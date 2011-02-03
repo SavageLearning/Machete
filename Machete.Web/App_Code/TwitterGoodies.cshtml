@@ -1,0 +1,332 @@
+@functions {
+    public enum DataCount {
+        Vertical,
+        Horizontal,
+        None
+    }
+    
+    public enum Languages {
+        English,
+        French,
+        German,
+        Spanish,
+        Japanese
+    }
+    
+    public static string GetLanguageCode(Languages language) {
+        switch (language) {
+            case Languages.French:
+                return "fr";
+            case Languages.German:
+                return "de";
+            case Languages.Spanish:
+                return "es";
+            case Languages.Japanese:
+                return "ja";
+            default:
+                return "";
+        }
+    }
+    
+    public enum FollowStyles {
+        Text,
+        Bird,
+        Twitter,
+        LogoBig,
+        LogoMedium,
+        LogoSmall
+    }
+    
+    public enum FollowColors {
+        Blue,
+        Silver,
+        Black
+    }
+    
+    public static string GetFollowButtonImageUrl(FollowStyles followStyle, FollowColors followColor) {
+        var fileName = "";
+        
+        switch (followStyle) {
+            case FollowStyles.Text:
+                fileName = "follow_me-";
+                break;
+            case FollowStyles.Bird:
+                fileName = "follow_bird-";
+                break;
+            case FollowStyles.Twitter:
+                fileName = "twitter-";
+                break;
+            case FollowStyles.LogoBig:
+                fileName = "t_logo-";
+                break;
+            case FollowStyles.LogoMedium:
+                fileName = "t_small-";
+                break;
+            case FollowStyles.LogoSmall:
+                fileName = "t_mini-";
+                break;
+        }
+        switch (followColor) {
+            case FollowColors.Blue:
+                fileName += "a";
+                break;
+            case FollowColors.Silver:
+                fileName += "b";
+                break;
+            case FollowColors.Black:
+                fileName += "c";
+                break;
+        }
+        
+        return fileName;
+    }
+    
+    public enum WidgetBehaviors {
+        Default,
+        All
+    }
+}
+
+@helper TweetButton(
+            DataCount dataCount = DataCount.Vertical,
+            string tweetText = "",
+            string url = "",
+            Languages language = Languages.English,
+            string username = "",
+            string relatedUsername = "",
+            string relatedUserDescription = "") {
+    var tweetTextAttribute = new HtmlString(!tweetText.IsEmpty() ? string.Format(" data-text=\"{0}\"", tweetText) : "");
+    var urlAttribute = new HtmlString(!url.IsEmpty() ? string.Format(" data-url=\"{0}\"", url) : "");
+    var languageAttribute = new HtmlString(!GetLanguageCode(language).IsEmpty() ? string.Format(" data-lang=\"{0}\"", GetLanguageCode(language)) : "");
+    var usernameAttribute = new HtmlString(!username.IsEmpty() ? string.Format(" data-via=\"{0}\"", username) : "");
+    var relatedAttribute = new HtmlString(!relatedUsername.IsEmpty() ? string.Format(" data-related=\"{0}{1}\"", relatedUsername, !relatedUserDescription.IsEmpty() ? ":" + relatedUserDescription : "") : "");
+<a href="http://twitter.com/share" class="twitter-share-button"@tweetTextAttribute@urlAttribute@languageAttribute@usernameAttribute@relatedAttribute data-count="@dataCount.ToString().ToLower()">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+}
+
+@helper FollowButton(
+            string username,
+            FollowStyles followStyle = FollowStyles.Text,
+            FollowColors followColor = FollowColors.Blue) {
+<a href="http://www.twitter.com/@username"><img src="http://twitter-badges.s3.amazonaws.com/@(GetFollowButtonImageUrl(followStyle, followColor)).png" alt="Follow @username on Twitter"/></a>
+}
+
+@helper Profile(
+            string username,
+            int width = 250,
+            int height = 300,
+            string backgroundShellColor = "#333333",
+            string shellColor = "#ffffff",
+            string tweetsBackgroundColor = "#000000",
+            string tweetsColor = "#ffffff",
+            string tweetsLinksColor = "#4aed05",
+            int numberOfTweets = 4,
+            bool scrollBar = false,
+            bool loop = false,
+            bool live = false,
+            bool hashTags = true,
+            bool timestamp = true,
+            bool avatars = false,
+            WidgetBehaviors behavior = WidgetBehaviors.All,
+            int interval = 6) {
+<script src="http://widgets.twimg.com/j/2/widget.js"></script>
+<script>
+new TWTR.Widget({
+  version: 2,
+  type: 'profile',
+  rpp: @(numberOfTweets < 1 ? 1 : (numberOfTweets > 30 ? 30 : numberOfTweets)),
+  interval: @(interval < 2 ? 2000 : (interval > 20 ? 20000 : (interval * 1000))),
+  width: @(new HtmlString(width <= 0 ? "'auto'" : width.ToString())),
+  height: @(height < 0 ? "0" : height.ToString()),
+  theme: {
+    shell: {
+      background: '@(backgroundShellColor.IsEmpty() ? "#333333" : backgroundShellColor)',
+      color: '@(shellColor.IsEmpty() ? "#ffffff" : shellColor)'
+    },
+    tweets: {
+      background: '@(tweetsBackgroundColor.IsEmpty() ? "#000000" : tweetsBackgroundColor)',
+      color: '@(tweetsColor.IsEmpty() ? "#ffffff" : tweetsColor)',
+      links: '@(tweetsLinksColor.IsEmpty() ? "#4aed05" : tweetsLinksColor)'
+    }
+  },
+  features: {
+    scrollbar: @scrollBar.ToString().ToLower(),
+    loop: @loop.ToString().ToLower(),
+    live: @live.ToString().ToLower(),
+    hashtags: @hashTags.ToString().ToLower(),
+    timestamp: @timestamp.ToString().ToLower(),
+    avatars: @avatars.ToString().ToLower(),
+    behavior: '@behavior.ToString().ToLower()'
+  }
+}).render().setUser('@username').start();
+</script>
+}
+
+@* Advanced queries: http://search.twitter.com/operators *@
+@helper Search(
+            string searchQuery,
+            int width = 250,
+            int height = 300,
+            string title = null,
+            string caption = null,
+            string backgroundShellColor = "#8ec1da",
+            string shellColor = "#ffffff",
+            string tweetsBackgroundColor = "#ffffff",
+            string tweetsColor = "#444444",
+            string tweetsLinksColor = "#1985b5",
+            bool scrollBar = false,
+            bool loop = true,
+            bool live = true,
+            bool hashTags = true,
+            bool timestamp = true,
+            bool avatars = true,
+            bool topTweets = true,
+            WidgetBehaviors behavior = WidgetBehaviors.All,
+            int interval = 6) {
+<script src="http://widgets.twimg.com/j/2/widget.js"></script>
+<script>
+new TWTR.Widget({
+  version: 2,
+  type: 'search',
+  search: '@searchQuery',
+  interval: @(interval < 2 ? 2000 : (interval > 20 ? 20000 : (interval * 1000))),
+  title: '@title',
+  subject: '@caption',
+  width: @(new HtmlString(width <= 0 ? "'auto'" : width.ToString())),
+  height: @(height < 0 ? "0" : height.ToString()),
+  theme: {
+    shell: {
+      background: '@(backgroundShellColor.IsEmpty() ? "#8ec1da" : backgroundShellColor)',
+      color: '@(shellColor.IsEmpty() ? "#ffffff" : shellColor)'
+    },
+    tweets: {
+      background: '@(tweetsBackgroundColor.IsEmpty() ? "#ffffff" : tweetsBackgroundColor)',
+      color: '@(tweetsColor.IsEmpty() ? "#444444" : tweetsColor)',
+      links: '@(tweetsLinksColor.IsEmpty() ? "#1985b5" : tweetsLinksColor)'
+    }
+  },
+  features: {
+    scrollbar: @scrollBar.ToString().ToLower(),
+    loop: @loop.ToString().ToLower(),
+    live: @live.ToString().ToLower(),
+    hashtags: @hashTags.ToString().ToLower(),
+    timestamp: @timestamp.ToString().ToLower(),
+    avatars: @avatars.ToString().ToLower(),
+    toptweets: @topTweets.ToString().ToLower(),
+    behavior: '@behavior.ToString().ToLower()'
+  }
+}).render().start();
+</script>
+}
+
+@helper Faves(
+            string username,
+            int width = 250,
+            int height = 300,
+            string title = null,
+            string caption = null,
+            string backgroundShellColor = "#43c43f",
+            string shellColor = "#ffffff",
+            string tweetsBackgroundColor = "#ffffff",
+            string tweetsColor = "#444444",
+            string tweetsLinksColor = "#43c43f",
+            int numberOfTweets = 10,
+            bool scrollBar = true,
+            bool loop = false,
+            bool live = true,
+            bool hashTags = true,
+            bool timestamp = true,
+            bool avatars = true,
+            bool topTweets = true,
+            WidgetBehaviors behavior = WidgetBehaviors.All,
+            int interval = 6) {
+<script src="http://widgets.twimg.com/j/2/widget.js"></script>
+<script>
+new TWTR.Widget({
+  version: 2,
+  type: 'faves',
+  rpp: @(numberOfTweets < 1 ? 1 : (numberOfTweets > 20 ? 20 : numberOfTweets)),
+  interval: @(interval < 2 ? 2000 : (interval > 20 ? 20000 : (interval * 1000))),
+  title: '@title',
+  subject: '@caption',
+  width: @(new HtmlString(width <= 0 ? "'auto'" : width.ToString())),
+  height: @(height < 0 ? "0" : height.ToString()),
+  theme: {
+    shell: {
+      background: '@(backgroundShellColor.IsEmpty() ? "#43c43f" : backgroundShellColor)',
+      color: '@(shellColor.IsEmpty() ? "#ffffff" : shellColor)'
+    },
+    tweets: {
+      background: '@(tweetsBackgroundColor.IsEmpty() ? "#ffffff" : tweetsBackgroundColor)',
+      color: '@(tweetsColor.IsEmpty() ? "#444444" : tweetsColor)',
+      links: '@(tweetsLinksColor.IsEmpty() ? "#43c43f" : tweetsLinksColor)'
+    }
+  },
+  features: {
+    scrollbar: @scrollBar.ToString().ToLower(),
+    loop: @loop.ToString().ToLower(),
+    live: @live.ToString().ToLower(),
+    hashtags: @hashTags.ToString().ToLower(),
+    timestamp: @timestamp.ToString().ToLower(),
+    avatars: @avatars.ToString().ToLower(),
+    behavior: '@behavior.ToString().ToLower()'
+  }
+}).render().setUser('@username').start();
+</script>
+}
+
+@helper List(
+            string username,
+            string list,
+            int width = 250,
+            int height = 300,
+            string title = null,
+            string caption = null,
+            string backgroundShellColor = "#ff96e7",
+            string shellColor = "#ffffff",
+            string tweetsBackgroundColor = "#ffffff",
+            string tweetsColor = "#444444",
+            string tweetsLinksColor = "#b740c2",
+            int numberOfTweets = 30,
+            bool scrollBar = true,
+            bool loop = false,
+            bool live = true,
+            bool hashTags = true,
+            bool timestamp = true,
+            bool avatars = true,
+            bool topTweets = true,
+            WidgetBehaviors behavior = WidgetBehaviors.All,
+            int interval = 6) {
+<script src="http://widgets.twimg.com/j/2/widget.js"></script>
+<script>
+new TWTR.Widget({
+  version: 2,
+  type: 'list',
+  rpp: @(numberOfTweets < 1 ? 1 : (numberOfTweets > 100 ? 100 : numberOfTweets)),
+  interval: @(interval < 2 ? 2000 : (interval > 20 ? 20000 : (interval * 1000))),
+  title: '@title',
+  subject: '@caption',
+  width: @(new HtmlString(width <= 0 ? "'auto'" : width.ToString())),
+  height: @(height < 0 ? "0" : height.ToString()),
+  theme: {
+    shell: {
+      background: '@(backgroundShellColor.IsEmpty() ? "#ff96e7" : backgroundShellColor)',
+      color: '@(shellColor.IsEmpty() ? "#ffffff" : shellColor)'
+    },
+    tweets: {
+      background: '@(tweetsBackgroundColor.IsEmpty() ? "#ffffff" : tweetsBackgroundColor)',
+      color: '@(tweetsColor.IsEmpty() ? "#444444" : tweetsColor)',
+      links: '@(tweetsLinksColor.IsEmpty() ? "#b740c2" : tweetsLinksColor)'
+    }
+  },
+  features: {
+    scrollbar: @scrollBar.ToString().ToLower(),
+    loop: @loop.ToString().ToLower(),
+    live: @live.ToString().ToLower(),
+    hashtags: @hashTags.ToString().ToLower(),
+    timestamp: @timestamp.ToString().ToLower(),
+    avatars: @avatars.ToString().ToLower(),
+    behavior: '@behavior.ToString().ToLower()'
+  }
+}).render().setList('@username', '@list').start();
+</script>
+}
