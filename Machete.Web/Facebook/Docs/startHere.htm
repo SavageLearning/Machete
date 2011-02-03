@@ -1,0 +1,265 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Facebook Helper for WebMatrix - Start Here</title>
+    <link href="content/Site.css" rel="stylesheet" type="text/css" />
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="content/images/webx-icon.png" alt="WebMatrix" />
+            <h1>
+                WebMatrix Helpers</h1>
+            <h2>
+                Facebook Helper - Start Here</h2>
+        </div>
+        <div class="content">
+            <div class="navLinks">
+                <a href="reference.htm">Helper Reference</a></div>
+            <h3>
+                Introduction</h3>
+            <p>
+                Microsoft WebMatrix provides an easy way to get started with web development, and
+                together with new Razor syntax for ASP.NET Web Pages it includes everything you
+                need to get your web site up, running and integrated with many other sites and networks,
+                in a short period of time. The WebMatrix helpers are designed to make your life
+                easier when creating web sites. They provide you a simple and consistent way of
+                performing common web development tasks that otherwise would require a great deal
+                of custom coding. With a few lines of code you should be able to secure your web
+                site using membership, store information in Windows Azure Storage, integrate your
+                site with Facebook, among others things.
+            </p>
+            <p>
+                The <strong>Facebook</strong> helper is designed to integrate your WebMatrix site
+                with Facebook, making it possible to add the <a href="http://developers.facebook.com/plugins">
+                    Facebook Social Plugins</a>, such as Like button, Facepile, Comments, Login
+                Button and Like Box, among others, in a few simple steps. It also allows you easily
+                integrate your site with the Facebook login mechanism, so users do not have to create
+                another account just to access your website.
+            </p>
+            <p>
+                Depending on the social plugin you want to use, the helper requires that you call
+                an initialization method. Check the table below and if the social plugin you want
+                to use does not require initialization see the <strong>Getting Started in 60 seconds
+                    (without initialization)</strong> section, otherwise see the <strong>Getting Started
+                        in 60 seconds (with initialization)</strong> section.
+            </p>
+            <table class="plugins">
+                <thead>
+                    <tr>
+                        <th>
+                            Social Plugin
+                        </th>
+                        <th>
+                            Initialization Required
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            Like Button
+                        </td>
+                        <td>
+                            No
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Activity Feed
+                        </td>
+                        <td>
+                            No
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Recommendations
+                        </td>
+                        <td>
+                            No
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Like Box
+                        </td>
+                        <td>
+                            No
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Login Button
+                        </td>
+                        <td>
+                            Yes
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Facepile
+                        </td>
+                        <td>
+                            Yes
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Comments
+                        </td>
+                        <td>
+                            Yes
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Live Stream
+                        </td>
+                        <td>
+                            Yes
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>
+                Getting Started in 60 Seconds (without initialization)</h3>
+            <p>
+                These steps will guide you on how to display a Facebook Like button into your Web
+                site:
+            </p>
+            <ol>
+                <li>Add the highlighted line from below in the page where you want to show the Like
+                    button, in this case for liking the Microsoft Web home page:
+                    <div class="code">
+                        &lt;!DOCTYPE html&gt;<br />
+                        &lt;html&gt;<br />
+                        <span class="codeIndent1">...</span><br />
+                        <span class="codeIndent1">&lt;body&gt;</span><br />
+                        <span class="codeIndent2">...</span><br />
+                        <span class="codeIndent2 highlight">@Facebook.LikeButton("http://www.microsoft.com/web")</span><br />
+                        <span class="codeIndent2">...</span><br />
+                        <span class="codeIndent1">&lt;/body&gt;</span><br />
+                        &lt;/html&gt;<br />
+                    </div>
+                </li>
+            </ol>
+            <h3>
+                Getting Started in 60 Seconds (with initialization)</h3>
+            <p>
+                These steps will guide you on how to display a Facebook Comments box into your Web
+                site:
+            </p>
+            <ol>
+                <li>Make note of the <strong>Site URL</strong> where your Microsoft WebMatrix site is
+                    running (click the Site workspace | Settings page).<br />
+                    &nbsp;<img alt="Configuring Facebook Application to run in localhost" src="content/images/wm-mysite-settings.png" />
+                </li>
+                <li><a href="http://www.facebook.com/developers/createapp.php">Register</a> a new Facebook
+                    application and make note of the Application Id and Secret. (Check <a href="http://www.facebook.com/developers">
+                        http://www.facebook.com/developers</a> for instructions on how to create a Facebook
+                    application).
+                    <div>
+                        <img alt="Create a Facebook Application" src="content/images/FBCreateApplication.png" />
+                    </div>
+                </li>
+                <li>When creating your Facebook application, make sure you set the Site Url to <strong>
+                    http://localhost:[port]</strong>, replacing the <em>[port]</em> placeholder with
+                    the port where your local WebMatrix site is running.
+                    <div>
+                        <img alt="Facebook Application Core Settings" src="content/images/FBCoreSettings.png" />
+                    </div>
+                </li>
+                <li>Add the following line to the <strong>_AppStart.cshtml</strong> page of your WebMatrix
+                    Site (create this page if it does not exist). Replace the placeholders with your
+                    Application Id and Secret.
+                    <div class="code">
+                        @{<br />
+                        <span class="codeIndent1 highlight">Facebook.Initialize(&quot;{your App ID}&quot;, &quot;{your
+                            App Secret}&quot;);</span><br />
+                        }<br />
+                    </div>
+                </li>
+                <li>Add the highlighted lines from below in the page where you want to show the Comments
+                    box:
+                    <div class="code">
+                        &lt;!DOCTYPE html&gt;<br />
+                        &lt;html <span class="highlight">@Facebook.FbmlNamespaces()</span>&gt;<br />
+                        <span class="codeIndent1">...</span><br />
+                        <span class="codeIndent1">&lt;body&gt;</span><br />
+                        <span class="codeIndent2 highlight">@Facebook.GetInitializationScripts()</span><br />
+                        <span class="codeIndent2">...</span><br />
+                        <span class="codeIndent2 highlight">@Facebook.Comments()</span><br />
+                        <span class="codeIndent2">...</span><br />
+                        <span class="codeIndent1">&lt;/body&gt;</span><br />
+                        &lt;/html&gt;<br />
+                    </div>
+                </li>
+            </ol>
+            <div>
+                <strong>Note:</strong> Some of the Facebook Social Plugins require that your site
+                is published into a public address where others can use it; see the <a href="reference.htm">
+                    helper reference</a> for a complete list. To do this you can try some of the
+                *Free* WebMatrix Hostings providers, like <a href="http://www.cytanium.com/">Cytanium</a>
+                (also check this tutorial on <a href="http://www.asp.net/webmatrix/tutorials/publish-a-website">
+                    publishing with WebMatrix)</a>.</div>
+            <h3>
+                Running the Facebook Helper Sample</h3>
+            <p>
+                Optionally, you can download a sample WebMatrix web site where you can see the helper
+                in action, and also see how to use the helper to <strong>integrate the Facebook login
+                    mechanism with the membership model of your web site</strong>. To download and
+                run it with Microsoft WebMatrix, follow these steps:</p>
+            <ol>
+                <li>Browse to the <a href="http://facebookhelper.codeplex.com">Facebook Helper CodePlex
+                    site</a> and download the <strong>Facebook Helper Sample</strong></li>
+                <li>Extract the content of the package, right-click the <strong>Facebook.Bakery</strong>
+                    folder and select 'Open as a Web Site with Microsoft WebMatrix'. This will open
+                    the Bakery sample web site with WebMatrix.</li>
+                <li>Change your WebMatrix site settings to match the <strong>Site Url</strong> you have
+                    configured in your Facebook application settings.
+                    <div>
+                        <img alt="Configuring WebMatrix to run in localhost" src="content/images/wm-site-settings.png" />
+                    </div>
+                </li>
+                <li>Open the <strong>_AppStart.cshtml</strong> page, uncomment the following line and
+                    replace the placeholders with your Facebook Application Id and Secret.
+                    <div class="code">
+                        @{<br />
+                        <span class="codeIndent1 highlight">Facebook.Initialize(&quot;{your App ID}&quot;, &quot;{your
+                            App Secret}&quot;, &quot;bakery&quot;);</span><br />
+                        <span class="codeIndent1">...</span><br />
+                        }<br />
+                    </div>
+                </li>
+                <li>Click on the <strong>Run</strong> button located in the Home tab.</li>
+                <li>Play with the sample!</li>
+            </ol>
+            <h3>
+                More Info</h3>
+            <p>
+                The helper ships with the following files: The <strong>Facebook.cshtml</strong>
+                file located into the <strong>App_Code</strong> folder inside you WebMatrix site,
+                and a <strong>Login.cshtml</strong> file under the <strong>Facebook</strong> folder
+                that will handle user login when using his Facebook account.
+            </p>
+            <p>
+                Learn more on WebMatrix, ASP.NET Web Pages and the Razor Syntax <a href="http://www.microsoft.com/web/webmatrix/learn/">
+                    with the WebMatrix tutorials</a>.
+            </p>
+            <p>
+                To explore the helper implementation you can open the <strong>Facebook.cshtml</strong>
+                file located under the <strong>App_Code</strong> folder. Additionally, you can get
+                more information on the helper from the <a href="http://facebookhelper.codeplex.com/">
+                    Facebook Helper CodePlex site</a>.
+            </p>
+        </div>
+        <ul class="footer">
+            <li>We're always looking for <a href="mailto:webapp@microsoft.com">bugs, feedback and
+                suggestions!</a></li>
+            <li>&copy; 2010-2011 Microsoft Corporation. Powered by IIS Express.</li>
+        </ul>
+    </div>
+</body>
+</html>

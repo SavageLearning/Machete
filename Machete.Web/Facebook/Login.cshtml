@@ -1,0 +1,11 @@
+@{
+    if (!Facebook.IsFacebookUserAuthenticated) {
+        Response.Redirect("~/");
+    }
+    
+    if (Facebook.MembershipLogin()) {
+        Context.RedirectLocal(Request["returnUrl"]);
+    } else {
+        Context.RedirectLocal(Request["registerUrl"]);
+    }
+}

@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Machete.Data", "Machete.Data\Machete.Data.csproj", "{A9F879BC-CA11-4470-A655-8541B5DA41A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Machete.Domain", "Machete.Domain\Machete.Domain.csproj", "{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Machete.Web", "Machete.Web\Machete.Web.csproj", "{FE22D839-09AA-4DE8-BAF7-E29C6EB2EECC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Machete.Service", "Machete.Service\Machete.Service.csproj", "{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}"
+EndProject
+Global
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE22D839-09AA-4DE8-BAF7-E29C6EB2EECC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE22D839-09AA-4DE8-BAF7-E29C6EB2EECC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE22D839-09AA-4DE8-BAF7-E29C6EB2EECC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE22D839-09AA-4DE8-BAF7-E29C6EB2EECC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
