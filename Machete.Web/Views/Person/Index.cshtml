@@ -1,0 +1,64 @@
+﻿@model IEnumerable<Machete.Domain.Person>
+
+@{
+    ViewBag.Title = @Machete.Web.Resources.Persons.indextitle;
+}
+
+<h2>@Machete.Web.Resources.Persons.indextitle</h2>
+
+<p>
+    @Html.ActionLink(@Machete.Web.Resources.Persons.createlink, "Create")
+</p>
+<table>
+    <tr>
+        <th></th>
+        <th>
+            @Machete.Domain.Resources.Persons.firstname1
+        </th>
+        <th>
+            @Machete.Domain.Resources.Persons.firstname2
+        </th>
+        <th>
+            @Machete.Domain.Resources.Persons.lastname1
+        </th>
+        <th>
+            @Machete.Domain.Resources.Persons.lastname2
+        </th>
+        <th>
+            @Machete.Domain.Resources.Persons.phone
+        </th>
+        <th>
+            @Machete.Domain.Resources.Persons.dateupdated
+        </th>
+
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink(@Machete.Web.Resources.Persons.editlink, "Edit", new { id = item.ID }) |
+            @Html.ActionLink(@Machete.Web.Resources.Persons.deletelink, "Delete", new { id = item.ID })
+        </td>
+        <td>
+            @item.firstname1
+        </td>
+        <td>
+            @item.firstname2
+        </td>
+        <td>
+            @item.lastname1
+        </td>
+        <td>
+            @item.lastname2
+        </td>
+        <td>
+            @item.phone
+        </td>
+        <td>
+            @item.dateupdated
+        </td>
+    </tr>
+}
+
+</table>
+

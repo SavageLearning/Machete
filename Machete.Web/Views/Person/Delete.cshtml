@@ -1,0 +1,20 @@
+﻿@model Machete.Domain.Person
+@{
+    ViewBag.Title = @Machete.Web.Resources.Persons.deletetitle;
+}
+<h2>@Machete.Web.Resources.Persons.deletetitle</h2>
+<h3>@Machete.Web.Resources.Persons.deleteconfirmation</h3>
+@using (Html.BeginForm())
+{
+<fieldset>
+    <legend>@Machete.Web.Resources.Persons.boxlegend</legend>
+    @Html.EditorForModel()
+</fieldset>
+<p>
+    <input type="submit" value=@Machete.Web.Resources.Persons.deletesubmit />
+    |
+</p>
+<div>
+    @Html.ActionLink(@Machete.Web.Resources.Persons.indexreturnlink, "Index")
+</div>
+}
