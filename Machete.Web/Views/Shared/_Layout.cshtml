@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>@ViewBag.Title</title>
+    <title>@Machete.Web.Resources.Shared.title</title>
     <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
     <script src="@Url.Content("~/Scripts/jquery-1.4.4.min.js")" type="text/javascript"></script>    
 </head>
@@ -11,24 +11,27 @@
 
         <div id="header">
             <div id="title">
-                <h1>machete::</h1>
+                <h1>@Machete.Web.Resources.Shared.title</h1>
             </div>
 
             <div id="logindisplay">
                 @Html.Partial("_LogOnPartial")
+                @Html.Partial("_CultureChooser")
             </div>
 
             <div id="menucontainer">
 
                 <ul id="menu">
-                    <li>@Html.ActionLink("Persons", "Index", "Persons")</li>
-                    <li>@Html.ActionLink("Workers", "Index", "Workers")</li>
-                    <li>@Html.ActionLink("WorkOrders", "Index", "WorkOrders")</li>
-                    <li>@Html.ActionLink("WorkAsmts", "Index", "WorkAssignments")</li>
-                    <li>@Html.ActionLink("Employers", "Index", "Employers")</li>
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Category", "Index", "Category")</li>					
-                    <li>@Html.ActionLink("Expense", "Index", "Expense")</li>
+                    <li>@Html.ActionLink(@Machete.Web.Resources.Shared.persontab, "Index", "Person")</li>
+                    <li>@Html.ActionLink(@Machete.Web.Resources.Shared.hometab, "Index", "Home")</li>
+                    <!--<li>@Html.ActionLink(@Machete.Web.Resources.Shared.workerstab, "Index", "Worker")</li>
+                    <li>@Html.ActionLink(@Machete.Web.Resources.Shared.workorderstab, "Index", "WorkOrders")</li>
+                    <li>@Html.ActionLink(@Machete.Web.Resources.Shared.workassignmentstab, "Index", "WorkAssignments")</li>
+                    <li>@Html.ActionLink(@Machete.Web.Resources.Shared.employerstab, "Index", "Employers")</li>
+                    <li>@Html.ActionLink(@Machete.Web.Resources.Shared.hometab, "Index", "Home")</li>
+                    <li>@Html.ActionLink("##Category", "Index", "Category")</li>					
+                    <li>@Html.ActionLink("##Expense", "Index", "Expense")</li>
+                    !-->
                 </ul>
 
             </div>
@@ -37,7 +40,7 @@
         <div id="main">
             @RenderBody()
             <div id="footer">
-            Casa Latina| <a href="http://www.casa-latina.org">Website</a> | <a href="https://www.facebook.com/pages/Casa-Latina/138778978113">Facebook</a>
+            Casa Latina| <a href="http://www.casa-latina.org">@Machete.Web.Resources.Shared.parentwebtitle</a> | <a href="https://www.facebook.com/pages/Casa-Latina/138778978113">Facebook</a>
             </div>
         </div>
     </div>
