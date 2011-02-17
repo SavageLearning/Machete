@@ -8,8 +8,8 @@
     <ProjectGuid>{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MyFinance.Service</RootNamespace>
-    <AssemblyName>MyFinance.Service</AssemblyName>
+    <RootNamespace>Machete.Service</RootNamespace>
+    <AssemblyName>Machete.Service</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -42,16 +42,17 @@
   <ItemGroup>
     <Compile Include="CategoryService.cs" />
     <Compile Include="ExpenseService.cs" />
+    <Compile Include="PersonService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Machete.Data\Machete.Data.csproj">
       <Project>{A9F879BC-CA11-4470-A655-8541B5DA41A1}</Project>
-      <Name>MyFinance.Data</Name>
+      <Name>Machete.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\Machete.Domain\Machete.Domain.csproj">
       <Project>{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}</Project>
-      <Name>MyFinance.Domain</Name>
+      <Name>Machete.Domain</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
