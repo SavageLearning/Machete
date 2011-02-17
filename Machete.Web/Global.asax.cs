@@ -14,6 +14,8 @@ using Machete.Domain;
 using Machete.Web.ViewModel;
 using Machete.Service;
 using Machete.Web.Controllers;
+using System.Globalization;
+using System.Threading;
 
 namespace Machete.Web
 {
@@ -40,6 +42,35 @@ namespace Machete.Web
             );
 
         }
+        protected void Application_AcquireRequestState(object sender, EventArgs e)
+        {
+            //It's important to check whether session object is ready
+            if (HttpContext.Current.Session != null)
+            {
+                CultureInfo ci = (CultureInfo)this.Session["Culture"];
+                //Checking first if there is no value in session 
+                //and set default language 
+                //this can happen for first user's request
+                if (ci == null)
+                {
+                    //Sets default culture to english invariant
+                    string langName = "en";
+
+                    //Try to get values from Accept lang HTTP header
+                    if (HttpContext.Current.Request.UserLanguages != null && HttpContext.Current.Request.UserLanguages.Length != 0)
+                    {
+                        //Gets accepted list 
+                        langName = HttpContext.Current.Request.UserLanguages[0].Substring(0, 2);
+                    }
+                    ci = new CultureInfo(langName);
+                    this.Session["Culture"] = ci;
+                }
+                //Finally setting culture for each request
+                Thread.CurrentThread.CurrentUICulture = ci;
+                Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture(ci.Name);
+            }
+        }
+
 
 protected void Application_Start()
 {
@@ -61,8 +92,10 @@ protected void Application_Start()
         .RegisterType<IDatabaseFactory, DatabaseFactory>(new HttpContextLifetimeManager<IDatabaseFactory>())
         .RegisterType<IUnitOfWork, UnitOfWork>(new HttpContextLifetimeManager<IUnitOfWork>())
         .RegisterType<ICategoryRepository, CategoryRepository>(new HttpContextLifetimeManager<ICategoryRepository>())
+        .RegisterType<IPersonRepository, PersonRepository>(new HttpContextLifetimeManager<IPersonRepository>())
         .RegisterType<IExpenseRepository, ExpenseRepository>(new HttpContextLifetimeManager<IExpenseRepository>())
         .RegisterType<ICategoryService, CategoryService>(new HttpContextLifetimeManager<ICategoryService>())
+        .RegisterType<IPersonService, PersonService>(new HttpContextLifetimeManager<IPersonService>())
         .RegisterType<IExpenseService, ExpenseService>(new HttpContextLifetimeManager<IExpenseService>());
         return container;         
     }
