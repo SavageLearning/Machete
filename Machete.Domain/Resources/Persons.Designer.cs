@@ -106,6 +106,15 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to At least one first name is required.
+        /// </summary>
+        public static string firstname1error {
+            get {
+                return ResourceManager.GetString("firstname1error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to First Name (2).
         /// </summary>
         public static string firstname2 {
@@ -138,6 +147,15 @@ namespace Machete.Domain.Resources {
         public static string lastname1 {
             get {
                 return ResourceManager.GetString("lastname1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to At least one last name is required.
+        /// </summary>
+        public static string lastname1error {
+            get {
+                return ResourceManager.GetString("lastname1error", resourceCulture);
             }
         }
         

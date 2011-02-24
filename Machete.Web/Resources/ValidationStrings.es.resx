@@ -117,14 +117,35 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="EmailAddress" xml:space="preserve">
+    <value>Dirección de correo electrónico</value>
+  </data>
   <data name="LogOff" xml:space="preserve">
     <value>Cerrar de sesión</value>
   </data>
   <data name="LogOn" xml:space="preserve">
     <value>Entrada</value>
   </data>
+  <data name="LogOnLegend" xml:space="preserve">
+    <value>Información de la cuenta</value>
+  </data>
+  <data name="LogOnRegisterString1" xml:space="preserve">
+    <value>Por favor ingrese su nombre de usuario y contraseña.</value>
+  </data>
+  <data name="LogOnRegisterString2" xml:space="preserve">
+    <value>si no tienes una cuenta.</value>
+  </data>
+  <data name="LogOnTitle" xml:space="preserve">
+    <value>Entrada Machete</value>
+  </data>
+  <data name="LogOnUnsuccessful" xml:space="preserve">
+    <value>Entrada no tuvo éxito. Por favor, corrija los errores y vuelva a intentarlo.</value>
+  </data>
   <data name="NewPasswordsMustMatch" xml:space="preserve">
     <value>La nueva contraseña y la contraseña de confirmación no coinciden</value>
+  </data>
+  <data name="password" xml:space="preserve">
+    <value>Contraseña</value>
   </data>
   <data name="PasswordCompare" xml:space="preserve">
     <value>La nueva contraseña y la contraseña de confirmación no coinciden.</value>
@@ -144,13 +165,67 @@
   <data name="PasswordsMustMatch" xml:space="preserve">
     <value>La contraceña y la contraseña de la confirmación no coinciden</value>
   </data>
+  <data name="Register" xml:space="preserve">
+    <value>Registrarse</value>
+  </data>
+  <data name="rememberme" xml:space="preserve">
+    <value>Recuerde a mi?</value>
+  </data>
   <data name="Required" xml:space="preserve">
     <value>Campo "{0}" es obligatorio</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Configuración</value>
   </data>
+  <data name="username" xml:space="preserve">
+    <value>Nombre de usuario</value>
+  </data>
   <data name="Welcome" xml:space="preserve">
     <value>Bienvenido</value>
+  </data>
+  <data name="Change" xml:space="preserve">
+    <value>Cambiar la contraseña</value>
+  </data>
+  <data name="ChangeLegend" xml:space="preserve">
+    <value>Información de la cuenta</value>
+  </data>
+  <data name="ChangePassLength1" xml:space="preserve">
+    <value>Las nuevas contraseñas deben tener un mínimo de</value>
+  </data>
+  <data name="ChangePassLength2" xml:space="preserve">
+    <value>caracteres de longitud.</value>
+  </data>
+  <data name="ChangeSubTitle" xml:space="preserve">
+    <value>Use the form below to change your password.</value>
+  </data>
+  <data name="ChangeSuccess" xml:space="preserve">
+    <value>Su contraseña ha sido cambiada con éxito.</value>
+  </data>
+  <data name="ChangeTitle" xml:space="preserve">
+    <value>Cambiar la contraseña</value>
+  </data>
+  <data name="ChangeValSummary" xml:space="preserve">
+    <value>Cambio de contraseña no tuvo éxito. Por favor, corrija los errores y vuelva a intentarlo.</value>
+  </data>
+  <data name="RegisterInstructions" xml:space="preserve">
+    <value>Utilice el formulario a continuación para crear una nueva cuenta.</value>
+  </data>
+  <data name="RegisterLegend" xml:space="preserve">
+    <value>Información de la cuenta</value>
+  </data>
+  <data name="RegisterPassLength1" xml:space="preserve">
+    <value>Las contraseñas deben tener un mínimo de</value>
+  </data>
+  <data name="RegisterPassLength2" xml:space="preserve">
+    <value>caracteres de longitud.</value>
+  </data>
+  <data name="RegisterSubTitle" xml:space="preserve">
+    <value>Crear una cuenta nueva</value>
+  </data>
+  <data name="RegisterTitle" xml:space="preserve">
+    <value>Registrarse</value>
+  </data>
+  <data name="RegisterValSummary" xml:space="preserve">
+    <value>La creación de cuentas no tuvo éxito. Por favor, corrija los errores y vuelva a intentarlo.</value>
   </data>
 </root>

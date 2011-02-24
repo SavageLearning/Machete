@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
 using Machete.Web.Models;
+using System.Globalization;
 
 namespace Machete.Web.Controllers
 {
@@ -24,7 +25,14 @@ namespace Machete.Web.Controllers
 
             base.Initialize(requestContext);
         }
-
+        // **************************************
+        // URL: /Account/settings
+        // TODO: Settings
+        // **************************************
+        public ActionResult Settings()
+        {
+            return View();
+        }
         // **************************************
         // URL: /Account/LogOn
         // **************************************
@@ -144,8 +152,19 @@ namespace Machete.Web.Controllers
 
         public ActionResult ChangePasswordSuccess()
         {
+            // TODO: Acknowledge the successful change
             return View();
         }
 
+        // **************************************
+        // Change Culture
+        // **************************************
+        public ActionResult ChangeCulture(string lang, string returnUrl)
+        {
+            Session["Culture"] = new CultureInfo(lang);
+            return Redirect(returnUrl);
+            // TODO: add user input validation to prevent setting unsupported language
+            // TODO: preserve field text when language changes
+        }
     }
 }

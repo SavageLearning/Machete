@@ -120,6 +120,21 @@
   <data name="employerstab" xml:space="preserve">
     <value>Patrones</value>
   </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="ErrorPgActionLabel" xml:space="preserve">
+    <value>Nombre de la acción:</value>
+  </data>
+  <data name="ErrorPgControllerLabel" xml:space="preserve">
+    <value>Nombre de la controladora:</value>
+  </data>
+  <data name="ErrorPgExceptionLabel" xml:space="preserve">
+    <value>Seguimiento de la pila:</value>
+  </data>
+  <data name="ErrorPgExplanation" xml:space="preserve">
+    <value>Lo sentimos, ha ocurrido un error al procesar su solicitud.</value>
+  </data>
   <data name="hometab" xml:space="preserve">
     <value>Inicio</value>
   </data>

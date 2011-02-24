@@ -1,0 +1,176 @@
+﻿@model Machete.Domain.Person
+<!--        
+    The table for the first name and last name
+!-->
+<table border="10" cellpadding="0" cellspacing="0" >
+    <tr>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.firstname1)
+                
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.firstname1)
+                @Html.ValidationMessageFor(model => model.firstname1)
+            </div>
+        </td>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.firstname2)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.firstname2)
+                @Html.ValidationMessageFor(model => model.firstname2)
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.lastname1)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.lastname1)
+                @Html.ValidationMessageFor(model => model.lastname1)
+            </div>
+        </td>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.lastname2)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.lastname2)
+                @Html.ValidationMessageFor(model => model.lastname2)
+            </div>
+        </td>
+    </tr>
+</table>
+<p>
+</p>
+<!--
+The table for the rest of the person information
+!-->
+<table>
+    <tr>
+        <td>
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td>
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.address1)
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field">
+                            @Html.EditorFor(model => model.address1)
+                            @Html.ValidationMessageFor(model => model.address1)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.address2)
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field">
+                            @Html.EditorFor(model => model.address2)
+                            @Html.ValidationMessageFor(model => model.address2)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.city)
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field">
+                            @Html.EditorFor(model => model.city)
+                            @Html.ValidationMessageFor(model => model.city)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.state)
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field">
+                            @Html.EditorFor(model => model.state)
+                            @Html.ValidationMessageFor(model => model.state)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.zipcode)
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field">
+                            @Html.EditorFor(model => model.zipcode)
+                            @Html.ValidationMessageFor(model => model.zipcode)
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <td>
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td>
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.phone)
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field">
+                            @Html.EditorFor(model => model.phone)
+                            @Html.ValidationMessageFor(model => model.phone)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.gender)
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field">
+                            @Html.EditorFor(model => model.gender)
+                            @Html.ValidationMessageFor(model => model.gender)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.genderother)
+                        </div>
+                    </td>
+                    <td>
+                        <div class="editor-field">
+                            @Html.EditorFor(model => model.genderother)
+                            @Html.ValidationMessageFor(model => model.genderother)
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>

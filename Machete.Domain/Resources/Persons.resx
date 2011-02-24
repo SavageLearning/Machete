@@ -132,6 +132,9 @@
   <data name="firstname1" xml:space="preserve">
     <value>First Name (1)</value>
   </data>
+  <data name="firstname1error" xml:space="preserve">
+    <value>At least one first name is required</value>
+  </data>
   <data name="firstname2" xml:space="preserve">
     <value>First Name (2)</value>
   </data>
@@ -143,6 +146,9 @@
   </data>
   <data name="lastname1" xml:space="preserve">
     <value>Last Name (1)</value>
+  </data>
+  <data name="lastname1error" xml:space="preserve">
+    <value>At least one last name is required</value>
   </data>
   <data name="lastname2" xml:space="preserve">
     <value>Last Name (2)</value>

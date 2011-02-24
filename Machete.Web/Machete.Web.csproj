@@ -10,8 +10,8 @@
     <ProjectTypeGuids>{E53F8FEA-EAE0-44A6-8774-FFD645390401};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MyFinance.Web</RootNamespace>
-    <AssemblyName>MyFinance.Web</AssemblyName>
+    <RootNamespace>Machete.Web</RootNamespace>
+    <AssemblyName>Machete.Web</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
   </PropertyGroup>
@@ -23,6 +23,11 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PublishDatabaseSettings>
+      <Objects>
+      </Objects>
+    </PublishDatabaseSettings>
+    <ExcludeApp_Data>true</ExcludeApp_Data>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,7 +38,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.CSharp">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation">
       <HintPath>..\packages\Unity.2.0\lib\20\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
@@ -52,31 +59,97 @@
     <Reference Include="Microsoft.Web.Helpers">
       <HintPath>..\packages\microsoft-web-helpers.1.1\lib\Microsoft.Web.Helpers.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Web.Mvc, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\MicrosoftWebMvc.2.0\lib\Microsoft.Web.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data.Entity" />
-    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="System.Web.WebPages" />
-    <Reference Include="System.Web.Helpers" />
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Web.DynamicData" />
-    <Reference Include="System.Web.Entity" />
-    <Reference Include="System.Web.ApplicationServices" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Web.Abstractions" />
-    <Reference Include="System.Web.Routing" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Web.Services" />
+    <Reference Include="Moq">
+      <HintPath>..\packages\Moq.3.1.416.3\lib\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.5.7.10213\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.mocks">
+      <HintPath>..\packages\NUnit.2.5.7.10213\lib\nunit.mocks.dll</HintPath>
+    </Reference>
+    <Reference Include="pnunit.framework">
+      <HintPath>..\packages\NUnit.2.5.7.10213\lib\pnunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.Entity">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Helpers">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.DynamicData">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Entity">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.ApplicationServices">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Core">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Extensions">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Abstractions">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Routing">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Configuration">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Services">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
@@ -84,6 +157,8 @@
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\ExpenseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PersonController.cs" />
+    <Compile Include="Helpers\AuthorizeExAttribute.cs" />
     <Compile Include="IoC\CustomControllerActivator.cs" />
     <Compile Include="IoC\UnityControllerFactory .cs" />
     <Compile Include="Global.asax.cs">
@@ -95,6 +170,36 @@
     <Compile Include="IoC\UnityDependencyResolver.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\Shared.Designer.cs">
+      <DependentUpon>Shared.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Resources\Persons.es.Designer.cs">
+      <DependentUpon>Persons.es.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Resources\ValidationStrings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ValidationStrings.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\ValidationStrings.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ValidationStrings.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Persons.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Persons.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Shared.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Shared.es.resx</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\ExpenseViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -115,16 +220,6 @@
     <Content Include="Content\images\ui-icons_f9f2bd_256x240.png" />
     <Content Include="Content\images\ui-icons_ff7519_256x240.png" />
     <Content Include="Content\jquery-ui-1.8.6.custom.css" />
-    <Content Include="Facebook\Docs\content\images\FBCoreSettings.png" />
-    <Content Include="Facebook\Docs\content\images\FBCreateApplication.png" />
-    <Content Include="Facebook\Docs\content\images\webx-bkg.png" />
-    <Content Include="Facebook\Docs\content\images\webx-content-bkg.jpg" />
-    <Content Include="Facebook\Docs\content\images\webx-icon.png" />
-    <Content Include="Facebook\Docs\content\images\wm-mysite-settings.png" />
-    <Content Include="Facebook\Docs\content\images\wm-site-settings.png" />
-    <Content Include="Facebook\Docs\content\Site.css" />
-    <Content Include="Facebook\Docs\reference.htm" />
-    <Content Include="Facebook\Docs\startHere.htm" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\jquery.ui.core.js" />
     <Content Include="Scripts\jquery.ui.datepicker.js" />
@@ -168,21 +263,19 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Machete.Data\Machete.Data.csproj">
       <Project>{A9F879BC-CA11-4470-A655-8541B5DA41A1}</Project>
-      <Name>MyFinance.Data</Name>
+      <Name>Machete.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\Machete.Domain\Machete.Domain.csproj">
       <Project>{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}</Project>
-      <Name>MyFinance.Domain</Name>
+      <Name>Machete.Domain</Name>
     </ProjectReference>
     <ProjectReference Include="..\Machete.Service\Machete.Service.csproj">
       <Project>{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}</Project>
-      <Name>MyFinance.Service</Name>
+      <Name>Machete.Service</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -219,10 +312,46 @@
     <Content Include="Views\Shared\EditorTemplates\ExpenseViewModel.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Facebook\Login.cshtml" />
+    <Content Include="App_Code\TwitterGoodies.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Code\TwitterGoodies.cshtml" />
+    <Content Include="Views\Person\Details.cshtml" />
+    <Content Include="Views\Person\Create.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Person.cshtml" />
+    <Content Include="Views\Person\Index.cshtml" />
+    <Content Include="Views\Person\Edit.cshtml" />
+    <Content Include="Views\Person\Delete.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Shared.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Shared.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Persons.es.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Persons.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\ValidationStrings.es.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ValidationStrings.es.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\ValidationStrings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ValidationStrings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Persons.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Persons.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Shared.es.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Shared.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_CultureChooser.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
@@ -240,11 +369,10 @@
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
-          <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>16420</DevelopmentServerPort>
+          <AutoAssignPort>False</AutoAssignPort>
+          <DevelopmentServerPort>42420</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>
-          </IISUrl>
+          <IISUrl>http://localhost/Machete.Web</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
