@@ -120,6 +120,21 @@
   <data name="employerstab" xml:space="preserve">
     <value>Employers</value>
   </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="ErrorPgActionLabel" xml:space="preserve">
+    <value>Action Name:</value>
+  </data>
+  <data name="ErrorPgControllerLabel" xml:space="preserve">
+    <value>Controller Name:</value>
+  </data>
+  <data name="ErrorPgExceptionLabel" xml:space="preserve">
+    <value>Stack Trace:</value>
+  </data>
+  <data name="ErrorPgExplanation" xml:space="preserve">
+    <value>Sorry, an error occurred while processing your request.</value>
+  </data>
   <data name="hometab" xml:space="preserve">
     <value>Home</value>
   </data>

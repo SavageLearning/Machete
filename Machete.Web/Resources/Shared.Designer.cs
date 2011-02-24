@@ -70,6 +70,51 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        public static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Action Name:.
+        /// </summary>
+        public static string ErrorPgActionLabel {
+            get {
+                return ResourceManager.GetString("ErrorPgActionLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Controller Name:.
+        /// </summary>
+        public static string ErrorPgControllerLabel {
+            get {
+                return ResourceManager.GetString("ErrorPgControllerLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stack Trace:.
+        /// </summary>
+        public static string ErrorPgExceptionLabel {
+            get {
+                return ResourceManager.GetString("ErrorPgExceptionLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sorry, an error occurred while processing your request..
+        /// </summary>
+        public static string ErrorPgExplanation {
+            get {
+                return ResourceManager.GetString("ErrorPgExplanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Home.
         /// </summary>
         public static string hometab {

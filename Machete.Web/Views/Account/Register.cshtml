@@ -1,25 +1,25 @@
 ﻿@model Machete.Web.Models.RegisterModel
 
 @{
-    ViewBag.Title = "Register";
+    ViewBag.Title = @Machete.Web.Resources.ValidationStrings.RegisterTitle;
 }
 
-<h2>Create a New Account</h2>
+<h2>@Machete.Web.Resources.ValidationStrings.RegisterSubTitle</h2>
 <p>
-    Use the form below to create a new account. 
+    @Machete.Web.Resources.ValidationStrings.RegisterInstructions 
 </p>
 <p>
-    Passwords are required to be a minimum of @ViewBag.PasswordLength characters in length.
+    @Machete.Web.Resources.ValidationStrings.RegisterPassLength1 @ViewBag.PasswordLength @Machete.Web.Resources.ValidationStrings.RegisterPassLength2
 </p>
 
 <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
 
 @using (Html.BeginForm()) {
-    @Html.ValidationSummary(true, "Account creation was unsuccessful. Please correct the errors and try again.")
+    @Html.ValidationSummary(true, @Machete.Web.Resources.ValidationStrings.RegisterValSummary)
     <div>
         <fieldset>
-            <legend>Account Information</legend>
+            <legend>@Machete.Web.Resources.ValidationStrings.RegisterLegend</legend>
 
             <div class="editor-label">
                 @Html.LabelFor(m => m.UserName)
@@ -54,7 +54,7 @@
             </div>
 
             <p>
-                <input type="submit" value="Register" />
+                <input type="submit" value="@Machete.Web.Resources.ValidationStrings.Register" />
             </p>
         </fieldset>
     </div>

@@ -7,6 +7,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using Machete.Web.Resources;
+using Machete.Domain;
 
 namespace Machete.Web.Models
 {
@@ -17,17 +19,19 @@ namespace Machete.Web.Models
     {
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Current password")]
+        //TODO: Test OldPassword
+        [LocalizedDisplayName("PasswordCurrent", NameResourceType = typeof(ValidationStrings))]
         public string OldPassword { get; set; }
 
         [Required]
         [ValidatePasswordLength]
         [DataType(DataType.Password)]
-        [Display(Name = "New password")]
+        //TODO: Test NewPassword
+        [LocalizedDisplayName("PasswordNew", NameResourceType = typeof(ValidationStrings))]
         public string NewPassword { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm new password")]
+        [LocalizedDisplayName("PasswordConfirm", NameResourceType = typeof(ValidationStrings))]
         [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
@@ -35,39 +39,40 @@ namespace Machete.Web.Models
     public class LogOnModel
     {
         [Required]
-        [Display(Name = "User name")]
+        [LocalizedDisplayName("username", NameResourceType = typeof(ValidationStrings))]
         public string UserName { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [LocalizedDisplayName("password", NameResourceType = typeof(ValidationStrings))]
         public string Password { get; set; }
 
-        [Display(Name = "Remember me?")]
+        [LocalizedDisplayName("rememberme", NameResourceType = typeof(ValidationStrings))]
         public bool RememberMe { get; set; }
     }
 
-
+    //[PropertiesMustMatch("Password", "ConfirmPassword", ErrorMessageResourceName = "PasswordMustMatch", ErrorMessageResourceType = typeof(ValidationStrings))]
     public class RegisterModel
     {
-        [Required]
-        [Display(Name = "User name")]
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [LocalizedDisplayName("username", NameResourceType = typeof(ValidationStrings))]
         public string UserName { get; set; }
 
-        [Required]
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         [DataType(DataType.EmailAddress)]
-        [Display(Name = "Email address")]
+        [LocalizedDisplayName("EmailAddress", NameResourceType = typeof(ValidationStrings))]
         public string Email { get; set; }
 
-        [Required]
-        [ValidatePasswordLength]
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [ValidatePasswordLength(ErrorMessageResourceName = "PasswordMinLength", ErrorMessageResourceType = typeof(ValidationStrings))]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [LocalizedDisplayName("password", NameResourceType = typeof(ValidationStrings))]
         public string Password { get; set; }
 
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [LocalizedDisplayName("PasswordConfirm", NameResourceType = typeof(ValidationStrings))]
+        [Compare("Password", ErrorMessageResourceName="PasswordsMustMatch", ErrorMessageResourceType = typeof(ValidationStrings))]
         public string ConfirmPassword { get; set; }
     }
     #endregion

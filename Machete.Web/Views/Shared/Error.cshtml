@@ -1,9 +1,24 @@
 ﻿@model System.Web.Mvc.HandleErrorInfo
 
 @{
-    ViewBag.Title = "Error";
+    ViewBag.Title = @Machete.Web.Resources.Shared.Error;
+    
 }
 
 <h2>
-    Sorry, an error occurred while processing your request.
+    @Machete.Web.Resources.Shared.ErrorPgExplanation
 </h2>
+<div>
+<p><b>@Machete.Web.Resources.Shared.ErrorPgControllerLabel</b>
+@Model.ControllerName
+</p>
+<p><b>@Machete.Web.Resources.Shared.ErrorPgActionLabel</b>
+@Model.ActionName
+</p>
+<p><h3>
+@Machete.Web.Resources.Shared.ErrorPgExceptionLabel
+</h3>
+@Model.Exception
+</p>
+
+</div>

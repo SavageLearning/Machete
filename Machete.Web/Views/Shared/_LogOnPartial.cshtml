@@ -1,7 +1,8 @@
 ﻿@if(Request.IsAuthenticated) {
-    <text>Welcome <b>@Context.User.Identity.Name</b>!
-    [ @Html.ActionLink("Log Off", "LogOff", "Account") ]</text>
+    <text>@Machete.Web.Resources.ValidationStrings.Welcome <b>@Context.User.Identity.Name</b>!
+    [ @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.Settings, "Settings", "Account") 
+      @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.LogOff, "LogOff", "Account") ]</text>
 }
 else {
-    @:[ @Html.ActionLink("Log On", "LogOn", "Account") ]
+    @:[ @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.LogOn, "LogOn", "Account") ]
 }

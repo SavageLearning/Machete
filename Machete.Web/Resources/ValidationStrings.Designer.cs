@@ -61,6 +61,87 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Change Password.
+        /// </summary>
+        public static string Change {
+            get {
+                return ResourceManager.GetString("Change", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Account Information.
+        /// </summary>
+        public static string ChangeLegend {
+            get {
+                return ResourceManager.GetString("ChangeLegend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New passwords are required to be a minimum of.
+        /// </summary>
+        public static string ChangePassLength1 {
+            get {
+                return ResourceManager.GetString("ChangePassLength1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to characters in length..
+        /// </summary>
+        public static string ChangePassLength2 {
+            get {
+                return ResourceManager.GetString("ChangePassLength2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use the form below to change your password..
+        /// </summary>
+        public static string ChangeSubTitle {
+            get {
+                return ResourceManager.GetString("ChangeSubTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your password has been changed successfully..
+        /// </summary>
+        public static string ChangeSuccess {
+            get {
+                return ResourceManager.GetString("ChangeSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change Password.
+        /// </summary>
+        public static string ChangeTitle {
+            get {
+                return ResourceManager.GetString("ChangeTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password change was unsuccessful. Please correct the errors and try again..
+        /// </summary>
+        public static string ChangeValSummary {
+            get {
+                return ResourceManager.GetString("ChangeValSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email address.
+        /// </summary>
+        public static string EmailAddress {
+            get {
+                return ResourceManager.GetString("EmailAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Logoff.
         /// </summary>
         public static string LogOff {
@@ -70,11 +151,56 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Login.
+        ///   Looks up a localized string similar to Logon.
         /// </summary>
         public static string LogOn {
             get {
                 return ResourceManager.GetString("LogOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Account Information.
+        /// </summary>
+        public static string LogOnLegend {
+            get {
+                return ResourceManager.GetString("LogOnLegend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter your username and password..
+        /// </summary>
+        public static string LogOnRegisterString1 {
+            get {
+                return ResourceManager.GetString("LogOnRegisterString1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to if you don&apos;t have an account..
+        /// </summary>
+        public static string LogOnRegisterString2 {
+            get {
+                return ResourceManager.GetString("LogOnRegisterString2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log on Machete.
+        /// </summary>
+        public static string LogOnTitle {
+            get {
+                return ResourceManager.GetString("LogOnTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Login was unsuccessful. Please correct the errors and try again..
+        /// </summary>
+        public static string LogOnUnsuccessful {
+            get {
+                return ResourceManager.GetString("LogOnUnsuccessful", resourceCulture);
             }
         }
         
@@ -84,6 +210,15 @@ namespace Machete.Web.Resources {
         public static string NewPasswordsMustMatch {
             get {
                 return ResourceManager.GetString("NewPasswordsMustMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password.
+        /// </summary>
+        public static string password {
+            get {
+                return ResourceManager.GetString("password", resourceCulture);
             }
         }
         
@@ -142,6 +277,87 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Register.
+        /// </summary>
+        public static string Register {
+            get {
+                return ResourceManager.GetString("Register", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use the form below to create a new account..
+        /// </summary>
+        public static string RegisterInstructions {
+            get {
+                return ResourceManager.GetString("RegisterInstructions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Account Information.
+        /// </summary>
+        public static string RegisterLegend {
+            get {
+                return ResourceManager.GetString("RegisterLegend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Passwords are required to be a minimum of.
+        /// </summary>
+        public static string RegisterPassLength1 {
+            get {
+                return ResourceManager.GetString("RegisterPassLength1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to characters in length..
+        /// </summary>
+        public static string RegisterPassLength2 {
+            get {
+                return ResourceManager.GetString("RegisterPassLength2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create a New Account.
+        /// </summary>
+        public static string RegisterSubTitle {
+            get {
+                return ResourceManager.GetString("RegisterSubTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Register.
+        /// </summary>
+        public static string RegisterTitle {
+            get {
+                return ResourceManager.GetString("RegisterTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Account creation was unsuccessful. Please correct the errors and try again..
+        /// </summary>
+        public static string RegisterValSummary {
+            get {
+                return ResourceManager.GetString("RegisterValSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remember me?.
+        /// </summary>
+        public static string rememberme {
+            get {
+                return ResourceManager.GetString("rememberme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to field &quot;{0}&quot; is required.
         /// </summary>
         public static string Required {
@@ -156,6 +372,15 @@ namespace Machete.Web.Resources {
         public static string Settings {
             get {
                 return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User name.
+        /// </summary>
+        public static string username {
+            get {
+                return ResourceManager.GetString("username", resourceCulture);
             }
         }
         

@@ -45,6 +45,7 @@ namespace Machete.Domain
         public string gender { get; set; }
         [LocalizedDisplayName("genderother", NameResourceType = typeof(Persons))]
         public string genderother { get; set; }
+        // maintained by code
         public DateTime? datecreated { get; set; }
         public DateTime? dateupdated { get; set; }
     }
