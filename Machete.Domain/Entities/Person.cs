@@ -17,14 +17,14 @@ namespace Machete.Domain
         public int ID { get; set; }
         [LocalizedDisplayName("firstname1", NameResourceType = typeof(Persons))]
         [StringLength(50)]
-        [Required(ErrorMessage= "At least one first name is required")]
+        [Required(ErrorMessageResourceName = "firstname1error", ErrorMessageResourceType = typeof(Persons))]
         public string firstname1 { get; set; }
         [LocalizedDisplayName("firstname2", NameResourceType = typeof(Persons))]
         [StringLength(50)]
         public string firstname2 { get; set; }
         [LocalizedDisplayName("lastname1", NameResourceType = typeof(Persons))]
         [StringLength(50)]
-        [Required(ErrorMessage = "At least one last name is required")]
+        [Required(ErrorMessageResourceName = "lastname1error", ErrorMessageResourceType = typeof(Persons))]
         public string lastname1 { get; set; }
         [LocalizedDisplayName("lastname2", NameResourceType = typeof(Persons))]
         [StringLength(50)]
@@ -45,8 +45,8 @@ namespace Machete.Domain
         public string gender { get; set; }
         [LocalizedDisplayName("genderother", NameResourceType = typeof(Persons))]
         public string genderother { get; set; }
-        // maintained by code
-        public DateTime? datecreated { get; set; }
-        public DateTime? dateupdated { get; set; }
+        // TODO: Have PersonController update time settings
+        public DateTime datecreated { get; set; }
+        public DateTime dateupdated { get; set; }
     }
 }

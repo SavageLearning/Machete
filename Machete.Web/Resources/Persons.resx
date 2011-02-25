@@ -159,4 +159,10 @@
   <data name="indextitle" xml:space="preserve">
     <value>List of Persons</value>
   </data>
+  <data name="RequiredFirstname1" xml:space="preserve">
+    <value>At least one first name is required</value>
+  </data>
+  <data name="RequiredLastname1" xml:space="preserve">
+    <value>At least one last name is required</value>
+  </data>
 </root>

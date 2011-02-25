@@ -11,26 +11,23 @@ using Machete.Service;
 
 namespace Machete.Web.Controllers
 {
-    //[HandleError]
-    public class PersonController : Controller
-    { 
-        private readonly IPersonService personService;
-
-        public PersonController(IPersonService personService)
+    public class WorkerController : Controller
+    {
+        private readonly IWorkerService workerService;
+        public WorkerController(IWorkerService workerService)
         {
-            this.personService = personService;
+            this.workerService = workerService;
         }
         //
-        // GET: /Person/
-        //
+        // GET: /Worker/
         [Authorize(Roles = "User, Manager, Administrator, Check-in, PhoneDesk, User")]
         public ActionResult Index()
         {
-            var persons = personService.GetPersons();
-            return View(persons);
+            var workers = workerService.GetWorkers();
+            return View(workers);
         }
         //
-        // GET: /Person/Create
+        // GET: /Worker/Create
         [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
         public ActionResult Create()
         {
@@ -39,33 +36,33 @@ namespace Machete.Web.Controllers
         } 
 
         //
-        // POST: /Person/Create
+        // POST: /Worker/Create
         //
         [HttpPost]
         [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
-        public ActionResult Create(Person person)
+        public ActionResult Create(Worker worker)
         {
             if (!ModelState.IsValid)
             {
-                return View(person);
+                return View(worker);
             }
-            person.datecreated = DateTime.Now;
-            person.dateupdated = person.datecreated;
-            personService.CreatePerson(person);
+            worker.datecreated = DateTime.Now;
+            worker.dateupdated = worker.datecreated;
+            workerService.CreateWorker(worker);
             return RedirectToAction("Index");
 
         }
         //
-        // GET: /Person/Edit/5
+        // GET: /Worker/Edit/5
         //
         [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
         public ActionResult Edit(int id)
         {
-            Person person = personService.GetPerson(id);
-            return View(person);
+            Worker worker = workerService.GetWorker(id);
+            return View(worker);
         }
         //
-        // POST: /Person/Edit/5
+        // POST: /Worker/Edit/5
         // TODO: catch exceptions, notify user
         // TODO: disable button
         //
@@ -73,35 +70,35 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
         public ActionResult Edit(int id, FormCollection collection)
         {
-            var person = personService.GetPerson(id);
-            person.dateupdated = DateTime.Now;
-            if (TryUpdateModel(person))
+            var worker = workerService.GetWorker(id);
+            worker.dateupdated = DateTime.Now;
+            if (TryUpdateModel(worker))
             {
-                personService.SavePerson();
+                workerService.SaveWorker();
                 return RedirectToAction("Index");
                
             }
-            else return View(person); 
+            else return View(worker); 
         }
         //
-        // GET: /Person/Delete/5
+        // GET: /Worker/Delete/5
         [Authorize(Roles = "Manager, Administrator")]
         public ActionResult Delete(int id)
         {
-            var person = personService.GetPerson(id);
-            return View(person);
+            var worker = workerService.GetWorker(id);
+            return View(worker);
 
         }
 
         //
-        // POST: /Person/Delete/5
+        // POST: /Worker/Delete/5
 
         [HttpPost]
         [Authorize(Roles = "Manager, Administrator")] 
         public ActionResult Delete(int id, FormCollection collection)
         {
             //TODO: privilege check
-            personService.DeletePerson(id);
+            workerService.DeleteWorker(id);
             return RedirectToAction("Index");
         }
     }

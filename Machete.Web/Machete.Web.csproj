@@ -158,6 +158,7 @@
     <Compile Include="Controllers\ExpenseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PersonController.cs" />
+    <Compile Include="Controllers\WorkerController.cs" />
     <Compile Include="Helpers\AuthorizeExAttribute.cs" />
     <Compile Include="IoC\CustomControllerActivator.cs" />
     <Compile Include="IoC\UnityControllerFactory .cs" />
@@ -263,7 +264,9 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\Worker\Index.cshtml" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Machete.Data\Machete.Data.csproj">
       <Project>{A9F879BC-CA11-4470-A655-8541B5DA41A1}</Project>
