@@ -29,10 +29,10 @@ namespace Machete.Web.Models
         //TODO: Test NewPassword
         [LocalizedDisplayName("PasswordNew", NameResourceType = typeof(ValidationStrings))]
         public string NewPassword { get; set; }
-
+        //TODO: GUI compare password error
         [DataType(DataType.Password)]
         [LocalizedDisplayName("PasswordConfirm", NameResourceType = typeof(ValidationStrings))]
-        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        [Compare("NewPassword", ErrorMessageResourceName = "PasswordCompare", ErrorMessageResourceType = typeof(ValidationStrings))]
         public string ConfirmPassword { get; set; }
     }
 
@@ -113,7 +113,7 @@ namespace Machete.Web.Models
                 return _provider.MinRequiredPasswordLength;
             }
         }
-
+        //TODO: localize ValidateUser
         public bool ValidateUser(string userName, string password)
         {
             if (String.IsNullOrEmpty(userName)) throw new ArgumentException("Value cannot be null or empty.", "userName");
@@ -121,7 +121,7 @@ namespace Machete.Web.Models
 
             return _provider.ValidateUser(userName, password);
         }
-
+        //TODO: localize MembershipCreateStatus
         public MembershipCreateStatus CreateUser(string userName, string password, string email)
         {
             if (String.IsNullOrEmpty(userName)) throw new ArgumentException("Value cannot be null or empty.", "userName");
@@ -132,7 +132,7 @@ namespace Machete.Web.Models
             _provider.CreateUser(userName, password, email, null, null, true, null, out status);
             return status;
         }
-
+        //TODO: localize ChangePassword
         public bool ChangePassword(string userName, string oldPassword, string newPassword)
         {
             if (String.IsNullOrEmpty(userName)) throw new ArgumentException("Value cannot be null or empty.", "userName");

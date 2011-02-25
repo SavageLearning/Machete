@@ -185,5 +185,23 @@ namespace Machete.Web.Resources {
                 return ResourceManager.GetString("indextitle", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to At least one first name is required.
+        /// </summary>
+        public static string RequiredFirstname1 {
+            get {
+                return ResourceManager.GetString("RequiredFirstname1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to At least one last name is required.
+        /// </summary>
+        public static string RequiredLastname1 {
+            get {
+                return ResourceManager.GetString("RequiredLastname1", resourceCulture);
+            }
+        }
     }
 }

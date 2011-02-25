@@ -91,11 +91,15 @@ protected void Application_Start()
         .RegisterInstance<MembershipProvider>(Membership.Provider)
         .RegisterType<IDatabaseFactory, DatabaseFactory>(new HttpContextLifetimeManager<IDatabaseFactory>())
         .RegisterType<IUnitOfWork, UnitOfWork>(new HttpContextLifetimeManager<IUnitOfWork>())
+        // TODO: Add repositories
         .RegisterType<ICategoryRepository, CategoryRepository>(new HttpContextLifetimeManager<ICategoryRepository>())
         .RegisterType<IPersonRepository, PersonRepository>(new HttpContextLifetimeManager<IPersonRepository>())
+        .RegisterType<IWorkerRepository, WorkerRepository>(new HttpContextLifetimeManager<IWorkerRepository>())
         .RegisterType<IExpenseRepository, ExpenseRepository>(new HttpContextLifetimeManager<IExpenseRepository>())
+        // TODO: Add services
         .RegisterType<ICategoryService, CategoryService>(new HttpContextLifetimeManager<ICategoryService>())
         .RegisterType<IPersonService, PersonService>(new HttpContextLifetimeManager<IPersonService>())
+        .RegisterType<IWorkerService, WorkerService>(new HttpContextLifetimeManager<IWorkerService>())
         .RegisterType<IExpenseService, ExpenseService>(new HttpContextLifetimeManager<IExpenseService>());
         return container;         
     }

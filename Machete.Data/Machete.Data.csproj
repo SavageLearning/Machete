@@ -57,6 +57,7 @@
     <Compile Include="Repositories\CategoryRepository.cs" />
     <Compile Include="Repositories\ExpenseRepository.cs" />
     <Compile Include="Repositories\PersonRepository.cs" />
+    <Compile Include="Repositories\WorkerRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Machete.Domain\Machete.Domain.csproj">
