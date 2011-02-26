@@ -1,6 +1,6 @@
 ﻿@if(Request.IsAuthenticated) {
     <text>@Machete.Web.Resources.ValidationStrings.Welcome <b>@Context.User.Identity.Name</b>!
-    [ @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.Settings, "Settings", "Account") 
+    [ @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.Settings, "Index", "Account") 
       @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.LogOff, "LogOff", "Account") ]</text>
 }
 else {

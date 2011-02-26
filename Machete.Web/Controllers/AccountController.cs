@@ -17,22 +17,25 @@ namespace Machete.Web.Controllers
 
         public IFormsAuthenticationService FormsService { get; set; }
         public IMembershipService MembershipService { get; set; }
-
+        
         protected override void Initialize(RequestContext requestContext)
         {
             if (FormsService == null) { FormsService = new FormsAuthenticationService(); }
             if (MembershipService == null) { MembershipService = new AccountMembershipService(); }
-
             base.Initialize(requestContext);
         }
+        #region User/Member management
         // **************************************
         // URL: /Account/settings
         // TODO: Settings
         // **************************************
-        public ActionResult Settings()
+        public ActionResult Index()
         {
-            return View();
+            int records = 0;
+            MembershipUserCollection members = Membership.GetAllUsers(0, Int32.MaxValue, out records);
+            return View(members);
         }
+        #endregion 
         // **************************************
         // URL: /Account/LogOn
         // **************************************

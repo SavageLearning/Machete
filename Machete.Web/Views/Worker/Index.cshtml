@@ -1,0 +1,220 @@
+﻿@model IEnumerable<Machete.Domain.Worker>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th></th>
+        <th>
+            raceID
+        </th>
+        <th>
+            raceother
+        </th>
+        <th>
+            height
+        </th>
+        <th>
+            weight
+        </th>
+        <th>
+            englishlevelID
+        </th>
+        <th>
+            recentarrival
+        </th>
+        <th>
+            dateinUSA
+        </th>
+        <th>
+            dateinseattle
+        </th>
+        <th>
+            disabled
+        </th>
+        <th>
+            disabilitydesc
+        </th>
+        <th>
+            maritalstatus
+        </th>
+        <th>
+            livewithchildren
+        </th>
+        <th>
+            numofchildren
+        </th>
+        <th>
+            incomeID
+        </th>
+        <th>
+            livealone
+        </th>
+        <th>
+            emcontUSAname
+        </th>
+        <th>
+            emcontUSArelation
+        </th>
+        <th>
+            emcontUSAphone
+        </th>
+        <th>
+            dwccardnum
+        </th>
+        <th>
+            seattleneighborhoodID
+        </th>
+        <th>
+            immigrantrefugee
+        </th>
+        <th>
+            countryoforigin
+        </th>
+        <th>
+            emcontoriginname
+        </th>
+        <th>
+            emcontoriginrelation
+        </th>
+        <th>
+            emcontoriginphone
+        </th>
+        <th>
+            memberexpirationdate
+        </th>
+        <th>
+            driverslicense
+        </th>
+        <th>
+            expirationdate
+        </th>
+        <th>
+            insurance
+        </th>
+        <th>
+            insuranceexpiration
+        </th>
+        <th>
+            datecreated
+        </th>
+        <th>
+            dateupdated
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+        <td>
+            @item.raceID
+        </td>
+        <td>
+            @item.raceother
+        </td>
+        <td>
+            @item.height
+        </td>
+        <td>
+            @item.weight
+        </td>
+        <td>
+            @item.englishlevelID
+        </td>
+        <td>
+            @item.recentarrival
+        </td>
+        <td>
+            @String.Format("{0:g}", item.dateinUSA)
+        </td>
+        <td>
+            @String.Format("{0:g}", item.dateinseattle)
+        </td>
+        <td>
+            @item.disabled
+        </td>
+        <td>
+            @item.disabilitydesc
+        </td>
+        <td>
+            @item.maritalstatus
+        </td>
+        <td>
+            @item.livewithchildren
+        </td>
+        <td>
+            @item.numofchildren
+        </td>
+        <td>
+            @item.incomeID
+        </td>
+        <td>
+            @item.livealone
+        </td>
+        <td>
+            @item.emcontUSAname
+        </td>
+        <td>
+            @item.emcontUSArelation
+        </td>
+        <td>
+            @item.emcontUSAphone
+        </td>
+        <td>
+            @item.dwccardnum
+        </td>
+        <td>
+            @item.seattleneighborhoodID
+        </td>
+        <td>
+            @item.immigrantrefugee
+        </td>
+        <td>
+            @item.countryoforigin
+        </td>
+        <td>
+            @item.emcontoriginname
+        </td>
+        <td>
+            @item.emcontoriginrelation
+        </td>
+        <td>
+            @item.emcontoriginphone
+        </td>
+        <td>
+            @String.Format("{0:g}", item.memberexpirationdate)
+        </td>
+        <td>
+            @item.driverslicense
+        </td>
+        <td>
+            @String.Format("{0:g}", item.expirationdate)
+        </td>
+        <td>
+            @item.insurance
+        </td>
+        <td>
+            @String.Format("{0:g}", item.insuranceexpiration)
+        </td>
+        <td>
+            @String.Format("{0:g}", item.datecreated)
+        </td>
+        <td>
+            @String.Format("{0:g}", item.dateupdated)
+        </td>
+    </tr>
+}
+
+</table>
+
