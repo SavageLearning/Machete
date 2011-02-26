@@ -132,17 +132,26 @@
   <data name="firstname1" xml:space="preserve">
     <value>Nombre (1)</value>
   </data>
+  <data name="firstname1error" xml:space="preserve">
+    <value>Por lo menos un nombre es requerido</value>
+  </data>
   <data name="firstname2" xml:space="preserve">
     <value>Nombre (2)</value>
   </data>
   <data name="gender" xml:space="preserve">
-    <value>De género</value>
+    <value>Género</value>
+  </data>
+  <data name="gendererror" xml:space="preserve">
+    <value>Género se requiere</value>
   </data>
   <data name="genderother" xml:space="preserve">
     <value>Otro género</value>
   </data>
   <data name="lastname1" xml:space="preserve">
     <value>Apellido (1)</value>
+  </data>
+  <data name="lastname1error" xml:space="preserve">
+    <value>Por lo menos un apellido es requerido</value>
   </data>
   <data name="lastname2" xml:space="preserve">
     <value>Apellido (2)</value>
@@ -152,6 +161,9 @@
   </data>
   <data name="state" xml:space="preserve">
     <value>Estado</value>
+  </data>
+  <data name="stringlength" xml:space="preserve">
+    <value>Por favor, introduzca un máximo de {1} caracteres</value>
   </data>
   <data name="zipcode" xml:space="preserve">
     <value>Código postal</value>

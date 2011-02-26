@@ -17,18 +17,19 @@ namespace Machete.Web.Models
 
     public class ChangePasswordModel
     {
-        [Required]
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         [DataType(DataType.Password)]
         //TODO: Test OldPassword
         [LocalizedDisplayName("PasswordCurrent", NameResourceType = typeof(ValidationStrings))]
         public string OldPassword { get; set; }
 
-        [Required]
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         [ValidatePasswordLength]
         [DataType(DataType.Password)]
         //TODO: Test NewPassword
         [LocalizedDisplayName("PasswordNew", NameResourceType = typeof(ValidationStrings))]
         public string NewPassword { get; set; }
+
         //TODO: GUI compare password error
         [DataType(DataType.Password)]
         [LocalizedDisplayName("PasswordConfirm", NameResourceType = typeof(ValidationStrings))]
@@ -38,11 +39,11 @@ namespace Machete.Web.Models
 
     public class LogOnModel
     {
-        [Required]
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         [LocalizedDisplayName("username", NameResourceType = typeof(ValidationStrings))]
         public string UserName { get; set; }
 
-        [Required]
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         [DataType(DataType.Password)]
         [LocalizedDisplayName("password", NameResourceType = typeof(ValidationStrings))]
         public string Password { get; set; }

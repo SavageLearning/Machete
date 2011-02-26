@@ -133,6 +133,15 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Gender is required.
+        /// </summary>
+        public static string gendererror {
+            get {
+                return ResourceManager.GetString("gendererror", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Other gender.
         /// </summary>
         public static string genderother {
@@ -183,6 +192,15 @@ namespace Machete.Domain.Resources {
         public static string state {
             get {
                 return ResourceManager.GetString("state", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter no more than {1} characters.
+        /// </summary>
+        public static string stringlength {
+            get {
+                return ResourceManager.GetString("stringlength", resourceCulture);
             }
         }
         
