@@ -141,6 +141,9 @@
   <data name="gender" xml:space="preserve">
     <value>Gender</value>
   </data>
+  <data name="gendererror" xml:space="preserve">
+    <value>Gender is required</value>
+  </data>
   <data name="genderother" xml:space="preserve">
     <value>Other gender</value>
   </data>
@@ -158,6 +161,9 @@
   </data>
   <data name="state" xml:space="preserve">
     <value>State</value>
+  </data>
+  <data name="stringlength" xml:space="preserve">
+    <value>Please enter no more than {1} characters</value>
   </data>
   <data name="zipcode" xml:space="preserve">
     <value>Zipcode</value>
