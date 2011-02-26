@@ -37,6 +37,15 @@ namespace Machete.Web.Models
         public string ConfirmPassword { get; set; }
     }
 
+    public class MembersModel
+    {
+        public string UserName { get; set;  }
+        DateTime LastActivityDate { get; set; }
+        public bool IsApproved { get; set; }
+        public bool IsLockedOut { get; set;  }
+        public bool IsOnline { get; set;  }
+    }
+    
     public class LogOnModel
     {
         [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]

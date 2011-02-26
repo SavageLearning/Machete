@@ -1,0 +1,70 @@
+﻿@model System.Web.Security.MembershipUserCollection
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th></th>
+        <th>
+            UserName
+        </th>
+        <th>
+            IsApproved
+        </th>
+        <th>
+            IsLockedOut
+        </th>
+        <th>
+            IsOnline
+        </th>
+        <th>
+            LastActivityDate
+        </th>
+        <th>
+            LastLoginDate
+        </th>
+        <th>
+            ProviderName
+        </th>
+    </tr>
+
+@foreach (MembershipUser item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+        </td>
+        <td>
+            @item.UserName
+        </td>
+        <td>
+            @item.IsApproved
+        </td>
+        <td>
+            @item.IsLockedOut
+        </td>
+        <td>
+            @item.IsOnline
+        </td>
+        <td>
+            @item.LastActivityDate
+        </td>
+        <td>
+            @item.LastLoginDate
+        </td>
+        <td>
+            @item.ProviderName
+        </td>
+    </tr>
+}
+
+</table>
+
