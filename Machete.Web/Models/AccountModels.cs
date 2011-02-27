@@ -39,11 +39,27 @@ namespace Machete.Web.Models
 
     public class MembersModel
     {
+        //public int personID { get; set; }
         public string UserName { get; set;  }
-        DateTime LastActivityDate { get; set; }
+        public string Password { get; set; }
+        public string ConfirmPassword { get; set; }
+        public string Email { get; set; }
         public bool IsApproved { get; set; }
-        public bool IsLockedOut { get; set;  }
-        public bool IsOnline { get; set;  }
+        public bool IsLockedOut { get; set; }
+        //public bool IsOnline { get; set; }
+        //public DateTime CreationDate { get; set; }
+        //public DateTime LastActivityDate { get; set; }
+        //public DateTime LastLoginDate { get; set; }
+        //public Guid ProviderUserKey { get; set; }
+        public MembershipUser member { get; set; }
+        //public Person person { get; set; }
+        public MembersModel()
+        {
+        }
+        public MembersModel(MembershipUser user)
+        {
+            this.member = user; 
+        }
     }
     
     public class LogOnModel

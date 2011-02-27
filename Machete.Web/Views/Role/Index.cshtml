@@ -1,0 +1,56 @@
+﻿@model List<String>
+@{
+    ViewBag.Title = "Index";
+}
+<table style="border-style: none">
+    <tr>
+        <td style="border-style: none; vertical-align: top">
+            <h2>
+                Roles</h2>
+            <table>
+                <tr>
+                    <th>
+                    </th>
+                    <th>
+                        Role
+                    </th>
+                </tr>
+                @foreach (String item in Model)
+                {
+    
+                    <tr>
+                        <td>
+                            @Html.ActionLink("Delete", "Delete", new { id = item })
+                        </td>
+                        <td style="width: 75px">
+                            @Html.Encode(item)
+                        </td>
+                    </tr>
+    
+                }
+            </table>
+        </td>
+        <td width="100%" style="border-style: none; vertical-align: top">
+        </td>
+        <td style="border-style: none; vertical-align: top">
+            @Html.ValidationSummary("Role creation was unsuccessful. Please correct the errors and try again.")
+            @using (Html.BeginForm("Create", "Role"))
+            {
+                <div>
+                    <fieldset>
+                        <legend>New Role</legend>
+                        <p>
+                            <label for="roleName">
+                                Role:</label>
+                            @Html.TextBox("roleName")
+                            @Html.ValidationMessage("username")
+                        </p>
+                        <p>
+                            <input type="submit" value="Create" />
+                        </p>
+                    </fieldset>
+                </div>
+            }
+        </td>
+    </tr>
+</table>
