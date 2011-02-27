@@ -29,6 +29,15 @@ namespace Machete.Web.Controllers
             var persons = personService.GetPersons();
             return View(persons);
         }
+        //TODO: finish search functionality
+        [HttpPost]
+        [Authorize(Roles = "User, Manager, Administrator, Check-in, PhoneDesk, User")]
+        public ActionResult Index(Person person)
+        {
+
+            return View(person);
+        }
+
         //
         // GET: /Person/Create
         [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
