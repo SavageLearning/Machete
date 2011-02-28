@@ -20,7 +20,7 @@ namespace Machete.Web.Controllers
         }
         //
         // GET: /Worker/
-        [Authorize(Roles = "User, Manager, Administrator, Check-in, PhoneDesk, User")]
+        [Authorize(Roles = "User, Manager, Administrator, Check-in, PhoneDesk")]
         public ActionResult Index()
         {
             var workers = workerService.GetWorkers();
@@ -28,11 +28,24 @@ namespace Machete.Web.Controllers
         }
         //
         // GET: /Worker/Create
+        //
         [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
         public ActionResult Create()
         {
             // TODO: ViewBag.Genders
-            return View();
+            //TODO: Move List<Race> to Worker object
+            List<Race> raceList = new List<Race> {
+                new Race { ID = 1, racelabel = "Pink" }
+            };
+            ViewData["raceIDlist"] = new SelectList(raceList, "ID", "RaceLabel");
+            List<EnglishLevel> Englishlist = new List<EnglishLevel> {
+                new EnglishLevel { ID = 1, englishlevel = "Fluent" }
+            };
+
+            ViewData["englishlevelID"] = new SelectList(Englishlist, "ID", "EnglishLevel");
+            var Worker = new Worker();
+
+            return View(Worker);
         } 
 
         //
@@ -46,6 +59,7 @@ namespace Machete.Web.Controllers
             {
                 return View(worker);
             }
+            ViewData["raceIDlist"] = new SelectListItem();
             worker.datecreated = DateTime.Now;
             worker.dateupdated = worker.datecreated;
             workerService.CreateWorker(worker);

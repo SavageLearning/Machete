@@ -13,7 +13,7 @@
     <tr>
         <th></th>
         <th>
-            raceID
+            @Machete.Domain.Resources.Worker.raceID
         </th>
         <th>
             raceother
@@ -199,10 +199,10 @@
             @item.driverslicense
         </td>
         <td>
-            @String.Format("{0:g}", item.expirationdate)
+            @String.Format("{0:g}", item.licenseexpirationdate)
         </td>
         <td>
-            @item.insurance
+            @item.carinsurance
         </td>
         <td>
             @String.Format("{0:g}", item.insuranceexpiration)
