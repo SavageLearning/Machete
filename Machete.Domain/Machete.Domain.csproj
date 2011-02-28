@@ -43,8 +43,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\Category.cs" />
+    <Compile Include="Entities\EnglishLevel.cs" />
     <Compile Include="Entities\Expense.cs" />
     <Compile Include="Entities\Person.cs" />
+    <Compile Include="Entities\Race.cs" />
     <Compile Include="Entities\Worker.cs" />
     <Compile Include="LocalizedDisplayNameAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -58,6 +60,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Resources\Worker.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Worker.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -70,6 +77,10 @@
     <EmbeddedResource Include="Resources\Persons.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Persons.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Worker.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Worker.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,0 +1,386 @@
+﻿@model Machete.Domain.Worker
+<script src="@Url.Content("~/Scripts/jquery-ui.js")" type="text/javascript"></script> 
+<script src="@Url.Content("~/Scripts/jquery.ui.datepicker.js")" type="text/javascript"></script> 
+<link href="@Url.Content("~/Content/jquery-ui-1.8.6.custom.css")" rel="stylesheet" type="text/css" />
+
+<table border="10" cellpadding="0" cellspacing="0">
+    <tr>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.raceID)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.DropDownList("raceIDlist", "Choose")
+                <!--@Html.EditorFor(model => model.raceID)!-->
+                @Html.ValidationMessageFor(model => model.raceID)
+            </div>
+        </td>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.raceother)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.raceother)
+                @Html.ValidationMessageFor(model => model.raceother)
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.height)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.height)
+                @Html.ValidationMessageFor(model => model.height)
+            </div>
+        </td>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.weight)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.weight)
+                @Html.ValidationMessageFor(model => model.weight)
+            </div>
+        </td>
+    </tr>
+</table>
+<table border="10" cellpadding="0" cellspacing="0">
+    <tr>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.englishlevelID)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.DropDownList("englishlevelID", "Choose")
+                @Html.ValidationMessageFor(model => model.englishlevelID)
+            </div>
+        </td>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.recentarrival)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.recentarrival)
+                @Html.ValidationMessageFor(model => model.recentarrival)
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.dateinUSA)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.TextBox("dateinUSA", Html.Encode(String.Format("{0:mm/dd/yyyy}", Model.dateinUSA.ToShortDateString())), new { @class = "ui-datepicker" }) 
+                
+                <!--@Html.EditorFor(model => model.dateinUSA)!-->
+                @Html.ValidationMessageFor(model => model.dateinUSA)
+            </div>
+        </td>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.dateinseattle)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.dateinseattle)
+                @Html.ValidationMessageFor(model => model.dateinseattle)
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.disabled)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.disabled)
+                @Html.ValidationMessageFor(model => model.disabled)
+            </div>
+        </td>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.disabilitydesc)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.disabilitydesc)
+                @Html.ValidationMessageFor(model => model.disabilitydesc)
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.maritalstatus)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.maritalstatus)
+                @Html.ValidationMessageFor(model => model.maritalstatus)
+            </div>
+        </td>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.livewithchildren)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.livewithchildren)
+                @Html.ValidationMessageFor(model => model.livewithchildren)
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.numofchildren)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.numofchildren)
+                @Html.ValidationMessageFor(model => model.numofchildren)
+            </div>
+        </td>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.incomeID)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.incomeID)
+                @Html.ValidationMessageFor(model => model.incomeID)
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.livealone)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.livealone)
+                @Html.ValidationMessageFor(model => model.livealone)
+            </div>
+        </td>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.dwccardnum)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.dwccardnum)
+                @Html.ValidationMessageFor(model => model.dwccardnum)
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.seattleneighborhoodID)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.seattleneighborhoodID)
+                @Html.ValidationMessageFor(model => model.seattleneighborhoodID)
+            </div>
+        </td>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.immigrantrefugee)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.immigrantrefugee)
+                @Html.ValidationMessageFor(model => model.immigrantrefugee)
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.countryoforigin)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.countryoforigin)
+                @Html.ValidationMessageFor(model => model.countryoforigin)
+            </div>
+        </td>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.memberexpirationdate)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.memberexpirationdate)
+                @Html.ValidationMessageFor(model => model.memberexpirationdate)
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.driverslicense)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.driverslicense)
+                @Html.ValidationMessageFor(model => model.driverslicense)
+            </div>
+        </td>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.licenseexpirationdate)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.licenseexpirationdate)
+                @Html.ValidationMessageFor(model => model.licenseexpirationdate)
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.carinsurance)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.carinsurance)
+                @Html.ValidationMessageFor(model => model.carinsurance)
+            </div>
+        </td>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.insuranceexpiration)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.insuranceexpiration)
+                @Html.ValidationMessageFor(model => model.insuranceexpiration)
+            </div>
+        </td>
+    </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.emcontUSAname)
+            </div>
+        </td>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.emcontUSArelation)
+            </div>
+        </td>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.emcontUSAphone)
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.emcontUSAname)
+                @Html.ValidationMessageFor(model => model.emcontUSAname)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.emcontUSArelation)
+                @Html.ValidationMessageFor(model => model.emcontUSArelation)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.emcontUSAphone)
+                @Html.ValidationMessageFor(model => model.emcontUSAphone)
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.emcontoriginname)
+            </div>
+        </td>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.emcontoriginrelation)
+            </div>
+        </td>
+        <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.emcontoriginphone)
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.emcontoriginname)
+                @Html.ValidationMessageFor(model => model.emcontoriginname)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.emcontoriginrelation)
+                @Html.ValidationMessageFor(model => model.emcontoriginrelation)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.emcontoriginphone)
+                @Html.ValidationMessageFor(model => model.emcontoriginphone)
+            </div>
+        </td>
+    </tr>
+</table>
+ <script type="text/javascript">
+     $().ready(function () {
+         $('.ui-datepicker').datepicker({
+             dateFormat: 'mm/dd/yy',
+             buttonImage: '@Url.Content("~/Content/calendar.gif")',
+             buttonImageOnly: true,
+             showOn: "button"
+         });
+     });
+</script>
