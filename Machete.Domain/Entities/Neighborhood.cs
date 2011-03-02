@@ -10,7 +10,7 @@ namespace Machete.Domain
 {
     public class Neighborhood
     {
-        public byte ID { get; set; }
-        public string neighborhoodlabel { get; set; }
+        public int ID { get; set; }
+        public string neighborhood { get; set; }
     }
 }

@@ -13,10 +13,12 @@ namespace Machete.Domain
     public class Worker
     {
         public int ID { get; set; }
+
         //
         [Required(ErrorMessageResourceName = "required", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("raceID", NameResourceType = typeof(Resources.Worker))]
-        public byte raceID { get; set; }
+        public int RaceID { get; set; }
+        //public virtual Race Race { get; set; }
         //
         // Error from nullstring:: The type 'string' must be a non-nullable value type in order to use it as parameter 'T' in the generic type or method 'System.Nullable<T>'
         [LocalizedDisplayName("raceother", NameResourceType = typeof(Resources.Worker))]
@@ -57,7 +59,8 @@ namespace Machete.Domain
         //
         [Required(ErrorMessageResourceName = "maritalstatus", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("maritalstatus", NameResourceType = typeof(Resources.Worker))]
-        public char maritalstatus { get; set; }
+        [StringLength(1, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Worker))]
+        public string maritalstatus { get; set; }
         //
         [LocalizedDisplayName("livewithchildren", NameResourceType = typeof(Resources.Worker))]
         public bool livewithchildren { get; set; }
@@ -92,11 +95,11 @@ namespace Machete.Domain
         //
         [Required(ErrorMessageResourceName = "seattleneighborhoodID", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("seattleneighborhoodID", NameResourceType = typeof(Resources.Worker))]
-        public byte seattleneighborhoodID { get; set; }
+        public byte neighborhoodID { get; set; }
         //
         [LocalizedDisplayName("immigrantrefugee", NameResourceType = typeof(Resources.Worker))]
         public bool immigrantrefugee { get; set; }
-        //
+        //  
         [StringLength(20, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Worker))]
         [Required(ErrorMessageResourceName = "countryoforigin", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("countryoforigin", NameResourceType = typeof(Resources.Worker))]
@@ -134,6 +137,8 @@ namespace Machete.Domain
         public DateTime? insuranceexpiration { get; set; }
         public DateTime datecreated { get; set; }
         public DateTime dateupdated { get; set; }
+        public Guid Createdby { get; set; }
+        public Guid Updatedby { get; set; }
     }
 }
 

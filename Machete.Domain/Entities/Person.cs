@@ -68,5 +68,7 @@ namespace Machete.Domain
 
         public DateTime datecreated { get; set; }
         public DateTime dateupdated { get; set; }
+        public Guid Createdby { get; set; }
+        public Guid Updatedby { get; set; }
     }
 }

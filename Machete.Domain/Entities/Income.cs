@@ -10,7 +10,7 @@ namespace Machete.Domain
 {
     public class Income
     {
-        public byte ID { get; set; }
+        public int ID { get; set; }
         public string incomelabel { get; set; }
     }
 }
