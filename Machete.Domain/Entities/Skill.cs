@@ -8,10 +8,10 @@ using Machete.Domain.Resources;
 
 namespace Machete.Domain
 {
-    public class Race
+    public class Skill
     {
-        [Key]
-        public int RaceID { get; set; }
-        public string racelabel { get; set; }
+        public int ID { get; set; }
+        public string skill { get; set; }
+        public string level { get; set; }
     }
 }
