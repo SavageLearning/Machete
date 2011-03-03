@@ -13,14 +13,14 @@ namespace Machete.Domain
     public class Worker
     {
         public int ID { get; set; }
-
+        public virtual Person Person { get; set; }
         //
         [Required(ErrorMessageResourceName = "required", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("raceID", NameResourceType = typeof(Resources.Worker))]
         public int RaceID { get; set; }
-        //public virtual Race Race { get; set; }
+
         //
-        // Error from nullstring:: The type 'string' must be a non-nullable value type in order to use it as parameter 'T' in the generic type or method 'System.Nullable<T>'
+        // TODO: Error from nullstring:: The type 'string' must be a non-nullable value type in order to use it as parameter 'T' in the generic type or method 'System.Nullable<T>'
         [LocalizedDisplayName("raceother", NameResourceType = typeof(Resources.Worker))]
         [StringLength(20, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Worker))]
         public string raceother { get; set; }

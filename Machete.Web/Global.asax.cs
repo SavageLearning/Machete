@@ -16,6 +16,9 @@ using Machete.Service;
 using Machete.Web.Controllers;
 using System.Globalization;
 using System.Threading;
+using System.Data.Entity;
+using System.Data.Entity.Database;
+using System.Data.Entity.ModelConfiguration;
 
 namespace Machete.Web
 {
@@ -79,6 +82,8 @@ protected void Application_Start()
     RegisterRoutes(RouteTable.Routes);
     IUnityContainer container = GetUnityContainer();
     DependencyResolver.SetResolver(new UnityDependencyResolver(container));
+    //DbDatabase.SetInitializer(new MacheteInitializer());
+    DbDatabase.SetInitializer<MacheteContext>(new DropCreateDatabaseAlways<MacheteContext>());
 }
 
     private IUnityContainer GetUnityContainer()
@@ -91,16 +96,18 @@ protected void Application_Start()
         .RegisterInstance<MembershipProvider>(Membership.Provider)
         .RegisterType<IDatabaseFactory, DatabaseFactory>(new HttpContextLifetimeManager<IDatabaseFactory>())
         .RegisterType<IUnitOfWork, UnitOfWork>(new HttpContextLifetimeManager<IUnitOfWork>())
-        // TODO: Add repositories
+            // TODO: Add repositories
         .RegisterType<ICategoryRepository, CategoryRepository>(new HttpContextLifetimeManager<ICategoryRepository>())
         .RegisterType<IPersonRepository, PersonRepository>(new HttpContextLifetimeManager<IPersonRepository>())
         .RegisterType<IWorkerRepository, WorkerRepository>(new HttpContextLifetimeManager<IWorkerRepository>())
         .RegisterType<IExpenseRepository, ExpenseRepository>(new HttpContextLifetimeManager<IExpenseRepository>())
-        // TODO: Add services
+        .RegisterType<IRaceRepository, RaceRepository>(new HttpContextLifetimeManager<IRaceRepository>())
+            // TODO: Add services
         .RegisterType<ICategoryService, CategoryService>(new HttpContextLifetimeManager<ICategoryService>())
         .RegisterType<IPersonService, PersonService>(new HttpContextLifetimeManager<IPersonService>())
         .RegisterType<IWorkerService, WorkerService>(new HttpContextLifetimeManager<IWorkerService>())
-        .RegisterType<IExpenseService, ExpenseService>(new HttpContextLifetimeManager<IExpenseService>());
+        .RegisterType<IExpenseService, ExpenseService>(new HttpContextLifetimeManager<IExpenseService>())
+        .RegisterType<IRaceService, RaceService>(new HttpContextLifetimeManager<IRaceService>());
         return container;         
     }
  }
