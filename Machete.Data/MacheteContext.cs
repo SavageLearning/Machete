@@ -5,6 +5,7 @@ using System.Text;
 using System.Data.Entity;
 using Machete.Domain;
 using System.Data.Entity.ModelConfiguration;
+using System.ComponentModel.DataAnnotations;
 namespace Machete.Data
 {
     public class MacheteContext : DbContext
@@ -36,9 +37,10 @@ namespace Machete.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            
-            //modelBuilder.Entity<Person>().ToTable("persons");
-            //modelBuilder.Entity<Worker>().ToTable("WorkerInfo");
+            modelBuilder.Configurations.Add(new WorkerBuilder());
+            modelBuilder.Entity<Person>().ToTable("Persons");
+            modelBuilder.Entity<Person>().HasOptional(p => p.Worker).WithRequired();
+            //modelBuilder.Entity<Worker>()
             //modelBuilder.Entity<Race>().ToTable("LookupRace");
             //modelBuilder.Entity<EnglishLevel>().ToTable("LookupEnglishlevel");
             //modelBuilder.Entity<Income>().ToTable("LookupIncome");
@@ -52,5 +54,15 @@ namespace Machete.Data
             //modelBuilder.Entity<Survey>().ToTable("Surveys");
 
         }
+    }
+    public class WorkerBuilder : EntityTypeConfiguration<Worker>
+    {
+        public WorkerBuilder() 
+        {
+            //HasKey(w => w.ID);
+            //Property(w => w.ID).HasDatabaseGenerationOption(DatabaseGenerationOption.None);
+            //HasRequired(w = w.ID).
+        }
+
     }
 }

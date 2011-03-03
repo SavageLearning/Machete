@@ -12,8 +12,10 @@ namespace Machete.Domain
 {
 
     public class Person
-    {
+    {   
+        //[Key]
         public int ID { get; set; }
+        public virtual Worker Worker { get; set; }
         //
         [LocalizedDisplayName("firstname1", NameResourceType = typeof(Persons))]
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Persons))]
@@ -70,5 +72,6 @@ namespace Machete.Domain
         public DateTime dateupdated { get; set; }
         public Guid Createdby { get; set; }
         public Guid Updatedby { get; set; }
+        public Person() { }
     }
 }

@@ -1,0 +1,131 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Machete.Domain;
+
+namespace Machete.Test
+{
+    public class Records
+    {
+        public static Worker _worker1 = new Worker
+        {                                   //#C data type
+            RaceID = 1,                     //byte
+            raceother = "Records._worker1",         //string
+            height = "too tall",            //string
+            weight = "too big",             //string
+            englishlevelID = 1,             //byte
+            recentarrival = true,           //bool
+            dateinUSA = DateTime.Now,       //datetime
+            dateinseattle = DateTime.Now,   //datetime
+            disabled = true,                //bool
+            disabilitydesc = "foo",         //string
+            maritalstatus = "S",            //string
+            livewithchildren = true,        //bool
+            numofchildren = 0,              //byte
+            incomeID = 1,                   //byte
+            livealone = true,               //bool
+            emcontUSAname = "Bill Clinton", //string
+            emcontUSAphone = "1234567890",  //string
+            emcontUSArelation = "idol",     //string
+            dwccardnum = 1,                 //int
+            neighborhoodID = 1,             //byte
+            immigrantrefugee = true,        //bool
+            countryoforigin = "USA",        //string
+            emcontoriginname = "Barak Obama",   //string
+            emcontoriginphone = "1234567890",   //string
+            emcontoriginrelation = "friend",    //string
+            memberexpirationdate = DateTime.Now,    //datetime
+            driverslicense = true,                  //bool
+            licenseexpirationdate = DateTime.Now,   //datetime
+            carinsurance = true,                    //bool
+            insuranceexpiration = DateTime.Now,     //datetime
+            datecreated = DateTime.Now,             //datetime
+            dateupdated = DateTime.Now,              //datetime
+            Createdby = Guid.Empty,
+            Updatedby = Guid.Empty
+        };
+        public static Worker _worker2 = new Worker
+        {                                   //#C data type
+            RaceID = 1,                     //byte
+            raceother = "Records._worker2",         //string
+            height = "too tall",            //string
+            weight = "too big",             //string
+            englishlevelID = 1,             //byte
+            recentarrival = true,           //bool
+            dateinUSA = DateTime.Now,       //datetime
+            dateinseattle = DateTime.Now,   //datetime
+            disabled = true,                //bool
+            disabilitydesc = "foo",         //string
+            maritalstatus = "S",            //string
+            livewithchildren = true,        //bool
+            numofchildren = 0,              //byte
+            incomeID = 1,                   //byte
+            livealone = true,               //bool
+            emcontUSAname = "Bill Clinton", //string
+            emcontUSAphone = "1234567890",  //string
+            emcontUSArelation = "idol",     //string
+            dwccardnum = 1,                 //int
+            neighborhoodID = 1,             //byte
+            immigrantrefugee = true,        //bool
+            countryoforigin = "USA",        //string
+            emcontoriginname = "Barak Obama",   //string
+            emcontoriginphone = "1234567890",   //string
+            emcontoriginrelation = "friend",    //string
+            memberexpirationdate = DateTime.Now,    //datetime
+            driverslicense = true,                  //bool
+            licenseexpirationdate = DateTime.Now,   //datetime
+            carinsurance = true,                    //bool
+            insuranceexpiration = DateTime.Now,     //datetime
+            datecreated = DateTime.Now,             //datetime
+            dateupdated = DateTime.Now,              //datetime
+            Createdby = Guid.Empty,
+            Updatedby = Guid.Empty
+        };
+        public static Person _person1 = new Person
+        {
+            firstname1 = "Records._person1",
+            lastname1 = "testestestest",
+            address1 = "123 Foo St",
+            city = "Foo town",
+            state = "FO",
+            zipcode = "12345",
+            phone = "No phone",
+            gender = "T",
+            datecreated = DateTime.Now,             //datetime
+            dateupdated = DateTime.Now,              //datetime
+            Createdby = Guid.Empty,
+            Updatedby = Guid.Empty
+        };
+        public static Person _person2 = new Person
+        {
+            firstname1 = "Records._person2",
+            lastname1 = "testestestest",
+            address1 = "123 Foo St",
+            city = "Foo town",
+            state = "FO",
+            zipcode = "12345",
+            phone = "No phone",
+            gender = "T",
+            datecreated = DateTime.Now,             //datetime
+            dateupdated = DateTime.Now,              //datetime
+            Createdby = Guid.Empty,
+            Updatedby = Guid.Empty
+        };
+        public static Person _person3 = new Person
+        {
+            firstname1 = "Records._person3",
+            lastname1 = "testestestest",
+            address1 = "123 Foo St",
+            city = "Foo town",
+            state = "FO",
+            zipcode = "12345",
+            phone = "No phone",
+            gender = "T",
+            datecreated = DateTime.Now,             //datetime
+            dateupdated = DateTime.Now,              //datetime
+            Createdby = Guid.Empty,
+            Updatedby = Guid.Empty
+        };
+    }
+}
