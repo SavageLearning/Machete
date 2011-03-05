@@ -79,6 +79,15 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Date created.
+        /// </summary>
+        public static string datecreated {
+            get {
+                return ResourceManager.GetString("datecreated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Date in Seattle.
         /// </summary>
         public static string dateinseattle {
@@ -93,6 +102,15 @@ namespace Machete.Domain.Resources {
         public static string dateinUSA {
             get {
                 return ResourceManager.GetString("dateinUSA", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Date updated.
+        /// </summary>
+        public static string dateupdated {
+            get {
+                return ResourceManager.GetString("dateupdated", resourceCulture);
             }
         }
         
@@ -268,6 +286,15 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Seattle neighborhood.
+        /// </summary>
+        public static string neighborhoodID {
+            get {
+                return ResourceManager.GetString("neighborhoodID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Number of Children.
         /// </summary>
         public static string numofchildren {
@@ -304,15 +331,6 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Seattle neighborhood.
-        /// </summary>
-        public static string seattleneighborhoodID {
-            get {
-                return ResourceManager.GetString("seattleneighborhoodID", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Please enter no more than {1} characters.
         /// </summary>
         public static string stringlength {
@@ -322,7 +340,7 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Weight.
+        ///   Looks up a localized string similar to Weight!!!.
         /// </summary>
         public static string weight {
             get {

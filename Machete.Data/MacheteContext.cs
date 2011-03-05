@@ -11,8 +11,8 @@ namespace Machete.Data
     public class MacheteContext : DbContext
     {
         public MacheteContext() : base("machete") { } //Machete here defines the database to use, by convention.
-        //public DbSet<Category> Categories { get; set; }
-        //public DbSet<Expense> Expenses { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Expense> Expenses { get; set; }
         public DbSet<Person> Persons { get; set; }
         public DbSet<Worker> Workers { get; set; }
         public DbSet<Race> Races { get; set; }
@@ -36,11 +36,9 @@ namespace Machete.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder); //This calls the other builders (below)
+            modelBuilder.Configurations.Add(new PersonBuilder());
             modelBuilder.Configurations.Add(new WorkerBuilder());
-            modelBuilder.Entity<Person>().ToTable("Persons");
-            modelBuilder.Entity<Person>().HasOptional(p => p.Worker).WithRequired();
-            //modelBuilder.Entity<Worker>()
             //modelBuilder.Entity<Race>().ToTable("LookupRace");
             //modelBuilder.Entity<EnglishLevel>().ToTable("LookupEnglishlevel");
             //modelBuilder.Entity<Income>().ToTable("LookupIncome");
@@ -55,14 +53,20 @@ namespace Machete.Data
 
         }
     }
+    public class PersonBuilder : EntityTypeConfiguration<Person>
+    {
+        public PersonBuilder()
+        {
+            ToTable("Persons");
+            HasKey(k => k.ID);
+            HasOptional(p => p.Worker).WithRequired();
+
+            //HasKey(k => new { k.firstname1, k.firstname2, k.lastname1, k.lastname2 });
+        }
+    }
     public class WorkerBuilder : EntityTypeConfiguration<Worker>
     {
-        public WorkerBuilder() 
-        {
-            //HasKey(w => w.ID);
-            //Property(w => w.ID).HasDatabaseGenerationOption(DatabaseGenerationOption.None);
-            //HasRequired(w = w.ID).
-        }
-
+        public WorkerBuilder() {}
     }
+
 }

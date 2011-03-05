@@ -7,7 +7,7 @@ using Machete.Domain;
 
 namespace Machete.Data
 {
-    public class MacheteInitializer : DropCreateDatabaseAlways<MacheteContext>
+    public class MacheteInitializer : DropCreateDatabaseIfModelChanges<MacheteContext>
     {
         protected override void Seed(MacheteContext macheteDB)
         {
@@ -18,21 +18,27 @@ namespace Machete.Data
                 new Race { racelabel = "Afroamerican" },
                 new Race { racelabel = "Asian"},
                 new Race { racelabel = "Caucausian" },
-                new Race { racelabel = "Latino" }
+                new Race { racelabel = "Hawaiian" },
+                new Race { racelabel = "Latino" },
+                new Race { racelabel = "Native American"},
+                new Race { racelabel = "Other"}
             }.ForEach(u => macheteDB.Races.Add(u));
 
             new List<Language>
             {
-                new Language { language = "spanish", level="conversational"},
-                new Language { language = "spanish", level="limited"},
-                new Language { language = "spanish", level="none"}
+                new Language { language = "English", level="conversational"},
+                new Language { language = "English", level="limited"},
+                new Language { language = "English", level="none"}
             }.ForEach(u => macheteDB.Languages.Add(u));
 
             new List<Neighborhood>
             {
                 new Neighborhood { neighborhood = "Seattle"},
                 new Neighborhood { neighborhood = "Capitol Hill"},
-                new Neighborhood { neighborhood = "Central District"}
+                new Neighborhood { neighborhood = "Central District"},
+                new Neighborhood { neighborhood = "South Park"},
+                new Neighborhood { neighborhood = "Kent"}, 
+                new Neighborhood { neighborhood = "Auburn"}
             }.ForEach(u => macheteDB.Neighborhoods.Add(u));
 
             new List<Income>
