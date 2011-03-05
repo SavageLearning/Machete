@@ -41,6 +41,7 @@ namespace Machete.Service
 
         public void CreateWorker(Worker worker)
         {
+            if (worker.Person == null) throw new MissingReferenceException("Worker object is missing a Person reference.");
             workerRepository.Add(worker);
             unitOfWork.Commit();
         }

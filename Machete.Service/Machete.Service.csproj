@@ -44,6 +44,8 @@
     <Compile Include="ExpenseService.cs" />
     <Compile Include="PersonService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="LookupService.cs" />
+    <Compile Include="ServiceExceptions.cs" />
     <Compile Include="WorkerService.cs" />
   </ItemGroup>
   <ItemGroup>
