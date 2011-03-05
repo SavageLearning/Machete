@@ -80,9 +80,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\CategoryControllerTest.cs" />
+    <Compile Include="Domain\PersonTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\PersonsControllerTests.cs" />
     <Compile Include="Controllers\WorkerControllerTests.cs" />
+    <Compile Include="Services\PersonServiceTest.cs" />
     <Compile Include="Services\WorkerServiceTest.cs" />
     <Compile Include="Domain\WorkerTests.cs" />
     <Compile Include="Records.cs" />
