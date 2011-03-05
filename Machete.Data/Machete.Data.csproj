@@ -58,7 +58,7 @@
     <Compile Include="Repositories\CategoryRepository.cs" />
     <Compile Include="Repositories\ExpenseRepository.cs" />
     <Compile Include="Repositories\PersonRepository.cs" />
-    <Compile Include="Repositories\RaceRepository.cs" />
+    <Compile Include="Repositories\LookupRepository.cs" />
     <Compile Include="Repositories\WorkerRepository.cs" />
   </ItemGroup>
   <ItemGroup>

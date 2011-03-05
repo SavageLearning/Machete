@@ -8,18 +8,38 @@ using Machete.Data.Infrastructure;
 using Machete.Domain;
 using Machete.Helpers;
 using Machete.Service;
+using Machete.Web.ViewModel;
+using Microsoft.Web.Mvc;
 
 namespace Machete.Web.Controllers
 {
     public class WorkerController : Controller
     {
         private readonly IWorkerService workerService;
-        public WorkerController(IWorkerService workerService)
+        private readonly IRaceService raceService;
+        private readonly IPersonService personService;
+        private readonly ILangService langService;
+        private readonly IHoodService hoodService;
+        private readonly IIncomeService incomeService;
+
+        public WorkerController(IWorkerService workerService, 
+                                IPersonService personService, 
+                                IRaceService raceService,
+                                ILangService langService,
+                                IHoodService hoodService,
+                                IIncomeService incomeService
+            )
         {
             this.workerService = workerService;
+            this.raceService = raceService;
+            this.personService = personService;
+            this.langService = langService;
+            this.hoodService = hoodService;
+            this.incomeService = incomeService;
         }
         //
-        // GET: /Worker/
+        // GET: /Worker/Index
+        //
         [Authorize(Roles = "User, Manager, Administrator, Check-in, PhoneDesk")]
         public ActionResult Index()
         {
@@ -32,20 +52,23 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
         public ActionResult Create()
         {
-            // TODO: ViewBag.Genders
-            //TODO: Move List<Race> to Worker object
-            List<Race> raceList = new List<Race> {
-                new Race { ID = 1, racelabel = "Pink" }
-            };
-            ViewData["raceIDlist"] = new SelectList(raceList, "ID", "RaceLabel");
-            List<EnglishLevel> Englishlist = new List<EnglishLevel> {
-                new EnglishLevel { ID = 1, englishlevel = "Fluent" }
-            };
-
-            ViewData["englishlevelID"] = new SelectList(Englishlist, "ID", "EnglishLevel");
-            var Worker = new Worker();
-
-            return View(Worker);
+            var _model = new WorkerViewModel();
+            _model.person = new Person();
+            _model.worker = new Worker();
+            //Link person to work for EF to save
+            _model.worker.Person = _model.person;
+            _model.person.Worker = _model.worker;
+            ViewBag.races = raceService.Lookup();
+            ViewBag.languages = langService.Lookup();
+            ViewBag.neighborhoods = hoodService.Lookup();
+            ViewBag.incomes = incomeService.Lookup();
+            ViewBag.maritalstatus = new[]
+            {
+                new SelectListItem {Value = "S", Text = "Single", Selected=true},
+                new SelectListItem {Value = "M", Text = "married"},
+                new SelectListItem {Value = "D", Text = "Divorced"}
+            }; 
+            return View(_model);
         } 
 
         //
@@ -53,18 +76,27 @@ namespace Machete.Web.Controllers
         //
         [HttpPost]
         [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
-        public ActionResult Create(Worker worker)
+        public ActionResult Create(WorkerViewModel _model)
         {
             if (!ModelState.IsValid)
             {
-                return View(worker);
+                return View(_model);
             }
-            ViewData["raceIDlist"] = new SelectListItem();
-            worker.datecreated = DateTime.Now;
-            worker.dateupdated = worker.datecreated;
-            workerService.CreateWorker(worker);
+            _model.worker.Person = _model.person;
+            _model.person.Worker = _model.worker;
+            DateTime rightnow = DateTime.Now;
+            _model.person.datecreated = rightnow;
+            _model.person.dateupdated = rightnow;
+            _model.worker.datecreated = rightnow;
+            _model.worker.dateupdated = rightnow;
+            //TODO: get user Guid
+            _model.person.Createdby = Guid.Empty;
+            _model.person.Updatedby = Guid.Empty;
+            _model.worker.Createdby = Guid.Empty;
+            _model.worker.Updatedby = Guid.Empty;
+            
+            workerService.CreateWorker(_model.worker);
             return RedirectToAction("Index");
-
         }
         //
         // GET: /Worker/Edit/5

@@ -25,7 +25,7 @@ namespace Machete.Domain
         [StringLength(20, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Worker))]
         public string raceother { get; set; }
         //
-        [StringLength(10, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Worker))]
+        [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Worker))]
         [Required(ErrorMessageResourceName = "height", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("height", NameResourceType = typeof(Resources.Worker))]
         public string height { get; set; }
@@ -44,11 +44,11 @@ namespace Machete.Domain
         //
         [Required(ErrorMessageResourceName = "dateinUSA", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("dateinUSA", NameResourceType = typeof(Resources.Worker))]
-        public DateTime dateinUSA { get; set; }
+        public DateTime? dateinUSA { get; set; }
         //
         [Required(ErrorMessageResourceName = "dateinseattle", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("dateinseattle", NameResourceType = typeof(Resources.Worker))]
-        public DateTime dateinseattle { get; set; }
+        public DateTime? dateinseattle { get; set; }
         //
         [LocalizedDisplayName("disabled", NameResourceType = typeof(Resources.Worker))]
         public bool disabled { get; set; }
@@ -93,8 +93,8 @@ namespace Machete.Domain
         [LocalizedDisplayName("dwccardnum", NameResourceType = typeof(Resources.Worker))]
         public int dwccardnum { get; set; }
         //
-        [Required(ErrorMessageResourceName = "seattleneighborhoodID", ErrorMessageResourceType = typeof(Resources.Worker))]
-        [LocalizedDisplayName("seattleneighborhoodID", NameResourceType = typeof(Resources.Worker))]
+        [Required(ErrorMessageResourceName = "neighborhoodID", ErrorMessageResourceType = typeof(Resources.Worker))]
+        [LocalizedDisplayName("neighborhoodID", NameResourceType = typeof(Resources.Worker))]
         public byte neighborhoodID { get; set; }
         //
         [LocalizedDisplayName("immigrantrefugee", NameResourceType = typeof(Resources.Worker))]
@@ -120,7 +120,7 @@ namespace Machete.Domain
         //TODO: how to handle imaage from SQL?
         [Required(ErrorMessageResourceName = "memberexpirationdate", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("memberexpirationdate", NameResourceType = typeof(Resources.Worker))]
-        public DateTime memberexpirationdate { get; set; }
+        public DateTime? memberexpirationdate { get; set; }
         //
         //[StringLength(16, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("driverslicense", NameResourceType = typeof(Resources.Worker))]

@@ -13,100 +13,19 @@
     <tr>
         <th></th>
         <th>
-            @Machete.Domain.Resources.Worker.raceID
+            @Machete.Domain.Resources.Persons.firstname1
         </th>
         <th>
-            raceother
+            @Machete.Domain.Resources.Persons.firstname2
         </th>
         <th>
-            height
+            @Machete.Domain.Resources.Persons.lastname1
         </th>
         <th>
-            weight
+            @Machete.Domain.Resources.Persons.lastname2
         </th>
         <th>
-            englishlevelID
-        </th>
-        <th>
-            recentarrival
-        </th>
-        <th>
-            dateinUSA
-        </th>
-        <th>
-            dateinseattle
-        </th>
-        <th>
-            disabled
-        </th>
-        <th>
-            disabilitydesc
-        </th>
-        <th>
-            maritalstatus
-        </th>
-        <th>
-            livewithchildren
-        </th>
-        <th>
-            numofchildren
-        </th>
-        <th>
-            incomeID
-        </th>
-        <th>
-            livealone
-        </th>
-        <th>
-            emcontUSAname
-        </th>
-        <th>
-            emcontUSArelation
-        </th>
-        <th>
-            emcontUSAphone
-        </th>
-        <th>
-            dwccardnum
-        </th>
-        <th>
-            seattleneighborhoodID
-        </th>
-        <th>
-            immigrantrefugee
-        </th>
-        <th>
-            countryoforigin
-        </th>
-        <th>
-            emcontoriginname
-        </th>
-        <th>
-            emcontoriginrelation
-        </th>
-        <th>
-            emcontoriginphone
-        </th>
-        <th>
-            memberexpirationdate
-        </th>
-        <th>
-            driverslicense
-        </th>
-        <th>
-            expirationdate
-        </th>
-        <th>
-            insurance
-        </th>
-        <th>
-            insuranceexpiration
-        </th>
-        <th>
-            datecreated
-        </th>
-        <th>
-            dateupdated
+            @Machete.Domain.Resources.Worker.dateupdated
         </th>
     </tr>
 
@@ -118,97 +37,16 @@
             @Html.ActionLink("Delete", "Delete", new { id=item.ID })
         </td>
         <td>
-            @item.raceID
+            @item.Person.firstname1
         </td>
         <td>
-            @item.raceother
+             @item.Person.firstname2
         </td>
         <td>
-            @item.height
+             @item.Person.lastname1
         </td>
         <td>
-            @item.weight
-        </td>
-        <td>
-            @item.englishlevelID
-        </td>
-        <td>
-            @item.recentarrival
-        </td>
-        <td>
-            @String.Format("{0:g}", item.dateinUSA)
-        </td>
-        <td>
-            @String.Format("{0:g}", item.dateinseattle)
-        </td>
-        <td>
-            @item.disabled
-        </td>
-        <td>
-            @item.disabilitydesc
-        </td>
-        <td>
-            @item.maritalstatus
-        </td>
-        <td>
-            @item.livewithchildren
-        </td>
-        <td>
-            @item.numofchildren
-        </td>
-        <td>
-            @item.incomeID
-        </td>
-        <td>
-            @item.livealone
-        </td>
-        <td>
-            @item.emcontUSAname
-        </td>
-        <td>
-            @item.emcontUSArelation
-        </td>
-        <td>
-            @item.emcontUSAphone
-        </td>
-        <td>
-            @item.dwccardnum
-        </td>
-        <td>
-            @item.seattleneighborhoodID
-        </td>
-        <td>
-            @item.immigrantrefugee
-        </td>
-        <td>
-            @item.countryoforigin
-        </td>
-        <td>
-            @item.emcontoriginname
-        </td>
-        <td>
-            @item.emcontoriginrelation
-        </td>
-        <td>
-            @item.emcontoriginphone
-        </td>
-        <td>
-            @String.Format("{0:g}", item.memberexpirationdate)
-        </td>
-        <td>
-            @item.driverslicense
-        </td>
-        <td>
-            @String.Format("{0:g}", item.licenseexpirationdate)
-        </td>
-        <td>
-            @item.carinsurance
-        </td>
-        <td>
-            @String.Format("{0:g}", item.insuranceexpiration)
-        </td>
-        <td>
-            @String.Format("{0:g}", item.datecreated)
+             @item.Person.lastname2
         </td>
         <td>
             @String.Format("{0:g}", item.dateupdated)

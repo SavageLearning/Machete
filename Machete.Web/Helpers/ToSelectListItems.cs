@@ -22,5 +22,19 @@ namespace Machete.Helpers
                               Value = category.CategoryId.ToString()
                           });
         }
+        public static IEnumerable<SelectListItem> ToSelectListItems(
+                this IEnumerable<Race> races, int selectedId)
+        {
+            return
+
+                races.OrderBy(race => race.RaceID)
+                      .Select(race =>
+                          new SelectListItem
+                          {
+                              Selected = (race.RaceID == selectedId),
+                              Text = race.racelabel,
+                              Value = race.RaceID.ToString()
+                          });
+        }
     }
 }

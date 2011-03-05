@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\Category.cs" />
+    <Compile Include="Entities\MaritalStatus.cs" />
     <Compile Include="Entities\Employer.cs" />
     <Compile Include="Entities\Language.cs" />
     <Compile Include="Entities\Expense.cs" />
