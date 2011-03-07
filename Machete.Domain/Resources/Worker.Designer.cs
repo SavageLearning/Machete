@@ -142,6 +142,15 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Card number must be 5 digits long.
+        /// </summary>
+        public static string dwccardnumerror {
+            get {
+                return ResourceManager.GetString("dwccardnumerror", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Emergency contact in country of origin.
         /// </summary>
         public static string emcontoriginname {
@@ -300,6 +309,15 @@ namespace Machete.Domain.Resources {
         public static string numofchildren {
             get {
                 return ResourceManager.GetString("numofchildren", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Children must be between 0 and 20.
+        /// </summary>
+        public static string numofchildrenRxError {
+            get {
+                return ResourceManager.GetString("numofchildrenRxError", resourceCulture);
             }
         }
         

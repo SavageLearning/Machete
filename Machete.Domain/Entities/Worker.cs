@@ -68,6 +68,7 @@ namespace Machete.Domain
         //TODO: positive number check
         [LocalizedDisplayName("numofchildren", NameResourceType = typeof(Resources.Worker))]
         [Required(ErrorMessageResourceName = "numofchildren", ErrorMessageResourceType = typeof(Resources.Worker))]
+        [RegularExpression("^([0-9]|[0-1]\\d|20)$", ErrorMessageResourceName = "numofchildrenRxError", ErrorMessageResourceType = typeof(Resources.Worker))]
         public byte numofchildren { get; set; }
         //
         [Required(ErrorMessageResourceName = "incomeID", ErrorMessageResourceType = typeof(Resources.Worker))]
@@ -91,6 +92,7 @@ namespace Machete.Domain
         //
         [Required(ErrorMessageResourceName = "dwccardnum", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("dwccardnum", NameResourceType = typeof(Resources.Worker))]
+        [RegularExpression("^[0-9]{5,5}$", ErrorMessageResourceName = "dwccardnumerror", ErrorMessageResourceType = typeof(Resources.Worker))]
         public int dwccardnum { get; set; }
         //
         [Required(ErrorMessageResourceName = "neighborhoodID", ErrorMessageResourceType = typeof(Resources.Worker))]

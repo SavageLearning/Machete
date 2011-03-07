@@ -21,6 +21,12 @@ namespace Machete.Web.Controllers
         private readonly ILangService langService;
         private readonly IHoodService hoodService;
         private readonly IIncomeService incomeService;
+        private SelectListItem[] maritalstatuslist = new[]
+            {
+                new SelectListItem {Value = "S", Text = "Single", Selected=true},
+                new SelectListItem {Value = "M", Text = "married"},
+                new SelectListItem {Value = "D", Text = "Divorced"}
+            }; 
 
         public WorkerController(IWorkerService workerService, 
                                 IPersonService personService, 
@@ -62,12 +68,7 @@ namespace Machete.Web.Controllers
             ViewBag.languages = langService.Lookup();
             ViewBag.neighborhoods = hoodService.Lookup();
             ViewBag.incomes = incomeService.Lookup();
-            ViewBag.maritalstatus = new[]
-            {
-                new SelectListItem {Value = "S", Text = "Single", Selected=true},
-                new SelectListItem {Value = "M", Text = "married"},
-                new SelectListItem {Value = "D", Text = "Divorced"}
-            }; 
+            ViewBag.maritalstatus = maritalstatuslist;
             return View(_model);
         } 
 
@@ -104,13 +105,27 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
         public ActionResult Edit(int id)
         {
-            Worker worker = workerService.GetWorker(id);
-            return View(worker);
+            Worker _worker = workerService.GetWorker(id);
+            var _model = new WorkerViewModel();
+            _model.worker = _worker;
+            _model.person = _worker.Person;
+            ViewBag.races = raceService.Lookup();
+            ViewBag.languages = langService.Lookup();
+            ViewBag.neighborhoods = hoodService.Lookup();
+            ViewBag.incomes = incomeService.Lookup();
+            ViewBag.maritalstatus = new[]
+            {
+                new SelectListItem {Value = "S", Text = "Single", Selected=true},
+                new SelectListItem {Value = "M", Text = "married"},
+                new SelectListItem {Value = "D", Text = "Divorced"}
+            };
+            return View(_model);
         }
         //
         // POST: /Worker/Edit/5
         // TODO: catch exceptions, notify user
         // TODO: disable button
+        // TODO: update edit-post
         //
         [HttpPost]
         [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 

@@ -213,4 +213,10 @@
   <data name="dateupdated" xml:space="preserve">
     <value>Date updated</value>
   </data>
+  <data name="dwccardnumerror" xml:space="preserve">
+    <value>Card number must be 5 digits long</value>
+  </data>
+  <data name="numofchildrenRxError" xml:space="preserve">
+    <value>Children must be between 0 and 20</value>
+  </data>
 </root>

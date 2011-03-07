@@ -10,13 +10,13 @@
             </div>
         </td>
         <td>
-            <div class="editor-field"  id="RaceChkbx" onclick="EnableDisableRace()">
+            <div class="editor-field">
                 @Html.DropDownListFor(model => model.RaceID, new SelectList(ViewBag.races, "RaceID", "racelabel", Model.RaceID), "(Choose)") 
                 @Html.ValidationMessageFor(model => model.RaceID)
             </div>
         </td>
         <td>
-            <div class="editor-label" id="worker_raceotherlabel">
+            <div class="editor-label">
                 @Html.LabelFor(model => model.raceother)
             </div>
         </td>
@@ -374,7 +374,13 @@
  <script type="text/javascript">
      $().ready(function () {
          DatePicker();
-         EnableDisableRace();
+         toggleRace();
+         toggleDisabled();
+         toggleDriverslicense();
+         $("#worker_RaceID").bind('change', toggleRace);
+         $("#worker_disabled").bind('change', toggleDisabled);
+         $("#worker_driverslicense").bind('change', toggleDriverslicense);
+
      });
      function DatePicker() {
          $('.ui-datepicker').datepicker({
@@ -384,13 +390,33 @@
              showOn: "button"
          });
      }
-     function EnableDisableRace() {
+     function toggleRace() {
          if ($("#worker_RaceID option:selected").text() == "Other") {
              $("#worker_raceother").show();
-             $("#worker_raceotherlabel label").show();
+             $("label[for=worker_raceother]").show();
          } else {
              $("#worker_raceother").hide();
-             $("#worker_raceotherlabel label").hide();
+             $("label[for=worker_raceother]").hide();
+         }
+     }
+     function toggleDisabled() {
+         if ($("#worker_disabled").attr("checked")) {
+             $("#worker_disabilitydesc").show();
+             $("label[for=worker_disabilitydesc]").show();
+         } else {
+             $("#worker_disabilitydesc").hide();
+             $("label[for=worker_disabilitydesc]").hide();
+         }
+         }
+     function toggleDriverslicense() {
+         if ($("#worker_driverslicense").attr("checked")) {
+             $("#worker_licenseexpirationdate").show();
+             $("#worker_licenseexpirationdate ~ *").show();
+             $("label[for=worker_licenseexpirationdate]").show();
+         } else {
+             $("#worker_licenseexpirationdate").hide();
+             $("#worker_licenseexpirationdate ~ *").hide();
+             $("label[for=worker_licenseexpirationdate]").hide();         
          }
      }
 </script>

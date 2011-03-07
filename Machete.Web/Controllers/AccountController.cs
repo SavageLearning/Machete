@@ -31,7 +31,7 @@ namespace Machete.Web.Controllers
         // **************************************
         // URL: /Account/Index
         // **************************************
-        //[Authorize(Roles = "Manager, Administrator")]
+        [Authorize(Roles = "Manager, Administrator")]
         public ActionResult Index()
         {
             int records = 0;
@@ -40,17 +40,16 @@ namespace Machete.Web.Controllers
         }
         //
         // GET: /Account/Create
-        //[Authorize(Roles = "Manager, Administrator")]
+        [Authorize(Roles = "Manager, Administrator")]
         public ActionResult Create()
         {
-            // TODO: ViewBag.Genders
             return View();
         }
         //
-        // POST: /Person/Create
+        // POST: /Account/Create
         //
         [HttpPost]
-        //[Authorize(Roles = "PhoneDesk, Manager, Administrator")]
+        [Authorize(Roles = "PhoneDesk, Manager, Administrator")]
         public ActionResult Create(MembersModel member)
         {
             if (ModelState.IsValid)
