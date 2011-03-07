@@ -10,13 +10,13 @@
             </div>
         </td>
         <td>
-            <div class="editor-field">
-                @Html.DropDownListFor(model => model.RaceID, new SelectList(ViewBag.races, "RaceID", "racelabel", Model.RaceID), "(Choose)")
+            <div class="editor-field"  id="RaceChkbx" onclick="EnableDisableRace()">
+                @Html.DropDownListFor(model => model.RaceID, new SelectList(ViewBag.races, "RaceID", "racelabel", Model.RaceID), "(Choose)") 
                 @Html.ValidationMessageFor(model => model.RaceID)
             </div>
         </td>
         <td>
-            <div class="editor-label">
+            <div class="editor-label" id="worker_raceotherlabel">
                 @Html.LabelFor(model => model.raceother)
             </div>
         </td>
@@ -113,6 +113,7 @@
                 @Html.ValidationMessageFor(model => model.disabled)
             </div>
         </td>
+
         <td>
             <div class="editor-label">
                 @Html.LabelFor(model => model.disabilitydesc)
@@ -372,11 +373,24 @@
 </table>
  <script type="text/javascript">
      $().ready(function () {
+         DatePicker();
+         EnableDisableRace();
+     });
+     function DatePicker() {
          $('.ui-datepicker').datepicker({
              dateFormat: 'mm/dd/yy',
              buttonImage: '@Url.Content("~/Content/calendar.gif")',
              buttonImageOnly: true,
-             showOn: "button"             
+             showOn: "button"
          });
-     });
+     }
+     function EnableDisableRace() {
+         if ($("#worker_RaceID option:selected").text() == "Other") {
+             $("#worker_raceother").show();
+             $("#worker_raceotherlabel label").show();
+         } else {
+             $("#worker_raceother").hide();
+             $("#worker_raceotherlabel label").hide();
+         }
+     }
 </script>
