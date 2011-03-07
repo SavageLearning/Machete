@@ -9,60 +9,85 @@
 @using (Html.BeginForm())
 {
     @Html.ValidationSummary(true)
-    <fieldset>
-        <legend>MembersModel</legend>
-        <div class="editor-label">
-            @Html.LabelFor(model => model.UserName)
-        </div>
-        <div class="editor-field">
-            @Html.DisplayTextFor(model => model.UserName)
-            @Html.ValidationMessageFor(model => model.UserName)
-        </div>
-        @*        <div class="editor-label">
-            @Html.LabelFor(model => model.Password)
-        </div>
+    <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td>
+                <fieldset>
+                    <legend>MembersModel</legend>
+                    <table border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td>
+                                <div class="editor-label">
+                                    @Html.LabelFor(model => model.UserName)
+                                </div>
+                            </td>
+                            <td>
+                                <div class="editor-field">
+                                    @Html.DisplayTextFor(model => model.UserName)
+                                    @Html.ValidationMessageFor(model => model.UserName)
+                                </div>
+                            </td>
+                        </tr>
+                        @*        <div class="editor-label">
+                            @Html.LabelFor(model => model.Password)
+                        </div>
         
-        <div class="editor-field">
-            @Html.PasswordFor(model => model.Password)
-            @Html.ValidationMessageFor(model => model.Password)
-        </div>
-        <div class="editor-label">
-            @Html.LabelFor(model => model.ConfirmPassword)
-        </div>
-        <div class="editor-field">
-            @Html.PasswordFor(model => model.ConfirmPassword)
-            @Html.ValidationMessageFor(model => model.ConfirmPassword)
-        </div>*@
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Email)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Email)
-            @Html.ValidationMessageFor(model => model.Email)
-        </div>
-        <div class="editor-label">
-            @Html.LabelFor(model => model.IsApproved)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.IsApproved)
-            @Html.ValidationMessageFor(model => model.IsApproved)
-        </div>
-        <p>
-            <input type="submit" value="Save" />
-        </p>
-    </fieldset>
-    <fieldset>
-        <legend>Roles</legend>
-        @foreach (String role in Roles.GetAllRoles())
-        {
-                    
-            <p>
-                <label for="@role">
-                    @role:</label>
-                @Html.CheckBox(role, Roles.IsUserInRole(Model.UserName, role))
-            </p>
-        }
-    </fieldset>
+                        <div class="editor-field">
+                            @Html.PasswordFor(model => model.Password)
+                            @Html.ValidationMessageFor(model => model.Password)
+                        </div>
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.ConfirmPassword)
+                        </div>
+                        <div class="editor-field">
+                            @Html.PasswordFor(model => model.ConfirmPassword)
+                            @Html.ValidationMessageFor(model => model.ConfirmPassword)
+                        </div>*@
+                        <tr>
+                            <td>
+                                <div class="editor-label">
+                                    @Html.LabelFor(model => model.Email)
+                                </div>
+                                </td>
+                                <td>
+                                <div class="editor-field">
+                                    @Html.EditorFor(model => model.Email)
+                                    @Html.ValidationMessageFor(model => model.Email)
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="editor-label">
+                                    @Html.LabelFor(model => model.IsApproved)
+                                </div>
+                                <div class="editor-field">
+                                    @Html.EditorFor(model => model.IsApproved)
+                                    @Html.ValidationMessageFor(model => model.IsApproved)
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <p>
+                        <input type="submit" value="Save" />
+                    </p>
+                </fieldset>
+            </td>
+            <td>
+                <fieldset>
+                    <legend>Roles</legend>
+                    @foreach (String role in Roles.GetAllRoles())
+                    {
+                        <p>
+                            <label for="@role">
+                                @role:</label>
+                            @Html.CheckBox(role, Roles.IsUserInRole(Model.UserName, role))
+                        </p>
+                    }
+                </fieldset>
+            </td>
+        </tr>
+    </table>
 }
 <div>
     @Html.ActionLink("Back to List", "Index")
