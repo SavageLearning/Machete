@@ -258,6 +258,8 @@
     <Content Include="Content\images\ui-icons_f9f2bd_256x240.png" />
     <Content Include="Content\images\ui-icons_ff7519_256x240.png" />
     <Content Include="Content\jquery-ui-1.8.6.custom.css" />
+    <Content Include="Content\Site_StageProd.css" />
+    <Content Include="Content\Site_StageTest.css" />
     <Content Include="Global.asax" />
     <Content Include="machete.ico" />
     <Content Include="Scripts\jquery.ui.core.js" />
@@ -467,4 +469,7 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <PropertyGroup>
+    <PreBuildEvent>copy $(ProjectDir)Content\Site_$(ConfigurationName).css $(ProjectDir)Content\Site.css</PreBuildEvent>
+  </PropertyGroup>
 </Project>
