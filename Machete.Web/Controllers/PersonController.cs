@@ -11,7 +11,7 @@ using Machete.Service;
 
 namespace Machete.Web.Controllers
 {
-    //[HandleError]
+    [HandleError]
     public class PersonController : Controller
     { 
         private readonly IPersonService personService;
@@ -43,8 +43,9 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
         public ActionResult Create()
         {
-            // TODO: ViewBag.Genders
-            return View();
+            var _model = new Person();
+            ViewBag.Genders = Lookups.gender;
+            return View(_model);
         } 
 
         //
@@ -60,6 +61,8 @@ namespace Machete.Web.Controllers
             }
             person.datecreated = DateTime.Now;
             person.dateupdated = person.datecreated;
+            person.Createdby = this.User.Identity.Name;
+            person.Updatedby = this.User.Identity.Name;
             personService.CreatePerson(person);
             return RedirectToAction("Index");
 
@@ -71,12 +74,12 @@ namespace Machete.Web.Controllers
         public ActionResult Edit(int id)
         {
             Person person = personService.GetPerson(id);
+            ViewBag.Genders = Lookups.gender;
             return View(person);
         }
         //
         // POST: /Person/Edit/5
         // TODO: catch exceptions, notify user
-        // TODO: disable button
         //
         [HttpPost]
         [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
@@ -84,6 +87,7 @@ namespace Machete.Web.Controllers
         {
             var person = personService.GetPerson(id);
             person.dateupdated = DateTime.Now;
+            person.Updatedby = this.User.Identity.Name;
             if (TryUpdateModel(person))
             {
                 personService.SavePerson();
@@ -94,10 +98,11 @@ namespace Machete.Web.Controllers
         }
         //
         // GET: /Person/Delete/5
-        [Authorize(Roles = "Manager, Administrator")]
+        [Authorize(Roles = "Administrator")]
         public ActionResult Delete(int id)
         {
             var person = personService.GetPerson(id);
+            ViewBag.Genders = Lookups.gender;
             return View(person);
 
         }
@@ -106,10 +111,9 @@ namespace Machete.Web.Controllers
         // POST: /Person/Delete/5
 
         [HttpPost]
-        [Authorize(Roles = "Manager, Administrator")] 
+        [Authorize(Roles = "Administrator")] 
         public ActionResult Delete(int id, FormCollection collection)
         {
-            //TODO: privilege check
             personService.DeletePerson(id);
             return RedirectToAction("Index");
         }

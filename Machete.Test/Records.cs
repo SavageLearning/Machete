@@ -42,8 +42,8 @@ namespace Machete.Test
             insuranceexpiration = DateTime.Now,     //datetime
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime
-            Createdby = Guid.Empty,
-            Updatedby = Guid.Empty
+            Createdby = "initialization script",
+            Updatedby = "initialization script"
         };
         public static Worker _worker2 = new Worker
         {                                   //#C data type
@@ -79,8 +79,8 @@ namespace Machete.Test
             insuranceexpiration = DateTime.Now,     //datetime
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime
-            Createdby = Guid.Empty,
-            Updatedby = Guid.Empty
+            Createdby = "initialization script",
+            Updatedby = "initialization script"
         };
         public static Worker _worker3 = new Worker
         {                                   //#C data type
@@ -116,8 +116,8 @@ namespace Machete.Test
             insuranceexpiration = DateTime.Now,     //datetime
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime
-            Createdby = Guid.Empty,
-            Updatedby = Guid.Empty
+            Createdby = "initialization script",
+            Updatedby = "initialization script"
         };
         public static Person _person1 = new Person
         {
@@ -132,8 +132,8 @@ namespace Machete.Test
             gender = "T",
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime
-            Createdby = Guid.Empty,
-            Updatedby = Guid.Empty
+            Createdby = "initialization script",
+            Updatedby = "initialization script"
         };
         public static Person _person2 = new Person
         {
@@ -148,8 +148,8 @@ namespace Machete.Test
             gender = "T",
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime
-            Createdby = Guid.Empty,
-            Updatedby = Guid.Empty
+            Createdby = "initialization script",
+            Updatedby = "initialization script"
         };
         public static Person _person3 = new Person
         {
@@ -164,8 +164,8 @@ namespace Machete.Test
             gender = "T",
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime
-            Createdby = Guid.Empty,
-            Updatedby = Guid.Empty
+            Createdby = "initialization script",
+            Updatedby = "initialization script"
         };
         public static Person _person4 = new Person
         {
@@ -180,8 +180,8 @@ namespace Machete.Test
             gender = "T",
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime
-            Createdby = Guid.Empty,
-            Updatedby = Guid.Empty
+            Createdby = "initialization script",
+            Updatedby = "initialization script"
         };
         public static Person _person5 = new Person
         {
@@ -196,8 +196,8 @@ namespace Machete.Test
             gender = "T",
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime
-            Createdby = Guid.Empty,
-            Updatedby = Guid.Empty
+            Createdby = "initialization script",
+            Updatedby = "initialization script"
         };
 
     }

@@ -14,7 +14,7 @@ namespace Machete.Data
             //Initialize Lookups
             new List<Race>
             {
-                //TODO:LOW How do I localize thses lookup strings?       
+                //TODO: localize: How do I localize thses lookup strings?       
                 new Race { racelabel = "Afroamerican" },
                 new Race { racelabel = "Asian"},
                 new Race { racelabel = "Caucausian" },
@@ -57,6 +57,80 @@ namespace Machete.Data
                 new Skill {skill = "construction", level = "competent"},
                 new Skill {skill = "construction", level = "master"}
             }.ForEach(u => macheteDB.Skills.Add(u));
+
+            new List<TypeOfWork>
+            {
+                new TypeOfWork { worklabel = "Construction"},
+                new TypeOfWork { worklabel = "Janitorial"},
+                new TypeOfWork { worklabel = "Landscaping"},
+                new TypeOfWork { worklabel = "Restaurant"},
+                new TypeOfWork { worklabel = "Service"},
+                new TypeOfWork { worklabel = "Factory"}
+            }.ForEach(u => macheteDB.TypesOfWork.Add(u));
+
+            new List<Person>
+            {
+                new Person { firstname1 = "Jimmy", 
+                             lastname1="Carter", 
+                             gender="M", 
+                             datecreated=DateTime.Now, 
+                             dateupdated=DateTime.Now,
+                             Createdby = "MacheteInitializer",
+                             Updatedby = "MacheteInitializer",
+                             Worker=new Worker {RaceID=1, 
+                                                height = "6ft 1in",
+                                                weight = "225lbs",
+                                                englishlevelID =1,
+                                                dateinUSA = DateTime.Now,
+                                                dateinseattle = DateTime.Now,
+                                                maritalstatus = "S",
+                                                incomeID=1,
+                                                neighborhoodID=1,
+                                                countryoforigin="USA",
+                                                dwccardnum=12345,
+                                                memberexpirationdate=DateTime.Now,
+                                                insuranceexpiration=DateTime.Now,
+                                                datecreated=DateTime.Now, 
+                                                dateupdated=DateTime.Now,
+                                                Createdby = "MacheteInitializer",
+                                                Updatedby = "MacheteInitializer"
+                              }
+                },
+                new Person {firstname1 = "Arielle", 
+                            lastname1="Rosenberg", 
+                            gender="F",
+                            datecreated=DateTime.Now, 
+                            dateupdated=DateTime.Now, 
+                            Createdby = "MacheteInitializer",
+                            Updatedby = "MacheteInitializer",
+                            Worker=new Worker {RaceID=1, 
+                                                height = "12ft 1in",
+                                                weight = "140lbs",
+                                                englishlevelID =1,
+                                                dateinUSA = DateTime.Now,
+                                                dateinseattle = DateTime.Now,
+                                                maritalstatus = "S",
+                                                incomeID=1,
+                                                neighborhoodID=1,
+                                                countryoforigin="USA",
+                                                dwccardnum=12346,
+                                                memberexpirationdate=DateTime.Now,
+                                                insuranceexpiration=DateTime.Now,
+                                                datecreated=DateTime.Now, 
+                                                dateupdated=DateTime.Now,
+                                                Createdby = "MacheteInitializer",
+                                                Updatedby = "MacheteInitializer"
+                            }
+                        },
+                new Person {firstname1 = "Cariño", 
+                            lastname1="Barragan", 
+                            gender="F",
+                            datecreated=DateTime.Now, 
+                            dateupdated=DateTime.Now,
+                            Createdby = "MacheteInitializer",
+                            Updatedby = "MacheteInitializer"
+                }
+            }.ForEach(u => macheteDB.Persons.Add(u));
         }
     }
 }

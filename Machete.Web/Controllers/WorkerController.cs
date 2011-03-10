@@ -10,6 +10,7 @@ using Machete.Helpers;
 using Machete.Service;
 using Machete.Web.ViewModel;
 using Microsoft.Web.Mvc;
+using System.Web.Security;
 
 namespace Machete.Web.Controllers
 {
@@ -21,12 +22,6 @@ namespace Machete.Web.Controllers
         private readonly ILangService langService;
         private readonly IHoodService hoodService;
         private readonly IIncomeService incomeService;
-        private SelectListItem[] maritalstatuslist = new[]
-            {
-                new SelectListItem {Value = "S", Text = "Single", Selected=true},
-                new SelectListItem {Value = "M", Text = "married"},
-                new SelectListItem {Value = "D", Text = "Divorced"}
-            }; 
 
         public WorkerController(IWorkerService workerService, 
                                 IPersonService personService, 
@@ -42,6 +37,14 @@ namespace Machete.Web.Controllers
             this.langService = langService;
             this.hoodService = hoodService;
             this.incomeService = incomeService;
+        }
+        private void loadLookups()
+        {
+            ViewBag.races = raceService.Lookup();
+            ViewBag.languages = langService.Lookup();
+            ViewBag.neighborhoods = hoodService.Lookup();
+            ViewBag.incomes = incomeService.Lookup();
+            ViewBag.maritalstatus = Lookups.maritalstatus;
         }
         //
         // GET: /Worker/Index
@@ -64,11 +67,7 @@ namespace Machete.Web.Controllers
             //Link person to work for EF to save
             _model.worker.Person = _model.person;
             _model.person.Worker = _model.worker;
-            ViewBag.races = raceService.Lookup();
-            ViewBag.languages = langService.Lookup();
-            ViewBag.neighborhoods = hoodService.Lookup();
-            ViewBag.incomes = incomeService.Lookup();
-            ViewBag.maritalstatus = maritalstatuslist;
+            loadLookups();
             return View(_model);
         } 
 
@@ -90,11 +89,10 @@ namespace Machete.Web.Controllers
             _model.person.dateupdated = rightnow;
             _model.worker.datecreated = rightnow;
             _model.worker.dateupdated = rightnow;
-            //TODO: get user Guid
-            _model.person.Createdby = Guid.Empty;
-            _model.person.Updatedby = Guid.Empty;
-            _model.worker.Createdby = Guid.Empty;
-            _model.worker.Updatedby = Guid.Empty;
+            _model.person.Createdby = this.User.Identity.Name;
+            _model.person.Updatedby = this.User.Identity.Name;
+            _model.worker.Createdby = this.User.Identity.Name;
+            _model.worker.Updatedby = this.User.Identity.Name;
             
             workerService.CreateWorker(_model.worker);
             return RedirectToAction("Index");
@@ -109,30 +107,21 @@ namespace Machete.Web.Controllers
             var _model = new WorkerViewModel();
             _model.worker = _worker;
             _model.person = _worker.Person;
-            ViewBag.races = raceService.Lookup();
-            ViewBag.languages = langService.Lookup();
-            ViewBag.neighborhoods = hoodService.Lookup();
-            ViewBag.incomes = incomeService.Lookup();
-            ViewBag.maritalstatus = new[]
-            {
-                new SelectListItem {Value = "S", Text = "Single", Selected=true},
-                new SelectListItem {Value = "M", Text = "married"},
-                new SelectListItem {Value = "D", Text = "Divorced"}
-            };
+            loadLookups();
             return View(_model);
         }
         //
         // POST: /Worker/Edit/5
         // TODO: catch exceptions, notify user
         // TODO: disable button
-        // TODO: update edit-post
         //
         [HttpPost]
-        [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
+        [Authorize(Roles = "Manager, Administrator")] 
         public ActionResult Edit(int id, FormCollection collection)
         {
             var worker = workerService.GetWorker(id);
             worker.dateupdated = DateTime.Now;
+            worker.Updatedby = this.User.Identity.Name;
             if (TryUpdateModel(worker))
             {
                 workerService.SaveWorker();
@@ -143,11 +132,15 @@ namespace Machete.Web.Controllers
         }
         //
         // GET: /Worker/Delete/5
-        [Authorize(Roles = "Manager, Administrator")]
+        [Authorize(Roles = "Administrator")]
         public ActionResult Delete(int id)
         {
-            var worker = workerService.GetWorker(id);
-            return View(worker);
+            var _worker = workerService.GetWorker(id);
+            var _model = new WorkerViewModel();
+            _model.worker = _worker;
+            _model.person = _worker.Person;
+            loadLookups();
+            return View(_model);
 
         }
 
@@ -155,10 +148,9 @@ namespace Machete.Web.Controllers
         // POST: /Worker/Delete/5
 
         [HttpPost]
-        [Authorize(Roles = "Manager, Administrator")] 
+        [Authorize(Roles = "Administrator")] 
         public ActionResult Delete(int id, FormCollection collection)
         {
-            //TODO: privilege check
             workerService.DeleteWorker(id);
             return RedirectToAction("Index");
         }

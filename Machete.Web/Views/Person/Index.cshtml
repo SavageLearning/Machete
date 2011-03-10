@@ -30,7 +30,9 @@
         <th>
             @Machete.Domain.Resources.Persons.dateupdated
         </th>
-
+                <th>
+            @Machete.Domain.Resources.Persons.updatedby
+        </th>
     </tr>
 
 @foreach (var item in Model) {
@@ -56,6 +58,9 @@
         </td>
         <td>
             @item.dateupdated
+        </td>
+        <td>
+            @item.Updatedby
         </td>
     </tr>
 }

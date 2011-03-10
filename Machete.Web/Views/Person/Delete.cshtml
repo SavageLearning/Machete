@@ -11,10 +11,14 @@
     @Html.EditorForModel()
 </fieldset>
 <p>
-    <input type="submit" value=@Machete.Web.Resources.Persons.deletesubmit />
-    |
+    <input type="submit" value="@Machete.Web.Resources.Persons.deletesubmit" />
 </p>
 <div>
     @Html.ActionLink(@Machete.Web.Resources.Persons.indexreturnlink, "Index")
 </div>
 }
+<script type="text/javascript">
+    $().ready(function () {
+        $('.editor-field').children().attr('disabled', 'disabled')
+    });
+</script>

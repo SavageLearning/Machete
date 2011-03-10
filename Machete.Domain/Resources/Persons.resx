@@ -165,6 +165,9 @@
   <data name="stringlength" xml:space="preserve">
     <value>Please enter no more than {1} characters</value>
   </data>
+  <data name="updatedby" xml:space="preserve">
+    <value>Updated by</value>
+  </data>
   <data name="zipcode" xml:space="preserve">
     <value>Zipcode</value>
   </data>

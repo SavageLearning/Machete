@@ -358,6 +358,15 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Updated by.
+        /// </summary>
+        public static string updatedby {
+            get {
+                return ResourceManager.GetString("updatedby", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Weight!!!.
         /// </summary>
         public static string weight {

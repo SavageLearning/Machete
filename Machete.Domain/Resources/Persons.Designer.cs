@@ -205,6 +205,15 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Updated by.
+        /// </summary>
+        public static string updatedby {
+            get {
+                return ResourceManager.GetString("updatedby", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zipcode.
         /// </summary>
         public static string zipcode {
