@@ -1,11 +1,11 @@
 ﻿/*----------------------------------------------------------
-The base color for this template is #800000. If you'd like
+The base color for this template is #5c87b2. If you'd like
 to use a different color start by replacing all instances of
-#800000 with your new color. Deep red is #800000
+#5c87b2 with your new color. Deep red is #800000
 ----------------------------------------------------------*/
 body
 {
-    background-color: #800000;
+    background-color: #5c87b2;
     font-size: 75%;
     font-family: Verdana, Tahoma, Arial, "Helvetica Neue" , Helvetica, Sans-Serif;
     margin: 0;
@@ -129,7 +129,7 @@ page width. Or, you can specify an exact pixel width. */
 ----------------------------------------------------------*/
 ul#menu
 {
-    border-bottom: 1px #800000 solid;
+    border-bottom: 1px #5c87b2 solid;
     padding: 0 0 2px;
     position: relative;
     margin: 0;
