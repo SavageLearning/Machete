@@ -1,0 +1,89 @@
+﻿@model  System.Web.Security.MembershipUser   
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td>
+                <fieldset>
+                    <legend>MembersModel</legend>
+                    <table border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td>
+                                <div class="editor-label">
+                                    @Html.LabelFor(model => model.UserName)
+                                </div>
+                            </td>
+                            <td>
+                                <div class="editor-field">
+                                    @Html.DisplayTextFor(model => model.UserName)
+                                    @Html.ValidationMessageFor(model => model.UserName)
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="editor-label">
+                                    @Html.LabelFor(model => model.Email)
+                                </div>
+                                </td>
+                                <td>
+                                <div class="editor-field">
+                                    @Html.DisplayTextFor(model => model.Email)
+                                    @Html.ValidationMessageFor(model => model.Email)
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="editor-label">
+                                    @Html.LabelFor(model => model.IsApproved)
+                                </div>
+                                </td>
+                                <td>
+                                <div class="editor-field">
+                                    @Html.DisplayTextFor(model => model.IsApproved)
+                                    @Html.ValidationMessageFor(model => model.IsApproved)
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <p>
+                        <input type="submit" value="Delete" />
+                    </p>
+                </fieldset>
+            </td>
+            <td>
+                <fieldset id="rolesgroup">
+                    <legend>Roles</legend>
+                    @foreach (String role in Roles.GetAllRoles())
+                    {
+                   
+                        <p>
+                            <label for="@role">@role:</label> 
+                            @Html.CheckBox(role, Roles.IsUserInRole(Model.UserName, role))
+                        </p>
+                   
+                    }
+                </fieldset>
+            </td>
+        </tr>
+    </table>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+<script type="text/javascript">
+    $().ready(function () {
+        $('#rolesgroup').children().children().attr('disabled', 'disabled')
+    });
+</script>

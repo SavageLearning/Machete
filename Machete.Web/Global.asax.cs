@@ -19,6 +19,7 @@ using System.Threading;
 using System.Data.Entity;
 using System.Data.Entity.Database;
 using System.Data.Entity.ModelConfiguration;
+using Machete.Helpers;
 
 namespace Machete.Web
 {
@@ -75,46 +76,46 @@ namespace Machete.Web
         }
 
 
-protected void Application_Start()
-{
-    AreaRegistration.RegisterAllAreas();
-    RegisterGlobalFilters(GlobalFilters.Filters);
-    RegisterRoutes(RouteTable.Routes);
-    IUnityContainer container = GetUnityContainer();
-    DependencyResolver.SetResolver(new UnityDependencyResolver(container));
-    DbDatabase.SetInitializer(new MacheteInitializer());
-    //DbDatabase.SetInitializer<MacheteContext>(new System.Data.Entity.Database.DropCreateDatabaseIfModelChanges<MacheteContext>());
-}
+        protected void Application_Start()
+        {
+            AreaRegistration.RegisterAllAreas();
+            RegisterGlobalFilters(GlobalFilters.Filters);
+            RegisterRoutes(RouteTable.Routes);
+            IUnityContainer container = GetUnityContainer();
+            DependencyResolver.SetResolver(new UnityDependencyResolver(container));
+            DbDatabase.SetInitializer(new MacheteInitializer());
+            Lookups.Initialize();
+        }
 
-    private IUnityContainer GetUnityContainer()
-    {
-        //Create UnityContainer          
-        IUnityContainer container = new UnityContainer()
-        .RegisterType<IControllerActivator, CustomControllerActivator>()
-        .RegisterType<IFormsAuthenticationService, FormsAuthenticationService>()
-        .RegisterType<IMembershipService, AccountMembershipService>()
-        .RegisterInstance<MembershipProvider>(Membership.Provider)
-        .RegisterType<IDatabaseFactory, DatabaseFactory>(new HttpContextLifetimeManager<IDatabaseFactory>())
-        .RegisterType<IUnitOfWork, UnitOfWork>(new HttpContextLifetimeManager<IUnitOfWork>())
-            // TODO: Add repositories
-        .RegisterType<ICategoryRepository, CategoryRepository>(new HttpContextLifetimeManager<ICategoryRepository>())
-        .RegisterType<IPersonRepository, PersonRepository>(new HttpContextLifetimeManager<IPersonRepository>())
-        .RegisterType<IWorkerRepository, WorkerRepository>(new HttpContextLifetimeManager<IWorkerRepository>())
-        .RegisterType<IExpenseRepository, ExpenseRepository>(new HttpContextLifetimeManager<IExpenseRepository>())
-        .RegisterType<IRaceRepository, RaceRepository>(new HttpContextLifetimeManager<IRaceRepository>())
-        .RegisterType<IHoodRepository, HoodRepository>(new HttpContextLifetimeManager<IHoodRepository>())
-        .RegisterType<ILangRepository, LangRepository>(new HttpContextLifetimeManager<ILangRepository>())
-        .RegisterType<IIncomeRepository, IncomeRepository>(new HttpContextLifetimeManager<IIncomeRepository>())
-            // TODO: Add services
-        .RegisterType<ICategoryService, CategoryService>(new HttpContextLifetimeManager<ICategoryService>())
-        .RegisterType<IPersonService, PersonService>(new HttpContextLifetimeManager<IPersonService>())
-        .RegisterType<IWorkerService, WorkerService>(new HttpContextLifetimeManager<IWorkerService>())
-        .RegisterType<IExpenseService, ExpenseService>(new HttpContextLifetimeManager<IExpenseService>())
-        .RegisterType<IRaceService, RaceService>(new HttpContextLifetimeManager<IRaceService>())
-        .RegisterType<IHoodService, HoodService>(new HttpContextLifetimeManager<IHoodService>())
-        .RegisterType<ILangService, LangService>(new HttpContextLifetimeManager<ILangService>())
-        .RegisterType<IIncomeService, IncomeService>(new HttpContextLifetimeManager<IIncomeService>());
-        return container;         
+        private IUnityContainer GetUnityContainer()
+        {
+            //Create UnityContainer          
+            IUnityContainer container = new UnityContainer()
+            .RegisterType<IControllerActivator, CustomControllerActivator>()
+            .RegisterType<IFormsAuthenticationService, FormsAuthenticationService>()
+            .RegisterType<IMembershipService, AccountMembershipService>()
+            .RegisterInstance<MembershipProvider>(Membership.Provider)
+            .RegisterType<IDatabaseFactory, DatabaseFactory>(new HttpContextLifetimeManager<IDatabaseFactory>())
+            .RegisterType<IUnitOfWork, UnitOfWork>(new HttpContextLifetimeManager<IUnitOfWork>())
+                // TODO: Add repositories
+            .RegisterType<ICategoryRepository, CategoryRepository>(new HttpContextLifetimeManager<ICategoryRepository>())
+            .RegisterType<IPersonRepository, PersonRepository>(new HttpContextLifetimeManager<IPersonRepository>())
+            .RegisterType<IWorkerRepository, WorkerRepository>(new HttpContextLifetimeManager<IWorkerRepository>())
+            .RegisterType<IExpenseRepository, ExpenseRepository>(new HttpContextLifetimeManager<IExpenseRepository>())
+            .RegisterType<IRaceRepository, RaceRepository>(new HttpContextLifetimeManager<IRaceRepository>())
+            .RegisterType<IHoodRepository, HoodRepository>(new HttpContextLifetimeManager<IHoodRepository>())
+            .RegisterType<ILangRepository, LangRepository>(new HttpContextLifetimeManager<ILangRepository>())
+            .RegisterType<IIncomeRepository, IncomeRepository>(new HttpContextLifetimeManager<IIncomeRepository>())
+                // TODO: Add services
+            .RegisterType<ICategoryService, CategoryService>(new HttpContextLifetimeManager<ICategoryService>())
+            .RegisterType<IPersonService, PersonService>(new HttpContextLifetimeManager<IPersonService>())
+            .RegisterType<IWorkerService, WorkerService>(new HttpContextLifetimeManager<IWorkerService>())
+            .RegisterType<IExpenseService, ExpenseService>(new HttpContextLifetimeManager<IExpenseService>())
+            .RegisterType<IRaceService, RaceService>(new HttpContextLifetimeManager<IRaceService>())
+            .RegisterType<IHoodService, HoodService>(new HttpContextLifetimeManager<IHoodService>())
+            .RegisterType<ILangService, LangService>(new HttpContextLifetimeManager<ILangService>())
+            .RegisterType<IIncomeService, IncomeService>(new HttpContextLifetimeManager<IIncomeService>());
+            return container;
+        }
     }
- }
 }

@@ -152,7 +152,7 @@ The table for the rest of the person information
                     </td>
                     <td>
                         <div class="editor-field">
-                            @Html.EditorFor(model => model.gender)
+                            @Html.DropDownListFor(model => model.gender, new SelectList(ViewBag.Genders, "Value", "Text", Model.gender), "(Choose)") 
                             @Html.ValidationMessageFor(model => model.gender)
                         </div>
                     </td>

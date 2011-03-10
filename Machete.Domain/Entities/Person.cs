@@ -58,7 +58,6 @@ namespace Machete.Domain
         [LocalizedDisplayName("phone", NameResourceType = typeof(Persons))]
         [StringLength(12, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Persons))]
         public string phone { get; set; }
-        // TODO: GUI drop down & limit gender characters
         [LocalizedDisplayName("gender", NameResourceType = typeof(Persons))]
         [StringLength(1, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Persons))]
         [Required(ErrorMessageResourceName = "gendererror", ErrorMessageResourceType = typeof(Persons))]
@@ -70,8 +69,8 @@ namespace Machete.Domain
 
         public DateTime datecreated { get; set; }
         public DateTime dateupdated { get; set; }
-        public Guid Createdby { get; set; }
-        public Guid Updatedby { get; set; }
+        public string Createdby { get; set; }
+        public string Updatedby { get; set; }
         public Person() { }
     }
 }

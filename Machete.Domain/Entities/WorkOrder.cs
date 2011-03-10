@@ -14,7 +14,6 @@ namespace Machete.Domain
         public int EmployerID { get; set; }
         public string WorkSiteAddress1 { get; set; }
         public string WorkSiteAddress2 { get; set; }
-        //TODO:LOOKUP: TypeOfWork
         public byte TypeOfWorkID { get; set; }
         public DateTime DateTimeofWork { get; set; }
         public bool TimeFlexible { get; set; }

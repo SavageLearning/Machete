@@ -377,10 +377,11 @@
          toggleRace();
          toggleDisabled();
          toggleDriverslicense();
+         toggleInsuranceExpiration();
          $("#worker_RaceID").bind('change', toggleRace);
          $("#worker_disabled").bind('change', toggleDisabled);
          $("#worker_driverslicense").bind('change', toggleDriverslicense);
-
+         $("#worker_carinsurance").bind('change', toggleInsuranceExpiration);
      });
      function DatePicker() {
          $('.ui-datepicker').datepicker({
@@ -417,6 +418,17 @@
              $("#worker_licenseexpirationdate").hide();
              $("#worker_licenseexpirationdate ~ *").hide();
              $("label[for=worker_licenseexpirationdate]").hide();         
+         }
+     }
+     function toggleInsuranceExpiration() {
+         if ($("#worker_carinsurance option:selected").text() == "True") {
+             $("#worker_insuranceexpiration").show();
+             $("#worker_insuranceexpiration ~*").show();
+             $("label[for=worker_insuranceexpiration]").show();
+         } else {
+             $("#worker_insuranceexpiration").hide();
+             $("#worker_insuranceexpiration ~*").hide();
+             $("label[for=worker_insuranceexpiration]").hide();
          }
      }
 </script>

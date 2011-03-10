@@ -20,7 +20,6 @@ namespace Machete.Domain
         public int RaceID { get; set; }
 
         //
-        // TODO: Error from nullstring:: The type 'string' must be a non-nullable value type in order to use it as parameter 'T' in the generic type or method 'System.Nullable<T>'
         [LocalizedDisplayName("raceother", NameResourceType = typeof(Resources.Worker))]
         [StringLength(20, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Worker))]
         public string raceother { get; set; }
@@ -65,7 +64,6 @@ namespace Machete.Domain
         [LocalizedDisplayName("livewithchildren", NameResourceType = typeof(Resources.Worker))]
         public bool livewithchildren { get; set; }
         //
-        //TODO: positive number check
         [LocalizedDisplayName("numofchildren", NameResourceType = typeof(Resources.Worker))]
         [Required(ErrorMessageResourceName = "numofchildren", ErrorMessageResourceType = typeof(Resources.Worker))]
         [RegularExpression("^([0-9]|[0-1]\\d|20)$", ErrorMessageResourceName = "numofchildrenRxError", ErrorMessageResourceType = typeof(Resources.Worker))]
@@ -122,13 +120,12 @@ namespace Machete.Domain
         //TODO: how to handle imaage from SQL?
         [Required(ErrorMessageResourceName = "memberexpirationdate", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("memberexpirationdate", NameResourceType = typeof(Resources.Worker))]
-        public DateTime? memberexpirationdate { get; set; }
+        public DateTime memberexpirationdate { get; set; }
         //
         //[StringLength(16, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("driverslicense", NameResourceType = typeof(Resources.Worker))]
         public bool driverslicense { get; set; }
         //
-        //TODO: If driverslicense is true, then expiration date check
         [LocalizedDisplayName("licenseexpirationdate", NameResourceType = typeof(Resources.Worker))]
         public DateTime? licenseexpirationdate { get; set; }
         //
@@ -139,8 +136,8 @@ namespace Machete.Domain
         public DateTime? insuranceexpiration { get; set; }
         public DateTime datecreated { get; set; }
         public DateTime dateupdated { get; set; }
-        public Guid Createdby { get; set; }
-        public Guid Updatedby { get; set; }
+        public string Createdby { get; set; }
+        public string Updatedby { get; set; }
     }
 }
 

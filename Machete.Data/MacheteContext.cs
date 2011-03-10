@@ -10,7 +10,7 @@ namespace Machete.Data
 {
     public class MacheteContext : DbContext
     {
-        public MacheteContext() : base("machete") { } //Machete here defines the database to use, by convention.
+        public MacheteContext() : base("macheteConnection") { } //Machete here defines the database to use, by convention.
         public DbSet<Category> Categories { get; set; }
         public DbSet<Expense> Expenses { get; set; }
         public DbSet<Person> Persons { get; set; }
@@ -20,6 +20,7 @@ namespace Machete.Data
         public DbSet<Income> Incomes { get; set; }
         public DbSet<Neighborhood> Neighborhoods { get; set; }
         public DbSet<Skill> Skills { get; set; }
+        public DbSet<TypeOfWork> TypesOfWork { get; set; }
         //public DbSet<WorkerSignin> WorkerSignins { get; set; }
         //public DbSet<Employer> Employers { get; set; }
         //public DbSet<WorkOrder> WorkOrders { get; set; }
@@ -50,7 +51,6 @@ namespace Machete.Data
             //modelBuilder.Entity<WorkerSkill>().ToTable("WorkerSkills");
             //modelBuilder.Entity<WorkAssignment>().ToTable("WorkAssignments");
             //modelBuilder.Entity<Survey>().ToTable("Surveys");
-
         }
     }
     public class PersonBuilder : EntityTypeConfiguration<Person>
@@ -59,14 +59,16 @@ namespace Machete.Data
         {
             ToTable("Persons");
             HasKey(k => k.ID);
-            HasOptional(p => p.Worker).WithRequired();
+            HasOptional(p => p.Worker).WithRequired().WillCascadeOnDelete();
 
             //HasKey(k => new { k.firstname1, k.firstname2, k.lastname1, k.lastname2 });
         }
     }
     public class WorkerBuilder : EntityTypeConfiguration<Worker>
     {
-        public WorkerBuilder() {}
+        public WorkerBuilder() 
+        {
+        }
     }
 
 }

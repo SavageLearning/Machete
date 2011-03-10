@@ -40,7 +40,7 @@ namespace Machete.Web.Controllers
         }
         //
         // GET: /Account/Create
-        [Authorize(Roles = "Manager, Administrator")]
+        [Authorize(Roles = "Administrator")]
         public ActionResult Create()
         {
             return View();
@@ -49,7 +49,7 @@ namespace Machete.Web.Controllers
         // POST: /Account/Create
         //
         [HttpPost]
-        [Authorize(Roles = "PhoneDesk, Manager, Administrator")]
+        [Authorize(Roles = "Administrator")]
         public ActionResult Create(MembersModel member)
         {
             if (ModelState.IsValid)
@@ -76,7 +76,7 @@ namespace Machete.Web.Controllers
         // **************************************
         // URL: /Account/Edit
         // **************************************
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public ActionResult Edit(Guid id)
         {
 
@@ -86,7 +86,7 @@ namespace Machete.Web.Controllers
             return View(member);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         public ActionResult Edit(Guid id, FormCollection collection)
         {
@@ -112,10 +112,24 @@ namespace Machete.Web.Controllers
             return View(member);
         }
         // **************************************
-        // TODO: /Account/Delete
+        // 
         // **************************************
-        
+        [Authorize(Roles = "Administrator")]
+        public ActionResult Delete(Guid id)
+        {
+            MembershipUser member = Membership.GetUser(id, false);
+            ViewBag.PasswordLength = MembershipService.MinPasswordLength;
+            return View(member);
+        }
 
+        [HttpPost]
+        [Authorize(Roles = "Administrator")]
+        public ActionResult Delete(Guid id, FormCollection collection)
+        {
+            MembershipUser member = Membership.GetUser(id, false);
+            bool success = Membership.DeleteUser(member.UserName);
+            return RedirectToAction("Index");
+        }
         #endregion 
 
         // **************************************
