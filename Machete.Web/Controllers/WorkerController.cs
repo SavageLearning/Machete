@@ -17,34 +17,19 @@ namespace Machete.Web.Controllers
     public class WorkerController : Controller
     {
         private readonly IWorkerService workerService;
-        private readonly IRaceService raceService;
         private readonly IPersonService personService;
-        private readonly ILangService langService;
-        private readonly IHoodService hoodService;
-        private readonly IIncomeService incomeService;
 
         public WorkerController(IWorkerService workerService, 
-                                IPersonService personService, 
-                                IRaceService raceService,
-                                ILangService langService,
-                                IHoodService hoodService,
-                                IIncomeService incomeService
-            )
+                                IPersonService personService)
         {
             this.workerService = workerService;
-            this.raceService = raceService;
             this.personService = personService;
-            this.langService = langService;
-            this.hoodService = hoodService;
-            this.incomeService = incomeService;
-        }
-        private void loadLookups()
-        {
-            ViewBag.races = raceService.Lookup();
-            ViewBag.languages = langService.Lookup();
-            ViewBag.neighborhoods = hoodService.Lookup();
-            ViewBag.incomes = incomeService.Lookup();
-            ViewBag.maritalstatus = Lookups.maritalstatus;
+            ViewBag.races = Lookups.races;
+            ViewBag.languages = Lookups.languages;
+            ViewBag.neighborhoods = Lookups.neighborhoods;
+            ViewBag.incomes = Lookups.incomes;
+            ViewBag.maritalstatus = Lookups.maritalstatuses;
+            ViewBag.Genders = Lookups.genders;
         }
         //
         // GET: /Worker/Index
@@ -67,7 +52,6 @@ namespace Machete.Web.Controllers
             //Link person to work for EF to save
             _model.worker.Person = _model.person;
             _model.person.Worker = _model.worker;
-            loadLookups();
             return View(_model);
         } 
 
@@ -107,7 +91,6 @@ namespace Machete.Web.Controllers
             var _model = new WorkerViewModel();
             _model.worker = _worker;
             _model.person = _worker.Person;
-            loadLookups();
             return View(_model);
         }
         //
@@ -139,7 +122,6 @@ namespace Machete.Web.Controllers
             var _model = new WorkerViewModel();
             _model.worker = _worker;
             _model.person = _worker.Person;
-            loadLookups();
             return View(_model);
 
         }

@@ -22,10 +22,10 @@
             <div id="menucontainer">
 
                 <ul id="menu">
-                    <li>@Html.ActionLink(@Machete.Web.Resources.Shared.persontab, "Index", "Person")</li>
-                    <li>@Html.ActionLink(@Machete.Web.Resources.Shared.hometab, "Index", "Home")</li>
-                    <li>@Html.ActionLink(@Machete.Web.Resources.Shared.workerstab, "Index", "Worker")</li>
-                    <li>@Html.ActionLink(@Machete.Web.Resources.Shared.workorderstab, "Index", "WorkOrders")</li>
+                    <li>@Html.ActionLink(@Machete.Web.Resources.Shared.persontab, "Index", "Person", null, new { id = "menulinkperson" })</li>
+                    <li>@Html.ActionLink(@Machete.Web.Resources.Shared.hometab, "Index", "Home", null, new { id = "menulinkhome" })</li>
+                    <li>@Html.ActionLink(@Machete.Web.Resources.Shared.workerstab, "Index", "Worker", null, new { id="menulinkworker"})</li>
+                    <li>@Html.ActionLink(@Machete.Web.Resources.Shared.workorderstab, "Index", "WorkOrders", null, new { id = "menulinkworkorder" })</li>
                     <!--<li>@Html.ActionLink(@Machete.Web.Resources.Shared.workassignmentstab, "Index", "WorkAssignments")</li>
                     <li>@Html.ActionLink(@Machete.Web.Resources.Shared.employerstab, "Index", "Employers")</li>
                     <li>@Html.ActionLink(@Machete.Web.Resources.Shared.hometab, "Index", "Home")</li>

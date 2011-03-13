@@ -4,17 +4,30 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Machete.Domain;
+using Machete.Data;
 
 namespace Machete.Helpers
 {
     public class Lookups
     {
-        public static SelectListItem[] maritalstatus {get; private set;}
-        public static SelectListItem[] gender { get; private set; } 
+        public static SelectListItem[] maritalstatuses {get; private set;}
+        public static SelectListItem[] genders { get; private set; }
+        public static IEnumerable<Race> races { get; private set; }
+        public static IEnumerable<Language> languages { get; private set; }
+        public static IEnumerable<Neighborhood> neighborhoods { get; private set; }
+        public static IEnumerable<Income> incomes { get; private set; }
+        public static MacheteContext MacheteDB { get; set; }
 
         public static void Initialize() {
-            maritalstatus = init_maritalstatus();
-            gender = init_gender();
+
+            MacheteDB = new MacheteContext(); 
+            maritalstatuses = init_maritalstatus();
+            genders = init_gender();
+            races = MacheteDB.Races.ToList();
+            languages = MacheteDB.Languages.ToList();
+            neighborhoods = MacheteDB.Neighborhoods.ToList();
+            incomes = MacheteDB.Incomes.ToList();
+            
         }
 
         private static SelectListItem[] init_maritalstatus()

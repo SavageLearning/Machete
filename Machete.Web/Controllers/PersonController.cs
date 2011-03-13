@@ -11,7 +11,7 @@ using Machete.Service;
 
 namespace Machete.Web.Controllers
 {
-    [HandleError]
+    [ElmahHandleError]
     public class PersonController : Controller
     { 
         private readonly IPersonService personService;
@@ -44,7 +44,7 @@ namespace Machete.Web.Controllers
         public ActionResult Create()
         {
             var _model = new Person();
-            ViewBag.Genders = Lookups.gender;
+            ViewBag.Genders = Lookups.genders;
             return View(_model);
         } 
 
@@ -74,7 +74,7 @@ namespace Machete.Web.Controllers
         public ActionResult Edit(int id)
         {
             Person person = personService.GetPerson(id);
-            ViewBag.Genders = Lookups.gender;
+            ViewBag.Genders = Lookups.genders;
             return View(person);
         }
         //
@@ -102,7 +102,7 @@ namespace Machete.Web.Controllers
         public ActionResult Delete(int id)
         {
             var person = personService.GetPerson(id);
-            ViewBag.Genders = Lookups.gender;
+            ViewBag.Genders = Lookups.genders;
             return View(person);
 
         }

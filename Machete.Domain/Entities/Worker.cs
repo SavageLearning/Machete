@@ -87,7 +87,7 @@ namespace Machete.Domain
         [StringLength(14, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("emcontUSAphone", NameResourceType = typeof(Resources.Worker))]
         public string emcontUSAphone { get; set; }
-        //
+        // TODO: require unique number
         [Required(ErrorMessageResourceName = "dwccardnum", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("dwccardnum", NameResourceType = typeof(Resources.Worker))]
         [RegularExpression("^[0-9]{5,5}$", ErrorMessageResourceName = "dwccardnumerror", ErrorMessageResourceType = typeof(Resources.Worker))]
