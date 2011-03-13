@@ -70,9 +70,11 @@
     <Compile Include="Infrastructure\IDatabaseFactory.cs" />
     <Compile Include="Infrastructure\IRepository.cs" />
     <Compile Include="Infrastructure\IUnitOfWork.cs" />
-    <Compile Include="Infrastructure\MacheteInitializer.cs" />
+    <Compile Include="Initialize\MacheteInitializer.cs" />
     <Compile Include="Infrastructure\RepositoryBase.cs" />
     <Compile Include="Infrastructure\UnitOfWork.cs" />
+    <Compile Include="Initialize\MacheteLookups.cs" />
+    <Compile Include="Initialize\TestInitializer.cs" />
     <Compile Include="MacheteContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\CategoryRepository.cs" />

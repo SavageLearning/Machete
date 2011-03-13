@@ -30,7 +30,7 @@ namespace Machete.Test
         [TestInitialize]
         public void TestInitialize()
         {
-            DbDatabase.SetInitializer<MacheteContext>(new MacheteInitializer());
+            DbDatabase.SetInitializer<MacheteContext>(new TestInitializer());
             this.MacheteDB = new MacheteContext();
             _dbFactory = new DatabaseFactory();
             _workerRepo = new WorkerRepository(_dbFactory);

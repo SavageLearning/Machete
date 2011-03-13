@@ -19,7 +19,7 @@ namespace Machete.Test
         [TestInitialize]
         public void Initialize()
         {
-            DbDatabase.SetInitializer<MacheteContext>(new MacheteInitializer());
+            DbDatabase.SetInitializer<MacheteContext>(new TestInitializer());
             this.MacheteDB = new MacheteContext();
 
         }

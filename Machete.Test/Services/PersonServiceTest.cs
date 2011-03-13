@@ -9,6 +9,7 @@ using Machete.Domain;
 using Machete.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data.Entity.Database;
+using System.Data.Entity.Validation;
 
 namespace Machete.Test
 {
@@ -32,7 +33,7 @@ namespace Machete.Test
         public void TestInitialize()
         {
 
-            DbDatabase.SetInitializer<MacheteContext>(new MacheteInitializer());
+            DbDatabase.SetInitializer<MacheteContext>(new TestInitializer());
             this.MacheteDB = new MacheteContext();
             _dbFactory = new DatabaseFactory();
             _personRepo = new PersonRepository(_dbFactory);
@@ -43,7 +44,6 @@ namespace Machete.Test
         [TestMethod]
         public void PersonService_Intergation_CreatePerson()
         {
-
             //
             //Arrange
             MacheteDB.Database.Delete();
@@ -69,18 +69,32 @@ namespace Machete.Test
             MacheteDB.Database.Delete();
             MacheteDB.Database.Initialize(true);
             Person _person4 = Records._person4;
-            _person4.firstname2 = "PersonService_Intergation_CreatePersons_NoDuplicate";
+            _person4.firstname2 = "PersonService_Int_CrePer_NoDuplicate";
             //
-            //Act          
-            _service.CreatePerson(_person4);
-            _service.CreatePerson(_person4);
-            _service.CreatePerson(_person4);
-            reccount = MacheteDB.Persons.Count(n => n.firstname1 == _person4.firstname1);
+            //Act
+            try
+            {
+                _service.CreatePerson(_person4);
+                _service.CreatePerson(_person4);
+                _service.CreatePerson(_person4);
+                reccount = MacheteDB.Persons.Count(n => n.firstname1 == _person4.firstname1);
+            }
+            catch (DbEntityValidationException ex)
+            {
+                Assert.Fail(string.Format("Validation exception for field {0} caught: {1}",
+                    ex.EntityValidationErrors.First().ValidationErrors.First().PropertyName,
+                    ex.EntityValidationErrors.First().ValidationErrors.First().ErrorMessage));
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(string.Format("Unexpected exception of type {0} caught: {1}",
+                ex.GetType(), ex.Message));
+            }
             //
             //Assert
             //TODO: figure out why de-dup isn't working
             Assert.IsNotNull(_person4.ID);
-            Assert.IsTrue(reccount == 1);
+            Assert.IsTrue(reccount == 1, "Expected record count of 1, received {0}", reccount);
       
         }
     }

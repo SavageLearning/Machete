@@ -11,7 +11,7 @@ namespace Machete.Test
         public static Worker _worker1 = new Worker
         {                                   //#C data type
             RaceID = 1,                     //byte
-            raceother = "Records._worker1",         //string
+            raceother = "Records._worker1", //string
             height = "too tall",            //string
             weight = "too big",             //string
             englishlevelID = 1,             //byte
@@ -28,7 +28,7 @@ namespace Machete.Test
             emcontUSAname = "Bill Clinton", //string
             emcontUSAphone = "1234567890",  //string
             emcontUSArelation = "idol",     //string
-            dwccardnum = 1,                 //int
+            dwccardnum = 12345,             //int
             neighborhoodID = 1,             //byte
             immigrantrefugee = true,        //bool
             countryoforigin = "USA",        //string
@@ -65,7 +65,7 @@ namespace Machete.Test
             emcontUSAname = "Bill Clinton", //string
             emcontUSAphone = "1234567890",  //string
             emcontUSArelation = "idol",     //string
-            dwccardnum = 1,                 //int
+            dwccardnum = 12345,                 //int
             neighborhoodID = 1,             //byte
             immigrantrefugee = true,        //bool
             countryoforigin = "USA",        //string
@@ -102,7 +102,7 @@ namespace Machete.Test
             emcontUSAname = "Bill Clinton", //string
             emcontUSAphone = "1234567890",  //string
             emcontUSArelation = "idol",     //string
-            dwccardnum = 1,                 //int
+            dwccardnum = 12345,                 //int
             neighborhoodID = 1,             //byte
             immigrantrefugee = true,        //bool
             countryoforigin = "USA",        //string
