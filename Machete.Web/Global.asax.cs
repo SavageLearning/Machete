@@ -44,6 +44,7 @@ namespace Machete.Web
                 "{controller}/{action}/{id}", // URL with parameters
                 new { controller = "Home", action = "Index", id = UrlParameter.Optional } // Parameter defaults
             );
+            routes.MapRoute("Error", "{*url}", new { controller = "Error", action = "Http404" });
 
         }
         protected void Application_AcquireRequestState(object sender, EventArgs e)
@@ -98,23 +99,11 @@ namespace Machete.Web
             .RegisterType<IDatabaseFactory, DatabaseFactory>(new HttpContextLifetimeManager<IDatabaseFactory>())
             .RegisterType<IUnitOfWork, UnitOfWork>(new HttpContextLifetimeManager<IUnitOfWork>())
                 // TODO: Add repositories
-            .RegisterType<ICategoryRepository, CategoryRepository>(new HttpContextLifetimeManager<ICategoryRepository>())
             .RegisterType<IPersonRepository, PersonRepository>(new HttpContextLifetimeManager<IPersonRepository>())
             .RegisterType<IWorkerRepository, WorkerRepository>(new HttpContextLifetimeManager<IWorkerRepository>())
-            .RegisterType<IExpenseRepository, ExpenseRepository>(new HttpContextLifetimeManager<IExpenseRepository>())
-            .RegisterType<IRaceRepository, RaceRepository>(new HttpContextLifetimeManager<IRaceRepository>())
-            .RegisterType<IHoodRepository, HoodRepository>(new HttpContextLifetimeManager<IHoodRepository>())
-            .RegisterType<ILangRepository, LangRepository>(new HttpContextLifetimeManager<ILangRepository>())
-            .RegisterType<IIncomeRepository, IncomeRepository>(new HttpContextLifetimeManager<IIncomeRepository>())
                 // TODO: Add services
-            .RegisterType<ICategoryService, CategoryService>(new HttpContextLifetimeManager<ICategoryService>())
             .RegisterType<IPersonService, PersonService>(new HttpContextLifetimeManager<IPersonService>())
-            .RegisterType<IWorkerService, WorkerService>(new HttpContextLifetimeManager<IWorkerService>())
-            .RegisterType<IExpenseService, ExpenseService>(new HttpContextLifetimeManager<IExpenseService>())
-            .RegisterType<IRaceService, RaceService>(new HttpContextLifetimeManager<IRaceService>())
-            .RegisterType<IHoodService, HoodService>(new HttpContextLifetimeManager<IHoodService>())
-            .RegisterType<ILangService, LangService>(new HttpContextLifetimeManager<ILangService>())
-            .RegisterType<IIncomeService, IncomeService>(new HttpContextLifetimeManager<IIncomeService>());
+            .RegisterType<IWorkerService, WorkerService>(new HttpContextLifetimeManager<IWorkerService>());
             return container;
         }
     }
