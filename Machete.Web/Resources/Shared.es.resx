@@ -132,7 +132,7 @@
   <data name="ErrorPgExceptionLabel" xml:space="preserve">
     <value>Seguimiento de la pila:</value>
   </data>
-  <data name="ErrorPgExplanation" xml:space="preserve">
+  <data name="ErrorPgApology" xml:space="preserve">
     <value>Lo sentimos, ha ocurrido un error al procesar su solicitud.</value>
   </data>
   <data name="hometab" xml:space="preserve">
@@ -155,5 +155,8 @@
   </data>
   <data name="workorderstab" xml:space="preserve">
     <value>Órdenes</value>
+  </data>
+  <data name="ErrorPgExplanation" xml:space="preserve">
+    <value>Ha ocurrido un error. Se ha registrado y será revisado por un administrador. Por favor, utilice el botón "Atrás" de su navegador para regresar a la pantalla anterior y probar su acción de nuevo. Si llegó a esta página de un marcador, el marcador ya no es válida.</value>
   </data>
 </root>
