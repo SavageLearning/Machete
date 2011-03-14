@@ -200,11 +200,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\CategoryController.cs" />
-    <Compile Include="Controllers\ExpenseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PersonController.cs" />
-    <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\WorkerController.cs" />
     <Compile Include="Helpers\AuthorizeExAttribute.cs" />
     <Compile Include="Helpers\Lookups.cs" />
@@ -254,6 +251,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\calendar.gif" />
+    <Content Include="Content\images\404error.jpg" />
     <Content Include="Content\images\ui-bg_diamond_10_4f4221_10x8.png" />
     <Content Include="Content\images\ui-bg_diamond_20_372806_10x8.png" />
     <Content Include="Content\images\ui-bg_diamond_25_675423_10x8.png" />

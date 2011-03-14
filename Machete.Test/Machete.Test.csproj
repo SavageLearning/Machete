@@ -103,7 +103,6 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\CategoryControllerTest.cs" />
     <Compile Include="Data\DatabaseTests.cs" />
     <Compile Include="Domain\PersonTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

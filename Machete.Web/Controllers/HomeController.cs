@@ -6,8 +6,11 @@ using System.Web.Mvc;
 using Machete.Service;
 using System.Web.Helpers;
 using System.Globalization;
+using Machete.Helpers;
+
 namespace Machete.Web.Controllers
 {
+    [ElmahHandleError]
     public class HomeController : Controller
     {
          public ActionResult Chart()

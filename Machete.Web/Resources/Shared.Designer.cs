@@ -88,6 +88,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sorry, an error occurred while processing your request. .
+        /// </summary>
+        public static string ErrorPgApology {
+            get {
+                return ResourceManager.GetString("ErrorPgApology", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Controller Name:.
         /// </summary>
         public static string ErrorPgControllerLabel {
@@ -106,7 +115,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sorry, an error occurred while processing your request..
+        ///   Looks up a localized string similar to An error has occurred. It has been logged and will be reviewed by an administrator. Please use the &apos;back&apos; button on your browser to return to the previous screen and try your action again. If you reached this page from a bookmark, your bookmark is no longer valid..
         /// </summary>
         public static string ErrorPgExplanation {
             get {

@@ -11,9 +11,11 @@ using Machete.Service;
 using Machete.Web.ViewModel;
 using Microsoft.Web.Mvc;
 using System.Web.Security;
+using Elmah;
 
 namespace Machete.Web.Controllers
 {
+    [ElmahHandleError]
     public class WorkerController : Controller
     {
         private readonly IWorkerService workerService;
