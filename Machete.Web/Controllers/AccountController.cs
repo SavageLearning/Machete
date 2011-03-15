@@ -12,6 +12,7 @@ using System.Globalization;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Helpers;
+using NLog;
 
 namespace Machete.Web.Controllers
 {
@@ -21,7 +22,9 @@ namespace Machete.Web.Controllers
 
         public IFormsAuthenticationService FormsService { get; set; }
         public IMembershipService MembershipService { get; set; }
-
+        Logger log = LogManager.GetCurrentClassLogger();
+        LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "AccountController", "");
+        
         protected override void Initialize(RequestContext requestContext)
         {
             if (FormsService == null) { FormsService = new FormsAuthenticationService(); }
@@ -62,7 +65,8 @@ namespace Machete.Web.Controllers
 
                 if (createStatus == MembershipCreateStatus.Success)
                 {
-                    
+                    levent.Level = LogLevel.Info; levent.Message = "Successfully created user: " + member.UserName;
+                    levent.Properties["username"] = this.User.Identity.Name; log.Log(levent);
                 }
                 else
                 {
@@ -73,6 +77,8 @@ namespace Machete.Web.Controllers
 
             // If we got this far, something failed, redisplay form
             ViewBag.PasswordLength = MembershipService.MinPasswordLength;
+            levent.Level = LogLevel.Info; levent.Message = "Create failed for user: " + member.UserName;
+            levent.Properties["username"] = this.User.Identity.Name; log.Log(levent);
             return RedirectToAction("Index");
         }
         // **************************************
@@ -101,13 +107,19 @@ namespace Machete.Web.Controllers
                     if (collection[role].Contains("true"))
                     {
                         if (!Roles.IsUserInRole(member.UserName, role)) Roles.AddUserToRole(member.UserName, role);
+                        levent.Level = LogLevel.Info; levent.Message = "Added " + role + " to user: " + member.UserName;
+                        levent.Properties["username"] = this.User.Identity.Name; log.Log(levent);
                     }
                     else
                     {
                         if (Roles.IsUserInRole(member.UserName, role)) Roles.RemoveUserFromRole(member.UserName, role);
+                        levent.Level = LogLevel.Info; levent.Message = "Removed " + role + " from user: " + member.UserName;
+                        levent.Properties["username"] = this.User.Identity.Name; log.Log(levent);
                     }
                 }
                 Membership.UpdateUser(member);
+                levent.Level = LogLevel.Info; levent.Message = "Edited user: " + member.UserName;
+                levent.Properties["username"] = this.User.Identity.Name; log.Log(levent);
                 return RedirectToAction("Index");
             }
             //TODO: ERror handling
@@ -130,6 +142,16 @@ namespace Machete.Web.Controllers
         {
             MembershipUser member = Membership.GetUser(id, false);
             bool success = Membership.DeleteUser(member.UserName);
+            if (success)
+            {
+                levent.Level = LogLevel.Info; levent.Message = "Deleted user: " + member.UserName;
+                levent.Properties["username"] = this.User.Identity.Name; log.Log(levent);
+            }
+            else
+            {
+                levent.Level = LogLevel.Info; levent.Message = "Failed to delete user: " + member.UserName;
+                levent.Properties["username"] = this.User.Identity.Name; log.Log(levent);
+            }
             return RedirectToAction("Index");
         }
         #endregion 
@@ -151,6 +173,8 @@ namespace Machete.Web.Controllers
                 if (MembershipService.ValidateUser(model.UserName, model.Password))
                 {
                     FormsService.SignIn(model.UserName, model.RememberMe);
+                    levent.Level = LogLevel.Info; levent.Message = "Logon successful";
+                    levent.Properties["username"] = model.UserName; log.Log(levent);
                     if (Url.IsLocalUrl(returnUrl))
                     {
                         return Redirect(returnUrl);
@@ -167,6 +191,8 @@ namespace Machete.Web.Controllers
             }
 
             // If we got this far, something failed, redisplay form
+            levent.Level = LogLevel.Info; levent.Message = "Logon failed for " + model.UserName;
+            log.Log(levent);
             return View(model);
         }
 
@@ -177,7 +203,8 @@ namespace Machete.Web.Controllers
         public ActionResult LogOff()
         {
             FormsService.SignOut();
-
+            levent.Level = LogLevel.Info; levent.Message = "Logoff for " + this.User.Identity.Name;
+            log.Log(levent);
             return RedirectToAction("Index", "Home");
         }
 
@@ -202,6 +229,8 @@ namespace Machete.Web.Controllers
                 if (createStatus == MembershipCreateStatus.Success)
                 {
                     FormsService.SignIn(model.UserName, false /* createPersistentCookie */);
+                    levent.Level = LogLevel.Info; levent.Message = "Registered new user: " + model.UserName;
+                    log.Log(levent);
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -212,6 +241,8 @@ namespace Machete.Web.Controllers
 
             // If we got this far, something failed, redisplay form
             ViewBag.PasswordLength = MembershipService.MinPasswordLength;
+            levent.Level = LogLevel.Info; levent.Message = "Registration failed for " + model.UserName;
+            log.Log(levent);
             return View(model);
         }
 
@@ -234,6 +265,8 @@ namespace Machete.Web.Controllers
             {
                 if (MembershipService.ChangePassword(User.Identity.Name, model.OldPassword, model.NewPassword))
                 {
+                    levent.Level = LogLevel.Info; levent.Message = "Password changed for " + User.Identity.Name;
+                    log.Log(levent);
                     return RedirectToAction("ChangePasswordSuccess");
                 }
                 else
@@ -243,6 +276,8 @@ namespace Machete.Web.Controllers
             }
 
             // If we got this far, something failed, redisplay form
+            levent.Level = LogLevel.Info; levent.Message = "Password change failed for " + User.Identity.Name;
+            log.Log(levent);
             ViewBag.PasswordLength = MembershipService.MinPasswordLength;
             return View(model);
         }

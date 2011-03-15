@@ -13,14 +13,11 @@ namespace Machete.Web.Controllers
     [ElmahHandleError]
     public class HomeController : Controller
     {
-         public ActionResult Chart()
-        {           
-            return null;
-         }
         public ActionResult Index()
         {
-            
+           
            return View();
+
         }
 
         public ActionResult About()

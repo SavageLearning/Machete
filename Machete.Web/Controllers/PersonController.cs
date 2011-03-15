@@ -8,6 +8,7 @@ using Machete.Data.Infrastructure;
 using Machete.Domain;
 using Machete.Helpers;
 using Machete.Service;
+using NLog;
 
 namespace Machete.Web.Controllers
 {
@@ -15,7 +16,8 @@ namespace Machete.Web.Controllers
     public class PersonController : Controller
     { 
         private readonly IPersonService personService;
-
+        private Logger log = LogManager.GetCurrentClassLogger();
+        private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "PersonController", "");
         public PersonController(IPersonService personService)
         {
             this.personService = personService;
@@ -29,12 +31,12 @@ namespace Machete.Web.Controllers
             var persons = personService.GetPersons();
             return View(persons);
         }
-        //TODO: finish search functionality
+        
         [HttpPost]
         [Authorize(Roles = "User, Manager, Administrator, Check-in, PhoneDesk, User")]
         public ActionResult Index(Person person)
         {
-
+            //TODO: finish search functionality
             return View(person);
         }
 
@@ -64,6 +66,10 @@ namespace Machete.Web.Controllers
             person.Createdby = this.User.Identity.Name;
             person.Updatedby = this.User.Identity.Name;
             personService.CreatePerson(person);
+
+            //log.Info("New Person created, ID={0}", person.ID);
+            levent.Level = LogLevel.Info; levent.Message = "New Person created";
+            levent.Properties["RecordID"] = person.ID; log.Log(levent);
             return RedirectToAction("Index");
 
         }
@@ -91,10 +97,17 @@ namespace Machete.Web.Controllers
             if (TryUpdateModel(person))
             {
                 personService.SavePerson();
+                levent.Level = LogLevel.Info; levent.Message = "Person edited";
+                levent.Properties["RecordID"] = person.ID; log.Log(levent);
                 return RedirectToAction("Index");
-               
+
             }
-            else return View(person); 
+            else
+            {
+                levent.Level = LogLevel.Error; levent.Message = "TryUpdateModel failed";
+                levent.Properties["RecordID"] = person.ID; log.Log(levent);
+                return View(person);
+            }
         }
         //
         // GET: /Person/Delete/5
@@ -115,6 +128,8 @@ namespace Machete.Web.Controllers
         public ActionResult Delete(int id, FormCollection collection)
         {
             personService.DeletePerson(id);
+            levent.Level = LogLevel.Info; levent.Message = "Person deleted";
+            levent.Properties["RecordID"] = id; log.Log(levent);
             return RedirectToAction("Index");
         }
     }
