@@ -10,7 +10,6 @@ using Machete.Service;
 using Machete.Web;
 using Machete.Web.Controllers;
 using Moq;
-using NUnit.Framework;
 
 //namespace Machete.Test
 //{

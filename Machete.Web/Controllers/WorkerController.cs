@@ -12,6 +12,7 @@ using Machete.Web.ViewModel;
 using Microsoft.Web.Mvc;
 using System.Web.Security;
 using Elmah;
+using NLog;
 
 namespace Machete.Web.Controllers
 {
@@ -20,6 +21,8 @@ namespace Machete.Web.Controllers
     {
         private readonly IWorkerService workerService;
         private readonly IPersonService personService;
+        private Logger log = LogManager.GetCurrentClassLogger();
+        private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "WorkerController", "");
 
         public WorkerController(IWorkerService workerService, 
                                 IPersonService personService)
@@ -81,6 +84,8 @@ namespace Machete.Web.Controllers
             _model.worker.Updatedby = this.User.Identity.Name;
             
             workerService.CreateWorker(_model.worker);
+            levent.Level = LogLevel.Info; levent.Message = "New Worker created";
+            levent.Properties["RecordID"] = _model.worker.ID; log.Log(levent);
             return RedirectToAction("Index");
         }
         //
@@ -110,10 +115,17 @@ namespace Machete.Web.Controllers
             if (TryUpdateModel(worker))
             {
                 workerService.SaveWorker();
+                levent.Level = LogLevel.Info; levent.Message = "Worker edited";
+                levent.Properties["RecordID"] = id; log.Log(levent);
                 return RedirectToAction("Index");
-               
+
             }
-            else return View(worker); 
+            else
+            {
+                levent.Level = LogLevel.Error; levent.Message = "TryUpdateModel created";
+                levent.Properties["RecordID"] = id; log.Log(levent);
+                return View(worker);
+            }
         }
         //
         // GET: /Worker/Delete/5
@@ -136,6 +148,8 @@ namespace Machete.Web.Controllers
         public ActionResult Delete(int id, FormCollection collection)
         {
             workerService.DeleteWorker(id);
+            levent.Level = LogLevel.Info; levent.Message = "Worker deleted";
+            levent.Properties["RecordID"] = id; log.Log(levent);
             return RedirectToAction("Index");
         }
     }
