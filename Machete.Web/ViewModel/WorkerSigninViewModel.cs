@@ -10,11 +10,10 @@ using Machete.Data;
 
 namespace Machete.Web.ViewModel
 {
-    public class WorkerViewModel
+    public class WorkerSigninViewModel
     {
-        public Domain.Worker worker { get; set; }
-        public Person person { get; set; }
-        //public byte RaceID { get; set; }
-        //public IEnumerable<SelectListItem> Race { get; set; }
+        public int dwccardentry { get; set; }
+        public DateTime dateforsignin { get; set; }
+        public IEnumerable<WorkerSigninView> workersignins { get; set; }
     }
 }

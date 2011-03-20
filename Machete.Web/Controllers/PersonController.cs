@@ -25,7 +25,7 @@ namespace Machete.Web.Controllers
         //
         // GET: /Person/
         //
-        [Authorize(Roles = "User, Manager, Administrator, Check-in, PhoneDesk, User")]
+        [Authorize(Roles = "User, Manager, Administrator, Check-in, PhoneDesk")]
         public ActionResult Index()
         {
             var persons = personService.GetPersons();
@@ -33,7 +33,7 @@ namespace Machete.Web.Controllers
         }
         
         [HttpPost]
-        [Authorize(Roles = "User, Manager, Administrator, Check-in, PhoneDesk, User")]
+        [Authorize(Roles = "User, Manager, Administrator, Check-in, PhoneDesk")]
         public ActionResult Index(Person person)
         {
             //TODO: finish search functionality
@@ -61,10 +61,7 @@ namespace Machete.Web.Controllers
             {
                 return View(person);
             }
-            person.datecreated = DateTime.Now;
-            person.dateupdated = person.datecreated;
-            person.Createdby = this.User.Identity.Name;
-            person.Updatedby = this.User.Identity.Name;
+            person.createdby(this.User.Identity.Name);
             personService.CreatePerson(person);
 
             //log.Info("New Person created, ID={0}", person.ID);
@@ -92,10 +89,10 @@ namespace Machete.Web.Controllers
         public ActionResult Edit(int id, FormCollection collection)
         {
             var person = personService.GetPerson(id);
-            person.dateupdated = DateTime.Now;
-            person.Updatedby = this.User.Identity.Name;
+            
             if (TryUpdateModel(person))
             {
+                person.updatedby(this.User.Identity.Name);
                 personService.SavePerson();
                 levent.Level = LogLevel.Info; levent.Message = "Person edited";
                 levent.Properties["RecordID"] = person.ID; log.Log(levent);

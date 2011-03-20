@@ -18,6 +18,7 @@ namespace Machete.Web.Controllers
         public ActionResult Http404(string url)
         {
             Response.StatusCode = 404;
+            Response.TrySkipIisCustomErrors = true;
             ViewData["url"] = url;
             return View();
         }

@@ -169,6 +169,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Worker Signin.
+        /// </summary>
+        public static string workersignintab {
+            get {
+                return ResourceManager.GetString("workersignintab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Workers.
         /// </summary>
         public static string workerstab {

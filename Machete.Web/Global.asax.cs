@@ -100,9 +100,11 @@ namespace Machete.Web
             .RegisterType<IUnitOfWork, UnitOfWork>(new HttpContextLifetimeManager<IUnitOfWork>())
                 // TODO: Add repositories
             .RegisterType<IPersonRepository, PersonRepository>(new HttpContextLifetimeManager<IPersonRepository>())
+            .RegisterType<IWorkerSigninRepository, WorkerSigninRepository>(new HttpContextLifetimeManager<IWorkerSigninRepository>())
             .RegisterType<IWorkerRepository, WorkerRepository>(new HttpContextLifetimeManager<IWorkerRepository>())
                 // TODO: Add services
             .RegisterType<IPersonService, PersonService>(new HttpContextLifetimeManager<IPersonService>())
+            .RegisterType<IWorkerSigninService, WorkerSigninService>(new HttpContextLifetimeManager<IWorkerSigninService>())
             .RegisterType<IWorkerService, WorkerService>(new HttpContextLifetimeManager<IWorkerService>());
             return container;
         }

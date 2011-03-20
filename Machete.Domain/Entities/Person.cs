@@ -10,12 +10,11 @@ using Machete.Domain.Resources;
 
 namespace Machete.Domain
 {
-
-    public class Person
+    public class Person : Record
     {   
-        //[Key]
         public int ID { get; set; }
         public virtual Worker Worker { get; set; }
+        public Person() { }
         //
         [LocalizedDisplayName("firstname1", NameResourceType = typeof(Persons))]
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Persons))]
@@ -66,11 +65,6 @@ namespace Machete.Domain
         [LocalizedDisplayName("genderother", NameResourceType = typeof(Persons))]
         [StringLength(20, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Persons))]
         public string genderother { get; set; }
-
-        public DateTime datecreated { get; set; }
-        public DateTime dateupdated { get; set; }
-        public string Createdby { get; set; }
-        public string Updatedby { get; set; }
-        public Person() { }
+        
     }
 }

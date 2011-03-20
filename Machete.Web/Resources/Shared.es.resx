@@ -159,4 +159,7 @@
   <data name="ErrorPgExplanation" xml:space="preserve">
     <value>Ha ocurrido un error. Se ha registrado y será revisado por un administrador. Por favor, utilice el botón "Atrás" de su navegador para regresar a la pantalla anterior y probar su acción de nuevo. Si llegó a esta página de un marcador, el marcador ya no es válida.</value>
   </data>
+  <data name="workersignintab" xml:space="preserve">
+    <value>Registros</value>
+  </data>
 </root>

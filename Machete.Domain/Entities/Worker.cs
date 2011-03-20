@@ -10,10 +10,11 @@ using Machete.Domain.Resources;
 
 namespace Machete.Domain
 {
-    public class Worker
+    public class Worker : Record
     {
         public int ID { get; set; }
         public virtual Person Person { get; set; }
+        public virtual ICollection<WorkerSignin> workersignins { get; set; }
         //
         [Required(ErrorMessageResourceName = "required", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("raceID", NameResourceType = typeof(Resources.Worker))]
@@ -91,6 +92,7 @@ namespace Machete.Domain
         [Required(ErrorMessageResourceName = "dwccardnum", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("dwccardnum", NameResourceType = typeof(Resources.Worker))]
         [RegularExpression("^[0-9]{5,5}$", ErrorMessageResourceName = "dwccardnumerror", ErrorMessageResourceType = typeof(Resources.Worker))]
+   
         public int dwccardnum { get; set; }
         //
         [Required(ErrorMessageResourceName = "neighborhoodID", ErrorMessageResourceType = typeof(Resources.Worker))]
@@ -134,10 +136,10 @@ namespace Machete.Domain
         //
         [LocalizedDisplayName("insuranceexpiration", NameResourceType = typeof(Resources.Worker))]
         public DateTime? insuranceexpiration { get; set; }
-        public DateTime datecreated { get; set; }
-        public DateTime dateupdated { get; set; }
-        public string Createdby { get; set; }
-        public string Updatedby { get; set; }
+        //public DateTime datecreated { get; set; }
+        //public DateTime dateupdated { get; set; }
+        //public string Createdby { get; set; }
+        //public string Updatedby { get; set; }
     }
 }
 

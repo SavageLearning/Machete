@@ -29,8 +29,8 @@ namespace Machete.Service
 
         public IEnumerable<Worker> GetWorkers()
         {
-            var categories = workerRepository.GetAll();
-            return categories;
+            var workers = workerRepository.GetAll();
+            return workers;
         }
 
         public Worker GetWorker(int id)

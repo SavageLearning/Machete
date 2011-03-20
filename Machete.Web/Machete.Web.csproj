@@ -200,6 +200,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PersonController.cs" />
     <Compile Include="Controllers\WorkerController.cs" />
+    <Compile Include="Controllers\WorkerSigninController.cs" />
     <Compile Include="Helpers\AuthorizeExAttribute.cs" />
     <Compile Include="Helpers\Lookups.cs" />
     <Compile Include="IoC\CustomControllerActivator.cs" />
@@ -242,7 +243,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Shared.es.resx</DependentUpon>
     </Compile>
-    <Compile Include="ViewModel\ExpenseViewModel.cs" />
+    <Compile Include="ViewModel\WorkerSigninViewModel.cs" />
     <Compile Include="ViewModel\WorkerViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -329,37 +330,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Category\CategoryList.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Category\Create.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Category\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Category\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Expense\ExpenseList.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Expense\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Expense\Create.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Expense\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Shared\EditorTemplates\Category.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Shared\EditorTemplates\ExpenseViewModel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Code\TwitterGoodies.cshtml" />
@@ -458,6 +432,9 @@
     <Content Include="NLog.config">
       <SubType>Designer</SubType>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\WorkerSignin\Index.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
