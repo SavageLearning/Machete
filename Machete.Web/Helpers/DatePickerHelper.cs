@@ -18,8 +18,6 @@ namespace Machete.Helpers
                      "});" +
                      "</script>" +
                      "<input type=\"text\" size=\"10\" value=\"" + value + "\" id=\"" + name + "\" name=\"" + name + "\"/>";
-
         }
-
     }
 }

@@ -73,15 +73,8 @@ namespace Machete.Web.Controllers
             }
             _model.worker.Person = _model.person;
             _model.person.Worker = _model.worker;
-            DateTime rightnow = DateTime.Now;
-            _model.person.datecreated = rightnow;
-            _model.person.dateupdated = rightnow;
-            _model.worker.datecreated = rightnow;
-            _model.worker.dateupdated = rightnow;
-            _model.person.Createdby = this.User.Identity.Name;
-            _model.person.Updatedby = this.User.Identity.Name;
-            _model.worker.Createdby = this.User.Identity.Name;
-            _model.worker.Updatedby = this.User.Identity.Name;
+            _model.person.createdby(this.User.Identity.Name);
+            _model.worker.createdby(this.User.Identity.Name);
             
             workerService.CreateWorker(_model.worker);
             levent.Level = LogLevel.Info; levent.Message = "New Worker created";
@@ -95,7 +88,7 @@ namespace Machete.Web.Controllers
         public ActionResult Edit(int id)
         {
             Worker _worker = workerService.GetWorker(id);
-            var _model = new WorkerViewModel();
+            WorkerViewModel _model = new WorkerViewModel();
             _model.worker = _worker;
             _model.person = _worker.Person;
             return View(_model);
@@ -107,12 +100,12 @@ namespace Machete.Web.Controllers
         //
         [HttpPost]
         [Authorize(Roles = "Manager, Administrator")] 
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(int id, WorkerViewModel _model)
         {
-            var worker = workerService.GetWorker(id);
-            worker.dateupdated = DateTime.Now;
-            worker.Updatedby = this.User.Identity.Name;
-            if (TryUpdateModel(worker))
+            Worker worker = workerService.GetWorker(id);
+            Person person = personService.GetPerson(id);
+            worker.updatedby(this.User.Identity.Name);
+            if (TryUpdateModel(worker) && TryUpdateModel(person))
             {
                 workerService.SaveWorker();
                 levent.Level = LogLevel.Info; levent.Message = "Worker edited";
@@ -122,7 +115,7 @@ namespace Machete.Web.Controllers
             }
             else
             {
-                levent.Level = LogLevel.Error; levent.Message = "TryUpdateModel created";
+                levent.Level = LogLevel.Error; levent.Message = "TryUpdateModel failed";
                 levent.Properties["RecordID"] = id; log.Log(levent);
                 return View(worker);
             }

@@ -56,6 +56,8 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -70,6 +72,7 @@
     <Compile Include="Entities\Neighborhood.cs" />
     <Compile Include="Entities\Person.cs" />
     <Compile Include="Entities\Race.cs" />
+    <Compile Include="Entities\Record.cs" />
     <Compile Include="Entities\Skill.cs" />
     <Compile Include="Entities\Survey.cs" />
     <Compile Include="Entities\TypeOfWork.cs" />

@@ -14,14 +14,13 @@ namespace Machete.Data
         {
             //Initialize Lookups
             MacheteLookup.Initialize(macheteDB);
-
             new List<Person>
             {
                 new Person { firstname1 = "Jimmy", 
                              lastname1="Carter", 
-                             gender="M", 
+                             gender="M",
                              datecreated=DateTime.Now, 
-                             dateupdated=DateTime.Now,
+                             dateupdated=DateTime.Now, 
                              Createdby = "MacheteInitializer",
                              Updatedby = "MacheteInitializer",
                              Worker=new Worker {RaceID=1, 
@@ -34,14 +33,14 @@ namespace Machete.Data
                                                 incomeID=1,
                                                 neighborhoodID=1,
                                                 countryoforigin="USA",
-                                                dwccardnum=12345,
+                                                dwccardnum=30114,
                                                 memberexpirationdate=DateTime.Now,
                                                 insuranceexpiration=DateTime.Now,
                                                 datecreated=DateTime.Now, 
                                                 dateupdated=DateTime.Now,
                                                 Createdby = "MacheteInitializer",
                                                 Updatedby = "MacheteInitializer"
-                              }
+                              },
                 },
                 new Person {firstname1 = "Arielle", 
                             lastname1="Rosenberg", 
@@ -60,7 +59,7 @@ namespace Machete.Data
                                                 incomeID=1,
                                                 neighborhoodID=1,
                                                 countryoforigin="USA",
-                                                dwccardnum=12346,
+                                                dwccardnum=30552,
                                                 memberexpirationdate=DateTime.Now,
                                                 insuranceexpiration=DateTime.Now,
                                                 datecreated=DateTime.Now, 

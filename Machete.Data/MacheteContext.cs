@@ -10,7 +10,8 @@ namespace Machete.Data
 {
     public class MacheteContext : DbContext
     {
-        public MacheteContext() : base("macheteConnection") { } //Machete here defines the database to use, by convention.
+        public MacheteContext() : base("macheteConnection") { }
+          //Machete here defines the database to use, by convention.
         public DbSet<Person> Persons { get; set; }
         public DbSet<Worker> Workers { get; set; }
         public DbSet<Race> Races { get; set; }
@@ -19,12 +20,13 @@ namespace Machete.Data
         public DbSet<Neighborhood> Neighborhoods { get; set; }
         public DbSet<Skill> Skills { get; set; }
         public DbSet<TypeOfWork> TypesOfWork { get; set; }
-        //public DbSet<WorkerSignin> WorkerSignins { get; set; }
+        public DbSet<WorkerSignin> WorkerSignins { get; set; }
         //public DbSet<Employer> Employers { get; set; }
         //public DbSet<WorkOrder> WorkOrders { get; set; }
         //public DbSet<WorkerSkill> WorkerSkills { get; set; }
         //public DbSet<WorkAssignment> WorkAssignments { get; set; }
         //public DbSet<Survey> Surveys { get; set; }
+        
 
         public virtual void Commit()
         {
@@ -38,6 +40,8 @@ namespace Machete.Data
             base.OnModelCreating(modelBuilder); //This calls the other builders (below)
             modelBuilder.Configurations.Add(new PersonBuilder());
             modelBuilder.Configurations.Add(new WorkerBuilder());
+            modelBuilder.Configurations.Add(new WorkerSigninBuilder());
+            //modelBuilder.Configurations.Add(new WorkerSigninViewBuilder());
             //modelBuilder.Entity<Race>().ToTable("LookupRace");
             //modelBuilder.Entity<EnglishLevel>().ToTable("LookupEnglishlevel");
             //modelBuilder.Entity<Income>().ToTable("LookupIncome");
@@ -58,15 +62,23 @@ namespace Machete.Data
             ToTable("Persons");
             HasKey(k => k.ID);
             HasOptional(p => p.Worker).WithRequired().WillCascadeOnDelete();
-
-            //HasKey(k => new { k.firstname1, k.firstname2, k.lastname1, k.lastname2 });
         }
     }
     public class WorkerBuilder : EntityTypeConfiguration<Worker>
     {
         public WorkerBuilder() 
         {
+            HasKey(k => k.ID);
+            HasMany(s => s.workersignins)
+                .WithOptional(s => s.worker)
+                .HasForeignKey(s => s.WorkerID);
         }
     }
-
+    public class WorkerSigninBuilder : EntityTypeConfiguration<WorkerSignin>
+    {
+        public WorkerSigninBuilder()
+        {
+            HasKey(k => k.ID);
+        }
+    }
 }

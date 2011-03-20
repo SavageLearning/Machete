@@ -159,4 +159,7 @@
   <data name="ErrorPgExplanation" xml:space="preserve">
     <value>An error has occurred. It has been logged and will be reviewed by an administrator. Please use the 'back' button on your browser to return to the previous screen and try your action again. If you reached this page from a bookmark, your bookmark is no longer valid.</value>
   </data>
+  <data name="workersignintab" xml:space="preserve">
+    <value>Worker Signin</value>
+  </data>
 </root>
