@@ -1,0 +1,57 @@
+﻿@model IEnumerable<Machete.Domain.Image>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th></th>
+        <th>
+            ImageMimeType
+        </th>
+        <th>
+            datecreated
+        </th>
+        <th>
+            dateupdated
+        </th>
+        <th>
+            Createdby
+        </th>
+        <th>
+            Updatedby
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+        <td>
+            @item.ImageMimeType
+        </td>
+        <td>
+            @String.Format("{0:g}", item.datecreated)
+        </td>
+        <td>
+            @String.Format("{0:g}", item.dateupdated)
+        </td>
+        <td>
+            @item.Createdby
+        </td>
+        <td>
+            @item.Updatedby
+        </td>
+    </tr>
+}
+
+</table>
+

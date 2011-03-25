@@ -26,9 +26,9 @@ public abstract class RepositoryBase<T> where T : class
     {
         get { return dataContext ?? (dataContext = DatabaseFactory.Get()); }
     }
-    public virtual void Add(T entity)
+    public virtual T Add(T entity)
     {
-        dbset.Add(entity);           
+        return dbset.Add(entity);           
     }
       
     public virtual void Delete(T entity)

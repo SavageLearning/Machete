@@ -7,7 +7,7 @@ namespace Machete.Data.Infrastructure
 {
 public interface IRepository<T> where T : class
 {
-    void Add(T entity);
+    T Add(T entity);
     void Delete(T entity);
     void Delete(Func<T, Boolean> predicate);
     T GetById(long Id);

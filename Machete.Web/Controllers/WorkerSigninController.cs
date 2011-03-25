@@ -16,7 +16,7 @@ namespace Machete.Web.Controllers
     public class WorkerSigninController : Controller
     {
         private readonly IWorkerSigninService workerSigninService;
-        private MacheteContext DB;
+        //private MacheteContext DB;
         
         private Logger log = LogManager.GetCurrentClassLogger();
         private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "WorkerSigninController", "");
@@ -25,28 +25,27 @@ namespace Machete.Web.Controllers
         public WorkerSigninController(IWorkerSigninService workerSigninService)
         {
             this.workerSigninService = workerSigninService;
-            DB = new MacheteContext();
+            //DB = new MacheteContext();
         }
 
-        private IEnumerable<WorkerSigninView> getView(DateTime date)
-        {
-            return from s in DB.WorkerSignins.AsEnumerable()
-                   join w in DB.Workers.AsEnumerable() on s.dwccardnum equals w.dwccardnum into outer
-                   from o in outer.DefaultIfEmpty()
-                   join p in DB.Persons.AsEnumerable() on o.ID equals p.ID
-                   where s.dateforsignin.DayOfYear == date.DayOfYear
-                   select new WorkerSigninView() { person = p, signin = s };
-        }
+        //private IEnumerable<WorkerSigninView> getView(DateTime date)
+        //{
+        //    return from s in DB.WorkerSignins.AsEnumerable()
+        //           join w in DB.Workers.AsEnumerable() on s.dwccardnum equals w.dwccardnum into outer
+        //           from w in outer.DefaultIfEmpty()
+        //           join p in DB.Persons.AsEnumerable() on w.ID equals p.ID
+        //           select new WorkerSigninView() { person = p, signin = s };
+        //}
         //
         // GET: /WorkerSignin/
 
         [Authorize(Roles = "User, Manager, Administrator, Check-in, PhoneDesk")]
         public ActionResult Index()
         {        
-            var _model = new WorkerSigninViewModel();
+            WorkerSigninViewModel _model = new WorkerSigninViewModel();
             if (ViewBag.dateforsignin == null) _model.dateforsignin = DateTime.Today;
             else _model.dateforsignin = ViewBag.dateforsignin;
-            _model.workersignins = getView(_model.dateforsignin);
+            _model.workersignins = workerSigninService.getView(_model.dateforsignin);
             return View(_model);
         }
 
@@ -57,20 +56,26 @@ namespace Machete.Web.Controllers
             var _signin = new WorkerSignin();
             _signin.dwccardnum = dwccardentry;
             _signin.dateforsignin = dateforsignin;
-            _signin.createdby(this.User.Identity.Name);
-            if (DB.WorkerSignins.AsEnumerable().Count(s => s.dateforsignin == dateforsignin && s.dwccardnum == dwccardentry) == 0)
-            {
-                DB.WorkerSignins.Add(_signin);
-                DB.SaveChanges();
-            }   
+            workerSigninService.CreateWorkerSignin(_signin, this.User.Identity.Name);
+
+            //if (DB.Workers.AsEnumerable().Count(s => s.dwccardnum == dwccardentry) > 0) 
+            //{
+            //    _signin.WorkerID = DB.Workers.AsEnumerable().First(s => s.dwccardnum == dwccardentry).ID;
+            //}
+            //if (DB.WorkerSignins.AsEnumerable().Count(s => s.dateforsignin == dateforsignin && s.dwccardnum == dwccardentry) == 0)
+            //{
+                
+            //    DB.WorkerSignins.Add(_signin);
+            //    DB.SaveChanges();
+            //}   
             //try
             //{
 
 
                 var _model = new WorkerSigninViewModel();
                 _model.dateforsignin = dateforsignin;
-                ModelState.Remove("dwccardentry");
-                _model.workersignins = getView(_model.dateforsignin);
+                ModelState.Remove("dwccardentry"); // Clears previous entry from view for next iteration
+                _model.workersignins = workerSigninService.getView(_model.dateforsignin);
                 return View(_model);
             //}
             //catch
@@ -145,10 +150,7 @@ namespace Machete.Web.Controllers
  
         public ActionResult Delete(int id)
         {
-            var del = DB.WorkerSignins.Find(id);
-            DB.WorkerSignins.Remove(del);
-            DB.SaveChanges();
-            //workerSigninService.DeleteWorkerSignin(id);
+            workerSigninService.DeleteWorkerSignin(id);
             return RedirectToAction("Index");
         }
 

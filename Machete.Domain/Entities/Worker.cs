@@ -136,10 +136,8 @@ namespace Machete.Domain
         //
         [LocalizedDisplayName("insuranceexpiration", NameResourceType = typeof(Resources.Worker))]
         public DateTime? insuranceexpiration { get; set; }
-        //public DateTime datecreated { get; set; }
-        //public DateTime dateupdated { get; set; }
-        //public string Createdby { get; set; }
-        //public string Updatedby { get; set; }
+        //
+        public int? ImageID { get; set; }
     }
 }
 

@@ -198,11 +198,13 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ImageController.cs" />
     <Compile Include="Controllers\PersonController.cs" />
     <Compile Include="Controllers\WorkerController.cs" />
     <Compile Include="Controllers\WorkerSigninController.cs" />
     <Compile Include="Helpers\AuthorizeExAttribute.cs" />
     <Compile Include="Helpers\Lookups.cs" />
+    <Compile Include="Helpers\userNameFilterAttribute.cs" />
     <Compile Include="IoC\CustomControllerActivator.cs" />
     <Compile Include="IoC\UnityControllerFactory .cs" />
     <Compile Include="Global.asax.cs">
@@ -248,7 +250,19 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\calendar.gif" />
+    <Content Include="Content\dataTables\demo_page.css" />
+    <Content Include="Content\dataTables\demo_table.css" />
+    <Content Include="Content\dataTables\demo_table_jui.css" />
     <Content Include="Content\images\404error.jpg" />
+    <Content Include="Content\images\back_disabled.jpg" />
+    <Content Include="Content\images\back_enabled.jpg" />
+    <Content Include="Content\images\forward_disabled.jpg" />
+    <Content Include="Content\images\forward_enabled.jpg" />
+    <Content Include="Content\images\sort_asc.png" />
+    <Content Include="Content\images\sort_asc_disabled.png" />
+    <Content Include="Content\images\sort_both.png" />
+    <Content Include="Content\images\sort_desc.png" />
+    <Content Include="Content\images\sort_desc_disabled.png" />
     <Content Include="Content\images\ui-bg_diamond_10_4f4221_10x8.png" />
     <Content Include="Content\images\ui-bg_diamond_20_372806_10x8.png" />
     <Content Include="Content\images\ui-bg_diamond_25_675423_10x8.png" />
@@ -269,6 +283,8 @@
     <Content Include="Content\Site_StageTest.css" />
     <Content Include="Global.asax" />
     <Content Include="machete.ico" />
+    <Content Include="Scripts\jquery.dataTables-1.7.6.js" />
+    <Content Include="Scripts\jquery.dataTables-1.7.6.min.js" />
     <Content Include="Scripts\jquery.ui.core.js" />
     <Content Include="Scripts\jquery.ui.datepicker.js" />
     <Content Include="Web.config">
@@ -423,6 +439,8 @@
     <Content Include="Views\Worker\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Content\themes\base\" />
+    <Folder Include="Content\themes\smoothness\" />
     <Folder Include="Tests\Worker\" />
   </ItemGroup>
   <ItemGroup>
@@ -435,6 +453,21 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\WorkerSignin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Image\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\EditorTemplates\Image.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Image\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Image\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Content\images\Sorting icons.psd" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
