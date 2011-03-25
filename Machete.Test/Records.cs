@@ -9,7 +9,8 @@ namespace Machete.Test
     public class Records
     {
         public static Worker _worker1 = new Worker
-        {                                   //#C data type
+        {   
+            ID = 1,                         //#C data type
             RaceID = 1,                     //byte
             raceother = "Records._worker1", //string
             height = "too tall",            //string
@@ -47,6 +48,7 @@ namespace Machete.Test
         };
         public static Worker _worker2 = new Worker
         {                                   //#C data type
+            ID =2 , 
             RaceID = 1,                     //byte
             raceother = "Records._worker2",         //string
             height = "too tall",            //string
@@ -65,7 +67,7 @@ namespace Machete.Test
             emcontUSAname = "Bill Clinton", //string
             emcontUSAphone = "1234567890",  //string
             emcontUSArelation = "idol",     //string
-            dwccardnum = 12345,                 //int
+            dwccardnum = 12346,                 //int
             neighborhoodID = 1,             //byte
             immigrantrefugee = true,        //bool
             countryoforigin = "USA",        //string
@@ -84,6 +86,7 @@ namespace Machete.Test
         };
         public static Worker _worker3 = new Worker
         {                                   //#C data type
+            ID = 3,
             RaceID = 1,                     //byte
             raceother = "Records._worker3",         //string
             height = "too tall",            //string
@@ -102,7 +105,7 @@ namespace Machete.Test
             emcontUSAname = "Bill Clinton", //string
             emcontUSAphone = "1234567890",  //string
             emcontUSArelation = "idol",     //string
-            dwccardnum = 12345,                 //int
+            dwccardnum = 12347,                 //int
             neighborhoodID = 1,             //byte
             immigrantrefugee = true,        //bool
             countryoforigin = "USA",        //string
@@ -121,6 +124,7 @@ namespace Machete.Test
         };
         public static Person _person1 = new Person
         {
+            ID = 1,
             firstname1 = "Records._person1",
             firstname2 = "default record",
             lastname1 = "testestestest",
@@ -137,6 +141,7 @@ namespace Machete.Test
         };
         public static Person _person2 = new Person
         {
+            ID = 2,
             firstname1 = "Records._person2",
             firstname2 = "default record",
             lastname1 = "testestestest",
@@ -153,6 +158,7 @@ namespace Machete.Test
         };
         public static Person _person3 = new Person
         {
+            ID = 3,
             firstname1 = "Records._person3",
             firstname2 = "default record",
             lastname1 = "testestestest",
@@ -169,6 +175,7 @@ namespace Machete.Test
         };
         public static Person _person4 = new Person
         {
+            ID = 4,
             firstname1 = "Records._person4",
             firstname2 = "default record",
             lastname1 = "testestestest",
@@ -185,6 +192,7 @@ namespace Machete.Test
         };
         public static Person _person5 = new Person
         {
+            ID = 5,
             firstname1 = "Records._person5",
             firstname2 = "default record",
             lastname1 = "testestestest",
