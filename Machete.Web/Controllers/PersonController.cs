@@ -8,6 +8,7 @@ using Machete.Data.Infrastructure;
 using Machete.Domain;
 using Machete.Helpers;
 using Machete.Service;
+using Machete.Web.Helpers;
 using NLog;
 
 namespace Machete.Web.Controllers
@@ -22,6 +23,7 @@ namespace Machete.Web.Controllers
         {
             this.personService = personService;
         }
+        #region Index
         //
         // GET: /Person/
         //
@@ -37,9 +39,12 @@ namespace Machete.Web.Controllers
         public ActionResult Index(Person person)
         {
             //TODO: finish search functionality
-            return View(person);
+            throw new NotImplementedException();
+            //return View(person);
         }
+        #endregion
 
+        #region Create
         //
         // GET: /Person/Create
         [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
@@ -53,23 +58,20 @@ namespace Machete.Web.Controllers
         //
         // POST: /Person/Create
         //
-        [HttpPost]
+        [HttpPost, UserNameFilter]
         [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
-        public ActionResult Create(Person person)
+        public ActionResult Create(Person person, string userName)
         {
             if (!ModelState.IsValid)
             {
                 return View(person);
             }
-            person.createdby(this.User.Identity.Name);
-            personService.CreatePerson(person);
-
-            //log.Info("New Person created, ID={0}", person.ID);
-            levent.Level = LogLevel.Info; levent.Message = "New Person created";
-            levent.Properties["RecordID"] = person.ID; log.Log(levent);
+            personService.CreatePerson(person, userName);
             return RedirectToAction("Index");
-
         }
+        #endregion
+
+        #region Edit
         //
         // GET: /Person/Edit/5
         //
@@ -84,20 +86,16 @@ namespace Machete.Web.Controllers
         // POST: /Person/Edit/5
         // TODO: catch exceptions, notify user
         //
-        [HttpPost]
+        [HttpPost, UserNameFilter]
         [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(int id, FormCollection collection, string userName)
         {
             var person = personService.GetPerson(id);
             
             if (TryUpdateModel(person))
             {
-                person.updatedby(this.User.Identity.Name);
-                personService.SavePerson();
-                levent.Level = LogLevel.Info; levent.Message = "Person edited";
-                levent.Properties["RecordID"] = person.ID; log.Log(levent);
+                personService.SavePerson(person, userName);
                 return RedirectToAction("Index");
-
             }
             else
             {
@@ -106,6 +104,9 @@ namespace Machete.Web.Controllers
                 return View(person);
             }
         }
+        #endregion
+
+        #region Delete
         //
         // GET: /Person/Delete/5
         [Authorize(Roles = "Administrator")]
@@ -114,20 +115,18 @@ namespace Machete.Web.Controllers
             var person = personService.GetPerson(id);
             ViewBag.Genders = Lookups.genders;
             return View(person);
-
         }
 
         //
         // POST: /Person/Delete/5
 
-        [HttpPost]
+        [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator")] 
-        public ActionResult Delete(int id, FormCollection collection)
+        public ActionResult Delete(int id, FormCollection collection, string user)
         {
-            personService.DeletePerson(id);
-            levent.Level = LogLevel.Info; levent.Message = "Person deleted";
-            levent.Properties["RecordID"] = id; log.Log(levent);
+            personService.DeletePerson(id, user);
             return RedirectToAction("Index");
         }
+        #endregion
     }
 }

@@ -1,5 +1,15 @@
 ﻿@model IEnumerable<Machete.Domain.Worker>
-
+<script src="@Url.Content("~/Scripts/jquery-ui.js")" type="text/javascript"></script> 
+<script src="@Url.Content("~/Scripts/jquery-1.4.4.min.js")" type="text/javascript"></script> 
+<script src="@Url.Content("~/Scripts/jquery.dataTables-1.7.6.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.jeditable.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.dataTables.editable.js")" type="text/javascript"></script>
+<link href="@Url.Content("~/Content/dataTables/demo_table.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Content/dataTables/demo_table_jui.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Content/themes/base/jquery-ui.css")" rel="stylesheet" type="text/css" media="all" />
+<link href="@Url.Content("~/Content/themes/smoothness/jquery-ui-1.7.2.custom.css")"rel="stylesheet" type="text/css" media="all" />
+ 
 @{
     ViewBag.Title = "Index";
 }
@@ -9,9 +19,13 @@
 <p>
     @Html.ActionLink("Create New", "Create", null, new { id="createlink" })
 </p>
-<table>
+<table id="myDataTable" class="display">
+    <thead>
     <tr>
         <th></th>
+        <th>
+            @Machete.Domain.Resources.Worker.dwccardnum
+        </th>
         <th>
             @Machete.Domain.Resources.Persons.firstname1
         </th>
@@ -25,16 +39,18 @@
             @Machete.Domain.Resources.Persons.lastname2
         </th>
         <th>
-            @Machete.Domain.Resources.Worker.dateupdated
+            @Machete.Domain.Resources.Worker.memberexpirationdate
         </th>
     </tr>
-
+    </thead>
 @foreach (var item in Model) {
     <tr>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
             @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+        <td>
+            @item.dwccardnum
         </td>
         <td>
             @item.Person.firstname1
@@ -49,10 +65,20 @@
              @item.Person.lastname2
         </td>
         <td>
-            @String.Format("{0:g}", item.dateupdated)
+            @String.Format("{0:g}", item.memberexpirationdate)
         </td>
     </tr>
 }
-
 </table>
-
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        $('#myDataTable').dataTable({
+            "bPaginate": true,
+            "bLengthChange": true,
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false
+        });
+    });  
+</script>	

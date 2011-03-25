@@ -12,43 +12,68 @@ namespace Machete.Service
     {
         IEnumerable<WorkerSignin> GetWorkerSignins();
         WorkerSignin GetWorkerSignin(int id);
-        void CreateWorkerSignin(WorkerSignin workerSignin);
+        void CreateWorkerSignin(WorkerSignin workerSignin, string user);
         void DeleteWorkerSignin(int id);
         void SaveWorkerSignin();
+        IEnumerable<WorkerSigninView> getView(DateTime date);
     }
     public class WorkerSigninService : IWorkerSigninService
     {
-        private readonly IWorkerSigninRepository workerSigninRepository;
+        private readonly IWorkerSigninRepository signinRepo;
+        private readonly IWorkerRepository workerRepo;
+        private readonly IPersonRepository personRepo;
         private readonly IUnitOfWork unitOfWork;
-        public WorkerSigninService(IWorkerSigninRepository workerSigninRepository, IUnitOfWork unitOfWork)
+        //
+        //
+        public WorkerSigninService(IWorkerSigninRepository workerSigninRepository, 
+                                   IWorkerRepository workerRepository,
+                                   IPersonRepository personRepository,
+                                   IUnitOfWork unitOfWork)
         {
-            this.workerSigninRepository = workerSigninRepository;
+            this.signinRepo = workerSigninRepository;
+            this.workerRepo = workerRepository;
+            this.personRepo = personRepository;
             this.unitOfWork = unitOfWork;
         }
         #region IWorkerSigninService Members
 
         public IEnumerable<WorkerSignin> GetWorkerSignins()
         {
-            var categories = workerSigninRepository.GetAll();
-            return categories;
+            var signins = signinRepo.GetAll();
+            return signins;
         }
 
         public WorkerSignin GetWorkerSignin(int id)
         {
-            var workerSignin = workerSigninRepository.GetById(id);
+            var workerSignin = signinRepo.GetById(id);
             return workerSignin;
         }
 
-        public void CreateWorkerSignin(WorkerSignin workerSignin)
+        public void CreateWorkerSignin(WorkerSignin signin, string user)
         {
-            workerSigninRepository.Add(workerSignin);
-            unitOfWork.Commit();
+            //Search for worker with matching card number
+            Worker _wfound;
+            _wfound = workerRepo.GetAll().FirstOrDefault(s => s.dwccardnum == signin.dwccardnum);
+            if (_wfound != null)
+            {
+                signin.WorkerID = _wfound.ID;
+            }
+            //Search for duplicate signin for the same day
+            int _sfound = 0;;
+            _sfound = signinRepo.GetAll().Count(s => s.dateforsignin == signin.dateforsignin &&
+                                                     s.dwccardnum == signin.dwccardnum);
+            if (_sfound == 0)
+            {
+                signin.createdby(user);
+                signinRepo.Add(signin);
+                unitOfWork.Commit();
+            }
         }
 
         public void DeleteWorkerSignin(int id)
         {
-            var workerSignin = workerSigninRepository.GetById(id);
-            workerSigninRepository.Delete(workerSignin);
+            var workerSignin = signinRepo.GetById(id);
+            signinRepo.Delete(workerSignin);
             unitOfWork.Commit();
         }
 
@@ -57,6 +82,18 @@ namespace Machete.Service
             unitOfWork.Commit();
         }
 
+        public IEnumerable<WorkerSigninView> getView(DateTime date)
+        {
+            var s_to_w_query = from s in signinRepo.GetAll()
+                         where s.dateforsignin == date
+                         join w in workerRepo.GetAll() on s.dwccardnum equals w.dwccardnum into outer
+                         from row in outer.DefaultIfEmpty(new Worker{ID=0})
+                         join p in personRepo.GetAll() on row.ID equals p.ID into final
+                         from finalrow in final.DefaultIfEmpty(new Person{ID=0})
+                         select new WorkerSigninView() { person = finalrow, signin = s };
+
+            return s_to_w_query;
+        }
         #endregion
     }
 }

@@ -21,6 +21,7 @@ namespace Machete.Data
         public DbSet<Skill> Skills { get; set; }
         public DbSet<TypeOfWork> TypesOfWork { get; set; }
         public DbSet<WorkerSignin> WorkerSignins { get; set; }
+        public DbSet<Image> Images { get; set; }
         //public DbSet<Employer> Employers { get; set; }
         //public DbSet<WorkOrder> WorkOrders { get; set; }
         //public DbSet<WorkerSkill> WorkerSkills { get; set; }
