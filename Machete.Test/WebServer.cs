@@ -6,6 +6,7 @@ using System.Diagnostics;
 
 namespace Machete.Test
 {
+    // Stops and starts web server for WatiN integration tests
     public class WebServer
     {
         private readonly string physicalPath;
