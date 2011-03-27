@@ -121,6 +121,7 @@
     <Compile Include="IntegrationTests\Services\WorkerServiceTest.cs" />
     <Compile Include="Domain\WorkerTests.cs" />
     <Compile Include="Records.cs" />
+    <Compile Include="UnitTests\Services\ImageServiceUnitTests.cs" />
     <Compile Include="UnitTests\Services\PersonServiceUnitTests.cs" />
     <Compile Include="Views\WorkerViewTests.cs" />
     <Compile Include="WebServer.cs" />

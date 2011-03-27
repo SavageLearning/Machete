@@ -12,7 +12,12 @@ namespace Machete.Domain
         public int ID { get; set; }
         public byte[] ImageData { get; set; }
         public string ImageMimeType { get; set; }
+        public string filename { get; set; }
         public byte[] Thumbnail { get; set; }
+        public string ThumbnailMimeType { get; set; }
+        public string parenttable { get; set; }
+        public string recordkey { get; set; }
+
         //public void make_thumbnail()
         //{
         //    Thumbnail = ResizeImage(ImageData, 100, 100);
