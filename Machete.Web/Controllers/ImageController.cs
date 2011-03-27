@@ -5,26 +5,31 @@ using System.Web;
 using System.Web.Mvc;
 using Machete.Domain;
 using Machete.Data;
+using Machete.Helpers;
+using Machete.Service;
 
 
 namespace Machete.Web.Controllers
 {
+    [ElmahHandleError]
     public class ImageController : Controller
     {
+        private readonly IImageService _serv;
         //
         // GET: /Image/
-        MacheteContext DB = new MacheteContext();
+        public ImageController(IImageService imageService)
+        {
+            this._serv = imageService;
+        }
         public ActionResult Index()
         {
-            var images = DB.Images.AsEnumerable();
+            var images = _serv.GetImages();
             return View(images);
         }
 
         public FileContentResult GetImage(int ID)
         {
-            Image image = (from i in DB.Images.AsEnumerable()
-                           where i.ID == ID
-                           select i).First();
+            Image image = _serv.GetImage(ID);
             return File(image.ImageData, image.ImageMimeType);
         }
 
@@ -63,10 +68,7 @@ namespace Machete.Web.Controllers
                         imagefile.InputStream.Read(image.ImageData, 
                                                    0, 
                                                    imagefile.ContentLength);
-                        image.createdby(this.User.Identity.Name);
-                        DB.Images.Add(image);
-                        DB.SaveChanges();
-
+                        _serv.CreateImage(image, this.User.Identity.Name);        
                     }
                 }
                 return RedirectToAction("Index");
@@ -82,7 +84,7 @@ namespace Machete.Web.Controllers
  
         public ActionResult Edit(int id)
         {
-            var image = DB.Images.Find(id);
+            var image = _serv.GetImage(id);
             return View(image);
         }
 

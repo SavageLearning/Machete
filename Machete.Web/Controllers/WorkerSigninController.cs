@@ -15,37 +15,25 @@ namespace Machete.Web.Controllers
    [ElmahHandleError]
     public class WorkerSigninController : Controller
     {
-        private readonly IWorkerSigninService workerSigninService;
-        //private MacheteContext DB;
+        private readonly IWorkerSigninService _serv;
         
         private Logger log = LogManager.GetCurrentClassLogger();
         private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "WorkerSigninController", "");
-
-
         public WorkerSigninController(IWorkerSigninService workerSigninService)
         {
-            this.workerSigninService = workerSigninService;
-            //DB = new MacheteContext();
+            this._serv = workerSigninService;
         }
 
-        //private IEnumerable<WorkerSigninView> getView(DateTime date)
-        //{
-        //    return from s in DB.WorkerSignins.AsEnumerable()
-        //           join w in DB.Workers.AsEnumerable() on s.dwccardnum equals w.dwccardnum into outer
-        //           from w in outer.DefaultIfEmpty()
-        //           join p in DB.Persons.AsEnumerable() on w.ID equals p.ID
-        //           select new WorkerSigninView() { person = p, signin = s };
-        //}
         //
         // GET: /WorkerSignin/
-
         [Authorize(Roles = "User, Manager, Administrator, Check-in, PhoneDesk")]
         public ActionResult Index()
         {        
             WorkerSigninViewModel _model = new WorkerSigninViewModel();
             if (ViewBag.dateforsignin == null) _model.dateforsignin = DateTime.Today;
             else _model.dateforsignin = ViewBag.dateforsignin;
-            _model.workersignins = workerSigninService.getView(_model.dateforsignin);
+            _model.workersignins = _serv.getView(_model.dateforsignin);
+            _model.last_chkin_image = new Image();
             return View(_model);
         }
 
@@ -56,32 +44,30 @@ namespace Machete.Web.Controllers
             var _signin = new WorkerSignin();
             _signin.dwccardnum = dwccardentry;
             _signin.dateforsignin = dateforsignin;
-            workerSigninService.CreateWorkerSignin(_signin, this.User.Identity.Name);
+            _serv.CreateWorkerSignin(_signin, this.User.Identity.Name);
 
-            //if (DB.Workers.AsEnumerable().Count(s => s.dwccardnum == dwccardentry) > 0) 
-            //{
-            //    _signin.WorkerID = DB.Workers.AsEnumerable().First(s => s.dwccardnum == dwccardentry).ID;
-            //}
-            //if (DB.WorkerSignins.AsEnumerable().Count(s => s.dateforsignin == dateforsignin && s.dwccardnum == dwccardentry) == 0)
-            //{
-                
-            //    DB.WorkerSignins.Add(_signin);
-            //    DB.SaveChanges();
-            //}   
-            //try
-            //{
-
-
+            try
+            {
+                //Get picture from checkin, show with next view
+                var checkin_image = _serv.getImage(dwccardentry);
                 var _model = new WorkerSigninViewModel();
+                if (checkin_image != null)
+                {
+                    _model.last_chkin_image = checkin_image;
+                }
+                else
+                {
+                    _model.last_chkin_image = new Image();
+                }
                 _model.dateforsignin = dateforsignin;
                 ModelState.Remove("dwccardentry"); // Clears previous entry from view for next iteration
-                _model.workersignins = workerSigninService.getView(_model.dateforsignin);
+                _model.workersignins = _serv.getView(_model.dateforsignin);
                 return View(_model);
-            //}
-            //catch
-            //{
-            //    return View();
-            //}
+            }
+            catch
+            {
+                return View();
+            }
         }
         
 
@@ -150,7 +136,7 @@ namespace Machete.Web.Controllers
  
         public ActionResult Delete(int id)
         {
-            workerSigninService.DeleteWorkerSignin(id);
+            _serv.DeleteWorkerSignin(id);
             return RedirectToAction("Index");
         }
 

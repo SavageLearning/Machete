@@ -23,6 +23,7 @@ namespace Machete.Test.IntegrationTests.Services
         Mock<IWorkerRepository> _wrepo;
         Mock<IPersonRepository> _prepo;
         Mock<IUnitOfWork> _uow;
+        Mock<IImageRepository> _irepo;
         List<WorkerSignin> _signins;
         List<Worker> _workers;
         List<Person> _persons;
@@ -96,6 +97,7 @@ namespace Machete.Test.IntegrationTests.Services
             _prepo = new Mock<IPersonRepository>();
             _prepo.Setup(s => s.GetAll()).Returns(_persons);
 
+            _irepo = new Mock<IImageRepository>();
             _uow = new Mock<IUnitOfWork>();
         }
         //
@@ -110,7 +112,7 @@ namespace Machete.Test.IntegrationTests.Services
         {
             //
             //Arrange
-            var _serv = new WorkerSigninService(_srepo.Object, _wrepo.Object, _prepo.Object, _uow.Object);
+            var _serv = new WorkerSigninService(_srepo.Object, _wrepo.Object, _prepo.Object, _irepo.Object, _uow.Object);
             //
             //Act
             var result = _serv.getView(DateTime.Today);
@@ -131,7 +133,7 @@ namespace Machete.Test.IntegrationTests.Services
         {
             //
             //Arrange
-            var _serv = new WorkerSigninService(_srepo.Object, _wrepo.Object, _prepo.Object, _uow.Object);
+            var _serv = new WorkerSigninService(_srepo.Object, _wrepo.Object, _prepo.Object, _irepo.Object, _uow.Object);
             var _signin = new WorkerSignin() { dwccardnum = 66666, dateforsignin = DateTime.Today };
             WorkerSignin _cbsignin = new WorkerSignin();
             _srepo.Setup(s => s.Add(It.IsAny<WorkerSignin>())).Callback((WorkerSignin s) => { _cbsignin = s; });
@@ -149,7 +151,7 @@ namespace Machete.Test.IntegrationTests.Services
             //
             //Arrange
             int fakeid = 66666;
-            var _serv = new WorkerSigninService(_srepo.Object, _wrepo.Object, _prepo.Object, _uow.Object);
+            var _serv = new WorkerSigninService(_srepo.Object, _wrepo.Object, _prepo.Object, _irepo.Object, _uow.Object);
             var _signin = new WorkerSignin() { dwccardnum = fakeid, dateforsignin = DateTime.Today };
             WorkerSignin _cbsignin = new WorkerSignin();
             _srepo.Setup(s => s.Add(It.IsAny<WorkerSignin>())).Callback((WorkerSignin s) => { _cbsignin = s; });
@@ -159,8 +161,8 @@ namespace Machete.Test.IntegrationTests.Services
             //
             //Assert
             Assert.AreEqual(_signin, _cbsignin);
-            Assert.IsNotNull(_signin.WorkerID);
-            Assert.AreEqual(_signin.WorkerID, fakeid);
+            Assert.IsNotNull(_signin.dwccardnum);
+            Assert.AreEqual(_signin.dwccardnum, fakeid);
         }
 
         [TestMethod]
@@ -169,7 +171,7 @@ namespace Machete.Test.IntegrationTests.Services
             //
             //Arrange
             int fakeid = 12345;
-            var _serv = new WorkerSigninService(_srepo.Object, _wrepo.Object, _prepo.Object, _uow.Object);
+            var _serv = new WorkerSigninService(_srepo.Object, _wrepo.Object, _prepo.Object, _irepo.Object, _uow.Object);
             var _signin = new WorkerSignin() { dwccardnum = fakeid, dateforsignin = DateTime.Today };
             WorkerSignin _cbsignin = null;
             _srepo.Setup(s => s.Add(It.IsAny<WorkerSignin>())).Callback((WorkerSignin s) => { _cbsignin = s; });

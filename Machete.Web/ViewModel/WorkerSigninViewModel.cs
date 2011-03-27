@@ -16,6 +16,7 @@ namespace Machete.Web.ViewModel
         [RegularExpression("^[0-9]{5,5}$", ErrorMessageResourceName = "dwccardnumerror", ErrorMessageResourceType = typeof(Domain.Resources.Worker))]
         public int dwccardentry { get; set; }
         public DateTime dateforsignin { get; set; }
+        public Image last_chkin_image { get; set; }
         public IEnumerable<WorkerSigninView> workersignins { get; set; }
     }
 }

@@ -16,6 +16,7 @@ namespace Machete.Service
         void DeleteWorkerSignin(int id);
         void SaveWorkerSignin();
         IEnumerable<WorkerSigninView> getView(DateTime date);
+        Image getImage(int dwccardnum);
     }
     public class WorkerSigninService : IWorkerSigninService
     {
@@ -23,17 +24,20 @@ namespace Machete.Service
         private readonly IWorkerRepository workerRepo;
         private readonly IPersonRepository personRepo;
         private readonly IUnitOfWork unitOfWork;
+        private readonly IImageRepository imageRepo;
         //
         //
         public WorkerSigninService(IWorkerSigninRepository workerSigninRepository, 
                                    IWorkerRepository workerRepository,
                                    IPersonRepository personRepository,
+                                   IImageRepository imageRepository,
                                    IUnitOfWork unitOfWork)
         {
             this.signinRepo = workerSigninRepository;
             this.workerRepo = workerRepository;
             this.personRepo = personRepository;
             this.unitOfWork = unitOfWork;
+            this.imageRepo = imageRepository;
         }
         #region IWorkerSigninService Members
 
@@ -90,10 +94,24 @@ namespace Machete.Service
                          from row in outer.DefaultIfEmpty(new Worker{ID=0})
                          join p in personRepo.GetAll() on row.ID equals p.ID into final
                          from finalrow in final.DefaultIfEmpty(new Person{ID=0})
+                         orderby s.datecreated descending
                          select new WorkerSigninView() { person = finalrow, signin = s };
 
             return s_to_w_query;
         }
+
+        public Image getImage(int cardrequest)
+        { 
+            var w_query = workerRepo.Get(w => w.dwccardnum == cardrequest);
+            if (w_query.ImageID != null)
+            {
+                return imageRepo.Get(i => i.ID == w_query.ImageID);
+            }
+
+            return null;
+        }
+
+
         #endregion
     }
 }
