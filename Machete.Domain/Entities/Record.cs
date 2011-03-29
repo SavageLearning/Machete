@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ComponentModel.DataAnnotations;
 
 namespace Machete.Domain
 {
@@ -9,7 +10,9 @@ namespace Machete.Domain
     {
         public DateTime datecreated { get; set; }
         public DateTime dateupdated { get; set; }
+        [StringLength(30)]
         public string Createdby { get; set; }
+        [StringLength(30)]
         public string Updatedby { get; set; }
 
         public Record() {}

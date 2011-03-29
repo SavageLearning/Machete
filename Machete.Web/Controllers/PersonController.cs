@@ -90,7 +90,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
         public ActionResult Edit(int id, FormCollection collection, string userName)
         {
-            var person = personService.GetPerson(id);
+            Person person = personService.GetPerson(id);
             
             if (TryUpdateModel(person))
             {

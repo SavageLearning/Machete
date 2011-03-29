@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.IO;
+using System.ComponentModel.DataAnnotations;
 
 namespace Machete.Domain
 {
@@ -11,11 +12,16 @@ namespace Machete.Domain
     {
         public int ID { get; set; }
         public byte[] ImageData { get; set; }
+        [StringLength(30)]
         public string ImageMimeType { get; set; }
+        [StringLength(255)]
         public string filename { get; set; }
         public byte[] Thumbnail { get; set; }
+        [StringLength(30)]
         public string ThumbnailMimeType { get; set; }
+        [StringLength(30)]
         public string parenttable { get; set; }
+        [StringLength(10)]
         public string recordkey { get; set; }
 
         //public void make_thumbnail()
