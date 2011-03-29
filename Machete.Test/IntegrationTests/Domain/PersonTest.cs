@@ -25,16 +25,16 @@ namespace Machete.Test
         }
 
         [TestMethod]
-        public void Person_add_simple_record()
+        public void DbSet_Person_add_simple_record()
         {
             //
             //Arrange
             int reccount = 0;
             MacheteDB.Database.Delete();
             MacheteDB.Database.Initialize(true);
-            Person _person1 = Records._person1;
-            Person _person2 = Records._person2;
-            Person _person3 = Records._person3;
+            Person _person1 = Records._person1; _person1.ID = 0;
+            Person _person2 = Records._person2; _person2.ID = 0;
+            Person _person3 = Records._person3; _person3.ID = 0;
             _person1.firstname2 = "Person_add_simple_record";
             _person2.firstname2 = "Person_add_simple_record";
             _person3.firstname2 = "Person_add_simple_record";
@@ -63,7 +63,7 @@ namespace Machete.Test
             Assert.IsTrue(reccount == 3, "Expected 3 records, found {0}", reccount);
         }
         [TestMethod]
-        public void Person_test_deduplication()
+        public void DbSet_Person_test_deduplication()
         {
             int reccount = 0;
             //

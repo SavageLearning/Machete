@@ -22,7 +22,7 @@ namespace Machete.Test.Data
         }
 
         [TestMethod]
-        public void Initializer_create_machete()
+        public void DbSet_Initializer_create_machete()
         {
             
             //Arrange

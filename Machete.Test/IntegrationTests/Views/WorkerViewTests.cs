@@ -49,7 +49,7 @@ namespace Machete.Test
                 browser.TextField(Find.ById("worker_dateinseattle")).TypeText("1/1/2011");
                 browser.SelectList(Find.ById("worker_englishlevelID")).SelectByValue("1");
                 browser.SelectList(Find.ById("worker_incomeID")).SelectByValue("1");
-                browser.TextField(Find.ById("worker_dwccardnum")).TypeText("30123");
+                browser.TextField(Find.ById("worker_dwccardnum")).TypeText("10123");
                 browser.SelectList(Find.ById("worker_neighborhoodID")).SelectByValue("1");
                 browser.TextField(Find.ById("worker_countryoforigin")).TypeText("USA");
                 browser.TextField(Find.ById("worker_memberexpirationdate")).TypeText("1/1/2012");

@@ -14,7 +14,7 @@ namespace Machete.Test
     public class LINQ
     {
         [TestMethod]
-        public void TestMethod1()
+        public void DbSet_TestMethod1()
         {
             //Arrange
             var persons = new List<Person>();
@@ -60,7 +60,7 @@ namespace Machete.Test
         }
 
         [TestMethod]
-        public void TestMethod2()
+        public void DbSet_TestMethod2()
         {
             //arrange
             DbDatabase.SetInitializer<MacheteContext>(new MacheteInitializer());
@@ -81,7 +81,7 @@ namespace Machete.Test
         }
 
         [TestMethod]
-        public void TestMethod3()
+        public void DbSet_TestMethod3()
         {
             DbDatabase.SetInitializer<MacheteContext>(new MacheteInitializer());
             MacheteContext DB = new MacheteContext();
