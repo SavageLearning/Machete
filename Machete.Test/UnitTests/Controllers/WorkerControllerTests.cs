@@ -1,109 +1,192 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Web.Mvc;
-using Machete.Data;
-using Machete.Data.Infrastructure;
-using Machete.Domain;
-using Machete.Service;
-using Machete.Web;
-using Machete.Web.Controllers;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Machete.Data;
+using Machete.Service;
+using Machete.Data.Infrastructure;
+using Machete.Web.Controllers;
+using System.Web.Mvc;
+using Machete.Domain;
+using Machete.Test;
+using Machete.Web.ViewModel;
 
-//namespace Machete.Test
-//{
-//    [TestFixture]
-//    public class WorkerControllerTest
-//    {
-//        Mock<IWorkerRepository> _workerRepository;
-//        Mock<IRaceRepository> _raceRepository;
-//        IWorkerService _workerService;
-//        IRaceService _raceService;
-//        IUnitOfWork _unitofwork;
+namespace Machete.Test.Controllers
+{
+    [TestClass]
+    public class WorkerControllerTests
+    {
+        Mock<IWorkerService> _wserv;
+        Mock<IPersonService> _pserv;
+        Mock<IImageService> _iserv;
+        //
+        //   Testing /Index functionality
+        //
+        [TestMethod]
+        public void WorkerController_index_get_returns_enumerable_list()
+        {
+            //Arrange
+            _wserv = new Mock<IWorkerService>();
+            _pserv = new Mock<IPersonService>();
+            _iserv = new Mock<IImageService>();
+            var _ctrlr = new WorkerController(_wserv.Object, _pserv.Object, _iserv.Object);
+            //Act
+            var result = (ViewResult)_ctrlr.Index();
+            //Assert
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(IEnumerable<Worker>));
+        }
 
+        [TestMethod]
+        public void WorkerController_create_get_returns_person()
+        {
+            //Arrange
+            _wserv = new Mock<IWorkerService>();
+            _pserv = new Mock<IPersonService>();
+            _iserv = new Mock<IImageService>();
+            var _ctrlr = new WorkerController(_wserv.Object, _pserv.Object, _iserv.Object);
+            //Act
+            var result = (ViewResult)_ctrlr.Create();
+            //Assert
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(WorkerViewModel));
+        }
 
-//        [SetUp]
-//        public void Setup()
-//        {
-//            _workerRepository = new Mock<IWorkerRepository>();
-//            _workerService = new WorkerService(_workerRepository.Object, _unitofwork);
-//            //_personService = mew PersonService(_
-//            _raceRepository = new Mock<IRaceRepository>();
-//            _raceService = new RaceService(_raceRepository.Object);
-//        }
+        [TestMethod]
+        public void WorkerController_create_post_valid_redirects_to_Index()
+        {
+            //Arrange
+            var _worker = new Worker();
+            var _person = new Person();
+            var _viewmodel = new WorkerViewModel();
+            _viewmodel.person = _person;
+            _viewmodel.worker = _worker;
+            //
+            _wserv = new Mock<IWorkerService>();
+            _pserv = new Mock<IPersonService>();
+            _wserv.Setup(p => p.CreateWorker(_worker, "UnitTest")).Returns(_worker);
+            _pserv.Setup(p => p.CreatePerson(_person, "UnitTest")).Returns(_person);
+            _iserv = new Mock<IImageService>();
+            var _ctrlr = new WorkerController(_wserv.Object, _pserv.Object, _iserv.Object);
+            //Act
+            var result = (RedirectToRouteResult)_ctrlr.Create(_viewmodel, "UnitTest");
+            //Assert
+            Assert.AreEqual("Index", result.RouteValues["action"]);
+        }
 
-//        [Test]
-//        public void Create_Category()
-//        {
-//            IQueryable<Worker> fakeWorkers = new List<Worker> {
-//                new Worker {    //ID = 7,
-//                                carinsurance = true,
-//                                countryoforigin = "USA",
-//                                disabilitydesc = "foo",
-//                                disabled = true,
-//                                driverslicense = true,
-//                                dwccardnum = 1,
-//                                emcontoriginname = "Barak Obama",
-//                                emcontoriginphone = "1234567890",
-//                                emcontoriginrelation = "friend",
-//                                emcontUSAname = "Bill Clinton",
-//                                emcontUSAphone = "1234567890",
-//                                emcontUSArelation = "idol",
-//                                englishlevelID = 1,
-//                                height = "too tall",
-//                                immigrantrefugee = true,
-//                                incomeID = 1,
-//                                livealone = true,
-//                                livewithchildren = true,
-//                                maritalstatus = "S",
-//                                memberexpirationdate = DateTime.Now,
-//                                numofchildren = 0,
-//                                RaceID = 1,
-//                                raceother = "fabulous",
-//                                recentarrival = true,
-//                                neighborhoodID = 1,
-//                                weight = "too big",
-//                                datecreated = DateTime.Now,
-//                                dateupdated = DateTime.Now,
-//                                dateinUSA = DateTime.Now,
-//                                dateinseattle = DateTime.Now,
-//                                insuranceexpiration = DateTime.Now,
-//                                licenseexpirationdate = DateTime.Now
-//                }
-//            }.AsQueryable();
+        [TestMethod]
+        public void WorkerController_create_post_invalid_returns_view()
+        {
+            //Arrange
+            var _worker = new Worker();
+            var _person = new Person();
+            var _viewmodel = new WorkerViewModel();
+            _viewmodel.person = _person;
+            _viewmodel.worker = _worker;
+            //
+            _pserv = new Mock<IPersonService>();
+            _wserv = new Mock<IWorkerService>();
+            _wserv.Setup(p => p.CreateWorker(_worker, "UnitTest")).Returns(_worker);
+            _pserv.Setup(p => p.CreatePerson(_person, "UnitTest")).Returns(_person);
+            _iserv = new Mock<IImageService>();
+            var _ctrlr = new WorkerController(_wserv.Object, _pserv.Object, _iserv.Object);
+            _ctrlr.ModelState.AddModelError("TestError", "foo");
+            //Act
+            var result = (ViewResult)_ctrlr.Create(_viewmodel, "UnitTest");
+            //Assert
+            var error = result.ViewData.ModelState["TestError"].Errors[0];
+            Assert.AreEqual("foo", error.ErrorMessage);
+        }
 
+        //
+        //   Testing /Edit functionality
+        //
+        #region edittests
+        [TestMethod]
+        public void WorkerController_edit_get_returns_worker()
+        {
+            //Arrange
+            var _worker = new Worker();
+            var _person = new Person();
+            var _viewmodel = new WorkerViewModel();
+            _viewmodel.person = _person;
+            _viewmodel.worker = _worker;
+            //
+            _pserv = new Mock<IPersonService>();
+            _wserv = new Mock<IWorkerService>();
+            int testid = 4242;
+            Person fakeperson = new Person();
+            _wserv.Setup(p => p.GetWorker(testid)).Returns(_worker);
+            _iserv = new Mock<IImageService>();
+            var _ctrlr = new WorkerController(_wserv.Object, _pserv.Object, _iserv.Object);
+            //Act
+            ViewResult result = (ViewResult)_ctrlr.Edit(testid);
+            //Assert
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(WorkerViewModel));
+        }
 
-//            _workerRepository.Setup(x => x.GetAll()).Returns(fakeWorkers);
+        [TestMethod]
+        public void WorkerController_edit_post_valid_updates_model_redirects_to_index()
+        {
+            //Arrange
+            _pserv = new Mock<IPersonService>();
+            _wserv = new Mock<IWorkerService>();
+            int testid = 4242;
+            FormCollection fakeform = new FormCollection();
 
-//            //WorkerController controller = new WorkerController(_workerService, _raceService);
-//            // Act
-//            //ViewResult result = controller.Create(null) as ViewResult;
-//            // Assert
-//            //Assert.IsNotNull(result, "View Result is null");
-//            //Assert.IsInstanceOf(typeof(PagedList<Category>), result.ViewData.Model, "Wrong ViewModel");
-//            //var categories = result.ViewData.Model as PagedList<Category>;
-//            //Assert.AreEqual(3, categories.Count, "Got wrong number of Categories");
-//            //Assert.AreEqual(0, (int)categories.PageIndex, "Wrong page Index");
-//            //Assert.AreEqual(1, (int)categories.PageNumber, "Wrong  page Number");
+            Worker fakeworker = new Worker();
+            Worker savedworker = new Worker();
+            Person fakeperson = new Person();
+            WorkerViewModel _viewmodel = new WorkerViewModel();
+            _viewmodel.person = fakeperson;
+            _viewmodel.worker = fakeworker;
 
-//        }
-//    }
-//}
-////[TestMethod]
-////public void WorkerController_Create()
-////{
-////    DatabaseFactory _dbfactory = new DatabaseFactory();
-////    WorkerRepository _workerrepo = new WorkerRepository(_dbfactory);
-////    RaceRepository _racerepo = new RaceRepository(_dbfactory);
-////    PersonRepository _personrepo = new PersonRepository(_dbfactory);
-////    UnitOfWork _iunitofwork = new UnitOfWork(_dbfactory);
-////    WorkerService _service = new WorkerService(_workerrepo, _iunitofwork);
-////    PersonService _pService = new PersonService(_personrepo, _iunitofwork);
-////    RaceService _race = new RaceService(_racerepo);
-////    var Personcontroller = new PersonController(_pService);
-////    var Workcontroller = new WorkerController(_service, _race);
-////    //var pResult = Personcontroller.Create(_person) as ViewResult;
-////    //var result = Workcontroller.Create(_worker) as ViewResult;
+            string user = "";
+            _wserv.Setup(p => p.GetWorker(testid)).Returns(fakeworker);
+            _pserv.Setup(p => p.GetPerson(testid)).Returns(fakeperson);
+            _wserv.Setup(x => x.SaveWorker(It.IsAny<Worker>(),
+                                          It.IsAny<string>())
+                                         ).Callback((Worker p, string str) =>
+                                         {
+                                             savedworker = p;
+                                             user = str;
+                                         });
+            _iserv = new Mock<IImageService>();
+            var _ctrlr = new WorkerController(_wserv.Object, _pserv.Object, _iserv.Object);
+            _ctrlr.SetFakeControllerContext();
+            _ctrlr.ValueProvider = fakeform.ToValueProvider();
+            //Act
+            //TODO Solve TryUpdateModel moq problem
+            var result = _ctrlr.Edit(testid, _viewmodel, "UnitTest") as RedirectToRouteResult;
+            //Assert
+            Assert.AreEqual("Index", result.RouteValues["action"]);
+            Assert.AreEqual(fakeworker, savedworker);
+            Assert.AreEqual(savedworker.height, "too tall");
+            Assert.AreEqual(savedworker.height, "too heavy");
+        }
 
-////}
+        private FormCollection _fakeCollection(int id)
+        {
+            FormCollection _fc = new FormCollection();
+            _fc.Add("id", id.ToString());
+            _fc.Add("person.firstname1", "blah_firstname");
+            _fc.Add("person.firstname2", "");
+            _fc.Add("person.lastname1", "unittest");
+            _fc.Add("person.lastname2", "");
+            _fc.Add("person.address1", "");
+            _fc.Add("person.address2", "");
+            _fc.Add("person.city", "");
+            _fc.Add("person.state", "");
+            _fc.Add("person.zipcode", "");
+            _fc.Add("person.phone", "");
+            _fc.Add("person.gender", "");
+            _fc.Add("person.genderother", "");
+
+            _fc.Add("worker.height", "too tall");
+            _fc.Add("worker.weight", "too heavy");
+            _fc.Add("worker.raceother", "multi-cultural");
+            return _fc;
+        }
+        #endregion  
+    }
+}

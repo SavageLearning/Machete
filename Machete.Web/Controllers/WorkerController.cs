@@ -13,6 +13,7 @@ using Microsoft.Web.Mvc;
 using System.Web.Security;
 using Elmah;
 using NLog;
+using Machete.Web.Helpers;
 
 namespace Machete.Web.Controllers
 {
@@ -20,15 +21,20 @@ namespace Machete.Web.Controllers
     public class WorkerController : Controller
     {
         private readonly IWorkerService workerService;
-        private readonly IPersonService personService;
+        //private readonly IPersonService personService;
+        private readonly IImageService imageServ;
+        private bool foo1;
+        private bool foo2;
         private Logger log = LogManager.GetCurrentClassLogger();
         private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "WorkerController", "");
 
         public WorkerController(IWorkerService workerService, 
-                                IPersonService personService)
+                                IPersonService personService,
+                                IImageService  imageServ)
         {
             this.workerService = workerService;
-            this.personService = personService;
+            //this.personService = personService;
+            this.imageServ = imageServ;
             ViewBag.races = Lookups.races;
             ViewBag.languages = Lookups.languages;
             ViewBag.neighborhoods = Lookups.neighborhoods;
@@ -63,22 +69,22 @@ namespace Machete.Web.Controllers
         //
         // POST: /Worker/Create
         //
-        [HttpPost]
+        [HttpPost, UserNameFilter]
         [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
-        public ActionResult Create(WorkerViewModel _model)
+        public ActionResult Create(WorkerViewModel _model, string userName)
         {
             if (!ModelState.IsValid)
             {
+                levent.Level = LogLevel.Error; levent.Message = "ModelState invalid";
+                //TODO will this log event work without record ID?
+                //levent.Properties["RecordID"] = id; 
+                log.Log(levent);
                 return View(_model);
             }
             _model.worker.Person = _model.person;
             _model.person.Worker = _model.worker;
-            _model.person.createdby(this.User.Identity.Name);
-            _model.worker.createdby(this.User.Identity.Name);
-            
-            workerService.CreateWorker(_model.worker);
-            levent.Level = LogLevel.Info; levent.Message = "New Worker created";
-            levent.Properties["RecordID"] = _model.worker.ID; log.Log(levent);
+
+            workerService.CreateWorker(_model.worker, userName);
             return RedirectToAction("Index");
         }
         //
@@ -91,6 +97,14 @@ namespace Machete.Web.Controllers
             WorkerViewModel _model = new WorkerViewModel();
             _model.worker = _worker;
             _model.person = _worker.Person;
+            if (_model.worker.ImageID != null)
+            {
+                _model.image = imageServ.GetImage((int)_worker.ImageID);
+            }
+            else
+            {
+                _model.image = new Image();
+            }
             return View(_model);
         }
         //
@@ -98,26 +112,24 @@ namespace Machete.Web.Controllers
         // TODO: catch exceptions, notify user
         // TODO: disable button
         //
-        [HttpPost]
-        [Authorize(Roles = "Manager, Administrator")] 
-        public ActionResult Edit(int id, WorkerViewModel _model)
+        [HttpPost, UserNameFilter]
+        [Authorize(Roles = "Manager, Administrator")]
+        public ActionResult Edit(int id, WorkerViewModel _model, string userName)
         {
             Worker worker = workerService.GetWorker(id);
-            Person person = personService.GetPerson(id);
-            worker.updatedby(this.User.Identity.Name);
-            if (TryUpdateModel(worker) && TryUpdateModel(person))
+            Person person = worker.Person;
+            foo1 = TryUpdateModel(worker);
+            foo2 = TryUpdateModel(person);
+            if (foo1 && foo2)
             {
-                workerService.SaveWorker();
-                levent.Level = LogLevel.Info; levent.Message = "Worker edited";
-                levent.Properties["RecordID"] = id; log.Log(levent);
+                workerService.SaveWorker(worker, userName);
                 return RedirectToAction("Index");
-
             }
-            else
+            else 
             {
-                levent.Level = LogLevel.Error; levent.Message = "TryUpdateModel failed";
+                levent.Level = LogLevel.Error; levent.Message = "ModelState invalid";
                 levent.Properties["RecordID"] = id; log.Log(levent);
-                return View(worker);
+                return View(_model);
             }
         }
         //
@@ -130,7 +142,6 @@ namespace Machete.Web.Controllers
             _model.worker = _worker;
             _model.person = _worker.Person;
             return View(_model);
-
         }
 
         //
