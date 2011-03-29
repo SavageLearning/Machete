@@ -40,9 +40,11 @@ namespace Machete.Web.Models
     public class MembersModel
     {
         //public int personID { get; set; }
+        [StringLength(30)]
         public string UserName { get; set;  }
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }
+        [StringLength(40)]
         public string Email { get; set; }
         public bool IsApproved { get; set; }
         public bool IsLockedOut { get; set; }

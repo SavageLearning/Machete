@@ -15,7 +15,7 @@ using Machete.Test;
 namespace Machete.Test.Controllers
 {
     /// <summary>
-    /// Summary description for UnitTest1
+    /// Summary description for PersonControllerUnitTests
     /// </summary>
 
     [TestClass]
@@ -81,7 +81,6 @@ namespace Machete.Test.Controllers
             //Assert
             var error = result.ViewData.ModelState["TestError"].Errors[0];
             Assert.AreEqual("foo", error.ErrorMessage);
-
         }
         #endregion
         //

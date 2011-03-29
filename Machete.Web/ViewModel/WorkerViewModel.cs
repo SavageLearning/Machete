@@ -14,7 +14,6 @@ namespace Machete.Web.ViewModel
     {
         public Domain.Worker worker { get; set; }
         public Person person { get; set; }
-        //public byte RaceID { get; set; }
-        //public IEnumerable<SelectListItem> Race { get; set; }
+        public Image image { get; set; }
     }
 }
