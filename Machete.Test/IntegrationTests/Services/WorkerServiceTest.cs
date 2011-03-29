@@ -39,7 +39,7 @@ namespace Machete.Test
         }
 
         [TestMethod]
-        public void WorkerService_Intergation_CreateWorker()
+        public void DbSet_WorkerService_Intergation_CreateWorker()
         {
             //
             //Arrange
@@ -52,7 +52,7 @@ namespace Machete.Test
             _worker3.Person = _person3;
             //
             //Act
-            _service.CreateWorker(_worker3);
+            _service.CreateWorker(_worker3, "UnitTest");
 
             //
             //Assert
@@ -62,7 +62,7 @@ namespace Machete.Test
         }
         [TestMethod]
         [ExpectedException(typeof(MissingReferenceException))]
-        public void WorkerService_Intergation_Detect_Missing_Person_Reference()
+        public void DbSet_WorkerService_Intergation_Detect_Missing_Person_Reference()
         {
             //
             //Arrange
@@ -75,12 +75,12 @@ namespace Machete.Test
             _worker2.height = "WorkerService_Intergation_Detect_Missing_Person_Reference";
             //
             //Act
-            _service.CreateWorker(_worker2);
+            _service.CreateWorker(_worker2, "UnitTest");
             //
             //Assert
         }
         [TestMethod]
-        public void WorkerService_Intergation_CreateWorkers_NoDuplicate()
+        public void DbSet_WorkerService_Intergation_CreateWorkers_NoDuplicate()
         {
             int reccount = 0;
             //
@@ -96,9 +96,9 @@ namespace Machete.Test
                 { _worker3.Person = _person3;}
             //
             //Act          
-            _service.CreateWorker(_worker3);
-            _service.CreateWorker(_worker3);
-            _service.CreateWorker(_worker3);
+            _service.CreateWorker(_worker3, "UnitTest");
+            _service.CreateWorker(_worker3, "UnitTest");
+            _service.CreateWorker(_worker3, "UnitTest");
             reccount = MacheteDB.Workers.Count(n => n.raceother == _worker3.raceother);
             //
             //Assert

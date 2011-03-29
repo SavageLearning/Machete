@@ -5,6 +5,7 @@ using System.Text;
 using Machete.Domain;
 using Machete.Data;
 using Machete.Data.Infrastructure;
+using NLog;
 
 namespace Machete.Service
 {
@@ -12,14 +13,18 @@ namespace Machete.Service
     {
         IEnumerable<Worker> GetWorkers();
         Worker GetWorker(int id);
-        void CreateWorker(Worker worker);
+        Worker CreateWorker(Worker worker, string user);
         void DeleteWorker(int id);
-        void SaveWorker();
+        void SaveWorker(Worker worker, string user);
     }
     public class WorkerService : IWorkerService
     {
         private readonly IWorkerRepository workerRepository;
         private readonly IUnitOfWork unitOfWork;
+        //
+        private Logger log = LogManager.GetCurrentClassLogger();
+        private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "WorkerService", "");
+
         public WorkerService(IWorkerRepository workerRepository, IUnitOfWork unitOfWork)
         {
             this.workerRepository = workerRepository;
@@ -39,11 +44,16 @@ namespace Machete.Service
             return worker;
         }
 
-        public void CreateWorker(Worker worker)
+        public Worker CreateWorker(Worker worker, string user)
         {
+            worker.createdby(user);
+            worker.Person.createdby(user);
             if (worker.Person == null) throw new MissingReferenceException("Worker object is missing a Person reference.");
-            workerRepository.Add(worker);
+            Worker _worker = workerRepository.Add(worker);
             unitOfWork.Commit();
+            _log(worker.ID, user, "Worker created");
+            return _worker;
+
         }
 
         public void DeleteWorker(int id)
@@ -53,11 +63,21 @@ namespace Machete.Service
             unitOfWork.Commit();
         }
 
-        public void SaveWorker()
+        public void SaveWorker(Worker worker, string user)
         {
+            worker.updatedby(user);
+            _log(worker.ID, user, "Worker edited");
             unitOfWork.Commit();
         }
 
+        private void _log(int ID, string user, string msg)
+        {
+            levent.Level = LogLevel.Info;
+            levent.Message = msg;
+            levent.Properties["RecordID"] = ID; //magic string maps to NLog config
+            levent.Properties["username"] = user;
+            log.Log(levent);
+        }
         #endregion
     }
 }

@@ -98,8 +98,14 @@
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="WatiN.Core">
-      <HintPath>..\..\..\..\Visual Studio 2010\Projects\Testing_error_handling\packages\WatiN.2.0.50\lib\net40\WatiN.Core.dll</HintPath>
+    <Reference Include="ThoughtWorks.Selenium.Core">
+      <HintPath>..\..\..\..\coding\C# examples archive\selenium-remote-control-1.0.3\selenium-dotnet-client-driver-1.0.1\ThoughtWorks.Selenium.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="ThoughtWorks.Selenium.IntegrationTests">
+      <HintPath>..\..\..\..\coding\C# examples archive\selenium-remote-control-1.0.3\selenium-dotnet-client-driver-1.0.1\ThoughtWorks.Selenium.IntegrationTests.dll</HintPath>
+    </Reference>
+    <Reference Include="ThoughtWorks.Selenium.UnitTests">
+      <HintPath>..\..\..\..\coding\C# examples archive\selenium-remote-control-1.0.3\selenium-dotnet-client-driver-1.0.1\ThoughtWorks.Selenium.UnitTests.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -108,6 +114,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IntegrationTests\Views\PersonTests.cs" />
     <Compile Include="UnitTests\Services\WorkerSigninServiceUnitTest.cs" />
     <Compile Include="UnitTests\Controllers\WorkerSigninControllerTests.cs" />
     <Compile Include="IntegrationTests\Data\DatabaseTests.cs" />
