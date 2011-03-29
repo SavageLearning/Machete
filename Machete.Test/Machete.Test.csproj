@@ -108,22 +108,22 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IntegrationTests\Services\WorkerSigninServiceUnitTest.cs" />
+    <Compile Include="UnitTests\Services\WorkerSigninServiceUnitTest.cs" />
     <Compile Include="UnitTests\Controllers\WorkerSigninControllerTests.cs" />
-    <Compile Include="Data\DatabaseTests.cs" />
-    <Compile Include="Domain\LINQ.cs" />
-    <Compile Include="Domain\PersonTest.cs" />
+    <Compile Include="IntegrationTests\Data\DatabaseTests.cs" />
+    <Compile Include="IntegrationTests\Domain\LINQ.cs" />
+    <Compile Include="IntegrationTests\Domain\PersonTest.cs" />
     <Compile Include="MvcMockHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitTests\Controllers\PersonsControllerTests.cs" />
     <Compile Include="UnitTests\Controllers\WorkerControllerTests.cs" />
     <Compile Include="IntegrationTests\Services\PersonServiceTest.cs" />
     <Compile Include="IntegrationTests\Services\WorkerServiceTest.cs" />
-    <Compile Include="Domain\WorkerTests.cs" />
+    <Compile Include="IntegrationTests\Domain\WorkerTests.cs" />
     <Compile Include="Records.cs" />
     <Compile Include="UnitTests\Services\ImageServiceUnitTests.cs" />
     <Compile Include="UnitTests\Services\PersonServiceUnitTests.cs" />
-    <Compile Include="Views\WorkerViewTests.cs" />
+    <Compile Include="IntegrationTests\Views\WorkerViewTests.cs" />
     <Compile Include="WebServer.cs" />
   </ItemGroup>
   <ItemGroup>

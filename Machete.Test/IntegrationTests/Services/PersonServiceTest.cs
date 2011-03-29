@@ -42,7 +42,7 @@ namespace Machete.Test
         }
 
         [TestMethod]
-        public void PersonService_Intergation_CreatePerson()
+        public void DbSet_PersonService_Intergation_CreatePerson()
         {
             //
             //Arrange
@@ -61,7 +61,7 @@ namespace Machete.Test
             Assert.IsTrue(_person.ID == 1);
         }
         [TestMethod]
-        public void PersonService_Intergation_CreatePersons_NoDuplicate()
+        public void DbSet_PersonService_Intergation_CreatePersons_NoDuplicate()
         {
             int reccount = 0;
             //
