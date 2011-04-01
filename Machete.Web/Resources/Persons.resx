@@ -121,7 +121,7 @@
     <value>Person</value>
   </data>
   <data name="createlink" xml:space="preserve">
-    <value>Create New</value>
+    <value>Create New Person</value>
   </data>
   <data name="createsubmit" xml:space="preserve">
     <value>Create</value>
@@ -141,9 +141,6 @@
   <data name="deletetitle" xml:space="preserve">
     <value>Delete Person Confirmation</value>
   </data>
-  <data name="detailstitle" xml:space="preserve">
-    <value>Details</value>
-  </data>
   <data name="editlink" xml:space="preserve">
     <value>Edit</value>
   </data>
@@ -154,15 +151,27 @@
     <value>Edit Person</value>
   </data>
   <data name="indexreturnlink" xml:space="preserve">
-    <value>Return to Person main page</value>
+    <value>Return to List of Persons</value>
   </data>
   <data name="indextitle" xml:space="preserve">
     <value>List of Persons</value>
   </data>
-  <data name="RequiredFirstname1" xml:space="preserve">
-    <value>At least one first name is required</value>
+  <data name="viewlink" xml:space="preserve">
+    <value>View</value>
   </data>
-  <data name="RequiredLastname1" xml:space="preserve">
-    <value>At least one last name is required</value>
+  <data name="editpersonlink" xml:space="preserve">
+    <value>Edit Person</value>
+  </data>
+  <data name="viewtitle" xml:space="preserve">
+    <value>View Person</value>
+  </data>
+  <data name="filterinactive" xml:space="preserve">
+    <value>Show inactive persons?</value>
+  </data>
+  <data name="filterlegend" xml:space="preserve">
+    <value>filter criteria</value>
+  </data>
+  <data name="filtersubmit" xml:space="preserve">
+    <value>filter</value>
   </data>
 </root>

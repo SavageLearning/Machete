@@ -16,6 +16,9 @@ namespace Machete.Domain
         public virtual Worker Worker { get; set; }
         public Person() { }
         //
+        [LocalizedDisplayName("active", NameResourceType = typeof(Persons))]
+        public bool active { get; set; }
+        //
         [LocalizedDisplayName("firstname1", NameResourceType = typeof(Persons))]
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Persons))]
         [Required(ErrorMessageResourceName = "firstname1error", ErrorMessageResourceType = typeof(Persons))]

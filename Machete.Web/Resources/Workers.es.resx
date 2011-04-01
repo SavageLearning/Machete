@@ -117,61 +117,64 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="active" xml:space="preserve">
-    <value>Persona activa</value>
+  <data name="boxlegend" xml:space="preserve">
+    <value>Trabajador</value>
   </data>
-  <data name="address1" xml:space="preserve">
-    <value>Dirección (1)</value>
+  <data name="createlink" xml:space="preserve">
+    <value>Crear nuevo trabajador</value>
   </data>
-  <data name="address2" xml:space="preserve">
-    <value>Dirección (2)</value>
+  <data name="createsubmit" xml:space="preserve">
+    <value>Crear</value>
   </data>
-  <data name="city" xml:space="preserve">
-    <value>Ciudad</value>
+  <data name="createtitle" xml:space="preserve">
+    <value>trabajador::crear</value>
   </data>
-  <data name="dateupdated" xml:space="preserve">
-    <value>Fecha de actualización</value>
+  <data name="deleteconfirmation" xml:space="preserve">
+    <value>¿Está seguro que desea eliminar este trabajador?</value>
   </data>
-  <data name="firstname1" xml:space="preserve">
-    <value>Nombre (1)</value>
+  <data name="deletelink" xml:space="preserve">
+    <value>Borrar</value>
   </data>
-  <data name="firstname1error" xml:space="preserve">
-    <value>Por lo menos un nombre es requerido</value>
+  <data name="deletesubmit" xml:space="preserve">
+    <value>Borrar</value>
   </data>
-  <data name="firstname2" xml:space="preserve">
-    <value>Nombre (2)</value>
+  <data name="deletetitle" xml:space="preserve">
+    <value>confirmación de borrado de los trabajadores</value>
   </data>
-  <data name="gender" xml:space="preserve">
-    <value>Género</value>
+  <data name="editlink" xml:space="preserve">
+    <value>Editar</value>
   </data>
-  <data name="gendererror" xml:space="preserve">
-    <value>Género se requiere</value>
+  <data name="editsubmit" xml:space="preserve">
+    <value>Guardar</value>
   </data>
-  <data name="genderother" xml:space="preserve">
-    <value>Otro género</value>
+  <data name="edittitle" xml:space="preserve">
+    <value>trabajador::editar</value>
   </data>
-  <data name="lastname1" xml:space="preserve">
-    <value>Apellido (1)</value>
+  <data name="editworkerlink" xml:space="preserve">
+    <value>Editar de los trabajadores</value>
   </data>
-  <data name="lastname1error" xml:space="preserve">
-    <value>Por lo menos un apellido es requerido</value>
+  <data name="filterinactive" xml:space="preserve">
+    <value>¿Mostrar los trabajadores inactivos?</value>
   </data>
-  <data name="lastname2" xml:space="preserve">
-    <value>Apellido (2)</value>
+  <data name="filterlegend" xml:space="preserve">
+    <value>criterios de filtro</value>
   </data>
-  <data name="phone" xml:space="preserve">
-    <value>Telefono</value>
+  <data name="filtersubmit" xml:space="preserve">
+    <value>filtro</value>
   </data>
-  <data name="state" xml:space="preserve">
-    <value>Estado</value>
+  <data name="indexreturnlink" xml:space="preserve">
+    <value>Volver a la lista de los trabajadores</value>
   </data>
-  <data name="stringlength" xml:space="preserve">
-    <value>Por favor, introduzca un máximo de {1} caracteres</value>
+  <data name="indextitle" xml:space="preserve">
+    <value>trabajador::índice</value>
   </data>
-  <data name="updatedby" xml:space="preserve">
-    <value>Puesto al día por</value>
+  <data name="noimagelabel" xml:space="preserve">
+    <value>No hay imágenes asociadas con el trabajador</value>
   </data>
-  <data name="zipcode" xml:space="preserve">
-    <value>Código postal</value>
+  <data name="viewlink" xml:space="preserve">
+    <value>Ver</value>
+  </data>
+  <data name="viewtitle" xml:space="preserve">
+    <value>trabajador::ver</value>
   </data>
 </root>

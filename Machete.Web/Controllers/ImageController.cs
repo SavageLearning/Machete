@@ -58,7 +58,6 @@ namespace Machete.Web.Controllers
         {
             try
             {
-                // TODO: Add insert logic here
                 if (ModelState.IsValid)
                 {
                     if (imagefile != null)

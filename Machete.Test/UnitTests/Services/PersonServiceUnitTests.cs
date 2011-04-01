@@ -23,9 +23,6 @@ namespace Machete.Test.UnitTests.Services
         
         public PersonServiceUnitTests()
         {
-            //
-            // TODO: Add constructor logic here
-            //
         }
 
         private TestContext testContextInstance;
@@ -76,14 +73,12 @@ namespace Machete.Test.UnitTests.Services
             _repo = new Mock<IPersonRepository>();
             _uow = new Mock<IUnitOfWork>();
             var _serv = new PersonService(_repo.Object, _uow.Object);
-            //TODO: Check if Object is actually Add()'ing ... probably not.
-            _repo.Object.Add(Records._person1);
             //Act
-            var result = _serv.GetPersons();
+            var result = _serv.GetPersons(false);
             //Assert
             Assert.IsInstanceOfType(result, typeof(IEnumerable<Person>));
         }
-
+        //TODO Test filter for persons
         [TestMethod]
         public void PersonService_GetPerson_returns_person()
         {

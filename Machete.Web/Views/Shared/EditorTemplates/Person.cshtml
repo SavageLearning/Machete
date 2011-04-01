@@ -170,6 +170,19 @@ The table for the rest of the person information
                         </div>
                     </td>
                 </tr>
+                <tr>
+                <td>
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.active)
+                        </div>
+                </td>
+                 <td>
+                        <div class="editor-field">
+                            @Html.EditorFor(model => model.active)
+                            @Html.ValidationMessageFor(model => model.active)
+                        </div>
+                    </td>
+                </tr>
             </table>
         </td>
     </tr>

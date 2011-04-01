@@ -113,6 +113,7 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Persons.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Worker.es.resx" />
     <EmbeddedResource Include="Resources\Worker.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Worker.Designer.cs</LastGenOutput>

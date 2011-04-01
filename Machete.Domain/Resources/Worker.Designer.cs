@@ -61,6 +61,15 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Active Worker.
+        /// </summary>
+        public static string active {
+            get {
+                return ResourceManager.GetString("active", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Car insurance.
         /// </summary>
         public static string carinsurance {
@@ -286,7 +295,7 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to expiration date.
+        ///   Looks up a localized string similar to Member expiration date.
         /// </summary>
         public static string memberexpirationdate {
             get {
@@ -331,7 +340,16 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to recentarrival.
+        ///   Looks up a localized string similar to Other race.
+        /// </summary>
+        public static string raceother {
+            get {
+                return ResourceManager.GetString("raceother", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recent arrival to the USA?.
         /// </summary>
         public static string recentarrival {
             get {
@@ -367,7 +385,7 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Weight!!!.
+        ///   Looks up a localized string similar to Weight.
         /// </summary>
         public static string weight {
             get {

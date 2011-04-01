@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Machete.Domain.Resources {
+namespace Machete.Web.Resources {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace Machete.Domain.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Persons {
+    public class Workers {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Persons() {
+        internal Workers() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Machete.Domain.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Machete.Domain.Resources.Persons", typeof(Persons).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Machete.Web.Resources.Workers", typeof(Workers).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,173 +61,182 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Active person.
+        ///   Looks up a localized string similar to Worker.
         /// </summary>
-        public static string active {
+        public static string boxlegend {
             get {
-                return ResourceManager.GetString("active", resourceCulture);
+                return ResourceManager.GetString("boxlegend", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Address (1).
+        ///   Looks up a localized string similar to Create New Worker.
         /// </summary>
-        public static string address1 {
+        public static string createlink {
             get {
-                return ResourceManager.GetString("address1", resourceCulture);
+                return ResourceManager.GetString("createlink", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Address (2).
+        ///   Looks up a localized string similar to Create.
         /// </summary>
-        public static string address2 {
+        public static string createsubmit {
             get {
-                return ResourceManager.GetString("address2", resourceCulture);
+                return ResourceManager.GetString("createsubmit", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to City.
+        ///   Looks up a localized string similar to worker::create.
         /// </summary>
-        public static string city {
+        public static string createtitle {
             get {
-                return ResourceManager.GetString("city", resourceCulture);
+                return ResourceManager.GetString("createtitle", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Date updated.
+        ///   Looks up a localized string similar to Are you sure you want to delete this person?.
         /// </summary>
-        public static string dateupdated {
+        public static string deleteconfirmation {
             get {
-                return ResourceManager.GetString("dateupdated", resourceCulture);
+                return ResourceManager.GetString("deleteconfirmation", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to First Name (1).
+        ///   Looks up a localized string similar to Delete.
         /// </summary>
-        public static string firstname1 {
+        public static string deletelink {
             get {
-                return ResourceManager.GetString("firstname1", resourceCulture);
+                return ResourceManager.GetString("deletelink", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to At least one first name is required.
+        ///   Looks up a localized string similar to Delete.
         /// </summary>
-        public static string firstname1error {
+        public static string deletesubmit {
             get {
-                return ResourceManager.GetString("firstname1error", resourceCulture);
+                return ResourceManager.GetString("deletesubmit", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to First Name (2).
+        ///   Looks up a localized string similar to worker::delete.
         /// </summary>
-        public static string firstname2 {
+        public static string deletetitle {
             get {
-                return ResourceManager.GetString("firstname2", resourceCulture);
+                return ResourceManager.GetString("deletetitle", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Gender.
+        ///   Looks up a localized string similar to Edit.
         /// </summary>
-        public static string gender {
+        public static string editlink {
             get {
-                return ResourceManager.GetString("gender", resourceCulture);
+                return ResourceManager.GetString("editlink", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Gender is required.
+        ///   Looks up a localized string similar to Save.
         /// </summary>
-        public static string gendererror {
+        public static string editsubmit {
             get {
-                return ResourceManager.GetString("gendererror", resourceCulture);
+                return ResourceManager.GetString("editsubmit", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Other gender.
+        ///   Looks up a localized string similar to worker::edit.
         /// </summary>
-        public static string genderother {
+        public static string edittitle {
             get {
-                return ResourceManager.GetString("genderother", resourceCulture);
+                return ResourceManager.GetString("edittitle", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Last Name (1).
+        ///   Looks up a localized string similar to Edit Worker.
         /// </summary>
-        public static string lastname1 {
+        public static string editworkerlink {
             get {
-                return ResourceManager.GetString("lastname1", resourceCulture);
+                return ResourceManager.GetString("editworkerlink", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to At least one last name is required.
+        ///   Looks up a localized string similar to Show inactive workers?.
         /// </summary>
-        public static string lastname1error {
+        public static string filterinactive {
             get {
-                return ResourceManager.GetString("lastname1error", resourceCulture);
+                return ResourceManager.GetString("filterinactive", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Last Name (2).
+        ///   Looks up a localized string similar to filter criteria.
         /// </summary>
-        public static string lastname2 {
+        public static string filterlegend {
             get {
-                return ResourceManager.GetString("lastname2", resourceCulture);
+                return ResourceManager.GetString("filterlegend", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Phone.
+        ///   Looks up a localized string similar to filter.
         /// </summary>
-        public static string phone {
+        public static string filtersubmit {
             get {
-                return ResourceManager.GetString("phone", resourceCulture);
+                return ResourceManager.GetString("filtersubmit", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to State.
+        ///   Looks up a localized string similar to Return to List of Workers.
         /// </summary>
-        public static string state {
+        public static string indexreturnlink {
             get {
-                return ResourceManager.GetString("state", resourceCulture);
+                return ResourceManager.GetString("indexreturnlink", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please enter no more than {1} characters.
+        ///   Looks up a localized string similar to worker::index.
         /// </summary>
-        public static string stringlength {
+        public static string indextitle {
             get {
-                return ResourceManager.GetString("stringlength", resourceCulture);
+                return ResourceManager.GetString("indextitle", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Updated by.
+        ///   Looks up a localized string similar to No image associated with worker.
         /// </summary>
-        public static string updatedby {
+        public static string noimagelabel {
             get {
-                return ResourceManager.GetString("updatedby", resourceCulture);
+                return ResourceManager.GetString("noimagelabel", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Zipcode.
+        ///   Looks up a localized string similar to View.
         /// </summary>
-        public static string zipcode {
+        public static string viewlink {
             get {
-                return ResourceManager.GetString("zipcode", resourceCulture);
+                return ResourceManager.GetString("viewlink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to worker::view.
+        /// </summary>
+        public static string viewtitle {
+            get {
+                return ResourceManager.GetString("viewtitle", resourceCulture);
             }
         }
     }

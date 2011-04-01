@@ -92,7 +92,6 @@ namespace Machete.Test
             }
             //
             //Assert
-            //TODO: figure out why de-dup isn't working
             Assert.IsNotNull(_person4.ID);
             Assert.IsTrue(reccount == 1, "Expected record count of 1, received {0}", reccount);
       

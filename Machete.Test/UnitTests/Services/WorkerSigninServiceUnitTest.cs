@@ -30,9 +30,6 @@ namespace Machete.Test.IntegrationTests.Services
 
         public WorkerSigninServiceUnitTest()
         {
-            //
-            // TODO: Add constructor logic here
-            //
         }
 
         private TestContext testContextInstance;
