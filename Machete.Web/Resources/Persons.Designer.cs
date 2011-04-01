@@ -70,7 +70,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Create New.
+        ///   Looks up a localized string similar to Create New Person.
         /// </summary>
         public static string createlink {
             get {
@@ -133,20 +133,20 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Details.
-        /// </summary>
-        public static string detailstitle {
-            get {
-                return ResourceManager.GetString("detailstitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Edit.
         /// </summary>
         public static string editlink {
             get {
                 return ResourceManager.GetString("editlink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Person.
+        /// </summary>
+        public static string editpersonlink {
+            get {
+                return ResourceManager.GetString("editpersonlink", resourceCulture);
             }
         }
         
@@ -169,7 +169,34 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Return to Person main page.
+        ///   Looks up a localized string similar to Show inactive persons?.
+        /// </summary>
+        public static string filterinactive {
+            get {
+                return ResourceManager.GetString("filterinactive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to filter criteria.
+        /// </summary>
+        public static string filterlegend {
+            get {
+                return ResourceManager.GetString("filterlegend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to filter.
+        /// </summary>
+        public static string filtersubmit {
+            get {
+                return ResourceManager.GetString("filtersubmit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Return to List of Persons.
         /// </summary>
         public static string indexreturnlink {
             get {
@@ -187,20 +214,20 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to At least one first name is required.
+        ///   Looks up a localized string similar to View.
         /// </summary>
-        public static string RequiredFirstname1 {
+        public static string viewlink {
             get {
-                return ResourceManager.GetString("RequiredFirstname1", resourceCulture);
+                return ResourceManager.GetString("viewlink", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to At least one last name is required.
+        ///   Looks up a localized string similar to View Person.
         /// </summary>
-        public static string RequiredLastname1 {
+        public static string viewtitle {
             get {
-                return ResourceManager.GetString("RequiredLastname1", resourceCulture);
+                return ResourceManager.GetString("viewtitle", resourceCulture);
             }
         }
     }

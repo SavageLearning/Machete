@@ -98,12 +98,12 @@ namespace Machete.Web
             .RegisterInstance<MembershipProvider>(Membership.Provider)
             .RegisterType<IDatabaseFactory, DatabaseFactory>(new HttpContextLifetimeManager<IDatabaseFactory>())
             .RegisterType<IUnitOfWork, UnitOfWork>(new HttpContextLifetimeManager<IUnitOfWork>())
-                // TODO: Add repositories
+                // 
             .RegisterType<IPersonRepository, PersonRepository>(new HttpContextLifetimeManager<IPersonRepository>())
             .RegisterType<IWorkerSigninRepository, WorkerSigninRepository>(new HttpContextLifetimeManager<IWorkerSigninRepository>())
             .RegisterType<IWorkerRepository, WorkerRepository>(new HttpContextLifetimeManager<IWorkerRepository>())
             .RegisterType<IImageRepository, ImageRepository>(new HttpContextLifetimeManager<IImageRepository>())
-                // TODO: Add services
+                // 
             .RegisterType<IPersonService, PersonService>(new HttpContextLifetimeManager<IPersonService>())
             .RegisterType<IWorkerSigninService, WorkerSigninService>(new HttpContextLifetimeManager<IWorkerSigninService>())
             .RegisterType<IWorkerService, WorkerService>(new HttpContextLifetimeManager<IWorkerService>())

@@ -147,6 +147,9 @@
   <data name="editlink" xml:space="preserve">
     <value>Editar</value>
   </data>
+  <data name="editpersonlink" xml:space="preserve">
+    <value>Editar Persona</value>
+  </data>
   <data name="editsubmit" xml:space="preserve">
     <value>Guardar</value>
   </data>
@@ -158,5 +161,17 @@
   </data>
   <data name="indextitle" xml:space="preserve">
     <value>Buscar Personas</value>
+  </data>
+  <data name="RequiredFirstname1" xml:space="preserve">
+    <value>Por lo menos un nombre de pila es necesario</value>
+  </data>
+  <data name="RequiredLastname1" xml:space="preserve">
+    <value>Por lo menos un apellido es requerido</value>
+  </data>
+  <data name="viewlink" xml:space="preserve">
+    <value>Ver</value>
+  </data>
+  <data name="viewtitle" xml:space="preserve">
+    <value>Ver Persona</value>
   </data>
 </root>

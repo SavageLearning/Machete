@@ -102,7 +102,6 @@ namespace Machete.Test
             reccount = MacheteDB.Workers.Count(n => n.raceother == _worker3.raceother);
             //
             //Assert
-            //TODO: figure out why de-dup isn't working
             Assert.IsNotNull(_worker3.ID);
             Assert.IsTrue(reccount == 1);
         }

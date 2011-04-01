@@ -118,52 +118,106 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="active" xml:space="preserve">
-    <value>Persona activa</value>
+    <value>Trabajador activo</value>
   </data>
-  <data name="address1" xml:space="preserve">
-    <value>Dirección (1)</value>
+  <data name="carinsurance" xml:space="preserve">
+    <value>Seguro de automóvil</value>
   </data>
-  <data name="address2" xml:space="preserve">
-    <value>Dirección (2)</value>
+  <data name="countryoforigin" xml:space="preserve">
+    <value>País de origen</value>
   </data>
-  <data name="city" xml:space="preserve">
-    <value>Ciudad</value>
+  <data name="datecreated" xml:space="preserve">
+    <value>Fecha de creación</value>
+  </data>
+  <data name="dateinseattle" xml:space="preserve">
+    <value>Fecha en Seattle</value>
+  </data>
+  <data name="dateinUSA" xml:space="preserve">
+    <value>Fecha en los EE.UU.</value>
   </data>
   <data name="dateupdated" xml:space="preserve">
     <value>Fecha de actualización</value>
   </data>
-  <data name="firstname1" xml:space="preserve">
-    <value>Nombre (1)</value>
+  <data name="disabilitydesc" xml:space="preserve">
+    <value>Descripción de la discapacidad</value>
   </data>
-  <data name="firstname1error" xml:space="preserve">
-    <value>Por lo menos un nombre es requerido</value>
+  <data name="driverslicense" xml:space="preserve">
+    <value>Licencia de conducir #</value>
   </data>
-  <data name="firstname2" xml:space="preserve">
-    <value>Nombre (2)</value>
+  <data name="dwccardnum" xml:space="preserve">
+    <value>DWC tarjeta #</value>
   </data>
-  <data name="gender" xml:space="preserve">
-    <value>Género</value>
+  <data name="dwccardnumerror" xml:space="preserve">
+    <value>Número de la tarjeta debe ser de 5 dígitos</value>
   </data>
-  <data name="gendererror" xml:space="preserve">
-    <value>Género se requiere</value>
+  <data name="emcontoriginname" xml:space="preserve">
+    <value>Contacto de emergencia en el país de origen</value>
   </data>
-  <data name="genderother" xml:space="preserve">
-    <value>Otro género</value>
+  <data name="emcontoriginphone" xml:space="preserve">
+    <value>Teléfono del contacto de emergencia en el país de origen </value>
   </data>
-  <data name="lastname1" xml:space="preserve">
-    <value>Apellido (1)</value>
+  <data name="emcontoriginrelation" xml:space="preserve">
+    <value>Contacto de emergencia en el país de origen con relación al trabajador</value>
   </data>
-  <data name="lastname1error" xml:space="preserve">
-    <value>Por lo menos un apellido es requerido</value>
+  <data name="emcontUSAname" xml:space="preserve">
+    <value>Contacto de emergencia en los EE.UU.</value>
   </data>
-  <data name="lastname2" xml:space="preserve">
-    <value>Apellido (2)</value>
+  <data name="emcontUSAphone" xml:space="preserve">
+    <value>Teléfono del contacto de emergencia en los EE.UU.</value>
   </data>
-  <data name="phone" xml:space="preserve">
-    <value>Telefono</value>
+  <data name="emcontUSArelation" xml:space="preserve">
+    <value>Contacto de emergencia en los EE.UU. con relación al trabajador</value>
   </data>
-  <data name="state" xml:space="preserve">
-    <value>Estado</value>
+  <data name="englishlevelID" xml:space="preserve">
+    <value>Nivel de Inglés</value>
+  </data>
+  <data name="height" xml:space="preserve">
+    <value>Altura</value>
+  </data>
+  <data name="immigrantrefugee" xml:space="preserve">
+    <value>Refugiado Inmigrante?</value>
+  </data>
+  <data name="incomeID" xml:space="preserve">
+    <value>Nivel de ingresos</value>
+  </data>
+  <data name="insuranceexpiration" xml:space="preserve">
+    <value>Fecha de vencimiento del seguro de coche</value>
+  </data>
+  <data name="licenseexpirationdate" xml:space="preserve">
+    <value>Fecha de vencimiento de la licencia de conducir</value>
+  </data>
+  <data name="livealone" xml:space="preserve">
+    <value>Vive sola?</value>
+  </data>
+  <data name="livewithchildren" xml:space="preserve">
+    <value>Vive con los niños</value>
+  </data>
+  <data name="maritalstatus" xml:space="preserve">
+    <value>Estado civil</value>
+  </data>
+  <data name="memberexpirationdate" xml:space="preserve">
+    <value>fecha de vencimiento miembro</value>
+  </data>
+  <data name="neighborhoodID" xml:space="preserve">
+    <value>Barrio de Seattle</value>
+  </data>
+  <data name="numofchildren" xml:space="preserve">
+    <value>Número de niños</value>
+  </data>
+  <data name="numofchildrenRxError" xml:space="preserve">
+    <value>Los niños deben estar entre 0 y 20</value>
+  </data>
+  <data name="raceID" xml:space="preserve">
+    <value>Raza</value>
+  </data>
+  <data name="raceother" xml:space="preserve">
+    <value>Otra raza</value>
+  </data>
+  <data name="recentarrival" xml:space="preserve">
+    <value>Reciente llegada a los EE.UU.?</value>
+  </data>
+  <data name="required" xml:space="preserve">
+    <value>Este campo es obligatorio</value>
   </data>
   <data name="stringlength" xml:space="preserve">
     <value>Por favor, introduzca un máximo de {1} caracteres</value>
@@ -171,7 +225,7 @@
   <data name="updatedby" xml:space="preserve">
     <value>Puesto al día por</value>
   </data>
-  <data name="zipcode" xml:space="preserve">
-    <value>Código postal</value>
+  <data name="weight" xml:space="preserve">
+    <value>Peso</value>
   </data>
 </root>

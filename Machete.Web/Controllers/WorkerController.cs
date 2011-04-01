@@ -45,15 +45,27 @@ namespace Machete.Web.Controllers
         //
         // GET: /Worker/Index
         //
+        #region index
         [Authorize(Roles = "User, Manager, Administrator, Check-in, PhoneDesk")]
         public ActionResult Index()
         {
-            var workers = workerService.GetWorkers();
+            ViewBag.show_inactive = false;
+            var workers = workerService.GetWorkers(false);
             return View(workers);
         }
+        [HttpPost]
+        [Authorize(Roles = "User, Manager, Administrator, Check-in, PhoneDesk")]
+        public ActionResult Index(bool show_inactive)
+        {
+            var workers = workerService.GetWorkers(show_inactive);
+            ViewBag.show_inactive = show_inactive;
+            return View(workers);
+        }
+        #endregion
         //
         // GET: /Worker/Create
         //
+        #region create
         [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
         public ActionResult Create()
         {
@@ -65,10 +77,6 @@ namespace Machete.Web.Controllers
             _model.person.Worker = _model.worker;
             return View(_model);
         } 
-
-        //
-        // POST: /Worker/Create
-        //
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
         public ActionResult Create(WorkerViewModel _model, string userName)
@@ -87,6 +95,7 @@ namespace Machete.Web.Controllers
             workerService.CreateWorker(_model.worker, userName);
             return RedirectToAction("Index");
         }
+        #endregion
         //
         // GET: /Worker/Edit/5
         //
@@ -107,17 +116,13 @@ namespace Machete.Web.Controllers
             }
             return View(_model);
         }
-        //
-        // POST: /Worker/Edit/5
-        // TODO: catch exceptions, notify user
-        // TODO: disable button
-        //
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Manager, Administrator")]
+        [Authorize(Roles = "PhoneDesk, Manager, Administrator")]
         public ActionResult Edit(int id, WorkerViewModel _model, string userName)
         {
             Worker worker = workerService.GetWorker(id);
             Person person = worker.Person;
+            // TODO: catch exceptions, notify user
             foo1 = TryUpdateModel(worker);
             foo2 = TryUpdateModel(person);
             if (foo1 && foo2)
@@ -133,7 +138,28 @@ namespace Machete.Web.Controllers
             }
         }
         //
+        //GET: /Worker/View/5
+        //
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk, User")]
+        public ActionResult View(int id)
+        {
+            Worker _worker = workerService.GetWorker(id);
+            WorkerViewModel _model = new WorkerViewModel();
+            _model.worker = _worker;
+            _model.person = _worker.Person;
+            if (_model.worker.ImageID != null)
+            {
+                _model.image = imageServ.GetImage((int)_worker.ImageID);
+            }
+            else
+            {
+                _model.image = new Image();
+            }
+            return View(_model);
+        }
+        //
         // GET: /Worker/Delete/5
+        #region delete
         [Authorize(Roles = "Administrator")]
         public ActionResult Delete(int id)
         {
@@ -143,10 +169,6 @@ namespace Machete.Web.Controllers
             _model.person = _worker.Person;
             return View(_model);
         }
-
-        //
-        // POST: /Worker/Delete/5
-
         [HttpPost]
         [Authorize(Roles = "Administrator")] 
         public ActionResult Delete(int id, FormCollection collection)
@@ -156,5 +178,6 @@ namespace Machete.Web.Controllers
             levent.Properties["RecordID"] = id; log.Log(levent);
             return RedirectToAction("Index");
         }
+        #endregion
     }
 }

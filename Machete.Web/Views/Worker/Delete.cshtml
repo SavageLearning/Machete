@@ -1,37 +1,28 @@
-﻿@model Machete.Web.ViewModel.WorkerViewModel
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+@model Machete.Web.ViewModel.WorkerViewModel
 @{
-    ViewBag.Title = "Worker::Delete";
+    ViewBag.Title = Machete.Web.Resources.Workers.deletetitle;
 }
-
-<h2>Delete</h2>
-
+<h2>@Machete.Web.Resources.Workers.deletetitle</h2>
+<p>
+    @Html.ActionLink(Machete.Web.Resources.Workers.indexreturnlink, "Index")
+</p>
 <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
-
-@using (Html.BeginForm()) {
+<script src="@Url.Content("~/Scripts/jquery-1.4.4.min.js")" type="text/javascript"></script>
+@using (Html.BeginForm())
+{
     @Html.ValidationSummary(true)
     <fieldset>
-        <legend>Person information</legend>
+        <legend>@Machete.Web.Resources.Persons.boxlegend</legend>
         @Html.EditorFor(model => model.person)
     </fieldset>
     <fieldset>
-        <legend>Worker information</legend>
-        <!--
-        
-        This pulls from views/shared/editortemplates. 
-        name is by convention, model name
-        
-        !-->
+        <legend>@Machete.Web.Resources.Workers.boxlegend</legend>
         @Html.EditorFor(model => model.worker)
-        <p>
-            <input type="submit" value="Delete" />
-        </p>
+        <input id="delete_button" type="submit" value="@Machete.Web.Resources.Workers.deletesubmit" class='confirm' />
     </fieldset>
 }
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
 <script type="text/javascript">
     $().ready(function () {
         $('.editor-field').children().attr('disabled', 'disabled')

@@ -26,6 +26,17 @@
                 @Html.ValidationMessageFor(model => model.raceother)
             </div>
         </td>
+                <td>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.active)
+            </div>
+        </td>
+        <td>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.active)
+                @Html.ValidationMessageFor(model => model.active)
+            </div>
+        </td>
     </tr>
     <tr>
         <td>

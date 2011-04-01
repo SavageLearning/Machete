@@ -11,7 +11,7 @@ namespace Machete.Service
 {
     public interface IWorkerService
     {
-        IEnumerable<Worker> GetWorkers();
+        IEnumerable<Worker> GetWorkers(bool inactive);
         Worker GetWorker(int id);
         Worker CreateWorker(Worker worker, string user);
         void DeleteWorker(int id);
@@ -32,9 +32,18 @@ namespace Machete.Service
         }
         #region IWorkerService Members
 
-        public IEnumerable<Worker> GetWorkers()
+        public IEnumerable<Worker> GetWorkers(bool showInactive)
         {
-            var workers = workerRepository.GetAll();
+            IEnumerable<Worker> workers;
+            //TODO unit test this
+            if (showInactive == false)
+            {
+                workers = workerRepository.GetAll().Where(w => w.active == true);
+            }
+            else
+            {
+                workers = workerRepository.GetAll();
+            }
             return workers;
         }
 

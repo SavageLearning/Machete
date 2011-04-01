@@ -11,7 +11,7 @@ namespace Machete.Service
 {
     public interface IPersonService
     {
-        IEnumerable<Person> GetPersons();
+        IEnumerable<Person> GetPersons(bool inactive);
         Person GetPerson(int id);
         Person CreatePerson(Person person, string user);
         void DeletePerson(int id, string user);
@@ -35,9 +35,18 @@ namespace Machete.Service
             this.unitOfWork = unitOfWork;
         }  
 
-        public IEnumerable<Person> GetPersons()
+        public IEnumerable<Person> GetPersons(bool showInactive)
         {
-            var persons = personRepository.GetAll();
+            IEnumerable<Person> persons;
+            //TODO Unit test this
+            if (showInactive == false)
+            {
+                persons = personRepository.GetAll().Where(w => w.active == true);
+            }
+            else
+            {
+                persons = personRepository.GetAll();
+            }
             return persons;
         }
 

@@ -16,6 +16,9 @@ namespace Machete.Domain
         public virtual Person Person { get; set; }
         public virtual ICollection<WorkerSignin> workersignins { get; set; }
         //
+        [LocalizedDisplayName("active", NameResourceType = typeof(Resources.Worker))]
+        public bool active { get; set; }
+        //
         [Required(ErrorMessageResourceName = "required", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("raceID", NameResourceType = typeof(Resources.Worker))]
         public int RaceID { get; set; }
@@ -119,12 +122,11 @@ namespace Machete.Domain
         [LocalizedDisplayName("emcontoriginphone", NameResourceType = typeof(Resources.Worker))]
         public string emcontoriginphone { get; set; }
         //
-        //TODO: how to handle imaage from SQL?
         [Required(ErrorMessageResourceName = "memberexpirationdate", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("memberexpirationdate", NameResourceType = typeof(Resources.Worker))]
         public DateTime memberexpirationdate { get; set; }
         //
-        //[StringLength(16, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Worker))]
+        [StringLength(16, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("driverslicense", NameResourceType = typeof(Resources.Worker))]
         public bool driverslicense { get; set; }
         //

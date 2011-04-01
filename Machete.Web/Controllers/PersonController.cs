@@ -27,27 +27,27 @@ namespace Machete.Web.Controllers
         //
         // GET: /Person/
         //
-        [Authorize(Roles = "User, Manager, Administrator, Check-in, PhoneDesk")]
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, User")]
         public ActionResult Index()
         {
-            var persons = personService.GetPersons();
+            ViewBag.show_inactive = false;
+            var persons = personService.GetPersons(false);
             return View(persons);
         }
-        
         [HttpPost]
-        [Authorize(Roles = "User, Manager, Administrator, Check-in, PhoneDesk")]
-        public ActionResult Index(Person person)
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, User")]
+        public ActionResult Index(bool show_inactive)
         {
-            //TODO: finish search functionality
-            throw new NotImplementedException();
-            //return View(person);
+            ViewBag.show_inactive = show_inactive;
+            var persons = personService.GetPersons(show_inactive);
+            return View(persons);
         }
         #endregion
 
         #region Create
         //
         // GET: /Person/Create
-        [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk")] 
         public ActionResult Create()
         {
             var _model = new Person();
@@ -59,7 +59,7 @@ namespace Machete.Web.Controllers
         // POST: /Person/Create
         //
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Create(Person person, string userName)
         {
             if (!ModelState.IsValid)
@@ -75,7 +75,7 @@ namespace Machete.Web.Controllers
         //
         // GET: /Person/Edit/5
         //
-        [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk")] 
         public ActionResult Edit(int id)
         {
             Person person = personService.GetPerson(id);
@@ -87,7 +87,7 @@ namespace Machete.Web.Controllers
         // TODO: catch exceptions, notify user
         //
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk")] 
         public ActionResult Edit(int id, FormCollection collection, string userName)
         {
             Person person = personService.GetPerson(id);
@@ -103,6 +103,18 @@ namespace Machete.Web.Controllers
                 levent.Properties["RecordID"] = person.ID; log.Log(levent);
                 return View(person);
             }
+        }
+        #endregion
+        #region View
+        //
+        //GET: /Person/View/5
+        //
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk, User")]
+        public ActionResult View(int id)
+        {
+            Person person = personService.GetPerson(id);
+            ViewBag.Genders = Lookups.genders;
+            return View(person);
         }
         #endregion
 

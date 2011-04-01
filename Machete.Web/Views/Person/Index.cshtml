@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<Machete.Domain.Person>
-<script src="@Url.Content("~/Scripts/jquery-ui.js")" type="text/javascript"></script> 
-<script src="@Url.Content("~/Scripts/jquery-1.4.4.min.js")" type="text/javascript"></script> 
+@using Machete.Web.Helpers
+<script src="@Url.Content("~/Scripts/jquery-ui.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery-1.4.4.min.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/jquery.dataTables-1.7.6.min.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/jquery.validate.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/jquery.jeditable.js")" type="text/javascript"></script>
@@ -10,72 +11,98 @@
 <link href="@Url.Content("~/Content/themes/base/jquery-ui.css")" rel="stylesheet" type="text/css" media="all" />
 <link href="@Url.Content("~/Content/themes/smoothness/jquery-ui-1.7.2.custom.css")"rel="stylesheet" type="text/css" media="all" />
 @{
-    ViewBag.Title = @Machete.Web.Resources.Persons.indextitle;
+    ViewBag.Title = Machete.Web.Resources.Persons.indextitle;
 }
-
 <h2>@Machete.Web.Resources.Persons.indextitle</h2>
-
 <p>
     @Html.ActionLink(@Machete.Web.Resources.Persons.createlink, "Create")
 </p>
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>@Machete.Web.Resources.Workers.filterlegend</legend>
+        @Html.Label(@Machete.Web.Resources.Workers.filterinactive)
+        @Html.CheckBox("show_inactive", (bool)ViewBag.show_inactive)
+        <input type="submit" value="@Machete.Web.Resources.Workers.filtersubmit" />
+    </fieldset>
+}
 <table id="myDataTable" class="display">
     <thead>
-    <tr>
-        <th></th>
-        <th>
-            @Machete.Domain.Resources.Persons.firstname1
-        </th>
-        <th>
-            @Machete.Domain.Resources.Persons.firstname2
-        </th>
-        <th>
-            @Machete.Domain.Resources.Persons.lastname1
-        </th>
-        <th>
-            @Machete.Domain.Resources.Persons.lastname2
-        </th>
-        <th>
-            @Machete.Domain.Resources.Persons.phone
-        </th>
-        <th>
-            @Machete.Domain.Resources.Persons.dateupdated
-        </th>
-                <th>
-            @Machete.Domain.Resources.Persons.updatedby
-        </th>
-    </tr>
+        <tr>
+            <th>
+            </th>
+            <th>
+                @Machete.Domain.Resources.Persons.active
+            </th>
+            <th>
+                @Machete.Domain.Resources.Persons.firstname1
+            </th>
+            <th>
+                @Machete.Domain.Resources.Persons.firstname2
+            </th>
+            <th>
+                @Machete.Domain.Resources.Persons.lastname1
+            </th>
+            <th>
+                @Machete.Domain.Resources.Persons.lastname2
+            </th>
+            <th>
+                @Machete.Domain.Resources.Persons.phone
+            </th>
+            <th>
+                @Machete.Domain.Resources.Persons.dateupdated
+            </th>
+            <th>
+                @Machete.Domain.Resources.Persons.updatedby
+            </th>
+        </tr>
     </thead>
-
-@foreach (var item in Model)
-{
-    <tr>
-        <td>
-            @Html.ActionLink(@Machete.Web.Resources.Persons.editlink, "Edit", new { id = item.ID }) |
-            @Html.ActionLink(@Machete.Web.Resources.Persons.deletelink, "Delete", new { id = item.ID })
-        </td>
-        <td>
-            @item.firstname1
-        </td>
-        <td>
-            @item.firstname2
-        </td>
-        <td>
-            @item.lastname1
-        </td>
-        <td>
-            @item.lastname2
-        </td>
-        <td>
-            @item.phone
-        </td>
-        <td>
-            @item.dateupdated
-        </td>
-        <td>
-            @item.Updatedby
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @if (Html.IsInRole(Html.Role_AMPU()))
+                {
+                    @Html.ActionLink(@Machete.Web.Resources.Persons.viewlink, "View", new { id = item.ID })
+                }
+                @if (Html.IsInRole(Html.Role_AMP()))
+                {
+                    @Html.Encode(" | ")
+                    @Html.ActionLink(@Machete.Web.Resources.Persons.editlink, "Edit", new { id = item.ID })
+                }
+                @if (Html.IsInRole(Html.Role_A()))
+                {
+                    @Html.Encode(" | ")
+                    @Html.ActionLink(@Machete.Web.Resources.Persons.deletelink, "Delete", new { id = item.ID })
+                }
+            </td>
+            <td>
+                @item.active
+            </td>
+            <td>
+                @item.firstname1
+            </td>
+            <td>
+                @item.firstname2
+            </td>
+            <td>
+                @item.lastname1
+            </td>
+            <td>
+                @item.lastname2
+            </td>
+            <td>
+                @item.phone
+            </td>
+            <td>
+                @item.dateupdated
+            </td>
+            <td>
+                @item.Updatedby
+            </td>
+        </tr>
+    }
 </table>
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {

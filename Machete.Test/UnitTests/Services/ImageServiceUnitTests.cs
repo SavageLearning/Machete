@@ -23,9 +23,6 @@ namespace Machete.Test.UnitTests.Services
         
         public ImageServiceUnitTests()
         {
-            //
-            // TODO: Add constructor logic here
-            //
         }
 
         private TestContext testContextInstance;

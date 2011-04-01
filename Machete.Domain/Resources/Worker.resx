@@ -142,7 +142,7 @@
     <value>Marital Status</value>
   </data>
   <data name="memberexpirationdate" xml:space="preserve">
-    <value>expiration date</value>
+    <value>Member expiration date</value>
   </data>
   <data name="numofchildren" xml:space="preserve">
     <value>Number of Children</value>
@@ -160,7 +160,7 @@
     <value>Please enter no more than {1} characters</value>
   </data>
   <data name="weight" xml:space="preserve">
-    <value>Weight!!!</value>
+    <value>Weight</value>
   </data>
   <data name="carinsurance" xml:space="preserve">
     <value>Car insurance</value>
@@ -205,7 +205,7 @@
     <value>Lives with children</value>
   </data>
   <data name="recentarrival" xml:space="preserve">
-    <value>recentarrival</value>
+    <value>Recent arrival to the USA?</value>
   </data>
   <data name="datecreated" xml:space="preserve">
     <value>Date created</value>
@@ -221,5 +221,11 @@
   </data>
   <data name="updatedby" xml:space="preserve">
     <value>Updated by</value>
+  </data>
+  <data name="active" xml:space="preserve">
+    <value>Active Worker</value>
+  </data>
+  <data name="raceother" xml:space="preserve">
+    <value>Other race</value>
   </data>
 </root>
