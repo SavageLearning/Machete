@@ -127,10 +127,10 @@
     <value>Create</value>
   </data>
   <data name="createtitle" xml:space="preserve">
-    <value>Create Person</value>
+    <value>person::create</value>
   </data>
   <data name="deleteconfirmation" xml:space="preserve">
-    <value>Are you sure you want to delete this person?</value>
+    <value>Are you sure you want to delete this person? All information will be deleted, forever. If you want to de-activate this Person, cancel from this dialog and uncheck the 'active' box on the person page.</value>
   </data>
   <data name="deletelink" xml:space="preserve">
     <value>Delete</value>
@@ -139,7 +139,7 @@
     <value>Delete</value>
   </data>
   <data name="deletetitle" xml:space="preserve">
-    <value>Delete Person Confirmation</value>
+    <value>person::delete</value>
   </data>
   <data name="editlink" xml:space="preserve">
     <value>Edit</value>
@@ -148,13 +148,13 @@
     <value>Save</value>
   </data>
   <data name="edittitle" xml:space="preserve">
-    <value>Edit Person</value>
+    <value>person::edit</value>
   </data>
   <data name="indexreturnlink" xml:space="preserve">
     <value>Return to List of Persons</value>
   </data>
   <data name="indextitle" xml:space="preserve">
-    <value>List of Persons</value>
+    <value>person::index</value>
   </data>
   <data name="viewlink" xml:space="preserve">
     <value>View</value>
@@ -163,7 +163,7 @@
     <value>Edit Person</value>
   </data>
   <data name="viewtitle" xml:space="preserve">
-    <value>View Person</value>
+    <value>person::view</value>
   </data>
   <data name="filterinactive" xml:space="preserve">
     <value>Show inactive persons?</value>

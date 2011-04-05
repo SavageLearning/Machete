@@ -88,7 +88,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Create Person.
+        ///   Looks up a localized string similar to person::create.
         /// </summary>
         public static string createtitle {
             get {
@@ -97,7 +97,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Are you sure you want to delete this person?.
+        ///   Looks up a localized string similar to Are you sure you want to delete this person? All information will be deleted, forever. If you want to de-activate this Person, cancel from this dialog and uncheck the &apos;active&apos; box on the person page..
         /// </summary>
         public static string deleteconfirmation {
             get {
@@ -124,7 +124,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Delete Person Confirmation.
+        ///   Looks up a localized string similar to person::delete.
         /// </summary>
         public static string deletetitle {
             get {
@@ -160,7 +160,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Edit Person.
+        ///   Looks up a localized string similar to person::edit.
         /// </summary>
         public static string edittitle {
             get {
@@ -205,7 +205,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to List of Persons.
+        ///   Looks up a localized string similar to person::index.
         /// </summary>
         public static string indextitle {
             get {
@@ -223,7 +223,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to View Person.
+        ///   Looks up a localized string similar to person::view.
         /// </summary>
         public static string viewtitle {
             get {

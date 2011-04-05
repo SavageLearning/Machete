@@ -130,7 +130,7 @@
     <value>worker::create</value>
   </data>
   <data name="deleteconfirmation" xml:space="preserve">
-    <value>Are you sure you want to delete this person?</value>
+    <value>Are you sure you want to delete this worker? All information will be deleted, forever. If you want to de-activate this Worker, cancel from this dialog and uncheck the 'active' box on the worker page.</value>
   </data>
   <data name="deletelink" xml:space="preserve">
     <value>Delete</value>

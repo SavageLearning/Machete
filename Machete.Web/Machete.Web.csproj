@@ -120,6 +120,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Data.Entity.Design" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
@@ -261,6 +263,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\calendar.gif" />
+    <Content Include="Content\confirm\help.gif" />
+    <Content Include="Content\confirm\important.gif" />
+    <Content Include="Content\confirm\info.gif" />
+    <Content Include="Content\confirm\jquery.alerts.css" />
+    <Content Include="Content\confirm\title.gif" />
     <Content Include="Content\dataTables\demo_page.css" />
     <Content Include="Content\dataTables\demo_table.css" />
     <Content Include="Content\dataTables\demo_table_jui.css" />
@@ -294,8 +301,15 @@
     <Content Include="Content\Site_StageTest.css" />
     <Content Include="Global.asax" />
     <Content Include="machete.ico" />
-    <Content Include="Scripts\jquery.dataTables-1.7.6.js" />
-    <Content Include="Scripts\jquery.dataTables-1.7.6.min.js" />
+    <Content Include="Scripts\jquery.alerts.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\jquery.dataTables-1.7.6.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\jquery.dataTables-1.7.6.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\jquery.ui.core.js" />
     <Content Include="Scripts\jquery.ui.datepicker.js" />
     <Content Include="Web.config">
@@ -376,6 +390,7 @@
     <Content Include="Views\Person\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="RDLC\WorkerSigninDaily.rdlc" />
     <EmbeddedResource Include="Resources\Workers.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Workers.es.Designer.cs</LastGenOutput>

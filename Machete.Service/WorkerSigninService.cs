@@ -17,6 +17,7 @@ namespace Machete.Service
         void SaveWorkerSignin();
         IEnumerable<WorkerSigninView> getView(DateTime date);
         Image getImage(int dwccardnum);
+        DateTime getExpireDate(int dwccardnum);
     }
     public class WorkerSigninService : IWorkerSigninService
     {
@@ -40,13 +41,13 @@ namespace Machete.Service
             this.imageRepo = imageRepository;
         }
         #region IWorkerSigninService Members
-
+        //TODO: GetWorkerSignins
         public IEnumerable<WorkerSignin> GetWorkerSignins()
         {
             var signins = signinRepo.GetAll();
             return signins;
         }
-
+        //TODO: GetWorkerSignin
         public WorkerSignin GetWorkerSignin(int id)
         {
             var workerSignin = signinRepo.GetById(id);
@@ -73,19 +74,19 @@ namespace Machete.Service
                 unitOfWork.Commit();
             }
         }
-
+        //TODO: UnitTest DeleteWorkerSignin
         public void DeleteWorkerSignin(int id)
         {
             var workerSignin = signinRepo.GetById(id);
             signinRepo.Delete(workerSignin);
             unitOfWork.Commit();
         }
-
+        //TODO: UnitTest SaveWorkerSignin
         public void SaveWorkerSignin()
         {
             unitOfWork.Commit();
         }
-
+        //TODO: UnitTest getView
         public IEnumerable<WorkerSigninView> getView(DateTime date)
         {
             var s_to_w_query = from s in signinRepo.GetAll()
@@ -96,22 +97,30 @@ namespace Machete.Service
                          from finalrow in final.DefaultIfEmpty(new Person{ID=0})
                          orderby s.datecreated descending
                          select new WorkerSigninView() { person = finalrow, signin = s };
-
             return s_to_w_query;
         }
-
+        //TODO: UnitTest getImage
         public Image getImage(int cardrequest)
         { 
-            var w_query = workerRepo.Get(w => w.dwccardnum == cardrequest);
+            Worker w_query = workerRepo.Get(w => w.dwccardnum == cardrequest);
+            if (w_query == null) return null;
             if (w_query.ImageID != null)
             {
                 return imageRepo.Get(i => i.ID == w_query.ImageID);
             }
-
             return null;
         }
-
-
         #endregion
+        //TODO: UnitTest 
+        public DateTime getExpireDate(int cardrequest)
+        {
+           Worker  w_query = workerRepo.Get(w => w.dwccardnum == cardrequest);
+            if (w_query == null)
+            {
+                //TODO: can't return null for datetime; better way to handle 'no record'?
+                return DateTime.MinValue;
+            }
+            return w_query.memberexpirationdate;
+        }
     }
 }

@@ -97,7 +97,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Are you sure you want to delete this person?.
+        ///   Looks up a localized string similar to Are you sure you want to delete this worker? All information will be deleted, forever. If you want to de-activate this Worker, cancel from this dialog and uncheck the &apos;active&apos; box on the worker page..
         /// </summary>
         public static string deleteconfirmation {
             get {
