@@ -17,6 +17,8 @@ namespace Machete.Web.ViewModel
         public int dwccardentry { get; set; }
         public DateTime dateforsignin { get; set; }
         public Image last_chkin_image { get; set; }
+        public DateTime last_chkin_memberexpirationdate { get; set; }
+        public bool memberexpired { get; set; }
         public IEnumerable<WorkerSigninView> workersignins { get; set; }
     }
 }

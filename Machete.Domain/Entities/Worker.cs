@@ -126,7 +126,6 @@ namespace Machete.Domain
         [LocalizedDisplayName("memberexpirationdate", NameResourceType = typeof(Resources.Worker))]
         public DateTime memberexpirationdate { get; set; }
         //
-        [StringLength(16, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("driverslicense", NameResourceType = typeof(Resources.Worker))]
         public bool driverslicense { get; set; }
         //

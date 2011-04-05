@@ -1,5 +1,4 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-@model Machete.Web.ViewModel.WorkerViewModel
+﻿@model Machete.Web.ViewModel.WorkerViewModel
 @{
     ViewBag.Title = Machete.Web.Resources.Workers.deletetitle;
 }
@@ -10,6 +9,8 @@
 <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/jquery-1.4.4.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.alerts.js")" type="text/javascript"></script>
+<link href="@Url.Content("~/Content/confirm/jquery.alerts.css")" rel="stylesheet" type="text/css" media="screen" />
 @using (Html.BeginForm())
 {
     @Html.ValidationSummary(true)
@@ -20,11 +21,21 @@
     <fieldset>
         <legend>@Machete.Web.Resources.Workers.boxlegend</legend>
         @Html.EditorFor(model => model.worker)
-        <input id="delete_button" type="submit" value="@Machete.Web.Resources.Workers.deletesubmit" class='confirm' />
+        <input id="confirm_button" type="button" value="@Machete.Web.Resources.Workers.deletesubmit" />
     </fieldset>
 }
 <script type="text/javascript">
     $().ready(function () {
-        $('.editor-field').children().attr('disabled', 'disabled')
+        $('.editor-field').children().attr('disabled', 'disabled');
+        $.alerts.okButton = "@Machete.Web.Resources.Workers.deletesubmit";
+        $("#confirm_button").click(function () {
+            jConfirm('@Machete.Web.Resources.Workers.deleteconfirmation',
+                     '@Machete.Web.Resources.Workers.deletetitle',
+                     function (r) {
+                         if (r == true) { $('form').submit(); }
+                     }
+                    );
+            
+        });
     });
 </script>
