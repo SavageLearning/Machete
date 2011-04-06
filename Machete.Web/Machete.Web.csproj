@@ -268,6 +268,13 @@
     <Compile Include="ViewModel\WorkerViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bg-header.png" />
+    <Content Include="Content\bg-inner-corners.png" />
+    <Content Include="Content\bg-main-corner-sprite.png" />
+    <Content Include="Content\bg-main.png" />
+    <Content Include="Content\bg-nav-corner-sprite.png" />
+    <Content Include="Content\bg-nav-side-sprite.png" />
+    <Content Include="Content\button-edit.png" />
     <Content Include="Content\calendar.gif" />
     <Content Include="Content\confirm\help.gif" />
     <Content Include="Content\confirm\important.gif" />
@@ -277,6 +284,9 @@
     <Content Include="Content\dataTables\demo_page.css" />
     <Content Include="Content\dataTables\demo_table.css" />
     <Content Include="Content\dataTables\demo_table_jui.css" />
+    <Content Include="Content\Delete.png" />
+    <Content Include="Content\demo_table.css" />
+    <Content Include="Content\Edit.png" />
     <Content Include="Content\images\404error.jpg" />
     <Content Include="Content\images\back_disabled.jpg" />
     <Content Include="Content\images\back_enabled.jpg" />
@@ -303,6 +313,10 @@
     <Content Include="Content\images\ui-icons_f9f2bd_256x240.png" />
     <Content Include="Content\images\ui-icons_ff7519_256x240.png" />
     <Content Include="Content\jquery-ui-1.8.6.custom.css" />
+    <Content Include="Content\jquery-ui-1.8.custom.css" />
+    <Content Include="Content\jquery-ui.css" />
+    <Content Include="Content\Site-Rounds.css" />
+    <Content Include="Content\Site_alt.css" />
     <Content Include="Content\Site_StageProd.css" />
     <Content Include="Content\Site_StageTest.css" />
     <Content Include="Global.asax" />
