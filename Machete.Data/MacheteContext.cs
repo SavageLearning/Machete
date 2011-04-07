@@ -36,7 +36,7 @@ namespace Machete.Data
             base.SaveChanges();
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder); //This calls the other builders (below)
             modelBuilder.Configurations.Add(new PersonBuilder());
