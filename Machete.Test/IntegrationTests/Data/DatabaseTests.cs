@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Machete.Data;
-using System.Data.Entity.Database;
+using System.Data.Entity;
 
 namespace Machete.Test.Data
 {
@@ -16,7 +16,7 @@ namespace Machete.Test.Data
         [TestInitialize]
         public void Initialize()
         {
-            DbDatabase.SetInitializer<MacheteContext>(new TestInitializer());
+            Database.SetInitializer<MacheteContext>(new TestInitializer());
             this.MacheteDB = new MacheteContext();
 
         }

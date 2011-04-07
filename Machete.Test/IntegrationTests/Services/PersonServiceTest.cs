@@ -8,7 +8,7 @@ using Machete.Data.Infrastructure;
 using Machete.Domain;
 using Machete.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Data.Entity.Database;
+using System.Data.Entity;
 using System.Data.Entity.Validation;
 
 namespace Machete.Test
@@ -33,7 +33,7 @@ namespace Machete.Test
         public void TestInitialize()
         {
 
-            DbDatabase.SetInitializer<MacheteContext>(new TestInitializer());
+            Database.SetInitializer<MacheteContext>(new TestInitializer());
             this.MacheteDB = new MacheteContext();
             _dbFactory = new DatabaseFactory();
             _personRepo = new PersonRepository(_dbFactory);
