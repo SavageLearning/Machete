@@ -57,15 +57,15 @@
                     <tr>
                         <td>@Html.ActionLink("Delete", 
                                              "Delete", 
-                                             new { id = item.signin.ID }, 
+                                             new { id = item.signinID }, 
                                              new { @class = "confirm_delete"})
                         </td>
-                        <td>@item.signin.dwccardnum</td>
-                        <td>@item.person.firstname1</td>
-                        <td>@item.person.firstname2</td>
-                        <td>@item.person.lastname1</td>
-                        <td>@item.person.lastname2</td>
-                        <td>@String.Format("{0:MM/dd/yyyy}", item.signin.dateforsignin)</td>
+                        <td>@item.dwccardnum</td>
+                        <td>@item.firstname1</td>
+                        <td>@item.firstname2</td>
+                        <td>@item.lastname1</td>
+                        <td>@item.lastname2</td>
+                        <td>@String.Format("{0:MM/dd/yyyy}", item.dateforsignin)</td>
                     </tr>
                 }
             </table>

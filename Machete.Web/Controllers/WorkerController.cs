@@ -169,11 +169,11 @@ namespace Machete.Web.Controllers
             _model.person = _worker.Person;
             return View(_model);
         }
-        [HttpPost]
-        [Authorize(Roles = "Administrator")] 
-        public ActionResult Delete(int id, FormCollection collection)
+        [HttpPost, UserNameFilter]
+        [Authorize(Roles = "Administrator")]
+        public ActionResult Delete(int id, string userName)
         {
-            workerService.DeleteWorker(id);
+            workerService.DeleteWorker(id, userName);
             levent.Level = LogLevel.Info; levent.Message = "Worker deleted";
             levent.Properties["RecordID"] = id; log.Log(levent);
             return RedirectToAction("Index");

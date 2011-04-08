@@ -96,7 +96,7 @@ namespace Machete.Service
                          join p in personRepo.GetAll() on row.ID equals p.ID into final
                          from finalrow in final.DefaultIfEmpty(new Person{ID=0})
                          orderby s.datecreated descending
-                         select new WorkerSigninView() { person = finalrow, signin = s };
+                         select new WorkerSigninView(finalrow, s);
             return s_to_w_query;
         }
         //TODO: UnitTest getImage

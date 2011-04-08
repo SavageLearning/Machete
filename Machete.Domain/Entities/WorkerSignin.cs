@@ -21,12 +21,22 @@ namespace Machete.Domain
     }
     public class WorkerSigninView
     {
-        public Person person { get; set; }
-        public WorkerSignin signin { get; set; }
+        public int dwccardnum { get; set; }
+        public string firstname1 { get; set; }
+        public string firstname2 { get; set; }
+        public string lastname1 { get; set; }
+        public string lastname2 { get; set; }
+        public int signinID { get; set; }
+        public DateTime dateforsignin { get; set; }
         public WorkerSigninView(Person p, WorkerSignin s)
         {
-            person = p;
-            signin = s;
+            firstname1 = p.firstname1;
+            firstname2 = p.firstname2;
+            lastname1 = p.lastname1;
+            lastname2 = p.lastname2;
+            dateforsignin = s.dateforsignin;
+            dwccardnum = s.dwccardnum;
+            signinID = s.ID;
         }
         public WorkerSigninView() { }
     }
