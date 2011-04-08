@@ -14,7 +14,7 @@ namespace Machete.Service
         IEnumerable<Worker> GetWorkers(bool inactive);
         Worker GetWorker(int id);
         Worker CreateWorker(Worker worker, string user);
-        void DeleteWorker(int id);
+        void DeleteWorker(int id, string user);
         void SaveWorker(Worker worker, string user);
     }
     public class WorkerService : IWorkerService
@@ -65,9 +65,10 @@ namespace Machete.Service
 
         }
 
-        public void DeleteWorker(int id)
+        public void DeleteWorker(int id, string user)
         {
             var worker = workerRepository.GetById(id);
+            _log(worker.ID, user, "Worker Deleted");
             workerRepository.Delete(worker);
             unitOfWork.Commit();
         }

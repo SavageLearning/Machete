@@ -50,19 +50,6 @@ namespace Machete.Test.IntegrationTests.Services
             }
         }
 
-        #region Additional test attributes
-        //
-        // You can use the following additional attributes as you write your tests:
-        //
-        // Use ClassInitialize to run code before running the first test in the class
-        // [ClassInitialize()]
-        // public static void MyClassInitialize(TestContext testContext) { }
-        //
-        // Use ClassCleanup to run code after all tests in a class have run
-        // [ClassCleanup()]
-        // public static void MyClassCleanup() { }
-        //
-        // Use TestInitialize to run code before running each test 
         [TestInitialize()]
         public void TestInitialize() 
         {
@@ -97,12 +84,6 @@ namespace Machete.Test.IntegrationTests.Services
             _irepo = new Mock<IImageRepository>();
             _uow = new Mock<IUnitOfWork>();
         }
-        //
-        // Use TestCleanup to run code after each test has run
-        // [TestCleanup()]
-        // public void MyTestCleanup() { }
-        //
-        #endregion
 
         [TestMethod]
         public void WorkerSigninService_getView_finds_joined_records()
@@ -118,10 +99,10 @@ namespace Machete.Test.IntegrationTests.Services
             Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkerSigninView>));
             Assert.IsTrue(result.Count() == 5);
             Assert.IsTrue((from rec in result
-                           where rec.person.ID != 0
+                           where rec.signinID != 0
                            select rec).Count() == 2);
             Assert.IsTrue((from rec in result
-                           where rec.person.firstname1 == "UnitTest"
+                           where rec.firstname1 == "UnitTest"
                            select rec).Count() == 2);
         }
 
