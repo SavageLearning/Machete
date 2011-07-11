@@ -1,189 +1,115 @@
 ﻿@model Machete.Domain.Person
-<!--        
-    The table for the first name and last name
-!-->
-<table border="10" cellpadding="0" cellspacing="0" >
-    <tr>
-        <td>
-            <div class="editor-label">
+<!--The table for the first name and last name-->
+    <div class="tb-table">
+        <div id="namerow1" class="tb-row">
+            <div class="tb-label tb-cell" id="l_firstname1">
                 @Html.LabelFor(model => model.firstname1)
-                
             </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.firstname1)
+            <div class="tb-field tb-cell" id="firstname1">
+                @Html.TextBoxFor(model => model.firstname1, new { tabindex = "1" })
                 @Html.ValidationMessageFor(model => model.firstname1)
             </div>
-        </td>
-        <td>
-            <div class="editor-label">
+            <div class="tb-label tb-cell" id="l_firstname2">
                 @Html.LabelFor(model => model.firstname2)
             </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.firstname2)
+            <div class="tb-field tb-cell" id="firstname2">
+                @Html.TextBoxFor(model => model.firstname2, new { tabindex = "1" })
                 @Html.ValidationMessageFor(model => model.firstname2)
             </div>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div class="editor-label">
+        </div>
+        <div id="namerow2" class="tb-row">
+            <div class="tb-label tb-cell">
                 @Html.LabelFor(model => model.lastname1)
             </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.lastname1)
+            <div class="tb-field tb-cell">
+                @Html.TextBoxFor(model => model.lastname1, new { tabindex = "1" })
                 @Html.ValidationMessageFor(model => model.lastname1)
             </div>
-        </td>
-        <td>
-            <div class="editor-label">
+            <div class="tb-label tb-cell">
                 @Html.LabelFor(model => model.lastname2)
             </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.lastname2)
+            <div class="tb-field tb-cell">
+                @Html.TextBoxFor(model => model.lastname2, new { tabindex = "1" })
                 @Html.ValidationMessageFor(model => model.lastname2)
             </div>
-        </td>
-    </tr>
-</table>
-<p>
-</p>
-<!--
-The table for the rest of the person information
-!-->
-<table>
-    <tr>
-        <td>
-            <table border="0" cellpadding="0" cellspacing="0">
-                <tr>
-                    <td>
-                        <div class="editor-label">
-                            @Html.LabelFor(model => model.address1)
-                        </div>
-                    </td>
-                    <td>
-                        <div class="editor-field">
-                            @Html.EditorFor(model => model.address1)
-                            @Html.ValidationMessageFor(model => model.address1)
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="editor-label">
-                            @Html.LabelFor(model => model.address2)
-                        </div>
-                    </td>
-                    <td>
-                        <div class="editor-field">
-                            @Html.EditorFor(model => model.address2)
-                            @Html.ValidationMessageFor(model => model.address2)
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="editor-label">
-                            @Html.LabelFor(model => model.city)
-                        </div>
-                    </td>
-                    <td>
-                        <div class="editor-field">
-                            @Html.EditorFor(model => model.city)
-                            @Html.ValidationMessageFor(model => model.city)
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="editor-label">
-                            @Html.LabelFor(model => model.state)
-                        </div>
-                    </td>
-                    <td>
-                        <div class="editor-field">
-                            @Html.EditorFor(model => model.state)
-                            @Html.ValidationMessageFor(model => model.state)
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="editor-label">
-                            @Html.LabelFor(model => model.zipcode)
-                        </div>
-                    </td>
-                    <td>
-                        <div class="editor-field">
-                            @Html.EditorFor(model => model.zipcode)
-                            @Html.ValidationMessageFor(model => model.zipcode)
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </td>
-        <td>
-            <table border="0" cellpadding="0" cellspacing="0">
-                <tr>
-                    <td>
-                        <div class="editor-label">
-                            @Html.LabelFor(model => model.phone)
-                        </div>
-                    </td>
-                    <td>
-                        <div class="editor-field">
-                            @Html.EditorFor(model => model.phone)
-                            @Html.ValidationMessageFor(model => model.phone)
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="editor-label">
-                            @Html.LabelFor(model => model.gender)
-                        </div>
-                    </td>
-                    <td>
-                        <div class="editor-field">
-                            @Html.DropDownListFor(model => model.gender, new SelectList(ViewBag.Genders, "Value", "Text", Model.gender), "(Choose)") 
-                            @Html.ValidationMessageFor(model => model.gender)
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="editor-label">
-                            @Html.LabelFor(model => model.genderother)
-                        </div>
-                    </td>
-                    <td>
-                        <div class="editor-field">
-                            @Html.EditorFor(model => model.genderother)
-                            @Html.ValidationMessageFor(model => model.genderother)
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                <td>
-                        <div class="editor-label">
-                            @Html.LabelFor(model => model.active)
-                        </div>
-                </td>
-                 <td>
-                        <div class="editor-field">
-                            @Html.EditorFor(model => model.active)
-                            @Html.ValidationMessageFor(model => model.active)
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-</table>
+        </div>
+        <div class="tb-row">
+            <div class="tb-label tb-cell">
+                @Html.LabelFor(model => model.address1)
+            </div>
+            <div class="tb-field tb-cell">
+                @Html.TextBoxFor(model => model.address1, new { tabindex = "1" })
+                @Html.ValidationMessageFor(model => model.address1)
+            </div>
+            <div class="tb-label tb-cell">
+                @Html.LabelFor(model => model.phone)
+            </div>
+            <div class="tb-field tb-cell">
+                @Html.TextBoxFor(model => model.phone, new { tabindex = "2" })
+                @Html.ValidationMessageFor(model => model.phone)
+            </div>
+        </div>
+        <div class="tb-row">
+            <div class="tb-label tb-cell">
+                @Html.LabelFor(model => model.address2)
+            </div>
+            <div class="tb-field tb-cell">
+                @Html.TextBoxFor(model => model.address2, new { tabindex = "1" })
+                @Html.ValidationMessageFor(model => model.address2)
+            </div>
+            <div class="tb-label tb-cell">
+                @Html.LabelFor(model => model.gender)
+            </div>
+            <div class="tb-field tb-cell">
+                @Html.DropDownListFor(model => model.gender, new SelectList(ViewBag.Genders, "Value", "Text", Model.gender), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })
+                @Html.ValidationMessageFor(model => model.gender)
+            </div>
+        </div>
+        <div class="tb-row">
+            <div class="tb-label tb-cell">
+                @Html.LabelFor(model => model.city)
+            </div>
+            <div class="tb-field tb-cell">
+                @Html.TextBoxFor(model => model.city, new { tabindex = "1" })
+                @Html.ValidationMessageFor(model => model.city)
+            </div>
+            <div class="tb-label tb-cell">
+                @Html.LabelFor(model => model.genderother)
+            </div>
+            <div class="tb-field tb-cell">
+                @Html.TextBoxFor(model => model.genderother, new { tabindex = "2" })
+                @Html.ValidationMessageFor(model => model.genderother)
+            </div>
+        </div>
+        <div class="tb-row">
+            <div class="tb-label tb-cell">
+                @Html.LabelFor(model => model.state)
+            </div>
+            <div class="tb-field tb-cell">
+                @Html.TextBoxFor(model => model.state, new { tabindex = "1" })
+                @Html.ValidationMessageFor(model => model.state)
+            </div>
+            <div class="tb-label tb-cell">
+                @Html.LabelFor(model => model.active)
+            </div>
+            <div class="tb-field tb-cell">
+                @Html.CheckBoxFor(model => model.active, new { tabindex = "2" })
+                @Html.ValidationMessageFor(model => model.active)
+            </div>
+        </div>
+        <div class="tb-row">
+            <div class="tb-label tb-cell">
+                @Html.LabelFor(model => model.zipcode)
+            </div>
+            <div class="tb-field tb-cell">
+                @Html.TextBoxFor(model => model.zipcode, new { tabindex = "1" })
+                @Html.ValidationMessageFor(model => model.zipcode)
+            </div>
+        </div>
+    </div>
+    @Html.Partial("timestamps")
+<script type="text/javascript">
+    $().ready(function () {
+        $("#phone").mask("999-999-9999", {placeholder:" "});
+    });
+</script>

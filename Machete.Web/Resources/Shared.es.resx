@@ -151,7 +151,7 @@
     <value>Asignaciones</value>
   </data>
   <data name="workerstab" xml:space="preserve">
-    <value>Trabajeros</value>
+    <value>Trabajadores</value>
   </data>
   <data name="workorderstab" xml:space="preserve">
     <value>Órdenes</value>
@@ -161,5 +161,20 @@
   </data>
   <data name="workersignintab" xml:space="preserve">
     <value>Registros</value>
+  </data>
+  <data name="managerinformation" xml:space="preserve">
+    <value>Información del jefe</value>
+  </data>
+  <data name="administratiorinformation" xml:space="preserve">
+    <value>Información del administrador</value>
+  </data>
+  <data name="choose" xml:space="preserve">
+    <value>(elegir)</value>
+  </data>
+  <data name="no" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="yes" xml:space="preserve">
+    <value>Si</value>
   </data>
 </root>

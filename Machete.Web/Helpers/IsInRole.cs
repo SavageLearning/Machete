@@ -19,7 +19,6 @@ namespace Machete.Web.Helpers
                 if (user.IsInRole(role))
                     return true;
             }
-
             return false;
         }
     }
@@ -29,7 +28,7 @@ namespace Machete.Web.Helpers
         public static string[] Role_AMPCU(this HtmlHelper html) { return new[]{"Administrator", "Manager", "PhoneDesk", "Check-in", "User"}; }
         public static string[] Role_AMPU(this HtmlHelper html) { return new[]{"Administrator", "Manager", "PhoneDesk", "User"}; }
         public static string[] Role_AMP(this HtmlHelper html) { return new[]{"Administrator", "Manager", "PhoneDesk"}; }
+        public static string[] Role_AM(this HtmlHelper html) { return new[] { "Administrator", "Manager" }; }
         public static string[] Role_A(this HtmlHelper html) {return new[]{"Administrator"}; }
-    }
-    
+    }  
 }

@@ -84,10 +84,14 @@
     <Compile Include="Initialize\TestInitializer.cs" />
     <Compile Include="MacheteContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\EmployerRepository.cs" />
     <Compile Include="Repositories\ImageRepository.cs" />
+    <Compile Include="Repositories\WorkAssignmentRepository.cs" />
+    <Compile Include="Repositories\WorkerRequestRepository.cs" />
     <Compile Include="Repositories\WorkerSigninRepository.cs" />
     <Compile Include="Repositories\PersonRepository.cs" />
     <Compile Include="Repositories\WorkerRepository.cs" />
+    <Compile Include="Repositories\WorkOrderRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Machete.Domain\Machete.Domain.csproj">
@@ -98,7 +102,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

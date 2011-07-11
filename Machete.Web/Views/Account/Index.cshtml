@@ -32,9 +32,6 @@
         <th>
             LastLoginDate
         </th>
-        <th>
-            ProviderUserKey
-        </th>
     </tr>
 
 @foreach (MembershipUser item in Model)
@@ -42,7 +39,8 @@
     <tr>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id = item.ProviderUserKey }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.ProviderUserKey })
+            @Html.ActionLink("Delete", "Delete", new { id = item.ProviderUserKey }) |
+            @Html.ActionLink("Set Password", "AdminChangePassword", new { id = item.ProviderUserKey })
         </td>
         <td>
             @item.UserName
@@ -64,9 +62,6 @@
         </td>
         <td>
             @String.Format("{0:g}", item.LastLoginDate)
-        </td>
-        <td>
-            @item.ProviderUserKey
         </td>
     </tr>
 }

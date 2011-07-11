@@ -1,39 +1,33 @@
 ﻿@model Machete.Domain.Person
+@using Machete.Web.Resources
 @{
-    ViewBag.Title = @Machete.Web.Resources.Persons.deletetitle;
+    ViewBag.Title = Persons.deletetitle;
 }
-<h2>@Machete.Web.Resources.Persons.deletetitle</h2>
+<h2>@Persons.deletetitle</h2>
 <p>
-    @Html.ActionLink(@Machete.Web.Resources.Persons.indexreturnlink, "Index")
+    @Html.ActionLink(Persons.indexreturnlink, "Index")
 </p>
-@using (Html.BeginForm())
-{
 <fieldset>
-    <legend>@Machete.Web.Resources.Persons.boxlegend</legend>
+    <legend>@Persons.boxlegend</legend>
     @Html.EditorForModel()
 </fieldset>
-<p>
-    <input id="confirm_button" type="button" value="@Machete.Web.Resources.Persons.deletesubmit" />
-</p>
-
+@using (Html.BeginForm())
+{
+    <p>
+        <input id="confirm_button" type="button" value="@Persons.deletesubmit" />
+    </p>
 }
-<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/jquery-1.4.4.min.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/jquery.alerts.js")" type="text/javascript"></script>
-<link href="@Url.Content("~/Content/confirm/jquery.alerts.css")" rel="stylesheet" type="text/css" media="screen" />
 <script type="text/javascript">
     $().ready(function () {
         $('.editor-field').children().attr('disabled', 'disabled');
-        $.alerts.okButton = "@Machete.Web.Resources.Persons.deletesubmit";
+        $.alerts.okButton = "@Persons.deletesubmit";
         $("#confirm_button").click(function () {
-            jConfirm('@Machete.Web.Resources.Persons.deleteconfirmation',
-                     '@Machete.Web.Resources.Persons.deletetitle',
+            jConfirm('@Persons.deleteconfirmation',
+                     '@Persons.deletetitle',
                      function (r) {
                          if (r == true) { $('form').submit(); }
                      }
                     );
-
         });
     });
 </script>

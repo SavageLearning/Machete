@@ -16,58 +16,66 @@ namespace Machete.Domain
         public virtual Worker Worker { get; set; }
         public Person() { }
         //
-        [LocalizedDisplayName("active", NameResourceType = typeof(Persons))]
+        // Used by EF for Optimistic Concurrency
+        //[Timestamp]
+        //public Byte[] Timestamp { get; set; }
+        //
+        //
+        [LocalizedDisplayName("active", NameResourceType = typeof(Resources.Person))]
         public bool active { get; set; }
         //
-        [LocalizedDisplayName("firstname1", NameResourceType = typeof(Persons))]
-        [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Persons))]
-        [Required(ErrorMessageResourceName = "firstname1error", ErrorMessageResourceType = typeof(Persons))]
+        [LocalizedDisplayName("firstname1", NameResourceType = typeof(Resources.Person))]
+        [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Person))]
+        [Required(ErrorMessageResourceName = "firstname1error", ErrorMessageResourceType = typeof(Resources.Person))]
         public string firstname1 { get; set; }
         //
-        [LocalizedDisplayName("firstname2", NameResourceType = typeof(Persons))]
-        [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Persons))]
+        [LocalizedDisplayName("firstname2", NameResourceType = typeof(Resources.Person))]
+        [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Person))]
         public string firstname2 { get; set; }
         //
-        [LocalizedDisplayName("lastname1", NameResourceType = typeof(Persons))]
-        [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Persons))]
-        [Required(ErrorMessageResourceName = "lastname1error", ErrorMessageResourceType = typeof(Persons))]
+        [LocalizedDisplayName("lastname1", NameResourceType = typeof(Resources.Person))]
+        [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Person))]
+        [Required(ErrorMessageResourceName = "lastname1error", ErrorMessageResourceType = typeof(Resources.Person))]
         public string lastname1 { get; set; }
         //
-        [LocalizedDisplayName("lastname2", NameResourceType = typeof(Persons))]
-        [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Persons))]
+        [LocalizedDisplayName("lastname2", NameResourceType = typeof(Resources.Person))]
+        [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Person))]
         public string lastname2 { get; set; }
         //
-        [LocalizedDisplayName("address1", NameResourceType = typeof(Persons))]
-        [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Persons))]
+        [LocalizedDisplayName("address1", NameResourceType = typeof(Resources.Person))]
+        [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Person))]
         public string address1 { get; set; }
         //
-        [LocalizedDisplayName("address2", NameResourceType = typeof(Persons))]
-        [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Persons))]
+        [LocalizedDisplayName("address2", NameResourceType = typeof(Resources.Person))]
+        [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Person))]
         public string address2 { get; set; }
         //
-        [LocalizedDisplayName("city", NameResourceType = typeof(Persons))]
-        [StringLength(25, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Persons))]
+        [LocalizedDisplayName("city", NameResourceType = typeof(Resources.Person))]
+        [StringLength(25, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Person))]
         public string city { get; set; }
         //
-        [LocalizedDisplayName("state", NameResourceType = typeof(Persons))]
-        [StringLength(2, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Persons))]
+        [LocalizedDisplayName("state", NameResourceType = typeof(Resources.Person))]
+        [StringLength(2, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Person))]
         public string state { get; set; }
         //
-        [LocalizedDisplayName("zipcode", NameResourceType = typeof(Persons))]
-        [StringLength(10, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Persons))]
+        [LocalizedDisplayName("zipcode", NameResourceType = typeof(Resources.Person))]
+        [StringLength(10, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Person))]
         public string zipcode { get; set; }
         //
-        [LocalizedDisplayName("phone", NameResourceType = typeof(Persons))]
-        [StringLength(12, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Persons))]
+        [LocalizedDisplayName("phone", NameResourceType = typeof(Resources.Person))]
+        [StringLength(12, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Person))]
         public string phone { get; set; }
-        [LocalizedDisplayName("gender", NameResourceType = typeof(Persons))]
-        [StringLength(1, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Persons))]
-        [Required(ErrorMessageResourceName = "gendererror", ErrorMessageResourceType = typeof(Persons))]
-        public string gender { get; set; }
+        [LocalizedDisplayName("gender", NameResourceType = typeof(Resources.Person))]
+        [Required(ErrorMessageResourceName = "gendererror", ErrorMessageResourceType = typeof(Resources.Person))]
+        public int gender { get; set; }
         //
-        [LocalizedDisplayName("genderother", NameResourceType = typeof(Persons))]
-        [StringLength(20, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Persons))]
+        [LocalizedDisplayName("genderother", NameResourceType = typeof(Resources.Person))]
+        [StringLength(20, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Person))]
         public string genderother { get; set; }
-        
+
+        public string fullName()
+        {
+            return firstname1 + " " + firstname2 + " " + lastname1 + " " + lastname2;
+        }
     }
 }

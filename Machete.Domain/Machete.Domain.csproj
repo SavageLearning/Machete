@@ -66,63 +66,147 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\depreciated\EmplrReference.cs" />
     <Compile Include="Entities\Image.cs" />
-    <Compile Include="Entities\MaritalStatus.cs" />
+    <Compile Include="Entities\Lookup.cs" />
+    <Compile Include="Entities\depreciated\MaritalStatus.cs" />
     <Compile Include="Entities\Employer.cs" />
-    <Compile Include="Entities\Language.cs" />
-    <Compile Include="Entities\Income.cs" />
-    <Compile Include="Entities\Neighborhood.cs" />
+    <Compile Include="Entities\depreciated\Language.cs" />
+    <Compile Include="Entities\depreciated\Income.cs" />
+    <Compile Include="Entities\depreciated\Neighborhood.cs" />
     <Compile Include="Entities\Person.cs" />
-    <Compile Include="Entities\Race.cs" />
+    <Compile Include="Entities\depreciated\Race.cs" />
     <Compile Include="Entities\Record.cs" />
-    <Compile Include="Entities\Skill.cs" />
-    <Compile Include="Entities\Survey.cs" />
-    <Compile Include="Entities\TypeOfWork.cs" />
+    <Compile Include="Entities\depreciated\Skill.cs" />
+    <Compile Include="Entities\depreciated\Survey.cs" />
+    <Compile Include="Entities\depreciated\TransportMethod.cs" />
+    <Compile Include="Entities\depreciated\TypeOfWork.cs" />
     <Compile Include="Entities\WorkAssignment.cs" />
     <Compile Include="Entities\Worker.cs" />
+    <Compile Include="Entities\WorkerRequest.cs" />
     <Compile Include="Entities\WorkerSignin.cs" />
     <Compile Include="Entities\WorkerSkill.cs" />
     <Compile Include="Entities\WorkOrder.cs" />
     <Compile Include="LocalizedDisplayNameAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\Persons.Designer.cs">
-      <DependentUpon>Persons.resx</DependentUpon>
+    <Compile Include="Resources\Employer.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Employer.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Employer.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Employer.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Person.Designer.cs">
+      <DependentUpon>Person.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Resources\Persons.es.Designer.cs">
-      <DependentUpon>Persons.es.resx</DependentUpon>
+    <Compile Include="Resources\Person.es.Designer.cs">
+      <DependentUpon>Person.es.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Resources\Record.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Record.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Record.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Record.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\WorkAssignment.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WorkAssignment.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\WorkAssignment.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WorkAssignment.es.resx</DependentUpon>
     </Compile>
     <Compile Include="Resources\Worker.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Worker.resx</DependentUpon>
     </Compile>
+    <Compile Include="Resources\Worker.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Worker.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\WorkOrder.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WorkOrder.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\WorkOrder.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WorkOrder.es.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Persons.es.resx">
+    <EmbeddedResource Include="Resources\Employer.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Persons.es.Designer.cs</LastGenOutput>
+      <LastGenOutput>Employer.es.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Persons.resx">
+    <EmbeddedResource Include="Resources\Employer.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Persons.Designer.cs</LastGenOutput>
+      <LastGenOutput>Employer.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Worker.es.resx" />
+    <EmbeddedResource Include="Resources\Person.es.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Person.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Person.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Person.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Record.es.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Record.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Record.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Record.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\WorkAssignment.es.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>WorkAssignment.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\WorkAssignment.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>WorkAssignment.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Worker.es.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Worker.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Worker.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Worker.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\WorkOrder.es.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>WorkOrder.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\WorkOrder.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>WorkOrder.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

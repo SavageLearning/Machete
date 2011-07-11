@@ -1,0 +1,99 @@
+﻿@model Machete.Domain.Employer
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using (Html.BeginForm("Edit", "Employer", FormMethod.Post, 
+                        new { @class = "edittab-form EditPost", @id="EmployerTab-" + Model.ID }))
+{
+    <input type="button" value="@Employers.viewlink" class="formButton" id="viewEmployer-@Model.ID" />
+    <input type="submit" value="@Employers.editsubmit" class="formButton"/>
+    if (Html.IsInRole(Html.Role_AMP()))
+    {
+        <input id="deleteEmployerButton-@Model.ID" type="button" value="@Employers.deletesubmit" 
+                class="formButton deleteButton" />
+    }
+    <br />    
+    @Html.ValidationSummary(true)
+    @Html.EditorForModel()
+
+}
+@if (Html.IsInRole(Html.Role_AMP()))
+{
+    using (Html.BeginForm("Delete", "Employer", FormMethod.Post, 
+                            new { @class = "edittab-form DeletePost", @id = "DeleteEmployer-" + Model.ID }))
+    {
+        @Html.HiddenFor(model => model.ID);
+    }
+}
+@Html.Partial("WorkOrderIndex", Model)
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        if (eventDebug) M_conlog("EVENT", "READY", "Employer/Edit", "", "");
+        $('#viewEmployer-@Model.ID').click(function () {
+            printwindow = window.open('/Employer/View/@Model.ID');
+            //printwindow.print();
+        });
+        $('.formButton').button();
+        $('#employerName').focus();
+        var myEmployerTab = $('#EmployerTab-@Model.ID');
+        //var deleteForm = 
+        $.validator.unobtrusive.parseDynamicContent($(myEmployerTab));
+        $.alerts.okButton = "@Employers.deletesubmit";
+        ////////////////////////////////////////////////////////////////
+        //
+        // delete button confirmation
+        //
+        $("#deleteEmployerButton-@Model.ID").click(function (event) {
+            jConfirm('@Employers.deleteconfirmation',
+                     '@Employers.deletetitle',
+                     function (r) {
+                         if (r == true) {
+                             //alert("delete submitted");
+                             $('#DeleteEmployer-@Model.ID').submit();
+                         }
+                     }
+             );
+        });
+        ////////////////////////////////////////////////////////////////
+        //
+        // edit form submit
+        //
+        $(myEmployerTab).submit(function (e, myEmployerTab) {
+            //alert("#EmployerTab-@Model.ID submitted");
+            if ($('#EmployerTab-@Model.ID').valid()) {
+                $.post($(this).attr("action"), $(this).serialize());
+                $(e.target).closest('.ui-tabs').tabs("select", 0);
+            }
+            
+            //TODO: javascript...need to deal with ajax error
+            e.preventDefault();
+        });
+        ////////////////////////////////////////////////////////////////
+        //
+        // Delete employer submit 
+        //
+        $("#DeleteEmployer-@Model.ID").submit(function (e) {
+            //alert("#DeleteEmployer-@Model.ID submitted");
+            $.post($(this).attr("action"), $(this).serialize());
+            //
+            //trigger close even
+            var oTabs = $(e.target).closest('.ui-tabs');
+            $(oTabs).find('.ui-state-active').find('span.ui-icon-close').click();
+            //TODO: javascript...need to deal with ajax error
+            //e.preventDefault();
+        });
+        ////////////////////////////////////////////////////////////////
+        //
+        // accordions for manager/admin information
+        //
+        $(".adminAccordion").accordion({
+            collapsible: true,
+            active: false,
+            autoHeight: false
+        });
+        $(".timestampAccordion").accordion({
+            collapsible: true,
+            active: false,
+            autoHeight: false
+        });
+    });
+</script>

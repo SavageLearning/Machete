@@ -1,0 +1,100 @@
+﻿@model Machete.Domain.WorkOrder
+@using Machete.Domain.Resources           
+@using Machete.Web.Resources
+@using Machete.Web.Helpers
+@using System.Globalization
+<link href="@Url.Content("~/Content/print.css")" rel="stylesheet" type="text/css" media="print" />
+@{
+    ViewBag.Title = WorkOrders.viewtitle;
+    CultureInfo CI = (CultureInfo)Session["Culture"];
+    ViewBag.assignCount = 0; 
+}
+<div class="dateNeeded">
+<div class="neededText">@WorkOrders.dateneeded</div>
+<div class="neededText">@System.String.Format("{0:dddd}", Model.dateTimeofWork)</div>
+<div class="neededText">@System.String.Format("{0:d}", Model.dateTimeofWork)</div>
+<div class="neededText">@System.String.Format("{0:t}", Model.dateTimeofWork)</div>
+@if (Model.timeFlexible == true)
+{
+    <div class="neededText">@WorkOrders.flexible</div>
+}
+else
+{
+    <div class="neededText">@WorkOrders.sharp</div>
+}
+</div>
+
+<br />
+<h2>@WorkOrders.boxlegend# @Model.ID</h2>
+<h3>@Employers.boxlegend: @Model.Employer.name</h3> 
+<div class="recordButtons print_off">
+    <input type="button" id="printOrder" class="formButton" value="@WorkOrders.printWorkOrder"/>
+    <input type="button" id="printMap" class="formButton" value="@Shared.printGoogleMap"/>
+</div>
+@Html.DisplayForModel()
+<h4>@WorkOrders.listOfPositions</h4>
+
+    <div class="tb-table">
+        <div class="tb-row">
+            <div class="tb-header-fixed tb-cell">@WorkOrders.woidcount</div>
+            <div class="tb-header-fixed tb-cell">@WorkAssignment.skillID</div>
+            <div class="tb-header-fixed tb-cell">@WorkAssignment.hourlyWage</div>
+            <div class="tb-header-fixed tb-cell">@WorkAssignment.hours</div>            
+            <div class="tb-header-fixed tb-cell">@WorkAssignment.days</div>
+            <div class="tb-header-fixed tb-cell">@WorkAssignment.englishLevelID</div>
+                        
+            
+        </div>
+    </div>
+@foreach (var item in Model.workAssignments)
+{
+    ViewBag.assignCount = ViewBag.assignCount + 1; 
+    <div class="tb-table">
+        <div class="tb-row">
+            <div class="tb-field-fixed tb-cell">@ViewBag.assignCount</div>           
+            <div class="tb-field-fixed tb-cell">@Lookups.byID_noBrackets(item.skillID, CI.TwoLetterISOLanguageName)</div> 
+            <div class="tb-field-fixed tb-cell">@System.String.Format("{0:C}", item.hourlyWage)</div>
+            <div class="tb-field-fixed tb-cell">@Html.DisplayFor(modelItem => item.hours)</div>
+            <div class="tb-field-fixed tb-cell">@Html.DisplayFor(modelItem => item.days)</div>
+            <div class="tb-field-fixed tb-cell">@item.englishLevelID</div>
+                       
+            
+        </div>
+    </div>
+    
+    if (item.description != null)
+    {
+        <div class="tb-table">
+            <div class="tb-row">
+                <div class="tb-underline tb-cell">
+                    @WorkAssignment.description
+                </div>
+                <div class="tb-field tb-cell">
+                    @Html.DisplayFor(modelItem => item.description)
+                </div>
+            </div>
+        </div>
+    }
+    <div class="tb-table">
+        <div class="tb-row">
+            <div class="tb-label tb-cell">
+                <h3>WORKER NAME?!</h3>
+            </div>
+            <div class="tb-field tb-cell">
+                _________________________________________________
+            </div>
+        </div>
+    </div>
+    <br />
+}
+<br />
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        $('.formButton').button();
+        $('#printMap').click(function () { openGoogleMap("@Html.Encode(Model.workSiteAddress1 + ' ' + Model.city + ' ' + Model.state)", null) });
+        $('#printOrder').click(function () {
+            window.print();
+        });
+    });
+
+</script>

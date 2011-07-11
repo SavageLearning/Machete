@@ -1,0 +1,76 @@
+﻿@model Machete.Domain.WorkOrder
+@using Machete.Web.Resources
+
+@using (Html.BeginForm("Create", "WorkOrder", FormMethod.Post, 
+                        new { @id = "workOrderCreateForm" }))
+{
+        <input type="button" id="workOrderCopyEmployerInfo"
+           value="@WorkOrders.copyemployerinfo" tabindex="9" />
+        <input type="submit" id="workOrderCreateButton" 
+           value="@WorkOrders.createsubmit" tabindex="9"/>
+
+
+    @Html.ValidationSummary(true)
+    @Html.EditorForModel()   
+}
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        M_workOrderCreateForm = $('#workOrderCreateForm');
+        $('#workOrderCreateButton').button();
+        $('#workOrderCopyEmployerInfo').button();
+
+        dateTimeWidget($(M_workOrderCreateForm).find('#dateTimeofWork'));
+        ////////////////////////////////////////////////////////////////
+        //
+        // Toggle English required note box
+        //
+        M_englishRequired = $(M_workOrderCreateForm).find('#englishRequired');
+        toggleDropDown(M_englishRequired, "@(Shared.yes)", $(M_workOrderCreateForm).find("#englishNote_@(Model.ID)"), true);
+        $(M_englishRequired).bind('change', function () { toggleDropDown(M_englishRequired, "@(Shared.yes)", $(M_workOrderCreateForm).find("#englishNote_@(Model.ID)"), false) });
+        ////////////////////////////////////////////////////////////////
+        //
+        //
+        //        
+        $.validator.unobtrusive.parseDynamicContent('#workOrderCreateForm');
+        // Find tabindex attribute (for tab order, not jquery tabs) and increment by 10
+        $('#workOrderCreateForm [tabindex]').each(function () {
+            $(this).attr('tabindex', parseInt($(this).attr('tabindex')) + 10)
+        });
+        ////////////////////////////////////////////////////////////////
+        //
+        // WorkOrder Create submit event
+        //
+        M_workOrderCreateForm.submit(function (e) {
+            //EmployerID = $("#employerTabs").attr('recordID');
+            M_workOrderCreateForm.find('#EmployerID').val(M_last_employerID_loaded);
+            if (M_workOrderCreateForm.valid()) {
+
+                $.post($(this).attr("action"), $(this).serialize(),
+                    function (data) {                        
+                        add_rectab(data.sNewRef, data.sNewLabel, M_workOrderTabs_@(Model.EmployerID), false, data.iNewID);
+                    }
+                );
+
+            }
+            //TODO: javascript...need to deal with ajax error
+            e.preventDefault();
+        });
+        ////////////////////////////////////////////////////////////////
+        //
+        // Copy info  submit event
+        //
+        $('#workOrderCopyEmployerInfo').bind("click.employerEvents", function (e) {
+            //alert("foo");
+            employerTab = $('form[id^=EmployerTab]');
+            M_workOrderCreateForm.find('#contactName').val(employerTab.find('#name').val());
+            M_workOrderCreateForm.find('#workSiteAddress1').val(employerTab.find('#address1').val());
+            M_workOrderCreateForm.find('#workSiteAddress2').val(employerTab.find('#address2').val());
+            M_workOrderCreateForm.find('#city').val(employerTab.find('#city').val());
+            M_workOrderCreateForm.find('#state').val(employerTab.find('#state').val());
+            M_workOrderCreateForm.find('#zipcode').val(employerTab.find('#zipcode').val());
+            M_workOrderCreateForm.find('#wophone').val(employerTab.find('#phone').val());
+            //e.preventDefault();
+        });
+
+    });
+</script>

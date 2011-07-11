@@ -10,6 +10,10 @@ using Machete.Helpers;
 using Machete.Service;
 using Machete.Web.Helpers;
 using NLog;
+using Machete.Web.ViewModel;
+using Machete.Web.Models;
+using System.Web.Routing;
+using System.Data.Entity.Infrastructure;
 
 namespace Machete.Web.Controllers
 {
@@ -23,6 +27,12 @@ namespace Machete.Web.Controllers
         {
             this.personService = personService;
         }
+        protected override void Initialize(RequestContext requestContext)
+        {
+            base.Initialize(requestContext);
+            System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+            ViewBag.Genders = Lookups.gender(CI.TwoLetterISOLanguageName);
+        }
         #region Index
         //
         // GET: /Person/
@@ -30,20 +40,74 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, User")]
         public ActionResult Index()
         {
-            ViewBag.show_inactive = false;
-            var persons = personService.GetPersons(false);
-            return View(persons);
+            return View();
         }
-        [HttpPost]
+
         [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, User")]
-        public ActionResult Index(bool show_inactive)
+        public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
-            ViewBag.show_inactive = show_inactive;
-            var persons = personService.GetPersons(show_inactive);
-            return View(persons);
+            //Get all the records
+            var allpersons = personService.GetPersons(true);
+            IEnumerable<Person> filteredPersons;
+            IEnumerable<Person> sortedPersons;
+            //Search based on search-bar string 
+            if (!string.IsNullOrEmpty(param.sSearch))
+            {
+                filteredPersons = personService.GetPersons(true)
+                    .Where(p => p.active.ToString().ContainsOIC(param.sSearch) ||
+                                p.firstname1.ContainsOIC(param.sSearch) ||
+                                p.firstname2.ContainsOIC(param.sSearch) ||
+                                p.lastname1.ContainsOIC(param.sSearch) ||
+                                p.lastname2.ContainsOIC(param.sSearch));
+            }
+            else
+            {
+                filteredPersons = allpersons;
+            }
+            //Sort the Persons based on column selection
+            var sortColIdx = Convert.ToInt32(Request["iSortCol_0"]);
+            Func<Person, string> orderingFunction = (p => sortColIdx == 2 ? p.active.ToString() : 
+                                                          sortColIdx == 3 ? p.firstname1 :
+                                                          sortColIdx == 4 ? p.firstname2 :
+                                                          sortColIdx == 5 ? p.lastname1 :
+                                                          sortColIdx == 6 ? p.lastname2 :
+                                                          sortColIdx == 7 ? p.phone :
+                                                          sortColIdx == 8 ? p.dateupdated.ToString() :
+                                                          p.Updatedby);
+            var sortDir = Request["sSortDir_0"];
+            if (sortDir == "asc")
+                sortedPersons = filteredPersons.OrderBy(orderingFunction);
+            else
+                sortedPersons = filteredPersons.OrderByDescending(orderingFunction);
+
+            //Limit results to the display length and offset
+            var displayPersons = sortedPersons.Skip(param.iDisplayStart)
+                                              .Take(param.iDisplayLength);
+
+            //return what's left to datatables
+            var result = from p in displayPersons
+                         select new[] { "/Person/Edit/" + Convert.ToString(p.ID),
+                                        p.firstname1 + ' ' + p.lastname1,
+                                        Convert.ToString(p.active), 
+                                        p.firstname1, 
+                                        p.firstname2, 
+                                        p.lastname1, 
+                                        p.lastname2, 
+                                        p.phone, 
+                                        Convert.ToString(p.dateupdated), 
+                                        p.Updatedby 
+                         };
+
+            return Json(new
+            {
+                sEcho = param.sEcho,
+                iTotalRecords = allpersons.Count(),
+                iTotalDisplayRecords = filteredPersons.Count(),
+                aaData = result
+            },
+            JsonRequestBehavior.AllowGet);
         }
         #endregion
-
         #region Create
         //
         // GET: /Person/Create
@@ -51,10 +115,10 @@ namespace Machete.Web.Controllers
         public ActionResult Create()
         {
             var _model = new Person();
-            ViewBag.Genders = Lookups.genders;
-            return View(_model);
-        } 
-
+            _model.gender = Lookups.genderDefault;
+            _model.active = true;
+            return PartialView(_model);
+        }
         //
         // POST: /Person/Create
         //
@@ -64,7 +128,7 @@ namespace Machete.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(person);
+                return PartialView(person);
             }
             personService.CreatePerson(person, userName);
             return RedirectToAction("Index");
@@ -79,8 +143,7 @@ namespace Machete.Web.Controllers
         public ActionResult Edit(int id)
         {
             Person person = personService.GetPerson(id);
-            ViewBag.Genders = Lookups.genders;
-            return View(person);
+            return PartialView(person);
         }
         //
         // POST: /Person/Edit/5
@@ -92,16 +155,25 @@ namespace Machete.Web.Controllers
         {
             Person person = personService.GetPerson(id);
             
-            if (TryUpdateModel(person))
-            {
-                personService.SavePerson(person, userName);
-                return RedirectToAction("Index");
+            try {
+                if (TryUpdateModel(person))
+                {
+                    personService.SavePerson(person, userName);
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    levent.Level = LogLevel.Error; levent.Message = "TryUpdateModel failed";
+                    levent.Properties["RecordID"] = person.ID; log.Log(levent);
+                    return PartialView(person);
+                }
             }
-            else
+            catch (DbUpdateConcurrencyException ex)
             {
+
                 levent.Level = LogLevel.Error; levent.Message = "TryUpdateModel failed";
                 levent.Properties["RecordID"] = person.ID; log.Log(levent);
-                return View(person);
+                return PartialView(person);
             }
         }
         #endregion
@@ -113,7 +185,6 @@ namespace Machete.Web.Controllers
         public ActionResult View(int id)
         {
             Person person = personService.GetPerson(id);
-            ViewBag.Genders = Lookups.genders;
             return View(person);
         }
         #endregion
@@ -125,7 +196,6 @@ namespace Machete.Web.Controllers
         public ActionResult Delete(int id)
         {
             var person = personService.GetPerson(id);
-            ViewBag.Genders = Lookups.genders;
             return View(person);
         }
 

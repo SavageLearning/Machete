@@ -1,0 +1,111 @@
+﻿@model Machete.Domain.WorkOrder
+@using Machete.Web.Helpers
+@using Machete.Domain.Resources
+@using Machete.Web.Resources
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+}
+<div id="workAssignTabs-wo-@(Model.ID)">
+    <ul>
+        <li><a href="#workAssignList-wo-@(Model.ID)" class="workAssignListTab ListTab" id="walt-@(Model.ID)">@WorkAssignments.listlink</a> </li>
+        <li><a href="/WorkAssignment/Create?WorkOrderID=@(Model.ID)" class="workAssignCreateTab CreateTab" id="wact-@(Model.ID)">@WorkAssignments.createlink</a></li>
+    </ul>
+    <div id="workAssignList-wo-@(Model.ID)">
+        <table id="workAssignTable-wo-@(Model.ID)" class="display">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>LABEL</th>
+                    <th>WorkOrderID</th>
+                    <th>ID#</th>
+                    <th>@WorkAssignment.englishLevelID</th>
+                    <th>@WorkAssignment.skillID</th>
+                    <th>@WorkAssignment.hourlyWage</th>
+                    <th>@WorkAssignment.hours</th>
+                    <th>@WorkAssignment.days</th>
+                    <th>@WorkAssignment.description</th>
+                    <th>@Record.dateupdated</th>
+                    <th>@Record.updatedby</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        if (eventDebug) M_conlog("EVENT", "READY", "assigment", "", "");
+        ////////////////////////////////////////////////////////////////
+        //
+        // Create Work Assignment tabs
+        //
+        M_assignmentTabs_@(Model.ID) = null;
+        M_assignmentTable_@(Model.ID) = null;
+        if (typeof M_workOrderTabs_@(Model.EmployerID) != "undefined") {
+            M_workOrderTabs_@(Model.EmployerID).unbind('.M_asmt_@(Model.ID)');
+        }
+        M_assignmentTabs_@(Model.ID) = $('#workAssignTabs-wo-@(Model.ID)');
+        var defaultTab = 1;
+        jqrfyTabs(M_assignmentTabs_@(Model.ID), "ui-tabs-workAssign-wo-@(Model.ID)-", defaultTab);
+        ////////////////////////////////////////////////////////////////
+        //
+        // Create Work Assignment table
+        //
+        M_assignmentTable_@(Model.ID) = $('#workAssignTable-wo-@(Model.ID)');
+        $('#activateWorkOrderButton-@(Model.ID)').hide();
+        jqrfyTable(M_assignmentTable_@(Model.ID), M_assignmentTabs_@(Model.ID),
+        {
+            "bPaginate": true,
+            "bLengthChange": true,
+            "aaSorting": [[7, 'desc']],
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "bServerSide": true,
+            "sAjaxSource": "/WorkAssignment/AjaxHandler",
+            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "bProcessing": true,
+            "aoColumns": [
+                            { "bSearchable": false, "bSortable": false, "bVisible": false },
+                            { "bSearchable": false, "bSortable": false, "bVisible": false },
+                            { "bSearchable": false, "bSortable": false, "bVisible": false },
+                            null, 
+                            null,
+                            null, 
+                            null, 
+                            null, 
+                            null, 
+                            null,
+                            { "bSearchable": false, "bSortable": false, "bVisible": true },
+                            { "sName": "Updatedby", "bSortable": false, "bVisible": true }
+                        ],
+            "aoSearchCols" : [null, null, { "sSearch": "@(Model.ID)" }, null, null, null, null, null, null, null, null, null],
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {                        
+                                    $(nRow).attr('edittabref', aData[0]);
+                                    $(nRow).attr('edittablabel', aData[1]);
+                                    //show activation button (need at least 1 assignment to activate)
+                                    $('#activateWorkOrderButton-@(Model.ID)').show();
+                                    return nRow;
+                            },
+            "fnDrawCallback": function () {
+                if (eventDebug) M_conlog("EVENT", "DRAW", "assignment", "", "fnDrawcallback");
+                //$('#activateWorkOrder-@(Model.ID)').hide();
+            }
+
+        });
+        ////////////////////////////////////////////////////////////////////////////
+        //
+        // Work Order Tab SELECT events (added from Work Assignment Index script)
+        //
+        if (typeof M_workOrderTabs_@(Model.EmployerID) != "undefined") {
+            M_workOrderTabs_@(Model.EmployerID).bind("tabsselect.M_asmt_@(Model.ID)", function (event, ui) {
+                if (eventDebug) M_conlog("EVENT", "SELECT","assignment",ui.panel.id, "");
+                //hide work order activation button. If assignment row exists, it will show button.
+                $('#activateWorkOrder-@(Model.ID)').hide();
+            });
+        }   
+        //M_workOrderTabs_@(Model.EmployerID).bind("tabsremove.M_asmt_@(Model.ID)", function (event) {if (eventDebug) M_conlog("EVENT", "REMOVE","assignment", event.target.id, "");});
+        //M_workOrderTabs_@(Model.EmployerID).bind("tabsshow.M_asmt_@(Model.ID)", function (event, ui) {if (eventDebug) M_conlog("EVENT", "SHOW","assignment", ui.panel.id, ""); });
+        //M_workOrderTabs_@(Model.EmployerID).bind("tabsload.M_asmt_@(Model.ID)", function (event, ui) {if (eventDebug) M_conlog("EVENT", "LOAD","assignment",ui.panel.id, "");});
+    });
+</script>

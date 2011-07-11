@@ -1,0 +1,13 @@
+﻿@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using Machete.Domain.Resources
+@{
+    ViewBag.Title = Employers.indextitle;
+}
+@Html.Partial("EmployerIndex")
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        if (eventDebug) M_conlog("EVENT", "READY", "employer/index", "", "");
+        M_employerTabs.addClass('ExclusiveTab');
+    });
+</script>

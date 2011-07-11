@@ -16,6 +16,13 @@ namespace Machete.Domain
         public virtual Person Person { get; set; }
         public virtual ICollection<WorkerSignin> workersignins { get; set; }
         //
+        //TODO: add to forms
+        public DateTime dateOfMembership { get; set; }
+        //
+        [Required(ErrorMessageResourceName = "dateOfBirth", ErrorMessageResourceType = typeof(Resources.Worker))]
+        [LocalizedDisplayName("dateOfBirth", NameResourceType = typeof(Resources.Worker))]
+        public DateTime dateOfBirth {get; set;}
+        //
         [LocalizedDisplayName("active", NameResourceType = typeof(Resources.Worker))]
         public bool active { get; set; }
         //
@@ -40,7 +47,7 @@ namespace Machete.Domain
         //
         [Required(ErrorMessageResourceName = "englishlevelID", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("englishlevelID", NameResourceType = typeof(Resources.Worker))]
-        public byte englishlevelID { get; set; }
+        public int englishlevelID { get; set; }
         //
         [LocalizedDisplayName("recentarrival", NameResourceType = typeof(Resources.Worker))]
         public bool recentarrival { get; set; }
@@ -62,8 +69,7 @@ namespace Machete.Domain
         //
         [Required(ErrorMessageResourceName = "maritalstatus", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("maritalstatus", NameResourceType = typeof(Resources.Worker))]
-        [StringLength(1, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Worker))]
-        public string maritalstatus { get; set; }
+        public int maritalstatus { get; set; }
         //
         [LocalizedDisplayName("livewithchildren", NameResourceType = typeof(Resources.Worker))]
         public bool livewithchildren { get; set; }
@@ -71,11 +77,11 @@ namespace Machete.Domain
         [LocalizedDisplayName("numofchildren", NameResourceType = typeof(Resources.Worker))]
         [Required(ErrorMessageResourceName = "numofchildren", ErrorMessageResourceType = typeof(Resources.Worker))]
         [RegularExpression("^([0-9]|[0-1]\\d|20)$", ErrorMessageResourceName = "numofchildrenRxError", ErrorMessageResourceType = typeof(Resources.Worker))]
-        public byte numofchildren { get; set; }
+        public int numofchildren { get; set; }
         //
         [Required(ErrorMessageResourceName = "incomeID", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("incomeID", NameResourceType = typeof(Resources.Worker))]
-        public byte incomeID { get; set; }
+        public int incomeID { get; set; }
         //
         [LocalizedDisplayName("livealone", NameResourceType = typeof(Resources.Worker))]
         public bool livealone { get; set; }
@@ -95,20 +101,18 @@ namespace Machete.Domain
         [Required(ErrorMessageResourceName = "dwccardnum", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("dwccardnum", NameResourceType = typeof(Resources.Worker))]
         [RegularExpression("^[0-9]{5,5}$", ErrorMessageResourceName = "dwccardnumerror", ErrorMessageResourceType = typeof(Resources.Worker))]
-   
         public int dwccardnum { get; set; }
         //
         [Required(ErrorMessageResourceName = "neighborhoodID", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("neighborhoodID", NameResourceType = typeof(Resources.Worker))]
-        public byte neighborhoodID { get; set; }
+        public int neighborhoodID { get; set; }
         //
         [LocalizedDisplayName("immigrantrefugee", NameResourceType = typeof(Resources.Worker))]
         public bool immigrantrefugee { get; set; }
         //  
-        [StringLength(20, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Worker))]
-        [Required(ErrorMessageResourceName = "countryoforigin", ErrorMessageResourceType = typeof(Resources.Worker))]
-        [LocalizedDisplayName("countryoforigin", NameResourceType = typeof(Resources.Worker))]
-        public string countryoforigin { get; set; }
+        [Required(ErrorMessageResourceName = "countryoforiginID", ErrorMessageResourceType = typeof(Resources.Worker))]
+        [LocalizedDisplayName("countryoforiginID", NameResourceType = typeof(Resources.Worker))]
+        public int countryoforiginID { get; set; }
         //
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("emcontoriginname", NameResourceType = typeof(Resources.Worker))]
@@ -139,6 +143,16 @@ namespace Machete.Domain
         public DateTime? insuranceexpiration { get; set; }
         //
         public int? ImageID { get; set; }
+        //
+        [LocalizedDisplayName("skill1", NameResourceType = typeof(Resources.Worker))]
+        public int? skill1 { get; set; }
+        //
+        [LocalizedDisplayName("skill2", NameResourceType = typeof(Resources.Worker))]
+        public int? skill2 { get; set; }
+        //
+        [LocalizedDisplayName("skill3", NameResourceType = typeof(Resources.Worker))]
+        public int? skill3 { get; set; }
+
     }
 }
 

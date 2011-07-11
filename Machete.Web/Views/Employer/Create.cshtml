@@ -1,0 +1,45 @@
+﻿@model Machete.Domain.Employer
+@using Machete.Web.Resources
+@using (Html.BeginForm("Create", "Employer", FormMethod.Post, 
+                        new { @id = "employerCreateForm" }))
+{
+    <input type="submit" id="employerCreateButton" 
+           value="@Employers.createsubmit"  tabindex="9"/>
+    @Html.ValidationSummary(true)
+    @Html.EditorForModel()
+}
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        //alert("employerCreate doc-ready");
+        $('#employerCreateButton').button();
+        $.validator.unobtrusive.parseDynamicContent('#employerCreateForm');
+        $('#employerName').focus();
+        ////////////////////////////////////////////////////////////////
+        //
+        // Employer Create submit event
+        //
+
+        $("#employerCreateForm").submit(function (e) {
+            e.preventDefault();
+            if ($("#employerCreateForm").valid()) {
+                $.post($(this).attr("action"), $(this).serialize(),
+                    function (data) {
+                        add_rectab(data.sNewRef, data.sNewLabel, M_employerTabs, true, data.iNewID);
+                    }
+                );
+            }
+            //TODO: javascript...need to deal with ajax error
+
+        });
+        $(".adminAccordion").accordion({
+            collapsible: true,
+            active: false,
+            autoHeight: false
+        });
+        $(".timestampAccordion").accordion({
+            collapsible: true,
+            active: false,
+            autoHeight: false
+        });
+    });
+</script>

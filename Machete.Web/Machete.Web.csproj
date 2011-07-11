@@ -14,6 +14,7 @@
     <AssemblyName>Machete.Web</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,7 +42,8 @@
     <PublishDatabases>false</PublishDatabases>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>machete.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'StageProd|AnyCPU'">
     <OutputPath>bin\</OutputPath>
@@ -66,45 +68,62 @@
     <DeployIisAppPath>Default Web Site/Machete.Web_StageTest</DeployIisAppPath>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Elmah, Version=1.1.11517.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\elmah.1.1\lib\Elmah.dll</HintPath>
+    <Reference Include="ajaxmin, Version=3.30.3576.28515, Culture=neutral, PublicKeyToken=b60b318a12299464, processorArchitecture=MSIL">
+      <HintPath>..\packages\combres.2.2.1.9\lib\net40\ajaxmin.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.4.1.10311.0\lib\EntityFramework.dll</HintPath>
+    <Reference Include="Combres, Version=2.2.1.0, Culture=neutral, PublicKeyToken=1ca6b37997dd7536, processorArchitecture=MSIL">
+      <HintPath>..\packages\combres.2.2.1.9\lib\net40\Combres.dll</HintPath>
+    </Reference>
+    <Reference Include="Combres.Mvc, Version=2.2.1.0, Culture=neutral, PublicKeyToken=1ca6b37997dd7536, processorArchitecture=MSIL">
+      <HintPath>..\packages\combres.mvc.2.2.1.9\lib\net40\Combres.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="dotless.Core">
+      <HintPath>..\packages\dotless.1.1.0\lib\dotless.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="EcmaScript.NET.modified">
+      <HintPath>..\packages\YUICompressor.NET.1.5.0.0\lib\NET35\EcmaScript.NET.modified.dll</HintPath>
+    </Reference>
+    <Reference Include="Elmah">
+      <HintPath>..\packages\elmah.corelibrary.1.2\lib\Elmah.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft ADO.NET Entity Framework Feature CTP5\Binaries\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Fasterflect">
+      <HintPath>..\packages\fasterflect.2.0.1\lib\net40\Fasterflect.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp">
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation">
-      <HintPath>..\packages\Unity.2.0\lib\20\Microsoft.Practices.ServiceLocation.dll</HintPath>
+      <HintPath>..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.Unity">
-      <HintPath>..\packages\Unity.2.0\lib\20\Microsoft.Practices.Unity.dll</HintPath>
+      <HintPath>..\packages\Unity.2.1.505.0\lib\NET35\Microsoft.Practices.Unity.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.Unity.Configuration">
-      <HintPath>..\packages\Unity.2.0\lib\20\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+      <HintPath>..\packages\Unity.2.1.505.0\lib\NET35\Microsoft.Practices.Unity.Configuration.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.Unity.Interception">
-      <HintPath>..\packages\Unity.2.0\lib\20\Microsoft.Practices.Unity.Interception.dll</HintPath>
+      <HintPath>..\packages\Unity.Interception.2.1.505.0\lib\NET35\Microsoft.Practices.Unity.Interception.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.Unity.Interception.Configuration">
-      <HintPath>..\packages\Unity.2.0\lib\20\Microsoft.Practices.Unity.Interception.Configuration.dll</HintPath>
+      <HintPath>..\packages\Unity.Interception.2.1.505.0\lib\NET35\Microsoft.Practices.Unity.Interception.Configuration.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.ReportViewer.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.ReportViewer.WebForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="Microsoft.ReportViewer.WebForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
-    <Reference Include="NLog">
-      <HintPath>..\packages\NLog.2.0.0.0\lib\NET40\NLog.dll</HintPath>
+    <Reference Include="NLog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.2.0.0.1904\lib\net40\NLog.dll</HintPath>
     </Reference>
     <Reference Include="NLog.Extended">
-      <HintPath>..\packages\NLog.2.0.0.0\lib\NET40\NLog.Extended.dll</HintPath>
+      <HintPath>..\packages\NLog.Extended.2.0.0.1904\lib\net40-full\NLog.Extended.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.Entity">
       <Private>True</Private>
@@ -182,17 +201,30 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="WebActivator, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebActivator.1.4.1\lib\net40\WebActivator.dll</HintPath>
+    </Reference>
+    <Reference Include="Yahoo.Yui.Compressor">
+      <HintPath>..\packages\YUICompressor.NET.1.5.0.0\lib\NET35\Yahoo.Yui.Compressor.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppStart_Combres.cs" />
+    <Compile Include="App_Start\Combres.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\EmployerController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImageController.cs" />
     <Compile Include="Controllers\PersonController.cs" />
+    <Compile Include="Controllers\WorkAssignmentController.cs" />
     <Compile Include="Controllers\WorkerController.cs" />
     <Compile Include="Controllers\WorkerSigninController.cs" />
+    <Compile Include="Controllers\WorkOrderController.cs" />
     <Compile Include="Helpers\AuthorizeExAttribute.cs" />
     <Compile Include="Helpers\IsInRole.cs" />
+    <Compile Include="Helpers\ListItemToOption.cs" />
+    <Compile Include="Helpers\liveSearch.cs" />
     <Compile Include="Helpers\Lookups.cs" />
     <Compile Include="Helpers\userNameFilterAttribute.cs" />
     <Compile Include="IoC\CustomControllerActivator.cs" />
@@ -204,7 +236,106 @@
     <Compile Include="Helpers\HandleErrorWithELMAHAttribute .cs" />
     <Compile Include="IoC\UnityDependencyResolver.cs" />
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\jQueryDataTableParam.cs" />
+    <Compile Include="Resources\Employers.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Employers.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\WorkAssignments.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WorkAssignments.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\WorkAssignments.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WorkAssignments.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\WorkerSignins.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WorkerSignins.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\WorkerSignins.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WorkerSignins.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\WorkOrders.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WorkOrders.es.resx</DependentUpon>
+    </Compile>
+    <Content Include="Content\favicon.ico" />
+    <Content Include="Scripts\maskedinput-1.3.js" />
+    <Compile Include="ViewModel\OrderSummary.cs" />
+    <Compile Include="ViewModel\depreciated\WorkAssignmentEditor.cs" />
+    <Compile Include="ViewModel\WorkAssignmentIndex.cs" />
+    <Compile Include="ViewModel\depreciated\WorkOrderEditor.cs" />
+    <Compile Include="ViewModel\WorkOrderIndex.cs" />
+    <Content Include="combres.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\combres_full_with_annotation.xml" />
+    <Content Include="Content\casa_logo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\machete_1_close_crop.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\print.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\ui\images\ui-anim_basic_16x16.gif" />
+    <Content Include="Content\ui\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
+    <Content Include="Content\ui\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
+    <Content Include="Content\ui\images\ui-bg_flat_10_000000_40x100.png" />
+    <Content Include="Content\ui\images\ui-bg_glass_100_f6f6f6_1x400.png" />
+    <Content Include="Content\ui\images\ui-bg_glass_100_fdf5ce_1x400.png" />
+    <Content Include="Content\ui\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\ui\images\ui-bg_gloss-wave_35_f6a828_500x100.png" />
+    <Content Include="Content\ui\images\ui-bg_highlight-soft_100_eeeeee_1x100.png" />
+    <Content Include="Content\ui\images\ui-bg_highlight-soft_75_ffe45c_1x100.png" />
+    <Content Include="Content\ui\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\ui\images\ui-icons_228ef1_256x240.png" />
+    <Content Include="Content\ui\images\ui-icons_ef8c08_256x240.png" />
+    <Content Include="Content\ui\images\ui-icons_ffd27a_256x240.png" />
+    <Content Include="Content\ui\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Content\ui\jquery-ui-1.8.6.custom.css" />
+    <Content Include="Content\ui\smoothness\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\ui\smoothness\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\ui\smoothness\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\ui\smoothness\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\ui\smoothness\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\ui\smoothness\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\ui\smoothness\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\ui\smoothness\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\ui\smoothness\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\ui\smoothness\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\ui\smoothness\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\ui\smoothness\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\ui\smoothness\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\ui\smoothness\jquery-ui-1.8.11.custom.css" />
+    <Content Include="notes.txt" />
+    <Compile Include="Models\filter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\Employers.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Employers.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Filters.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Filters.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Filter.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Filter.es.resx</DependentUpon>
+    </Compile>
     <Compile Include="Resources\Workers.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -245,17 +376,19 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Workers.es.resx</DependentUpon>
     </Compile>
+    <Compile Include="Resources\WorkOrders.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WorkOrders.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModel\depreciated\EmployerIndex.cs" />
+    <Compile Include="ViewModel\depreciated\PersonIndex.cs" />
+    <Compile Include="ViewModel\depreciated\WorkerIndex.cs" />
     <Compile Include="ViewModel\WorkerSigninViewModel.cs" />
     <Compile Include="ViewModel\WorkerViewModel.cs" />
+    <Compile Include="ViewModel\EmployerViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bg-header.png" />
-    <Content Include="Content\bg-inner-corners.png" />
-    <Content Include="Content\bg-main-corner-sprite.png" />
-    <Content Include="Content\bg-main.png" />
-    <Content Include="Content\bg-nav-corner-sprite.png" />
-    <Content Include="Content\bg-nav-side-sprite.png" />
-    <Content Include="Content\button-edit.png" />
     <Content Include="Content\calendar.gif" />
     <Content Include="Content\confirm\help.gif" />
     <Content Include="Content\confirm\important.gif" />
@@ -265,9 +398,6 @@
     <Content Include="Content\dataTables\demo_page.css" />
     <Content Include="Content\dataTables\demo_table.css" />
     <Content Include="Content\dataTables\demo_table_jui.css" />
-    <Content Include="Content\Delete.png" />
-    <Content Include="Content\demo_table.css" />
-    <Content Include="Content\Edit.png" />
     <Content Include="Content\images\404error.jpg" />
     <Content Include="Content\images\back_disabled.jpg" />
     <Content Include="Content\images\back_enabled.jpg" />
@@ -293,15 +423,11 @@
     <Content Include="Content\images\ui-icons_f2ec64_256x240.png" />
     <Content Include="Content\images\ui-icons_f9f2bd_256x240.png" />
     <Content Include="Content\images\ui-icons_ff7519_256x240.png" />
-    <Content Include="Content\jquery-ui-1.8.6.custom.css" />
-    <Content Include="Content\jquery-ui-1.8.custom.css" />
-    <Content Include="Content\jquery-ui.css" />
-    <Content Include="Content\Site-Rounds.css" />
-    <Content Include="Content\Site_alt.css" />
+    <Content Include="Content\Site_Debug.css" />
     <Content Include="Content\Site_StageProd.css" />
     <Content Include="Content\Site_StageTest.css" />
     <Content Include="Global.asax" />
-    <Content Include="machete.ico" />
+    <Content Include="Scripts\console-log.js" />
     <Content Include="Scripts\jquery.alerts.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -311,19 +437,17 @@
     <Content Include="Scripts\jquery.dataTables-1.7.6.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\jquery.dataTables-1.8.0.js" />
+    <Content Include="Scripts\jquery.dataTables.editable-1.0.0.js" />
+    <Content Include="Scripts\jquery.dataTables.plugins.js" />
+    <Content Include="Scripts\jquery.form.js" />
+    <Content Include="Scripts\jquery.jeditable-1.7.1.js" />
+    <Content Include="Scripts\jquery.jeditable-1.7.1.min.js" />
     <Content Include="Scripts\jquery.ui.core.js" />
     <Content Include="Scripts\jquery.ui.datepicker.js" />
-    <Content Include="Web.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-      <SubType>Designer</SubType>
-    </Content>
+    <Content Include="Scripts\macheteLayout.js" />
+    <Content Include="Scripts\ui.datetimepicker.js" />
+    <Content Include="Scripts\validation_hack.js" />
     <Content Include="Content\Site.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -374,16 +498,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Shared\EditorTemplates\Category.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_Code\TwitterGoodies.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Person\Details.cshtml" />
     <Content Include="Views\Person\Create.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Person.cshtml" />
     <Content Include="Views\Person\Index.cshtml" />
@@ -391,8 +505,30 @@
     <Content Include="Views\Person\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Content\RDLC\WorkerSigninsDaily.rdlc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <EmbeddedResource Include="RDLC\WorkerSigninsDaily.rdlc" />
+    <EmbeddedResource Include="Resources\Employers.es.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Employers.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Employers.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Employers.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Filter.es.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Filter.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Filters.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Filters.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\WorkAssignments.es.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>WorkAssignments.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\WorkAssignments.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>WorkAssignments.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Workers.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -427,6 +563,23 @@
     <EmbeddedResource Include="Resources\Shared.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Shared.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\WorkerSignins.es.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>WorkerSignins.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\WorkerSignins.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>WorkerSignins.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\WorkOrders.es.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>WorkOrders.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\WorkOrders.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>WorkOrders.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -463,23 +616,9 @@
     <Content Include="Views\Account\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Web.StageProd.config">
-      <DependentUpon>Web.config</DependentUpon>
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Web.StageTest.config">
-      <DependentUpon>Web.config</DependentUpon>
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Worker\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Content\themes\base\" />
-    <Folder Include="Content\themes\smoothness\" />
     <Folder Include="Tests\Worker\" />
   </ItemGroup>
   <ItemGroup>
@@ -506,9 +645,55 @@
     <Content Include="Views\Image\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="combres.readme" />
     <None Include="Content\images\Sorting icons.psd" />
     <Content Include="Views\Person\View.cshtml" />
     <Content Include="Views\Worker\View.cshtml" />
+    <Content Include="Views\Employer\Index.cshtml" />
+    <Content Include="Views\Employer\Create.cshtml" />
+    <Content Include="Views\Employer\Edit.cshtml" />
+    <Content Include="Views\Employer\Delete.cshtml" />
+    <Content Include="Views\Employer\View.cshtml" />
+    <Content Include="Views\WorkOrder\Index.cshtml" />
+    <Content Include="Views\WorkOrder\Create.cshtml" />
+    <Content Include="Views\WorkOrder\Edit.cshtml" />
+    <Content Include="Views\WorkOrder\View.cshtml" />
+    <Content Include="Views\WorkOrder\Delete.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\WorkOrder.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Employer.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Filter.cshtml" />
+    <Content Include="Views\Shared\timestamps.cshtml" />
+    <Content Include="Views\WorkAssignment\Index.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\WorkOrderIndex.cshtml" />
+    <Content Include="Views\Shared\EmployerIndex.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\PersonIndex.cshtml" />
+    <Content Include="Views\Shared\WorkAssignmentIndex.cshtml" />
+    <Content Include="Views\WorkAssignment\Create.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\WorkAssignment.cshtml" />
+    <Content Include="Views\WorkAssignment\Edit.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\WorkAssignmentSurvey.cshtml" />
+    <Content Include="packages.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.StageProd.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.StageTest.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\WorkAssignment\View.cshtml" />
+    <Content Include="Views\WorkAssignment\Delete.cshtml" />
+    <Content Include="Views\Shared\WorkOrderIndex.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\WorkOrder.cshtml" />
+    <Content Include="Views\Account\AdminChangePassword.cshtml" />
+    <Content Include="Views\Shared\WorkerIndex.cshtml.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
@@ -525,11 +710,11 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>42420</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost/Machete.Web</IISUrl>
+          <IISUrl>http://localhost:42420/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>http://machete/</CustomServerUrl>
@@ -539,6 +724,7 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PreBuildEvent>copy $(ProjectDir)Content\Site_$(ConfigurationName).css $(ProjectDir)Content\Site.css</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>

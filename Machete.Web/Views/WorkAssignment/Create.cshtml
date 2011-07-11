@@ -1,0 +1,49 @@
+﻿@model Machete.Domain.WorkAssignment
+@using Machete.Web.Resources
+@using (Html.BeginForm("Create", "WorkAssignment", FormMethod.Post,
+                        new { @id = "workAssignmentCreateForm-wo-" + Model.workOrderID}))
+{
+        <input type="submit" id="workAssignmentCreateButton-wo-@(Model.workOrderID)"
+               value="@WorkAssignments.createsubmit" tabindex="9"/>
+        @Html.ValidationSummary(true)
+        @Html.EditorForModel()
+}
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        $('#activateWorkOrderButton-@(Model.workOrderID)').hide();
+        $('#workAssignmentCreateButton-wo-@(Model.workOrderID)').button();
+        M_createAssignmentForm_@(Model.workOrderID) = $('#workAssignmentCreateForm-wo-@(Model.workOrderID)');
+        $.validator.unobtrusive.parseDynamicContent('#workAssignmentCreateForm-wo-@(Model.workOrderID)');
+        // Find tabindex attribute (for tab order, not jquery tabs) and increment by 10
+        $('#workAssignmentCreateForm-wo-@(Model.workOrderID) [tabindex]').each(function () {
+            $(this).attr('tabindex', parseInt($(this).attr('tabindex')) + 20) 
+        });
+        ////////////////////////////////////////////////////////////////
+        //
+        //
+        //
+        //M_createSkillID_@(Model.workOrderID) = $('#workAssignmentCreateForm-wo-@(Model.workOrderID)').find('#skillID');
+        if ($('#hourlyWage').text() == "0") {
+            parseSkillsDD(M_createAssignmentForm_@(Model.workOrderID));
+        }
+
+        $('#workAssignmentCreateForm-wo-@(Model.workOrderID)').find('#skillID').bind('change', function () { parseSkillsDD(M_createAssignmentForm_@(Model.workOrderID)) });
+        ////////////////////////////////////////////////////////////////
+        //
+        // WorkOrder Create submit event
+        //
+        $('#workAssignmentCreateForm-wo-@(Model.workOrderID)').submit(function (e) {
+            if ($("#workAssignmentCreateForm-wo-@(Model.workOrderID)").valid()) {
+                e.preventDefault();
+                $.post($(this).attr("action"), $(this).serialize(),
+                    function (data) {                        
+                        add_rectab(data.sNewRef, data.sNewLabel, M_assignmentTabs_@(Model.workOrderID), false, data.iNewID);
+                    }
+                );
+            }
+            //TODO: javascript...need to deal with ajax error
+
+        });
+    });
+
+</script>

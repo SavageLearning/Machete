@@ -19,18 +19,33 @@ namespace Machete.Web.Models
     {
         [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         [DataType(DataType.Password)]
-        //TODO: Test OldPassword
         [LocalizedDisplayName("PasswordCurrent", NameResourceType = typeof(ValidationStrings))]
         public string OldPassword { get; set; }
 
         [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         [ValidatePasswordLength]
         [DataType(DataType.Password)]
-        //TODO: Test NewPassword
         [LocalizedDisplayName("PasswordNew", NameResourceType = typeof(ValidationStrings))]
         public string NewPassword { get; set; }
 
-        //TODO: GUI compare password error
+        [DataType(DataType.Password)]
+        [LocalizedDisplayName("PasswordConfirm", NameResourceType = typeof(ValidationStrings))]
+        [Compare("NewPassword", ErrorMessageResourceName = "PasswordCompare", ErrorMessageResourceType = typeof(ValidationStrings))]
+        public string ConfirmPassword { get; set; }
+    }
+
+    public class AdminChangePasswordModel
+    {
+        
+        public string UserName { get; set; }
+        [Required]
+        public Guid id { get; set; }
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [ValidatePasswordLength]
+        [DataType(DataType.Password)]
+        [LocalizedDisplayName("PasswordNew", NameResourceType = typeof(ValidationStrings))]
+        public string NewPassword { get; set; }
+        
         [DataType(DataType.Password)]
         [LocalizedDisplayName("PasswordConfirm", NameResourceType = typeof(ValidationStrings))]
         [Compare("NewPassword", ErrorMessageResourceName = "PasswordCompare", ErrorMessageResourceType = typeof(ValidationStrings))]
@@ -41,20 +56,33 @@ namespace Machete.Web.Models
     {
         //public int personID { get; set; }
         [StringLength(30)]
+        
         public string UserName { get; set;  }
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        public string FirstName { get; set; }
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        public string LastName { get; set; }
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         public string Password { get; set; }
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         public string ConfirmPassword { get; set; }
         [StringLength(40)]
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         public string Email { get; set; }
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         public bool IsApproved { get; set; }
         public bool IsLockedOut { get; set; }
+        //[Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        public string question { get; set; }
+        //[Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        public string answer { get; set; }
         //public bool IsOnline { get; set; }
         //public DateTime CreationDate { get; set; }
         //public DateTime LastActivityDate { get; set; }
         //public DateTime LastLoginDate { get; set; }
         //public Guid ProviderUserKey { get; set; }
         public MembershipUser member { get; set; }
-        //public Person person { get; set; }
+  
         public MembersModel()
         {
         }
@@ -82,9 +110,15 @@ namespace Machete.Web.Models
     //[PropertiesMustMatch("Password", "ConfirmPassword", ErrorMessageResourceName = "PasswordMustMatch", ErrorMessageResourceType = typeof(ValidationStrings))]
     public class RegisterModel
     {
-        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
-        [LocalizedDisplayName("username", NameResourceType = typeof(ValidationStrings))]
+        //[Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        //[LocalizedDisplayName("username", NameResourceType = typeof(ValidationStrings))]
         public string UserName { get; set; }
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [LocalizedDisplayName("firstname", NameResourceType = typeof(ValidationStrings))]
+        public string FirstName { get; set; }
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [LocalizedDisplayName("lastname", NameResourceType = typeof(ValidationStrings))]
+        public string LastName { get; set; }
 
         [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         [DataType(DataType.EmailAddress)]
@@ -102,6 +136,14 @@ namespace Machete.Web.Models
         [LocalizedDisplayName("PasswordConfirm", NameResourceType = typeof(ValidationStrings))]
         [Compare("Password", ErrorMessageResourceName="PasswordsMustMatch", ErrorMessageResourceType = typeof(ValidationStrings))]
         public string ConfirmPassword { get; set; }
+
+        [StringLength(256)]
+        //[Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        public string question { get; set; }
+        
+        [StringLength(128)]
+        //[Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        public string answer { get; set; }
     }
     #endregion
 
@@ -116,7 +158,7 @@ namespace Machete.Web.Models
         int MinPasswordLength { get; }
 
         bool ValidateUser(string userName, string password);
-        MembershipCreateStatus CreateUser(string userName, string password, string email);
+        MembershipCreateStatus CreateUser(string userName, string password, string email, string question, string answer);
         bool ChangePassword(string userName, string oldPassword, string newPassword);
     }
 
@@ -150,14 +192,14 @@ namespace Machete.Web.Models
             return _provider.ValidateUser(userName, password);
         }
         //TODO: localize MembershipCreateStatus
-        public MembershipCreateStatus CreateUser(string userName, string password, string email)
+        public MembershipCreateStatus CreateUser(string userName, string password, string email, string question, string answer)
         {
             if (String.IsNullOrEmpty(userName)) throw new ArgumentException("Value cannot be null or empty.", "userName");
             if (String.IsNullOrEmpty(password)) throw new ArgumentException("Value cannot be null or empty.", "password");
             if (String.IsNullOrEmpty(email)) throw new ArgumentException("Value cannot be null or empty.", "email");
 
             MembershipCreateStatus status;
-            _provider.CreateUser(userName, password, email, null, null, true, null, out status);
+            _provider.CreateUser(userName, password, email, question, answer, true, null, out status);
             return status;
         }
         //TODO: localize ChangePassword

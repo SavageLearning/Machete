@@ -320,14 +320,44 @@ div#title
 .display-label,
 .editor-label
 {
-    margin: 1em 0 0 0;
+    /*margin: 1em 0 0 0;
+     border: 1px solid red;*/
+     clear: left;
+     float: left;
+     font-weight: bold;
+     padding: 5px 15px;
+     text-align: right;
+     width: 150px;
+     margin: 0;
+
 }
 
 .display-field,
 .editor-field
 {
-    margin:0.5em 0 0 0;
+ /* border: 1px solid blue; */
+    padding: 5px;
+    width: 200px;
+    margin: 0;
+    float: left;
 }
+
+.display-label-noreturn, .editor-label-noreturn
+{
+    /*border: 1px solid red;*/
+    clear: none;
+    float: left;
+    font-weight: bold;
+    padding: 5px 15px;
+    text-align: right;
+    width: 100px;
+    margin: 0;
+}
+.editor-row 
+{
+    clear: left;
+}
+
 
 .text-box
 {

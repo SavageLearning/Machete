@@ -123,11 +123,8 @@
   <data name="carinsurance" xml:space="preserve">
     <value>Seguro de automóvil</value>
   </data>
-  <data name="countryoforigin" xml:space="preserve">
+  <data name="countryoforiginID" xml:space="preserve">
     <value>País de origen</value>
-  </data>
-  <data name="datecreated" xml:space="preserve">
-    <value>Fecha de creación</value>
   </data>
   <data name="dateinseattle" xml:space="preserve">
     <value>Fecha en Seattle</value>
@@ -135,14 +132,11 @@
   <data name="dateinUSA" xml:space="preserve">
     <value>Fecha en los EE.UU.</value>
   </data>
-  <data name="dateupdated" xml:space="preserve">
-    <value>Fecha de actualización</value>
-  </data>
   <data name="disabilitydesc" xml:space="preserve">
     <value>Descripción de la discapacidad</value>
   </data>
   <data name="driverslicense" xml:space="preserve">
-    <value>Licencia de conducir #</value>
+    <value>Tiene una licencia de conducir de los EE.UU.?</value>
   </data>
   <data name="dwccardnum" xml:space="preserve">
     <value>DWC tarjeta #</value>
@@ -222,10 +216,19 @@
   <data name="stringlength" xml:space="preserve">
     <value>Por favor, introduzca un máximo de {1} caracteres</value>
   </data>
-  <data name="updatedby" xml:space="preserve">
-    <value>Puesto al día por</value>
-  </data>
   <data name="weight" xml:space="preserve">
     <value>Peso</value>
+  </data>
+  <data name="dateOfBirth" xml:space="preserve">
+    <value>Fecha de nacimiento</value>
+  </data>
+  <data name="skill1" xml:space="preserve">
+    <value>Habilidad (1)</value>
+  </data>
+  <data name="skill2" xml:space="preserve">
+    <value>Habilidad (2)</value>
+  </data>
+  <data name="skill3" xml:space="preserve">
+    <value>Habilidad (3)</value>
   </data>
 </root>

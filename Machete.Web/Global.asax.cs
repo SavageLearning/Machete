@@ -18,7 +18,7 @@ using System.Globalization;
 using System.Threading;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration;
-using Machete.Helpers;
+using Machete.Web.Helpers;
 
 namespace Machete.Web
 {
@@ -84,7 +84,7 @@ namespace Machete.Web
             IUnityContainer container = GetUnityContainer();
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
             Database.SetInitializer(new MacheteInitializer());
-            Lookups.Initialize();
+            Lookups.Initialize(new MacheteContext());
         }
 
         private IUnityContainer GetUnityContainer()
@@ -101,11 +101,19 @@ namespace Machete.Web
             .RegisterType<IPersonRepository, PersonRepository>(new HttpContextLifetimeManager<IPersonRepository>())
             .RegisterType<IWorkerSigninRepository, WorkerSigninRepository>(new HttpContextLifetimeManager<IWorkerSigninRepository>())
             .RegisterType<IWorkerRepository, WorkerRepository>(new HttpContextLifetimeManager<IWorkerRepository>())
+            .RegisterType<IWorkerRequestRepository, WorkerRequestRepository>(new HttpContextLifetimeManager<IWorkerRequestRepository>())
             .RegisterType<IImageRepository, ImageRepository>(new HttpContextLifetimeManager<IImageRepository>())
+            .RegisterType<IEmployerRepository, EmployerRepository>(new HttpContextLifetimeManager<IEmployerRepository>())
+            .RegisterType<IWorkOrderRepository, WorkOrderRepository>(new HttpContextLifetimeManager<IWorkOrderRepository>())
+            .RegisterType<IWorkAssignmentRepository, WorkAssignmentRepository>(new HttpContextLifetimeManager<IWorkAssignmentRepository>())
                 // 
             .RegisterType<IPersonService, PersonService>(new HttpContextLifetimeManager<IPersonService>())
             .RegisterType<IWorkerSigninService, WorkerSigninService>(new HttpContextLifetimeManager<IWorkerSigninService>())
             .RegisterType<IWorkerService, WorkerService>(new HttpContextLifetimeManager<IWorkerService>())
+            .RegisterType<IWorkerRequestService, WorkerRequestService>(new HttpContextLifetimeManager<IWorkerRequestService>())
+            .RegisterType<IEmployerService, EmployerService>(new HttpContextLifetimeManager<IEmployerService>())
+            .RegisterType<IWorkOrderService, WorkOrderService>(new HttpContextLifetimeManager<IWorkOrderService>())
+            .RegisterType<IWorkAssignmentService, WorkAssignmentService>(new HttpContextLifetimeManager<IWorkAssignmentService>())
             .RegisterType<IImageService, ImageService>(new HttpContextLifetimeManager<IImageService>());
             return container;
         }

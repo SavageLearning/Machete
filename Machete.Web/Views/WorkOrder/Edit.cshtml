@@ -1,0 +1,128 @@
+﻿@model Machete.Domain.WorkOrder
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using (Html.BeginForm("Edit", "WorkOrder", FormMethod.Post, 
+                        new { @class = "edittab-form EditPost", @id="WorkOrderTab-" + Model.ID}))
+{
+    <input type="button" value="@WorkOrders.printlink" class="formButton" id="viewWorkOrder-@(Model.ID)" />
+    <input type="submit" value="@WorkOrders.editsubmit" class="formButton"/>
+
+    <input type="button" id="printMap" class="formButton" value="@WorkOrders.mapbutton"/>
+    if (Html.IsInRole(Html.Role_AMP()))
+    {
+        <input id="deleteWorkOrderButton-@(Model.ID)" type="button" value="@WorkOrders.deletesubmit" 
+                class="formButton deleteButton" />
+    }
+    <br />  
+    @Html.ValidationSummary(true)
+    @Html.EditorForModel()
+
+}
+
+@using (Html.BeginForm("Activate", "WorkOrder", FormMethod.Post,
+                        new { @class = "edittab-form ActivatePost", @id = "ActivateWorkOrder-" + Model.ID }))
+{
+    @Html.HiddenFor(model => model.ID);
+}
+
+@if (Html.IsInRole(Html.Role_AMP()))
+{
+    using (Html.BeginForm("Delete", "WorkOrder", FormMethod.Post,
+                            new { @class = "edittab-form DeletePost", @id = "DeleteWorkOrder-" + Model.ID }))
+    {
+        @Html.HiddenFor(model => model.ID);
+    }
+}
+@Html.Partial("WorkAssignmentIndex", Model)
+
+@if (Lookups.getPendingID() == Model.status)
+{
+    <div class="completeOrderContainer">
+        <input type="button" value="@WorkOrders.activatesubmit" class="formButton completeOrderButton" id="activateWorkOrderButton-@(Model.ID)"/>
+    </div>
+} 
+
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        M_workOrderEditForm_@(Model.ID) = $('#WorkOrderTab-@Model.ID');
+        $('#activateWorkOrder-@(Model.ID)').hide();
+        $('.formButton').button();
+        $('#contactName').focus();
+
+        dateTimeWidget($(M_workOrderEditForm_@(Model.ID)).find('#dateTimeofWork'));
+        //
+        //
+        toggleDropDown($('.englishRequired_@(Model.ID)'), "@(Shared.yes)", $("#englishNote_@(Model.ID)"), true);
+        $(M_workOrderEditForm_@(Model.ID)).find("#englishRequired").bind('change', function () { 
+            toggleDropDown($('.englishRequired_@(Model.ID)'), "@(Shared.yes)", $("#englishNote_@(Model.ID)"), false);
+        });
+
+        //
+        $.validator.unobtrusive.parseDynamicContent($('#WorkOrderTab-@Model.ID'));
+        // Find tabindex attribute (for tab order, not jquery tabs) and increment by 10
+        $('#WorkOrderTab-@Model.ID').find('[tabindex]').each(function () { $(this).attr('tabindex', parseInt($(this).attr('tabindex')) + 10) });
+        $.alerts.okButton = "@WorkOrders.deletesubmit";
+        ////////////////////////////////////////////////////////////////
+        //
+        // open work order view for printing
+        //
+        $('#viewWorkOrder-@(Model.ID)').click(function () {
+            printwindow = window.open('/WorkOrder/View/@(Model.ID)');
+            //printwindow.print();
+        });
+
+        ////////////////////////////////////////////////////////////////
+        //
+        // Confirm delete event
+        //
+        $("#deleteWorkOrderButton-@(Model.ID)").click(function () {
+            jConfirm('@WorkOrders.deleteconfirmation',
+                     '@WorkOrders.deletetitle',
+                     function (r) {
+                         if (r == true) {
+                             $('#DeleteWorkOrder-@(Model.ID)').submit();
+                         }
+                     }
+                    );
+        });
+        ////////////////////////////////////////////////////////////////
+        //
+        // submit edit
+        //
+        $('#WorkOrderTab-@Model.ID').submit(function (e) {
+            if ($('#WorkOrderTab-@Model.ID').valid()) {
+                $.post($(this).attr("action"), $(this).serialize());
+                $(e.target).closest('.ui-tabs').tabs("select", 0);
+            }
+            //TODO: javascript...need to deal with ajax error
+            e.preventDefault();
+        });
+        ////////////////////////////////////////////////////////////////
+        //
+        // submit delete
+        //
+        $("#DeleteWorkOrder-@(Model.ID)").submit(function (e) {
+            $.post($(this).attr("action"), $(this).serialize());
+            var oTabs = $(e.target).closest('.ui-tabs').children('.ui-tabs-nav');
+            $(oTabs).find('.ui-state-active').find('span.ui-icon-close').click();
+            //TODO: javascript...need to deal with ajax error
+            $(e.target).closest('.ui-tabs').tabs("select", 0);
+            e.preventDefault();
+        });
+        ////////////////////////////////////////////////////////////////
+        //
+        // submit activate
+        //
+        $("#activateWorkOrderButton-@(Model.ID)").click(function () { $('#ActivateWorkOrder-@(Model.ID)').submit(); });
+        $("#ActivateWorkOrder-@(Model.ID)").submit(function (e) {
+            $.post($(this).attr("action"), $(this).serialize());
+            var oTabs = $(e.target).closest('.ui-tabs').children('.ui-tabs-nav');
+            $(oTabs).find('.ui-state-active').find('span.ui-icon-close').click();
+            window.open('/WorkOrder/View/@(Model.ID)');
+            //TODO: javascript...need to deal with ajax error
+            $(e.target).closest('.ui-tabs').tabs("select", 0);
+            e.preventDefault();
+        });
+        $('#printMap').click(function () { openGoogleMap("@Html.Encode(Model.workSiteAddress1 + ' ' + Model.city + ' ' + Model.state)", null) });
+    });
+</script>
