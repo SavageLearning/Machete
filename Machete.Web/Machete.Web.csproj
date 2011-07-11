@@ -505,7 +505,6 @@
     <Content Include="Views\Person\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="RDLC\WorkerSigninsDaily.rdlc" />
     <EmbeddedResource Include="Resources\Employers.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Employers.es.Designer.cs</LastGenOutput>
