@@ -1,0 +1,46 @@
+﻿@model Machete.Domain.Record
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@if (Html.IsInRole(Html.Role_AM()))
+{
+<div class="timestampAccordion">
+    <h3><a href="#">@Shared.managerinformation</a></h3>
+    <div class="tb-table">
+        <div class="tb-row">
+            <div class="tb-label tb-cell">
+                @Html.LabelFor(model => model.datecreated)
+            </div>
+            <div class="tb-display tb-cell">
+                @Html.DisplayFor(model => model.datecreated)
+                @Html.ValidationMessageFor(model => model.datecreated)
+            </div>
+            <div class="tb-label tb-cell">
+                @Html.LabelFor(model => model.dateupdated)
+            </div>
+            <div class="tb-display tb-cell">
+                @Html.DisplayFor(model => model.dateupdated)
+                @Html.ValidationMessageFor(model => model.dateupdated)
+            </div>
+        </div>
+        <!--tb-row-->
+        <div class="tb-row">
+            <div class="tb-label tb-cell">
+                @Html.LabelFor(model => model.Createdby)
+            </div>
+            <div class="tb-display tb-cell">
+                @Html.DisplayFor(model => model.Createdby)
+                @Html.ValidationMessageFor(model => model.Createdby)
+            </div>
+            <div class="tb-label tb-cell">
+                @Html.LabelFor(model => model.Updatedby)
+            </div>
+            <div class="tb-display tb-cell">
+                @Html.DisplayFor(model => model.Updatedby)
+                @Html.ValidationMessageFor(model => model.Updatedby)
+            </div>
+        </div>
+        <!--tb-row-->
+    </div>
+    <!--tb-table-->
+</div>
+}

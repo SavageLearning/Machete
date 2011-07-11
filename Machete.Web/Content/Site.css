@@ -1,17 +1,47 @@
 ﻿/*----------------------------------------------------------
-The base color for this template is #800000. If you'd like
+The base color for this template is #414D5B. If you'd like
 to use a different color start by replacing all instances of
-#800000 with your new color. Deep red is #800000
+#5c87b2 with your new color. Deep red is #696969
+the blue back ground #5c87b2
+Deep red background #800000
 ----------------------------------------------------------*/
 body
 {
-    background-color: #800000;
+    background-color: #414D5B;
     font-size: 75%;
     font-family: Verdana, Tahoma, Arial, "Helvetica Neue" , Helvetica, Sans-Serif;
     margin: 0;
     padding: 0;
-    color: #696969;
+    color: #607286;
 }
+
+.casaLogo 
+{
+    float: left; 
+    width: 125px; 
+    clear:left;
+    padding: 0;
+}
+
+.dateNeeded 
+{
+    float:right; 
+    border: 1px solid Black;
+}
+
+.neededText 
+{
+    font-size: 1.5em;
+    color: #000;
+    margin: 2px;
+}
+
+.ui-timepicker-div .ui-widget-header{ margin-bottom: 8px; }
+.ui-timepicker-div dl{ text-align: left; }
+.ui-timepicker-div dl dt{ height: 25px; }
+.ui-timepicker-div dl dd{ margin: -25px 0 10px 65px; }
+.ui-timepicker-div td { font-size: 90%; }
+#ui-datepicker-div{ display: none;}
 
 a:link
 {
@@ -83,7 +113,7 @@ first child of the left and right table columns */
 page width. Or, you can specify an exact pixel width. */
 .page
 {
-    width: 90%;
+    width: 97%;
     margin-left: auto;
     margin-right: auto;
 }
@@ -109,7 +139,7 @@ page width. Or, you can specify an exact pixel width. */
 
 #main
 {
-    padding: 30px 30px 15px 30px;
+    padding: 20px 10px 10px 10px;
     background-color: #fff;
     margin-bottom: 30px;
     _height: 1px; /* only IE6 applies CSS properties starting with an underscore */
@@ -129,7 +159,7 @@ page width. Or, you can specify an exact pixel width. */
 ----------------------------------------------------------*/
 ul#menu
 {
-    border-bottom: 1px #800000 solid;
+    border-bottom: 1px #414D5B solid;
     padding: 0 0 2px;
     position: relative;
     margin: 0;
@@ -159,6 +189,11 @@ ul#menu li a
     line-height: 2.8em;
     background-color: #e8eef4;
     color: #034af3;
+}
+
+ul#menu li a.menulinkactive
+{
+    background-color: #F9C877;
 }
 
 ul#menu li a:hover
@@ -250,6 +285,7 @@ table th
 #menucontainer
 {
     margin-top:40px;
+    clear: left;
 }
 
 div#title
@@ -257,6 +293,12 @@ div#title
     display:block;
     float:left;
     text-align:left;
+    padding: 0 0 25px;
+}
+
+div.recordButtons
+{
+    padding: 1em 0em;
 }
 
 #logindisplay
@@ -266,6 +308,7 @@ div#title
     text-align:right;
     margin:10px;
     color:White;
+    padding-top: 12px;
 }
 
 #logindisplay a:link
@@ -320,13 +363,52 @@ div#title
 .display-label,
 .editor-label
 {
-    margin: 1em 0 0 0;
+    /*border: 1px solid red;*/
+     clear: left;
+     float: left;
+     font-weight: bold;
+     padding: 5px 15px;
+     text-align: right;
+     width: auto;
+     margin: 0;
 }
 
 .display-field,
 .editor-field
 {
-    margin:0.5em 0 0 0;
+    padding: 5px;
+    width: auto;
+    margin: 0;
+    float: left;
+    /*border: 1px solid blue;*/
+}
+
+.desc-label
+{
+    vertical-align: top;
+    width: 8em;
+    
+}
+
+.desc-field
+{
+    /*width: 20em;*/
+    height: 2em !important;
+}
+
+.note-label
+{
+    vertical-align: top;   
+}
+
+.note-field
+{
+    min-height: 1em !important;
+}
+
+.money-field
+{
+    width: 5em !important;
 }
 
 .text-box
@@ -342,4 +424,123 @@ div#title
 .tri-state
 {
     width: 6em;
+}
+
+.tb-table
+{
+    display: table;
+}
+
+.tb-row
+{
+    display: table-row;
+}
+
+.tb-cell
+{
+    display: table-cell;
+}
+
+.tb-col-hidden
+{
+    display: none;
+}
+
+.tb-label
+{
+    /*border: 1px solid red;*/
+    margin: 1em 0 0 0;
+    font-weight: bold;
+    padding: 5px;
+    text-align: right;
+    
+}
+
+.tb-header
+{
+    border: 1px solid black;
+    margin: 1em 0 0 0;
+    font-weight: bold;
+    padding: 5px;
+    text-align: left;
+}
+
+.tb-header-fixed
+{
+    border: 1px solid black;
+    margin: 1em 0 0 0;
+    font-weight: bold;
+    padding: 5px;
+    text-align: left;
+    width: 80px;
+    font-size: 80%;
+}
+
+.tb-field
+{
+    /*border: 1px solid blue;*/
+    margin:0.5em 0 0 0;
+    padding: 5px;
+    /*font-weight: bold;*/
+    /*width: 20em;*/
+}
+.tb-field-fixed
+{
+    /*border: 1px solid blue;*/
+    margin:0.5em 0 0 0;
+    padding: 5px;
+    /*font-weight: bold;*/
+    width: 80px;
+    text-align: center;
+}
+
+.tb-underline
+{
+    font-weight: bold;
+    text-decoration: underline;       
+}
+
+.tb-bordered_field
+{
+    border: 1px solid black;
+    margin: 1em 0 0 0;    
+    padding: 5px;
+    text-align: left;
+}
+
+.tb-display
+{
+    margin:0.5em 0 0 0;
+}
+
+.tri-col
+{
+    width: 300px;   
+}
+.tri-col input[type="text"]
+{
+    width: 300px;
+}
+
+.print_off
+{
+}
+
+.completeOrderContainer
+{
+    display: block;
+}
+
+.completeOrderButton
+{
+    width: 100%;
+    margin: 10px 0; 
+    padding: 10px !important;
+    border: 1px solid red !important;
+    color: Red !important; 
+}
+
+.deleteButton
+{
+    float: right;
 }

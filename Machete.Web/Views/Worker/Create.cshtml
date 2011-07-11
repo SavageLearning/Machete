@@ -1,27 +1,36 @@
-﻿@model Machete.Web.ViewModel.WorkerViewModel
-@{
-    ViewBag.Title = Machete.Web.Resources.Workers.createtitle;
-}
-<h2>Create</h2>
-<p>
-    @Html.ActionLink(Machete.Web.Resources.Workers.indexreturnlink, "Index")
-</p>
-<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
-@using (Html.BeginForm())
+﻿@model Machete.Domain.Worker
+@using Machete.Web.Resources
+@using (Html.BeginForm("Create", "Worker", FormMethod.Post, new { @id = "workerCreateForm-" + Model.ID }))
 {
+    <input type="submit" id="createWorkerButton-@(Model.ID)" value="@Workers.createsubmit" tabindex="9"/>
     @Html.ValidationSummary(true)
-    <fieldset>
-        <legend>@Machete.Web.Resources.Persons.boxlegend</legend>
-        @Html.EditorFor(model => model.person)
-    </fieldset>
-    <fieldset>
-        <legend>@Machete.Web.Resources.Workers.boxlegend</legend>
-        @Html.EditorFor(model => model.worker)
-        <p>
-            <input type="submit" value="@Machete.Web.Resources.Workers.createsubmit" />
-        </p>
-    </fieldset>
+    @Html.EditorForModel()
 }
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        $('#createWorkerButton-@(Model.ID)').button();
+        $.validator.unobtrusive.parseDynamicContent('#workerCreateForm-@(Model.ID)');
+        M_workerCreateForm_@(Model.ID) = $('#workerCreateForm-@(Model.ID)');
+        //$('#firstname1').focus();
+        ////////////////////////////////////////////////////////////////
+        //
+        // Worker Create submit event
+        //
+        M_workerCreateForm_@(Model.ID).submit(function (e) {
+            e.preventDefault();           
+            if (M_workerCreateForm_@(Model.ID).valid()) {
 
-
+                $.post($(this).attr("action"), $(this).serialize(),
+                    function (data) {                                                
+                    }
+                );
+                var oTabs = $(e.target).closest('.ui-tabs');                
+                $(oTabs).tabs("select", 0);
+                $(oTabs).tabs("url", 1, "/Worker/Edit/@(Model.ID)");
+                var createtab = $(oTabs).children('.ui-tabs-nav').find('a').get('1');
+                $(createtab).text("create changed the name");
+            }
+            //TODO: javascript...need to deal with ajax error
+        });
+    });
+</script>

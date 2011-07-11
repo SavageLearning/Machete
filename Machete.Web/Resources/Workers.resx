@@ -153,23 +153,20 @@
   <data name="editworkerlink" xml:space="preserve">
     <value>Edit Worker</value>
   </data>
-  <data name="filterinactive" xml:space="preserve">
-    <value>Show inactive workers?</value>
-  </data>
-  <data name="filterlegend" xml:space="preserve">
-    <value>filter criteria</value>
-  </data>
-  <data name="filtersubmit" xml:space="preserve">
-    <value>filter</value>
-  </data>
   <data name="indexreturnlink" xml:space="preserve">
     <value>Return to List of Workers</value>
   </data>
   <data name="indextitle" xml:space="preserve">
     <value>worker::index</value>
   </data>
+  <data name="listlink" xml:space="preserve">
+    <value>List workers</value>
+  </data>
   <data name="noimagelabel" xml:space="preserve">
     <value>No image associated with worker</value>
+  </data>
+  <data name="printlink" xml:space="preserve">
+    <value>Print worker</value>
   </data>
   <data name="viewlink" xml:space="preserve">
     <value>View</value>

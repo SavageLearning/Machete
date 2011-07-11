@@ -1,0 +1,26 @@
+﻿@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using Machete.Domain.Resources
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+}
+<table id="employerTable" class="display">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>LABEL</th>
+            <th>@Employer.active</th>
+            <th>@Employer.name</th>
+            <th>@Employer.address1</th>
+            <th>@Employer.city</th>
+            <th>@Employer.phone</th>
+            <th>@Record.dateupdated</th>
+            <th>@Record.updatedby</th>
+        </tr>
+    </thead>
+</table>
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+
+    });
+</script>

@@ -1,0 +1,31 @@
+﻿@model Machete.Domain.Employer
+@using Machete.Web.Resources
+@{
+    ViewBag.Title = "Delete";
+}
+<h2 class="hide_on_js">@Employers.deletetitle</h2>
+<p class="hide_on_js">
+    @Html.ActionLink(Employers.indexreturnlink, "Index")
+</p>
+@Html.EditorForModel()
+@using (Html.BeginForm("Delete", "Employer", FormMethod.Post, new { @id = "edittab-form" })) 
+{
+    <p>
+        <input id="confirm_button" type="button" value="@Employers.deletesubmit" />
+    </p>
+}
+
+<script type="text/javascript">
+    $().ready(function () {
+        $('.editor-field').children().attr('disabled', 'disabled');
+        $.alerts.okButton = "@Persons.deletesubmit";
+        $("#confirm_button").click(function () {
+            jConfirm('@Employers.deleteconfirmation',
+                     '@Employers.deletetitle',
+                     function (r) {
+                         if (r == true) { $('form').submit(); }
+                     }
+                    );
+        });
+    });
+</script>

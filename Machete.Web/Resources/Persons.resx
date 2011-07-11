@@ -174,4 +174,7 @@
   <data name="filtersubmit" xml:space="preserve">
     <value>filter</value>
   </data>
+  <data name="listlink" xml:space="preserve">
+    <value>List persons</value>
+  </data>
 </root>

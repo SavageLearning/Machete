@@ -11,6 +11,7 @@ using Machete.Web.Controllers;
 using System.Web.Mvc;
 using Machete.Domain;
 using Machete.Test;
+using Machete.Web.ViewModel;
 
 namespace Machete.Test.Controllers
 {
@@ -27,7 +28,7 @@ namespace Machete.Test.Controllers
         //   Testing /Index functionality
         //
         [TestMethod]
-        public void PersonController_index_get_returns_enumerable_list()
+        public void PersonController_index_get_returns_ActionResult()
         {
             //Arrange
             _serv = new Mock<IPersonService>();
@@ -35,8 +36,9 @@ namespace Machete.Test.Controllers
             //Act
             var result = (ViewResult)_ctrlr.Index();
             //Assert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(IEnumerable<Person>));
+            Assert.IsInstanceOfType(result, typeof(ActionResult));
         }
+        //TODO: test filter unit stuff
         //
         //   Testing /Create functionality
         //
@@ -48,7 +50,7 @@ namespace Machete.Test.Controllers
             _serv = new Mock<IPersonService>();
             var _ctrlr = new PersonController(_serv.Object);
             //Act
-            var result = (ViewResult)_ctrlr.Create();
+            var result = (PartialViewResult)_ctrlr.Create();
             //Assert
             Assert.IsInstanceOfType(result.ViewData.Model, typeof(Person));
         }
@@ -77,7 +79,7 @@ namespace Machete.Test.Controllers
             var _ctrlr = new PersonController(_serv.Object);
             _ctrlr.ModelState.AddModelError("TestError", "foo");
             //Act
-            var result = (ViewResult)_ctrlr.Create(person, "UnitTest");
+            var result = (PartialViewResult)_ctrlr.Create(person, "UnitTest");
             //Assert
             var error = result.ViewData.ModelState["TestError"].Errors[0];
             Assert.AreEqual("foo", error.ErrorMessage);
@@ -97,7 +99,7 @@ namespace Machete.Test.Controllers
             _serv.Setup(p => p.GetPerson(testid)).Returns(fakeperson);
             var _ctrlr = new PersonController(_serv.Object);
             //Act
-            var result = (ViewResult)_ctrlr.Edit(testid);
+            var result = (PartialViewResult)_ctrlr.Edit(testid);
             //Assert
             Assert.IsInstanceOfType(result.ViewData.Model, typeof(Person));
         }
@@ -110,11 +112,11 @@ namespace Machete.Test.Controllers
             int testid = 4242;
             FormCollection fakeform = new FormCollection();
             fakeform.Add("ID", testid.ToString());
-            fakeform.Add("firstname1", "blah");
-            fakeform.Add("lastname1", "UnitTest");
-            fakeform.Add("gender", "M");
+            fakeform.Add("firstname1", "blah");     //Every required field must be populated,
+            fakeform.Add("lastname1", "UnitTest");  //or result will be null.
+            fakeform.Add("gender", "47");
             Person fakeperson = new Person();
-            var savedperson = new Person();
+            Person savedperson = new Person();
             string user = "";
             _serv.Setup(p => p.GetPerson(testid)).Returns(fakeperson);
             _serv.Setup(x => x.SavePerson(It.IsAny<Person>(),
@@ -134,7 +136,7 @@ namespace Machete.Test.Controllers
             Assert.AreEqual(fakeperson, savedperson);
             Assert.AreEqual(savedperson.firstname1, "blah");
             Assert.AreEqual(savedperson.lastname1, "UnitTest");
-            Assert.AreEqual(savedperson.gender, "M");
+            Assert.AreEqual(savedperson.gender, 47);
         }
 
         [TestMethod]
@@ -161,7 +163,7 @@ namespace Machete.Test.Controllers
             //
             //Act
             _ctrlr.ModelState.AddModelError("TestError", "foo");
-            var result = (ViewResult)_ctrlr.Edit(testid, fakeform, "UnitTest");
+            var result = (PartialViewResult)_ctrlr.Edit(testid, fakeform, "UnitTest");
             //Assert
             var error = result.ViewData.ModelState["TestError"].Errors[0];
             Assert.AreEqual("foo", error.ErrorMessage);

@@ -1,0 +1,33 @@
+﻿@model Machete.Web.Models.Filter
+@using Machete.Web.Resources
+<div id="filterAccordion">
+    <h3>
+        <a href="#">@Filters.legend</a></h3>
+    <div>
+        @if (Model.showInactive)
+        {
+        <div class="tb-table tb-cell">
+            <div id="namerow1" class="tb-row">
+                    
+                <div class="tb-label">
+                    @Html.LabelFor(model => model.inactive)
+                </div>
+                <div class="tb-field tb-cell">
+                    @Html.CheckBoxFor(model => model.inactive)
+                </div>
+            </div>
+            <input type="button" value="@Filters.submit" class="formButton tb-label" id="filterButton" />
+        </div>
+        }
+    </div>
+</div>
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        $("#filterAccordion").accordion({
+            collapsible: true,
+            active: false,
+            autoHeight: false
+        });
+        $('#filterButton').button();
+    });
+</script>

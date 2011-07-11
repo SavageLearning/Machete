@@ -1,0 +1,41 @@
+﻿@model Machete.Domain.WorkOrder
+@using Machete.Web.Resources
+@{
+    ViewBag.Title = WorkOrders.deletetitle;
+}
+<div id="employerAccordion">
+    <h3>
+        <a href="#">@Employers.boxlegend: @Model.Employer.name</a></h3>
+    <div>
+        @Html.EditorFor(model => model.Employer)
+    </div>
+</div> 
+<h2 class="hide_on_js">@WorkOrders.deletetitle</h2>
+<p class="hide_on_js">
+    @Html.ActionLink(WorkOrders.indexreturnlink, "Index", new { EmployerID = Model.EmployerID })
+</p>
+@using (Html.BeginForm("Delete", "WorkOrder", FormMethod.Post, new { @class = "deletetab-form" })) 
+{
+    @Html.EditorForModel()
+    <p>
+        <input id="confirm_button" type="button" value="@WorkOrders.deletesubmit" /> 
+    </p>
+}
+<script type="text/javascript">
+    $().ready(function () {
+        $('.editor-field').children().attr('disabled', 'disabled');
+        $.alerts.okButton = "@WorkOrders.deletesubmit";
+        $("#confirm_button").click(function () {
+            jConfirm('@WorkOrders.deleteconfirmation',
+                     '@WorkOrders.deletetitle',
+                     function (r) {
+                         if (r == true) { $('form').submit(); }
+                     }
+                    );
+                 });
+        $("#employerAccordion").accordion({
+            active: false,
+            collapsible: true
+        });
+    });
+</script>

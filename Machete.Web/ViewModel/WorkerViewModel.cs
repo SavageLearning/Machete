@@ -13,7 +13,7 @@ namespace Machete.Web.ViewModel
     public class WorkerViewModel
     {
         public Domain.Worker worker { get; set; }
-        public Person person { get; set; }
+        public Domain.Person person { get; set; }
         public Image image { get; set; }
     }
 }

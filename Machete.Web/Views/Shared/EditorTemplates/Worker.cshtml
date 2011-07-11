@@ -1,445 +1,365 @@
 ﻿@model Machete.Domain.Worker
-<script src="@Url.Content("~/Scripts/jquery-ui.js")" type="text/javascript"></script> 
-<script src="@Url.Content("~/Scripts/jquery.ui.datepicker.js")" type="text/javascript"></script> 
-<link href="@Url.Content("~/Content/jquery-ui-1.8.6.custom.css")" rel="stylesheet" type="text/css" />
-<table border="10" cellpadding="0" cellspacing="0">
-    <tr>
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.RaceID)
-            </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.DropDownListFor(model => model.RaceID, new SelectList(ViewBag.races, "RaceID", "racelabel", Model.RaceID), "(Choose)") 
-                @Html.ValidationMessageFor(model => model.RaceID)
-            </div>
-        </td>
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.raceother)
-            </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.raceother)
-                @Html.ValidationMessageFor(model => model.raceother)
-            </div>
-        </td>
-                <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.active)
-            </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.active)
-                @Html.ValidationMessageFor(model => model.active)
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.height)
-            </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.height)
-                @Html.ValidationMessageFor(model => model.height)
-            </div>
-        </td>
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.weight)
-            </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.weight)
-                @Html.ValidationMessageFor(model => model.weight)
-            </div>
-        </td>
-    </tr>
-</table>
-<table border="10" cellpadding="0" cellspacing="0">
-    <tr>
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.englishlevelID)
-            </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.DropDownListFor(model => model.englishlevelID, new SelectList(ViewBag.languages, "ID", "level", Model.englishlevelID), "(Choose)")
-                @Html.ValidationMessageFor(model => model.englishlevelID)
-            </div>
-        </td>
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.recentarrival)
-            </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.recentarrival)
-                @Html.ValidationMessageFor(model => model.recentarrival)
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.dateinUSA)
-            </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.TextBox("dateinUSA", Html.Encode(String.Format("{0:mm/dd/yyyy}", Model.dateinUSA.ToString())), new { @class = "ui-datepicker" }) 
-                @Html.ValidationMessageFor(model => model.dateinUSA)
-            </div>
-        </td>
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.dateinseattle)
-            </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.TextBox("dateinseattle", Html.Encode(String.Format("{0:mm/dd/yyyy}", Model.dateinseattle.ToString())), new { @class = "ui-datepicker" })
-                @Html.ValidationMessageFor(model => model.dateinseattle)
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.disabled)
-            </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.disabled)
-                @Html.ValidationMessageFor(model => model.disabled)
-            </div>
-        </td>
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+}
+@Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID" })
+<div class="tb-table">
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.dateOfMembership)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.TextBox("dateOfMembership",
+                          Html.Encode(Model.dateOfMembership == DateTime.MinValue ? "" : Model.dateOfMembership.ToShortDateString()),
+                                     new { @class = "ui-datepicker", tabindex = "2", id = "dateOfMembership-@(Model.ID)" })
+            @Html.ValidationMessageFor(model => model.dateOfMembership)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.RaceID)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.DropDownListFor(model => model.RaceID, new SelectList(ViewBag.races, "Value", "Text", Model.RaceID), "Choose", new { tabindex = "1" })
+            @Html.ValidationMessageFor(model => model.RaceID)
+        </div>
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.active)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.DropDownListFor(model => model.active, new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.active), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })
+            @Html.ValidationMessageFor(model => model.active)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.raceother)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.EditorFor(model => model.raceother, new { tabindex = "1" })
+            @Html.ValidationMessageFor(model => model.raceother)
+        </div>
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.dateOfBirth)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.TextBox("dateOfBirth",
+                            Html.Encode(Model.dateOfBirth == DateTime.MinValue ? "" : Model.dateOfBirth.ToShortDateString()),
+                            new { @class = "ui-datepicker", tabindex = "2", id = "dateOfBirth-@(Model.ID)" })
+            @Html.ValidationMessageFor(model => model.dateOfBirth)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.height)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.EditorFor(model => model.height, new { tabindex = "1" })
+            @Html.ValidationMessageFor(model => model.height)
+        </div>
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.weight)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.EditorFor(model => model.weight, new { tabindex = "2" })
+            @Html.ValidationMessageFor(model => model.weight)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.englishlevelID)
+        </div>
+        <div class="tb-field tb-cell">            
+            @Html.DropDownListFor(model => model.englishlevelID, new SelectList(Lookups.skillLevels(), "Value", "Text", Model.englishlevelID), @Machete.Web.Resources.Shared.choose, new { tabindex = "1" })
+            @Html.ValidationMessageFor(model => model.englishlevelID)
+        </div>
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.recentarrival)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.DropDownListFor(model => model.recentarrival, new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.recentarrival), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })
+            @Html.ValidationMessageFor(model => model.recentarrival)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.dateinUSA)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.TextBox("dateinUSA", Html.Encode(System.String.Format("{0:d}", Model.dateinUSA)), new { @class = "ui-datepicker", tabindex = "1" })
+            @Html.ValidationMessageFor(model => model.dateinUSA)
+        </div>
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.dateinseattle)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.TextBox("dateinseattle", Html.Encode(System.String.Format("{0:d}", Model.dateinseattle)), new { @class = "ui-datepicker", tabindex = "2" })
+            @Html.ValidationMessageFor(model => model.dateinseattle)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.disabled)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.DropDownListFor(model => model.disabled, new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.disabled), @Machete.Web.Resources.Shared.choose, new { tabindex = "1" })           
+            @Html.ValidationMessageFor(model => model.disabled)
+        </div>
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.disabilitydesc)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.EditorFor(model => model.disabilitydesc, new { tabindex = "2" })
+            @Html.ValidationMessageFor(model => model.disabilitydesc)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.maritalstatus)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.DropDownListFor(model => model.maritalstatus, new SelectList(ViewBag.maritalstatus, "Value", "Text", Model.maritalstatus), new { tabindex = "1" })
+            @Html.ValidationMessageFor(model => model.maritalstatus)
+        </div>
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.livewithchildren)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.DropDownListFor(model => model.livewithchildren, new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.livewithchildren), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })                       
+            @Html.ValidationMessageFor(model => model.livewithchildren)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.numofchildren)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.EditorFor(model => model.numofchildren, new { tabindex = "1" })
+            @Html.ValidationMessageFor(model => model.numofchildren)
+        </div>
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.incomeID)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.DropDownListFor(model => model.incomeID, new SelectList(ViewBag.incomes, "Value", "Text", Model.incomeID), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })
+            @Html.ValidationMessageFor(model => model.incomeID)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.livealone)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.DropDownListFor(model => model.livealone, new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.livealone), @Machete.Web.Resources.Shared.choose, new { tabindex = "1" })
+            @Html.ValidationMessageFor(model => model.livealone)
+        </div>
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.dwccardnum)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.EditorFor(model => model.dwccardnum, new { tabindex = "2" })
+            @Html.ValidationMessageFor(model => model.dwccardnum)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.neighborhoodID)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.DropDownListFor(model => model.neighborhoodID, new SelectList(ViewBag.neighborhoods, "Value", "Text", Model.neighborhoodID), @Machete.Web.Resources.Shared.choose, new { tabindex = "1" })
+            @Html.ValidationMessageFor(model => model.neighborhoodID)
+        </div>
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.immigrantrefugee)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.DropDownListFor(model => model.immigrantrefugee, new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.immigrantrefugee), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })
+            @Html.ValidationMessageFor(model => model.immigrantrefugee)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.countryoforiginID)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.DropDownListFor(model => model.countryoforiginID, new SelectList(ViewBag.countriesoforigin, "Value", "Text", Model.countryoforiginID), @Machete.Web.Resources.Shared.choose, new { tabindex = "1" })
+            @Html.ValidationMessageFor(model => model.countryoforiginID)
+        </div>
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.memberexpirationdate)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.TextBox("memberexpirationdate",
+                          Html.Encode(Model.memberexpirationdate == DateTime.MinValue ? "" : Model.memberexpirationdate.ToShortDateString()),
+                                        new { @class = "ui-datepicker", tabindex = "2" })
+            @Html.ValidationMessageFor(model => model.memberexpirationdate)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.driverslicense)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.DropDownListFor(model => model.driverslicense, new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.driverslicense), @Machete.Web.Resources.Shared.choose, new { tabindex = "1" })
+            @Html.ValidationMessageFor(model => model.driverslicense)
+        </div>
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.licenseexpirationdate)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.TextBox("licenseexpirationdate", Html.Encode(System.String.Format("{0:d}", Model.licenseexpirationdate)), new { @class = "ui-datepicker", tabindex = "2" })
+            @Html.ValidationMessageFor(model => model.licenseexpirationdate)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.carinsurance)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.EditorFor(model => model.carinsurance, new { tabindex = "1" })
+            @Html.ValidationMessageFor(model => model.carinsurance)
+        </div>
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.insuranceexpiration)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.TextBox("insuranceexpiration", Html.Encode(System.String.Format("{0:d}", Model.insuranceexpiration)), new { @class = "ui-datepicker", tabindex = "2" })
+            @Html.ValidationMessageFor(model => model.insuranceexpiration)
+        </div>
+    </div>
+</div>
+<div class="tb-table">
+    <div class="tb-row">
+        <div class="tb-label tri-col tb-cell" style="text-align: left">
+            @Html.LabelFor(model => model.skill1)
+        </div>
+        <div class="tb-label tri-col tb-cell" style="text-align: left">
+            @Html.LabelFor(model => model.skill2)
+        </div>
+        <div class="tb-label tri-col tb-cell" style="text-align: left">
+            @Html.LabelFor(model => model.skill3)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-field tri-col tb-cell">
+            @Html.DropDownListFor(model => model.skill1, new SelectList(Lookups.skill(CI.TwoLetterISOLanguageName), "Value", "Text", Model.skill1), @Machete.Web.Resources.Shared.choose)
+            @Html.ValidationMessageFor(model => model.skill1)
+        </div>
+        <div class="tb-field tri-col tb-cell">
+            @Html.DropDownListFor(model => model.skill2, new SelectList(Lookups.skill(CI.TwoLetterISOLanguageName), "Value", "Text", Model.skill2), @Machete.Web.Resources.Shared.choose)
+            @Html.ValidationMessageFor(model => model.skill2)
+        </div>
+        <div class="tb-field tri-col tb-cell">
+            @Html.DropDownListFor(model => model.skill3, new SelectList(Lookups.skill(CI.TwoLetterISOLanguageName), "Value", "Text", Model.skill3), @Machete.Web.Resources.Shared.choose)
+            @Html.ValidationMessageFor(model => model.skill3)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label tri-col tb-cell" style="text-align: left">
+            @Html.LabelFor(model => model.emcontUSAname)
+        </div>
+        <div class="tb-label tri-col tb-cell" style="text-align: left">
+            @Html.LabelFor(model => model.emcontUSArelation)
+        </div>
+        <div class="tb-label tri-col tb-cell" style="text-align: left">
+            @Html.LabelFor(model => model.emcontUSAphone)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-field tri-col tb-cell">
+            @Html.EditorFor(model => model.emcontUSAname)
+            @Html.ValidationMessageFor(model => model.emcontUSAname)
+        </div>
+        <div class="tb-field tri-col tb-cell">
+            @Html.EditorFor(model => model.emcontUSArelation)
+            @Html.ValidationMessageFor(model => model.emcontUSArelation)
+        </div>
+        <div class="tb-field tri-col tb-cell">
+            @Html.EditorFor(model => model.emcontUSAphone)
+            @Html.ValidationMessageFor(model => model.emcontUSAphone)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label tri-col tb-cell" style="text-align: left">
+            @Html.LabelFor(model => model.emcontoriginname)
+        </div>
+        <div class="tb-label tri-col tb-cell" style="text-align: left">
+            @Html.LabelFor(model => model.emcontoriginrelation)
+        </div>
+        <div class="tb-label tri-col tb-cell" style="text-align: left">
+            @Html.LabelFor(model => model.emcontoriginphone)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-field tri-col tb-cell">
+            @Html.EditorFor(model => model.emcontoriginname)
+            @Html.ValidationMessageFor(model => model.emcontoriginname)
+        </div>
+        <div class="tb-field tri-col tb-cell">
+            @Html.EditorFor(model => model.emcontoriginrelation)
+            @Html.ValidationMessageFor(model => model.emcontoriginrelation)
+        </div>
+        <div class="tb-field tri-col tb-cell">
+            @Html.EditorFor(model => model.emcontoriginphone)
+            @Html.ValidationMessageFor(model => model.emcontoriginphone)
+        </div>
+    </div>
+</div>
 
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.disabilitydesc)
-            </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.disabilitydesc)
-                @Html.ValidationMessageFor(model => model.disabilitydesc)
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.maritalstatus)
-            </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.DropDownListFor(model => model.maritalstatus, new SelectList(ViewBag.maritalstatus, "Value", "Text", Model.maritalstatus))
-                @Html.ValidationMessageFor(model => model.maritalstatus)
-            </div>
-        </td>
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.livewithchildren)
-            </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.livewithchildren)
-                @Html.ValidationMessageFor(model => model.livewithchildren)
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.numofchildren)
-            </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.numofchildren)
-                @Html.ValidationMessageFor(model => model.numofchildren)
-            </div>
-        </td>
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.incomeID)
-            </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.DropDownListFor(model => model.incomeID, new SelectList(ViewBag.incomes, "ID", "incomelabel", Model.incomeID), "(Choose)")
-                @Html.ValidationMessageFor(model => model.incomeID)
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.livealone)
-            </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.livealone)
-                @Html.ValidationMessageFor(model => model.livealone)
-            </div>
-        </td>
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.dwccardnum)
-            </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.dwccardnum)
-                @Html.ValidationMessageFor(model => model.dwccardnum)
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.neighborhoodID)
-            </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.DropDownListFor(model => model.neighborhoodID, new SelectList(ViewBag.neighborhoods, "ID", "neighborhood", Model.neighborhoodID), "(Choose)")
-                @Html.ValidationMessageFor(model => model.neighborhoodID)
-            </div>
-        </td>
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.immigrantrefugee)
-            </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.immigrantrefugee)
-                @Html.ValidationMessageFor(model => model.immigrantrefugee)
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.countryoforigin)
-            </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.countryoforigin)
-                @Html.ValidationMessageFor(model => model.countryoforigin)
-            </div>
-        </td>
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.memberexpirationdate)
-            </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.TextBox("memberexpirationdate", Html.Encode(String.Format("{0:mm/dd/yyyy}", Model.memberexpirationdate.ToString())), new { @class = "ui-datepicker" })
-                @Html.ValidationMessageFor(model => model.memberexpirationdate)
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.driverslicense)
-            </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.driverslicense)
-                @Html.ValidationMessageFor(model => model.driverslicense)
-            </div>
-        </td>
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.licenseexpirationdate)
-            </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.TextBox("licenseexpirationdate", Html.Encode(String.Format("{0:mm/dd/yyyy}", Model.licenseexpirationdate.ToString())), new { @class = "ui-datepicker" })
-                @Html.ValidationMessageFor(model => model.licenseexpirationdate)
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.carinsurance)
-            </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.carinsurance)
-                @Html.ValidationMessageFor(model => model.carinsurance)
-            </div>
-        </td>
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.insuranceexpiration)
-            </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.TextBox("insuranceexpiration", Html.Encode(String.Format("{0:mm/dd/yyyy}", Model.insuranceexpiration.ToString())), new { @class = "ui-datepicker" })
-                @Html.ValidationMessageFor(model => model.insuranceexpiration)
-            </div>
-        </td>
-    </tr>
-</table>
-<table border="0" cellpadding="0" cellspacing="0">
-    <tr>
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.emcontUSAname)
-            </div>
-        </td>
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.emcontUSArelation)
-            </div>
-        </td>
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.emcontUSAphone)
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.emcontUSAname)
-                @Html.ValidationMessageFor(model => model.emcontUSAname)
-            </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.emcontUSArelation)
-                @Html.ValidationMessageFor(model => model.emcontUSArelation)
-            </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.emcontUSAphone)
-                @Html.ValidationMessageFor(model => model.emcontUSAphone)
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.emcontoriginname)
-            </div>
-        </td>
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.emcontoriginrelation)
-            </div>
-        </td>
-        <td>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.emcontoriginphone)
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.emcontoriginname)
-                @Html.ValidationMessageFor(model => model.emcontoriginname)
-            </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.emcontoriginrelation)
-                @Html.ValidationMessageFor(model => model.emcontoriginrelation)
-            </div>
-        </td>
-        <td>
-            <div class="editor-field">
-                @Html.EditorFor(model => model.emcontoriginphone)
-                @Html.ValidationMessageFor(model => model.emcontoriginphone)
-            </div>
-        </td>
-    </tr>
-</table>
- <script type="text/javascript">
-     $().ready(function () {
-         DatePicker();
-         toggleRace();
-         toggleDisabled();
-         toggleDriverslicense();
-         toggleInsuranceExpiration();
-         $("#worker_RaceID").bind('change', toggleRace);
-         $("#worker_disabled").bind('change', toggleDisabled);
-         $("#worker_driverslicense").bind('change', toggleDriverslicense);
-         $("#worker_carinsurance").bind('change', toggleInsuranceExpiration);
-     });
-     function DatePicker() {
-         $('.ui-datepicker').datepicker({
-             dateFormat: 'mm/dd/yy',
-             buttonImage: '@Url.Content("~/Content/calendar.gif")',
-             buttonImageOnly: true,
-             showOn: "button"
-         });
-     }
-     function toggleRace() {
-         if ($("#worker_RaceID option:selected").text() == "Other") {
-             $("#worker_raceother").show();
-             $("label[for=worker_raceother]").show();
-         } else {
-             $("#worker_raceother").hide();
-             $("label[for=worker_raceother]").hide();
-         }
-     }
-     function toggleDisabled() {
-         if ($("#worker_disabled").attr("checked")) {
-             $("#worker_disabilitydesc").show();
-             $("label[for=worker_disabilitydesc]").show();
-         } else {
-             $("#worker_disabilitydesc").hide();
-             $("label[for=worker_disabilitydesc]").hide();
-         }
-         }
-     function toggleDriverslicense() {
-         if ($("#worker_driverslicense").attr("checked")) {
-             $("#worker_licenseexpirationdate").show();
-             $("#worker_licenseexpirationdate ~ *").show();
-             $("label[for=worker_licenseexpirationdate]").show();
-         } else {
-             $("#worker_licenseexpirationdate").hide();
-             $("#worker_licenseexpirationdate ~ *").hide();
-             $("label[for=worker_licenseexpirationdate]").hide();         
-         }
-     }
-     function toggleInsuranceExpiration() {
-         if ($("#worker_carinsurance option:selected").text() == "True") {
-             $("#worker_insuranceexpiration").show();
-             $("#worker_insuranceexpiration ~*").show();
-             $("label[for=worker_insuranceexpiration]").show();
-         } else {
-             $("#worker_insuranceexpiration").hide();
-             $("#worker_insuranceexpiration ~*").hide();
-             $("label[for=worker_insuranceexpiration]").hide();
-         }
-     }
+@Html.Partial("timestamps")
+
+<script type="text/javascript">
+    $().ready(function () {
+        DatePicker();
+        toggleDropDown($("#worker_RaceID"), "Other", $("#worker_raceother"), $("label[for=worker_raceother]"));
+        toggleDisabled();
+        toggleDriverslicense();
+        toggleInsuranceExpiration();
+        $("#worker_RaceID").bind('change', function () { toggleDropDown($("#worker_RaceID"), "Other", $("#worker_raceother"), $("label[for=worker_raceother]")) });
+        $("#worker_disabled").bind('change', toggleDisabled);
+        $("#worker_driverslicense").bind('change', toggleDriverslicense);
+        $("#worker_carinsurance").bind('change', toggleInsuranceExpiration);
+    });
+    function DatePicker() {
+        $('.ui-datepicker').datepicker({
+            dateFormat: 'mm/dd/yy',
+            buttonImage: '@Url.Content("~/Content/calendar.gif")',
+            buttonImageOnly: true,
+            showOn: "button"
+        });
+    }
+
+    function toggleDisabled() {
+        if ($("#worker_disabled").attr("checked")) {
+            $("#worker_disabilitydesc").show();
+            $("label[for=worker_disabilitydesc]").show();
+        } else {
+            $("#worker_disabilitydesc").hide();
+            $("label[for=worker_disabilitydesc]").hide();
+        }
+    }
+    function toggleDriverslicense() {
+        if ($("#worker_driverslicense").attr("checked")) {
+            $("#worker_licenseexpirationdate").show();
+            $("#worker_licenseexpirationdate ~ *").show();
+            $("label[for=worker_licenseexpirationdate]").show();
+        } else {
+            $("#worker_licenseexpirationdate").hide();
+            $("#worker_licenseexpirationdate ~ *").hide();
+            $("label[for=worker_licenseexpirationdate]").hide();
+        }
+    }
+    function toggleInsuranceExpiration() {
+        if ($("#worker_carinsurance option:selected").text() == "True") {
+            $("#worker_insuranceexpiration").show();
+            $("#worker_insuranceexpiration ~*").show();
+            $("label[for=worker_insuranceexpiration]").show();
+        } else {
+            $("#worker_insuranceexpiration").hide();
+            $("#worker_insuranceexpiration ~*").hide();
+            $("label[for=worker_insuranceexpiration]").hide();
+        }
+    }
 </script>

@@ -228,4 +228,10 @@
   <data name="Welcome" xml:space="preserve">
     <value>Welcome</value>
   </data>
+  <data name="firstname" xml:space="preserve">
+    <value>First name</value>
+  </data>
+  <data name="lastname" xml:space="preserve">
+    <value>Last name</value>
+  </data>
 </root>

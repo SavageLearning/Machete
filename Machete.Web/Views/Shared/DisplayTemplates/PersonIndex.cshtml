@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Machete.Domain.Person>
+@using Machete.Web.Helpers
+@using Machete.Domain.Resources
+<table id="myDataTable" class="display">
+    <thead>
+        <tr>
+            <th>@Person.active</th>
+            <th>@Person.firstname1</th>
+            <th>@Person.firstname2</th>
+            <th>@Person.lastname1</th>
+            <th>@Person.lastname2</th>
+            <th>@Person.phone</th>
+            <th>@Record.dateupdated</th>
+            <th>@Record.updatedby</th>
+        </tr>
+    </thead>
+    @foreach (var item in Model)
+    {
+        <tr tablabel="@item.firstname1 @item.lastname1" edithref="/Person/Edit/@item.ID">
+            <td>@item.active
+            </td>
+            <td>@item.firstname1
+            </td>
+            <td>@item.firstname2
+            </td>
+            <td>@item.lastname1
+            </td>
+            <td>@item.lastname2
+            </td>
+            <td>@item.phone
+            </td>
+            <td>@item.dateupdated
+            </td>
+            <td>@item.Updatedby
+            </td>
+        </tr>
+    }
+</table>

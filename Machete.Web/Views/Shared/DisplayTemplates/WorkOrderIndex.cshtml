@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Machete.Domain.WorkOrder>
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using Machete.Domain.Resources
+<table id="workOrderTable" class="display">
+    <thead>
+        <tr>
+            <th >
+            </th>
+            <th>
+                @WorkOrder.workorderID
+            </th>
+            <th>
+                @WorkOrder.contactName
+            </th>
+            <th>
+                @WorkOrder.workSiteAddress1
+            </th>
+            <th>
+                @Record.dateupdated
+            </th>
+            <th>
+                @Record.updatedby
+            </th>
+        </tr>
+    </thead>
+    @foreach (var item in Model)
+    {
+        <tr tablabel="@item.Employer.name: @WorkOrders.boxlegend# @item.ID" edithref="/WorkOrder/Edittab/@item.ID">
+            <td class="hide_on_js print_off">
+                @if (Html.IsInRole(Html.Role_AMPU()))
+                {
+                    @Html.ActionLink(WorkOrders.viewlink, "View", "WorkOrder", new { id = item.ID }, null)
+                }
+                @if (Html.IsInRole(Html.Role_AMP()))
+                {
+                    @Html.Encode("  ")
+                    @Html.ActionLink(WorkOrders.editlink, "Edit", "WorkOrder", new { id = item.ID }, null)
+                }
+                @if (Html.IsInRole(Html.Role_AMP()))
+                {
+                    @Html.Encode("  ")
+                    @Html.ActionLink(WorkOrders.deletelink, "Delete", "WorkOrder", new { id = item.ID }, null)
+                }
+            </td>
+            <td>
+                @item.ID
+            </td>
+            <td>
+                @item.contactName
+            </td>
+            <td>
+                @item.workSiteAddress1
+            </td>
+            <td>
+                @System.String.Format("{0:g}", item.dateupdated)
+            </td>
+            <td>
+                @item.Updatedby
+            </td>
+        </tr>
+    }
+</table>

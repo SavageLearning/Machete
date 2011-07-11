@@ -1,0 +1,18 @@
+﻿@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using Machete.Domain.Resources
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+}
+<div id="assignmentTab">
+    <ul>
+        <li><a href="#availAssignList">Assignments</a></li>
+    </ul>
+    <div id="availAssignList">
+    </div>
+</div>
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        jqrfyTabs($("#assignmentTab"), "ui-tabs-assignment-");
+    });
+</script>

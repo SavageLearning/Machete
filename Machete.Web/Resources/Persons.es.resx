@@ -174,4 +174,7 @@
   <data name="viewtitle" xml:space="preserve">
     <value>Ver Persona</value>
   </data>
+  <data name="listlink" xml:space="preserve">
+    <value>Lista de personas</value>
+  </data>
 </root>

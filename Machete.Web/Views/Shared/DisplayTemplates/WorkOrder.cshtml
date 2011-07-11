@@ -1,0 +1,98 @@
+﻿@model Machete.Domain.WorkOrder
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using Machete.Domain.Resources
+@Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID" })
+@Html.HiddenFor(model => model.EmployerID)
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];    
+}
+<div class="tb-table">
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.contactName)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.DisplayTextFor(model => model.contactName)            
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.workSiteAddress1)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.DisplayTextFor(model => model.workSiteAddress1)
+            @Html.DisplayTextFor(model => model.workSiteAddress2)
+            <br />
+            @Html.DisplayTextFor(model => model.city)
+            @Html.DisplayTextFor(model => model.state)
+            @Html.DisplayTextFor(model => model.zipcode)
+        </div>
+    </div>
+        <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.phone)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.DisplayTextFor(model => model.phone)            
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.Label(WorkOrder.lunchShort)
+        </div>
+        <div class="tb-field tb-cell">
+            @Lookups.getBool(Model.lunchSupplied, CI.TwoLetterISOLanguageName)  
+        </div>
+        <div class="tb-field tb-cell" style="font-weight: bold; ">  
+            @Html.Label(WorkOrders.transportFeeShort)        
+        </div>
+        <div class="tb-field tb-cell bold" style="font-weight: bold; ">
+            @Html.Label(WorkOrders.transportFeeExtraShort)
+        </div>
+                <div class="tb-field tb-cell bold" style="font-weight: bold; ">
+            @Html.Label(WorkOrders.transportfeetotal)
+        </div>
+    </div>
+
+
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.Label(WorkOrders.transportMethodIDShort)
+        </div>
+        <div class="tb-field tb-cell">
+            @Lookups.byID(Model.transportMethodID, CI.TwoLetterISOLanguageName)
+        </div>
+        <div class="tb-field tb-cell">
+            @System.String.Format("{0:c}",Model.transportFee)    +
+        </div>
+        <div class="tb-field tb-cell">
+            @System.String.Format("{0:c}",Model.transportFeeExtra)    = 
+        </div>        
+        <div class="tb-field tb-cell">
+            @System.String.Format("{0:c}", Model.transportFee + Model.transportFeeExtra)   
+        </div>
+    </div>    
+
+    @if (Model.englishRequired == true)
+    {
+        <div class="tb-row">
+            <div class="tb-label tb-cell">
+                @Html.LabelFor(model => model.englishRequiredNote)
+            </div>
+            <div class="tb-field tb-cell">
+                @Html.DisplayTextFor(model => model.englishRequiredNote)            
+            </div>
+        </div>
+    }
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.description)
+        </div>
+        <div class="tb-bordered_field tb-cell">
+            @Html.DisplayTextFor(model => model.description)
+            
+        </div>
+    </div>
+</div><!--tb-table-->
+

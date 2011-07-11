@@ -1,24 +1,18 @@
 ﻿@model Machete.Domain.Person
 @using Machete.Web.Helpers
+@using Machete.Web.Resources
+<link href="@Url.Content("~/Content/print.css")" rel="stylesheet" type="text/css" media="print" />
 @{
-    ViewBag.Title = @Machete.Web.Resources.Persons.viewtitle;
+    ViewBag.Title = Persons.viewtitle;
 }
-<h2>@Machete.Web.Resources.Persons.viewtitle</h2>
-<p>
-    @if (Html.IsInRole(Html.Role_AMP()))
-    {
-        @Html.ActionLink(@Machete.Web.Resources.Persons.editpersonlink, "Edit", new { id = Model.ID })
-        @Html.Encode(" | ");
-    }
-    @Html.ActionLink(@Machete.Web.Resources.Persons.indexreturnlink, "Index")
-</p>
 <fieldset>
-    <legend>@Machete.Web.Resources.Persons.boxlegend</legend>
+    <legend>@Persons.boxlegend</legend>
+
     @Html.EditorForModel()
 </fieldset>
 
 <script type="text/javascript">
     $().ready(function () {
-        $('.editor-field').children().attr('disabled', 'disabled')
+        $('.editor-field').children().attr('disabled', 'disabled');
     });
 </script>

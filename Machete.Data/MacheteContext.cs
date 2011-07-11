@@ -14,19 +14,14 @@ namespace Machete.Data
           //Machete here defines the database to use, by convention.
         public DbSet<Person> Persons { get; set; }
         public DbSet<Worker> Workers { get; set; }
-        public DbSet<Race> Races { get; set; }
-        public DbSet<Language> Languages { get; set; }
-        public DbSet<Income> Incomes { get; set; }
-        public DbSet<Neighborhood> Neighborhoods { get; set; }
-        public DbSet<Skill> Skills { get; set; }
-        public DbSet<TypeOfWork> TypesOfWork { get; set; }
+        public DbSet<WorkAssignment> WorkAssignments { get; set; }
+        public DbSet<Lookup> Lookups { get; set; }        
         public DbSet<WorkerSignin> WorkerSignins { get; set; }
         public DbSet<Image> Images { get; set; }
-        //public DbSet<Employer> Employers { get; set; }
-        //public DbSet<WorkOrder> WorkOrders { get; set; }
-        //public DbSet<WorkerSkill> WorkerSkills { get; set; }
-        //public DbSet<WorkAssignment> WorkAssignments { get; set; }
-        //public DbSet<Survey> Surveys { get; set; }
+        public DbSet<Employer> Employers { get; set; }
+        public DbSet<WorkOrder> WorkOrders { get; set; }
+        public DbSet<WorkerRequest> WorkerRequests { get; set; }        
+
         
 
         public virtual void Commit()
@@ -42,18 +37,10 @@ namespace Machete.Data
             modelBuilder.Configurations.Add(new PersonBuilder());
             modelBuilder.Configurations.Add(new WorkerBuilder());
             modelBuilder.Configurations.Add(new WorkerSigninBuilder());
-            //modelBuilder.Configurations.Add(new WorkerSigninViewBuilder());
-            //modelBuilder.Entity<Race>().ToTable("LookupRace");
-            //modelBuilder.Entity<EnglishLevel>().ToTable("LookupEnglishlevel");
-            //modelBuilder.Entity<Income>().ToTable("LookupIncome");
-            //modelBuilder.Entity<SkillLevel>().ToTable("LookupSkillLevel");
-            //modelBuilder.Entity<Neighborhood>().ToTable("LookupNeighborhood");
-            //modelBuilder.Entity<WorkerSignin>().ToTable("WorkerSignin");
-            //modelBuilder.Entity<Employer>().ToTable("Employers");
-            //modelBuilder.Entity<WorkOrder>().ToTable("WorkOrders");
+            modelBuilder.Entity<Employer>().ToTable("Employers");
+            modelBuilder.Entity<WorkOrder>().ToTable("WorkOrders");
             //modelBuilder.Entity<WorkerSkill>().ToTable("WorkerSkills");
-            //modelBuilder.Entity<WorkAssignment>().ToTable("WorkAssignments");
-            //modelBuilder.Entity<Survey>().ToTable("Surveys");
+            modelBuilder.Entity<WorkAssignment>().ToTable("WorkAssignments");
         }
     }
     public class PersonBuilder : EntityTypeConfiguration<Person>
@@ -80,6 +67,39 @@ namespace Machete.Data
         public WorkerSigninBuilder()
         {
             HasKey(k => k.ID);
+        }
+    }
+
+    public class EmployerBuilder : EntityTypeConfiguration<Employer>
+    {
+        public EmployerBuilder()
+        {
+            HasKey(e => e.ID);                  //being explicit for EF
+            HasMany(e => e.WorkOrders)          //define the parent
+            .WithRequired(w => w.Employer)      //Virtual property definition
+            .HasForeignKey(w => w.EmployerID)   //DB foreign key definition
+            .WillCascadeOnDelete();
+        }
+    }
+
+    public class WorkOrderBuilder : EntityTypeConfiguration<WorkOrder>
+    {
+        public WorkOrderBuilder()
+        {
+            HasKey(k => k.ID);
+            HasRequired(p => p.Employer)
+            .WithMany(e => e.WorkOrders)
+            .HasForeignKey(e => e.EmployerID);
+        }
+    }
+    public class WorkAssignmentBuilder : EntityTypeConfiguration<WorkAssignment>
+    {
+        public WorkAssignmentBuilder()
+        {
+            HasKey(k => k.ID);
+            HasRequired(k => k.workOrder)
+                .WithMany(a => a.workAssignments)
+                .HasForeignKey(a => a.workOrderID);
         }
     }
 }

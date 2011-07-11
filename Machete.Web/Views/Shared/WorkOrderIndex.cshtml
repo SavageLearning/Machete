@@ -1,0 +1,93 @@
+﻿@model Machete.Domain.Employer
+@using Machete.Web.Helpers
+@using Machete.Domain.Resources
+@using Machete.Web.Resources
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+}
+<div id="workOrderTabs_@(Model.ID)" >
+    <ul>
+        <li><a href="#workOrderList" id="workOrderListTab_@(Model.ID)" class="ListTab">@WorkOrders.listlink</a> </li>
+        <li><a href="/WorkOrder/Create?EmployerID=@(Model.ID)" id="workOrderCreateTab_@(Model.ID)" class="CreateTab">@WorkOrders.createlink</a></li>        
+    </ul>
+    <div id="workOrderList">
+        <table id="workOrderTable_@(Model.ID)" class="display">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>LABEL</th>
+                    <th>EmployerID</th>
+                    <th>@WorkOrder.workorderID</th>
+                    <th>@WorkOrder.dateTimeofWork</th>
+                    <th>@WorkOrder.statusShort</th>
+                    <th>@WorkOrders.assigncount</th>
+                    <th>@WorkOrder.contactName</th>
+                    <th>@WorkOrder.workSiteAddress1</th>
+                    <th>@Record.dateupdated</th>
+                    <th>@Record.updatedby</th>
+                </tr>
+            </thead>
+        </table>        
+    </div>
+</div>
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        if (eventDebug) M_conlog("EVENT", "READY", "workorder", "", "");
+        ////////////////////////////////////////////////////////////////
+        //
+        // Setup work order Tabs
+        //
+        $('#workOrderTabs_@(Model.ID)').unbind('.M_workorderEvents');
+        M_workOrderTabs_@(Model.ID) = null;
+        M_workOrderTable_@(Model.ID) = null;
+        
+        M_workOrderTabs_@(Model.ID) = $('#workOrderTabs_@(Model.ID)');
+        jqrfyTabs(M_workOrderTabs_@(Model.ID), "ui-tabs-workorder-e_@(Model.ID)-");
+        ////////////////////////////////////////////////////////////////
+        //
+        // Setup workorder Table
+        //
+        M_workOrderTable_@(Model.ID) = $('#workOrderTable_@(Model.ID)');
+        jqrfyTable(M_workOrderTable_@(Model.ID), M_workOrderTabs_@(Model.ID),
+        {
+            "bPaginate": true,
+            "bLengthChange": true,
+            "aaSorting": [[7, 'desc']],
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "bServerSide": true,
+            "sAjaxSource": "/WorkOrder/AjaxHandler",
+            "bProcessing": true,
+            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "aoColumns": [
+                            { "sName": "ID", "bSearchable": false, "bSortable": false, "bVisible": false },
+                            { "sName": "LABEL", "bSearchable": false, "bSortable": false, "bVisible": false },
+                            { "sName": "EmployerID", "bSearchable": false, "bSortable": false, "bVisible": false },
+                            { "sName": "workorderID" },
+                            { "sName": "dateTimeofWork" },
+                            { "sName": "status" },
+                            { "sName": "assigncount" },
+                            { "sName": "contactName" },
+                            { "sName": "workSiteAddress1" },
+                            { "sName": "dateupdated" },
+                            { "sName": "Updatedby" }
+                        ],
+            "aoSearchCols" :  [null, null, { "sSearch": "@(Model.ID)" }, null, null, null, null, null, null],
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                        $(nRow).attr('edittabref', aData[0]);
+                        $(nRow).attr('edittablabel', aData[1]);
+                        return nRow;
+                    }
+        });
+        ////////////////////////////////////////////////////////////////
+        //
+        // WorkOrder Tab sevent (including inherited events)
+        //
+//        M_workOrderTabs_@(Model.ID).bind("tabsselect.M_workorderEvents", function (event, ui) { if (eventDebug) M_conlog("EVENT", "SELECT", "workorder", ui.panel.id, ""); });
+//        M_workOrderTabs_@(Model.ID).bind("tabsload.M_workorderEvents", function (event, ui) { if (eventDebug) M_conlog("EVENT", "LOAD", "workorder", ui.panel.id, ""); });
+//        M_workOrderTabs_@(Model.ID).bind("tabsshow.M_workorderEvents", function (event, ui) { if (eventDebug) M_conlog("EVENT", "SHOW", "workorder", ui.panel.id, ""); });
+//        M_workOrderTabs_@(Model.ID).bind("tabsremove.M_workorderEvents", function (event, ui) { if (eventDebug) M_conlog("EVENT", "REMOVE", "workorder", event.target.id, ""); });
+    });
+</script>

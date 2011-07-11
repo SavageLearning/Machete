@@ -8,12 +8,10 @@ using Machete.Domain.Resources;
 
 namespace Machete.Domain
 {
-    public class WorkerSkill
+    public class WorkerSkill : Record
     {
         public int ID { get; set; }
-        public DateTime datecreated { get; set; }
-        public DateTime dateupdated { get; set; }
-        public Guid Createdby { get; set; }
-        public Guid Updatedby { get; set; }
+        public int WorkerID { get; set; }
+        public int SkillID { get; set; }
     }
 }

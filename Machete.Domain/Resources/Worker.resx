@@ -117,7 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="countryoforigin" xml:space="preserve">
+  <data name="countryoforiginID" xml:space="preserve">
     <value>Country of origin</value>
   </data>
   <data name="dateinseattle" xml:space="preserve">
@@ -169,7 +169,7 @@
     <value>Disability description</value>
   </data>
   <data name="driverslicense" xml:space="preserve">
-    <value>Driver's license #</value>
+    <value>Has a U.S. driver's license?</value>
   </data>
   <data name="emcontoriginname" xml:space="preserve">
     <value>Emergency contact in country of origin</value>
@@ -210,22 +210,28 @@
   <data name="datecreated" xml:space="preserve">
     <value>Date created</value>
   </data>
-  <data name="dateupdated" xml:space="preserve">
-    <value>Date updated</value>
-  </data>
   <data name="dwccardnumerror" xml:space="preserve">
     <value>Card number must be 5 digits long</value>
   </data>
   <data name="numofchildrenRxError" xml:space="preserve">
     <value>Children must be between 0 and 20</value>
   </data>
-  <data name="updatedby" xml:space="preserve">
-    <value>Updated by</value>
-  </data>
   <data name="active" xml:space="preserve">
     <value>Active Worker</value>
   </data>
   <data name="raceother" xml:space="preserve">
     <value>Other race</value>
+  </data>
+  <data name="dateOfBirth" xml:space="preserve">
+    <value>Date of birth</value>
+  </data>
+  <data name="skill1" xml:space="preserve">
+    <value>Skill (1)</value>
+  </data>
+  <data name="skill2" xml:space="preserve">
+    <value>Skill (2)</value>
+  </data>
+  <data name="skill3" xml:space="preserve">
+    <value>Skill (3)</value>
   </data>
 </root>

@@ -61,7 +61,8 @@ namespace Machete.Web.Controllers
             {
                 // Attempt to register the user
                 // TODO: Error handling
-                MembershipCreateStatus createStatus = MembershipService.CreateUser(member.UserName, member.Password, member.Email);
+                member.UserName = member.FirstName + "." + member.LastName;
+                MembershipCreateStatus createStatus = MembershipService.CreateUser(member.UserName, member.Password, member.Email, member.question, member.answer);
 
                 if (createStatus == MembershipCreateStatus.Success)
                 {
@@ -96,10 +97,15 @@ namespace Machete.Web.Controllers
 
         [Authorize(Roles = "Administrator")]
         [HttpPost]
-        public ActionResult Edit(Guid id, FormCollection collection)
+        public ActionResult Edit(Guid id, FormCollection collection, bool IsApproved, bool IsLockedOut)
         {
             // TODO:!!!! Add admin password change/reset/something
             MembershipUser member = Membership.GetUser(id, false);
+            member.IsApproved = IsApproved;
+            if (IsLockedOut == false)
+            {
+                member.UnlockUser();
+            }
             if (TryUpdateModel(member))
             {   
                 foreach (String role in Roles.GetAllRoles())
@@ -223,8 +229,9 @@ namespace Machete.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                model.UserName = model.FirstName + "." + model.LastName;
                 // Attempt to register the user
-                MembershipCreateStatus createStatus = MembershipService.CreateUser(model.UserName, model.Password, model.Email);
+                MembershipCreateStatus createStatus = MembershipService.CreateUser(model.UserName, model.Password, model.Email, model.question, model.answer);
 
                 if (createStatus == MembershipCreateStatus.Success)
                 {
@@ -277,6 +284,42 @@ namespace Machete.Web.Controllers
 
             // If we got this far, something failed, redisplay form
             levent.Level = LogLevel.Info; levent.Message = "Password change failed for " + User.Identity.Name;
+            log.Log(levent);
+            ViewBag.PasswordLength = MembershipService.MinPasswordLength;
+            return View(model);
+        }
+        //[Authorize]
+        public ActionResult AdminChangePassword(Guid id)
+        {
+            MembershipUser member = Membership.GetUser(id, false);
+            AdminChangePasswordModel model = new AdminChangePasswordModel();
+            model.UserName = member.UserName;
+            ViewBag.PasswordLength = MembershipService.MinPasswordLength;
+            return View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult AdminChangePassword(AdminChangePasswordModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                MembershipUser member = Membership.GetUser(model.id, false);
+                if (member.ChangePassword(member.ResetPassword(), model.NewPassword))
+                //if (MembershipService.ChangePassword(User.Identity.Name, model.OldPassword, model.NewPassword))
+                {
+                    levent.Level = LogLevel.Info; levent.Message = "Admin changed password for " + model.UserName;
+                    log.Log(levent);
+                    return RedirectToAction("ChangePasswordSuccess");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Model validation error for Admin change password.");
+                }
+            }
+
+            // If we got this far, something failed, redisplay form
+            levent.Level = LogLevel.Info; levent.Message = "Password change failed for " + model.UserName;
             log.Log(levent);
             ViewBag.PasswordLength = MembershipService.MinPasswordLength;
             return View(model);

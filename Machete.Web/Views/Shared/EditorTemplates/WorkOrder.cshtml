@@ -1,0 +1,338 @@
+﻿@model Machete.Domain.WorkOrder
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using Machete.Domain.Resources
+@Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID" })
+@Html.HiddenFor(model => model.EmployerID)
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+}
+<div class="tb-table">
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.dateTimeofWork)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.TextBox("dateTimeofWork", Html.Encode(System.String.Format("{0:g}", Model.dateTimeofWork)))
+            @Html.ValidationMessageFor(model => model.dateTimeofWork)
+        </div>
+        <div class="tb-label tb-cell" style="width: auto">
+            @Html.LabelFor(model => model.timeFlexible)
+        </div>
+        <div class="tb-field tb-cell" style="width: 20px">
+            @Html.DropDownListFor(model => model.timeFlexible, new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.timeFlexible), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })           
+            @Html.ValidationMessageFor(model => model.timeFlexible)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.status)
+        </div>
+        
+
+        @if (Html.IsInRole(Html.Role_AM()))
+        {
+            <div class="tb-field tb-cell">
+            @Html.DropDownListFor(model => model.status, new SelectList(ViewBag.woStatuses, "Value", "Text", Model.status), @Machete.Web.Resources.Shared.choose)
+            @Html.ValidationMessageFor(model => model.status)
+            </div>
+                
+        }
+        else
+        {
+            <div class="tb-header tb-cell">
+
+            @Lookups.byID(Model.status, CI.TwoLetterISOLanguageName)
+            @Html.HiddenFor(model => model.status)
+            </div>
+        }
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.permanentPlacement)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.DropDownListFor(model => model.permanentPlacement, new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.permanentPlacement), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })           
+            @Html.ValidationMessageFor(model => model.permanentPlacement)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.contactName)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.TextBoxFor(model => model.contactName, new { tabindex = "1" })
+            @Html.ValidationMessageFor(model => model.contactName)
+        </div>
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.typeOfWorkID)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.DropDownListFor(model => model.typeOfWorkID, new SelectList(ViewBag.typesOfWork, "Value", "Text", Model.typeOfWorkID), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })
+            @Html.ValidationMessageFor(model => model.typeOfWorkID)
+        </div>    
+    </div>
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.workSiteAddress1)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.TextBoxFor(model => model.workSiteAddress1, new { tabindex = "1" })
+            @Html.ValidationMessageFor(model => model.workSiteAddress1)
+        </div>
+        <div class="tb-label tb-cell englishRequired_@(Model.ID)">
+            @Html.LabelFor(model => model.englishRequired)
+        </div>
+        <div class="tb-field tb-cell englishRequired_@(Model.ID)">
+            @Html.DropDownListFor(model => model.englishRequired, new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.englishRequired), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })
+            @Html.ValidationMessageFor(model => model.englishRequired)
+        </div>
+    </div>
+    <!--tb-row-->
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.workSiteAddress2)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.TextBoxFor(model => model.workSiteAddress2, new { tabindex = "1" })
+            @Html.ValidationMessageFor(model => model.workSiteAddress2)
+        </div>
+
+    </div>
+    <!--tb-row-->
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.city)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.TextBoxFor(model => model.city, new { tabindex = "1" })
+            @Html.ValidationMessageFor(model => model.city)
+        </div>
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.lunchSupplied)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.DropDownListFor(model => model.lunchSupplied, new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.lunchSupplied), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })
+            @Html.ValidationMessageFor(model => model.lunchSupplied)
+        </div>
+
+    </div>
+    <!--tb-row-->
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.state)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.TextBoxFor(model => model.state, new { tabindex = "1" })
+            @Html.ValidationMessageFor(model => model.state)
+        </div>
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.transportMethodID)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.DropDownListFor(model => model.transportMethodID, new SelectList(ViewBag.TransportMethods, "Value", "Text", Model.transportMethodID), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })
+            @Html.ValidationMessageFor(model => model.transportMethodID)
+        </div>
+    </div>
+    <!--tb-row-->
+    <div class="tb-row">
+
+    <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.zipcode)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.TextBoxFor(model => model.zipcode, new { tabindex = "1" })
+            @Html.ValidationMessageFor(model => model.zipcode)
+        </div>
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.transportFee)
+        </div>
+        <div class="tb-field tb-cell">      
+            @Html.TextBox("transportFee", Html.Encode(System.String.Format("{0:f2}", Model.transportFee)), new { tabindex = "2", @class="money-field" })
+            @Html.ValidationMessageFor(model => model.transportFee)
+        </div>
+    </div>
+    <!--tb-row-->
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.phone)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.TextBoxFor(model => model.phone, new { tabindex = "1", id="wophone" })
+            @Html.ValidationMessageFor(model => model.phone)
+        </div>
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.transportFeeExtra)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.TextBox("transportFeeExtra", Html.Encode(System.String.Format("{0:f2}", Model.transportFeeExtra)), new { tabindex = "2", @class = "money-field" })
+            @Html.ValidationMessageFor(model => model.transportFeeExtra)
+        </div>
+    </div>
+</div><!--tb-table-->
+<div class="tb-table">
+    <div class="tb-row englishNoteRow" id="englishNote_@(Model.ID)">
+        <div class="tb-label tb-cell desc-label">
+            @Html.LabelFor(model => model.englishRequiredNote)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.TextAreaFor(model => model.englishRequiredNote, new { tabindex = "2", @class="desc-field" })
+            @Html.ValidationMessageFor(model => model.englishRequiredNote)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label tb-cell desc-label">
+            @Html.LabelFor(model => model.workerRequests)
+            <input type="button" value="Add?!" class="formButton" id="addRequestBtn-@(Model.ID)"/>
+            <input type="button" value="Remove?!" class="formButton" id="removeRequestBtn-@(Model.ID)"/>
+        </div>
+        <div class="tb-field tb-cell desc-field">
+            <select id="requestsTable" size="5" />
+        </div>
+
+        <div class="tb-label tb-cell desc-label">
+            @Html.LabelFor(model => model.description)
+        </div>
+        <div class="tb-field tb-cell desc-field">
+            @Html.TextAreaFor(model => model.description, new { tabindex = "3", @class="desc-field" })
+            @Html.ValidationMessageFor(model => model.description)
+        </div>
+    </div>
+</div><!--tb-table-->
+@if (Html.IsInRole(Html.Role_AM()))
+{
+    @Html.Partial("timestamps")
+}
+@if (Html.IsInRole(Html.Role_A()))
+{
+<div class="adminAccordion">
+    <h3><a href="#">@Shared.administratorinformation</a></h3>    
+    <div class="tb-table">
+        <div class="tb-row">
+            <div class="tb-label tb-cell">
+                @Html.LabelFor(model => model.EmployerID)
+            </div>
+            <div class="tb-field tb-cell">
+                @Html.TextBoxFor(model => model.EmployerID)
+                @Html.ValidationMessageFor(model => model.EmployerID)
+            </div>
+        </div>
+    </div>    
+</div>
+}
+
+<div id="workerDialog-@(Model.ID)" title="Select a worker?!">
+    <table id="workerTable-@(Model.ID)" class="display" style="display: none">
+        <thead>
+            <tr>
+                <th class="tb-col-hidden">EDITREF</th>
+                <th class="tb-col-hidden">LABEL</th>
+                <th class="tb-col-hidden">ID</th>
+                <th>@Worker.dwccardnum</th>
+                <th>@Worker.active</th>
+                <th>@Person.firstname1</th>
+                <th>@Person.firstname2</th>
+                <th>@Person.lastname1</th>
+                <th>@Person.lastname2</th>
+                <th>@Worker.memberexpirationdate</th>
+            </tr>
+        </thead>
+    </table>
+    
+</div>
+<script language="javascript" type="text/javascript">
+      function getRequests(myObj) {
+
+        $.getJSON("/WorkOrder/GetRequests", { "id": "@Model.ID" }, function (data) {
+            $(myObj).addItems(data);
+        });
+        }
+    $(document).ready(function () {
+        M_workerRequestTable_@(Model.ID) = $('#workerTable-@(Model.ID)').dataTable({
+            "bPaginate": true,
+            "bLengthChange": true,
+            "aaSorting": [[9, 'desc']],
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "iDeferLoading": true,
+            "bAutoWidth": false,
+            "bServerSide": true,
+            "sAjaxSource": "/Worker/AjaxHandler", 
+            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "bProcessing": true,
+            "aoColumns": [
+                { "bSearchable": false, "bSortable": false, "bVisible": false },
+                { "bSearchable": false, "bSortable": false, "bVisible": false },
+                { "bSearchable": false, "bSortable": false, "bVisible": false },
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+            ],            
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $(nRow).attr('requestedID', aData[2]);
+                //$(nRow).attr('edittablabel', aData[1]);                
+                return nRow;
+            }                
+        }).fnSetFilteringDelay(250);
+        $(M_workerRequestTable_@(Model.ID)).find('tbody').dblclick(function (event) {
+            var myTr = event.target.parentNode;
+            var myID = $(myTr).attr('requestedID');            
+            //if (eventDebug) M_conlog("EVENT", "DBLCLICK", "jqrfyTable", "", "========================");
+            var myStr = "ID=@(Model.ID)&WorkerID=" + myID;            
+            $.post("/WorkOrder/AddRequest", myStr);
+
+            getRequests($("#requestsTable"));
+            $('a.ui-dialog-titlebar-close').click();
+
+        });
+        //////////////////////////////////////////////////
+        //
+        //
+        $('#workerDialog-@(Model.ID)').hide();
+        $('#workerTable-@(Model.ID)').hide();
+        $("#wophone").mask("999-999-9999", { placeholder: " " });
+        $(".adminAccordion").accordion({
+            collapsible: true,
+            active: false
+        });
+        //////////////////////////////////////////////////
+        //
+        //
+        getRequests($("#requestsTable"));
+
+        //////////////////////////////////////////////////
+        //
+        //
+        $('#addRequestBtn-@(Model.ID)').click(function () {
+            M_workerRequestTable_@(Model.ID).fnDraw();
+            $('#workerTable-@(Model.ID)').show();
+
+            $("#workerDialog-@(Model.ID)").dialog({
+                    height: 340,
+                    width: 1000,
+                    modal: true
+            });
+            
+            $('#workerDialog-@(Model.ID)').show();
+        });
+        //////////////////////////////////////////////////
+        //
+        //
+        $('#removeRequestBtn-@(Model.ID)').click(function () {
+            if ($('#requestsTable')) {
+            //$.post("/WorkOrder/RemoveRequest", myStr);
+                $('#requestsTable :selected').each(function(i, selected) {
+                    alert($(selected).val());
+                    var myStr = "ID=" + $(selected).val();            
+                    $.post("/WorkOrder/RemoveRequest", myStr);
+                    getRequests($("#requestsTable"));
+                });
+            } else {
+                alert("Please select a requested worker to remove.?!");
+            }
+        });
+    });
+</script>

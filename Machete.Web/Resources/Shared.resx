@@ -162,4 +162,25 @@
   <data name="workersignintab" xml:space="preserve">
     <value>Worker Signin</value>
   </data>
+  <data name="managerinformation" xml:space="preserve">
+    <value>Manager information</value>
+  </data>
+  <data name="administratorinformation" xml:space="preserve">
+    <value>Administrator information</value>
+  </data>
+  <data name="googleMap" xml:space="preserve">
+    <value>Google map</value>
+  </data>
+  <data name="printGoogleMap" xml:space="preserve">
+    <value>Print google map</value>
+  </data>
+  <data name="choose" xml:space="preserve">
+    <value>(choose)</value>
+  </data>
+  <data name="no" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
 </root>

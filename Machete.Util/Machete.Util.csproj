@@ -34,8 +34,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="docs\machete cheetsheets.vsd" />
+    <None Include="docs\Machete-Create user.doc" />
+    <None Include="docs\Machete-Create user.pdf" />
     <None Include="machete_image_load.ps1" />
     <None Include="records_load.ps1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="sql\status_summary_combined_EN.sql" />
+    <Content Include="sql\employers_EN.sql" />
+    <Content Include="sql\status_summary_workAssignments_EN.sql" />
+    <Content Include="sql\workers_EN.sql" />
+    <Content Include="sql\workOrders_EN.sql" />
+    <Content Include="sql\status_summary_workOrders_EN.sql" />
+    <Content Include="workerSignins.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

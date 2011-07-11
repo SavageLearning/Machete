@@ -166,7 +166,7 @@
     <value>La contraceña y la contraseña de la confirmación no coinciden</value>
   </data>
   <data name="Register" xml:space="preserve">
-    <value>Registrarse</value>
+    <value>Crear una cuenta</value>
   </data>
   <data name="rememberme" xml:space="preserve">
     <value>Recuerde a mi?</value>
@@ -214,10 +214,10 @@
     <value>Información de la cuenta</value>
   </data>
   <data name="RegisterPassLength1" xml:space="preserve">
-    <value>Las contraseñas deben tener un mínimo de</value>
+    <value>La contraseña deben tener un mínimo de</value>
   </data>
   <data name="RegisterPassLength2" xml:space="preserve">
-    <value>caracteres de longitud.</value>
+    <value>caracteres.</value>
   </data>
   <data name="RegisterSubTitle" xml:space="preserve">
     <value>Crear una cuenta nueva</value>
@@ -227,5 +227,11 @@
   </data>
   <data name="RegisterValSummary" xml:space="preserve">
     <value>La creación de cuentas no tuvo éxito. Por favor, corrija los errores y vuelva a intentarlo.</value>
+  </data>
+  <data name="firstname" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="lastname" xml:space="preserve">
+    <value>Apellido</value>
   </data>
 </root>
