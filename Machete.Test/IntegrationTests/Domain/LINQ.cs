@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Machete.Domain;
 using System.Diagnostics;
 using Machete.Data;
-using System.Data.Entity;
+using System.Data.Entity.Database;
 
 namespace Machete.Test
 {
@@ -63,7 +63,7 @@ namespace Machete.Test
         public void DbSet_TestMethod2()
         {
             //arrange
-            Database.SetInitializer<MacheteContext>(new MacheteInitializer());
+            DbDatabase.SetInitializer<MacheteContext>(new MacheteInitializer());
             MacheteContext DB = new MacheteContext();
             var q = from s in DB.WorkerSignins.AsEnumerable()
                     //join w in DB.Workers.AsEnumerable() on s.dwccardnum equals w.dwccardnum into outer
@@ -83,7 +83,7 @@ namespace Machete.Test
         [TestMethod]
         public void DbSet_TestMethod3()
         {
-            Database.SetInitializer<MacheteContext>(new MacheteInitializer());
+            DbDatabase.SetInitializer<MacheteContext>(new MacheteInitializer());
             MacheteContext DB = new MacheteContext();
             DB.Database.Delete();
             DB.Database.Initialize(true);

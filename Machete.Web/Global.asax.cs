@@ -17,6 +17,7 @@ using Machete.Web.Controllers;
 using System.Globalization;
 using System.Threading;
 using System.Data.Entity;
+using System.Data.Entity.Database;
 using System.Data.Entity.ModelConfiguration;
 using Machete.Web.Helpers;
 
@@ -83,7 +84,7 @@ namespace Machete.Web
             RegisterRoutes(RouteTable.Routes);
             IUnityContainer container = GetUnityContainer();
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
-            Database.SetInitializer(new MacheteInitializer());
+            DbDatabase.SetInitializer(new MacheteInitializer());
             Lookups.Initialize(new MacheteContext());
         }
 

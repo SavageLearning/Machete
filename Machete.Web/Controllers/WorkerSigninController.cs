@@ -87,7 +87,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Manager, Administrator, Check-in")]
         public ActionResult Report()
         {
-            var ReportPath = Server.MapPath("~/bin/Content/RDLC/WorkerSigninsDaily.rdlc");
+            var ReportPath = Server.MapPath("~/RDLC/WorkerSigninsDaily.rdlc");
 
             object Model =  _serv.getView(DateTime.Today);
 

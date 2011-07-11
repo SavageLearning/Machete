@@ -68,7 +68,7 @@ namespace Machete.Test.IntegrationTests.Services
 
             _persons = new List<Person>();
             _persons.Add(new Person() { ID = 1, firstname1 = "UnitTest" });
-            _persons.Add(new Person() { ID = 2, firstname1 = "UnitTest" });
+            _persons.Add(new Person() { ID = 3, firstname1 = "UnitTest" });
 
             //
             // Arrange WorkerSignin
@@ -99,8 +99,8 @@ namespace Machete.Test.IntegrationTests.Services
             Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkerSigninView>));
             Assert.IsTrue(result.Count() == 5);
             Assert.IsTrue((from rec in result
-                           where rec.signinID != 0
-                           select rec).Count() == 2);
+                           where rec.dwccardnum == 66666
+                           select rec).Count() == 0);
             Assert.IsTrue((from rec in result
                            where rec.firstname1 == "UnitTest"
                            select rec).Count() == 2);

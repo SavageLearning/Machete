@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Machete.Domain;
 using Machete.Data;
 using Machete.Data.Infrastructure;
-using System.Data.Entity;
+using System.Data.Entity.Database;
 using System.Data.Entity.Infrastructure;
 using Machete.Service;
 using System.Data.Entity.Validation;
@@ -21,7 +21,7 @@ namespace Machete.Test
         [TestInitialize]
         public void Initialize()
         {
-            Database.SetInitializer<MacheteContext>(new TestInitializer());
+            DbDatabase.SetInitializer<MacheteContext>(new TestInitializer());
             this.MacheteDB = new MacheteContext();
         }
         
