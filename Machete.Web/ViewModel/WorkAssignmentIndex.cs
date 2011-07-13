@@ -9,10 +9,7 @@ namespace Machete.Web.ViewModel
 {
     public class WorkAssignmentIndex
     {
-        public Filter filter { get; set; }
-        public Employer employer { get; set; }
-        public WorkOrder workOrder { get; set; }
-        public WorkAssignment workAssignment { get; set; }
-        public IEnumerable<WorkAssignment> workAssignments { get; set; }
+        public DateTime date { get; set; }
+
     }
 }
