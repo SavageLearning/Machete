@@ -137,19 +137,7 @@ namespace Machete.Web.Controllers
                 sEcho = param.sEcho,
                 iTotalRecords = filteredAssignments.Count(),
                 iTotalDisplayRecords = filteredAssignments.Count(),
-                aaData = result//,
-                //sColumns = "refstring" + "," +
-                //           "label" + "," +
-                //           "WOID" + "," +
-                //           "WAID" + "," +
-                //           "englishlevel" + "," +
-                //           "skill" + "," +
-                //           "hourlyWage" + "," +
-                //           "hours" + "," +
-                //           "days" + "," +
-                //           "description" + "," +
-                //           "dateupdated" + "," +
-                //           "Updatedby" + ","
+                aaData = result
             },
             JsonRequestBehavior.AllowGet);
         }

@@ -222,7 +222,6 @@ function add_rectab(theref, label, tabObj, exclusiveTab, recID) {
 ///
 ///##Create dataTable
 ///
-//function jqrfyTable(myTable, ajaxSource, colDef, rowCallback, myTab, sorting, initFilter) {
 function jqrfyTable(myTable, myTab, myOptions) {
     var oTable;
     oTable = $(myTable).dataTable(myOptions).fnSetFilteringDelay(250);

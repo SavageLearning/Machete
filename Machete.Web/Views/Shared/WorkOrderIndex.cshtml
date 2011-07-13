@@ -62,22 +62,22 @@
             "bProcessing": true,
             "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
             "aoColumns": [
-                            { "sName": "ID", "bSearchable": false, "bSortable": false, "bVisible": false },
-                            { "sName": "LABEL", "bSearchable": false, "bSortable": false, "bVisible": false },
-                            { "sName": "EmployerID", "bSearchable": false, "bSortable": false, "bVisible": false },
-                            { "sName": "workorderID" },
-                            { "sName": "dateTimeofWork" },
-                            { "sName": "status" },
-                            { "sName": "assigncount" },
-                            { "sName": "contactName" },
-                            { "sName": "workSiteAddress1" },
-                            { "sName": "dateupdated" },
-                            { "sName": "Updatedby" }
+                            { "mDataProp": "tabref", "bSearchable": false, "bSortable": false, "bVisible": false },
+                            { "mDataProp": "tablabel", "bSearchable": false, "bSortable": false, "bVisible": false },
+                            { "mDataProp": "EID", "bSearchable": false, "bSortable": false, "bVisible": false },
+                            { "mDataProp": "WOID" },
+                            { "mDataProp": "dateTimeofWork" },
+                            { "mDataProp": "status" },
+                            { "mDataProp": "WAcount" },
+                            { "mDataProp": "contactName" },
+                            { "mDataProp": "workSiteAddress1" },
+                            { "mDataProp": "dateupdated" },
+                            { "mDataProp": "updatedby" }
                         ],
             "aoSearchCols" :  [null, null, { "sSearch": "@(Model.ID)" }, null, null, null, null, null, null],
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                        $(nRow).attr('edittabref', aData[0]);
-                        $(nRow).attr('edittablabel', aData[1]);
+                        $(nRow).attr('edittabref', aData["tabref"]);
+                        $(nRow).attr('edittablabel', aData["tablabel"]);
                         return nRow;
                     }
         });
