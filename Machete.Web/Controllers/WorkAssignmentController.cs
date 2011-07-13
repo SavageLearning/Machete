@@ -117,18 +117,19 @@ namespace Machete.Web.Controllers
             //return what's left to datatables
             
             var result = from p in displayAssignments
-                         select new[] { _getTabRef(p),
-                                        _getTabLabel(p),
-                                        Convert.ToString(p.workOrderID),
-                                        Convert.ToString(p.ID),
-                                        Convert.ToString(p.englishLevelID),
-                                        Lookups.byID_noBrackets(p.skillID, culture),
-                                        Convert.ToString(p.hourlyWage),
-                                        Convert.ToString(p.hours),
-                                        Convert.ToString(p.days),
-                                        p.description,
-                                        Convert.ToString(p.dateupdated), 
-                                        p.Updatedby 
+                         select new { tabref = _getTabRef(p),
+                                      tablabel = _getTabLabel(p),
+                                      WOID = Convert.ToString(p.workOrderID),
+                                      WAID = Convert.ToString(p.ID),
+                                      englishlevel = Convert.ToString(p.englishLevelID),
+                                      skill =  Lookups.byID_noBrackets(p.skillID, culture),
+                                      hourlywage = Convert.ToString(p.hourlyWage),
+                                      hours = Convert.ToString(p.hours),
+                                      days = Convert.ToString(p.days),
+                                      description = p.description,
+                                      dateupdated = Convert.ToString(p.dateupdated), 
+                                      updatedby = p.Updatedby,
+                                      dateTimeofWork = p.workOrder.dateTimeofWork.ToString()
                          };
 
             return Json(new
@@ -136,7 +137,19 @@ namespace Machete.Web.Controllers
                 sEcho = param.sEcho,
                 iTotalRecords = filteredAssignments.Count(),
                 iTotalDisplayRecords = filteredAssignments.Count(),
-                aaData = result
+                aaData = result//,
+                //sColumns = "refstring" + "," +
+                //           "label" + "," +
+                //           "WOID" + "," +
+                //           "WAID" + "," +
+                //           "englishlevel" + "," +
+                //           "skill" + "," +
+                //           "hourlyWage" + "," +
+                //           "hours" + "," +
+                //           "days" + "," +
+                //           "description" + "," +
+                //           "dateupdated" + "," +
+                //           "Updatedby" + ","
             },
             JsonRequestBehavior.AllowGet);
         }

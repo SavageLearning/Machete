@@ -66,23 +66,23 @@
             "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
             "bProcessing": true,
             "aoColumns": [
-                            { "bSearchable": false, "bSortable": false, "bVisible": false },
-                            { "bSearchable": false, "bSortable": false, "bVisible": false },
-                            { "bSearchable": false, "bSortable": false, "bVisible": false },
-                            null, 
-                            null,
-                            null, 
-                            null, 
-                            null, 
-                            null, 
-                            null,
-                            { "bSearchable": false, "bSortable": false, "bVisible": true },
-                            { "sName": "Updatedby", "bSortable": false, "bVisible": true }
+                            { "mDataProp": "tabref", "bSearchable": false, "bSortable": false, "bVisible": false },
+                            { "mDataProp": "tablabel", "bSearchable": false, "bSortable": false, "bVisible": false },
+                            { "mDataProp": "WOID", "bSearchable": false, "bSortable": false, "bVisible": false }, 
+                            { "mDataProp": "WAID"},
+                            { "mDataProp": "englishlevel"}, 
+                            { "mDataProp": "skill"}, 
+                            { "mDataProp": "hourlywage"}, 
+                            { "mDataProp": "hours"}, 
+                            { "mDataProp": "days"},
+                            { "mDataProp": "description"},
+                            { "mDataProp": "dateupdated"},
+                            { "mDataProp": "updatedby" }
                         ],
             "aoSearchCols" : [null, null, { "sSearch": "@(Model.ID)" }, null, null, null, null, null, null, null, null, null],
-            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {                        
-                                    $(nRow).attr('edittabref', aData[0]);
-                                    $(nRow).attr('edittablabel', aData[1]);
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) { 
+                                    $(nRow).attr('edittabref', aData["tabref"]);
+                                    $(nRow).attr('edittablabel', aData["tablabel"]);
                                     //show activation button (need at least 1 assignment to activate)
                                     $('#activateWorkOrderButton-@(Model.ID)').show();
                                     return nRow;

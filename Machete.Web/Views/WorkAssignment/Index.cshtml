@@ -1,18 +1,75 @@
-﻿@using Machete.Web.Helpers
+﻿@model Machete.Web.ViewModel.WorkAssignmentIndex
+@using Machete.Web.Helpers
 @using Machete.Web.Resources
 @using Machete.Domain.Resources
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
 }
+<div>
+    @Html.LabelFor(m => m.date)
+</div>
+<div>
+    @Html.TextBoxFor(m => m.date)
+</div>
+
+
 <div id="assignmentTab">
     <ul>
-        <li><a href="#availAssignList">Assignments</a></li>
+        <li><a href="#availAssignList">All Assignments?!</a></li>
     </ul>
     <div id="availAssignList">
+            <table id="availAssignTable" class="display">
+            <thead>
+                <tr>
+                    <th>REF</th>
+                    <th>LABEL</th>
+                    <th>WorkOrderID</th>
+                    <th>ID#</th>
+                    <th>@WorkAssignment.englishLevelID</th>
+                    <th>@WorkAssignment.skillID</th>
+                    <th>@WorkAssignment.hourlyWage</th>
+                    <th>@WorkAssignment.hours</th>
+                    <th>@WorkAssignment.days</th>
+                    <th>@WorkAssignment.description</th>
+                    <th>@WorkOrder.dateTimeofWork</th>
+
+                </tr>
+            </thead>
+        </table>
     </div>
 </div>
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
         jqrfyTabs($("#assignmentTab"), "ui-tabs-assignment-");
+        jqrfyTable($("#availAssignTable"), $("#assignmentTab"),
+        {
+            "bPaginate": true,
+            "bLengthChange": true,
+            "aaSorting": [[7, 'desc']],
+            "bFilter": true,
+            //"bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "bServerSide": true,
+            "sAjaxSource": "/WorkAssignment/AjaxHandler",
+            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "bProcessing": true,
+            "aoColumns": [
+                            { "mDataProp": "tabref", "bSearchable": false, "bSortable": false, "bVisible": false },
+                            { "mDataProp": "tablabel", "bSearchable": false, "bSortable": false, "bVisible": false },
+                            { "mDataProp": "WOID", "bSearchable": false, "bSortable": false, "bVisible": false }, 
+                            { "mDataProp": "WAID"},
+                            { "mDataProp": "englishlevel"}, 
+                            { "mDataProp": "skill"}, 
+                            { "mDataProp": "hourlywage"}, 
+                            { "mDataProp": "hours"}, 
+                            { "mDataProp": "days"},
+                            { "mDataProp": "description"},
+                            { "mDataProp": "dateTimeofWork"}
+                        ],
+            "aoSearchCols" : [null, null, null, null, null, null, null, null, null, null, null]//,
+//            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) { },
+//            "fnDrawCallback": function () {}
+            });
     });
 </script>

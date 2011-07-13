@@ -26,13 +26,11 @@
     <resourceSet name="siteJs" type="js">
         <resource path="~/Scripts/jquery-1.4.4.js" />
         <resource path="~/Scripts/jquery-ui.js" />
-        <resource path="~/Scripts/jquery.dataTables-1.8.0.js" />
+        <resource path="~/Scripts/jquery.dataTables-1.8.1.js" />
         <resource path="~/Scripts/jquery.validate.js" />
         <resource path="~/Scripts/jquery.validate.unobtrusive.js" />
         <resource path="~/Scripts/jquery.alerts.js" />
         <resource path="~/Scripts/jquery.ui.datepicker.js" />
-        <resource path="~/Scripts/jquery.jeditable-1.7.1.js" />
-        <resource path="~/Scripts/jquery.dataTables.editable-1.0.0.js" />
         <resource path="~/Scripts/console-log.js" />
         <resource path="~/Scripts/macheteLayout.js" />
         <resource path="~/Scripts/validation_hack.js" />
