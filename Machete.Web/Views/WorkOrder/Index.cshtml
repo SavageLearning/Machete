@@ -6,35 +6,37 @@
 }
 <div id="dispatchTabs" >
     <ul>
-        <li><a href="#summaryOrderList" id="summaryOrderListTab" class="ListTab">Summary?!</a> </li>
-        <li><a href="#pendingOrderList" id="pendingOrderListTab" class="ListTab">Pending?!</a> </li>
-        <li><a href="#activeOrderList" id="activeOrderListTab" class="ListTab">Active?!</a> </li>   
-        <li><a href="#completedOrderList" id="completedOrderListTab" class="ListTab">Completed?!</a> </li>   
-        <li><a href="#cancelledOrderList" id="cancelledOrderListTab" class="ListTab">Cancelled?!</a> </li>   
-        <li><a href="#expiredOrderList" id="expiredOrderListTab" class="ListTab">Expired?!</a> </li>   
+        <li><a href="#summaryList" id="summaryOrderListTab" class="ListTab">Summary?!</a> </li>
+        <li><a href="#orderList" id="pendingOrderListTab" class="ListTab">Details?!</a> </li>
     </ul>
-    <div id="summaryOrderList">
+    <div id="summaryList">
         <table id="orderSummaryTable" class="display">
             <thead>
                 <tr>
-                    <th>date</th>
-                    <th>weekday</th>
-                    <th>pending order</th>
-                    <th>pending assignment</th>
-                    <th>active order</th>
-                    <th>active assignment</th>
-                    <th>completed order</th>
-                    <th>completed assignment</th>
-                    <th>cancelled order</th>
-                    <th>cancelled assignment</th>
-                    <th>expired order</th>
-                    <th>expired assignment</th>
+                    <th>date?!</th>
+                    <th>weekday?!</th>
+                    <th>pending order?!</th>
+                    <th>pending assignment?!</th>
+                    <th>active order?!</th>
+                    <th>active assignment?!</th>
+                    <th>completed order?!</th>
+                    <th>completed assignment?!</th>
+                    <th>cancelled order?!</th>
+                    <th>cancelled assignment?!</th>
+                    <th>expired order?!</th>
+                    <th>expired assignment?!</th>
                 </tr>
             </thead>
         </table>
     </div>
-    <div id="pendingOrderList">
-        <table id="pendingOrderTable" class="display">
+    <div id="orderList">
+        <input type="button" value="Pending?!" class="formButton" id="pendingOrdersBtn"/>
+        <input type="button" value="Active?!" class="formButton" id="activeOrdersBtn"/>
+        <input type="button" value="Completed?!" class="formButton" id="completedOrdersBtn"/>
+        <input type="button" value="Cancelled?!" class="formButton" id="cancelledOrdersBtn"/>
+        <input type="button" value="Expired?!" class="formButton" id="expiredOrdersBtn"/>
+        <input type="button" value="All?!" class="formButton" id="allOrdersBtn"/>
+        <table id="orderTable" class="display">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -48,82 +50,6 @@
                     <th>@WorkOrder.workSiteAddress1</th>
                     <th>@Record.dateupdated</th>
                     <th>@Record.updatedby</th>                    
-                </tr>
-            </thead>
-        </table>        
-    </div>
-    <div id="activeOrderList">
-        <table id="activeOrderTable" class="display">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>LABEL</th>
-                    <th>EmployerID</th>
-                    <th>@WorkOrder.workorderID</th>
-                    <th>@WorkOrder.dateTimeofWork</th>
-                    <th>@WorkOrder.statusShort</th>
-                    <th>@WorkOrders.assigncount</th>
-                    <th>@WorkOrder.contactName</th>
-                    <th>@WorkOrder.workSiteAddress1</th>
-                    <th>@Record.dateupdated</th>
-                    <th>@Record.updatedby</th>
-                </tr>
-            </thead>
-        </table>        
-    </div>
-    <div id="completedOrderList">
-        <table id="completedOrderTable" class="display">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>LABEL</th>
-                    <th>EmployerID</th>
-                    <th>@WorkOrder.workorderID</th>
-                    <th>@WorkOrder.dateTimeofWork</th>
-                    <th>@WorkOrder.statusShort</th>
-                    <th>@WorkOrders.assigncount</th>
-                    <th>@WorkOrder.contactName</th>
-                    <th>@WorkOrder.workSiteAddress1</th>
-                    <th>@Record.dateupdated</th>
-                    <th>@Record.updatedby</th>
-                </tr>
-            </thead>
-        </table>        
-    </div>
-    <div id="cancelledOrderList">
-        <table id="cancelledOrderTable" class="display">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>LABEL</th>
-                    <th>EmployerID</th>
-                    <th>@WorkOrder.workorderID</th>
-                    <th>@WorkOrder.dateTimeofWork</th>
-                    <th>@WorkOrder.statusShort</th>
-                    <th>@WorkOrders.assigncount</th>
-                    <th>@WorkOrder.contactName</th>
-                    <th>@WorkOrder.workSiteAddress1</th>
-                    <th>@Record.dateupdated</th>
-                    <th>@Record.updatedby</th>
-                </tr>
-            </thead>
-        </table>        
-    </div>
-    <div id="expiredOrderList">
-        <table id="expiredOrderTable" class="display">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>LABEL</th>
-                    <th>EmployerID</th>
-                    <th>@WorkOrder.workorderID</th>
-                    <th>@WorkOrder.dateTimeofWork</th>
-                    <th>@WorkOrder.statusShort</th>
-                    <th>@WorkOrders.assigncount</th>
-                    <th>@WorkOrder.contactName</th>
-                    <th>@WorkOrder.workSiteAddress1</th>
-                    <th>@Record.dateupdated</th>
-                    <th>@Record.updatedby</th>
                 </tr>
             </thead>
         </table>        
@@ -144,47 +70,42 @@
             "bProcessing": true,
             "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
             "aoColumns": [
-                            { "sName": "ID", "bSearchable": false, "bSortable": false, "bVisible": false },
-                            { "sName": "LABEL", "bSearchable": false, "bSortable": false, "bVisible": false },
-                            { "sName": "EmployerID", "bSearchable": false, "bSortable": false, "bVisible": false },
-                            { "sName": "workorderID" },
-                            { "sName": "dateTimeofWork" },
-                            { "sName": "status", "bVisible": false  },
-                            { "sName": "assigncount" },
-                            { "sName": "contactName" },
-                            { "sName": "workSiteAddress1" },
-                            { "sName": "dateupdated" },
-                            { "sName": "Updatedby" }
+                            { "mDataProp": "tabref", "bSearchable": false, "bSortable": false, "bVisible": false },
+                            { "mDataProp": "tablabel", "bSearchable": false, "bSortable": false, "bVisible": false },
+                            { "mDataProp": "EID", "bSearchable": false, "bSortable": false, "bVisible": false },
+                            { "mDataProp": "WOID" },
+                            { "mDataProp": "dateTimeofWork" },
+                            { "mDataProp": "status" },
+                            { "mDataProp": "WAcount" },
+                            { "mDataProp": "contactName" },
+                            { "mDataProp": "workSiteAddress1" },
+                            { "mDataProp": "dateupdated" },
+                            { "mDataProp": "updatedby" }
                         ],
             "aoSearchCols" :  [null, null, null, null, null, null, null, null, null, null, null],
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                        $(nRow).attr("edittabref", aData[0]);
-                        $(nRow).attr("edittablabel", aData[1]);
+                        $(nRow).attr("edittabref", aData["tabref"]);
+                        $(nRow).attr("edittablabel", aData["tablabel"]);
                         return nRow;
                     }
         };
-    var pendingDefs = jQuery.extend(true, {}, oTableDefaults);
-    var activeDefs = jQuery.extend(true, {}, oTableDefaults);
-    var completedDefs = jQuery.extend(true, {}, oTableDefaults);
-    var cancelledDefs = jQuery.extend(true, {}, oTableDefaults);
-    var expiredDefs = jQuery.extend(true, {}, oTableDefaults);
+    var orderDefs = jQuery.extend(true, {}, oTableDefaults); //example of copying js object
     var summaryDefs = jQuery.extend(true, {}, oTableDefaults);
-   
-    pendingDefs["aoSearchCols"][5] = {"sSearch" : '@Lookups.getSingleEN("orderstatus", "Pending")'};
-    activeDefs["aoSearchCols"][5] = {"sSearch" : '@Lookups.getSingleEN("orderstatus", "Active")'};
-    completedDefs["aoSearchCols"][5] = {"sSearch" : '@Lookups.getSingleEN("orderstatus", "Completed")'};
-    cancelledDefs["aoSearchCols"][5] = {"sSearch" : '@Lookups.getSingleEN("orderstatus", "Cancelled")'};
-    expiredDefs["aoSearchCols"][5] = {"sSearch" : '@Lookups.getSingleEN("orderstatus", "Expired")'};
-    //////////////////////////////////////////////
-    //
-    //
-    //
     delete summaryDefs["iDeferLoading"];
     delete summaryDefs["aoColumns"];
     delete summaryDefs["fnRowCallback"];
     summaryDefs["aaSorting"] = [[1, 'desc']];
     summaryDefs["sAjaxSource"] = "/WorkOrder/AjaxSummary";
-
+       
+//    pendingDefs["aoSearchCols"][5] = {"sSearch" : '@Lookups.getSingleEN("orderstatus", "Pending")'};
+//    activeDefs["aoSearchCols"][5] = {"sSearch" : '@Lookups.getSingleEN("orderstatus", "Active")'};
+//    completedDefs["aoSearchCols"][5] = {"sSearch" : '@Lookups.getSingleEN("orderstatus", "Completed")'};
+//    cancelledDefs["aoSearchCols"][5] = {"sSearch" : '@Lookups.getSingleEN("orderstatus", "Cancelled")'};
+//    expiredDefs["aoSearchCols"][5] = {"sSearch" : '@Lookups.getSingleEN("orderstatus", "Expired")'};
+    //////////////////////////////////////////////
+    //
+    //
+    //
     $(document).ready(function () {
         if (eventDebug) M_conlog("EVENT", "READY", "workorder", "", "");
         ////////////////////////////////////////////////////////////////
@@ -192,29 +113,37 @@
         // Setup work order Tabs
         //
         M_dispatchTabs = null;
-        M_pendingOrderTable = null;
-        M_activeOrderTable = null;
-        M_completedOrderTable = null;
-        M_cancelledOrderTable = null;
-        M_expiredOrderTable = null;
-        
+        M_orderTable = null;
+        M_summaryTable = null;
+        $('.formButton').button();
         M_dispatchTabs = $('#dispatchTabs');
         jqrfyTabs(M_dispatchTabs, "ui-tabs-dispatch-");
         ////////////////////////////////////////////////////////////////
         //
         // Setup workorder Table
         //
-        M_pendingOrderTable = $('#pendingOrderTable');
-        M_activeOrderTable = $('#activeOrderTable');
-        M_completedOrderTable = $('#completedOrderTable');
-        M_cancelledOrderTable = $('#cancelledOrderTable');
-        M_expiredOrderTable = $('#expiredOrderTable');
+        M_orderTable = $('#orderTable');
         M_summaryTable = $('#orderSummaryTable');
-        jqrfyTable(M_pendingOrderTable, M_dispatchTabs, pendingDefs);
-        jqrfyTable(M_activeOrderTable, M_dispatchTabs, activeDefs);
-        jqrfyTable(M_completedOrderTable, M_dispatchTabs, completedDefs);
-        jqrfyTable(M_cancelledOrderTable, M_dispatchTabs, cancelledDefs);
-        jqrfyTable(M_expiredOrderTable, M_dispatchTabs, expiredDefs);
+        oTable = jqrfyTable(M_orderTable, M_dispatchTabs, orderDefs);
         jqrfyTable(M_summaryTable, M_dispatchTabs, summaryDefs);
+
+        $('#pendingOrdersBtn').click(function() {            
+            oTable.dataTable().fnFilter('@Lookups.getSingleEN("orderstatus", "Pending")', 5); //sync with DT array above
+        });
+        $('#activeOrdersBtn').click(function() {            
+            oTable.dataTable().fnFilter('@Lookups.getSingleEN("orderstatus", "Active")', 5); //sync with DT array above
+        });
+        $('#completedOrdersBtn').click(function() {            
+            oTable.dataTable().fnFilter('@Lookups.getSingleEN("orderstatus", "Completed")', 5); //sync with DT array above
+        });
+        $('#expiredOrdersBtn').click(function() {            
+            oTable.dataTable().fnFilter('@Lookups.getSingleEN("orderstatus", "Expired")', 5); //sync with DT array above
+        });
+        $('#allOrdersBtn').click(function() {            
+            oTable.dataTable().fnFilter("", 5); //sync with DT array above
+        });
+        $('#cancelledOrdersBtn').click(function() {
+            oTable.dataTable().fnFilter('@Lookups.getSingleEN("orderstatus", "Cancelled")', 5); //sync with DT array above
+        });
     });
 </script>

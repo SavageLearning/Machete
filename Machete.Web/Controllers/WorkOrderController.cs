@@ -231,17 +231,17 @@ namespace Machete.Web.Controllers
             //return what's left to datatables
             
             var result = from p in displayEmployers
-                         select new[] { _getTabRef(p),
-                                        _getTabLabel(p),
-                                        Convert.ToString(p.EmployerID),
-                                        System.String.Format("{0,5:D5}", p.ID),
-                                        System.String.Format("{0:MM/dd/yyyy}", p.dateTimeofWork),
-                                        Lookups.byID(p.status, CI.TwoLetterISOLanguageName),
-                                        p.workAssignments.Count(a => a.workOrderID == p.ID).ToString(),
-                                        p.contactName, 
-                                        p.workSiteAddress1,                                        
-                                        System.String.Format("{0:MM/dd/yyyy HH:mm:ss}", p.dateupdated), 
-                                        p.Updatedby
+                         select new { tabref = _getTabRef(p),
+                                      tablabel =  _getTabLabel(p),
+                                      EID = Convert.ToString(p.EmployerID),
+                                      WOID = System.String.Format("{0,5:D5}", p.ID),
+                                      dateTimeofWork = System.String.Format("{0:MM/dd/yyyy}", p.dateTimeofWork),
+                                      status = Lookups.byID(p.status, CI.TwoLetterISOLanguageName),
+                                      WAcount = p.workAssignments.Count(a => a.workOrderID == p.ID).ToString(),
+                                      contactName =  p.contactName, 
+                                      workSiteAddress1 =  p.workSiteAddress1,                                        
+                                      dateupdated = System.String.Format("{0:MM/dd/yyyy HH:mm:ss}", p.dateupdated), 
+                                      updatedby = p.Updatedby
                          };
 
             return Json(new
