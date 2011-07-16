@@ -42,8 +42,78 @@ namespace Machete.Web.Models
         public int iSortingCols { get; set; }
 
         /// <summary>
+        /// Number of columns that are used in sorting
+        /// </summary>
+        public int iSortCol_0 { get; set;}
+
+        /// <summary>
         /// Comma separated list of column names
         /// </summary>
         public string sColumns { get; set; }
+
+        /// <summary>
+        /// name of indexed column
+        /// </summary>
+        public string mDataProp_0 { get; set; }
+        /// <summary>
+        /// name of indexed column
+        /// </summary>
+        public string mDataProp_1 { get; set; }
+        /// <summary>
+        /// name of indexed column
+        /// </summary>
+        public string mDataProp_2 { get; set; }
+        /// <summary>
+        /// name of indexed column
+        /// </summary>
+        public string mDataProp_3 { get; set; }
+        /// <summary>
+        /// name of indexed column
+        /// </summary>
+        public string mDataProp_4 { get; set; }
+        /// <summary>
+        /// name of indexed column
+        /// </summary>
+        public string mDataProp_5 { get; set; }
+        /// <summary>
+        /// name of indexed column
+        /// </summary>
+        public string mDataProp_6 { get; set; }
+        /// <summary>
+        /// name of indexed column
+        /// </summary>
+        public string mDataProp_7 { get; set; }
+        /// <summary>
+        /// name of indexed column
+        /// </summary>
+        public string mDataProp_8 { get; set; }
+        /// <summary>
+        /// name of indexed column
+        /// </summary>
+        public string mDataProp_9 { get; set; }
+        /// <summary>
+        /// name of indexed column
+        /// </summary>
+        public string mDataProp_10 { get; set; }
+        /// <summary>
+        /// name of indexed column
+        /// </summary>
+        public string mDataProp_11 { get; set; }
+        /// <summary>
+        /// name of indexed column
+        /// </summary>
+        public string mDataProp_12 { get; set; }
+        /// <summary>
+        /// name of indexed column
+        /// </summary>
+        public string mDataProp_13 { get; set; }
+        /// <summary>
+        /// name of indexed column
+        /// </summary>
+        public string mDataProp_14 { get; set; }
+        /// <summary>
+        /// name of indexed column
+        /// </summary>
+        public string mDataProp_15 { get; set; }
     }
 }

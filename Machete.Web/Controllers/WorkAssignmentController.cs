@@ -96,13 +96,22 @@ namespace Machete.Web.Controllers
             }
             //Sort the Persons based on column selection
             var sortColIdx = Convert.ToInt32(Request["iSortCol_0"]);
-            Func<WorkAssignment, string> orderingFunction = (p => sortColIdx == 2 ? p.ID.ToString() :
-                                                          sortColIdx == 3 ? p.active.ToString() :
-                                                          //sortColIdx == 4 ? p.dateTimeofWork.ToBinary().ToString() :
-                                                          sortColIdx == 4 ? p.englishLevelID.ToString() :
-                                                          sortColIdx == 5 ? Lookups.byID(p.skillID, culture) :
-                                                          sortColIdx == 6 ? p.Updatedby :
-                                                          p.dateupdated.ToBinary().ToString());
+            //var sortColName = param.
+
+            var sortColName = _mapColIdx(param);
+            Func<WorkAssignment, string> orderingFunction =
+                  (p => sortColName == "WOID" ? p.workOrder.ID.ToString() :
+                        sortColName == "WAID" ? p.ID.ToString() :
+                        sortColName == "englishlevel" ? p.englishLevelID.ToString() :
+                        sortColName == "skill" ? Lookups.byID(p.skillID, culture) :
+                        sortColName == "hourlywage" ? p.hourlyWage.ToString() :
+                        sortColName == "hours" ? p.hours.ToString() :
+                        sortColName == "days" ? p.days.ToString() :
+                        sortColName == "description" ? p.description :
+                        sortColName == "dateTimeofWork" ? p.workOrder.dateTimeofWork.ToBinary().ToString() :
+
+                        sortColName == "updatedby" ? p.Updatedby :
+                        p.dateupdated.ToBinary().ToString());
 
             var sortDir = Request["sSortDir_0"];
             if (sortDir == "asc")
@@ -304,6 +313,28 @@ namespace Machete.Web.Controllers
             return PartialView("Index", _ord);
         }
         #endregion
+
+        private string _mapColIdx(jQueryDataTableParam param)
+        {
+            int idx = param.iSortCol_0;
+            if (idx == 0) return param.mDataProp_0;
+            if (idx == 1) return param.mDataProp_1;
+            if (idx == 2) return param.mDataProp_2;
+            if (idx == 3) return param.mDataProp_3;
+            if (idx == 4) return param.mDataProp_4;
+            if (idx == 5) return param.mDataProp_5;
+            if (idx == 6) return param.mDataProp_6;
+            if (idx == 7) return param.mDataProp_7;
+            if (idx == 8) return param.mDataProp_8;
+            if (idx == 9) return param.mDataProp_9;
+            if (idx == 10) return param.mDataProp_10;
+            if (idx == 11) return param.mDataProp_11;
+            if (idx == 12) return param.mDataProp_12;
+            if (idx == 13) return param.mDataProp_13;
+            if (idx == 14) return param.mDataProp_14;
+            if (idx == 15) return param.mDataProp_15;
+            return null;
+        }
     }
 
 
