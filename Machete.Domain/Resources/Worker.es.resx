@@ -231,4 +231,10 @@
   <data name="skill3" xml:space="preserve">
     <value>Habilidad (3)</value>
   </data>
+  <data name="dateOfMembership" xml:space="preserve">
+    <value>Decha de la afiliación</value>
+  </data>
+  <data name="program" xml:space="preserve">
+    <value>Typo de trabajador</value>
+  </data>
 </root>

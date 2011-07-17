@@ -35,7 +35,7 @@
 }
 @Html.Partial("WorkAssignmentIndex", Model)
 
-@if (Lookups.getPendingID() == Model.status)
+@if (Lookups.getSingleEN("orderstatus", "Pending") == Model.status)
 {
     <div class="completeOrderContainer">
         <input type="button" value="@WorkOrders.activatesubmit" class="formButton completeOrderButton" id="activateWorkOrderButton-@(Model.ID)"/>

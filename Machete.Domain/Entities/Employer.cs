@@ -66,5 +66,8 @@ namespace Machete.Domain
         [LocalizedDisplayName("referredbyOther", NameResourceType = typeof(Resources.Employer))]
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Employer))]
         public string referredbyOther { get; set; }
+
+        [LocalizedDisplayName("blogparticipate", NameResourceType = typeof(Resources.Employer))]
+        public bool? blogparticipate { get; set; }
     }
 }

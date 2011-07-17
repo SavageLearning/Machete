@@ -21,8 +21,9 @@ namespace Machete.Domain
         public int? workerSigninID { get; set; }
         public virtual WorkerSignin workerSiginin { get; set; }
 
-        public bool active { get; set; } 
-
+        public bool active { get; set; }
+        [LocalizedDisplayName("pseudoID", NameResourceType = typeof(Resources.WorkOrder))]
+        public int? pseudoID { get; set; }
         [LocalizedDisplayName("description", NameResourceType = typeof(Resources.WorkAssignment))]        
         [StringLength(1000, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.WorkAssignment))]
         public string description { get; set; }

@@ -16,13 +16,20 @@
                                      new { @class = "ui-datepicker", tabindex = "2", id = "dateOfMembership-@(Model.ID)" })
             @Html.ValidationMessageFor(model => model.dateOfMembership)
         </div>
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.program)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.DropDownListFor(model => model.program, new SelectList(Lookups.typeOfWork(CI.TwoLetterISOLanguageName), "Value", "Text", Model.program), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })
+            @Html.ValidationMessageFor(model => model.program)
+        </div>
     </div>
     <div class="tb-row">
         <div class="tb-label tb-cell">
             @Html.LabelFor(model => model.RaceID)
         </div>
         <div class="tb-field tb-cell">
-            @Html.DropDownListFor(model => model.RaceID, new SelectList(ViewBag.races, "Value", "Text", Model.RaceID), "Choose", new { tabindex = "1" })
+            @Html.DropDownListFor(model => model.RaceID, new SelectList(ViewBag.races, "Value", "Text", Model.RaceID), @Machete.Web.Resources.Shared.choose, new { tabindex = "1" })
             @Html.ValidationMessageFor(model => model.RaceID)
         </div>
         <div class="tb-label tb-cell">
