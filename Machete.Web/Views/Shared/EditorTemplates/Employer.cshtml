@@ -70,6 +70,13 @@
             @Html.TextBoxFor(model => model.email, new { tabindex = "2" })
             @Html.ValidationMessageFor(model => model.email)
         </div>
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.blogparticipate)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.EditorFor(model => model.blogparticipate, new { tabindex = "2" })
+            @Html.ValidationMessageFor(model => model.blogparticipate)
+        </div>
     </div>
     <!--tb-row-->
     <div class="tb-row">

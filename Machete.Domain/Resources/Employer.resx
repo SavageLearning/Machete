@@ -129,6 +129,9 @@
   <data name="address2" xml:space="preserve">
     <value>Address (2)</value>
   </data>
+  <data name="blogparticipate" xml:space="preserve">
+    <value>Agrees to participate in blog?</value>
+  </data>
   <data name="cellphone" xml:space="preserve">
     <value>Cell phone</value>
   </data>

@@ -16,7 +16,12 @@ namespace Machete.Domain
         public virtual Person Person { get; set; }
         public virtual ICollection<WorkerSignin> workersignins { get; set; }
         //
-        //TODO: add to forms
+        [Required(ErrorMessageResourceName = "program", ErrorMessageResourceType = typeof(Resources.Worker))]
+        [LocalizedDisplayName("program", NameResourceType = typeof(Resources.Worker))]
+        public int program { get; set; }
+        //
+        [Required(ErrorMessageResourceName = "dateOfMembership", ErrorMessageResourceType = typeof(Resources.Worker))]
+        [LocalizedDisplayName("dateOfMembership", NameResourceType = typeof(Resources.Worker))]
         public DateTime dateOfMembership { get; set; }
         //
         [Required(ErrorMessageResourceName = "dateOfBirth", ErrorMessageResourceType = typeof(Resources.Worker))]
