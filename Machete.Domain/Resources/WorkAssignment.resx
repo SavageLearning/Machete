@@ -168,12 +168,6 @@
   <data name="skillIDRequired" xml:space="preserve">
     <value>A skill is required (use general labor if none was specificed)</value>
   </data>
-  <data name="skillLevel" xml:space="preserve">
-    <value>Skill level</value>
-  </data>
-  <data name="skillLevelRequired" xml:space="preserve">
-    <value>A skill level is required</value>
-  </data>
   <data name="stringlength" xml:space="preserve">
     <value>Please enter no more than {1} characters</value>
   </data>

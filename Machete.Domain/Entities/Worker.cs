@@ -16,9 +16,9 @@ namespace Machete.Domain
         public virtual Person Person { get; set; }
         public virtual ICollection<WorkerSignin> workersignins { get; set; }
         //
-        [Required(ErrorMessageResourceName = "program", ErrorMessageResourceType = typeof(Resources.Worker))]
-        [LocalizedDisplayName("program", NameResourceType = typeof(Resources.Worker))]
-        public int program { get; set; }
+        [Required(ErrorMessageResourceName = "typeOfWorkID", ErrorMessageResourceType = typeof(Resources.Worker))]
+        [LocalizedDisplayName("typeOfWorkID", NameResourceType = typeof(Resources.Worker))]
+        public int typeOfWorkID { get; set; }
         //
         [Required(ErrorMessageResourceName = "dateOfMembership", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("dateOfMembership", NameResourceType = typeof(Resources.Worker))]

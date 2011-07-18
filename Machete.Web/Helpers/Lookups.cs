@@ -12,6 +12,7 @@ namespace Machete.Web.Helpers
 {
     public class Lookups
     {
+        #region definitions
         private static SelectList maritalstatusesEN { get; set; }
         private static SelectList maritalstatusesES { get; set; }
         public static int maritalstatusDefault { get; private set; }
@@ -58,7 +59,10 @@ namespace Machete.Web.Helpers
         public static int skillDefault { get; private set; }
         private static List<SelectListItem> yesnoEN { get; set; }
         private static List<SelectListItem> yesnoES { get; set; }
-
+        #endregion
+        //
+        // Initialize once to prevent re-querying DB
+        //
         public static void Initialize(MacheteContext db)
         {
             DB = db;
@@ -235,9 +239,7 @@ namespace Machete.Web.Helpers
             List<SelectListItemEx> list;
             if (locale == "es")
             {
-                //daysNum = new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14" }
-                //        .Select(x => new LookupNumber { Value = x, Text = x });
-                //            yesnoES.Add(new SelectListItem() { Selected = false, Text = "Si", Value = "true" });
+
                 list = new List<SelectListItemEx>(DB.Lookups.ToList().Where(s => s.category == category)
                                     .Select(x => new SelectListItemEx
                                     { 
@@ -266,7 +268,9 @@ namespace Machete.Web.Helpers
             return list;
         }
 
-
+        //
+        // Returns the default ID for a given category
+        //
         public static int getDefaultID(string category)
         {
             //TODO Exception handling
@@ -279,32 +283,26 @@ namespace Machete.Web.Helpers
             return count; 
 
         }
-        //TODO this needs a better name
+        //
+        // Get the ID number for a given lookup string
+        //
         public static int getSingleEN(string category, string text)
         {
             int rtnint = 0;
             rtnint = DB.Lookups.Single(s => s.category == category && s.text_EN == text).ID;
             return rtnint;
         }
-
+        //
+        // Get the Id string for a given lookup number
+        //
         public static string byID(int ID, string locale)
         {
             if (locale == "es") return DB.Lookups.Single(s => s.ID == ID).text_ES;
             return DB.Lookups.Single(s => s.ID == ID).text_EN; ;  //defaults to English
         }
-        public static int getPendingID()
-        {
-            return DB.Lookups.Single(s => s.category == "orderstatus" && s.text_EN == "Pending").ID;
-        }
-
-        public static string byID_noBrackets(int ID, string locale)
-        {
-            string result;
-            string pattern = @"\s*\[.*\]";
-            result = byID(ID, locale);
-            return Regex.Replace(result, pattern, System.String.Empty);            
-        }
-
+        //
+        // create multi-lingual yes/no strings
+        //
         public static string getBool(bool val, string locale)
         {
             if (locale == "es")
@@ -320,7 +318,14 @@ namespace Machete.Web.Helpers
             if (val == null) val = false;
             return getBool((bool)val, locale);
         }
+        //
+        //
+        //
+        public static bool isSpecialized(int id)
+        {
+            return DB.Lookups.Single(s => s.ID == id).speciality;
 
+        }
     }
     public class LookupNumber
     {

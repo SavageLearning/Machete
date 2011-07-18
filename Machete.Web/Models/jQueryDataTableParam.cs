@@ -19,8 +19,22 @@ namespace Machete.Web.Models
         /// Text used for filtering
         /// </summary>
         public string sSearch { get; set; }
+        public string sSearch_0 { get; set; }
+        public string sSearch_1 { get; set; }
         public string sSearch_2 { get; set; }
+        public string sSearch_3 { get; set; }
+        public string sSearch_4 { get; set; }
         public string sSearch_5 { get; set; }
+        public string sSearch_6 { get; set; }
+        public string sSearch_7 { get; set; }
+        public string sSearch_8 { get; set; }
+        public string sSearch_9 { get; set; }
+        public string sSearch_10 { get; set; }
+        public string sSearch_11 { get; set; }
+        public string sSearch_12 { get; set; }
+        public string sSearch_13 { get; set; }
+        public string sSearch_14 { get; set; }
+        public string sSearch_15 { get; set; }
         /// <summary>
         /// Number of records that should be shown in table
         /// </summary>
@@ -115,5 +129,50 @@ namespace Machete.Web.Models
         /// name of indexed column
         /// </summary>
         public string mDataProp_15 { get; set; }
+
+        public string todaysdate { get; set; }
+        public string dwccardnum { get; set; }
+        public string sortColName()         
+        {
+            int idx = this.iSortCol_0;
+            if (idx == 0) return this.mDataProp_0;
+            if (idx == 1) return this.mDataProp_1;
+            if (idx == 2) return this.mDataProp_2;
+            if (idx == 3) return this.mDataProp_3;
+            if (idx == 4) return this.mDataProp_4;
+            if (idx == 5) return this.mDataProp_5;
+            if (idx == 6) return this.mDataProp_6;
+            if (idx == 7) return this.mDataProp_7;
+            if (idx == 8) return this.mDataProp_8;
+            if (idx == 9) return this.mDataProp_9;
+            if (idx == 10) return this.mDataProp_10;
+            if (idx == 11) return this.mDataProp_11;
+            if (idx == 12) return this.mDataProp_12;
+            if (idx == 13) return this.mDataProp_13;
+            if (idx == 14) return this.mDataProp_14;
+            if (idx == 15) return this.mDataProp_15;
+            return null;
+        }
+
+        public string searchColName(string name)
+        {
+            if (this.mDataProp_0 == name) return this.sSearch_0;
+            if (this.mDataProp_1 == name) return this.sSearch_1;
+            if (this.mDataProp_2 == name) return this.sSearch_2;
+            if (this.mDataProp_3 == name) return this.sSearch_3;
+            if (this.mDataProp_4 == name) return this.sSearch_4;
+            if (this.mDataProp_5 == name) return this.sSearch_5;
+            if (this.mDataProp_6 == name) return this.sSearch_6;
+            if (this.mDataProp_7 == name) return this.sSearch_7;
+            if (this.mDataProp_8 == name) return this.sSearch_8;
+            if (this.mDataProp_9 == name) return this.sSearch_9;
+            if (this.mDataProp_10 == name) return this.sSearch_10;
+            if (this.mDataProp_11 == name) return this.sSearch_11;
+            if (this.mDataProp_12 == name) return this.sSearch_12;
+            if (this.mDataProp_13 == name) return this.sSearch_13;
+            if (this.mDataProp_14 == name) return this.sSearch_14;
+            if (this.mDataProp_15 == name) return this.sSearch_15;
+            return null;
+        }
     }
 }

@@ -17,11 +17,11 @@
             @Html.ValidationMessageFor(model => model.dateOfMembership)
         </div>
         <div class="tb-label tb-cell">
-            @Html.LabelFor(model => model.program)
+            @Html.LabelFor(model => model.typeOfWorkID)
         </div>
         <div class="tb-field tb-cell">
-            @Html.DropDownListFor(model => model.program, new SelectList(Lookups.typeOfWork(CI.TwoLetterISOLanguageName), "Value", "Text", Model.program), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })
-            @Html.ValidationMessageFor(model => model.program)
+            @Html.DropDownListFor(model => model.typeOfWorkID, new SelectList(Lookups.typeOfWork(CI.TwoLetterISOLanguageName), "Value", "Text", Model.typeOfWorkID), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })
+            @Html.ValidationMessageFor(model => model.typeOfWorkID)
         </div>
     </div>
     <div class="tb-row">

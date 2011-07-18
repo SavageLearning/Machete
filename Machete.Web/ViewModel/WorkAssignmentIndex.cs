@@ -9,7 +9,8 @@ namespace Machete.Web.ViewModel
 {
     public class WorkAssignmentIndex
     {
-        public DateTime date { get; set; }
+        public string todaysdate { get; set; }
+        public string dwccardnum { get; set; }
 
     }
 }

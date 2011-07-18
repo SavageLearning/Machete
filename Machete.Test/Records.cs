@@ -459,7 +459,6 @@ namespace Machete.Test
             hourlyWage = 20.50,
             description = "A job I want done",
             englishLevelID = 1,
-            skillLevel = 1,
             //evaluation
             qualityOfWork = 5,
             followDirections = 4,

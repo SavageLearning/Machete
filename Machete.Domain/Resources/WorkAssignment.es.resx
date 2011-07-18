@@ -168,12 +168,6 @@
   <data name="skillIDRequired" xml:space="preserve">
     <value>Una habilidad es obligatorio (Usa trabajo general si no ha especificado)</value>
   </data>
-  <data name="skillLevel" xml:space="preserve">
-    <value>Nivel de habilidad</value>
-  </data>
-  <data name="skillLevelRequired" xml:space="preserve">
-    <value>Una nivel es obligatorio</value>
-  </data>
   <data name="stringlength" xml:space="preserve">
     <value>Por favor, introduzca un máximo de {1} caracteres</value>
   </data>

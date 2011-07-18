@@ -340,15 +340,6 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Type of worker.
-        /// </summary>
-        public static string program {
-            get {
-                return ResourceManager.GetString("program", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Race.
         /// </summary>
         public static string raceID {
@@ -417,6 +408,15 @@ namespace Machete.Domain.Resources {
         public static string stringlength {
             get {
                 return ResourceManager.GetString("stringlength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type of worker.
+        /// </summary>
+        public static string typeOfWorkID {
+            get {
+                return ResourceManager.GetString("typeOfWorkID", resourceCulture);
             }
         }
         

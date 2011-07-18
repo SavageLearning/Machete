@@ -237,7 +237,7 @@
   <data name="dateOfMembership" xml:space="preserve">
     <value>Date of Membership</value>
   </data>
-  <data name="program" xml:space="preserve">
+  <data name="typeOfWorkID" xml:space="preserve">
     <value>Type of worker</value>
   </data>
 </root>
