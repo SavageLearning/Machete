@@ -129,6 +129,7 @@ namespace Machete.Web.Controllers
             Func<WorkAssignment, string> orderingFunction =
                   (p => sortColName == "WOID" ? p.workOrder.ID.ToString() :
                         sortColName == "WAID" ? p.ID.ToString() :
+                        sortColName == "pWAID" ? Convert.ToString(p.workOrderID) + "-" + Convert.ToString(p.ID) : 
                         sortColName == "englishlevel" ? p.englishLevelID.ToString() :
                         sortColName == "skill" ? Lookups.byID(p.skillID, culture) :
                         sortColName == "hourlywage" ? p.hourlyWage.ToString() :
@@ -136,7 +137,7 @@ namespace Machete.Web.Controllers
                         sortColName == "days" ? p.days.ToString() :
                         sortColName == "description" ? p.description :
                         sortColName == "dateTimeofWork" ? p.workOrder.dateTimeofWork.ToBinary().ToString() :
-
+                        sortColName == "earnings" ? Convert.ToString(p.hourlyWage * p.hours * p.days) :
                         sortColName == "updatedby" ? p.Updatedby :
                         p.dateupdated.ToBinary().ToString());
 
@@ -157,6 +158,7 @@ namespace Machete.Web.Controllers
                                       tablabel = _getTabLabel(p),
                                       WOID = Convert.ToString(p.workOrderID),
                                       WAID = Convert.ToString(p.ID),
+                                      pWAID = Convert.ToString(p.workOrderID) + "-" + Convert.ToString(p.ID),
                                       englishlevel = Convert.ToString(p.englishLevelID),
                                       skill =  Lookups.byID(p.skillID, culture),
                                       hourlywage = Convert.ToString(p.hourlyWage),
@@ -165,7 +167,8 @@ namespace Machete.Web.Controllers
                                       description = p.description,
                                       dateupdated = Convert.ToString(p.dateupdated), 
                                       updatedby = p.Updatedby,
-                                      dateTimeofWork = p.workOrder.dateTimeofWork.ToString()
+                                      dateTimeofWork = p.workOrder.dateTimeofWork.ToString(),
+                                      earnings = p.hourlyWage * p.hours * p.days
                          };
 
             return Json(new
