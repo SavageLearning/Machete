@@ -13,6 +13,7 @@ namespace Machete.Service
     {
         IEnumerable<Worker> GetWorkers(bool inactive);
         Worker GetWorker(int id);
+        Worker GetWorkerByNum(int dwccardnum);
         Worker CreateWorker(Worker worker, string user);
         void DeleteWorker(int id, string user);
         void SaveWorker(Worker worker, string user);
@@ -50,6 +51,12 @@ namespace Machete.Service
         public Worker GetWorker(int id)
         {
             var worker = workerRepository.GetById(id);
+            return worker;
+        }
+
+        public Worker GetWorkerByNum(int dwccardnum)
+        {
+            Worker worker = workerRepository.Get(w => w.dwccardnum == dwccardnum);
             return worker;
         }
 

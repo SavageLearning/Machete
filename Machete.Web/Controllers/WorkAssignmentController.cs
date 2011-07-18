@@ -20,17 +20,18 @@ namespace Machete.Web.Controllers
     public class WorkAssignmentController : Controller
     {
         private readonly IWorkAssignmentService _assServ;
-        private readonly IEmployerService _empServ;
+        private readonly IWorkerService _wkrServ;
         private readonly IWorkOrderService _ordServ;
+        private MacheteContext DB;
         private string culture {get; set;}
         private Logger log = LogManager.GetCurrentClassLogger();
         private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "WorkAssignmentController", "");
         public WorkAssignmentController(IWorkAssignmentService workAssignmentService,
-                                        IEmployerService employerService,
+                                        IWorkerService workerService,
                                         IWorkOrderService workOrderService)
         {
             this._assServ = workAssignmentService;
-            this._empServ = employerService;
+            this._wkrServ = workerService;
             this._ordServ = workOrderService;
         }
         protected override void Initialize(RequestContext requestContext)
@@ -45,7 +46,8 @@ namespace Machete.Web.Controllers
             //ViewBag.languages = Lookups.language(CI.TwoLetterISOLanguageName);
             ViewBag.hoursList = Lookups.hours();
             ViewBag.daysList = Lookups.days();
-            ViewBag.skillLevelList = Lookups.skillLevels();            
+            ViewBag.skillLevelList = Lookups.skillLevels();
+            DB = new MacheteContext();
         }
 
         #region Index
@@ -55,7 +57,9 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, User")]
         public ActionResult Index()
         {
-            return View();
+            WorkAssignmentIndex _model = new WorkAssignmentIndex();
+            _model.todaysdate = DateTime.Today.ToShortDateString();
+            return View(_model);
         }
 
         #endregion
@@ -69,10 +73,33 @@ namespace Machete.Web.Controllers
             IEnumerable<WorkAssignment> filteredAssignments;
             IEnumerable<WorkAssignment> sortedAssignments;
             //Search based on search-bar string 
-            if (!string.IsNullOrEmpty(param.sSearch_2))
+            if (!string.IsNullOrEmpty(param.dwccardnum) & !string.IsNullOrEmpty(param.todaysdate))
+            {
+                Worker worker = _wkrServ.GetWorkerByNum(Convert.ToInt32(param.dwccardnum));
+
+                emplrfilteredAssignments = _assServ.GetMany(true).Join(DB.Lookups,
+                                                                       wa => wa.skillID,
+                                                                       sk => sk.ID,
+                                                                       (wa, sk) => new { wa, sk })
+                                                                 .Where(jj => jj.wa.workOrder.dateTimeofWork.Date.Equals(Convert.ToDateTime(param.todaysdate)) &&
+                                                                              jj.wa.englishLevelID <= worker.englishlevelID &&
+                                                                              jj.sk.typeOfWorkID.Equals(worker.typeOfWorkID) && (
+                                                                              jj.wa.skillID.Equals(worker.skill1) ||
+                                                                              jj.wa.skillID.Equals(worker.skill2) ||
+                                                                              jj.wa.skillID.Equals(worker.skill3) ||
+                                                                              jj.sk.speciality == false )                                                                             
+                                                                              )
+                                                                 .Select(jj => jj.wa);
+            }
+            else if (!string.IsNullOrEmpty(param.todaysdate)) 
+            {
+                    emplrfilteredAssignments = _assServ.GetMany(true).Where(wa =>
+                                                                    wa.workOrder.dateTimeofWork.Date.Equals(Convert.ToDateTime(param.todaysdate)));
+            }
+            else if (!string.IsNullOrEmpty(param.searchColName("WOID")))
             {
                 emplrfilteredAssignments = _assServ.GetMany(true)
-                    .Where(p => p.workOrderID.Equals(Convert.ToInt32(param.sSearch_2)));
+                    .Where(p => p.workOrderID.Equals(Convert.ToInt32(param.searchColName("WOID"))));
             }
             else
             {
@@ -83,7 +110,7 @@ namespace Machete.Web.Controllers
                 filteredAssignments = emplrfilteredAssignments
                     .Where(p => p.ID.ToString().ContainsOIC(param.sSearch) ||
                                 p.active.ToString().ContainsOIC(param.sSearch) ||
-                                //p.dateTimeofWork.ToString().ContainsOIC(param.sSearch) ||
+                                p.workOrder.dateTimeofWork.ToString().ContainsOIC(param.sSearch) ||
                                 p.description.ContainsOIC(param.sSearch) ||
                                 p.englishLevelID.ToString().ContainsOIC(param.sSearch) ||
                                 Lookups.byID(p.skillID, CI.TwoLetterISOLanguageName).ContainsOIC(param.sSearch) ||
@@ -98,7 +125,7 @@ namespace Machete.Web.Controllers
             var sortColIdx = Convert.ToInt32(Request["iSortCol_0"]);
             //var sortColName = param.
 
-            var sortColName = _mapColIdx(param);
+            var sortColName = param.sortColName();
             Func<WorkAssignment, string> orderingFunction =
                   (p => sortColName == "WOID" ? p.workOrder.ID.ToString() :
                         sortColName == "WAID" ? p.ID.ToString() :
@@ -131,7 +158,7 @@ namespace Machete.Web.Controllers
                                       WOID = Convert.ToString(p.workOrderID),
                                       WAID = Convert.ToString(p.ID),
                                       englishlevel = Convert.ToString(p.englishLevelID),
-                                      skill =  Lookups.byID_noBrackets(p.skillID, culture),
+                                      skill =  Lookups.byID(p.skillID, culture),
                                       hourlywage = Convert.ToString(p.hourlyWage),
                                       hours = Convert.ToString(p.hours),
                                       days = Convert.ToString(p.days),
@@ -314,27 +341,7 @@ namespace Machete.Web.Controllers
         }
         #endregion
 
-        private string _mapColIdx(jQueryDataTableParam param)
-        {
-            int idx = param.iSortCol_0;
-            if (idx == 0) return param.mDataProp_0;
-            if (idx == 1) return param.mDataProp_1;
-            if (idx == 2) return param.mDataProp_2;
-            if (idx == 3) return param.mDataProp_3;
-            if (idx == 4) return param.mDataProp_4;
-            if (idx == 5) return param.mDataProp_5;
-            if (idx == 6) return param.mDataProp_6;
-            if (idx == 7) return param.mDataProp_7;
-            if (idx == 8) return param.mDataProp_8;
-            if (idx == 9) return param.mDataProp_9;
-            if (idx == 10) return param.mDataProp_10;
-            if (idx == 11) return param.mDataProp_11;
-            if (idx == 12) return param.mDataProp_12;
-            if (idx == 13) return param.mDataProp_13;
-            if (idx == 14) return param.mDataProp_14;
-            if (idx == 15) return param.mDataProp_15;
-            return null;
-        }
+
     }
 
 

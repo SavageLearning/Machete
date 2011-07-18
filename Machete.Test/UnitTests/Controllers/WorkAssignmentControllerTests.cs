@@ -23,7 +23,7 @@ namespace Machete.Test.Controllers
     public class WorkAssignmentsControllerTests
     {
         Mock<IWorkAssignmentService> _serv;
-        Mock<IEmployerService> _empServ;
+        Mock<IWorkerService> _wkrServ;
         Mock<IWorkOrderService> _woServ;
         //
         //   Testing /Index functionality
@@ -33,7 +33,7 @@ namespace Machete.Test.Controllers
         {
             //Arrange
             _serv = new Mock<IWorkAssignmentService>();
-            var _ctrlr = new WorkAssignmentController(_serv.Object, _empServ.Object, _woServ.Object);
+            var _ctrlr = new WorkAssignmentController(_serv.Object, _wkrServ.Object, _woServ.Object);
             var _view = new WorkAssignmentIndex();
             //Act
             var result = (ViewResult)_ctrlr.Index();
@@ -50,7 +50,7 @@ namespace Machete.Test.Controllers
         {
             //Arrange
             _serv = new Mock<IWorkAssignmentService>();
-            var _ctrlr = new WorkAssignmentController(_serv.Object, _empServ.Object, _woServ.Object);
+            var _ctrlr = new WorkAssignmentController(_serv.Object, _wkrServ.Object, _woServ.Object);
             //Act
             var result = (ViewResult)_ctrlr.Create(0);
             //Assert
@@ -64,7 +64,7 @@ namespace Machete.Test.Controllers
             var _editor = new WorkAssignment();
             _serv = new Mock<IWorkAssignmentService>();
             _serv.Setup(p => p.Create(_editor, "UnitTest")).Returns(_editor);
-            var _ctrlr = new WorkAssignmentController(_serv.Object, _empServ.Object, _woServ.Object);
+            var _ctrlr = new WorkAssignmentController(_serv.Object, _wkrServ.Object, _woServ.Object);
             //Act
             var result = (RedirectToRouteResult)_ctrlr.Create(_editor, "UnitTest");
             //Assert
@@ -78,7 +78,7 @@ namespace Machete.Test.Controllers
             var _editor = new WorkAssignment();
             _serv = new Mock<IWorkAssignmentService>();
             _serv.Setup(p => p.Create(_editor, "UnitTest")).Returns(_editor);
-            var _ctrlr = new WorkAssignmentController(_serv.Object, _empServ.Object, _woServ.Object);
+            var _ctrlr = new WorkAssignmentController(_serv.Object, _wkrServ.Object, _woServ.Object);
             _ctrlr.ModelState.AddModelError("TestError", "foo");
             //Act
             var result = (ViewResult)_ctrlr.Create(_editor, "UnitTest");
@@ -99,7 +99,7 @@ namespace Machete.Test.Controllers
             int testid = 4242;
             WorkAssignment fakeworkAssignment = new WorkAssignment();
             _serv.Setup(p => p.Get(testid)).Returns(fakeworkAssignment);
-            var _ctrlr = new WorkAssignmentController(_serv.Object, _empServ.Object, _woServ.Object);
+            var _ctrlr = new WorkAssignmentController(_serv.Object, _wkrServ.Object, _woServ.Object);
             //Act
             var result = (ViewResult)_ctrlr.Edit(testid);
             //Assert
@@ -127,7 +127,7 @@ namespace Machete.Test.Controllers
                                              savedworkAssignment = p;
                                              user = str;
                                          });
-            var _ctrlr = new WorkAssignmentController(_serv.Object, _empServ.Object, _woServ.Object);
+            var _ctrlr = new WorkAssignmentController(_serv.Object, _wkrServ.Object, _woServ.Object);
             _ctrlr.SetFakeControllerContext();
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
@@ -156,7 +156,7 @@ namespace Machete.Test.Controllers
             _serv.Setup(p => p.Get(testid)).Returns(workAssignment);
             //
             // Mock HttpContext so that ModelState and FormCollection work
-            var _ctrlr = new WorkAssignmentController(_serv.Object, _empServ.Object, _woServ.Object);
+            var _ctrlr = new WorkAssignmentController(_serv.Object, _wkrServ.Object, _woServ.Object);
             _ctrlr.SetFakeControllerContext();
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //
@@ -180,7 +180,7 @@ namespace Machete.Test.Controllers
             int testid = 4242;
             WorkAssignment fakeworkAssignment = new WorkAssignment();
             _serv.Setup(p => p.Get(testid)).Returns(fakeworkAssignment);
-            var _ctrlr = new WorkAssignmentController(_serv.Object, _empServ.Object, _woServ.Object);
+            var _ctrlr = new WorkAssignmentController(_serv.Object, _wkrServ.Object, _woServ.Object);
             //Act
             var result = (ViewResult)_ctrlr.Delete(testid);
             //Assert
@@ -194,7 +194,7 @@ namespace Machete.Test.Controllers
             _serv = new Mock<IWorkAssignmentService>();
             int testid = 4242;
             FormCollection fakeform = new FormCollection();
-            var _ctrlr = new WorkAssignmentController(_serv.Object, _empServ.Object, _woServ.Object);
+            var _ctrlr = new WorkAssignmentController(_serv.Object, _wkrServ.Object, _woServ.Object);
             _ctrlr.SetFakeControllerContext();
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act

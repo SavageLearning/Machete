@@ -5,13 +5,22 @@
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
 }
+@using (Html.BeginForm())
+{
 <div>
-    @Html.LabelFor(m => m.date)
+    @Html.LabelFor(m => m.todaysdate)
 </div>
 <div>
-    @Html.TextBoxFor(m => m.date)
+    @Html.TextBoxFor(m => m.todaysdate)
+    <input type="button" value="update" id="updateBtn" />
 </div>
-
+}    
+<div>
+    @Html.LabelFor(m => m.dwccardnum)
+</div>
+<div>
+    @Html.TextBoxFor(m => m.dwccardnum)
+</div>
 
 <div id="assignmentTab">
     <ul>
@@ -25,13 +34,14 @@
                     <th>LABEL</th>
                     <th>WorkOrderID</th>
                     <th>ID#</th>
+                    <th>@WorkOrder.dateTimeofWork</th>
                     <th>@WorkAssignment.englishLevelID</th>
                     <th>@WorkAssignment.skillID</th>
                     <th>@WorkAssignment.hourlyWage</th>
                     <th>@WorkAssignment.hours</th>
                     <th>@WorkAssignment.days</th>
                     <th>@WorkAssignment.description</th>
-                    <th>@WorkOrder.dateTimeofWork</th>
+
 
                 </tr>
             </thead>
@@ -45,7 +55,7 @@
         {
             "bPaginate": true,
             "bLengthChange": true,
-            "aaSorting": [[7, 'desc']],
+            "aaSorting": [[4, 'desc']],
             "bFilter": true,
             //"bSort": true,
             "bInfo": true,
@@ -58,18 +68,32 @@
                             { "mDataProp": "tabref", "bSearchable": false, "bSortable": false, "bVisible": false },
                             { "mDataProp": "tablabel", "bSearchable": false, "bSortable": false, "bVisible": false },
                             { "mDataProp": "WOID", "bSearchable": false, "bSortable": false, "bVisible": false }, 
-                            { "mDataProp": "WAID"},
+                            { "mDataProp": "WAID"},                            
+                            { "mDataProp": "dateTimeofWork"},                            
                             { "mDataProp": "englishlevel"}, 
                             { "mDataProp": "skill"}, 
                             { "mDataProp": "hourlywage"}, 
                             { "mDataProp": "hours"}, 
                             { "mDataProp": "days"},
-                            { "mDataProp": "description"},
-                            { "mDataProp": "dateTimeofWork"}
+                            { "mDataProp": "description"}
+
                         ],
-            "aoSearchCols" : [null, null, null, null, null, null, null, null, null, null, null]//,
+            "aoSearchCols" : [null, null, null, null, null, null, null, null, null, null, null],
+            "fnServerData": function ( sSource, aoData, fnCallback ) {
+			        /* Add some extra data to the sender */
+			        aoData.push( { "name": "todaysdate", "value": $('#todaysdate').val() } );
+                    aoData.push( { "name": "dwccardnum", "value": $('#dwccardnum').val()} );
+			        $.getJSON( sSource, aoData, function (json) { 
+				        /* Do whatever additional processing you want on the callback, then tell DataTables */
+				        fnCallback(json)
+			        } );
+		        }
 //            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) { },
 //            "fnDrawCallback": function () {}
+            });
+            $("#updateBtn").click(function (e) {
+                e.preventDefault();
+                $("#availAssignTable").dataTable().fnDraw();
             });
     });
 </script>

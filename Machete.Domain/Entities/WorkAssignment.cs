@@ -34,14 +34,7 @@ namespace Machete.Domain
         //
         [LocalizedDisplayName("skillID", NameResourceType = typeof(Resources.WorkAssignment))]
         [Required(ErrorMessageResourceName = "skillIDRequired", ErrorMessageResourceType = typeof(Resources.WorkAssignment))]
-        public int skillID { get; set; }
-        //
-        [LocalizedDisplayName("skillLevel", NameResourceType = typeof(Resources.WorkAssignment))]
-        [Required(ErrorMessageResourceName = "skillLevelRequired", ErrorMessageResourceType = typeof(Resources.WorkAssignment))]
-        public int skillLevel { get; set; }
-        //
-
-
+        public int skillID { get; set; }       
         //
         [LocalizedDisplayName("hourlyWage", NameResourceType = typeof(Resources.WorkAssignment))]
         [Required(ErrorMessageResourceName = "hourlyWagerequired", ErrorMessageResourceType = typeof(Resources.WorkAssignment))]
