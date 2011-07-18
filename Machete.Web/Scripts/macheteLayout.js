@@ -175,9 +175,14 @@ function jqrfyTabs(myTab, myPrefix, defaultTab) {
 ///
 /// Add_rectab to tabbar
 ///
+///     theref      - The URL reference for thte tab. Passed to tabs()
+///     label       - Label used for new tab. Passed to tabs(), used to detect duplicate tab
+///     tabObj      - The tab() object
+///     exclusiveTab- If true then remove other tabs
+///     recID       - 
+///
 function add_rectab(theref, label, tabObj, exclusiveTab, recID) {
-    //search for tab label--if it's already open, select instead of adding duplcate (datatables error)
-    //TODO: de-duplicate based on ID, not label (label can change)
+    //search for tab label--if it's already open, select instead of adding duplcate (datatables error)    
 
     var foundtab = $(tabObj).children('.ui-tabs-nav').find('li').find('a[recordID=' + recID + ']');
     var tabsize = foundtab.size();
@@ -188,33 +193,22 @@ function add_rectab(theref, label, tabObj, exclusiveTab, recID) {
         setGlobalIDs(tabObj.id, recID, "add_rectab");
         return;
     }
-    if (exclusiveTab) {  //>0==inside an accordion
-        
-        //$(myAccordion).accordion("activate", false);
-        //Delete previous tab--only one when using for selection inside accordion
-        var index2 = $(tabObj).children('.ui-tabs-nav').find('li').size() - 1;
-        if (index2 > 1) {
-            if (eventDebug) M_conlog("INIT+", "ADD TAB", "add_rectab", "", "exclusive on; removing tab");
-            //Don't blast tab 0 or tab 1 (list and create)
 
+    if (exclusiveTab) {         // If true, look for existing tab with same label; remove for re-create
+        var index2 = $(tabObj).children('.ui-tabs-nav').find('li').size() - 1;
+        if (index2 > 1) { //Don't blast tab 0 or tab 1 (list and create)
+            if (eventDebug) M_conlog("INIT+", "ADD TAB", "add_rectab", "", "exclusive on; removing tab");            
             tabObj.tabs("remove", index2);
         }
     }
-
-    // create tab on tabbar
-    
-    tabObj.tabs("add", theref, label);
-
+    tabObj.tabs("add", theref, label);  // create tab on tabbar    
 
     var tabIndex = tabObj.tabs('length');
-    // select the newly created tab
-    tabObj.tabs("select", tabIndex - 1);
-    $(tabObj).find('.ui-tabs-selected').find('a').attr('recordID', recID);
-    //setGlobalIDs(tabObj.id, recID, "add_rectab");
+    tabObj.tabs("select", tabIndex - 1);    // select the newly created tab
+    $(tabObj).find('.ui-tabs-selected').find('a').attr('recordID', recID); //Put recID in HTML attribute
 
     //float the close icon --ui 1.8.6 is overflow: hidden on ui-icon
     $(tabObj).find("span.ui-icon-close").attr('style', 'float: right');
-    //Close accordion and get to the work order
 
     return false;
 }
@@ -306,15 +300,37 @@ function parseSkillsDD(myForm) {
     var myOption = $(myDD).find('option:selected');
     if ($(myOption).attr('wage') != null) { $(myWage).val($(myOption).attr('wage')); }
     if ($(myOption).attr('minHour') != null) { $(myHour).val($(myOption).attr('minHour')); }
-    if ($(myOption).attr('fixedjob') == "True") {
-        //\
+    if ($(myOption).attr('fixedjob') == "True") { //Disable wage and hours on fixed job
         $(myWage).attr('disabled', 'disabled');
         $(myHour).attr('disabled', 'disabled');
     } else {
         $(myWage).removeAttr('disabled', 'disabled');
         $(myHour).removeAttr('disabled', 'disabled');
     }
+    waEstimateEarnings(myForm);
 }
+
+function waEstimateEarnings(myForm) {    
+    var myWage = $(myForm).find('#hourlyWage').val();
+    var myHours = $(myForm).find('#hours').find('option:selected').val();
+    var myEarnings = $(myForm).find('#total');
+    $(myEarnings).attr('disabled', 'disabled');
+    var myDays = $(myForm).find('#days').find('option:selected').val();
+    if (isNumber(myDays) &&
+        isNumber(myHours) &&
+        isNumber(myWage)) {
+        var total = myDays * myHours * myWage;
+        $(myEarnings).val("$" + total.toFixed(2));
+    } else {
+        $(myEarnings).val("not calculable?!");
+    }
+}
+
+// http://stackoverflow.com/questions/18082/validate-numbers-in-javascript-isnumeric/174921#174921
+function isNumber(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
 
 function toggleDropDown(myDD, showVal, myRow, init) {
     //

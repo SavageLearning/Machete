@@ -11,7 +11,9 @@
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
         $('#activateWorkOrderButton-@(Model.workOrderID)').hide();
+        //jquery'ify the buttons
         $('#workAssignmentCreateButton-wo-@(Model.workOrderID)').button();
+        //Run MS validation on dynamic content
         M_createAssignmentForm_@(Model.workOrderID) = $('#workAssignmentCreateForm-wo-@(Model.workOrderID)');
         $.validator.unobtrusive.parseDynamicContent('#workAssignmentCreateForm-wo-@(Model.workOrderID)');
         // Find tabindex attribute (for tab order, not jquery tabs) and increment by 10
@@ -22,12 +24,16 @@
         //
         //
         //
-        //M_createSkillID_@(Model.workOrderID) = $('#workAssignmentCreateForm-wo-@(Model.workOrderID)').find('#skillID');
         if ($('#hourlyWage').text() == "0") {
             parseSkillsDD(M_createAssignmentForm_@(Model.workOrderID));
         }
-
+        // update earnings info based on skill
         $('#workAssignmentCreateForm-wo-@(Model.workOrderID)').find('#skillID').bind('change', function () { parseSkillsDD(M_createAssignmentForm_@(Model.workOrderID)) });
+        // show total estimated earnings for assignment
+        waEstimateEarnings(M_createAssignmentForm_@(Model.workOrderID));
+        $('#workAssignmentCreateForm-wo-@(Model.workOrderID)').find('.earnings-part').bind('change', function () { 
+                waEstimateEarnings(M_createAssignmentForm_@(Model.workOrderID)); 
+        });
         ////////////////////////////////////////////////////////////////
         //
         // WorkOrder Create submit event

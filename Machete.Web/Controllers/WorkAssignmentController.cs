@@ -161,14 +161,14 @@ namespace Machete.Web.Controllers
                                       pWAID = Convert.ToString(p.workOrderID) + "-" + Convert.ToString(p.ID),
                                       englishlevel = Convert.ToString(p.englishLevelID),
                                       skill =  Lookups.byID(p.skillID, culture),
-                                      hourlywage = Convert.ToString(p.hourlyWage),
+                                      hourlywage = System.String.Format("${0:f2}", p.hourlyWage),
                                       hours = Convert.ToString(p.hours),
                                       days = Convert.ToString(p.days),
                                       description = p.description,
                                       dateupdated = Convert.ToString(p.dateupdated), 
                                       updatedby = p.Updatedby,
                                       dateTimeofWork = p.workOrder.dateTimeofWork.ToString(),
-                                      earnings = p.hourlyWage * p.hours * p.days
+                                      earnings = System.String.Format("${0:f2}",(p.hourlyWage * p.hours * p.days))
                          };
 
             return Json(new

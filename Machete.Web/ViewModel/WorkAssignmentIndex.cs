@@ -6,7 +6,10 @@ using Machete.Web.Models;
 using Machete.Domain;
 
 namespace Machete.Web.ViewModel
-{
+{   
+    /// <summary>
+    /// Class for /WorkAssignment/Index view. 
+    /// </summary>
     public class WorkAssignmentIndex
     {
         public string todaysdate { get; set; }
