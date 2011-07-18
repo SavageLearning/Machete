@@ -147,6 +147,9 @@
   <data name="dupsubmit" xml:space="preserve">
     <value>Duplicate assignment</value>
   </data>
+  <data name="earnings" xml:space="preserve">
+    <value>(Est) Earnings</value>
+  </data>
   <data name="editlink" xml:space="preserve">
     <value>Edit</value>
   </data>
