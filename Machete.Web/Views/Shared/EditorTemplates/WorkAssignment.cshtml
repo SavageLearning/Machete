@@ -42,22 +42,28 @@
             @Html.LabelFor(model => model.hourlyWage)
         </div>
         <div class="tb-field tb-cell">
-            @Html.TextBox("hourlyWage", Html.Encode(System.String.Format("{0:f2}", Model.hourlyWage)), new { @class = "money-field" })
+            @Html.TextBox("hourlyWage", Html.Encode(System.String.Format("{0:f2}", Model.hourlyWage)), new { @class = "money-field earnings-part" })
             @Html.ValidationMessageFor(model => model.hourlyWage)
         </div>
         <div class="tb-label tb-cell">
             @Html.LabelFor(model => model.hours)
         </div>
         <div class="tb-field tb-cell">
-            @Html.DropDownListFor(model => model.hours, new SelectList(ViewBag.hoursList, "Value", "Text", Model.hours), Shared.choose)
+            @Html.DropDownListFor(model => model.hours, new SelectList(ViewBag.hoursList, "Value", "Text", Model.hours), Shared.choose, new { @id="hours", @class = "earnings-part" })
             @Html.ValidationMessageFor(model => model.hours)
         </div>
         <div class="tb-label tb-cell">
             @Html.LabelFor(model => model.days)
         </div>
         <div class="tb-field tb-cell">
-            @Html.DropDownListFor(model => model.days, new SelectList(ViewBag.daysList, "Value", "Text", Model.days), Shared.choose)
+            @Html.DropDownListFor(model => model.days, new SelectList(ViewBag.daysList, "Value", "Text", Model.days), Shared.choose, new { @id="days", @class = "earnings-part" })
             @Html.ValidationMessageFor(model => model.days)
+        </div>
+        <div class="tb-label tb-cell">
+            @Html.Label("total")
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.TextBox("total",null,new { style = "width: 6em;" })
         </div>
     </div>
 </div>

@@ -271,7 +271,6 @@
     <Content Include="Scripts\maskedinput-1.3.js" />
     <Content Include="Scripts\jquery.dataTables-1.8.1.js" />
     <Compile Include="ViewModel\OrderSummary.cs" />
-    <Compile Include="ViewModel\depreciated\WorkAssignmentEditor.cs" />
     <Compile Include="ViewModel\WorkAssignmentIndex.cs" />
     <Compile Include="ViewModel\depreciated\WorkOrderEditor.cs" />
     <Compile Include="ViewModel\WorkOrderIndex.cs" />
