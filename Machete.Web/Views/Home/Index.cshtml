@@ -14,6 +14,7 @@
             <div>
                 <h4>Application updates</h4>
                 -Fixed "blank Updatedby" field when WorkOrders are activiated<br />
+                -Fixed Manager/Administrator accordions in the Work Order form<br />
                 -Added Createdby/Updatedby information to WorkOrder footer when printing<br />
                 -Added total (Hourly wage * hours * days) to WorkAssignment form and WorkOrder printing<br />
                 -Ordered Skills dropdown based on frequency of selection -- most requested skills are at the top of the list<br />
@@ -55,8 +56,6 @@
             </div>
         </div>
     </div>
-    <div id="newsRef">
-    </div>
 </div>
 
 
@@ -65,6 +64,6 @@
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
         $('#homeTabs').tabs();
-        $('#newsAccordion').accordion({ event: "mouseover" });
+        $('#newsAccordion').accordion();
     });
 </script>

@@ -62,13 +62,13 @@
             @Html.TextBoxFor(model => model.contactName, new { tabindex = "1" })
             @Html.ValidationMessageFor(model => model.contactName)
         </div>
-        @*<div class="tb-label tb-cell">
+         @*<div class="tb-label tb-cell">
             @Html.LabelFor(model => model.typeOfWorkID)
         </div>
         <div class="tb-field tb-cell">
             @Html.DropDownListFor(model => model.typeOfWorkID, new SelectList(ViewBag.typesOfWork, "Value", "Text", Model.typeOfWorkID), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })
             @Html.ValidationMessageFor(model => model.typeOfWorkID)
-        </div>*@ 
+        </div>*@
     </div>
     <div class="tb-row">
         <div class="tb-label tb-cell">
@@ -179,14 +179,14 @@
         </div>
     </div>
     <div class="tb-row">
-        <div class="tb-label tb-cell desc-label" style="display: none">
+        @*<div class="tb-label tb-cell desc-label">
             @Html.LabelFor(model => model.workerRequests)
             <input type="button" value="Add?!" class="formButton" id="addRequestBtn-@(Model.ID)"/>
             <input type="button" value="Remove?!" class="formButton" id="removeRequestBtn-@(Model.ID)"/>
         </div>
-        <div class="tb-field tb-cell desc-field" style="display: none">
+        <div class="tb-field tb-cell desc-field">
             <select id="requestsTable" size="5" />
-        </div>
+        </div>*@
 
         <div class="tb-label tb-cell desc-label">
             @Html.LabelFor(model => model.description)
@@ -294,10 +294,10 @@
         $('#workerDialog-@(Model.ID)').hide();
         $('#workerTable-@(Model.ID)').hide();
         $("#wophone").mask("999-999-9999", { placeholder: " " });
-        $(".adminAccordion").accordion({
-            collapsible: true,
-            active: false
-        });
+//        $(".adminAccordion").accordion({
+//            collapsible: true,
+//            active: false
+//        });
         //////////////////////////////////////////////////
         //
         //
