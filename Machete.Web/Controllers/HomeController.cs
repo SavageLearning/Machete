@@ -22,7 +22,7 @@ namespace Machete.Web.Controllers
 
         public ActionResult About()
         {
-            return View();
+            return PartialView();
         }        
     }   
 }
