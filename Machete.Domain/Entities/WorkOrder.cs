@@ -59,7 +59,7 @@ namespace Machete.Domain
         public string zipcode { get; set; }
         //
         [LocalizedDisplayName("typeOfWorkID", NameResourceType = typeof(Resources.WorkOrder))]
-        [Required(ErrorMessageResourceName = "typeOfWorkIDrequired", ErrorMessageResourceType = typeof(Resources.WorkOrder))]
+        //[Required(ErrorMessageResourceName = "typeOfWorkIDrequired", ErrorMessageResourceType = typeof(Resources.WorkOrder))]
         public int typeOfWorkID { get; set; }
         //
         [LocalizedDisplayName("englishRequired", NameResourceType = typeof(Resources.WorkOrder))]
