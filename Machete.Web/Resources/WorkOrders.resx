@@ -133,7 +133,7 @@
     <value>To create a new work order, you must first select an existing employer record or create a new employer. Click on the menu box (above) to create or select an employer. Alternatively, you can view an existing work order (below) and then view all orders for that employer.</value>
   </data>
   <data name="createsubmit" xml:space="preserve">
-    <value>Create</value>
+    <value>Save</value>
   </data>
   <data name="createtitle" xml:space="preserve">
     <value>workorder::create</value>

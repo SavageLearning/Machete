@@ -133,7 +133,7 @@
     <value>Para crear una nueva orden de trabajo, primero debe seleccionar un registro del empleador existente o crear una nueva empresa. Haga clic en el cuadro de menú (arriba) para crear o seleccionar un empleador. Alternativamente, usted puede ver una orden de trabajo existentes (abajo) y luego ver todos los pedidos de ese empleador.</value>
   </data>
   <data name="createsubmit" xml:space="preserve">
-    <value>Crear</value>
+    <value>Guardar</value>
   </data>
   <data name="createtitle" xml:space="preserve">
     <value>Crear Orden del Trabajo</value>

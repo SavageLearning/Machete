@@ -133,7 +133,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Create.
+        ///   Looks up a localized string similar to Save.
         /// </summary>
         public static string createsubmit {
             get {
