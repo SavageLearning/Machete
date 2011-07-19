@@ -127,7 +127,7 @@
     <value>Para crear una asignación de un nuevo trabajo, primero debe seleccionar un registro de órdenes de trabajo existente o crear una nueva orden de trabajo. Haga clic en el cuadro de menú (arriba) para crear o seleccionar una orden de trabajo existentes. Alternativamente, usted puede ver una asignación de trabajo existentes (abajo) y luego ver todas las asignaciones para ese orden de trabajo.</value>
   </data>
   <data name="createsubmit" xml:space="preserve">
-    <value>Crear</value>
+    <value>Guardar</value>
   </data>
   <data name="createtitle" xml:space="preserve">
     <value>asignación:crear</value>

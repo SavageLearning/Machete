@@ -127,7 +127,7 @@
     <value>To create a new work assignment, you must first select an existing work order record or create a new work order. Click on the menu box (above) to create or select an existing work order. Alternatively, you can view an existing work assignment (below) and then view all assignments for that work order.</value>
   </data>
   <data name="createsubmit" xml:space="preserve">
-    <value>Create</value>
+    <value>Save</value>
   </data>
   <data name="createtitle" xml:space="preserve">
     <value>workassignment::create</value>

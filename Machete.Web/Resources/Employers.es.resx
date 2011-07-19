@@ -124,7 +124,7 @@
     <value>Crear un empleador nuevo</value>
   </data>
   <data name="createsubmit" xml:space="preserve">
-    <value>Crear</value>
+    <value>Guardar</value>
   </data>
   <data name="createtitle" xml:space="preserve">
     <value>Crear empleador</value>

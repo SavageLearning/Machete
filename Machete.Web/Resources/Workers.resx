@@ -124,7 +124,7 @@
     <value>Create New Worker</value>
   </data>
   <data name="createsubmit" xml:space="preserve">
-    <value>Create</value>
+    <value>Save</value>
   </data>
   <data name="createtitle" xml:space="preserve">
     <value>worker::create</value>
