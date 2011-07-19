@@ -85,7 +85,7 @@
     <Compile Include="Entities\Worker.cs" />
     <Compile Include="Entities\WorkerRequest.cs" />
     <Compile Include="Entities\WorkerSignin.cs" />
-    <Compile Include="Entities\WorkerSkill.cs" />
+    <Compile Include="Entities\depreciated\WorkerSkill.cs" />
     <Compile Include="Entities\WorkOrder.cs" />
     <Compile Include="LocalizedDisplayNameAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

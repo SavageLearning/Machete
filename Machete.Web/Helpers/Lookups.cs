@@ -218,14 +218,14 @@ namespace Machete.Web.Helpers
             if (locale == "es")
             {
 
-                list = new SelectList(DB.Lookups.ToList().Where(s => s.category == category),
+                list = new SelectList(DB.Lookups.ToList().Where(s => s.category == category).OrderBy(s => s.sortorder).ThenBy(s => s.text_ES),
                                       "ID",
                                       "text_ES",
                                       getDefaultID(category));
             }
             else //Default to English
             {
-                list = new SelectList(DB.Lookups.ToList().Where(s => s.category == category),
+                list = new SelectList(DB.Lookups.ToList().Where(s => s.category == category).OrderBy(s => s.sortorder).ThenBy(s => s.text_EN),
                                       "ID",
                                       "text_EN",
                                       getDefaultID(category));
@@ -240,7 +240,7 @@ namespace Machete.Web.Helpers
             if (locale == "es")
             {
 
-                list = new List<SelectListItemEx>(DB.Lookups.ToList().Where(s => s.category == category)
+                list = new List<SelectListItemEx>(DB.Lookups.ToList().Where(s => s.category == category).OrderBy(s => s.sortorder).ThenBy(s => s.text_ES)
                                     .Select(x => new SelectListItemEx
                                     { 
                                                             Selected = x.selected,
@@ -254,7 +254,7 @@ namespace Machete.Web.Helpers
             }
             else //Default to English
             {
-                list = new List<SelectListItemEx>(DB.Lookups.ToList().Where(s => s.category == category)
+                list = new List<SelectListItemEx>(DB.Lookups.ToList().Where(s => s.category == category).OrderBy(s => s.sortorder).ThenBy(s => s.text_EN)
                                     .Select(x => new SelectListItemEx
                                     {
                                         Selected = x.selected,

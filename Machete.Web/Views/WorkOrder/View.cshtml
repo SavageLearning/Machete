@@ -41,6 +41,7 @@ else
             <div class="tb-header-fixed tb-cell">@WorkAssignment.hourlyWage</div>
             <div class="tb-header-fixed tb-cell">@WorkAssignment.hours</div>            
             <div class="tb-header-fixed tb-cell">@WorkAssignment.days</div>
+            <div class="tb-header-fixed tb-cell">@WorkAssignments.earnings</div>
             <div class="tb-header-fixed tb-cell">@WorkAssignment.englishLevelID</div>
                         
             
@@ -52,10 +53,11 @@ else
     <div class="tb-table">
         <div class="tb-row">
             <div class="tb-field-fixed tb-cell">@ViewBag.assignCount</div>           
-            <div class="tb-field-fixed tb-cell">@Lookups.byID_noBrackets(item.skillID, CI.TwoLetterISOLanguageName)</div> 
+            <div class="tb-field-fixed tb-cell">@Lookups.byID(item.skillID, CI.TwoLetterISOLanguageName)</div> 
             <div class="tb-field-fixed tb-cell">@System.String.Format("{0:C}", item.hourlyWage)</div>
             <div class="tb-field-fixed tb-cell">@Html.DisplayFor(modelItem => item.hours)</div>
             <div class="tb-field-fixed tb-cell">@Html.DisplayFor(modelItem => item.days)</div>
+            <div class="tb-field-fixed tb-cell">@System.String.Format("{0:C}", item.hourlyWage * item.hours * item.days)</div>
             <div class="tb-field-fixed tb-cell">@item.englishLevelID</div>
                        
             
@@ -88,6 +90,34 @@ else
     <br />
 }
 <br />
+<div class="tb-table">
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+        @Html.LabelFor(model => model.Createdby)
+        </div>
+        <div class="tb-field tb-cell">
+        @Html.DisplayFor(model => model.Createdby)
+        </div>
+                <div class="tb-label tb-cell">
+        @Html.LabelFor(model => model.datecreated)
+        </div>
+        <div class="tb-field tb-cell">
+        @Html.DisplayFor(model => model.datecreated)
+        </div>
+        <div class="tb-label tb-cell">
+        @Html.LabelFor(model => model.Updatedby)
+        </div>
+        <div class="tb-field tb-cell">
+        @Html.DisplayFor(model => model.Updatedby)
+        </div>
+                <div class="tb-label tb-cell">
+        @Html.LabelFor(model => model.dateupdated)
+        </div>
+        <div class="tb-field tb-cell">
+        @Html.DisplayFor(model => model.dateupdated)
+        </div>
+    </div>
+</div>
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
         $('.formButton').button();
