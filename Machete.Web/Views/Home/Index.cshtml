@@ -1,28 +1,70 @@
 ﻿@{
     ViewBag.Title = "Home Page";
 }
-<h1>Welcome to Machete
-</h1>
 
-<h2>Production Machete is <b>open</b> for taking orders</h2>
+<div id="homeTabs">
+    <ul>
+        <li><a href="#newsRef" id="newsTab">Machete news?!</a> </li>
+        <li><a href="/Home/About" id="aboutTab">About?!</a></li>
+        @*<li><a href="#opensourceRef" id="opensourceTab">Open Source?!</a></li>*@
+    </ul>
+    <div id="newsRef">
+        <div id="newsAccordion">
+            <h3><a href="#">July 20th, 2011 - Many updates, please read</a></h3>
+            <div>
+                <h4>Application updates</h4>
+                -Fixed "blank Updatedby" field when WorkOrders are activiated<br />
+                -Added Createdby/Updatedby information to WorkOrder footer when printing<br />
+                -Added total (Hourly wage * hours * days) to WorkAssignment form and WorkOrder printing<br />
+                -Ordered Skills dropdown based on frequency of selection -- most requested skills are at the top of the list<br />
+                -Ordered Transportation dropdown based on frequency<br />
+                -Added 'Worker walks' option for transportation<br />
+                -Added Fancy home page display<br />     
+                -Added "participate in blog" field for Employer<br />
+                -Removed "Type of Work" from WorkOrder (redundant, inferred from Assignment skill)<br />
+                <h4>Currently in development</h4>
+                -Worker Requests and Worker -> Work Assignment functionality<br />
+                -Auto-save / unsaved data pop-up warning<br />
+                -Pseudo IDs for WorkOrders and Work Assignments (Richard Park's request)<br />
+                -Unified naming for the save button (was "create" on the create page)<br />
+                <h4>Server updates</h4>
+                -Completed data entry for Worker Signins for previous year 7/1/2010 - 6/30/2011 (Thanks Raul!)<br />
+                -Completed United Way Demographics report (available from SQL Server ODBC connection)<br />
+                -Completed Report views for Employers & Work Orders (via ODBC)<br />
+            </div>
+            <h3><a href="#">June 2nd, 2011- Machete open for taking orders</a></h3>
+            <div>
+                <p>
+                   Machete is Casa Latina's new application for managing Dayworker Center information.<b> Machete can be used to enter and print orders.</b>
+                   A printed copy is still required at this time to support the existing work order process.
+                </p>
+                <p>
+                   The Production <a href="http://machete/">machete</a> has a <b><font color="#414D5B">DARK BLUE-GREY background</FONT></b>. You should the production version to take real orders.
+                </p>
+                <p>
+                   The Test <a href="http://machete:4242/">machete</a> has a <b><font color="#800000">RED background</font></b>. You are encouraged to do anything you like in the test version and provide feedback.
+                </p>
+                <p>
+                   You can reach me (jimmy) by email at jimmy@savagelearning.com. 
+                </p>
+            </div>
+            <h3><a href="#">Login accounts</a></h3>
+            <div>
+                Every employee and volunteer of Casa Latina will have their own login for Machete. There will be no group accounts (like volunteer1). 
+                If you need an account, please click <b>logon</b> in the upper right-hand corner, then click <b>register</b> to create an account.
+            </div>
+        </div>
+    </div>
+    <div id="newsRef">
+    </div>
+</div>
 
-<p>
-   Machete is Casa Latina's new application for managing Dayworker Center information.<b> Machete can be used to enter and print orders.</b>
-   A printed copy is still required at this time to support the existing work order process.
-</p>
-<p>
-   The Production <a href="http://machete/">machete</a> has a <b><font color="#414D5B">DARK BLUE-GREY background</FONT></b>. You should the production version to take real orders.
-</p>
-<p>
-   The Test <a href="http://machete:4242/">machete</a> has a <b><font color="#800000">RED background</font></b>. You are encouraged to do anything you like in the test version and provide feedback.
-</p>
-<p>
-   You can reach me (jimmy) by email at jimmy@savagelearning.com. 
-</p>
-<h3>
-Login accounts
-</h3>
-Every employee and volunteer of Casa Latina will have their own login for Machete. There will be no group accounts (like volunteer1). 
-If you need an account, please click <b>logon</b> in the upper right-hand corner, then click <b>register</b> to create an account.
 
-@*<p><div><img src="/Home/Chart" /></div></p>*@
+
+
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        $('#homeTabs').tabs();
+        $('#newsAccordion').accordion({ event: "mouseover" });
+    });
+</script>
