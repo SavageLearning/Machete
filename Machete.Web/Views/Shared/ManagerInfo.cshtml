@@ -3,7 +3,7 @@
 @using Machete.Web.Resources
 @if (Html.IsInRole(Html.Role_AM()))
 {
-<div class="timestampAccordion">
+<div class="managerAccordion">
     <h3><a href="#">@Shared.managerinformation</a></h3>
     <div class="tb-table">
         <div class="tb-row">
@@ -44,3 +44,12 @@
     <!--tb-table-->
 </div>
 }
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        $(".managerAccordion").accordion({
+            collapsible: true,
+            active: false,
+            autoHeight: false
+        });
+    });
+</script>

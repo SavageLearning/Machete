@@ -502,7 +502,6 @@
     <Content Include="Views\Shared\EditorTemplates\Person.cshtml" />
     <Content Include="Views\Person\Index.cshtml" />
     <Content Include="Views\Person\Edit.cshtml" />
-    <Content Include="Views\Person\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Employers.es.resx">
@@ -615,9 +614,6 @@
     <Content Include="Views\Account\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Worker\Delete.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Tests\Worker\" />
   </ItemGroup>
   <ItemGroup>
@@ -651,17 +647,14 @@
     <Content Include="Views\Employer\Index.cshtml" />
     <Content Include="Views\Employer\Create.cshtml" />
     <Content Include="Views\Employer\Edit.cshtml" />
-    <Content Include="Views\Employer\Delete.cshtml" />
     <Content Include="Views\Employer\View.cshtml" />
     <Content Include="Views\WorkOrder\Index.cshtml" />
     <Content Include="Views\WorkOrder\Create.cshtml" />
     <Content Include="Views\WorkOrder\Edit.cshtml" />
     <Content Include="Views\WorkOrder\View.cshtml" />
-    <Content Include="Views\WorkOrder\Delete.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\WorkOrder.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Employer.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Filter.cshtml" />
-    <Content Include="Views\Shared\timestamps.cshtml" />
+    <Content Include="Views\Shared\ManagerInfo.cshtml" />
     <Content Include="Views\WorkAssignment\Index.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\WorkOrderIndex.cshtml" />
     <Content Include="Views\Shared\EmployerIndex.cshtml" />
@@ -687,11 +680,10 @@
     <Content Include="Web.StageTest.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Views\WorkAssignment\View.cshtml" />
-    <Content Include="Views\WorkAssignment\Delete.cshtml" />
     <Content Include="Views\Shared\WorkOrderIndex.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\WorkOrder.cshtml" />
     <Content Include="Views\Account\AdminChangePassword.cshtml" />
+    <Content Include="Views\Shared\AdministratorInfo.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
