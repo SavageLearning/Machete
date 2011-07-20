@@ -8,6 +8,7 @@ namespace Machete.Domain
 {
     public class Record
     {
+        public int ID { get; set; }
         public DateTime datecreated { get; set; }
         public DateTime dateupdated { get; set; }
         [StringLength(30)]

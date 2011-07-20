@@ -12,7 +12,7 @@ namespace Machete.Domain
 {
     public class Worker : Record
     {
-        public int ID { get; set; }
+        //public int ID { get; set; }
         public virtual Person Person { get; set; }
         public virtual ICollection<WorkerSignin> workersignins { get; set; }
         //

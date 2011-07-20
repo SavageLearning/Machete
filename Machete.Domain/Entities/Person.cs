@@ -11,8 +11,8 @@ using Machete.Domain.Resources;
 namespace Machete.Domain
 {
     public class Person : Record
-    {   
-        public int ID { get; set; }
+    {
+        //public override int ID { get; set; }
         public virtual Worker Worker { get; set; }
         public Person() { }
         //
