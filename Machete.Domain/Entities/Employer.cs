@@ -10,7 +10,7 @@ namespace Machete.Domain
 {
     public class Employer : Record
     {
-        public int ID { get; set; }
+        //public int ID { get; set; }
         public virtual ICollection<WorkOrder> WorkOrders { get; set; }
         //
         [LocalizedDisplayName("active", NameResourceType = typeof(Resources.Employer))]
@@ -68,6 +68,6 @@ namespace Machete.Domain
         public string referredbyOther { get; set; }
 
         [LocalizedDisplayName("blogparticipate", NameResourceType = typeof(Resources.Employer))]
-        public bool? blogparticipate { get; set; }
+        public bool blogparticipate { get; set; }
     }
 }

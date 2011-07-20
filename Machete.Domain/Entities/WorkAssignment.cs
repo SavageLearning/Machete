@@ -10,7 +10,7 @@ namespace Machete.Domain
 {
     public class WorkAssignment : Record
     {
-        public int ID { get; set; }
+        //public int ID { get; set; }
 
         public int? workerAssignedID { get; set; }
         public virtual Worker workerAssigned { get; set; }

@@ -10,7 +10,7 @@ namespace Machete.Domain
 {
     public class WorkerSignin : Record
     {
-        public int ID { get; set; }
+        //public int ID { get; set; }
         public virtual Worker worker {get; set;}
         [Required(ErrorMessageResourceName = "dwccardnum", ErrorMessageResourceType = typeof(Resources.Worker))]
         [RegularExpression("^[0-9]{5,5}$", ErrorMessageResourceName = "dwccardnumerror", ErrorMessageResourceType = typeof(Resources.Worker))]
