@@ -132,6 +132,7 @@ namespace Machete.Web.Controllers
             _model.active = true;
             _model.city = "Seattle";
             _model.state = "WA";
+            _model.blogparticipate = false;
             _model.referredby = Lookups.emplrreferenceDefault;
             return PartialView("Create", _model);
         }

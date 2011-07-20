@@ -19,7 +19,6 @@
         </div>
         <div class="tb-field tb-cell">
             @Html.DropDownListFor(model => model.active, new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.active), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })           
-
             @Html.ValidationMessageFor(model => model.active)
         </div>
     </div><!--tb-row-->
@@ -74,7 +73,7 @@
             @Html.LabelFor(model => model.blogparticipate)
         </div>
         <div class="tb-field tb-cell">
-            @Html.EditorFor(model => model.blogparticipate, new { tabindex = "2" })
+            @Html.DropDownListFor(model => model.blogparticipate, new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.blogparticipate), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })           
             @Html.ValidationMessageFor(model => model.blogparticipate)
         </div>
     </div>
@@ -113,27 +112,10 @@
         </div>
     </div>
 </div>
-@if (Html.IsInRole(Html.Role_AM()))
-{
-    @Html.Partial("timestamps", Model)
-}
-@if (Html.IsInRole(Html.Role_A()))
-{
-<div class="adminAccordion">
-    <h3><a href="#">@Shared.administratorinformation</a></h3> 
-    <div class="tb-table">
-        <div class="tb-row">
-            <div class="tb-label tb-cell">
-                @Html.LabelFor(model => model.ID)
-            </div>
-            <div class="tb-field tb-cell">
-                @Html.EditorFor(model => model.ID)
-                @Html.ValidationMessageFor(model => model.ID)
-            </div>
-        </div>
-    </div>
-</div>  
-}
+
+@Html.Partial("ManagerInfo", Model)
+@Html.Partial("AdministratorInfo", Model)
+
 <script type="text/javascript">
     $().ready(function () {
         $("#phone").mask("999-999-9999", { placeholder: " " });

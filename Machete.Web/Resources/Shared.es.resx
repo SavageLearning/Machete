@@ -165,7 +165,7 @@
   <data name="managerinformation" xml:space="preserve">
     <value>Información del jefe</value>
   </data>
-  <data name="administratiorinformation" xml:space="preserve">
+  <data name="administratorinformation" xml:space="preserve">
     <value>Información del administrador</value>
   </data>
   <data name="choose" xml:space="preserve">

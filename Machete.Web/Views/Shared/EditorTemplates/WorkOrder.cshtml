@@ -197,27 +197,9 @@
         </div>
     </div>
 </div><!--tb-table-->
-@if (Html.IsInRole(Html.Role_AM()))
-{
-    @Html.Partial("timestamps")
-}
-@if (Html.IsInRole(Html.Role_A()))
-{
-<div class="adminAccordion">
-    <h3><a href="#">@Shared.administratorinformation</a></h3>    
-    <div class="tb-table">
-        <div class="tb-row">
-            <div class="tb-label tb-cell">
-                @Html.LabelFor(model => model.EmployerID)
-            </div>
-            <div class="tb-field tb-cell">
-                @Html.TextBoxFor(model => model.EmployerID)
-                @Html.ValidationMessageFor(model => model.EmployerID)
-            </div>
-        </div>
-    </div>    
-</div>
-}
+@Html.Partial("ManagerInfo")
+@Html.Partial("AdministratorInfo")
+
 
 <div id="workerDialog-@(Model.ID)" title="Select a worker?!">
     <table id="workerTable-@(Model.ID)" class="display" style="display: none">
@@ -294,10 +276,7 @@
         $('#workerDialog-@(Model.ID)').hide();
         $('#workerTable-@(Model.ID)').hide();
         $("#wophone").mask("999-999-9999", { placeholder: " " });
-//        $(".adminAccordion").accordion({
-//            collapsible: true,
-//            active: false
-//        });
+
         //////////////////////////////////////////////////
         //
         //

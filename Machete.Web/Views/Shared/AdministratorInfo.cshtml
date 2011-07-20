@@ -1,0 +1,29 @@
+﻿@model Machete.Domain.Record
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@if (Html.IsInRole(Html.Role_A()))
+{
+<div class="adminAccordion">
+    <h3><a href="#">@Shared.administratorinformation</a></h3> 
+    <div class="tb-table">
+        <div class="tb-row">
+            <div class="tb-label tb-cell">
+                @Html.LabelFor(model => model.ID)
+            </div>
+            <div class="tb-field tb-cell">
+                @Html.EditorFor(model => model.ID)
+                @Html.ValidationMessageFor(model => model.ID)
+            </div>
+        </div>
+    </div>
+</div>  
+}
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        $(".adminAccordion").accordion({
+            collapsible: true,
+            active: false,
+            autoHeight: false
+        });
+    });
+</script>
