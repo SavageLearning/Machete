@@ -231,4 +231,7 @@
   <data name="timeFlexible" xml:space="preserve">
     <value>Es hora de inicio es flexible?</value>
   </data>
+  <data name="phoneformat" xml:space="preserve">
+    <value>Por favor, utilice este formulario: ###-###-####</value>
+  </data>
 </root>

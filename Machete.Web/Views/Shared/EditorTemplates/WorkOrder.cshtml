@@ -266,7 +266,7 @@
             var myStr = "ID=@(Model.ID)&WorkerID=" + myID;            
             $.post("/WorkOrder/AddRequest", myStr);
 
-            getRequests($("#requestsTable"));
+            //getRequests($("#requestsTable")); commented out until ready for Worker Requests
             $('a.ui-dialog-titlebar-close').click();
 
         });
@@ -275,12 +275,13 @@
         //
         $('#workerDialog-@(Model.ID)').hide();
         $('#workerTable-@(Model.ID)').hide();
-        $("#wophone").mask("999-999-9999", { placeholder: " " });
+        //$("#wophone").mask("999-999-9999", { placeholder: " " });
 
         //////////////////////////////////////////////////
         //
+        // Initially populate requests Table for the worker
         //
-        getRequests($("#requestsTable"));
+        //getRequests($("#requestsTable"));
 
         //////////////////////////////////////////////////
         //

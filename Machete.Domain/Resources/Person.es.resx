@@ -159,6 +159,9 @@
   <data name="phone" xml:space="preserve">
     <value>Telefono</value>
   </data>
+  <data name="phoneformat" xml:space="preserve">
+    <value>Por favor, utilice este formulario: ###-###-####</value>
+  </data>
   <data name="state" xml:space="preserve">
     <value>Estado</value>
   </data>

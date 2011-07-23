@@ -43,11 +43,13 @@ namespace Machete.Domain
         [LocalizedDisplayName("phone", NameResourceType = typeof(Resources.Employer))]
         [StringLength(12, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Employer))]
         [Required(ErrorMessageResourceName = "phonerequired", ErrorMessageResourceType = typeof(Resources.Employer))]
+        [RegularExpression(@"^[\d]{3,3}-[\d]{3,3}-[\d]{4,4}$", ErrorMessageResourceName = "phoneformat", ErrorMessageResourceType = typeof(Resources.Employer))]
         public string phone { get; set; }
         //
         [LocalizedDisplayName("cellphone", NameResourceType = typeof(Resources.Employer))]
         [StringLength(12, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Employer))]
         //[RequiredIfEmpty("phone", ErrorMessageResourceName = "phonerequired", ErrorMessageResourceType = typeof(Resources.Employer))]
+        [RegularExpression(@"^$|^[\d]{3,3}-[\d]{3,3}-[\d]{4,4}$", ErrorMessageResourceName = "phoneformat", ErrorMessageResourceType = typeof(Resources.Employer))]
         public string cellphone { get; set; }
         //
         [LocalizedDisplayName("zipcode", NameResourceType = typeof(Resources.Employer))]

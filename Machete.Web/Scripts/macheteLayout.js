@@ -301,11 +301,11 @@ function parseSkillsDD(myForm) {
     if ($(myOption).attr('wage') != null) { $(myWage).val($(myOption).attr('wage')); }
     if ($(myOption).attr('minHour') != null) { $(myHour).val($(myOption).attr('minHour')); }
     if ($(myOption).attr('fixedjob') == "True") { //Disable wage and hours on fixed job
-        $(myWage).attr('disabled', 'disabled');
-        $(myHour).attr('disabled', 'disabled');
+        $(myWage).attr('readonly', 'readonly');
+        $(myHour).attr('readonly', 'readonly');
     } else {
-        $(myWage).removeAttr('disabled', 'disabled');
-        $(myHour).removeAttr('disabled', 'disabled');
+        $(myWage).removeAttr('readonly', 'readonly');
+        $(myHour).removeAttr('readonly', 'readonly');
     }
     waEstimateEarnings(myForm);
 }

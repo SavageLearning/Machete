@@ -684,6 +684,8 @@
     <Content Include="Views\Shared\DisplayTemplates\WorkOrder.cshtml" />
     <Content Include="Views\Account\AdminChangePassword.cshtml" />
     <Content Include="Views\Shared\AdministratorInfo.cshtml" />
+    <Content Include="Views\Home\Wiki.cshtml" />
+    <Content Include="Views\Home\Issues.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

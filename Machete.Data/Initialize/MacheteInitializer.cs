@@ -117,7 +117,7 @@ namespace Machete.Data
                                 city = "Seattle",
                                 state = "WA",
                                 zipcode = "98144",
-                                phone = "206.956.0779",
+                                phone = "206-956-0779",
                                 cellphone = "123-456-7890",
                                 email = "info@casa-latina.org",
                                 referredby = MacheteLookup.getID(DB, "emplrreference", "Facebook"),

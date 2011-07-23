@@ -153,6 +153,9 @@
   <data name="phone" xml:space="preserve">
     <value>Phone number</value>
   </data>
+  <data name="phoneformat" xml:space="preserve">
+    <value>Please use this form: ###-###-####</value>
+  </data>
   <data name="phonerequired" xml:space="preserve">
     <value>At least one phone number is required</value>
   </data>

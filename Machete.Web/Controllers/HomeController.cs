@@ -23,6 +23,14 @@ namespace Machete.Web.Controllers
         public ActionResult About()
         {
             return PartialView();
-        }        
+        }
+        public ActionResult Issues()
+        {
+            return PartialView();
+        }
+        public ActionResult Wiki()
+        {
+            return PartialView();
+        }      
     }   
 }
