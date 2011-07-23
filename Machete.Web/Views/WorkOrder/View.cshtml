@@ -7,7 +7,6 @@
 @{
     ViewBag.Title = WorkOrders.viewtitle;
     CultureInfo CI = (CultureInfo)Session["Culture"];
-    ViewBag.assignCount = 0; 
 }
 <div class="dateNeeded">
 <div class="neededText">@WorkOrders.dateneeded</div>
@@ -25,7 +24,14 @@ else
 </div>
 
 <br />
-<h2>@WorkOrders.boxlegend# @Model.ID</h2>
+@if (Model.paperOrderNum.HasValue)
+{
+<h2>@WorkOrders.boxlegend# @Model.paperOrderNum</h2>
+}
+else
+{
+    <h2>@WorkOrders.boxlegend# @Model.ID</h2>
+}
 <h3>@Employers.boxlegend: @Model.Employer.name</h3> 
 <div class="recordButtons print_off">
     <input type="button" id="printOrder" class="formButton" value="@WorkOrders.printWorkOrder"/>
@@ -49,10 +55,9 @@ else
     </div>
 @foreach (var item in Model.workAssignments)
 {
-    ViewBag.assignCount = ViewBag.assignCount + 1; 
     <div class="tb-table">
         <div class="tb-row">
-            <div class="tb-field-fixed tb-cell">@ViewBag.assignCount</div>           
+            <div class="tb-field-fixed tb-cell">@item.pseudoID</div>           
             <div class="tb-field-fixed tb-cell">@Lookups.byID(item.skillID, CI.TwoLetterISOLanguageName)</div> 
             <div class="tb-field-fixed tb-cell">@System.String.Format("{0:C}", item.hourlyWage)</div>
             <div class="tb-field-fixed tb-cell">@Html.DisplayFor(modelItem => item.hours)</div>

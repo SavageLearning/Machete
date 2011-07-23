@@ -17,7 +17,13 @@ namespace Machete.Domain
         public virtual ICollection<WorkAssignment> workAssignments { get; set; }
         public virtual ICollection<WorkerRequest> workerRequests { get; set; }
         //
+        public WorkOrder()
+        {            
+            this.waPseudoIDCounter = 0;
+        }
+        //
         [LocalizedDisplayName("paperOrderNum", NameResourceType = typeof(Resources.WorkOrder))]
+        [RegularExpression(@"^$|^[\d]{5,5}$", ErrorMessageResourceName = "paperOrderNumFormat", ErrorMessageResourceType = typeof(Resources.WorkOrder))]
         public int? paperOrderNum { get; set; }
         // used to track next number assignments in this work order
         public int waPseudoIDCounter { get; set; }

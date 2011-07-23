@@ -234,4 +234,10 @@
   <data name="phoneformat" xml:space="preserve">
     <value>Please use this form: ###-###-####</value>
   </data>
+  <data name="paperOrderNum" xml:space="preserve">
+    <value>Alternate (paper) order ID</value>
+  </data>
+  <data name="paperOrderNumFormat" xml:space="preserve">
+    <value>This number must be 5 digits, or blank</value>
+  </data>
 </root>
