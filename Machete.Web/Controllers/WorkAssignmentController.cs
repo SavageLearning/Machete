@@ -209,9 +209,7 @@ namespace Machete.Web.Controllers
             WorkAssignment _assignment = new WorkAssignment();
             _assignment.active = true;
             _assignment.workOrderID = WorkOrderID;
-            //_assignment.dateTimeofWork = DateTime.Today;
             _assignment.skillID = Lookups.skillDefault;
-            //_assignment.skillLevel = Lookups.skillLevelDefault;
             _assignment.hours = Lookups.hoursDefault;
             _assignment.days = Lookups.daysDefault;
             _assignment.hourlyWage = Lookups.hourlyWageDefault;

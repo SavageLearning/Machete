@@ -18,7 +18,9 @@ namespace Machete.Domain
         public virtual ICollection<WorkerRequest> workerRequests { get; set; }
         //
         [LocalizedDisplayName("paperOrderNum", NameResourceType = typeof(Resources.WorkOrder))]
-        public int? paperOrderNum { get; set; } 
+        public int? paperOrderNum { get; set; }
+        // used to track next number assignments in this work order
+        public int waPseudoIDCounter { get; set; }
         //
         [LocalizedDisplayName("contactName", NameResourceType = typeof(Resources.WorkOrder))]
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.WorkOrder))]
@@ -51,6 +53,7 @@ namespace Machete.Domain
         [LocalizedDisplayName("phone", NameResourceType = typeof(Resources.WorkOrder))]
         [StringLength(12, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.WorkOrder))]
         [Required(ErrorMessageResourceName = "phonerequired", ErrorMessageResourceType = typeof(Resources.WorkOrder))]
+        [RegularExpression(@"^$|^[\d]{3,3}-[\d]{3,3}-[\d]{4,4}$", ErrorMessageResourceName = "phoneformat", ErrorMessageResourceType = typeof(Resources.WorkOrder))]
         public string phone { get; set; }
         //
         [LocalizedDisplayName("zipcode", NameResourceType = typeof(Resources.WorkOrder))]

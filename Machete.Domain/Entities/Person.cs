@@ -64,6 +64,7 @@ namespace Machete.Domain
         //
         [LocalizedDisplayName("phone", NameResourceType = typeof(Resources.Person))]
         [StringLength(12, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Person))]
+        [RegularExpression(@"^$|^[\d]{3,3}-[\d]{3,3}-[\d]{4,4}$", ErrorMessageResourceName = "phoneformat", ErrorMessageResourceType = typeof(Resources.Person))]
         public string phone { get; set; }
         [LocalizedDisplayName("gender", NameResourceType = typeof(Resources.Person))]
         [Required(ErrorMessageResourceName = "gendererror", ErrorMessageResourceType = typeof(Resources.Person))]

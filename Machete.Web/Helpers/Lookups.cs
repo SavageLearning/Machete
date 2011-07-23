@@ -103,7 +103,7 @@ namespace Machete.Web.Helpers
             hourlyWageDefault = 12;
             hoursNum = new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16" }
                 .Select(x => new LookupNumber { Value = x, Text = x });
-            hoursDefault = 8;
+            hoursDefault = 5;
             daysNum = new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14" }
                 .Select(x => new LookupNumber { Value = x, Text = x });
             daysDefault = 1;

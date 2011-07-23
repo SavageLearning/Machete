@@ -169,6 +169,15 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please use this form: ###-###-####.
+        /// </summary>
+        public static string phoneformat {
+            get {
+                return ResourceManager.GetString("phoneformat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to At least one phone number is required.
         /// </summary>
         public static string phonerequired {
