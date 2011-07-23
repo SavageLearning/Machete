@@ -187,6 +187,24 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Alternate (paper) order ID.
+        /// </summary>
+        public static string paperOrderNum {
+            get {
+                return ResourceManager.GetString("paperOrderNum", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This number must be 5 digits, or blank.
+        /// </summary>
+        public static string paperOrderNumFormat {
+            get {
+                return ResourceManager.GetString("paperOrderNumFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Is this a permanent placement?.
         /// </summary>
         public static string permanentPlacement {

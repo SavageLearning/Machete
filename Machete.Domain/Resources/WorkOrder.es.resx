@@ -234,4 +234,10 @@
   <data name="phoneformat" xml:space="preserve">
     <value>Por favor, utilice este formulario: ###-###-####</value>
   </data>
+  <data name="paperOrderNum" xml:space="preserve">
+    <value>Alternativa (de papel) para ID</value>
+  </data>
+  <data name="paperOrderNumFormat" xml:space="preserve">
+    <value>Este número debe ser de 5 dígitos, o en blanco</value>
+  </data>
 </root>

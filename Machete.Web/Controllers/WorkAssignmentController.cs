@@ -158,7 +158,7 @@ namespace Machete.Web.Controllers
                                       tablabel = _getTabLabel(p),
                                       WOID = Convert.ToString(p.workOrderID),
                                       WAID = Convert.ToString(p.ID),
-                                      pWAID = Convert.ToString(p.workOrderID) + "-" + Convert.ToString(p.ID),
+                                      pWAID = _getFullPseudoID(p), 
                                       englishlevel = Convert.ToString(p.englishLevelID),
                                       skill =  Lookups.byID(p.skillID, culture),
                                       hourlywage = System.String.Format("${0:f2}", p.hourlyWage),
@@ -194,9 +194,13 @@ namespace Machete.Web.Controllers
         //
         private string _getTabLabel(WorkAssignment wa)
         {
-            return Machete.Web.Resources.WorkAssignments.tabprefix + wa.ID;
+            return Machete.Web.Resources.WorkAssignments.tabprefix + _getFullPseudoID(wa);
         }
-
+        private string _getFullPseudoID(WorkAssignment wa)
+        {
+            return (wa.workOrder.paperOrderNum.HasValue ? wa.workOrder.paperOrderNum.ToString() : Convert.ToString(wa.workOrderID))
+                                      + "-" + (wa.pseudoID.HasValue ? Convert.ToString(wa.pseudoID) : Convert.ToString(wa.ID));
+        }
         
         
         //
@@ -229,6 +233,8 @@ namespace Machete.Web.Controllers
                 return PartialView("Create", assignment);
             }
             assignment.workOrder = _ordServ.GetWorkOrder(assignment.workOrderID);
+            assignment.workOrder.waPseudoIDCounter++;
+            assignment.pseudoID = assignment.workOrder.waPseudoIDCounter;
             WorkAssignment newAssignment = _assServ.Create(assignment, userName);
 
             return Json(new
@@ -253,6 +259,8 @@ namespace Machete.Web.Controllers
         {
             WorkAssignment _assignment = _assServ.Get(id);
             WorkAssignment newAssign = _assignment;
+            newAssign.workOrder.waPseudoIDCounter++;
+            newAssign.pseudoID = newAssign.workOrder.waPseudoIDCounter;
             _assServ.Create(newAssign, userName);
             return Json(new
             {

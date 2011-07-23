@@ -212,7 +212,7 @@ namespace Machete.Web.Controllers
             Func<WorkOrder, string> orderingFunction = (p => sortColIdx == 3 ? System.String.Format("{0,5:D5}", p.ID) :
                                                           sortColIdx == 4 ? System.String.Format("{0:MM/dd/yyyy  HH:mm:ss}", p.dateTimeofWork) :
                                                           sortColIdx == 5 ? p.status.ToString() :
-                                                          sortColIdx == 6 ?  System.String.Format("{0,2:D2}", p.workAssignments.Count) :
+                                                          sortColIdx == 6 ? System.String.Format("{0,2:D2}", p.workAssignments.Count) :
                                                           sortColIdx == 7 ? p.contactName :
                                                           sortColIdx == 8 ? p.workSiteAddress1 :
                                                           sortColIdx == 9 ? p.dateupdated.ToBinary().ToString() :
@@ -234,7 +234,8 @@ namespace Machete.Web.Controllers
                          select new { tabref = _getTabRef(p),
                                       tablabel =  _getTabLabel(p),
                                       EID = Convert.ToString(p.EmployerID),
-                                      WOID = System.String.Format("{0,5:D5}", p.ID),
+                                      //WOID = System.String.Format("{0,5:D5}", p.ID),
+                                      WOID = _getPseudoWOID(p),
                                       dateTimeofWork = System.String.Format("{0:MM/dd/yyyy}", p.dateTimeofWork),
                                       status = Lookups.byID(p.status, CI.TwoLetterISOLanguageName),
                                       WAcount = p.workAssignments.Count(a => a.workOrderID == p.ID).ToString(),
@@ -260,7 +261,12 @@ namespace Machete.Web.Controllers
 
         private string _getTabLabel(WorkOrder wo)
         {
-            return Machete.Web.Resources.WorkOrders.tabprefix + wo.ID + ' ' + wo.workSiteAddress1;
+            return Machete.Web.Resources.WorkOrders.tabprefix + _getPseudoWOID(wo) + " @ " + wo.workSiteAddress1;
+        }
+
+        private string _getPseudoWOID(WorkOrder wo)
+        {
+            return wo.paperOrderNum.HasValue ? System.String.Format("{0,5:D5}", wo.paperOrderNum) : System.String.Format("{0,5:D5}", wo.ID);
         }
 
         private void _setCreateDefaults(WorkOrderEditor _model)

@@ -34,6 +34,13 @@
             @*@Html.DropDownListFor(model => model.skillID, new SelectList(ViewBag.skillList, "Value", "Text", Model.skillID), @Machete.Web.Resources.Shared.choose)*@
             @Html.ValidationMessageFor(model => model.skillID)
         </div>
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.pseudoID)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.TextBox("pseudoID",Model.pseudoID, new { style = "width: 2em", @readonly="readonly"})
+            @Html.ValidationMessageFor(model => model.pseudoID)
+        </div>
     </div>
 </div>
 <div class="tb-table">
