@@ -129,7 +129,7 @@ namespace Machete.Web.Controllers
             Func<WorkAssignment, string> orderingFunction =
                   (p => sortColName == "WOID" ? p.workOrder.ID.ToString() :
                         sortColName == "WAID" ? p.ID.ToString() :
-                        sortColName == "pWAID" ? Convert.ToString(p.workOrderID) + "-" + Convert.ToString(p.ID) : 
+                        sortColName == "pWAID" ? _getFullPseudoID(p) : 
                         sortColName == "englishlevel" ? p.englishLevelID.ToString() :
                         sortColName == "skill" ? Lookups.byID(p.skillID, culture) :
                         sortColName == "hourlywage" ? p.hourlyWage.ToString() :
@@ -198,8 +198,12 @@ namespace Machete.Web.Controllers
         }
         private string _getFullPseudoID(WorkAssignment wa)
         {
-            return (wa.workOrder.paperOrderNum.HasValue ? wa.workOrder.paperOrderNum.ToString() : Convert.ToString(wa.workOrderID))
-                                      + "-" + (wa.pseudoID.HasValue ? Convert.ToString(wa.pseudoID) : Convert.ToString(wa.ID));
+            return (wa.workOrder.paperOrderNum.HasValue ? 
+                        System.String.Format("{0,5:D5}", wa.workOrder.paperOrderNum) : 
+                        System.String.Format("{0,5:D5}", wa.workOrderID))
+                    + "-" + (wa.pseudoID.HasValue ? 
+                        System.String.Format("{0,2:D2}", wa.pseudoID) : 
+                        System.String.Format("{0,5:D5}", wa.ID));
         }
         
         
