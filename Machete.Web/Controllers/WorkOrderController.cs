@@ -179,6 +179,7 @@ namespace Machete.Web.Controllers
             //IEnumerable<WorkOrder> emplrfilteredWorkOrders;
             IEnumerable<WorkOrder> filteredWorkOrders;
             IEnumerable<WorkOrder> sortedWorkOrders;
+            IEnumerable<SelectListItem> statusFilter;
             //Search based on search-bar string 
             if (!string.IsNullOrEmpty(param.sSearch_2))
             {
@@ -193,14 +194,19 @@ namespace Machete.Web.Controllers
 
             if (!string.IsNullOrEmpty(param.sSearch))
             {
+                statusFilter = Lookups.orderstatus(CI.TwoLetterISOLanguageName)
+                        .Where(p => p.Text.ContainsOIC(param.sSearch));
+
                 filteredWorkOrders = allWorkOrders
-                    .Where(p => p.ID.ToString().ContainsOIC(param.sSearch) ||
+                    .Where(p => p.ID.ToString().Contains(param.sSearch) ||
+                                p.paperOrderNum.ToString().ContainsOIC(param.sSearch) ||
                                 p.dateTimeofWork.ToString().ContainsOIC(param.sSearch) ||
-                                Lookups.byID(p.status, culture).ContainsOIC(param.sSearch) ||
+                                //Lookups.byID(p.status,  CI.TwoLetterISOLanguageName).ContainsOIC(param.sSearch) ||
                                 p.contactName.ContainsOIC(param.sSearch) ||
                                 p.workSiteAddress1.ContainsOIC(param.sSearch) ||
-                                p.dateupdated.ToString().ContainsOIC(param.sSearch) ||
-                                p.Updatedby.ContainsOIC(param.sSearch));
+                                p.dateupdated.ToString().Contains(param.sSearch) ||
+                                p.Updatedby.ContainsOIC(param.sSearch)
+                                );
                                 
             }
             else
@@ -209,14 +215,17 @@ namespace Machete.Web.Controllers
             }
             //Sort the Persons based on column selection
             var sortColIdx = Convert.ToInt32(Request["iSortCol_0"]);
-            Func<WorkOrder, string> orderingFunction = (p => sortColIdx == 3 ? System.String.Format("{0,5:D5}", p.ID) :
-                                                          sortColIdx == 4 ? System.String.Format("{0:MM/dd/yyyy  HH:mm:ss}", p.dateTimeofWork) :
-                                                          sortColIdx == 5 ? p.status.ToString() :
-                                                          sortColIdx == 6 ? System.String.Format("{0,2:D2}", p.workAssignments.Count) :
-                                                          sortColIdx == 7 ? p.contactName :
-                                                          sortColIdx == 8 ? p.workSiteAddress1 :
-                                                          sortColIdx == 9 ? p.dateupdated.ToBinary().ToString() :
-                                                          p.Updatedby);
+            var sortColName = param.sortColName();
+            Func<WorkOrder, string> orderingFunction =
+                (p => sortColName == "WOID" ? System.String.Format("{0,5:D5}", _getPseudoWOID(p)) :
+                        sortColName == "dateTimeofWork" ? System.String.Format("{0:MM/dd/yyyy  HH:mm:ss}", p.dateTimeofWork) :
+                        sortColName == "status" ? p.status.ToString() :
+                        sortColName == "WAcount" ? System.String.Format("{0,2:D2}", p.workAssignments.Count) :
+                        sortColName == "contactName" ? p.contactName :
+                        sortColName == "workSiteAddress1" ? p.workSiteAddress1 :
+                        sortColName == "dateupdated" ? p.dateupdated.ToBinary().ToString() :
+                        sortColName == "updatedby" ? p.Updatedby :
+                        System.String.Format("{0,5:D5}",_getPseudoWOID(p)));
 
             var sortDir = Request["sSortDir_0"];
             if (sortDir == "asc")
