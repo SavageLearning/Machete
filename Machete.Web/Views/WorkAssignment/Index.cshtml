@@ -21,10 +21,26 @@
 <div>
     @Html.TextBoxFor(m => m.dwccardnum)
 </div>
-
-<div id="assignmentTab">
+<div class="tb-table">
+<div class="tb-row"></div>
+<div id="signinTab" class="tb-cell">
     <ul>
-        <li><a href="#availAssignList">All Assignments?!</a></li>
+        <li><a href="#signinList">Lottery list</a></li>
+    </ul>
+    <div id="signinList">
+    <table id="signinTable" class="display">
+    <thead>
+        <tr>
+            <th>dwc#</th>
+        </tr>
+    </thead>
+    </table>
+    </div>
+</div>
+<div id="assignmentTab" class="tb-cell">
+    <ul>
+        <li><a href="#availAssignList">Open Assignments?!</a></li>
+        <li><a href="#availAssignList">Filled Assignments?!</a></li>
     </ul>
     <div id="availAssignList">
             <table id="availAssignTable" class="display">
@@ -49,9 +65,32 @@
         </table>
     </div>
 </div>
+</div>
+</div>
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
         jqrfyTabs($("#assignmentTab"), "ui-tabs-assignment-");
+        jqrfyTabs($("#signinTab"), "ui-tabs-signin-");
+        
+        jqrfyWSignin($("#signinTable"), {
+            "bLengthChange": false,
+            "bServerSide": true,
+            "sAjaxSource": "/WorkerSignin/AjaxHandler",
+            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "bProcessing": true,
+            "aoColumns": [
+                {"mDataProp": "dwccardnum"}
+            ],
+            "fnServerData": function ( sSource, aoData, fnCallback ) {
+			    /* Add some extra data to the sender */
+			    aoData.push( { "name": "todaysdate", "value": $('#todaysdate').val() } );
+                aoData.push( { "name": "dwccardnum", "value": $('#dwccardnum').val()} );
+			    $.getJSON( sSource, aoData, function (json) { 
+				    /* Do whatever additional processing you want on the callback, then tell DataTables */
+				    fnCallback(json)
+			    } );
+		    }
+        });
         jqrfyTable($("#availAssignTable"), $("#assignmentTab"),
         {
             "bPaginate": true,
@@ -96,6 +135,7 @@
             $("#updateBtn").click(function (e) {
                 e.preventDefault();
                 $("#availAssignTable").dataTable().fnDraw();
+                $("#signinTable").dataTable().fnDraw();
             });
     });
 </script>

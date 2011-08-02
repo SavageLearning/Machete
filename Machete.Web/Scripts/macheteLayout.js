@@ -82,9 +82,12 @@ function getGlobalID(idtag) {
     if (M_ass_uitab_patt.test(idtag)) {
         rtnval = M_last_assignmentID_loaded;
     }
-    return rtnval;    
+    return rtnval;
 }
-
+////////////////////////////////////////////////////////////////
+//
+//
+//
 function jqrfyTabs(myTab, myPrefix, defaultTab) {
     if (defaultTab == null) defaultTab = 0;
     //
@@ -99,9 +102,8 @@ function jqrfyTabs(myTab, myPrefix, defaultTab) {
             data: {},
             success: function (data, textStatus) { }
         },
-        ////////////////////////////////////////////////////////////////
         //
-        // select event
+        // jquery.tabs() select event
         //
         select: function (event, ui) {
             $(ui.panel).hide();
@@ -125,9 +127,8 @@ function jqrfyTabs(myTab, myPrefix, defaultTab) {
                 //
             }
         },
-        ////////////////////////////////////////////////////////////////
         //
-        // load event (This event doesn't happen for the list tab)
+        // jquery.tabs() load event (This event doesn't happen for the list tab)
         //
         load: function (event, ui) {
             if (eventDebug) M_conlog("EVENT", "LOAD", "jqrfyTabs", ui.panel.id, $(ui.tab).attr('href'));
@@ -138,9 +139,8 @@ function jqrfyTabs(myTab, myPrefix, defaultTab) {
             setGlobalIDs(ui.panel.id, hiddenID, "jqrfyTabs");
             $(ui.panel).fadeIn();
         },
-        ////////////////////////////////////////////////////////////////
         //
-        // show event
+        // jquery.tabs() show event
         //
         show: function (event, ui) {
             if (eventDebug) M_conlog("EVENT", "SHOW", "jqrfyTabs", ui.panel.id, $(ui.tab).attr('href'));
@@ -149,9 +149,8 @@ function jqrfyTabs(myTab, myPrefix, defaultTab) {
                 $(ui.panel).fadeIn();
             }
         },
-        ////////////////////////////////////////////////////////////////
         //
-        // remove  event (This event doesn't happen for the list tab)
+        // jquery.tabs() remove event (This event doesn't happen for the list tab)
         //
         remove: function (event) {
             if (eventDebug) M_conlog("EVENT", "REMOVE", "jqrfyTabs", event.target.id, "");
@@ -160,9 +159,9 @@ function jqrfyTabs(myTab, myPrefix, defaultTab) {
         //template to put the ui-icon-close in the tab
         tabTemplate: "<li><a href='#{href}'>#{label}</a> <span class='ui-icon ui-icon-close'>Remove Tab</span></li>"
     });
-    ///
-    /// close tab event
-    ///
+    //
+    // close tab event
+    //
     $(jTabs).find("span.ui-icon-close").live("click", function (e) {
         var trgTabnav = $(e.target).closest('.ui-tabs');
         var index = trgTabnav.children('.ui-tabs-nav').index($(this).parent());
@@ -212,13 +211,30 @@ function add_rectab(theref, label, tabObj, exclusiveTab, recID) {
 
     return false;
 }
+////////////////////////////////////////////////////////////////
+//
+//
+//
+function jqrfyWSignin(myTable, myOptions) {
+    var oTable;
+    oTable = $(myTable).dataTable(myOptions).fnSetFilteringDelay(400);
+    $(myTable).find('tbody').click(function (event) {
+        $(oTable.fnSettings().aoData).each(function () {
+            $(this.nTr).removeClass('row_selected');
+        });
+        $(event.target.parentNode).addClass('row_selected');
+    });
+
+}
+
+
 //////////////////////////////////////////////////////////////////
 ///
 ///##Create dataTable
 ///
 function jqrfyTable(myTable, myTab, myOptions) {
     var oTable;
-    oTable = $(myTable).dataTable(myOptions).fnSetFilteringDelay(250);
+    oTable = $(myTable).dataTable(myOptions).fnSetFilteringDelay(400);
     if (eventDebug) M_conlog("INIT+", "ADD TABLE","jqrfyTable", "", "");
     ////////////////////////////////////////////////////////////////
     //
