@@ -35,6 +35,7 @@ namespace Machete.Web.Models
         public string sSearch_13 { get; set; }
         public string sSearch_14 { get; set; }
         public string sSearch_15 { get; set; }
+        public string sSortDir_0 { get; set; }
         /// <summary>
         /// Number of records that should be shown in table
         /// </summary>

@@ -6,10 +6,12 @@ using System.Web.Mvc;
 using Machete.Service;
 using Machete.Helpers;
 using Machete.Web.ViewModel;
+using Machete.Web.Helpers;
 using NLog;
 using Machete.Domain;
 using Machete.Data;
 using Microsoft.Reporting.WebForms;
+using Machete.Web.Models;
 
 namespace Machete.Web.Controllers
 {
@@ -84,59 +86,125 @@ namespace Machete.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = "Manager, Administrator, Check-in")]
-        public ActionResult Report()
+
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, User")]
+        public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
-            var ReportPath = Server.MapPath("~/RDLC/WorkerSigninsDaily.rdlc");
+            //Get all the records
+            var allWSI = _serv.GetWorkerSignins();
+            IEnumerable<WorkerSignin> filteredWSI;
+            IEnumerable<WorkerSignin> sortedWSI;
+            //Search based on search-bar string
+            if (!string.IsNullOrEmpty(param.todaysdate)) {
+                allWSI = allWSI
+                    .Where(jj => jj.dateforsignin.Date.Equals(Convert.ToDateTime(param.todaysdate)));
+                      
+            }
+            if (!string.IsNullOrEmpty(param.sSearch))
+            {
+                filteredWSI = allWSI
+                    .Where(p => p.dwccardnum.ToString().ContainsOIC(param.sSearch) ||
+                                p.worker.Person.firstname1.ContainsOIC(param.sSearch) ||
+                                p.worker.Person.firstname2.ContainsOIC(param.sSearch) ||
+                                p.worker.Person.lastname1.ContainsOIC(param.sSearch) ||
+                                p.worker.Person.lastname2.ContainsOIC(param.sSearch));
+            }
+            else
+            {
+                filteredWSI = allWSI;
+            }
+            //Sort the Persons based on column selection
+            var sortColIdx = Convert.ToInt32(Request["iSortCol_0"]);
+            var sortColName = param.sortColName();
+            Func<WorkerSignin, string> orderingFunction = (p => sortColName == "dwccardnum" ? p.dwccardnum.ToString() :
+                                                          sortColName == "firstname1" ? p.worker.Person.firstname1 :
+                                                          sortColName == "firstname2" ? p.worker.Person.firstname2 :
+                                                          sortColName == "lastname1" ? p.worker.Person.lastname1 :
+                                                          sortColName == "lastname2" ? p.worker.Person.lastname2 :
+                                                          sortColName == "dateforsignin" ? p.dateforsignin.ToString() :
+                                                          p.dateupdated.ToString());
+            var sortDir = Request["sSortDir_0"];
+            if (sortDir == "asc")
+                sortedWSI = filteredWSI.OrderBy(orderingFunction);
+            else
+                sortedWSI = filteredWSI.OrderByDescending(orderingFunction);
 
-            object Model =  _serv.getView(DateTime.Today);
+            //Limit results to the display length and offset
+            var displayWSI = sortedWSI.Skip(param.iDisplayStart)
+                                              .Take(param.iDisplayLength);
 
-            RenderReport(ReportPath, Model);
+            //return what's left to datatables
+            var result = from p in displayWSI
+                         select new {  dwccardnum = p.dwccardnum,
+                                       firstname1 = p.worker.Person.firstname1,
+                                       firstname2 = p.worker.Person.firstname2,
+                                       lastname1 = p.worker.Person.lastname1,
+                                       lastname2 = p.worker.Person.lastname2, 
+                                       dateforsignin = p.dateforsignin
+                         };
 
-            return View();
+            return Json(new
+            {
+                sEcho = param.sEcho,
+                iTotalRecords = allWSI.Count(),
+                iTotalDisplayRecords = filteredWSI.Count(),
+                aaData = result
+            },
+            JsonRequestBehavior.AllowGet);
         }
+        //[Authorize(Roles = "Manager, Administrator, Check-in")]
+        //public ActionResult Report()
+        //{
+        //    var ReportPath = Server.MapPath("~/RDLC/WorkerSigninsDaily.rdlc");
 
-        private void RenderReport(string ReportPath, object Model)
-        {
+        //    object Model =  _serv.getView(DateTime.Today);
 
-            var localReport = new LocalReport { ReportPath = ReportPath };
+        //    RenderReport(ReportPath, Model);
 
-            //Give the collection a name (EmployeeCollection) so that we can reference it in our report designer
-            var reportDataSource = new ReportDataSource("SigninDaily", Model);
-            localReport.DataSources.Add(reportDataSource);
+        //    return View();
+        //}
 
-            var reportType = "PDF";
-            string mimeType;
-            string encoding;
-            string fileNameExtension;
+        //private void RenderReport(string ReportPath, object Model)
+        //{
 
-            //The DeviceInfo settings should be changed based on the reportType
-            //http://msdn2.microsoft.com/en-us/library/ms155397.aspx
-            var deviceInfo =
-                string.Format("<DeviceInfo><OutputFormat>{0}</OutputFormat><PageWidth>8.5in</PageWidth><PageHeight>11in</PageHeight><MarginTop>0.5in</MarginTop><MarginLeft>1in</MarginLeft><MarginRight>1in</MarginRight><MarginBottom>0.5in</MarginBottom></DeviceInfo>", reportType);
+        //    var localReport = new LocalReport { ReportPath = ReportPath };
 
-            Warning[] warnings;
-            string[] streams;
+        //    //Give the collection a name (EmployeeCollection) so that we can reference it in our report designer
+        //    var reportDataSource = new ReportDataSource("SigninDaily", Model);
+        //    localReport.DataSources.Add(reportDataSource);
 
-            //Render the report
-            var renderedBytes = localReport.Render(
-                reportType,
-                deviceInfo,
-                out mimeType,
-                out encoding,
-                out fileNameExtension,
-                out streams,
-                out warnings);
+        //    var reportType = "PDF";
+        //    string mimeType;
+        //    string encoding;
+        //    string fileNameExtension;
 
-            //Clear the response stream and write the bytes to the outputstream
-            //Set content-disposition to "attachment" so that user is prompted to take an action
-            //on the file (open or save)
-            Response.Clear();
-            Response.ContentType = mimeType;
-            Response.AddHeader("content-disposition", "attachment; filename=foo." + fileNameExtension);
-            Response.BinaryWrite(renderedBytes);
-            Response.End();
-        }
+        //    //The DeviceInfo settings should be changed based on the reportType
+        //    //http://msdn2.microsoft.com/en-us/library/ms155397.aspx
+        //    var deviceInfo =
+        //        string.Format("<DeviceInfo><OutputFormat>{0}</OutputFormat><PageWidth>8.5in</PageWidth><PageHeight>11in</PageHeight><MarginTop>0.5in</MarginTop><MarginLeft>1in</MarginLeft><MarginRight>1in</MarginRight><MarginBottom>0.5in</MarginBottom></DeviceInfo>", reportType);
+
+        //    Warning[] warnings;
+        //    string[] streams;
+
+        //    //Render the report
+        //    var renderedBytes = localReport.Render(
+        //        reportType,
+        //        deviceInfo,
+        //        out mimeType,
+        //        out encoding,
+        //        out fileNameExtension,
+        //        out streams,
+        //        out warnings);
+
+        //    //Clear the response stream and write the bytes to the outputstream
+        //    //Set content-disposition to "attachment" so that user is prompted to take an action
+        //    //on the file (open or save)
+        //    Response.Clear();
+        //    Response.ContentType = mimeType;
+        //    Response.AddHeader("content-disposition", "attachment; filename=foo." + fileNameExtension);
+        //    Response.BinaryWrite(renderedBytes);
+        //    Response.End();
+        //}
 
 
 
