@@ -10,7 +10,11 @@ namespace Machete.Data
 {
     public class MacheteContext : DbContext
     {
-        public MacheteContext() : base("macheteConnection") { }
+        public MacheteContext() : base("macheteConnection") 
+        {
+            //this.Configuration.LazyLoadingEnabled = false;
+        }
+        
           //Machete here defines the database to use, by convention.
         public DbSet<Person> Persons { get; set; }
         public DbSet<Worker> Workers { get; set; }

@@ -48,15 +48,15 @@ public abstract class RepositoryBase<T> where T : class
 
     public virtual IEnumerable<T> GetAll()
     {
-        return dbset.ToList();
+        return dbset.AsEnumerable();
     }
     public virtual IEnumerable<T> GetMany(Func<T, bool> where)
     {
-        return dbset.Where(where).ToList();
+        return dbset.Where(where);
     }
     public T Get(Func<T, Boolean> where)
     {
         return dbset.Where(where).FirstOrDefault<T>();
-    } 
+    }
 }
 }

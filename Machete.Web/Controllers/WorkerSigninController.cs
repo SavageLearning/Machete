@@ -146,8 +146,8 @@ namespace Machete.Web.Controllers
             return Json(new
             {
                 sEcho = param.sEcho,
-                iTotalRecords = allWSI.Count(),
-                iTotalDisplayRecords = filteredWSI.Count(),
+                //iTotalRecords = allWSI.Count(),
+                //iTotalDisplayRecords = filteredWSI.Count(),
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);
