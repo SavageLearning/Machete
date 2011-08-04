@@ -68,7 +68,7 @@ namespace Machete.Web.Controllers
         {
             //Get all the records
             System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
-            var allAssignments = _assServ.GetMany(true);
+            //var allAssignments = _assServ.GetMany();
             IEnumerable<WorkAssignment> emplrfilteredAssignments;
             IEnumerable<WorkAssignment> filteredAssignments;
             IEnumerable<WorkAssignment> sortedAssignments;
@@ -77,7 +77,7 @@ namespace Machete.Web.Controllers
             {
                 Worker worker = _wkrServ.GetWorkerByNum(Convert.ToInt32(param.dwccardnum));
 
-                emplrfilteredAssignments = _assServ.GetMany(true).Join(DB.Lookups,
+                emplrfilteredAssignments = _assServ.GetMany().Join(DB.Lookups,
                                                                        wa => wa.skillID,
                                                                        sk => sk.ID,
                                                                        (wa, sk) => new { wa, sk })
@@ -93,17 +93,18 @@ namespace Machete.Web.Controllers
             }
             else if (!string.IsNullOrEmpty(param.todaysdate)) 
             {
-                    emplrfilteredAssignments = _assServ.GetMany(true).Where(wa =>
+                    emplrfilteredAssignments = _assServ.GetMany().Where(wa =>
                                                                     wa.workOrder.dateTimeofWork.Date.Equals(Convert.ToDateTime(param.todaysdate)));
+
             }
             else if (!string.IsNullOrEmpty(param.searchColName("WOID")))
             {
-                emplrfilteredAssignments = _assServ.GetMany(true)
+                emplrfilteredAssignments = _assServ.GetMany()
                     .Where(p => p.workOrderID.Equals(Convert.ToInt32(param.searchColName("WOID"))));
             }
             else
             {
-                emplrfilteredAssignments = allAssignments;
+                emplrfilteredAssignments = _assServ.GetMany();
             }
             if (!string.IsNullOrEmpty(param.sSearch))
             {
@@ -170,12 +171,12 @@ namespace Machete.Web.Controllers
                                       dateTimeofWork = p.workOrder.dateTimeofWork.ToString(),
                                       earnings = System.String.Format("${0:f2}",(p.hourlyWage * p.hours * p.days))
                          };
-
+            var counter = filteredAssignments.Count();
             return Json(new
             {
                 sEcho = param.sEcho,
-                iTotalRecords = filteredAssignments.Count(),
-                iTotalDisplayRecords = filteredAssignments.Count(),
+                iTotalRecords = counter,
+                iTotalDisplayRecords = counter,
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);

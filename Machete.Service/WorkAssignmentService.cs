@@ -11,8 +11,9 @@ namespace Machete.Service
 {
     public interface IWorkAssignmentService
     {
-        IEnumerable<WorkAssignment> GetMany(bool inactive);
-        IEnumerable<WorkAssignment> GetManyByWO(int woID);
+        IEnumerable<WorkAssignment> GetMany();
+        IEnumerable<WorkAssignment> GetMany(Func<WorkAssignment, bool> where);
+        //IEnumerable<WorkAssignment> GetManyByWO(int woID);
         IEnumerable<WorkAssignmentSummary> GetSummary();
         WorkAssignment Get(int id);
         WorkAssignment Create(WorkAssignment workAssignment, string user);
@@ -37,27 +38,20 @@ namespace Machete.Service
             this.unitOfWork = unitOfWork;
         }
 
-        public IEnumerable<WorkAssignment> GetMany(bool showInactive)
+        public IEnumerable<WorkAssignment> GetMany()
         {
-            IEnumerable<WorkAssignment> workAssignments;
-            //TODO Unit test this
-            if (showInactive == false)
-            {
-                workAssignments = workAssignmentRepository.GetAll().Where(w => w.active == true);
-            }
-            else
-            {
-                workAssignments = workAssignmentRepository.GetAll();
-            }
-            return workAssignments;
+            return workAssignmentRepository.GetAll();
         }
-
-        public IEnumerable<WorkAssignment> GetManyByWO(int woID)
+        public IEnumerable<WorkAssignment> GetMany(Func<WorkAssignment, bool> where)
         {
-               IEnumerable<WorkAssignment> workAssignments;
-               workAssignments = workAssignmentRepository.GetAll().Where(w => w.workOrderID == woID);
-               return workAssignments;
+            return workAssignmentRepository.GetMany(where);
         }
+        //public IEnumerable<WorkAssignment> GetManyByWO(int woID)
+        //{
+        //       IEnumerable<WorkAssignment> workAssignments;
+        //       workAssignments = workAssignmentRepository.GetAll().Where(w => w.workOrderID == woID);
+        //       return workAssignments;
+        //}
 
         public WorkAssignment Get(int id)
         {

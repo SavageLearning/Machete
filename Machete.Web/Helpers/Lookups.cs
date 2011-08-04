@@ -59,6 +59,10 @@ namespace Machete.Web.Helpers
         public static int skillDefault { get; private set; }
         private static List<SelectListItem> yesnoEN { get; set; }
         private static List<SelectListItem> yesnoES { get; set; }
+        private static IQueryable<Lookup> DbCacheEN { get; set; }
+        private static IQueryable<Lookup> DbCacheES { get; set; }
+        private static IQueryable<Lookup> DbCache { get; set; }
+        private static Dictionary<string, SelectList> LookupLists { get; set; }
         #endregion
         //
         // Initialize once to prevent re-querying DB
@@ -66,6 +70,7 @@ namespace Machete.Web.Helpers
         public static void Initialize(MacheteContext db)
         {
             DB = db;
+            FillCache();
             maritalstatusesEN = get("maritalstatus", "en");
             maritalstatusesES = get("maritalstatus", "es");
             maritalstatusDefault = getDefaultID("maritalstatus");
@@ -211,6 +216,19 @@ namespace Machete.Web.Helpers
             return yesnoEN;  //defaults to English
         }
 
+        private static void FillCache()
+        {
+
+            DbCache = DB.Lookups.OrderBy(s => s.category).ThenBy(s => s.sortorder).AsQueryable();
+            //foreach (var row in DbCache)
+            //{
+            //    if (LookupLists[row.category + "-en"] == null)
+            //    {
+            //        LookupLists[row.category + "-en"] = new 
+            //    }
+            //}
+        }
+
         private static SelectList get(string category, string locale)
         {
             //TODO: throw and catch exception if Lookup returns nothing
@@ -218,14 +236,14 @@ namespace Machete.Web.Helpers
             if (locale == "es")
             {
 
-                list = new SelectList(DB.Lookups.ToList().Where(s => s.category == category).OrderBy(s => s.sortorder).ThenBy(s => s.text_ES),
+                list = new SelectList(DbCache.Where(s => s.category == category),
                                       "ID",
                                       "text_ES",
                                       getDefaultID(category));
             }
             else //Default to English
             {
-                list = new SelectList(DB.Lookups.ToList().Where(s => s.category == category).OrderBy(s => s.sortorder).ThenBy(s => s.text_EN),
+                list = new SelectList(DbCache.Where(s => s.category == category),
                                       "ID",
                                       "text_EN",
                                       getDefaultID(category));
@@ -240,7 +258,7 @@ namespace Machete.Web.Helpers
             if (locale == "es")
             {
 
-                list = new List<SelectListItemEx>(DB.Lookups.ToList().Where(s => s.category == category).OrderBy(s => s.sortorder).ThenBy(s => s.text_ES)
+                list = new List<SelectListItemEx>(DbCache.ToList().Where(s => s.category == category).OrderBy(s => s.sortorder).ThenBy(s => s.text_ES)
                                     .Select(x => new SelectListItemEx
                                     { 
                                                             Selected = x.selected,
@@ -254,7 +272,7 @@ namespace Machete.Web.Helpers
             }
             else //Default to English
             {
-                list = new List<SelectListItemEx>(DB.Lookups.ToList().Where(s => s.category == category).OrderBy(s => s.sortorder).ThenBy(s => s.text_EN)
+                list = new List<SelectListItemEx>(DbCache.ToList().Where(s => s.category == category).OrderBy(s => s.sortorder).ThenBy(s => s.text_EN)
                                     .Select(x => new SelectListItemEx
                                     {
                                         Selected = x.selected,
@@ -275,10 +293,10 @@ namespace Machete.Web.Helpers
         {
             //TODO Exception handling
             int count;
-            count = DB.Lookups.Where(s => s.selected == true &&
+            count = DbCache.Where(s => s.selected == true &&
                                            s.category == category)
                                 .Count();
-            if (count > 0) return DB.Lookups.Where(s => s.selected == true &&
+            if (count > 0) return DbCache.Where(s => s.selected == true &&
                                            s.category == category).SingleOrDefault().ID;
             return count; 
 
@@ -289,7 +307,7 @@ namespace Machete.Web.Helpers
         public static int getSingleEN(string category, string text)
         {
             int rtnint = 0;
-            rtnint = DB.Lookups.Single(s => s.category == category && s.text_EN == text).ID;
+            rtnint = DbCache.Single(s => s.category == category && s.text_EN == text).ID;
             return rtnint;
         }
         //
@@ -297,8 +315,8 @@ namespace Machete.Web.Helpers
         //
         public static string byID(int ID, string locale)
         {
-            if (locale == "es") return DB.Lookups.Single(s => s.ID == ID).text_ES;
-            return DB.Lookups.Single(s => s.ID == ID).text_EN; ;  //defaults to English
+            if (locale == "es") return DbCache.Single(s => s.ID == ID).text_ES;
+            return DbCache.Single(s => s.ID == ID).text_EN; ;  //defaults to English
         }
         //
         // create multi-lingual yes/no strings

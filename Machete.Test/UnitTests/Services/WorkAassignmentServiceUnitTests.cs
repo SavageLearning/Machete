@@ -74,7 +74,7 @@ namespace Machete.Test.UnitTests.Services
             _uow = new Mock<IUnitOfWork>();
             var _serv = new WorkAssignmentService(_repo.Object, _uow.Object);
             //Act
-            var result = _serv.GetMany(false);
+            var result = _serv.GetMany();
             //Assert
             Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
         }

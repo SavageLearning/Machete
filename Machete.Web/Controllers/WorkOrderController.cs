@@ -179,7 +179,7 @@ namespace Machete.Web.Controllers
             //IEnumerable<WorkOrder> emplrfilteredWorkOrders;
             IEnumerable<WorkOrder> filteredWorkOrders;
             IEnumerable<WorkOrder> sortedWorkOrders;
-            IEnumerable<SelectListItem> statusFilter;
+            //IEnumerable<SelectListItem> statusFilter;
             //Search based on search-bar string 
             if (!string.IsNullOrEmpty(param.sSearch_2))
             {
@@ -194,8 +194,8 @@ namespace Machete.Web.Controllers
 
             if (!string.IsNullOrEmpty(param.sSearch))
             {
-                statusFilter = Lookups.orderstatus(CI.TwoLetterISOLanguageName)
-                        .Where(p => p.Text.ContainsOIC(param.sSearch));
+                //statusFilter = Lookups.orderstatus(CI.TwoLetterISOLanguageName)
+                //        .Where(p => p.Text.ContainsOIC(param.sSearch));
 
                 filteredWorkOrders = allWorkOrders
                     .Where(p => p.ID.ToString().Contains(param.sSearch) ||
