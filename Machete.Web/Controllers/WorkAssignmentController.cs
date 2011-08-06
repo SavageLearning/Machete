@@ -64,6 +64,7 @@ namespace Machete.Web.Controllers
 
         #endregion
 
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, User")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             //Get all the records
