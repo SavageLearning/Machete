@@ -137,6 +137,7 @@
   <ItemGroup>
     <Compile Include="IntegrationTests\Selenium tests\Employer\SeEmployerTests.cs" />
     <Compile Include="IntegrationTests\Services\WorkAssignmentServiceTest.cs" />
+    <Compile Include="IntegrationTests\Services\WorkerSigninServiceTest.cs" />
     <Compile Include="IntegrationTests\Services\WorkOrderServiceTest.cs" />
     <Compile Include="IntegrationTests\Views\PersonTests.cs" />
     <Compile Include="UnitTests\Controllers\EmployerControllerTests.cs" />

@@ -50,13 +50,25 @@ public abstract class RepositoryBase<T> where T : class
     {
         return dbset.AsEnumerable();
     }
+    public virtual IQueryable<T> GetAllQ()
+    {
+        return dbset.AsQueryable();
+    }
     public virtual IEnumerable<T> GetMany(Func<T, bool> where)
     {
         return dbset.Where(where);
     }
-    public T Get(Func<T, Boolean> where)
+    public virtual IQueryable<T> GetManyQ(Func<T, bool> where)
+    {
+        return dbset.Where(where).AsQueryable();
+    }
+    public T Get(Func<T, bool> where)
     {
         return dbset.Where(where).FirstOrDefault<T>();
+    }
+    public T GetQ(Func<T, bool> where)
+    {
+        return dbset.Where(where).AsQueryable().FirstOrDefault<T>();
     }
 }
 }

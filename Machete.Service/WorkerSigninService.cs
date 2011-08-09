@@ -58,14 +58,14 @@ namespace Machete.Service
         {
             //Search for worker with matching card number
             Worker _wfound;
-            _wfound = workerRepo.GetAll().FirstOrDefault(s => s.dwccardnum == signin.dwccardnum);
+            _wfound = workerRepo.GetAllQ().FirstOrDefault(s => s.dwccardnum == signin.dwccardnum);
             if (_wfound != null)
             {
                 signin.WorkerID = _wfound.ID;
             }
             //Search for duplicate signin for the same day
             int _sfound = 0;;
-            _sfound = signinRepo.GetAll().Count(s => s.dateforsignin == signin.dateforsignin &&
+            _sfound = signinRepo.GetAllQ().Count(s => s.dateforsignin == signin.dateforsignin &&
                                                      s.dwccardnum == signin.dwccardnum);
             if (_sfound == 0)
             {
@@ -89,20 +89,41 @@ namespace Machete.Service
         //TODO: UnitTest getView
         public IEnumerable<WorkerSigninView> getView(DateTime date)
         {
-            var s_to_w_query = from s in signinRepo.GetAll()
-                         where s.dateforsignin == date
-                         join w in workerRepo.GetAll() on s.dwccardnum equals w.dwccardnum into outer
-                         from row in outer.DefaultIfEmpty(new Worker{ID=0})
-                         join p in personRepo.GetAll() on row.ID equals p.ID into final
-                         from finalrow in final.DefaultIfEmpty(new Person{ID=0})
-                         orderby s.datecreated descending
-                         select new WorkerSigninView(finalrow, s);
-            return s_to_w_query;
+            //var s_to_w_query = from s in signinRepo.GetAll()
+            //                   where s.dateforsignin == date
+            //                   join w in workerRepo.GetAll() on s.dwccardnum equals w.dwccardnum into outer
+            //                   from row in outer.DefaultIfEmpty(new Worker { ID = 0 })
+            //                   join p in personRepo.GetAll() on row.ID equals p.ID into final
+            //                   from finalrow in final.DefaultIfEmpty(new Person { ID = 0 })
+            //                   orderby s.datecreated descending
+            //                   select new WorkerSigninView(finalrow, s);
+            //return s_to_w_query;
+            var signins = signinRepo.GetAllQ();
+            var workers = workerRepo.GetAllQ();
+            var persons = personRepo.GetAllQ();
+
+            Worker blank = new Worker { ID = 0 };
+            var query = signins.Where(s => s.dateforsignin == date)
+                               .Join(workers, s => s.dwccardnum, w => w.dwccardnum, (s, w) => new { s, w })
+                               .DefaultIfEmpty()
+                               .Join(persons, oj => oj.w.ID, p => p.ID, (oj, p) => new { oj, p }).DefaultIfEmpty()
+                               .Select(a => new WorkerSigninView
+                               {
+                                   dateforsignin = a.oj.s == null ? DateTime.MinValue : a.oj.s.dateforsignin,
+                                   dwccardnum = a.oj.s == null ? 0 : a.oj.s.dwccardnum,
+                                   signinID = a.oj.s == null ? 0 : a.oj.s.ID,
+                                   firstname1 = a.p == null ? null : a.p.firstname1,
+                                   firstname2 = a.p == null ? null : a.p.firstname2,
+                                   lastname1 = a.p == null ? null : a.p.lastname1,
+                                   lastname2 = a.p == null ? null : a.p.lastname2
+                               }).AsEnumerable();
+            return query;
+
         }
         //TODO: UnitTest getImage
         public Image getImage(int cardrequest)
         { 
-            Worker w_query = workerRepo.Get(w => w.dwccardnum == cardrequest);
+            Worker w_query = workerRepo.GetAllQ().Where(w => w.dwccardnum == cardrequest).AsEnumerable().FirstOrDefault();
             if (w_query == null) return null;
             if (w_query.ImageID != null)
             {
@@ -114,7 +135,9 @@ namespace Machete.Service
         //TODO: UnitTest 
         public DateTime getExpireDate(int cardrequest)
         {
-           Worker  w_query = workerRepo.Get(w => w.dwccardnum == cardrequest);
+           //IEnumerable<Worker>  w_query = workerRepo.GetManyQ(w => w.dwccardnum == cardrequest).AsEnumerable();
+            var workers = workerRepo.GetAllQ();
+            Worker w_query = workers.Where(w => w.dwccardnum == cardrequest).AsEnumerable().FirstOrDefault();
             if (w_query == null)
             {
                 //TODO: can't return null for datetime; better way to handle 'no record'?
