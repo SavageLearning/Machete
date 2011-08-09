@@ -679,6 +679,7 @@
     </Content>
     <Content Include="Web.StageTest.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Views\Shared\WorkOrderIndex.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\WorkOrder.cshtml" />
