@@ -112,7 +112,7 @@ namespace Machete.Web.Controllers
             else
             {
                 filteredWSI = allWSI;
-            }
+            }                
             //Sort the Persons based on column selection
             var sortColIdx = Convert.ToInt32(Request["iSortCol_0"]);
             var sortColName = param.sortColName();
@@ -142,7 +142,6 @@ namespace Machete.Web.Controllers
                                        lastname2 = p.worker.Person.lastname2, 
                                        dateforsignin = p.dateforsignin
                          };
-
             return Json(new
             {
                 sEcho = param.sEcho,
@@ -152,62 +151,5 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
-        //[Authorize(Roles = "Manager, Administrator, Check-in")]
-        //public ActionResult Report()
-        //{
-        //    var ReportPath = Server.MapPath("~/RDLC/WorkerSigninsDaily.rdlc");
-
-        //    object Model =  _serv.getView(DateTime.Today);
-
-        //    RenderReport(ReportPath, Model);
-
-        //    return View();
-        //}
-
-        //private void RenderReport(string ReportPath, object Model)
-        //{
-
-        //    var localReport = new LocalReport { ReportPath = ReportPath };
-
-        //    //Give the collection a name (EmployeeCollection) so that we can reference it in our report designer
-        //    var reportDataSource = new ReportDataSource("SigninDaily", Model);
-        //    localReport.DataSources.Add(reportDataSource);
-
-        //    var reportType = "PDF";
-        //    string mimeType;
-        //    string encoding;
-        //    string fileNameExtension;
-
-        //    //The DeviceInfo settings should be changed based on the reportType
-        //    //http://msdn2.microsoft.com/en-us/library/ms155397.aspx
-        //    var deviceInfo =
-        //        string.Format("<DeviceInfo><OutputFormat>{0}</OutputFormat><PageWidth>8.5in</PageWidth><PageHeight>11in</PageHeight><MarginTop>0.5in</MarginTop><MarginLeft>1in</MarginLeft><MarginRight>1in</MarginRight><MarginBottom>0.5in</MarginBottom></DeviceInfo>", reportType);
-
-        //    Warning[] warnings;
-        //    string[] streams;
-
-        //    //Render the report
-        //    var renderedBytes = localReport.Render(
-        //        reportType,
-        //        deviceInfo,
-        //        out mimeType,
-        //        out encoding,
-        //        out fileNameExtension,
-        //        out streams,
-        //        out warnings);
-
-        //    //Clear the response stream and write the bytes to the outputstream
-        //    //Set content-disposition to "attachment" so that user is prompted to take an action
-        //    //on the file (open or save)
-        //    Response.Clear();
-        //    Response.ContentType = mimeType;
-        //    Response.AddHeader("content-disposition", "attachment; filename=foo." + fileNameExtension);
-        //    Response.BinaryWrite(renderedBytes);
-        //    Response.End();
-        //}
-
-
-
-
     }
 }

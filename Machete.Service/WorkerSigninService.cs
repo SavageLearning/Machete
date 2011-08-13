@@ -5,6 +5,7 @@ using System.Text;
 using Machete.Domain;
 using Machete.Data;
 using Machete.Data.Infrastructure;
+using System.Data.Objects.SqlClient;
 
 namespace Machete.Service
 {
@@ -18,6 +19,7 @@ namespace Machete.Service
         IEnumerable<WorkerSigninView> getView(DateTime date);
         Image getImage(int dwccardnum);
         DateTime getExpireDate(int dwccardnum);
+        IEnumerable<WorkerSignin> GetSigninsForAssignment(DateTime date, string search, string order, int? displayStart, int? displayLength);
     }
     public class WorkerSigninService : IWorkerSigninService
     {
@@ -86,38 +88,71 @@ namespace Machete.Service
         {
             unitOfWork.Commit();
         }
-        //TODO: UnitTest getView
-        public IEnumerable<WorkerSigninView> getView(DateTime date)
+        public IEnumerable<WorkerSignin> GetSigninsForAssignment(DateTime date, string search, string order, int? displayStart, int? displayLength)
         {
-            //var s_to_w_query = from s in signinRepo.GetAll()
-            //                   where s.dateforsignin == date
-            //                   join w in workerRepo.GetAll() on s.dwccardnum equals w.dwccardnum into outer
-            //                   from row in outer.DefaultIfEmpty(new Worker { ID = 0 })
-            //                   join p in personRepo.GetAll() on row.ID equals p.ID into final
-            //                   from finalrow in final.DefaultIfEmpty(new Person { ID = 0 })
-            //                   orderby s.datecreated descending
-            //                   select new WorkerSigninView(finalrow, s);
-            //return s_to_w_query;
+            IQueryable<WorkerSignin> allWSI = signinRepo.GetAllQ();
+            IQueryable<WorkerSignin> filtered;
             var signins = signinRepo.GetAllQ();
             var workers = workerRepo.GetAllQ();
             var persons = personRepo.GetAllQ();
+                if (!string.IsNullOrEmpty(search))
+                {
+                    allWSI = signins.Where(s => s.dateforsignin == date)
+                        .Join(workers, s => s.dwccardnum, w => w.dwccardnum, (s, w) => new { s, w })
+                        .Join(persons, oj => oj.w.ID, p => p.ID, (oj, p) => new { oj, p })
+                        .Where(jj =>
+                                    SqlFunctions.StringConvert((decimal)jj.oj.s.dwccardnum).Contains(search) ||
+                                    jj.p.firstname1.Contains(search) ||
+                                    jj.p.firstname2.Contains(search) ||
+                                    jj.p.lastname1.Contains(search) ||
+                                    jj.p.lastname2.Contains(search))
+                        .Select(a => a.oj.s);
+                }
+            return allWSI.AsEnumerable();
+        }
 
-            Worker blank = new Worker { ID = 0 };
-            var query = signins.Where(s => s.dateforsignin == date)
-                               .Join(workers, s => s.dwccardnum, w => w.dwccardnum, (s, w) => new { s, w })
-                               .DefaultIfEmpty()
-                               .Join(persons, oj => oj.w.ID, p => p.ID, (oj, p) => new { oj, p }).DefaultIfEmpty()
-                               .Select(a => new WorkerSigninView
-                               {
-                                   dateforsignin = a.oj.s == null ? DateTime.MinValue : a.oj.s.dateforsignin,
-                                   dwccardnum = a.oj.s == null ? 0 : a.oj.s.dwccardnum,
-                                   signinID = a.oj.s == null ? 0 : a.oj.s.ID,
-                                   firstname1 = a.p == null ? null : a.p.firstname1,
-                                   firstname2 = a.p == null ? null : a.p.firstname2,
-                                   lastname1 = a.p == null ? null : a.p.lastname1,
-                                   lastname2 = a.p == null ? null : a.p.lastname2
-                               }).AsEnumerable();
-            return query;
+        //TODO: UnitTest getView
+        public IEnumerable<WorkerSigninView> getView(DateTime date)
+        {
+            var signins = signinRepo.GetAllQ();
+            var workers = workerRepo.GetAllQ();
+            var persons = personRepo.GetAllQ();
+            var s_to_w_query = from s in signins
+                               where s.dateforsignin == date
+                               join w in workers on s.dwccardnum equals w.dwccardnum into outer
+                               from row in outer.DefaultIfEmpty()
+                               join p in persons on row.ID equals p.ID into final
+                               from finalrow in final.DefaultIfEmpty()
+                               orderby s.datecreated descending
+                               // Changed select statement to meet Linq/Entities requirement
+                               // this form gets passed to SQL server
+                               select new WorkerSigninView {
+                                   dateforsignin = s == null ? DateTime.MinValue : s.dateforsignin,
+                                   dwccardnum = s == null ? 0 : s.dwccardnum,
+                                   signinID = s == null ? 0 : s.ID,
+                                   firstname1 = finalrow == null ? null : finalrow.firstname1,
+                                   firstname2 = finalrow == null ? null : finalrow.firstname2,
+                                   lastname1 = finalrow == null ? null : finalrow.lastname1,
+                                   lastname2 = finalrow == null ? null : finalrow.lastname2
+                               };
+            return s_to_w_query;
+            //Worker blank = new Worker { ID = 0 };
+            //var query = signins.Where(s => s.dateforsignin == date)
+            //                   .Join(workers, s => s.dwccardnum, w => w.dwccardnum, (s, w) => new { s, w })
+            //                   //.DefaultIfEmpty()
+            //                   .Join(persons, oj => oj.w.ID, p => p.ID, (oj, p) => new { oj, p })
+            //                   //.DefaultIfEmpty()
+            //                   .Select(a => new WorkerSigninView
+            //                   {
+            //                       dateforsignin = a.oj.s == null ? DateTime.MinValue : a.oj.s.dateforsignin,
+            //                       dwccardnum = a.oj.s == null ? 0 : a.oj.s.dwccardnum,
+            //                       signinID = a.oj.s == null ? 0 : a.oj.s.ID,
+            //                       firstname1 = a.p == null ? null : a.p.firstname1,
+            //                       firstname2 = a.p == null ? null : a.p.firstname2,
+            //                       lastname1 = a.p == null ? null : a.p.lastname1,
+            //                       lastname2 = a.p == null ? null : a.p.lastname2
+            //                   });
+            //return query;
 
         }
         //TODO: UnitTest getImage
