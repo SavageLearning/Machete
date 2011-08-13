@@ -37,19 +37,40 @@ namespace Machete.Test
         {
             _dbFactory = new DatabaseFactory();
             _iRepo = new ImageRepository(_dbFactory);
+            _wRepo = new WorkerRepository(_dbFactory);
             _wsiRepo = new WorkerSigninRepository(_dbFactory);
             _pRepo = new PersonRepository(_dbFactory);
             _unitofwork = new UnitOfWork(_dbFactory);
             _pServ = new PersonService(_pRepo, _unitofwork);
             _iServ = new ImageService(_iRepo, _unitofwork);
+            _wServ = new WorkerService(_wRepo, _unitofwork);
             _wsiServ = new WorkerSigninService(_wsiRepo, _wRepo, _pRepo, _iRepo, _unitofwork);
         }
-
+        [TestMethod]
+        public void DbSet_WorkerSignin_GetView()
+        {
+            DateTime date = Convert.ToDateTime("08/02/2011");
+            IEnumerable<WorkerSigninView> filteredWSI = _wsiServ.getView(date);
+            IEnumerable<WorkerSigninView> foo = filteredWSI.ToList();
+            Assert.IsNotNull(filteredWSI, "Person.ID is Null");
+            Assert.IsNotNull(foo, "Person.ID is Null");
+        }
         [TestMethod]
         public void DbSet_TestMethod4()
         {                        
             IEnumerable<WorkerSignin> filteredWSI = _wsiServ.GetWorkerSignins().Where(jj => jj.dateforsignin.Date.Equals(Convert.ToDateTime("08/02/2011")));
             Assert.IsNotNull(filteredWSI, "Person.ID is Null");
+        }
+        [TestMethod]
+        public void DbSet_TestMethod5()
+        {
+
+            IEnumerable<WorkerSignin> testing = _wsiServ.GetSigninsForAssignment(Convert.ToDateTime("08/02/2011"),
+                                                        "Jose",
+                                                        "asc",
+                                                        null,
+                                                        null);
+            Assert.IsNotNull(testing, "null");
         }
     }
 }
