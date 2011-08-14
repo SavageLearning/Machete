@@ -61,7 +61,7 @@ namespace Machete.Web.Helpers
         private static List<SelectListItem> yesnoES { get; set; }
         private static IQueryable<Lookup> DbCacheEN { get; set; }
         private static IQueryable<Lookup> DbCacheES { get; set; }
-        private static IQueryable<Lookup> DbCache { get; set; }
+        private static IEnumerable<Lookup> DbCache { get; set; }
         private static Dictionary<string, SelectList> LookupLists { get; set; }
         #endregion
         //
@@ -219,7 +219,7 @@ namespace Machete.Web.Helpers
         private static void FillCache()
         {
 
-            DbCache = DB.Lookups.OrderBy(s => s.category).ThenBy(s => s.sortorder).AsQueryable();
+            DbCache = DB.Lookups.OrderBy(s => s.category).ThenBy(s => s.sortorder).ToList();
             //foreach (var row in DbCache)
             //{
             //    if (LookupLists[row.category + "-en"] == null)

@@ -10,6 +10,7 @@ using Machete.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data.Entity.Database;
 using System.Data.Entity.Validation;
+using System.Globalization;
 
 namespace Machete.Test
 {
@@ -53,6 +54,30 @@ namespace Machete.Test
 
             //
             //Assert
+            Assert.IsNotNull(result, "Person.ID is Null");
+            //Assert.IsTrue(_person.ID == 1);
+        }
+
+        [TestMethod]
+        public void DbSet_WorkOrderService_Intergation_GetIndexView()
+        {
+            //
+            //Arrange
+            CultureInfo CI = new CultureInfo("en-US", false);
+            //
+            //Act
+            var result = _service.GetIndexView(
+                    CI,
+                    "2011",   //search str
+                    null, //employerID
+                    null, //status 
+                    true, //desc(true), asc(false)
+                    0, 20, "WOID"
+                );
+
+            //
+            //Assert
+            var foo = result.query.ToList();
             Assert.IsNotNull(result, "Person.ID is Null");
             //Assert.IsTrue(_person.ID == 1);
         }
