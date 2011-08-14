@@ -23,7 +23,7 @@ namespace Machete.Domain
         }
         //
         [LocalizedDisplayName("paperOrderNum", NameResourceType = typeof(Resources.WorkOrder))]
-        [RegularExpression(@"^$|^[\d]{5,5}$", ErrorMessageResourceName = "paperOrderNumFormat", ErrorMessageResourceType = typeof(Resources.WorkOrder))]
+        [RegularExpression(@"^$|^[\d]{1,5}$", ErrorMessageResourceName = "paperOrderNumFormat", ErrorMessageResourceType = typeof(Resources.WorkOrder))]
         public int? paperOrderNum { get; set; }
         // used to track next number assignments in this work order
         public int waPseudoIDCounter { get; set; }
@@ -109,6 +109,11 @@ namespace Machete.Domain
         //
         [LocalizedDisplayName("timeFlexible", NameResourceType = typeof(Resources.WorkOrder))]
         public bool timeFlexible { get; set; }
+
+        public string getPseudoWOID()
+        {
+            return this.paperOrderNum.HasValue ? System.String.Format("{0,5:D5}", this.paperOrderNum) : System.String.Format("{0,5:D5}", this.ID);
+        }
     }
 
     public class WorkOrderSummary

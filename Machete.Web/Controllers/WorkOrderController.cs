@@ -174,77 +174,85 @@ namespace Machete.Web.Controllers
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];            
-            //Get all the records
-            var allWorkOrders = workOrderService.GetWorkOrders();
-            //IEnumerable<WorkOrder> emplrfilteredWorkOrders;
-            IEnumerable<WorkOrder> filteredWorkOrders;
-            IEnumerable<WorkOrder> sortedWorkOrders;
-            //IEnumerable<SelectListItem> statusFilter;
-            //Search based on search-bar string 
-            if (!string.IsNullOrEmpty(param.sSearch_2))
-            {
-                allWorkOrders = allWorkOrders
-                    .Where(p => p.EmployerID.Equals(Convert.ToInt32(param.sSearch_2)));
-            }
-            if (!string.IsNullOrEmpty(param.sSearch_5))
-            {
-                allWorkOrders = allWorkOrders
-                    .Where(p => p.status.Equals(Convert.ToInt32(param.sSearch_5)));
-            }
+            //Get all the records            
+            ServiceIndexView<WorkOrder> allWorkOrders = workOrderService.GetIndexView(
+                CI,
+                param.sSearch,
+                string.IsNullOrEmpty(param.sSearch_2) ? (int?)null : Convert.ToInt32(param.sSearch_2),
+                string.IsNullOrEmpty(param.sSearch_5) ? (int?)null : Convert.ToInt32(param.sSearch_5),
+                param.sSortDir_0 == "asc" ? false : true,
+                param.iDisplayStart,
+                param.iDisplayLength,
+                param.sortColName()
+                );
+            ////IEnumerable<WorkOrder> emplrfilteredWorkOrders;
+            //IEnumerable<WorkOrder> filteredWorkOrders;
+            //IEnumerable<WorkOrder> sortedWorkOrders;
+            ////IEnumerable<SelectListItem> statusFilter;
+            ////Search based on search-bar string 
+            //if (!string.IsNullOrEmpty(param.sSearch_2)) //EmployerID for WorkOrderIndex view
+            //{
+            //    allWorkOrders = allWorkOrders
+            //        .Where(p => p.EmployerID.Equals(Convert.ToInt32(param.sSearch_2)));
+            //}
+            //if (!string.IsNullOrEmpty(param.sSearch_5)) //Work Order Status
+            //{
+            //    allWorkOrders = allWorkOrders
+            //        .Where(p => p.status.Equals(Convert.ToInt32(param.sSearch_5)));
+            //}
 
-            if (!string.IsNullOrEmpty(param.sSearch))
-            {
-                //statusFilter = Lookups.orderstatus(CI.TwoLetterISOLanguageName)
-                //        .Where(p => p.Text.ContainsOIC(param.sSearch));
+            //if (!string.IsNullOrEmpty(param.sSearch))
+            //{
+            //    //statusFilter = Lookups.orderstatus(CI.TwoLetterISOLanguageName)
+            //    //        .Where(p => p.Text.ContainsOIC(param.sSearch));
 
-                filteredWorkOrders = allWorkOrders
-                    .Where(p => p.ID.ToString().Contains(param.sSearch) ||
-                                p.paperOrderNum.ToString().ContainsOIC(param.sSearch) ||
-                                p.dateTimeofWork.ToString().ContainsOIC(param.sSearch) ||
-                                //Lookups.byID(p.status,  CI.TwoLetterISOLanguageName).ContainsOIC(param.sSearch) ||
-                                p.contactName.ContainsOIC(param.sSearch) ||
-                                p.workSiteAddress1.ContainsOIC(param.sSearch) ||
-                                p.dateupdated.ToString().Contains(param.sSearch) ||
-                                p.Updatedby.ContainsOIC(param.sSearch)
-                                );
+            //    filteredWorkOrders = allWorkOrders
+            //        .Where(p => p.ID.ToString().Contains(param.sSearch) ||
+            //                    p.paperOrderNum.ToString().ContainsOIC(param.sSearch) ||
+            //                    p.dateTimeofWork.ToString().ContainsOIC(param.sSearch) ||
+            //                    //Lookups.byID(p.status,  CI.TwoLetterISOLanguageName).ContainsOIC(param.sSearch) ||
+            //                    p.contactName.ContainsOIC(param.sSearch) ||
+            //                    p.workSiteAddress1.ContainsOIC(param.sSearch) ||
+            //                    p.dateupdated.ToString().Contains(param.sSearch) ||
+            //                    p.Updatedby.ContainsOIC(param.sSearch)
+            //                    );
                                 
-            }
-            else
-            {
-                filteredWorkOrders = allWorkOrders;
-            }
-            //Sort the Persons based on column selection
-            var sortColIdx = Convert.ToInt32(Request["iSortCol_0"]);
-            var sortColName = param.sortColName();
-            Func<WorkOrder, string> orderingFunction =
-                (p => sortColName == "WOID" ? System.String.Format("{0,5:D5}", _getPseudoWOID(p)) :
-                        sortColName == "dateTimeofWork" ? System.String.Format("{0:MM/dd/yyyy  HH:mm:ss}", p.dateTimeofWork) :
-                        sortColName == "status" ? p.status.ToString() :
-                        sortColName == "WAcount" ? System.String.Format("{0,2:D2}", p.workAssignments.Count) :
-                        sortColName == "contactName" ? p.contactName :
-                        sortColName == "workSiteAddress1" ? p.workSiteAddress1 :
-                        sortColName == "dateupdated" ? p.dateupdated.ToBinary().ToString() :
-                        sortColName == "updatedby" ? p.Updatedby :
-                        System.String.Format("{0,5:D5}",_getPseudoWOID(p)));
+            //}
+            //else
+            //{
+            //    filteredWorkOrders = allWorkOrders;
+            //}
+            ////Sort the Persons based on column selection
+            //var sortColIdx = Convert.ToInt32(Request["iSortCol_0"]);
+            //var sortColName = param.sortColName();
+            //Func<WorkOrder, string> orderingFunction =
+            //    (p => sortColName == "WOID" ? System.String.Format("{0,5:D5}", p.getPseudoWOID()) :
+            //            sortColName == "dateTimeofWork" ? System.String.Format("{0:MM/dd/yyyy  HH:mm:ss}", p.dateTimeofWork) :
+            //            sortColName == "status" ? p.status.ToString() :
+            //            sortColName == "WAcount" ? System.String.Format("{0,2:D2}", p.workAssignments.Count) :
+            //            sortColName == "contactName" ? p.contactName :
+            //            sortColName == "workSiteAddress1" ? p.workSiteAddress1 :
+            //            sortColName == "dateupdated" ? p.dateupdated.ToBinary().ToString() :
+            //            sortColName == "updatedby" ? p.Updatedby :
+            //            System.String.Format("{0,5:D5}",p.getPseudoWOID()));
 
-            var sortDir = Request["sSortDir_0"];
-            if (sortDir == "asc")
-                sortedWorkOrders = filteredWorkOrders.OrderBy(orderingFunction);
-            else
-                sortedWorkOrders = filteredWorkOrders.OrderByDescending(orderingFunction);
+            //var sortDir = Request["sSortDir_0"];
+            //if (sortDir == "asc")
+            //    sortedWorkOrders = filteredWorkOrders.OrderBy(orderingFunction);
+            //else
+            //    sortedWorkOrders = filteredWorkOrders.OrderByDescending(orderingFunction);
 
-            //Limit results to the display length and offset
-            var displayEmployers = sortedWorkOrders.Skip(param.iDisplayStart)
-                                                .Take(param.iDisplayLength);
+            ////Limit results to the display length and offset
+            //var displayEmployers = sortedWorkOrders.Skip(param.iDisplayStart)
+            //                                    .Take(param.iDisplayLength);
 
             //return what's left to datatables
-            
-            var result = from p in displayEmployers
+
+            var result = from p in allWorkOrders.query
                          select new { tabref = _getTabRef(p),
                                       tablabel =  _getTabLabel(p),
                                       EID = Convert.ToString(p.EmployerID),
-                                      //WOID = System.String.Format("{0,5:D5}", p.ID),
-                                      WOID = _getPseudoWOID(p),
+                                      WOID = System.String.Format("{0,5:D5}", p.paperOrderNum),
                                       dateTimeofWork = System.String.Format("{0:MM/dd/yyyy}", p.dateTimeofWork),
                                       status = Lookups.byID(p.status, CI.TwoLetterISOLanguageName),
                                       WAcount = p.workAssignments.Count(a => a.workOrderID == p.ID).ToString(),
@@ -257,8 +265,8 @@ namespace Machete.Web.Controllers
             return Json(new
             {
                 sEcho = param.sEcho,
-                iTotalRecords = filteredWorkOrders.Count(),
-                iTotalDisplayRecords = filteredWorkOrders.Count(),
+                iTotalRecords = allWorkOrders.totalCount,
+                iTotalDisplayRecords = allWorkOrders.filteredCount,
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);
@@ -270,13 +278,10 @@ namespace Machete.Web.Controllers
 
         private string _getTabLabel(WorkOrder wo)
         {
-            return Machete.Web.Resources.WorkOrders.tabprefix + _getPseudoWOID(wo) + " @ " + wo.workSiteAddress1;
+            return Machete.Web.Resources.WorkOrders.tabprefix + wo.getPseudoWOID() + " @ " + wo.workSiteAddress1;
         }
 
-        private string _getPseudoWOID(WorkOrder wo)
-        {
-            return wo.paperOrderNum.HasValue ? System.String.Format("{0,5:D5}", wo.paperOrderNum) : System.String.Format("{0,5:D5}", wo.ID);
-        }
+
 
         private void _setCreateDefaults(WorkOrderEditor _model)
         {

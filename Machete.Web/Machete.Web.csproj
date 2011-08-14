@@ -273,7 +273,6 @@
     <Compile Include="ViewModel\OrderSummary.cs" />
     <Compile Include="ViewModel\WorkAssignmentIndex.cs" />
     <Compile Include="ViewModel\depreciated\WorkOrderEditor.cs" />
-    <Compile Include="ViewModel\WorkOrderIndex.cs" />
     <Content Include="combres.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>

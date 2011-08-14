@@ -143,6 +143,7 @@
     <Compile Include="UnitTests\Controllers\EmployerControllerTests.cs" />
     <Compile Include="UnitTests\Controllers\WorkAssignmentControllerTests.cs" />
     <Compile Include="UnitTests\Controllers\WorkOrderControllerTests.cs" />
+    <Compile Include="UnitTests\DateTimeTests.cs" />
     <Compile Include="UnitTests\LookupsTests.cs" />
     <Compile Include="UnitTests\Services\EmployerServiceUnitTests.cs" />
     <Compile Include="UnitTests\Services\WorkAassignmentServiceUnitTests.cs" />
