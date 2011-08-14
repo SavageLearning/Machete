@@ -68,7 +68,7 @@ namespace Machete.Test
             //Act
             var result = _service.GetIndexView(
                     CI,
-                    "2011",   //search str
+                    "7/2011",   //search str
                     null, //employerID
                     null, //status 
                     true, //desc(true), asc(false)

@@ -9,6 +9,7 @@ using System.Globalization;
 using NLog;
 using System.Data.Objects.SqlClient;
 using System.Data.Objects;
+using System.Text.RegularExpressions;
 
 
 namespace Machete.Service
@@ -40,6 +41,10 @@ namespace Machete.Service
     {
         private readonly IWorkOrderRepository workOrderRepository;
         private readonly IUnitOfWork unitOfWork;
+        private static Regex isTimeSpecific = new Regex(@"^\s*\d{1,2}[\/-_]\d{1,2}[\/-_]\d{2,4}\s+\d{1,2}:\d{1,2}");
+        private static Regex isDaySpecific = new Regex(@"^\s*\d{1,2}\/\d{1,2}\/\d{2,4}");
+        private static Regex isMonthSpecific = new Regex(@"^\s*\d{1,2}\/\d{4,4}");
+        //private static Regex isYearSpecific = new Regex("(?<=%download%#)\\d+");
         //
         private Logger log = LogManager.GetCurrentClassLogger();
         private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "WorkOrderService", "");
@@ -49,6 +54,8 @@ namespace Machete.Service
         {
             this.workOrderRepository = workOrderRepository;
             this.unitOfWork = unitOfWork;
+            
+
         }
 
         public IEnumerable<WorkOrder> GetWorkOrders()
@@ -90,27 +97,24 @@ namespace Machete.Service
             IQueryable<WorkOrder> orderedWO;
             bool isDateTime = false;
             //Search based on search-bar string 
-            if (EmployerID != null) //EmployerID for WorkOrderIndex view
-            {
-                filteredWO = filteredWO
-                    .Where(p => p.EmployerID.Equals((int)EmployerID));
-            }
-            if (status != null) //Work Order Status
-            {
-                filteredWO = filteredWO
-                    .Where(p => p.status.Equals((int)status));
-            }
+            if (EmployerID != null)            
+                filteredWO = filteredWO.Where(p => p.EmployerID.Equals((int)EmployerID)); //EmployerID for WorkOrderIndex view
+            
+            if (status != null) 
+                filteredWO = filteredWO.Where(p => p.status.Equals((int)status)); //Work Order Status
+            
             if (!string.IsNullOrEmpty(search))
             {
+                //Using DateTime.TryParse as determiner of date/string
                 DateTime parsedTime;
                 if (isDateTime = DateTime.TryParse(search, out parsedTime))
                 {
-                    
-                    filteredWO = filteredWO
-                            .Where(p => 
-                                EntityFunctions.DiffMonths(p.dateTimeofWork, parsedTime) == 0 ? true : false //||
-                                //EntityFunctions.DiffMonths(p.dateupdated, parsedTime) == 0 ? true : false
-                            );
+                    if (isMonthSpecific.IsMatch(search))  //Regex for month/year
+                        filteredWO = filteredWO.Where(p => EntityFunctions.DiffMonths(p.dateTimeofWork, parsedTime) == 0 ? true : false);
+                    if (isDaySpecific.IsMatch(search))  //Regex for day/month/year
+                        filteredWO = filteredWO.Where(p =>EntityFunctions.DiffDays(p.dateTimeofWork, parsedTime) == 0 ? true : false);
+                    if (isTimeSpecific.IsMatch(search)) //Regex for day/month/year time
+                        filteredWO = filteredWO.Where(p => EntityFunctions.DiffHours(p.dateTimeofWork, parsedTime) == 0 ? true : false);
                 } else { 
                     filteredWO = filteredWO
                         .Where(p => SqlFunctions.StringConvert((decimal)p.ID).Contains(search) ||
@@ -118,7 +122,7 @@ namespace Machete.Service
                                     p.contactName.Contains(search) ||
                                     p.workSiteAddress1.Contains(search) ||
                                     p.Updatedby.Contains(search)
-                                    );
+                              );
                 }
             }
             //var counted = filteredWO.Count();
@@ -132,6 +136,7 @@ namespace Machete.Service
                 case "workSiteAddress1": orderedWO = orderDescending ? filteredWO.OrderByDescending(p => p.workSiteAddress1) : filteredWO.OrderBy(p => p.workSiteAddress1); break;
                 case "updatedby": orderedWO = orderDescending ? filteredWO.OrderByDescending(p => p.Updatedby) : filteredWO.OrderBy(p => p.Updatedby); break;
                 case "WOID": orderedWO = orderDescending ? filteredWO.OrderByDescending(p => p.paperOrderNum) : filteredWO.OrderBy(p => p.paperOrderNum); break;
+                case "dateupdated": orderedWO = orderDescending ? filteredWO.OrderByDescending(p => p.dateupdated) : filteredWO.OrderBy(p => p.dateupdated); break;
                 default: orderedWO = orderDescending ? filteredWO.OrderByDescending(p => p.dateTimeofWork) : filteredWO.OrderBy(p => p.dateTimeofWork); break;
             }
 
