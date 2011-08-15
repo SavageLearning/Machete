@@ -6,8 +6,9 @@
 }
 <div id="dispatchTabs" >
     <ul>
-        <li><a href="#summaryList" id="summaryOrderListTab" class="ListTab">Summary?!</a> </li>
         <li><a href="#orderList" id="pendingOrderListTab" class="ListTab">Details?!</a> </li>
+        <li><a href="#summaryList" id="summaryOrderListTab" class="ListTab">Summary?!</a> </li>
+        
     </ul>
     <div id="summaryList">
         <table id="orderSummaryTable" class="display">
@@ -91,7 +92,7 @@
         };
     var orderDefs = jQuery.extend(true, {}, oTableDefaults); //example of copying js object
     var summaryDefs = jQuery.extend(true, {}, oTableDefaults);
-    delete summaryDefs["iDeferLoading"];
+    delete orderDefs["iDeferLoading"];
     delete summaryDefs["aoColumns"];
     delete summaryDefs["fnRowCallback"];
     summaryDefs["aaSorting"] = [[1, 'desc']];
