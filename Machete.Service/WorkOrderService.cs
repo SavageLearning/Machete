@@ -171,8 +171,9 @@ namespace Machete.Service
         public WorkOrder CreateWorkOrder(WorkOrder workOrder, string user)
         {
             workOrder.createdby(user);
-            _workOrder = workOrderRepository.Add(workOrder);
-            if (_workOrder.paperOrderNum == null) _workOrder.paperOrderNum  = _workOrder.ID;
+            _workOrder = workOrderRepository.Add(workOrder);            
+            unitOfWork.Commit();
+            if (_workOrder.paperOrderNum == null) _workOrder.paperOrderNum = _workOrder.ID;
             unitOfWork.Commit();
 
             _log(workOrder.ID, user, "WorkOrder created");
