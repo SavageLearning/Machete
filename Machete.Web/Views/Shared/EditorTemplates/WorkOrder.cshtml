@@ -13,7 +13,7 @@
             @Html.LabelFor(model => model.dateTimeofWork)
         </div>
         <div class="tb-field tb-cell">
-            @Html.TextBox("dateTimeofWork", Html.Encode(System.String.Format("{0:g}", Model.dateTimeofWork)))
+            @Html.TextBox("dateTimeofWork", Html.Encode(System.String.Format("{0:g}", Model.dateTimeofWork)), new { @id = "WO-dateTimeofWork-" + Model.ID })
             @Html.ValidationMessageFor(model => model.dateTimeofWork)
         </div>
         <div class="tb-label tb-cell">
@@ -234,6 +234,7 @@
         });
         }
     $(document).ready(function () {
+        dateTimeWidget($("#WO-dateTimeofWork-@(Model.ID)"));
         M_workerRequestTable_@(Model.ID) = $('#workerTable-@(Model.ID)').dataTable({
             "bPaginate": true,
             "bLengthChange": true,
