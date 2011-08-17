@@ -38,6 +38,15 @@ else
     <input type="button" id="printMap" class="formButton" value="@Shared.printGoogleMap"/>
 </div>
 @Html.DisplayForModel()
+<div class="tb-label tb-cell">
+    @Html.LabelFor(model => model.workerRequests)
+</div>
+<div class="tb-field tb-cell">
+    @foreach (var req in Model.workerRequests)
+    {
+        @System.String.Format(req.workerRequested.dwccardnum + "--" + req.fullName) <br />
+    }    
+</div>
 <h4>@WorkOrders.listOfPositions</h4>
 
     <div class="tb-table">
