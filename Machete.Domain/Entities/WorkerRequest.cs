@@ -13,8 +13,8 @@ namespace Machete.Domain
         public int WorkOrderID { get; set; }
 
         public virtual WorkOrder workOrder { get; set; }
-        [System.ComponentModel.DataAnnotations.NotMapped]
-        public int dwccardnum { get; set; }
+        //[System.ComponentModel.DataAnnotations.NotMapped]
+        //public int dwccardnum { get; set; }
         public int WorkerID { get; set; }
         public virtual Worker workerRequested { get; set; }
         public string fullName
@@ -32,7 +32,7 @@ namespace Machete.Domain
     {
         bool IEqualityComparer<WorkerRequest>.Equals(WorkerRequest x, WorkerRequest y)
         {
-            return x.dwccardnum == y.dwccardnum ? true : false;
+            return x.WorkerID == y.WorkerID ? true : false;
         }
         int IEqualityComparer<WorkerRequest>.GetHashCode(WorkerRequest obj)
         {

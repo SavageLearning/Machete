@@ -180,11 +180,11 @@ namespace Machete.Test.Controllers
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
             List<WorkerRequest> list = new List<WorkerRequest>();
-            list.Add(new WorkerRequest { dwccardnum = 12345});
-            list.Add(new WorkerRequest { dwccardnum = 30002 });
-            list.Add(new WorkerRequest { dwccardnum = 30311 });
-            list.Add(new WorkerRequest { dwccardnum = 30420 });
-            list.Add(new WorkerRequest { dwccardnum = 30421 });
+            list.Add(new WorkerRequest { WorkerID = 12345 });
+            list.Add(new WorkerRequest { WorkerID = 30002 });
+            list.Add(new WorkerRequest { WorkerID = 30311 });
+            list.Add(new WorkerRequest { WorkerID = 30420 });
+            list.Add(new WorkerRequest { WorkerID = 30421 });
             var result = _ctrlr.Edit(testid, fakeform, "UnitTest", list) as RedirectToRouteResult;
             //Assert
             Assert.AreEqual("Index", result.RouteValues["action"]);
@@ -244,11 +244,11 @@ namespace Machete.Test.Controllers
             _ctrlr.SetFakeControllerContext();
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             List<WorkerRequest> list = new List<WorkerRequest>();
-            list.Add(new WorkerRequest { dwccardnum = 12345 });
-            list.Add(new WorkerRequest { dwccardnum = 30002 });
-            list.Add(new WorkerRequest { dwccardnum = 30311 });
-            list.Add(new WorkerRequest { dwccardnum = 30420 });
-            list.Add(new WorkerRequest { dwccardnum = 30421 });
+            list.Add(new WorkerRequest { WorkerID = 12345 });
+            list.Add(new WorkerRequest { WorkerID = 30002 });
+            list.Add(new WorkerRequest { WorkerID = 30311 });
+            list.Add(new WorkerRequest { WorkerID = 30420 });
+            list.Add(new WorkerRequest { WorkerID = 30421 });
             //Act
 
             var result = _ctrlr.Edit(testid, fakeform, "UnitTest", list) as RedirectToRouteResult;
@@ -257,12 +257,12 @@ namespace Machete.Test.Controllers
             Assert.AreEqual(fakeworkOrder, savedworkOrder);
 
             Assert.AreEqual(savedworkOrder.workerRequests.Count(), 5);
-            Assert.AreEqual(savedworkOrder.workerRequests.Count(a => a.dwccardnum == 12345), 1);
-            Assert.AreEqual(savedworkOrder.workerRequests.Count(a => a.dwccardnum == 30002), 1);
-            Assert.AreEqual(savedworkOrder.workerRequests.Count(a => a.dwccardnum == 30311), 1);
-            Assert.AreEqual(savedworkOrder.workerRequests.Count(a => a.dwccardnum == 30420), 1);
-            Assert.AreEqual(savedworkOrder.workerRequests.Count(a => a.dwccardnum == 30421), 1);
-            Assert.AreEqual(savedworkOrder.workerRequests.Count(a => a.dwccardnum == 12346), 0);
+            Assert.AreEqual(savedworkOrder.workerRequests.Count(a => a.WorkerID == 12345), 1);
+            Assert.AreEqual(savedworkOrder.workerRequests.Count(a => a.WorkerID == 30002), 1);
+            Assert.AreEqual(savedworkOrder.workerRequests.Count(a => a.WorkerID == 30311), 1);
+            Assert.AreEqual(savedworkOrder.workerRequests.Count(a => a.WorkerID == 30420), 1);
+            Assert.AreEqual(savedworkOrder.workerRequests.Count(a => a.WorkerID == 30421), 1);
+            Assert.AreEqual(savedworkOrder.workerRequests.Count(a => a.WorkerID == 12346), 0);
         }
 
         /// <summary>

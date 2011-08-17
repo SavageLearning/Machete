@@ -189,6 +189,7 @@ function add_rectab(theref, label, tabObj, exclusiveTab, recID) {
         var index1 = $("li", tabObj).index($(foundtab).parent());
         if (eventDebug) M_conlog("", "SELECT TAB", "add_rectab", "", label);
         tabObj.tabs("select", index1);
+        $(foundtab).val(label);
         setGlobalIDs(tabObj.id, recID, "add_rectab");
         return;
     }

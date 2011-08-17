@@ -91,6 +91,7 @@
         //
         $('#WorkOrderTab-@Model.ID').submit(function (e) {
             if ($('#WorkOrderTab-@Model.ID').valid()) {
+                $('#workerRequests2_WO-@(Model.ID)').find('option').attr("selected", "selected");
                 $.post($(this).attr("action"), $(this).serialize());
                 $(e.target).closest('.ui-tabs').tabs("select", 0);
             }

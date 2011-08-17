@@ -191,15 +191,7 @@
             <input type="button" value="Remove?!" class="formButton" id="removeRequestBtn-@(Model.ID)"/>
         </div>
         <div class="tb-field tb-cell desc-field">
-            @*@Html.ListBox("workerRequests2", new SelectList(ViewBag.TransportMethods, "Value", "Text", Model.transportMethodID), new { tabindex = "2" })*@
-            <select id="workerRequests2" multiple="multiple" name="workerRequests2" tabindex="12" class="valid">
-                <option value="12345">Van</option>
-                <option value="30002">Worker buses</option>
-                <option value="30320">Worker drives</option>
-                <option value="30311">Employer Picks up</option>
-                <option value="30286">Worker walks</option>
-            </select>
-
+            @Html.ListBox("workerRequests2", new SelectList(ViewBag.workerRequests, "Value", "Text"), new { @id = "workerRequests2_WO-"+ Model.ID, tabindex = "2" })
         </div>
 
         <div class="tb-label tb-cell desc-label">
@@ -274,9 +266,19 @@
                 return nRow;
             }                
         }).fnSetFilteringDelay(250);
-        $(M_workerRequestTable_@(Model.ID)).find('tbody').dblclick(function (event) {
+        $(M_workerRequestTable_@(Model.ID)).find('tbody').dblclick(function (event) {            
             var myTr = event.target.parentNode;
-            var myID = $(myTr).attr('requestedID');            
+
+            var myID = $(myTr).attr('requestedID');  
+            //var childNodes = $(myTr).find('td');   
+   
+            $('#workerRequests2_WO-@(Model.ID)').append(
+                $('<option></option>').val(myID).html($(myTr).find('td:eq(0)').text() + ' '+
+                    $(myTr).find('td:eq(2)').text() + ' '+
+                    $(myTr).find('td:eq(4)').text()
+                )                
+            );
+
             //if (eventDebug) M_conlog("EVENT", "DBLCLICK", "jqrfyTable", "", "========================");
             //var myStr = "ID=@(Model.ID)&WorkerID=" + myID;            
             //$.post("/WorkOrder/AddRequest", myStr);
@@ -317,17 +319,19 @@
         //
         //
         $('#removeRequestBtn-@(Model.ID)').click(function () {
-            if ($('#requestsTable')) {
-            //$.post("/WorkOrder/RemoveRequest", myStr);
-                $('#requestsTable :selected').each(function(i, selected) {
-                    alert($(selected).val());
-                    var myStr = "ID=" + $(selected).val();            
-                    $.post("/WorkOrder/RemoveRequest", myStr);
-                    getRequests($("#requestsTable"));
-                });
-            } else {
-                alert("Please select a requested worker to remove.?!");
-            }
+            //alert($('#workerRequests2_WO-@(Model.ID) option:selected'));
+            $('#workerRequests2_WO-@(Model.ID)').find('option:selected').remove();
+//            if ($('#requestsTable')) {
+//            //$.post("/WorkOrder/RemoveRequest", myStr);
+//                $('#requestsTable :selected').each(function(i, selected) {
+//                    alert($(selected).val());
+//                    var myStr = "ID=" + $(selected).val();            
+//                    $.post("/WorkOrder/RemoveRequest", myStr);
+//                    getRequests($("#requestsTable"));
+//                });
+//            } else {
+//                alert("Please select a requested worker to remove.?!");
+//            }
         });
     });
 </script>
