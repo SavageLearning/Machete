@@ -185,14 +185,22 @@
         </div>
     </div>
     <div class="tb-row">
-        @*<div class="tb-label tb-cell desc-label">
+        <div class="tb-label tb-cell desc-label">
             @Html.LabelFor(model => model.workerRequests)
             <input type="button" value="Add?!" class="formButton" id="addRequestBtn-@(Model.ID)"/>
             <input type="button" value="Remove?!" class="formButton" id="removeRequestBtn-@(Model.ID)"/>
         </div>
         <div class="tb-field tb-cell desc-field">
-            <select id="requestsTable" size="5" />
-        </div>*@
+            @*@Html.ListBox("workerRequests2", new SelectList(ViewBag.TransportMethods, "Value", "Text", Model.transportMethodID), new { tabindex = "2" })*@
+            <select id="workerRequests2" multiple="multiple" name="workerRequests2" tabindex="12" class="valid">
+                <option value="12345">Van</option>
+                <option value="30002">Worker buses</option>
+                <option value="30320">Worker drives</option>
+                <option value="30311">Employer Picks up</option>
+                <option value="30286">Worker walks</option>
+            </select>
+
+        </div>
 
         <div class="tb-label tb-cell desc-label">
             @Html.LabelFor(model => model.description)
@@ -270,8 +278,8 @@
             var myTr = event.target.parentNode;
             var myID = $(myTr).attr('requestedID');            
             //if (eventDebug) M_conlog("EVENT", "DBLCLICK", "jqrfyTable", "", "========================");
-            var myStr = "ID=@(Model.ID)&WorkerID=" + myID;            
-            $.post("/WorkOrder/AddRequest", myStr);
+            //var myStr = "ID=@(Model.ID)&WorkerID=" + myID;            
+            //$.post("/WorkOrder/AddRequest", myStr);
 
             //getRequests($("#requestsTable")); commented out until ready for Worker Requests
             $('a.ui-dialog-titlebar-close').click();

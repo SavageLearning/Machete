@@ -16,6 +16,7 @@ namespace Machete.Service
         WorkerRequest CreateWorkerRequest(WorkerRequest workerRequest, string user);
         void DeleteWorkerRequest(int id, string user);
         void SaveWorkerRequest(WorkerRequest workerRequest, string user);
+        WorkerRequest GetWorkerRequestsByNum(int woid, int dwccardnum);
     }
     public class WorkerRequestService : IWorkerRequestService
     {
@@ -37,6 +38,11 @@ namespace Machete.Service
             IEnumerable<WorkerRequest> workerRequests;
             workerRequests = workerRequestRepository.GetAll();
             return workerRequests;
+        }
+
+        public WorkerRequest GetWorkerRequestsByNum(int woid, int dwccardnum)
+        {
+            return workerRequestRepository.Get(wr => wr.WorkOrderID == woid && wr.dwccardnum == dwccardnum);
         }
 
         public WorkerRequest GetWorkerRequest(int id)
