@@ -80,6 +80,8 @@ namespace Machete.Web
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
+            ModelBinders.Binders.Add(typeof(List<WorkerRequest>), new workerRequestBinder());
+            //ModelBinders.Binders.Add(typeof(string), new workerRequestBinder());
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
             IUnityContainer container = GetUnityContainer();

@@ -222,6 +222,7 @@
     <Compile Include="Controllers\WorkerSigninController.cs" />
     <Compile Include="Controllers\WorkOrderController.cs" />
     <Compile Include="Helpers\AuthorizeExAttribute.cs" />
+    <Compile Include="Helpers\CustomModelBinders.cs" />
     <Compile Include="Helpers\IsInRole.cs" />
     <Compile Include="Helpers\ListItemToOption.cs" />
     <Compile Include="Helpers\liveSearch.cs" />

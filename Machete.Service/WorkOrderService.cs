@@ -49,7 +49,11 @@ namespace Machete.Service
         private Logger log = LogManager.GetCurrentClassLogger();
         private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "WorkOrderService", "");
         private WorkOrder _workOrder;
-        //
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="workOrderRepository"></param>
+        /// <param name="unitOfWork"></param>
         public WorkOrderService(IWorkOrderRepository workOrderRepository, IUnitOfWork unitOfWork)
         {
             this.workOrderRepository = workOrderRepository;
@@ -57,11 +61,19 @@ namespace Machete.Service
             
 
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<WorkOrder> GetWorkOrders()
         {
             return GetWorkOrders(null);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="empID"></param>
+        /// <returns></returns>
         public IEnumerable<WorkOrder> GetWorkOrders(int? empID)
         {
             //TODO Unit test this
@@ -74,13 +86,28 @@ namespace Machete.Service
                 return workOrderRepository.GetMany(w => w.EmployerID == empID);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public WorkOrder GetWorkOrder(int id)
         {
             var workOrder = workOrderRepository.GetById(id);
             return workOrder;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="CI"></param>
+        /// <param name="search"></param>
+        /// <param name="EmployerID"></param>
+        /// <param name="status"></param>
+        /// <param name="orderDescending"></param>
+        /// <param name="displayStart"></param>
+        /// <param name="displayLength"></param>
+        /// <param name="sortColName"></param>
+        /// <returns></returns>
         public ServiceIndexView<WorkOrder> GetIndexView(
                         CultureInfo CI,
                         string search,
@@ -151,8 +178,10 @@ namespace Machete.Service
                 totalCount = total
             };
         }
-
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<WorkOrderSummary> GetSummary()
         {
             var sum_query = from wo in workOrderRepository.GetAll()
@@ -167,7 +196,12 @@ namespace Machete.Service
 
             return sum_query;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="workOrder"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public WorkOrder CreateWorkOrder(WorkOrder workOrder, string user)
         {
             workOrder.createdby(user);
@@ -179,7 +213,11 @@ namespace Machete.Service
             _log(workOrder.ID, user, "WorkOrder created");
             return _workOrder;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="user"></param>
         public void DeleteWorkOrder(int id, string user)
         {
             var workOrder = workOrderRepository.GetById(id);
@@ -187,7 +225,11 @@ namespace Machete.Service
             _log(id, user, "WorkOrder deleted");
             unitOfWork.Commit();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="workOrder"></param>
+        /// <param name="user"></param>
         public void SaveWorkOrder(WorkOrder workOrder, string user)
         {
             workOrder.updatedby(user);

@@ -21,7 +21,8 @@ namespace Machete.Web.Controllers
     {
         private readonly IWorkOrderService workOrderService;
         private readonly IEmployerService _empServ;
-        private readonly IWorkerRequestService _reqServ;
+        private readonly IWorkerService _reqServ;
+        private readonly IWorkerRequestService _wrServ;
         private readonly IWorkAssignmentService _waServ;
         private string culture {get; set;}
         private Logger log = LogManager.GetCurrentClassLogger();
@@ -29,12 +30,14 @@ namespace Machete.Web.Controllers
         public WorkOrderController(IWorkOrderService workOrderService, 
                                    IWorkAssignmentService workAssignmentService,
                                    IEmployerService employerService,
-                                   IWorkerRequestService workerRequestService)
+                                   IWorkerService workerService,
+                                   IWorkerRequestService requestService)
         {
             this.workOrderService = workOrderService;
             this._empServ = employerService;
-            this._reqServ = workerRequestService;
+            this._reqServ = workerService;
             this._waServ = workAssignmentService;
+            this._wrServ = requestService;
         }
         protected override void Initialize(RequestContext requestContext)
         {
@@ -64,7 +67,7 @@ namespace Machete.Web.Controllers
         //{
         //    return View(_getSummary());
         //}
-
+        #region AJaxSummary
         [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, User")]
         public ActionResult AjaxSummary(jQueryDataTableParam param)
         {
@@ -119,32 +122,41 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
+        #endregion
+        #region addrequest/removerequeset
+        /// <summary>
+        /// Adds workerRequest
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="workerID"></param>
+        /// <param name="collection"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        //[HttpPost, UserNameFilter]
+        //[Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        //public bool  AddRequest(int id, int workerID, FormCollection collection, string user)
+        //{
+        //    WorkOrder order = workOrderService.GetWorkOrder(id);
+        //    if (order.workerRequests != null)
+        //    {
+        //        foreach (WorkerRequest req in order.workerRequests)
+        //        {
+        //            if (req.WorkerID == workerID) return false;
+        //        }
+        //    }
+        //    WorkerRequest request = new WorkerRequest();
+        //    request.WorkOrderID = id;
+        //    request.WorkerID = workerID;
+        //    _reqServ.CreateWorkerRequest(request, user);
+        //    return true;
+        //}
 
-        [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public bool  AddRequest(int id, int workerID, FormCollection collection, string user)
-        {
-            WorkOrder order = workOrderService.GetWorkOrder(id);
-            if (order.workerRequests != null)
-            {
-                foreach (WorkerRequest req in order.workerRequests)
-                {
-                    if (req.WorkerID == workerID) return false;
-                }
-            }
-            WorkerRequest request = new WorkerRequest();
-            request.WorkOrderID = id;
-            request.WorkerID = workerID;
-            _reqServ.CreateWorkerRequest(request, user);
-            return true;
-        }
-
-        [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public void RemoveRequest(int id, FormCollection collection, string user)
-        {
-            _reqServ.DeleteWorkerRequest(id, user);
-        }
+        //[HttpPost, UserNameFilter]
+        //[Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        //public void RemoveRequest(int id, FormCollection collection, string user)
+        //{
+        //    _reqServ.DeleteWorkerRequest(id, user);
+        //}
 
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public JsonResult GetRequests(int id)
@@ -169,7 +181,13 @@ namespace Machete.Web.Controllers
             return Json(list, JsonRequestBehavior.AllowGet);
 
         }
-
+        #endregion
+        #region Ajaxhandler
+        /// <summary>
+        /// Processes display requests from DataTables.Net javascript library. Called from /Index
+        /// </summary>
+        /// <param name="param">Datatables.Net parameters object</param>
+        /// <returns>MVC Action Result</returns>
         [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, User")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
@@ -185,68 +203,7 @@ namespace Machete.Web.Controllers
                 param.iDisplayLength,
                 param.sortColName()
                 );
-            ////IEnumerable<WorkOrder> emplrfilteredWorkOrders;
-            //IEnumerable<WorkOrder> filteredWorkOrders;
-            //IEnumerable<WorkOrder> sortedWorkOrders;
-            ////IEnumerable<SelectListItem> statusFilter;
-            ////Search based on search-bar string 
-            //if (!string.IsNullOrEmpty(param.sSearch_2)) //EmployerID for WorkOrderIndex view
-            //{
-            //    allWorkOrders = allWorkOrders
-            //        .Where(p => p.EmployerID.Equals(Convert.ToInt32(param.sSearch_2)));
-            //}
-            //if (!string.IsNullOrEmpty(param.sSearch_5)) //Work Order Status
-            //{
-            //    allWorkOrders = allWorkOrders
-            //        .Where(p => p.status.Equals(Convert.ToInt32(param.sSearch_5)));
-            //}
 
-            //if (!string.IsNullOrEmpty(param.sSearch))
-            //{
-            //    //statusFilter = Lookups.orderstatus(CI.TwoLetterISOLanguageName)
-            //    //        .Where(p => p.Text.ContainsOIC(param.sSearch));
-
-            //    filteredWorkOrders = allWorkOrders
-            //        .Where(p => p.ID.ToString().Contains(param.sSearch) ||
-            //                    p.paperOrderNum.ToString().ContainsOIC(param.sSearch) ||
-            //                    p.dateTimeofWork.ToString().ContainsOIC(param.sSearch) ||
-            //                    //Lookups.byID(p.status,  CI.TwoLetterISOLanguageName).ContainsOIC(param.sSearch) ||
-            //                    p.contactName.ContainsOIC(param.sSearch) ||
-            //                    p.workSiteAddress1.ContainsOIC(param.sSearch) ||
-            //                    p.dateupdated.ToString().Contains(param.sSearch) ||
-            //                    p.Updatedby.ContainsOIC(param.sSearch)
-            //                    );
-                                
-            //}
-            //else
-            //{
-            //    filteredWorkOrders = allWorkOrders;
-            //}
-            ////Sort the Persons based on column selection
-            //var sortColIdx = Convert.ToInt32(Request["iSortCol_0"]);
-            //var sortColName = param.sortColName();
-            //Func<WorkOrder, string> orderingFunction =
-            //    (p => sortColName == "WOID" ? System.String.Format("{0,5:D5}", p.getPseudoWOID()) :
-            //            sortColName == "dateTimeofWork" ? System.String.Format("{0:MM/dd/yyyy  HH:mm:ss}", p.dateTimeofWork) :
-            //            sortColName == "status" ? p.status.ToString() :
-            //            sortColName == "WAcount" ? System.String.Format("{0,2:D2}", p.workAssignments.Count) :
-            //            sortColName == "contactName" ? p.contactName :
-            //            sortColName == "workSiteAddress1" ? p.workSiteAddress1 :
-            //            sortColName == "dateupdated" ? p.dateupdated.ToBinary().ToString() :
-            //            sortColName == "updatedby" ? p.Updatedby :
-            //            System.String.Format("{0,5:D5}",p.getPseudoWOID()));
-
-            //var sortDir = Request["sSortDir_0"];
-            //if (sortDir == "asc")
-            //    sortedWorkOrders = filteredWorkOrders.OrderBy(orderingFunction);
-            //else
-            //    sortedWorkOrders = filteredWorkOrders.OrderByDescending(orderingFunction);
-
-            ////Limit results to the display length and offset
-            //var displayEmployers = sortedWorkOrders.Skip(param.iDisplayStart)
-            //                                    .Take(param.iDisplayLength);
-
-            //return what's left to datatables
 
             var result = from p in allWorkOrders.query
                          select new { tabref = _getTabRef(p),
@@ -280,8 +237,7 @@ namespace Machete.Web.Controllers
         {
             return Machete.Web.Resources.WorkOrders.tabprefix + wo.getPseudoWOID() + " @ " + wo.workSiteAddress1;
         }
-
-
+        #endregion
 
         private void _setCreateDefaults(WorkOrderEditor _model)
         {
@@ -291,8 +247,11 @@ namespace Machete.Web.Controllers
         }
 
         #region Create
-        //
-        // GET: /WorkOrder/Create
+        /// <summary>
+        /// HTTP GET /WorkOrder/Create
+        /// </summary>
+        /// <param name="EmployerID">Parent record ID</param>
+        /// <returns>MVC Action Result</returns>
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Create(int EmployerID)
         {
@@ -304,10 +263,12 @@ namespace Machete.Web.Controllers
             _model.status = Lookups.woStatusDefault;            
             return PartialView("Create", _model);
         }
-
-        //
-        // POST: /WorkOrder/Create
-        //
+        /// <summary>
+        /// POST: /WorkOrder/Create
+        /// </summary>
+        /// <param name="_model"></param>
+        /// <param name="userName"></param>
+        /// <returns></returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Create(WorkOrder _model, string userName)
@@ -328,7 +289,6 @@ namespace Machete.Web.Controllers
         }
 
         #endregion
-
         #region Edit
         //
         // GET: /WorkOrder/Edit/5
@@ -343,13 +303,34 @@ namespace Machete.Web.Controllers
         // POST: /WorkOrder/Edit/5
         // TODO: catch exceptions, notify user
         // TODO: de-duplicate these actions
+        //[Bind(Exclude = "workerRequests")]
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public ActionResult Edit(int id, FormCollection collection, string userName)
+        public ActionResult Edit(int id, FormCollection collection, string userName, List<WorkerRequest> workerRequests2)
         {
             WorkOrder workOrder = workOrderService.GetWorkOrder(id);
+            TryUpdateModel(workOrder);
+            foreach (var wo in workOrder.workerRequests) wo.dwccardnum = wo.workerRequested.dwccardnum;
+            //IEnumerable<WorkerRequest> known = workOrder.workerRequests.AsEnumerable();
+            //IEnumerable<WorkerRequest> newwrk = workerRequests2.AsEnumerable();
+            //var stale = workOrder.workerRequests.Except<WorkerRequest>(workerRequests2, new WorkerRequestComparer());
+            //var toadd = workerRequests2.Except<WorkerRequest>(workOrder.workerRequests, new WorkerRequestComparer());
+            foreach (var rem in workOrder.workerRequests.Except<WorkerRequest>(workerRequests2, new WorkerRequestComparer()).ToArray())
+            {
+                var request = _wrServ.GetWorkerRequestsByNum(workOrder.ID, rem.dwccardnum);
+                _wrServ.DeleteWorkerRequest(request.ID, userName);
+                workOrder.workerRequests.Remove(rem);
+            }
+            foreach (var add in workerRequests2.Except<WorkerRequest>(workOrder.workerRequests, new WorkerRequestComparer()))
+            {
+                add.workOrder = workOrder;
+                add.workerRequested = _reqServ.GetWorkerByNum(add.dwccardnum);
+                add.updatedby(userName);
+                add.createdby(userName);
+                workOrder.workerRequests.Add(add);
+            }
 
-            if (TryUpdateModel(workOrder))
+            if (ModelState.IsValid)
             {
                 workOrderService.SaveWorkOrder(workOrder, userName);
                 return RedirectToAction("Index", new { EmployerID = workOrder.EmployerID });
@@ -373,7 +354,6 @@ namespace Machete.Web.Controllers
             return View(workOrder);
         }
         #endregion
-
         #region Delete
         //
         // GET: /WorkOrder/Delete/5
@@ -394,6 +374,7 @@ namespace Machete.Web.Controllers
             return RedirectToAction("Index", new { EmployerID = workOrder.EmployerID });
         }
         #endregion
+        #region Activate
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Activate(int id, FormCollection collection, string userName)
@@ -405,7 +386,7 @@ namespace Machete.Web.Controllers
             //workOrderService.DeleteWorkOrder(id, user);
             return PartialView("Edit", workOrder);
         }
-
+        #endregion
         private IEnumerable<OrderSummary> _getSummary()
         {
 
