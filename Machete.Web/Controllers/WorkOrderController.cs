@@ -158,29 +158,29 @@ namespace Machete.Web.Controllers
         //    _reqServ.DeleteWorkerRequest(id, user);
         //}
 
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public JsonResult GetRequests(int id)
-        {
-            WorkOrder workOrder = workOrderService.GetWorkOrder(id);
-            List<SelectListItem> list;
-            try
-            {
-                list = new List<SelectListItem>(workOrder.workerRequests.ToList()
-                       .Select(x => new SelectListItem
-                       {
-                           Text = x.workerRequested.Person.fullName(),
-                           Value = x.ID.ToString()
-                       }));
-            }
-            catch (Exception e)
-            {
-                list = null;
-            }
+        //[Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        //public JsonResult GetRequests(int id)
+        //{
+        //    WorkOrder workOrder = workOrderService.GetWorkOrder(id);
+        //    List<SelectListItem> list;
+        //    try
+        //    {
+        //        list = new List<SelectListItem>(workOrder.workerRequests.ToList()
+        //               .Select(x => new SelectListItem
+        //               {
+        //                   Text = x.workerRequested.Person.fullName(),
+        //                   Value = x.ID.ToString()
+        //               }));
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        list = null;
+        //    }
 
 
-            return Json(list, JsonRequestBehavior.AllowGet);
+        //    return Json(list, JsonRequestBehavior.AllowGet);
 
-        }
+        //}
         #endregion
         #region Ajaxhandler
         /// <summary>
@@ -297,6 +297,14 @@ namespace Machete.Web.Controllers
         public ActionResult Edit(int id)
         {
             WorkOrder workOrder = workOrderService.GetWorkOrder(id);
+            ViewBag.workerRequests = workOrder.workerRequests.Select(a => 
+                new SelectListItem
+                { 
+                    Value = a.WorkerID.ToString(), 
+                    Text = a.workerRequested.dwccardnum.ToString() + ' ' + 
+                    a.workerRequested.Person.firstname1 + ' ' + 
+                    a.workerRequested.Person.lastname1 
+                });
             return PartialView("Edit", workOrder);
         }
         //
@@ -310,21 +318,18 @@ namespace Machete.Web.Controllers
         {
             WorkOrder workOrder = workOrderService.GetWorkOrder(id);
             TryUpdateModel(workOrder);
-            foreach (var wo in workOrder.workerRequests) wo.dwccardnum = wo.workerRequested.dwccardnum;
-            //IEnumerable<WorkerRequest> known = workOrder.workerRequests.AsEnumerable();
-            //IEnumerable<WorkerRequest> newwrk = workerRequests2.AsEnumerable();
-            //var stale = workOrder.workerRequests.Except<WorkerRequest>(workerRequests2, new WorkerRequestComparer());
-            //var toadd = workerRequests2.Except<WorkerRequest>(workOrder.workerRequests, new WorkerRequestComparer());
+            //Stale requests to remove
             foreach (var rem in workOrder.workerRequests.Except<WorkerRequest>(workerRequests2, new WorkerRequestComparer()).ToArray())
             {
-                var request = _wrServ.GetWorkerRequestsByNum(workOrder.ID, rem.dwccardnum);
+                var request = _wrServ.GetWorkerRequestsByNum(workOrder.ID, rem.WorkerID);
                 _wrServ.DeleteWorkerRequest(request.ID, userName);
                 workOrder.workerRequests.Remove(rem);
             }
+            //New requests to add
             foreach (var add in workerRequests2.Except<WorkerRequest>(workOrder.workerRequests, new WorkerRequestComparer()))
             {
                 add.workOrder = workOrder;
-                add.workerRequested = _reqServ.GetWorkerByNum(add.dwccardnum);
+                add.workerRequested = _reqServ.GetWorker(add.WorkerID);
                 add.updatedby(userName);
                 add.createdby(userName);
                 workOrder.workerRequests.Add(add);

@@ -29,7 +29,7 @@ namespace Machete.Web.Helpers
                 model = incomingData.Split(new char[1] { ',' }).Select(data => new WorkerRequest
                 {
                     //workerRequested = workerService.GetWorkerByNum(int.Parse(data)),
-                    dwccardnum = int.Parse(data)
+                    WorkerID = int.Parse(data)
                 }).ToList();
             }
             bindingContext.ModelState.SetModelValue(bindingContext.ModelName, vpr);
