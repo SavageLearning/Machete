@@ -13,6 +13,8 @@ using NLog;
 using Machete.Web.ViewModel;
 using System.Web.Routing;
 using Machete.Web.Models;
+using System.Data.Objects;
+using System.Data.Objects.SqlClient;
 
 namespace Machete.Web.Controllers
 {
@@ -70,92 +72,20 @@ namespace Machete.Web.Controllers
             //Get all the records
             System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
             //var allAssignments = _assServ.GetMany();
-            IEnumerable<WorkAssignment> emplrfilteredAssignments;
-            IEnumerable<WorkAssignment> filteredAssignments;
-            IEnumerable<WorkAssignment> sortedAssignments;
-            //Search based on search-bar string 
-            if (!string.IsNullOrEmpty(param.dwccardnum) & !string.IsNullOrEmpty(param.todaysdate))
-            {
-                Worker worker = _wkrServ.GetWorkerByNum(Convert.ToInt32(param.dwccardnum));
-
-                emplrfilteredAssignments = _assServ.GetMany().Join(DB.Lookups,
-                                                                       wa => wa.skillID,
-                                                                       sk => sk.ID,
-                                                                       (wa, sk) => new { wa, sk })
-                                                                 .Where(jj => jj.wa.workOrder.dateTimeofWork.Date.Equals(Convert.ToDateTime(param.todaysdate)) &&
-                                                                              jj.wa.englishLevelID <= worker.englishlevelID &&
-                                                                              jj.sk.typeOfWorkID.Equals(worker.typeOfWorkID) && (
-                                                                              jj.wa.skillID.Equals(worker.skill1) ||
-                                                                              jj.wa.skillID.Equals(worker.skill2) ||
-                                                                              jj.wa.skillID.Equals(worker.skill3) ||
-                                                                              jj.sk.speciality == false )                                                                             
-                                                                              )
-                                                                 .Select(jj => jj.wa);
-            }
-            else if (!string.IsNullOrEmpty(param.todaysdate)) 
-            {
-                    emplrfilteredAssignments = _assServ.GetMany().Where(wa =>
-                                                                    wa.workOrder.dateTimeofWork.Date.Equals(Convert.ToDateTime(param.todaysdate)));
-
-            }
-            else if (!string.IsNullOrEmpty(param.searchColName("WOID")))
-            {
-                emplrfilteredAssignments = _assServ.GetMany()
-                    .Where(p => p.workOrderID.Equals(Convert.ToInt32(param.searchColName("WOID"))));
-            }
-            else
-            {
-                emplrfilteredAssignments = _assServ.GetMany();
-            }
-            if (!string.IsNullOrEmpty(param.sSearch))
-            {
-                filteredAssignments = emplrfilteredAssignments
-                    .Where(p => p.ID.ToString().ContainsOIC(param.sSearch) ||
-                                p.active.ToString().ContainsOIC(param.sSearch) ||
-                                p.workOrder.dateTimeofWork.ToString().ContainsOIC(param.sSearch) ||
-                                p.description.ContainsOIC(param.sSearch) ||
-                                p.englishLevelID.ToString().ContainsOIC(param.sSearch) ||
-                                Lookups.byID(p.skillID, CI.TwoLetterISOLanguageName).ContainsOIC(param.sSearch) ||
-                                p.dateupdated.ToString().ContainsOIC(param.sSearch) ||
-                                p.Updatedby.ContainsOIC(param.sSearch));
-            }
-            else
-            {
-                filteredAssignments = emplrfilteredAssignments;
-            }
-            //Sort the Persons based on column selection
-            var sortColIdx = Convert.ToInt32(Request["iSortCol_0"]);
-            //var sortColName = param.
-
-            var sortColName = param.sortColName();
-            Func<WorkAssignment, string> orderingFunction =
-                  (p => sortColName == "WOID" ? p.workOrder.ID.ToString() :
-                        sortColName == "WAID" ? p.ID.ToString() :
-                        sortColName == "pWAID" ? _getFullPseudoID(p) : 
-                        sortColName == "englishlevel" ? p.englishLevelID.ToString() :
-                        sortColName == "skill" ? Lookups.byID(p.skillID, culture) :
-                        sortColName == "hourlywage" ? p.hourlyWage.ToString() :
-                        sortColName == "hours" ? p.hours.ToString() :
-                        sortColName == "days" ? p.days.ToString() :
-                        sortColName == "description" ? p.description :
-                        sortColName == "dateTimeofWork" ? p.workOrder.dateTimeofWork.ToBinary().ToString() :
-                        sortColName == "earnings" ? Convert.ToString(p.hourlyWage * p.hours * p.days) :
-                        sortColName == "updatedby" ? p.Updatedby :
-                        p.dateupdated.ToBinary().ToString());
-
-            var sortDir = Request["sSortDir_0"];
-            if (sortDir == "asc")
-                sortedAssignments = filteredAssignments.OrderBy(orderingFunction);
-            else
-                sortedAssignments = filteredAssignments.OrderByDescending(orderingFunction);
-
-            //Limit results to the display length and offset
-            var displayAssignments = sortedAssignments.Skip(param.iDisplayStart)
-                                                .Take(param.iDisplayLength);
 
             //return what's left to datatables
-            
-            var result = from p in displayAssignments
+            ServiceIndexView<WorkAssignment> was = _assServ.GetIndexView(
+                    CI,
+                    param.sSearch,
+                    DateTime.Parse(param.todaysdate),
+                    Convert.ToInt32(param.dwccardnum),
+                    Convert.ToInt32(param.searchColName("WOID")),
+                    param.sSortDir_0 == "asc" ? false : true,
+                    param.iDisplayStart,
+                    param.iDisplayLength,
+                    param.sortColName()
+                );
+            var result = from p in was.query.DefaultIfEmpty()
                          select new { tabref = _getTabRef(p),
                                       tablabel = _getTabLabel(p),
                                       WOID = Convert.ToString(p.workOrderID),
@@ -172,12 +102,12 @@ namespace Machete.Web.Controllers
                                       dateTimeofWork = p.workOrder.dateTimeofWork.ToString(),
                                       earnings = System.String.Format("${0:f2}",(p.hourlyWage * p.hours * p.days))
                          };
-            var counter = filteredAssignments.Count();
+ 
             return Json(new
             {
                 sEcho = param.sEcho,
-                iTotalRecords = counter,
-                iTotalDisplayRecords = counter,
+                iTotalRecords = was.totalCount,
+                iTotalDisplayRecords = was.filteredCount,
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);

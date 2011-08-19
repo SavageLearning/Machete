@@ -168,7 +168,8 @@ namespace Machete.Web.Controllers
                     return PartialView(person);
                 }
             }
-            catch (DbUpdateConcurrencyException ex)
+            //catch (DbUpdateConcurrencyException ex)
+            catch
             {
 
                 levent.Level = LogLevel.Error; levent.Message = "TryUpdateModel failed";
