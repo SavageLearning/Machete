@@ -20,6 +20,7 @@ namespace Machete.Test.UnitTests.Services
     {
         Mock<IWorkAssignmentRepository> _repo;
         Mock<IUnitOfWork> _uow;
+        Mock<IWorkerRepository> _wRepo;
 
         public WorkAssignmentServiceUnitTests()
         {
@@ -72,7 +73,8 @@ namespace Machete.Test.UnitTests.Services
             //Arrange
             _repo = new Mock<IWorkAssignmentRepository>();
             _uow = new Mock<IUnitOfWork>();
-            var _serv = new WorkAssignmentService(_repo.Object, _uow.Object);
+            _wRepo = new Mock<IWorkerRepository>();
+            var _serv = new WorkAssignmentService(_repo.Object, _wRepo.Object, _uow.Object);
             //Act
             var result = _serv.GetMany();
             //Assert
@@ -88,7 +90,8 @@ namespace Machete.Test.UnitTests.Services
             _uow = new Mock<IUnitOfWork>();
             int id = 1; //This matches Records._workAssignment3 ID value
             _repo.Setup(r => r.GetById(id)).Returns(Records._workAssignment1);
-            var _serv = new WorkAssignmentService(_repo.Object, _uow.Object);
+            _wRepo = new Mock<IWorkerRepository>();
+            var _serv = new WorkAssignmentService(_repo.Object, _wRepo.Object, _uow.Object);
             //Act
             var result = _serv.Get(id);
             //Assert
@@ -107,7 +110,8 @@ namespace Machete.Test.UnitTests.Services
             Records._workAssignment1.datecreated = DateTime.MinValue;
             Records._workAssignment1.dateupdated = DateTime.MinValue;
             _repo.Setup(r => r.Add(Records._workAssignment1)).Returns(Records._workAssignment1);
-            var _serv = new WorkAssignmentService(_repo.Object, _uow.Object);
+            _wRepo = new Mock<IWorkerRepository>();
+            var _serv = new WorkAssignmentService(_repo.Object, _wRepo.Object, _uow.Object);
             //
             //Act
             var result = _serv.Create(Records._workAssignment1, user);
@@ -132,7 +136,8 @@ namespace Machete.Test.UnitTests.Services
             WorkAssignment dp = new WorkAssignment();
             _repo.Setup(r => r.Delete(It.IsAny<WorkAssignment>())).Callback((WorkAssignment p) => { dp = p; });
             _repo.Setup(r => r.GetById(id)).Returns(Records._workAssignment1);
-            var _serv = new WorkAssignmentService(_repo.Object, _uow.Object);
+            _wRepo = new Mock<IWorkerRepository>();
+            var _serv = new WorkAssignmentService(_repo.Object, _wRepo.Object, _uow.Object);
             //
             //Act
             _serv.Delete(id, user);
@@ -151,7 +156,8 @@ namespace Machete.Test.UnitTests.Services
             string user = "UnitTest";
             Records._workAssignment1.datecreated = DateTime.MinValue;
             Records._workAssignment1.dateupdated = DateTime.MinValue;
-            var _serv = new WorkAssignmentService(_repo.Object, _uow.Object);
+            _wRepo = new Mock<IWorkerRepository>();
+            var _serv = new WorkAssignmentService(_repo.Object, _wRepo.Object, _uow.Object);
             //
             //Act
             _serv.Save(Records._workAssignment1, user);

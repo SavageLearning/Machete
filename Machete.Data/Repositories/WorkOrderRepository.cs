@@ -17,11 +17,11 @@ namespace Machete.Data
         {
             dbset = base.DataContext.Set<WorkOrder>();
         }
-        protected MacheteContext DataContext
-        {
-            get { return dataContext ?? (dataContext = DatabaseFactory.Get()); }
-        }
-        public virtual IQueryable<WorkOrder> GetAllQ()
+        //override protected MacheteContext DataContext
+        //{
+        //    override get { return dataContext ?? (dataContext = DatabaseFactory.Get()); }
+        //}
+        override public IQueryable<WorkOrder> GetAllQ()
         {
             return dbset.Include(a => a.workAssignments).AsQueryable();
         }

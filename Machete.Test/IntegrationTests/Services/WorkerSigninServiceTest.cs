@@ -58,7 +58,7 @@ namespace Machete.Test
         [TestMethod]
         public void DbSet_TestMethod4()
         {                        
-            IEnumerable<WorkerSignin> filteredWSI = _wsiServ.GetWorkerSignins().Where(jj => jj.dateforsignin.Date.Equals(Convert.ToDateTime("08/02/2011")));
+            IEnumerable<WorkerSignin> filteredWSI = _wsiServ.GetWorkerSigninsQ().Where(jj => jj.dateforsignin.Date.Equals(Convert.ToDateTime("08/02/2011")));
             Assert.IsNotNull(filteredWSI, "Person.ID is Null");
         }
         [TestMethod]

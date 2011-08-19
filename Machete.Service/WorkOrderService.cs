@@ -29,8 +29,8 @@ namespace Machete.Service
                         int? EmployerID,
                         int? status,
                         bool orderDescending,
-                        int? displayStart,
-                        int? displayLength,
+                        int displayStart,
+                        int displayLength,
                         string sortColName
             );
     }
@@ -114,8 +114,8 @@ namespace Machete.Service
                         int? EmployerID,
                         int? status,
                         bool orderDescending,
-                        int? displayStart,
-                        int? displayLength,
+                        int displayStart,
+                        int displayLength,
                         string sortColName                        
             )
         {
@@ -123,7 +123,9 @@ namespace Machete.Service
             IQueryable<WorkOrder> filteredWO = workOrderRepository.GetAllQ();
             IQueryable<WorkOrder> orderedWO;
             bool isDateTime = false;
-            //Search based on search-bar string 
+            //
+            //WHERE based on search-bar string 
+            //
             if (EmployerID != null)            
                 filteredWO = filteredWO.Where(p => p.EmployerID.Equals((int)EmployerID)); //EmployerID for WorkOrderIndex view
             
@@ -152,8 +154,9 @@ namespace Machete.Service
                               );
                 }
             }
-            //var counted = filteredWO.Count();
-            //Sort the Persons based on column selection
+            //
+            //ORDER BY based on column selection
+            //
             switch (sortColName)
             {
                 //case "WOID": orderedWO = orderDescending ? filteredWO.OrderByDescending(p => p.dateTimeofWork) : filteredWO.OrderBy(p => p.dateTimeofWork); break;
@@ -166,7 +169,9 @@ namespace Machete.Service
                 case "dateupdated": orderedWO = orderDescending ? filteredWO.OrderByDescending(p => p.dateupdated) : filteredWO.OrderBy(p => p.dateupdated); break;
                 default: orderedWO = orderDescending ? filteredWO.OrderByDescending(p => p.dateTimeofWork) : filteredWO.OrderBy(p => p.dateTimeofWork); break;
             }
-
+            //
+            //SKIP & TAKE for display
+            //
             if (displayLength != null && displayStart != null)
                 orderedWO = orderedWO.Skip<WorkOrder>((int)displayStart).Take((int)displayLength);
             var filtered = filteredWO.Count();

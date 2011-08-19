@@ -11,7 +11,7 @@ namespace Machete.Service
 {
     public interface IWorkerSigninService
     {
-        IEnumerable<WorkerSignin> GetWorkerSignins();
+        IQueryable<WorkerSignin> GetWorkerSigninsQ();
         WorkerSignin GetWorkerSignin(int id);
         void CreateWorkerSignin(WorkerSignin workerSignin, string user);
         void DeleteWorkerSignin(int id);
@@ -44,10 +44,10 @@ namespace Machete.Service
         }
         #region IWorkerSigninService Members
         //TODO: GetWorkerSignins
-        public IEnumerable<WorkerSignin> GetWorkerSignins()
+        public IQueryable<WorkerSignin> GetWorkerSigninsQ()
         {
-            var signins = signinRepo.GetAll();
-            return signins;
+            return signinRepo.GetAllQ();
+ 
         }
         //TODO: GetWorkerSignin
         public WorkerSignin GetWorkerSignin(int id)
@@ -90,23 +90,22 @@ namespace Machete.Service
         }
         public IEnumerable<WorkerSignin> GetSigninsForAssignment(DateTime date, string search, string order, int? displayStart, int? displayLength)
         {
+
             IQueryable<WorkerSignin> allWSI = signinRepo.GetAllQ();
-            IQueryable<WorkerSignin> filtered;
-            var signins = signinRepo.GetAllQ();
-            var workers = workerRepo.GetAllQ();
-            var persons = personRepo.GetAllQ();
+            IQueryable<Worker> workers = workerRepo.GetAllQ();
+            IQueryable<Person> persons = personRepo.GetAllQ();
                 if (!string.IsNullOrEmpty(search))
                 {
-                    allWSI = signins.Where(s => s.dateforsignin == date)
+                    allWSI = allWSI.Where(s => s.dateforsignin == date)
                         .Join(workers, s => s.dwccardnum, w => w.dwccardnum, (s, w) => new { s, w })
-                        .Join(persons, oj => oj.w.ID, p => p.ID, (oj, p) => new { oj, p })
+                        //.Join(persons, oj => oj.w.ID, p => p.ID, (oj, p) => new { oj, p })
                         .Where(jj =>
-                                    SqlFunctions.StringConvert((decimal)jj.oj.s.dwccardnum).Contains(search) ||
-                                    jj.p.firstname1.Contains(search) ||
-                                    jj.p.firstname2.Contains(search) ||
-                                    jj.p.lastname1.Contains(search) ||
-                                    jj.p.lastname2.Contains(search))
-                        .Select(a => a.oj.s);
+                                    SqlFunctions.StringConvert((decimal)jj.s.dwccardnum).Contains(search) ||
+                                    jj.w.Person.firstname1.Contains(search) ||
+                                    jj.w.Person.firstname2.Contains(search) ||
+                                    jj.w.Person.lastname1.Contains(search) ||
+                                    jj.w.Person.lastname2.Contains(search))
+                        .Select(a => a.s);
                 }
             return allWSI.AsEnumerable();
         }

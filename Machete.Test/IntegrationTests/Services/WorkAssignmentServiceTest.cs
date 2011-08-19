@@ -10,6 +10,7 @@ using Machete.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data.Entity.Database;
 using System.Data.Entity.Validation;
+using System.Globalization;
 
 namespace Machete.Test
 {
@@ -18,9 +19,11 @@ namespace Machete.Test
     {
         WorkAssignmentRepository _waRepo;
         WorkOrderRepository _woRepo;
+        WorkerRepository _wRepo;
         DatabaseFactory _dbFactory;
         WorkAssignmentService _waServ;
         WorkOrderService _woServ;
+        WorkerService _wServ;
         IUnitOfWork _unitofwork;
         MacheteContext MacheteDB;
 
@@ -41,11 +44,35 @@ namespace Machete.Test
             _waRepo = new WorkAssignmentRepository(_dbFactory);
             _woRepo = new WorkOrderRepository(_dbFactory);
             _unitofwork = new UnitOfWork(_dbFactory);
-            _waServ = new WorkAssignmentService(_waRepo, _unitofwork);
+            _wRepo = new WorkerRepository(_dbFactory);
+            _waServ = new WorkAssignmentService(_waRepo, _wRepo, _unitofwork);
             _woServ = new WorkOrderService(_woRepo, _unitofwork);
 
         }
+        [TestMethod]
+        public void DbSet_WorkAssignmentService_Intergation_GetIndexView()
+        {
+            //
+            //Arrange
+            CultureInfo CI = new CultureInfo("en-US", false);
+            //
+            //Act
+            var result = _waServ.GetIndexView(
+                    CI,
+                    "",   //search str
+                    DateTime.Parse("8/10/2011"),
+                    null, //dwccardnum
+                    null, //woid 
+                    true, //desc(true), asc(false)
+                    0, 20, "WOID"
+                );
 
+            //
+            //Assert
+            var foo = result.query.ToList();
+            Assert.IsNotNull(foo, "Person.ID is Null");
+            //Assert.IsTrue(_person.ID == 1);
+        }
         [TestMethod]
         public void DbSet_WorkAssignmentService_Intergation_GetSummary()
         {

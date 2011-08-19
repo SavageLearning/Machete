@@ -73,7 +73,8 @@
         jqrfyTabs($("#signinTab"), "ui-tabs-signin-");
         
         jqrfyWSignin($("#signinTable"), {
-            "bLengthChange": false,
+            "bPaginate": true,
+            "bLengthChange": true,
             "bServerSide": true,
             "sAjaxSource": "/WorkerSignin/AjaxHandler",
             "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
