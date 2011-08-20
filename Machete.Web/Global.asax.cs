@@ -87,7 +87,8 @@ namespace Machete.Web
             IUnityContainer container = GetUnityContainer();
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
             DbDatabase.SetInitializer(new MacheteInitializer());
-            Lookups.Initialize(new MacheteContext());
+            LookupCache.Initialize(new MacheteContext());
+            Lookups.Initialize(LookupCache.getCache());
         }
 
         private IUnityContainer GetUnityContainer()
@@ -109,6 +110,7 @@ namespace Machete.Web
             .RegisterType<IEmployerRepository, EmployerRepository>(new HttpContextLifetimeManager<IEmployerRepository>())
             .RegisterType<IWorkOrderRepository, WorkOrderRepository>(new HttpContextLifetimeManager<IWorkOrderRepository>())
             .RegisterType<IWorkAssignmentRepository, WorkAssignmentRepository>(new HttpContextLifetimeManager<IWorkAssignmentRepository>())
+            .RegisterType<ILookupRepository, LookupRepository>(new HttpContextLifetimeManager<ILookupRepository>())
                 // 
             .RegisterType<IPersonService, PersonService>(new HttpContextLifetimeManager<IPersonService>())
             .RegisterType<IWorkerSigninService, WorkerSigninService>(new HttpContextLifetimeManager<IWorkerSigninService>())

@@ -52,7 +52,7 @@ namespace Machete.Web.Helpers
         public static int daysDefault { get; private set; }
         private static IEnumerable<LookupNumber> skillLevelNum { get; set; }
         public static int skillLevelDefault { get; private set; }
-        private static MacheteContext DB { get; set; }
+
         public static double hourlyWageDefault { get; private set; }
         private static List<SelectListItemEx> skillEN { get; set; }
         private static List<SelectListItemEx> skillES { get; set; }
@@ -67,10 +67,9 @@ namespace Machete.Web.Helpers
         //
         // Initialize once to prevent re-querying DB
         //
-        public static void Initialize(MacheteContext db)
+        public static void Initialize(IEnumerable<Lookup> cache)
         {
-            DB = db;
-            FillCache();
+            DbCache = cache;
             maritalstatusesEN = get("maritalstatus", "en");
             maritalstatusesES = get("maritalstatus", "es");
             maritalstatusDefault = getDefaultID("maritalstatus");
@@ -216,18 +215,6 @@ namespace Machete.Web.Helpers
             return yesnoEN;  //defaults to English
         }
 
-        private static void FillCache()
-        {
-
-            DbCache = DB.Lookups.OrderBy(s => s.category).ThenBy(s => s.sortorder).ToList();
-            //foreach (var row in DbCache)
-            //{
-            //    if (LookupLists[row.category + "-en"] == null)
-            //    {
-            //        LookupLists[row.category + "-en"] = new 
-            //    }
-            //}
-        }
 
         private static SelectList get(string category, string locale)
         {
@@ -336,14 +323,7 @@ namespace Machete.Web.Helpers
             if (val == null) val = false;
             return getBool((bool)val, locale);
         }
-        //
-        //
-        //
-        public static bool isSpecialized(int id)
-        {
-            return DB.Lookups.Single(s => s.ID == id).speciality;
 
-        }
     }
     public class LookupNumber
     {

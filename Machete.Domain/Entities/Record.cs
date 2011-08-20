@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Machete.Domain
 {
-    public class Record
+    public class Record : ICloneable
     {
         public int ID { get; set; }
         public DateTime datecreated { get; set; }
@@ -28,6 +28,10 @@ namespace Machete.Domain
             datecreated = DateTime.Now;
             Createdby = user;
             updatedby(user);
+        }
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
     }
 }
