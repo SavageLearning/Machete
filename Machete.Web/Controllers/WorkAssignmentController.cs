@@ -217,9 +217,13 @@ namespace Machete.Web.Controllers
         #region Edit
         public ActionResult Edit(int id)
         {
-            WorkAssignment workAssignment = _assServ.Get(id);
+            WorkAssignment wa = _assServ.Get(id);
+            if (wa.workerAssignedID != null)
+            {
+                wa.workerAssigned = _wkrServ.GetWorker((int)wa.workerAssignedID);
+            }
             //ViewBag.days2 = new SelectList(Lookups.days(), "Value", "Text", workAssignment.days);
-            return PartialView(workAssignment);
+            return PartialView(wa);
         }
         //
         // POST: /WorkAssignment/Edit/5
