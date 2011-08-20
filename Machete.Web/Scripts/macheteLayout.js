@@ -5,7 +5,7 @@ M_emp_uitab_patt = /employer/i;
 M_ord_uitab_patt = /workorder/i;
 M_ass_uitab_patt = /workassign/i;
 
-var eventDebug = 1;
+var eventDebug = 0;
 var eventsequence = 0;
 var eventDate = new Date();
 var M_employerAccordion;

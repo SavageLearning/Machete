@@ -173,7 +173,7 @@
             @Html.ValidationMessageFor(model => model.transportFeeExtra)
         </div>
     </div>
-</div><!--tb-table-->
+</div><!--tb-table main workorder table-->
 <div class="tb-table">
     <div class="tb-row englishNoteRow" id="englishNote_@(Model.ID)">
         <div class="tb-label tb-cell desc-label">
@@ -202,7 +202,7 @@
             @Html.ValidationMessageFor(model => model.description)
         </div>
     </div>
-</div><!--tb-table-->
+</div><!--tb-table description fields below-->
 @Html.Partial("ManagerInfo")
 @Html.Partial("AdministratorInfo")
 
@@ -268,22 +268,11 @@
         }).fnSetFilteringDelay(250);
         $(M_workerRequestTable_@(Model.ID)).find('tbody').dblclick(function (event) {            
             var myTr = event.target.parentNode;
-
             var myID = $(myTr).attr('requestedID');  
-            //var childNodes = $(myTr).find('td');   
-   
-            $('#workerRequests2_WO-@(Model.ID)').append(
-                $('<option></option>').val(myID).html($(myTr).find('td:eq(0)').text() + ' '+
-                    $(myTr).find('td:eq(2)').text() + ' '+
-                    $(myTr).find('td:eq(4)').text()
-                )                
-            );
-
-            //if (eventDebug) M_conlog("EVENT", "DBLCLICK", "jqrfyTable", "", "========================");
-            //var myStr = "ID=@(Model.ID)&WorkerID=" + myID;            
-            //$.post("/WorkOrder/AddRequest", myStr);
-
-            //getRequests($("#requestsTable")); commented out until ready for Worker Requests
+            var myLabel =  $(myTr).find('td:eq(0)').text() + ' '+
+                                              $(myTr).find('td:eq(2)').text() + ' '+
+                                              $(myTr).find('td:eq(4)').text();
+          M_workerRequestHandler_@(Model.ID)(myID, myLabel);
             $('a.ui-dialog-titlebar-close').click();
 
         });
@@ -296,17 +285,17 @@
 
         //////////////////////////////////////////////////
         //
-        // Initially populate requests Table for the worker
-        //
-        //getRequests($("#requestsTable"));
-
-        //////////////////////////////////////////////////
-        //
         //
         $('#addRequestBtn-@(Model.ID)').click(function () {
             M_workerRequestTable_@(Model.ID).fnDraw();
             $('#workerTable-@(Model.ID)').show();
-
+            M_workerRequestHandler_@(Model.ID) = function (myID, myLabel){
+                //
+                //Anon function to handle doubleclick of record selector
+                $('#workerRequests2_WO-@(Model.ID)').append(
+                    $('<option></option>').val(myID).html(myLabel)                
+                );
+            }
             $("#workerDialog-@(Model.ID)").dialog({
                     height: 340,
                     width: 1000,

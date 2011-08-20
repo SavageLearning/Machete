@@ -3,6 +3,9 @@
 @using Machete.Web.Resources
 @Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID" })
 @Html.HiddenFor(model => model.workOrderID)
+@{
+    string myStr = "";
+        }
 
 <div class="tb-table">
 
@@ -86,3 +89,82 @@
         </div>
     </div>
 </div>
+@if (Html.IsInRole(Html.Role_AM()))
+{
+<div class="Accordion" id="dispatchAccordion">
+    <h3><a href="#">Dispatch information?!</a></h3>
+    <div class="tb-table">
+        <div class="tb-row">
+            <div class="tb-label tb-cell">
+                @Html.LabelFor(model => model.workerAssignedID)
+            </div>
+            <div class="tb-display tb-cell">
+                @Html.HiddenFor(model => model.workerAssignedID,
+                    new { 
+                       @id="workerAssigned-" + Model.ID
+                    })           
+                    @{                    
+                        if (Model.workerAssigned != null)
+                        {
+                            myStr = Model.workerAssigned.dwccardnum + " " +
+                                           Model.workerAssigned.Person.fullName();
+                        }
+                    }
+                @Html.TextBox("workerAssignedDisplay", 
+                    myStr, 
+                    new { 
+                        style = "width: 20em",
+                        @disabled = "disabled",
+                        @id = "workerAssignedDisplay-" + Model.ID
+                    })
+             </div>
+             <div class="tb-label tb-cell">
+                    <input type="button" value="Change?!" class="formButton" id="changeAssigned-@(Model.ID)"/>
+                    <input type="button" value="delete?!" class="formButton" id="deleteAssigned-@(Model.ID)"/>
+             </div>
+        </div>
+    </div>
+</div>
+}
+@Html.Partial("ManagerInfo")
+@Html.Partial("AdministratorInfo")
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+            $('#changeAssigned-@(Model.ID)').click(function () {
+
+                M_workerRequestTable_@(Model.workOrderID).fnDraw();
+                $('#workerTable-@(Model.workOrderID)').show();
+                M_workerRequestHandler_@(Model.workOrderID) = function (myID, myLabel) {
+                    //
+                    //Anon function to handle doubleclick of record selector
+                    $('#workerAssigned-@(Model.ID)').val(myID);
+                    $('#workerAssignedDisplay-@(Model.ID)').val(myLabel);
+                    $('#WorkAssignmentTab-@(Model.ID)').submit();
+                    //$('#DeleteWorkOrder-@(Model.ID)').submit();
+
+                }
+                $("#workerDialog-@(Model.workOrderID)").dialog({
+                        height: 340,
+                        width: 1000,
+                        modal: true
+                });            
+                $('#workerDialog-@(Model.workOrderID)').show();
+            });
+
+        ////////////////////////////////////////////////////////////////
+        //
+        // Delete confirmation 
+        //
+        $('#deleteAssigned-@(Model.ID)').click(function () {
+            jConfirm('Do you want to delete this dispatch assignment?!',
+                     'Dispatch delete title',
+                     function (r) {
+                         if (r == true) {
+                            $('#workerAssigned-@(Model.ID)').val(null);
+                            $('#workerAssignedDisplay-@(Model.ID)').val(null);
+                         }
+                     }
+            );
+        });
+    });
+</script>

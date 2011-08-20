@@ -3,7 +3,7 @@
 @using Machete.Web.Resources
 @if (Html.IsInRole(Html.Role_AM()))
 {
-<div class="managerAccordion">
+<div class="managerAccordion Accordion">
     <h3><a href="#">@Shared.managerinformation</a></h3>
     <div class="tb-table">
         <div class="tb-row">
@@ -46,7 +46,7 @@
 }
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
-        $(".managerAccordion").accordion({
+        $(".Accordion").accordion({
             collapsible: true,
             active: false,
             autoHeight: false
