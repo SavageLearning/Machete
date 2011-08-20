@@ -172,7 +172,7 @@ namespace Machete.Service
             //
             //SKIP & TAKE for display
             //
-            if (displayLength != null && displayStart != null)
+            //if (displayLength != 0 && displayStart != 0)
                 orderedWO = orderedWO.Skip<WorkOrder>((int)displayStart).Take((int)displayLength);
             var filtered = filteredWO.Count();
             var total =  workOrderRepository.GetAllQ().Count();

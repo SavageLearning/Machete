@@ -9,6 +9,8 @@ using NLog;
 using System.Globalization;
 using System.Data.Objects;
 using System.Data.Objects.SqlClient;
+using System.Text.RegularExpressions;
+using System.Linq.Expressions;
 
 namespace Machete.Service
 {
@@ -42,16 +44,23 @@ namespace Machete.Service
         private readonly IWorkAssignmentRepository waRepo;
         private readonly IWorkerRepository wRepo;
         private readonly IUnitOfWork unitOfWork;
+        private readonly ILookupRepository lRepo;
+        private readonly MacheteContext DB;
+        private static Regex isTimeSpecific = new Regex(@"^\s*\d{1,2}[\/-_]\d{1,2}[\/-_]\d{2,4}\s+\d{1,2}:\d{1,2}");
+        private static Regex isDaySpecific = new Regex(@"^\s*\d{1,2}\/\d{1,2}\/\d{2,4}");
+        private static Regex isMonthSpecific = new Regex(@"^\s*\d{1,2}\/\d{4,4}");
         //
         private Logger log = LogManager.GetCurrentClassLogger();
         private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "WorkAssignmentService", "");
         private WorkAssignment _workAssignment;
         //
-        public WorkAssignmentService(IWorkAssignmentRepository waRepo, IWorkerRepository wRepo, IUnitOfWork unitOfWork)
+        public WorkAssignmentService(IWorkAssignmentRepository waRepo, IWorkerRepository wRepo, ILookupRepository lRepo, IUnitOfWork unitOfWork)
         {
             this.waRepo = waRepo;
             this.unitOfWork = unitOfWork;
             this.wRepo = wRepo;
+            this.lRepo = lRepo;
+            DB = new MacheteContext();
         }
 
         public IEnumerable<WorkAssignment> GetMany()
@@ -90,94 +99,137 @@ namespace Machete.Service
                                                     int? displayLength,
                                                     string sortColName)
         {
-            IQueryable<WorkAssignment> filteredWA = waRepo.GetAllQ();
-            //Search based on search-bar string
-
+            IQueryable<WorkAssignment> prefilteredWA = waRepo.GetAllQ();
+            IEnumerable<WorkAssignment> enumedWA;
+            IEnumerable<WorkAssignment> filteredWA;
+            bool isDateTime = false;
+            IEnumerable<Lookup> lCache = LookupCache.getCache();
+            // 
+            // DATE
+            //
             if (date != null)
             {
-                filteredWA = filteredWA.Where(p => EntityFunctions.DiffDays(p.workOrder.dateTimeofWork, date) == 0 ? true : false);
+                prefilteredWA = prefilteredWA.Where(p => EntityFunctions.DiffDays(p.workOrder.dateTimeofWork, date) == 0 ? true : false);
             }
-            if (dwccardnum != null)
+            // 
+            // WOID
+            //
+            if (woid != null && woid != 0) prefilteredWA = prefilteredWA.Where(p => p.workOrderID==woid);
+            // 
+            // SEARCH STRING
+            //
+            if (!string.IsNullOrEmpty(search))
             {
-                //Worker worker = wRepo.GetQ(w => w.dwccardnum == Convert.ToInt32(dwccardnum));
-
-                //filteredWA = filteredWA
-                //                .Where(wa => wa.englishLevelID <= worker.englishlevelID && (
-                //                            wa.skillID.Equals(worker.skill1) ||
-                //                            wa.skillID.Equals(worker.skill2) ||
-                //                            wa.skillID.Equals(worker.skill3))
-                //                            );
-
-
-                //filteredWA = filteredWA.Join(Lookups,
-                //    wa => wa.skillID,
-                //    sk => sk.ID,
-                //    (wa, sk) => new { wa, sk })
-                //.Where(jj => jj.wa.englishLevelID <= worker.englishlevelID &&
-                //            jj.sk.typeOfWorkID.Equals(worker.typeOfWorkID) && (
-                //            jj.wa.skillID.Equals(worker.skill1) ||
-                //            jj.wa.skillID.Equals(worker.skill2) ||
-                //            jj.wa.skillID.Equals(worker.skill3) ||
-                //            jj.sk.speciality == false)
-                //            )
-                //.Select(jj => jj.wa);
+                DateTime parsedTime;
+                if (isDateTime = DateTime.TryParse(search, out parsedTime))
+                {
+                    if (isMonthSpecific.IsMatch(search))  //Regex for month/year
+                        prefilteredWA = prefilteredWA.Where(p => EntityFunctions.DiffMonths(p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
+                    if (isDaySpecific.IsMatch(search))  //Regex for day/month/year
+                        prefilteredWA = prefilteredWA.Where(p => EntityFunctions.DiffDays(p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
+                    if (isTimeSpecific.IsMatch(search)) //Regex for day/month/year time
+                        prefilteredWA = prefilteredWA.Where(p => EntityFunctions.DiffHours(p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
+                }
+                else
+                {
+                    prefilteredWA = prefilteredWA
+                        .Join(lRepo.GetAllQ(), wa => wa.skillID, sk => sk.ID, (wa, sk) => new { wa, sk })
+                        .Where(p => SqlFunctions.StringConvert((decimal)p.wa.workOrder.paperOrderNum).Contains(search) ||
+                            p.wa.description.Contains(search) ||
+                            p.sk.text_EN.Contains(search) ||
+                            p.sk.text_ES.Contains(search) ||
+                            //p.dateupdated.ToString().ContainsOIC(param.sSearch) ||
+                            p.wa.Updatedby.Contains(search)).Select(p => p.wa);
+                }
             }
+            int langlevel;
+            int typeofworkid;
+            int? skill1 =null; 
+            int? skill2 =null; 
+            int? skill3= null;
+            int? skill4 = null;
+            int? skill5 = null;
+            int? skill6 = null;
+            Stack<int> primeskills = new Stack<int>();
+            Stack<int> skills = new Stack<int>();
+            int[] staticskills;
+            if (dwccardnum != null && dwccardnum != 0)
+            {
+                Worker worker = wRepo.Get(w => w.dwccardnum == dwccardnum);
+                if (worker != null)
+                {
+                    if (worker.skill1 != null) primeskills.Push((int)worker.skill1);
+                    if (worker.skill2 != null) primeskills.Push((int)worker.skill2);
+                    if (worker.skill3 != null) primeskills.Push((int)worker.skill3);
 
-            //if (woid != null) filteredWA = filteredWA.Where(p => p.workOrderID==woid);
-            
-
-            //if (!string.IsNullOrEmpty(search))
-            //{
-            //    filteredWA = filteredWA
-            //        .Where(p => SqlFunctions.StringConvert((decimal)p.workOrder.paperOrderNum).Contains(search) ||
-
-            //                    //p.workOrder.dateTimeofWork.ToString().ContainsOIC(param.sSearch) ||
-            //                    p.description.Contains(search) ||
-            //                    SqlFunctions.StringConvert((decimal)p.englishLevelID).Contains(search) ||
-            //                    //Lookups.byID(p.skillID, CI.TwoLetterISOLanguageName).ContainsOIC(search) ||
-            //                    //p.dateupdated.ToString().ContainsOIC(param.sSearch) ||
-            //                    p.Updatedby.Contains(search));
-            //}
-
+                    foreach (var skillid in primeskills)
+                    {
+                        skills.Push(skillid);
+                        Lookup skill = LookupCache.getByID(skillid);
+                        foreach (var subskill in lCache.Where(a => a.category == skill.category &&
+                                                                   a.subcategory == skill.subcategory &&
+                                                                   a.level < skill.level))
+                        {
+                            skills.Push(subskill.ID);
+                        }
+                    }
+                    if (skills.Count() != 0) skill1 = skills.Pop();
+                    if (skills.Count() != 0) skill2 = skills.Pop();
+                    if (skills.Count() != 0) skill3 = skills.Pop();
+                    if (skills.Count() != 0) skill4 = skills.Pop();
+                    if (skills.Count() != 0) skill5 = skills.Pop();
+                    if (skills.Count() != 0) skill6 = skills.Pop();
+                    enumedWA = prefilteredWA.AsEnumerable();
+                    filteredWA = enumedWA.Join(DB.Lookups,
+                                                       wa => wa.skillID,
+                                                       sk => sk.ID,
+                                                       (wa, sk) => new { wa, sk })
+                                                 .Where(jj => jj.wa.englishLevelID <= worker.englishlevelID &&
+                                                              jj.sk.typeOfWorkID.Equals(worker.typeOfWorkID) && (
+                                                              jj.wa.skillID.Equals(skill1) ||
+                                                              jj.wa.skillID.Equals(skill2) ||
+                                                              jj.wa.skillID.Equals(skill3) ||
+                                                              jj.wa.skillID.Equals(skill4) ||
+                                                              jj.wa.skillID.Equals(skill5) ||
+                                                              jj.wa.skillID.Equals(skill6) ||
+                                                              jj.sk.speciality == false)
+                                                              )
+                                                 .Select(jj => jj.wa).AsQueryable();
+                }
+                else
+                {
+                    filteredWA = prefilteredWA.AsEnumerable();
+                }
+            }
+            {
+                filteredWA = prefilteredWA.AsEnumerable();
+            }
             ////Sort the Persons based on column selection
-            //var sortColIdx = Convert.ToInt32(Request["iSortCol_0"]);
-            ////var sortColName = param.
-
-            //var sortColName = param.sortColName();
-            //Func<WorkAssignment, string> orderingFunction =
-            //      (p => sortColName == "WOID" ? p.workOrder.ID.ToString() :
-            //            sortColName == "WAID" ? p.ID.ToString() :
-            //            sortColName == "pWAID" ? _getFullPseudoID(p) : 
-            //            sortColName == "englishlevel" ? p.englishLevelID.ToString() :
-            //            sortColName == "skill" ? Lookups.byID(p.skillID, culture) :
-            //            sortColName == "hourlywage" ? p.hourlyWage.ToString() :
-            //            sortColName == "hours" ? p.hours.ToString() :
-            //            sortColName == "days" ? p.days.ToString() :
-            //            sortColName == "description" ? p.description :
-            //            sortColName == "dateTimeofWork" ? p.workOrder.dateTimeofWork.ToBinary().ToString() :
-            //            sortColName == "earnings" ? Convert.ToString(p.hourlyWage * p.hours * p.days) :
-            //            sortColName == "updatedby" ? p.Updatedby :
-            //            p.dateupdated.ToBinary().ToString());
-
-            //var sortDir = Request["sSortDir_0"];
-            //if (sortDir == "asc")
-            filteredWA = filteredWA.OrderBy(p => p.ID);
-            //else
-            //    sortedAssignments = filteredWA.OrderByDescending(orderingFunction);
-
+            switch (sortColName)
+            {
+                case "pWAID": filteredWA = orderDescending ? filteredWA.OrderByDescending(p => p.pseudoID) : filteredWA.OrderBy(p => p.pseudoID); break;
+                case "skill": filteredWA = orderDescending ? filteredWA.OrderByDescending(p => p.skillID) : filteredWA.OrderBy(p => p.skillID); break;
+                case "earnings": filteredWA = orderDescending ? filteredWA.OrderByDescending(p => p.hourlyWage * p.hours * p.days) : filteredWA.OrderBy(p => p.hourlyWage * p.hours * p.days); break;
+                case "hourlywage": filteredWA = orderDescending ? filteredWA.OrderByDescending(p => p.hourlyWage) : filteredWA.OrderBy(p => p.hourlyWage); break;
+                case "hours": filteredWA = orderDescending ? filteredWA.OrderByDescending(p => p.hours) : filteredWA.OrderBy(p => p.hours); break;
+                case "days": filteredWA = orderDescending ? filteredWA.OrderByDescending(p => p.days) : filteredWA.OrderBy(p => p.days); break;
+                case "WOID": filteredWA = orderDescending ? filteredWA.OrderByDescending(p => p.workOrderID) : filteredWA.OrderBy(p => p.workOrderID); break;
+                case "WAID": filteredWA = orderDescending ? filteredWA.OrderByDescending(p => p.ID) : filteredWA.OrderBy(p => p.ID); break;
+                case "description": filteredWA = orderDescending ? filteredWA.OrderByDescending(p => p.description) : filteredWA.OrderBy(p => p.description); break;                
+                case "updatedby": filteredWA = orderDescending ? filteredWA.OrderByDescending(p => p.Updatedby) : filteredWA.OrderBy(p => p.Updatedby); break;
+                case "dateupdated": filteredWA = orderDescending ? filteredWA.OrderByDescending(p => p.dateupdated) : filteredWA.OrderBy(p => p.dateupdated); break;
+                default: filteredWA = orderDescending ? filteredWA.OrderByDescending(p => p.workOrder.dateTimeofWork) : filteredWA.OrderBy(p => p.workOrder.dateTimeofWork); break;
+            }
             //Limit results to the display length and offset
-           //if (displayLength != null && displayStart != null)
-               filteredWA = filteredWA.Skip((int)displayStart)
-                                                .Take((int)displayLength);
-           //var filtered = filteredWA.Count();
-           //var total = waRepo.GetAllQ().Count();
+               filteredWA = filteredWA.Skip((int)displayStart).Take((int)displayLength);
+           var filtered = filteredWA.Count();
+           var total = waRepo.GetAllQ().Count();
            return new ServiceIndexView<WorkAssignment>
            {
-               query = filteredWA,
-               filteredCount = 0,//filtered,
-               totalCount = 0//total
+               query = filteredWA.AsEnumerable(),
+               filteredCount = filtered,
+               totalCount = total
            };
-
       }
 
         public IEnumerable<WorkAssignmentSummary> GetSummary()

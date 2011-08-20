@@ -77,7 +77,7 @@ namespace Machete.Web.Controllers
             ServiceIndexView<WorkAssignment> was = _assServ.GetIndexView(
                     CI,
                     param.sSearch,
-                    DateTime.Parse(param.todaysdate),
+                    param.todaysdate == null ? null : (DateTime?)DateTime.Parse(param.todaysdate),
                     Convert.ToInt32(param.dwccardnum),
                     Convert.ToInt32(param.searchColName("WOID")),
                     param.sSortDir_0 == "asc" ? false : true,
@@ -85,7 +85,7 @@ namespace Machete.Web.Controllers
                     param.iDisplayLength,
                     param.sortColName()
                 );
-            var result = from p in was.query.DefaultIfEmpty()
+            var result = from p in was.query
                          select new { tabref = _getTabRef(p),
                                       tablabel = _getTabLabel(p),
                                       WOID = Convert.ToString(p.workOrderID),
