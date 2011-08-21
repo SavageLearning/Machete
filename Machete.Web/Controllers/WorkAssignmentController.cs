@@ -197,6 +197,8 @@ namespace Machete.Web.Controllers
             WorkAssignment newAssign = _assignment;
             newAssign.workOrder.waPseudoIDCounter++;
             newAssign.pseudoID = newAssign.workOrder.waPseudoIDCounter;
+            newAssign.workerAssigned = null;
+            newAssign.workerAssignedID = null;
             _assServ.Create(newAssign, userName);
             return Json(new
             {

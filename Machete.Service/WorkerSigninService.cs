@@ -6,6 +6,8 @@ using Machete.Domain;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using System.Data.Objects.SqlClient;
+using System.Globalization;
+using System.Data.Objects;
 
 namespace Machete.Service
 {
@@ -19,6 +21,17 @@ namespace Machete.Service
         IEnumerable<WorkerSigninView> getView(DateTime date);
         Image getImage(int dwccardnum);
         DateTime getExpireDate(int dwccardnum);
+        ServiceIndexView<WorkerSigninView> GetIndexView(
+                    CultureInfo CI,
+                    string search,
+                    DateTime? date,
+                    int? dwccardnum,
+                    int? skillid,
+                    bool orderDescending,
+                    int? displayStart,
+                    int? displayLength,
+                    string sortColName
+            );
         IEnumerable<WorkerSignin> GetSigninsForAssignment(DateTime date, string search, string order, int? displayStart, int? displayLength);
     }
     public class WorkerSigninService : IWorkerSigninService
@@ -109,6 +122,72 @@ namespace Machete.Service
                 }
             return allWSI.AsEnumerable();
         }
+        public ServiceIndexView<WorkerSigninView> GetIndexView(
+                    CultureInfo CI,
+                    string search,
+                    DateTime? date,
+                    int? dwccardnum,
+                    int? skillid,
+                    bool orderDescending,
+                    int? displayStart,
+                    int? displayLength,
+                    string sortColName
+            )
+        {
+            //Get all the records
+            IQueryable<WorkerSignin> queryableWSI = signinRepo.GetAllQ();
+            IQueryable<WorkerSignin> orderedWSI;
+            //Search based on search-bar string
+            //DateTime parsedTime;
+            if (date != null)
+            {
+                queryableWSI = queryableWSI.Where(p => EntityFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false);
+
+            }
+            if (!string.IsNullOrEmpty(search))
+            {
+                queryableWSI = queryableWSI
+                    .Where(p => SqlFunctions.StringConvert((decimal)p.dwccardnum).Contains(search) ||
+                                p.worker.Person.firstname1.Contains(search) ||
+                                p.worker.Person.firstname2.Contains(search) ||
+                                p.worker.Person.lastname1.Contains(search) ||
+                                p.worker.Person.lastname2.Contains(search));
+            }
+
+            //Sort the Persons based on column selection
+            switch (sortColName)
+            {
+                //case "WOID": orderedWSI = orderDescending ? queryableWSI.OrderByDescending(p => p.dateTimeofWork) : queryableWSI.OrderBy(p => p.dateTimeofWork); break;
+                case "dwccardnum": queryableWSI = orderDescending ? queryableWSI.OrderByDescending(p => p.dwccardnum) : queryableWSI.OrderBy(p => p.dwccardnum); break;
+                case "firstname1": queryableWSI = orderDescending ? queryableWSI.OrderByDescending(p => p.worker.Person.firstname1) : queryableWSI.OrderBy(p => p.worker.Person.firstname1); break;
+                case "firstname2": queryableWSI = orderDescending ? queryableWSI.OrderByDescending(p => p.worker.Person.firstname2) : queryableWSI.OrderBy(p => p.worker.Person.firstname2); break;
+                case "lastname1": queryableWSI = orderDescending ? queryableWSI.OrderByDescending(p => p.worker.Person.lastname1) : queryableWSI.OrderBy(p => p.worker.Person.lastname1); break;
+                case "lastname2": queryableWSI = orderDescending ? queryableWSI.OrderByDescending(p => p.worker.Person.lastname2) : queryableWSI.OrderBy(p => p.worker.Person.lastname2); break;
+                case "dateupdated": queryableWSI = orderDescending ? queryableWSI.OrderByDescending(p => p.dateupdated) : queryableWSI.OrderBy(p => p.dateupdated); break;
+                default: queryableWSI = orderDescending ? queryableWSI.OrderByDescending(p => p.dateforsignin) : queryableWSI.OrderBy(p => p.dateforsignin); break;
+            }
+            //queryableWSI = queryableWSI.ToList();
+            var filtered = queryableWSI.Count();
+            //if (param.iDisplayLength > 0 && param.iDisplayStart > 0)
+            queryableWSI = queryableWSI.Skip<WorkerSignin>((int)displayStart).Take((int)displayLength);
+
+            var total = signinRepo.GetAllQ().Count();
+            var enumWSIV = queryableWSI.AsEnumerable()
+                .Select(p => new WorkerSigninView {  dwccardnum = p.dwccardnum,
+                                       firstname1 = p.worker.Person.firstname1,
+                                       firstname2 = p.worker.Person.firstname2,
+                                       lastname1 = p.worker.Person.lastname1,
+                                       lastname2 = p.worker.Person.lastname2, 
+                                       dateforsignin = p.dateforsignin
+                         });
+            return new ServiceIndexView<WorkerSigninView>
+            {
+                query = enumWSIV,
+                filteredCount = filtered,
+                totalCount = total
+            };
+
+        }
 
         //TODO: UnitTest getView
         public IEnumerable<WorkerSigninView> getView(DateTime date)
@@ -135,23 +214,6 @@ namespace Machete.Service
                                    lastname2 = finalrow == null ? null : finalrow.lastname2
                                };
             return s_to_w_query;
-            //Worker blank = new Worker { ID = 0 };
-            //var query = signins.Where(s => s.dateforsignin == date)
-            //                   .Join(workers, s => s.dwccardnum, w => w.dwccardnum, (s, w) => new { s, w })
-            //                   //.DefaultIfEmpty()
-            //                   .Join(persons, oj => oj.w.ID, p => p.ID, (oj, p) => new { oj, p })
-            //                   //.DefaultIfEmpty()
-            //                   .Select(a => new WorkerSigninView
-            //                   {
-            //                       dateforsignin = a.oj.s == null ? DateTime.MinValue : a.oj.s.dateforsignin,
-            //                       dwccardnum = a.oj.s == null ? 0 : a.oj.s.dwccardnum,
-            //                       signinID = a.oj.s == null ? 0 : a.oj.s.ID,
-            //                       firstname1 = a.p == null ? null : a.p.firstname1,
-            //                       firstname2 = a.p == null ? null : a.p.firstname2,
-            //                       lastname1 = a.p == null ? null : a.p.lastname1,
-            //                       lastname2 = a.p == null ? null : a.p.lastname2
-            //                   });
-            //return query;
 
         }
         //TODO: UnitTest getImage

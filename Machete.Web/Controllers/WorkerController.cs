@@ -64,12 +64,12 @@ namespace Machete.Web.Controllers
         {
             //Get all the records
             var allWorkers = workerService.GetWorkers(true);
-            IEnumerable<Worker> filteredWorkers;
-            IEnumerable<Worker> sortedWorkers;
+            IEnumerable<Worker> filteredW;
+            IEnumerable<Worker> orderedW;
             //Search based on search-bar string 
             if (!string.IsNullOrEmpty(param.sSearch))
             {
-                filteredWorkers = workerService.GetWorkers(true)
+                filteredW = workerService.GetWorkers(true)
                     .Where(p => p.dwccardnum.ToString().ContainsOIC(param.sSearch) ||
                                 p.active.ToString().ContainsOIC(param.sSearch) ||
                                 p.Person.firstname1.ContainsOIC(param.sSearch) ||
@@ -80,46 +80,51 @@ namespace Machete.Web.Controllers
             }
             else
             {
-                filteredWorkers = allWorkers;
+                filteredW = allWorkers;
+            }
+            //
+            //ORDER BY based on column selection
+            //
+            var orderDescending = true;
+            if (param.sSortDir_0 == "asc") orderDescending = false;
+
+            switch (param.sortColName())
+            {                
+                case "dwccardnum": orderedW = orderDescending ? filteredW.OrderByDescending(p => p.dwccardnum) : filteredW.OrderBy(p => p.dwccardnum); break;
+                case "active": orderedW = orderDescending ? filteredW.OrderByDescending(p => p.active) : filteredW.OrderBy(p => p.active); break;
+                case "firstname1": orderedW = orderDescending ? filteredW.OrderByDescending(p => p.Person.firstname1) : filteredW.OrderBy(p => p.Person.firstname1); break;
+                case "firstname2": orderedW = orderDescending ? filteredW.OrderByDescending(p => p.Person.firstname2) : filteredW.OrderBy(p => p.Person.firstname2); break;
+                case "lastname1": orderedW = orderDescending ? filteredW.OrderByDescending(p => p.Person.lastname1) : filteredW.OrderBy(p => p.Person.lastname1); break;
+                case "lastname2": orderedW = orderDescending ? filteredW.OrderByDescending(p => p.Person.lastname2) : filteredW.OrderBy(p => p.Person.lastname2); break;
+                case "memberexpirationdate": orderedW = orderDescending ? filteredW.OrderByDescending(p => p.memberexpirationdate) : filteredW.OrderBy(p => p.memberexpirationdate); break;
+                default: orderedW = orderDescending ? filteredW.OrderByDescending(p => p.ID) : filteredW.OrderBy(p => p.ID); break;
             }
             //Sort the Persons based on column selection
-            var sortColIdx = Convert.ToInt32(Request["iSortCol_0"]);
-            Func<Worker, string> orderingFunction = (p => sortColIdx == 2 ? p.dwccardnum.ToString() :
-                                                          sortColIdx == 3 ? p.active.ToString() :
-                                                          sortColIdx == 4 ? p.Person.firstname1 :
-                                                          sortColIdx == 5 ? p.Person.firstname2 :
-                                                          sortColIdx == 6 ? p.Person.lastname1 :
-                                                          sortColIdx == 7 ? p.Person.lastname2 :
-                                                          p.memberexpirationdate.ToString());
-            var sortDir = Request["sSortDir_0"];
-            if (sortDir == "asc")
-                sortedWorkers = filteredWorkers.OrderBy(orderingFunction);
-            else
-                sortedWorkers = filteredWorkers.OrderByDescending(orderingFunction);
 
             //Limit results to the display length and offset
-            var displayPersons = sortedWorkers.Skip(param.iDisplayStart)
+            var displayPersons = orderedW.Skip(param.iDisplayStart)
                                               .Take(param.iDisplayLength);
 
             //return what's left to datatables
             var result = from p in displayPersons
-                         select new[] { "/Worker/Edit/" + Convert.ToString(p.ID),
-                                        p.Person.firstname1 + ' ' + p.Person.lastname1,
-                                        p.ID.ToString(),
-                                        Convert.ToString(p.dwccardnum),
-                                        Convert.ToString(p.active), 
-                                        p.Person.firstname1, 
-                                        p.Person.firstname2, 
-                                        p.Person.lastname1, 
-                                        p.Person.lastname2, 
-                                        Convert.ToString(p.memberexpirationdate)
+                         select new{ 
+                                     tabref = "/Worker/Edit/" + Convert.ToString(p.ID),
+                                     tablabel =  p.Person.firstname1 + ' ' + p.Person.lastname1,
+                                     WID =    p.ID.ToString(),
+                                     dwccardnum =  Convert.ToString(p.dwccardnum),
+                                     active =  Convert.ToString(p.active), 
+                                     firstname1 = p.Person.firstname1, 
+                                     firstname2 = p.Person.firstname2, 
+                                     lastname1 = p.Person.lastname1, 
+                                     lastname2 = p.Person.lastname2, 
+                                     memberexpirationdate = Convert.ToString(p.memberexpirationdate)
                          };
 
             return Json(new
             {
                 sEcho = param.sEcho,
                 iTotalRecords = allWorkers.Count(),
-                iTotalDisplayRecords = filteredWorkers.Count(),
+                iTotalDisplayRecords = filteredW.Count(),
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);
