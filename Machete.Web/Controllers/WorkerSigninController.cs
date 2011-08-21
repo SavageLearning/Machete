@@ -14,6 +14,7 @@ using Microsoft.Reporting.WebForms;
 using Machete.Web.Models;
 using System.Data.Objects.SqlClient;
 using System.Data.Objects;
+using System.Web.Routing;
 
 namespace Machete.Web.Controllers
 {
@@ -23,12 +24,18 @@ namespace Machete.Web.Controllers
         private readonly IWorkerSigninService _serv;
         
         private Logger log = LogManager.GetCurrentClassLogger();
+        private System.Globalization.CultureInfo CI;
         private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "WorkerSigninController", "");
         public WorkerSigninController(IWorkerSigninService workerSigninService)
         {
             this._serv = workerSigninService;
         }
 
+        protected override void Initialize(RequestContext requestContext)
+        {
+            base.Initialize(requestContext);
+            CI = (System.Globalization.CultureInfo)Session["Culture"];
+        }
         //
         // GET: /WorkerSignin/
         // Initial page creation
@@ -92,75 +99,32 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, User")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
-            //Get all the records
-            IQueryable<WorkerSignin> filteredWSI = _serv.GetWorkerSigninsQ();
-            IQueryable<WorkerSignin> orderedWSI;
-            //Search based on search-bar string
-            DateTime parsedTime;
-            if (DateTime.TryParse(param.todaysdate, out parsedTime)) {
-                    filteredWSI = filteredWSI.Where(p => EntityFunctions.DiffDays(p.dateforsignin, parsedTime) == 0 ? true : false);
-                      
-            }
-            if (!string.IsNullOrEmpty(param.sSearch))
-            {
-                filteredWSI = filteredWSI
-                    .Where(p => SqlFunctions.StringConvert((decimal)p.dwccardnum).Contains(param.sSearch) ||
-                                p.worker.Person.firstname1.Contains(param.sSearch) ||
-                                p.worker.Person.firstname2.Contains(param.sSearch) ||
-                                p.worker.Person.lastname1.Contains(param.sSearch) ||
-                                p.worker.Person.lastname2.Contains(param.sSearch));
-            }
-              
-            //Sort the Persons based on column selection
-            var sortColIdx = Convert.ToInt32(Request["iSortCol_0"]);
-            var sortColName = param.sortColName();
-            var sortDir = Request["sSortDir_0"];
-            var orderDescending = true;
-            if (sortDir == "asc") orderDescending = false;
-            switch (sortColName)
-            {
-                //case "WOID": orderedWSI = orderDescending ? filteredWSI.OrderByDescending(p => p.dateTimeofWork) : filteredWSI.OrderBy(p => p.dateTimeofWork); break;
-                case "dwccardnum": orderedWSI = orderDescending ? filteredWSI.OrderByDescending(p => p.dwccardnum) : filteredWSI.OrderBy(p => p.dwccardnum); break;
-                case "firstname1": orderedWSI = orderDescending ? filteredWSI.OrderByDescending(p => p.worker.Person.firstname1) : filteredWSI.OrderBy(p => p.worker.Person.firstname1); break;
-                case "firstname2": orderedWSI = orderDescending ? filteredWSI.OrderByDescending(p => p.worker.Person.firstname2) : filteredWSI.OrderBy(p => p.worker.Person.firstname2); break;
-                case "lastname1": orderedWSI = orderDescending ? filteredWSI.OrderByDescending(p => p.worker.Person.lastname1) : filteredWSI.OrderBy(p => p.worker.Person.lastname1); break;
-                case "lastname2": orderedWSI = orderDescending ? filteredWSI.OrderByDescending(p => p.worker.Person.lastname2) : filteredWSI.OrderBy(p => p.worker.Person.lastname2); break;  
-                case "dateupdated": orderedWSI = orderDescending ? filteredWSI.OrderByDescending(p => p.dateupdated) : filteredWSI.OrderBy(p => p.dateupdated); break;
-                default: orderedWSI = orderDescending ? filteredWSI.OrderByDescending(p => p.dateforsignin) : filteredWSI.OrderBy(p => p.dateforsignin); break;
-            }
-            //Func<WorkerSignin, string> orderedWSI = (p => sortColName == "dwccardnum" ? p.dwccardnum.ToString() :
-            //                                              sortColName == "firstname1" ? p.worker.Person.firstname1 :
-            //                                              sortColName == "firstname2" ? p.worker.Person.firstname2 :
-            //                                              sortColName == "lastname1" ? p.worker.Person.lastname1 :
-            //                                              sortColName == "lastname2" ? p.worker.Person.lastname2 :
-            //                                              sortColName == "dateforsignin" ? p.dateforsignin.ToString() :
-            //                                              p.dateupdated.ToString());
-            //var sortDir = Request["sSortDir_0"];
-            //if (sortDir == "asc")
-            //    sortedWSI = filteredWSI.OrderBy(orderingFunction);
-            //else
-            //    sortedWSI = filteredWSI.OrderByDescending(orderingFunction);
-
-            //Limit results to the display length and offset
-            //var displayWSI = sortedWSI.Skip(param.iDisplayStart)
-            //                                  .Take(param.iDisplayLength);
-            //if (param.iDisplayLength > 0 && param.iDisplayStart > 0)
-                orderedWSI = orderedWSI.Skip<WorkerSignin>((int)param.iDisplayStart).Take((int)param.iDisplayLength);
+            ServiceIndexView<WorkerSigninView> was = _serv.GetIndexView(
+                CI,
+                param.sSearch,
+                param.todaysdate == null ? null : (DateTime?)DateTime.Parse(param.todaysdate),
+                Convert.ToInt32(param.dwccardnum),
+                Convert.ToInt32(param.searchColName("WOID")),
+                param.sSortDir_0 == "asc" ? false : true,
+                param.iDisplayStart,
+                param.iDisplayLength,
+                param.sortColName()
+            );
 
             //return what's left to datatables
-            var result = from p in orderedWSI
+            var result = from p in was.query
                          select new {  dwccardnum = p.dwccardnum,
-                                       firstname1 = p.worker.Person.firstname1,
-                                       firstname2 = p.worker.Person.firstname2,
-                                       lastname1 = p.worker.Person.lastname1,
-                                       lastname2 = p.worker.Person.lastname2, 
+                                       firstname1 = p.firstname1,
+                                       firstname2 = p.firstname2,
+                                       lastname1 = p.lastname1,
+                                       lastname2 = p.lastname2, 
                                        dateforsignin = p.dateforsignin
                          };
             return Json(new
             {
                 sEcho = param.sEcho,
-                //iTotalRecords = allWSI.Count(),
-                //iTotalDisplayRecords = filteredWSI.Count(),
+                iTotalRecords = was.totalCount,
+                iTotalDisplayRecords = was.filteredCount,
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);

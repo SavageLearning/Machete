@@ -45,20 +45,20 @@
             "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
             "bProcessing": true,
             "aoColumns": [
-                { "bSearchable": false, "bSortable": false, "bVisible": false },
-                { "bSearchable": false, "bSortable": false, "bVisible": false },
-                { "bSearchable": false, "bSortable": false, "bVisible": false },
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-            ],            
+                { "mDataProp": "tabref","bSearchable": false, "bSortable": false, "bVisible": false },
+                { "mDataProp": "tablabel","bSearchable": false, "bSortable": false, "bVisible": false },
+                { "mDataProp": "WID","bSearchable": false, "bSortable": false, "bVisible": false },
+                { "mDataProp": "dwccardnum" },
+                { "mDataProp": "active" },
+                { "mDataProp": "firstname1" },
+                { "mDataProp": "firstname2" },
+                { "mDataProp": "lastname1" },
+                { "mDataProp": "lastname2" },
+                { "mDataProp": "memberexpirationdate" }
+            ],             
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                $(nRow).attr('edittabref', aData[0]);
-                $(nRow).attr('edittablabel', aData[1]);
+                $(nRow).attr('edittabref', aData['tabref']);
+                $(nRow).attr('edittablabel', aData['tablabel']);
                 return nRow;
             }                
         });

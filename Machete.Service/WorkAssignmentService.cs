@@ -99,22 +99,23 @@ namespace Machete.Service
                                                     int? displayLength,
                                                     string sortColName)
         {
-            IQueryable<WorkAssignment> prefilteredWA = waRepo.GetAllQ();
+            IQueryable<WorkAssignment> queryableWA = waRepo.GetAllQ();
             IEnumerable<WorkAssignment> enumedWA;
             IEnumerable<WorkAssignment> filteredWA;
             bool isDateTime = false;
+
             IEnumerable<Lookup> lCache = LookupCache.getCache();
             // 
             // DATE
             //
             if (date != null)
             {
-                prefilteredWA = prefilteredWA.Where(p => EntityFunctions.DiffDays(p.workOrder.dateTimeofWork, date) == 0 ? true : false);
+                queryableWA = queryableWA.Where(p => EntityFunctions.DiffDays(p.workOrder.dateTimeofWork, date) == 0 ? true : false);
             }
             // 
             // WOID
             //
-            if (woid != null && woid != 0) prefilteredWA = prefilteredWA.Where(p => p.workOrderID==woid);
+            if (woid != null && woid != 0) queryableWA = queryableWA.Where(p => p.workOrderID==woid);
             // 
             // SEARCH STRING
             //
@@ -124,15 +125,15 @@ namespace Machete.Service
                 if (isDateTime = DateTime.TryParse(search, out parsedTime))
                 {
                     if (isMonthSpecific.IsMatch(search))  //Regex for month/year
-                        prefilteredWA = prefilteredWA.Where(p => EntityFunctions.DiffMonths(p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
+                        queryableWA = queryableWA.Where(p => EntityFunctions.DiffMonths(p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
                     if (isDaySpecific.IsMatch(search))  //Regex for day/month/year
-                        prefilteredWA = prefilteredWA.Where(p => EntityFunctions.DiffDays(p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
+                        queryableWA = queryableWA.Where(p => EntityFunctions.DiffDays(p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
                     if (isTimeSpecific.IsMatch(search)) //Regex for day/month/year time
-                        prefilteredWA = prefilteredWA.Where(p => EntityFunctions.DiffHours(p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
+                        queryableWA = queryableWA.Where(p => EntityFunctions.DiffHours(p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
                 }
                 else
                 {
-                    prefilteredWA = prefilteredWA
+                    queryableWA = queryableWA
                         .Join(lRepo.GetAllQ(), wa => wa.skillID, sk => sk.ID, (wa, sk) => new { wa, sk })
                         .Where(p => SqlFunctions.StringConvert((decimal)p.wa.workOrder.paperOrderNum).Contains(search) ||
                             p.wa.description.Contains(search) ||
@@ -142,8 +143,6 @@ namespace Machete.Service
                             p.wa.Updatedby.Contains(search)).Select(p => p.wa);
                 }
             }
-            int langlevel;
-            int typeofworkid;
             int? skill1 =null; 
             int? skill2 =null; 
             int? skill3= null;
@@ -152,7 +151,7 @@ namespace Machete.Service
             int? skill6 = null;
             Stack<int> primeskills = new Stack<int>();
             Stack<int> skills = new Stack<int>();
-            int[] staticskills;
+
             if (dwccardnum != null && dwccardnum != 0)
             {
                 Worker worker = wRepo.Get(w => w.dwccardnum == dwccardnum);
@@ -179,8 +178,8 @@ namespace Machete.Service
                     if (skills.Count() != 0) skill4 = skills.Pop();
                     if (skills.Count() != 0) skill5 = skills.Pop();
                     if (skills.Count() != 0) skill6 = skills.Pop();
-                    enumedWA = prefilteredWA.AsEnumerable();
-                    filteredWA = enumedWA.Join(DB.Lookups,
+                    //enumedWA = queryableWA.AsEnumerable();
+                    filteredWA = queryableWA.Join(lCache,
                                                        wa => wa.skillID,
                                                        sk => sk.ID,
                                                        (wa, sk) => new { wa, sk })
@@ -194,15 +193,16 @@ namespace Machete.Service
                                                               jj.wa.skillID.Equals(skill6) ||
                                                               jj.sk.speciality == false)
                                                               )
-                                                 .Select(jj => jj.wa).AsQueryable();
+                                                //.Select(jj => jj.wa).AsQueryable();
+                                                 .Select(jj => jj.wa);
                 }
                 else
                 {
-                    filteredWA = prefilteredWA.AsEnumerable();
+                    filteredWA = queryableWA.AsEnumerable();
                 }
             }
             {
-                filteredWA = prefilteredWA.AsEnumerable();
+                filteredWA = queryableWA.AsEnumerable();
             }
             ////Sort the Persons based on column selection
             switch (sortColName)
@@ -220,9 +220,11 @@ namespace Machete.Service
                 case "dateupdated": filteredWA = orderDescending ? filteredWA.OrderByDescending(p => p.dateupdated) : filteredWA.OrderBy(p => p.dateupdated); break;
                 default: filteredWA = orderDescending ? filteredWA.OrderByDescending(p => p.workOrder.dateTimeofWork) : filteredWA.OrderBy(p => p.workOrder.dateTimeofWork); break;
             }
+            filteredWA = filteredWA.ToList();
+            var filtered = filteredWA.Count();
             //Limit results to the display length and offset
-               filteredWA = filteredWA.Skip((int)displayStart).Take((int)displayLength);
-           var filtered = filteredWA.Count();
+            filteredWA = filteredWA.Skip((int)displayStart).Take((int)displayLength);
+           
            var total = waRepo.GetAllQ().Count();
            return new ServiceIndexView<WorkAssignment>
            {
