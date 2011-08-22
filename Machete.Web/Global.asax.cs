@@ -88,6 +88,7 @@ namespace Machete.Web
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
             DbDatabase.SetInitializer(new MacheteInitializer());
             LookupCache.Initialize(new MacheteContext());
+            WorkerCache.Initialize(new MacheteContext());
             Lookups.Initialize(LookupCache.getCache());
         }
 
