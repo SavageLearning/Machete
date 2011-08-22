@@ -13,7 +13,8 @@ namespace Machete.Data
         {
             //Initialize Lookup tables with static data
             MacheteLookup.Initialize(DB);
-            DB.SaveChanges();    
+            DB.SaveChanges(); 
+            
             Person person = new Person
             {
                 firstname1 = "barack",
@@ -108,9 +109,25 @@ namespace Machete.Data
                 Createdby = "initialization script",
                 Updatedby = "initialization script"
             };
+            WorkerSignin signin = new WorkerSignin
+            {
+                dwccardnum = 30040,
+                dateforsignin = DateTime.Parse("8/10/2011"),
+                datecreated = DateTime.Now,             //datetime
+                dateupdated = DateTime.Now,              //datetime
+                Createdby = "initialization script",
+                Updatedby = "initialization script"
+            };
+            var dt = DateTime.Parse("8/10/2011");
             Person p1 = (Person)person.Clone(); DB.Persons.Add(p1); p1.Worker = (Worker)worker.Clone(); p1.Worker.dwccardnum = 30040; p1.Worker.skill1 = 62;
             Person p2 = (Person)person.Clone(); DB.Persons.Add(p2); p2.Worker = (Worker)worker.Clone(); p2.Worker.dwccardnum = 30041;
             Person p3 = (Person)person.Clone(); DB.Persons.Add(p3); p3.Worker = (Worker)worker.Clone(); p3.Worker.dwccardnum = 30042;
+            DB.SaveChanges();
+            WorkerSignin wsi1 = (WorkerSignin)signin.Clone(); DB.WorkerSignins.Add(wsi1); wsi1.dwccardnum = 30040; wsi1.dateforsignin = dt;
+            WorkerSignin wsi2 = (WorkerSignin)signin.Clone(); DB.WorkerSignins.Add(wsi2); wsi2.dwccardnum = 30041; wsi2.dateforsignin = dt;
+            WorkerSignin wsi3 = (WorkerSignin)signin.Clone(); DB.WorkerSignins.Add(wsi3); wsi3.dwccardnum = 30042; wsi3.dateforsignin = dt;
+            WorkerSignin wsi4 = (WorkerSignin)signin.Clone(); DB.WorkerSignins.Add(wsi4); wsi4.dwccardnum = 30043; wsi4.dateforsignin = dt;
+            WorkerSignin wsi5 = (WorkerSignin)signin.Clone(); DB.WorkerSignins.Add(wsi5); wsi5.dwccardnum = 30044; wsi5.dateforsignin = dt;
             DB.SaveChanges();
             Employer em1 = (Employer)employer.Clone(); DB.Employers.Add(em1);
             Employer em2 = (Employer)employer.Clone(); DB.Employers.Add(em2);

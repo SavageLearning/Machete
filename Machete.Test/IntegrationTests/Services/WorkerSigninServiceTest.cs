@@ -10,6 +10,7 @@ using Machete.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data.Entity.Database;
 using System.Data.Entity.Validation;
+using System.Globalization;
 
 namespace Machete.Test
 {
@@ -28,9 +29,14 @@ namespace Machete.Test
         ImageService _iServ;
         IUnitOfWork _unitofwork;
         MacheteContext MacheteDB;
-
+        CultureInfo CI;
+        
         [ClassInitialize]
-        public static void ClassInitialize(TestContext context) { }
+        public static void ClassInitialize(TestContext context) 
+        {
+            DbDatabase.SetInitializer<MacheteContext>(new TestInitializer());
+            WorkerCache.Initialize(new MacheteContext());
+        }
 
         [TestInitialize]
         public void TestInitialize()
@@ -45,21 +51,32 @@ namespace Machete.Test
             _iServ = new ImageService(_iRepo, _unitofwork);
             _wServ = new WorkerService(_wRepo, _unitofwork);
             _wsiServ = new WorkerSigninService(_wsiRepo, _wRepo, _pRepo, _iRepo, _unitofwork);
+            CI = new CultureInfo("en-US", false);
         }
         [TestMethod]
         public void DbSet_WorkerSignin_GetView()
         {
-            DateTime date = Convert.ToDateTime("08/02/2011");
+            DateTime date = Convert.ToDateTime("08/10/2011");
             IEnumerable<WorkerSigninView> filteredWSI = _wsiServ.getView(date);
             IEnumerable<WorkerSigninView> foo = filteredWSI.ToList();
             Assert.IsNotNull(filteredWSI, "Person.ID is Null");
             Assert.IsNotNull(foo, "Person.ID is Null");
         }
         [TestMethod]
-        public void DbSet_TestMethod4()
-        {                        
-            IEnumerable<WorkerSignin> filteredWSI = _wsiServ.GetWorkerSigninsQ().Where(jj => jj.dateforsignin.Date.Equals(Convert.ToDateTime("08/02/2011")));
-            Assert.IsNotNull(filteredWSI, "Person.ID is Null");
+        public void DbSet_WorkSigninService_Intergation_GetIndexView_check_search_dwccardnum()
+        {
+            DateTime date = Convert.ToDateTime("08/10/2011");
+            //
+            //Act
+            ServiceIndexView<WorkerSigninView> result = _wsiServ.GetIndexView(CI, ""/*search str*/, date, 30040/*dwccardnum*/, null/*woid */, true, /*desc(true), asc(false)*/0, 20, "WOID");
+            //
+            //Assert
+            List<WorkerSigninView> tolist = result.query.ToList();
+            Assert.IsNotNull(tolist, "return value is null");
+            Assert.IsInstanceOfType(result, typeof(ServiceIndexView<WorkerSigninView>));
+            //Assert.AreEqual(61, tolist[0].skillID);
+            Assert.AreEqual(3, result.filteredCount);
+            Assert.AreEqual(3, result.totalCount);
         }
         [TestMethod]
         public void DbSet_TestMethod5()

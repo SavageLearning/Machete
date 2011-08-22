@@ -19,7 +19,7 @@ namespace Machete.Domain
         public int? WorkAssignmentID { get; set; }
         public DateTime dateforsignin { get; set; } 
     }
-    public class WorkerSigninView
+    public class WorkerSigninView : Record
     {
         public int dwccardnum { get; set; }
         public string firstname1 { get; set; }
@@ -28,6 +28,8 @@ namespace Machete.Domain
         public string lastname2 { get; set; }
         public int signinID { get; set; }
         public DateTime dateforsignin { get; set; }
+
+
         public WorkerSigninView(Person p, WorkerSignin s)
         {
             firstname1 = p.firstname1;
@@ -37,6 +39,10 @@ namespace Machete.Domain
             dateforsignin = s.dateforsignin;
             dwccardnum = s.dwccardnum;
             signinID = s.ID;
+            dateupdated = s.dateupdated;
+            datecreated = s.datecreated;
+            Createdby = s.Createdby;
+            Updatedby = s.Updatedby;
         }
         public WorkerSigninView() { }
     }
