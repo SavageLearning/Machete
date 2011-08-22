@@ -73,6 +73,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceExceptions.cs" />
     <Compile Include="WorkAssignmentService.cs" />
+    <Compile Include="WorkerCache.cs" />
     <Compile Include="WorkerRequestService.cs" />
     <Compile Include="WorkerService.cs" />
     <Compile Include="WorkerSigninService.cs" />

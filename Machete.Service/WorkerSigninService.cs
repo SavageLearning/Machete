@@ -136,7 +136,8 @@ namespace Machete.Service
         {
             //Get all the records
             IQueryable<WorkerSignin> queryableWSI = signinRepo.GetAllQ();
-            IQueryable<WorkerSignin> orderedWSI;
+            IEnumerable<WorkerSignin> enumWSI;
+            IEnumerable<WorkerSigninView> enumWSIV;
             //Search based on search-bar string
             //DateTime parsedTime;
             if (date != null)
@@ -146,40 +147,43 @@ namespace Machete.Service
             }
             if (!string.IsNullOrEmpty(search))
             {
-                queryableWSI = queryableWSI
-                    .Where(p => SqlFunctions.StringConvert((decimal)p.dwccardnum).Contains(search) ||
-                                p.worker.Person.firstname1.Contains(search) ||
-                                p.worker.Person.firstname2.Contains(search) ||
-                                p.worker.Person.lastname1.Contains(search) ||
-                                p.worker.Person.lastname2.Contains(search));
+                enumWSI = queryableWSI.ToList()
+                    .Join(WorkerCache.getCache(), s => s.dwccardnum, w => w.dwccardnum, (s, w) => new { s, w })
+                    .Where(p => SqlFunctions.StringConvert((decimal)p.w.dwccardnum).Contains(search) ||
+
+                                p.w.Person.firstname1.Contains(search) ||
+                                p.w.Person.firstname2.Contains(search) ||
+                                p.w.Person.lastname1.Contains(search) ||
+                                p.w.Person.lastname2.Contains(search)).Select(a => a.s);
             }
+            else
+            {
+                enumWSI = queryableWSI.ToList();
+            }
+
+            enumWSIV = enumWSI
+                        .Join(WorkerCache.getCache(), s => s.dwccardnum, w => w.dwccardnum, (s, w) => new { s, w })
+                        .Select(p => new WorkerSigninView(p.w.Person, p.s));
 
             //Sort the Persons based on column selection
             switch (sortColName)
             {
-                //case "WOID": orderedWSI = orderDescending ? queryableWSI.OrderByDescending(p => p.dateTimeofWork) : queryableWSI.OrderBy(p => p.dateTimeofWork); break;
-                case "dwccardnum": queryableWSI = orderDescending ? queryableWSI.OrderByDescending(p => p.dwccardnum) : queryableWSI.OrderBy(p => p.dwccardnum); break;
-                case "firstname1": queryableWSI = orderDescending ? queryableWSI.OrderByDescending(p => p.worker.Person.firstname1) : queryableWSI.OrderBy(p => p.worker.Person.firstname1); break;
-                case "firstname2": queryableWSI = orderDescending ? queryableWSI.OrderByDescending(p => p.worker.Person.firstname2) : queryableWSI.OrderBy(p => p.worker.Person.firstname2); break;
-                case "lastname1": queryableWSI = orderDescending ? queryableWSI.OrderByDescending(p => p.worker.Person.lastname1) : queryableWSI.OrderBy(p => p.worker.Person.lastname1); break;
-                case "lastname2": queryableWSI = orderDescending ? queryableWSI.OrderByDescending(p => p.worker.Person.lastname2) : queryableWSI.OrderBy(p => p.worker.Person.lastname2); break;
-                case "dateupdated": queryableWSI = orderDescending ? queryableWSI.OrderByDescending(p => p.dateupdated) : queryableWSI.OrderBy(p => p.dateupdated); break;
-                default: queryableWSI = orderDescending ? queryableWSI.OrderByDescending(p => p.dateforsignin) : queryableWSI.OrderBy(p => p.dateforsignin); break;
+                //case "WOID": orderedWSI = orderDescending ? enumWSIV.OrderByDescending(p => p.dateTimeofWork) : enumWSIV.OrderBy(p => p.dateTimeofWork); break;
+                case "dwccardnum": enumWSIV = orderDescending ? enumWSIV.OrderByDescending(p => p.dwccardnum) : enumWSIV.OrderBy(p => p.dwccardnum); break;
+                case "firstname1": enumWSIV = orderDescending ? enumWSIV.OrderByDescending(p => p.firstname1) : enumWSIV.OrderBy(p => p.firstname1); break;
+                case "firstname2": enumWSIV = orderDescending ? enumWSIV.OrderByDescending(p => p.firstname2) : enumWSIV.OrderBy(p => p.firstname2); break;
+                case "lastname1": enumWSIV = orderDescending ? enumWSIV.OrderByDescending(p => p.lastname1) : enumWSIV.OrderBy(p => p.lastname1); break;
+                case "lastname2": enumWSIV = orderDescending ? enumWSIV.OrderByDescending(p => p.lastname2) : enumWSIV.OrderBy(p => p.lastname2); break;
+                case "dateupdated": enumWSIV = orderDescending ? enumWSIV.OrderByDescending(p => p.dateupdated) : enumWSIV.OrderBy(p => p.dateupdated); break;
+                default: enumWSIV = orderDescending ? enumWSIV.OrderByDescending(p => p.dateforsignin) : enumWSIV.OrderBy(p => p.dateforsignin); break;
             }
             //queryableWSI = queryableWSI.ToList();
-            var filtered = queryableWSI.Count();
+            var filtered = enumWSIV.Count();
             //if (param.iDisplayLength > 0 && param.iDisplayStart > 0)
-            queryableWSI = queryableWSI.Skip<WorkerSignin>((int)displayStart).Take((int)displayLength);
+            enumWSIV = enumWSIV.Skip<WorkerSigninView>((int)displayStart).Take((int)displayLength);
 
             var total = signinRepo.GetAllQ().Count();
-            var enumWSIV = queryableWSI.AsEnumerable()
-                .Select(p => new WorkerSigninView {  dwccardnum = p.dwccardnum,
-                                       firstname1 = p.worker.Person.firstname1,
-                                       firstname2 = p.worker.Person.firstname2,
-                                       lastname1 = p.worker.Person.lastname1,
-                                       lastname2 = p.worker.Person.lastname2, 
-                                       dateforsignin = p.dateforsignin
-                         });
+
             return new ServiceIndexView<WorkerSigninView>
             {
                 query = enumWSIV,

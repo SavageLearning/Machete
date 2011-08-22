@@ -154,7 +154,7 @@ namespace Machete.Service
 
             if (dwccardnum != null && dwccardnum != 0)
             {
-                Worker worker = wRepo.Get(w => w.dwccardnum == dwccardnum);
+                Worker worker = WorkerCache.getCache(w => w.dwccardnum == dwccardnum).FirstOrDefault();
                 if (worker != null)
                 {
                     if (worker.skill1 != null) primeskills.Push((int)worker.skill1);
