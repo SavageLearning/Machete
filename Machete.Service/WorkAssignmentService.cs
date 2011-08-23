@@ -21,7 +21,7 @@ namespace Machete.Service
         IQueryable<WorkAssignment> GetManyQ(Func<WorkAssignment, bool> where);
         IQueryable<WorkAssignment> GetManyQ();
         //IEnumerable<WorkAssignment> GetManyByWO(int woID);
-        IEnumerable<WorkAssignmentSummary> GetSummary();
+        IQueryable<WorkAssignmentSummary> GetSummary(string search);
         WorkAssignment Get(int id);
         WorkAssignment Create(WorkAssignment workAssignment, string user);
         void Delete(int id, string user);
@@ -234,12 +234,18 @@ namespace Machete.Service
            };
       }
 
-        public IEnumerable<WorkAssignmentSummary> GetSummary()
+        public IQueryable<WorkAssignmentSummary> GetSummary(string search)
         {
-            var sum_query = from wa in waRepo.GetAll()
+            IQueryable<WorkAssignment> query;
+            if (!string.IsNullOrEmpty(search))
+                query = QueryDate(waRepo.GetAllQ(), search);
+            else
+                query = waRepo.GetAllQ();
+            var sum_query = from wa in query
                             group wa by new
                             {
-                                dateSoW = wa.workOrder.dateTimeofWork.ToString("MM/dd/yyyy"),
+                                dateSoW = EntityFunctions.TruncateTime(wa.workOrder.dateTimeofWork),
+                                //dateSoW = wa.workOrder.dateTimeofWork,
                                 wa.workOrder.status
                             } into dayGroup
                             select new WorkAssignmentSummary()
@@ -284,6 +290,23 @@ namespace Machete.Service
             levent.Properties["RecordID"] = ID; //magic string maps to NLog config
             levent.Properties["username"] = user;
             log.Log(levent);
+        }
+        private IQueryable<WorkAssignment> QueryDate(IQueryable<WorkAssignment> query, string search)
+        {
+
+            //Using DateTime.TryParse as determiner of date/string
+            DateTime parsedTime;
+            if (DateTime.TryParse(search, out parsedTime))
+            {
+                if (isMonthSpecific.IsMatch(search))  //Regex for month/year
+                    return query.Where(p => EntityFunctions.DiffMonths(p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
+                if (isDaySpecific.IsMatch(search))  //Regex for day/month/year
+                    return query.Where(p => EntityFunctions.DiffDays(p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
+                if (isTimeSpecific.IsMatch(search)) //Regex for day/month/year time
+                    return query.Where(p => EntityFunctions.DiffHours(p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
+            }
+            return query;
+
         }
     }
 }

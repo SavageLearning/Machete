@@ -233,7 +233,7 @@ function jqrfyWSignin(myTable, myOptions) {
 ///
 ///##Create dataTable
 ///
-function jqrfyTable(myTable, myTab, myOptions) {
+function jqrfyTable(myTable, myTab, myOptions, dblclickevent) {
     var oTable;
     oTable = $(myTable).dataTable(myOptions).fnSetFilteringDelay(400);
     if (eventDebug) M_conlog("INIT+", "ADD TABLE","jqrfyTable", "", "");
@@ -251,22 +251,26 @@ function jqrfyTable(myTable, myTab, myOptions) {
     //
     // table doubleclick event 
     //
-    $(myTable).find('tbody').dblclick(function (event) {
+    if (dblclickevent) {
+        $(myTable).find('tbody').dblclick(dblclickevent);
+    } else {
+        $(myTable).find('tbody').dblclick(function (event) {
 
-        var exclusiveTab = $(event.target).closest('.ui-tabs').hasClass('ExclusiveTab');
-        var myTr = event.target.parentNode;
-        var idPatt = /\d+\b/;
-        var myID = $(myTr).attr('edittabref').match(idPatt);
-        if (eventDebug) M_conlog("EVENT", "DBLCLICK", "jqrfyTable", "", "========================");
-        //
-        // add new tab
-        //TODO: where the hell is myTab coming from? when will it get clobbered?
-        add_rectab($(myTr).attr('edittabref'),
+            var exclusiveTab = $(event.target).closest('.ui-tabs').hasClass('ExclusiveTab');
+            var myTr = event.target.parentNode;
+            var idPatt = /\d+\b/;
+            var myID = $(myTr).attr('edittabref').match(idPatt);
+            if (eventDebug) M_conlog("EVENT", "DBLCLICK", "jqrfyTable", "", "========================");
+            //
+            // add new tab
+            //TODO: where the hell is myTab coming from? when will it get clobbered?
+            add_rectab($(myTr).attr('edittabref'),
                    $(myTr).attr('edittablabel'),
                    myTab,
                    exclusiveTab,
                    myID);
-    });
+        });
+    }
     return oTable;
 }
 //////////////////////////////////////////////////////////////////

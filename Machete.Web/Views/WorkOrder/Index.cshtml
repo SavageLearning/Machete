@@ -95,20 +95,19 @@
     delete orderDefs["iDeferLoading"];
     delete summaryDefs["aoColumns"];
     delete summaryDefs["fnRowCallback"];
-    summaryDefs["aaSorting"] = [[1, 'desc']];
+    summaryDefs["aaSorting"] = [[0, 'desc']];
     summaryDefs["sAjaxSource"] = "/WorkOrder/AjaxSummary";
        
-//    pendingDefs["aoSearchCols"][5] = {"sSearch" : '@Lookups.getSingleEN("orderstatus", "Pending")'};
-//    activeDefs["aoSearchCols"][5] = {"sSearch" : '@Lookups.getSingleEN("orderstatus", "Active")'};
-//    completedDefs["aoSearchCols"][5] = {"sSearch" : '@Lookups.getSingleEN("orderstatus", "Completed")'};
-//    cancelledDefs["aoSearchCols"][5] = {"sSearch" : '@Lookups.getSingleEN("orderstatus", "Cancelled")'};
-//    expiredDefs["aoSearchCols"][5] = {"sSearch" : '@Lookups.getSingleEN("orderstatus", "Expired")'};
+    //    pendingDefs["aoSearchCols"][5] = {"sSearch" : '@Lookups.getSingleEN("orderstatus", "Pending")'};
+    //    activeDefs["aoSearchCols"][5] = {"sSearch" : '@Lookups.getSingleEN("orderstatus", "Active")'};
+    //    completedDefs["aoSearchCols"][5] = {"sSearch" : '@Lookups.getSingleEN("orderstatus", "Completed")'};
+    //    cancelledDefs["aoSearchCols"][5] = {"sSearch" : '@Lookups.getSingleEN("orderstatus", "Cancelled")'};
+    //    expiredDefs["aoSearchCols"][5] = {"sSearch" : '@Lookups.getSingleEN("orderstatus", "Expired")'};
     //////////////////////////////////////////////
     //
     //
     //
     $(document).ready(function () {
-        if (eventDebug) M_conlog("EVENT", "READY", "workorder", "", "");
         ////////////////////////////////////////////////////////////////
         //
         // Setup work order Tabs
@@ -125,9 +124,12 @@
         //
         M_orderTable = $('#orderTable');
         M_summaryTable = $('#orderSummaryTable');
-        oTable = jqrfyTable(M_orderTable, M_dispatchTabs, orderDefs);
-        jqrfyTable(M_summaryTable, M_dispatchTabs, summaryDefs);
-
+        oTable = jqrfyTable(M_orderTable, M_dispatchTabs, orderDefs, false);
+        jqrfyTable(M_summaryTable, M_dispatchTabs, summaryDefs, function (event) {            
+            var myTr = event.target.parentNode;
+            $(M_orderTable).dataTable().fnFilter($(myTr).find('td:eq(0)').text());
+            $('#dispatchTabs').tabs('select',0);
+        });
         $('#pendingOrdersBtn').click(function() {            
             oTable.dataTable().fnFilter('@Lookups.getSingleEN("orderstatus", "Pending")', 5); //sync with DT array above
         });

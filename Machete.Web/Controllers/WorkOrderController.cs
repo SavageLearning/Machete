@@ -13,6 +13,8 @@ using NLog;
 using Machete.Web.ViewModel;
 using System.Web.Routing;
 using Machete.Web.Models;
+using System.Text.RegularExpressions;
+using System.Data.Objects;
 
 namespace Machete.Web.Controllers
 {
@@ -24,6 +26,10 @@ namespace Machete.Web.Controllers
         private readonly IWorkerService _reqServ;
         private readonly IWorkerRequestService _wrServ;
         private readonly IWorkAssignmentService _waServ;
+        private static Regex isTimeSpecific = new Regex(@"^\s*\d{1,2}[\/-_]\d{1,2}[\/-_]\d{2,4}\s+\d{1,2}:\d{1,2}");
+        private static Regex isDaySpecific = new Regex(@"^\s*\d{1,2}\/\d{1,2}\/\d{2,4}");
+        private static Regex isMonthSpecific = new Regex(@"^\s*\d{1,2}\/\d{4,4}");
+        
         private string culture {get; set;}
         private Logger log = LogManager.GetCurrentClassLogger();
         private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "WorkOrderController", "");
@@ -73,115 +79,38 @@ namespace Machete.Web.Controllers
         {
             System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
             //Get all the records
-            IEnumerable<OrderSummary> allSummary = _getSummary();
-            IEnumerable<OrderSummary> filteredSummary;
-            IEnumerable<OrderSummary> sortedSummary;
-            //Search based on search-bar string 
-
-            if (!string.IsNullOrEmpty(param.sSearch))            
-                filteredSummary = allSummary.Where(p => p.date.ContainsOIC(param.sSearch));            
-            else
-                filteredSummary = allSummary;
-
-            //Sort the order  based on column selection
-            var sortColIdx = Convert.ToInt32(Request["iSortCol_0"]);
-            Func<OrderSummary, string> orderingFunction = (p => p.date);
-
-            var sortDir = Request["sSortDir_0"];
-            if (sortDir == "asc")
-                sortedSummary = filteredSummary.OrderBy(orderingFunction);
-            else
-                sortedSummary = filteredSummary.OrderByDescending(orderingFunction);
-
-            //Limit results to the display length and offset
-            var displayedSummary = sortedSummary.Skip(param.iDisplayStart)
-                                                .Take(param.iDisplayLength);
-
+            ServiceIndexView<WOWASummary> filteredSummary = 
+                workOrderService.CombinedSummary(param.sSearch,
+                    Request["sSortDir_0"] == "asc" ? false : true,
+                    param.iDisplayStart,
+                    param.iDisplayLength);
             //return what's left to datatables
-            var result = from p in displayedSummary
-                         select  new[] { p.date,
-                                         p.weekday,
-                                         p.pending_wo.ToString(),
-                                         p.pending_wa.ToString(),
-                                         p.active_wo.ToString(),
-                                         p.active_wa.ToString(),
-                                         p.completed_wo.ToString(),
-                                         p.completed_wa.ToString(),
-                                         p.cancelled_wo.ToString(),
-                                         p.cancelled_wa.ToString(),
-                                         p.expired_wo.ToString(),
-                                         p.expired_wa.ToString()
+            var result = from p in filteredSummary.query
+                         select new[] { System.String.Format("{0:MM/dd/yyyy}", p.date),
+                                         p.weekday.ToString(),
+                                         p.pending_wo > 0 ? p.pending_wo.ToString(): null,
+                                         p.pending_wa > 0 ? p.pending_wa.ToString(): null,
+                                         p.active_wo > 0 ? p.active_wo.ToString(): null,
+                                         p.active_wa > 0 ? p.active_wa.ToString(): null,
+                                         p.completed_wo > 0 ? p.completed_wo.ToString(): null,
+                                         p.completed_wa > 0 ? p.completed_wa.ToString(): null,
+                                         p.cancelled_wo > 0 ? p.cancelled_wo.ToString(): null,
+                                         p.cancelled_wa > 0 ? p.cancelled_wa.ToString(): null,
+                                         p.expired_wo > 0 ? p.expired_wo.ToString(): null,
+                                         p.expired_wa > 0 ? p.expired_wa.ToString(): null
                          };
 
             return Json(new
             {
                 sEcho = param.sEcho,
-                iTotalRecords = filteredSummary.Count(),
-                iTotalDisplayRecords = filteredSummary.Count(),
+                iTotalRecords = filteredSummary.totalCount,
+                iTotalDisplayRecords = filteredSummary.filteredCount,
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);
         }
         #endregion
-        #region addrequest/removerequeset
-        /// <summary>
-        /// Adds workerRequest
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="workerID"></param>
-        /// <param name="collection"></param>
-        /// <param name="user"></param>
-        /// <returns></returns>
-        //[HttpPost, UserNameFilter]
-        //[Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        //public bool  AddRequest(int id, int workerID, FormCollection collection, string user)
-        //{
-        //    WorkOrder order = workOrderService.GetWorkOrder(id);
-        //    if (order.workerRequests != null)
-        //    {
-        //        foreach (WorkerRequest req in order.workerRequests)
-        //        {
-        //            if (req.WorkerID == workerID) return false;
-        //        }
-        //    }
-        //    WorkerRequest request = new WorkerRequest();
-        //    request.WorkOrderID = id;
-        //    request.WorkerID = workerID;
-        //    _reqServ.CreateWorkerRequest(request, user);
-        //    return true;
-        //}
 
-        //[HttpPost, UserNameFilter]
-        //[Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        //public void RemoveRequest(int id, FormCollection collection, string user)
-        //{
-        //    _reqServ.DeleteWorkerRequest(id, user);
-        //}
-
-        //[Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        //public JsonResult GetRequests(int id)
-        //{
-        //    WorkOrder workOrder = workOrderService.GetWorkOrder(id);
-        //    List<SelectListItem> list;
-        //    try
-        //    {
-        //        list = new List<SelectListItem>(workOrder.workerRequests.ToList()
-        //               .Select(x => new SelectListItem
-        //               {
-        //                   Text = x.workerRequested.Person.fullName(),
-        //                   Value = x.ID.ToString()
-        //               }));
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        list = null;
-        //    }
-
-
-        //    return Json(list, JsonRequestBehavior.AllowGet);
-
-        //}
-        #endregion
         #region Ajaxhandler
         /// <summary>
         /// Processes display requests from DataTables.Net javascript library. Called from /Index
@@ -392,38 +321,6 @@ namespace Machete.Web.Controllers
             return PartialView("Edit", workOrder);
         }
         #endregion
-        private IEnumerable<OrderSummary> _getSummary()
-        {
 
-            IEnumerable<OrderSummary> result;
-
-            result = workOrderService.GetSummary().Join(_waServ.GetSummary(),
-                            wo => new { wo.date, wo.status },
-                            wa => new { wa.date, wa.status },
-                            (wo, wa) => new
-                            {
-                                wo.date,
-                                wo.status,
-                                wo_count = wo.count,
-                                wa_count = wa.count
-                            }).OrderBy(a => a.date)
-            .GroupBy(gb => gb.date)
-            .Select(g => new OrderSummary
-            {
-                date = g.Key,
-                weekday = Convert.ToDateTime(g.Key).ToString("dddd"),
-                pending_wo = g.Where(c => c.status == 43).Sum(d => d.wo_count),
-                pending_wa = g.Where(c => c.status == 43).Sum(d => d.wa_count),
-                active_wo = g.Where(c => c.status == 42).Sum(d => d.wo_count),
-                active_wa = g.Where(c => c.status == 42).Sum(d => d.wa_count),
-                completed_wo = g.Where(c => c.status == 44).Sum(d => d.wo_count),
-                completed_wa = g.Where(c => c.status == 44).Sum(d => d.wa_count),
-                cancelled_wo = g.Where(c => c.status == 45).Sum(d => d.wo_count),
-                cancelled_wa = g.Where(c => c.status == 45).Sum(d => d.wa_count),
-                expired_wo = g.Where(c => c.status == 46).Sum(d => d.wo_count),
-                expired_wa = g.Where(c => c.status == 46).Sum(d => d.wa_count)
-            });
-            return result;
-        }
     }
 }
