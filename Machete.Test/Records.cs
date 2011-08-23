@@ -215,14 +215,14 @@ namespace Machete.Test
         #region Employers
         public static Employer _employer1 = new Employer
         {
-            ID = 1,
+            //ID = 1,
             name = "Savage Learning, LLC",
-            address1 = "2410 Boyer Ave E",
-            address2 = "Apt 310",
+            address1 = "1234 Street St",
+            address2 = "Apt 1",
             city = "seattle",
             state = "wa",
             zipcode = "98112",
-            phone = "206-660-3361",
+            phone = "206-123-1231",
             email = "jimmy@savagelearning.com",
             referredby = 1,
             datecreated = DateTime.Now,             //datetime
@@ -233,7 +233,7 @@ namespace Machete.Test
 
         public static Employer _employer2 = new Employer
         {
-            ID = 2,
+            //ID = 2,
             name = "Casa Latina",
             address1 = "317 17th Ave S",
             address2 = null,
@@ -251,7 +251,7 @@ namespace Machete.Test
 
         public static Employer _employer3 = new Employer
         {
-            ID = 3,
+            //ID = 3,
             name = "Mike McGinn",
             address1 = "Mayor's Office",
             address2 = "P.O. Box 94749",
@@ -270,7 +270,7 @@ namespace Machete.Test
         #region WorkOrders
         public static WorkOrder _workOrder1 = new WorkOrder
         {
-            ID = 1,
+            //ID = 1,
             EmployerID = 1,
             workSiteAddress1 = "2400 Boyer Ave E",
             workSiteAddress2 = "Apt 207",
@@ -299,7 +299,7 @@ namespace Machete.Test
 
         public static WorkOrder _workOrder2 = new WorkOrder
         {
-            ID = 2,
+            //ID = 2,
             EmployerID = 1,
             workSiteAddress1 = "",
             workSiteAddress2 = "",
@@ -328,7 +328,7 @@ namespace Machete.Test
 
         public static WorkOrder _workOrder3 = new WorkOrder
         {
-            ID = 3,
+            //ID = 3,
             EmployerID = 1,
             workSiteAddress1 = "",
             workSiteAddress2 = "",
@@ -357,7 +357,7 @@ namespace Machete.Test
 
         public static WorkOrder _workOrder4 = new WorkOrder
         {
-            ID = 4,
+            //ID = 4,
             EmployerID = 2,
             workSiteAddress1 = "",
             workSiteAddress2 = "",
@@ -386,7 +386,7 @@ namespace Machete.Test
 
         public static WorkOrder _workOrder5 = new WorkOrder
         {
-            ID = 5,
+            //ID = 5,
             EmployerID = 2,
             workSiteAddress1 = "",
             workSiteAddress2 = "",
@@ -411,7 +411,7 @@ namespace Machete.Test
 
         public static WorkOrder _workOrder6 = new WorkOrder
         {
-            ID = 6,
+            //ID = 6,
             EmployerID = 3,
             workSiteAddress1 = "",
             workSiteAddress2 = "",
@@ -447,7 +447,7 @@ namespace Machete.Test
         #region workassignments
         public static WorkAssignment _workAssignment1 = new WorkAssignment
         {
-            ID = 1,
+            //ID = 1,
             active = true,
             workerAssignedID = 1,
             

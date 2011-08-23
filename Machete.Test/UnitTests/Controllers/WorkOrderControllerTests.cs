@@ -30,6 +30,8 @@ namespace Machete.Test.Controllers
         Mock<IWorkerRequestService> _wrServ;
         //Mock<ICollection<WorkerRequest>> _requests;
         FormCollection fullfakeform;
+        List<WorkerRequest> workerRequest;
+        WorkOrderController _ctrlr;
         int testid = 4242;
         //
         [TestInitialize]
@@ -48,6 +50,13 @@ namespace Machete.Test.Controllers
             fullfakeform.Add("transportFee", "20.00");
             fullfakeform.Add("contactName", "test script contact name");
             //fullfakeform.Add("workerRequests", "30123,301234,30122,12345");
+            _serv = new Mock<IWorkOrderService>();
+            _empServ = new Mock<IEmployerService>();
+            _waServ = new Mock<IWorkAssignmentService>();
+            _reqServ = new Mock<IWorkerService>();
+            _wrServ = new Mock<IWorkerRequestService>();
+            workerRequest = new List<WorkerRequest> { };
+            _ctrlr = new WorkOrderController(_serv.Object, _waServ.Object, _empServ.Object, _reqServ.Object, _wrServ.Object);
         }
         //
         //   Testing /Index functionality
@@ -55,16 +64,7 @@ namespace Machete.Test.Controllers
         [TestMethod]
         public void WorkOrderController_index_get_returns_enumerable_list()
         {
-            //Arrange
-            _serv = new Mock<IWorkOrderService>();
-            _empServ = new Mock<IEmployerService>();
-            _waServ = new Mock<IWorkAssignmentService>();
-            _reqServ = new Mock<IWorkerService>();
-            _wrServ = new Mock<IWorkerRequestService>();
-            var _ctrlr = new WorkOrderController(_serv.Object, _waServ.Object, _empServ.Object, _reqServ.Object,  _wrServ.Object);
-            //Act
             var result = (ViewResult)_ctrlr.Index();
-            //Assert
             Assert.IsInstanceOfType(result, typeof(ActionResult));
         }
         //
@@ -74,37 +74,19 @@ namespace Machete.Test.Controllers
         [TestMethod]
         public void WorkOrderController_create_get_returns_workOrder()
         {
-            //Arrange
-            _serv = new Mock<IWorkOrderService>();
-            _empServ = new Mock<IEmployerService>();
-            _waServ = new Mock<IWorkAssignmentService>();
-            _reqServ = new Mock<IWorkerService>();
-            _wrServ = new Mock<IWorkerRequestService>();
-            var _ctrlr = new WorkOrderController(_serv.Object, _waServ.Object, _empServ.Object, _reqServ.Object, _wrServ.Object);
-            int EmployerID = 4242;
-            //Act
             var result = (PartialViewResult)_ctrlr.Create(0);
-            //Assert
             Assert.IsInstanceOfType(result.ViewData.Model, typeof(WorkOrder));
         }
 
         [TestMethod]
-        public void WorkOrderController_create_post_valid_redirects_to_Index()
+        public void WorkOrderController_create_valid_post_returns_JSON()
         {
             //Arrange
             var workOrder = new WorkOrder();
             var _model = new WorkOrder();
-            _serv = new Mock<IWorkOrderService>();
-            _empServ = new Mock<IEmployerService>();
-            _serv.Setup(p => p.CreateWorkOrder(workOrder, "UnitTest")).Returns(workOrder);
-            _waServ = new Mock<IWorkAssignmentService>();
-            _reqServ = new Mock<IWorkerService>();
-            _wrServ = new Mock<IWorkerRequestService>();
-            var _ctrlr = new WorkOrderController(_serv.Object, _waServ.Object, _empServ.Object, _reqServ.Object, _wrServ.Object);
-            
-            
+            _serv.Setup(p => p.CreateWorkOrder(workOrder, "UnitTest")).Returns(workOrder);                        
             //Act
-            var result = (RedirectToRouteResult)_ctrlr.Create(_model, "UnitTest");
+            var result = (RedirectToRouteResult)_ctrlr.Create(_model, "UnitTest", workerRequest);
             //Assert
             Assert.AreEqual("Index", result.RouteValues["action"]);
         }
@@ -114,16 +96,10 @@ namespace Machete.Test.Controllers
         {
             //Arrange
             var workOrder = new WorkOrder();
-            _serv = new Mock<IWorkOrderService>();
-            _empServ = new Mock<IEmployerService>();
-            _waServ = new Mock<IWorkAssignmentService>();
-            _reqServ = new Mock<IWorkerService>();
-            _wrServ = new Mock<IWorkerRequestService>();
-            var _ctrlr = new WorkOrderController(_serv.Object, _waServ.Object, _empServ.Object, _reqServ.Object, _wrServ.Object);
             _serv.Setup(p => p.CreateWorkOrder(workOrder, "UnitTest")).Returns(workOrder);
             _ctrlr.ModelState.AddModelError("TestError", "foo");
             //Act
-            var result = (PartialViewResult)_ctrlr.Create(workOrder, "UnitTest");
+            var result = (PartialViewResult)_ctrlr.Create(workOrder, "UnitTest", workerRequest);
             //Assert
             var error = result.ViewData.ModelState["TestError"].Errors[0];
             Assert.AreEqual("foo", error.ErrorMessage);

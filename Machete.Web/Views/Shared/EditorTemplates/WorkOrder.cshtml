@@ -229,9 +229,9 @@
 <script language="javascript" type="text/javascript">
       function getRequests(myObj) {
 
-        $.getJSON("/WorkOrder/GetRequests", { "id": "@Model.ID" }, function (data) {
-            $(myObj).addItems(data);
-        });
+//        $.getJSON("/WorkOrder/GetRequests", { "id": "@Model.ID" }, function (data) {
+//            $(myObj).addItems(data);
+//        });
         }
     $(document).ready(function () {
         dateTimeWidget($("#WO-dateTimeofWork-@(Model.ID)"));
@@ -261,7 +261,7 @@
                 { "mDataProp": "memberexpirationdate" }
             ],            
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                $(nRow).attr('requestedID', aData[2]);
+                $(nRow).attr('requestedID', aData['WID']);
                 //$(nRow).attr('edittablabel', aData[1]);                
                 return nRow;
             }                

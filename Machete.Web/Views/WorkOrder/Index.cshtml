@@ -125,6 +125,7 @@
         M_orderTable = $('#orderTable');
         M_summaryTable = $('#orderSummaryTable');
         oTable = jqrfyTable(M_orderTable, M_dispatchTabs, orderDefs, false);
+
         jqrfyTable(M_summaryTable, M_dispatchTabs, summaryDefs, function (event) {            
             var myTr = event.target.parentNode;
             $(M_orderTable).dataTable().fnFilter($(myTr).find('td:eq(0)').text());
@@ -142,7 +143,8 @@
         $('#expiredOrdersBtn').click(function() {            
             oTable.dataTable().fnFilter('@Lookups.getSingleEN("orderstatus", "Expired")', 5); //sync with DT array above
         });
-        $('#allOrdersBtn').click(function() {            
+        $('#allOrdersBtn').click(function() {
+            oTable.dataTable().fnFilter("");
             oTable.dataTable().fnFilter("", 5); //sync with DT array above
         });
         $('#cancelledOrdersBtn').click(function() {
