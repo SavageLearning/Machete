@@ -73,7 +73,7 @@ namespace Machete.Domain
     }
     public class WorkAssignmentSummary
     {
-        public string date { get; set; }
+        public DateTime? date { get; set; }
         public int status { get; set; }
         public int count { get; set; }
     }

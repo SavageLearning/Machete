@@ -17,47 +17,60 @@ namespace Machete.Test
     [TestClass]
     public class WorkOrderServiceTest
     {
-        WorkOrderRepository _woRepo;
-        DatabaseFactory _dbFactory;
-        WorkOrderService _service;
-        IUnitOfWork _unitofwork;
+        DatabaseFactory dbFactory;
+        WorkOrderRepository woRepo;
+        IWorkerRepository wRepo;
+        ILookupRepository lRepo;
+        WorkOrderService woServ;
+        WorkAssignmentService waServ;
+        IUnitOfWork uow;
         MacheteContext MacheteDB;
-
+        WorkAssignmentRepository waRepo;
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
-            //DbDatabase.SetInitializer<MacheteContext>(new MacheteInitializer());
+            DbDatabase.SetInitializer<MacheteContext>(new TestInitializer());
         }
 
 
         [TestInitialize]
         public void TestInitialize()
         {
-
             //DbDatabase.SetInitializer<MacheteContext>(new MacheteInitializer());
             MacheteDB = new MacheteContext();
-            _dbFactory = new DatabaseFactory();
-            _woRepo = new WorkOrderRepository(_dbFactory);
-            _unitofwork = new UnitOfWork(_dbFactory);
-            _service = new WorkOrderService(_woRepo, _unitofwork);
+            dbFactory = new DatabaseFactory();
+            woRepo = new WorkOrderRepository(dbFactory);
+            uow = new UnitOfWork(dbFactory);
+            wRepo = new WorkerRepository(dbFactory);
+            waRepo = new WorkAssignmentRepository(dbFactory);
+            waServ = new WorkAssignmentService(waRepo, wRepo, lRepo, uow);
+            woServ = new WorkOrderService(woRepo, waServ, uow);
         }
 
         [TestMethod]
-        public void DbSet_WorkOrderService_Intergation_GetSummary()
+        public void DbSetWorkOrderService_Intergation_GetSummary()
         {
             //
             //Arrange
-
             //
             //Act
-            var result = _service.GetSummary();
-
+            var result = woServ.GetSummary("");
             //
             //Assert
             Assert.IsNotNull(result, "Person.ID is Null");
-            //Assert.IsTrue(_person.ID == 1);
         }
-
+        [TestMethod]
+        public void DbSetWorkOrderService_Intergation_CombinedSummary()
+        {
+            //
+            //Arrange
+            //
+            //Act
+            var result = woServ.CombinedSummary("", true, 0,0);
+            //
+            //Assert
+            Assert.IsNotNull(result, "Person.ID is Null");
+        }
         [TestMethod]
         public void DbSet_WorkOrderService_Intergation_GetIndexView()
         {
@@ -66,7 +79,7 @@ namespace Machete.Test
             CultureInfo CI = new CultureInfo("en-US", false);
             //
             //Act
-            var result = _service.GetIndexView(
+            var result = woServ.GetIndexView(
                     CI,
                     "7/2011",   //search str
                     null, //employerID
@@ -79,7 +92,7 @@ namespace Machete.Test
             //Assert
             var foo = result.query.ToList();
             Assert.IsNotNull(result, "Person.ID is Null");
-            //Assert.IsTrue(_person.ID == 1);
+            //Assert.IsTrue(person.ID == 1);
         }
     }
 }

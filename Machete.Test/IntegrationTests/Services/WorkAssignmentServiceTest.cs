@@ -48,7 +48,7 @@ namespace Machete.Test
             _wRepo = new WorkerRepository(_dbFactory);
             _lRepo = new LookupRepository(_dbFactory);
             _waServ = new WorkAssignmentService(_waRepo, _wRepo, _lRepo, _unitofwork);
-            _woServ = new WorkOrderService(_woRepo, _unitofwork);
+            _woServ = new WorkOrderService(_woRepo, _waServ, _unitofwork);
             CI = new CultureInfo("en-US", false);
             LookupCache.Initialize(new MacheteContext());
         }
@@ -169,18 +169,32 @@ namespace Machete.Test
             Assert.AreEqual(10, result.filteredCount);
             Assert.AreEqual(10, result.totalCount);
         }
+
         [TestMethod]
         public void DbSet_WorkAssignmentService_Intergation_GetSummary()
+        {
+            //
+            //Arrange
+            //
+            //Act
+            var result = _waServ.GetSummary("");
+            //
+            //Assert
+            Assert.IsNotNull(result, "Person.ID is Null");
+        }
+
+        [TestMethod]
+        public void DbSet_WorkAssignmentService_Intergation_GetSummary2()
         {
             //
             //Arrange
 
             //
             //Act
-            var woresults = _woServ.GetSummary();
-            var waresults = _waServ.GetSummary();
+            var woresults = _woServ.GetSummary("8/10/2011");
+            var waresults = _waServ.GetSummary("8/10/2011");
 
-            var joined = _woServ.GetSummary().Join(_waServ.GetSummary(),
+            var joined = _woServ.GetSummary("8/10/2011").Join(_waServ.GetSummary("8/10/2011"),
                                         wo => new {wo.date, wo.status},
                                         wa => new {wa.date, wa.status},
                                         (wo, wa) => new

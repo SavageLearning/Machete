@@ -13,6 +13,7 @@
 <div>
     @Html.TextBoxFor(m => m.todaysdate)
     <input type="button" value="update" id="updateBtn" />
+
 </div>
 }    
 <div>
@@ -25,9 +26,13 @@
 <div class="tb-row"></div>
 <div id="signinTab" class="tb-cell">
     <ul>
-        <li><a href="#signinList">Lottery list</a></li>
+        <li><a href="#signinList">Workers</a></li>
     </ul>
     <div id="signinList">
+            <div id="radioWorkers" class="radio">
+		    <input type="radio" id="rW1_lottery" name="radio" checked="checked" /><label for="rW1_lottery">Lottery?!</label>
+		    <input type="radio" id="rW1_signin" name="radio"  /><label for="rW1_signin">Sign-in?!</label>
+	    </div>
     <table id="signinTable" class="display">
     <thead>
         <tr>
@@ -39,10 +44,23 @@
 </div>
 <div id="assignmentTab" class="tb-cell">
     <ul>
-        <li><a href="#availAssignList">Open Assignments?!</a></li>
-        <li><a href="#availAssignList">Filled Assignments?!</a></li>
+        <li><a href="#availAssignList">Assignments?!</a></li>
     </ul>
-    <div id="availAssignList">
+        <div id="availAssignList">
+        <div id="radioOpenFilled" class="radio" style="float: left;padding: 0 3em 0 0;">
+		    <input type="radio" id="rA1_Open" name="radioOpenFilled" checked="checked" /><label for="rA1_Open">Open</label>
+		    <input type="radio" id="rA1_Filled" name="radioOpenFilled"  /><label for="rA1_Filled">Filled</label>
+	    </div>
+        <div id="radioProgram" class="radio" style="float: left;float: left;padding: 0 3em 0 0;">
+		    <input type="radio" id="rA2_DWC" name="radioProgram" checked="checked" /><label for="rA2_DWC">DWC</label>
+		    <input type="radio" id="rA2_HHH" name="radioProgram"  /><label for="rA2_HHH">HHH</label>
+            <input type="radio" id="rA2_All" name="radioProgram"  /><label for="rA2_All">All</label>
+	    </div>
+        <div id="radioDate" class="radio" style="float: left;float: left;padding: 0 3em 0 0;">
+		    <input type="radio" id="rA3_today" name="radioDate" checked="checked" /><label for="rA3_today">Today</label>
+		    <input type="radio" id="rA3_picker" name="radioDate" /><label for="rA3_picker">Select date</label>
+            <input type="radio" id="rA3_All" name="radioDate" /><label for="rA3_All">Date range</label>
+	    </div>
             <table id="availAssignTable" class="display">
             <thead>
                 <tr>
@@ -58,8 +76,6 @@
                     <th>@WorkAssignment.days</th>
                     <th>@WorkAssignments.earnings</th>
                     <th>@WorkAssignment.description</th>
-
-
                 </tr>
             </thead>
         </table>
@@ -69,6 +85,7 @@
 </div>
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
+    $( ".radio" ).buttonset();
         jqrfyTabs($("#assignmentTab"), "ui-tabs-assignment-");
         jqrfyTabs($("#signinTab"), "ui-tabs-signin-");
         
@@ -118,7 +135,6 @@
                             { "mDataProp": "days"},
                             { "mDataProp": "earnings"},
                             { "mDataProp": "description"}
-
                         ],
             "aoSearchCols" : [null, null, null, null, null, null, null, null, null, null, null],
             "fnServerData": function ( sSource, aoData, fnCallback ) {

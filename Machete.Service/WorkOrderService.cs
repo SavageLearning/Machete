@@ -18,7 +18,11 @@ namespace Machete.Service
     {
         IEnumerable<WorkOrder> GetWorkOrders();
         IEnumerable<WorkOrder> GetWorkOrders(int? byEmployer);
-        IEnumerable<WorkOrderSummary> GetSummary();
+        IQueryable<WorkOrderSummary> GetSummary(string search);
+        ServiceIndexView<WOWASummary> CombinedSummary(string search,
+            bool orderDescending,
+            int displayStart,
+            int displayLength);
         WorkOrder GetWorkOrder(int id);
         WorkOrder CreateWorkOrder(WorkOrder workOrder, string user);
         void DeleteWorkOrder(int id, string user);
@@ -39,7 +43,8 @@ namespace Machete.Service
     // Ïf I made a non-web app, would I still need the code? If yes, put in here.
     public class WorkOrderService : IWorkOrderService
     {
-        private readonly IWorkOrderRepository workOrderRepository;
+        private readonly IWorkOrderRepository woRepo;
+        private readonly IWorkAssignmentService waServ;
         private readonly IUnitOfWork unitOfWork;
         private static Regex isTimeSpecific = new Regex(@"^\s*\d{1,2}[\/-_]\d{1,2}[\/-_]\d{2,4}\s+\d{1,2}:\d{1,2}");
         private static Regex isDaySpecific = new Regex(@"^\s*\d{1,2}\/\d{1,2}\/\d{2,4}");
@@ -52,14 +57,15 @@ namespace Machete.Service
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="workOrderRepository"></param>
+        /// <param name="woRepo"></param>
         /// <param name="unitOfWork"></param>
-        public WorkOrderService(IWorkOrderRepository workOrderRepository, IUnitOfWork unitOfWork)
+        public WorkOrderService(IWorkOrderRepository woRepo, 
+                               IWorkAssignmentService waServ,
+                                IUnitOfWork unitOfWork)
         {
-            this.workOrderRepository = workOrderRepository;
-            this.unitOfWork = unitOfWork;
-            
-
+            this.woRepo = woRepo;
+            this.waServ = waServ;
+            this.unitOfWork = unitOfWork;            
         }
         /// <summary>
         /// 
@@ -79,11 +85,11 @@ namespace Machete.Service
             //TODO Unit test this
             if (empID == null)
             {
-                return workOrderRepository.GetAll();
+                return woRepo.GetAll();
             }
             else
             {
-                return workOrderRepository.GetMany(w => w.EmployerID == empID);
+                return woRepo.GetMany(w => w.EmployerID == empID);
             }
         }
         /// <summary>
@@ -93,9 +99,10 @@ namespace Machete.Service
         /// <returns></returns>
         public WorkOrder GetWorkOrder(int id)
         {
-            var workOrder = workOrderRepository.GetById(id);
+            var workOrder = woRepo.GetById(id);
             return workOrder;
         }
+        #region GetIndexView
         /// <summary>
         /// 
         /// </summary>
@@ -120,7 +127,7 @@ namespace Machete.Service
             )
         {
             //Get all the records
-            IQueryable<WorkOrder> filteredWO = workOrderRepository.GetAllQ();
+            IQueryable<WorkOrder> filteredWO = woRepo.GetAllQ();
             IQueryable<WorkOrder> orderedWO;
             bool isDateTime = false;
             //
@@ -175,7 +182,7 @@ namespace Machete.Service
             //if (displayLength != 0 && displayStart != 0)
                 orderedWO = orderedWO.Skip<WorkOrder>((int)displayStart).Take((int)displayLength);
             var filtered = filteredWO.Count();
-            var total =  workOrderRepository.GetAllQ().Count();
+            var total =  woRepo.GetAllQ().Count();
             return new ServiceIndexView<WorkOrder> 
             { 
                 query = orderedWO,
@@ -183,15 +190,22 @@ namespace Machete.Service
                 totalCount = total
             };
         }
+        #endregion
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<WorkOrderSummary> GetSummary()
+        public IQueryable<WorkOrderSummary> GetSummary(string search)
         {
-            var sum_query = from wo in workOrderRepository.GetAll()
-                            group wo by new { dateSoW = wo.dateTimeofWork.ToString("MM/dd/yyyy"),                                              
-                                              wo.status} into dayGroup
+            IQueryable<WorkOrder> query;
+            if (!string.IsNullOrEmpty(search)) 
+                query = filterDateTimeOfWork(woRepo.GetAllQ(), search);            
+            else query = woRepo.GetAllQ();
+            var group_query = from wo in query
+                            group wo by new { 
+                                dateSoW = EntityFunctions.TruncateTime(wo.dateTimeofWork),                                              
+                                wo.status
+                            } into dayGroup
                             select new WorkOrderSummary()
                             {
                                 date = dayGroup.Key.dateSoW,
@@ -199,8 +213,9 @@ namespace Machete.Service
                                 count = dayGroup.Count()
                             };
 
-            return sum_query;
+            return group_query;
         }
+        #region CRUD
         /// <summary>
         /// 
         /// </summary>
@@ -210,7 +225,7 @@ namespace Machete.Service
         public WorkOrder CreateWorkOrder(WorkOrder workOrder, string user)
         {
             workOrder.createdby(user);
-            _workOrder = workOrderRepository.Add(workOrder);            
+            _workOrder = woRepo.Add(workOrder);            
             unitOfWork.Commit();
             if (_workOrder.paperOrderNum == null) _workOrder.paperOrderNum = _workOrder.ID;
             unitOfWork.Commit();
@@ -225,8 +240,8 @@ namespace Machete.Service
         /// <param name="user"></param>
         public void DeleteWorkOrder(int id, string user)
         {
-            var workOrder = workOrderRepository.GetById(id);
-            workOrderRepository.Delete(workOrder);
+            var workOrder = woRepo.GetById(id);
+            woRepo.Delete(workOrder);
             _log(id, user, "WorkOrder deleted");
             unitOfWork.Commit();
         }
@@ -242,10 +257,6 @@ namespace Machete.Service
             unitOfWork.Commit();
         }
 
-        public void AddWorkerRequest(int id, int workerID, string user)
-        {
-
-        }
 
         private void _log(int ID, string user, string msg)
         {
@@ -254,6 +265,84 @@ namespace Machete.Service
             levent.Properties["RecordID"] = ID; //magic string maps to NLog config
             levent.Properties["username"] = user;
             log.Log(levent);
+        }
+        #endregion
+        ///
+        ///
+        private IQueryable<WorkOrder> filterDateTimeOfWork(IQueryable<WorkOrder> query, string search)
+        {
+
+            //Using DateTime.TryParse as determiner of date/string
+            DateTime parsedTime;
+            if (DateTime.TryParse(search, out parsedTime))
+            {
+                if (isMonthSpecific.IsMatch(search))  //Regex for month/year
+                    return query.Where(p => EntityFunctions.DiffMonths(p.dateTimeofWork, parsedTime) == 0 ? true : false);
+                if (isDaySpecific.IsMatch(search))  //Regex for day/month/year
+                    return query.Where(p => EntityFunctions.DiffDays(p.dateTimeofWork, parsedTime) == 0 ? true : false);
+                if (isTimeSpecific.IsMatch(search)) //Regex for day/month/year time
+                    return query.Where(p => EntityFunctions.DiffHours(p.dateTimeofWork, parsedTime) == 0 ? true : false);                    
+            }
+            return query;                
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="search"></param>
+        /// <returns></returns>
+        public ServiceIndexView<WOWASummary> CombinedSummary(string search, 
+            bool orderDescending,
+            int displayStart,
+            int displayLength)
+        {
+
+            IEnumerable<WorkOrderSummary> woResult;
+            IEnumerable<WorkAssignmentSummary> waResult;
+            IEnumerable<WOWASummary> result;
+            //pulling from DB here because the joins grind it to a halt
+            woResult = GetSummary(search).ToList();
+            waResult = waServ.GetSummary(search).ToList();
+                result = woResult.Join(waResult,
+                            wo => new { wo.date, wo.status },
+                            wa => new { wa.date, wa.status },
+                            (wo, wa) => new
+                            {
+                                wo.date,
+                                wo.status,
+                                wo_count = wo.count,
+                                wa_count = wa.count
+                            })
+            .GroupBy(gb => gb.date)
+            .Select(g => new WOWASummary
+            {
+                date = g.Key,
+                weekday = Convert.ToDateTime(g.Key).ToString("dddd"),
+                pending_wo = g.Where(c => c.status == 43).Sum(d => d.wo_count),
+                pending_wa = g.Where(c => c.status == 43).Sum(d => d.wa_count),
+                active_wo = g.Where(c => c.status == 42).Sum(d => d.wo_count),
+                active_wa = g.Where(c => c.status == 42).Sum(d => d.wa_count),
+                completed_wo = g.Where(c => c.status == 44).Sum(d => d.wo_count),
+                completed_wa = g.Where(c => c.status == 44).Sum(d => d.wa_count),
+                cancelled_wo = g.Where(c => c.status == 45).Sum(d => d.wo_count),
+                cancelled_wa = g.Where(c => c.status == 45).Sum(d => d.wa_count),
+                expired_wo = g.Where(c => c.status == 46).Sum(d => d.wo_count),
+                expired_wa = g.Where(c => c.status == 46).Sum(d => d.wa_count)
+            });
+
+                if (orderDescending)
+                    result = result.OrderByDescending(p => p.date);
+                else
+                    result = result.OrderBy(p => p.date);
+
+                //Limit results to the display length and offset
+                var displayedSummary = result.Skip(displayStart)
+                                                    .Take(displayLength);
+            return new ServiceIndexView<WOWASummary> {
+                query = displayedSummary,
+                filteredCount = result.Count(),
+                totalCount = displayedSummary.Count()
+                
+            };
         }
     }
 }

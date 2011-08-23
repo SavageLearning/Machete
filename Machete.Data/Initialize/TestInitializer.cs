@@ -133,12 +133,12 @@ namespace Machete.Data
             Employer em2 = (Employer)employer.Clone(); DB.Employers.Add(em2);
             Employer em3 = (Employer)employer.Clone(); DB.Employers.Add(em3);
             DB.SaveChanges();
-            WorkOrder em1od1 = (WorkOrder)order.Clone(); em1od1.Employer = em1; em1od1.paperOrderNum = 12420; em1od1.contactName = "Umpa1";  DB.WorkOrders.Add(em1od1);// em1.WorkOrders.Add(em1od1);
-            WorkOrder em2od1 = (WorkOrder)order.Clone(); em2od1.Employer = em2; em2od1.paperOrderNum = 12421; em2od1.contactName = "Umpa2"; DB.WorkOrders.Add(em2od1);
-            WorkOrder em2od2 = (WorkOrder)order.Clone(); em2od2.Employer = em2; em2od2.paperOrderNum = 12422; em2od2.contactName = "Umpa3"; DB.WorkOrders.Add(em2od2);
-            WorkOrder em3od1 = (WorkOrder)order.Clone(); em3od1.Employer = em3; em3od1.paperOrderNum = 12423; em3od1.contactName = "Umpa4"; DB.WorkOrders.Add(em3od1);
-            WorkOrder em3od2 = (WorkOrder)order.Clone(); em3od2.Employer = em3; em3od2.paperOrderNum = 12424; em3od2.contactName = "Umpa5"; DB.WorkOrders.Add(em3od2);
-            WorkOrder em3od3 = (WorkOrder)order.Clone(); em3od3.Employer = em3; em3od3.paperOrderNum = 12425; em3od3.contactName = "Umpa6"; DB.WorkOrders.Add(em3od3);
+            WorkOrder em1od1 = (WorkOrder)order.Clone(); em1od1.Employer = em1; em1od1.paperOrderNum = 12420; em1od1.contactName = "Umpa1"; em1od1.status = 42; DB.WorkOrders.Add(em1od1);// em1.WorkOrders.Add(em1od1);
+            WorkOrder em2od1 = (WorkOrder)order.Clone(); em2od1.Employer = em2; em2od1.paperOrderNum = 12421; em2od1.contactName = "Umpa2"; em2od1.status = 43; DB.WorkOrders.Add(em2od1);
+            WorkOrder em2od2 = (WorkOrder)order.Clone(); em2od2.Employer = em2; em2od2.paperOrderNum = 12422; em2od2.contactName = "Umpa3"; em2od2.status = 44; DB.WorkOrders.Add(em2od2);
+            WorkOrder em3od1 = (WorkOrder)order.Clone(); em3od1.Employer = em3; em3od1.paperOrderNum = 12423; em3od1.contactName = "Umpa4"; em3od1.status = 45; DB.WorkOrders.Add(em3od1);
+            WorkOrder em3od2 = (WorkOrder)order.Clone(); em3od2.Employer = em3; em3od2.paperOrderNum = 12424; em3od2.contactName = "Umpa5"; em3od2.status = 44; DB.WorkOrders.Add(em3od2);
+            WorkOrder em3od3 = (WorkOrder)order.Clone(); em3od3.Employer = em3; em3od3.paperOrderNum = 12425; em3od3.contactName = "Umpa6"; em3od3.status = 42; DB.WorkOrders.Add(em3od3);
             DB.SaveChanges();
             WorkAssignment em1od1as1 = (WorkAssignment)assignment.Clone(); em1od1as1.workOrder = em1od1; 
             em1od1as1.description = "foostring1"; em1od1as1.Updatedby = "foostring2"; em1od1as1.skillID = 70;  DB.WorkAssignments.Add(em1od1as1);

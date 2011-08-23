@@ -1,15 +1,15 @@
-﻿USE [machete]
+﻿USE [macheteStageProd]
 GO
 
-/****** Object:  View [db_datareader].[workAssignments_status_summary_EN]    Script Date: 06/19/2011 19:55:34 ******/
+/****** Object:  View [db_datareader].[workAssignments_status_summary_EN]    Script Date: 08/22/2011 15:22:13 ******/
 IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[db_datareader].[workAssignments_status_summary_EN]'))
 DROP VIEW [db_datareader].[workAssignments_status_summary_EN]
 GO
 
-USE [machete]
+USE [macheteStageProd]
 GO
 
-/****** Object:  View [db_datareader].[workAssignments_status_summary_EN]    Script Date: 06/19/2011 19:55:34 ******/
+/****** Object:  View [db_datareader].[workAssignments_status_summary_EN]    Script Date: 08/22/2011 15:22:14 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -18,21 +18,16 @@ GO
 
 CREATE VIEW [db_datareader].[workAssignments_status_summary_EN]
 AS
-SELECT     TOP (100) PERCENT startdate, weekday, SUM(CASE status WHEN 'Pending' THEN countof ELSE '' END) AS 'Pending Assignments', 
-                      SUM(CASE status WHEN 'Active' THEN countof ELSE '' END) AS 'Active Assignments', SUM(CASE status WHEN 'Completed' THEN countof ELSE '' END) 
-                      AS 'Completed Assignments', SUM(CASE status WHEN 'Cancelled' THEN countof ELSE '' END) AS 'Cancelled Assignments', 
-                      SUM(CASE status WHEN 'Expired' THEN countof ELSE '' END) AS 'Expired Assignments'
-FROM         (SELECT     startdate, weekday,
-                                                  (SELECT     text_EN
-                                                    FROM          dbo.Lookups AS l
-                                                    WHERE      (ID = wo_1.status)) AS status, COUNT(ID) AS countof
-                       FROM          (SELECT     CONVERT(char(10), wo.dateTimeofWork, 126) AS startdate, CASE datepart(dw, datetimeofwork) 
-                                                                      WHEN 1 THEN 'Sunday' WHEN 2 THEN 'Monday' WHEN 3 THEN 'Tuesday' WHEN 4 THEN 'Wednesday' WHEN 5 THEN 'Thursday' WHEN 6 THEN
-                                                                       'Friday' WHEN 7 THEN 'Saturday' END AS weekday, wa.ID, wo.status
-                                               FROM          dbo.WorkOrders AS wo INNER JOIN
-                                                                      dbo.WorkAssignments AS wa ON wo.ID = wa.workOrderID) AS wo_1
-                       GROUP BY startdate, weekday, status) AS list
-GROUP BY startdate, weekday
+SELECT     TOP (100) PERCENT startdate, SUM(CASE status WHEN 43 THEN countof ELSE '' END) AS [Pending Assignments], 
+                      SUM(CASE status WHEN 42 THEN countof ELSE '' END) AS [Active Assignments], SUM(CASE status WHEN 44 THEN countof ELSE '' END) 
+                      AS [Completed Assignments], SUM(CASE status WHEN 45 THEN countof ELSE '' END) AS [Cancelled Assignments], 
+                      SUM(CASE status WHEN 46 THEN countof ELSE '' END) AS [Expired Assignments]
+FROM         (SELECT     startdate, status, COUNT(ID) AS countof
+                       FROM          (SELECT     CONVERT(char(10), wo.dateTimeofWork, 126) AS startdate, was.ID, wo.status
+                                               FROM          dbo.WorkAssignments AS was INNER JOIN
+                                                                      dbo.WorkOrders AS wo ON wo.ID = was.workOrderID) AS waa
+                       GROUP BY startdate, status) AS summed
+GROUP BY startdate
 ORDER BY startdate DESC
 
 GO
@@ -108,12 +103,12 @@ Begin DesignProperties =
          Left = 0
       End
       Begin Tables = 
-         Begin Table = "list"
+         Begin Table = "summed"
             Begin Extent = 
                Top = 6
                Left = 38
-               Bottom = 125
-               Right = 214
+               Bottom = 99
+               Right = 205
             End
             DisplayFlags = 280
             TopColumn = 0
