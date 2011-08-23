@@ -10,6 +10,7 @@ using NLog;
 using System.Data.Objects.SqlClient;
 using System.Data.Objects;
 using System.Text.RegularExpressions;
+using System.Collections.ObjectModel;
 
 
 namespace Machete.Service
@@ -225,11 +226,11 @@ namespace Machete.Service
         public WorkOrder CreateWorkOrder(WorkOrder workOrder, string user)
         {
             workOrder.createdby(user);
-            _workOrder = woRepo.Add(workOrder);            
+            _workOrder = woRepo.Add(workOrder);
+            _workOrder.workerRequests = new Collection<WorkerRequest>();
             unitOfWork.Commit();
             if (_workOrder.paperOrderNum == null) _workOrder.paperOrderNum = _workOrder.ID;
             unitOfWork.Commit();
-
             _log(workOrder.ID, user, "WorkOrder created");
             return _workOrder;
         }

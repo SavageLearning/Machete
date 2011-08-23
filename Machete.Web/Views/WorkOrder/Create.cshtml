@@ -4,9 +4,9 @@
 @using (Html.BeginForm("Create", "WorkOrder", FormMethod.Post, 
                         new { @id = "workOrderCreateForm" }))
 {
-        <input type="button" id="workOrderCopyEmployerInfo"
+        <input type="button" id="workOrderCopyEmployerInfo" class="formButton"
            value="@WorkOrders.copyemployerinfo" tabindex="9" />
-        <input type="submit" id="workOrderCreateButton" 
+        <input type="submit" id="workOrderCreateButton" class="formButton"
            value="@WorkOrders.createsubmit" tabindex="9"/>
 
 
@@ -16,8 +16,9 @@
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
         M_workOrderCreateForm = $('#workOrderCreateForm');
-        $('#workOrderCreateButton').button();
-        $('#workOrderCopyEmployerInfo').button();
+        $('.formButton').button();       
+//        $('#workOrderCreateButton').button(); 
+//        $('#workOrderCopyEmployerInfo').button();
 
         //dateTimeWidget($(M_workOrderCreateForm).find('#dateTimeofWork'));
         ////////////////////////////////////////////////////////////////
@@ -44,7 +45,7 @@
             //EmployerID = $("#employerTabs").attr('recordID');
             M_workOrderCreateForm.find('#EmployerID').val(M_last_employerID_loaded);
             if (M_workOrderCreateForm.valid()) {
-
+                $('#workerRequests2_WO-@(Model.ID)').find('option').attr("selected", "selected");
                 $.post($(this).attr("action"), $(this).serialize(),
                     function (data) {                        
                         add_rectab(data.sNewRef, data.sNewLabel, M_workOrderTabs_@(Model.EmployerID), false, data.iNewID);

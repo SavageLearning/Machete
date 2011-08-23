@@ -139,7 +139,7 @@ namespace Machete.Web.Controllers
                                       tablabel =  _getTabLabel(p),
                                       EID = Convert.ToString(p.EmployerID),
                                       WOID = System.String.Format("{0,5:D5}", p.paperOrderNum),
-                                      dateTimeofWork = System.String.Format("{0:MM/dd/yyyy}", p.dateTimeofWork),
+                                      dateTimeofWork =  p.dateTimeofWork.ToString(),
                                       status = Lookups.byID(p.status, CI.TwoLetterISOLanguageName),
                                       WAcount = p.workAssignments.Count(a => a.workOrderID == p.ID).ToString(),
                                       contactName =  p.contactName, 
@@ -189,7 +189,8 @@ namespace Machete.Web.Controllers
             _model.dateTimeofWork = DateTime.Today;
             _model.transportMethodID = Lookups.transportmethodDefault;
             _model.typeOfWorkID = Lookups.typesOfWorkDefault;
-            _model.status = Lookups.woStatusDefault;            
+            _model.status = Lookups.woStatusDefault;
+            ViewBag.workerRequests = new List<SelectListItem> {};
             return PartialView("Create", _model);
         }
         /// <summary>
@@ -200,13 +201,23 @@ namespace Machete.Web.Controllers
         /// <returns></returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public ActionResult Create(WorkOrder _model, string userName)
+        public ActionResult Create(WorkOrder _model, string userName, List<WorkerRequest> workerRequests2)
         {
             if (!ModelState.IsValid)
             {
                 return PartialView("Create", _model);
             }
-            WorkOrder neworder = workOrderService.CreateWorkOrder(_model, userName);
+            WorkOrder neworder = workOrderService.CreateWorkOrder(_model, userName);           
+            //New requests to add
+            foreach (var add in workerRequests2)
+            {
+                add.workOrder = neworder;
+                add.workerRequested = _reqServ.GetWorker(add.WorkerID);
+                add.updatedby(userName);
+                add.createdby(userName);
+                neworder.workerRequests.Add(add);
+            }
+            workOrderService.SaveWorkOrder(neworder, userName);
             //return PartialView("Index", neworder);
             return Json(new 
             {
@@ -263,7 +274,6 @@ namespace Machete.Web.Controllers
                 add.createdby(userName);
                 workOrder.workerRequests.Add(add);
             }
-
             if (ModelState.IsValid)
             {
                 workOrderService.SaveWorkOrder(workOrder, userName);
