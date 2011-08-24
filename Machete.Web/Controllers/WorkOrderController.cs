@@ -327,8 +327,13 @@ namespace Machete.Web.Controllers
             // lookup int value for status active
             workOrder.status = Lookups.getSingleEN("orderstatus","Active");
             workOrderService.SaveWorkOrder(workOrder, userName);
-            //workOrderService.DeleteWorkOrder(id, user);
-            return PartialView("Edit", workOrder);
+         
+            //return PartialView("Edit", workOrder);
+            return Json(new
+            {
+                status = "activated"
+            },
+            JsonRequestBehavior.AllowGet);
         }
         #endregion
 

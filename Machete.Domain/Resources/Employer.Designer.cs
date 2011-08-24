@@ -142,6 +142,15 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Is a business?.
+        /// </summary>
+        public static string isbusiness {
+            get {
+                return ResourceManager.GetString("isbusiness", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         public static string name {
@@ -156,6 +165,15 @@ namespace Machete.Domain.Resources {
         public static string namerequired {
             get {
                 return ResourceManager.GetString("namerequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Notes.
+        /// </summary>
+        public static string notes {
+            get {
+                return ResourceManager.GetString("notes", resourceCulture);
             }
         }
         

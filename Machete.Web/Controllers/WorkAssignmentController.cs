@@ -211,7 +211,15 @@ namespace Machete.Web.Controllers
         }
         #endregion
 
-        
+        [HttpPost, UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        #region Assign
+        public ActionResult Assign(int waid, int wsiid, string userName)
+        {
+            _assServ.Assign(waid, wsiid);
+            return Json(new { }, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
         //
         // GET: /WorkAssignment/Edit/5
         //

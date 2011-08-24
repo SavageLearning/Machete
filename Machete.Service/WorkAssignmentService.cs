@@ -24,6 +24,10 @@ namespace Machete.Service
         IQueryable<WorkAssignmentSummary> GetSummary(string search);
         WorkAssignment Get(int id);
         WorkAssignment Create(WorkAssignment workAssignment, string user);
+        bool Assign(int waid, int wsiid);
+        bool Unassign(WorkerSignin signin);
+        bool Unassign(WorkAssignment assignment);
+        bool Unassign(WorkerSignin signin, WorkAssignment assignment);
         void Delete(int id, string user);
         void Save(WorkAssignment workAssignment, string user);
         ServiceIndexView<WorkAssignment> GetIndexView(CultureInfo CI,
@@ -43,6 +47,7 @@ namespace Machete.Service
     {
         private readonly IWorkAssignmentRepository waRepo;
         private readonly IWorkerRepository wRepo;
+        private readonly IWorkerSigninRepository wsiRepo;
         private readonly IUnitOfWork unitOfWork;
         private readonly ILookupRepository lRepo;
         private readonly MacheteContext DB;
@@ -54,12 +59,17 @@ namespace Machete.Service
         private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "WorkAssignmentService", "");
         private WorkAssignment _workAssignment;
         //
-        public WorkAssignmentService(IWorkAssignmentRepository waRepo, IWorkerRepository wRepo, ILookupRepository lRepo, IUnitOfWork unitOfWork)
+        public WorkAssignmentService(IWorkAssignmentRepository waRepo, 
+                                     IWorkerRepository wRepo, 
+                                     ILookupRepository lRepo, 
+                                     IWorkerSigninRepository wsiRepo,
+                                     IUnitOfWork unitOfWork)
         {
             this.waRepo = waRepo;
             this.unitOfWork = unitOfWork;
             this.wRepo = wRepo;
             this.lRepo = lRepo;
+            this.wsiRepo = wsiRepo;
             DB = new MacheteContext();
         }
 
@@ -258,7 +268,30 @@ namespace Machete.Service
             return sum_query;
         }
 
-
+        public bool Assign(int waid, int wsiid)
+        {
+            WorkerSignin signin = wsiRepo.GetById(wsiid);
+            WorkAssignment assignment = waRepo.GetById(waid);
+            Worker _worker = wRepo.Get(w => w.dwccardnum == signin.dwccardnum);
+            signin.WorkerID = _worker.ID;
+            signin.WorkAssignmentID = assignment.ID;
+            assignment.workerSigninID = signin.ID;
+            assignment.workerAssignedID = _worker.ID;
+            unitOfWork.Commit();
+            return true;
+        }
+        public bool Unassign(WorkerSignin signin)
+        {
+            return true;
+        }
+        public bool Unassign(WorkAssignment assignment)
+        {
+            return true;
+        }
+        public bool Unassign(WorkerSignin signin, WorkAssignment assignment)
+        {
+            return true;
+        }
         public WorkAssignment Create(WorkAssignment workAssignment, string user)
         {
             workAssignment.createdby(user);
@@ -267,7 +300,11 @@ namespace Machete.Service
             _log(workAssignment.ID, user, "WorkAssignment created");
             return _workAssignment;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="user"></param>
         public void Delete(int id, string user)
         {
             var workAssignment = waRepo.GetById(id);
@@ -291,6 +328,12 @@ namespace Machete.Service
             levent.Properties["username"] = user;
             log.Log(levent);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="search"></param>
+        /// <returns></returns>
         private IQueryable<WorkAssignment> QueryDate(IQueryable<WorkAssignment> query, string search)
         {
 
