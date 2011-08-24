@@ -144,11 +144,17 @@
   <data name="email" xml:space="preserve">
     <value>Correo electrónico</value>
   </data>
+  <data name="isbusiness" xml:space="preserve">
+    <value>Es una empresa?</value>
+  </data>
   <data name="name" xml:space="preserve">
     <value>Nombre</value>
   </data>
   <data name="namerequired" xml:space="preserve">
     <value>Un nombre es obligatorio</value>
+  </data>
+  <data name="notes" xml:space="preserve">
+    <value>Notas</value>
   </data>
   <data name="phone" xml:space="preserve">
     <value>Teléfono</value>

@@ -22,7 +22,7 @@ namespace Machete.Data
         //}
         override public IQueryable<WorkAssignment> GetAllQ()
         {
-            return dbset.Include(a => a.workOrder).AsQueryable();
+            return dbset.Include(a => a.workOrder).Include(a => a.workerAssigned).AsQueryable();
         }
     }
     public interface IWorkAssignmentRepository : IRepository<WorkAssignment>

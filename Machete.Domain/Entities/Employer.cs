@@ -16,6 +16,8 @@ namespace Machete.Domain
         [LocalizedDisplayName("active", NameResourceType = typeof(Resources.Employer))]
         public bool active { get; set; }
         //
+        [LocalizedDisplayName("isbusiness", NameResourceType = typeof(Resources.Employer))]
+        public bool business { get; set; }
         [LocalizedDisplayName("name", NameResourceType = typeof(Resources.Employer))]
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Employer))]
         [Required(ErrorMessageResourceName = "namerequired", ErrorMessageResourceType = typeof(Resources.Employer))]
@@ -68,8 +70,13 @@ namespace Machete.Domain
         [LocalizedDisplayName("referredbyOther", NameResourceType = typeof(Resources.Employer))]
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Employer))]
         public string referredbyOther { get; set; }
-
+        //
         [LocalizedDisplayName("blogparticipate", NameResourceType = typeof(Resources.Employer))]
         public bool blogparticipate { get; set; }
+        //
+        [LocalizedDisplayName("notes", NameResourceType = typeof(Resources.Employer))]
+        [StringLength(4000, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Employer))]
+        public string notes { get; set; }
+
     }
 }

@@ -20,10 +20,16 @@ namespace Machete.Test
         WorkAssignmentRepository _waRepo;
         WorkOrderRepository _woRepo;
         WorkerRepository _wRepo;
+        WorkerSigninRepository _wsiRepo;
+        PersonRepository _pRepo;
+        ImageRepository _iRepo;
         DatabaseFactory _dbFactory;
         WorkAssignmentService _waServ;
         WorkOrderService _woServ;
         WorkerService _wServ;
+        PersonService _pServ;
+        ImageService _iServ;
+        WorkerSigninService _wsiServ;
         IUnitOfWork _unitofwork;
         ILookupRepository _lRepo;
         MacheteContext MacheteDB;
@@ -44,16 +50,18 @@ namespace Machete.Test
             _dbFactory = new DatabaseFactory();
             _waRepo = new WorkAssignmentRepository(_dbFactory);
             _woRepo = new WorkOrderRepository(_dbFactory);
+            _wsiRepo = new WorkerSigninRepository(_dbFactory);
             _unitofwork = new UnitOfWork(_dbFactory);
             _wRepo = new WorkerRepository(_dbFactory);
             _lRepo = new LookupRepository(_dbFactory);
-            _waServ = new WorkAssignmentService(_waRepo, _wRepo, _lRepo, _unitofwork);
+            _waServ = new WorkAssignmentService(_waRepo, _wRepo, _lRepo, _wsiRepo, _unitofwork);
             _woServ = new WorkOrderService(_woRepo, _waServ, _unitofwork);
+            _wsiServ = new WorkerSigninService(_wsiRepo, _wRepo, _pRepo, _iRepo, _unitofwork);
             CI = new CultureInfo("en-US", false);
             LookupCache.Initialize(new MacheteContext());
         }
         [TestMethod]
-        public void DbSet_WorkAssignmentService_Intergation_GetIndexView_basic()
+        public void Integration_WA_Service_GetIndexView_basic()
         {       
             //
             //Act
@@ -67,7 +75,7 @@ namespace Machete.Test
             Assert.AreEqual(result.totalCount, 10);            
         }
         [TestMethod]
-        public void DbSet_WorkAssignmentService_Intergation_GetIndexView_check_woidfilter()
+        public void Integration_WA_Service_GetIndexView_check_woidfilter()
         {
             //Act
             var result = _waServ.GetIndexView(CI, ""/*search str*/, DateTime.Parse("8/10/2011"), null/*dwccardnum*/, 1/*woid */, true, /*desc(true), asc(false)*/0, 20, "WOID");
@@ -80,7 +88,7 @@ namespace Machete.Test
             Assert.AreEqual(10, result.totalCount);
         }
         [TestMethod]
-        public void DbSet_WorkAssignmentService_Intergation_GetIndexView_check_search_paperordernum()
+        public void Integration_WA_Service_GetIndexView_check_search_paperordernum()
         {            
             //
             //Act
@@ -95,7 +103,7 @@ namespace Machete.Test
             Assert.AreEqual(10, result.totalCount);
         }
         [TestMethod]
-        public void DbSet_WorkAssignmentService_Intergation_GetIndexView_check_search_description()
+        public void Integration_WA_Service_GetIndexView_check_search_description()
         {
             //
             //Act
@@ -110,7 +118,7 @@ namespace Machete.Test
             Assert.AreEqual(10, result.totalCount);
         }
         [TestMethod]
-        public void DbSet_WorkAssignmentService_Intergation_GetIndexView_check_search_Updatedby()
+        public void Integration_WA_Service_GetIndexView_check_search_Updatedby()
         {
             //
             //Act
@@ -125,7 +133,7 @@ namespace Machete.Test
             Assert.AreEqual(10, result.totalCount);
         }
         [TestMethod]
-        public void DbSet_WorkAssignmentService_Intergation_GetIndexView_check_search_skill()
+        public void Integration_WA_Service_GetIndexView_check_search_skill()
         {
             //
             //Act
@@ -140,7 +148,7 @@ namespace Machete.Test
             Assert.AreEqual(10, result.totalCount);
         }
         [TestMethod]
-        public void DbSet_WorkAssignmentService_Intergation_GetIndexView_check_search_dateTimeofWork()
+        public void Integration_WA_Service_GetIndexView_check_search_dateTimeofWork()
         {
             //
             //Act
@@ -155,11 +163,19 @@ namespace Machete.Test
             Assert.AreEqual(10, result.totalCount);
         }
         [TestMethod]
-        public void DbSet_WorkAssignmentService_Intergation_GetIndexView_check_search_dwccardnum()
+        public void Integration_WA_Service_GetIndexView_check_search_dwccardnum()
         {
             //
             //Act
-            var result = _waServ.GetIndexView(CI, ""/*search str*/, null,30040/*dwccardnum*/, null/*woid */, true, /*desc(true), asc(false)*/0, 20, "WOID");
+            var result = _waServ.GetIndexView(CI, 
+                                            ""/*search str*/, 
+                                            null,
+                                            30040/*dwccardnum*/, 
+                                            null/*woid */, 
+                                            true, /*desc(true), asc(false)*/
+                                            0, 
+                                            20, 
+                                            "WOID");
             //
             //Assert
             var tolist = result.query.ToList();
@@ -169,22 +185,27 @@ namespace Machete.Test
             Assert.AreEqual(10, result.filteredCount);
             Assert.AreEqual(10, result.totalCount);
         }
-
         [TestMethod]
-        public void DbSet_WorkAssignmentService_Intergation_GetSummary()
+        public void Integration_WA_Service_Assign_updates_WSI_and_WA()
         {
-            //
-            //Arrange
-            //
-            //Act
+            var result = _waServ.Assign(1, 1);
+            WorkerSignin wsi2 = _wsiServ.GetWorkerSignin(1);
+            WorkAssignment wa2 = _waServ.Get(1);
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(wa2.workerAssignedID);
+            Assert.IsNotNull(wa2.workerSigninID);
+            Assert.IsNotNull(wsi2.WorkAssignmentID);
+            Assert.IsNotNull(wsi2.WorkerID);
+        }
+        [TestMethod]
+        public void Integration_WA_Service_GetSummary()
+        {
             var result = _waServ.GetSummary("");
-            //
-            //Assert
             Assert.IsNotNull(result, "Person.ID is Null");
         }
 
         [TestMethod]
-        public void DbSet_WorkAssignmentService_Intergation_GetSummary2()
+        public void Integration_WA_Service_GetSummary2()
         {
             //
             //Arrange

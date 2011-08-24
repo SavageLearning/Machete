@@ -18,10 +18,12 @@ namespace Machete.Test.UnitTests.Services
     [TestClass]
     public class WorkAssignmentServiceUnitTests
     {
-        Mock<IWorkAssignmentRepository> _repo;
+        Mock<IWorkAssignmentRepository> _waRepo;
         Mock<IUnitOfWork> _uow;
         Mock<ILookupRepository> _lRepo;
         Mock<IWorkerRepository> _wRepo;
+        Mock<IWorkerSigninRepository> _wsiRepo;
+        WorkAssignmentService _waServ;
 
         public WorkAssignmentServiceUnitTests()
         {
@@ -66,19 +68,24 @@ namespace Machete.Test.UnitTests.Services
         // public void MyTestCleanup() { }
         //
         #endregion
-
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            _waRepo = new Mock<IWorkAssignmentRepository>();
+            _uow = new Mock<IUnitOfWork>();
+            _wRepo = new Mock<IWorkerRepository>();
+            _lRepo = new Mock<ILookupRepository>();
+            _wsiRepo = new Mock<IWorkerSigninRepository>();
+            _waServ = new WorkAssignmentService(_waRepo.Object, _wRepo.Object, _lRepo.Object, _wsiRepo.Object, _uow.Object);
+        }
         [TestMethod]
         public void WorkAssignmentService_GetWorkAssignments_returns_Enumerable()
         {
             //
             //Arrange
-            _repo = new Mock<IWorkAssignmentRepository>();
-            _uow = new Mock<IUnitOfWork>();
-            _wRepo = new Mock<IWorkerRepository>();
-            _lRepo = new Mock<ILookupRepository>();
-            var _serv = new WorkAssignmentService(_repo.Object, _wRepo.Object, _lRepo.Object, _uow.Object);
+
             //Act
-            var result = _serv.GetMany();
+            var result = _waServ.GetMany();
             //Assert
             Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
         }
@@ -88,15 +95,10 @@ namespace Machete.Test.UnitTests.Services
         {
             //
             //Arrange
-            _repo = new Mock<IWorkAssignmentRepository>();
-            _uow = new Mock<IUnitOfWork>();
             int id = 1; //This matches Records._workAssignment3 ID value
-            _repo.Setup(r => r.GetById(id)).Returns(Records._workAssignment1);
-            _wRepo = new Mock<IWorkerRepository>();
-            _lRepo = new Mock<ILookupRepository>();
-            var _serv = new WorkAssignmentService(_repo.Object, _wRepo.Object, _lRepo.Object, _uow.Object);
+            _waRepo.Setup(r => r.GetById(id)).Returns(Records._workAssignment1);
             //Act
-            var result = _serv.Get(id);
+            var result = _waServ.Get(id);
             //Assert
             Assert.IsInstanceOfType(result, typeof(WorkAssignment));
             Assert.IsTrue(result.ID == id);
@@ -107,18 +109,13 @@ namespace Machete.Test.UnitTests.Services
         {
             //
             //Arrange
-            _repo = new Mock<IWorkAssignmentRepository>();
-            _uow = new Mock<IUnitOfWork>();
             string user = "UnitTest";
             Records._workAssignment1.datecreated = DateTime.MinValue;
             Records._workAssignment1.dateupdated = DateTime.MinValue;
-            _repo.Setup(r => r.Add(Records._workAssignment1)).Returns(Records._workAssignment1);
-            _wRepo = new Mock<IWorkerRepository>();
-            _lRepo = new Mock<ILookupRepository>();
-            var _serv = new WorkAssignmentService(_repo.Object, _wRepo.Object, _lRepo.Object, _uow.Object);
+            _waRepo.Setup(r => r.Add(Records._workAssignment1)).Returns(Records._workAssignment1);
             //
             //Act
-            var result = _serv.Create(Records._workAssignment1, user);
+            var result = _waServ.Create(Records._workAssignment1, user);
             //
             //Assert
             Assert.IsInstanceOfType(result, typeof(WorkAssignment));
@@ -127,46 +124,34 @@ namespace Machete.Test.UnitTests.Services
             Assert.IsTrue(result.datecreated > DateTime.MinValue);
             Assert.IsTrue(result.dateupdated > DateTime.MinValue);
         }
-
         [TestMethod]
         public void WorkAssignmentService_DeleteWorkAssignment()
         {
             //
             //Arrange
-            _repo = new Mock<IWorkAssignmentRepository>();
-            _uow = new Mock<IUnitOfWork>();
             string user = "UnitTest";
             int id = 1;
             WorkAssignment dp = new WorkAssignment();
-            _repo.Setup(r => r.Delete(It.IsAny<WorkAssignment>())).Callback((WorkAssignment p) => { dp = p; });
-            _repo.Setup(r => r.GetById(id)).Returns(Records._workAssignment1);
-            _wRepo = new Mock<IWorkerRepository>();
-            _lRepo = new Mock<ILookupRepository>();
-            var _serv = new WorkAssignmentService(_repo.Object, _wRepo.Object, _lRepo.Object, _uow.Object); ;
+            _waRepo.Setup(r => r.Delete(It.IsAny<WorkAssignment>())).Callback((WorkAssignment p) => { dp = p; });
+            _waRepo.Setup(r => r.GetById(id)).Returns(Records._workAssignment1);
             //
             //Act
-            _serv.Delete(id, user);
+            _waServ.Delete(id, user);
             //
             //Assert
             Assert.AreEqual(dp, Records._workAssignment1);
         }
-
         [TestMethod]
         public void WorkAssignmentService_SaveWorkAssignment_updates_timestamp()
         {
             //
             //Arrange
-            _repo = new Mock<IWorkAssignmentRepository>();
-            _uow = new Mock<IUnitOfWork>();
             string user = "UnitTest";
             Records._workAssignment1.datecreated = DateTime.MinValue;
             Records._workAssignment1.dateupdated = DateTime.MinValue;
-            _wRepo = new Mock<IWorkerRepository>();
-            _lRepo = new Mock<ILookupRepository>();
-            var _serv = new WorkAssignmentService(_repo.Object, _wRepo.Object, _lRepo.Object, _uow.Object);
             //
             //Act
-            _serv.Save(Records._workAssignment1, user);
+            _waServ.Save(Records._workAssignment1, user);
             //
             //Assert
             Assert.IsTrue(Records._workAssignment1.Updatedby == user);

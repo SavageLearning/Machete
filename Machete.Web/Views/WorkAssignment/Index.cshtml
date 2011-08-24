@@ -37,10 +37,14 @@
     <thead>
         <tr>
             <th>dwc#</th>
+            <th>full name?!</th>
         </tr>
     </thead>
     </table>
     </div>
+</div>
+<div id="buttonDivider">
+    <input type="button" id="bAssign" class="formButton" value="Assign"/>
 </div>
 <div id="assignmentTab" class="tb-cell">
     <ul>
@@ -48,6 +52,7 @@
     </ul>
         <div id="availAssignList">
         <div id="radioOpenFilled" class="radio" style="float: left;padding: 0 3em 0 0;">
+            <input type="radio" id="rA1_Requested" name="radioOpenFilled" /><label for="rA1_Requested">Requested</label>
 		    <input type="radio" id="rA1_Open" name="radioOpenFilled" checked="checked" /><label for="rA1_Open">Open</label>
 		    <input type="radio" id="rA1_Filled" name="radioOpenFilled"  /><label for="rA1_Filled">Filled</label>
 	    </div>
@@ -86,6 +91,7 @@
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
     $( ".radio" ).buttonset();
+    $(".formButton").button();
         jqrfyTabs($("#assignmentTab"), "ui-tabs-assignment-");
         jqrfyTabs($("#signinTab"), "ui-tabs-signin-");
         
@@ -97,7 +103,8 @@
             "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
             "bProcessing": true,
             "aoColumns": [
-                {"mDataProp": "dwccardnum"}
+                {"mDataProp": "dwccardnum"},
+                {"mDataProp": "fullname"}
             ],
             "fnServerData": function ( sSource, aoData, fnCallback ) {
 			    /* Add some extra data to the sender */
@@ -107,7 +114,12 @@
 				    /* Do whatever additional processing you want on the callback, then tell DataTables */
 				    fnCallback(json)
 			    } );
-		    }
+		    },
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $(nRow).attr('requestedID', aData['WID']);
+                //$(nRow).attr('edittablabel', aData[1]);                
+                return nRow;
+            } 
         });
         jqrfyTable($("#availAssignTable"), $("#assignmentTab"),
         {
@@ -145,9 +157,25 @@
 				        /* Do whatever additional processing you want on the callback, then tell DataTables */
 				        fnCallback(json)
 			        } );
-		        }
-//            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) { },
-//            "fnDrawCallback": function () {}
+		        },
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $(nRow).attr('requestedID', aData['WAID']);
+                //$(nRow).attr('edittablabel', aData[1]);                
+                return nRow;
+            } 
+            });
+            //
+            //
+            //
+            $('#bAssign').click(function (e) {
+                e.preventDefault();                
+                var assignRow = $('#availAssignTable').find('tbody').find('tr.row_selected').attr('requestedID');
+                var signinRow = $('#signinTable').find('tbody').find('tr.row_selected').attr('requestedID');
+                alert("WSI-ID: " + signinRow + " WA-ID: " + assignRow);
+                $.post("/WorkAssignment/Assign", {
+                        waid: assignRow,
+                        wsiid: signinRow
+                });
             });
             $("#updateBtn").click(function (e) {
                 e.preventDefault();

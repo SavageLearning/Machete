@@ -64,6 +64,9 @@ namespace Machete.Data
             HasMany(s => s.workersignins)
                 .WithOptional(s => s.worker)
                 .HasForeignKey(s => s.WorkerID);
+            HasMany(a => a.workAssignments)
+                .WithOptional(a => a.workerAssigned)
+                .HasForeignKey(a => a.workerAssignedID);
         }
     }
     public class WorkerSigninBuilder : EntityTypeConfiguration<WorkerSignin>
@@ -104,6 +107,7 @@ namespace Machete.Data
             HasRequired(k => k.workOrder)
                 .WithMany(a => a.workAssignments)
                 .HasForeignKey(a => a.workOrderID);
+
         }
     }
 }

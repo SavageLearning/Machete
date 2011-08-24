@@ -26,12 +26,24 @@ namespace Machete.Domain
         public string firstname2 { get; set; }
         public string lastname1 { get; set; }
         public string lastname2 { get; set; }
+        public string fullname
+        {
+            get
+            {
+                return firstname1 + " " +
+                        firstname2 + " " +
+                        lastname1 + " " +
+                        lastname2;
+            }
+            set{}
+        }
         public int signinID { get; set; }
         public DateTime dateforsignin { get; set; }
 
 
         public WorkerSigninView(Person p, WorkerSignin s)
         {
+            ID = p.ID;
             firstname1 = p.firstname1;
             firstname2 = p.firstname2;
             lastname1 = p.lastname1;

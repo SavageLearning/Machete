@@ -113,7 +113,9 @@ namespace Machete.Web.Controllers
 
             //return what's left to datatables
             var result = from p in was.query
-                         select new {  dwccardnum = p.dwccardnum,
+                         select new {  WID = p.ID,
+                                        dwccardnum = p.dwccardnum,
+                                        fullname = p.fullname,
                                        firstname1 = p.firstname1,
                                        firstname2 = p.firstname2,
                                        lastname1 = p.lastname1,
