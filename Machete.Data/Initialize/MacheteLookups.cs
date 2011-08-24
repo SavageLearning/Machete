@@ -106,6 +106,7 @@ namespace Machete.Data
                 new Lookup { ID=74, category = "skill", typeOfWorkID=21, speciality=false,  minHour=2, wage=25,    sortorder=9,  text_EN = "HHH Chambita 2hr",                            text_ES = "HHH Chambita 2hr",       fixedJob=true, selected=false},
                 new Lookup { ID=77, category = "skill", typeOfWorkID=20, speciality=false,  minHour=5, wage=15,    sortorder=9,  text_EN = "Demolition",                                  text_ES = "Demolición",             fixedJob=false, selected=false},
                 new Lookup { ID=83, category = "skill", typeOfWorkID=20, speciality=false,  minHour=5, wage=13,    sortorder=1,  text_EN = "Yardwork",                                    text_ES = "trabajar en el jardín",  fixedJob=false, selected=false},
+                new Lookup { ID=88, category = "skill", typeOfWorkID=21, speciality=false,  minHour=3, wage=16.66666,    sortorder=9,  text_EN = "HHH Chambita 3hr",                            text_ES = "HHH Chambita 3hr",  fixedJob=true, selected=false},
                 //last used 86
             }.ForEach(u => context.Lookups.Add(u));
             context.SaveChanges();
