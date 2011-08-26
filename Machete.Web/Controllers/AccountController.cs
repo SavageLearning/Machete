@@ -108,7 +108,7 @@ namespace Machete.Web.Controllers
             }
             if (TryUpdateModel(member))
             {   
-                foreach (String role in Roles.GetAllRoles())
+                foreach (string role in Roles.GetAllRoles())
                 {
                     if (collection[role].Contains("true"))
                     {

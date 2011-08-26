@@ -27,6 +27,7 @@ namespace Machete.Test
         MacheteContext MacheteDB;
         WorkAssignmentRepository waRepo;
         WorkerSigninRepository wsiRepo;
+        WorkerRequestRepository wrRepo;
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
@@ -45,7 +46,8 @@ namespace Machete.Test
             wRepo = new WorkerRepository(dbFactory);
             waRepo = new WorkAssignmentRepository(dbFactory);
             wsiRepo = new WorkerSigninRepository(dbFactory);
-            waServ = new WorkAssignmentService(waRepo, wRepo, lRepo, wsiRepo, uow);
+            wrRepo = new WorkerRequestRepository(dbFactory);
+            waServ = new WorkAssignmentService(waRepo, wRepo, lRepo, wsiRepo, wrRepo, uow);
             woServ = new WorkOrderService(woRepo, waServ, uow);
         }
 

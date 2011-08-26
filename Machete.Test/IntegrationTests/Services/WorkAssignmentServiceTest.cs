@@ -17,24 +17,25 @@ namespace Machete.Test
     [TestClass]
     public class WorkAssignmentServiceTest
     {
-        WorkAssignmentRepository _waRepo;
-        WorkOrderRepository _woRepo;
-        WorkerRepository _wRepo;
-        WorkerSigninRepository _wsiRepo;
-        PersonRepository _pRepo;
-        ImageRepository _iRepo;
-        DatabaseFactory _dbFactory;
-        WorkAssignmentService _waServ;
-        WorkOrderService _woServ;
-        WorkerService _wServ;
-        PersonService _pServ;
-        ImageService _iServ;
-        WorkerSigninService _wsiServ;
-        IUnitOfWork _unitofwork;
-        ILookupRepository _lRepo;
+        WorkAssignmentRepository waRepo;
+        WorkOrderRepository woRepo;
+        WorkerRepository wRepo;
+        WorkerSigninRepository wsiRepo;
+        PersonRepository pRepo;
+        ImageRepository iRepo;
+        DatabaseFactory dbFactory;
+        WorkAssignmentService waServ;
+        WorkOrderService woServ;
+        WorkerService wServ;
+        PersonService pServ;
+        ImageService iServ;
+        WorkerSigninService wsiServ;
+        IUnitOfWork unitofwork;
+        ILookupRepository lRepo;
+        WorkerRequestRepository wrRepo;
         MacheteContext MacheteDB;
         CultureInfo CI;
-        DispatchOptions _dOptions;
+        DispatchOptions dOptions;
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
@@ -47,17 +48,18 @@ namespace Machete.Test
         {
             //DbDatabase.SetInitializer<MacheteContext>(new MacheteInitializer());
             MacheteDB = new MacheteContext();
-            _dbFactory = new DatabaseFactory();
-            _waRepo = new WorkAssignmentRepository(_dbFactory);
-            _woRepo = new WorkOrderRepository(_dbFactory);
-            _wsiRepo = new WorkerSigninRepository(_dbFactory);
-            _unitofwork = new UnitOfWork(_dbFactory);
-            _wRepo = new WorkerRepository(_dbFactory);
-            _lRepo = new LookupRepository(_dbFactory);
-            _waServ = new WorkAssignmentService(_waRepo, _wRepo, _lRepo, _wsiRepo, _unitofwork);
-            _woServ = new WorkOrderService(_woRepo, _waServ, _unitofwork);
-            _wsiServ = new WorkerSigninService(_wsiRepo, _wRepo, _pRepo, _iRepo, _unitofwork);
-            _dOptions = new DispatchOptions
+            dbFactory = new DatabaseFactory();
+            waRepo = new WorkAssignmentRepository(dbFactory);
+            woRepo = new WorkOrderRepository(dbFactory);
+            wsiRepo = new WorkerSigninRepository(dbFactory);
+            unitofwork = new UnitOfWork(dbFactory);
+            wRepo = new WorkerRepository(dbFactory);
+            lRepo = new LookupRepository(dbFactory);
+            wrRepo = new WorkerRequestRepository(dbFactory);
+            waServ = new WorkAssignmentService(waRepo, wRepo, lRepo, wsiRepo, wrRepo, unitofwork);
+            woServ = new WorkOrderService(woRepo, waServ, unitofwork);
+            wsiServ = new WorkerSigninService(wsiRepo, wRepo, pRepo, iRepo, unitofwork);
+            dOptions = new DispatchOptions
             {
                 CI = new CultureInfo("en-US", false),
                 search = "",
@@ -77,7 +79,7 @@ namespace Machete.Test
         {       
             //
             //Act
-            var result = _waServ.GetIndexView(_dOptions);
+            var result = waServ.GetIndexView(dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -87,12 +89,12 @@ namespace Machete.Test
             Assert.AreEqual(result.totalCount, 10);            
         }
         [TestMethod]
-        public void Integration_WA_Service_GetIndexView_check_woidfilter()
+        public void Integration_WA_Service_GetIndexView_checkwoidfilter()
         {
             //Act
-            _dOptions.woid = 1;
-            _dOptions.orderDescending = true;
-            var result = _waServ.GetIndexView(_dOptions);
+            dOptions.woid = 1;
+            dOptions.orderDescending = true;
+            var result = waServ.GetIndexView(dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -106,10 +108,10 @@ namespace Machete.Test
         {            
             //
             //Act
-            _dOptions.search = "12420";
-            _dOptions.woid = 1;
-            _dOptions.orderDescending = true;
-            var result = _waServ.GetIndexView(_dOptions);
+            dOptions.search = "12420";
+            dOptions.woid = 1;
+            dOptions.orderDescending = true;
+            var result = waServ.GetIndexView(dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -124,10 +126,10 @@ namespace Machete.Test
         {
             //
             //Act
-            _dOptions.search = "foostring1";
-            _dOptions.woid = 1;
-            _dOptions.orderDescending = true;
-            var result = _waServ.GetIndexView(_dOptions);
+            dOptions.search = "foostring1";
+            dOptions.woid = 1;
+            dOptions.orderDescending = true;
+            var result = waServ.GetIndexView(dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -140,10 +142,10 @@ namespace Machete.Test
         [TestMethod]
         public void Integration_WA_Service_GetIndexView_check_search_Updatedby()
         {
-            _dOptions.search = "foostring1";
-            _dOptions.woid = 1;
-            _dOptions.orderDescending = true;
-            var result = _waServ.GetIndexView(_dOptions);
+            dOptions.search = "foostring1";
+            dOptions.woid = 1;
+            dOptions.orderDescending = true;
+            var result = waServ.GetIndexView(dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -156,9 +158,9 @@ namespace Machete.Test
         [TestMethod]
         public void Integration_WA_Service_GetIndexView_check_search_skill()
         {
-            _dOptions.search = "Digging";
-            _dOptions.orderDescending = true;
-            var result = _waServ.GetIndexView(_dOptions);
+            dOptions.search = "Digging";
+            dOptions.orderDescending = true;
+            var result = waServ.GetIndexView(dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -169,13 +171,13 @@ namespace Machete.Test
             Assert.AreEqual(10, result.totalCount);
         }
         [TestMethod]
-        public void Integration_WA_Service_GetIndexView_check_search_dateTimeofWork()
+        public void Integration_WA_Service_GetIndexView_check_searchdateTimeofWork()
         {
             //
             //Act
-            _dOptions.search = "8/10/2011 9:00";
-            _dOptions.orderDescending = true;
-            var result = _waServ.GetIndexView(_dOptions);
+            dOptions.search = "8/10/2011 9:00";
+            dOptions.orderDescending = true;
+            var result = waServ.GetIndexView(dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -186,13 +188,13 @@ namespace Machete.Test
             Assert.AreEqual(10, result.totalCount);
         }
         [TestMethod]
-        public void Integration_WA_Service_GetIndexView_check_search_dwccardnum()
+        public void Integration_WA_Service_GetIndexView_check_searchdwccardnum()
         {
             //
             //Act
-            _dOptions.dwccardnum = 30040;
-            _dOptions.orderDescending = true;
-            var result = _waServ.GetIndexView(_dOptions);
+            dOptions.dwccardnum = 30040;
+            dOptions.orderDescending = true;
+            var result = waServ.GetIndexView(dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -205,11 +207,11 @@ namespace Machete.Test
         [TestMethod]
         public void Integration_WA_Service_Assign_updates_WSI_and_WA()
         {
-            WorkerSignin wsi1 = _wsiServ.GetWorkerSignin(1);
-            WorkAssignment wa1 = _waServ.Get(1);
-            var result = _waServ.Assign(wa1, wsi1);
-            WorkerSignin wsi2 = _wsiServ.GetWorkerSignin(1);
-            WorkAssignment wa2 = _waServ.Get(1);
+            WorkerSignin wsi1 = wsiServ.GetWorkerSignin(1);
+            WorkAssignment wa1 = waServ.Get(1);
+            var result = waServ.Assign(wa1, wsi1);
+            WorkerSignin wsi2 = wsiServ.GetWorkerSignin(1);
+            WorkAssignment wa2 = waServ.Get(1);
             Assert.IsNotNull(result);
             Assert.IsNotNull(wa2.workerAssignedID);
             Assert.IsNotNull(wa2.workerSigninID);
@@ -219,7 +221,7 @@ namespace Machete.Test
         [TestMethod]
         public void Integration_WA_Service_GetSummary()
         {
-            var result = _waServ.GetSummary("");
+            var result = waServ.GetSummary("");
             Assert.IsNotNull(result, "Person.ID is Null");
         }
 
@@ -231,10 +233,10 @@ namespace Machete.Test
 
             //
             //Act
-            var woresults = _woServ.GetSummary("8/10/2011");
-            var waresults = _waServ.GetSummary("8/10/2011");
+            var woresults = woServ.GetSummary("8/10/2011");
+            var waresults = waServ.GetSummary("8/10/2011");
 
-            var joined = _woServ.GetSummary("8/10/2011").Join(_waServ.GetSummary("8/10/2011"),
+            var joined = woServ.GetSummary("8/10/2011").Join(waServ.GetSummary("8/10/2011"),
                                         wo => new {wo.date, wo.status},
                                         wa => new {wa.date, wa.status},
                                         (wo, wa) => new

@@ -42,6 +42,7 @@ namespace Machete.Service
         private readonly IWorkerSigninRepository wsiRepo;
         private readonly IUnitOfWork unitOfWork;
         private readonly ILookupRepository lRepo;
+        private readonly IWorkerRequestRepository wrRepo;
         private readonly MacheteContext DB;
         private static Regex isTimeSpecific = new Regex(@"^\s*\d{1,2}[\/-_]\d{1,2}[\/-_]\d{2,4}\s+\d{1,2}:\d{1,2}");
         private static Regex isDaySpecific = new Regex(@"^\s*\d{1,2}\/\d{1,2}\/\d{2,4}");
@@ -55,6 +56,7 @@ namespace Machete.Service
                                      IWorkerRepository wRepo, 
                                      ILookupRepository lRepo, 
                                      IWorkerSigninRepository wsiRepo,
+                                     IWorkerRequestRepository wrRepo,
                                      IUnitOfWork unitOfWork)
         {
             this.waRepo = waRepo;
@@ -62,6 +64,7 @@ namespace Machete.Service
             this.wRepo = wRepo;
             this.lRepo = lRepo;
             this.wsiRepo = wsiRepo;
+            this.wrRepo = wrRepo;
             DB = new MacheteContext();
         }
         /// <summary>
@@ -118,7 +121,15 @@ namespace Machete.Service
             switch (o.wa_grouping) 
             {
                 case "open": queryableWA = queryableWA.Where(p => p.workerAssignedID == null); break;
-                case "filled": queryableWA = queryableWA.Where(p => p.workerAssignedID != null); break;                   
+                case "filled": queryableWA = queryableWA.Where(p => p.workerAssignedID != null); break;
+                case "skilled": queryableWA = queryableWA.Where(p => p.workerAssignedID == null); break;
+                case "requested": queryableWA = queryableWA.Where(p => p.workerAssignedID == null);break;
+                                                           //.Join(wrRepo.GetAllQ(),
+                                                           //      wa => wa.workOrderID,
+                                                           //      wr => wr.WorkOrderID,
+                                                           //      (wa, wr) => new { wa });
+                    
+                
             }
             // 
             // SEARCH STRING

@@ -18,12 +18,13 @@ namespace Machete.Test.UnitTests.Services
     [TestClass]
     public class WorkAssignmentServiceUnitTests
     {
-        Mock<IWorkAssignmentRepository> _waRepo;
-        Mock<IUnitOfWork> _uow;
-        Mock<ILookupRepository> _lRepo;
-        Mock<IWorkerRepository> _wRepo;
-        Mock<IWorkerSigninRepository> _wsiRepo;
-        WorkAssignmentService _waServ;
+        Mock<IWorkAssignmentRepository> waRepo;
+        Mock<IUnitOfWork> uow;
+        Mock<ILookupRepository> lRepo;
+        Mock<IWorkerRepository> wRepo;
+        Mock<IWorkerSigninRepository> wsiRepo;
+        WorkAssignmentService waServ;
+        Mock<WorkerRequestRepository> wrRepo;
 
         public WorkAssignmentServiceUnitTests()
         {
@@ -71,12 +72,14 @@ namespace Machete.Test.UnitTests.Services
         [TestInitialize]
         public void TestInitialize()
         {
-            _waRepo = new Mock<IWorkAssignmentRepository>();
-            _uow = new Mock<IUnitOfWork>();
-            _wRepo = new Mock<IWorkerRepository>();
-            _lRepo = new Mock<ILookupRepository>();
-            _wsiRepo = new Mock<IWorkerSigninRepository>();
-            _waServ = new WorkAssignmentService(_waRepo.Object, _wRepo.Object, _lRepo.Object, _wsiRepo.Object, _uow.Object);
+            waRepo = new Mock<IWorkAssignmentRepository>();
+            uow = new Mock<IUnitOfWork>();
+            wRepo = new Mock<IWorkerRepository>();
+            lRepo = new Mock<ILookupRepository>();
+            wsiRepo = new Mock<IWorkerSigninRepository>();
+            wrRepo = new Mock<WorkerRequestRepository>();
+            waServ = new WorkAssignmentService(waRepo.Object, wRepo.Object, lRepo.Object, wsiRepo.Object, wrRepo.Object, uow.Object);
+            
         }
         [TestMethod]
         public void WorkAssignmentService_GetWorkAssignments_returns_Enumerable()
@@ -85,7 +88,7 @@ namespace Machete.Test.UnitTests.Services
             //Arrange
 
             //Act
-            var result = _waServ.GetMany();
+            var result = waServ.GetMany();
             //Assert
             Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
         }
@@ -96,9 +99,9 @@ namespace Machete.Test.UnitTests.Services
             //
             //Arrange
             int id = 1; //This matches Records._workAssignment3 ID value
-            _waRepo.Setup(r => r.GetById(id)).Returns(Records._workAssignment1);
+            waRepo.Setup(r => r.GetById(id)).Returns(Records._workAssignment1);
             //Act
-            var result = _waServ.Get(id);
+            var result = waServ.Get(id);
             //Assert
             Assert.IsInstanceOfType(result, typeof(WorkAssignment));
             Assert.IsTrue(result.ID == id);
@@ -112,10 +115,10 @@ namespace Machete.Test.UnitTests.Services
             string user = "UnitTest";
             Records._workAssignment1.datecreated = DateTime.MinValue;
             Records._workAssignment1.dateupdated = DateTime.MinValue;
-            _waRepo.Setup(r => r.Add(Records._workAssignment1)).Returns(Records._workAssignment1);
+            waRepo.Setup(r => r.Add(Records._workAssignment1)).Returns(Records._workAssignment1);
             //
             //Act
-            var result = _waServ.Create(Records._workAssignment1, user);
+            var result = waServ.Create(Records._workAssignment1, user);
             //
             //Assert
             Assert.IsInstanceOfType(result, typeof(WorkAssignment));
@@ -132,11 +135,11 @@ namespace Machete.Test.UnitTests.Services
             string user = "UnitTest";
             int id = 1;
             WorkAssignment dp = new WorkAssignment();
-            _waRepo.Setup(r => r.Delete(It.IsAny<WorkAssignment>())).Callback((WorkAssignment p) => { dp = p; });
-            _waRepo.Setup(r => r.GetById(id)).Returns(Records._workAssignment1);
+           waRepo.Setup(r => r.Delete(It.IsAny<WorkAssignment>())).Callback((WorkAssignment p) => { dp = p; });
+            waRepo.Setup(r => r.GetById(id)).Returns(Records._workAssignment1);
             //
             //Act
-            _waServ.Delete(id, user);
+            waServ.Delete(id, user);
             //
             //Assert
             Assert.AreEqual(dp, Records._workAssignment1);
@@ -151,7 +154,7 @@ namespace Machete.Test.UnitTests.Services
             Records._workAssignment1.dateupdated = DateTime.MinValue;
             //
             //Act
-            _waServ.Save(Records._workAssignment1, user);
+            waServ.Save(Records._workAssignment1, user);
             //
             //Assert
             Assert.IsTrue(Records._workAssignment1.Updatedby == user);
