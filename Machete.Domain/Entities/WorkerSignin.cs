@@ -43,7 +43,7 @@ namespace Machete.Domain
 
         public WorkerSigninView(Person p, WorkerSignin s)
         {
-            ID = p.ID;
+            ID = s.ID;
             firstname1 = p.firstname1;
             firstname2 = p.firstname2;
             lastname1 = p.lastname1;

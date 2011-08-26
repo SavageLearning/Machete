@@ -24,21 +24,13 @@ namespace Machete.Service
         IQueryable<WorkAssignmentSummary> GetSummary(string search);
         WorkAssignment Get(int id);
         WorkAssignment Create(WorkAssignment workAssignment, string user);
-        bool Assign(int waid, int wsiid);
+        bool Assign(WorkAssignment assignment,WorkerSignin signin);
         bool Unassign(WorkerSignin signin);
         bool Unassign(WorkAssignment assignment);
         bool Unassign(WorkerSignin signin, WorkAssignment assignment);
         void Delete(int id, string user);
         void Save(WorkAssignment workAssignment, string user);
-        ServiceIndexView<WorkAssignment> GetIndexView(CultureInfo CI,
-                                                        string search,
-                                                        DateTime? date,
-                                                        int? dwccardnum,
-                                                        int? woid,
-                                                        bool orderDescending,
-                                                        int? displayStart,
-                                                        int? displayLength,
-                                                        string sortColName);
+        ServiceIndexView<WorkAssignment> GetIndexView(DispatchOptions o);
     }
 
     // Business logic for WorkAssignment record management
@@ -72,7 +64,11 @@ namespace Machete.Service
             this.wsiRepo = wsiRepo;
             DB = new MacheteContext();
         }
-
+        /// <summary>
+        ///
+        /// </summary>
+        /// <returns></returns>
+        #region GET__()
         public IEnumerable<WorkAssignment> GetMany()
         {
             return waRepo.GetAll();
@@ -97,20 +93,10 @@ namespace Machete.Service
             var workAssignment = waRepo.GetById(id);
             return workAssignment;
         }
-
-        public ServiceIndexView<WorkAssignment> GetIndexView(
-                                                    CultureInfo CI,
-                                                    string search,
-                                                    DateTime? date,
-                                                    int? dwccardnum,
-                                                    int? woid,
-                                                    bool orderDescending,
-                                                    int? displayStart,
-                                                    int? displayLength,
-                                                    string sortColName)
+        #endregion
+        public ServiceIndexView<WorkAssignment> GetIndexView(DispatchOptions o)
         {
             IQueryable<WorkAssignment> queryableWA = waRepo.GetAllQ();
-            IEnumerable<WorkAssignment> enumedWA;
             IEnumerable<WorkAssignment> filteredWA;
             bool isDateTime = false;
 
@@ -118,39 +104,47 @@ namespace Machete.Service
             // 
             // DATE
             //
-            if (date != null)
+            if (o.date != null)
             {
-                queryableWA = queryableWA.Where(p => EntityFunctions.DiffDays(p.workOrder.dateTimeofWork, date) == 0 ? true : false);
+                queryableWA = queryableWA.Where(p => EntityFunctions.DiffDays(p.workOrder.dateTimeofWork, o.date) == 0 ? true : false);
             }
             // 
             // WOID
             //
-            if (woid != null && woid != 0) queryableWA = queryableWA.Where(p => p.workOrderID==woid);
+            if (o.woid != null && o.woid != 0) queryableWA = queryableWA.Where(p => p.workOrderID == o.woid);
+            // 
+            // wa_grouping
+            //
+            switch (o.wa_grouping) 
+            {
+                case "open": queryableWA = queryableWA.Where(p => p.workerAssignedID == null); break;
+                case "filled": queryableWA = queryableWA.Where(p => p.workerAssignedID != null); break;                   
+            }
             // 
             // SEARCH STRING
             //
-            if (!string.IsNullOrEmpty(search))
+            if (!string.IsNullOrEmpty(o.search))
             {
                 DateTime parsedTime;
-                if (isDateTime = DateTime.TryParse(search, out parsedTime))
+                if (isDateTime = DateTime.TryParse(o.search, out parsedTime))
                 {
-                    if (isMonthSpecific.IsMatch(search))  //Regex for month/year
+                    if (isMonthSpecific.IsMatch(o.search))  //Regex for month/year
                         queryableWA = queryableWA.Where(p => EntityFunctions.DiffMonths(p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
-                    if (isDaySpecific.IsMatch(search))  //Regex for day/month/year
+                    if (isDaySpecific.IsMatch(o.search))  //Regex for day/month/year
                         queryableWA = queryableWA.Where(p => EntityFunctions.DiffDays(p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
-                    if (isTimeSpecific.IsMatch(search)) //Regex for day/month/year time
+                    if (isTimeSpecific.IsMatch(o.search)) //Regex for day/month/year time
                         queryableWA = queryableWA.Where(p => EntityFunctions.DiffHours(p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
                 }
                 else
                 {
                     queryableWA = queryableWA
                         .Join(lRepo.GetAllQ(), wa => wa.skillID, sk => sk.ID, (wa, sk) => new { wa, sk })
-                        .Where(p => SqlFunctions.StringConvert((decimal)p.wa.workOrder.paperOrderNum).Contains(search) ||
-                            p.wa.description.Contains(search) ||
-                            p.sk.text_EN.Contains(search) ||
-                            p.sk.text_ES.Contains(search) ||
+                        .Where(p => SqlFunctions.StringConvert((decimal)p.wa.workOrder.paperOrderNum).Contains(o.search) ||
+                            p.wa.description.Contains(o.search) ||
+                            p.sk.text_EN.Contains(o.search) ||
+                            p.sk.text_ES.Contains(o.search) ||
                             //p.dateupdated.ToString().ContainsOIC(param.sSearch) ||
-                            p.wa.Updatedby.Contains(search)).Select(p => p.wa);
+                            p.wa.Updatedby.Contains(o.search)).Select(p => p.wa);
                 }
             }
             int? skill1 =null; 
@@ -162,9 +156,9 @@ namespace Machete.Service
             Stack<int> primeskills = new Stack<int>();
             Stack<int> skills = new Stack<int>();
 
-            if (dwccardnum != null && dwccardnum != 0)
+            if (o.dwccardnum != null && o.dwccardnum != 0)
             {
-                Worker worker = WorkerCache.getCache(w => w.dwccardnum == dwccardnum).FirstOrDefault();
+                Worker worker = WorkerCache.getCache(w => w.dwccardnum == o.dwccardnum).FirstOrDefault();
                 if (worker != null)
                 {
                     if (worker.skill1 != null) primeskills.Push((int)worker.skill1);
@@ -215,25 +209,25 @@ namespace Machete.Service
                 filteredWA = queryableWA.AsEnumerable();
             }
             ////Sort the Persons based on column selection
-            switch (sortColName)
+            switch (o.sortColName)
             {
-                case "pWAID": filteredWA = orderDescending ? filteredWA.OrderByDescending(p => p.pseudoID) : filteredWA.OrderBy(p => p.pseudoID); break;
-                case "skill": filteredWA = orderDescending ? filteredWA.OrderByDescending(p => p.skillID) : filteredWA.OrderBy(p => p.skillID); break;
-                case "earnings": filteredWA = orderDescending ? filteredWA.OrderByDescending(p => p.hourlyWage * p.hours * p.days) : filteredWA.OrderBy(p => p.hourlyWage * p.hours * p.days); break;
-                case "hourlywage": filteredWA = orderDescending ? filteredWA.OrderByDescending(p => p.hourlyWage) : filteredWA.OrderBy(p => p.hourlyWage); break;
-                case "hours": filteredWA = orderDescending ? filteredWA.OrderByDescending(p => p.hours) : filteredWA.OrderBy(p => p.hours); break;
-                case "days": filteredWA = orderDescending ? filteredWA.OrderByDescending(p => p.days) : filteredWA.OrderBy(p => p.days); break;
-                case "WOID": filteredWA = orderDescending ? filteredWA.OrderByDescending(p => p.workOrderID) : filteredWA.OrderBy(p => p.workOrderID); break;
-                case "WAID": filteredWA = orderDescending ? filteredWA.OrderByDescending(p => p.ID) : filteredWA.OrderBy(p => p.ID); break;
-                case "description": filteredWA = orderDescending ? filteredWA.OrderByDescending(p => p.description) : filteredWA.OrderBy(p => p.description); break;                
-                case "updatedby": filteredWA = orderDescending ? filteredWA.OrderByDescending(p => p.Updatedby) : filteredWA.OrderBy(p => p.Updatedby); break;
-                case "dateupdated": filteredWA = orderDescending ? filteredWA.OrderByDescending(p => p.dateupdated) : filteredWA.OrderBy(p => p.dateupdated); break;
-                default: filteredWA = orderDescending ? filteredWA.OrderByDescending(p => p.workOrder.dateTimeofWork) : filteredWA.OrderBy(p => p.workOrder.dateTimeofWork); break;
+                case "pWAID": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.pseudoID) : filteredWA.OrderBy(p => p.pseudoID); break;
+                case "skill": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.skillID) : filteredWA.OrderBy(p => p.skillID); break;
+                case "earnings": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.hourlyWage * p.hours * p.days) : filteredWA.OrderBy(p => p.hourlyWage * p.hours * p.days); break;
+                case "hourlywage": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.hourlyWage) : filteredWA.OrderBy(p => p.hourlyWage); break;
+                case "hours": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.hours) : filteredWA.OrderBy(p => p.hours); break;
+                case "days": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.days) : filteredWA.OrderBy(p => p.days); break;
+                case "WOID": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.workOrderID) : filteredWA.OrderBy(p => p.workOrderID); break;
+                case "WAID": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.ID) : filteredWA.OrderBy(p => p.ID); break;
+                case "description": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.description) : filteredWA.OrderBy(p => p.description); break;                
+                case "updatedby": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.Updatedby) : filteredWA.OrderBy(p => p.Updatedby); break;
+                case "dateupdated": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.dateupdated) : filteredWA.OrderBy(p => p.dateupdated); break;
+                default: filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.workOrder.dateTimeofWork) : filteredWA.OrderBy(p => p.workOrder.dateTimeofWork); break;
             }
             filteredWA = filteredWA.ToList();
             var filtered = filteredWA.Count();
             //Limit results to the display length and offset
-            filteredWA = filteredWA.Skip((int)displayStart).Take((int)displayLength);
+            filteredWA = filteredWA.Skip((int)o.displayStart).Take((int)o.displayLength);
            
            var total = waRepo.GetAllQ().Count();
            return new ServiceIndexView<WorkAssignment>
@@ -243,7 +237,11 @@ namespace Machete.Service
                totalCount = total
            };
       }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="search"></param>
+        /// <returns></returns>
         public IQueryable<WorkAssignmentSummary> GetSummary(string search)
         {
             IQueryable<WorkAssignment> query;
@@ -267,31 +265,79 @@ namespace Machete.Service
 
             return sum_query;
         }
-
-        public bool Assign(int waid, int wsiid)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="waid"></param>
+        /// <param name="wsiid"></param>
+        /// <returns></returns>
+        #region ASSIGNS
+        public bool Assign(WorkAssignment asmt, WorkerSignin signin)
         {
-            WorkerSignin signin = wsiRepo.GetById(wsiid);
-            WorkAssignment assignment = waRepo.GetById(waid);
-            Worker _worker = wRepo.Get(w => w.dwccardnum == signin.dwccardnum);
-            signin.WorkerID = _worker.ID;
-            signin.WorkAssignmentID = assignment.ID;
-            assignment.workerSigninID = signin.ID;
-            assignment.workerAssignedID = _worker.ID;
+            //Assignments must be explicitly unassigned first; throws exception if either record is in assigned state
+            if (signin == null) throw new NullReferenceException("WorkerSignin is null");
+            if (signin.WorkAssignmentID != null) throw new MacheteDispatchException("WorkerSignin already associated with WorkAssignment ID " + signin.WorkAssignmentID);
+            if (signin.WorkerID == null) throw new MacheteIntegrityException("WorkerSignin key not associated with a Worker record. Check worker record ID.");
+            if (asmt == null) throw new NullReferenceException("WorkAssignment is null");
+            if (asmt.workerSigninID != null) throw new MacheteDispatchException("WorkAssignment already associated with WorkerSignin ID " + asmt.workerSigninID);
+            if (asmt.workerAssignedID != null) throw new MacheteDispatchException("WorkAssignment already associated with Worker ID " + asmt.workerAssignedID);
+            Worker worker = wRepo.Get(w => w.dwccardnum == signin.dwccardnum);
+            if (worker == null) throw new NullReferenceException("Worker for key " + signin.dwccardnum.ToString() + " is null");
+            if (worker.ID != signin.WorkerID) throw new MacheteIntegrityException("WorkerSignin's internal WorkerID and public worker ID don't match");
+            //
+            // Link signin with 
+            //signin.WorkerID = worker.ID;
+            signin.WorkAssignmentID = asmt.ID;
+            asmt.workerSigninID = signin.ID;
+            asmt.workerAssignedID = worker.ID;
             unitOfWork.Commit();
             return true;
         }
         public bool Unassign(WorkerSignin signin)
         {
-            return true;
+            return Unassign(signin, null);
         }
         public bool Unassign(WorkAssignment assignment)
         {
-            return true;
+            return Unassign(null, assignment);
         }
-        public bool Unassign(WorkerSignin signin, WorkAssignment assignment)
+        public bool Unassign(WorkerSignin signin, WorkAssignment asmt)
         {
+            if (signin == null && asmt == null) throw new NullReferenceException("Signin and WorkAssignment are both null");
+            //Try unassign with WorkAssignment record only
+            if (signin == null) // Assignment processing
+            {
+                // legacy assignment; only thing to do is clear it.                
+                if (asmt.workerSigninID == null) //throw new MacheteIntegrityException("Unassign called on non-assigned WorkAssignment");
+                {
+                    asmt.workerAssignedID = null;
+                    unitOfWork.Commit();
+                    return true;
+                }
+                // Proper dispatch, called with only WorkAssignment
+                else
+                {
+                    signin = wsiRepo.GetById((long)asmt.workerSigninID);
+                }
+            }
+            else if (asmt == null) //asmt must be null -- Signin processing
+            {
+                if (signin.WorkAssignmentID == null) throw new MacheteIntegrityException("Unassign called on non-assigned WorkerSignin");
+                asmt = waRepo.GetById((long)signin.WorkAssignmentID);
+            }
+            //Have both assignment and signin. 
+            if (signin == null || asmt == null) throw new NullReferenceException("Signin and WorkAssignment are both null");
+            //Try unassign with WorkerSignin only 
+            if (signin.WorkAssignmentID != asmt.ID) throw new MacheteIntegrityException("WorkerSignin doesn't link back to referencing Assignment");          
+            if (asmt.workerSigninID != signin.ID) throw new MacheteIntegrityException("WorkAssignment doesn't link back to referencing WorkerSignin");            
+            signin.WorkAssignmentID = null;
+            asmt.workerSigninID = null;
+            asmt.workerAssignedID = null;
+            unitOfWork.Commit();
             return true;
         }
+        #endregion
+        #region CRUD
         public WorkAssignment Create(WorkAssignment workAssignment, string user)
         {
             workAssignment.createdby(user);
@@ -305,6 +351,7 @@ namespace Machete.Service
         /// </summary>
         /// <param name="id"></param>
         /// <param name="user"></param>
+
         public void Delete(int id, string user)
         {
             var workAssignment = waRepo.GetById(id);
@@ -328,6 +375,7 @@ namespace Machete.Service
             levent.Properties["username"] = user;
             log.Log(levent);
         }
+        #endregion
         /// <summary>
         /// 
         /// </summary>
@@ -351,5 +399,19 @@ namespace Machete.Service
             return query;
 
         }
+    }
+    public class DispatchOptions
+    {
+            public CultureInfo CI;
+            public string search;
+            public DateTime? date;
+            public int? dwccardnum;
+            public int? woid;
+            public bool orderDescending;
+            public int? displayStart;
+            public int? displayLength;
+            public string sortColName;
+            public string wa_grouping;
+            public string typeofwork_grouping;
     }
 }

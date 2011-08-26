@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EmployerService.cs" />
+    <Compile Include="Exceptions.cs" />
     <Compile Include="Helpers\OrderSummary.cs" />
     <Compile Include="Helpers\ServiceIndexView.cs" />
     <Compile Include="ImageService.cs" />

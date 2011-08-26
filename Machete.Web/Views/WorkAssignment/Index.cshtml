@@ -11,9 +11,12 @@
     @Html.LabelFor(m => m.todaysdate)
 </div>
 <div>
-    @Html.TextBoxFor(m => m.todaysdate)
+    @Html.TextBoxFor(m => m.todaysdate, new { @class="ui-datepicker"})
     <input type="button" value="update" id="updateBtn" />
-
+    @Html.LabelFor(m => m.wa_grouping)
+    @Html.TextBoxFor(m => m.wa_grouping)
+    @Html.LabelFor(m => m.typeofwork_grouping)
+    @Html.TextBoxFor(m => m.typeofwork_grouping)
 </div>
 }    
 <div>
@@ -44,7 +47,8 @@
     </div>
 </div>
 <div id="buttonDivider">
-    <input type="button" id="bAssign" class="formButton" value="Assign"/>
+    <input type="button" id="bAssign" class="formButton" value="Assign" style="padding: 2em;"/>
+    <input type="button" id="bUnassign" class="formButton" value="Unassign" style="padding: 2em;"/>
 </div>
 <div id="assignmentTab" class="tb-cell">
     <ul>
@@ -52,20 +56,22 @@
     </ul>
         <div id="availAssignList">
         <div id="radioOpenFilled" class="radio" style="float: left;padding: 0 3em 0 0;">
-            <input type="radio" id="rA1_Requested" name="radioOpenFilled" /><label for="rA1_Requested">Requested</label>
-		    <input type="radio" id="rA1_Open" name="radioOpenFilled" checked="checked" /><label for="rA1_Open">Open</label>
-		    <input type="radio" id="rA1_Filled" name="radioOpenFilled"  /><label for="rA1_Filled">Filled</label>
+		    <input type="radio" id="rA1_all" name="radioOpenFilled" checked="checked" /><label for="rA1_all">All</label>
+            <input type="radio" id="rA1_requested" name="radioOpenFilled" /><label for="rA1_requested">Requested</label>
+		    <input type="radio" id="rA1_skilled" name="radioOpenFilled" /><label for="rA1_skilled">Skilled</label>
+            <input type="radio" id="rA1_open" name="radioOpenFilled" /><label for="rA1_open">Open</label>
+		    <input type="radio" id="rA1_filled" name="radioOpenFilled"  /><label for="rA1_filled">Filled</label>
 	    </div>
         <div id="radioProgram" class="radio" style="float: left;float: left;padding: 0 3em 0 0;">
 		    <input type="radio" id="rA2_DWC" name="radioProgram" checked="checked" /><label for="rA2_DWC">DWC</label>
 		    <input type="radio" id="rA2_HHH" name="radioProgram"  /><label for="rA2_HHH">HHH</label>
             <input type="radio" id="rA2_All" name="radioProgram"  /><label for="rA2_All">All</label>
 	    </div>
-        <div id="radioDate" class="radio" style="float: left;float: left;padding: 0 3em 0 0;">
+@*        <div id="radioDate" class="radio" style="float: left;float: left;padding: 0 3em 0 0;">
 		    <input type="radio" id="rA3_today" name="radioDate" checked="checked" /><label for="rA3_today">Today</label>
-		    <input type="radio" id="rA3_picker" name="radioDate" /><label for="rA3_picker">Select date</label>
-            <input type="radio" id="rA3_All" name="radioDate" /><label for="rA3_All">Date range</label>
-	    </div>
+		    <input type="radio" id="rA3_picker" name="radioDate" class="ui-datepicker"/><label for="rA3_picker">Select date</label>
+            <input type="radio" id="rA3_range" name="radioDate" /><label for="rA3_range">Date range</label>
+	    </div>*@
             <table id="availAssignTable" class="display">
             <thead>
                 <tr>
@@ -90,6 +96,7 @@
 </div>
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
+    DatePicker();
     $( ".radio" ).buttonset();
     $(".formButton").button();
         jqrfyTabs($("#assignmentTab"), "ui-tabs-assignment-");
@@ -110,13 +117,15 @@
 			    /* Add some extra data to the sender */
 			    aoData.push( { "name": "todaysdate", "value": $('#todaysdate').val() } );
                 aoData.push( { "name": "dwccardnum", "value": $('#dwccardnum').val()} );
+                aoData.push( { "name": "wa_grouping", "value": $('#wa_grouping').val()} );
+                aoData.push( { "name": "typeofwork_grouping", "value": $('#typeofwork_grouping').val()} );
 			    $.getJSON( sSource, aoData, function (json) { 
 				    /* Do whatever additional processing you want on the callback, then tell DataTables */
 				    fnCallback(json)
 			    } );
 		    },
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                $(nRow).attr('requestedID', aData['WID']);
+                $(nRow).attr('requestedID', aData['WSIID']);
                 //$(nRow).attr('edittablabel', aData[1]);                
                 return nRow;
             } 
@@ -153,6 +162,8 @@
 			        /* Add some extra data to the sender */
 			        aoData.push( { "name": "todaysdate", "value": $('#todaysdate').val() } );
                     aoData.push( { "name": "dwccardnum", "value": $('#dwccardnum').val()} );
+                    aoData.push( { "name": "wa_grouping", "value": $('#wa_grouping').val()} );
+                    aoData.push( { "name": "typeofwork_grouping", "value": $('#typeofwork_grouping').val()} );
 			        $.getJSON( sSource, aoData, function (json) { 
 				        /* Do whatever additional processing you want on the callback, then tell DataTables */
 				        fnCallback(json)
@@ -160,6 +171,13 @@
 		        },
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $(nRow).attr('requestedID', aData['WAID']);
+                //alert(aData['WID'] + "-" + aData['WSIID']);
+                if (aData['WID'] > 0 && aData['WSIID'] > 0) { // green
+                    $(nRow).addClass('gradeA');
+                } 
+                if (aData['WID'] > 0 && aData['WSIID'] == 0) { // red
+                    $(nRow).addClass('gradeX');
+                }   
                 //$(nRow).attr('edittablabel', aData[1]);                
                 return nRow;
             } 
@@ -172,15 +190,72 @@
                 var assignRow = $('#availAssignTable').find('tbody').find('tr.row_selected').attr('requestedID');
                 var signinRow = $('#signinTable').find('tbody').find('tr.row_selected').attr('requestedID');
                 alert("WSI-ID: " + signinRow + " WA-ID: " + assignRow);
-                $.post("/WorkAssignment/Assign", {
+                $.post("/WorkAssignment/Assign", 
+                    {
+                        waid: assignRow,
+                        wsiid: signinRow
+                    },
+                    function (data) {
+                        alert("result:"+data.result+"Message:"+data.resultMsg);
+                    }
+                );
+            });
+                        //
+            //
+            //
+            $('#bUnassign').click(function (e) {
+                e.preventDefault();                
+                var assignRow = $('#availAssignTable').find('tbody').find('tr.row_selected').attr('requestedID');
+                var signinRow = $('#signinTable').find('tbody').find('tr.row_selected').attr('requestedID');
+                alert("WSI-ID: " + signinRow + " WA-ID: " + assignRow);
+                $.post("/WorkAssignment/Unassign", {
                         waid: assignRow,
                         wsiid: signinRow
                 });
             });
+            $('#rA1_all').click(function (e) {
+                e.preventDefault();  
+                $('#wa_grouping').val('all');
+                $("#updateBtn").click();           
+            });
+            $('#rA1_requested').click(function (e) {
+                e.preventDefault();
+//                var _date = new Date();
+//                $('#todaysdate').val(_date.toLocaleDateString());
+                $('#wa_grouping').val('requested');
+                $("#updateBtn").click();
+            });
+            $('#rA1_open').click(function (e) {
+                e.preventDefault();  
+                $('#wa_grouping').val('open');
+                $("#updateBtn").click();           
+            });
+            $('#rA1_skilled').click(function (e) {
+                e.preventDefault();  
+                $('#wa_grouping').val('skilled');
+                $("#updateBtn").click();           
+            });
+            $('#rA1_filled').click(function (e) {
+                e.preventDefault(); 
+                $('#wa_grouping').val('filled');
+                $("#updateBtn").click();
+            });
+            
             $("#updateBtn").click(function (e) {
                 e.preventDefault();
                 $("#availAssignTable").dataTable().fnDraw();
                 $("#signinTable").dataTable().fnDraw();
             });
     });
+    function DatePicker() {
+        $('.ui-datepicker').datepicker({
+            dateFormat: 'mm/dd/yy',
+            buttonImage: '@Url.Content("~/Content/calendar.gif")',
+            buttonImageOnly: true,
+            showOn: "button"
+        });
+         $('.ui-datepicker').change(function (event) {
+            $("#updateBtn").click();
+         });
+    }
 </script>

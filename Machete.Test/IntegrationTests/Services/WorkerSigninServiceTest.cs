@@ -29,6 +29,7 @@ namespace Machete.Test
         ImageService _iServ;
         IUnitOfWork _unitofwork;
         MacheteContext MacheteDB;
+        DispatchOptions _dOptions;
         CultureInfo CI;
         
         [ClassInitialize]
@@ -51,7 +52,18 @@ namespace Machete.Test
             _iServ = new ImageService(_iRepo, _unitofwork);
             _wServ = new WorkerService(_wRepo, _unitofwork);
             _wsiServ = new WorkerSigninService(_wsiRepo, _wRepo, _pRepo, _iRepo, _unitofwork);
-            CI = new CultureInfo("en-US", false);
+            _dOptions = new DispatchOptions
+            {
+                CI = new CultureInfo("en-US", false),
+                search = "",
+                date = DateTime.Parse("8/10/2011"),
+                dwccardnum = null,
+                woid = null,
+                orderDescending = true,
+                sortColName = "WOID",
+                displayStart = 0,
+                displayLength = 20
+            };
         }
         [TestMethod]
         public void DbSet_WorkerSignin_GetView()
@@ -65,10 +77,10 @@ namespace Machete.Test
         [TestMethod]
         public void DbSet_WorkSigninService_Intergation_GetIndexView_check_search_dwccardnum()
         {
-            DateTime date = Convert.ToDateTime("08/10/2011");
             //
             //Act
-            ServiceIndexView<WorkerSigninView> result = _wsiServ.GetIndexView(CI, ""/*search str*/, date, 30040/*dwccardnum*/, null/*woid */, true, /*desc(true), asc(false)*/0, 20, "WOID");
+            _dOptions.dwccardnum = 30040;
+            ServiceIndexView<WorkerSigninView> result = _wsiServ.GetIndexView(_dOptions);
             //
             //Assert
             List<WorkerSigninView> tolist = result.query.ToList();

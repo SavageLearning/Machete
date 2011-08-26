@@ -21,17 +21,7 @@ namespace Machete.Service
         IEnumerable<WorkerSigninView> getView(DateTime date);
         Image getImage(int dwccardnum);
         DateTime getExpireDate(int dwccardnum);
-        ServiceIndexView<WorkerSigninView> GetIndexView(
-                    CultureInfo CI,
-                    string search,
-                    DateTime? date,
-                    int? dwccardnum,
-                    int? skillid,
-                    bool orderDescending,
-                    int? displayStart,
-                    int? displayLength,
-                    string sortColName
-            );
+        ServiceIndexView<WorkerSigninView> GetIndexView(DispatchOptions o);
         IEnumerable<WorkerSignin> GetSigninsForAssignment(DateTime date, string search, string order, int? displayStart, int? displayLength);
     }
     public class WorkerSigninService : IWorkerSigninService
@@ -122,17 +112,12 @@ namespace Machete.Service
                 }
             return allWSI.AsEnumerable();
         }
-        public ServiceIndexView<WorkerSigninView> GetIndexView(
-                    CultureInfo CI,
-                    string search,
-                    DateTime? date,
-                    int? dwccardnum,
-                    int? skillid,
-                    bool orderDescending,
-                    int? displayStart,
-                    int? displayLength,
-                    string sortColName
-            )
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        public ServiceIndexView<WorkerSigninView> GetIndexView(DispatchOptions o)
         {
             //Get all the records
             IQueryable<WorkerSignin> queryableWSI = signinRepo.GetAllQ();
@@ -140,21 +125,29 @@ namespace Machete.Service
             IEnumerable<WorkerSigninView> enumWSIV;
             //Search based on search-bar string
             //DateTime parsedTime;
-            if (date != null)
+            if (o.date != null)
             {
-                queryableWSI = queryableWSI.Where(p => EntityFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false);
+                queryableWSI = queryableWSI.Where(p => EntityFunctions.DiffDays(p.dateforsignin, o.date) == 0 ? true : false);
 
             }
-            if (!string.IsNullOrEmpty(search))
+            // 
+            // wa_grouping
+            //
+            switch (o.wa_grouping)
+            {
+                case "open": queryableWSI = queryableWSI.Where(p => p.WorkAssignmentID == null); break;
+                case "filled": queryableWSI = queryableWSI.Where(p => p.WorkAssignmentID != null); break;
+            }
+            if (!string.IsNullOrEmpty(o.search))
             {
                 enumWSI = queryableWSI.ToList()
                     .Join(WorkerCache.getCache(), s => s.dwccardnum, w => w.dwccardnum, (s, w) => new { s, w })
-                    .Where(p => SqlFunctions.StringConvert((decimal)p.w.dwccardnum).Contains(search) ||
+                    .Where(p => SqlFunctions.StringConvert((decimal)p.w.dwccardnum).Contains(o.search) ||
 
-                                p.w.Person.firstname1.Contains(search) ||
-                                p.w.Person.firstname2.Contains(search) ||
-                                p.w.Person.lastname1.Contains(search) ||
-                                p.w.Person.lastname2.Contains(search)).Select(a => a.s);
+                                p.w.Person.firstname1.Contains(o.search) ||
+                                p.w.Person.firstname2.Contains(o.search) ||
+                                p.w.Person.lastname1.Contains(o.search) ||
+                                p.w.Person.lastname2.Contains(o.search)).Select(a => a.s);
             }
             else
             {
@@ -166,21 +159,20 @@ namespace Machete.Service
                         .Select(p => new WorkerSigninView(p.w.Person, p.s));
 
             //Sort the Persons based on column selection
-            switch (sortColName)
-            {
-                //case "WOID": orderedWSI = orderDescending ? enumWSIV.OrderByDescending(p => p.dateTimeofWork) : enumWSIV.OrderBy(p => p.dateTimeofWork); break;
-                case "dwccardnum": enumWSIV = orderDescending ? enumWSIV.OrderByDescending(p => p.dwccardnum) : enumWSIV.OrderBy(p => p.dwccardnum); break;
-                case "firstname1": enumWSIV = orderDescending ? enumWSIV.OrderByDescending(p => p.firstname1) : enumWSIV.OrderBy(p => p.firstname1); break;
-                case "firstname2": enumWSIV = orderDescending ? enumWSIV.OrderByDescending(p => p.firstname2) : enumWSIV.OrderBy(p => p.firstname2); break;
-                case "lastname1": enumWSIV = orderDescending ? enumWSIV.OrderByDescending(p => p.lastname1) : enumWSIV.OrderBy(p => p.lastname1); break;
-                case "lastname2": enumWSIV = orderDescending ? enumWSIV.OrderByDescending(p => p.lastname2) : enumWSIV.OrderBy(p => p.lastname2); break;
-                case "dateupdated": enumWSIV = orderDescending ? enumWSIV.OrderByDescending(p => p.dateupdated) : enumWSIV.OrderBy(p => p.dateupdated); break;
-                default: enumWSIV = orderDescending ? enumWSIV.OrderByDescending(p => p.dateforsignin) : enumWSIV.OrderBy(p => p.dateforsignin); break;
+            switch (o.sortColName)
+            {               
+                case "dwccardnum": enumWSIV = o.orderDescending ? enumWSIV.OrderByDescending(p => p.dwccardnum) : enumWSIV.OrderBy(p => p.dwccardnum); break;
+                case "firstname1": enumWSIV = o.orderDescending ? enumWSIV.OrderByDescending(p => p.firstname1) : enumWSIV.OrderBy(p => p.firstname1); break;
+                case "firstname2": enumWSIV = o.orderDescending ? enumWSIV.OrderByDescending(p => p.firstname2) : enumWSIV.OrderBy(p => p.firstname2); break;
+                case "lastname1": enumWSIV = o.orderDescending ? enumWSIV.OrderByDescending(p => p.lastname1) : enumWSIV.OrderBy(p => p.lastname1); break;
+                case "lastname2": enumWSIV = o.orderDescending ? enumWSIV.OrderByDescending(p => p.lastname2) : enumWSIV.OrderBy(p => p.lastname2); break;
+                case "dateupdated": enumWSIV = o.orderDescending ? enumWSIV.OrderByDescending(p => p.dateupdated) : enumWSIV.OrderBy(p => p.dateupdated); break;
+                default: enumWSIV = o.orderDescending ? enumWSIV.OrderByDescending(p => p.dateforsignin) : enumWSIV.OrderBy(p => p.dateforsignin); break;
             }
             //queryableWSI = queryableWSI.ToList();
             var filtered = enumWSIV.Count();
             //if (param.iDisplayLength > 0 && param.iDisplayStart > 0)
-            enumWSIV = enumWSIV.Skip<WorkerSigninView>((int)displayStart).Take((int)displayLength);
+            enumWSIV = enumWSIV.Skip<WorkerSigninView>((int)o.displayStart).Take((int)o.displayLength);
 
             var total = signinRepo.GetAllQ().Count();
 

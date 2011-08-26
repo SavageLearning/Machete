@@ -21,20 +21,23 @@ namespace Machete.Web.Controllers
     [ElmahHandleError]
     public class WorkAssignmentController : Controller
     {
-        private readonly IWorkAssignmentService _assServ;
-        private readonly IWorkerService _wkrServ;
-        private readonly IWorkOrderService _ordServ;
+        private readonly IWorkAssignmentService waServ;
+        private readonly IWorkerService wkrServ;
+        private readonly IWorkOrderService woServ;
+        private readonly IWorkerSigninService wsiServ;
         private MacheteContext DB;
         private string culture {get; set;}
         private Logger log = LogManager.GetCurrentClassLogger();
         private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "WorkAssignmentController", "");
         public WorkAssignmentController(IWorkAssignmentService workAssignmentService,
                                         IWorkerService workerService,
-                                        IWorkOrderService workOrderService)
+                                        IWorkOrderService workOrderService,
+                                        IWorkerSigninService signinService)
         {
-            this._assServ = workAssignmentService;
-            this._wkrServ = workerService;
-            this._ordServ = workOrderService;
+            this.waServ = workAssignmentService;
+            this.wkrServ = workerService;
+            this.woServ = workOrderService;
+            this.wsiServ = signinService;
         }
         protected override void Initialize(RequestContext requestContext)
         {
@@ -71,37 +74,39 @@ namespace Machete.Web.Controllers
         {
             //Get all the records
             System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
-            //var allAssignments = _assServ.GetMany();
 
-            //return what's left to datatables
-            ServiceIndexView<WorkAssignment> was = _assServ.GetIndexView(
-                    CI,
-                    param.sSearch,
-                    param.todaysdate == null ? null : (DateTime?)DateTime.Parse(param.todaysdate),
-                    Convert.ToInt32(param.dwccardnum),
-                    Convert.ToInt32(param.searchColName("WOID")),
-                    param.sSortDir_0 == "asc" ? false : true,
-                    param.iDisplayStart,
-                    param.iDisplayLength,
-                    param.sortColName()
-                );
-            var result = from p in was.query
-                         select new { tabref = _getTabRef(p),
-                                      tablabel = _getTabLabel(p),
-                                      WOID = Convert.ToString(p.workOrderID),
-                                      WAID = Convert.ToString(p.ID),
-                                      pWAID = _getFullPseudoID(p), 
-                                      englishlevel = Convert.ToString(p.englishLevelID),
-                                      skill =  Lookups.byID(p.skillID, culture),
-                                      hourlywage = System.String.Format("${0:f2}", p.hourlyWage),
-                                      hours = Convert.ToString(p.hours),
-                                      days = Convert.ToString(p.days),
-                                      description = p.description,
-                                      dateupdated = Convert.ToString(p.dateupdated), 
-                                      updatedby = p.Updatedby,
-                                      dateTimeofWork = p.workOrder.dateTimeofWork.ToString(),
-                                      earnings = System.String.Format("${0:f2}",(p.hourlyWage * p.hours * p.days))
-                         };
+            ServiceIndexView<WorkAssignment> was = waServ.GetIndexView(new DispatchOptions {
+                    CI = CI,
+                    search = param.sSearch,
+                    date = param.todaysdate == null ? null : (DateTime?)DateTime.Parse(param.todaysdate),
+                    dwccardnum = Convert.ToInt32(param.dwccardnum),
+                    woid = Convert.ToInt32(param.searchColName("WOID")),
+                    orderDescending = param.sSortDir_0 == "asc" ? false : true,
+                    displayStart = param.iDisplayStart,
+                    displayLength = param.iDisplayLength,
+                    sortColName=param.sortColName(),
+                    wa_grouping = param.wa_grouping,
+                    typeofwork_grouping = param.typeofwork_grouping
+            });
+            var result = from p in was.query select new { 
+                            tabref = _getTabRef(p),
+                            tablabel = _getTabLabel(p),
+                            WOID = Convert.ToString(p.workOrderID),
+                            WAID = Convert.ToString(p.ID),
+                            pWAID = _getFullPseudoID(p), 
+                            englishlevel = Convert.ToString(p.englishLevelID),
+                            skill =  Lookups.byID(p.skillID, CI.TwoLetterISOLanguageName),
+                            hourlywage = System.String.Format("${0:f2}", p.hourlyWage),
+                            hours = Convert.ToString(p.hours),
+                            days = Convert.ToString(p.days),
+                            description = p.description,
+                            dateupdated = Convert.ToString(p.dateupdated), 
+                            updatedby = p.Updatedby,
+                            dateTimeofWork = p.workOrder.dateTimeofWork.ToString(),
+                            earnings = System.String.Format("${0:f2}",(p.hourlyWage * p.hours * p.days)),
+                            WSIID = p.workerSigninID ?? 0,
+                            WID = p.workerAssignedID ?? 0
+                };
  
             return Json(new
             {
@@ -168,10 +173,10 @@ namespace Machete.Web.Controllers
                 //TODO: this may always blow up
                 return PartialView("Create", assignment);
             }
-            assignment.workOrder = _ordServ.GetWorkOrder(assignment.workOrderID);
+            assignment.workOrder = woServ.GetWorkOrder(assignment.workOrderID);
             assignment.workOrder.waPseudoIDCounter++;
             assignment.pseudoID = assignment.workOrder.waPseudoIDCounter;
-            WorkAssignment newAssignment = _assServ.Create(assignment, userName);
+            WorkAssignment newAssignment = waServ.Create(assignment, userName);
 
             return Json(new
             {
@@ -193,13 +198,13 @@ namespace Machete.Web.Controllers
         #region Duplicate
         public ActionResult Duplicate(int id, string userName)
         {
-            WorkAssignment _assignment = _assServ.Get(id);
+            WorkAssignment _assignment = waServ.Get(id);
             WorkAssignment newAssign = _assignment;
             newAssign.workOrder.waPseudoIDCounter++;
             newAssign.pseudoID = newAssign.workOrder.waPseudoIDCounter;
             newAssign.workerAssigned = null;
             newAssign.workerAssignedID = null;
-            _assServ.Create(newAssign, userName);
+            waServ.Create(newAssign, userName);
             return Json(new
             {
                 sNewRef = _getTabRef(newAssign),
@@ -212,13 +217,55 @@ namespace Machete.Web.Controllers
         #endregion
 
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator, Manager")]
         #region Assign
         public ActionResult Assign(int waid, int wsiid, string userName)
         {
-            _assServ.Assign(waid, wsiid);
-            return Json(new { }, JsonRequestBehavior.AllowGet);
+            string returnMsg = "";
+            bool successful = true;
+            WorkerSignin signin = wsiServ.GetWorkerSignin(wsiid);          
+            WorkAssignment assignment = waServ.Get(waid);
+            try
+            {
+                waServ.Assign(assignment, signin);
+            }
+            catch (Exception e)
+            {
+                returnMsg = e.Message.ToString();
+                successful = false;
+            }
+            return Json(new
+            {
+                resultMsg = returnMsg,
+                result = successful
+            }, JsonRequestBehavior.AllowGet);            
         }
+
+        [HttpPost, UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager")]
+
+        public ActionResult Unassign(int waid, int wsiid, string userName)
+        {
+            string returnMsg = "";
+            bool successful = true;
+            WorkerSignin signin = wsiServ.GetWorkerSignin(wsiid);
+            WorkAssignment assignment = waServ.Get(waid);
+            try
+            {
+                waServ.Unassign(signin, assignment);
+            }
+            catch (Exception e)
+            {
+                returnMsg = e.Message.ToString();
+                successful = false;
+            }
+            return Json(new
+            {
+                resultMsg = returnMsg,
+                result = successful
+            }, JsonRequestBehavior.AllowGet);
+        }
+
         #endregion
         //
         // GET: /WorkAssignment/Edit/5
@@ -227,10 +274,10 @@ namespace Machete.Web.Controllers
         #region Edit
         public ActionResult Edit(int id)
         {
-            WorkAssignment wa = _assServ.Get(id);
+            WorkAssignment wa = waServ.Get(id);
             if (wa.workerAssignedID != null)
             {
-                wa.workerAssigned = _wkrServ.GetWorker((int)wa.workerAssignedID);
+                wa.workerAssigned = wkrServ.GetWorker((int)wa.workerAssignedID);
             }
             //ViewBag.days2 = new SelectList(Lookups.days(), "Value", "Text", workAssignment.days);
             return PartialView(wa);
@@ -243,11 +290,11 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Edit(int id, FormCollection collection, string userName)
         {
-            WorkAssignment _assignment = _assServ.Get(id);
+            WorkAssignment _assignment = waServ.Get(id);
 
             if (TryUpdateModel(_assignment))
             {
-                _assServ.Save(_assignment, userName);
+                waServ.Save(_assignment, userName);
                 //feeding parent work order to Index
                 return PartialView(_assignment);
             }
@@ -268,7 +315,7 @@ namespace Machete.Web.Controllers
         #region View
         public ActionResult View(int id)
         {
-            WorkAssignment workAssignment = _assServ.Get(id);
+            WorkAssignment workAssignment = waServ.Get(id);
             
             return View(workAssignment);
         }
@@ -281,7 +328,7 @@ namespace Machete.Web.Controllers
         #region Delete
         public ActionResult Delete(int id)
         {
-            var workAssignment = _assServ.Get(id);
+            var workAssignment = waServ.Get(id);
 
             return View(workAssignment);
         }
@@ -293,9 +340,9 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Delete(int id, FormCollection collection, string user)
         {
-            var _assignment = _assServ.Get(id);
-            var _ord = _ordServ.GetWorkOrder(_assignment.workOrderID);
-            _assServ.Delete(id, user);
+            var _assignment = waServ.Get(id);
+            var _ord = woServ.GetWorkOrder(_assignment.workOrderID);
+            waServ.Delete(id, user);
             return PartialView("Index", _ord);
         }
         #endregion
