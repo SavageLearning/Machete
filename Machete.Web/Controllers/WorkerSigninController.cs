@@ -99,21 +99,22 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, User")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
-            ServiceIndexView<WorkerSigninView> was = _serv.GetIndexView(
-                CI,
-                param.sSearch,
-                param.todaysdate == null ? null : (DateTime?)DateTime.Parse(param.todaysdate),
-                Convert.ToInt32(param.dwccardnum),
-                Convert.ToInt32(param.searchColName("WOID")),
-                param.sSortDir_0 == "asc" ? false : true,
-                param.iDisplayStart,
-                param.iDisplayLength,
-                param.sortColName()
-            );
+            ServiceIndexView<WorkerSigninView> was = _serv.GetIndexView(new DispatchOptions {
+                CI = CI,
+                search = param.sSearch,
+                date = param.todaysdate == null ? null : (DateTime?)DateTime.Parse(param.todaysdate),
+                dwccardnum = Convert.ToInt32(param.dwccardnum),
+                woid = Convert.ToInt32(param.searchColName("WOID")),
+                orderDescending = param.sSortDir_0 == "asc" ? false : true,
+                displayStart = param.iDisplayStart,
+                displayLength = param.iDisplayLength,
+                sortColName = param.sortColName(),
+                wa_grouping = param.wa_grouping
+            });
 
             //return what's left to datatables
             var result = from p in was.query
-                         select new {  WID = p.ID,
+                         select new {  WSIID = p.ID,
                                         dwccardnum = p.dwccardnum,
                                         fullname = p.fullname,
                                        firstname1 = p.firstname1,

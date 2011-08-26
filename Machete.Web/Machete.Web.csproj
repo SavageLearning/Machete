@@ -430,13 +430,6 @@
     <Content Include="Scripts\jquery.alerts.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\jquery.dataTables-1.7.6.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\jquery.dataTables-1.7.6.min.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\jquery.dataTables-1.8.0.js" />
     <Content Include="Scripts\jquery.dataTables.editable-1.0.0.js" />
     <Content Include="Scripts\jquery.dataTables.plugins.js" />
     <Content Include="Scripts\jquery.form.js" />

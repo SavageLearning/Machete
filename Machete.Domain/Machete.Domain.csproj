@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\depreciated\EmplrReference.cs" />
+    <Compile Include="Entities\Exceptions.cs" />
     <Compile Include="Entities\Image.cs" />
     <Compile Include="Entities\Lookup.cs" />
     <Compile Include="Entities\depreciated\MaritalStatus.cs" />

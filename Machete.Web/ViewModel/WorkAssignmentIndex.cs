@@ -14,6 +14,8 @@ namespace Machete.Web.ViewModel
     {
         public string todaysdate { get; set; }
         public string dwccardnum { get; set; }
+        public bool wa_grouping { get; set; }
+        public bool typeofwork_grouping { get; set; }
 
     }
 }

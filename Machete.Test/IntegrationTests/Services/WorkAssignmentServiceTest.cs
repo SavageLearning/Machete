@@ -34,7 +34,7 @@ namespace Machete.Test
         ILookupRepository _lRepo;
         MacheteContext MacheteDB;
         CultureInfo CI;
-
+        DispatchOptions _dOptions;
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
@@ -57,7 +57,19 @@ namespace Machete.Test
             _waServ = new WorkAssignmentService(_waRepo, _wRepo, _lRepo, _wsiRepo, _unitofwork);
             _woServ = new WorkOrderService(_woRepo, _waServ, _unitofwork);
             _wsiServ = new WorkerSigninService(_wsiRepo, _wRepo, _pRepo, _iRepo, _unitofwork);
-            CI = new CultureInfo("en-US", false);
+            _dOptions = new DispatchOptions
+            {
+                CI = new CultureInfo("en-US", false),
+                search = "",
+                date = DateTime.Parse("8/10/2011"),
+                dwccardnum = null,
+                woid = null,
+                orderDescending = false,
+                sortColName = "WOID",
+                displayStart = 0,
+                displayLength = 20
+            };
+            
             LookupCache.Initialize(new MacheteContext());
         }
         [TestMethod]
@@ -65,7 +77,7 @@ namespace Machete.Test
         {       
             //
             //Act
-            var result = _waServ.GetIndexView(CI,""/*search str*/,DateTime.Parse("8/10/2011"),null/*dwccardnum*/,null/*woid */,true, /*desc(true), asc(false)*/0, 20, "WOID");
+            var result = _waServ.GetIndexView(_dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -78,7 +90,9 @@ namespace Machete.Test
         public void Integration_WA_Service_GetIndexView_check_woidfilter()
         {
             //Act
-            var result = _waServ.GetIndexView(CI, ""/*search str*/, DateTime.Parse("8/10/2011"), null/*dwccardnum*/, 1/*woid */, true, /*desc(true), asc(false)*/0, 20, "WOID");
+            _dOptions.woid = 1;
+            _dOptions.orderDescending = true;
+            var result = _waServ.GetIndexView(_dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -92,7 +106,10 @@ namespace Machete.Test
         {            
             //
             //Act
-            var result = _waServ.GetIndexView(CI, "12420"/*search str*/, DateTime.Parse("8/10/2011"), null/*dwccardnum*/, 1/*woid */, true, /*desc(true), asc(false)*/0, 20, "WOID");
+            _dOptions.search = "12420";
+            _dOptions.woid = 1;
+            _dOptions.orderDescending = true;
+            var result = _waServ.GetIndexView(_dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -107,7 +124,10 @@ namespace Machete.Test
         {
             //
             //Act
-            var result = _waServ.GetIndexView(CI, "foostring1"/*search str*/, DateTime.Parse("8/10/2011"), null/*dwccardnum*/, 1/*woid */, true, /*desc(true), asc(false)*/0, 20, "WOID");
+            _dOptions.search = "foostring1";
+            _dOptions.woid = 1;
+            _dOptions.orderDescending = true;
+            var result = _waServ.GetIndexView(_dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -120,9 +140,10 @@ namespace Machete.Test
         [TestMethod]
         public void Integration_WA_Service_GetIndexView_check_search_Updatedby()
         {
-            //
-            //Act
-            var result = _waServ.GetIndexView(CI, "foostring1"/*search str*/, DateTime.Parse("8/10/2011"), null/*dwccardnum*/, 1/*woid */, true, /*desc(true), asc(false)*/0, 20, "WOID");
+            _dOptions.search = "foostring1";
+            _dOptions.woid = 1;
+            _dOptions.orderDescending = true;
+            var result = _waServ.GetIndexView(_dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -135,9 +156,9 @@ namespace Machete.Test
         [TestMethod]
         public void Integration_WA_Service_GetIndexView_check_search_skill()
         {
-            //
-            //Act
-            var result = _waServ.GetIndexView(CI, "Digging"/*search str*/, DateTime.Parse("8/10/2011"), null/*dwccardnum*/, null/*woid */, true, /*desc(true), asc(false)*/0, 20, "WOID");
+            _dOptions.search = "Digging";
+            _dOptions.orderDescending = true;
+            var result = _waServ.GetIndexView(_dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -152,7 +173,9 @@ namespace Machete.Test
         {
             //
             //Act
-            var result = _waServ.GetIndexView(CI, "8/10/2011 9:00"/*search str*/, null, null/*dwccardnum*/, null/*woid */, true, /*desc(true), asc(false)*/0, 20, "WOID");
+            _dOptions.search = "8/10/2011 9:00";
+            _dOptions.orderDescending = true;
+            var result = _waServ.GetIndexView(_dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -167,15 +190,9 @@ namespace Machete.Test
         {
             //
             //Act
-            var result = _waServ.GetIndexView(CI, 
-                                            ""/*search str*/, 
-                                            null,
-                                            30040/*dwccardnum*/, 
-                                            null/*woid */, 
-                                            true, /*desc(true), asc(false)*/
-                                            0, 
-                                            20, 
-                                            "WOID");
+            _dOptions.dwccardnum = 30040;
+            _dOptions.orderDescending = true;
+            var result = _waServ.GetIndexView(_dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -188,7 +205,9 @@ namespace Machete.Test
         [TestMethod]
         public void Integration_WA_Service_Assign_updates_WSI_and_WA()
         {
-            var result = _waServ.Assign(1, 1);
+            WorkerSignin wsi1 = _wsiServ.GetWorkerSignin(1);
+            WorkAssignment wa1 = _waServ.Get(1);
+            var result = _waServ.Assign(wa1, wsi1);
             WorkerSignin wsi2 = _wsiServ.GetWorkerSignin(1);
             WorkAssignment wa2 = _waServ.Get(1);
             Assert.IsNotNull(result);
