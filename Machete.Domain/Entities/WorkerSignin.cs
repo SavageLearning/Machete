@@ -39,6 +39,7 @@ namespace Machete.Domain
         }
         public int signinID { get; set; }
         public DateTime dateforsignin { get; set; }
+        public int? waid { get; set; }
 
 
         public WorkerSigninView(Person p, WorkerSignin s)
@@ -55,6 +56,7 @@ namespace Machete.Domain
             datecreated = s.datecreated;
             Createdby = s.Createdby;
             Updatedby = s.Updatedby;
+            waid = s.WorkAssignmentID;
         }
         public WorkerSigninView() { }
     }

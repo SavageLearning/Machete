@@ -121,7 +121,8 @@ namespace Machete.Web.Controllers
                                        firstname2 = p.firstname2,
                                        lastname1 = p.lastname1,
                                        lastname2 = p.lastname2, 
-                                       dateforsignin = p.dateforsignin
+                                       dateforsignin = p.dateforsignin,
+                                       WAID = p.waid ?? 0
                          };
             return Json(new
             {

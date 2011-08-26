@@ -126,7 +126,10 @@
 		    },
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $(nRow).attr('requestedID', aData['WSIID']);
-                //$(nRow).attr('edittablabel', aData[1]);                
+                //alert(aData['WID'] + "-" + aData['WSIID']);
+                if (aData['WAID'] > 0) { // green
+                    $(nRow).addClass('gradeA');
+                }                
                 return nRow;
             } 
         });
@@ -197,6 +200,7 @@
                     },
                     function (data) {
                         alert("result:"+data.result+"Message:"+data.resultMsg);
+                        $("#updateBtn").click();     
                     }
                 );
             });
@@ -211,6 +215,10 @@
                 $.post("/WorkAssignment/Unassign", {
                         waid: assignRow,
                         wsiid: signinRow
+                },
+                function (data) {
+                    alert("result:"+data.result+"Message:"+data.resultMsg);
+                    $("#updateBtn").click();     
                 });
             });
             $('#rA1_all').click(function (e) {

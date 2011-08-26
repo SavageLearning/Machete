@@ -244,11 +244,16 @@ namespace Machete.Web.Controllers
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager")]
 
-        public ActionResult Unassign(int waid, int wsiid, string userName)
+        public ActionResult Unassign(int waid, int? wsiid, string userName)
         {
             string returnMsg = "";
             bool successful = true;
-            WorkerSignin signin = wsiServ.GetWorkerSignin(wsiid);
+            WorkerSignin signin = null;
+            if (wsiid != null)
+            {
+                signin = wsiServ.GetWorkerSignin((int)wsiid);
+            }
+
             WorkAssignment assignment = waServ.Get(waid);
             try
             {
