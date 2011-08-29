@@ -141,23 +141,38 @@ namespace Machete.Data
             WorkOrder em3od3 = (WorkOrder)order.Clone(); em3od3.Employer = em3; em3od3.paperOrderNum = 12425; em3od3.contactName = "Umpa6"; em3od3.status = 42; DB.WorkOrders.Add(em3od3);
             DB.SaveChanges();
             WorkAssignment em1od1as1 = (WorkAssignment)assignment.Clone(); em1od1as1.workOrder = em1od1; 
-            em1od1as1.description = "foostring1"; em1od1as1.Updatedby = "foostring2"; em1od1as1.skillID = 70;  DB.WorkAssignments.Add(em1od1as1);
-            em1od1.dateTimeofWork = DateTime.Parse("08-10-2011 09:00:00");
+                em1od1as1.description = "foostring1"; 
+                em1od1as1.Updatedby = "foostring2";
+                em1od1as1.workerAssignedID = 1;
+                em1od1as1.skillID = 70;  DB.WorkAssignments.Add(em1od1as1);
+            
+                em1od1.dateTimeofWork = DateTime.Parse("08-10-2011 09:00:00");
             WorkAssignment em1od1as2 = (WorkAssignment)assignment.Clone(); em1od1as2.workOrder = em1od1; DB.WorkAssignments.Add(em1od1as2);
-            em1od1as2.skillID = 61; em1od1as2.englishLevelID = 2;
+                em1od1as2.workerAssignedID = 2;
+                em1od1as2.skillID = 61; 
+                em1od1as2.englishLevelID = 2;
             WorkAssignment em1od1as3 = (WorkAssignment)assignment.Clone(); em1od1as3.workOrder = em1od1; DB.WorkAssignments.Add(em1od1as3);
+                em1od1as1.workerAssignedID = 1;
+                em1od1as3.workerAssignedID = 3;
             //
             WorkAssignment em2od1as1 = (WorkAssignment)assignment.Clone(); em2od1as1.workOrder = em2od1; DB.WorkAssignments.Add(em2od1as1);
+            em2od1as1.workerAssignedID = 1;
             WorkAssignment em2od1as2 = (WorkAssignment)assignment.Clone(); em2od1as2.workOrder = em2od1; DB.WorkAssignments.Add(em2od1as2);
+            em2od1as2.workerAssignedID = 2;
             //
             WorkAssignment em2od2as1 = (WorkAssignment)assignment.Clone(); em2od2as1.workOrder = em2od2; DB.WorkAssignments.Add(em2od2as1);
+            em2od2as1.workerAssignedID = 1;
             WorkAssignment em2od2as2 = (WorkAssignment)assignment.Clone(); em2od2as2.workOrder = em2od2; DB.WorkAssignments.Add(em2od2as2);
+            em2od2as2.workerAssignedID = 2;
             //
             WorkAssignment em3od1as1 = (WorkAssignment)assignment.Clone(); em3od1as1.workOrder = em3od1; DB.WorkAssignments.Add(em3od1as1);
+            em3od1as1.workerAssignedID = 1;
             //
             WorkAssignment em3od2as1 = (WorkAssignment)assignment.Clone(); em3od2as1.workOrder = em3od2; DB.WorkAssignments.Add(em3od2as1);
+            em3od2as1.workerAssignedID = 1;
             //
-            WorkAssignment em3od3as1 = (WorkAssignment)assignment.Clone(); em3od3as1.workOrder = em3od3; DB.WorkAssignments.Add(em3od3as1); 
+            WorkAssignment em3od3as1 = (WorkAssignment)assignment.Clone(); em3od3as1.workOrder = em3od3; DB.WorkAssignments.Add(em3od3as1);
+            
             DB.SaveChanges();
         }
     }

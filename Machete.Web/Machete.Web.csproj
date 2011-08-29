@@ -606,6 +606,7 @@
     <Content Include="Views\Account\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Reports\" />
     <Folder Include="Tests\Worker\" />
   </ItemGroup>
   <ItemGroup>

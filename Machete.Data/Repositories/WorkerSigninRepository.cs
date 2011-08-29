@@ -19,7 +19,7 @@ namespace Machete.Data
         override public IQueryable<WorkerSignin> GetAllQ()
         {
             //return dbset.Include(a => a.worker).AsQueryable();
-            return dbset.AsQueryable();
+            return dbset.AsNoTracking().AsQueryable();
         }
     }
     public interface IWorkerSigninRepository : IRepository<WorkerSignin>

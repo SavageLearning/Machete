@@ -369,11 +369,11 @@ function dateTimeWidget(myObj) {
         stepMinute: 15,
         ampm: true,
         hourMin: 7,
-        hourMax: 17,
+        hourMax: 23,
         minuteMin: 0,
         minuteMax: 45,
         minuteGrid: 15,
-        hourGrid: 2
+        hourGrid: 4
     });
 }
 

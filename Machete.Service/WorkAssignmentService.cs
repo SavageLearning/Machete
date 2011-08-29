@@ -24,10 +24,10 @@ namespace Machete.Service
         IQueryable<WorkAssignmentSummary> GetSummary(string search);
         WorkAssignment Get(int id);
         WorkAssignment Create(WorkAssignment workAssignment, string user);
-        bool Assign(WorkAssignment assignment,WorkerSignin signin);
-        bool Unassign(WorkerSignin signin);
-        bool Unassign(WorkAssignment assignment);
-        bool Unassign(WorkerSignin signin, WorkAssignment assignment);
+        bool Assign(WorkAssignment assignment, WorkerSignin signin, string user);
+        bool Unassign(WorkerSignin signin, string user);
+        bool Unassign(WorkAssignment assignment, string user);
+        bool Unassign(WorkerSignin signin, WorkAssignment assignment, string user);
         void Delete(int id, string user);
         void Save(WorkAssignment workAssignment, string user);
         ServiceIndexView<WorkAssignment> GetIndexView(DispatchOptions o);
@@ -215,11 +215,35 @@ namespace Machete.Service
                 {
                     filteredWA = queryableWA.AsEnumerable();
                 }
-            }
+            } else
             {
                 filteredWA = queryableWA.AsEnumerable();
             }
-            ////Sort the Persons based on column selection
+            //Sort the Persons based on column selection
+            filteredWA = filteredWA.GroupJoin(WorkerCache.getCache(), wa => wa.workerAssignedID, wc => wc.ID, (wa, wc) => new { wa, wc })
+                            .SelectMany(jj => jj.wc.DefaultIfEmpty(new Worker { ID = 0, dwccardnum = 0}),
+                            (jj, row) => jj.wa);
+                            //{
+                            //    ID = jj.wa.ID,
+                            //    active = jj.wa.active,
+                            //    description = jj.wa.description,
+                            //    workerAssignedID = jj.wa.workerAssignedID,
+                            //    workerAssigned = jj.wc,
+                            //    Createdby = jj.wa.Createdby,
+                            //    datecreated = jj.wa.datecreated,
+                            //    dateupdated = jj.wa.dateupdated,
+                            //    days = jj.wa.days,
+                            //    englishLevelID = jj.wa.englishLevelID,
+                            //    hourlyWage = jj.wa.hourlyWage,
+                            //    hours = jj.wa.hours,
+                            //    pseudoID = jj.wa.pseudoID,
+                            //    skillID = jj.wa.skillID,
+                            //    Updatedby = jj.wa.Updatedby,
+                            //    workerSigninID = jj.wa.workerSigninID,
+                            //    workOrderID = jj.wa.workOrderID,
+                            //    workOrder = jj.wa.workOrder
+
+                            //});
             switch (o.sortColName)
             {
                 case "pWAID": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.pseudoID) : filteredWA.OrderBy(p => p.pseudoID); break;
@@ -233,6 +257,7 @@ namespace Machete.Service
                 case "description": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.description) : filteredWA.OrderBy(p => p.description); break;                
                 case "updatedby": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.Updatedby) : filteredWA.OrderBy(p => p.Updatedby); break;
                 case "dateupdated": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.dateupdated) : filteredWA.OrderBy(p => p.dateupdated); break;
+                //case "assignedWorker": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.workerAssigned.dwccardnum) : filteredWA.OrderBy(p => p.workerAssigned.dwccardnum); break;
                 default: filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.workOrder.dateTimeofWork) : filteredWA.OrderBy(p => p.workOrder.dateTimeofWork); break;
             }
             filteredWA = filteredWA.ToList();
@@ -283,36 +308,39 @@ namespace Machete.Service
         /// <param name="wsiid"></param>
         /// <returns></returns>
         #region ASSIGNS
-        public bool Assign(WorkAssignment asmt, WorkerSignin signin)
+        public bool Assign(WorkAssignment asmt, WorkerSignin signin, string user)
         {
             //Assignments must be explicitly unassigned first; throws exception if either record is in assigned state
             if (signin == null) throw new NullReferenceException("WorkerSignin is null");
             if (signin.WorkAssignmentID != null) throw new MacheteDispatchException("WorkerSignin already associated with WorkAssignment ID " + signin.WorkAssignmentID);
-            if (signin.WorkerID == null) throw new MacheteIntegrityException("WorkerSignin key not associated with a Worker record. Check worker record ID.");
+            if (signin.WorkerID == null) throw new MacheteIntegrityException("WorkerSignin key not associated with a Worker record. Check worker record, does it have a public ID?");
             if (asmt == null) throw new NullReferenceException("WorkAssignment is null");
             if (asmt.workerSigninID != null) throw new MacheteDispatchException("WorkAssignment already associated with WorkerSignin ID " + asmt.workerSigninID);
-            if (asmt.workerAssignedID != null) throw new MacheteDispatchException("WorkAssignment already associated with Worker ID " + asmt.workerAssignedID);
+            if (asmt.workerSigninID == null && asmt.workerAssignedID != null && asmt.workerAssignedID != signin.WorkerID) 
+                throw new MacheteDispatchException("Orphaned WorkAssignment, associated with Worker ID " + asmt.workerAssignedID +"; Unassign first, the assign to new Worker");
             Worker worker = wRepo.Get(w => w.dwccardnum == signin.dwccardnum);
             if (worker == null) throw new NullReferenceException("Worker for key " + signin.dwccardnum.ToString() + " is null");
             if (worker.ID != signin.WorkerID) throw new MacheteIntegrityException("WorkerSignin's internal WorkerID and public worker ID don't match");
             //
             // Link signin with 
-            //signin.WorkerID = worker.ID;
             signin.WorkAssignmentID = asmt.ID;
             asmt.workerSigninID = signin.ID;
             asmt.workerAssignedID = worker.ID;
+            asmt.updatedby(user);
+            signin.updatedby(user);
             unitOfWork.Commit();
+            _log(asmt.ID, user, "WSIID:" + signin.ID + " Assign successful");
             return true;
         }
-        public bool Unassign(WorkerSignin signin)
+        public bool Unassign(WorkerSignin signin, string user)
         {
-            return Unassign(signin, null);
+            return Unassign(signin, null, user);
         }
-        public bool Unassign(WorkAssignment assignment)
+        public bool Unassign(WorkAssignment assignment, string user)
         {
-            return Unassign(null, assignment);
+            return Unassign(null, assignment, user);
         }
-        public bool Unassign(WorkerSignin signin, WorkAssignment asmt)
+        public bool Unassign(WorkerSignin signin, WorkAssignment asmt, string user)
         {
             if (signin == null && asmt == null) throw new NullReferenceException("Signin and WorkAssignment are both null");
             //Try unassign with WorkAssignment record only
@@ -344,7 +372,10 @@ namespace Machete.Service
             signin.WorkAssignmentID = null;
             asmt.workerSigninID = null;
             asmt.workerAssignedID = null;
+            asmt.updatedby(user);
+            signin.updatedby(user);
             unitOfWork.Commit();
+            _log(asmt.ID, user, "WSIID:" + signin.ID + " Unassign successful");
             return true;
         }
         #endregion
