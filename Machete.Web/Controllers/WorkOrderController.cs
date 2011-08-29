@@ -140,6 +140,7 @@ namespace Machete.Web.Controllers
                                       EID = Convert.ToString(p.EmployerID),
                                       WOID = System.String.Format("{0,5:D5}", p.paperOrderNum),
                                       dateTimeofWork =  p.dateTimeofWork.ToString(),
+                                      statusEN = Lookups.byID(p.status, "en"),
                                       status = Lookups.byID(p.status, CI.TwoLetterISOLanguageName),
                                       WAcount = p.workAssignments.Count(a => a.workOrderID == p.ID).ToString(),
                                       contactName =  p.contactName, 

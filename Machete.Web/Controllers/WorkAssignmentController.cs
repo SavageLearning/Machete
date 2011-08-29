@@ -105,7 +105,8 @@ namespace Machete.Web.Controllers
                             dateTimeofWork = p.workOrder.dateTimeofWork.ToString(),
                             earnings = System.String.Format("${0:f2}",(p.hourlyWage * p.hours * p.days)),
                             WSIID = p.workerSigninID ?? 0,
-                            WID = p.workerAssignedID ?? 0
+                            WID = p.workerAssignedID ?? 0,
+                            assignedWorker = p.workerAssigned != null ? p.workerAssigned.dwccardnum + " " + p.workerAssigned.Person.fullName() : ""
                 };
  
             return Json(new
@@ -227,7 +228,7 @@ namespace Machete.Web.Controllers
             WorkAssignment assignment = waServ.Get(waid);
             try
             {
-                waServ.Assign(assignment, signin);
+                waServ.Assign(assignment, signin, "test script");
             }
             catch (Exception e)
             {
@@ -244,20 +245,21 @@ namespace Machete.Web.Controllers
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager")]
 
-        public ActionResult Unassign(int waid, int? wsiid, string userName)
+        public ActionResult Unassign(int? waid, int? wsiid, string userName)
         {
             string returnMsg = "";
             bool successful = true;
             WorkerSignin signin = null;
+            WorkAssignment assignment = null;
             if (wsiid != null)
             {
                 signin = wsiServ.GetWorkerSignin((int)wsiid);
             }
-
-            WorkAssignment assignment = waServ.Get(waid);
+            if (waid != null)
+             assignment = waServ.Get((int)waid);
             try
             {
-                waServ.Unassign(signin, assignment);
+                waServ.Unassign(signin, assignment, "test script");
             }
             catch (Exception e)
             {

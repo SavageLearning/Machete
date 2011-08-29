@@ -71,8 +71,8 @@ namespace Machete.Test
                 displayStart = 0,
                 displayLength = 20
             };
-            
             LookupCache.Initialize(new MacheteContext());
+            WorkerCache.Initialize(new MacheteContext()); 
         }
         [TestMethod]
         public void Integration_WA_Service_GetIndexView_basic()
@@ -85,8 +85,19 @@ namespace Machete.Test
             var tolist = result.query.ToList();
             Assert.IsNotNull(result, "return value is null");
             Assert.IsInstanceOfType(result, typeof(ServiceIndexView<WorkAssignment>));
-            Assert.AreEqual(result.filteredCount, 10);
-            Assert.AreEqual(result.totalCount, 10);            
+            Assert.AreEqual(10, result.filteredCount);
+            Assert.AreEqual(10, result.totalCount);            
+        }
+        [TestMethod]
+        public void Integration_WA_Service_GetIndexView_check_workerjoin_blank_worker_ok()
+        {
+            dOptions.sortColName = "assignedWorker";
+            var result = waServ.GetIndexView(dOptions);
+            var tolist = result.query.ToList();
+            Assert.IsNotNull(tolist, "return value is null");
+            Assert.IsInstanceOfType(result, typeof(ServiceIndexView<WorkAssignment>));
+            Assert.AreEqual(10, result.filteredCount);
+            Assert.AreEqual(10, result.totalCount);
         }
         [TestMethod]
         public void Integration_WA_Service_GetIndexView_checkwoidfilter()
@@ -209,7 +220,7 @@ namespace Machete.Test
         {
             WorkerSignin wsi1 = wsiServ.GetWorkerSignin(1);
             WorkAssignment wa1 = waServ.Get(1);
-            var result = waServ.Assign(wa1, wsi1);
+            var result = waServ.Assign(wa1, wsi1, "test script");
             WorkerSignin wsi2 = wsiServ.GetWorkerSignin(1);
             WorkAssignment wa2 = waServ.Get(1);
             Assert.IsNotNull(result);
@@ -218,6 +229,7 @@ namespace Machete.Test
             Assert.IsNotNull(wsi2.WorkAssignmentID);
             Assert.IsNotNull(wsi2.WorkerID);
         }
+
         [TestMethod]
         public void Integration_WA_Service_GetSummary()
         {

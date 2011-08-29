@@ -19,7 +19,7 @@ namespace Machete.Data
         }
         override public IQueryable<Worker> GetAllQ()
         {
-            return dbset.Include(a => a.Person).AsQueryable();
+            return dbset.Include(a => a.Person).AsNoTracking().AsQueryable();
         }
     }
     public interface IWorkerRepository : IRepository<Worker>

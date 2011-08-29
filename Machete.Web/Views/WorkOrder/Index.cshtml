@@ -87,16 +87,36 @@
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                         $(nRow).attr("edittabref", aData["tabref"]);
                         $(nRow).attr("edittablabel", aData["tablabel"]);
+                        if (aData['statusEN'] == "Pending") {
+                            $(nRow).addClass('statusGrey');
+                        } 
+                        if (aData['statusEN'] == "Active") {
+                            $(nRow).addClass('statusBlue');
+                        } 
+                        if (aData['statusEN'] == "Completed") {
+                            $(nRow).addClass('statusGreen');
+                        } 
+                        if (aData['statusEN'] == "Cancelled") {
+                            $(nRow).addClass('statusRed');
+                        } 
+                        if (aData['statusEN'] == "Expired") {
+                            $(nRow).addClass('statusExpired');
+                        } 
                         return nRow;
-                    }
+            }
         };
     var orderDefs = jQuery.extend(true, {}, oTableDefaults); //example of copying js object
     var summaryDefs = jQuery.extend(true, {}, oTableDefaults);
     delete orderDefs["iDeferLoading"];
     delete summaryDefs["aoColumns"];
     delete summaryDefs["fnRowCallback"];
+        summaryDefs["sAjaxSource"] = "/WorkOrder/AjaxSummary";
     summaryDefs["aaSorting"] = [[0, 'desc']];
-    summaryDefs["sAjaxSource"] = "/WorkOrder/AjaxSummary";
+    summaryDefs["iDisplayLength"] = 25;
+    summaryDefs["aLengthMenu"] = [[25, 50, 100], [25, 50, 100]];
+        orderDefs["iDisplayLength"] = 15;
+    orderDefs["aLengthMenu"] = [[15, 50, 100], [15, 50, 100]];
+
        
     //    pendingDefs["aoSearchCols"][5] = {"sSearch" : '@Lookups.getSingleEN("orderstatus", "Pending")'};
     //    activeDefs["aoSearchCols"][5] = {"sSearch" : '@Lookups.getSingleEN("orderstatus", "Active")'};

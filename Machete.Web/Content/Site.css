@@ -526,6 +526,23 @@ div.recordButtons
 {
 }
 
+input.ui-button.dispatchButton
+{
+    padding: 1em;
+    float: left;
+}
+
+.ui-button-text-only .ui-button-text
+{
+    padding: 1em;
+    float: left;
+}
+.ui-buttonset
+{
+    padding: 1em;
+    float: left;
+}
+
 .completeOrderContainer
 {
     display: block;

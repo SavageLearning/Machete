@@ -70,6 +70,12 @@ namespace Machete.Domain
 
         [LocalizedDisplayName("comments", NameResourceType = typeof(Resources.WorkAssignment))]
         public string comments { get; set; }
+
+        public string fullIDandName()
+        {
+            if (this.workerAssigned != null) return this.workerAssigned + " " + this.workerAssigned.Person.fullName();
+            else return null;
+        }
     }
     public class WorkAssignmentSummary
     {

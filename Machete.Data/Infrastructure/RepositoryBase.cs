@@ -52,7 +52,7 @@ public abstract class RepositoryBase<T> where T : class
     }
     public virtual IQueryable<T> GetAllQ()
     {
-        return dbset.AsQueryable();
+        return dbset.AsNoTracking().AsQueryable();
     }
     public virtual IEnumerable<T> GetMany(Func<T, bool> where)
     {

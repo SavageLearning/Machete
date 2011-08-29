@@ -7,35 +7,64 @@
 }
 @using (Html.BeginForm())
 {
-<div>
-    @Html.LabelFor(m => m.todaysdate)
-</div>
-<div>
-    @Html.TextBoxFor(m => m.todaysdate, new { @class="ui-datepicker"})
-    <input type="button" value="update" id="updateBtn" />
+<div style="display:block;">
     @Html.LabelFor(m => m.wa_grouping)
     @Html.TextBoxFor(m => m.wa_grouping)
     @Html.LabelFor(m => m.typeofwork_grouping)
     @Html.TextBoxFor(m => m.typeofwork_grouping)
+    @Html.LabelFor(m => m.assignedWorker_visible)
+    @Html.TextBoxFor(m => m.assignedWorker_visible)
+    @Html.LabelFor(m => m.signin_visible)
+    @Html.TextBoxFor(m => m.signin_visible)
+</div>   
+<div style="float: left;">     
+    <div>
+        @Html.LabelFor(m => m.todaysdate)
+    </div>
+    <div>
+        @Html.TextBoxFor(m => m.todaysdate, new { @class = "ui-datepicker", @style = "width: 5em;" })
+        <input type="button" value="update" id="updateBtn" style="display:none;"/>
+    </div>    
+    <div>
+        @Html.LabelFor(m => m.dwccardnum)
+    </div>
+    <div>
+        @Html.TextBoxFor(m => m.dwccardnum, new { @style = "width: 5em;" })
+    </div>
 </div>
-}    
-<div>
-    @Html.LabelFor(m => m.dwccardnum)
+}        
+<div id="buttonDivider">
+        <div id="radioWorkers" class="radio">
+		    <input type="radio" id="rW1_lottery" name="radio" checked="checked" /><label for="rW1_lottery">Lottery<br />list</label>
+		    <input type="radio" id="rW1_signin" name="radio"  /><label for="rW1_signin">Sign-in<br />list</label>
+	    </div>
+        <div class="radio">
+            <input type="button" id="bAssign" class="formButton dispatchButton" value="Assign" />
+            <input type="button" id="bUnassign" class="formButton dispatchButton" value="Unassign"/>
+
+        </div>
+    @*<div id="radioOpenFilled" class="radio" style="float: left;padding: 0 3em 0 0;">*@
+    <div id="radioOpenFilled" class="radio">
+        <input type="radio" id="rA1_requested" name="radioOpenFilled" /><label for="rA1_requested" class="dispatchButton">Requested<br/>(Active)</label>
+		<input type="radio" id="rA1_skilled" name="radioOpenFilled" /><label for="rA1_skilled" class="dispatchButton">Skilled<br />(Active)</label>
+        <input type="radio" id="rA1_active" name="radioOpenFilled" /><label for="rA1_active" class="dispatchButton">Active</label>
+		<input type="radio" id="rA1_completed" name="radioOpenFilled" /><label for="rA1_completed" class="dispatchButton">Completed</label>
+        <input type="radio" id="rA1_all" name="radioOpenFilled" checked="checked" /><label for="rA1_all" class="dispatchButton">All</label>
+	</div>
+    <div id="radioProgram" class="radio">
+	    <input type="radio" id="rA2_DWC" name="radioProgram" checked="checked" /><label for="rA2_DWC">DWC</label>
+	    <input type="radio" id="rA2_HHH" name="radioProgram"  /><label for="rA2_HHH">HHH</label>
+        <input type="radio" id="rA2_All" name="radioProgram"  /><label for="rA2_All">All</label>
+    </div>
 </div>
-<div>
-    @Html.TextBoxFor(m => m.dwccardnum)
-</div>
-<div class="tb-table">
+
+<div class="tb-table" style="clear: left;">
 <div class="tb-row"></div>
 <div id="signinTab" class="tb-cell">
     <ul>
         <li><a href="#signinList">Workers</a></li>
     </ul>
     <div id="signinList">
-            <div id="radioWorkers" class="radio">
-		    <input type="radio" id="rW1_lottery" name="radio" checked="checked" /><label for="rW1_lottery">Lottery?!</label>
-		    <input type="radio" id="rW1_signin" name="radio"  /><label for="rW1_signin">Sign-in?!</label>
-	    </div>
     <table id="signinTable" class="display">
     <thead>
         <tr>
@@ -46,27 +75,14 @@
     </table>
     </div>
 </div>
-<div id="buttonDivider">
-    <input type="button" id="bAssign" class="formButton" value="Assign" style="padding: 2em;"/>
-    <input type="button" id="bUnassign" class="formButton" value="Unassign" style="padding: 2em;"/>
-</div>
+
 <div id="assignmentTab" class="tb-cell">
     <ul>
         <li><a href="#availAssignList">Assignments?!</a></li>
     </ul>
         <div id="availAssignList">
-        <div id="radioOpenFilled" class="radio" style="float: left;padding: 0 3em 0 0;">
-		    <input type="radio" id="rA1_all" name="radioOpenFilled" checked="checked" /><label for="rA1_all">All</label>
-            <input type="radio" id="rA1_requested" name="radioOpenFilled" /><label for="rA1_requested">Requested</label>
-		    <input type="radio" id="rA1_skilled" name="radioOpenFilled" /><label for="rA1_skilled">Skilled</label>
-            <input type="radio" id="rA1_open" name="radioOpenFilled" /><label for="rA1_open">Open</label>
-		    <input type="radio" id="rA1_filled" name="radioOpenFilled"  /><label for="rA1_filled">Filled</label>
-	    </div>
-        <div id="radioProgram" class="radio" style="float: left;float: left;padding: 0 3em 0 0;">
-		    <input type="radio" id="rA2_DWC" name="radioProgram" checked="checked" /><label for="rA2_DWC">DWC</label>
-		    <input type="radio" id="rA2_HHH" name="radioProgram"  /><label for="rA2_HHH">HHH</label>
-            <input type="radio" id="rA2_All" name="radioProgram"  /><label for="rA2_All">All</label>
-	    </div>
+
+
 @*        <div id="radioDate" class="radio" style="float: left;float: left;padding: 0 3em 0 0;">
 		    <input type="radio" id="rA3_today" name="radioDate" checked="checked" /><label for="rA3_today">Today</label>
 		    <input type="radio" id="rA3_picker" name="radioDate" class="ui-datepicker"/><label for="rA3_picker">Select date</label>
@@ -75,9 +91,7 @@
             <table id="availAssignTable" class="display">
             <thead>
                 <tr>
-                    <th>REF</th>
-                    <th>LABEL</th>
-                    <th>WorkOrderID</th>
+                    <th>assignedWorker</th>
                     <th>ID#</th>
                     <th>@WorkOrder.dateTimeofWork</th>
                     <th>@WorkAssignment.englishLevelID</th>
@@ -99,21 +113,69 @@
     DatePicker();
     $( ".radio" ).buttonset();
     $(".formButton").button();
-        jqrfyTabs($("#assignmentTab"), "ui-tabs-assignment-");
-        jqrfyTabs($("#signinTab"), "ui-tabs-signin-");
+    $('#signin_visible').val(true);
+    $('#assignedWorker_visible').val(false);
+    jqrfyTabs($("#assignmentTab"), "ui-tabs-assignment-");
+    jqrfyTabs($("#signinTab"), "ui-tabs-signin-");
         
-        jqrfyWSignin($("#signinTable"), {
-            "bPaginate": true,
-            "bLengthChange": true,
-            "bServerSide": true,
-            "sAjaxSource": "/WorkerSignin/AjaxHandler",
-            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
-            "bProcessing": true,
-            "aoColumns": [
-                {"mDataProp": "dwccardnum"},
-                {"mDataProp": "fullname"}
-            ],
-            "fnServerData": function ( sSource, aoData, fnCallback ) {
+    jqrfyWSignin($("#signinTable"), {
+        "bPaginate": true,
+        "bLengthChange": true,
+        "bServerSide": true,
+        "sAjaxSource": "/WorkerSignin/AjaxHandler",
+        "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+        "bProcessing": true,
+        "aoColumns": [
+            {"mDataProp": "dwccardnum"},
+            {"mDataProp": "fullname"}
+        ],
+        "fnServerData": function ( sSource, aoData, fnCallback ) {
+			/* Add some extra data to the sender */
+			aoData.push( { "name": "todaysdate", "value": $('#todaysdate').val() } );
+            aoData.push( { "name": "dwccardnum", "value": $('#dwccardnum').val()} );
+            aoData.push( { "name": "wa_grouping", "value": $('#wa_grouping').val()} );
+            aoData.push( { "name": "typeofwork_grouping", "value": $('#typeofwork_grouping').val()} );
+			$.getJSON( sSource, aoData, function (json) { 
+				/* Do whatever additional processing you want on the callback, then tell DataTables */
+				fnCallback(json)
+			} );
+		},
+        "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+            $(nRow).attr('requestedID', aData['WSIID']);
+            //alert(aData['WID'] + "-" + aData['WSIID']);
+            if (aData['WAID'] > 0) { // green
+                $(nRow).addClass('statusGreen');
+            }                
+            return nRow;
+        } 
+    });
+    jqrfyTable($("#availAssignTable"), $("#assignmentTab"),
+    {
+        "bPaginate": true,
+        "bLengthChange": true,
+        "aaSorting": [[4, 'desc']],
+        "bFilter": true,
+        //"bSort": true,
+        "bInfo": true,
+        "bAutoWidth": false,
+        "bServerSide": true,
+        "sAjaxSource": "/WorkAssignment/AjaxHandler",
+        "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+        "bProcessing": true,
+        "aoColumns": [
+                        { "mDataProp": "assignedWorker", "bVisible": false, "bSortable": false}, 
+                        { "mDataProp": "pWAID"},                            
+                        { "mDataProp": "dateTimeofWork"},                            
+                        { "mDataProp": "englishlevel"}, 
+                        { "mDataProp": "skill"}, 
+                        { "mDataProp": "hourlywage"}, 
+                        { "mDataProp": "hours"}, 
+                        { "mDataProp": "days"},
+                        { "mDataProp": "earnings"},
+                        { "mDataProp": "description"}
+                    ],
+        "aoSearchCols" : [null, null, null, null, null, null, null, null, null, null],
+        "fnServerData": function ( sSource, aoData, fnCallback ) {
 			    /* Add some extra data to the sender */
 			    aoData.push( { "name": "todaysdate", "value": $('#todaysdate').val() } );
                 aoData.push( { "name": "dwccardnum", "value": $('#dwccardnum').val()} );
@@ -124,146 +186,142 @@
 				    fnCallback(json)
 			    } );
 		    },
-            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                $(nRow).attr('requestedID', aData['WSIID']);
-                //alert(aData['WID'] + "-" + aData['WSIID']);
-                if (aData['WAID'] > 0) { // green
-                    $(nRow).addClass('gradeA');
-                }                
-                return nRow;
+        "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+            $(nRow).attr('requestedID', aData['WAID']);
+            //alert(aData['WID'] + "-" + aData['WSIID']);
+            if (aData['WID'] > 0 && aData['WSIID'] > 0) { // green
+                $(nRow).addClass('statusGreen');
             } 
+            if (aData['WID'] > 0 && aData['WSIID'] == 0) { // red
+                $(nRow).addClass('statusYellow');
+            }   
+            //$(nRow).attr('edittablabel', aData[1]);                
+            return nRow;
+        } 
         });
-        jqrfyTable($("#availAssignTable"), $("#assignmentTab"),
-        {
-            "bPaginate": true,
-            "bLengthChange": true,
-            "aaSorting": [[4, 'desc']],
-            "bFilter": true,
-            //"bSort": true,
-            "bInfo": true,
-            "bAutoWidth": false,
-            "bServerSide": true,
-            "sAjaxSource": "/WorkAssignment/AjaxHandler",
-            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
-            "bProcessing": true,
-            "aoColumns": [
-                            { "mDataProp": "tabref", "bSearchable": false, "bSortable": false, "bVisible": false },
-                            { "mDataProp": "tablabel", "bSearchable": false, "bSortable": false, "bVisible": false },
-                            { "mDataProp": "WOID", "bSearchable": false, "bSortable": false, "bVisible": false }, 
-                            { "mDataProp": "pWAID"},                            
-                            { "mDataProp": "dateTimeofWork"},                            
-                            { "mDataProp": "englishlevel"}, 
-                            { "mDataProp": "skill"}, 
-                            { "mDataProp": "hourlywage"}, 
-                            { "mDataProp": "hours"}, 
-                            { "mDataProp": "days"},
-                            { "mDataProp": "earnings"},
-                            { "mDataProp": "description"}
-                        ],
-            "aoSearchCols" : [null, null, null, null, null, null, null, null, null, null, null],
-            "fnServerData": function ( sSource, aoData, fnCallback ) {
-			        /* Add some extra data to the sender */
-			        aoData.push( { "name": "todaysdate", "value": $('#todaysdate').val() } );
-                    aoData.push( { "name": "dwccardnum", "value": $('#dwccardnum').val()} );
-                    aoData.push( { "name": "wa_grouping", "value": $('#wa_grouping').val()} );
-                    aoData.push( { "name": "typeofwork_grouping", "value": $('#typeofwork_grouping').val()} );
-			        $.getJSON( sSource, aoData, function (json) { 
-				        /* Do whatever additional processing you want on the callback, then tell DataTables */
-				        fnCallback(json)
-			        } );
-		        },
-            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                $(nRow).attr('requestedID', aData['WAID']);
-                //alert(aData['WID'] + "-" + aData['WSIID']);
-                if (aData['WID'] > 0 && aData['WSIID'] > 0) { // green
-                    $(nRow).addClass('gradeA');
-                } 
-                if (aData['WID'] > 0 && aData['WSIID'] == 0) { // red
-                    $(nRow).addClass('gradeX');
-                }   
-                //$(nRow).attr('edittablabel', aData[1]);                
-                return nRow;
-            } 
-            });
-            //
-            //
-            //
-            $('#bAssign').click(function (e) {
-                e.preventDefault();                
-                var assignRow = $('#availAssignTable').find('tbody').find('tr.row_selected').attr('requestedID');
-                var signinRow = $('#signinTable').find('tbody').find('tr.row_selected').attr('requestedID');
-                alert("WSI-ID: " + signinRow + " WA-ID: " + assignRow);
-                $.post("/WorkAssignment/Assign", 
-                    {
-                        waid: assignRow,
-                        wsiid: signinRow
-                    },
-                    function (data) {
-                        alert("result:"+data.result+"Message:"+data.resultMsg);
-                        $("#updateBtn").click();     
-                    }
-                );
-            });
-                        //
-            //
-            //
-            $('#bUnassign').click(function (e) {
-                e.preventDefault();                
-                var assignRow = $('#availAssignTable').find('tbody').find('tr.row_selected').attr('requestedID');
-                var signinRow = $('#signinTable').find('tbody').find('tr.row_selected').attr('requestedID');
-                alert("WSI-ID: " + signinRow + " WA-ID: " + assignRow);
-                $.post("/WorkAssignment/Unassign", {
-                        waid: assignRow,
-                        wsiid: signinRow
+        //
+        //
+        //
+        $('#bAssign').click(function (e) {
+            e.preventDefault();                
+            var assignRow = $('#availAssignTable').find('tbody').find('tr.row_selected').attr('requestedID');
+            var signinRow = $('#signinTable').find('tbody').find('tr.row_selected').attr('requestedID');
+            //alert("WSI-ID: " + signinRow + " WA-ID: " + assignRow);
+            $.post("/WorkAssignment/Assign", 
+                {
+                    waid: assignRow,
+                    wsiid: signinRow
                 },
                 function (data) {
-                    alert("result:"+data.result+"Message:"+data.resultMsg);
+                    if (data.result == false) {
+                        alert(data.resultMsg);
+                    } else {
+                        $("#updateBtn").click();     
+                    }
+                }
+            );
+        });
+                    //
+        //
+        //
+        $('#bUnassign').click(function (e) {
+            e.preventDefault();                
+            var assignRow = $('#availAssignTable').find('tbody').find('tr.row_selected').attr('requestedID');
+            var signinRow = $('#signinTable').find('tbody').find('tr.row_selected').attr('requestedID');
+            //alert("WSI-ID: " + signinRow + " WA-ID: " + assignRow);
+            $.post("/WorkAssignment/Unassign", {
+                    waid: assignRow,
+                    wsiid: signinRow
+            },
+            function (data) {
+                if (data.result == false) {
+                    alert(data.resultMsg);
+                } else {
                     $("#updateBtn").click();     
-                });
+                }
             });
-            $('#rA1_all').click(function (e) {
-                e.preventDefault();  
-                $('#wa_grouping').val('all');
-                $("#updateBtn").click();           
-            });
-            $('#rA1_requested').click(function (e) {
-                e.preventDefault();
-//                var _date = new Date();
-//                $('#todaysdate').val(_date.toLocaleDateString());
-                $('#wa_grouping').val('requested');
-                $("#updateBtn").click();
-            });
-            $('#rA1_open').click(function (e) {
-                e.preventDefault();  
-                $('#wa_grouping').val('open');
-                $("#updateBtn").click();           
-            });
-            $('#rA1_skilled').click(function (e) {
-                e.preventDefault();  
-                $('#wa_grouping').val('skilled');
-                $("#updateBtn").click();           
-            });
-            $('#rA1_filled').click(function (e) {
-                e.preventDefault(); 
-                $('#wa_grouping').val('filled');
-                $("#updateBtn").click();
-            });
-            
-            $("#updateBtn").click(function (e) {
-                e.preventDefault();
-                $("#availAssignTable").dataTable().fnDraw();
+        });
+        $('#rA1_all').click(function (e) {
+            e.preventDefault();  
+            $('#wa_grouping').val('all'); 
+            $('#signin_visible').val(true);
+            $('#assignedWorker_visible').val(true);
+            $("#updateBtn").click();    
+        });
+        $('#rA1_requested').click(function (e) {
+            e.preventDefault();
+            $('#wa_grouping').val('requested'); 
+            $('#signin_visible').val(true);
+            $('#assignedWorker_visible').val(false);
+            $("#updateBtn").click();     
+        });
+        $('#rA1_active').click(function (e) {
+            e.preventDefault(); 
+            $('#wa_grouping').val('open'); 
+            $('#signin_visible').val(true);
+            $('#assignedWorker_visible').val(false);
+            $("#updateBtn").click(); 
+        });
+        $('#rA1_skilled').click(function (e) {
+            e.preventDefault();  
+            $('#wa_grouping').val('skilled'); 
+            $('#signin_visible').val(true);
+            $('#assignedWorker_visible').val(false);
+            $("#updateBtn").click();    
+          
+        });
+        $('#rA1_completed').click(function (e) {
+            e.preventDefault();
+            $('#wa_grouping').val('filled');
+            $('#signin_visible').val(false);
+            $('#assignedWorker_visible').val(true);
+            $("#updateBtn").click();                 
+        });
+          
+        $("#updateBtn").click(function (e) {
+            e.preventDefault();
+            if ($('#assignedWorker_visible').val() == 'true') {
+                $("#availAssignTable").dataTable().fnSetColumnVis( 0, true );
+            } else {
+                $("#availAssignTable").dataTable().fnSetColumnVis( 0, false );
+            }
+            if ($('#signin_visible').val() == 'true') {
+                $("#signinTab").show();
+            } else {
+                $("#signinTab").hide();
+            }
+            //alert($("#signinTable").dataTable().fnFilter());
+            if ($('#signinTable_filter').val() == null) {
                 $("#signinTable").dataTable().fnDraw();
-            });
+            } else {
+                $("#signinTable").dataTable().fnFilter("");
+            }
+            if ($('#availAssignTable_filter').val() == null) {
+                $("#availAssignTable").dataTable().fnDraw();
+            } else {
+                $("#availAssignTable").dataTable().fnFilter("");
+            }
+            
+        });
     });
     function DatePicker() {
         $('.ui-datepicker').datepicker({
-            dateFormat: 'mm/dd/yy',
-            buttonImage: '@Url.Content("~/Content/calendar.gif")',
-            buttonImageOnly: true,
-            showOn: "button"
+            dateFormat: 'mm/dd/yy'//,
+//            buttonImage: '@Url.Content("~/Content/calendar.gif")',
+//            buttonImageOnly: true,
+//            showOn: "button"
         });
          $('.ui-datepicker').change(function (event) {
             $("#updateBtn").click();
          });
+    }
+    function clickAsmtRefresh (myStr) {
+        $('#wa_grouping').val(myStr);
+
+        
+        //$("#signinTable").dataTable().fnDraw();
+        //$("#updateBtn").click();
+
+
     }
 </script>
