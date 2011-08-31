@@ -19,6 +19,7 @@ namespace Machete.Service
     {
         IEnumerable<WorkOrder> GetWorkOrders();
         IEnumerable<WorkOrder> GetWorkOrders(int? byEmployer);
+        IEnumerable<WorkOrder> GetActiveOrders(DateTime date);
         IQueryable<WorkOrderSummary> GetSummary(string search);
         ServiceIndexView<WOWASummary> CombinedSummary(string search,
             bool orderDescending,
@@ -103,6 +104,18 @@ namespace Machete.Service
             var workOrder = woRepo.GetById(id);
             return workOrder;
         }
+
+        public IEnumerable<WorkOrder> GetActiveOrders(DateTime date)
+        {
+            //TODO should make statuses strongly typed (42 == active)
+            // I will rot in hell for hardcoding this value -- matches the Lookups table 
+            // for active orderstatus
+            IQueryable<WorkOrder> query = woRepo.GetAllQ();
+                            query = query.Where(wo => wo.status == 42 &&
+                                    EntityFunctions.DiffDays(wo.dateTimeofWork, date) == 0 ? true : false).AsQueryable();
+            return query.ToList();
+        }
+
         #region GetIndexView
         /// <summary>
         /// 
@@ -169,6 +182,7 @@ namespace Machete.Service
             {
                 //case "WOID": orderedWO = orderDescending ? filteredWO.OrderByDescending(p => p.dateTimeofWork) : filteredWO.OrderBy(p => p.dateTimeofWork); break;
                 case "status": orderedWO = orderDescending ? filteredWO.OrderByDescending(p => p.status) : filteredWO.OrderBy(p => p.status); break;
+                case "transportMethod": orderedWO = orderDescending ? filteredWO.OrderByDescending(p => p.transportMethodID) : filteredWO.OrderBy(p => p.transportMethodID); break;
                 case "WAcount": orderedWO = orderDescending ? filteredWO.OrderByDescending(p => p.workAssignments.Count) : filteredWO.OrderBy(p => p.workAssignments.Count); break;
                 case "contactName": orderedWO = orderDescending ? filteredWO.OrderByDescending(p => p.contactName) : filteredWO.OrderBy(p => p.contactName); break;
                 case "workSiteAddress1": orderedWO = orderDescending ? filteredWO.OrderByDescending(p => p.workSiteAddress1) : filteredWO.OrderBy(p => p.workSiteAddress1); break;

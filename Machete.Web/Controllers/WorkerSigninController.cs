@@ -58,6 +58,7 @@ namespace Machete.Web.Controllers
             var _signin = new WorkerSignin();
             _signin.dwccardnum = dwccardentry;
             _signin.dateforsignin = dateforsignin;
+            //_signin.lottery_timestamp = DateTime.MinValue;
             //TODO: Create config page that lets admin control whether unmatched card ids are recorded
             _serv.CreateWorkerSignin(_signin, this.User.Identity.Name);
             

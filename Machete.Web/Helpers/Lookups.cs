@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Machete.Domain;
 using Machete.Data;
+using Machete.Service;
 using System.Data.Entity;
 using System.Text.RegularExpressions;
 
@@ -302,8 +303,14 @@ namespace Machete.Web.Helpers
         //
         public static string byID(int ID, string locale)
         {
-            if (locale == "es") return DbCache.Single(s => s.ID == ID).text_ES;
-            return DbCache.Single(s => s.ID == ID).text_EN; ;  //defaults to English
+            Lookup record;
+            record = DbCache.Single(s => s.ID == ID);
+            if (record == null) throw new MacheteIntegrityException("Unable to find Lookup record " + ID);
+            if (locale == "es")
+            {
+                return record.text_ES;
+            }
+            return record.text_EN; ;  //defaults to English
         }
         //
         // create multi-lingual yes/no strings

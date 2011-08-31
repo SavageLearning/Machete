@@ -383,6 +383,7 @@
     <Compile Include="ViewModel\depreciated\EmployerIndex.cs" />
     <Compile Include="ViewModel\depreciated\PersonIndex.cs" />
     <Compile Include="ViewModel\depreciated\WorkerIndex.cs" />
+    <Compile Include="ViewModel\WorkOrderGroupPrintView.cs" />
     <Compile Include="ViewModel\WorkerSigninViewModel.cs" />
     <Compile Include="ViewModel\WorkerViewModel.cs" />
     <Compile Include="ViewModel\EmployerViewModel.cs" />
@@ -680,6 +681,7 @@
     <Content Include="Views\Shared\AdministratorInfo.cshtml" />
     <Content Include="Views\Home\Wiki.cshtml" />
     <Content Include="Views\Home\Issues.cshtml" />
+    <Content Include="Views\WorkOrder\GroupView.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

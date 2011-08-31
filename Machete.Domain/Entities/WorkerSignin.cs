@@ -17,7 +17,8 @@ namespace Machete.Domain
         public int dwccardnum { get; set; }
         public int? WorkerID { get; set; }
         public int? WorkAssignmentID { get; set; }
-        public DateTime dateforsignin { get; set; } 
+        public DateTime dateforsignin { get; set; }
+        public DateTime? lottery_timestamp { get; set; } 
     }
     public class WorkerSigninView : Record
     {
