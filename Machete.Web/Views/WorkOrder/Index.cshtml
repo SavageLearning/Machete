@@ -46,6 +46,7 @@
                     <th>@WorkOrder.workorderID</th>
                     <th>@WorkOrder.dateTimeofWork</th>
                     <th>@WorkOrder.statusShort</th>
+                    <th>@WorkOrder.transportMethodID</th>
                     <th>@WorkOrders.assigncount</th>
                     <th>@WorkOrder.contactName</th>
                     <th>@WorkOrder.workSiteAddress1</th>
@@ -77,13 +78,14 @@
                             { "mDataProp": "WOID" },
                             { "mDataProp": "dateTimeofWork" },
                             { "mDataProp": "status" },
+                            { "mDataProp": "transportMethod" },
                             { "mDataProp": "WAcount" },
                             { "mDataProp": "contactName" },
                             { "mDataProp": "workSiteAddress1" },
                             { "mDataProp": "dateupdated" },
                             { "mDataProp": "updatedby" }
                         ],
-            "aoSearchCols" :  [null, null, null, null, null, null, null, null, null, null, null],
+            "aoSearchCols" :  [null, null, null, null, null, null, null, null, null, null, null, null],
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                         $(nRow).attr("edittabref", aData["tabref"]);
                         $(nRow).attr("edittablabel", aData["tablabel"]);

@@ -1,0 +1,12 @@
+﻿@model Machete.Web.ViewModel.WorkOrderGroupPrintView
+@using Machete.Domain           
+@using Machete.Web.Resources
+@using Machete.Web.Helpers
+@using System.Globalization
+           
+@foreach (WorkOrder order in Model.orders)
+{
+    @Html.Partial("View", order);
+    <div style="page-break-before: always;">
+    </div>
+}

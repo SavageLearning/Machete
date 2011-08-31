@@ -67,12 +67,18 @@ namespace Machete.Test
         public void DbSetWorkOrderService_Intergation_CombinedSummary()
         {
             //
-            //Arrange
-            //
             //Act
             var result = woServ.CombinedSummary("", true, 0,0);
             //
             //Assert
+            Assert.IsNotNull(result, "Person.ID is Null");
+        }
+        [TestMethod]
+        public void DbSetWorkOrderService_Intergation_get_GroupView()
+        {
+            //
+            //Act
+            var result = woServ.GetActiveOrders(DateTime.Now);
             Assert.IsNotNull(result, "Person.ID is Null");
         }
         [TestMethod]

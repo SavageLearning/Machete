@@ -21,7 +21,7 @@ namespace Machete.Web.Controllers
     [ElmahHandleError]
     public class WorkOrderController : Controller
     {
-        private readonly IWorkOrderService workOrderService;
+        private readonly IWorkOrderService woServ;
         private readonly IEmployerService _empServ;
         private readonly IWorkerService _reqServ;
         private readonly IWorkerRequestService _wrServ;
@@ -33,13 +33,13 @@ namespace Machete.Web.Controllers
         private string culture {get; set;}
         private Logger log = LogManager.GetCurrentClassLogger();
         private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "WorkOrderController", "");
-        public WorkOrderController(IWorkOrderService workOrderService, 
+        public WorkOrderController(IWorkOrderService woServ, 
                                    IWorkAssignmentService workAssignmentService,
                                    IEmployerService employerService,
                                    IWorkerService workerService,
                                    IWorkerRequestService requestService)
         {
-            this.workOrderService = workOrderService;
+            this.woServ = woServ;
             this._empServ = employerService;
             this._reqServ = workerService;
             this._waServ = workAssignmentService;
@@ -80,7 +80,7 @@ namespace Machete.Web.Controllers
             System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
             //Get all the records
             ServiceIndexView<WOWASummary> filteredSummary = 
-                workOrderService.CombinedSummary(param.sSearch,
+                woServ.CombinedSummary(param.sSearch,
                     Request["sSortDir_0"] == "asc" ? false : true,
                     param.iDisplayStart,
                     param.iDisplayLength);
@@ -122,7 +122,7 @@ namespace Machete.Web.Controllers
         {
             System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];            
             //Get all the records            
-            ServiceIndexView<WorkOrder> allWorkOrders = workOrderService.GetIndexView(
+            ServiceIndexView<WorkOrder> allWorkOrders = woServ.GetIndexView(
                 CI,
                 param.sSearch,
                 string.IsNullOrEmpty(param.sSearch_2) ? (int?)null : Convert.ToInt32(param.sSearch_2),
@@ -146,7 +146,8 @@ namespace Machete.Web.Controllers
                                       contactName =  p.contactName, 
                                       workSiteAddress1 =  p.workSiteAddress1,                                        
                                       dateupdated = System.String.Format("{0:MM/dd/yyyy HH:mm:ss}", p.dateupdated), 
-                                      updatedby = p.Updatedby
+                                      updatedby = p.Updatedby,
+                                      transportMethod = Lookups.byID(p.transportMethodID, CI.TwoLetterISOLanguageName) 
                          };
 
             return Json(new
@@ -208,7 +209,7 @@ namespace Machete.Web.Controllers
             {
                 return PartialView("Create", _model);
             }
-            WorkOrder neworder = workOrderService.CreateWorkOrder(_model, userName);           
+            WorkOrder neworder = woServ.CreateWorkOrder(_model, userName);           
             //New requests to add
             foreach (var add in workerRequests2)
             {
@@ -218,7 +219,7 @@ namespace Machete.Web.Controllers
                 add.createdby(userName);
                 neworder.workerRequests.Add(add);
             }
-            workOrderService.SaveWorkOrder(neworder, userName);
+            woServ.SaveWorkOrder(neworder, userName);
             //return PartialView("Index", neworder);
             return Json(new 
             {
@@ -237,7 +238,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Edit(int id)
         {
-            WorkOrder workOrder = workOrderService.GetWorkOrder(id);
+            WorkOrder workOrder = woServ.GetWorkOrder(id);
             ViewBag.workerRequests = workOrder.workerRequests.Select(a => 
                 new SelectListItem
                 { 
@@ -257,7 +258,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Edit(int id, FormCollection collection, string userName, List<WorkerRequest> workerRequests2)
         {
-            WorkOrder workOrder = workOrderService.GetWorkOrder(id);
+            WorkOrder workOrder = woServ.GetWorkOrder(id);
             TryUpdateModel(workOrder);
             //Stale requests to remove
             foreach (var rem in workOrder.workerRequests.Except<WorkerRequest>(workerRequests2, new WorkerRequestComparer()).ToArray())
@@ -277,7 +278,7 @@ namespace Machete.Web.Controllers
             }
             if (ModelState.IsValid)
             {
-                workOrderService.SaveWorkOrder(workOrder, userName);
+                woServ.SaveWorkOrder(workOrder, userName);
                 return RedirectToAction("Index", new { EmployerID = workOrder.EmployerID });
             }
             else
@@ -295,9 +296,19 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult View(int id)
         {
-            WorkOrder workOrder = workOrderService.GetWorkOrder(id);
+            WorkOrder workOrder = woServ.GetWorkOrder(id);
             return View(workOrder);
         }
+        [Authorize(Roles = "Administrator, Manager")]
+        public ActionResult GroupView()
+        {
+            WorkOrderGroupPrintView view = new WorkOrderGroupPrintView();
+            view.orders = woServ.GetActiveOrders(DateTime.Now);
+            return View(view);
+        }
+
+
+
         #endregion
         #region Delete
         //
@@ -305,7 +316,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Delete(int id)
         {
-            var workOrder = workOrderService.GetWorkOrder(id);
+            var workOrder = woServ.GetWorkOrder(id);
             return View(workOrder);
         }
         //
@@ -314,8 +325,8 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Delete(int id, FormCollection collection, string user)
         {
-            var workOrder = workOrderService.GetWorkOrder(id);
-            workOrderService.DeleteWorkOrder(id, user);
+            var workOrder = woServ.GetWorkOrder(id);
+            woServ.DeleteWorkOrder(id, user);
             return RedirectToAction("Index", new { EmployerID = workOrder.EmployerID });
         }
         #endregion
@@ -324,10 +335,10 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Activate(int id, FormCollection collection, string userName)
         {
-            var workOrder = workOrderService.GetWorkOrder(id);
+            var workOrder = woServ.GetWorkOrder(id);
             // lookup int value for status active
             workOrder.status = Lookups.getSingleEN("orderstatus","Active");
-            workOrderService.SaveWorkOrder(workOrder, userName);
+            woServ.SaveWorkOrder(workOrder, userName);
          
             //return PartialView("Edit", workOrder);
             return Json(new

@@ -102,14 +102,24 @@ namespace Machete.Service
             IQueryable<WorkAssignment> queryableWA = waRepo.GetAllQ();
             IEnumerable<WorkAssignment> filteredWA;
             bool isDateTime = false;
-
+            DateTime sunday;
             IEnumerable<Lookup> lCache = LookupCache.getCache();
             // 
             // DATE
             //
             if (o.date != null)
             {
-                queryableWA = queryableWA.Where(p => EntityFunctions.DiffDays(p.workOrder.dateTimeofWork, o.date) == 0 ? true : false);
+                if (o.date.Value.DayOfWeek == DayOfWeek.Saturday)
+                {
+                    sunday = o.date.Value.AddDays(1);
+                    queryableWA = queryableWA.Where(p => EntityFunctions.DiffDays(p.workOrder.dateTimeofWork, o.date) == 0 ? true : false ||
+                        EntityFunctions.DiffDays(p.workOrder.dateTimeofWork, sunday) == 0 ? true : false
+                        );
+                }
+                else
+                {
+                    queryableWA = queryableWA.Where(p => EntityFunctions.DiffDays(p.workOrder.dateTimeofWork, o.date) == 0 ? true : false);
+                }
             }
             // 
             // WOID
