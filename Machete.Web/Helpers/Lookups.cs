@@ -304,8 +304,14 @@ namespace Machete.Web.Helpers
         public static string byID(int ID, string locale)
         {
             Lookup record;
-            record = DbCache.Single(s => s.ID == ID);
-            if (record == null) throw new MacheteIntegrityException("Unable to find Lookup record " + ID);
+            try
+            {
+                record = DbCache.Single(s => s.ID == ID);
+            }
+            catch
+            {
+                throw new MacheteIntegrityException("Unable to find Lookup record " + ID);
+            }
             if (locale == "es")
             {
                 return record.text_ES;

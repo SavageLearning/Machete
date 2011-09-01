@@ -4,9 +4,22 @@
 @using Machete.Web.Helpers
 @using System.Globalization
            
-@foreach (WorkOrder order in Model.orders)
+@if (Model.orders.Count() == 0)
+{
+    <h3> @Html.Encode("No active orders with fulfilled worker assignments for the date you selected.?!") </h3>
+}
+else
+{
+foreach (WorkOrder order in Model.orders)
 {
     @Html.Partial("View", order);
     <div style="page-break-before: always;">
     </div>
 }
+}
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        $('.formButton').hide();
+        $('#printOrder:first').show();
+    });
+</script>

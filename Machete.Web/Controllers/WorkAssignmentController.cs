@@ -86,7 +86,8 @@ namespace Machete.Web.Controllers
                     displayLength = param.iDisplayLength,
                     sortColName=param.sortColName(),
                     wa_grouping = param.wa_grouping,
-                    typeofwork_grouping = param.typeofwork_grouping
+                    typeofwork_grouping = param.typeofwork_grouping,
+                    status = param.status
             });
             var result = from p in was.query select new { 
                             tabref = _getTabRef(p),
@@ -228,7 +229,7 @@ namespace Machete.Web.Controllers
             WorkAssignment assignment = waServ.Get(waid);
             try
             {
-                waServ.Assign(assignment, signin, "test script");
+                waServ.Assign(assignment, signin, userName);
             }
             catch (Exception e)
             {
@@ -259,7 +260,7 @@ namespace Machete.Web.Controllers
              assignment = waServ.Get((int)waid);
             try
             {
-                waServ.Unassign(signin, assignment, "test script");
+                waServ.Unassign(signin, assignment, userName);
             }
             catch (Exception e)
             {

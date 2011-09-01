@@ -126,6 +126,10 @@ namespace Machete.Service
             //
             if (o.woid != null && o.woid != 0) queryableWA = queryableWA.Where(p => p.workOrderID == o.woid);
             // 
+            // Status filtering
+            //
+            if (o.status != null && o.status != 0) queryableWA = queryableWA.Where(p => p.workOrder.status == o.status);
+            // 
             // wa_grouping
             //
             switch (o.wa_grouping) 
@@ -459,6 +463,7 @@ namespace Machete.Service
             public DateTime? date;
             public int? dwccardnum;
             public int? woid;
+            public int? status;
             public bool orderDescending;
             public int? displayStart;
             public int? displayLength;
