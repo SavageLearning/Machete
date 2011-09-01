@@ -47,8 +47,8 @@
     <div id="radioOpenFilled" class="radio">
         <input type="radio" id="rA1_requested" name="radioOpenFilled" /><label for="rA1_requested" class="dispatchButton">Requested<br/>(Active)</label>
 		<input type="radio" id="rA1_skilled" name="radioOpenFilled" /><label for="rA1_skilled" class="dispatchButton">Skilled<br />(Active)</label>
-        <input type="radio" id="rA1_active" name="radioOpenFilled" /><label for="rA1_active" class="dispatchButton">Active</label>
-		<input type="radio" id="rA1_completed" name="radioOpenFilled" /><label for="rA1_completed" class="dispatchButton">Completed</label>
+        <input type="radio" id="rA1_active" name="radioOpenFilled" /><label for="rA1_active" class="dispatchButton">Open<br />(Active)</label>
+		<input type="radio" id="rA1_completed" name="radioOpenFilled" /><label for="rA1_completed" class="dispatchButton">Assigned<br />(Active)</label>
         <input type="radio" id="rA1_all" name="radioOpenFilled" checked="checked" /><label for="rA1_all" class="dispatchButton">All</label>
 	</div>
     <div id="radioProgram" class="radio">
@@ -134,7 +134,7 @@
 			aoData.push( { "name": "todaysdate", "value": $('#todaysdate').val() } );
             aoData.push( { "name": "dwccardnum", "value": $('#dwccardnum').val()} );
             aoData.push( { "name": "wa_grouping", "value": $('#wa_grouping').val()} );
-            aoData.push( { "name": "typeofwork_grouping", "value": $('#typeofwork_grouping').val()} );
+            aoData.push( { "name": "typeofwork_grouping", "value": $('#typeofwork_grouping').val()} );            
 			$.getJSON( sSource, aoData, function (json) { 
 				/* Do whatever additional processing you want on the callback, then tell DataTables */
 				fnCallback(json)
@@ -181,6 +181,7 @@
                 aoData.push( { "name": "dwccardnum", "value": $('#dwccardnum').val()} );
                 aoData.push( { "name": "wa_grouping", "value": $('#wa_grouping').val()} );
                 aoData.push( { "name": "typeofwork_grouping", "value": $('#typeofwork_grouping').val()} );
+                aoData.push( { "name": "status", "value": @Lookups.getSingleEN("orderstatus", "Active")});
 			    $.getJSON( sSource, aoData, function (json) { 
 				    /* Do whatever additional processing you want on the callback, then tell DataTables */
 				    fnCallback(json)
@@ -314,14 +315,5 @@
          $('.ui-datepicker').change(function (event) {
             $("#updateBtn").click();
          });
-    }
-    function clickAsmtRefresh (myStr) {
-        $('#wa_grouping').val(myStr);
-
-        
-        //$("#signinTable").dataTable().fnDraw();
-        //$("#updateBtn").click();
-
-
     }
 </script>

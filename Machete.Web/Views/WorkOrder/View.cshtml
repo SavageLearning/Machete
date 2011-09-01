@@ -98,7 +98,7 @@ else
             </div>
             <div class="tb-field tb-cell">
                 @if (item.workerAssigned != null) {
-                    @Html.Encode(item.workerAssigned.Person.fullName());
+                  <h3>@Html.Encode(item.workerAssigned.Person.fullName())</h3>
                 } else {
                     @Html.Encode("_____________________________________________")
                 }

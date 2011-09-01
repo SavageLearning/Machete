@@ -299,16 +299,30 @@ namespace Machete.Web.Controllers
             WorkOrder workOrder = woServ.GetWorkOrder(id);
             return View(workOrder);
         }
+        //
+        //
         [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult GroupView()
+        public ActionResult GroupView(DateTime date)
         {
             WorkOrderGroupPrintView view = new WorkOrderGroupPrintView();
-            view.orders = woServ.GetActiveOrders(DateTime.Now);
+            view.orders = woServ.GetActiveOrders(date);
             return View(view);
         }
+        //
+        //
+        [HttpPost, UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager")]
+        public ActionResult CompleteOrders(DateTime date, string user)
+        {
 
+            int count = woServ.CompleteActiveOrders(date, user);
 
-
+            return Json(new
+            {
+                completedCount = count
+            },
+            JsonRequestBehavior.AllowGet);
+        }
         #endregion
         #region Delete
         //

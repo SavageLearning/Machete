@@ -21,6 +21,7 @@ namespace Machete.Service
         IEnumerable<WorkOrder> GetWorkOrders(int? byEmployer);
         IEnumerable<WorkOrder> GetActiveOrders(DateTime date);
         IQueryable<WorkOrderSummary> GetSummary(string search);
+        int CompleteActiveOrders(DateTime date, string user);
         ServiceIndexView<WOWASummary> CombinedSummary(string search,
             bool orderDescending,
             int displayStart,
@@ -111,9 +112,38 @@ namespace Machete.Service
             // I will rot in hell for hardcoding this value -- matches the Lookups table 
             // for active orderstatus
             IQueryable<WorkOrder> query = woRepo.GetAllQ();
-                            query = query.Where(wo => wo.status == 42 &&
-                                    EntityFunctions.DiffDays(wo.dateTimeofWork, date) == 0 ? true : false).AsQueryable();
-            return query.ToList();
+                            query = query.Where(wo => wo.status == 42 && 
+                                           EntityFunctions.DiffDays(wo.dateTimeofWork, date) == 0 ? true : false)
+                                    .AsQueryable();
+            List<WorkOrder> list = query.ToList();
+            List<WorkOrder> final = list.ToList();
+            foreach (WorkOrder wo in list)
+            {
+                foreach (WorkAssignment wa in wo.workAssignments)
+                {
+                    if (wa.workerAssignedID == null)
+                    {
+                        final.Remove(wo);
+                        break;
+                    }
+                }
+            }
+            return final;
+        }
+
+        public int CompleteActiveOrders(DateTime date, string user)
+        {
+            IEnumerable<WorkOrder> list = this.GetActiveOrders(date);
+            int count = 0;
+            foreach (WorkOrder wo in list)
+            {
+                var order = this.GetWorkOrder(wo.ID);
+                //TODO use strongly typed status here
+                order.status = 44;
+                this.SaveWorkOrder(order, user);
+                count++;
+            }
+            return count;
         }
 
         #region GetIndexView
