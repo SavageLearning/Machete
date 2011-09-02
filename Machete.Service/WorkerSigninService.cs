@@ -30,20 +30,27 @@ namespace Machete.Service
         private readonly IWorkerRepository workerRepo;
         private readonly IPersonRepository personRepo;
         private readonly IUnitOfWork unitOfWork;
+        //private readonly ILookupRepository lRepo;
         private readonly IImageRepository imageRepo;
+        private static int lkup_dwc;
+        private static int lkup_hhh;
         //
         //
         public WorkerSigninService(IWorkerSigninRepository workerSigninRepository, 
                                    IWorkerRepository workerRepository,
                                    IPersonRepository personRepository,
                                    IImageRepository imageRepository,
+                                   //ILookupRepository lookupRepository,
                                    IUnitOfWork unitOfWork)
         {
             this.signinRepo = workerSigninRepository;
             this.workerRepo = workerRepository;
             this.personRepo = personRepository;
+            //this.lRepo = lookupRepository;
             this.unitOfWork = unitOfWork;
             this.imageRepo = imageRepository;
+            lkup_dwc = LookupCache.getSingleEN("worktype", "(DWC) Day Worker Center");
+            lkup_hhh = LookupCache.getSingleEN("worktype", "(HHH) Household Helpers");
         }
         #region IWorkerSigninService Members
         //TODO: GetWorkerSignins
@@ -131,12 +138,27 @@ namespace Machete.Service
 
             }
             // 
+            // typeofwork ( DWC / HHH )
+            //          
+            if (o.typeofwork_grouping == lkup_dwc)
+            {
+                queryableWSI = queryableWSI
+                                         .Where(wsi => wsi.worker.typeOfWorkID == lkup_dwc)
+                                         .Select(wsi => wsi);
+            }
+            if (o.typeofwork_grouping == lkup_hhh)
+            {
+                queryableWSI = queryableWSI
+                                         .Where(wsi => wsi.worker.typeOfWorkID == lkup_hhh)
+                                         .Select(wsi => wsi);
+            }    
+            // 
             // wa_grouping
             //
             switch (o.wa_grouping)
             {
                 case "open": queryableWSI = queryableWSI.Where(p => p.WorkAssignmentID == null); break;
-                case "filled": queryableWSI = queryableWSI.Where(p => p.WorkAssignmentID != null); break;
+                case "assigned": queryableWSI = queryableWSI.Where(p => p.WorkAssignmentID != null); break;
                 case "skilled": queryableWSI = queryableWSI.Where(p => p.WorkAssignmentID == null); break;
                 case "requested": queryableWSI = queryableWSI.Where(p => p.WorkAssignmentID == null); break;
             }

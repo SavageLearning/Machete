@@ -294,29 +294,14 @@ namespace Machete.Web.Helpers
         //
         public static int getSingleEN(string category, string text)
         {
-            int rtnint = 0;
-            rtnint = DbCache.Single(s => s.category == category && s.text_EN == text).ID;
-            return rtnint;
+            return LookupCache.getSingleEN(category, text);
         }
         //
         // Get the Id string for a given lookup number
         //
         public static string byID(int ID, string locale)
         {
-            Lookup record;
-            try
-            {
-                record = DbCache.Single(s => s.ID == ID);
-            }
-            catch
-            {
-                throw new MacheteIntegrityException("Unable to find Lookup record " + ID);
-            }
-            if (locale == "es")
-            {
-                return record.text_ES;
-            }
-            return record.text_EN; ;  //defaults to English
+            return LookupCache.byID(ID, locale);
         }
         //
         // create multi-lingual yes/no strings

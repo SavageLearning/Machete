@@ -134,7 +134,7 @@ namespace Machete.Web.Models
         public string todaysdate { get; set; }
         public string dwccardnum { get; set; }
         public string wa_grouping { get; set; }
-        public string typeofwork_grouping { get; set; }
+        public int? typeofwork_grouping { get; set; }
         public int? status { get; set; }
 
         public string sortColName()         
