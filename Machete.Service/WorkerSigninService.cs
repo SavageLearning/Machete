@@ -159,7 +159,15 @@ namespace Machete.Service
             {
                 case "open": queryableWSI = queryableWSI.Where(p => p.WorkAssignmentID == null); break;
                 case "assigned": queryableWSI = queryableWSI.Where(p => p.WorkAssignmentID != null); break;
-                case "skilled": queryableWSI = queryableWSI.Where(p => p.WorkAssignmentID == null); break;
+                case "skilled": queryableWSI = queryableWSI
+                                     .Where(wsi => wsi.WorkAssignmentID == null &&
+                                         wsi.worker.skill1 != null ||
+                                         wsi.worker.skill2 != null ||
+                                         wsi.worker.skill3 != null
+                                            
+                    ); 
+
+                    break;
                 case "requested": queryableWSI = queryableWSI.Where(p => p.WorkAssignmentID == null); break;
             }
             if (!string.IsNullOrEmpty(o.search))

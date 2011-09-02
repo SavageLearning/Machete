@@ -118,7 +118,7 @@
     $('#signin_visible').val(true);
     $('#assignedWorker_visible').val(false);
     $('#typeofwork_grouping').val(null);
-    $('#status').val(@(Lookups.getSingleEN("orderstatus", "Active")));
+    $('#status').val(false);
     jqrfyTabs($("#assignmentTab"), "ui-tabs-assignment-");
     jqrfyTabs($("#signinTab"), "ui-tabs-signin-");
         
@@ -290,7 +290,7 @@
         $('#rA1_All').click(function (e) {
             e.preventDefault();
             $('#wa_grouping').val(false);
-            $('#signin_visible').val(false);
+            $('#signin_visible').val(true);
             $('#assignedWorker_visible').val(true);
             $('#status').val(false);
             $("#updateBtn").click();                 
