@@ -30,9 +30,59 @@ namespace Machete.Service
         {
             return DbCache.Single(s => s.ID == skillid).speciality;
         }
-        public static Lookup getByID(int skillid)
+        public static Lookup getBySkillID(int skillid)
         {
             return DbCache.Single(s => s.ID == skillid);
+        }
+        //
+        // Get the Id string for a given lookup number
+        //
+        public static string byID(int ID, string locale)
+        {
+            Lookup record;
+            try
+            {
+                record = DbCache.Single(s => s.ID == ID);
+            }
+            catch
+            {
+                throw new MacheteIntegrityException("Unable to find Lookup record " + ID);
+            }
+            if (locale == "es")
+            {
+                return record.text_ES;
+            }
+            return record.text_EN; ;  //defaults to English
+        }
+        //
+        // Get the ID number for a given lookup string
+        //
+        public static int getSingleEN(string category, string text)
+        {
+            int rtnint = 0;
+            try
+            {
+                rtnint = DbCache.Single(s => s.category == category && s.text_EN == text).ID;
+            }
+            catch
+            {
+                throw new MacheteIntegrityException("Unable to Lookup Category: " + category + ", text: " + text);
+            }
+            return rtnint;
+        }
+        //
+        //
+        //
+        public static IEnumerable<int> getSkillsByWorkType(int worktypeID)
+        {
+            try
+            {
+                return DbCache.Where(l => l.typeOfWorkID == worktypeID).Select(l => l.ID );
+            }
+            catch {
+                throw new MacheteIntegrityException("getSkillsByWorkType throws exception for worktype ID:" +worktypeID);
+            }
+
         }
     }
 }

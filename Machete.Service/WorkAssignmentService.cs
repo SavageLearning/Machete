@@ -44,6 +44,8 @@ namespace Machete.Service
         private readonly ILookupRepository lRepo;
         private readonly IWorkerRequestRepository wrRepo;
         private readonly MacheteContext DB;
+        private static int lkup_dwc;
+        private static int lkup_hhh;
         private static Regex isTimeSpecific = new Regex(@"^\s*\d{1,2}[\/-_]\d{1,2}[\/-_]\d{2,4}\s+\d{1,2}:\d{1,2}");
         private static Regex isDaySpecific = new Regex(@"^\s*\d{1,2}\/\d{1,2}\/\d{2,4}");
         private static Regex isMonthSpecific = new Regex(@"^\s*\d{1,2}\/\d{4,4}");
@@ -66,6 +68,8 @@ namespace Machete.Service
             this.wsiRepo = wsiRepo;
             this.wrRepo = wrRepo;
             DB = new MacheteContext();
+            lkup_dwc = LookupCache.getSingleEN("worktype", "(DWC) Day Worker Center");
+            lkup_hhh = LookupCache.getSingleEN("worktype", "(HHH) Household Helpers");
         }
         /// <summary>
         ///
@@ -100,6 +104,7 @@ namespace Machete.Service
         public ServiceIndexView<WorkAssignment> GetIndexView(DispatchOptions o)
         {
             IQueryable<WorkAssignment> queryableWA = waRepo.GetAllQ();
+            
             IEnumerable<WorkAssignment> filteredWA;
             bool isDateTime = false;
             DateTime sunday;
@@ -122,6 +127,27 @@ namespace Machete.Service
                 }
             }
             // 
+            // typeofwork ( DWC / HHH )
+            //          
+            if (o.typeofwork_grouping == lkup_dwc)
+            {
+                queryableWA = queryableWA.Join(lRepo.GetAllQ(),
+                                                wa => wa.skillID,
+                                                sk => sk.ID,
+                                                (wa, sk) => new { wa, sk })
+                                         .Where(jj => jj.sk.typeOfWorkID == lkup_dwc)
+                                         .Select(jj => jj.wa);                                             
+            }
+            if (o.typeofwork_grouping == lkup_hhh)
+            {
+                queryableWA = queryableWA.Join(lRepo.GetAllQ(),
+                                                wa => wa.skillID,
+                                                sk => sk.ID,
+                                                (wa, sk) => new { wa, sk })
+                                         .Where(jj => jj.sk.typeOfWorkID == lkup_hhh)
+                                         .Select(jj => jj.wa);
+            }          
+            // 
             // WOID
             //
             if (o.woid != null && o.woid != 0) queryableWA = queryableWA.Where(p => p.workOrderID == o.woid);
@@ -135,15 +161,13 @@ namespace Machete.Service
             switch (o.wa_grouping) 
             {
                 case "open": queryableWA = queryableWA.Where(p => p.workerAssignedID == null); break;
-                case "filled": queryableWA = queryableWA.Where(p => p.workerAssignedID != null); break;
+                case "assigned": queryableWA = queryableWA.Where(p => p.workerAssignedID != null); break;
                 case "skilled": queryableWA = queryableWA.Where(p => p.workerAssignedID == null); break;
                 case "requested": queryableWA = queryableWA.Where(p => p.workerAssignedID == null);break;
                                                            //.Join(wrRepo.GetAllQ(),
                                                            //      wa => wa.workOrderID,
                                                            //      wr => wr.WorkOrderID,
-                                                           //      (wa, wr) => new { wa });
-                    
-                
+                                                           //      (wa, wr) => new { wa });                                    
             }
             // 
             // SEARCH STRING
@@ -172,6 +196,10 @@ namespace Machete.Service
                             p.wa.Updatedby.Contains(o.search)).Select(p => p.wa);
                 }
             }
+            //
+            // Skill kludge. Assuming there won't be more than 6 cascading skill matches
+            // horrible flattening job of relational data
+            //
             int? skill1 =null; 
             int? skill2 =null; 
             int? skill3= null;
@@ -193,7 +221,7 @@ namespace Machete.Service
                     foreach (var skillid in primeskills)
                     {
                         skills.Push(skillid);
-                        Lookup skill = LookupCache.getByID(skillid);
+                        Lookup skill = LookupCache.getBySkillID(skillid);
                         foreach (var subskill in lCache.Where(a => a.category == skill.category &&
                                                                    a.subcategory == skill.subcategory &&
                                                                    a.level < skill.level))
@@ -233,6 +261,7 @@ namespace Machete.Service
             {
                 filteredWA = queryableWA.AsEnumerable();
             }
+            //
             //Sort the Persons based on column selection
             filteredWA = filteredWA.GroupJoin(WorkerCache.getCache(), wa => wa.workerAssignedID, wc => wc.ID, (wa, wc) => new { wa, wc })
                             .SelectMany(jj => jj.wc.DefaultIfEmpty(new Worker { ID = 0, dwccardnum = 0}),
@@ -469,6 +498,6 @@ namespace Machete.Service
             public int? displayLength;
             public string sortColName;
             public string wa_grouping;
-            public string typeofwork_grouping;
+            public int? typeofwork_grouping;
     }
 }

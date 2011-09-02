@@ -110,7 +110,8 @@ namespace Machete.Web.Controllers
                 displayStart = param.iDisplayStart,
                 displayLength = param.iDisplayLength,
                 sortColName = param.sortColName(),
-                wa_grouping = param.wa_grouping
+                wa_grouping = param.wa_grouping,
+                typeofwork_grouping = param.typeofwork_grouping
             });
 
             //return what's left to datatables
