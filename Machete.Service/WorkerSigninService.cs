@@ -28,6 +28,7 @@ namespace Machete.Service
     {
         private readonly IWorkerSigninRepository signinRepo;
         private readonly IWorkerRepository workerRepo;
+        private readonly IWorkerRequestRepository wrRepo;
         private readonly IPersonRepository personRepo;
         private readonly IUnitOfWork unitOfWork;
         //private readonly ILookupRepository lRepo;
@@ -40,12 +41,14 @@ namespace Machete.Service
                                    IWorkerRepository workerRepository,
                                    IPersonRepository personRepository,
                                    IImageRepository imageRepository,
+                                   IWorkerRequestRepository workerRequestRepository,
                                    //ILookupRepository lookupRepository,
                                    IUnitOfWork unitOfWork)
         {
             this.signinRepo = workerSigninRepository;
             this.workerRepo = workerRepository;
             this.personRepo = personRepository;
+            this.wrRepo = workerRequestRepository;
             //this.lRepo = lookupRepository;
             this.unitOfWork = unitOfWork;
             this.imageRepo = imageRepository;
@@ -128,6 +131,7 @@ namespace Machete.Service
         {
             //Get all the records
             IQueryable<WorkerSignin> queryableWSI = signinRepo.GetAllQ();
+            IQueryable<WorkerRequest> queryableWOWR;
             IEnumerable<WorkerSignin> enumWSI;
             IEnumerable<WorkerSigninView> enumWSIV;
             //Search based on search-bar string
@@ -163,12 +167,24 @@ namespace Machete.Service
                                      .Where(wsi => wsi.WorkAssignmentID == null &&
                                          wsi.worker.skill1 != null ||
                                          wsi.worker.skill2 != null ||
-                                         wsi.worker.skill3 != null
-                                            
+                                         wsi.worker.skill3 != null                                            
                     ); 
 
                     break;
-                case "requested": queryableWSI = queryableWSI.Where(p => p.WorkAssignmentID == null); break;
+                case "requested": 
+                    if (o.date == null) throw new MacheteIntegrityException("Date cannot be null for Requested filter");
+                    queryableWSI = queryableWSI.Where(p => p.WorkAssignmentID == null); 
+                    //var foo = from wsi in queryableWSI.
+                    //               join wr in wrRepo.GetAllQ() on
+                    //                    new { K1 = wsi.WorkerID, K2 = wsi.dateforsignin}
+                    //               equals new { K1 = wr.WorkerID, K2 = wr.datecreated}
+                    //               select wsi ;
+
+                    queryableWSI = queryableWSI.Join(wrRepo.GetAllQ(), 
+                                                wsi => new { K1 = (int)wsi.WorkerID, K2 = wsi.dateforsignin}, 
+                                                wr => new { K1 = wr.WorkerID, K2 = (DateTime)EntityFunctions.TruncateTime(wr.workOrder.dateTimeofWork) },
+                                                (wsi, wr) => wsi);
+                    break;
             }
             if (!string.IsNullOrEmpty(o.search))
             {

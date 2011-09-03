@@ -58,7 +58,7 @@ namespace Machete.Test
             wrRepo = new WorkerRequestRepository(dbFactory);
             waServ = new WorkAssignmentService(waRepo, wRepo, lRepo, wsiRepo, wrRepo, unitofwork);
             woServ = new WorkOrderService(woRepo, waServ, unitofwork);
-            wsiServ = new WorkerSigninService(wsiRepo, wRepo, pRepo, iRepo, unitofwork);
+            wsiServ = new WorkerSigninService(wsiRepo, wRepo, pRepo, iRepo, wrRepo,  unitofwork);
             dOptions = new DispatchOptions
             {
                 CI = new CultureInfo("en-US", false),

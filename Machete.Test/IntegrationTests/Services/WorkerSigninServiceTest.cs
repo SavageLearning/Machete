@@ -11,6 +11,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data.Entity.Database;
 using System.Data.Entity.Validation;
 using System.Globalization;
+using Machete.Web.Helpers;
 
 namespace Machete.Test
 {
@@ -21,12 +22,19 @@ namespace Machete.Test
         WorkerSigninRepository _wsiRepo;
         WorkerRepository _wRepo;
         PersonRepository _pRepo;
+        WorkOrderRepository _woRepo;
+        WorkAssignmentRepository _waRepo;
+        WorkerRequestRepository _wrRepo;
+        ILookupRepository _lRepo;
         ImageRepository _iRepo;
         DatabaseFactory _dbFactory;
         WorkerSigninService _wsiServ;
         WorkerService _wServ;
         PersonService _pServ;
         ImageService _iServ;
+        WorkerRequestService _wrServ;
+        WorkOrderService _woServ;
+        WorkAssignmentService _waServ;
         IUnitOfWork _unitofwork;
         MacheteContext MacheteDB;
         DispatchOptions _dOptions;
@@ -37,6 +45,9 @@ namespace Machete.Test
         {
             DbDatabase.SetInitializer<MacheteContext>(new TestInitializer());
             WorkerCache.Initialize(new MacheteContext());
+            LookupCache.Initialize(new MacheteContext());
+            WorkerCache.Initialize(new MacheteContext());
+            Lookups.Initialize(LookupCache.getCache());
         }
 
         [TestInitialize]
@@ -45,13 +56,19 @@ namespace Machete.Test
             _dbFactory = new DatabaseFactory();
             _iRepo = new ImageRepository(_dbFactory);
             _wRepo = new WorkerRepository(_dbFactory);
+            _woRepo = new WorkOrderRepository(_dbFactory);
+            _wrRepo = new WorkerRequestRepository(_dbFactory);
+            _waRepo = new WorkAssignmentRepository(_dbFactory);
             _wsiRepo = new WorkerSigninRepository(_dbFactory);
             _pRepo = new PersonRepository(_dbFactory);
             _unitofwork = new UnitOfWork(_dbFactory);
             _pServ = new PersonService(_pRepo, _unitofwork);
             _iServ = new ImageService(_iRepo, _unitofwork);
+            _wrServ = new WorkerRequestService(_wrRepo, _unitofwork);
+            _waServ = new WorkAssignmentService(_waRepo, _wRepo, _lRepo, _wsiRepo,_wrRepo, _unitofwork);
             _wServ = new WorkerService(_wRepo, _unitofwork);
-            _wsiServ = new WorkerSigninService(_wsiRepo, _wRepo, _pRepo, _iRepo, _unitofwork);
+            _woServ = new WorkOrderService(_woRepo, _waServ, _unitofwork);
+            _wsiServ = new WorkerSigninService(_wsiRepo, _wRepo, _pRepo, _iRepo, _wrRepo, _unitofwork);
             _dOptions = new DispatchOptions
             {
                 CI = new CultureInfo("en-US", false),
@@ -80,6 +97,23 @@ namespace Machete.Test
             //
             //Act
             _dOptions.dwccardnum = 30040;
+            ServiceIndexView<WorkerSigninView> result = _wsiServ.GetIndexView(_dOptions);
+            //
+            //Assert
+            List<WorkerSigninView> tolist = result.query.ToList();
+            Assert.IsNotNull(tolist, "return value is null");
+            Assert.IsInstanceOfType(result, typeof(ServiceIndexView<WorkerSigninView>));
+            //Assert.AreEqual(61, tolist[0].skillID);
+            Assert.AreEqual(3, result.filteredCount);
+            Assert.AreEqual(3, result.totalCount);
+        }
+        [TestMethod]
+        public void DbSet_WorkSigninService_Intergation_GetIndexView_workerRequested()
+        {
+            //
+            //Act
+            _dOptions.dwccardnum = 30040;
+            _dOptions.wa_grouping = "requested";
             ServiceIndexView<WorkerSigninView> result = _wsiServ.GetIndexView(_dOptions);
             //
             //Assert
