@@ -16,7 +16,7 @@ namespace Machete.Data
             //Initialize Lookups
             MacheteLookup.Initialize(DB);
             DB.SaveChanges();
-            
+            DB.Database.SqlCommand("CREATE NONCLUSTERED INDEX [dateTimeofWork] ON [dbo].[WorkOrders] ([dateTimeofWork] ASC) WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]");
             new List<Person>
             {
                 new Person { firstname1 = "Jimmy", 
