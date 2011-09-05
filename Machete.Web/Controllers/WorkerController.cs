@@ -48,7 +48,7 @@ namespace Machete.Web.Controllers
         // GET: /Worker/Index
         //
         #region index
-        [Authorize(Roles = "User, Manager, Administrator, Check-in, PhoneDesk")]
+        [Authorize(Roles = "Manager, Administrator, PhoneDesk")]
         public ActionResult Index()
         {
             //WorkerIndex _view = new WorkerIndex();
@@ -59,7 +59,7 @@ namespace Machete.Web.Controllers
             return View();
         }
 
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, User")]
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             //Get all the records

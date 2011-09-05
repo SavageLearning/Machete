@@ -39,7 +39,7 @@ namespace Machete.Web.Controllers
         //
         // GET: /WorkerSignin/
         // Initial page creation
-        [Authorize(Roles = "Manager, Administrator, Check-in, PhoneDesk, User")]
+        [Authorize(Roles = "Manager, Administrator, Check-in")]
         public ActionResult Index()
         {        
             WorkerSigninViewModel _model = new WorkerSigninViewModel();
@@ -97,7 +97,7 @@ namespace Machete.Web.Controllers
         }
 
 
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, User")]
+        [Authorize(Roles = "Administrator, Manager, Check-in")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             ServiceIndexView<WorkerSigninView> was = _serv.GetIndexView(new DispatchOptions {

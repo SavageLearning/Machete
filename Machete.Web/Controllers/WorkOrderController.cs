@@ -60,7 +60,7 @@ namespace Machete.Web.Controllers
         //
         // GET: /WorkOrder/
         //
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, User")]
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Index()
         {
             return View();
@@ -68,13 +68,8 @@ namespace Machete.Web.Controllers
 
         #endregion
 
-        //[Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, User")]
-        //public ActionResult Dispatch()
-        //{
-        //    return View(_getSummary());
-        //}
         #region AJaxSummary
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, User")]
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult AjaxSummary(jQueryDataTableParam param)
         {
             System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
@@ -117,7 +112,7 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="param">Datatables.Net parameters object</param>
         /// <returns>MVC Action Result</returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, User")]
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];            
