@@ -162,7 +162,10 @@ namespace Machete.Service
             {
                 case "open": queryableWA = queryableWA.Where(p => p.workerAssignedID == null); break;
                 case "assigned": queryableWA = queryableWA.Where(p => p.workerAssignedID != null); break;
-                case "requested": queryableWA = queryableWA.Where(p => p.workerAssignedID == null); break;
+                case "requested": 
+                    queryableWA = queryableWA.Where(p => p.workerAssignedID == null && p.workOrder.workerRequests.Any() == true); 
+
+                    break;
                 case "skilled": queryableWA = queryableWA.Join(lRepo.GetAllQ(),
                                     wa => wa.skillID,
                                     sk => sk.ID,

@@ -104,10 +104,12 @@ namespace Machete.Web.Controllers
                             dateupdated = Convert.ToString(p.dateupdated), 
                             updatedby = p.Updatedby,
                             dateTimeofWork = p.workOrder.dateTimeofWork.ToString(),
+                            status = p.workOrder.status.ToString(),
                             earnings = System.String.Format("${0:f2}",(p.hourlyWage * p.hours * p.days)),
                             WSIID = p.workerSigninID ?? 0,
                             WID = p.workerAssignedID ?? 0,
-                            assignedWorker = p.workerAssigned != null ? p.workerAssigned.dwccardnum + " " + p.workerAssigned.Person.fullName() : ""
+                            assignedWorker = p.workerAssigned != null ? p.workerAssigned.dwccardnum + " " + p.workerAssigned.Person.fullName() : "",
+                            requestedList = p.workOrder.workerRequests.Select(a => a.fullNameAndID).ToArray()
                 };
  
             return Json(new
