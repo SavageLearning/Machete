@@ -5,7 +5,7 @@
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
 }
-<div class="tb-table">
+<div class="tb-table" style="float: left;">
     <div class="tb-row">
         <div class="tb-label tb-cell" id="employerName">
             @Html.LabelFor(model => model.name)
@@ -15,11 +15,11 @@
             @Html.ValidationMessageFor(model => model.name)
         </div>
         <div class="tb-label tb-cell">
-            @Html.LabelFor(model => model.active)
+            @Html.LabelFor(model => model.business)
         </div>
         <div class="tb-field tb-cell">
-            @Html.DropDownListFor(model => model.active, new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.active), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })           
-            @Html.ValidationMessageFor(model => model.active)
+            @Html.DropDownListFor(model => model.business, new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.business), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })           
+            @Html.ValidationMessageFor(model => model.business)
         </div>
     </div><!--tb-row-->
     <div class="tb-row">
@@ -69,13 +69,7 @@
             @Html.TextBoxFor(model => model.email, new { tabindex = "2" })
             @Html.ValidationMessageFor(model => model.email)
         </div>
-        <div class="tb-label tb-cell">
-            @Html.LabelFor(model => model.blogparticipate)
-        </div>
-        <div class="tb-field tb-cell">
-            @Html.DropDownListFor(model => model.blogparticipate, new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.blogparticipate), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })           
-            @Html.ValidationMessageFor(model => model.blogparticipate)
-        </div>
+
     </div>
     <!--tb-row-->
     <div class="tb-row">
@@ -111,8 +105,38 @@
             @Html.ValidationMessageFor(model => model.referredbyOther)
         </div>
     </div>
-</div>
 
+</div>
+<div class="tb-table" style="float: left;">
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.active)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.DropDownListFor(model => model.active, new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.active), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })           
+            @Html.ValidationMessageFor(model => model.active)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.blogparticipate)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.DropDownListFor(model => model.blogparticipate, new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.blogparticipate), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })           
+            @Html.ValidationMessageFor(model => model.blogparticipate)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label tb-cell desc-label">
+            @Html.LabelFor(model => model.notes)
+        </div>
+        <div class="tb-field tb-cell desc-field">
+            @Html.TextAreaFor(model => model.notes, new { tabindex = "3", @class="desc-field" })
+            @Html.ValidationMessageFor(model => model.notes)
+        </div>
+    </div>
+</div>
+<div style="clear: left;"></div>
 @Html.Partial("ManagerInfo", Model)
 @Html.Partial("AdministratorInfo", Model)
 
