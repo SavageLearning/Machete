@@ -18,6 +18,8 @@
     @Html.TextBoxFor(m => m.signin_visible)
     @Html.LabelFor(m => m.status)
     @Html.TextBoxFor(m => m.status)
+    @Html.LabelFor(m => m.requestedWorkers_visible)
+    @Html.TextBoxFor(m => m.requestedWorkers_visible)
 </div>   
 <div style="float: left;">     
     <div>
@@ -65,7 +67,7 @@
     <div class="tb-row"></div>
         <div id="signinTab" class="tb-cell">
             <ul>
-                <li><a href="#signinList">Workers</a></li>
+                <li><a href="#signinList">Worker Sign-in</a></li>
             </ul>
             <div id="signinList">
                 <table id="signinTable" class="display">
@@ -95,6 +97,7 @@
             <thead>
                 <tr>
                     <th>assignedWorker</th>
+                    <th>requestedWorkers</th>
                     <th>ID#</th>
                     <th>@WorkOrder.dateTimeofWork</th>
                     <th>@WorkAssignment.englishLevelID</th>
@@ -112,11 +115,13 @@
 </div>
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
+    assignTableCount = 0;
     DatePicker();
     $( ".radio" ).buttonset();
     $(".formButton").button();
     $('#signin_visible').val(true);
     $('#assignedWorker_visible').val(false);
+    $('#requestedWorkers_visible').val(false);
     $('#typeofwork_grouping').val(null);
     $('#status').val(false);
     jqrfyTabs($("#assignmentTab"), "ui-tabs-assignment-");
@@ -168,6 +173,7 @@
         "bProcessing": true,
         "aoColumns": [
                         { "mDataProp": "assignedWorker", "bVisible": false, "bSortable": false}, 
+                        { "mDataProp": "requestedList", "bVisible": false, "bSortable": false}, 
                         { "mDataProp": "pWAID"},                            
                         { "mDataProp": "dateTimeofWork"},                            
                         { "mDataProp": "englishlevel"}, 
@@ -178,7 +184,7 @@
                         { "mDataProp": "earnings"},
                         { "mDataProp": "description"}
                     ],
-        "aoSearchCols" : [null, null, null, null, null, null, null, null, null, null],
+        "aoSearchCols" : [null, null, null, null, null, null, null, null, null, null, null],
         "fnServerData": function ( sSource, aoData, fnCallback ) {
 			    /* Add some extra data to the sender */
 			    aoData.push( { "name": "todaysdate", "value": $('#todaysdate').val() } );
@@ -194,15 +200,20 @@
         "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
             $(nRow).attr('requestedID', aData['WAID']);
             //alert(aData['WID'] + "-" + aData['WSIID']);
-            if (aData['WID'] > 0 && aData['WSIID'] > 0) { // green
+            if (aData['WID'] > 0 && aData['WSIID'] > 0 && aData['status'] == @(Lookups.getSingleEN("orderstatus", "Active"))) { // assigned
                 $(nRow).addClass('statusGreen');
             } 
-            if (aData['WID'] > 0 && aData['WSIID'] == 0) { // red
+            if (aData['WID'] > 0 && aData['WSIID'] == 0 && aData['status'] == @(Lookups.getSingleEN("orderstatus", "Active"))) { // orphaned
                 $(nRow).addClass('statusYellow');
-            }   
+            }
+            if (aData['status'] == @(Lookups.getSingleEN("orderstatus", "Cancelled"))) { // orphaned
+                $(nRow).addClass('statusRed');
+            }
+
             //$(nRow).attr('edittablabel', aData[1]);                
             return nRow;
-        } 
+        }, 
+        "fnDrawCallback": function () { assignTableCount++; }
         });
         //
         //
@@ -251,6 +262,7 @@
             $('#wa_grouping').val('assigned'); 
             $('#signin_visible').val(false);
             $('#assignedWorker_visible').val(true);
+            $('#requestedWorkers_visible').val(false);
             $('#status').val(@(Lookups.getSingleEN("orderstatus", "Completed")));
             $("#updateBtn").click();    
         });
@@ -259,6 +271,7 @@
             $('#wa_grouping').val('requested'); 
             $('#signin_visible').val(true);
             $('#assignedWorker_visible').val(false);
+            $('#requestedWorkers_visible').val(true);
             $('#status').val(@(Lookups.getSingleEN("orderstatus", "Active")));
             $("#updateBtn").click();     
         });
@@ -267,6 +280,7 @@
             $('#wa_grouping').val('open'); 
             $('#signin_visible').val(true);
             $('#assignedWorker_visible').val(false);
+            $('#requestedWorkers_visible').val(false);
             $('#status').val(@(Lookups.getSingleEN("orderstatus", "Active")));
             $("#updateBtn").click(); 
         });
@@ -275,6 +289,7 @@
             $('#wa_grouping').val('skilled'); 
             $('#signin_visible').val(true);
             $('#assignedWorker_visible').val(false);
+            $('#requestedWorkers_visible').val(false);
             $('#status').val(@(Lookups.getSingleEN("orderstatus", "Active")));
             $("#updateBtn").click();    
           
@@ -284,6 +299,7 @@
             $('#wa_grouping').val('assigned');
             $('#signin_visible').val(false);
             $('#assignedWorker_visible').val(true);
+            $('#requestedWorkers_visible').val(true);
             $('#status').val(@(Lookups.getSingleEN("orderstatus", "Active")));
             $("#updateBtn").click();                 
         });
@@ -292,6 +308,7 @@
             $('#wa_grouping').val(false);
             $('#signin_visible').val(true);
             $('#assignedWorker_visible').val(true);
+            $('#requestedWorkers_visible').val(false);
             $('#status').val(false);
             $("#updateBtn").click();                 
         });
@@ -314,9 +331,14 @@
         $("#updateBtn").click(function (e) {
             e.preventDefault();
             if ($('#assignedWorker_visible').val() == 'true') {
-                $("#availAssignTable").dataTable().fnSetColumnVis( 0, true );
+                $("#availAssignTable").dataTable().fnSetColumnVis( 0, true , false);
             } else {
-                $("#availAssignTable").dataTable().fnSetColumnVis( 0, false );
+                $("#availAssignTable").dataTable().fnSetColumnVis( 0, false, false );
+            }
+            if ($('#requestedWorkers_visible').val() == 'true') {
+                $("#availAssignTable").dataTable().fnSetColumnVis( 1, true, false );
+            } else {
+                $("#availAssignTable").dataTable().fnSetColumnVis( 1, false, false );
             }
             if ($('#signin_visible').val() == 'true') {
                 $("#signinTab").show();
@@ -334,12 +356,29 @@
             } else {
                 $("#availAssignTable").dataTable().fnFilter("");
             }
-            
+//            var thebit = false;
+//            if ($('#signin_visible').val() == 'true') {
+//                $("#signinTab").show();
+//            } else {
+//                $("#signinTab").hide();
+//            }
+//            //
+//            //
+//            if ($('#assignedWorker_visible').val() == 'true') {
+//                thebit = true;
+//            } 
+//            //
+//            //
+//            $("#signinTable").dataTable().fnFilter("").fnDraw();
+//            //$("#availAssignTable").dataTable().fnFilter("").fnDraw().fnSetColumnVis( 0, thebit );
+//            $("#availAssignTable").dataTable().fnDraw();            
         });
     });
     function DatePicker() {
         $('.ui-datepicker').datepicker({
-            dateFormat: 'mm/dd/yy'//,
+            dateFormat: 'mm/dd/yy',
+            showOtherMonths: true,
+			selectOtherMonths: true
 //            buttonImage: '@Url.Content("~/Content/calendar.gif")',
 //            buttonImageOnly: true,
 //            showOn: "button"

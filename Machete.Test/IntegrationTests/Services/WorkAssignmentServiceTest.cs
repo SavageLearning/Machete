@@ -11,6 +11,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data.Entity.Database;
 using System.Data.Entity.Validation;
 using System.Globalization;
+using Machete.Web.Helpers;
 
 namespace Machete.Test
 {
@@ -40,6 +41,9 @@ namespace Machete.Test
         public static void ClassInitialize(TestContext context)
         {
             DbDatabase.SetInitializer<MacheteContext>(new TestInitializer());
+            LookupCache.Initialize(new MacheteContext());
+            WorkerCache.Initialize(new MacheteContext());
+            Lookups.Initialize(LookupCache.getCache());
         }
 
 
@@ -71,8 +75,7 @@ namespace Machete.Test
                 displayStart = 0,
                 displayLength = 20
             };
-            LookupCache.Initialize(new MacheteContext());
-            WorkerCache.Initialize(new MacheteContext()); 
+
         }
         [TestMethod]
         public void Integration_WA_Service_GetIndexView_basic()
@@ -205,6 +208,23 @@ namespace Machete.Test
             //Act
             dOptions.dwccardnum = 30040;
             dOptions.orderDescending = true;
+            var result = waServ.GetIndexView(dOptions);
+            //
+            //Assert
+            var tolist = result.query.ToList();
+            Assert.IsNotNull(tolist, "return value is null");
+            Assert.IsInstanceOfType(result, typeof(ServiceIndexView<WorkAssignment>));
+            //Assert.AreEqual(61, tolist[0].skillID);
+            Assert.AreEqual(10, result.filteredCount);
+            Assert.AreEqual(10, result.totalCount);
+        }
+        [TestMethod]
+        public void Integration_WA_Service_GetIndexView_check_requested_filter()
+        {
+            //
+            //Act
+            dOptions.orderDescending = true;
+            dOptions.wa_grouping = "requested";
             var result = waServ.GetIndexView(dOptions);
             //
             //Assert

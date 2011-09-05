@@ -27,6 +27,18 @@ namespace Machete.Domain
                          p.lastname2;
                 }
         }
+        public string fullNameAndID
+        {
+            get
+            {
+                Person p = this.workerRequested.Person;
+                return this.workerRequested.dwccardnum + " " + 
+                     p.firstname1 + " " +
+                     p.firstname2 + " " +
+                     p.lastname1 + " " +
+                     p.lastname2;
+            }
+        }
     }
     public class WorkerRequestComparer : IEqualityComparer<WorkerRequest>
     {

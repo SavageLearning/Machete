@@ -174,14 +174,8 @@ namespace Machete.Service
                 case "requested": 
                     if (o.date == null) throw new MacheteIntegrityException("Date cannot be null for Requested filter");
                     queryableWSI = queryableWSI.Where(p => p.WorkAssignmentID == null); 
-                    //var foo = from wsi in queryableWSI.
-                    //               join wr in wrRepo.GetAllQ() on
-                    //                    new { K1 = wsi.WorkerID, K2 = wsi.dateforsignin}
-                    //               equals new { K1 = wr.WorkerID, K2 = wr.datecreated}
-                    //               select wsi ;
-
                     queryableWSI = queryableWSI.Join(wrRepo.GetAllQ(), 
-                                                wsi => new { K1 = (int)wsi.WorkerID, K2 = wsi.dateforsignin}, 
+                                                wsi => new { K1 = (int)wsi.WorkerID, K2 = (DateTime)EntityFunctions.TruncateTime(wsi.dateforsignin)}, 
                                                 wr => new { K1 = wr.WorkerID, K2 = (DateTime)EntityFunctions.TruncateTime(wr.workOrder.dateTimeofWork) },
                                                 (wsi, wr) => wsi);
                     break;

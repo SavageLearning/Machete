@@ -19,5 +19,6 @@ namespace Machete.Web.ViewModel
         public bool typeofwork_grouping { get; set; }
         public bool assignedWorker_visible { get; set; }
         public bool signin_visible { get; set; }
+        public bool requestedWorkers_visible { get; set; }
     }
 }
