@@ -37,13 +37,13 @@ namespace Machete.Web.Controllers
         //
         // GET: /Person/
         //
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, User")]
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Index()
         {
             return View();
         }
 
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, User")]
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             //Get all the records
@@ -182,7 +182,7 @@ namespace Machete.Web.Controllers
         //
         //GET: /Person/View/5
         //
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk, User")]
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult View(int id)
         {
             Person person = personService.GetPerson(id);

@@ -36,7 +36,7 @@ namespace Machete.Web.Controllers
         //
         // GET: /Employer/
         //
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, User")]
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Index()
         {
             return View();
