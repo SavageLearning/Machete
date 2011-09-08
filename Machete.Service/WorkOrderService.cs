@@ -19,7 +19,7 @@ namespace Machete.Service
     {
         IEnumerable<WorkOrder> GetWorkOrders();
         IEnumerable<WorkOrder> GetWorkOrders(int? byEmployer);
-        IEnumerable<WorkOrder> GetActiveOrders(DateTime date);
+        IEnumerable<WorkOrder> GetActiveOrders(DateTime date, bool assignedOnly);
         IQueryable<WorkOrderSummary> GetSummary(string search);
         int CompleteActiveOrders(DateTime date, string user);
         ServiceIndexView<WOWASummary> CombinedSummary(string search,
@@ -106,7 +106,7 @@ namespace Machete.Service
             return workOrder;
         }
 
-        public IEnumerable<WorkOrder> GetActiveOrders(DateTime date)
+        public IEnumerable<WorkOrder> GetActiveOrders(DateTime date, bool assignedOnly)
         {
             //TODO should make statuses strongly typed (42 == active)
             // I will rot in hell for hardcoding this value -- matches the Lookups table 
@@ -117,6 +117,7 @@ namespace Machete.Service
                                     .AsQueryable();
             List<WorkOrder> list = query.ToList();
             List<WorkOrder> final = list.ToList();
+            if (!assignedOnly) return final;
             foreach (WorkOrder wo in list)
             {
                 foreach (WorkAssignment wa in wo.workAssignments)
@@ -133,7 +134,7 @@ namespace Machete.Service
 
         public int CompleteActiveOrders(DateTime date, string user)
         {
-            IEnumerable<WorkOrder> list = this.GetActiveOrders(date);
+            IEnumerable<WorkOrder> list = this.GetActiveOrders(date, false);
             int count = 0;
             foreach (WorkOrder wo in list)
             {
