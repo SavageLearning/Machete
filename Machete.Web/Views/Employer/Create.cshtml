@@ -3,8 +3,10 @@
 @using (Html.BeginForm("Create", "Employer", FormMethod.Post, 
                         new { @id = "employerCreateForm" }))
 {
-    <input type="submit" id="employerCreateButton" 
-           value="@Employers.createsubmit"  tabindex="9"/>
+    <div style="float: left;">
+        <input type="submit" id="employerCreateButton" 
+               value="@Employers.createsubmit"  tabindex="9"/>
+    </div>
     @Html.ValidationSummary(true)
     @Html.EditorForModel()
 }

@@ -12,8 +12,9 @@
     </ul>
     <div id="summaryList">
         <input type="button" id="printActiveBtn" class="formButton" value="Print active orders"/>
+        <input type="button" id="printActiveAssignedBtn" class="formButton" value="Print active & assigned orders"/>
         @Html.TextBox("activeDate", @DateTime.Today.ToShortDateString(), new { @style = "width: 6em;", @class = "ui-datepicker" })
-        <input type="button" id="completeActiveBtn" class="formButton" value="Complete active orders"/>
+        <input type="button" id="completeActiveBtn" class="formButton" value="Complete active & assigned orders"/>
         <table id="orderSummaryTable" class="display">
             <thead>
                 <tr>
@@ -184,8 +185,11 @@
         // print and complete buttons from summary page
         //  
         $('#printActiveBtn').click(function() {
-            window.open('/WorkOrder/GroupView?date='+$('#activeDate').val());
-        });        
+            window.open('/WorkOrder/GroupView?assignedOnly=false&date='+$('#activeDate').val());
+        });
+        $('#printActiveAssignedBtn').click(function() {
+            window.open('/WorkOrder/GroupView?assignedOnly=true&date='+$('#activeDate').val());
+        });     
         $('#completeActiveBtn').click(function() {
             $.post("/WorkOrder/CompleteOrders", 
                 {

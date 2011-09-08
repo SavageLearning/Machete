@@ -17,14 +17,11 @@
                 <img alt="@Machete.Web.Resources.Shared.title" src="/Content/casa_logo.png" title="CasaLogo" class="casaLogo"/>
                 <img class="print_off" alt="@Machete.Web.Resources.Shared.title" src="/Content/machete_1_close_crop.png" title="titleBanner"/>
             </div>
-
             <div id="logindisplay" class="print_off">
                 @Html.Partial("_LogOnPartial")
                 @Html.Partial("_CultureChooser")
             </div>
-
             <div id="menucontainer" class="print_off">
-
                 <ul id="menu">
                     <li>@Html.ActionLink(@Machete.Web.Resources.Shared.hometab, "Index", "Home", null, new { id = "menulinkhome" })</li>
                     <li>@Html.ActionLink(@Machete.Web.Resources.Shared.employerstab, "Index", "Employer", null, new { id = "menulinkemployer" })</li>
@@ -33,12 +30,9 @@
                     <li>@Html.ActionLink(@Machete.Web.Resources.Shared.persontab, "Index", "Person", null, new { id = "menulinkperson" })</li>
                     <li>@Html.ActionLink(@Machete.Web.Resources.Shared.workerstab, "Index", "Worker", null, new { id="menulinkworker"})</li>
                     <li>@Html.ActionLink(@Machete.Web.Resources.Shared.workersignintab, "Index", "WorkerSignin", null, new { id = "menulinkworkersignin" })</li>
-                    
                 </ul>
-
             </div>
         </div>
-
         <div id="main" class="clearfix">
             @RenderBody()
             <div id="footer" class="print_off" style="Clear:Both">

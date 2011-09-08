@@ -78,7 +78,7 @@ namespace Machete.Test
         {
             //
             //Act
-            var result = woServ.GetActiveOrders(DateTime.Now);
+            var result = woServ.GetActiveOrders(DateTime.Now, false);
             Assert.IsNotNull(result, "Person.ID is Null");
         }
         [TestMethod]

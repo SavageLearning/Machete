@@ -297,10 +297,12 @@ namespace Machete.Web.Controllers
         //
         //
         [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult GroupView(DateTime date)
+        public ActionResult GroupView(DateTime date, bool? assignedOnly)
         {
             WorkOrderGroupPrintView view = new WorkOrderGroupPrintView();
-            view.orders = woServ.GetActiveOrders(date);
+            if (assignedOnly == true) 
+                view.orders = woServ.GetActiveOrders(date, true );
+            else view.orders = woServ.GetActiveOrders(date, false);
             return View(view);
         }
         //
