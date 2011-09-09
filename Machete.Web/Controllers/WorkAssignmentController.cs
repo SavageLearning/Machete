@@ -45,7 +45,7 @@ namespace Machete.Web.Controllers
             System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
             
             ViewBag.EmplrReferences = Lookups.emplrreference(CI.TwoLetterISOLanguageName);
-            ViewBag.skillList = Lookups.skill(CI.TwoLetterISOLanguageName);
+            ViewBag.skillList = Lookups.skill(CI.TwoLetterISOLanguageName, false);
             ViewBag.TransportMethods = Lookups.transportmethod(CI.TwoLetterISOLanguageName);
             ViewBag.woStatuses = Lookups.orderstatus(CI.TwoLetterISOLanguageName);
             //ViewBag.languages = Lookups.language(CI.TwoLetterISOLanguageName);

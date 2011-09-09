@@ -30,5 +30,7 @@ namespace Machete.Domain
         public int sortorder { get; set; }
         public int typeOfWorkID { get; set; } // 1 DWC, 2 HHH
         public bool speciality { get; set; }
+        [StringLength(1)]
+        public string ltrCode { get; set; }
     }
 }

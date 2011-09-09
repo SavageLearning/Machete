@@ -124,7 +124,8 @@ namespace Machete.Web.Controllers
                                        lastname1 = p.lastname1,
                                        lastname2 = p.lastname2, 
                                        dateforsignin = p.dateforsignin,
-                                       WAID = p.waid ?? 0
+                                       WAID = p.waid ?? 0,
+                                       skills = _getSkillCodes(p.englishlevel, p.skill1, p.skill2, p.skill3)
                          };
             return Json(new
             {
@@ -134,6 +135,25 @@ namespace Machete.Web.Controllers
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);
+        }
+        private string _getSkillCodes(int eng, int? sk1, int? sk2, int? sk3)
+        {
+            string rtnstr = "E" + eng + " ";
+            if (sk1 !=null) {
+                var lookup = LookupCache.getBySkillID((int)sk1);
+                rtnstr = rtnstr + lookup.ltrCode + lookup.level + " ";
+            }
+            if (sk2 != null)
+            {
+                var lookup = LookupCache.getBySkillID((int)sk2);
+                rtnstr = rtnstr + lookup.ltrCode + lookup.level + " ";
+            }
+            if (sk3 != null)
+            {
+                var lookup = LookupCache.getBySkillID((int)sk3);
+                rtnstr = rtnstr + lookup.ltrCode + lookup.level;
+            }
+            return rtnstr;
         }
     }
 }
