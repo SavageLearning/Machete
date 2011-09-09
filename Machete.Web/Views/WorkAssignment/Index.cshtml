@@ -7,7 +7,7 @@
 }
 @using (Html.BeginForm())
 {
-<div style="display:block;">
+<div style="display:none;">
     @Html.LabelFor(m => m.wa_grouping)
     @Html.TextBoxFor(m => m.wa_grouping)
     @Html.LabelFor(m => m.typeofwork_grouping)
@@ -73,7 +73,8 @@
                 <table id="signinTable" class="display">
                     <thead>
                         <tr>
-                            <th>dwc#</th>
+                            <th>card#</th>
+                            <th>skills</th>
                             <th>full name?!</th>
                         </tr>
                     </thead>
@@ -87,12 +88,6 @@
         </ul>
         <div id="availAssignList">
 
-
-@*        <div id="radioDate" class="radio" style="float: left;float: left;padding: 0 3em 0 0;">
-		    <input type="radio" id="rA3_today" name="radioDate" checked="checked" /><label for="rA3_today">Today</label>
-		    <input type="radio" id="rA3_picker" name="radioDate" class="ui-datepicker"/><label for="rA3_picker">Select date</label>
-            <input type="radio" id="rA3_range" name="radioDate" /><label for="rA3_range">Date range</label>
-	    </div>*@
             <table id="availAssignTable" class="display">
             <thead>
                 <tr>
@@ -136,6 +131,7 @@
         "bProcessing": true,
         "aoColumns": [
             {"mDataProp": "dwccardnum"},
+            {"mDataProp": "skills"},
             {"mDataProp": "fullname"}
         ],
         "fnServerData": function ( sSource, aoData, fnCallback ) {
@@ -238,7 +234,7 @@
                 }
             );
         });
-                    //
+        //
         //
         //
         $('#bUnassign').click(function (e) {
@@ -356,23 +352,7 @@
                 $("#availAssignTable").dataTable().fnDraw();
             } else {
                 $("#availAssignTable").dataTable().fnFilter("");
-            }
-//            var thebit = false;
-//            if ($('#signin_visible').val() == 'true') {
-//                $("#signinTab").show();
-//            } else {
-//                $("#signinTab").hide();
-//            }
-//            //
-//            //
-//            if ($('#assignedWorker_visible').val() == 'true') {
-//                thebit = true;
-//            } 
-//            //
-//            //
-//            $("#signinTable").dataTable().fnFilter("").fnDraw();
-//            //$("#availAssignTable").dataTable().fnFilter("").fnDraw().fnSetColumnVis( 0, thebit );
-//            $("#availAssignTable").dataTable().fnDraw();            
+            }            
         });
     });
     function DatePicker() {

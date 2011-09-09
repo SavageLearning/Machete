@@ -38,7 +38,11 @@ namespace Machete.Domain
             }
             set{}
         }
+        public int? skill1 { get; set; }
+        public int? skill2 { get; set; }
+        public int? skill3 { get; set; }
         public int signinID { get; set; }
+        public int englishlevel { get; set; }
         public DateTime dateforsignin { get; set; }
         public int? waid { get; set; }
 
@@ -58,6 +62,10 @@ namespace Machete.Domain
             Createdby = s.Createdby;
             Updatedby = s.Updatedby;
             waid = s.WorkAssignmentID;
+            skill1 = p.Worker.skill1;
+            skill2 = p.Worker.skill2;
+            skill3 = p.Worker.skill3;
+            englishlevel = p.Worker.englishlevelID;
         }
         public WorkerSigninView() { }
     }

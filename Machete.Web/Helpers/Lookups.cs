@@ -55,8 +55,8 @@ namespace Machete.Web.Helpers
         public static int skillLevelDefault { get; private set; }
 
         public static double hourlyWageDefault { get; private set; }
-        private static List<SelectListItemEx> skillEN { get; set; }
-        private static List<SelectListItemEx> skillES { get; set; }
+        //private static List<SelectListItemEx> skillEN { get; set; }
+        //private static List<SelectListItemEx> skillES { get; set; }
         public static int skillDefault { get; private set; }
         private static List<SelectListItem> yesnoEN { get; set; }
         private static List<SelectListItem> yesnoES { get; set; }
@@ -116,8 +116,8 @@ namespace Machete.Web.Helpers
             skillLevelNum = new[] {"0", "1", "2", "3", "4" }
                 .Select(x => new LookupNumber { Value = x, Text = x });
             skillLevelDefault = 1;         
-            skillEN = getEx("skill", "en");
-            skillES = getEx("skill", "es");
+            //skillEN = getEx("skill", "en");
+            //skillES = getEx("skill", "es");
             skillDefault = getDefaultID("skill");
             yesnoEN = new List<SelectListItem>();
             yesnoEN.Add(new SelectListItem() { Selected = false, Text = "No", Value = "false" });
@@ -204,10 +204,11 @@ namespace Machete.Web.Helpers
             return skillLevelNum;
         }
 
-        public static List<SelectListItemEx> skill(string locale)
+        public static List<SelectListItemEx> skill(string locale, bool specializedOnly)
         {
-            if (locale == "es") return skillES;
-            return skillEN;  //defaults to English
+            return getEx("skill", locale, specializedOnly);
+            //if (locale == "es") return skillES;
+            //return skillEN;  //defaults to English
         }
 
         public static List<SelectListItem> yesno(string locale)
@@ -238,39 +239,37 @@ namespace Machete.Web.Helpers
             }
             return list;
         }
-
-        private static List<SelectListItemEx> getEx(string category, string locale)
+        /// <summary>
+        /// get skills with extra information
+        /// </summary>
+        /// <param name="category">string that matches a category group</param>
+        /// <param name="locale">two letter language identifier</param>
+        /// <param name="specializedOnly">include only specialized skills</param>
+        /// <returns>List of items for an MVC dropdown box</returns>
+        private static List<SelectListItemEx> getEx(string category, string locale, bool specializedOnly)
         {
             //TODO: throw and catch exception if Lookup returns nothing
+            IEnumerable<Lookup> prelist = DbCache.ToList().Where(s => s.category == category);
+            Func<Lookup, string> textFunc;
             List<SelectListItemEx> list;
-            if (locale == "es")
-            {
-
-                list = new List<SelectListItemEx>(DbCache.ToList().Where(s => s.category == category).OrderBy(s => s.sortorder).ThenBy(s => s.text_ES)
-                                    .Select(x => new SelectListItemEx
-                                    { 
-                                                            Selected = x.selected,
-                                                            Value = Convert.ToString(x.ID),
-                                                            Text = x.text_ES,
-                                                            wage = Convert.ToString(x.wage),
-                                                            minHour = Convert.ToString(x.minHour),
-                                                            fixedJob = Convert.ToString(x.fixedJob)
-                                    }));
-
-            }
-            else //Default to English
-            {
-                list = new List<SelectListItemEx>(DbCache.ToList().Where(s => s.category == category).OrderBy(s => s.sortorder).ThenBy(s => s.text_EN)
-                                    .Select(x => new SelectListItemEx
-                                    {
-                                        Selected = x.selected,
-                                        Value = Convert.ToString(x.ID),
-                                        Text = x.text_EN,
-                                        wage = Convert.ToString(x.wage),
-                                        minHour = Convert.ToString(x.minHour),
-                                        fixedJob = Convert.ToString(x.fixedJob)
-                                    }));
-            }
+            if (specializedOnly) {
+                textFunc = (ll => "[" + ll.ltrCode + ll.level + "] " + (locale == "es" ? ll.text_ES : ll.text_EN));
+                prelist = prelist.Where(s => s.speciality == true).OrderBy(s => textFunc(s));
+            } else {
+                textFunc = (ll => locale == "es" ? ll.text_ES : ll.text_EN);
+                if (locale == "es") prelist = prelist.OrderBy(s => s.sortorder).ThenBy(s => s.text_ES);
+                else prelist = prelist.OrderBy(s => s.sortorder).ThenBy(s => s.text_EN);
+            }          
+            list =  new List<SelectListItemEx>(prelist
+                    .Select(x => new SelectListItemEx
+                    { 
+                        Selected = x.selected,
+                        Value = Convert.ToString(x.ID),
+                        Text = textFunc(x),
+                        wage = Convert.ToString(x.wage),
+                        minHour = Convert.ToString(x.minHour),
+                        fixedJob = Convert.ToString(x.fixedJob)
+                    }));
             return list;
         }
 
