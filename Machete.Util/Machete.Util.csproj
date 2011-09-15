@@ -41,6 +41,7 @@
     <None Include="records_load.ps1" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="sql\Create_Views.sql" />
     <Content Include="sql\migrate_machete_records.sql" />
     <Content Include="sql\status_summary_combined_EN.sql" />
     <Content Include="sql\employers_EN.sql" />

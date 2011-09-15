@@ -214,6 +214,7 @@ namespace Machete.Service
             //queryableWSI = queryableWSI.ToList();
             var filtered = enumWSIV.Count();
             //if (param.iDisplayLength > 0 && param.iDisplayStart > 0)
+            if ((int)o.displayLength >= 0)
             enumWSIV = enumWSIV.Skip<WorkerSigninView>((int)o.displayStart).Take((int)o.displayLength);
 
             var total = signinRepo.GetAllQ().Count();

@@ -224,8 +224,12 @@ function jqrfyWSignin(myTable, myOptions) {
             $(this.nTr).removeClass('row_selected');
         });
         $(event.target.parentNode).addClass('row_selected');
-    });
 
+    });
+    $(myTable).find('tbody').dblclick(function (event) {
+        $('#dwccardnum').val($(event.target.parentNode).find('td:first').text());
+        $("#availAssignTable").dataTable().fnDraw();
+    });
 }
 
 
