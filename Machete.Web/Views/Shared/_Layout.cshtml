@@ -11,7 +11,9 @@
 
 <body>
     <div class="page">
-
+        <div >
+            <input type="button" value="show banner?!" id="showbanner" />
+        </div>
         <div id="header">
             <div id="title" >
                 <img alt="@Machete.Web.Resources.Shared.title" src="/Content/casa_logo.png" title="CasaLogo" class="casaLogo"/>
@@ -33,6 +35,7 @@
                 </ul>
             </div>
         </div>
+
         <div id="main" class="clearfix">
             @RenderBody()
             <div id="footer" class="print_off" style="Clear:Both">
@@ -47,6 +50,21 @@
 </html>
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
+        $('#showbanner').hide();
+        $('#showbanner').button();
         $('a[href=/@Request.RequestContext.RouteData.Values["controller"]]').addClass('menulinkactive');
+        $('#showbanner').click(function (e) {
+            $('#showbanner').hide();
+            $("#header").show("drop", {});
+        });
+        $('#title').click(function (e) {
+            $('#header').hide("drop", {});
+            $('#showbanner').fadeIn();
+        });
+        function callback() {
+            setTimeout(function () {
+
+            }, 1000);
+        };
     });
 </script>

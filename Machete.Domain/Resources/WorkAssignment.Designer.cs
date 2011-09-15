@@ -124,6 +124,15 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Eng #.
+        /// </summary>
+        public static string englishlevelshort {
+            get {
+                return ResourceManager.GetString("englishlevelshort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ability to follow directions.
         /// </summary>
         public static string followDirections {

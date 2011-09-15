@@ -20,22 +20,16 @@
     @Html.TextBoxFor(m => m.status)
     @Html.LabelFor(m => m.requestedWorkers_visible)
     @Html.TextBoxFor(m => m.requestedWorkers_visible)
-</div>   
-<div style="float: left;">     
-    <div>
-        @Html.LabelFor(m => m.todaysdate)
-    </div>
-    <div>
-        @Html.TextBoxFor(m => m.todaysdate, new { @class = "ui-datepicker", @style = "width: 5em;" })
-        <input type="button" value="update" id="updateBtn" style="display:none;"/>
-    </div>    
-    <div>
-        @Html.LabelFor(m => m.dwccardnum)
-    </div>
-    <div>
+            @Html.LabelFor(m => m.dwccardnum)
         @Html.TextBoxFor(m => m.dwccardnum, new { @style = "width: 5em;" })
+</div>   
+
+    <div>
+        <input type="button" value="update" id="updateBtn" />
+        @Html.LabelFor(m => m.todaysdate)
+        @Html.TextBoxFor(m => m.todaysdate, new { @class = "ui-datepicker", @style = "width: 15em;" })
     </div>
-</div>
+
 }        
 <div id="buttonDivider">
         <div id="radioWorkers" class="radio">
@@ -43,11 +37,12 @@
 		    <input type="radio" id="rW1_signin" name="radio"  /><label for="rW1_signin">Sign-in<br />list</label>
 	    </div>
         <div class="radio">
-            <input type="button" id="bAssign" class="formButton dispatchButton" value="Assign" />
-            <input type="button" id="bUnassign" class="formButton dispatchButton" value="Unassign"/>
-
+        <input type="button" id="bOpenLottery" class="formButton dispatchButton" value="Lottery" />
         </div>
-    @*<div id="radioOpenFilled" class="radio" style="float: left;padding: 0 3em 0 0;">*@
+        <div class="radio">
+            <input type="button" id="bAssign" class="formButton dispatchButton" value="Assign" />
+            <input type="button" id="bUnassign" class="formButton dispatchButton" value="Remove"/>
+        </div>
     <div id="radioOpenFilled" class="radio">
         <input type="radio" id="rA1_requested" name="radioOpenFilled" /><label for="rA1_requested" class="dispatchButton">Requested<br/>(Active)</label>
 		<input type="radio" id="rA1_skilled" name="radioOpenFilled" /><label for="rA1_skilled" class="dispatchButton">Skilled<br />(Active)</label>
@@ -64,10 +59,10 @@
 </div>
 
 <div class="tb-table" style="clear: left;">
-    <div class="tb-row"></div>
+    <div class="tb-row">
         <div id="signinTab" class="tb-cell">
             <ul>
-                <li><a href="#signinList">Worker Sign-in</a></li>
+                <li><a href="#signinList">Sign-in</a></li>
             </ul>
             <div id="signinList">
                 <table id="signinTable" class="display">
@@ -82,31 +77,33 @@
             </div>
         </div>
 
-    <div id="assignmentTab" class="tb-cell">
-        <ul>
-            <li><a href="#availAssignList">Assignments?!</a></li>
-        </ul>
-        <div id="availAssignList">
+        <div id="assignmentTab" class="tb-cell">
+            <ul>
+                <li><a href="#availAssignList">Assignments?!</a></li>
+            </ul>
+            <div id="availAssignList">
 
-            <table id="availAssignTable" class="display">
-            <thead>
-                <tr>
-                    <th>assignedWorker</th>
-                    <th>requestedWorkers</th>
-                    <th>ID#</th>
-                    <th>@WorkOrder.dateTimeofWork</th>
-                    <th>@WorkAssignment.englishLevelID</th>
-                    <th>@WorkAssignment.skillID</th>
-                    <th>@WorkAssignment.hourlyWage</th>
-                    <th>@WorkAssignment.hours</th>
-                    <th>@WorkAssignment.days</th>
-                    <th>@WorkAssignments.earnings</th>
-                    <th>@WorkAssignment.description</th>
-                </tr>
-            </thead>
-        </table>
+                <table id="availAssignTable" class="display">
+                    <thead>
+                        <tr>
+                            <th>assigned Worker</th>
+                            <th>requested Workers</th>
+                            <th>ID#</th>
+                            <th>@WorkOrder.dateTimeofWork</th>
+                            <th>@WorkAssignment.englishlevelshort</th>
+                            <th>@WorkAssignment.skillID</th>
+                            <th>@WorkAssignment.hourlyWage</th>
+                            <th>@WorkAssignment.hours</th>
+                            <th>@WorkAssignment.days</th>
+                            <th>@WorkAssignments.earnings</th>
+                            <th>@WorkAssignment.description</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
     </div>
-    </div>
+
 </div>
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
@@ -123,7 +120,8 @@
     jqrfyTabs($("#signinTab"), "ui-tabs-signin-");
         
     jqrfyWSignin($("#signinTable"), {
-        "bPaginate": true,
+        "sScrollY": "300px",
+        "bPaginate": false,
         "bLengthChange": true,
         "bServerSide": true,
         "sAjaxSource": "/WorkerSignin/AjaxHandler",
@@ -156,7 +154,8 @@
     });
     jqrfyTable($("#availAssignTable"), $("#assignmentTab"),
     {
-        "bPaginate": true,
+        "sScrollY": "300px",
+        "bPaginate": false,
         "bLengthChange": true,
         "aaSorting": [[4, 'desc']],
         "bFilter": true,
@@ -255,7 +254,7 @@
             });
         });
         $('#rA1_completed').click(function (e) {
-            e.preventDefault();  
+            e.preventDefault();            
             $('#wa_grouping').val('assigned'); 
             $('#signin_visible').val(false);
             $('#assignedWorker_visible').val(true);
@@ -327,6 +326,7 @@
           
         $("#updateBtn").click(function (e) {
             e.preventDefault();
+            //$('#dwccardnum').val(""); 
             if ($('#assignedWorker_visible').val() == 'true') {
                 $("#availAssignTable").dataTable().fnSetColumnVis( 0, true , false);
             } else {
@@ -357,7 +357,7 @@
     });
     function DatePicker() {
         $('.ui-datepicker').datepicker({
-            dateFormat: 'mm/dd/yy',
+            dateFormat: 'DD, d MM yy',
             showOtherMonths: true,
 			selectOtherMonths: true
 //            buttonImage: '@Url.Content("~/Content/calendar.gif")',

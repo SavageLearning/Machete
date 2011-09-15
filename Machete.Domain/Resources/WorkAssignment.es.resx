@@ -138,6 +138,9 @@
   <data name="englishLevelID" xml:space="preserve">
     <value>Nivel de Inglés es obligatorio</value>
   </data>
+  <data name="englishlevelshort" xml:space="preserve">
+    <value>Ing #</value>
+  </data>
   <data name="followDirections" xml:space="preserve">
     <value>Capacidad para seguir instrucciones</value>
   </data>

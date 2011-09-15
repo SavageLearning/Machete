@@ -220,7 +220,7 @@ namespace Machete.Service
 
             if (o.dwccardnum != null && o.dwccardnum != 0)
             {
-                Worker worker = WorkerCache.getCache(w => w.dwccardnum == o.dwccardnum).FirstOrDefault();
+                Worker worker = WorkerCache.getCache().FirstOrDefault(w => w.dwccardnum == o.dwccardnum);
                 if (worker != null)
                 {
                     if (worker.skill1 != null) primeskills.Push((int)worker.skill1);
@@ -244,8 +244,8 @@ namespace Machete.Service
                     if (skills.Count() != 0) skill4 = skills.Pop();
                     if (skills.Count() != 0) skill5 = skills.Pop();
                     if (skills.Count() != 0) skill6 = skills.Pop();
-                    //enumedWA = queryableWA.AsEnumerable();
-                    filteredWA = queryableWA.Join(lCache,
+                    filteredWA = queryableWA.AsEnumerable();
+                    filteredWA = filteredWA.Join(lCache,
                                                        wa => wa.skillID,
                                                        sk => sk.ID,
                                                        (wa, sk) => new { wa, sk })
@@ -260,7 +260,7 @@ namespace Machete.Service
                                                               jj.sk.speciality == false)
                                                               )
                                                 //.Select(jj => jj.wa).AsQueryable();
-                                                 .Select(jj => jj.wa);
+                                                 .Select(jj => jj.wa).AsEnumerable();
                 }
                 else
                 {
@@ -306,7 +306,7 @@ namespace Machete.Service
                 case "days": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.days) : filteredWA.OrderBy(p => p.days); break;
                 case "WOID": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.workOrderID) : filteredWA.OrderBy(p => p.workOrderID); break;
                 case "WAID": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.ID) : filteredWA.OrderBy(p => p.ID); break;
-                case "description": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.description) : filteredWA.OrderBy(p => p.description); break;                
+                case "description": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.description) : filteredWA.OrderBy(p => p.description); break;
                 case "updatedby": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.Updatedby) : filteredWA.OrderBy(p => p.Updatedby); break;
                 case "dateupdated": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.dateupdated) : filteredWA.OrderBy(p => p.dateupdated); break;
                 //case "assignedWorker": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.workerAssigned.dwccardnum) : filteredWA.OrderBy(p => p.workerAssigned.dwccardnum); break;
@@ -315,7 +315,8 @@ namespace Machete.Service
             filteredWA = filteredWA.ToList();
             var filtered = filteredWA.Count();
             //Limit results to the display length and offset
-            filteredWA = filteredWA.Skip((int)o.displayStart).Take((int)o.displayLength);
+            if ((int)o.displayLength >= 0)
+                filteredWA = filteredWA.Skip((int)o.displayStart).Take((int)o.displayLength);
            
            var total = waRepo.GetAllQ().Count();
            return new ServiceIndexView<WorkAssignment>

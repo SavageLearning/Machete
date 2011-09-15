@@ -293,7 +293,7 @@ div#title
     display:block;
     float:left;
     text-align:left;
-    padding: 0 0 25px;
+    padding: 0 0 0 0;
 }
 
 div.recordButtons
@@ -539,12 +539,12 @@ input.ui-button.dispatchButton
 
 .ui-button-text-only .ui-button-text
 {
-    padding: 1em;
+    padding: .5em;
     float: left;
 }
 .ui-buttonset
 {
-    padding: 1em;
+    padding: .5em;
     float: left;
 }
 
