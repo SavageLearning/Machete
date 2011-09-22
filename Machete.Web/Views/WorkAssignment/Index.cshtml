@@ -122,15 +122,16 @@
     jqrfyWSignin($("#signinTable"), {
         "sScrollY": "300px",
         "bPaginate": false,
+        "bAutoWidth": false,
         "bLengthChange": true,
         "bServerSide": true,
         "sAjaxSource": "/WorkerSignin/AjaxHandler",
         "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
         "bProcessing": true,
         "aoColumns": [
-            {"mDataProp": "dwccardnum"},
-            {"mDataProp": "skills"},
-            {"mDataProp": "fullname"}
+            {"mDataProp": "dwccardnum", "sWidth": "3em"},
+            {"mDataProp": "skills", "sWidth": "3em"},
+            {"mDataProp": "fullname", "sWidth": "3em"}
         ],
         "fnServerData": function ( sSource, aoData, fnCallback ) {
 			/* Add some extra data to the sender */
@@ -161,23 +162,23 @@
         "bFilter": true,
         //"bSort": true,
         "bInfo": true,
-        "bAutoWidth": false,
+        "bAutoWidth": true,
         "bServerSide": true,
         "sAjaxSource": "/WorkAssignment/AjaxHandler",
         "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
         "bProcessing": true,
         "aoColumns": [
-                        { "mDataProp": "assignedWorker", "bVisible": false, "bSortable": false, "sWidth": "6em"}, 
-                        { "mDataProp": "requestedList", "bVisible": false, "bSortable": false, "sWidth": "6em"}, 
-                        { "mDataProp": "pWAID", "sWidth": "3em"},                            
-                        { "mDataProp": "dateTimeofWork", "sWidth": "6em"},                            
-                        { "mDataProp": "englishlevel", "sWidth": "2em"}, 
-                        { "mDataProp": "skill", "sWidth": "5em"}, 
-                        { "mDataProp": "hourlywage", "sWidth": "4em"}, 
-                        { "mDataProp": "hours", "sWidth": "2em"}, 
-                        { "mDataProp": "days", "sWidth": "2em"},
-                        { "mDataProp": "earnings", "sWidth": "4em"},
-                        { "mDataProp": "description", "sWidth": "15em"},                        
+                        { "mDataProp": "assignedWorker", "bVisible": false, "bSortable": false}, 
+                        { "mDataProp": "requestedList", "bVisible": false, "bSortable": false}, 
+                        { "mDataProp": "pWAID"},                            
+                        { "mDataProp": "dateTimeofWork"},                            
+                        { "mDataProp": "englishlevel"}, 
+                        { "mDataProp": "skill"}, 
+                        { "mDataProp": "hourlywage"}, 
+                        { "mDataProp": "hours"}, 
+                        { "mDataProp": "days"},
+                        { "mDataProp": "earnings"},
+                        { "mDataProp": "description"},                         
                     ],
         "aoSearchCols" : [null, null, null, null, null, null, null, null, null, null, null],
         "fnServerData": function ( sSource, aoData, fnCallback ) {
@@ -327,24 +328,26 @@
         $("#updateBtn").click(function (e) {
             e.preventDefault();
             //$('#dwccardnum').val(""); 
-            if ($('#assignedWorker_visible').val() == 'true') {
-                $("#availAssignTable").dataTable().fnSetColumnVis( 0, true , false);
-            } else {
-                $("#availAssignTable").dataTable().fnSetColumnVis( 0, false, false );
-            }
-            if ($('#requestedWorkers_visible').val() == 'true') {
-                $("#availAssignTable").dataTable().fnSetColumnVis( 1, true, false );
-            } else {
-                $("#availAssignTable").dataTable().fnSetColumnVis( 1, false, false );
-            }
-            if ($('#signin_visible').val() == 'true') {
-                $("#signinTab").show();
-            } else {
-                $("#signinTab").hide();
-            }
+//            if ($('#assignedWorker_visible').val() == 'true') {
+//                $("#availAssignTable").dataTable().fnSetColumnVis( 0, true , false);
+//            } else {
+//                //$("#availAssignTable").dataTable().fnSetColumnVis( 0, false, false );
+//            }
+//            if ($('#requestedWorkers_visible').val() == 'true') {
+//                $("#availAssignTable").dataTable().fnSetColumnVis( 1, true, false );
+//            } else {
+//                //$("#availAssignTable").dataTable().fnSetColumnVis( 1, false, false );
+//            }
+//            if ($('#signin_visible').val() == 'true') {
+//                $("#signinTab").show();
+//            } else {
+//                $("#signinTab").hide();
+//            }
             //alert($("#signinTable").dataTable().fnFilter());
+            $("#signinTable").dataTable().fnAdjustColumnSizing();
             $("#signinTable").dataTable().fnDraw();
-            $("#availAssignTable").dataTable().fnDraw();
+
+//            $("#availAssignTable").dataTable().fnDraw();
 //            if ($('#signinTable_filter').val() == null) {
 //                $("#signinTable").dataTable().fnDraw();
 //            } else {
