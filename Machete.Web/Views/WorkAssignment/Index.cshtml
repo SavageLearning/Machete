@@ -167,17 +167,17 @@
         "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
         "bProcessing": true,
         "aoColumns": [
-                        { "mDataProp": "assignedWorker", "bVisible": false, "bSortable": false}, 
-                        { "mDataProp": "requestedList", "bVisible": false, "bSortable": false}, 
-                        { "mDataProp": "pWAID"},                            
-                        { "mDataProp": "dateTimeofWork"},                            
-                        { "mDataProp": "englishlevel"}, 
-                        { "mDataProp": "skill"}, 
-                        { "mDataProp": "hourlywage"}, 
-                        { "mDataProp": "hours"}, 
-                        { "mDataProp": "days"},
-                        { "mDataProp": "earnings"},
-                        { "mDataProp": "description"}
+                        { "mDataProp": "assignedWorker", "bVisible": false, "bSortable": false, "sWidth": "6em"}, 
+                        { "mDataProp": "requestedList", "bVisible": false, "bSortable": false, "sWidth": "6em"}, 
+                        { "mDataProp": "pWAID", "sWidth": "3em"},                            
+                        { "mDataProp": "dateTimeofWork", "sWidth": "6em"},                            
+                        { "mDataProp": "englishlevel", "sWidth": "2em"}, 
+                        { "mDataProp": "skill", "sWidth": "5em"}, 
+                        { "mDataProp": "hourlywage", "sWidth": "4em"}, 
+                        { "mDataProp": "hours", "sWidth": "2em"}, 
+                        { "mDataProp": "days", "sWidth": "2em"},
+                        { "mDataProp": "earnings", "sWidth": "4em"},
+                        { "mDataProp": "description", "sWidth": "15em"},                        
                     ],
         "aoSearchCols" : [null, null, null, null, null, null, null, null, null, null, null],
         "fnServerData": function ( sSource, aoData, fnCallback ) {
@@ -343,16 +343,18 @@
                 $("#signinTab").hide();
             }
             //alert($("#signinTable").dataTable().fnFilter());
-            if ($('#signinTable_filter').val() == null) {
-                $("#signinTable").dataTable().fnDraw();
-            } else {
-                $("#signinTable").dataTable().fnFilter("");
-            }
-            if ($('#availAssignTable_filter').val() == null) {
-                $("#availAssignTable").dataTable().fnDraw();
-            } else {
-                $("#availAssignTable").dataTable().fnFilter("");
-            }            
+            $("#signinTable").dataTable().fnDraw();
+            $("#availAssignTable").dataTable().fnDraw();
+//            if ($('#signinTable_filter').val() == null) {
+//                $("#signinTable").dataTable().fnDraw();
+//            } else {
+//                $("#signinTable").dataTable().fnFilter("");
+//            }
+//            if ($('#availAssignTable_filter').val() == null) {
+//                $("#availAssignTable").dataTable().fnDraw();
+//            } else {
+//                $("#availAssignTable").dataTable().fnFilter("");
+//            }            
         });
     });
     function DatePicker() {

@@ -183,4 +183,19 @@
   <data name="yes" xml:space="preserve">
     <value>Yes</value>
   </data>
+  <data name="about" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="bannerbtn" xml:space="preserve">
+    <value>show banner</value>
+  </data>
+  <data name="frontpage" xml:space="preserve">
+    <value>Machete news</value>
+  </data>
+  <data name="issuetracker" xml:space="preserve">
+    <value>Issue Tracker</value>
+  </data>
+  <data name="wiki" xml:space="preserve">
+    <value>Wiki</value>
+  </data>
 </root>
