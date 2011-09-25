@@ -198,4 +198,7 @@
   <data name="wiki" xml:space="preserve">
     <value>Wiki</value>
   </data>
+  <data name="notcalculable" xml:space="preserve">
+    <value>not calculable</value>
+  </data>
 </root>

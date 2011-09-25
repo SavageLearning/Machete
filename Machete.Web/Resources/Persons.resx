@@ -165,16 +165,16 @@
   <data name="viewtitle" xml:space="preserve">
     <value>person::view</value>
   </data>
-  <data name="filterinactive" xml:space="preserve">
-    <value>Show inactive persons?</value>
-  </data>
-  <data name="filterlegend" xml:space="preserve">
-    <value>filter criteria</value>
-  </data>
-  <data name="filtersubmit" xml:space="preserve">
-    <value>filter</value>
-  </data>
   <data name="listlink" xml:space="preserve">
     <value>List persons</value>
+  </data>
+  <data name="basicinfo" xml:space="preserve">
+    <value>Basic Information</value>
+  </data>
+  <data name="createworker" xml:space="preserve">
+    <value>Create Worker</value>
+  </data>
+  <data name="workerinfo" xml:space="preserve">
+    <value>Worker information</value>
   </data>
 </root>

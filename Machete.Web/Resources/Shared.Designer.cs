@@ -214,6 +214,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to not calculable.
+        /// </summary>
+        public static string notcalculable {
+            get {
+                return ResourceManager.GetString("notcalculable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Website.
         /// </summary>
         public static string parentwebtitle {

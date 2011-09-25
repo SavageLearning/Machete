@@ -240,4 +240,13 @@
   <data name="paperOrderNumFormat" xml:space="preserve">
     <value>This number must be 5 digits, or blank</value>
   </data>
+  <data name="requestAdd" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="requestRemove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="requestTitle" xml:space="preserve">
+    <value>Select a worker</value>
+  </data>
 </root>

@@ -228,4 +228,79 @@
   <data name="woidcount" xml:space="preserve">
     <value>Worker #</value>
   </data>
+  <data name="activeassignment" xml:space="preserve">
+    <value>Active assignment</value>
+  </data>
+  <data name="activeorder" xml:space="preserve">
+    <value>Active order</value>
+  </data>
+  <data name="btnActive" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="btnAll" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="btnCancelled" xml:space="preserve">
+    <value>Cancelled</value>
+  </data>
+  <data name="btnCompleted" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="btnExpired" xml:space="preserve">
+    <value>Expired</value>
+  </data>
+  <data name="btnPending" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="cancelledassignment" xml:space="preserve">
+    <value>Cancelled assignment</value>
+  </data>
+  <data name="cancelledorder" xml:space="preserve">
+    <value>Cancelled order</value>
+  </data>
+  <data name="completeactiveassigned" xml:space="preserve">
+    <value>Complete active &amp; assigned orders</value>
+  </data>
+  <data name="completedassignment" xml:space="preserve">
+    <value>Completed assignment</value>
+  </data>
+  <data name="completedorder" xml:space="preserve">
+    <value>Completed order</value>
+  </data>
+  <data name="date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="expiredassignment" xml:space="preserve">
+    <value>Expired assignment</value>
+  </data>
+  <data name="expiredorder" xml:space="preserve">
+    <value>Expired order</value>
+  </data>
+  <data name="groupviewerror" xml:space="preserve">
+    <value>No active orders with fulfilled worker assignments for the date you selected.</value>
+  </data>
+  <data name="pendingassignment" xml:space="preserve">
+    <value>Pending assignment</value>
+  </data>
+  <data name="pendingorder" xml:space="preserve">
+    <value>Pending order</value>
+  </data>
+  <data name="printactive" xml:space="preserve">
+    <value>Print active orders</value>
+  </data>
+  <data name="printactiveassigned" xml:space="preserve">
+    <value>Print active &amp; assigned orders</value>
+  </data>
+  <data name="summary" xml:space="preserve">
+    <value>Summary</value>
+  </data>
+  <data name="weekday" xml:space="preserve">
+    <value>Weekday</value>
+  </data>
+  <data name="workername" xml:space="preserve">
+    <value>WORKER NAME:</value>
+  </data>
 </root>

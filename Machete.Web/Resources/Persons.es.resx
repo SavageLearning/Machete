@@ -141,9 +141,6 @@
   <data name="deletetitle" xml:space="preserve">
     <value>Confirmación Persona Borrar</value>
   </data>
-  <data name="detailstitle" xml:space="preserve">
-    <value>Detalles</value>
-  </data>
   <data name="editlink" xml:space="preserve">
     <value>Editar</value>
   </data>
@@ -162,12 +159,6 @@
   <data name="indextitle" xml:space="preserve">
     <value>Buscar Personas</value>
   </data>
-  <data name="RequiredFirstname1" xml:space="preserve">
-    <value>Por lo menos un nombre de pila es necesario</value>
-  </data>
-  <data name="RequiredLastname1" xml:space="preserve">
-    <value>Por lo menos un apellido es requerido</value>
-  </data>
   <data name="viewlink" xml:space="preserve">
     <value>Ver</value>
   </data>
@@ -176,5 +167,14 @@
   </data>
   <data name="listlink" xml:space="preserve">
     <value>Lista de personas</value>
+  </data>
+  <data name="basicinfo" xml:space="preserve">
+    <value>Información básica</value>
+  </data>
+  <data name="createworker" xml:space="preserve">
+    <value>Crear Trabajador</value>
+  </data>
+  <data name="workerinfo" xml:space="preserve">
+    <value>Información del trabajador</value>
   </data>
 </root>

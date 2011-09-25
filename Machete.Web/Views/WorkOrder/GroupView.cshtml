@@ -6,7 +6,7 @@
            
 @if (Model.orders.Count() == 0)
 {
-    <h3> @Html.Encode("No active orders with fulfilled worker assignments for the date you selected.?!") </h3>
+    <h3> @Html.Encode(Machete.Web.Resources.WorkOrders.groupviewerror) </h3>
 }
 else
 {

@@ -3,13 +3,13 @@
 @using Machete.Web.Helpers
 <div id="personPartsTabs_@(Model.ID)">
     <ul>
-        <li><a href="#personGeneralTab_@(Model.ID)" id="personGeneralTab__@(Model.ID)" class="GeneralTab">General info?!</a></li>
+        <li><a href="#personGeneralTab_@(Model.ID)" id="personGeneralTab__@(Model.ID)" class="GeneralTab">@Machete.Web.Resources.Persons.basicinfo</a></li>
         @if (Model.Worker == null) {
-            <li><a href="/Worker/Create?ID=@(Model.ID)" id="workerCreateTab__@(Model.ID)" class="CreateTab">Create Worker?!</a></li>
+            <li><a href="/Worker/Create?ID=@(Model.ID)" id="workerCreateTab__@(Model.ID)" class="CreateTab">@Machete.Web.Resources.Persons.createworker</a></li>
         }
         else
         {
-            <li><a href="/Worker/Edit/@(Model.ID)">Worker information?!</a></li>
+            <li><a href="/Worker/Edit/@(Model.ID)">@Machete.Web.Resources.Persons.workerinfo</a></li>
         }
     </ul>
     <div id="personGeneralTab_@(Model.ID)">
