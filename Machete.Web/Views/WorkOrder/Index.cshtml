@@ -6,41 +6,41 @@
 }
 <div id="dispatchTabs" >
     <ul>
-        <li><a href="#orderList" id="pendingOrderListTab" class="ListTab">Details?!</a> </li>
-        <li><a href="#summaryList" id="summaryOrderListTab" class="ListTab">Summary?!</a> </li>
+        <li><a href="#orderList" id="pendingOrderListTab" class="ListTab">@Machete.Web.Resources.WorkOrders.details</a> </li>
+        <li><a href="#summaryList" id="summaryOrderListTab" class="ListTab">@Machete.Web.Resources.WorkOrders.summary</a> </li>
         
     </ul>
     <div id="summaryList">
-        <input type="button" id="printActiveBtn" class="formButton" value="Print active orders"/>
-        <input type="button" id="printActiveAssignedBtn" class="formButton" value="Print active & assigned orders"/>
+        <input type="button" id="printActiveBtn" class="formButton" value="@Machete.Web.Resources.WorkOrders.printactive"/>
+        <input type="button" id="printActiveAssignedBtn" class="formButton" value="@Machete.Web.Resources.WorkOrders.printactiveassigned"/>
         @Html.TextBox("activeDate", @DateTime.Today.ToShortDateString(), new { @style = "width: 6em;", @class = "ui-datepicker" })
-        <input type="button" id="completeActiveBtn" class="formButton" value="Complete active & assigned orders"/>
+        <input type="button" id="completeActiveBtn" class="formButton" value="@Machete.Web.Resources.WorkOrders.completeactiveassigned"/>
         <table id="orderSummaryTable" class="display">
             <thead>
                 <tr>
-                    <th>date?!</th>
-                    <th>weekday?!</th>
-                    <th>pending order?!</th>
-                    <th>pending assignment?!</th>
-                    <th>active order?!</th>
-                    <th>active assignment?!</th>
-                    <th>completed order?!</th>
-                    <th>completed assignment?!</th>
-                    <th>cancelled order?!</th>
-                    <th>cancelled assignment?!</th>
-                    <th>expired order?!</th>
-                    <th>expired assignment?!</th>
+                    <th>@Machete.Web.Resources.WorkOrders.date</th>
+                    <th>@Machete.Web.Resources.WorkOrders.weekday</th>
+                    <th>@Machete.Web.Resources.WorkOrders.pendingorder</th>
+                    <th>@Machete.Web.Resources.WorkOrders.pendingassignment</th>
+                    <th>@Machete.Web.Resources.WorkOrders.activeorder</th>
+                    <th>@Machete.Web.Resources.WorkOrders.activeassignment</th>
+                    <th>@Machete.Web.Resources.WorkOrders.completedorder</th>
+                    <th>@Machete.Web.Resources.WorkOrders.completedassignment</th>
+                    <th>@Machete.Web.Resources.WorkOrders.cancelledorder</th>
+                    <th>@Machete.Web.Resources.WorkOrders.cancelledassignment</th>
+                    <th>@Machete.Web.Resources.WorkOrders.expiredorder</th>
+                    <th>@Machete.Web.Resources.WorkOrders.expiredassignment</th>
                 </tr>
             </thead>
         </table>
     </div>
     <div id="orderList">
-        <input type="button" value="Pending?!" class="formButton" id="pendingOrdersBtn"/>
-        <input type="button" value="Active?!" class="formButton" id="activeOrdersBtn"/>
-        <input type="button" value="Completed?!" class="formButton" id="completedOrdersBtn"/>
-        <input type="button" value="Cancelled?!" class="formButton" id="cancelledOrdersBtn"/>
-        <input type="button" value="Expired?!" class="formButton" id="expiredOrdersBtn"/>
-        <input type="button" value="All?!" class="formButton" id="allOrdersBtn"/>
+        <input type="button" value="@Machete.Web.Resources.WorkOrders.btnPending" class="formButton" id="pendingOrdersBtn"/>
+        <input type="button" value="@Machete.Web.Resources.WorkOrders.btnActive" class="formButton" id="activeOrdersBtn"/>
+        <input type="button" value="@Machete.Web.Resources.WorkOrders.btnCompleted" class="formButton" id="completedOrdersBtn"/>
+        <input type="button" value="@Machete.Web.Resources.WorkOrders.btnCancelled" class="formButton" id="cancelledOrdersBtn"/>
+        <input type="button" value="@Machete.Web.Resources.WorkOrders.btnExpired" class="formButton" id="expiredOrdersBtn"/>
+        <input type="button" value="@Machete.Web.Resources.WorkOrders.btnAll" class="formButton" id="allOrdersBtn"/>
         <table id="orderTable" class="display">
             <thead>
                 <tr>

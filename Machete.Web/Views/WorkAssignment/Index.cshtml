@@ -62,15 +62,15 @@
     <div class="tb-row">
         <div id="signinTab" class="tb-cell">
             <ul>
-                <li><a href="#signinList">Sign-in</a></li>
+                <li><a href="#signinList">@Machete.Web.Resources.WorkAssignments.signin</a></li>
             </ul>
             <div id="signinList">
                 <table id="signinTable" class="display">
                     <thead>
                         <tr>
-                            <th>card#</th>
-                            <th>skills</th>
-                            <th>full name?!</th>
+                            <th>@Machete.Web.Resources.WorkAssignments.memberID</th>
+                            <th>@Machete.Web.Resources.WorkAssignments.skills</th>
+                            <th>@Machete.Web.Resources.WorkAssignments.fullname</th>
                         </tr>
                     </thead>
                 </table>
@@ -79,7 +79,7 @@
 
         <div id="assignmentTab" class="tb-cell">
             <ul>
-                <li><a href="#availAssignList">Assignments?!</a></li>
+                <li><a href="#availAssignList">@Machete.Web.Resources.WorkAssignments.assignments</a></li>
             </ul>
             <div id="availAssignList">
 
@@ -120,18 +120,18 @@
     jqrfyTabs($("#signinTab"), "ui-tabs-signin-");
         
     jqrfyWSignin($("#signinTable"), {
-        "sScrollY": "300px",
-        "bPaginate": false,
-        "bAutoWidth": false,
+        //"sScrollY": "300px",
+        "bPaginate": true,
         "bLengthChange": true,
+        "bAutoWidth": false,
         "bServerSide": true,
         "sAjaxSource": "/WorkerSignin/AjaxHandler",
         "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
         "bProcessing": true,
         "aoColumns": [
-            {"mDataProp": "dwccardnum", "sWidth": "3em"},
-            {"mDataProp": "skills", "sWidth": "3em"},
-            {"mDataProp": "fullname", "sWidth": "3em"}
+            {"mDataProp": "dwccardnum"},
+            {"mDataProp": "skills"},
+            {"mDataProp": "fullname"}
         ],
         "fnServerData": function ( sSource, aoData, fnCallback ) {
 			/* Add some extra data to the sender */
@@ -155,14 +155,14 @@
     });
     jqrfyTable($("#availAssignTable"), $("#assignmentTab"),
     {
-        "sScrollY": "300px",
-        "bPaginate": false,
+        //"sScrollY": "300px",
+        "bPaginate": true,
         "bLengthChange": true,
         "aaSorting": [[4, 'desc']],
         "bFilter": true,
         //"bSort": true,
+        "bAutoWidth": false,
         "bInfo": true,
-        "bAutoWidth": true,
         "bServerSide": true,
         "sAjaxSource": "/WorkAssignment/AjaxHandler",
         "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
@@ -170,7 +170,7 @@
         "aoColumns": [
                         { "mDataProp": "assignedWorker", "bVisible": false, "bSortable": false}, 
                         { "mDataProp": "requestedList", "bVisible": false, "bSortable": false}, 
-                        { "mDataProp": "pWAID"},                            
+                        { "mDataProp": "pWAID" },                            
                         { "mDataProp": "dateTimeofWork"},                            
                         { "mDataProp": "englishlevel"}, 
                         { "mDataProp": "skill"}, 
@@ -178,7 +178,7 @@
                         { "mDataProp": "hours"}, 
                         { "mDataProp": "days"},
                         { "mDataProp": "earnings"},
-                        { "mDataProp": "description"},                         
+                        { "mDataProp": "description"},                        
                     ],
         "aoSearchCols" : [null, null, null, null, null, null, null, null, null, null, null],
         "fnServerData": function ( sSource, aoData, fnCallback ) {
@@ -328,26 +328,24 @@
         $("#updateBtn").click(function (e) {
             e.preventDefault();
             //$('#dwccardnum').val(""); 
-//            if ($('#assignedWorker_visible').val() == 'true') {
-//                $("#availAssignTable").dataTable().fnSetColumnVis( 0, true , false);
-//            } else {
-//                //$("#availAssignTable").dataTable().fnSetColumnVis( 0, false, false );
-//            }
-//            if ($('#requestedWorkers_visible').val() == 'true') {
-//                $("#availAssignTable").dataTable().fnSetColumnVis( 1, true, false );
-//            } else {
-//                //$("#availAssignTable").dataTable().fnSetColumnVis( 1, false, false );
-//            }
-//            if ($('#signin_visible').val() == 'true') {
-//                $("#signinTab").show();
-//            } else {
-//                $("#signinTab").hide();
-//            }
+            if ($('#assignedWorker_visible').val() == 'true') {
+                $("#availAssignTable").dataTable().fnSetColumnVis( 0, true , false);
+            } else {
+                $("#availAssignTable").dataTable().fnSetColumnVis( 0, false, false );
+            }
+            if ($('#requestedWorkers_visible').val() == 'true') {
+                $("#availAssignTable").dataTable().fnSetColumnVis( 1, true, false );
+            } else {
+                $("#availAssignTable").dataTable().fnSetColumnVis( 1, false, false );
+            }
+            if ($('#signin_visible').val() == 'true') {
+                $("#signinTab").show();
+            } else {
+                $("#signinTab").hide();
+            }
             //alert($("#signinTable").dataTable().fnFilter());
-            $("#signinTable").dataTable().fnAdjustColumnSizing();
             $("#signinTable").dataTable().fnDraw();
-
-//            $("#availAssignTable").dataTable().fnDraw();
+            $("#availAssignTable").dataTable().fnDraw();
 //            if ($('#signinTable_filter').val() == null) {
 //                $("#signinTable").dataTable().fnDraw();
 //            } else {

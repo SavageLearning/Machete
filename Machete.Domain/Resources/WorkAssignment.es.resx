@@ -123,6 +123,9 @@
   <data name="attitude" xml:space="preserve">
     <value>Actitud</value>
   </data>
+  <data name="change" xml:space="preserve">
+    <value>Cambiar</value>
+  </data>
   <data name="comments" xml:space="preserve">
     <value>Comentarios</value>
   </data>
@@ -132,8 +135,20 @@
   <data name="daysrequired" xml:space="preserve">
     <value>El número de días es obligatorio</value>
   </data>
+  <data name="delete" xml:space="preserve">
+    <value>Borrar</value>
+  </data>
+  <data name="deleteassignedconfirm" xml:space="preserve">
+    <value>¿Desea borrar esta tarea de asignacion?</value>
+  </data>
+  <data name="deleteassignedtitle" xml:space="preserve">
+    <value>Borrar registros de despacho</value>
+  </data>
   <data name="description" xml:space="preserve">
     <value>Información adicional</value>
+  </data>
+  <data name="dispatchinfo" xml:space="preserve">
+    <value>Información de despacho</value>
   </data>
   <data name="englishLevelID" xml:space="preserve">
     <value>Nivel de Inglés es obligatorio</value>

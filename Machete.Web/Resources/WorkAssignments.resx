@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="assignments" xml:space="preserve">
+    <value>Assignments</value>
+  </data>
   <data name="boxlegend" xml:space="preserve">
     <value>Work assignment</value>
   </data>
@@ -162,6 +165,9 @@
   <data name="editworkorderlink" xml:space="preserve">
     <value>Edit work assignment</value>
   </data>
+  <data name="fullname" xml:space="preserve">
+    <value>Full name</value>
+  </data>
   <data name="indexreturnlink" xml:space="preserve">
     <value>Return to list of work assignments</value>
   </data>
@@ -173,6 +179,15 @@
   </data>
   <data name="listlinkall" xml:space="preserve">
     <value>List of ALL work assignments</value>
+  </data>
+  <data name="memberID" xml:space="preserve">
+    <value>Card#</value>
+  </data>
+  <data name="signin" xml:space="preserve">
+    <value>Sign-in</value>
+  </data>
+  <data name="skills" xml:space="preserve">
+    <value>Skills</value>
   </data>
   <data name="tabprefix" xml:space="preserve">
     <value>Assignment #: </value>

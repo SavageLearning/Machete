@@ -347,7 +347,7 @@ function waEstimateEarnings(myForm) {
         var total = myDays * myHours * myWage;
         $(myEarnings).val("$" + total.toFixed(2));
     } else {
-        $(myEarnings).val("not calculable?!");
+        $(myEarnings).val("@(Machete.Web.Resources.Shared.notcalculable)");
     }
 }
 
