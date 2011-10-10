@@ -47,16 +47,17 @@
         M_workOrderEditForm_@(Model.ID) = $('#WorkOrderTab-@Model.ID');
         $('#activateWorkOrder-@(Model.ID)').hide();
         $('.formButton').button();
-        $('#contactName').focus();
-
-        //dateTimeWidget($(M_workOrderEditForm_@(Model.ID)).find('#dateTimeofWork'));
+        $('#contactName').focus();        
         //
+        // English note toggle
         //
         toggleDropDown($('.englishRequired_@(Model.ID)'), "@(Shared.yes)", $("#englishNote_@(Model.ID)"), true);
         $(M_workOrderEditForm_@(Model.ID)).find("#englishRequired").bind('change', function () { 
             toggleDropDown($('.englishRequired_@(Model.ID)'), "@(Shared.yes)", $("#englishNote_@(Model.ID)"), false);
         });
-
+        ////////////////////////////////////////////////////////////////
+        //
+        // Add validation to dynamic content
         //
         $.validator.unobtrusive.parseDynamicContent($('#WorkOrderTab-@Model.ID'));
         // Find tabindex attribute (for tab order, not jquery tabs) and increment by 10

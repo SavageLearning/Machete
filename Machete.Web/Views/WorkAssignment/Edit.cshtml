@@ -5,7 +5,7 @@
 @using (Html.BeginForm("Edit", "WorkAssignment", FormMethod.Post, 
                         new { @class = "edittab-form EditPost", @id="WorkAssignmentTab-" + Model.ID }))
 {
-    <input type="button" value="@WorkAssignments.viewlink" class="formButton" id="view-@(Model.ID)" />
+    @*<input type="button" value="@WorkAssignments.viewlink" class="formButton" id="view-@(Model.ID)" />*@
     <input type="submit" value="@WorkAssignments.editsubmit" class="formButton"/>
     <input type="button" value="@WorkAssignments.dupsubmit" class="formButton" id="duplicate-@(Model.ID)" />
     if (Html.IsInRole(Html.Role_AMP()))

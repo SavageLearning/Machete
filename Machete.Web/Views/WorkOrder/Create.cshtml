@@ -17,8 +17,6 @@
     $(document).ready(function () {
         M_workOrderCreateForm = $('#workOrderCreateForm');
         $('.formButton').button();       
-//        $('#workOrderCreateButton').button(); 
-//        $('#workOrderCopyEmployerInfo').button();
 
         //dateTimeWidget($(M_workOrderCreateForm).find('#dateTimeofWork'));
         ////////////////////////////////////////////////////////////////
@@ -30,7 +28,7 @@
         $(M_englishRequired).bind('change', function () { toggleDropDown(M_englishRequired, "@(Shared.yes)", $(M_workOrderCreateForm).find("#englishNote_@(Model.ID)"), false) });
         ////////////////////////////////////////////////////////////////
         //
-        //
+        // Add validation to dynamic content
         //        
         $.validator.unobtrusive.parseDynamicContent('#workOrderCreateForm');
         // Find tabindex attribute (for tab order, not jquery tabs) and increment by 10

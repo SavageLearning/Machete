@@ -403,6 +403,15 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Requests for workers.
+        /// </summary>
+        public static string workerRequests {
+            get {
+                return ResourceManager.GetString("workerRequests", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Order #:.
         /// </summary>
         public static string workorderID {

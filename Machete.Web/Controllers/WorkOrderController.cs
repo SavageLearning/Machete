@@ -135,14 +135,14 @@ namespace Machete.Web.Controllers
                                       EID = Convert.ToString(p.EmployerID),
                                       WOID = System.String.Format("{0,5:D5}", p.paperOrderNum),
                                       dateTimeofWork =  p.dateTimeofWork.ToString(),
-                                      statusEN = Lookups.byID(p.status, "en"),
                                       status = Lookups.byID(p.status, CI.TwoLetterISOLanguageName),
                                       WAcount = p.workAssignments.Count(a => a.workOrderID == p.ID).ToString(),
                                       contactName =  p.contactName, 
                                       workSiteAddress1 =  p.workSiteAddress1,                                        
                                       dateupdated = System.String.Format("{0:MM/dd/yyyy HH:mm:ss}", p.dateupdated), 
                                       updatedby = p.Updatedby,
-                                      transportMethod = Lookups.byID(p.transportMethodID, CI.TwoLetterISOLanguageName) 
+                                      transportMethod = Lookups.byID(p.transportMethodID, CI.TwoLetterISOLanguageName),
+                                      displayState = _getDisplayState(p)
                          };
 
             return Json(new
@@ -162,6 +162,17 @@ namespace Machete.Web.Controllers
         private string _getTabLabel(WorkOrder wo)
         {
             return Machete.Web.Resources.WorkOrders.tabprefix + wo.getPseudoWOID() + " @ " + wo.workSiteAddress1;
+        }
+
+        private string _getDisplayState(WorkOrder wo)
+        {
+            string status = Lookups.byID(wo.status, "en");
+            if (status == "Completed")
+            {
+                if (wo.workAssignments.Count(wa => wa.workerAssignedID == null) > 0) return "Unassigned";
+                if (wo.workAssignments.Count(wa => wa.workerAssignedID != null && wa.workerSigninID == null) > 0) return "Orphaned";                                 
+            }
+            return status;
         }
         #endregion
 
@@ -309,10 +320,10 @@ namespace Machete.Web.Controllers
         //
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult CompleteOrders(DateTime date, string user)
+        public ActionResult CompleteOrders(DateTime date, string userName)
         {
 
-            int count = woServ.CompleteActiveOrders(date, user);
+            int count = woServ.CompleteActiveOrders(date, userName);
 
             return Json(new
             {

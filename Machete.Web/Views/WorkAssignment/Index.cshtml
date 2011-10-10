@@ -168,7 +168,7 @@
         "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
         "bProcessing": true,
         "aoColumns": [
-                        { "mDataProp": "assignedWorker", "bVisible": false, "bSortable": false}, 
+                        { "mDataProp": "assignedWorker", "bVisible": false, "bSortable": true}, 
                         { "mDataProp": "requestedList", "bVisible": false, "bSortable": false}, 
                         { "mDataProp": "pWAID" },                            
                         { "mDataProp": "dateTimeofWork"},                            
@@ -195,15 +195,16 @@
 		    },
         "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
             $(nRow).attr('requestedID', aData['WAID']);
-            //alert(aData['WID'] + "-" + aData['WSIID']);
-            //if (aData['WID'] > 0 && aData['WSIID'] > 0 && aData['status'] == @(Lookups.getSingleEN("orderstatus", "Active"))) { // assigned
             if (aData['WID'] > 0 && aData['WSIID'] > 0 && aData['status']) { // assigned
                 $(nRow).addClass('statusGreen');
             } 
-            if (aData['WID'] > 0 && aData['WSIID'] == 0 && aData['status'] ) { // orphaned
+            if (aData['WID'] == 0 && aData['status'] == @(Lookups.getSingleEN("orderstatus", "Completed"))) { // Unassigned
+                $(nRow).addClass('statusOrange');
+            } 
+            if (aData['WID'] > 0 && aData['WSIID'] == 0 && aData['status'] == @(Lookups.getSingleEN("orderstatus", "Completed"))) { // orphaned
                 $(nRow).addClass('statusYellow');
             }
-            if (aData['status'] == @(Lookups.getSingleEN("orderstatus", "Cancelled"))) { // orphaned
+            if (aData['status'] == @(Lookups.getSingleEN("orderstatus", "Cancelled"))) { // cancelled
                 $(nRow).addClass('statusRed');
             }
 
