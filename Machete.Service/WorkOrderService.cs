@@ -134,7 +134,7 @@ namespace Machete.Service
 
         public int CompleteActiveOrders(DateTime date, string user)
         {
-            IEnumerable<WorkOrder> list = this.GetActiveOrders(date, false);
+            IEnumerable<WorkOrder> list = this.GetActiveOrders(date, true);
             int count = 0;
             foreach (WorkOrder wo in list)
             {

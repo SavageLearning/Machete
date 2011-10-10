@@ -21,21 +21,21 @@ GO
 
 CREATE VIEW [db_datareader].[average_of_wage_by_month]
 AS
-SELECT     TOP (100) PERCENT CONVERT(VARCHAR(7), wo.dateTimeofWork, 111) AS yearmonth, '$' + CONVERT(varchar, CONVERT(money, AVG(wa.hourlyWage)), 1) 
-                      AS dispatchedWageAvg
+SELECT     TOP (100) PERCENT CONVERT(VARCHAR(7), wo.dateTimeofWork, 111) AS yearmonth, '$' + CONVERT(varchar, CONVERT(money, 
+                      SUM(wa.days * wa.hours * wa.hourlyWage) / SUM(wa.days * wa.hours)), 1) AS dispatchedWageAvg
 FROM         dbo.WorkAssignments AS wa INNER JOIN
                       dbo.WorkOrders AS wo ON wa.workOrderID = wo.ID
-WHERE     (wo.status < 45)
+WHERE     (wo.status = 44)
 GROUP BY CONVERT(VARCHAR(7), wo.dateTimeofWork, 111)
 ORDER BY yearmonth DESC
-GO
+go
 
 CREATE VIEW [db_datareader].[average_of_wage_by_year]
 AS
 SELECT     TOP (100) PERCENT DATEPART(yy, wo.dateTimeofWork) AS year, '$' + CONVERT(varchar, CONVERT(money, AVG(wa.hourlyWage)), 1) AS dispatchedWageAvg
 FROM         dbo.WorkAssignments AS wa INNER JOIN
                       dbo.WorkOrders AS wo ON wa.workOrderID = wo.ID
-WHERE     (wo.status < 45)
+WHERE     (wo.status = 44)
 GROUP BY DATEPART(yy, wo.dateTimeofWork)
 ORDER BY year DESC
 GO
@@ -45,7 +45,7 @@ AS
 SELECT     TOP (100) PERCENT CONVERT(VARCHAR(7), wo.dateTimeofWork, 111) AS yearmonth, COUNT(wa.ID) AS dispatchedCount
 FROM         dbo.WorkAssignments AS wa INNER JOIN
                       dbo.WorkOrders AS wo ON wa.workOrderID = wo.ID
-WHERE     (wo.status < 45)
+WHERE     (wo.status = 44)
 GROUP BY CONVERT(VARCHAR(7), wo.dateTimeofWork, 111)
 ORDER BY yearmonth DESC
 GO
@@ -68,22 +68,6 @@ SELECT     ID, active, name, address1, address2, city, state, phone, cellphone, 
                             WHERE      (ID = dbo.Employers.referredby)) AS referredby, referredbyOther, datecreated, dateupdated, Createdby, Updatedby
 FROM         dbo.Employers
 
-GO
-
-CREATE VIEW [db_datareader].[status_summary_combined_EN]
-AS
-SELECT     TOP (100) PERCENT db_datareader.workOrders_status_summary_EN.startdate, CASE datepart(dw, db_datareader.workOrders_status_summary_EN.startdate) 
-                      WHEN 1 THEN 'Sunday' WHEN 2 THEN 'Monday' WHEN 3 THEN 'Tuesday' WHEN 4 THEN 'Wednesday' WHEN 5 THEN 'Thursday' WHEN 6 THEN 'Friday' WHEN 7 THEN
-                       'Saturday' END AS Expr1, db_datareader.workOrders_status_summary_EN.[Pending Orders], 
-                      db_datareader.workAssignments_status_summary_EN.[Pending Assignments], db_datareader.workOrders_status_summary_EN.[Active Orders], 
-                      db_datareader.workAssignments_status_summary_EN.[Active Assignments], db_datareader.workOrders_status_summary_EN.[Completed Orders], 
-                      db_datareader.workAssignments_status_summary_EN.[Completed Assignments], db_datareader.workOrders_status_summary_EN.[Cancelled Orders], 
-                      db_datareader.workAssignments_status_summary_EN.[Cancelled Assignments], db_datareader.workOrders_status_summary_EN.[Expired Orders], 
-                      db_datareader.workAssignments_status_summary_EN.[Expired Assignments]
-FROM         db_datareader.workOrders_status_summary_EN INNER JOIN
-                      db_datareader.workAssignments_status_summary_EN ON 
-                      db_datareader.workOrders_status_summary_EN.startdate = db_datareader.workAssignments_status_summary_EN.startdate
-ORDER BY db_datareader.workOrders_status_summary_EN.startdate DESC
 GO
 
 CREATE VIEW [db_datareader].[united_way_demographics]
@@ -215,8 +199,24 @@ SELECT     yearmonth, COUNT(workerAssignedID) AS uniqueEmployments
 FROM         (SELECT     CONVERT(VARCHAR(7), wo.dateTimeofWork, 111) AS yearmonth, wa.workerAssignedID
                        FROM          dbo.WorkAssignments AS wa INNER JOIN
                                               dbo.WorkOrders AS wo ON wa.workOrderID = wo.ID
-                       WHERE      (wo.status < 45) AND (wo.dateTimeofWork < GETDATE()) AND (wa.workerAssignedID IS NOT NULL)
+                       WHERE      (wo.status = 44) AND (wo.dateTimeofWork < GETDATE()) AND (wa.workerAssignedID IS NOT NULL)
                        GROUP BY CONVERT(VARCHAR(7), wo.dateTimeofWork, 111), wa.workerAssignedID) AS foo
 GROUP BY yearmonth
 
+GO
+
+CREATE VIEW [db_datareader].[status_summary_combined_EN]
+AS
+SELECT     TOP (100) PERCENT db_datareader.workOrders_status_summary_EN.startdate, CASE datepart(dw, db_datareader.workOrders_status_summary_EN.startdate) 
+                      WHEN 1 THEN 'Sunday' WHEN 2 THEN 'Monday' WHEN 3 THEN 'Tuesday' WHEN 4 THEN 'Wednesday' WHEN 5 THEN 'Thursday' WHEN 6 THEN 'Friday' WHEN 7 THEN
+                       'Saturday' END AS Expr1, db_datareader.workOrders_status_summary_EN.[Pending Orders], 
+                      db_datareader.workAssignments_status_summary_EN.[Pending Assignments], db_datareader.workOrders_status_summary_EN.[Active Orders], 
+                      db_datareader.workAssignments_status_summary_EN.[Active Assignments], db_datareader.workOrders_status_summary_EN.[Completed Orders], 
+                      db_datareader.workAssignments_status_summary_EN.[Completed Assignments], db_datareader.workOrders_status_summary_EN.[Cancelled Orders], 
+                      db_datareader.workAssignments_status_summary_EN.[Cancelled Assignments], db_datareader.workOrders_status_summary_EN.[Expired Orders], 
+                      db_datareader.workAssignments_status_summary_EN.[Expired Assignments]
+FROM         db_datareader.workOrders_status_summary_EN INNER JOIN
+                      db_datareader.workAssignments_status_summary_EN ON 
+                      db_datareader.workOrders_status_summary_EN.startdate = db_datareader.workAssignments_status_summary_EN.startdate
+ORDER BY db_datareader.workOrders_status_summary_EN.startdate DESC
 GO

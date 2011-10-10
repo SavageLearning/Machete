@@ -93,21 +93,27 @@
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                         $(nRow).attr("edittabref", aData["tabref"]);
                         $(nRow).attr("edittablabel", aData["tablabel"]);
-                        if (aData['statusEN'] == "Pending") {
+                        if (aData['displayState'] == "Pending") {
                             $(nRow).addClass('statusGrey');
                         } 
-                        if (aData['statusEN'] == "Active") {
+                        if (aData['displayState'] == "Active") {
                             $(nRow).addClass('statusBlue');
                         } 
-                        if (aData['statusEN'] == "Completed") {
+                        if (aData['displayState'] == "Completed") {
                             $(nRow).addClass('statusGreen');
                         } 
-                        if (aData['statusEN'] == "Cancelled") {
+                        if (aData['displayState'] == "Cancelled") {
                             $(nRow).addClass('statusRed');
                         } 
-                        if (aData['statusEN'] == "Expired") {
+                        if (aData['displayState'] == "Expired") {
                             $(nRow).addClass('statusExpired');
-                        } 
+                        }
+                        if (aData['displayState'] == "Orphaned") {
+                            $(nRow).addClass('statusYellow');
+                        }
+                        if (aData['displayState'] == "Unassigned") {
+                            $(nRow).addClass('statusOrange');
+                        }
                         return nRow;
             }
         };
@@ -121,14 +127,7 @@
     summaryDefs["iDisplayLength"] = 25;
     summaryDefs["aLengthMenu"] = [[25, 50, 100], [25, 50, 100]];
         orderDefs["iDisplayLength"] = 15;
-    orderDefs["aLengthMenu"] = [[15, 50, 100], [15, 50, 100]];
-
-       
-    //    pendingDefs["aoSearchCols"][5] = {"sSearch" : '@Lookups.getSingleEN("orderstatus", "Pending")'};
-    //    activeDefs["aoSearchCols"][5] = {"sSearch" : '@Lookups.getSingleEN("orderstatus", "Active")'};
-    //    completedDefs["aoSearchCols"][5] = {"sSearch" : '@Lookups.getSingleEN("orderstatus", "Completed")'};
-    //    cancelledDefs["aoSearchCols"][5] = {"sSearch" : '@Lookups.getSingleEN("orderstatus", "Cancelled")'};
-    //    expiredDefs["aoSearchCols"][5] = {"sSearch" : '@Lookups.getSingleEN("orderstatus", "Expired")'};
+    orderDefs["aLengthMenu"] = [[15, 50, 100], [15, 50, 100]];      
     //////////////////////////////////////////////
     //
     //

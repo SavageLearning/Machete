@@ -227,12 +227,6 @@
     
 </div>
 <script language="javascript" type="text/javascript">
-      function getRequests(myObj) {
-
-//        $.getJSON("/WorkOrder/GetRequests", { "id": "@Model.ID" }, function (data) {
-//            $(myObj).addItems(data);
-//        });
-        }
     $(document).ready(function () {
         dateTimeWidget($("#WO-dateTimeofWork-@(Model.ID)"));
         M_workerRequestTable_@(Model.ID) = $('#workerTable-@(Model.ID)').dataTable({

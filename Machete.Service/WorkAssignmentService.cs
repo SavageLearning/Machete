@@ -298,7 +298,7 @@ namespace Machete.Service
                             //});
             switch (o.sortColName)
             {
-                case "pWAID": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.pseudoID) : filteredWA.OrderBy(p => p.pseudoID); break;
+                case "pWAID": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => string.Format("{0,5:D5}", p.workOrder.paperOrderNum) + "-" + p.pseudoID) : filteredWA.OrderBy(p => string.Format("{0,5:D5}", p.workOrder.paperOrderNum) + "-" + p.pseudoID); break;
                 case "skill": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.skillID) : filteredWA.OrderBy(p => p.skillID); break;
                 case "earnings": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.hourlyWage * p.hours * p.days) : filteredWA.OrderBy(p => p.hourlyWage * p.hours * p.days); break;
                 case "hourlywage": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.hourlyWage) : filteredWA.OrderBy(p => p.hourlyWage); break;
@@ -309,7 +309,7 @@ namespace Machete.Service
                 case "description": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.description) : filteredWA.OrderBy(p => p.description); break;
                 case "updatedby": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.Updatedby) : filteredWA.OrderBy(p => p.Updatedby); break;
                 case "dateupdated": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.dateupdated) : filteredWA.OrderBy(p => p.dateupdated); break;
-                //case "assignedWorker": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.workerAssigned.dwccardnum) : filteredWA.OrderBy(p => p.workerAssigned.dwccardnum); break;
+                case "assignedWorker": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.workerAssigned == null ? 0 : p.workerAssigned.dwccardnum) : filteredWA.OrderBy(p => p.workerAssigned == null ? 0 : p.workerAssigned.dwccardnum); break;
                 default: filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.workOrder.dateTimeofWork) : filteredWA.OrderBy(p => p.workOrder.dateTimeofWork); break;
             }
             filteredWA = filteredWA.ToList();

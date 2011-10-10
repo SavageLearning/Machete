@@ -85,6 +85,18 @@
                                     $(nRow).attr('edittablabel', aData["tablabel"]);
                                     //show activation button (need at least 1 assignment to activate)
                                     $('#activateWorkOrderButton-@(Model.ID)').show();
+                                    if (aData['WID'] > 0 && aData['WSIID'] > 0 && aData['status']) { // assigned
+                                        $(nRow).addClass('statusGreen');
+                                    } 
+                                    if (aData['WID'] == 0 && aData['status'] == @(Lookups.getSingleEN("orderstatus", "Completed"))) { // Unassigned
+                                        $(nRow).addClass('statusOrange');
+                                    } 
+                                    if (aData['WID'] > 0 && aData['WSIID'] == 0 && aData['status'] == @(Lookups.getSingleEN("orderstatus", "Completed"))) { // orphaned
+                                        $(nRow).addClass('statusYellow');
+                                    }
+                                    if (aData['status'] == @(Lookups.getSingleEN("orderstatus", "Cancelled"))) { // cancelled
+                                        $(nRow).addClass('statusRed');
+                                    }
                                     return nRow;
                             },
             "fnDrawCallback": function () {

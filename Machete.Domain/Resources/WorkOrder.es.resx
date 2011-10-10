@@ -249,4 +249,7 @@
   <data name="requestTitle" xml:space="preserve">
     <value>Seleccionar un trabajador</value>
   </data>
+  <data name="workerRequests" xml:space="preserve">
+    <value>Peticiones de los trabajadores</value>
+  </data>
 </root>
