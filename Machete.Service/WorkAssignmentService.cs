@@ -154,7 +154,18 @@ namespace Machete.Service
             // 
             // Status filtering
             //
-            if (o.status != null && o.status != 0) queryableWA = queryableWA.Where(p => p.workOrder.status == o.status);
+            if (o.status != null && o.status != 0)
+            {
+                queryableWA = queryableWA.Where(p => p.workOrder.status == o.status);
+            }
+            // 
+            // pending filtering
+            //
+            if (o.showPending == false)
+            {
+                int pending = LookupCache.getSingleEN("orderstatus", "Pending");
+                queryableWA = queryableWA.Where(p => p.workOrder.status != pending);
+            }
             // 
             // wa_grouping
             //
@@ -172,11 +183,7 @@ namespace Machete.Service
                                     (wa, sk) => new { wa, sk })
                              .Where(jj => jj.sk.speciality == true && jj.wa.workerAssigned == null)
                              .Select(jj => jj.wa);                    
-                    break;
-                                                           //.Join(wrRepo.GetAllQ(),
-                                                           //      wa => wa.workOrderID,
-                                                           //      wr => wr.WorkOrderID,
-                                                           //      (wa, wr) => new { wa });                                    
+                    break;                                  
             }
             // 
             // SEARCH STRING
@@ -259,7 +266,6 @@ namespace Machete.Service
                                                               jj.wa.skillID.Equals(skill6) ||
                                                               jj.sk.speciality == false)
                                                               )
-                                                //.Select(jj => jj.wa).AsQueryable();
                                                  .Select(jj => jj.wa).AsEnumerable();
                 }
                 else
@@ -275,27 +281,7 @@ namespace Machete.Service
             filteredWA = filteredWA.GroupJoin(WorkerCache.getCache(), wa => wa.workerAssignedID, wc => wc.ID, (wa, wc) => new { wa, wc })
                             .SelectMany(jj => jj.wc.DefaultIfEmpty(new Worker { ID = 0, dwccardnum = 0}),
                             (jj, row) => jj.wa);
-                            //{
-                            //    ID = jj.wa.ID,
-                            //    active = jj.wa.active,
-                            //    description = jj.wa.description,
-                            //    workerAssignedID = jj.wa.workerAssignedID,
-                            //    workerAssigned = jj.wc,
-                            //    Createdby = jj.wa.Createdby,
-                            //    datecreated = jj.wa.datecreated,
-                            //    dateupdated = jj.wa.dateupdated,
-                            //    days = jj.wa.days,
-                            //    englishLevelID = jj.wa.englishLevelID,
-                            //    hourlyWage = jj.wa.hourlyWage,
-                            //    hours = jj.wa.hours,
-                            //    pseudoID = jj.wa.pseudoID,
-                            //    skillID = jj.wa.skillID,
-                            //    Updatedby = jj.wa.Updatedby,
-                            //    workerSigninID = jj.wa.workerSigninID,
-                            //    workOrderID = jj.wa.workOrderID,
-                            //    workOrder = jj.wa.workOrder
 
-                            //});
             switch (o.sortColName)
             {
                 case "pWAID": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => string.Format("{0,5:D5}", p.workOrder.paperOrderNum) + "-" + p.pseudoID) : filteredWA.OrderBy(p => string.Format("{0,5:D5}", p.workOrder.paperOrderNum) + "-" + p.pseudoID); break;
@@ -503,6 +489,7 @@ namespace Machete.Service
             public int? dwccardnum;
             public int? woid;
             public int? status;
+            public bool showPending;
             public bool orderDescending;
             public int? displayStart;
             public int? displayLength;

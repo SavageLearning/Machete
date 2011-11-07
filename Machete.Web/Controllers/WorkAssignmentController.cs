@@ -89,7 +89,8 @@ namespace Machete.Web.Controllers
                     sortColName=param.sortColName(),
                     wa_grouping = param.wa_grouping,
                     typeofwork_grouping = param.typeofwork_grouping,
-                    status = param.status
+                    status = param.status,
+                    showPending = param.showPending
             });
             var result = from p in was.query select new { 
                             tabref = _getTabRef(p),
