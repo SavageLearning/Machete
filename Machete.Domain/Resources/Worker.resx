@@ -127,7 +127,7 @@
     <value>Date in the USA</value>
   </data>
   <data name="dwccardnum" xml:space="preserve">
-    <value>DWC Card#</value>
+    <value>Membership #</value>
   </data>
   <data name="englishlevelID" xml:space="preserve">
     <value>English level</value>

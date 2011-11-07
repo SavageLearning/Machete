@@ -325,16 +325,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Employers.resx</DependentUpon>
     </Compile>
-    <Compile Include="Resources\Filters.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Filters.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\Filter.es.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Filter.es.resx</DependentUpon>
-    </Compile>
     <Compile Include="Resources\Workers.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -504,14 +494,6 @@
     <EmbeddedResource Include="Resources\Employers.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Employers.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Filter.es.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Filter.es.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Filters.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Filters.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\WorkAssignments.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

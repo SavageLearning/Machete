@@ -139,7 +139,7 @@
     <value>Tiene una licencia de conducir de los EE.UU.?</value>
   </data>
   <data name="dwccardnum" xml:space="preserve">
-    <value>DWC tarjeta #</value>
+    <value>Afiliación #</value>
   </data>
   <data name="dwccardnumerror" xml:space="preserve">
     <value>Número de la tarjeta debe ser de 5 dígitos</value>

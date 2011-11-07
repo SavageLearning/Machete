@@ -169,7 +169,7 @@
     <value>Print worker</value>
   </data>
   <data name="viewlink" xml:space="preserve">
-    <value>View</value>
+    <value>Print</value>
   </data>
   <data name="viewtitle" xml:space="preserve">
     <value>worker::view</value>

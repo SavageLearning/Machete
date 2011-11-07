@@ -136,7 +136,7 @@
     <value>workersignin::delete</value>
   </data>
   <data name="dwccardnum" xml:space="preserve">
-    <value>DWC Card#</value>
+    <value>Membership #</value>
   </data>
   <data name="dwccardnumerror" xml:space="preserve">
     <value>Card number must be 5 digits long</value>
