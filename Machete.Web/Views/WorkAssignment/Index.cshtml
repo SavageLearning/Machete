@@ -188,6 +188,7 @@
                 aoData.push( { "name": "wa_grouping", "value": $('#wa_grouping').val()} );
                 aoData.push( { "name": "typeofwork_grouping", "value": $('#typeofwork_grouping').val()} );
                 aoData.push( { "name": "status", "value": $('#status').val()});
+                aoData.push( { "name": "showPending", "value": false});
 			    $.getJSON( sSource, aoData, function (json) { 
 				    /* Do whatever additional processing you want on the callback, then tell DataTables */
 				    fnCallback(json)
@@ -206,6 +207,9 @@
             }
             if (aData['status'] == @(Lookups.getSingleEN("orderstatus", "Cancelled"))) { // cancelled
                 $(nRow).addClass('statusRed');
+            }
+            if (aData['status'] == @(Lookups.getSingleEN("orderstatus", "Active"))) { // cancelled
+                $(nRow).addClass('statusBlue');
             }
 
             //$(nRow).attr('edittablabel', aData[1]);                

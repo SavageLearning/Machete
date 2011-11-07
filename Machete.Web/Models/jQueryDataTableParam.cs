@@ -136,6 +136,7 @@ namespace Machete.Web.Models
         public string wa_grouping { get; set; }
         public int? typeofwork_grouping { get; set; }
         public int? status { get; set; }
+        public bool showPending { get; set; }
 
         public string sortColName()         
         {
