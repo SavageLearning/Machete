@@ -169,7 +169,7 @@
     <value>Imprimir trabajador</value>
   </data>
   <data name="viewlink" xml:space="preserve">
-    <value>Ver</value>
+    <value>Imprimir</value>
   </data>
   <data name="viewtitle" xml:space="preserve">
     <value>trabajador::ver</value>

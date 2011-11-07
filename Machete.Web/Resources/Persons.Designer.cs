@@ -214,7 +214,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to View.
+        ///   Looks up a localized string similar to Print.
         /// </summary>
         public static string viewlink {
             get {

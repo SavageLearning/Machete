@@ -157,7 +157,7 @@
     <value>person::index</value>
   </data>
   <data name="viewlink" xml:space="preserve">
-    <value>View</value>
+    <value>Print</value>
   </data>
   <data name="editpersonlink" xml:space="preserve">
     <value>Edit Person</value>
