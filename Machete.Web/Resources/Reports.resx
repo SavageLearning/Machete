@@ -117,91 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="employerstab" xml:space="preserve">
-    <value>Employers</value>
+  <data name="ordersTab" xml:space="preserve">
+    <value>Work Orders</value>
   </data>
-  <data name="Error" xml:space="preserve">
-    <value>Error</value>
+  <data name="summaryTab" xml:space="preserve">
+    <value>Summaries</value>
   </data>
-  <data name="ErrorPgActionLabel" xml:space="preserve">
-    <value>Action Name:</value>
-  </data>
-  <data name="ErrorPgControllerLabel" xml:space="preserve">
-    <value>Controller Name:</value>
-  </data>
-  <data name="ErrorPgExceptionLabel" xml:space="preserve">
-    <value>Stack Trace:</value>
-  </data>
-  <data name="ErrorPgApology" xml:space="preserve">
-    <value>Sorry, an error occurred while processing your request. </value>
-  </data>
-  <data name="hometab" xml:space="preserve">
-    <value>Home</value>
-  </data>
-  <data name="parentwebtitle" xml:space="preserve">
-    <value>Website</value>
-  </data>
-  <data name="persontab" xml:space="preserve">
-    <value>Persons</value>
-  </data>
-  <data name="title" xml:space="preserve">
-    <value>machete::</value>
-  </data>
-  <data name="workassignmentstab" xml:space="preserve">
-    <value>Dispatch</value>
-  </data>
-  <data name="workerstab" xml:space="preserve">
+  <data name="workersTab" xml:space="preserve">
     <value>Workers</value>
-  </data>
-  <data name="workorderstab" xml:space="preserve">
-    <value>WorkOrders</value>
-  </data>
-  <data name="ErrorPgExplanation" xml:space="preserve">
-    <value>An error has occurred. It has been logged and will be reviewed by an administrator. Please use the 'back' button on your browser to return to the previous screen and try your action again. If you reached this page from a bookmark, your bookmark is no longer valid.</value>
-  </data>
-  <data name="workersignintab" xml:space="preserve">
-    <value>Worker Signin</value>
-  </data>
-  <data name="managerinformation" xml:space="preserve">
-    <value>Manager information</value>
-  </data>
-  <data name="administratorinformation" xml:space="preserve">
-    <value>Administrator information</value>
-  </data>
-  <data name="googleMap" xml:space="preserve">
-    <value>Google map</value>
-  </data>
-  <data name="printGoogleMap" xml:space="preserve">
-    <value>Print google map</value>
-  </data>
-  <data name="choose" xml:space="preserve">
-    <value>(choose)</value>
-  </data>
-  <data name="no" xml:space="preserve">
-    <value>No</value>
-  </data>
-  <data name="yes" xml:space="preserve">
-    <value>Yes</value>
-  </data>
-  <data name="about" xml:space="preserve">
-    <value>About</value>
-  </data>
-  <data name="bannerbtn" xml:space="preserve">
-    <value>show banner</value>
-  </data>
-  <data name="frontpage" xml:space="preserve">
-    <value>Machete news</value>
-  </data>
-  <data name="issuetracker" xml:space="preserve">
-    <value>Issue Tracker</value>
-  </data>
-  <data name="wiki" xml:space="preserve">
-    <value>Wiki</value>
-  </data>
-  <data name="notcalculable" xml:space="preserve">
-    <value>not calculable</value>
-  </data>
-  <data name="reportstab" xml:space="preserve">
-    <value>Reports</value>
   </data>
 </root>

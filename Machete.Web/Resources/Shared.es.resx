@@ -201,4 +201,7 @@
   <data name="wiki" xml:space="preserve">
     <value>Wiki</value>
   </data>
+  <data name="reportstab" xml:space="preserve">
+    <value>Reportes</value>
+  </data>
 </root>

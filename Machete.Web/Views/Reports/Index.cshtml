@@ -1,0 +1,49 @@
+﻿@{
+    ViewBag.Title = "Reports";
+}
+
+<div id="homeTabs">
+    <ul>
+        <li><a href="#summary" id="summaryTab" >@Machete.Web.Resources.Reports.summaryTab</a> </li>
+        <li><a href="#workers" id="workersTab" >@Machete.Web.Resources.Reports.workersTab</a> </li>
+        <li><a href="#orders" id="ordersTab" >@Machete.Web.Resources.Reports.ordersTab</a> </li>
+    </ul>
+    <div id="summary">
+        <h3>Note</h3>
+        Machete is not integrated into the Domain security system, so you have to type in a password for the report server. <p />
+        The ID is: reports <p />
+        The password is: reports
+        <hr />             
+        <a href="/ReportServer/Pages/ReportViewer.aspx?%2fWork+orders-Monthly+status+report&rs:Command=Render" target="_blank">Monthly Status Report (City data)</a>
+        <p />
+        <a href="/ReportServer/Pages/ReportViewer.aspx?%2fWorkers-Monthly+dispatch+summary+with+detail&rs:Command=Render" target="_blank">Monthly dispatch with daily details</a>
+        <p />
+        <a href="/ReportServer/Pages/ReportViewer.aspx?%2fWork+orders-Status+summary+pie+charts&rs:Command=Render" target="_blank">Monthly work order statuses (Pie charts)</a>
+        <p />
+        <a href="/ReportServer/Pages/ReportViewer.aspx?%2fWork+orders-Status+summary&rs:Command=Render" target="_blank">Monthly work order and assignment statuses (bar charts)</a>
+    </div>
+    <div id="workers">
+        <p />
+        <a href="/ReportServer/Pages/ReportViewer.aspx?%2fActive+workers+sorted+by+MemberID--All+fields&rs:Command=Render" target="_blank">All Workers</a>
+        <p />
+        <a href="/ReportServer/Pages/ReportViewer.aspx?%2fActive+workers+with+expired+membership+dates&rs:Command=Render" target="_blank">Active workers with expired memberships</a>
+        <p />
+        <a href="/ReportServer/Pages/ReportViewer.aspx?%2fActive+workers+with+impossible+membership+dates&rs:Command=Render" target="_blank">Active workers with impossible membership dates</a>
+        <p />
+        <a href="/ReportServer/Pages/ReportViewer.aspx?%2fActive+workers+with+one+or+more+skills&rs:Command=Render" target="_blank">Active workers with specialty skills</a>
+    </div>
+    <div id="orders">
+        <p />
+        <a href="/ReportServer/Pages/ReportViewer.aspx?%2fWork+orders-Status+summary+by+day&rs:Command=Render" target="_blank">Daily work order statuses</a>
+    </div>
+</div>
+
+
+
+
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        $('#homeTabs').tabs();
+        //$('#newsAccordion').accordion();
+    });
+</script>
