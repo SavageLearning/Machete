@@ -12,6 +12,7 @@ using System.Web.Mvc;
 using Machete.Domain;
 using Machete.Test;
 using Machete.Web.ViewModel;
+using System.Web;
 
 namespace Machete.Test.Controllers
 {
@@ -132,6 +133,7 @@ namespace Machete.Test.Controllers
             _pserv = new Mock<IPersonService>();
             _wserv = new Mock<IWorkerService>();
             int testid = 4242;
+            Mock<HttpPostedFileBase> image = new Mock<HttpPostedFileBase>();
             FormCollection fakeform = _fakeCollection(testid);
 
             Worker fakeworker = new Worker();
@@ -158,7 +160,7 @@ namespace Machete.Test.Controllers
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
             //TODO Solve TryUpdateModel moq problem
-            var result = _ctrlr.Edit(testid, fakeworker, "UnitTest") as RedirectToRouteResult;
+            var result = _ctrlr.Edit(testid, fakeworker, "UnitTest", image.Object) as RedirectToRouteResult;
             //Assert
             Assert.AreEqual("Index", result.RouteValues["action"]);
             Assert.AreEqual(fakeworker, savedworker);
