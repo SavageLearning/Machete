@@ -241,6 +241,19 @@ input[type="text"]
     border: 1px solid #CCC;
 }
 
+input[type="text"].workerEditor
+{
+    width: 6em;
+    border: 1px solid #CCC;
+    padding: .2em .2em 0;
+}
+select.workerEditor
+{
+    width: 6em;
+    border: 1px solid #CCC;
+    padding: .2em .2em 0;
+}
+
 input[type="password"] 
 {
     width: 200px;

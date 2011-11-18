@@ -51,11 +51,6 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Manager, Administrator, PhoneDesk")]
         public ActionResult Index()
         {
-            //WorkerIndex _view = new WorkerIndex();
-            //_view.filter = new Models.Filter();
-            //_view.filter.inactive = false;
-            //_view.workers = workerService.GetWorkers(false);
-            //return View(_view);
             return View();
         }
 
@@ -143,10 +138,7 @@ namespace Machete.Web.Controllers
             _model.countryoforiginID = Lookups.countryoforiginDefault;
             _model.englishlevelID = Lookups.languageDefault;
             _model.neighborhoodID = Lookups.neighborhoodDefault;
-            //_model.dateOfBirth = Date
-            //Link person to work for EF to save
 
-            //_model.worker.memberexpirationdate = null;
             return PartialView(_model);
         } 
         [HttpPost, UserNameFilter]
@@ -156,8 +148,6 @@ namespace Machete.Web.Controllers
             if (!ModelState.IsValid)
             {
                 levent.Level = LogLevel.Error; levent.Message = "ModelState invalid";
-                //TODO will this log event work without record ID?
-                //levent.Properties["RecordID"] = id; 
                 log.Log(levent);
                 return PartialView(_model);
             }
@@ -173,30 +163,45 @@ namespace Machete.Web.Controllers
         public ActionResult Edit(int id)
         {
             Worker _worker = workerService.GetWorker(id);
-            //WorkerViewModel _model = new WorkerViewModel();
-            //_model.worker = _worker;
-            //_model.person = _worker.Person;
-            //if (_worker.ImageID != null)
-            //{
-            //    _model.image = imageServ.GetImage((int)_worker.ImageID);
-            //}
-            //else
-            //{
-            //    _model.image = new Image();
-            //}
             return PartialView(_worker);
         }
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "PhoneDesk, Manager, Administrator")]
-        public ActionResult Edit(int id, Worker _model, string userName)
+        public ActionResult Edit(int id, Worker _model, string userName, HttpPostedFileBase imagefile)
         {
             Worker worker = workerService.GetWorker(id);
-            //Person person = worker.Person;
             // TODO: catch exceptions, notify user
-            foo1 = TryUpdateModel(worker);
-            //foo2 = TryUpdateModel(person);
-            if (foo1)
+            if (TryUpdateModel(worker))
             {
+                if (imagefile != null)
+                {
+                    if (worker.ImageID != null)
+                    {
+                        Image image = imageServ.GetImage((int)worker.ImageID);
+                        image.ImageMimeType = imagefile.ContentType;
+                        image.parenttable = "Workers";
+                        image.filename = imagefile.FileName;
+                        image.recordkey = worker.ID.ToString();
+                        image.ImageData = new byte[imagefile.ContentLength];
+                        imagefile.InputStream.Read(image.ImageData,
+                                                   0,
+                                                   imagefile.ContentLength);
+                        imageServ.SaveImage(image, this.User.Identity.Name);
+                    }
+                    else
+                    {
+                        Image image = new Image();
+                        image.ImageMimeType = imagefile.ContentType;
+                        image.parenttable = "Workers";
+                        image.recordkey = worker.ID.ToString();
+                        image.ImageData = new byte[imagefile.ContentLength];
+                        imagefile.InputStream.Read(image.ImageData,
+                                                   0,
+                                                   imagefile.ContentLength);
+                        Image newImage = imageServ.CreateImage(image, this.User.Identity.Name);
+                        worker.ImageID = newImage.ID;
+                    }
+                }
                 workerService.SaveWorker(worker, userName);
                 return PartialView(worker);
             }

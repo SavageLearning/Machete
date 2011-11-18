@@ -4,7 +4,9 @@
 
 
 @using (Html.BeginForm("Edit", "Worker", FormMethod.Post,
-                    new { @class = "edittab-form EditPost", @id = "workderEditTab-" + Model.ID }))
+                    new { @class = "edittab-form EditPost", 
+                          @id = "workderEditTab-" + Model.ID, 
+                          enctype = "multipart/form-data" }))
 {
     <input type="button" value="@Workers.printlink" class="formButton" id="viewWorker-@(Model.ID)" />
     <input type="submit" value="@Workers.editsubmit" class="formButton"/>
@@ -33,6 +35,11 @@
     $(document).ready(function () {
         M_WorkerEditForm_@(Model.ID) = $('#workderEditTab-@Model.ID');
         $('.formButton').button();
+        $('#workderEditTab-@Model.ID').ajaxForm({
+            success: function() {                       
+                        $('#workderEditTab-@Model.ID').closest('.ui-tabs').tabs("select", 0);
+                     }
+        });
         //TODO: Tab order $('#contactName').focus();
         $.validator.unobtrusive.parseDynamicContent(M_WorkerEditForm_@(Model.ID));
                 ////////////////////////////////////////////////////////////////
@@ -62,14 +69,14 @@
         //
         // submit edit
         //
-        $('#workderEditTab-@Model.ID').submit(function (e) {
-            if ($('#workderEditTab-@Model.ID').valid()) {
-                $.post($(this).attr("action"), $(this).serialize());
-                $(e.target).closest('.ui-tabs').tabs("select", 0);
-            }
-            //TODO: javascript...need to deal with ajax error
-            e.preventDefault();
-        });
+//        $('#workderEditTab-@Model.ID').submit(function (e) {
+//            if ($('#workderEditTab-@Model.ID').valid()) {
+//                //$.post($(this).attr("action"), $(this).serialize());
+//                $(e.target).closest('.ui-tabs').tabs("select", 0);
+//            }
+//            //TODO: javascript...need to deal with ajax error
+//            //e.preventDefault();
+//        });
         ////////////////////////////////////////////////////////////////
         //
         // submit delete
