@@ -49,10 +49,10 @@
   <ItemGroup>
     <Reference Include="EntityFramework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
     <Reference Include="NLog">
-      <HintPath>..\packages\NLog.2.0.0.1904\lib\net40\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.2.0.0.2000\lib\net40\NLog.dll</HintPath>
     </Reference>
     <Reference Include="NLog.Extended">
-      <HintPath>..\packages\NLog.Extended.2.0.0.1904\lib\net40-full\NLog.Extended.dll</HintPath>
+      <HintPath>..\packages\NLog.Extended.2.0.0.2000\lib\net40-full\NLog.Extended.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
