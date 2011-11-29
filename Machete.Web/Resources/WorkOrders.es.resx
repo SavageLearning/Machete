@@ -303,4 +303,7 @@
   <data name="workername" xml:space="preserve">
     <value>NOMBRE DELTRABAJADOR:</value>
   </data>
+  <data name="changeemployer" xml:space="preserve">
+    <value>Cambiar de empleador</value>
+  </data>
 </root>

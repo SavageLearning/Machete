@@ -84,15 +84,16 @@ namespace Machete.Web.Controllers
 
             //return what's left to datatables
             var result = from p in displayEmployers
-                         select new[] { _getTabRef(p),
-                                        _getTabLabel(p),
-                                        Convert.ToString(p.active), 
-                                        p.name, 
-                                        p.address1, 
-                                        p.city, 
-                                        p.phone, 
-                                        Convert.ToString(p.dateupdated), 
-                                        p.Updatedby 
+                         select new { tabref = _getTabRef(p),
+                                      tablabel = _getTabLabel(p),
+                                      active = Convert.ToString(p.active),
+                                      EID = Convert.ToString(p.ID), 
+                                      name = p.name, 
+                                      address1 = p.address1, 
+                                      city = p.city, 
+                                      phone =  p.phone, 
+                                      dateupdated = Convert.ToString(p.dateupdated),
+                                      Updatedby = p.Updatedby 
                          };
 
             return Json(new

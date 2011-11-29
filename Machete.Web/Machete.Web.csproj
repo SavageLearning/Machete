@@ -568,6 +568,7 @@
     <EmbeddedResource Include="Resources\WorkOrders.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>WorkOrders.es.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\WorkOrders.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
