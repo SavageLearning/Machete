@@ -1,6 +1,9 @@
 ﻿@model Machete.Domain.WorkOrder
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+}
 @using (Html.BeginForm("Edit", "WorkOrder", FormMethod.Post, 
                         new { @class = "edittab-form EditPost", @id="WorkOrderTab-" + Model.ID}))
 {
@@ -8,8 +11,10 @@
     <input type="submit" value="@WorkOrders.editsubmit" class="formButton"/>
 
     <input type="button" id="printMap" class="formButton" value="@WorkOrders.mapbutton"/>
+    <input type="button" id="changeEmployerBtn" value="@WorkOrders.changeemployer" class="formButton"/>
     if (Html.IsInRole(Html.Role_AMP()))
     {
+        
         <input id="deleteWorkOrderButton-@(Model.ID)" type="button" value="@WorkOrders.deletesubmit" 
                 class="formButton deleteButton" />
     }
@@ -18,7 +23,23 @@
     @Html.EditorForModel()
 
 }
-
+<div id="employerSelectDialog" title="Select new Employer!?">
+    <table id="employerSelectTable" class="display">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>LABEL</th>
+            <th>@Machete.Domain.Resources.Employer.active</th>
+            <th>@Machete.Domain.Resources.Employer.name</th>
+            <th>@Machete.Domain.Resources.Employer.address1</th>
+            <th>@Machete.Domain.Resources.Employer.city</th>
+            <th>@Machete.Domain.Resources.Employer.phone</th>
+            <th>@Machete.Domain.Resources.Record.dateupdated</th>
+            <th>@Machete.Domain.Resources.Record.updatedby</th>
+        </tr>
+    </thead>
+</table>
+</div>
 @using (Html.BeginForm("Activate", "WorkOrder", FormMethod.Post,
                         new { @class = "edittab-form ActivatePost", @id = "ActivateWorkOrder-" + Model.ID }))
 {
@@ -44,6 +65,7 @@
 
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
+        M_employerSelect = null;
         M_workOrderEditForm_@(Model.ID) = $('#WorkOrderTab-@Model.ID');
         $('#activateWorkOrder-@(Model.ID)').hide();
         $('.formButton').button();
@@ -126,5 +148,73 @@
             e.preventDefault();
         });
         $('#printMap').click(function () { openGoogleMap("@Html.Encode(Model.workSiteAddress1 + ' ' + Model.city + ' ' + Model.state)", null) });
+        ////////////////////////////////////////////////////////////////
+        //
+        // change employer
+        //
+        $('#changeEmployerBtn').click(function() {
+            
+            M_employerSelect.fnDraw();
+            $('#employerSelectTable').show();
+            //
+            //Anon function to handle doubleclick of record selector            
+            $("#employerSelectDialog").dialog({
+                    height: 340,
+                    width: 1000,
+                    modal: true
+            });
+            
+            $('#employerSelectDialog').show();
+        });
+        M_employerSelect = $('#employerSelectTable').dataTable({
+            "bPaginate": true,
+            "bLengthChange": true,
+            "aaSorting": [[7, 'desc']],
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "iDeferLoading": true,
+            "bAutoWidth": false,
+            "bServerSide": true,
+            "sAjaxSource": "/Employer/AjaxHandler", 
+            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "bProcessing": true,
+            "aoColumns": [
+                            {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                            {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                            {"mDataProp": "active" },
+                            {"mDataProp": "name" },
+                            {"mDataProp": "address1" },
+                            {"mDataProp": "city" },
+                            {"mDataProp": "phone" },
+                            {"mDataProp": "dateupdated" },
+                            {"mDataProp": "Updatedby", "bSortable": false }
+            ],
+            // callback populates html attr with row data from JSON            
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $(nRow).attr('requestedID', aData['EID']);
+                //$(nRow).attr('edittablabel', aData[1]);                
+                return nRow;
+            }                
+        }).fnSetFilteringDelay(250);
+        //////////////////////////////////////////////////
+        //
+        //
+        $('#employerSelectDialog').hide();
+        $('#employerSelectTable').hide();
+
+        $('#employerSelectTable').find('tbody').dblclick(function (event) {            
+            var myTr = event.target.parentNode;
+            var myID = $(myTr).attr('requestedID');  
+            var myLabel =  $(myTr).find('td:eq(0)').text() + ' '+
+                                              $(myTr).find('td:eq(2)').text() + ' '+
+                                              $(myTr).find('td:eq(4)').text();
+          // handler function created by addRequestionBtn create event
+          alert('ha ha! ' + myID);
+          // action for doubleclick
+          $('#EmployerID').val(myID);
+          $('a.ui-dialog-titlebar-close').click();
+          //$('#WorkOrderTab-@Model.ID').click();
+        });
     });
 </script>

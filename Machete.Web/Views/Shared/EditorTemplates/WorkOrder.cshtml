@@ -224,8 +224,8 @@
             </tr>
         </thead>
     </table>
-    
 </div>
+
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
         dateTimeWidget($("#WO-dateTimeofWork-@(Model.ID)"));
@@ -253,19 +253,23 @@
                 { "mDataProp": "lastname1" },
                 { "mDataProp": "lastname2" },
                 { "mDataProp": "memberexpirationdate" }
-            ],            
+            ],
+            // callback populates html attr with row data from JSON            
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $(nRow).attr('requestedID', aData['WID']);
                 //$(nRow).attr('edittablabel', aData[1]);                
                 return nRow;
             }                
         }).fnSetFilteringDelay(250);
+        // workRequest Dialog -doubleclick on row to select
+        // create event to handle worker selection from dialog
         $(M_workerRequestTable_@(Model.ID)).find('tbody').dblclick(function (event) {            
             var myTr = event.target.parentNode;
             var myID = $(myTr).attr('requestedID');  
             var myLabel =  $(myTr).find('td:eq(0)').text() + ' '+
                                               $(myTr).find('td:eq(2)').text() + ' '+
                                               $(myTr).find('td:eq(4)').text();
+          // handler function created by addRequestionBtn create event
           M_workerRequestHandler_@(Model.ID)(myID, myLabel);
             $('a.ui-dialog-titlebar-close').click();
 
@@ -283,9 +287,9 @@
         $('#addRequestBtn-@(Model.ID)').click(function () {
             M_workerRequestTable_@(Model.ID).fnDraw();
             $('#workerTable-@(Model.ID)').show();
+            //
+            //Anon function to handle doubleclick of record selector
             M_workerRequestHandler_@(Model.ID) = function (myID, myLabel){
-                //
-                //Anon function to handle doubleclick of record selector
                 $('#workerRequests2_WO-@(Model.ID)').append(
                     $('<option></option>').val(myID).html(myLabel)                
                 );

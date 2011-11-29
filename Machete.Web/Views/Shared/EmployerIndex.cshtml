@@ -44,24 +44,24 @@
             "bInfo": true,
             "bAutoWidth": false,
             "bServerSide": true,
-            "sAjaxSource": "Employer/AjaxHandler",
+            "sAjaxSource": "/Employer/AjaxHandler",
             "bProcessing": true,
             "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
             "aoColumns": [                           //dataTable column definition
-                            { "bSearchable": false, "bSortable": false, "bVisible": false },
-                            { "bSearchable": false, "bSortable": false, "bVisible": false },
-                            null,
-                            null,
-                            null,
-                            null,
-                            null,
-                            null,
-                            { "sName": "Updatedby", "bSortable": false }
+                            {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                            {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                            {"mDataProp": "active" },
+                            {"mDataProp": "name" },
+                            {"mDataProp": "address1" },
+                            {"mDataProp": "city" },
+                            {"mDataProp": "phone" },
+                            {"mDataProp": "dateupdated" },
+                            { "mDataProp": "Updatedby", "bSortable": false }
                         ],
                                            
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                        $(nRow).attr('edittabref', aData[0]);       //set col0 to href
-                        $(nRow).attr('edittablabel', aData[1]);     //set col1 to label
+                        $(nRow).attr('edittabref', aData['tabref']);       //set col0 to href
+                        $(nRow).attr('edittablabel', aData['tablabel']);     //set col1 to label
                         return nRow;
                     }
                                     
