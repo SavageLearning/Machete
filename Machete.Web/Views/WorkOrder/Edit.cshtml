@@ -215,6 +215,9 @@
           $('#EmployerID').val(myID);
           $('a.ui-dialog-titlebar-close').click();
           //$('#WorkOrderTab-@Model.ID').click();
+            $.post($(this).attr("action"), $(this).serialize(), function() {
+                alert("success");
+            });
         });
     });
 </script>
