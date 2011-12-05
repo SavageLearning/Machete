@@ -19,7 +19,8 @@ namespace Machete.Service
         private static void FillCache()
         {
             //DbCache = DB.Lookups.OrderBy(s => s.category).ThenBy(s => s.sortorder).ToList();
-            DbCache = DB.Lookups.ToList();
+            //DbCache = DB.Lookups.AsNoTracking().ToList();
+            DbCache = DB.Set<Lookup>().AsNoTracking().ToList();
             DB.Dispose();
         }
         public static IEnumerable<Lookup> getCache()
