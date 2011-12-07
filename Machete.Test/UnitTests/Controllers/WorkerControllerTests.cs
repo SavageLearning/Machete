@@ -22,35 +22,36 @@ namespace Machete.Test.Controllers
         Mock<IWorkerService> _wserv;
         Mock<IPersonService> _pserv;
         Mock<IImageService> _iserv;
+        WorkerController _ctrlr;
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            _wserv = new Mock<IWorkerService>();
+            _pserv = new Mock<IPersonService>();
+            _iserv = new Mock<IImageService>();
+            _ctrlr = new WorkerController(_wserv.Object, _pserv.Object, _iserv.Object);
+        }
         //
         //   Testing /Index functionality
         //
         [TestMethod]
         public void WorkerController_index_get_WorkIndexViewModel()
         {
-            //Arrange
-            _wserv = new Mock<IWorkerService>();
-            _pserv = new Mock<IPersonService>();
-            _iserv = new Mock<IImageService>();
-            var _ctrlr = new WorkerController(_wserv.Object, _pserv.Object, _iserv.Object);
+            //Arrange           
             //Act
             var result = (ViewResult)_ctrlr.Index();
             //Assert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(WorkerIndex));
+            Assert.IsInstanceOfType(result, typeof(ViewResult));
         }
 
         [TestMethod]
         public void WorkerController_create_get_returns_person()
         {
             //Arrange
-            _wserv = new Mock<IWorkerService>();
-            _pserv = new Mock<IPersonService>();
-            _iserv = new Mock<IImageService>();
-            var _ctrlr = new WorkerController(_wserv.Object, _pserv.Object, _iserv.Object);
             //Act
-            var result = (ViewResult)_ctrlr.Create(0);
+            var result = (PartialViewResult)_ctrlr.Create(0);
             //Assert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(WorkerViewModel));
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Worker));
         }
 
         [TestMethod]
@@ -63,16 +64,12 @@ namespace Machete.Test.Controllers
             _viewmodel.person = _person;
             _viewmodel.worker = _worker;
             //
-            _wserv = new Mock<IWorkerService>();
-            _pserv = new Mock<IPersonService>();
             _wserv.Setup(p => p.CreateWorker(_worker, "UnitTest")).Returns(_worker);
             _pserv.Setup(p => p.CreatePerson(_person, "UnitTest")).Returns(_person);
-            _iserv = new Mock<IImageService>();
-            var _ctrlr = new WorkerController(_wserv.Object, _pserv.Object, _iserv.Object);
             //Act
-            var result = (RedirectToRouteResult)_ctrlr.Create(_worker, "UnitTest");
+            var result = (PartialViewResult)_ctrlr.Create(_worker, "UnitTest");
             //Assert
-            Assert.AreEqual("Index", result.RouteValues["action"]);
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Worker));
         }
 
         [TestMethod]
@@ -85,15 +82,11 @@ namespace Machete.Test.Controllers
             _viewmodel.person = _person;
             _viewmodel.worker = _worker;
             //
-            _pserv = new Mock<IPersonService>();
-            _wserv = new Mock<IWorkerService>();
             _wserv.Setup(p => p.CreateWorker(_worker, "UnitTest")).Returns(_worker);
             _pserv.Setup(p => p.CreatePerson(_person, "UnitTest")).Returns(_person);
-            _iserv = new Mock<IImageService>();
-            var _ctrlr = new WorkerController(_wserv.Object, _pserv.Object, _iserv.Object);
             _ctrlr.ModelState.AddModelError("TestError", "foo");
             //Act
-            var result = (ViewResult)_ctrlr.Create(_worker, "UnitTest");
+            var result = (PartialViewResult)_ctrlr.Create(_worker, "UnitTest");
             //Assert
             var error = result.ViewData.ModelState["TestError"].Errors[0];
             Assert.AreEqual("foo", error.ErrorMessage);
@@ -112,26 +105,20 @@ namespace Machete.Test.Controllers
             var _viewmodel = new WorkerViewModel();
             _viewmodel.person = _person;
             _viewmodel.worker = _worker;
-            //
-            _pserv = new Mock<IPersonService>();
-            _wserv = new Mock<IWorkerService>();
             int testid = 4242;
             Person fakeperson = new Person();
             _wserv.Setup(p => p.GetWorker(testid)).Returns(_worker);
-            _iserv = new Mock<IImageService>();
-            var _ctrlr = new WorkerController(_wserv.Object, _pserv.Object, _iserv.Object);
             //Act
-            ViewResult result = (ViewResult)_ctrlr.Edit(testid);
+            var result = (PartialViewResult)_ctrlr.Edit(testid);
             //Assert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(WorkerViewModel));
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Worker));
         }
 
         [TestMethod]
         public void WorkerController_edit_post_valid_updates_model_redirects_to_index()
         {
             //Arrange
-            _pserv = new Mock<IPersonService>();
-            _wserv = new Mock<IWorkerService>();
+
             int testid = 4242;
             Mock<HttpPostedFileBase> image = new Mock<HttpPostedFileBase>();
             FormCollection fakeform = _fakeCollection(testid);
@@ -154,15 +141,14 @@ namespace Machete.Test.Controllers
                                              savedworker = p;
                                              user = str;
                                          });
-            _iserv = new Mock<IImageService>();
-            var _ctrlr = new WorkerController(_wserv.Object, _pserv.Object, _iserv.Object);
+
             _ctrlr.SetFakeControllerContext();
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
             //TODO Solve TryUpdateModel moq problem
-            var result = _ctrlr.Edit(testid, fakeworker, "UnitTest", image.Object) as RedirectToRouteResult;
+            var result = _ctrlr.Edit(testid, fakeworker, "UnitTest", null) as PartialViewResult;
             //Assert
-            Assert.AreEqual("Index", result.RouteValues["action"]);
+            //Assert.AreEqual("Index", result.RouteValues["action"]);
             Assert.AreEqual(fakeworker, savedworker);
             Assert.AreEqual(savedworker.height, "UnitTest");
             Assert.AreEqual(savedworker.height, "UnitTest");
@@ -183,19 +169,21 @@ namespace Machete.Test.Controllers
             //_fc.Add("person.zipcode", "");
             //_fc.Add("person.phone", "");
             _fc.Add("gender", "M");
-            //_fc.Add("person.genderother", "");          
+            _fc.Add("typeOfWorkID", "1");          
             _fc.Add("RaceID", "1");     //Every required field must be populated,
             _fc.Add("height", "UnitTest");  //or result will be null.
             _fc.Add("weight", "UnitTest");
             _fc.Add("englishlevelID", "1");
             _fc.Add("dateinUSA", "1/1/2001");
             _fc.Add("dateinseattle", "1/1/2001");
-            _fc.Add("maritalstatus", "S");
+            _fc.Add("dateOfBirth", "1/1/2001");
+            _fc.Add("dateOfMembership", "1/1/2001");
+            _fc.Add("maritalstatus", "1");
             _fc.Add("numofchildren", "1");
             _fc.Add("incomeID", "1");
             _fc.Add("dwccardnum", "12345");
             _fc.Add("neighborhoodID", "1");
-            _fc.Add("countryoforigin", "USA");
+            _fc.Add("countryoforigin", "1");
             _fc.Add("memberexpirationdate", "1/1/2002");
             return _fc;
         }

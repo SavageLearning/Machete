@@ -24,7 +24,7 @@ namespace Machete.Test.UnitTests.Services
         Mock<IWorkerRepository> wRepo;
         Mock<IWorkerSigninRepository> wsiRepo;
         WorkAssignmentService waServ;
-        Mock<WorkerRequestRepository> wrRepo;
+        Mock<IWorkerRequestRepository> wrRepo;
 
         public WorkAssignmentServiceUnitTests()
         {
@@ -77,7 +77,7 @@ namespace Machete.Test.UnitTests.Services
             wRepo = new Mock<IWorkerRepository>();
             lRepo = new Mock<ILookupRepository>();
             wsiRepo = new Mock<IWorkerSigninRepository>();
-            wrRepo = new Mock<WorkerRequestRepository>();
+            wrRepo = new Mock<IWorkerRequestRepository>();
             waServ = new WorkAssignmentService(waRepo.Object, wRepo.Object, lRepo.Object, wsiRepo.Object, wrRepo.Object, uow.Object);
             
         }
