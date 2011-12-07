@@ -21,9 +21,15 @@ namespace Machete.Test.UnitTests.Services
         Mock<IEmployerRepository> _repo;
         Mock<IUnitOfWork> _uow;
         Mock<IWorkOrderService> _woServ;
+        EmployerService _serv;
 
         public EmployerServiceUnitTests()
         {
+            _repo = new Mock<IEmployerRepository>();
+            _uow = new Mock<IUnitOfWork>();
+            _woServ = new Mock<IWorkOrderService>();
+            _serv = new EmployerService(_repo.Object, _woServ.Object, _uow.Object);
+
         }
 
         private TestContext testContextInstance;
@@ -50,10 +56,6 @@ namespace Machete.Test.UnitTests.Services
         {
             //
             //Arrange
-            _repo = new Mock<IEmployerRepository>();
-            _uow = new Mock<IUnitOfWork>();
-            _woServ = new Mock<IWorkOrderService>();
-            var _serv = new EmployerService(_repo.Object, _woServ.Object, _uow.Object);
             //Act
             var result = _serv.GetEmployers(false);
             //Assert
@@ -65,12 +67,8 @@ namespace Machete.Test.UnitTests.Services
         {
             //
             //Arrange
-            _repo = new Mock<IEmployerRepository>();
-            _uow = new Mock<IUnitOfWork>();
-            _woServ = new Mock<IWorkOrderService>();
             int id = 3; //This matches Records._employer3 ID value
-            _repo.Setup(r => r.GetById(id)).Returns(Records._employer3);
-            var _serv = new EmployerService(_repo.Object, _woServ.Object, _uow.Object);
+            _repo.Setup(r => r.GetById(id)).Returns(Records._employer3);           
             //Act
             var result = _serv.GetEmployer(id);
             //Assert

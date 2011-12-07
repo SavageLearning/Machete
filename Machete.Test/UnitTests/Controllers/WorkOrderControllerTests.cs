@@ -84,11 +84,12 @@ namespace Machete.Test.Controllers
             //Arrange
             var workOrder = new WorkOrder();
             var _model = new WorkOrder();
-            _serv.Setup(p => p.CreateWorkOrder(workOrder, "UnitTest")).Returns(workOrder);                        
+            _serv.Setup(p => p.CreateWorkOrder(workOrder, "UnitTest")).Returns(() => workOrder);                        
             //Act
-            var result = (RedirectToRouteResult)_ctrlr.Create(_model, "UnitTest", workerRequest);
+            var result = (JsonResult)_ctrlr.Create(workOrder, "UnitTest", workerRequest);
             //Assert
-            Assert.AreEqual("Index", result.RouteValues["action"]);
+            Assert.IsInstanceOfType(result, typeof(JsonResult));
+            Assert.AreEqual(result.Data.ToString(), "{ sNewRef = /WorkOrder/Edit/0, sNewLabel = Order #: 00000 @ , iNewID = 0 }");
         }
 
         [TestMethod]
@@ -113,17 +114,12 @@ namespace Machete.Test.Controllers
         public void WorkOrderController_edit_get_returns_workOrder()
         {
             //Arrange
-            _serv = new Mock<IWorkOrderService>();
-            _empServ = new Mock<IEmployerService>();
             int testid = 4242;
             WorkOrder fakeworkOrder = new WorkOrder();
+            fakeworkOrder.workerRequests = workerRequest;
             _serv.Setup(p => p.GetWorkOrder(testid)).Returns(fakeworkOrder);
-            _waServ = new Mock<IWorkAssignmentService>();
-            _reqServ = new Mock<IWorkerService>();
-            _wrServ = new Mock<IWorkerRequestService>();
-            var _ctrlr = new WorkOrderController(_serv.Object, _waServ.Object, _empServ.Object, _reqServ.Object, _wrServ.Object);
             //Act
-            var result = (ViewResult)_ctrlr.Edit(testid);
+            var result = (PartialViewResult)_ctrlr.Edit(testid);
             //Assert
             Assert.IsInstanceOfType(result.ViewData.Model, typeof(WorkOrder));
         }
@@ -132,13 +128,10 @@ namespace Machete.Test.Controllers
         public void WorkOrderController_edit_post_valid_updates_model_redirects_to_index()
         {
             //Arrange
-            _serv = new Mock<IWorkOrderService>();
-            _waServ = new Mock<IWorkAssignmentService>();
-            _empServ = new Mock<IEmployerService>();
-            _reqServ = new Mock<IWorkerService>();
             int testid = 4242;
             FormCollection fakeform = fullfakeform;
             WorkOrder fakeworkOrder = new WorkOrder();
+            fakeworkOrder.workerRequests = workerRequest;
             WorkOrder savedworkOrder = new WorkOrder();
             string user = "";
             _serv.Setup(p => p.GetWorkOrder(testid)).Returns(fakeworkOrder);
@@ -149,9 +142,6 @@ namespace Machete.Test.Controllers
                                              savedworkOrder = p;
                                              user = str;
                                          });
-            _waServ = new Mock<IWorkAssignmentService>();
-            _wrServ = new Mock<IWorkerRequestService>();
-            var _ctrlr = new WorkOrderController(_serv.Object, _waServ.Object, _empServ.Object, _reqServ.Object, _wrServ.Object);
             _ctrlr.SetFakeControllerContext();
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
@@ -161,9 +151,9 @@ namespace Machete.Test.Controllers
             list.Add(new WorkerRequest { WorkerID = 30311 });
             list.Add(new WorkerRequest { WorkerID = 30420 });
             list.Add(new WorkerRequest { WorkerID = 30421 });
-            var result = _ctrlr.Edit(testid, fakeform, "UnitTest", list) as RedirectToRouteResult;
+            var result = _ctrlr.Edit(testid, fakeform, "UnitTest", list) as JsonResult;
             //Assert
-            Assert.AreEqual("Index", result.RouteValues["action"]);
+            //Assert.AreEqual("Index", result.RouteValues["action"]);
             Assert.AreEqual(fakeworkOrder, savedworkOrder);
             Assert.AreEqual(savedworkOrder.workSiteAddress1, "blah");
             Assert.AreEqual(savedworkOrder.city, "UnitTest");
@@ -181,29 +171,28 @@ namespace Machete.Test.Controllers
         public void WorkOrderController_edit_post_workerRequests_finds_duplicates()
         {
             //Arrange
-            _serv = new Mock<IWorkOrderService>();
-            _waServ = new Mock<IWorkAssignmentService>();
-            _empServ = new Mock<IEmployerService>();
-            _reqServ = new Mock<IWorkerService>();
             int testid = 4242;
             FormCollection fakeform = fullfakeform;
             WorkOrder fakeworkOrder = new WorkOrder();
-            fakeworkOrder.workerRequests = new List<WorkerRequest>();
-            fakeworkOrder.workerRequests.Add(new WorkerRequest
+            fakeworkOrder.workerRequests = workerRequest;
+            WorkerRequest foo1 = new WorkerRequest
             {
                 ID = 111,
                 WorkerID = 1,
-                WorkOrderID = 4242,
+                WorkOrderID = testid,
                 workerRequested = new Worker { ID = 1, dwccardnum = 12345 }
 
-            });
-            fakeworkOrder.workerRequests.Add(new WorkerRequest 
+            };
+            
+            WorkerRequest foo2 = new WorkerRequest 
             {
                 ID = 222,
                 WorkerID = 2,
-                WorkOrderID = 4242,
+                WorkOrderID = testid,
                 workerRequested = new Worker { ID = 2, dwccardnum = 12346 } 
-            });
+            };
+            workerRequest.Add(foo1);
+            workerRequest.Add(foo2);
             WorkOrder savedworkOrder = new WorkOrder();
             string user = "";
             _serv.Setup(p => p.GetWorkOrder(testid)).Returns(fakeworkOrder);
@@ -214,9 +203,8 @@ namespace Machete.Test.Controllers
                                              savedworkOrder = p;
                                              user = str;
                                          });
-            _waServ = new Mock<IWorkAssignmentService>();
-            _wrServ = new Mock<IWorkerRequestService>();
-            var _ctrlr = new WorkOrderController(_serv.Object, _waServ.Object, _empServ.Object, _reqServ.Object, _wrServ.Object);
+            _wrServ.Setup(x => x.GetWorkerRequestsByNum(testid, 1)).Returns(foo1);
+            _wrServ.Setup(x => x.GetWorkerRequestsByNum(testid, 2)).Returns(foo2);
             _ctrlr.SetFakeControllerContext();
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             List<WorkerRequest> list = new List<WorkerRequest>();
@@ -227,9 +215,9 @@ namespace Machete.Test.Controllers
             list.Add(new WorkerRequest { WorkerID = 30421 });
             //Act
 
-            var result = _ctrlr.Edit(testid, fakeform, "UnitTest", list) as RedirectToRouteResult;
+            var result = _ctrlr.Edit(testid, fakeform, "UnitTest", list) as JsonResult;
             //Assert
-            Assert.AreEqual("Index", result.RouteValues["action"]);
+            //Assert.AreEqual("Index", result.RouteValues["action"]);
             Assert.AreEqual(fakeworkOrder, savedworkOrder);
 
             Assert.AreEqual(savedworkOrder.workerRequests.Count(), 5);
@@ -249,6 +237,7 @@ namespace Machete.Test.Controllers
         {
             //Arrange
             var workOrder = new WorkOrder();
+            workOrder.workerRequests = workerRequest;
             int testid = 4243;
             FormCollection fakeform = new FormCollection();
             fakeform.Add("ID", testid.ToString());
@@ -257,25 +246,21 @@ namespace Machete.Test.Controllers
             fakeform.Add("gender", "M");
             //
             // Mock service and setup SaveWorkOrder mock
-            _serv = new Mock<IWorkOrderService>();
-            _empServ = new Mock<IEmployerService>();
             _serv.Setup(p => p.SaveWorkOrder(workOrder, "UnitTest"));
             _serv.Setup(p => p.GetWorkOrder(testid)).Returns(workOrder);
             //
             // Mock HttpContext so that ModelState and FormCollection work
-            _waServ = new Mock<IWorkAssignmentService>();
-            _wrServ = new Mock<IWorkerRequestService>();
-            var _ctrlr = new WorkOrderController(_serv.Object, _waServ.Object, _empServ.Object, _reqServ.Object, _wrServ.Object);
             _ctrlr.SetFakeControllerContext();
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //
             //Act
             _ctrlr.ModelState.AddModelError("TestError", "foo");
             List<WorkerRequest> list = new List<WorkerRequest>();
-            var result = (ViewResult)_ctrlr.Edit(testid, fakeform, "UnitTest", list);
+            var result = (JsonResult)_ctrlr.Edit(testid, fakeform, "UnitTest", list);
             //Assert
-            var error = result.ViewData.ModelState["TestError"].Errors[0];
-            Assert.AreEqual("foo", error.ErrorMessage);
+            //var error = result.ViewData.ModelState["TestError"].Errors[0];
+            //Assert.AreEqual("foo", error.ErrorMessage);
+            Assert.AreEqual(result.Data.ToString(), "{ status = ERROR, editedID = 4243 }");
         }
         #endregion
         #region delete tests
@@ -286,15 +271,9 @@ namespace Machete.Test.Controllers
         public void WorkOrderController_delete_get_returns_workOrder()
         {
             //Arrange
-            _serv = new Mock<IWorkOrderService>();
-            _empServ = new Mock<IEmployerService>();
             int testid = 4242;
             WorkOrder fakeworkOrder = new WorkOrder();
-            _reqServ = new Mock<IWorkerService>();
             _serv.Setup(p => p.GetWorkOrder(testid)).Returns(fakeworkOrder);
-            _waServ = new Mock<IWorkAssignmentService>();
-            _wrServ = new Mock<IWorkerRequestService>();
-            var _ctrlr = new WorkOrderController(_serv.Object, _waServ.Object, _empServ.Object, _reqServ.Object, _wrServ.Object);
             //Act
             var result = (ViewResult)_ctrlr.Delete(testid);
             //Assert
@@ -304,23 +283,17 @@ namespace Machete.Test.Controllers
         /// delete POST redirects to index
         /// </summary>
         [TestMethod]
-        public void WorkOrderController_delete_post_redirects_to_index()
+        public void WorkOrderController_delete_post_returns_json()
         {
             //Arrange
-            _serv = new Mock<IWorkOrderService>();
-            _empServ = new Mock<IEmployerService>();
             int testid = 4242;
             FormCollection fakeform = new FormCollection();
-            _waServ = new Mock<IWorkAssignmentService>();
-            _reqServ = new Mock<IWorkerService>();
-            _wrServ = new Mock<IWorkerRequestService>();
-            var _ctrlr = new WorkOrderController(_serv.Object, _waServ.Object, _empServ.Object, _reqServ.Object, _wrServ.Object);
-            _ctrlr.SetFakeControllerContext();
+             _ctrlr.SetFakeControllerContext();
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
-            var result = _ctrlr.Delete(testid, fakeform, "UnitTest") as RedirectToRouteResult;
+            var result = _ctrlr.Delete(testid, fakeform, "UnitTest") as JsonResult;
             //Assert
-            Assert.AreEqual("Index", result.RouteValues["action"]);
+            Assert.AreEqual(result.Data.ToString(), "{ status = OK, deletedID = 4242 }");
         }
         #endregion
         //

@@ -285,13 +285,23 @@ namespace Machete.Web.Controllers
             if (ModelState.IsValid)
             {
                 woServ.SaveWorkOrder(workOrder, userName);
-                return RedirectToAction("Index", new { EmployerID = workOrder.EmployerID });
+                return Json(new
+                {
+                    status = "OK",
+                    editedID = id
+                },
+                JsonRequestBehavior.AllowGet);
             }
             else
             {
                 levent.Level = LogLevel.Error; levent.Message = "TryUpdateModel failed";
                 levent.Properties["RecordID"] = workOrder.ID; log.Log(levent);
-                return PartialView("Edit", workOrder);
+                return Json(new
+                {
+                    status = "ERROR",
+                    editedID = id
+                },
+                JsonRequestBehavior.AllowGet);
             }
         }
         #endregion
@@ -347,9 +357,14 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Delete(int id, FormCollection collection, string user)
         {
-            var workOrder = woServ.GetWorkOrder(id);
+            //var workOrder = woServ.GetWorkOrder(id);
             woServ.DeleteWorkOrder(id, user);
-            return RedirectToAction("Index", new { EmployerID = workOrder.EmployerID });
+            return Json(new
+            {
+                status = "OK",
+                deletedID = id
+            },
+            JsonRequestBehavior.AllowGet);
         }
         #endregion
         #region Activate

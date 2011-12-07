@@ -68,8 +68,7 @@ namespace Machete.Service
             this.wsiRepo = wsiRepo;
             this.wrRepo = wrRepo;
             DB = new MacheteContext();
-            lkup_dwc = LookupCache.getSingleEN("worktype", "(DWC) Day Worker Center");
-            lkup_hhh = LookupCache.getSingleEN("worktype", "(HHH) Household Helpers");
+
         }
         /// <summary>
         ///
@@ -104,7 +103,8 @@ namespace Machete.Service
         public ServiceIndexView<WorkAssignment> GetIndexView(DispatchOptions o)
         {
             IQueryable<WorkAssignment> queryableWA = waRepo.GetAllQ();
-            
+            lkup_dwc = LookupCache.getSingleEN("worktype", "(DWC) Day Worker Center");
+            lkup_hhh = LookupCache.getSingleEN("worktype", "(HHH) Household Helpers");
             IEnumerable<WorkAssignment> filteredWA;
             bool isDateTime = false;
             DateTime sunday;
