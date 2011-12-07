@@ -334,17 +334,17 @@ namespace Machete.Web.Controllers
         }
         #endregion
 
-        
-        //
-        // GET: /WorkAssignment/Delete/5
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        #region Delete
-        public ActionResult Delete(int id)
-        {
-            var workAssignment = waServ.Get(id);
 
-            return View(workAssignment);
-        }
+        #region Delete
+        //
+        //JS doesn't need; keeping incase I need to degrade in the future
+        //[Authorize(Roles = "Administrator, Manager, PhoneDesk")]        
+        //public ActionResult Delete(int id)
+        //{
+        //    var workAssignment = waServ.Get(id);
+
+        //    return View(workAssignment);
+        //}
 
         //
         // POST: /WorkAssignment/Delete/5
@@ -353,10 +353,14 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Delete(int id, FormCollection collection, string user)
         {
-            var _assignment = waServ.Get(id);
-            var _ord = woServ.GetWorkOrder(_assignment.workOrderID);
+            //var _assignment = waServ.Get(id);
             waServ.Delete(id, user);
-            return PartialView("Index", _ord);
+            return Json(new
+            {
+                status ="OK",
+                deletedID = id
+            },
+            JsonRequestBehavior.AllowGet);
         }
         #endregion
 
