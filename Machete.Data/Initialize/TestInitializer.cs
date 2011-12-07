@@ -24,8 +24,8 @@ namespace Machete.Data
                 active = true, //true
                 datecreated = DateTime.Now,
                 dateupdated = DateTime.Now,
-                Createdby = "MacheteInitializer",
-                Updatedby = "MacheteInitializer"
+                Createdby = "TestInitializer",
+                Updatedby = "TestInitializer"
             };
             Worker worker = new Worker
             {
@@ -48,8 +48,8 @@ namespace Machete.Data
                 insuranceexpiration = DateTime.Now,
                 datecreated = DateTime.Now,
                 dateupdated = DateTime.Now,
-                Createdby = "MacheteInitializer",
-                Updatedby = "MacheteInitializer"
+                Createdby = "TestInitializer",
+                Updatedby = "TestInitializer"
             };
             Employer employer = new Employer
             {
@@ -65,8 +65,8 @@ namespace Machete.Data
                 referredby = null,
                 datecreated = DateTime.Now,             //datetime
                 dateupdated = DateTime.Now,              //datetime
-                Createdby = "initialization script",
-                Updatedby = "initialization script"
+                Createdby = "TestInitializer",
+                Updatedby = "TestInitializer"
             };
             WorkOrder order = new WorkOrder
             {
@@ -92,8 +92,8 @@ namespace Machete.Data
                 dateTimeofWork = DateTime.Parse("08-10-2011 00:00:00"),
                 datecreated = DateTime.Now,             //datetime
                 dateupdated = DateTime.Now,              //datetime
-                Createdby = "initialization script",
-                Updatedby = "initialization script"
+                Createdby = "TestInitializer",
+                Updatedby = "TestInitializer"
             };
             WorkAssignment assignment = new WorkAssignment
             {
@@ -107,8 +107,8 @@ namespace Machete.Data
                 days = 1,
                 datecreated = DateTime.Now,             //datetime
                 dateupdated = DateTime.Now,              //datetime
-                Createdby = "initialization script",
-                Updatedby = "initialization script"
+                Createdby = "TestInitializer",
+                Updatedby = "TestInitializer"
             };
             WorkerSignin signin = new WorkerSignin
             {
@@ -116,49 +116,49 @@ namespace Machete.Data
                 dateforsignin = DateTime.Parse("8/10/2011"),
                 datecreated = DateTime.Now,             //datetime
                 dateupdated = DateTime.Now,              //datetime
-                Createdby = "initialization script",
-                Updatedby = "initialization script"
+                Createdby = "TestInitializer",
+                Updatedby = "TestInitializer"
             };
             WorkerRequest request = new WorkerRequest
             {
                 datecreated = DateTime.Now,             //datetime
                 dateupdated = DateTime.Now,              //datetime
-                Createdby = "initialization script",
-                Updatedby = "initialization script"
+                Createdby = "TestInitializer",
+                Updatedby = "TestInitializer"
             };
             var dt = DateTime.Parse("8/10/2011");
             Person p1 = (Person)person.Clone(); DB.Persons.Add(p1); p1.Worker = (Worker)worker.Clone(); p1.Worker.dwccardnum = 30040; p1.Worker.skill1 = 62;
             Person p2 = (Person)person.Clone(); DB.Persons.Add(p2); p2.Worker = (Worker)worker.Clone(); p2.Worker.dwccardnum = 30041;
             Person p3 = (Person)person.Clone(); DB.Persons.Add(p3); p3.Worker = (Worker)worker.Clone(); p3.Worker.dwccardnum = 30042;
-            DB.SaveChanges();
+            //DB.SaveChanges();
             WorkerSignin wsi1 = (WorkerSignin)signin.Clone(); DB.WorkerSignins.Add(wsi1); wsi1.dwccardnum = 30040; wsi1.dateforsignin = dt; wsi1.WorkerID = 1;
             WorkerSignin wsi2 = (WorkerSignin)signin.Clone(); DB.WorkerSignins.Add(wsi2); wsi2.dwccardnum = 30041; wsi2.dateforsignin = dt; wsi2.WorkerID = 2;
             WorkerSignin wsi3 = (WorkerSignin)signin.Clone(); DB.WorkerSignins.Add(wsi3); wsi3.dwccardnum = 30042; wsi3.dateforsignin = dt; wsi3.WorkerID = 3;
             WorkerSignin wsi4 = (WorkerSignin)signin.Clone(); DB.WorkerSignins.Add(wsi4); wsi4.dwccardnum = 30043; wsi4.dateforsignin = dt;
-            WorkerSignin wsi5 = (WorkerSignin)signin.Clone(); DB.WorkerSignins.Add(wsi5); wsi5.dwccardnum = 30044; wsi5.dateforsignin = dt; 
+            WorkerSignin wsi5 = (WorkerSignin)signin.Clone(); DB.WorkerSignins.Add(wsi5); wsi5.dwccardnum = 30044; wsi5.dateforsignin = dt;
             DB.SaveChanges();
             Employer em1 = (Employer)employer.Clone(); DB.Employers.Add(em1);
             Employer em2 = (Employer)employer.Clone(); DB.Employers.Add(em2);
             Employer em3 = (Employer)employer.Clone(); DB.Employers.Add(em3);
             DB.SaveChanges();
-            
-                WorkOrder em1od1 = (WorkOrder)order.Clone();
-                em1od1.Employer = em1;
-                em1od1.paperOrderNum = 12420;
-                em1od1.contactName = "Umpa1";
-                em1od1.status = 42;
-                WorkerRequest od1wr1 = (WorkerRequest)request.Clone();
-                
-                DB.WorkOrders.Add(em1od1); //CreateWorkOrder
-                em1od1.workerRequests = new Collection<WorkerRequest>();
-                DB.SaveChanges();
-                od1wr1.workerRequested = p2.Worker;
-                od1wr1.workOrder = em1od1;
+
+            WorkOrder em1od1 = (WorkOrder)order.Clone();
+            em1od1.Employer = em1;
+            em1od1.paperOrderNum = 12420;
+            em1od1.contactName = "Umpa1";
+            em1od1.status = 42;
+            WorkerRequest od1wr1 = (WorkerRequest)request.Clone();
+
+            DB.WorkOrders.Add(em1od1); //CreateWorkOrder
+            em1od1.workerRequests = new Collection<WorkerRequest>();
+            DB.SaveChanges();
+            od1wr1.workerRequested = p2.Worker;
+            od1wr1.workOrder = em1od1;
 
 
-                em1od1.workerRequests.Add(od1wr1);
-                // em1.WorkOrders.Add(em1od1);
-                DB.SaveChanges();
+            em1od1.workerRequests.Add(od1wr1);
+            // em1.WorkOrders.Add(em1od1);
+            DB.SaveChanges();
             WorkOrder em2od1 = (WorkOrder)order.Clone(); em2od1.Employer = em2; em2od1.paperOrderNum = 12421; em2od1.contactName = "Umpa2"; em2od1.status = 43; DB.WorkOrders.Add(em2od1);
             WorkOrder em2od2 = (WorkOrder)order.Clone(); em2od2.Employer = em2; em2od2.paperOrderNum = 12422; em2od2.contactName = "Umpa3"; em2od2.status = 44; DB.WorkOrders.Add(em2od2);
             WorkOrder em3od1 = (WorkOrder)order.Clone(); em3od1.Employer = em3; em3od1.paperOrderNum = 12423; em3od1.contactName = "Umpa4"; em3od1.status = 45; DB.WorkOrders.Add(em3od1);

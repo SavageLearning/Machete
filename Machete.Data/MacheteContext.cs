@@ -6,6 +6,8 @@ using System.Data.Entity;
 using Machete.Domain;
 using System.Data.Entity.ModelConfiguration;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Entity.Validation;
+using System.Diagnostics;
 namespace Machete.Data
 {
     public class MacheteContext : DbContext
@@ -30,9 +32,20 @@ namespace Machete.Data
 
         public virtual void Commit()
         {
-            //TODO: Catch and handle database exceptions
-            
-            base.SaveChanges();
+            try
+            {
+                base.SaveChanges();
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                foreach (var validationErrors in dbEx.EntityValidationErrors)
+                {
+                    foreach (var validationError in validationErrors.ValidationErrors)
+                    {
+                        Trace.TraceInformation("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage);
+                    }
+                }
+            }
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

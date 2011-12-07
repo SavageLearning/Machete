@@ -22,7 +22,7 @@ namespace Machete.Test.Controllers
     [TestClass]
     public class WorkAssignmentsControllerTests
     {
-        Mock<IWorkAssignmentService> _serv;
+        Mock<IWorkAssignmentService> _waServ;
         Mock<IWorkerService> _wkrServ;
         Mock<IWorkOrderService> _woServ;
         Mock<IWorkerSigninService> _wsiServ;
@@ -31,8 +31,11 @@ namespace Machete.Test.Controllers
         [TestInitialize]
         public void TestInitialize()
         {
-            _serv = new Mock<IWorkAssignmentService>();
-            _ctrlr = new WorkAssignmentController(_serv.Object, _wkrServ.Object, _woServ.Object, _wsiServ.Object);
+            _waServ = new Mock<IWorkAssignmentService>();
+            _wkrServ = new Mock<IWorkerService>();
+            _woServ = new Mock<IWorkOrderService>();
+            _wsiServ = new Mock<IWorkerSigninService>();
+            _ctrlr = new WorkAssignmentController(_waServ.Object, _wkrServ.Object, _woServ.Object, _wsiServ.Object);
             _view = new WorkAssignmentIndex();
         }
         //
@@ -48,7 +51,6 @@ namespace Machete.Test.Controllers
             //Assert
             Assert.IsInstanceOfType(result.ViewData.Model, typeof(WorkAssignmentIndex));
         }
-        //TODO: test filter unit stuff
         //
         //   Testing /Create functionality
         //
@@ -58,21 +60,32 @@ namespace Machete.Test.Controllers
         {
             //Arrange
             //Act
-            var result = (ViewResult)_ctrlr.Create(0);
+            var result = (PartialViewResult)_ctrlr.Create(0);
             //Assert
             Assert.IsInstanceOfType(result.ViewData.Model, typeof(WorkAssignment));
         }
 
         [TestMethod]
-        public void WorkAssignmentController_create_post_valid_redirects_to_Index()
+        public void WorkAssignmentController_create_valid_post_returns_json()
         {
             //Arrange
-            var _editor = new WorkAssignment();
-            _serv.Setup(p => p.Create(_editor, "UnitTest")).Returns(_editor);
+            WorkAssignment _newWA = new WorkAssignment();
+            WorkAssignment _editor = new WorkAssignment();
+            _newWA.ID = 11;
+            _editor.Updatedby = "derp";
+            WorkOrder _wo = new WorkOrder();
+            _newWA.workOrder = _wo;
+            _wo.paperOrderNum = 12345;
+            _wo.ID = 123;
+            int _num = 0;
+            string username = "UnitTest";
+            _waServ.Setup(p => p.Create(_editor, username)).Returns(() => _newWA);
+            _woServ.Setup(p => p.GetWorkOrder(_num)).Returns(() => _wo);
             //Act
-            var result = (RedirectToRouteResult)_ctrlr.Create(_editor, "UnitTest");
+            JsonResult result = (JsonResult)_ctrlr.Create(_editor, username);
             //Assert
-            Assert.AreEqual("Index", result.RouteValues["action"]);
+            Assert.IsInstanceOfType(result, typeof(JsonResult));
+            Assert.AreEqual(result.Data.ToString(), "{ sNewRef = /WorkAssignment/Edit/11, sNewLabel = Assignment #: 12345-00011, iNewID = 11 }");
         }
 
         [TestMethod]
@@ -80,10 +93,10 @@ namespace Machete.Test.Controllers
         {
             //Arrange
             var _editor = new WorkAssignment();
-            _serv.Setup(p => p.Create(_editor, "UnitTest")).Returns(_editor);
+            _waServ.Setup(p => p.Create(_editor, "UnitTest")).Returns(_editor);
             _ctrlr.ModelState.AddModelError("TestError", "foo");
             //Act
-            var result = (ViewResult)_ctrlr.Create(_editor, "UnitTest");
+            var result = (PartialViewResult)_ctrlr.Create(_editor, "UnitTest");
             //Assert
             var error = result.ViewData.ModelState["TestError"].Errors[0];
             Assert.AreEqual("foo", error.ErrorMessage);
@@ -96,13 +109,13 @@ namespace Machete.Test.Controllers
         [TestMethod]
         public void WorkAssignmentController_edit_get_returns_workAssignment()
         {
-            //Arrange
-            _serv = new Mock<IWorkAssignmentService>();
+            //Arrange            
             int testid = 4242;
-            WorkAssignment fakeworkAssignment = new WorkAssignment();
-            _serv.Setup(p => p.Get(testid)).Returns(fakeworkAssignment);
+            var fakeworkAssignment = new WorkAssignment();
+            fakeworkAssignment.ID = 4243;
+            _waServ.Setup(p => p.Get(testid)).Returns(() => fakeworkAssignment);
             //Act
-            var result = (ViewResult)_ctrlr.Edit(testid);
+            PartialViewResult result = (PartialViewResult)_ctrlr.Edit(testid);
             //Assert
             Assert.IsInstanceOfType(result.ViewData.Model, typeof(WorkAssignment));
         }
@@ -119,8 +132,8 @@ namespace Machete.Test.Controllers
             WorkAssignment fakeworkAssignment = new WorkAssignment();
             WorkAssignment savedworkAssignment = new WorkAssignment();
             string user = "";
-            _serv.Setup(p => p.Get(testid)).Returns(fakeworkAssignment);
-            _serv.Setup(x => x.Save(It.IsAny<WorkAssignment>(),
+            _waServ.Setup(p => p.Get(testid)).Returns(fakeworkAssignment);
+            _waServ.Setup(x => x.Save(It.IsAny<WorkAssignment>(),
                                           It.IsAny<string>())
                                          ).Callback((WorkAssignment p, string str) =>
                                          {
@@ -130,9 +143,9 @@ namespace Machete.Test.Controllers
             _ctrlr.SetFakeControllerContext();
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
-            var result = _ctrlr.Edit(testid, fakeform, "UnitTest") as RedirectToRouteResult;
+            var result = _ctrlr.Edit(testid, fakeform, "UnitTest") as PartialViewResult;
             //Assert
-            Assert.AreEqual("Index", result.RouteValues["action"]);
+            //Assert.AreEqual("Index", result.RouteValues["action"]);
             Assert.AreEqual(fakeworkAssignment, savedworkAssignment);
             Assert.AreEqual(savedworkAssignment.description, "blah");
             Assert.AreEqual(savedworkAssignment.comments, "UnitTest");
@@ -150,8 +163,8 @@ namespace Machete.Test.Controllers
             fakeform.Add("comments", "UnitTest");
             //
             // Mock service and setup SaveWorkAssignment mock
-            _serv.Setup(p => p.Save(workAssignment, "UnitTest"));
-            _serv.Setup(p => p.Get(testid)).Returns(workAssignment);
+            _waServ.Setup(p => p.Save(workAssignment, "UnitTest"));
+            _waServ.Setup(p => p.Get(testid)).Returns(workAssignment);
             //
             // Mock HttpContext so that ModelState and FormCollection work
             _ctrlr.SetFakeControllerContext();
@@ -159,41 +172,27 @@ namespace Machete.Test.Controllers
             //
             //Act
             _ctrlr.ModelState.AddModelError("TestError", "foo");
-            var result = (ViewResult)_ctrlr.Edit(testid, fakeform, "UnitTest");
+            var result = (PartialViewResult)_ctrlr.Edit(testid, fakeform, "UnitTest");
             //Assert
             var error = result.ViewData.ModelState["TestError"].Errors[0];
             Assert.AreEqual("foo", error.ErrorMessage);
         }
         #endregion
 
-        //
-        // Testing /Delete functionality
-        //
         [TestMethod]
-        public void WorkAssignmentController_delete_get_returns_workAssignment()
-        {
-            //Arrange
-            int testid = 4242;
-            WorkAssignment fakeworkAssignment = new WorkAssignment();
-            _serv.Setup(p => p.Get(testid)).Returns(fakeworkAssignment);
-            //Act
-            var result = (ViewResult)_ctrlr.Delete(testid);
-            //Assert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(WorkAssignment));
-        }
-
-        [TestMethod]
-        public void WorkAssignmentController_delete_post_redirects_to_index()
+        public void WorkAssignmentController_delete_post_returns_json()
         {
             //Arrange
             int testid = 4242;
             FormCollection fakeform = new FormCollection();
+
             _ctrlr.SetFakeControllerContext();
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
+
             //Act
-            var result = _ctrlr.Delete(testid, fakeform, "UnitTest") as RedirectToRouteResult;
+            var result = _ctrlr.Delete(testid, fakeform, "UnitTest") as JsonResult;
             //Assert
-            Assert.AreEqual("Index", result.RouteValues["action"]);
+            Assert.AreEqual(result.Data.ToString(), "{ status = OK, deletedID = 4242 }");
         }
     }
 }
