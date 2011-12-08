@@ -4,16 +4,16 @@ using System.Linq;
 using System.Text;
 using Machete.Domain;
 using Machete.Data;
+using System.Collections.ObjectModel;
 
 namespace Machete.Test
 {
     public class Records
     {
         #region Workers
-        public static Worker _worker1 = new Worker
+        public static Worker worker = new Worker
         {   
-            ID = 1,                         //#C data type
-            RaceID = 1,                     //byte
+            RaceID = MacheteLookup.cache.First(x => x.category == "race" && x.text_EN =="Latino").ID,                     //byte
             raceother = "Records._worker1", //string
             height = "too tall",            //string
             weight = "too big",             //string
@@ -23,18 +23,18 @@ namespace Machete.Test
             dateinseattle = DateTime.Now,   //datetime
             disabled = true,                //bool
             disabilitydesc = "foo",         //string
-            maritalstatus = 1,            //string
+            maritalstatus = MacheteLookup.cache.First(x => x.category == "maritalstatus" && x.text_EN == "Single").ID,            //string
             livewithchildren = true,        //bool
             numofchildren = 0,              //byte
-            incomeID = 1,                   //byte
+            incomeID = MacheteLookup.cache.First(x => x.category == "income" && x.text_EN == @"Less than $15,000").ID,                   //byte
             livealone = true,               //bool
             emcontUSAname = "Bill Clinton", //string
             emcontUSAphone = "1234567890",  //string
             emcontUSArelation = "idol",     //string
             dwccardnum = 12345,             //int
-            neighborhoodID = 1,             //byte
+            neighborhoodID = MacheteLookup.cache.First(x => x.category == "neighborhood" && x.text_EN == "Seattle").ID,             //byte
             immigrantrefugee = true,        //bool
-            countryoforiginID = 1,        //string
+            countryoforiginID = MacheteLookup.cache.First(x => x.category == "countryoforigin" && x.text_EN == "USA").ID,        //string
             emcontoriginname = "Barak Obama",   //string
             emcontoriginphone = "1234567890",   //string
             emcontoriginrelation = "friend",    //string
@@ -46,418 +46,103 @@ namespace Machete.Test
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime
             Createdby = "initialization script",
-            Updatedby = "initialization script"
+            Updatedby = "initialization script",
+            dateOfBirth = DateTime.Now,
+            dateOfMembership = DateTime.Now
         };
-        public static Worker _worker2 = new Worker
-        {                                   //#C data type
-            ID =2 , 
-            RaceID = 1,                     //byte
-            raceother = "Records._worker2",         //string
-            height = "too tall",            //string
-            weight = "too big",             //string
-            englishlevelID = 1,             //byte
-            recentarrival = true,           //bool
-            dateinUSA = DateTime.Now,       //datetime
-            dateinseattle = DateTime.Now,   //datetime
-            disabled = true,                //bool
-            disabilitydesc = "foo",         //string
-            maritalstatus = 1,            //string
-            livewithchildren = true,        //bool
-            numofchildren = 0,              //byte
-            incomeID = 1,                   //byte
-            livealone = true,               //bool
-            emcontUSAname = "Bill Clinton", //string
-            emcontUSAphone = "1234567890",  //string
-            emcontUSArelation = "idol",     //string
-            dwccardnum = 12346,                 //int
-            neighborhoodID = 1,             //byte
-            immigrantrefugee = true,        //bool
-            countryoforiginID = 1,        //string
-            emcontoriginname = "Barak Obama",   //string
-            emcontoriginphone = "1234567890",   //string
-            emcontoriginrelation = "friend",    //string
-            memberexpirationdate = DateTime.Now,    //datetime
-            driverslicense = true,                  //bool
-            licenseexpirationdate = DateTime.Now,   //datetime
-            carinsurance = true,                    //bool
-            insuranceexpiration = DateTime.Now,     //datetime
-            datecreated = DateTime.Now,             //datetime
-            dateupdated = DateTime.Now,              //datetime
-            Createdby = "initialization script",
-            Updatedby = "initialization script"
-        };
-        public static Worker _worker3 = new Worker
-        {                                   //#C data type
-            ID = 3,
-            RaceID = 1,                     //byte
-            raceother = "Records._worker3",         //string
-            height = "too tall",            //string
-            weight = "too big",             //string
-            englishlevelID = 1,             //byte
-            recentarrival = true,           //bool
-            dateinUSA = DateTime.Now,       //datetime
-            dateinseattle = DateTime.Now,   //datetime
-            disabled = true,                //bool
-            disabilitydesc = "foo",         //string
-            maritalstatus = 1,            //string
-            livewithchildren = true,        //bool
-            numofchildren = 0,              //byte
-            incomeID = 1,                   //byte
-            livealone = true,               //bool
-            emcontUSAname = "Bill Clinton", //string
-            emcontUSAphone = "1234567890",  //string
-            emcontUSArelation = "idol",     //string
-            dwccardnum = 12347,                 //int
-            neighborhoodID = 1,             //byte
-            immigrantrefugee = true,        //bool
-            countryoforiginID = 1,        //string
-            emcontoriginname = "Barak Obama",   //string
-            emcontoriginphone = "1234567890",   //string
-            emcontoriginrelation = "friend",    //string
-            memberexpirationdate = DateTime.Now,    //datetime
-            driverslicense = true,                  //bool
-            licenseexpirationdate = DateTime.Now,   //datetime
-            carinsurance = true,                    //bool
-            insuranceexpiration = DateTime.Now,     //datetime
-            datecreated = DateTime.Now,             //datetime
-            dateupdated = DateTime.Now,              //datetime
-            Createdby = "initialization script",
-            Updatedby = "initialization script"
-        };
+        public static Worker _worker1 = (Worker)worker.Clone();
+        public static Worker _worker2 = (Worker)worker.Clone();
+        public static Worker _worker3 = (Worker)worker.Clone();
         #endregion
         #region Persons
-        public static Person _person1 = new Person
+        public static Person person = new Person
         {
-            ID = 1,
-            firstname1 = "Records._person1",
-            firstname2 = "default record",
-            lastname1 = "testestestest",
-            address1 = "123 Foo St",
-            city = "Foo town",
-            state = "FO",
-            zipcode = "12345",
-            phone = "No phone",
-            gender = 3,
-            datecreated = DateTime.Now,             //datetime
-            dateupdated = DateTime.Now,              //datetime
-            Createdby = "initialization script",
-            Updatedby = "initialization script"
+            firstname1 = "barack",
+            lastname1 = "obama",
+            gender = MacheteLookup.cache.First(x => x.category == "gender" && x.text_EN == "Male").ID,
+            active = true, //true
+            datecreated = DateTime.Now,
+            dateupdated = DateTime.Now,
+            Createdby = "TestInitializer",
+            Updatedby = "TestInitializer"
         };
-        public static Person _person2 = new Person
-        {
-            ID = 2,
-            firstname1 = "Records._person2",
-            firstname2 = "default record",
-            lastname1 = "testestestest",
-            address1 = "123 Foo St",
-            city = "Foo town",
-            state = "FO",
-            zipcode = "12345",
-            phone = "No phone",
-            gender = 3,
-            datecreated = DateTime.Now,             //datetime
-            dateupdated = DateTime.Now,              //datetime
-            Createdby = "initialization script",
-            Updatedby = "initialization script"
-        };
-        public static Person _person3 = new Person
-        {
-            ID = 3,
-            firstname1 = "Records._person3",
-            firstname2 = "default record",
-            lastname1 = "testestestest",
-            address1 = "123 Foo St",
-            city = "Foo town",
-            state = "FO",
-            zipcode = "12345",
-            phone = "No phone",
-            gender = 3,
-            datecreated = DateTime.Now,             //datetime
-            dateupdated = DateTime.Now,              //datetime
-            Createdby = "initialization script",
-            Updatedby = "initialization script"
-        };
-        public static Person _person4 = new Person
-        {
-            ID = 4,
-            firstname1 = "Records._person4",
-            firstname2 = "default record",
-            lastname1 = "testestestest",
-            address1 = "123 Foo St",
-            city = "Foo town",
-            state = "FO",
-            zipcode = "12345",
-            phone = "No phone",
-            gender = 3,
-            datecreated = DateTime.Now,             //datetime
-            dateupdated = DateTime.Now,              //datetime
-            Createdby = "initialization script",
-            Updatedby = "initialization script"
-        };
-        public static Person _person5 = new Person
-        {
-            ID = 5,
-            firstname1 = "Records._person5",
-            firstname2 = "default record",
-            lastname1 = "testestestest",
-            address1 = "123 Foo St",
-            city = "Foo town",
-            state = "FO",
-            zipcode = "12345",
-            phone = "No phone",
-            gender = 3,
-            datecreated = DateTime.Now,             //datetime
-            dateupdated = DateTime.Now,              //datetime
-            Createdby = "initialization script",
-            Updatedby = "initialization script"
-        };
+        public static Person _person1 = (Person)person.Clone();
+        public static Person _person2 = (Person)person.Clone();
+        public static Person _person3 = (Person)person.Clone();
+        public static Person _person4 = (Person)person.Clone();
+        public static Person _person5 = (Person)person.Clone();
+
         #endregion
         #region Employers
-        public static Employer _employer1 = new Employer
+        public static Employer employer = new Employer
         {
-            //ID = 1,
-            name = "Savage Learning, LLC",
-            address1 = "1234 Street St",
-            address2 = "Apt 1",
-            city = "seattle",
-            state = "wa",
-            zipcode = "98112",
-            phone = "206-123-1231",
-            email = "jimmy@savagelearning.com",
-            referredby = 1,
-            datecreated = DateTime.Now,             //datetime
-            dateupdated = DateTime.Now,              //datetime
-            Createdby = "initialization script",
-            Updatedby = "initialization script"
-        };
-
-        public static Employer _employer2 = new Employer
-        {
-            //ID = 2,
-            name = "Casa Latina",
-            address1 = "317 17th Ave S",
-            address2 = null,
-            city = "Seattle",
-            state = "WA",
-            zipcode = "98144",
-            phone = "206.956.0779",
-            email = "info@casa-latina.org",
-            referredby = 2,
-            datecreated = DateTime.Now,             //datetime
-            dateupdated = DateTime.Now,              //datetime
-            Createdby = "initialization script",
-            Updatedby = "initialization script"
-        };
-
-        public static Employer _employer3 = new Employer
-        {
-            //ID = 3,
-            name = "Mike McGinn",
+            name = "Willy Wonka",
+            active = false,
             address1 = "Mayor's Office",
             address2 = "P.O. Box 94749",
             city = "Seattle",
             state = "WA",
             zipcode = "98124-4749",
             phone = "206-684-4000",
+            cellphone = "123-456-7890",
             referredby = null,
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime
-            Createdby = "initialization script",
-            Updatedby = "initialization script"
-
+            Createdby = "TestInitializer",
+            Updatedby = "TestInitializer"
         };
+
+        public static Employer _employer1 = (Employer)employer.Clone();
+        public static Employer _employer2 = (Employer)employer.Clone();
+        public static Employer _employer3 = (Employer)employer.Clone();
         #endregion
         #region WorkOrders
-        public static WorkOrder _workOrder1 = new WorkOrder
+        public static WorkOrder order = new WorkOrder
         {
-            //ID = 1,
-            EmployerID = 1,
-            workSiteAddress1 = "2400 Boyer Ave E",
+            contactName = "Umpa Lumpa",
+            workSiteAddress1 = "2400 Main Ave E",
             workSiteAddress2 = "Apt 207",
-            city = "",
-            state = "",
-            zipcode = "",
-            phone = "",
+            status = 42,
+            city = "london",
+            state = "uk",
+            zipcode = "12345",
+            phone = "123-456-7890",
             typeOfWorkID = 1,
-            //dateTimeofWork = DateTime.Now,
-            //timeFlexible = true,
-            //hourlyWage = 14.50,
-            //hours = 4,
-            //hoursChambita = null,
-            //days = 1,
             englishRequired = false,
             lunchSupplied = false,
             permanentPlacement = false,
             transportMethodID = 1,
             transportFee = 20.75,
             transportFeeExtra = 0,
+            englishRequiredNote = "",
+            description = "descriptiong string",
+            dateTimeofWork = DateTime.Parse("08-10-2011 00:00:00"),
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime
             Createdby = "initialization script",
             Updatedby = "initialization script"
         };
 
-        public static WorkOrder _workOrder2 = new WorkOrder
-        {
-            //ID = 2,
-            EmployerID = 1,
-            workSiteAddress1 = "",
-            workSiteAddress2 = "",
-            city = "",
-            state = "",
-            zipcode = "",
-            phone = "",
-            typeOfWorkID = 1,
-            //dateTimeofWork = DateTime.Now,
-            //timeFlexible = true,
-            //hourlyWage = 14.50,
-            //hours = 4,
-            //hoursChambita = null,
-            //days = 1,
-            englishRequired = false,
-            lunchSupplied = false,
-            permanentPlacement = false,
-            transportMethodID = 1,
-            transportFee = 20.75,
-            transportFeeExtra = 0,
-            datecreated = DateTime.Now,             //datetime
-            dateupdated = DateTime.Now,              //datetime
-            Createdby = "initialization script",
-            Updatedby = "initialization script"
-        };
-
-        public static WorkOrder _workOrder3 = new WorkOrder
-        {
-            //ID = 3,
-            EmployerID = 1,
-            workSiteAddress1 = "",
-            workSiteAddress2 = "",
-            city = "",
-            state = "",
-            zipcode = "",
-            phone = "",
-            typeOfWorkID = 1,
-            //dateTimeofWork = DateTime.Now,
-            //timeFlexible = true,
-            //hourlyWage = 14.50,
-            //hours = 4,
-            //hoursChambita = null,
-            //days = 1,
-            englishRequired = false,
-            lunchSupplied = false,
-            permanentPlacement = false,
-            transportMethodID = 1,
-            transportFee = 20.75,
-            transportFeeExtra = 0,
-            datecreated = DateTime.Now,             //datetime
-            dateupdated = DateTime.Now,              //datetime
-            Createdby = "initialization script",
-            Updatedby = "initialization script"
-        };
-
-        public static WorkOrder _workOrder4 = new WorkOrder
-        {
-            //ID = 4,
-            EmployerID = 2,
-            workSiteAddress1 = "",
-            workSiteAddress2 = "",
-            city = "",
-            state = "",
-            zipcode = "",
-            phone = "",
-            typeOfWorkID = 1,
-            //dateTimeofWork = DateTime.Now,
-            //timeFlexible = true,
-            //hourlyWage = 14.50,
-            //hours = 4,
-            //hoursChambita = null,
-            //days = 1,
-            englishRequired = false,
-            lunchSupplied = false,
-            permanentPlacement = false,
-            transportMethodID = 1,
-            transportFee = 20.75,
-            transportFeeExtra = 0,
-            datecreated = DateTime.Now,             //datetime
-            dateupdated = DateTime.Now,              //datetime
-            Createdby = "initialization script",
-            Updatedby = "initialization script"
-        };
-
-        public static WorkOrder _workOrder5 = new WorkOrder
-        {
-            //ID = 5,
-            EmployerID = 2,
-            workSiteAddress1 = "",
-            workSiteAddress2 = "",
-            typeOfWorkID = 1,
-            //dateTimeofWork = DateTime.Now,
-            //timeFlexible = true,
-            //hourlyWage = 14.50,
-            //hours = 4,
-            //hoursChambita = null,
-            //days = 1,
-            englishRequired = false,
-            lunchSupplied = false,
-            permanentPlacement = false,
-            transportMethodID = 1,
-            transportFee = 20.75,
-            transportFeeExtra = 0,
-            datecreated = DateTime.Now,             //datetime
-            dateupdated = DateTime.Now,              //datetime
-            Createdby = "initialization script",
-            Updatedby = "initialization script"
-        };
-
-        public static WorkOrder _workOrder6 = new WorkOrder
-        {
-            //ID = 6,
-            EmployerID = 3,
-            workSiteAddress1 = "",
-            workSiteAddress2 = "",
-            city = "",
-            state = "",
-            zipcode = "",
-            phone = "",
-            typeOfWorkID = 1,
-            //dateTimeofWork = DateTime.Now,
-            //timeFlexible = true,
-            //hourlyWage = 14.50,
-            //hours = 4,
-            //hoursChambita = null,
-            //days = 1,
-            englishRequired = true,
-            englishRequiredNote = "Southern accent if possible.",
-            description = "some description about the work order.",
-            contactName = "Milton Friedman",
-            status = 1, 
-            lunchSupplied = false,
-            permanentPlacement = false,
-            transportMethodID = 1,
-            transportFee = 20.75,
-            transportFeeExtra = 0,
-            datecreated = DateTime.Now,             //datetime
-            dateupdated = DateTime.Now,              //datetime
-            Createdby = "initialization script",
-            Updatedby = "initialization script"
-        };
-
+        public static WorkOrder _workOrder1 = (WorkOrder)order.Clone();
+        public static WorkOrder _workOrder2 = (WorkOrder)order.Clone();
+        public static WorkOrder _workOrder3 = (WorkOrder)order.Clone();
+        public static WorkOrder _workOrder4 = (WorkOrder)order.Clone();
+        public static WorkOrder _workOrder5 = (WorkOrder)order.Clone();
+        public static WorkOrder _workOrder6 = (WorkOrder)order.Clone();
+        
         #endregion
 
         #region workassignments
-        public static WorkAssignment _workAssignment1 = new WorkAssignment
+        public static WorkAssignment assignment = new WorkAssignment
         {
             //ID = 1,
             active = true,
-            workerAssignedID = 1,
-            
-            workerSigninID = 1,
-            workOrderID = 1,
             days = 1,
             hours = 5,
             //chambita = false,
             hourlyWage = 20.50,
-            description = "A job I want done",
+            skillID = 69,
+            description = "init script",
             englishLevelID = 1,
             //evaluation
             qualityOfWork = 5,
@@ -471,7 +156,105 @@ namespace Machete.Test
             Createdby = "initialization script",
             Updatedby = "initialization script"
         };
+        public static WorkAssignment _workAssignment1 = (WorkAssignment)assignment.Clone();
         #endregion
+        public static WorkerSignin signin = new WorkerSignin
+        {
+            dwccardnum = 30040,
+            dateforsignin = DateTime.Parse("8/10/2011"),
+            datecreated = DateTime.Now,             //datetime
+            dateupdated = DateTime.Now,              //datetime
+            Createdby = "TestInitializer",
+            Updatedby = "TestInitializer"
+        };
+        public static WorkerRequest request = new WorkerRequest
+        {
+            datecreated = DateTime.Now,             //datetime
+            dateupdated = DateTime.Now,              //datetime
+            Createdby = "TestInitializer",
+            Updatedby = "TestInitializer"
+        };
 
+
+
+        public static void Initialize(MacheteContext DB)
+        {
+            var dt = DateTime.Parse("8/10/2011");
+            Person p1 = (Person)person.Clone(); p1.Worker = (Worker)worker.Clone(); p1.Worker.dwccardnum = 30040; p1.Worker.skill1 = 62;
+            p1.Worker.Person = p1;
+            DB.Persons.Add(p1);
+            DB.Workers.Add(p1.Worker);
+            Person p2 = (Person)person.Clone(); DB.Persons.Add(p2); p2.Worker = (Worker)worker.Clone(); p2.Worker.dwccardnum = 30041;
+            Person p3 = (Person)person.Clone(); DB.Persons.Add(p3); p3.Worker = (Worker)worker.Clone(); p3.Worker.dwccardnum = 30042;
+            //DB.SaveChanges();
+            WorkerSignin wsi1 = (WorkerSignin)signin.Clone(); DB.WorkerSignins.Add(wsi1); wsi1.dwccardnum = 30040; wsi1.dateforsignin = dt; wsi1.WorkerID = 1;
+            WorkerSignin wsi2 = (WorkerSignin)signin.Clone(); DB.WorkerSignins.Add(wsi2); wsi2.dwccardnum = 30041; wsi2.dateforsignin = dt; wsi2.WorkerID = 2;
+            WorkerSignin wsi3 = (WorkerSignin)signin.Clone(); DB.WorkerSignins.Add(wsi3); wsi3.dwccardnum = 30042; wsi3.dateforsignin = dt; wsi3.WorkerID = 3;
+            WorkerSignin wsi4 = (WorkerSignin)signin.Clone(); DB.WorkerSignins.Add(wsi4); wsi4.dwccardnum = 30043; wsi4.dateforsignin = dt;
+            WorkerSignin wsi5 = (WorkerSignin)signin.Clone(); DB.WorkerSignins.Add(wsi5); wsi5.dwccardnum = 30044; wsi5.dateforsignin = dt;
+            DB.SaveChanges();
+            Employer em1 = (Employer)employer.Clone(); DB.Employers.Add(em1);
+            Employer em2 = (Employer)employer.Clone(); DB.Employers.Add(em2);
+            Employer em3 = (Employer)employer.Clone(); DB.Employers.Add(em3);
+            DB.SaveChanges();
+
+            WorkOrder em1od1 = (WorkOrder)order.Clone();
+            em1od1.Employer = em1;
+            em1od1.paperOrderNum = 12420;
+            em1od1.contactName = "Umpa1";
+            em1od1.status = 42;
+            WorkerRequest od1wr1 = (WorkerRequest)request.Clone();
+
+            DB.WorkOrders.Add(em1od1); //CreateWorkOrder
+            em1od1.workerRequests = new Collection<WorkerRequest>();
+            DB.SaveChanges();
+            od1wr1.workerRequested = p2.Worker;
+            od1wr1.workOrder = em1od1;
+
+
+            em1od1.workerRequests.Add(od1wr1);
+            // em1.WorkOrders.Add(em1od1);
+            DB.SaveChanges();
+            WorkOrder em2od1 = (WorkOrder)order.Clone(); em2od1.Employer = em2; em2od1.paperOrderNum = 12421; em2od1.contactName = "Umpa2"; em2od1.status = 43; DB.WorkOrders.Add(em2od1);
+            WorkOrder em2od2 = (WorkOrder)order.Clone(); em2od2.Employer = em2; em2od2.paperOrderNum = 12422; em2od2.contactName = "Umpa3"; em2od2.status = 44; DB.WorkOrders.Add(em2od2);
+            WorkOrder em3od1 = (WorkOrder)order.Clone(); em3od1.Employer = em3; em3od1.paperOrderNum = 12423; em3od1.contactName = "Umpa4"; em3od1.status = 45; DB.WorkOrders.Add(em3od1);
+            WorkOrder em3od2 = (WorkOrder)order.Clone(); em3od2.Employer = em3; em3od2.paperOrderNum = 12424; em3od2.contactName = "Umpa5"; em3od2.status = 44; DB.WorkOrders.Add(em3od2);
+            WorkOrder em3od3 = (WorkOrder)order.Clone(); em3od3.Employer = em3; em3od3.paperOrderNum = 12425; em3od3.contactName = "Umpa6"; em3od3.status = 42; DB.WorkOrders.Add(em3od3);
+            DB.SaveChanges();
+            WorkAssignment em1od1as1 = (WorkAssignment)assignment.Clone(); em1od1as1.workOrder = em1od1; DB.WorkAssignments.Add(em1od1as1);
+            em1od1as1.description = "foostring1";
+            em1od1as1.Updatedby = "foostring2";
+            em1od1as1.workerAssignedID = 1;
+            em1od1as1.skillID = 70; DB.WorkAssignments.Add(em1od1as1);
+
+            //em1od1.dateTimeofWork = DateTime.Parse("08-10-2011 09:00:00");
+            WorkAssignment em1od1as2 = (WorkAssignment)assignment.Clone(); em1od1as2.workOrder = em1od1; DB.WorkAssignments.Add(em1od1as2);
+            em1od1as2.workerAssignedID = 2;
+            em1od1as2.skillID = 61;
+            em1od1as2.englishLevelID = 2;
+            WorkAssignment em1od1as3 = (WorkAssignment)assignment.Clone(); em1od1as3.workOrder = em1od1; DB.WorkAssignments.Add(em1od1as3);
+            em1od1as1.workerAssignedID = 1;
+            em1od1as3.workerAssignedID = 3;
+            //
+            WorkAssignment em2od1as1 = (WorkAssignment)assignment.Clone(); em2od1as1.workOrder = em2od1; DB.WorkAssignments.Add(em2od1as1);
+            em2od1as1.workerAssignedID = 1;
+            WorkAssignment em2od1as2 = (WorkAssignment)assignment.Clone(); em2od1as2.workOrder = em2od1; DB.WorkAssignments.Add(em2od1as2);
+            em2od1as2.workerAssignedID = 2;
+            //
+            WorkAssignment em2od2as1 = (WorkAssignment)assignment.Clone(); em2od2as1.workOrder = em2od2; DB.WorkAssignments.Add(em2od2as1);
+            em2od2as1.workerAssignedID = 1;
+            WorkAssignment em2od2as2 = (WorkAssignment)assignment.Clone(); em2od2as2.workOrder = em2od2; DB.WorkAssignments.Add(em2od2as2);
+            em2od2as2.workerAssignedID = 2;
+            //
+            WorkAssignment em3od1as1 = (WorkAssignment)assignment.Clone(); em3od1as1.workOrder = em3od1; DB.WorkAssignments.Add(em3od1as1);
+            em3od1as1.workerAssignedID = 1;
+            //
+            WorkAssignment em3od2as1 = (WorkAssignment)assignment.Clone(); em3od2as1.workOrder = em3od2; DB.WorkAssignments.Add(em3od2as1);
+            em3od2as1.workerAssignedID = 1;
+            //
+            WorkAssignment em3od3as1 = (WorkAssignment)assignment.Clone(); em3od3as1.workOrder = em3od3; DB.WorkAssignments.Add(em3od3as1);
+
+            DB.SaveChanges();            
+        }
     }
 }

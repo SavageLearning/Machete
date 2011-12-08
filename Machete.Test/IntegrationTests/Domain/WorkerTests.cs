@@ -70,28 +70,28 @@ namespace Machete.Test
             MacheteDB.Database.Delete();
             MacheteDB.Database.Initialize(true);
             // Person1
-            Person _person1 = Records._person1;
-            _person1.ID = 0;
+            Person _person1 = (Person)Records.person.Clone();
+            _person1.ID = 1;
             _person1.firstname2 = "Worker_add_multiple_persons_workers";
             // Person 2
-            Person _person2 = Records._person2;
-            _person2.ID = 0;
+            Person _person2 = (Person)Records.person.Clone();
+            _person2.ID = 3;
             _person2.firstname2 = "Worker_add_multiple_persons_workers";
             // Person 3
-            Person _person3 = Records._person3;
-            _person3.ID = 0;
+            Person _person3 = (Person)Records.person.Clone();
+            _person3.ID = 2;
             _person3.firstname2 = "Worker_add_multiple_persons_workers";
             // Worker 1
-            Worker _worker1 = Records._worker1;
-            _worker1.ID = 0;
+            Worker _worker1 = (Worker)Records.worker.Clone();
+            _worker1.ID = 1;
             _worker1.height = "Worker_add_multiple_persons_workers";
             // Worker 2
-            Worker _worker2 = Records._worker2;
-            _worker2.ID = 0;
+            Worker _worker2 = (Worker)Records.worker.Clone();
+            _worker2.ID = 3;
             _worker2.height = "Worker_add_multiple_persons_workers";
 
             _person2.Worker = _worker2;
-            
+            _person1.Worker = _worker1;
             MacheteDB.Persons.Add(_person1);
             MacheteDB.Persons.Add(_person3);
             //
@@ -101,9 +101,10 @@ namespace Machete.Test
                 MacheteDB.SaveChanges();
                 MacheteDB.Persons.Add(_person2);
                 MacheteDB.SaveChanges();
-                _worker1.Person = _person1;
-                MacheteDB.Workers.Add(_worker1);
-                MacheteDB.SaveChanges();
+                //_worker1.Person = _person1;
+                
+                //MacheteDB.Workers.Add(_worker1);
+                //MacheteDB.SaveChanges();
 
             }
             catch (Exception e)
@@ -118,7 +119,7 @@ namespace Machete.Test
             Assert.IsNotNull(_person1.Worker);
             Assert.IsNotNull(_person2.Worker);
             Assert.IsNull(_person3.Worker);
-            Assert.IsInstanceOfType(_worker1.Person, typeof(Person));
+            //Assert.IsInstanceOfType(_worker1.Person, typeof(Person));
         }
         [TestMethod]
         public void DbSet_Worker_test_deduplication()

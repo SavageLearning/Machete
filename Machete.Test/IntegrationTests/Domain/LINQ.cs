@@ -14,19 +14,19 @@ namespace Machete.Test
     public class LINQ
     {
         [TestMethod]
-        public void DbSet_TestMethod1()
+        public void LINQ_sanity_check()
         {
             //Arrange
             var persons = new List<Person>();
-            persons.Add(Records._person1);
-            persons.Add(Records._person2);
-            persons.Add(Records._person3);
-            persons.Add(Records._person4);
+            persons.Add(new Person { ID = 1 });
+            persons.Add(new Person { ID = 2 });
+            persons.Add(new Person { ID = 3 });
+            persons.Add(new Person { ID = 4 });
 
             var workers = new List<Worker>();
-            workers.Add(Records._worker1);
-            workers.Add(Records._worker2);
-            workers.Add(Records._worker3);
+            workers.Add(new Worker { ID = 1, dwccardnum = 12345 });
+            workers.Add(new Worker { ID = 2, dwccardnum = 12346 });
+            workers.Add(new Worker { ID = 3, dwccardnum = 12347 });
 
             var signins = new List<WorkerSignin>();
             signins.Add(new WorkerSignin { dwccardnum = 12345, dateforsignin = DateTime.Now });

@@ -21,6 +21,7 @@ namespace Machete.Test.UnitTests.Services
         Mock<IWorkOrderRepository> _repo;
         Mock<IWorkAssignmentService> _waServ;
         Mock<IUnitOfWork> _uow;
+        WorkOrderService _serv;
 
         public WorkOrderServiceUnitTests()
         {
@@ -65,16 +66,19 @@ namespace Machete.Test.UnitTests.Services
         // public void MyTestCleanup() { }
         //
         #endregion
-
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            _repo = new Mock<IWorkOrderRepository>();
+            _uow = new Mock<IUnitOfWork>();
+            _waServ = new Mock<IWorkAssignmentService>();
+            _serv = new WorkOrderService(_repo.Object, _waServ.Object, _uow.Object);
+        }
         [TestMethod]
         public void WorkOrderService_GetWorkOrders_returns_Enumerable()
         {
             //
             //Arrange
-            _repo = new Mock<IWorkOrderRepository>();
-            _uow = new Mock<IUnitOfWork>();
-            _waServ = new Mock<IWorkAssignmentService>();
-            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _uow.Object);
             //Act
             var result = _serv.GetWorkOrders();
             //Assert
@@ -86,17 +90,14 @@ namespace Machete.Test.UnitTests.Services
         {
             //
             //Arrange
-            _repo = new Mock<IWorkOrderRepository>();
-            _uow = new Mock<IUnitOfWork>();
-            int id = 3; //This matches Records._workOrder3 ID value
-            _repo.Setup(r => r.GetById(id)).Returns(Records._workOrder3);
-            _waServ = new Mock<IWorkAssignmentService>();
-            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _uow.Object);
+            WorkOrder order = (WorkOrder)Records.order.Clone();
+            order.ID = 3; //This matches Records._workOrder3 ID value
+            _repo.Setup(r => r.GetById(3)).Returns(order);
             //Act
-            var result = _serv.GetWorkOrder(id);
+            var result = _serv.GetWorkOrder(3);
             //Assert
             Assert.IsInstanceOfType(result, typeof(WorkOrder));
-            Assert.IsTrue(result.ID == id);
+            Assert.IsTrue(result.ID == 3);
         }
 
         [TestMethod]

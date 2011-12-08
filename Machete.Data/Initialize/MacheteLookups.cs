@@ -8,16 +8,8 @@ using System.Data.Entity;
 namespace Machete.Data
 {
     public static class MacheteLookup    {
-        public static int getID(MacheteContext DB, string category, string text)
-        {
-            int count;
-            count = DB.Lookups.Where(s => s.category == category && s.text_EN == text).Count();
-            if (count > 0)
-            return DB.Lookups.SingleOrDefault(s => s.category == category && s.text_EN == text).ID;
-            return 0;
-        }
-        public static void Initialize(MacheteContext context) {
-            new List<Lookup>
+        public static List<Lookup> cache {get {return _cache;} }
+        private static List<Lookup> _cache = new List<Lookup>
             {
                 //TODO: localize: How do I localize thses lookup strings?       
                 new Lookup { ID=1, category = "race", text_EN = "Afroamerican",   text_ES="Afroamericano",    selected = false },
@@ -110,7 +102,17 @@ namespace Machete.Data
                 new Lookup { ID=88, category = "skill", typeOfWorkID=20, speciality=true,  ltrCode="G", minHour=5, wage=99999, sortorder=9, text_EN = "Landscaping", text_ES = "Paisajismo", fixedJob=false, selected=false, subcategory="garden", level=2},
                 new Lookup { ID=89, category = "skill", typeOfWorkID=20, speciality=true,  ltrCode="R", minHour=5, wage=99999, sortorder=9, text_EN = "Roofing", text_ES = "Techado", fixedJob=false, selected=false, subcategory="roof", level=1}
                 //last used 87
-            }.ForEach(u => context.Lookups.Add(u));
+            };
+        public static int getID(MacheteContext DB, string category, string text)
+        {
+            int count;
+            count = DB.Lookups.Where(s => s.category == category && s.text_EN == text).Count();
+            if (count > 0)
+            return DB.Lookups.SingleOrDefault(s => s.category == category && s.text_EN == text).ID;
+            return 0;
+        }
+        public static void Initialize(MacheteContext context) {
+            _cache.ForEach(u => context.Lookups.Add(u));
             context.SaveChanges();
         }
     }    
