@@ -91,6 +91,10 @@ namespace Machete.Test
             Assert.IsNotNull(filteredWSI, "Person.ID is Null");
             Assert.IsNotNull(foo, "Person.ID is Null");
         }
+        //
+        /// <summary>
+        /// Filters WSI IndexView based on dwccardnum option. should return all records.
+        /// </summary>
         [TestMethod]
         public void DbSet_WorkSigninService_Intergation_GetIndexView_check_search_dwccardnum()
         {
@@ -104,9 +108,12 @@ namespace Machete.Test
             Assert.IsNotNull(tolist, "return value is null");
             Assert.IsInstanceOfType(result, typeof(ServiceIndexView<WorkerSigninView>));
             //Assert.AreEqual(61, tolist[0].skillID);
-            Assert.AreEqual(3, result.filteredCount);
-            Assert.AreEqual(3, result.totalCount);
+            Assert.AreEqual(result.filteredCount,3);
+            Assert.AreEqual(result.totalCount,5);
         }
+        /// <summary>
+        /// Filter on requested grouping
+        /// </summary>
         [TestMethod]
         public void DbSet_WorkSigninService_Intergation_GetIndexView_workerRequested()
         {
@@ -121,8 +128,8 @@ namespace Machete.Test
             Assert.IsNotNull(tolist, "return value is null");
             Assert.IsInstanceOfType(result, typeof(ServiceIndexView<WorkerSigninView>));
             //Assert.AreEqual(61, tolist[0].skillID);
-            Assert.AreEqual(3, result.filteredCount);
-            Assert.AreEqual(3, result.totalCount);
+            Assert.AreEqual(1, result.filteredCount);
+            Assert.AreEqual(5, result.totalCount);
         }
         [TestMethod]
         public void DbSet_TestMethod5()

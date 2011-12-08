@@ -13,6 +13,7 @@ namespace Machete.Test
         #region Workers
         public static Worker worker = new Worker
         {   
+            typeOfWorkID = 20,
             RaceID = MacheteLookup.cache.First(x => x.category == "race" && x.text_EN =="Latino").ID,                     //byte
             raceother = "Records._worker1", //string
             height = "too tall",            //string
@@ -107,7 +108,7 @@ namespace Machete.Test
             state = "uk",
             zipcode = "12345",
             phone = "123-456-7890",
-            typeOfWorkID = 1,
+            typeOfWorkID = 20,
             englishRequired = false,
             lunchSupplied = false,
             permanentPlacement = false,
@@ -184,8 +185,12 @@ namespace Machete.Test
             p1.Worker.Person = p1;
             DB.Persons.Add(p1);
             DB.Workers.Add(p1.Worker);
-            Person p2 = (Person)person.Clone(); DB.Persons.Add(p2); p2.Worker = (Worker)worker.Clone(); p2.Worker.dwccardnum = 30041;
-            Person p3 = (Person)person.Clone(); DB.Persons.Add(p3); p3.Worker = (Worker)worker.Clone(); p3.Worker.dwccardnum = 30042;
+            Person p2 = (Person)person.Clone(); p2.Worker = (Worker)worker.Clone(); p2.Worker.dwccardnum = 30041;
+            Person p3 = (Person)person.Clone(); p3.Worker = (Worker)worker.Clone(); p3.Worker.dwccardnum = 30042;
+            p2.Worker.Person = p2;
+            p3.Worker.Person = p3;
+            DB.Persons.Add(p2); DB.Workers.Add(p2.Worker);
+            DB.Persons.Add(p3); DB.Workers.Add(p3.Worker);
             //DB.SaveChanges();
             WorkerSignin wsi1 = (WorkerSignin)signin.Clone(); DB.WorkerSignins.Add(wsi1); wsi1.dwccardnum = 30040; wsi1.dateforsignin = dt; wsi1.WorkerID = 1;
             WorkerSignin wsi2 = (WorkerSignin)signin.Clone(); DB.WorkerSignins.Add(wsi2); wsi2.dwccardnum = 30041; wsi2.dateforsignin = dt; wsi2.WorkerID = 2;
@@ -202,18 +207,8 @@ namespace Machete.Test
             em1od1.Employer = em1;
             em1od1.paperOrderNum = 12420;
             em1od1.contactName = "Umpa1";
-            em1od1.status = 42;
-            WorkerRequest od1wr1 = (WorkerRequest)request.Clone();
-
+            em1od1.status = 42;            
             DB.WorkOrders.Add(em1od1); //CreateWorkOrder
-            em1od1.workerRequests = new Collection<WorkerRequest>();
-            DB.SaveChanges();
-            od1wr1.workerRequested = p2.Worker;
-            od1wr1.workOrder = em1od1;
-
-
-            em1od1.workerRequests.Add(od1wr1);
-            // em1.WorkOrders.Add(em1od1);
             DB.SaveChanges();
             WorkOrder em2od1 = (WorkOrder)order.Clone(); em2od1.Employer = em2; em2od1.paperOrderNum = 12421; em2od1.contactName = "Umpa2"; em2od1.status = 43; DB.WorkOrders.Add(em2od1);
             WorkOrder em2od2 = (WorkOrder)order.Clone(); em2od2.Employer = em2; em2od2.paperOrderNum = 12422; em2od2.contactName = "Umpa3"; em2od2.status = 44; DB.WorkOrders.Add(em2od2);
@@ -227,7 +222,7 @@ namespace Machete.Test
             em1od1as1.workerAssignedID = 1;
             em1od1as1.skillID = 70; DB.WorkAssignments.Add(em1od1as1);
 
-            //em1od1.dateTimeofWork = DateTime.Parse("08-10-2011 09:00:00");
+            em1od1.dateTimeofWork = DateTime.Parse("08-10-2011 09:00:00");
             WorkAssignment em1od1as2 = (WorkAssignment)assignment.Clone(); em1od1as2.workOrder = em1od1; DB.WorkAssignments.Add(em1od1as2);
             em1od1as2.workerAssignedID = 2;
             em1od1as2.skillID = 61;
@@ -253,7 +248,13 @@ namespace Machete.Test
             em3od2as1.workerAssignedID = 1;
             //
             WorkAssignment em3od3as1 = (WorkAssignment)assignment.Clone(); em3od3as1.workOrder = em3od3; DB.WorkAssignments.Add(em3od3as1);
+            WorkerRequest od3wr1 = (WorkerRequest)request.Clone();
+            em3od3.workerRequests = new Collection<WorkerRequest>();
+            od3wr1.workerRequested = p2.Worker;
+            od3wr1.workOrder = em3od3;
 
+
+            em3od3.workerRequests.Add(od3wr1);
             DB.SaveChanges();            
         }
     }
