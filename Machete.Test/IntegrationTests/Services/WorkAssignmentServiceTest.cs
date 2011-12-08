@@ -40,11 +40,12 @@ namespace Machete.Test
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
-            Database.SetInitializer<MacheteContext>(new TestInitializer());
-            Records.Initialize(new MacheteContext());
-            WorkerCache.Initialize(new MacheteContext());
-            LookupCache.Initialize(new MacheteContext());
-            Lookups.Initialize(LookupCache.getCache());
+            //Database.SetInitializer<MacheteContext>(new TestInitializer());
+            //Records.Initialize(new MacheteContext());
+            //WorkerCache.Initialize(new MacheteContext());
+            //LookupCache.Initialize(new MacheteContext());
+            //Lookups.Initialize(LookupCache.getCache());
+
             //MacheteLookup.Initialize(new MacheteContext());
 
         }
@@ -52,8 +53,14 @@ namespace Machete.Test
         [TestInitialize]
         public void TestInitialize()
         {
-            //Database.SetInitializer<MacheteContext>(new MacheteInitializer());
+            Database.SetInitializer<MacheteContext>(new TestInitializer());
             MacheteDB = new MacheteContext();
+            MacheteDB.Database.Delete();
+            MacheteDB.Database.Initialize(true);
+            Records.Initialize(new MacheteContext());
+            WorkerCache.Initialize(new MacheteContext());
+            LookupCache.Initialize(new MacheteContext());
+            Lookups.Initialize(LookupCache.getCache());
             dbFactory = new DatabaseFactory();
             waRepo = new WorkAssignmentRepository(dbFactory);
             woRepo = new WorkOrderRepository(dbFactory);
@@ -90,7 +97,7 @@ namespace Machete.Test
             var tolist = result.query.ToList();
             Assert.IsNotNull(result, "return value is null");
             Assert.IsInstanceOfType(result, typeof(ServiceIndexView<WorkAssignment>));
-            Assert.AreEqual(8, result.filteredCount);
+            Assert.AreEqual(8, result.filteredCount); //pending excluded
             Assert.AreEqual(10, result.totalCount);            
         }
         [TestMethod]
@@ -101,7 +108,7 @@ namespace Machete.Test
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
             Assert.IsInstanceOfType(result, typeof(ServiceIndexView<WorkAssignment>));
-            Assert.AreEqual(10, result.filteredCount);
+            Assert.AreEqual(8, result.filteredCount); //pending excluded
             Assert.AreEqual(10, result.totalCount);
         }
         [TestMethod]
@@ -203,6 +210,9 @@ namespace Machete.Test
             Assert.AreEqual(3, result.filteredCount);
             Assert.AreEqual(10, result.totalCount);
         }
+        //
+        // Simulates doubleclicking on a worker in the workerSignin list
+        // 
         [TestMethod]
         public void Integration_WA_Service_GetIndexView_check_searchdwccardnum()
         {
@@ -217,7 +227,7 @@ namespace Machete.Test
             Assert.IsNotNull(tolist, "return value is null");
             Assert.IsInstanceOfType(result, typeof(ServiceIndexView<WorkAssignment>));
             //Assert.AreEqual(61, tolist[0].skillID);
-            Assert.AreEqual(10, result.filteredCount);
+            Assert.AreEqual(7, result.filteredCount);
             Assert.AreEqual(10, result.totalCount);
         }
         [TestMethod]
@@ -234,7 +244,7 @@ namespace Machete.Test
             Assert.IsNotNull(tolist, "return value is null");
             Assert.IsInstanceOfType(result, typeof(ServiceIndexView<WorkAssignment>));
             //Assert.AreEqual(61, tolist[0].skillID);
-            Assert.AreEqual(10, result.filteredCount);
+            Assert.AreEqual(1, result.filteredCount);
             Assert.AreEqual(10, result.totalCount);
         }
         [TestMethod]

@@ -224,7 +224,9 @@ namespace Machete.Service
             int? skill6 = null;
             Stack<int> primeskills = new Stack<int>();
             Stack<int> skills = new Stack<int>();
-
+            //
+            // filter on member ID, showing only assignments available to the member based on their
+            // skills
             if (o.dwccardnum != null && o.dwccardnum != 0)
             {
                 Worker worker = WorkerCache.getCache().FirstOrDefault(w => w.dwccardnum == o.dwccardnum);

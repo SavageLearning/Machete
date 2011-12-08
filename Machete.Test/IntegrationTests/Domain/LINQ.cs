@@ -56,6 +56,8 @@ namespace Machete.Test
 
             foreach (var ii in q2)
             {
+                Debug.WriteLine("Customer: {0}  dateforsignin: {1}",
+                        ii.dwccardnum.ToString().PadRight(11, ' '), ii.dateforsignin);
             }
         }
 
