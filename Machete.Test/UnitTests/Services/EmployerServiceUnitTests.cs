@@ -67,13 +67,15 @@ namespace Machete.Test.UnitTests.Services
         {
             //
             //Arrange
-            int id = 3; //This matches Records._employer3 ID value
-            _repo.Setup(r => r.GetById(id)).Returns(Records._employer3);           
+            var employer = (Employer)Records.employer.Clone();
+            employer.ID = 3;
+            
+            _repo.Setup(r => r.GetById(3)).Returns(employer);           
             //Act
-            var result = _serv.GetEmployer(id);
+            var result = _serv.GetEmployer(3);
             //Assert
             Assert.IsInstanceOfType(result, typeof(Employer));
-            Assert.IsTrue(result.ID == id);
+            Assert.IsTrue(result.ID == 3);
         }
 
         [TestMethod]

@@ -98,13 +98,14 @@ namespace Machete.Test.UnitTests.Services
         {
             //
             //Arrange
-            int id = 1; //This matches Records._workAssignment3 ID value
-            waRepo.Setup(r => r.GetById(id)).Returns(Records._workAssignment1);
+            WorkAssignment assignment = (WorkAssignment)Records.assignment.Clone();
+            assignment.ID = 1; //This matches Records._workAssignment3 ID value
+            waRepo.Setup(r => r.GetById(1)).Returns(assignment);
             //Act
-            var result = waServ.Get(id);
+            var result = waServ.Get(1);
             //Assert
             Assert.IsInstanceOfType(result, typeof(WorkAssignment));
-            Assert.IsTrue(result.ID == id);
+            Assert.IsTrue(result.ID == 1);
         }
 
         [TestMethod]

@@ -20,7 +20,7 @@ namespace Machete.Test.UnitTests.Services
     {
         Mock<IPersonRepository> _repo;
         Mock<IUnitOfWork> _uow;
-        
+        PersonService _serv;
         public PersonServiceUnitTests()
         {
         }
@@ -65,14 +65,18 @@ namespace Machete.Test.UnitTests.Services
         //
         #endregion
 
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            _repo = new Mock<IPersonRepository>();
+            _uow = new Mock<IUnitOfWork>();
+            _serv = new PersonService(_repo.Object, _uow.Object);
+        }
         [TestMethod]
         public void PersonService_GetPersons_returns_Enumerable()
         {
             //
             //Arrange
-            _repo = new Mock<IPersonRepository>();
-            _uow = new Mock<IUnitOfWork>();
-            var _serv = new PersonService(_repo.Object, _uow.Object);
             //Act
             var result = _serv.GetPersons(false);
             //Assert
@@ -84,16 +88,14 @@ namespace Machete.Test.UnitTests.Services
         {
             //
             //Arrange
-            _repo = new Mock<IPersonRepository>();
-            _uow = new Mock<IUnitOfWork>();
-            int id = 3; //This matches Records._person3 ID value
-            _repo.Setup(r => r.GetById(id)).Returns(Records._person3);
-            var _serv = new PersonService(_repo.Object, _uow.Object);
+            Person _person = (Person)Records.person.Clone();
+            _person.ID = 3; //This matches Records._person3 ID value
+            _repo.Setup(r => r.GetById(3)).Returns(_person);
             //Act
-            var result = _serv.GetPerson(id);
+            var result = _serv.GetPerson(3);
             //Assert
             Assert.IsInstanceOfType(result, typeof(Person));
-            Assert.IsTrue(result.ID == id);
+            Assert.IsTrue(result.ID == 3);
         }
 
         [TestMethod]
@@ -101,23 +103,20 @@ namespace Machete.Test.UnitTests.Services
         {
             //
             //Arrange
-            _repo = new Mock<IPersonRepository>();
-            _uow = new Mock<IUnitOfWork>();
+            Person _person = (Person)Records.person.Clone(); 
             string user = "UnitTest";
-            Records._person1.datecreated = DateTime.MinValue;
-            Records._person1.dateupdated = DateTime.MinValue;
-            _repo.Setup(r => r.Add(Records._person1)).Returns(Records._person1);
-            var _serv = new PersonService(_repo.Object, _uow.Object);
+
+            _repo.Setup(r => r.Add(_person)).Returns(_person);
             //
             //Act
-            var result = _serv.CreatePerson(Records._person1, user);
+            var result = _serv.CreatePerson(_person, user);
             //
             //Assert
             Assert.IsInstanceOfType(result, typeof(Person));
             Assert.IsTrue(result.Createdby == user);
             Assert.IsTrue(result.Updatedby == user);
             Assert.IsTrue(result.datecreated > DateTime.MinValue);
-            Assert.IsTrue(result.dateupdated > DateTime.MinValue);
+            Assert.IsTrue(result.dateupdated >  DateTime.MinValue);
         }
 
         [TestMethod]

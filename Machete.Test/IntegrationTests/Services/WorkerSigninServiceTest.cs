@@ -44,9 +44,9 @@ namespace Machete.Test
         public static void ClassInitialize(TestContext context) 
         {
             Database.SetInitializer<MacheteContext>(new TestInitializer());
+            Records.Initialize(new MacheteContext());
             WorkerCache.Initialize(new MacheteContext());
-            LookupCache.Initialize(new MacheteContext());
-            WorkerCache.Initialize(new MacheteContext());
+            LookupCache.Initialize(new MacheteContext());            
             Lookups.Initialize(LookupCache.getCache());
         }
 

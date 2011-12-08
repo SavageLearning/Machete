@@ -27,9 +27,9 @@ namespace Machete.Test
         DatabaseFactory dbFactory;
         WorkAssignmentService waServ;
         WorkOrderService woServ;
-        WorkerService wServ;
-        PersonService pServ;
-        ImageService iServ;
+        //WorkerService wServ;
+        //PersonService pServ;
+        //ImageService iServ;
         WorkerSigninService wsiServ;
         IUnitOfWork unitofwork;
         ILookupRepository lRepo;
@@ -41,11 +41,13 @@ namespace Machete.Test
         public static void ClassInitialize(TestContext context)
         {
             Database.SetInitializer<MacheteContext>(new TestInitializer());
-            LookupCache.Initialize(new MacheteContext());
+            Records.Initialize(new MacheteContext());
             WorkerCache.Initialize(new MacheteContext());
+            LookupCache.Initialize(new MacheteContext());
             Lookups.Initialize(LookupCache.getCache());
-        }
+            //MacheteLookup.Initialize(new MacheteContext());
 
+        }
 
         [TestInitialize]
         public void TestInitialize()
@@ -88,7 +90,7 @@ namespace Machete.Test
             var tolist = result.query.ToList();
             Assert.IsNotNull(result, "return value is null");
             Assert.IsInstanceOfType(result, typeof(ServiceIndexView<WorkAssignment>));
-            Assert.AreEqual(10, result.filteredCount);
+            Assert.AreEqual(8, result.filteredCount);
             Assert.AreEqual(10, result.totalCount);            
         }
         [TestMethod]

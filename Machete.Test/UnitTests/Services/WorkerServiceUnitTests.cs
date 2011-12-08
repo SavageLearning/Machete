@@ -20,7 +20,7 @@ namespace Machete.Test.UnitTests.Services
     {
         Mock<IWorkerRepository> _repo;
         Mock<IUnitOfWork> _uow;
-
+        WorkerService _serv;
         public WorkerServiceUnitTests()
         {
         }
@@ -64,15 +64,18 @@ namespace Machete.Test.UnitTests.Services
         // public void MyTestCleanup() { }
         //
         #endregion
-
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            _repo = new Mock<IWorkerRepository>();
+            _uow = new Mock<IUnitOfWork>();
+            _serv = new WorkerService(_repo.Object, _uow.Object);
+        }
         [TestMethod]
         public void WorkerService_GetWorkers_returns_Enumerable()
         {
             //
             //Arrange
-            _repo = new Mock<IWorkerRepository>();
-            _uow = new Mock<IUnitOfWork>();
-            var _serv = new WorkerService(_repo.Object, _uow.Object);
             //Act
             var result = _serv.GetWorkers(false);
             //Assert
@@ -84,11 +87,10 @@ namespace Machete.Test.UnitTests.Services
         {
             //
             //Arrange
-            _repo = new Mock<IWorkerRepository>();
-            _uow = new Mock<IUnitOfWork>();
+            Worker worker = (Worker)Records.worker.Clone();
+            worker.ID = 3;
             int id = 3; //This matches Records._worker3 ID value
-            _repo.Setup(r => r.GetById(id)).Returns(Records._worker3);
-            var _serv = new WorkerService(_repo.Object, _uow.Object);
+            _repo.Setup(r => r.GetById(id)).Returns(worker);
             //Act
             var result = _serv.GetWorker(id);
             //Assert
@@ -101,16 +103,13 @@ namespace Machete.Test.UnitTests.Services
         {
             //
             //Arrange
-            _repo = new Mock<IWorkerRepository>();
-            _uow = new Mock<IUnitOfWork>();
             string user = "UnitTest";
             Records._worker1.Person = Records._person1;
             Records._worker1.Person.datecreated = DateTime.MinValue;
             Records._worker1.Person.dateupdated = DateTime.MinValue;
-            Records._worker1.datecreated = DateTime.MinValue;
-            Records._worker1.dateupdated = DateTime.MinValue;
+            //Records._worker1.datecreated = DateTime.MinValue;
+            //Records._worker1.dateupdated = DateTime.MinValue;
             _repo.Setup(r => r.Add(Records._worker1)).Returns(Records._worker1);
-            var _serv = new WorkerService(_repo.Object, _uow.Object);
             //
             //Act
             var result = _serv.CreateWorker(Records._worker1, user);
@@ -121,8 +120,8 @@ namespace Machete.Test.UnitTests.Services
             Assert.IsTrue(result.Updatedby == user);
             Assert.IsTrue(result.datecreated > DateTime.MinValue);
             Assert.IsTrue(result.dateupdated > DateTime.MinValue);
-            Assert.IsTrue(result.Person.datecreated > DateTime.MinValue);
-            Assert.IsTrue(result.Person.dateupdated > DateTime.MinValue);
+            Assert.IsTrue(result.Person.datecreated == DateTime.MinValue);
+            Assert.IsTrue(result.Person.dateupdated == DateTime.MinValue);
         }
 
         [TestMethod]
