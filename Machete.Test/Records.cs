@@ -185,12 +185,9 @@ namespace Machete.Test
             p1.Worker.Person = p1;
             DB.Persons.Add(p1);
             DB.Workers.Add(p1.Worker);
-            Person p2 = (Person)person.Clone(); p2.Worker = (Worker)worker.Clone(); p2.Worker.dwccardnum = 30041;
-            Person p3 = (Person)person.Clone(); p3.Worker = (Worker)worker.Clone(); p3.Worker.dwccardnum = 30042;
-            p2.Worker.Person = p2;
-            p3.Worker.Person = p3;
-            DB.Persons.Add(p2); DB.Workers.Add(p2.Worker);
-            DB.Persons.Add(p3); DB.Workers.Add(p3.Worker);
+            Person p2 = (Person)person.Clone(); DB.Persons.Add(p2); p2.Worker = (Worker)worker.Clone(); p2.Worker.dwccardnum = 30041;
+            Person p3 = (Person)person.Clone(); DB.Persons.Add(p3); p3.Worker = (Worker)worker.Clone(); p3.Worker.dwccardnum = 30042;
+
             //DB.SaveChanges();
             WorkerSignin wsi1 = (WorkerSignin)signin.Clone(); DB.WorkerSignins.Add(wsi1); wsi1.dwccardnum = 30040; wsi1.dateforsignin = dt; wsi1.WorkerID = 1;
             WorkerSignin wsi2 = (WorkerSignin)signin.Clone(); DB.WorkerSignins.Add(wsi2); wsi2.dwccardnum = 30041; wsi2.dateforsignin = dt; wsi2.WorkerID = 2;
