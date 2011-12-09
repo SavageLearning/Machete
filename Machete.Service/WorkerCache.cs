@@ -22,7 +22,7 @@ namespace Machete.Service
         }
         private static void FillCache()
         {
-            DbCache = DB.Set<Worker>().Include("Person").ToList();
+            DbCache = DB.Workers.AsNoTracking().Include(p => p.Person).ToList();
             DB.Dispose();
         }
         public static IEnumerable<Worker> getCache()

@@ -66,7 +66,7 @@ namespace Machete.Data
         {
             ToTable("Persons");
             HasKey(k => k.ID);
-            HasOptional(p => p.Worker).WithRequired().WillCascadeOnDelete();
+            HasOptional(p => p.Worker).WithRequired(p => p.Person).WillCascadeOnDelete();
         }
     }
     public class WorkerBuilder : EntityTypeConfiguration<Worker>

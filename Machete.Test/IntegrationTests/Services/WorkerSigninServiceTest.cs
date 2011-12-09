@@ -96,7 +96,7 @@ namespace Machete.Test
         /// Filters WSI IndexView based on dwccardnum option. should return all records.
         /// </summary>
         [TestMethod]
-        public void DbSet_WorkSigninService_Intergation_GetIndexView_check_search_dwccardnum()
+        public void DbSet_WorkerSigninService_Intergation_GetIndexView_check_search_dwccardnum()
         {
             //
             //Act
@@ -115,7 +115,7 @@ namespace Machete.Test
         /// Filter on requested grouping
         /// </summary>
         [TestMethod]
-        public void DbSet_WorkSigninService_Intergation_GetIndexView_workerRequested()
+        public void DbSet_WorkerSigninService_Intergation_GetIndexView_workerRequested()
         {
             //
             //Act
