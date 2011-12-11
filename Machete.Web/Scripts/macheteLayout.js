@@ -180,7 +180,7 @@ function jqrfyTabs(myTab, myPrefix, defaultTab) {
 ///     exclusiveTab- If true then remove other tabs
 ///     recID       - 
 ///
-function add_rectab(theref, label, tabObj, exclusiveTab, recID) {
+function add_rectab(theref, label, tabObj, exclusiveTab, recID, recTable) {
     //search for tab label--if it's already open, select instead of adding duplcate (datatables error)    
 
     var foundtab = $(tabObj).children('.ui-tabs-nav').find('li').find('a[recordID=' + recID + ']');
@@ -206,7 +206,7 @@ function add_rectab(theref, label, tabObj, exclusiveTab, recID) {
     var tabIndex = tabObj.tabs('length');
     tabObj.tabs("select", tabIndex - 1);    // select the newly created tab
     $(tabObj).find('.ui-tabs-selected').find('a').attr('recordID', recID); //Put recID in HTML attribute
-
+    $(tabObj).find('.ui-tabs-selected').addClass(recTable);
     //float the close icon --ui 1.8.6 is overflow: hidden on ui-icon
     $(tabObj).find("span.ui-icon-close").attr('style', 'float: right');
 
@@ -237,7 +237,7 @@ function jqrfyWSignin(myTable, myOptions) {
 ///
 ///##Create dataTable
 ///
-function jqrfyTable(myTable, myTab, myOptions, dblclickevent) {
+function jqrfyTable(myTable, myTab, myOptions, dblclickevent, recTable) {
     var oTable;
     oTable = $(myTable).dataTable(myOptions).fnSetFilteringDelay(400);
     if (eventDebug) M_conlog("INIT+", "ADD TABLE","jqrfyTable", "", "");
@@ -272,7 +272,7 @@ function jqrfyTable(myTable, myTab, myOptions, dblclickevent) {
                    $(myTr).attr('edittablabel'),
                    myTab,
                    exclusiveTab,
-                   myID);
+                   myID, recTable);
         });
     }
     return oTable;

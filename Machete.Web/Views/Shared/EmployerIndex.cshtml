@@ -3,6 +3,7 @@
 @using Machete.Domain.Resources
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "employer";
 }
 <div id="employerTabs">
     <ul>
@@ -65,7 +66,7 @@
                         return nRow;
                     }
                                     
-        });
+        }, null, "@(recType)");
         M_employerTabs = jqrfyTabs($('#employerTabs'), "ui-tabs-employer-");
     });
 </script>

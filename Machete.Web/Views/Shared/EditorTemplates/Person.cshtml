@@ -2,17 +2,17 @@
 <!--The table for the first name and last name-->
 <div class="tb-table">
     <div id="namerow1" class="tb-row">
-        <div class="tb-label tb-cell" id="l_firstname1">
+        <div class="tb-label tb-cell">
             @Html.LabelFor(model => model.firstname1)
         </div>
-        <div class="tb-field tb-cell" id="firstname1">
+        <div class="tb-field tb-cell">
             @Html.TextBoxFor(model => model.firstname1, new { tabindex = "1" })
             @Html.ValidationMessageFor(model => model.firstname1)
         </div>
-        <div class="tb-label tb-cell" id="l_firstname2">
+        <div class="tb-label tb-cell">
             @Html.LabelFor(model => model.firstname2)
         </div>
-        <div class="tb-field tb-cell" id="firstname2">
+        <div class="tb-field tb-cell">
             @Html.TextBoxFor(model => model.firstname2, new { tabindex = "1" })
             @Html.ValidationMessageFor(model => model.firstname2)
         </div>

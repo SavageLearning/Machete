@@ -1,10 +1,14 @@
 ﻿@model Machete.Domain.Employer
 @using Machete.Web.Resources
+@{  
+    string recType = "employer";
+    string idPrefix = recType + Model.ID + "-";
+}
 @using (Html.BeginForm("Create", "Employer", FormMethod.Post, 
                         new { @id = "employerCreateForm" }))
 {
     <div style="float: left;">
-        <input type="submit" id="employerCreateButton" 
+        <input type="submit" id="@(idPrefix)Save" 
                value="@Employers.createsubmit"  tabindex="9"/>
     </div>
     @Html.ValidationSummary(true)
@@ -13,7 +17,7 @@
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
         //alert("employerCreate doc-ready");
-        $('#employerCreateButton').button();
+        $('#@(idPrefix)Save').button();
         $.validator.unobtrusive.parseDynamicContent('#employerCreateForm');
         $('#employerName').focus();
         ////////////////////////////////////////////////////////////////
@@ -24,9 +28,15 @@
         $("#employerCreateForm").submit(function (e) {
             e.preventDefault();
             if ($("#employerCreateForm").valid()) {
+                //
+                // post create form, open tab for new records
                 $.post($(this).attr("action"), $(this).serialize(),
                     function (data) {
-                        add_rectab(data.sNewRef, data.sNewLabel, M_employerTabs, true, data.iNewID);
+                        add_rectab(data.sNewRef,
+                                    data.sNewLabel,
+                                    M_employerTabs,
+                                    true, data.iNewID, 
+                                    "@(recType)");
                     }
                 );
             }

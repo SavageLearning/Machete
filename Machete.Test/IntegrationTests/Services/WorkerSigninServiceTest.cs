@@ -108,8 +108,8 @@ namespace Machete.Test
             Assert.IsNotNull(tolist, "return value is null");
             Assert.IsInstanceOfType(result, typeof(ServiceIndexView<WorkerSigninView>));
             //Assert.AreEqual(61, tolist[0].skillID);
-            Assert.AreEqual(result.filteredCount,3);
-            Assert.AreEqual(result.totalCount,5);
+            Assert.AreEqual(3, result.filteredCount);
+            Assert.AreEqual(5, result.totalCount);
         }
         /// <summary>
         /// Filter on requested grouping
