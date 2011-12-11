@@ -1,7 +1,9 @@
 ﻿@model Machete.Domain.WorkAssignment
 @using Machete.Web.Helpers           
 @using Machete.Web.Resources
-
+@{
+        string recType = "assignment";
+}
 @using (Html.BeginForm("Edit", "WorkAssignment", FormMethod.Post, 
                         new { @class = "edittab-form EditPost", @id="WorkAssignmentTab-" + Model.ID }))
 {
@@ -113,7 +115,7 @@
             if ($('#WorkAssignmentTab-@(Model.ID)').valid()) {
                 $.post($(this).attr("action"), $(this).serialize(),
                         function (data) {                        
-                            add_rectab(data.sNewRef, data.sNewLabel, M_assignmentTabs_@(Model.workOrderID), false, data.iNewID);
+                            add_rectab(data.sNewRef, data.sNewLabel, M_assignmentTabs_@(Model.workOrderID), false, data.iNewID, "@(recType)");
                         }
                 );
             }

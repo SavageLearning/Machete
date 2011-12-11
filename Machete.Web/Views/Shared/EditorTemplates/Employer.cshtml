@@ -4,21 +4,23 @@
 @Html.HiddenFor(model => model.ID, new { @class="hiddenRecID"})
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "employer";
+    string idPrefix = recType + Model.ID + "-";
 }
 <div class="tb-table" style="float: left; clear: left;">
     <div class="tb-row">
-        <div class="tb-label tb-cell" id="employerName">
+        <div class="tb-label tb-cell">
             @Html.LabelFor(model => model.name)
         </div>
         <div class="tb-field tb-cell">
-            @Html.TextBoxFor(model => model.name, new { tabindex = "1" })
+            @Html.TextBoxFor(model => model.name, new { tabindex = "1", id=idPrefix + "name" })
             @Html.ValidationMessageFor(model => model.name)
         </div>
         <div class="tb-label tb-cell">
             @Html.LabelFor(model => model.business)
         </div>
         <div class="tb-field tb-cell">
-            @Html.DropDownListFor(model => model.business, new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.business), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })           
+            @Html.DropDownListFor(model => model.business, new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.business), @Machete.Web.Resources.Shared.choose, new { tabindex = "2", id = idPrefix + "business" })           
             @Html.ValidationMessageFor(model => model.business)
         </div>
     </div><!--tb-row-->
@@ -27,14 +29,14 @@
             @Html.LabelFor(model => model.address1)
         </div>
         <div class="tb-field tb-cell">
-            @Html.TextBoxFor(model => model.address1, new { tabindex = "1" })
+            @Html.TextBoxFor(model => model.address1, new { tabindex = "1", id = idPrefix + "address1" })
             @Html.ValidationMessageFor(model => model.address1)
         </div>
         <div class="tb-label tb-cell">
             @Html.LabelFor(model => model.phone)
         </div>
         <div class="tb-field tb-cell">
-            @Html.TextBoxFor(model => model.phone, new { tabindex = "2" })
+            @Html.TextBoxFor(model => model.phone, new { tabindex = "2", id = idPrefix + "phone" })
             @Html.ValidationMessageFor(model => model.phone)
         </div>
     </div><!--tb-row-->
@@ -43,14 +45,14 @@
             @Html.LabelFor(model => model.address2)
         </div>
         <div class="tb-field tb-cell">
-            @Html.TextBoxFor(model => model.address2, new { tabindex = "1" })
+            @Html.TextBoxFor(model => model.address2, new { tabindex = "1", id = idPrefix + "address2" })
             @Html.ValidationMessageFor(model => model.address2)
         </div>
                 <div class="tb-label tb-cell">
             @Html.LabelFor(model => model.cellphone)
         </div>
         <div class="tb-field tb-cell">
-            @Html.TextBoxFor(model => model.cellphone, new { tabindex = "2" })
+            @Html.TextBoxFor(model => model.cellphone, new { tabindex = "2", id = idPrefix + "cellphone" })
             @Html.ValidationMessageFor(model => model.cellphone)
         </div>
     </div><!--tb-row-->
@@ -59,14 +61,14 @@
             @Html.LabelFor(model => model.city)
         </div>
         <div class="tb-field tb-cell">
-            @Html.TextBoxFor(model => model.city, new { tabindex = "1" })
+            @Html.TextBoxFor(model => model.city, new { tabindex = "1", id = idPrefix + "city" })
             @Html.ValidationMessageFor(model => model.city)
         </div>
         <div class="tb-label tb-cell">
             @Html.LabelFor(model => model.email)
         </div>
         <div class="tb-field tb-cell">
-            @Html.TextBoxFor(model => model.email, new { tabindex = "2" })
+            @Html.TextBoxFor(model => model.email, new { tabindex = "2", id = idPrefix + "email" })
             @Html.ValidationMessageFor(model => model.email)
         </div>
 
@@ -77,14 +79,14 @@
             @Html.LabelFor(model => model.state)
         </div>
         <div class="tb-field tb-cell">
-            @Html.TextBoxFor(model => model.state, new { tabindex = "1" })
+            @Html.TextBoxFor(model => model.state, new { tabindex = "1", id = idPrefix + "state" })
             @Html.ValidationMessageFor(model => model.state)
         </div>
         <div class="tb-label tb-cell">
             @Html.LabelFor(model => model.referredby)
         </div>
         <div class="tb-field tb-cell">
-            @Html.DropDownListFor(model => model.referredby, new SelectList(ViewBag.EmplrReferences, "Value", "Text", Model.referredby), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })
+            @Html.DropDownListFor(model => model.referredby, new SelectList(ViewBag.EmplrReferences, "Value", "Text", Model.referredby), @Machete.Web.Resources.Shared.choose, new { tabindex = "2", id = idPrefix + "referredby" })
             @Html.ValidationMessageFor(model => model.referredby)
         </div>
     </div>
@@ -94,14 +96,14 @@
             @Html.LabelFor(model => model.zipcode)
         </div>
         <div class="tb-field tb-cell">
-            @Html.TextBoxFor(model => model.zipcode, new { tabindex = "1" })
+            @Html.TextBoxFor(model => model.zipcode, new { tabindex = "1", id = idPrefix + "zipcode" })
             @Html.ValidationMessageFor(model => model.zipcode)
         </div>
         <div class="tb-label tb-cell">
             @Html.LabelFor(model => model.referredbyOther)
         </div>
         <div class="tb-field tb-cell">
-            @Html.TextBoxFor(model => model.referredbyOther, new { tabindex = "2" })
+            @Html.TextBoxFor(model => model.referredbyOther, new { tabindex = "2", id = idPrefix + "referredbyOther" })
             @Html.ValidationMessageFor(model => model.referredbyOther)
         </div>
     </div>
@@ -131,7 +133,7 @@
             @Html.LabelFor(model => model.notes)
         </div>
         <div class="tb-field tb-cell desc-field">
-            @Html.TextAreaFor(model => model.notes, new { tabindex = "3", @class="desc-field" })
+            @Html.TextAreaFor(model => model.notes, new { tabindex = "3", @class="desc-field" , id = idPrefix + "notes"})
             @Html.ValidationMessageFor(model => model.notes)
         </div>
     </div>

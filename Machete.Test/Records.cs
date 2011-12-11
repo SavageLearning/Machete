@@ -86,7 +86,12 @@ namespace Machete.Test
             zipcode = "98124-4749",
             phone = "206-684-4000",
             cellphone = "123-456-7890",
-            referredby = null,
+            referredby = MacheteLookup.cache.First(c => c.category == "emplrreference" && c.text_EN == "Facebook").ID,
+            email = "willy@wonka.com",
+            notes = "A note!",
+            referredbyOther = "brother from a different mother",
+            blogparticipate = true,
+            business = true,
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime
             Createdby = "TestInitializer",
