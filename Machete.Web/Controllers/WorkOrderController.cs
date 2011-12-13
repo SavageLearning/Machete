@@ -130,8 +130,8 @@ namespace Machete.Web.Controllers
 
 
             var result = from p in allWorkOrders.query
-                         select new { tabref = _getTabRef(p),
-                                      tablabel =  _getTabLabel(p),
+                         select new { tabref = p.getTabRef(),
+                                      tablabel = Machete.Web.Resources.WorkOrders.tabprefix + p.getTabLabel(),
                                       EID = Convert.ToString(p.EmployerID),
                                       WOID = System.String.Format("{0,5:D5}", p.paperOrderNum),
                                       dateTimeofWork =  p.dateTimeofWork.ToString(),
@@ -155,14 +155,6 @@ namespace Machete.Web.Controllers
             JsonRequestBehavior.AllowGet);
         } 
 
-        private string _getTabRef(WorkOrder wo) {
-            return "/WorkOrder/Edit/" + Convert.ToString(wo.ID);
-        }
-
-        private string _getTabLabel(WorkOrder wo)
-        {
-            return Machete.Web.Resources.WorkOrders.tabprefix + wo.getPseudoWOID() + " @ " + wo.workSiteAddress1;
-        }
 
         private string _getDisplayState(WorkOrder wo)
         {
@@ -216,6 +208,7 @@ namespace Machete.Web.Controllers
                 return PartialView("Create", _model);
             }
             WorkOrder neworder = woServ.CreateWorkOrder(_model, userName);           
+            //
             //New requests to add
             foreach (var add in workerRequests2)
             {
@@ -226,11 +219,12 @@ namespace Machete.Web.Controllers
                 neworder.workerRequests.Add(add);
             }
             woServ.SaveWorkOrder(neworder, userName);
-            //return PartialView("Index", neworder);
+            //
+            //
             return Json(new 
             {
-                sNewRef = _getTabRef(neworder),
-                sNewLabel = _getTabLabel(neworder),
+                sNewRef = neworder.getTabRef(),
+                sNewLabel = Machete.Web.Resources.WorkOrders.tabprefix + neworder.getTabLabel(),
                 iNewID = neworder.ID
             }, 
             JsonRequestBehavior.AllowGet);

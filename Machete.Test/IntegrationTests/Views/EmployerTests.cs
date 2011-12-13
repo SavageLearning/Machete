@@ -26,7 +26,7 @@ namespace Machete.Test
         public void SetupTest()
         {
             driver = new FirefoxDriver();
-            baseURL = "http://localhost:4213/";
+            baseURL = "http://localhost/";
             ui = new sharedUI(driver, baseURL);
             verificationErrors = new StringBuilder();
             ui.login();
@@ -53,69 +53,25 @@ namespace Machete.Test
         public static void ClassCleanup() { }
 
         [TestMethod]
-        public void Se_Employer_Create_record()
+        public void SeEmployer_Create_employer()
         {
             Employer _emp = (Employer)Records.employer.Clone();
-            string prefix = "employer0-";
-            _emp.name = ui.RandomString(7);
-            // go to person page
-            ui.WaitThenClickElement(By.Id("menulinkemployer"));
-            // go to create person tab
-            ui.WaitThenClickElement(By.Id("employerCreateTab"));
-            ui.WaitForElement(By.Id(prefix+"name"));
-            ui.ReplaceElementText(By.Id(prefix + "name"), _emp.name);
-            ui.ReplaceElementText(By.Id(prefix + "address1"), _emp.address1);
-            ui.ReplaceElementText(By.Id(prefix + "city"), _emp.city);
-            ui.ReplaceElementText(By.Id(prefix + "zipcode"), _emp.zipcode);
-            ui.ReplaceElementText(By.Id(prefix + "phone"), _emp.phone);
-            ui.ReplaceElementText(By.Id(prefix + "cellphone"), _emp.cellphone);
-            // select lists
-            //http://stackoverflow.com/questions/4672658/how-do-i-set-a-an-option-as-selected-using-selenium-webdriver-selenium-2-0-cli
-            //ui.ReplaceElementText(By.Id(prefix + "referredby"), _emp.referredby.ToString());
-            ui.ReplaceElementText(By.Id(prefix + "email"), _emp.email);
-            ui.ReplaceElementText(By.Id(prefix + "notes"), _emp.notes);
-            ui.ReplaceElementText(By.Id(prefix + "referredbyOther"), _emp.referredbyOther);
+            ui.employerCreate(_emp);
+            ui.employerValidate(_emp);
 
-            driver.FindElement(By.Id(prefix + "Save")).Click();
-            //
-            // look for new open tab with class: .employer.ui-tabs-selected
-            var selectedTab = ui.WaitForElement(By.CssSelector("li.employer.ui-tabs-selected"));
-            Assert.IsNotNull(selectedTab, "Failed to find Employer selected tab element");
-            IWebElement tabAnchor = selectedTab.FindElement(By.CssSelector("a"));
-            Assert.IsNotNull(tabAnchor, "Failed to find Employer selected tab element anchor");
-            Assert.IsTrue(tabAnchor.Text == _emp.name, "Employer anchor label doesn't match employer name" );
-            //
-            // get recordid for finding new record. ID is {recType}{recID}-{field}
-            _emp.ID = Convert.ToInt32(tabAnchor.GetAttribute("recordid"));
-            prefix = "employer" + _emp.ID.ToString() + "-";
-            Func<string, string, bool> getAttributeAssertEqual = ((p, q) => { 
-                Assert.AreEqual(p, 
-                    ui.WaitForElement(By.Id(prefix + q)).GetAttribute("value"), 
-                    "New employer " + q + "doesn't match original."); 
-                return true; 
-            });
-            getAttributeAssertEqual(_emp.name, "name");
-            getAttributeAssertEqual(_emp.address1, "address1");
-            getAttributeAssertEqual(_emp.city, "city");
-            getAttributeAssertEqual(_emp.zipcode, "zipcode");
-            getAttributeAssertEqual(_emp.phone, "phone");
-            getAttributeAssertEqual(_emp.cellphone, "cellphone");
-            //getAttributeAssertEqual(_emp.referredby.ToString(), "referredby");
-            getAttributeAssertEqual(_emp.email, "email");
-            getAttributeAssertEqual(_emp.notes, "notes");
-            getAttributeAssertEqual(_emp.referredbyOther, "referredbyOther");
-
-            //Assert.IsTrue(false);
         }
         [TestMethod]
-        public void Se_Person_Change_Zip()
+        public void SeEmployer_Create_workorder()
         {
+            Employer _emp = (Employer)Records.employer.Clone();
+            WorkOrder _wo = (WorkOrder)Records.order.Clone();
+            
+            ui.employerCreate(_emp);
+            ui.workOrderCreate(_emp, _wo);
+            ui.workOrderValidate(_emp, _wo);
         }
-        //
-        //
     }
 }
-
 
         #region Additional test attributes
         //
