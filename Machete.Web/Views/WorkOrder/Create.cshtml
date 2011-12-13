@@ -1,14 +1,17 @@
 ﻿@model Machete.Domain.WorkOrder
 @using Machete.Web.Resources
 @{
-    string recType = "order";
+    string recType = "WO";
+    string empRecType = "employer";
+    string idPrefix = recType + Model.ID + "-";
+    string empPrefix = empRecType + Model.EmployerID + "-";
 }
 @using (Html.BeginForm("Create", "WorkOrder", FormMethod.Post, 
                         new { @id = "workOrderCreateForm" }))
 {
         <input type="button" id="workOrderCopyEmployerInfo" class="formButton"
            value="@WorkOrders.copyemployerinfo" tabindex="9" />
-        <input type="submit" id="workOrderCreateButton" class="formButton"
+        <input type="submit" id="@(idPrefix)SaveBtn" class="formButton"
            value="@WorkOrders.createsubmit" tabindex="9"/>
 
 
@@ -61,16 +64,14 @@
         // Copy info  submit event
         //
         $('#workOrderCopyEmployerInfo').bind("click.employerEvents", function (e) {
-            //alert("foo");
             employerTab = $('form[id^=EmployerTab]');
-            M_workOrderCreateForm.find('#contactName').val(employerTab.find('#name').val());
-            M_workOrderCreateForm.find('#workSiteAddress1').val(employerTab.find('#address1').val());
-            M_workOrderCreateForm.find('#workSiteAddress2').val(employerTab.find('#address2').val());
-            M_workOrderCreateForm.find('#city').val(employerTab.find('#city').val());
-            M_workOrderCreateForm.find('#state').val(employerTab.find('#state').val());
-            M_workOrderCreateForm.find('#zipcode').val(employerTab.find('#zipcode').val());
-            M_workOrderCreateForm.find('#wophone').val(employerTab.find('#phone').val());
-            //e.preventDefault();
+            M_workOrderCreateForm.find('#@(idPrefix)contactName').val(employerTab.find('#@(empPrefix)name').val());
+            M_workOrderCreateForm.find('#@(idPrefix)workSiteAddress1').val(employerTab.find('#@(empPrefix)address1').val());
+            M_workOrderCreateForm.find('#@(idPrefix)workSiteAddress2').val(employerTab.find('#@(empPrefix)address2').val());
+            M_workOrderCreateForm.find('#@(idPrefix)city').val(employerTab.find('#@(empPrefix)city').val());
+            M_workOrderCreateForm.find('#@(idPrefix)state').val(employerTab.find('#@(empPrefix)state').val());
+            M_workOrderCreateForm.find('#@(idPrefix)zipcode').val(employerTab.find('#@(empPrefix)zipcode').val());
+            M_workOrderCreateForm.find('#@(idPrefix)phone').val(employerTab.find('#@(empPrefix)phone').val());
         });
     });
 </script>

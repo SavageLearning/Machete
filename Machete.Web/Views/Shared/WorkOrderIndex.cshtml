@@ -4,6 +4,7 @@
 @using Machete.Web.Resources
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "WO";
 }
 <div id="workOrderTabs_@(Model.ID)" >
     <ul>
@@ -80,7 +81,7 @@
                         $(nRow).attr('edittablabel', aData["tablabel"]);
                         return nRow;
                     }
-        });
+        }, null, "@(recType)" );
         ////////////////////////////////////////////////////////////////
         //
         // WorkOrder Tab sevent (including inherited events)

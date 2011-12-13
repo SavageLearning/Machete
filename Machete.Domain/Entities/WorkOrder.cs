@@ -110,10 +110,24 @@ namespace Machete.Domain
         [LocalizedDisplayName("timeFlexible", NameResourceType = typeof(Resources.WorkOrder))]
         public bool timeFlexible { get; set; }
 
+        //
+        //
+        //
         public string getPseudoWOID()
         {
             return this.paperOrderNum.HasValue ? System.String.Format("{0,5:D5}", this.paperOrderNum) : System.String.Format("{0,5:D5}", this.ID);
         }
+        public string getTabRef()
+        {
+            return "/WorkOrder/Edit/" + Convert.ToString(this.ID);
+        }
+
+        public string getTabLabel()
+        {
+            return this.getPseudoWOID() + " @ " + this.workSiteAddress1;
+        }
+
+
     }
 
     public class WorkOrderSummary
