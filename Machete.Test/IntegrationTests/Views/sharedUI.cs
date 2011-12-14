@@ -6,6 +6,7 @@ using OpenQA.Selenium;
 using System.Threading;
 using Machete.Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OpenQA.Selenium.Interactions;
 
 
 namespace Machete.Test
@@ -24,13 +25,13 @@ namespace Machete.Test
             _d.Navigate().GoToUrl(_url);
 
             _d.FindElement(By.LinkText("Logon")).Click();
-            WaitForText("Account Information", _d, 60);
+            WaitForText("Account Information", 60);
             _d.FindElement(By.Id("UserName")).Clear();
             _d.FindElement(By.Id("UserName")).SendKeys("jadmin");
             _d.FindElement(By.Id("Password")).Clear();
             _d.FindElement(By.Id("Password")).SendKeys("machete");
             _d.FindElement(By.Name("logonB")).Click();
-            WaitForText("Welcome", _d, 60);
+            WaitForText("Welcome", 60);
             return true;
         }
         #region employers
@@ -45,6 +46,7 @@ namespace Machete.Test
             WaitForElement(By.Id(prefix + "name"));
             ReplaceElementText(By.Id(prefix + "name"), _emp.name);
             ReplaceElementText(By.Id(prefix + "address1"), _emp.address1);
+            ReplaceElementText(By.Id(prefix + "address2"), _emp.address2);
             ReplaceElementText(By.Id(prefix + "city"), _emp.city);
             ReplaceElementText(By.Id(prefix + "zipcode"), _emp.zipcode);
             ReplaceElementText(By.Id(prefix + "phone"), _emp.phone);
@@ -83,6 +85,7 @@ namespace Machete.Test
             });
             getAttributeAssertEqual(_emp.name, "name");
             getAttributeAssertEqual(_emp.address1, "address1");
+            getAttributeAssertEqual(_emp.address2, "address2");
             getAttributeAssertEqual(_emp.city, "city");
             getAttributeAssertEqual(_emp.zipcode, "zipcode");
             getAttributeAssertEqual(_emp.phone, "phone");
@@ -126,17 +129,25 @@ namespace Machete.Test
             //
             // Find new work order tab (css class "WO"), get embedded WOID, populate
             // WO object
-            var selectedTab = WaitForElement(By.CssSelector("li.WO.ui-tabs-selected"));
-            Assert.IsNotNull(selectedTab, "Failed to find work order selected tab element");
-            IWebElement tabAnchor = selectedTab.FindElement(By.CssSelector("a"));
-            Assert.IsNotNull(tabAnchor, "Failed to find work order selected tab element anchor");
-            _wo.ID = Convert.ToInt32(tabAnchor.GetAttribute("recordid"));
-            Assert.IsTrue(tabAnchor.Text == Machete.Web.Resources.WorkOrders.tabprefix + _wo.getTabLabel(), "Work order anchor label doesn't match work order");
+
+            _wo.ID = getSelectedTabRecordID("WO");
+            Assert.IsTrue(_d.FindElement(By.CssSelector("li.WO.ui-tabs-selected > a"))
+                                            .Text == Machete.Web.Resources.WorkOrders.tabprefix + _wo.getTabLabel(), 
+                "Work order anchor label doesn't match work order");
             
             return true;
         }
 
-        public bool workOrderValidate(Employer _emp, WorkOrder _wo) 
+        public int getSelectedTabRecordID(string cssClass)
+        {
+            var selectedTab = WaitForElement(By.CssSelector("li." + cssClass + ".ui-tabs-selected"));
+            Assert.IsNotNull(selectedTab, "Failed to find " + cssClass + " selected tab element");
+            IWebElement tabAnchor = selectedTab.FindElement(By.CssSelector("a"));
+            Assert.IsNotNull(tabAnchor, "Failed to find " + cssClass + " selected tab element anchor");
+            return Convert.ToInt32(tabAnchor.GetAttribute("recordid"));
+        }
+
+        public bool workOrderValidate(WorkOrder _wo) 
         {
             string prefix = "WO" + _wo.ID.ToString() + "-";
             Func<string, string, bool> getAttributeAssertEqual = ((p, q) =>
@@ -163,6 +174,16 @@ namespace Machete.Test
         //
         //
         #region utilfunctions
+        public bool WaitForValueAndDoubleClick(By by, string value)
+        {
+            WaitForElementValue(by, value);
+            IWebElement rowrecord = _d.FindElement(by);
+            Actions actionProvider = new Actions(_d);
+            IAction doubleClick = actionProvider.DoubleClick(rowrecord).Build();
+            doubleClick.Perform();
+            return true;
+        }
+
         public bool ReplaceElementText(By by, string text)
         {
             var elem = _d.FindElement(by);
@@ -231,13 +252,13 @@ namespace Machete.Test
             }
             return false;
         }
-        public bool WaitForText(String what, IWebDriver driver, int waitfor)
+        public bool WaitForText(String what, int waitfor)
         {
             for (int second = 0; second < waitfor; second++)
             {
                 try
                 {
-                    if (isTextPresent(what, driver)) return true;
+                    if (isTextPresent(what, _d)) return true;
                 }
                 catch (Exception)
                 { return false; }

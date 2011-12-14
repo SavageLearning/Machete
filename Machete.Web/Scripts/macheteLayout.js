@@ -239,7 +239,9 @@ function jqrfyWSignin(myTable, myOptions) {
 ///
 function jqrfyTable(myTable, myTab, myOptions, dblclickevent, recTable) {
     var oTable;
+    var myLabel = $(myTable).attr('ID');
     oTable = $(myTable).dataTable(myOptions).fnSetFilteringDelay(400);
+    $('#' + myLabel + '_filter input').attr('ID', myLabel + '_searchbox');
     if (eventDebug) M_conlog("INIT+", "ADD TABLE","jqrfyTable", "", "");
     ////////////////////////////////////////////////////////////////
     //

@@ -3,6 +3,10 @@
 @using Machete.Web.Resources
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "WO";
+    string empRecType = "employer";
+    string idPrefix = recType + Model.ID + "-";
+    string empPrefix = empRecType + Model.EmployerID + "-";
 }
 @using (Html.BeginForm("Edit", "WorkOrder", FormMethod.Post, 
                         new { @class = "edittab-form EditPost", @id="WorkOrderTab-" + Model.ID}))
@@ -11,7 +15,7 @@
     <input type="submit" value="@WorkOrders.editsubmit" class="formButton"/>
 
     <input type="button" id="printMap" class="formButton" value="@WorkOrders.mapbutton"/>
-    <input type="button" id="changeEmployerBtn" value="@WorkOrders.changeemployer" class="formButton"/>
+    <input type="button" id="@(idPrefix)changeEmployerBtn" value="@WorkOrders.changeemployer" class="formButton"/>
     if (Html.IsInRole(Html.Role_AMP()))
     {
         
@@ -152,7 +156,7 @@
         //
         // change employer
         //
-        $('#changeEmployerBtn').click(function() {
+        $('#@(idPrefix)changeEmployerBtn').click(function() {
             
             M_employerSelect.fnDraw();
             $('#employerSelectTable').show();
@@ -197,6 +201,7 @@
                 return nRow;
             }                
         }).fnSetFilteringDelay(250);
+        $('#employerSelectTable_filter input').attr('ID', 'employerSelectTable_searchbox');
         //////////////////////////////////////////////////
         //
         //

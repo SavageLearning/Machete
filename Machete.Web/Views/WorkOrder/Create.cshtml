@@ -9,7 +9,7 @@
 @using (Html.BeginForm("Create", "WorkOrder", FormMethod.Post, 
                         new { @id = "workOrderCreateForm" }))
 {
-        <input type="button" id="workOrderCopyEmployerInfo" class="formButton"
+        <input type="button" id="@(idPrefix)copyEmployerInfo" class="formButton"
            value="@WorkOrders.copyemployerinfo" tabindex="9" />
         <input type="submit" id="@(idPrefix)SaveBtn" class="formButton"
            value="@WorkOrders.createsubmit" tabindex="9"/>
@@ -63,7 +63,7 @@
         //
         // Copy info  submit event
         //
-        $('#workOrderCopyEmployerInfo').bind("click.employerEvents", function (e) {
+        $('#@(idPrefix)copyEmployerInfo').bind("click.employerEvents", function (e) {
             employerTab = $('form[id^=EmployerTab]');
             M_workOrderCreateForm.find('#@(idPrefix)contactName').val(employerTab.find('#@(empPrefix)name').val());
             M_workOrderCreateForm.find('#@(idPrefix)workSiteAddress1').val(employerTab.find('#@(empPrefix)address1').val());
