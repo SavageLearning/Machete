@@ -51,17 +51,7 @@ namespace Machete.Test
         [ClassCleanup]
         public static void ClassCleanup() { }
 
-        [TestMethod]
-        public void Se_Person_Create()
-        {
-            // go to person page
-            ui.WaitThenClickElement(By.Id("menulinkperson"));
-            // go to create person tab
-            ui.WaitThenClickElement(By.Id("personCreateTab"));
-            var fn1 = ui.WaitForElement(By.Id("firstname1"));
-            fn1.Clear();
-            fn1.SendKeys("carter");
-        }
+
         [TestMethod]
         public void Se_Person_Change_Zip()
         {
