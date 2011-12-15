@@ -121,13 +121,16 @@ namespace Machete.Test
             IJavaScriptExecutor js = driver as IJavaScriptExecutor;
             string title = (string)js.ExecuteScript("if (window.screen){window.moveTo(0, 0);window.resizeTo(window.screen.availWidth,window.screen.availHeight);};");
 
-
             ui.WaitThenClickElement(By.Id(prefix + "changeEmployerBtn"));
             ui.WaitForElement(By.Id("employerSelectTable_searchbox")).SendKeys(_emp1.name);
-            ui.WaitForValueAndDoubleClick(By.XPath("//table[@id='employerSelectTable']/tbody/tr/td[2]"), _emp1.name);
-            
+            ui.WaitForElementValue(By.XPath("//table[@id='employerSelectTable']/tbody/tr/td[2]"), _emp1.name);
+            ui.WaitAndDoubleClick(By.XPath("//table[@id='employerSelectTable']/tbody/tr/td[6]"));
+            //
+            // need to save record for employer change to save
+
             Assert.IsTrue(false);
         }
+
     }
 }
 

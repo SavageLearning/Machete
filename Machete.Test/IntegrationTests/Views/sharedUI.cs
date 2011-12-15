@@ -174,9 +174,9 @@ namespace Machete.Test
         //
         //
         #region utilfunctions
-        public bool WaitForValueAndDoubleClick(By by, string value)
+        public bool WaitAndDoubleClick(By by)
         {
-            WaitForElementValue(by, value);
+            WaitForElement(by);
             IWebElement rowrecord = _d.FindElement(by);
             Actions actionProvider = new Actions(_d);
             IAction doubleClick = actionProvider.DoubleClick(rowrecord).Build();
