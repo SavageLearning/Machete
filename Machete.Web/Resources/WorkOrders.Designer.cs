@@ -376,6 +376,33 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to move this work order? The tab will be saved and closed. To open it, you must go to the Employer list tab and find the new employer containing the work order..
+        /// </summary>
+        public static string empChgConfirm {
+            get {
+                return ResourceManager.GetString("empChgConfirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move.
+        /// </summary>
+        public static string empChgConfirmSubmit {
+            get {
+                return ResourceManager.GetString("empChgConfirmSubmit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select a new employer.
+        /// </summary>
+        public static string empChgConfirmTitle {
+            get {
+                return ResourceManager.GetString("empChgConfirmTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Expired assignment.
         /// </summary>
         public static string expiredassignment {

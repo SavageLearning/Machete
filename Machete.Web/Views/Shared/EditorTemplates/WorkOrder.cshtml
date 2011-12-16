@@ -2,13 +2,13 @@
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
 @using Machete.Domain.Resources
-@Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID" })
-@Html.HiddenFor(model => model.EmployerID)
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
     string recType = "WO";
     string idPrefix = recType + Model.ID + "-";
 }
+@Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID" })
+@Html.HiddenFor(model => model.EmployerID, new { @id = idPrefix + "EmployerID" })
 <div class="tb-table">
     <div class="tb-row">
         <div class="tb-label tb-cell">

@@ -205,8 +205,10 @@ function add_rectab(theref, label, tabObj, exclusiveTab, recID, recTable) {
 
     var tabIndex = tabObj.tabs('length');
     tabObj.tabs("select", tabIndex - 1);    // select the newly created tab
-    $(tabObj).find('.ui-tabs-selected').find('a').attr('recordID', recID); //Put recID in HTML attribute
-    $(tabObj).find('.ui-tabs-selected').addClass(recTable);
+    var newTab = $(tabObj).find('.ui-tabs-selected');
+    $(newTab).find('a').attr('recordID', recID); //Put recID in HTML attribute
+    $(newTab).addClass(recTable);
+    $(newTab).find('span').attr('ID', recTable+recID+'-CloseBtn');
     //float the close icon --ui 1.8.6 is overflow: hidden on ui-icon
     $(tabObj).find("span.ui-icon-close").attr('style', 'float: right');
 

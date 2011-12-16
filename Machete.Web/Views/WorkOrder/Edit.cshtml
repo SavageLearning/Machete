@@ -12,7 +12,7 @@
                         new { @class = "edittab-form EditPost", @id="WorkOrderTab-" + Model.ID}))
 {
     <input type="button" value="@WorkOrders.printlink" class="formButton" id="viewWorkOrder-@(Model.ID)" />
-    <input type="submit" value="@WorkOrders.editsubmit" class="formButton"/>
+    <input type="submit" value="@WorkOrders.editsubmit" class="formButton" id="@(idPrefix)SaveBtn"/>
 
     <input type="button" id="printMap" class="formButton" value="@WorkOrders.mapbutton"/>
     <input type="button" id="@(idPrefix)changeEmployerBtn" value="@WorkOrders.changeemployer" class="formButton"/>
@@ -27,23 +27,7 @@
     @Html.EditorForModel()
 
 }
-<div id="employerSelectDialog" title="Select new Employer!?">
-    <table id="employerSelectTable" class="display">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>LABEL</th>
-            <th>@Machete.Domain.Resources.Employer.active</th>
-            <th>@Machete.Domain.Resources.Employer.name</th>
-            <th>@Machete.Domain.Resources.Employer.address1</th>
-            <th>@Machete.Domain.Resources.Employer.city</th>
-            <th>@Machete.Domain.Resources.Employer.phone</th>
-            <th>@Machete.Domain.Resources.Record.dateupdated</th>
-            <th>@Machete.Domain.Resources.Record.updatedby</th>
-        </tr>
-    </thead>
-</table>
-</div>
+
 @using (Html.BeginForm("Activate", "WorkOrder", FormMethod.Post,
                         new { @class = "edittab-form ActivatePost", @id = "ActivateWorkOrder-" + Model.ID }))
 {
@@ -88,7 +72,7 @@
         $.validator.unobtrusive.parseDynamicContent($('#WorkOrderTab-@Model.ID'));
         // Find tabindex attribute (for tab order, not jquery tabs) and increment by 10
         $('#WorkOrderTab-@Model.ID').find('[tabindex]').each(function () { $(this).attr('tabindex', parseInt($(this).attr('tabindex')) + 10) });
-        $.alerts.okButton = "@WorkOrders.deletesubmit";
+        
         ////////////////////////////////////////////////////////////////
         //
         // open work order view for printing
@@ -103,6 +87,7 @@
         // Confirm delete event
         //
         $("#deleteWorkOrderButton-@(Model.ID)").click(function () {
+            $.alerts.okButton = "@WorkOrders.deletesubmit";
             jConfirm('@WorkOrders.deleteconfirmation',
                      '@WorkOrders.deletetitle',
                      function (r) {
@@ -156,9 +141,9 @@
         //
         // change employer
         //
-        $('#@(idPrefix)changeEmployerBtn').click(function() {
-            
-            M_employerSelect.fnDraw();
+        $('#@(idPrefix)changeEmployerBtn').click(function() {            
+            $('#employerSelectTable').attr('idprefix', '@(idPrefix)');
+            $('#employerSelectTable').dataTable().fnDraw();
             $('#employerSelectTable').show();
             //
             //Anon function to handle doubleclick of record selector            
@@ -170,59 +155,7 @@
             
             $('#employerSelectDialog').show();
         });
-        M_employerSelect = $('#employerSelectTable').dataTable({
-            "bPaginate": true,
-            "bLengthChange": true,
-            "aaSorting": [[7, 'desc']],
-            "bFilter": true,
-            "bSort": true,
-            "bInfo": true,
-            "iDeferLoading": true,
-            "bAutoWidth": false,
-            "bServerSide": true,
-            "sAjaxSource": "/Employer/AjaxHandler", 
-            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
-            "bProcessing": true,
-            "aoColumns": [
-                            {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
-                            {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
-                            {"mDataProp": "active" },
-                            {"mDataProp": "name" },
-                            {"mDataProp": "address1" },
-                            {"mDataProp": "city" },
-                            {"mDataProp": "phone" },
-                            {"mDataProp": "dateupdated" },
-                            {"mDataProp": "Updatedby", "bSortable": false }
-            ],
-            // callback populates html attr with row data from JSON            
-            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                $(nRow).attr('requestedID', aData['EID']);
-                //$(nRow).attr('edittablabel', aData[1]);                
-                return nRow;
-            }                
-        }).fnSetFilteringDelay(250);
-        $('#employerSelectTable_filter input').attr('ID', 'employerSelectTable_searchbox');
-        //////////////////////////////////////////////////
-        //
-        //
-        $('#employerSelectDialog').hide();
-        $('#employerSelectTable').hide();
 
-        $('#employerSelectTable').find('tbody').dblclick(function (event) {            
-            var myTr = event.target.parentNode;
-            var myID = $(myTr).attr('requestedID');  
-            var myLabel =  $(myTr).find('td:eq(0)').text() + ' '+
-                                              $(myTr).find('td:eq(2)').text() + ' '+
-                                              $(myTr).find('td:eq(4)').text();
-          // handler function created by addRequestionBtn create event
-          alert('ha ha! ' + myID);
-          // action for doubleclick
-          $('#EmployerID').val(myID);
-          $('a.ui-dialog-titlebar-close').click();
-          //$('#WorkOrderTab-@Model.ID').click();
-            $.post($(this).attr("action"), $(this).serialize(), function() {
-                alert("success");
-            });
-        });
+
     });
 </script>

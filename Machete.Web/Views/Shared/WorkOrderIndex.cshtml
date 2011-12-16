@@ -5,6 +5,7 @@
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
     string recType = "WO";
+    //string idPrefix = recType + Model.ID + "-";
 }
 <div id="workOrderTabs_@(Model.ID)" >
     <ul>
@@ -30,6 +31,24 @@
             </thead>
         </table>        
     </div>
+</div>
+
+<div id="employerSelectDialog" title="@WorkOrders.empChgConfirmTitle">
+    <table id="employerSelectTable" class="display">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>LABEL</th>
+            <th>@Machete.Domain.Resources.Employer.active</th>
+            <th>@Machete.Domain.Resources.Employer.name</th>
+            <th>@Machete.Domain.Resources.Employer.address1</th>
+            <th>@Machete.Domain.Resources.Employer.city</th>
+            <th>@Machete.Domain.Resources.Employer.phone</th>
+            <th>@Machete.Domain.Resources.Record.dateupdated</th>
+            <th>@Machete.Domain.Resources.Record.updatedby</th>
+        </tr>
+    </thead>
+</table>
 </div>
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
@@ -86,9 +105,71 @@
         //
         // WorkOrder Tab sevent (including inherited events)
         //
-//        M_workOrderTabs_@(Model.ID).bind("tabsselect.M_workorderEvents", function (event, ui) { if (eventDebug) M_conlog("EVENT", "SELECT", "workorder", ui.panel.id, ""); });
-//        M_workOrderTabs_@(Model.ID).bind("tabsload.M_workorderEvents", function (event, ui) { if (eventDebug) M_conlog("EVENT", "LOAD", "workorder", ui.panel.id, ""); });
-//        M_workOrderTabs_@(Model.ID).bind("tabsshow.M_workorderEvents", function (event, ui) { if (eventDebug) M_conlog("EVENT", "SHOW", "workorder", ui.panel.id, ""); });
-//        M_workOrderTabs_@(Model.ID).bind("tabsremove.M_workorderEvents", function (event, ui) { if (eventDebug) M_conlog("EVENT", "REMOVE", "workorder", event.target.id, ""); });
+        //M_workOrderTabs_@(Model.ID).bind("tabsselect.M_workorderEvents", function (event, ui) { if (eventDebug) M_conlog("EVENT", "SELECT", "workorder", ui.panel.id, ""); });
+        //M_workOrderTabs_@(Model.ID).bind("tabsload.M_workorderEvents", function (event, ui) { if (eventDebug) M_conlog("EVENT", "LOAD", "workorder", ui.panel.id, ""); });
+        //M_workOrderTabs_@(Model.ID).bind("tabsshow.M_workorderEvents", function (event, ui) { if (eventDebug) M_conlog("EVENT", "SHOW", "workorder", ui.panel.id, ""); });
+        //M_workOrderTabs_@(Model.ID).bind("tabsremove.M_workorderEvents", function (event, ui) { if (eventDebug) M_conlog("EVENT", "REMOVE", "workorder", event.target.id, ""); });
+        M_employerSelect = $('#employerSelectTable').dataTable({
+            "bPaginate": true,
+            "bLengthChange": true,
+            "aaSorting": [[7, 'desc']],
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "iDeferLoading": true,
+            "bAutoWidth": false,
+            "bServerSide": true,
+            "sAjaxSource": "/Employer/AjaxHandler", 
+            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "bProcessing": true,
+            "aoColumns": [
+                            {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                            {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                            {"mDataProp": "active" },
+                            {"mDataProp": "name" },
+                            {"mDataProp": "address1" },
+                            {"mDataProp": "city" },
+                            {"mDataProp": "phone" },
+                            {"mDataProp": "dateupdated" },
+                            {"mDataProp": "Updatedby", "bSortable": false }
+            ],
+            // callback populates html attr with row data from JSON            
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $(nRow).attr('requestedID', aData['EID']);
+                //$(nRow).attr('edittablabel', aData[1]);                
+                return nRow;
+            }                
+        }).fnSetFilteringDelay(250);
+        $('#employerSelectTable_filter input').attr('ID', 'employerSelectTable_searchbox');
+        //////////////////////////////////////////////////
+        //
+        //
+        $('#employerSelectDialog').hide();
+        $('#employerSelectTable').hide();
+        
+        $('#employerSelectTable').find('tbody').dblclick(function (event) {
+            var myTr = event.target.parentNode;
+            var myID = $(myTr).attr('requestedID');  
+            var myLabel =  $('li.WO.ui-tabs-selected a').text() + " >--> "         
+                        $(myTr).find('td:eq(2)').text() + ' '+
+                        $(myTr).find('td:eq(4)').text();
+            var idPrefix = $('#employerSelectTable').attr('idprefix');
+            $.alerts.okButton = "@WorkOrders.empChgConfirmSubmit";
+            jConfirm('@WorkOrders.empChgConfirm',
+                '@WorkOrders.empChgConfirmSubmit ' + myLabel,
+                function (r) {
+                    if (r == true) {
+                        // 
+                        // action for doubleclick
+                        $('#'+idPrefix+'EmployerID').val(myID);
+                        $('a.ui-dialog-titlebar-close').click();
+                        $('#'+idPrefix+'SaveBtn').submit();
+                        $('#'+idPrefix+'CloseBtn').click();
+                        event.preventDefault();
+                    }
+                }
+            );            
+            e.preventDefault();
+        });
     });
 </script>
