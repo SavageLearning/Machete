@@ -13,7 +13,7 @@ namespace Machete.Test.Controllers
     [TestClass]
     public class WorkerSigninControllerTests
     {
-        Mock<IWorkerSigninService> _sserv;
+        Mock<IWorkerSigninService> _sserv ;
         Mock<IWorkerService> _wserv;
         Mock<IPersonService> _pserv;
 
@@ -22,7 +22,8 @@ namespace Machete.Test.Controllers
         {
             //arrange
             _sserv = new Mock<IWorkerSigninService>();
-            
+            _wserv = new Mock<IWorkerService>();
+            _pserv = new Mock<IPersonService>();
             //_service = new WorkerSigninService(_signinRepo.Object, _unitofwork);
 
         }

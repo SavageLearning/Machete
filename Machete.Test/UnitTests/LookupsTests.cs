@@ -13,7 +13,8 @@ namespace Machete.Test.Helpers
     [TestClass]
     public class LookupsTests
     {
-        Mock<MacheteContext> _db;
+        Mock<MacheteContext> _db = new Mock<MacheteContext>();
+
         [TestMethod]
         public void HelperLookups_getDefaultID_valid_returns_int()
         {

@@ -36,9 +36,9 @@ namespace Machete.Test
         WorkOrderService _woServ;
         WorkAssignmentService _waServ;
         IUnitOfWork _unitofwork;
-        MacheteContext MacheteDB;
+        //MacheteContext MacheteDB;
         DispatchOptions _dOptions;
-        CultureInfo CI;
+        //CultureInfo CI;
         
         [ClassInitialize]
         public static void ClassInitialize(TestContext context) 
@@ -60,6 +60,7 @@ namespace Machete.Test
             _wrRepo = new WorkerRequestRepository(_dbFactory);
             _waRepo = new WorkAssignmentRepository(_dbFactory);
             _wsiRepo = new WorkerSigninRepository(_dbFactory);
+            _lRepo = new LookupRepository(_dbFactory);
             _pRepo = new PersonRepository(_dbFactory);
             _unitofwork = new UnitOfWork(_dbFactory);
             _pServ = new PersonService(_pRepo, _unitofwork);

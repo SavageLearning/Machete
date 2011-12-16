@@ -47,6 +47,7 @@ namespace Machete.Test
             waRepo = new WorkAssignmentRepository(dbFactory);
             wsiRepo = new WorkerSigninRepository(dbFactory);
             wrRepo = new WorkerRequestRepository(dbFactory);
+            lRepo = new LookupRepository(dbFactory);
             waServ = new WorkAssignmentService(waRepo, wRepo, lRepo, wsiRepo, wrRepo, uow);
             woServ = new WorkOrderService(woRepo, waServ, uow);
         }

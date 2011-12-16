@@ -131,7 +131,7 @@ namespace Machete.Service
         {
             //Get all the records
             IQueryable<WorkerSignin> queryableWSI = signinRepo.GetAllQ();
-            IQueryable<WorkerRequest> queryableWOWR;
+            //IQueryable<WorkerRequest> queryableWOWR;
             IEnumerable<WorkerSignin> enumWSI;
             IEnumerable<WorkerSigninView> enumWSIV;
             //Search based on search-bar string

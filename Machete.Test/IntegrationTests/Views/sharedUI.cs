@@ -301,7 +301,7 @@ namespace Machete.Test
                 driver.FindElement(By.XPath("//*[contains(.,'" + what + "')]"));
                 return true;
             }
-            catch (NoSuchElementException e)
+            catch (NoSuchElementException)
             {
                 return false;
             }
