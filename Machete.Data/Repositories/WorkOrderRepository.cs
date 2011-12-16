@@ -11,7 +11,7 @@ namespace Machete.Data
     public class WorkOrderRepository : RepositoryBase<WorkOrder>, IWorkOrderRepository
     {
         private readonly IDbSet<WorkOrder> dbset;
-        private MacheteContext dataContext;
+        //private MacheteContext dataContext;
         public WorkOrderRepository(IDatabaseFactory databaseFactory)
             : base(databaseFactory)
         {

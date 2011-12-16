@@ -35,7 +35,7 @@ namespace Machete.Test
         ILookupRepository lRepo;
         WorkerRequestRepository wrRepo;
         MacheteContext MacheteDB;
-        CultureInfo CI;
+        //CultureInfo CI;
         DispatchOptions dOptions;
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
@@ -67,6 +67,8 @@ namespace Machete.Test
             wsiRepo = new WorkerSigninRepository(dbFactory);
             unitofwork = new UnitOfWork(dbFactory);
             wRepo = new WorkerRepository(dbFactory);
+            pRepo = new PersonRepository(dbFactory);
+            iRepo = new ImageRepository(dbFactory);
             lRepo = new LookupRepository(dbFactory);
             wrRepo = new WorkerRequestRepository(dbFactory);
             waServ = new WorkAssignmentService(waRepo, wRepo, lRepo, wsiRepo, wrRepo, unitofwork);

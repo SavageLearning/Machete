@@ -11,7 +11,7 @@ namespace Machete.Data
     public class WorkerRepository : RepositoryBase<Worker>, IWorkerRepository
     {
         private readonly IDbSet<Worker> dbset;
-        private MacheteContext dataContext;
+        //private MacheteContext dataContext;
         public WorkerRepository(IDatabaseFactory databaseFactory)
             : base(databaseFactory)
         {

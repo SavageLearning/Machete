@@ -305,8 +305,8 @@ namespace Machete.Test.Controllers
             //Arrange
             _serv = new Mock<IWorkOrderService>();
             _empServ = new Mock<IEmployerService>();
-            int testid = 4242;
-            int testworkerid = 4269;
+            //int testid = 4242;
+            //int testworkerid = 4269;
             WorkOrder fakeorder = new WorkOrder();
             fakeorder.workerRequests = new List<WorkerRequest>();
             fakeorder.workerRequests.Add(new WorkerRequest() { WorkerID = 4269 });

@@ -21,7 +21,6 @@ namespace Machete.Web.Controllers
     {
         private readonly IWorkerService workerService;
         private readonly IImageService imageServ;
-        private bool foo1;
         private Logger log = LogManager.GetCurrentClassLogger();
         private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "WorkerController", "");
 
