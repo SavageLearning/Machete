@@ -67,27 +67,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\depreciated\EmplrReference.cs" />
     <Compile Include="Entities\Exceptions.cs" />
     <Compile Include="Entities\Image.cs" />
     <Compile Include="Entities\Lookup.cs" />
-    <Compile Include="Entities\depreciated\MaritalStatus.cs" />
     <Compile Include="Entities\Employer.cs" />
-    <Compile Include="Entities\depreciated\Language.cs" />
-    <Compile Include="Entities\depreciated\Income.cs" />
-    <Compile Include="Entities\depreciated\Neighborhood.cs" />
     <Compile Include="Entities\Person.cs" />
-    <Compile Include="Entities\depreciated\Race.cs" />
     <Compile Include="Entities\Record.cs" />
-    <Compile Include="Entities\depreciated\Skill.cs" />
-    <Compile Include="Entities\depreciated\Survey.cs" />
-    <Compile Include="Entities\depreciated\TransportMethod.cs" />
-    <Compile Include="Entities\depreciated\TypeOfWork.cs" />
     <Compile Include="Entities\WorkAssignment.cs" />
     <Compile Include="Entities\Worker.cs" />
     <Compile Include="Entities\WorkerRequest.cs" />
     <Compile Include="Entities\WorkerSignin.cs" />
-    <Compile Include="Entities\depreciated\WorkerSkill.cs" />
     <Compile Include="Entities\WorkOrder.cs" />
     <Compile Include="LocalizedDisplayNameAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
