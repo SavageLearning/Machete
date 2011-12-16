@@ -306,4 +306,13 @@
   <data name="changeemployer" xml:space="preserve">
     <value>Change Employer</value>
   </data>
+  <data name="empChgConfirm" xml:space="preserve">
+    <value>Are you sure you want to move this work order? The tab will be saved and closed. To open it, you must go to the Employer list tab and find the new employer containing the work order.</value>
+  </data>
+  <data name="empChgConfirmTitle" xml:space="preserve">
+    <value>Select a new employer</value>
+  </data>
+  <data name="empChgConfirmSubmit" xml:space="preserve">
+    <value>Move</value>
+  </data>
 </root>
