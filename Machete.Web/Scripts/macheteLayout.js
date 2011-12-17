@@ -294,7 +294,7 @@ function openGoogleMap(destAddr, origAddr) {
 }
 ////////////////////////////////////////////
 //
-//
+// add new html elements
 //
 $.fn.addItems = function (data) {
     var elSel = this[0];    

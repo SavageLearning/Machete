@@ -34,6 +34,7 @@
         <resource path="~/Scripts/jquery.ui.datepicker.js" />
         <resource path="~/Scripts/console-log.js" />
         <resource path="~/Scripts/macheteLayout.js" />
+        <resource path="~/Scripts/jquery.macheteUI-0.1.js" />
         <resource path="~/Scripts/validation_hack.js" />
         <resource path="~/Scripts/jquery.dataTables.plugins.js" />    
         <resource path="~/Scripts/ui.datetimepicker.js" />
