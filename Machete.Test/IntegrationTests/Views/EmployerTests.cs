@@ -37,17 +37,17 @@ namespace Machete.Test
         {
             //
             // Loggoff
-            Assert.AreEqual("", verificationErrors.ToString());
-            ui.WaitForElement(By.LinkText("Logoff"));
-            driver.FindElement(By.LinkText("Logoff")).Click();
-            try
-            {
-                driver.Quit();
-            }
-            catch (Exception)
-            {
-                // Ignore errors if unable to close the browser
-            }
+            //Assert.AreEqual("", verificationErrors.ToString());
+            //ui.WaitForElement(By.LinkText("Logoff"));
+            //driver.FindElement(By.LinkText("Logoff")).Click();
+            //try
+            //{
+            //    driver.Quit();
+            //}
+            //catch (Exception)
+            //{
+            //    // Ignore errors if unable to close the browser
+            //}
 
         }
         [ClassCleanup]
@@ -126,9 +126,16 @@ namespace Machete.Test
             ui.WaitForElementValue(By.XPath("//table[@id='employerSelectTable']/tbody/tr/td[2]"), _emp1.name);
             ui.WaitAndDoubleClick(By.XPath("//table[@id='employerSelectTable']/tbody/tr/td[6]"));
             //
-            // need to save record for employer change to save
-
-            Assert.IsTrue(false);
+            // confirm dialog
+            ui.WaitThenClickElement(By.Id("popup_ok"));
+            ui.WaitThenClickElement(By.Id("employerListTab"));
+            ui.WaitForElement(By.Id("employerTable_searchbox")).SendKeys(_emp1.name);
+            ui.WaitForElementValue(By.XPath("//table[@id='employerTable']/tbody/tr/td[2]"), _emp1.name);
+            ui.WaitAndDoubleClick(By.XPath("//table[@id='employerTable']/tbody/tr/td[6]"));
+            var selectedTab = ui.WaitForElement(By.CssSelector("li.employer.ui-tabs-selected a"));
+            var recID = Convert.ToInt32(selectedTab.GetAttribute("recordid"));
+            ui.WaitForElement(By.Id("workOrderList"));
+            Assert.IsTrue(ui.WaitForElementValue(By.XPath("//table[@id='workOrderTable_" + recID.ToString() + "']/tbody/tr/td[5]"), _wo.contactName));
         }
 
     }

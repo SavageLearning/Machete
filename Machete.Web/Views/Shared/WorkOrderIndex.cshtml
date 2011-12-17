@@ -147,29 +147,11 @@
         $('#employerSelectDialog').hide();
         $('#employerSelectTable').hide();
         
-        $('#employerSelectTable').find('tbody').dblclick(function (event) {
-            var myTr = event.target.parentNode;
-            var myID = $(myTr).attr('requestedID');  
-            var myLabel =  $('li.WO.ui-tabs-selected a').text() + " >--> "         
-                        $(myTr).find('td:eq(2)').text() + ' '+
-                        $(myTr).find('td:eq(4)').text();
-            var idPrefix = $('#employerSelectTable').attr('idprefix');
-            $.alerts.okButton = "@WorkOrders.empChgConfirmSubmit";
-            jConfirm('@WorkOrders.empChgConfirm',
-                '@WorkOrders.empChgConfirmSubmit ' + myLabel,
-                function (r) {
-                    if (r == true) {
-                        // 
-                        // action for doubleclick
-                        $('#'+idPrefix+'EmployerID').val(myID);
-                        $('a.ui-dialog-titlebar-close').click();
-                        $('#'+idPrefix+'SaveBtn').submit();
-                        $('#'+idPrefix+'CloseBtn').click();
-                        event.preventDefault();
-                    }
-                }
-            );            
-            e.preventDefault();
+        $('#employerSelectTable').find('tbody').mUI('selectEmployerDblClick',
+        {
+            okButton: "@WorkOrders.empChgConfirmSubmit",
+            message: "@WorkOrders.empChgConfirm",
+            title: '@WorkOrders.empChgConfirmSubmit' 
         });
     });
 </script>
