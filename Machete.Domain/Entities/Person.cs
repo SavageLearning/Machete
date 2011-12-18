@@ -76,7 +76,11 @@ namespace Machete.Domain
 
         public string fullName()
         {
-            return firstname1 + " " + firstname2 + " " + lastname1 + " " + lastname2;
+            var rtnstr = firstname1 + " ";
+            if (firstname2 != null) rtnstr = rtnstr + firstname2 + " ";
+            rtnstr = rtnstr + lastname1;
+            if (lastname2 != null) rtnstr = rtnstr + " " + lastname2;
+            return rtnstr;
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Threading;
 using Machete.Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Support.UI;
 
 
 namespace Machete.Test
@@ -20,6 +21,10 @@ namespace Machete.Test
             _d = driver;
             _url = url;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public bool login()
         {
             _d.Navigate().GoToUrl(_url);
@@ -34,7 +39,69 @@ namespace Machete.Test
             WaitForText("Welcome", 60);
             return true;
         }
+        #region persons
+        public bool personCreate(Person _per)
+        {
+            
+            _per.firstname1 = RandomString(4);
+            _per.lastname1 = RandomString(8);
+            WaitThenClickElement(By.Id("menulinkperson"));
+            WaitThenClickElement(By.Id("personCreateTab"));
+            WaitThenClickElement(By.Id("firstname1"));
+            _d.FindElement(By.Id("firstname1")).Clear();
+            _d.FindElement(By.Id("firstname1")).SendKeys(_per.firstname1);
+            _d.FindElement(By.Id("lastname1")).Clear();
+            _d.FindElement(By.Id("lastname1")).SendKeys(_per.lastname1);
+            WaitThenClickElement(By.Id("createButton"));
+
+            //
+            WaitForElement(By.Id("personSearchBox")).SendKeys(_per.lastname1);
+            WaitForElementValue(By.XPath("//table[@id='personTable']/tbody/tr/td[4]"), _per.lastname1);
+            WaitAndDoubleClick(By.XPath("//table[@id='personTable']/tbody/tr/td[6]"));
+
+            //
+            var selectedTab = WaitForElement(By.CssSelector("li.person.ui-tabs-selected"));
+            Assert.IsNotNull(selectedTab, "Failed to find Person selected tab element");
+            IWebElement tabAnchor = selectedTab.FindElement(By.CssSelector("a"));
+            Assert.IsNotNull(tabAnchor, "Failed to find Person selected tab element anchor");
+            var name = _per.firstname1 + " " + _per.lastname1;
+
+            Assert.IsTrue(tabAnchor.Text == name, "Person anchor label doesn't match person name");
+            _per.ID = Convert.ToInt32(tabAnchor.GetAttribute("recordid"));
+            return true;
+        }
+
+        public bool workerCreate(Person _per)
+        {
+            string prefix = "worker"+_per.ID+"-";
+            WaitThenClickElement(By.Id("workerCreateTab"));
+            WaitForElement(By.Id(prefix + "dateOfMembership"));            
+            _d.FindElement(By.Id(prefix + "dateOfMembership")).SendKeys(DateTime.Today.ToShortDateString());            
+            _d.FindElement(By.Id(prefix + "dateOfBirth")).SendKeys(DateTime.Today.ToShortDateString());
+            _d.FindElement(By.Id(prefix + "dateinUSA")).SendKeys(DateTime.Today.ToShortDateString());
+            _d.FindElement(By.Id(prefix + "dateinseattle")).SendKeys(DateTime.Today.ToShortDateString());
+            _d.FindElement(By.Id(prefix + "memberexpirationdate")).SendKeys(DateTime.Today.ToShortDateString());
+            _d.FindElement(By.Id(prefix + "height")).SendKeys("6'1");
+            _d.FindElement(By.Id(prefix + "weight")).SendKeys("230lbs");
+            _d.FindElement(By.Id(prefix + "dwccardnum")).Clear();
+            _d.FindElement(By.Id(prefix + "dwccardnum")).SendKeys("12345");
+
+            SelectOption(By.Id(prefix + "neighborhoodID"), "Kent");
+            SelectOption(By.Id(prefix + "typeOfWorkID"), "(DWC) Day Worker Center");
+            SelectOption(By.Id(prefix + "englishlevelID"), "2");
+            SelectOption(By.Id(prefix + "incomeID"), "Less than $15,000");
+            SelectOption(By.Id(prefix + "neighborhoodID"), "Kent");
+            _d.FindElement(By.Id("createWorkerBtn")).Click();
+            Assert.IsTrue(false);
+            return true;
+        }
+        #endregion
         #region employers
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="_emp"></param>
+        /// <returns></returns>
         public bool employerCreate(Employer _emp)
         {
             string prefix = "employer0-";
@@ -68,7 +135,11 @@ namespace Machete.Test
             _emp.ID = Convert.ToInt32(tabAnchor.GetAttribute("recordid"));
             return true;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="_emp"></param>
+        /// <returns></returns>
         public bool employerValidate(Employer _emp)
         {
 
@@ -170,7 +241,13 @@ namespace Machete.Test
             return true;
         }
         #endregion
-
+        public bool SelectOption(By by, string opttext)
+        {
+            var dropdown = _d.FindElement(by);
+            var selectElem = new SelectElement(dropdown);
+            selectElem.SelectByText(opttext);
+            return true;
+        }
         //
         //
         #region utilfunctions

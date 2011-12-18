@@ -1,18 +1,22 @@
 ﻿@model Machete.Domain.Person
 @using Machete.Web.Resources
 @using Machete.Web.Helpers
-<div id="personPartsTabs_@(Model.ID)">
+@{
+    string recType = "person";
+    string idPrefix = recType + "-";
+}
+<div id="personPartsTabs">
     <ul>
-        <li><a href="#personGeneralTab_@(Model.ID)" id="personGeneralTab__@(Model.ID)" class="GeneralTab">@Machete.Web.Resources.Persons.basicinfo</a></li>
+        <li><a href="#personGeneralTabRef" id="personGeneralTab" class="GeneralTab">@Machete.Web.Resources.Persons.basicinfo</a></li>
         @if (Model.Worker == null) {
-            <li><a href="/Worker/Create?ID=@(Model.ID)" id="workerCreateTab__@(Model.ID)" class="CreateTab">@Machete.Web.Resources.Persons.createworker</a></li>
+            <li><a href="/Worker/Create?ID=@(Model.ID)" id="workerCreateTab" class="CreateTab">@Machete.Web.Resources.Persons.createworker</a></li>        
         }
         else
         {
             <li><a href="/Worker/Edit/@(Model.ID)">@Machete.Web.Resources.Persons.workerinfo</a></li>
         }
     </ul>
-    <div id="personGeneralTab_@(Model.ID)">
+    <div id="personGeneralTabRef">
         @using (Html.BeginForm("Edit", "Person", FormMethod.Post,
                     new { @class = "edittab-form", @id = "Persontab-" + Model.ID }))
         {
@@ -71,6 +75,6 @@
         //
         //
         //
-        jqrfyTabs($('#personPartsTabs_@(Model.ID)'), "ui-tabs-personParts-");
+        jqrfyTabs($('#personPartsTabs'), "ui-tabs-personParts-");
     });
 </script>

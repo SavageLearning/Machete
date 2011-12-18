@@ -4,6 +4,7 @@
 @{
     ViewBag.Title = Persons.indextitle;
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "person";
 }
 <div id="personTabs" class="ExclusiveTab">
     <ul>
@@ -62,7 +63,7 @@
                 $(nRow).attr('edittablabel', aData[1]);
                 return nRow;
             }                
-        });
+        }, null, "@(recType)");
         $('#personTable_filter input').attr('ID','personSearchBox');
     jqrfyTabs($('#personTabs'), "ui-tabs-person-");
     });
