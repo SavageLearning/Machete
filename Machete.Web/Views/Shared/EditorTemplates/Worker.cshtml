@@ -328,19 +328,9 @@
     </div>
 </div>
 <div class="tb-table">
-    <div class="tb-row">
-        
-        @if (Model.ImageID == null)
-        {
-            <p>
-            @Html.Label("No image")
-            </p>
-        }
-        else
-        {
-            <img src="@Url.Action("GetImage", "Image", new { ID=Model.ImageID })" alt="" />
-        }
-        <div>Upload new image: <input type="file" name="imagefile" /></div>
+    <div class="tb-row">        
+        <img src="@Url.Action("GetImage", "Image", new { ID=Model.ImageID })" alt="no image" style="width: 200px"/>        
+        <div class="view_off print_off">Upload new image: <input type="file" name="imagefile" /></div>
     </div>
 </div>
 <div class="tb-table">

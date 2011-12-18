@@ -531,13 +531,11 @@ input[type="text"].ui-datepicker
     margin:0.5em 0 0 0;
 }
 
-.tri-col
-{
-    width: 300px;   
-}
+.tri-col, 
+.tri-col select,
 .tri-col input[type="text"]
 {
-    width: 300px;
+    width: 200px;
 }
 
 .print_off

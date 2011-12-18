@@ -1,10 +1,13 @@
 ﻿@model Machete.Web.ViewModel.WorkerViewModel
 @using Machete.Web.Resources
 @using Machete.Web.Helpers
+<link href="@Url.Content("~/Content/print.css")" rel="stylesheet" type="text/css" media="print" />
 @{
     ViewBag.Title = Workers.viewtitle;
 }
+<div class="print_off view_off">
 <h2>@Workers.viewtitle</h2>
+
 <p>
     @if (Html.IsInRole(Html.Role_AMP()))
     {
@@ -13,43 +16,22 @@
     }
     @Html.ActionLink(Workers.indexreturnlink, "Index")
 </p>
-
+</div>
 
 
     <fieldset>
         <legend>@Persons.boxlegend</legend>
-        <table border="0" cellpadding="0" cellspacing="0">
-            <tr>
-                <td>
-                    @Html.EditorFor(model => model.person)
-                </td>
-                <td>
-                    @if (Model.image.ImageData == null)
-                    {
-                        <p>
-                            @Html.Label(Workers.noimagelabel)
-                        </p>
-                    }
-                    else
-                    {
-                        <img src="@Url.Action("GetImage", "Image", new { Model.image.ID })" alt="" />
-                    }
-                </td>
-            </tr>
-        </table>
+        @Html.EditorFor(model => model.person)
+        
     </fieldset>
     <fieldset>
         <legend>@Workers.boxlegend</legend>
-        <!--
-        
-        This pulls from views/shared/editortemplates. 
-        name is by convention, model name
-        
-        !-->
+
         @Html.EditorFor(model => model.worker)
     </fieldset>
 <script type="text/javascript">
     $().ready(function () {
+        $('.view_off').hide();
         $('.editor-field').children().attr('disabled', 'disabled')
     });
 </script>
