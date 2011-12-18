@@ -87,14 +87,14 @@
             //var oTabs = $(e.target).closest('.ui-tabs').children('.ui-tabs-nav');
             //$(oTabs).find('.ui-state-active').find('span.ui-icon-close').click();
             //TODO: javascript...need to deal with ajax error
-            alert("foo");
+            //alert("foo");
             var oTabs = $(e.target).closest('.ui-tabs');
             $(oTabs).tabs("select", 0);            
             var edittab = $(oTabs).children('.ui-tabs-nav').find('a').get('1');
             $(oTabs).tabs("url", 1, "/Worker/Create?ID=@(Model.ID)");
             $(edittab).text('edit changed the name');
             
-            alert("foo2");
+            //alert("foo2");
         });
     });
 </script>

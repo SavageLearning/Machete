@@ -1,24 +1,23 @@
 ﻿@model Machete.Domain.Worker
 @using Machete.Web.Resources
-@using (Html.BeginForm("Create", "Worker", FormMethod.Post, new { @id = "workerCreateForm-" + Model.ID }))
+@using (Html.BeginForm("Create", "Worker", FormMethod.Post, new { @id = "workerCreateForm"}))
 {
-    <input type="submit" id="createWorkerButton-@(Model.ID)" value="@Workers.createsubmit" tabindex="9"/>
+    <input type="submit" id="createWorkerBtn" value="@Workers.createsubmit" tabindex="9"/>
     @Html.ValidationSummary(true)
     @Html.EditorForModel()
 }
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
-        $('#createWorkerButton-@(Model.ID)').button();
-        $.validator.unobtrusive.parseDynamicContent('#workerCreateForm-@(Model.ID)');
-        M_workerCreateForm_@(Model.ID) = $('#workerCreateForm-@(Model.ID)');
+        $('#createWorkerBtn').button();
+        $.validator.unobtrusive.parseDynamicContent('#workerCreateForm');        
         //$('#firstname1').focus();
         ////////////////////////////////////////////////////////////////
         //
         // Worker Create submit event
         //
-        M_workerCreateForm_@(Model.ID).submit(function (e) {
+        $('#workerCreateForm').submit(function (e) {
             e.preventDefault();           
-            if (M_workerCreateForm_@(Model.ID).valid()) {
+            if ($('#workerCreateForm').valid()) {
 
                 $.post($(this).attr("action"), $(this).serialize(),
                     function (data) {                                                
@@ -28,7 +27,7 @@
                 $(oTabs).tabs("select", 0);
                 $(oTabs).tabs("url", 1, "/Worker/Edit/@(Model.ID)");
                 var createtab = $(oTabs).children('.ui-tabs-nav').find('a').get('1');
-                $(createtab).text("create changed the name");
+                $(createtab).text("@(Persons.workerinfo)");
             }
             //TODO: javascript...need to deal with ajax error
         });
