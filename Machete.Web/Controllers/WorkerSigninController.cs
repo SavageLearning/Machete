@@ -88,6 +88,40 @@ namespace Machete.Web.Controllers
             _model.workersignins = _serv.getView(_model.dateforsignin); //Get list of signins already checked in for the day
             return View(_model);
         }
+
+        //
+        // Lottery post
+        //
+        // POST: /WorkOrder/Delete/5
+        [HttpPost, UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        public ActionResult lotterySignin(int lotterycardnum, DateTime lotterysignindate, string user)
+        {
+            //var workOrder = woServ.GetWorkOrder(id);
+            string rtnstatus;
+            var wsi = _serv.GetWorkerSignin(lotterycardnum, lotterysignindate);
+            if (wsi != null)
+            {
+                if (wsi.lottery_timestamp == null)
+                {
+                    wsi.lottery_timestamp = DateTime.Now;
+                    _serv.SaveWorkerSignin();
+                }                
+                rtnstatus = "OK";
+
+            }
+            else
+            {
+                rtnstatus = "NO_WSI_REC";
+            }
+            var _signin = new WorkerSignin();
+            return Json(new
+            {
+                status = rtnstatus,
+                memberID = lotterycardnum
+            },
+            JsonRequestBehavior.AllowGet);
+        }
         //
         // GET: /WorkerSignin/Delete/5
         public ActionResult Delete(int id)

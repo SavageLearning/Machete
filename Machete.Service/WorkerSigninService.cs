@@ -15,6 +15,7 @@ namespace Machete.Service
     {
         IQueryable<WorkerSignin> GetWorkerSigninsQ();
         WorkerSignin GetWorkerSignin(int id);
+        WorkerSignin GetWorkerSignin(int dwccardnum, DateTime date);
         void CreateWorkerSignin(WorkerSignin workerSignin, string user);
         void DeleteWorkerSignin(int id);
         void SaveWorkerSignin();
@@ -56,17 +57,25 @@ namespace Machete.Service
             lkup_hhh = LookupCache.getSingleEN("worktype", "(HHH) Household Helpers");
         }
         #region IWorkerSigninService Members
-        //TODO: GetWorkerSignins
+        
         public IQueryable<WorkerSignin> GetWorkerSigninsQ()
         {
             return signinRepo.GetAllQ();
  
         }
-        //TODO: GetWorkerSignin
+        
         public WorkerSignin GetWorkerSignin(int id)
         {
             var workerSignin = signinRepo.GetById(id);
             return workerSignin;
+        }
+
+        public WorkerSignin GetWorkerSignin(int dwccardnum, DateTime date)
+        {
+            //.AsQueryable().FirstOrDefault(r => r.dwccardnum == 30040 && EntityFunctions.DiffDays(r.dateforsignin, datestr) == 0 ? true : false);
+            var workerSignin = signinRepo.GetManyQ();//
+            var foo = workerSignin.FirstOrDefault(r => r.dwccardnum == dwccardnum && EntityFunctions.DiffDays(r.dateforsignin, date) == 0 ? true : false);
+            return foo;
         }
 
         public void CreateWorkerSignin(WorkerSignin signin, string user)

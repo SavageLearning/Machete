@@ -20,8 +20,8 @@
     @Html.TextBoxFor(m => m.status)
     @Html.LabelFor(m => m.requestedWorkers_visible)
     @Html.TextBoxFor(m => m.requestedWorkers_visible)
-            @Html.LabelFor(m => m.dwccardnum)
-        @Html.TextBoxFor(m => m.dwccardnum, new { @style = "width: 5em;" })
+    @Html.LabelFor(m => m.dwccardnum)
+    @Html.TextBoxFor(m => m.dwccardnum, new { @style = "width: 5em;" })
 </div>   
 
     <div>
@@ -103,7 +103,41 @@
             </div>
         </div>
     </div>
+</div>
 
+<div id="lotteryList" class="lotteryPopup">
+            @using (Html.BeginForm("lotterySignin", "WorkerSignin", FormMethod.Post,
+                            new { @class = "edittab-form", @id = "lotterySigninForm"}))
+            {
+                @Html.ValidationSummary(true)
+                <div class="editor-label">
+                   
+                </div>
+                <div class="editor-field">
+                    @Html.TextBox("lotterycardnum", "", new {style="width: 100px;" })
+                    
+                </div>
+                <div class="editor-field">
+                    @Html.TextBox("lotterysignindate",
+                        Html.Encode(String.Format("{0:mm/dd/yy}", DateTime.Now.ToShortDateString())),
+                        new { @class = "ui-datepicker", style="width: 100px;" })
+                    
+                </div>
+                <div class="">
+                <p>
+                    <input type="submit" value="@WorkerSignins.indexsubmit" id="lotterySubmit"/>
+                </p>   
+                </div>
+            }
+    <table id="lotteryTable" class="display">
+        <thead>
+            <tr>
+                <th>@Machete.Web.Resources.WorkAssignments.memberID</th>
+                <th>Lottery ?!</th>
+                <th>@Machete.Web.Resources.WorkAssignments.fullname</th>
+            </tr>
+        </thead>
+    </table>
 </div>
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
@@ -118,6 +152,58 @@
     $('#status').val(false);
     jqrfyTabs($("#assignmentTab"), "ui-tabs-assignment-");
     jqrfyTabs($("#signinTab"), "ui-tabs-signin-");
+
+    jqrfyWSignin($("#lotteryTable"), {
+        //"sScrollY": "300px",
+        "bFilter": false,
+        "bPaginate": true,
+        "bLengthChange": false,
+        "bAutoWidth": true,
+        "bServerSide": true,
+        "sAjaxSource": "/WorkerSignin/AjaxHandler",
+        "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+        "bProcessing": true,
+        "aoColumns": [
+            {"mDataProp": "dwccardnum"},
+            {"mDataProp": "skills"},
+            {"mDataProp": "fullname"}
+        ],
+        "fnServerData": function ( sSource, aoData, fnCallback ) {
+			/* Add some extra data to the sender */
+			aoData.push( { "name": "todaysdate", "value": $('#todaysdate').val() } );
+            aoData.push( { "name": "dwccardnum", "value": $('#dwccardnum').val()} );
+            aoData.push( { "name": "wa_grouping", "value": $('#wa_grouping').val()} );
+            aoData.push( { "name": "typeofwork_grouping", "value": $('#typeofwork_grouping').val()} );            
+			$.getJSON( sSource, aoData, function (json) { 
+				/* Do whatever additional processing you want on the callback, then tell DataTables */
+				fnCallback(json)
+			} );
+		},
+        "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+            $(nRow).attr('requestedID', aData['WSIID']);
+            if (aData['WAID'] > 0) { // green
+                $(nRow).addClass('statusGreen');
+            }                
+            return nRow;
+        } 
+    });
+    $('#lotteryList').hide();
+    $('#lotteryTable').hide();
+    $('#bOpenLottery').click(function () {
+        $('#lotteryTable').dataTable().fnDraw();
+        $('#lotteryList').dialog({
+                height: 600,
+                width: 450,
+                modal: true
+        });
+        $('#lotteryTable').show();
+        $('#lotteryList').show();
+    });
+    $('#lotterySigninForm').submit(function (e) {
+        $.post($(this).attr("action"), $(this).serialize());
+        $('#lotteryTable').dataTable().fnDraw();
+        e.preventDefault();
+    });
         
     jqrfyWSignin($("#signinTable"), {
         //"sScrollY": "300px",
@@ -348,19 +434,8 @@
             } else {
                 $("#signinTab").hide();
             }
-            //alert($("#signinTable").dataTable().fnFilter());
             $("#signinTable").dataTable().fnDraw();
-            $("#availAssignTable").dataTable().fnDraw();
-//            if ($('#signinTable_filter').val() == null) {
-//                $("#signinTable").dataTable().fnDraw();
-//            } else {
-//                $("#signinTable").dataTable().fnFilter("");
-//            }
-//            if ($('#availAssignTable_filter').val() == null) {
-//                $("#availAssignTable").dataTable().fnDraw();
-//            } else {
-//                $("#availAssignTable").dataTable().fnFilter("");
-//            }            
+            $("#availAssignTable").dataTable().fnDraw();            
         });
     });
     function DatePicker() {
