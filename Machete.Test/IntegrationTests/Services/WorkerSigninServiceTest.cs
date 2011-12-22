@@ -84,13 +84,22 @@ namespace Machete.Test
             };
         }
         [TestMethod]
+        public void DbSet_WorkerSigin_LotterySignin()
+        {
+            var foo = _wsiServ.GetWorkerSignin(30040, DateTime.Parse("8/10/2011"));
+            Assert.IsNotNull(foo);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        [TestMethod]
         public void DbSet_WorkerSignin_GetView()
         {
             DateTime date = Convert.ToDateTime("08/10/2011");
             IEnumerable<WorkerSigninView> filteredWSI = _wsiServ.getView(date);
             IEnumerable<WorkerSigninView> foo = filteredWSI.ToList();
-            Assert.IsNotNull(filteredWSI, "Person.ID is Null");
-            Assert.IsNotNull(foo, "Person.ID is Null");
+            Assert.IsNotNull(filteredWSI, "WorkerSignin getView return is Null");
+            Assert.IsNotNull(foo, "WorkerSignin getview.ToList() is Null");
         }
         //
         /// <summary>

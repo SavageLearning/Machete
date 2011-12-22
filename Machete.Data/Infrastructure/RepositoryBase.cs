@@ -62,13 +62,17 @@ public abstract class RepositoryBase<T> where T : class
     {
         return dbset.Where(where).AsQueryable();
     }
+    public virtual IQueryable<T> GetManyQ()
+    {
+        return dbset.AsQueryable();
+    }
     public T Get(Func<T, bool> where)
     {
         return dbset.Where(where).FirstOrDefault<T>();
     }
     public T GetQ(Func<T, bool> where)
     {
-        return dbset.Where(where).AsQueryable().FirstOrDefault<T>();
+        return dbset.AsQueryable().First<T>(where);
     }
 }
 }

@@ -16,6 +16,7 @@ namespace Machete.Data.Infrastructure
         IEnumerable<T> GetMany(Func<T, bool> where);
         IQueryable<T> GetAllQ();
         IQueryable<T> GetManyQ(Func<T, bool> where);
+        IQueryable<T> GetManyQ();
         T GetQ(Func<T, bool> where);
     }
 }

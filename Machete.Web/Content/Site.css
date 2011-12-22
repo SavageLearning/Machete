@@ -577,3 +577,8 @@ input.ui-button.dispatchButton
 {
     float: right;
 }
+
+.lotteryPopup 
+{
+    width: 300px;
+}
