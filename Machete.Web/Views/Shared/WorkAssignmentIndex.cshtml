@@ -8,7 +8,10 @@
 <div id="workAssignTabs-wo-@(Model.ID)">
     <ul>
         <li><a href="#workAssignList-wo-@(Model.ID)" class="workAssignListTab ListTab" id="walt-@(Model.ID)">@WorkAssignments.listlink</a> </li>
-        <li><a href="/WorkAssignment/Create?WorkOrderID=@(Model.ID)" class="workAssignCreateTab CreateTab" id="wact-@(Model.ID)">@WorkAssignments.createlink</a></li>
+        @if ((Html.IsInRole(Html.Role_AMP()) && Model.dateTimeofWork >= DateTime.Today) || Html.IsInRole(Html.Role_AM()))
+        {
+            <li><a href="/WorkAssignment/Create?WorkOrderID=@(Model.ID)" class="workAssignCreateTab CreateTab" id="wact-@(Model.ID)">@WorkAssignments.createlink</a></li>
+        }
     </ul>
     <div id="workAssignList-wo-@(Model.ID)">
         <table id="workAssignTable-wo-@(Model.ID)" class="display">
