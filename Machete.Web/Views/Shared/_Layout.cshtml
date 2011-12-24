@@ -4,6 +4,9 @@
 <html>
 @Html.CombresLink("siteJs")
 @Html.CombresLink("siteCss")
+@{
+    string controllerName = Request.RequestContext.RouteData.Values["controller"].ToString();
+}
 <head>
     <title>@Machete.Web.Resources.Shared.title@ViewBag.title</title>
     <link rel="shortcut icon" href="/Content/favicon.ico" type="image/png"/>
@@ -57,7 +60,7 @@
     $(document).ready(function () {
         $('#showbanner').hide();
         $('#showbanner').button();
-        $('a[href=/@Request.RequestContext.RouteData.Values["controller"]]').addClass('menulinkactive');
+        $("a[href='/@(controllerName)']").addClass('menulinkactive');
         $('#showbanner').click(function (e) {
             $('#showbanner').hide();
             $("#header").show("drop", {});
