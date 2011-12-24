@@ -2,15 +2,27 @@
 @using Machete.Web.Helpers           
 @using Machete.Web.Resources
 @{
-        string recType = "assignment";
+    string recType = "assignment";
+    int editDisable = 0;
+    if (!Html.IsInRole(Html.Role_AM()) && (Html.IsInRole(Html.Role_AMP()) && Model.workOrder.dateTimeofWork < DateTime.Today))
+    {
+        editDisable = 1;
+    }
 }
-@using (Html.BeginForm("Edit", "WorkAssignment", FormMethod.Post, 
-                        new { @class = "edittab-form EditPost", @id="WorkAssignmentTab-" + Model.ID }))
+@using (Html.BeginForm("Edit", "WorkAssignment", FormMethod.Post,
+                        new { @class = "edittab-form EditPost", @id = "WorkAssignmentTab-" + Model.ID }))
 {
     @*<input type="button" value="@WorkAssignments.viewlink" class="formButton" id="view-@(Model.ID)" />*@
+    if ((Html.IsInRole(Html.Role_AMP()) && Model.workOrder.dateTimeofWork >= DateTime.Today) || Html.IsInRole(Html.Role_AM()))
+    {
     <input type="submit" value="@WorkAssignments.editsubmit" class="formButton"/>
     <input type="button" value="@WorkAssignments.dupsubmit" class="formButton" id="duplicate-@(Model.ID)" />
-    if (Html.IsInRole(Html.Role_AMP()))
+    }
+
+    if ((Html.IsInRole(Html.Role_AMP()) &&
+        Model.workOrder.dateTimeofWork >= DateTime.Today) ||
+    Html.IsInRole(Html.Role_AM())
+    )
     {
         <input id="deleteWorkAssignmentButton-@(Model.ID)" type="button" value="@WorkAssignments.deletesubmit" 
                 class="formButton deleteButton" />
@@ -27,7 +39,10 @@
     @Html.HiddenFor(model => model.ID);
 }
 
-@if (Html.IsInRole(Html.Role_AMP()))
+@if ((Html.IsInRole(Html.Role_AMP()) &&
+        Model.workOrder.dateTimeofWork >= DateTime.Today) ||
+    Html.IsInRole(Html.Role_AM())
+    )
 {
     using (Html.BeginForm("Delete", "WorkAssignment", FormMethod.Post,
                             new { @class = "edittab-form DeletePost", @id = "DeleteWorkAssignment-" + Model.ID }))
@@ -37,6 +52,9 @@
 }
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
+        if (@(editDisable)) { 
+            $('#WorkAssignmentTab-@(Model.ID)').find('input,select,textarea').attr('disabled', 'disabled');
+        }
         dupSubmit_@(Model.ID) = null;
         dupSubmit_@(Model.ID) = false;
         $('#activateWorkOrderButton-@(Model.workOrderID)').hide();
