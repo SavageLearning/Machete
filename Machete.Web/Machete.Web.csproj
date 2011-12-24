@@ -280,6 +280,11 @@
       <DependentUpon>WorkOrders.es.resx</DependentUpon>
     </Compile>
     <Content Include="Content\favicon.ico" />
+    <Content Include="Scripts\jquery-1.5.1-vsdoc.js" />
+    <Content Include="Scripts\jquery-1.5.1.js" />
+    <Content Include="Scripts\jquery-1.5.1.min.js" />
+    <Content Include="Scripts\jquery-ui-1.8.11.js" />
+    <Content Include="Scripts\jquery-ui-1.8.11.min.js" />
     <Content Include="Scripts\jquery.macheteUI-0.1.js" />
     <Content Include="Scripts\maskedinput-1.3.js" />
     <Content Include="Scripts\jquery.dataTables-1.8.1.js" />
