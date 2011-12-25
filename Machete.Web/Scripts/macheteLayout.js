@@ -54,7 +54,7 @@ function spaceFill(number, width) {
 // set global ID, based on tag
 //
 function setGlobalIDs(idtag, recordid, func) {
-    M_conlog("ID===", "SET", func, idtag, "BEFORE");
+    //M_conlog("ID===", "SET", func, idtag, "BEFORE");
     if (recordid == null) return;
     if (M_emp_uitab_patt.test(idtag)) {
         M_last_employerID_loaded = recordid;
@@ -65,7 +65,7 @@ function setGlobalIDs(idtag, recordid, func) {
     if (M_ass_uitab_patt.test(idtag)) {
         M_last_assignmentID_loaded = recordid;
     }
-    M_conlog("ID===", "SET", "", idtag, "AFTER");
+    //M_conlog("ID===", "SET", "", idtag, "AFTER");
 }
 ////////////////////////////////////////////////////////////////
 //
@@ -315,45 +315,7 @@ $.fn.addItems = function (data) {
     }
 };
 
-////////////////////////////////////////////
-//
-// parse skills drop down
-//  for the create/edit assignment page. 
-//  bound to change event
-//
-function parseSkillsDD(myForm) {
-    var myDD = $(myForm).find('#skillID');
-    var myWage = $(myForm).find('#hourlyWage');
-    var myHour = $(myForm).find('#hours');
-    //
-    var myOption = $(myDD).find('option:selected');
-    if ($(myOption).attr('wage') != null) { $(myWage).val($(myOption).attr('wage')); }
-    if ($(myOption).attr('minHour') != null) { $(myHour).val($(myOption).attr('minHour')); }
-    if ($(myOption).attr('fixedjob') == "True") { //Disable wage and hours on fixed job
-        $(myWage).attr('readonly', 'readonly');
-        $(myHour).attr('readonly', 'readonly');
-    } else {
-        $(myWage).removeAttr('readonly', 'readonly');
-        $(myHour).removeAttr('readonly', 'readonly');
-    }
-    waEstimateEarnings(myForm);
-}
 
-function waEstimateEarnings(myForm) {    
-    var myWage = $(myForm).find('#hourlyWage').val();
-    var myHours = $(myForm).find('#hours').find('option:selected').val();
-    var myEarnings = $(myForm).find('#total');
-    $(myEarnings).attr('disabled', 'disabled');
-    var myDays = $(myForm).find('#days').find('option:selected').val();
-    if (isNumber(myDays) &&
-        isNumber(myHours) &&
-        isNumber(myWage)) {
-        var total = myDays * myHours * myWage;
-        $(myEarnings).val("$" + total.toFixed(2));
-    } else {
-        $(myEarnings).val("@(Machete.Web.Resources.Shared.notcalculable)");
-    }
-}
 
 // http://stackoverflow.com/questions/18082/validate-numbers-in-javascript-isnumeric/174921#174921
 function isNumber(n) {

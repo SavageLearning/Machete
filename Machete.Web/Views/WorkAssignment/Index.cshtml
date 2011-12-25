@@ -281,6 +281,8 @@
 			    } );
 		    },
         "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+            $(nRow).attr('edittabref', aData["tabref"]);
+            $(nRow).attr('edittablabel', aData["tablabel"]);
             $(nRow).attr('requestedID', aData['WAID']);
             if (aData['WID'] > 0 && aData['WSIID'] > 0 && aData['status']) { // assigned
                 $(nRow).addClass('statusGreen');

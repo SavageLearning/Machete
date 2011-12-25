@@ -63,6 +63,13 @@
             @Html.ValidationMessageFor(model => model.hours)
         </div>
         <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.hourRange)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.DropDownListFor(model => model.hourRange, new SelectList(ViewBag.hoursList, "Value", "Text", Model.hourRange), Shared.choose, new { @id = "hourRange", @class = "earnings-part" })
+            @Html.ValidationMessageFor(model => model.hourRange)
+        </div>
+        <div class="tb-label tb-cell">
             @Html.LabelFor(model => model.days)
         </div>
         <div class="tb-field tb-cell">
@@ -74,6 +81,12 @@
         </div>
         <div class="tb-field tb-cell">
             @Html.TextBox("total",null,new { style = "width: 6em;" })
+        </div>
+        <div class="tb-label tb-cell">
+            @Html.Label("totalRange")
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.TextBox("totalRange",null,new { style = "width: 6em;" })
         </div>
     </div>
 </div>
