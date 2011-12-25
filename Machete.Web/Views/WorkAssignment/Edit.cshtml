@@ -52,6 +52,9 @@
 }
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
+        //
+        // Block phonedesk from editing old orders
+        //
         if (@(editDisable)) { 
             $('#WorkAssignmentTab-@(Model.ID)').find('input,select,textarea').attr('disabled', 'disabled');
         }
@@ -60,20 +63,27 @@
         $('#activateWorkOrderButton-@(Model.workOrderID)').hide();
         $('#viewWorkAssignment-@(Model.ID)').click(function () {
             printwindow = window.open('/WorkAssignment/View/@(Model.ID)');
-            //printwindow.print();
         });
         $('.formButton').button();
         $('#contactName').focus();
-        var myWorkAssignmentTab_@(Model.ID) = $('#WorkAssignmentTab-@(Model.ID)');
-        $.validator.unobtrusive.parseDynamicContent(myWorkAssignmentTab_@(Model.ID));
+        //var myWorkAssignmentTab_@(Model.ID) = $('#WorkAssignmentTab-@(Model.ID)');
+        $.validator.unobtrusive.parseDynamicContent('#WorkAssignmentTab-@(Model.ID)');
+        //
         // Find tabindex attribute (for tab order, not jquery tabs) and increment by 10
-        $(myWorkAssignmentTab_@(Model.ID)).find('[tabindex]').each(function () { $(this).attr('tabindex', parseInt($(this).attr('tabindex')) + 10) });
-        $.alerts.okButton = "@WorkAssignments.deletesubmit";
-        if ($('#hourlyWage').text() == "0") {
-            parseSkillsDD(myWorkAssignmentTab_@(Model.ID));
-        }
-
-        $('#WorkAssignmentTab-@(Model.ID)').find('#skillID').bind('change', function () { parseSkillsDD(myWorkAssignmentTab_@(Model.ID)) });
+        //
+        $('#WorkAssignmentTab-@(Model.ID)').find('[tabindex]').each(function () { 
+            $(this).attr('tabindex', parseInt($(this).attr('tabindex')) + 10);
+         });
+        //
+        // wage calculations
+        //
+        $('#WorkAssignmentTab-@(Model.ID)').mUI('waFormConfiguration');
+//        if ($('#hourlyWage').text() == "0") {
+//            parseSkillsDD('#WorkAssignmentTab-@(Model.ID)');
+//        }
+//        $('#WorkAssignmentTab-@(Model.ID)').find('#skillID').bind('change', function () { 
+//            parseSkillsDD('#WorkAssignmentTab-@(Model.ID)'); 
+//        });
 
 
         ////////////////////////////////////////////////////////////////
@@ -81,6 +91,7 @@
         // Delete confirmation 
         //
         $("#deleteWorkAssignmentButton-@(Model.ID)").click(function () {
+            $.alerts.okButton = "@WorkAssignments.deletesubmit";
             jConfirm('@WorkAssignments.deleteconfirmation',
                      '@WorkAssignments.deletetitle',
                      function (r) {
@@ -94,7 +105,7 @@
         //
         //  Edit submit event
         //
-        $(myWorkAssignmentTab_@(Model.ID)).submit(function (e) {
+        $('#WorkAssignmentTab-@(Model.ID)').submit(function (e) {
             e.preventDefault();
             if ($('#WorkAssignmentTab-@(Model.ID)').valid()) {
                 $.post($(this).attr("action"), $(this).serialize());

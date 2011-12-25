@@ -165,6 +165,9 @@
   <data name="hourlyWagerequired" xml:space="preserve">
     <value>Un salario por hora es obligatorio</value>
   </data>
+  <data name="hourRange" xml:space="preserve">
+    <value>Rango de hora</value>
+  </data>
   <data name="hours" xml:space="preserve">
     <value>Horas de trabajo</value>
   </data>
