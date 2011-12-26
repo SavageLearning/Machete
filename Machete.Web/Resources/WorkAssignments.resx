@@ -151,7 +151,10 @@
     <value>Duplicate assignment</value>
   </data>
   <data name="earnings" xml:space="preserve">
-    <value>(Est) Earnings</value>
+    <value>Est. Earnings (minimum)</value>
+  </data>
+  <data name="earningsRange" xml:space="preserve">
+    <value>Est. Earnings (maximum)</value>
   </data>
   <data name="editlink" xml:space="preserve">
     <value>Edit</value>
@@ -167,6 +170,12 @@
   </data>
   <data name="fullname" xml:space="preserve">
     <value>Full name</value>
+  </data>
+  <data name="hourRange" xml:space="preserve">
+    <value>Maximum hours (if different)</value>
+  </data>
+  <data name="hours" xml:space="preserve">
+    <value>Minimum hours of work</value>
   </data>
   <data name="indexreturnlink" xml:space="preserve">
     <value>Return to list of work assignments</value>
@@ -191,6 +200,12 @@
   </data>
   <data name="tabprefix" xml:space="preserve">
     <value>Assignment #: </value>
+  </data>
+  <data name="total" xml:space="preserve">
+    <value>min. total</value>
+  </data>
+  <data name="totalRange" xml:space="preserve">
+    <value>max. total</value>
   </data>
   <data name="viewlink" xml:space="preserve">
     <value>View</value>

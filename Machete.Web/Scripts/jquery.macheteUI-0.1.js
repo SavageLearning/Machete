@@ -173,7 +173,6 @@
         if (Number(hour) >= Number(range)) {
             $(waForm).find('#hourRange option[value=""]').attr("selected", "selected").show();
             $(waForm).find('#totalRange').val("");
-            //$('#hourRange option[value=""]').show();
         }
     }
 

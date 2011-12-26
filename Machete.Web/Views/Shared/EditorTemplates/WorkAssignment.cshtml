@@ -77,13 +77,13 @@
             @Html.ValidationMessageFor(model => model.days)
         </div>
         <div class="tb-label tb-cell">
-            @Html.Label("total")
+            @Html.Label("total", @Machete.Web.Resources.WorkAssignments.total)
         </div>
         <div class="tb-field tb-cell">
             @Html.TextBox("total",null,new { style = "width: 6em;" })
         </div>
         <div class="tb-label tb-cell">
-            @Html.Label("totalRange")
+            @Html.Label("totalRange", @Machete.Web.Resources.WorkAssignments.totalRange)
         </div>
         <div class="tb-field tb-cell">
             @Html.TextBox("totalRange",null,new { style = "width: 6em;" })

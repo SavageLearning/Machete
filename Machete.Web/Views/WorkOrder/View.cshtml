@@ -54,9 +54,11 @@ else
             <div class="tb-header-fixed tb-cell">@WorkOrders.woidcount</div>
             <div class="tb-header-fixed tb-cell">@WorkAssignment.skillID</div>
             <div class="tb-header-fixed tb-cell">@WorkAssignment.hourlyWage</div>
-            <div class="tb-header-fixed tb-cell">@WorkAssignment.hours</div>            
+            <div class="tb-header-fixed tb-cell">@WorkAssignments.hours</div> 
+            <div class="tb-header-fixed tb-cell">@WorkAssignments.hourRange</div>                       
             <div class="tb-header-fixed tb-cell">@WorkAssignment.days</div>
             <div class="tb-header-fixed tb-cell">@WorkAssignments.earnings</div>
+            <div class="tb-header-fixed tb-cell">@WorkAssignments.earningsRange</div>
             <div class="tb-header-fixed tb-cell">@WorkAssignment.englishLevelID</div>
                         
             
@@ -70,16 +72,32 @@ else
             <div class="tb-field-fixed tb-cell">@Lookups.byID(item.skillID, CI.TwoLetterISOLanguageName)</div> 
             <div class="tb-field-fixed tb-cell">@System.String.Format("{0:C}", item.hourlyWage)</div>
             <div class="tb-field-fixed tb-cell">@Html.DisplayFor(modelItem => item.hours)</div>
+            @if (item.hourRange > 0)
+            {
+            <div class="tb-field-fixed tb-cell">@Html.DisplayFor(modelItem => item.hourRange)</div>
+            }
+            else
+            {
+                <div class="tb-field-fixed tb-cell"></div>
+            }
             <div class="tb-field-fixed tb-cell">@Html.DisplayFor(modelItem => item.days)</div>
             <div class="tb-field-fixed tb-cell">@System.String.Format("{0:C}", item.hourlyWage * item.hours * item.days)</div>
+            @if (item.hourRange > 0)
+            {
+            <div class="tb-field-fixed tb-cell">@System.String.Format("{0:C}", item.hourlyWage * item.hourRange * item.days)</div>
+            }
+            else
+            {
+                <div class="tb-field-fixed tb-cell"></div>
+            }            
             <div class="tb-field-fixed tb-cell">@item.englishLevelID</div>
                        
             
         </div>
     </div>
     
-    if (item.description != null)
-    {
+            if (item.description != null)
+            {
         <div class="tb-table">
             <div class="tb-row">
                 <div class="tb-underline tb-cell">
@@ -90,16 +108,19 @@ else
                 </div>
             </div>
         </div>
-    }
+            }
     <div class="tb-table">
         <div class="tb-row">
             <div class="tb-label tb-cell">
                 <h3>@Machete.Web.Resources.WorkOrders.workername</h3>
             </div>
             <div class="tb-field tb-cell">
-                @if (item.workerAssigned != null) {
+                @if (item.workerAssigned != null)
+                {
                   <h3>@Html.Encode(item.workerAssigned.Person.fullName())</h3>
-                } else {
+                }
+                else
+                {
                     @Html.Encode("_____________________________________________")
                 }
             </div>
