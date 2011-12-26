@@ -151,7 +151,10 @@
     <value>Duplicar asignación</value>
   </data>
   <data name="earnings" xml:space="preserve">
-    <value>(Est) Ganancias</value>
+    <value>Ganancias Estimadas (mínimas)</value>
+  </data>
+  <data name="earningsRange" xml:space="preserve">
+    <value>Ganancias Estimadas (máximas)</value>
   </data>
   <data name="editlink" xml:space="preserve">
     <value>Editar</value>
@@ -167,6 +170,12 @@
   </data>
   <data name="fullname" xml:space="preserve">
     <value>Nombre completo</value>
+  </data>
+  <data name="hourRange" xml:space="preserve">
+    <value>número máximo de horas (si es diferente)</value>
+  </data>
+  <data name="hours" xml:space="preserve">
+    <value>mínimo de horas de trabajo</value>
   </data>
   <data name="indexreturnlink" xml:space="preserve">
     <value>Volver a la lista de asignaciones de trabajo</value>
@@ -191,6 +200,12 @@
   </data>
   <data name="tabprefix" xml:space="preserve">
     <value>Asignación #:</value>
+  </data>
+  <data name="total" xml:space="preserve">
+    <value>min. total</value>
+  </data>
+  <data name="totalRange" xml:space="preserve">
+    <value>max. total</value>
   </data>
   <data name="viewlink" xml:space="preserve">
     <value>Ver</value>
