@@ -5,7 +5,7 @@ M_emp_uitab_patt = /employer/i;
 M_ord_uitab_patt = /workorder/i;
 M_ass_uitab_patt = /workassign/i;
 
-var eventDebug = 0;
+eventDebug = 0;
 var eventsequence = 0;
 var eventDate = new Date();
 var M_employerAccordion;
@@ -112,16 +112,16 @@ function jqrfyTabs(myTab, myPrefix, defaultTab) {
             if ($(ui.tab).hasClass('ListTab')) {
                 //
                 //clear out old recordID 
-                if (eventDebug) M_conlog("EVENT", "SELECT", "jqrfyTabs", ui.panel.id, "ListTab");
+                //if (eventDebug) M_conlog("EVENT", "SELECT", "jqrfyTabs", ui.panel.id, "ListTab");
                 setGlobalIDs(ui.panel.id, 0, "jqrfyTabs");
                 //
-                // hide list and redraw it                
+                // redraw datatable                
                 var myTable = $(ui.panel).find('.display');
                 myTable.dataTable().fnDraw();
 
             } else {
                 // Get record from global variable
-                if (eventDebug) M_conlog("EVENT", "SELECT", "jqrfyTabs", ui.panel.id, "RecordTab");
+                //if (eventDebug) M_conlog("EVENT", "SELECT", "jqrfyTabs", ui.panel.id, "RecordTab");
                 var hiddenID = $(ui.panel).find('.hiddenRecID').attr('value');
                 setGlobalIDs(ui.panel.id, hiddenID, "jqrfyTabs");
                 //
@@ -131,7 +131,7 @@ function jqrfyTabs(myTab, myPrefix, defaultTab) {
         // jquery.tabs() load event (This event doesn't happen for the list tab)
         //
         load: function (event, ui) {
-            if (eventDebug) M_conlog("EVENT", "LOAD", "jqrfyTabs", ui.panel.id, $(ui.tab).attr('href'));
+            //if (eventDebug) M_conlog("EVENT", "LOAD", "jqrfyTabs", ui.panel.id, $(ui.tab).attr('href'));
             // Get record from edit tab
             var hiddenID = $(ui.panel).find('.hiddenRecID').attr('value');
 
@@ -143,7 +143,7 @@ function jqrfyTabs(myTab, myPrefix, defaultTab) {
         // jquery.tabs() show event
         //
         show: function (event, ui) {
-            if (eventDebug) M_conlog("EVENT", "SHOW", "jqrfyTabs", ui.panel.id, $(ui.tab).attr('href'));
+            //if (eventDebug) M_conlog("EVENT", "SHOW", "jqrfyTabs", ui.panel.id, $(ui.tab).attr('href'));
 
             if ($(ui.tab).hasClass('ListTab') || $(ui.tab).hasClass('GeneralTab')) {
                 $(ui.panel).fadeIn();
@@ -153,7 +153,7 @@ function jqrfyTabs(myTab, myPrefix, defaultTab) {
         // jquery.tabs() remove event (This event doesn't happen for the list tab)
         //
         remove: function (event) {
-            if (eventDebug) M_conlog("EVENT", "REMOVE", "jqrfyTabs", event.target.id, "");
+            //if (eventDebug) M_conlog("EVENT", "REMOVE", "jqrfyTabs", event.target.id, "");
         },
         idPrefix: myPrefix,
         //template to put the ui-icon-close in the tab
@@ -187,7 +187,7 @@ function add_rectab(theref, label, tabObj, exclusiveTab, recID, recTable) {
     var tabsize = foundtab.size();
     if (tabsize > 0) {
         var index1 = $("li", tabObj).index($(foundtab).parent());
-        if (eventDebug) M_conlog("", "SELECT TAB", "add_rectab", "", label);
+        //if (eventDebug) M_conlog("", "SELECT TAB", "add_rectab", "", label);
         tabObj.tabs("select", index1);
         $(foundtab).val(label);
         setGlobalIDs(tabObj.id, recID, "add_rectab");
@@ -197,7 +197,7 @@ function add_rectab(theref, label, tabObj, exclusiveTab, recID, recTable) {
     if (exclusiveTab) {         // If true, look for existing tab with same label; remove for re-create
         var index2 = $(tabObj).children('.ui-tabs-nav').find('li').size() - 1;
         if (index2 > 1) { //Don't blast tab 0 or tab 1 (list and create)
-            if (eventDebug) M_conlog("INIT+", "ADD TAB", "add_rectab", "", "exclusive on; removing tab");            
+            //if (eventDebug) M_conlog("INIT+", "ADD TAB", "add_rectab", "", "exclusive on; removing tab");            
             tabObj.tabs("remove", index2);
         }
     }
@@ -244,7 +244,7 @@ function jqrfyTable(myTable, myTab, myOptions, dblclickevent, recTable) {
     var myLabel = $(myTable).attr('ID');
     oTable = $(myTable).dataTable(myOptions).fnSetFilteringDelay(400);
     $('#' + myLabel + '_filter input').attr('ID', myLabel + '_searchbox');
-    if (eventDebug) M_conlog("INIT+", "ADD TABLE","jqrfyTable", "", "");
+    //if (eventDebug) M_conlog("INIT+", "ADD TABLE","jqrfyTable", "", "");
     ////////////////////////////////////////////////////////////////
     //
     // table click event -- highlight row
@@ -268,7 +268,7 @@ function jqrfyTable(myTable, myTab, myOptions, dblclickevent, recTable) {
             var myTr = event.target.parentNode;
             var idPatt = /\d+\b/;
             var myID = $(myTr).attr('edittabref').match(idPatt);
-            if (eventDebug) M_conlog("EVENT", "DBLCLICK", "jqrfyTable", "", "========================");
+            //if (eventDebug) M_conlog("EVENT", "DBLCLICK", "jqrfyTable", "", "========================");
             //
             // add new tab
             //TODO: where the hell is myTab coming from? when will it get clobbered?

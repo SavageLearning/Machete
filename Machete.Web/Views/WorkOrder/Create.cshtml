@@ -45,8 +45,9 @@
         // WorkOrder Create submit event
         //
         M_workOrderCreateForm.submit(function (e) {
-            //EmployerID = $("#employerTabs").attr('recordID');
-            M_workOrderCreateForm.find('#EmployerID').val(M_last_employerID_loaded);
+        //
+            //
+            M_workOrderCreateForm.find('#@(idPrefix)EmployerID').val(M_last_employerID_loaded);
             if (M_workOrderCreateForm.valid()) {
                 $('#workerRequests2_WO-@(Model.ID)').find('option').attr("selected", "selected");
                 $.post($(this).attr("action"), $(this).serialize(),
