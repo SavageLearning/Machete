@@ -1,6 +1,10 @@
 ﻿@model Machete.Domain.Employer
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "employer";
+}
 @using (Html.BeginForm("Edit", "Employer", FormMethod.Post, 
                         new { @class = "edittab-form EditPost", @id="EmployerTab-" + Model.ID }))
 {
@@ -34,19 +38,25 @@
         if (eventDebug) M_conlog("EVENT", "READY", "Employer/Edit", "", "");
         $('#viewEmployer-@Model.ID').click(function () {
             printwindow = window.open('/Employer/View/@Model.ID');
-            //printwindow.print();
         });
         $('.formButton').button();
         $('#employerName').focus();
         var myEmployerTab = $('#EmployerTab-@Model.ID');
-        //var deleteForm = 
+        //
+        // machete UI detect changes on forms in tabs
+        //
+        $("#EmployerTab-@(Model.ID)").mUI('formDetectChanges');
+        //
+        // validation for elements added after page load
+        //
         $.validator.unobtrusive.parseDynamicContent($(myEmployerTab));
-        $.alerts.okButton = "@Employers.deletesubmit";
+        
         ////////////////////////////////////////////////////////////////
         //
         // delete button confirmation
         //
         $("#deleteEmployerButton-@Model.ID").click(function (event) {
+            $.alerts.okButton = "@Employers.deletesubmit";
             jConfirm('@Employers.deleteconfirmation',
                      '@Employers.deletetitle',
                      function (r) {
