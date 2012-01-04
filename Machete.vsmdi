@@ -73,7 +73,7 @@
     </TestLinks>
   </TestList>
   <TestList name="Lists of Tests" id="8c43106b-9dc1-4907-a29f-aa66a61bf5b6">
-    <RunConfiguration id="9f7ab2a9-3c0f-4e60-9f3b-524acc24db43" name="Local" storage="local.testsettings" type="Microsoft.VisualStudio.TestTools.Common.TestRunConfiguration, Microsoft.VisualStudio.QualityTools.Common, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <RunConfiguration id="2c3d2565-304c-46ae-a3be-94f33b728606" name="Trace and Test Impact" storage="traceandtestimpact.testsettings" type="Microsoft.VisualStudio.TestTools.Common.TestRunConfiguration, Microsoft.VisualStudio.QualityTools.Common, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   </TestList>
   <TestList name="Unit Tests" id="9c78ed43-91d7-49a1-b7f4-2b50d715b535" parentListId="8c43106b-9dc1-4907-a29f-aa66a61bf5b6">
     <TestLinks>

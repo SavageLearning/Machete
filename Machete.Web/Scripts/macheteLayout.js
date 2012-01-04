@@ -15,9 +15,9 @@ var M_employerCreateForm;
 var M_workOrderTable;
 var M_workOrderTabs;
 var M_workOrderCreateForm;
-var M_last_employerID_loaded = -1;
-var M_last_orderID_loaded = -1;
-var M_last_assignmentID_loaded = -1;
+//var M_last_employerID_loaded = -1;
+//var M_last_orderID_loaded = -1;
+//var M_last_assignmentID_loaded = -1;
 ////////////////////////////////////////////////////////////////
 //
 // console logging function
@@ -33,7 +33,7 @@ function M_conlog(typeStr, event, page, idtag, msg) {
                                  spaceFill(timelapse, 7),
                                  spaceFill(event, 10),
                                  spaceFill(page, 12),
-                                 spaceFill(getGlobalID(idtag), 4),
+                                 spaceFill(idtag, 4),
                                  idtag,
                                  msg);
     eventDate = d;
@@ -49,41 +49,41 @@ function spaceFill(number, width) {
     } 
     return number;
 }
-////////////////////////////////////////////////////////////////
-//
-// set global ID, based on tag
-//
-function setGlobalIDs(idtag, recordid, func) {
-    //M_conlog("ID===", "SET", func, idtag, "BEFORE");
-    if (recordid == null) return;
-    if (M_emp_uitab_patt.test(idtag)) {
-        M_last_employerID_loaded = recordid;
-    }
-    if (M_ord_uitab_patt.test(idtag)) {
-        M_last_orderID_loaded = recordid;
-    }
-    if (M_ass_uitab_patt.test(idtag)) {
-        M_last_assignmentID_loaded = recordid;
-    }
-    //M_conlog("ID===", "SET", "", idtag, "AFTER");
-}
-////////////////////////////////////////////////////////////////
-//
-// get global ID, based on tag
-//
-function getGlobalID(idtag) {
-    var rtnval = 0; 
-    if (M_emp_uitab_patt.test(idtag)) {
-        rtnval = M_last_employerID_loaded;
-    }
-    if (M_ord_uitab_patt.test(idtag)) {
-        rtnval = M_last_orderID_loaded;
-    }
-    if (M_ass_uitab_patt.test(idtag)) {
-        rtnval = M_last_assignmentID_loaded;
-    }
-    return rtnval;
-}
+//////////////////////////////////////////////////////////////////
+////
+//// set global ID, based on tag
+////
+//function setGlobalIDs(idtag, recordid, func) {
+//    //M_conlog("ID===", "SET", func, idtag, "BEFORE");
+//    if (recordid == null) return;
+//    if (M_emp_uitab_patt.test(idtag)) {
+//        M_last_employerID_loaded = recordid;
+//    }
+//    if (M_ord_uitab_patt.test(idtag)) {
+//        M_last_orderID_loaded = recordid;
+//    }
+//    if (M_ass_uitab_patt.test(idtag)) {
+//        M_last_assignmentID_loaded = recordid;
+//    }
+//    //M_conlog("ID===", "SET", "", idtag, "AFTER");
+//}
+//////////////////////////////////////////////////////////////////
+////
+//// get global ID, based on tag
+////
+//function getGlobalID(idtag) {
+//    var rtnval = 0; 
+//    if (M_emp_uitab_patt.test(idtag)) {
+//        rtnval = M_last_employerID_loaded;
+//    }
+//    if (M_ord_uitab_patt.test(idtag)) {
+//        rtnval = M_last_orderID_loaded;
+//    }
+//    if (M_ass_uitab_patt.test(idtag)) {
+//        rtnval = M_last_assignmentID_loaded;
+//    }
+//    return rtnval;
+//}
 ////////////////////////////////////////////////////////////////
 //
 //
@@ -113,7 +113,7 @@ function jqrfyTabs(myTab, myPrefix, defaultTab) {
                 //
                 //clear out old recordID 
                 //if (eventDebug) M_conlog("EVENT", "SELECT", "jqrfyTabs", ui.panel.id, "ListTab");
-                setGlobalIDs(ui.panel.id, 0, "jqrfyTabs");
+                //setGlobalIDs(ui.panel.id, 0, "jqrfyTabs");
                 //
                 // redraw datatable                
                 var myTable = $(ui.panel).find('.display');
@@ -122,8 +122,8 @@ function jqrfyTabs(myTab, myPrefix, defaultTab) {
             } else {
                 // Get record from global variable
                 //if (eventDebug) M_conlog("EVENT", "SELECT", "jqrfyTabs", ui.panel.id, "RecordTab");
-                var hiddenID = $(ui.panel).find('.hiddenRecID').attr('value');
-                setGlobalIDs(ui.panel.id, hiddenID, "jqrfyTabs");
+                //var hiddenID = $(ui.panel).find('.hiddenRecID').attr('value');
+                //setGlobalIDs(ui.panel.id, hiddenID, "jqrfyTabs");
                 //
             }
         },
@@ -136,7 +136,7 @@ function jqrfyTabs(myTab, myPrefix, defaultTab) {
             var hiddenID = $(ui.panel).find('.hiddenRecID').attr('value');
 
             // Set record ID in tabs custom attribute
-            setGlobalIDs(ui.panel.id, hiddenID, "jqrfyTabs");
+            //setGlobalIDs(ui.panel.id, hiddenID, "jqrfyTabs");
             $(ui.panel).fadeIn();
         },
         //
@@ -190,7 +190,7 @@ function add_rectab(theref, label, tabObj, exclusiveTab, recID, recTable) {
         //if (eventDebug) M_conlog("", "SELECT TAB", "add_rectab", "", label);
         tabObj.tabs("select", index1);
         $(foundtab).val(label);
-        setGlobalIDs(tabObj.id, recID, "add_rectab");
+        //setGlobalIDs(tabObj.id, recID, "add_rectab");
         return;
     }
 

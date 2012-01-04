@@ -92,6 +92,9 @@ namespace Machete.Test
             SelectOption(By.Id(prefix + "incomeID"), "Less than $15,000");
             SelectOption(By.Id(prefix + "neighborhoodID"), "Kent");
             _d.FindElement(By.Id("createWorkerBtn")).Click();
+
+            //
+            //
             Assert.IsTrue(false);
             return true;
         }
