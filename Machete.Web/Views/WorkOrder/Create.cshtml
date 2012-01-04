@@ -9,9 +9,9 @@
 @using (Html.BeginForm("Create", "WorkOrder", FormMethod.Post, 
                         new { @id = "workOrderCreateForm" }))
 {
-        <input type="button" id="@(idPrefix)copyEmployerInfo" class="formButton"
+    <input type="button" id="@(idPrefix)copyEmployerInfo" class="formButton"
            value="@WorkOrders.copyemployerinfo" tabindex="9" />
-        <input type="submit" id="@(idPrefix)SaveBtn" class="formButton"
+    <input type="submit" id="@(idPrefix)SaveBtn" class="formButton"
            value="@WorkOrders.createsubmit" tabindex="9"/>
 
 
@@ -45,15 +45,17 @@
         // WorkOrder Create submit event
         //
         M_workOrderCreateForm.submit(function (e) {
-        //
             //
-            M_workOrderCreateForm.find('#@(idPrefix)EmployerID').val(M_last_employerID_loaded);
+            // Get the employerID and put it in the WO form field
+            //
+            var eid = M_employerTabs.find(".EditPost .hiddenRecID").val();
+            M_workOrderCreateForm.find('#@(idPrefix)EmployerID').val(eid);
             if (M_workOrderCreateForm.valid()) {
                 $('#workerRequests2_WO-@(Model.ID)').find('option').attr("selected", "selected");
                 $.post($(this).attr("action"), $(this).serialize(),
                     function (data) {                        
-                        add_rectab(data.sNewRef, data.sNewLabel, M_workOrderTabs_@(Model.EmployerID), false, data.iNewID, "@(recType)");
-                    }
+                    add_rectab(data.sNewRef, data.sNewLabel, M_workOrderTabs_@(Model.EmployerID), false, data.iNewID, "@(recType)");
+                }
                 );
 
             }
