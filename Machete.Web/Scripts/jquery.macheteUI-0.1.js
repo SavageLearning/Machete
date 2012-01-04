@@ -24,7 +24,7 @@
 (function ($, window, document) {
     var methods = {
         init: function (options) {
-            // THIS 
+            // THIS
         },
         //
         // Change Work Order's employer, doubleclick event
@@ -41,16 +41,16 @@
                 jConfirm(content.message,
                     content.title + '[' + orderText + '] TO [' + employerText + ']',
                     function (r) {
-                        if (r == true) {
-                            // 
-                            // action for doubleclick
-                            $('#' + idPrefix + 'EmployerID').val(myID);
-                            $('a.ui-dialog-titlebar-close').click();
-                            $('#' + idPrefix + 'SaveBtn').submit();
-                            $('#' + idPrefix + 'CloseBtn').click();
-                            event.preventDefault();
-                        }
+                    if (r == true) {
+                        //
+                        // action for doubleclick
+                        $('#' + idPrefix + 'EmployerID').val(myID);
+                        $('a.ui-dialog-titlebar-close').click();
+                        $('#' + idPrefix + 'SaveBtn').submit();
+                        $('#' + idPrefix + 'CloseBtn').click();
+                        event.preventDefault();
                     }
+                }
                 );
                 event.preventDefault();
             });
@@ -63,7 +63,7 @@
             var hrWage = $(this).find('#hourlyWage');
             var skillID = $(this).find('#skillID');
             var hours = $(this).find('#hours');
-            // 
+            //
             // Run only if hourly wage is 0
             // don't want to override a custom hourly wage on edit
             if ($(hrWage).text() == "0") {
@@ -79,7 +79,17 @@
             $(waForm).find('.earnings-part').bind('change', function () {
                 waEstimateEarnings(waForm);
             });
+        },
+        //
+        //
+        //
+        formDetectChanges: function() {
+            var form = this;
+            $(form).find('input[type="text"], select, textarea').bind('change', function () {
+
+            });
         }
+
     };
 
     $.fn.mUI = function (method) {
@@ -96,6 +106,10 @@
     };
 
     ////////////////////////////////////////////
+    //
+    // machete js internal functions
+    //
+
     //
     //  parse skills drop down
     //  for the create/edit assignment page. 
