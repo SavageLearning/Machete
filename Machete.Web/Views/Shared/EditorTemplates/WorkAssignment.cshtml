@@ -14,23 +14,37 @@
             @Html.LabelFor(model => model.englishLevelID)
         </div>
         <div class="tb-field tb-cell">
-            @Html.DropDownListFor(model => model.englishLevelID, new SelectList(ViewBag.skillLevelList, "Value", "Text", Model.englishLevelID), @Machete.Web.Resources.Shared.choose)
+            @Html.DropDownListFor(model => model.englishLevelID, 
+                                    new SelectList(ViewBag.skillLevelList, "Value", "Text", Model.englishLevelID), 
+                                    @Machete.Web.Resources.Shared.choose, new {tabindex = "1"})
             @Html.ValidationMessageFor(model => model.englishLevelID)
         </div>
         <div class="tb-label tb-cell">
             @Html.LabelFor(model => model.skillID)
         </div>
         <div class="tb-field tb-cell">
-            <select name="skillID" id="skillID" data-val-required="A skill is required (use general labor if none was specificed)" data-val-number="The field Skill must be a number." data-val="true" class="valid"><option value="">@Shared.choose</option>
+            <select name="skillID" id="skillID" 
+                    data-val-required="A skill is required (use general labor if none was specificed)" 
+                    data-val-number="The field Skill must be a number." 
+                    data-val="true"
+                    tabindex="1"
+                    class="valid"><option value="">@Shared.choose</option>
                 @foreach (var item in ViewBag.skillList)
                 {
                     if (Model.skillID == Convert.ToInt16(item.Value))
                     {
-                        <option value="@(item.Value)" wage="@(item.wage)" minHour="@(item.minHour)" fixedJob="@(item.fixedJob)" selected="selected">@item.Text</option>
+                        <option value="@(item.Value)" 
+                                wage="@(item.wage)" 
+                                minHour="@(item.minHour)" 
+                                fixedJob="@(item.fixedJob)" 
+                                selected="selected">@item.Text</option>
                     }
                     else
                     {                                                
-                        <option value="@(item.Value)" wage="@(item.wage)" minHour="@(item.minHour)" fixedJob="@(item.fixedJob)">@item.Text</option>
+                        <option value="@(item.Value)" 
+                                wage="@(item.wage)" 
+                                minHour="@(item.minHour)" 
+                                fixedJob="@(item.fixedJob)">@item.Text</option>
                     }
                 } 
             </select>
@@ -41,7 +55,7 @@
             @Html.LabelFor(model => model.pseudoID)
         </div>
         <div class="tb-field tb-cell">
-            @Html.TextBox("pseudoID",Model.pseudoID, new { style = "width: 2em", @readonly="readonly"})
+            @Html.TextBox("pseudoID", Model.pseudoID, new { tabindex = "1", style = "width: 2em", @readonly = "readonly" })
             @Html.ValidationMessageFor(model => model.pseudoID)
         </div>
     </div>
@@ -52,41 +66,41 @@
             @Html.LabelFor(model => model.hourlyWage)
         </div>
         <div class="tb-field tb-cell">
-            @Html.TextBox("hourlyWage", Html.Encode(System.String.Format("{0:f2}", Model.hourlyWage)), new { @class = "money-field earnings-part" })
+            @Html.TextBox("hourlyWage", Html.Encode(System.String.Format("{0:f2}", Model.hourlyWage)), new { tabindex = "1", @class = "money-field earnings-part" })
             @Html.ValidationMessageFor(model => model.hourlyWage)
         </div>
         <div class="tb-label tb-cell">
             @Html.LabelFor(model => model.hours)
         </div>
         <div class="tb-field tb-cell">
-            @Html.DropDownListFor(model => model.hours, new SelectList(ViewBag.hoursList, "Value", "Text", Model.hours), Shared.choose, new { @id="hours", @class = "earnings-part" })
+            @Html.DropDownListFor(model => model.hours, new SelectList(ViewBag.hoursList, "Value", "Text", Model.hours), Shared.choose, new { tabindex = "1", @id = "hours", @class = "earnings-part" })
             @Html.ValidationMessageFor(model => model.hours)
         </div>
         <div class="tb-label tb-cell">
             @Html.LabelFor(model => model.hourRange)
         </div>
         <div class="tb-field tb-cell">
-            @Html.DropDownListFor(model => model.hourRange, new SelectList(ViewBag.hoursList, "Value", "Text", Model.hourRange), Shared.choose, new { @id = "hourRange", @class = "earnings-part" })
+            @Html.DropDownListFor(model => model.hourRange, new SelectList(ViewBag.hoursList, "Value", "Text", Model.hourRange), Shared.choose, new { tabindex = "1", @id = "hourRange", @class = "earnings-part" })
             @Html.ValidationMessageFor(model => model.hourRange)
         </div>
         <div class="tb-label tb-cell">
             @Html.LabelFor(model => model.days)
         </div>
         <div class="tb-field tb-cell">
-            @Html.DropDownListFor(model => model.days, new SelectList(ViewBag.daysList, "Value", "Text", Model.days), Shared.choose, new { @id="days", @class = "earnings-part" })
+            @Html.DropDownListFor(model => model.days, new SelectList(ViewBag.daysList, "Value", "Text", Model.days), Shared.choose, new { tabindex = "1", @id = "days", @class = "earnings-part" })
             @Html.ValidationMessageFor(model => model.days)
         </div>
         <div class="tb-label tb-cell">
             @Html.Label("total", @Machete.Web.Resources.WorkAssignments.total)
         </div>
         <div class="tb-field tb-cell">
-            @Html.TextBox("total",null,new { style = "width: 6em;" })
+            @Html.TextBox("total", null, new { tabindex = "1", style = "width: 6em;" })
         </div>
         <div class="tb-label tb-cell">
             @Html.Label("totalRange", @Machete.Web.Resources.WorkAssignments.totalRange)
         </div>
         <div class="tb-field tb-cell">
-            @Html.TextBox("totalRange",null,new { style = "width: 6em;" })
+            @Html.TextBox("totalRange", null, new { tabindex = "1", style = "width: 6em;" })
         </div>
     </div>
 </div>
@@ -97,7 +111,7 @@
         </div>
         <div class="tb-field tb-cell desc-field">
             @*@Html.TextAreaFor("description", Model.description, new { style = "width: 40em; height: 4em;" })*@
-            @Html.TextAreaFor(model => model.description, new { @class = "desc-field" })
+            @Html.TextAreaFor(model => model.description, new { tabindex = "1", @class = "desc-field" })
             @Html.ValidationMessageFor(model => model.description)
         </div>
     </div>

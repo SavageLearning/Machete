@@ -7,10 +7,18 @@
 }
 <div id="workAssignTabs-wo-@(Model.ID)">
     <ul>
-        <li><a href="#workAssignList-wo-@(Model.ID)" class="workAssignListTab ListTab" id="walt-@(Model.ID)">@WorkAssignments.listlink</a> </li>
+        <li>
+            <a href="#workAssignList-wo-@(Model.ID)" 
+                class="workAssignListTab ListTab" 
+                id="walt-@(Model.ID)">@WorkAssignments.listlink</a> 
+        </li>
         @if ((Html.IsInRole(Html.Role_AMP()) && Model.dateTimeofWork >= DateTime.Today) || Html.IsInRole(Html.Role_AM()))
         {
-            <li><a href="/WorkAssignment/Create?WorkOrderID=@(Model.ID)" class="workAssignCreateTab CreateTab" id="wact-@(Model.ID)">@WorkAssignments.createlink</a></li>
+            <li>
+                <a href="/WorkAssignment/Create?WorkOrderID=@(Model.ID)" 
+                    class="workAssignCreateTab CreateTab" 
+                    id="wact-@(Model.ID)">@WorkAssignments.createlink</a>
+             </li>
         }
     </ul>
     <div id="workAssignList-wo-@(Model.ID)">
@@ -36,26 +44,24 @@
 </div>
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
-        if (eventDebug) M_conlog("EVENT", "READY", "assigment", "", "");
         ////////////////////////////////////////////////////////////////
         //
         // Create Work Assignment tabs
         //
-        M_assignmentTabs_@(Model.ID) = null;
-        M_assignmentTable_@(Model.ID) = null;
-        if (typeof M_workOrderTabs_@(Model.EmployerID) != "undefined") {
-            M_workOrderTabs_@(Model.EmployerID).unbind('.M_asmt_@(Model.ID)');
+        if (typeof $('#workOrderTabs_@(Model.EmployerID)') != "undefined") {
+            $('#workOrderTabs_@(Model.EmployerID)').unbind('.M_asmt_@(Model.ID)');
         }
-        M_assignmentTabs_@(Model.ID) = $('#workAssignTabs-wo-@(Model.ID)');
-        var defaultTab = 1;
-        jqrfyTabs(M_assignmentTabs_@(Model.ID), "ui-tabs-workAssign-wo-@(Model.ID)-", defaultTab);
+
+        $('#workAssignTabs-wo-@(Model.ID)').mUI('createTabs', {
+            prefix: "ui-tabs-workAssign-wo-@(Model.ID)-", 
+            defaultTab: 1
+        });
         ////////////////////////////////////////////////////////////////
         //
         // Create Work Assignment table
         //
-        M_assignmentTable_@(Model.ID) = $('#workAssignTable-wo-@(Model.ID)');
         $('#activateWorkOrderButton-@(Model.ID)').hide();
-        jqrfyTable(M_assignmentTable_@(Model.ID), M_assignmentTabs_@(Model.ID),
+        jqrfyTable($('#workAssignTable-wo-@(Model.ID)'), $('#workAssignTabs-wo-@(Model.ID)'),
         {
             "bPaginate": true,
             "bLengthChange": true,
@@ -109,26 +115,18 @@
 				    /* Do whatever additional processing you want on the callback, then tell DataTables */
 				    fnCallback(json)
 			    } );
-		    },
-            "fnDrawCallback": function () {
-                if (eventDebug) M_conlog("EVENT", "DRAW", "assignment", "", "fnDrawcallback");
-                //$('#activateWorkOrder-@(Model.ID)').hide();
-            }
-
+		    }
         });
         ////////////////////////////////////////////////////////////////////////////
         //
         // Work Order Tab SELECT events (added from Work Assignment Index script)
         //
-        if (typeof M_workOrderTabs_@(Model.EmployerID) != "undefined") {
-            M_workOrderTabs_@(Model.EmployerID).bind("tabsselect.M_asmt_@(Model.ID)", function (event, ui) {
+        if (typeof $('#workOrderTabs_@(Model.EmployerID)') != "undefined") {
+            $('#workOrderTabs_@(Model.EmployerID)').bind("tabsselect.M_asmt_@(Model.ID)", function (event, ui) {
                 if (eventDebug) M_conlog("EVENT", "SELECT","assignment",ui.panel.id, "");
                 //hide work order activation button. If assignment row exists, it will show button.
                 $('#activateWorkOrder-@(Model.ID)').hide();
             });
         }   
-        //M_workOrderTabs_@(Model.EmployerID).bind("tabsremove.M_asmt_@(Model.ID)", function (event) {if (eventDebug) M_conlog("EVENT", "REMOVE","assignment", event.target.id, "");});
-        //M_workOrderTabs_@(Model.EmployerID).bind("tabsshow.M_asmt_@(Model.ID)", function (event, ui) {if (eventDebug) M_conlog("EVENT", "SHOW","assignment", ui.panel.id, ""); });
-        //M_workOrderTabs_@(Model.EmployerID).bind("tabsload.M_asmt_@(Model.ID)", function (event, ui) {if (eventDebug) M_conlog("EVENT", "LOAD","assignment",ui.panel.id, "");});
     });
 </script>

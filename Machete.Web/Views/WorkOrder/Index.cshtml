@@ -4,7 +4,7 @@
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
 }
-<div id="dispatchTabs" >
+<div id="woDispatchTabs" >
     <ul>
         <li><a href="#orderList" id="pendingOrderListTab" class="ListTab">@Machete.Web.Resources.WorkOrders.details</a> </li>
         <li><a href="#summaryList" id="summaryOrderListTab" class="ListTab">@Machete.Web.Resources.WorkOrders.summary</a> </li>
@@ -137,24 +137,18 @@
         //
         // Setup work order Tabs
         //
-        M_dispatchTabs = null;
-        M_orderTable = null;
-        M_summaryTable = null;
         $('.formButton').button();
-        M_dispatchTabs = $('#dispatchTabs');
-        jqrfyTabs(M_dispatchTabs, "ui-tabs-dispatch-");
+        $('#woDispatchTabs').mUI('createTabs', {prefix: "ui-tabs-dispatch-"});
         ////////////////////////////////////////////////////////////////
         //
         // Setup workorder Table
         //
-        M_orderTable = $('#orderTable');
-        M_summaryTable = $('#orderSummaryTable');
-        oTable = jqrfyTable(M_orderTable, M_dispatchTabs, orderDefs, false);
+        oTable = jqrfyTable($('#orderTable'), $('#woDispatchTabs'), orderDefs, false);
 
-        jqrfyTable(M_summaryTable, M_dispatchTabs, summaryDefs, function (event) {            
+        jqrfyTable($('#orderSummaryTable'), $('#woDispatchTabs'), summaryDefs, function (event) {            
             var myTr = event.target.parentNode;
-            $(M_orderTable).dataTable().fnFilter($(myTr).find('td:eq(0)').text());
-            $('#dispatchTabs').tabs('select',0);
+            $('#orderTable').dataTable().fnFilter($(myTr).find('td:eq(0)').text());
+            $('#woDispatchTabs').tabs('select',0);
         });
         ////////////////////////////////////////////////////////////////
         //

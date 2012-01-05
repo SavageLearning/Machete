@@ -26,6 +26,9 @@
         init: function (options) {
             // THIS
         },
+        //
+        //
+        //
         createTabs: function (opt) {
             var tabdiv = this;
             //
@@ -73,6 +76,14 @@
                 // jquery.tabs() remove event (This event doesn't happen for the list tab)
                 remove: function (event) { }
             });
+            //
+            // close tab event
+            $(tabdiv).find("span.ui-icon-close").live("click", function (e) {
+                var trgTabnav = $(e.target).closest('.ui-tabs');
+                var index = trgTabnav.children('.ui-tabs-nav').index($(this).parent());
+                trgTabnav.tabs("remove", index);
+                trgTabnav.tabs("select", 0);            //select list tab
+            });
         },
         //
         // Change Work Order's employer, doubleclick event
@@ -112,11 +123,18 @@
             var skillID = $(waForm).find('#skillID');
             var hours = $(waForm).find('#hours');
             //
+            // Increment tabindex by 20 to offset for employers(0) and orders (10)
+            $(waForm).find('[tabindex]').each(function () {
+                $(this).attr('tabindex', parseInt($(this).attr('tabindex')) + 20)
+            });
+            //
             // Run only if hourly wage is 0
             // don't want to override a custom hourly wage on edit
             if ($(hrWage).text() == "0") {
+                // update earnings info based on skill
                 parseSkillsDD(waForm);
             }
+            // show total estimated earnings for assignment
             waEstimateEarnings(waForm);
             _waFilterHourRange(waForm);
             // presets for skill dropdown
@@ -149,6 +167,29 @@
                 }
             });
             //TODO: javascript...need to deal with ajax error
+        },
+        //
+        //
+        formClickDelete: function (opt) {
+            var btn = this;
+            var ok = opt.ok || "DELETE?!";
+            var confirm = opt.confirm || "CONFIRM?!";
+            var title = opt.title || "TITLE?!";
+            var form = opt.form || Error("No employer Delete Form defined");
+            _submitDelete(form);
+            btn.click(function (e) {
+                $.alerts.okButton = ok;
+                jConfirm(confirm,
+                         title,
+                         function (r) {
+                             if (r == true) {
+                                 //alert("delete submitted");
+                                 form.submit();
+                             }
+                         }
+                 );
+            });
+
         },
         //
         //
@@ -258,5 +299,18 @@
             $(waForm).find('#totalRange').val("");
         }
     }
+    //
+    //
+    //
+    function _submitDelete(form) {
+        form.submit(function (e) {
+            e.preventDefault();
+            $.post($(this).attr("action"), $(this).serialize());
+            //
+            //trigger close even
+            var oTabs = $(e.target).closest('.ui-tabs');
+            $(oTabs).find('.ui-state-active').find('span.ui-icon-close').click();
 
+        });
+    }
 })(jQuery, window, document);

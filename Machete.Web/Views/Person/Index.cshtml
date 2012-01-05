@@ -65,6 +65,6 @@
             }                
         }, null, "@(recType)");
         $('#personTable_filter input').attr('ID','personSearchBox');
-    jqrfyTabs($('#personTabs'), "ui-tabs-person-");
+        $('#personTabs').mUI("createTabs", {prefix: "ui-tabs-person-"} );
     });
 </script>

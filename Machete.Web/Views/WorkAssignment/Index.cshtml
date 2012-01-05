@@ -150,8 +150,8 @@
     $('#requestedWorkers_visible').val(false);
     $('#typeofwork_grouping').val(null);
     $('#status').val(false);
-    jqrfyTabs($("#assignmentTab"), "ui-tabs-assignment-");
-    jqrfyTabs($("#signinTab"), "ui-tabs-signin-");
+    $("#assignmentTab").mUI('createTabs', {prefix: "ui-tabs-assignment-"});
+    $("#signinTab").mUI('createTabs', { prefix: "ui-tabs-signin-"});
 
     jqrfyWSignin($("#lotteryTable"), {
         //"sScrollY": "300px",

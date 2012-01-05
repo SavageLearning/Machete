@@ -35,13 +35,11 @@
 @Html.Partial("WorkOrderIndex", Model)
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
-        if (eventDebug) M_conlog("EVENT", "READY", "Employer/Edit", "", "");
         $('#viewEmployer-@Model.ID').click(function () {
             printwindow = window.open('/Employer/View/@Model.ID');
         });
         $('.formButton').button();
         $('#employerName').focus();
-        var myEmployerTab = $('#EmployerTab-@Model.ID');
         //
         // machete UI detect changes on forms in tabs
         //
@@ -49,35 +47,38 @@
         //
         // validation for elements added after page load
         //
-        $.validator.unobtrusive.parseDynamicContent($(myEmployerTab));
-        
-        ////////////////////////////////////////////////////////////////
+        $.validator.unobtrusive.parseDynamicContent($('#EmployerTab-@Model.ID'));
         //
         // delete button confirmation
-        //
-        $("#deleteEmployerButton-@Model.ID").click(function (event) {
-            $.alerts.okButton = "@Employers.deletesubmit";
-            jConfirm('@Employers.deleteconfirmation',
-                     '@Employers.deletetitle',
-                     function (r) {
-                         if (r == true) {
-                             //alert("delete submitted");
-                             $('#DeleteEmployer-@Model.ID').submit();
-                         }
-                     }
-             );
+        $("#deleteEmployerButton-@Model.ID").mUI('formClickDelete', {
+            ok: "@Employers.deletesubmit",
+            confirm: '@Employers.deleteconfirmation',
+            title: '@Employers.deletetitle',
+            form: $('#DeleteEmployer-@Model.ID')
         });
+//        $("#deleteEmployerButton-@Model.ID").click(function (event) {
+//            $.alerts.okButton = "@Employers.deletesubmit";
+//            jConfirm('@Employers.deleteconfirmation',
+//                     '@Employers.deletetitle',
+//                     function (r) {
+//                         if (r == true) {
+//                             //alert("delete submitted");
+//                             $('#DeleteEmployer-@Model.ID').submit();
+//                         }
+//                     }
+//             );
+//        });
         ////////////////////////////////////////////////////////////////
         //
         // edit form submit
         //
-        $(myEmployerTab).submit(function (e, myEmployerTab) {
+        $('#EmployerTab-@Model.ID').submit(function (e) {
             //alert("#EmployerTab-@Model.ID submitted");
             if ($('#EmployerTab-@Model.ID').valid()) {
                 $.post($(this).attr("action"), $(this).serialize());
                 $(e.target).closest('.ui-tabs').tabs("select", 0);
             }
-            
+
             //TODO: javascript...need to deal with ajax error
             e.preventDefault();
         });
@@ -85,15 +86,14 @@
         //
         // Delete employer submit 
         //
-        $("#DeleteEmployer-@Model.ID").submit(function (e) {
-            //alert("#DeleteEmployer-@Model.ID submitted");
-            $.post($(this).attr("action"), $(this).serialize());
-            //
-            //trigger close even
-            var oTabs = $(e.target).closest('.ui-tabs');
-            $(oTabs).find('.ui-state-active').find('span.ui-icon-close').click();
-            //TODO: javascript...need to deal with ajax error
-            //e.preventDefault();
-        });
+//        $("#DeleteEmployer-@Model.ID").submit(function (e) {
+//            $.post($(this).attr("action"), $(this).serialize());
+//            //
+//            //trigger close even
+//            var oTabs = $(e.target).closest('.ui-tabs');
+//            $(oTabs).find('.ui-state-active').find('span.ui-icon-close').click();
+//            //TODO: javascript...need to deal with ajax error
+//            e.preventDefault();
+//        });
     });
 </script>

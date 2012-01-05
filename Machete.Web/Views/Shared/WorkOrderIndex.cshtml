@@ -52,23 +52,20 @@
 </div>
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
-        if (eventDebug) M_conlog("EVENT", "READY", "workorder", "", "");
         ////////////////////////////////////////////////////////////////
         //
         // Setup work order Tabs
         //
         $('#workOrderTabs_@(Model.ID)').unbind('.M_workorderEvents');
-        M_workOrderTabs_@(Model.ID) = null;
         M_workOrderTable_@(Model.ID) = null;
         
-        M_workOrderTabs_@(Model.ID) = $('#workOrderTabs_@(Model.ID)');
-        jqrfyTabs(M_workOrderTabs_@(Model.ID), "ui-tabs-workorder-e_@(Model.ID)-");
+        $('#workOrderTabs_@(Model.ID)').mUI('createTabs', {prefix: "ui-tabs-workorder-e_@(Model.ID)-"});
         ////////////////////////////////////////////////////////////////
         //
         // Setup workorder Table
         //
         M_workOrderTable_@(Model.ID) = $('#workOrderTable_@(Model.ID)');
-        jqrfyTable(M_workOrderTable_@(Model.ID), M_workOrderTabs_@(Model.ID),
+        jqrfyTable(M_workOrderTable_@(Model.ID), $('#workOrderTabs_@(Model.ID)'),
         {
             "bPaginate": true,
             "bLengthChange": true,
@@ -105,10 +102,6 @@
         //
         // WorkOrder Tab sevent (including inherited events)
         //
-        //M_workOrderTabs_@(Model.ID).bind("tabsselect.M_workorderEvents", function (event, ui) { if (eventDebug) M_conlog("EVENT", "SELECT", "workorder", ui.panel.id, ""); });
-        //M_workOrderTabs_@(Model.ID).bind("tabsload.M_workorderEvents", function (event, ui) { if (eventDebug) M_conlog("EVENT", "LOAD", "workorder", ui.panel.id, ""); });
-        //M_workOrderTabs_@(Model.ID).bind("tabsshow.M_workorderEvents", function (event, ui) { if (eventDebug) M_conlog("EVENT", "SHOW", "workorder", ui.panel.id, ""); });
-        //M_workOrderTabs_@(Model.ID).bind("tabsremove.M_workorderEvents", function (event, ui) { if (eventDebug) M_conlog("EVENT", "REMOVE", "workorder", event.target.id, ""); });
         M_employerSelect = $('#employerSelectTable').dataTable({
             "bPaginate": true,
             "bLengthChange": true,
