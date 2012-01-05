@@ -6,7 +6,7 @@
 @using (Html.BeginForm("Create", "WorkAssignment", FormMethod.Post,
                         new { @id = "workAssignmentCreateForm-wo-" + Model.workOrderID}))
 {
-        <input type="submit" id="workAssignmentCreateButton-wo-@(Model.workOrderID)"
+        <input type="submit" id="workAssignmentCreateButton-wo-@(Model.workOrderID)" class="formButton"
                value="@WorkAssignments.createsubmit" tabindex="9"/>
         @Html.ValidationSummary(true)
         @Html.EditorForModel()
@@ -15,7 +15,7 @@
     $(document).ready(function () {
         $('#activateWorkOrderButton-@(Model.workOrderID)').hide();
         //jquery'ify the buttons
-        $('#workAssignmentCreateButton-wo-@(Model.workOrderID)').button();
+        $('.formButton').button();
         //Run MS validation on dynamic content
         M_createAssignmentForm_@(Model.workOrderID) = $('#workAssignmentCreateForm-wo-@(Model.workOrderID)');
         $.validator.unobtrusive.parseDynamicContent('#workAssignmentCreateForm-wo-@(Model.workOrderID)');

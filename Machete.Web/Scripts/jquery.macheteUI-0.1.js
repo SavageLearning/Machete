@@ -142,7 +142,7 @@
                         add_rectab(data.sNewRef,
                                     data.sNewLabel,
                                     $('#employerTabs'),
-                                    true, 
+                                    true,
                                     data.iNewID,
                                     opt.recType);
                     });

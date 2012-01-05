@@ -48,18 +48,9 @@
         var personID = "@Model.ID";
         $('#view-@Model.ID').click(function () {
             printwindow = window.open('/Person/View/@Model.ID');
-            //printwindow.print();
         });
         $('.formButton').button();
         $('#firstname1').focus();
-        //$('#edittab-form').ajaxForm();
-        //        $("#Persontab-"+ "@Model.ID").submit(function (e) {
-        //            if ($("#edittab-form").valid()) {
-        //                $.post($(this).attr("action"), $(this).serialize());
-        //            }
-        //            //TODO: javascript...need to deal with ajax error
-        //            e.preventDefault();
-        //        });
         $.validator.unobtrusive.parseDynamicContent('.edittab-form');
         $.alerts.okButton = "@Persons.deletesubmit";
         $("#delete-@Model.ID").click(function () {
@@ -74,7 +65,8 @@
         });
         //
         //
-        //
-        jqrfyTabs($('#personPartsTabs'), "ui-tabs-personParts-");
+        
+        $('#personPartsTabs').mUI('createTabs', { prefix: "ui-tabs-personParts-" });
+        //jqrfyTabs($('#personPartsTabs'), "ui-tabs-personParts-");
     });
 </script>
