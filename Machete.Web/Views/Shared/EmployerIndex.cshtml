@@ -67,7 +67,8 @@
                     }
                                     
         }, null, "@(recType)");
-        M_employerTabs = jqrfyTabs($('#employerTabs'), "ui-tabs-employer-");
+        $('#employerTabs').mUI('createTabs', { prefix: "ui-tabs-employer-" });
+        //M_employerTabs = jqrfyTabs($('#employerTabs'), "ui-tabs-employer-");
     });
 </script>
 

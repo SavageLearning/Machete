@@ -81,21 +81,24 @@ namespace Machete.Test
             _d.FindElement(By.Id(prefix + "dateinUSA")).SendKeys(DateTime.Today.ToShortDateString());
             _d.FindElement(By.Id(prefix + "dateinseattle")).SendKeys(DateTime.Today.ToShortDateString());
             _d.FindElement(By.Id(prefix + "memberexpirationdate")).SendKeys(DateTime.Today.ToShortDateString());
-            _d.FindElement(By.Id(prefix + "height")).SendKeys("6'1");
+            _d.FindElement(By.Id(prefix + "height")).SendKeys(@"6'1");
             _d.FindElement(By.Id(prefix + "weight")).SendKeys("230lbs");
             _d.FindElement(By.Id(prefix + "dwccardnum")).Clear();
             _d.FindElement(By.Id(prefix + "dwccardnum")).SendKeys("12345");
 
             SelectOption(By.Id(prefix + "neighborhoodID"), "Kent");
-            SelectOption(By.Id(prefix + "typeOfWorkID"), "(DWC) Day Worker Center");
+            SelectOption(By.Id(prefix + "typeOfWorkID"), @"(DWC) Day Worker Center");
             SelectOption(By.Id(prefix + "englishlevelID"), "2");
-            SelectOption(By.Id(prefix + "incomeID"), "Less than $15,000");
+            SelectOption(By.Id(prefix + "incomeID"), @"Less than $15,000");
             SelectOption(By.Id(prefix + "neighborhoodID"), "Kent");
             _d.FindElement(By.Id("createWorkerBtn")).Click();
 
             //
             //
-            Assert.IsTrue(false);
+            WaitForElementValue(By.Id("workerCreateTab"), "Worker Information");
+            _d.FindElement(By.Id("workerCreateTab")).Click();
+
+            //Assert.IsTrue(false);
             return true;
         }
         #endregion

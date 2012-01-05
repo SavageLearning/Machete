@@ -26,6 +26,54 @@
         init: function (options) {
             // THIS
         },
+        createTabs: function (opt) {
+            var tabdiv = this;
+            //
+            // create jQuery tabs with mUI handlers
+            $(tabdiv).tabs({
+                // defaults
+                selected: opt.defaultTab || 0,
+                idPrefix: opt.prefix || "PREFIX",
+                //template to put the ui-icon-close in the tab
+                tabTemplate: "<li><a href='#{href}'>#{label}</a> <span class='ui-icon ui-icon-close'>Remove Tab</span></li>",
+                //
+                //http://forum.jquery.com/topic/ajaxoptions-is-null-problem
+                ajaxOptions: {
+                    error: function (xhr, status, index, anchor) {
+                        $(anchor.hash).html("Couldn't load this tab.");
+                    },
+                    data: {},
+                    success: function (data, textStatus) { }
+                },
+                //
+                // jquery.tabs() select event
+                select: function (event, ui) {
+                    $(ui.panel).hide();
+                    //if ListTab, hide table and redraw it
+                    if ($(ui.tab).hasClass('ListTab')) {
+                        // redraw datatable                
+                        var myTable = $(ui.panel).find('.display');
+                        myTable.dataTable().fnDraw();
+                    }
+                },
+                //
+                // jquery.tabs() load event (This event doesn't happen for the list tab)
+                load: function (event, ui) {
+                    $(ui.panel).fadeIn();
+                },
+                //
+                // jquery.tabs() show event
+                show: function (event, ui) {
+                    if ($(ui.tab).hasClass('ListTab')
+                            || $(ui.tab).hasClass('GeneralTab')) {
+                        $(ui.panel).fadeIn();
+                    }
+                },
+                //
+                // jquery.tabs() remove event (This event doesn't happen for the list tab)
+                remove: function (event) { }
+            });
+        },
         //
         // Change Work Order's employer, doubleclick event
         //
@@ -41,16 +89,16 @@
                 jConfirm(content.message,
                     content.title + '[' + orderText + '] TO [' + employerText + ']',
                     function (r) {
-                    if (r == true) {
-                        //
-                        // action for doubleclick
-                        $('#' + idPrefix + 'EmployerID').val(myID);
-                        $('a.ui-dialog-titlebar-close').click();
-                        $('#' + idPrefix + 'SaveBtn').submit();
-                        $('#' + idPrefix + 'CloseBtn').click();
-                        event.preventDefault();
+                        if (r == true) {
+                            //
+                            // action for doubleclick
+                            $('#' + idPrefix + 'EmployerID').val(myID);
+                            $('a.ui-dialog-titlebar-close').click();
+                            $('#' + idPrefix + 'SaveBtn').submit();
+                            $('#' + idPrefix + 'CloseBtn').click();
+                            event.preventDefault();
+                        }
                     }
-                }
                 );
                 event.preventDefault();
             });
@@ -60,14 +108,14 @@
         //
         waFormConfiguration: function () {
             var waForm = this;
-            var hrWage = $(this).find('#hourlyWage');
-            var skillID = $(this).find('#skillID');
-            var hours = $(this).find('#hours');
+            var hrWage = $(waForm).find('#hourlyWage');
+            var skillID = $(waForm).find('#skillID');
+            var hours = $(waForm).find('#hours');
             //
             // Run only if hourly wage is 0
             // don't want to override a custom hourly wage on edit
             if ($(hrWage).text() == "0") {
-                parseSkillsDD(this);
+                parseSkillsDD(waForm);
             }
             waEstimateEarnings(waForm);
             _waFilterHourRange(waForm);
@@ -82,8 +130,29 @@
         },
         //
         //
+        formSubmitCreate: function (opt) {
+            var form = this;
+            form.submit(function (e) {
+                e.preventDefault();
+                if ($(form).valid()) {
+                    //
+                    // post create form, open tab for new records
+                    $.post($(form).attr("action"), $(form).serialize(),
+                    function (data) {
+                        add_rectab(data.sNewRef,
+                                    data.sNewLabel,
+                                    $('#employerTabs'),
+                                    true, 
+                                    data.iNewID,
+                                    opt.recType);
+                    });
+                }
+            });
+            //TODO: javascript...need to deal with ajax error
+        },
         //
-        formDetectChanges: function() {
+        //
+        formDetectChanges: function () {
             var form = this;
             $(form).find('input[type="text"], select, textarea').bind('change', function () {
 
