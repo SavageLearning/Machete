@@ -19,30 +19,31 @@
         //Run MS validation on dynamic content        
         $.validator.unobtrusive.parseDynamicContent('#workAssignmentCreateForm-wo-@(Model.workOrderID)');
         // Find tabindex attribute (for tab order, not jquery tabs) and increment by 10
-//        $('#workAssignmentCreateForm-wo-@(Model.workOrderID) [tabindex]').each(function () {
-//            $(this).attr('tabindex', parseInt($(this).attr('tabindex')) + 20) 
-//        });
-        ////////////////////////////////////////////////////////////////
-        //
+        //        $('#workAssignmentCreateForm-wo-@(Model.workOrderID) [tabindex]').each(function () {
+        //            $(this).attr('tabindex', parseInt($(this).attr('tabindex')) + 20) 
+        //        });
         //
         //
         $('#workAssignmentCreateForm-wo-@(Model.workOrderID)').mUI('waFormConfiguration');
-        ////////////////////////////////////////////////////////////////
         //
         // WorkOrder Create submit event
-        //
-        $('#workAssignmentCreateForm-wo-@(Model.workOrderID)').submit(function (e) {
-            if ($("#workAssignmentCreateForm-wo-@(Model.workOrderID)").valid()) {
-                e.preventDefault();
-                $.post($(this).attr("action"), $(this).serialize(),
-                    function (data) {
-                        add_rectab(data.sNewRef, data.sNewLabel, $('#workAssignTabs-wo-@(Model.ID)'), false, data.iNewID, "@(recType)");
-                    }
-                );
-            }
-            //TODO: javascript...need to deal with ajax error
-
+        $('#workAssignmentCreateForm-wo-@(Model.workOrderID)').mUI('formSubmit', {
+            exclusiveTab: false,
+            create: true,
+            recType: "@(recType)"
         });
+//        $('#workAssignmentCreateForm-wo-@(Model.workOrderID)').submit(function (e) {
+//            if ($("#workAssignmentCreateForm-wo-@(Model.workOrderID)").valid()) {
+//                e.preventDefault();
+//                $.post($(this).attr("action"), $(this).serialize(),
+//                    function (data) {
+//                        add_rectab(data.sNewRef, data.sNewLabel, $('#workAssignTabs-wo-@(Model.ID)'), false, data.iNewID, "@(recType)");
+//                    }
+//                );
+//            }
+//            //TODO: javascript...need to deal with ajax error
+
+//        });
     });
 
 </script>

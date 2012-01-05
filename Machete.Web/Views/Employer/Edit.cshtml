@@ -42,11 +42,9 @@
         $('#employerName').focus();
         //
         // machete UI detect changes on forms in tabs
-        //
         $("#EmployerTab-@(Model.ID)").mUI('formDetectChanges');
         //
         // validation for elements added after page load
-        //
         $.validator.unobtrusive.parseDynamicContent($('#EmployerTab-@Model.ID'));
         //
         // delete button confirmation
@@ -56,46 +54,11 @@
             title: '@Employers.deletetitle',
             form: $('#DeleteEmployer-@Model.ID')
         });
-        //        $("#deleteEmployerButton-@Model.ID").click(function (event) {
-        //            $.alerts.okButton = "@Employers.deletesubmit";
-        //            jConfirm('@Employers.deleteconfirmation',
-        //                     '@Employers.deletetitle',
-        //                     function (r) {
-        //                         if (r == true) {
-        //                             //alert("delete submitted");
-        //                             $('#DeleteEmployer-@Model.ID').submit();
-        //                         }
-        //                     }
-        //             );
-        //        });
-        ////////////////////////////////////////////////////////////////
         //
         // edit form submit
-        //
         $('#EmployerTab-@Model.ID').mUI('formSubmit', {
+            create: false,
             selectTab: 0
         });
-//        $('#EmployerTab-@Model.ID').submit(function (e) {
-//            if ($('#EmployerTab-@Model.ID').valid()) {
-//                $.post($(this).attr("action"), $(this).serialize());
-//                $(e.target).closest('.ui-tabs').tabs("select", 0);
-//            }
-
-//            //TODO: javascript...need to deal with ajax error
-//            e.preventDefault();
-//        });
-        ////////////////////////////////////////////////////////////////
-        //
-        // Delete employer submit 
-        //
-        //        $("#DeleteEmployer-@Model.ID").submit(function (e) {
-        //            $.post($(this).attr("action"), $(this).serialize());
-        //            //
-        //            //trigger close even
-        //            var oTabs = $(e.target).closest('.ui-tabs');
-        //            $(oTabs).find('.ui-state-active').find('span.ui-icon-close').click();
-        //            //TODO: javascript...need to deal with ajax error
-        //            e.preventDefault();
-        //        });
     });
 </script>

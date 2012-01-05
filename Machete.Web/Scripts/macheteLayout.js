@@ -9,7 +9,7 @@ eventDebug = 0;
 var eventsequence = 0;
 var eventDate = new Date();
 var M_employerAccordion;
-var M_employerTable;
+//var M_employerTable;
 //var M_employerTabs;
 var M_employerCreateForm;
 var M_workOrderTable;
