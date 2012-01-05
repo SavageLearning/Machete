@@ -37,16 +37,16 @@ namespace Machete.Test
         {
             ////
             //// Loggoff
-            //ui.WaitForElement(By.LinkText("Logoff"));
-            //driver.FindElement(By.LinkText("Logoff")).Click();
-            //try
-            //{
-            //    driver.Quit();
-            //}
-            //catch (Exception)
-            //{
-            //    // Ignore errors if unable to close the browser
-            //}
+            ui.WaitForElement(By.LinkText("Logoff"));
+            driver.FindElement(By.LinkText("Logoff")).Click();
+            try
+            {
+                driver.Quit();
+            }
+            catch (Exception)
+            {
+                // Ignore errors if unable to close the browser
+            }
             Assert.AreEqual("", verificationErrors.ToString());
         }
         [ClassCleanup]
