@@ -144,7 +144,7 @@
             if ($('#WorkAssignmentTab-@(Model.ID)').valid()) {
                 $.post($(this).attr("action"), $(this).serialize(),
                         function (data) {                        
-                            add_rectab(data.sNewRef, data.sNewLabel, M_assignmentTabs_@(Model.workOrderID), false, data.iNewID, "@(recType)");
+                            add_rectab(data.sNewRef, data.sNewLabel, $('#workAssignTabs-wo-@(Model.ID)'), false, data.iNewID, "@(recType)");
                         }
                 );
             }

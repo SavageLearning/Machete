@@ -53,8 +53,8 @@
             if (M_workOrderCreateForm.valid()) {
                 $('#workerRequests2_WO-@(Model.ID)').find('option').attr("selected", "selected");
                 $.post($(this).attr("action"), $(this).serialize(),
-                    function (data) {                        
-                    add_rectab(data.sNewRef, data.sNewLabel, M_workOrderTabs_@(Model.EmployerID), false, data.iNewID, "@(recType)");
+                    function (data) {
+                        add_rectab(data.sNewRef, data.sNewLabel, $('#workOrderTabs_@(Model.EmployerID)'), false, data.iNewID, "@(recType)");
                 }
                 );
 
