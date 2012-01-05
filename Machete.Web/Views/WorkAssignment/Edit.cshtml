@@ -66,41 +66,34 @@
         });
         $('.formButton').button();
         $('#contactName').focus();
-        //var myWorkAssignmentTab_@(Model.ID) = $('#WorkAssignmentTab-@(Model.ID)');
         $.validator.unobtrusive.parseDynamicContent('#WorkAssignmentTab-@(Model.ID)');
         //
         // Find tabindex attribute (for tab order, not jquery tabs) and increment by 10
-        //
-        $('#WorkAssignmentTab-@(Model.ID)').find('[tabindex]').each(function () { 
-            $(this).attr('tabindex', parseInt($(this).attr('tabindex')) + 10);
-         });
+//        $('#WorkAssignmentTab-@(Model.ID)').find('[tabindex]').each(function () { 
+//            $(this).attr('tabindex', parseInt($(this).attr('tabindex')) + 10);
+//         });
         //
         // wage calculations
-        //
         $('#WorkAssignmentTab-@(Model.ID)').mUI('waFormConfiguration');
-//        if ($('#hourlyWage').text() == "0") {
-//            parseSkillsDD('#WorkAssignmentTab-@(Model.ID)');
-//        }
-//        $('#WorkAssignmentTab-@(Model.ID)').find('#skillID').bind('change', function () { 
-//            parseSkillsDD('#WorkAssignmentTab-@(Model.ID)'); 
-//        });
-
-
-        ////////////////////////////////////////////////////////////////
         //
         // Delete confirmation 
-        //
-        $("#deleteWorkAssignmentButton-@(Model.ID)").click(function () {
-            $.alerts.okButton = "@WorkAssignments.deletesubmit";
-            jConfirm('@WorkAssignments.deleteconfirmation',
-                     '@WorkAssignments.deletetitle',
-                     function (r) {
-                         if (r == true) {
-                             $('#DeleteWorkAssignment-@(Model.ID)').submit();
-                         }
-                     }
-            );
+        $("#deleteWorkAssignmentButton-@(Model.ID)").mUI('formClickDelete', {
+            ok: "@WorkAssignments.deletesubmit",
+            confirm: '@WorkAssignments.deleteconfirmation',
+            title: '@WorkAssignments.deletetitle',
+            form: $('#DeleteWorkAssignment-@Model.ID')
         });
+//        $("#deleteWorkAssignmentButton-@(Model.ID)").click(function () {
+//            $.alerts.okButton = "@WorkAssignments.deletesubmit";
+//            jConfirm('@WorkAssignments.deleteconfirmation',
+//                     '@WorkAssignments.deletetitle',
+//                     function (r) {
+//                         if (r == true) {
+//                             $('#DeleteWorkAssignment-@(Model.ID)').submit();
+//                         }
+//                     }
+//            );
+//        });
         ////////////////////////////////////////////////////////////////
         //
         //  Edit submit event
@@ -124,22 +117,26 @@
         //
         // Delete submit event
         //
-        $("#DeleteWorkAssignment-@(Model.ID)").submit(function (e) {
-            $.post($(this).attr("action"), $(this).serialize());
-            var oTabs = $(e.target).closest('.ui-tabs');
-            $(oTabs).find('.ui-state-active').find('span.ui-icon-close').click();
-            //TODO: javascript...need to deal with ajax error
-            e.preventDefault();
-        });
+//        $("#DeleteWorkAssignment-@(Model.ID)").submit(function (e) {
+//            $.post($(this).attr("action"), $(this).serialize());
+//            var oTabs = $(e.target).closest('.ui-tabs');
+//            $(oTabs).find('.ui-state-active').find('span.ui-icon-close').click();
+//            //TODO: javascript...need to deal with ajax error
+//            e.preventDefault();
+//        });
         ////////////////////////////////////////////////////////////////
         //
         // Duplicate submit event
         //
         $("#duplicate-@(Model.ID)").click(function (e) { 
             dupSubmit_@(Model.ID) = true;
+            // save the current edit
             $('#WorkAssignmentTab-@(Model.ID)').submit();
+            // duplicate the current edit
             $('#DuplicateWorkAssignment-@(Model.ID)').submit(); 
         });
+        //
+        // duplicate form submit
         $("#DuplicateWorkAssignment-@(Model.ID)").submit(function (e) {
             if ($('#WorkAssignmentTab-@(Model.ID)').valid()) {
                 $.post($(this).attr("action"), $(this).serialize(),

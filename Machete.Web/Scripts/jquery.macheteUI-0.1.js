@@ -51,7 +51,7 @@
                 //
                 // jquery.tabs() select event
                 select: function (event, ui) {
-                    $(ui.panel).hide();
+                    //$(ui.panel).hide();
                     //if ListTab, hide table and redraw it
                     if ($(ui.tab).hasClass('ListTab')) {
                         // redraw datatable                
@@ -62,15 +62,15 @@
                 //
                 // jquery.tabs() load event (This event doesn't happen for the list tab)
                 load: function (event, ui) {
-                    $(ui.panel).fadeIn();
+                    //$(ui.panel).fadeIn();
                 },
                 //
                 // jquery.tabs() show event
                 show: function (event, ui) {
-                    if ($(ui.tab).hasClass('ListTab')
-                            || $(ui.tab).hasClass('GeneralTab')) {
-                        $(ui.panel).fadeIn();
-                    }
+                    //if ($(ui.tab).hasClass('ListTab')
+                    //        || $(ui.tab).hasClass('GeneralTab')) {
+                    //    $(ui.panel).fadeIn();
+                    //}
                 },
                 //
                 // jquery.tabs() remove event (This event doesn't happen for the list tab)
@@ -148,33 +148,13 @@
         },
         //
         //
-        formSubmitCreate: function (opt) {
-            var form = this;
-            var parentTab = $(form).closest('.ui-tabs');
-            form.submit(function (e) {
-                e.preventDefault();
-                if ($(form).valid()) {
-                    //
-                    // post create form, open tab for new records
-                    $.post($(form).attr("action"), $(form).serialize(),
-                    function (data) {
-                        add_rectab(data.sNewRef,
-                                    data.sNewLabel,
-                                    parentTab,
-                                    true,
-                                    data.iNewID,
-                                    opt.recType);
-                    });
-                }
-            });
-            //TODO: javascript...need to deal with ajax error
-        },
         formSubmit: function (opt) {
             var form = this;
             var parentTab = $(form).closest('.ui-tabs');
-            var selList = opt.selectList || null;
+            var selList = opt.selectList || 0;
             var create = opt.create || null;
             var recType = opt.recType || null;
+            var exclusiveTab = opt.exclusiveTab || true;
             form.submit(function (e) {
                 e.preventDefault();
                 if ($(form).valid()) {
@@ -188,7 +168,7 @@
                             add_rectab(data.sNewRef,
                                         data.sNewLabel,
                                         parentTab,
-                                        true,
+                                        exclusiveTab,
                                         data.iNewID,
                                         recType);
                         });
@@ -196,7 +176,9 @@
                     else {
                         $.post($(form).attr("action"), $(form).serialize());
                     }
-                    if (selList) {
+                    //
+                    // Tab behavior after save. change tab or no...
+                    if (selList >= 0) {
                         $(parentTab).tabs("select", selList);
                     }
                 }
@@ -230,8 +212,9 @@
         //
         formDetectChanges: function () {
             var form = this;
-            $(form).find('input[type="text"], select, textarea').bind('change', function () {
-
+            // fires when changed AND focus moves away from element
+            $(form).find('input[type="text"], select, textarea').bind('change', function (e) {
+                debug.log($(e.target).attr('ID') + " changed");
             });
         }
 
