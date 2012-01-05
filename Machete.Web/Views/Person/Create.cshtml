@@ -2,13 +2,13 @@
 @using Machete.Web.Resources
 @using (Html.BeginForm("Create", "Person", FormMethod.Post, new { @id = "createtab-form" }))
 {
-    <input type="submit" id="createButton" value="@Persons.createsubmit" tabindex="9"/>
+    <input type="submit" id="createButton" class="formButton" value="@Persons.createsubmit" tabindex="9"/>
     @Html.ValidationSummary(true)
     @Html.EditorForModel()
 }
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
-        $('#createButton').button();
+        $('.formButton').button();
         $.validator.unobtrusive.parseDynamicContent('#createtab-form');
         $('#firstname1').focus();
     });

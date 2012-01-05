@@ -16,7 +16,7 @@
 <body>
     <div class="page">
         <div >
-            <input type="button" value="@Machete.Web.Resources.Shared.bannerbtn" id="showbanner" />
+            <input type="button" value="@Machete.Web.Resources.Shared.bannerbtn" id="showbanner" class="formButton"/>
         </div>
         <div id="header">
             <div id="title" >
@@ -59,7 +59,7 @@
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
         $('#showbanner').hide();
-        $('#showbanner').button();
+        $('.formButton').button();
         $("a[href='/@(controllerName)']").addClass('menulinkactive');
         $('#showbanner').click(function (e) {
             $('#showbanner').hide();
