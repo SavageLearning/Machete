@@ -20,8 +20,9 @@
         $.validator.unobtrusive.parseDynamicContent('#employerCreateForm');
         $('#employerName').focus();
         // Employer Create submit event
-        $("#employerCreateForm").mUI('formSubmitCreate', {
-            recType: "@(recType)" 
+        $("#employerCreateForm").mUI('formSubmit', {
+            recType: "@(recType)", //for add_rectab
+            create: true
         });
     });
 </script>

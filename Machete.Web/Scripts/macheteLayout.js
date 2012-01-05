@@ -181,28 +181,27 @@ function jqrfyTabs(myTab, myPrefix, defaultTab) {
 ///     recID       - 
 ///
 function add_rectab(theref, label, tabObj, exclusiveTab, recID, recTable) {
+    //
     //search for tab label--if it's already open, select instead of adding duplcate (datatables error)    
-
     var foundtab = $(tabObj).children('.ui-tabs-nav').find('li').find('a[recordID=' + recID + ']');
     var tabsize = foundtab.size();
     if (tabsize > 0) {
         var index1 = $("li", tabObj).index($(foundtab).parent());
-        //if (eventDebug) M_conlog("", "SELECT TAB", "add_rectab", "", label);
         tabObj.tabs("select", index1);
         $(foundtab).val(label);
-        //setGlobalIDs(tabObj.id, recID, "add_rectab");
         return;
     }
-
-    if (exclusiveTab) {         // If true, look for existing tab with same label; remove for re-create
+    //
+    // If true, look for existing tab with same label; remove for re-create
+    if (exclusiveTab) {         
         var index2 = $(tabObj).children('.ui-tabs-nav').find('li').size() - 1;
         if (index2 > 1) { //Don't blast tab 0 or tab 1 (list and create)
-            //if (eventDebug) M_conlog("INIT+", "ADD TAB", "add_rectab", "", "exclusive on; removing tab");            
             tabObj.tabs("remove", index2);
         }
     }
     tabObj.tabs("add", theref, label);  // create tab on tabbar    
-
+    //
+    //
     var tabIndex = tabObj.tabs('length');
     tabObj.tabs("select", tabIndex - 1);    // select the newly created tab
     var newTab = $(tabObj).find('.ui-tabs-selected');

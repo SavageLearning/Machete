@@ -150,6 +150,7 @@
         //
         formSubmitCreate: function (opt) {
             var form = this;
+            var parentTab = $(form).closest('.ui-tabs');
             form.submit(function (e) {
                 e.preventDefault();
                 if ($(form).valid()) {
@@ -159,11 +160,45 @@
                     function (data) {
                         add_rectab(data.sNewRef,
                                     data.sNewLabel,
-                                    $('#employerTabs'),
+                                    parentTab,
                                     true,
                                     data.iNewID,
                                     opt.recType);
                     });
+                }
+            });
+            //TODO: javascript...need to deal with ajax error
+        },
+        formSubmit: function (opt) {
+            var form = this;
+            var parentTab = $(form).closest('.ui-tabs');
+            var selList = opt.selectList || null;
+            var create = opt.create || null;
+            var recType = opt.recType || null;
+            form.submit(function (e) {
+                e.preventDefault();
+                if ($(form).valid()) {
+                    //
+                    // post create form, open tab for new records
+                    if (create) {
+                        //
+                        // post create form, open tab for new records
+                        $.post($(form).attr("action"), $(form).serialize(),
+                        function (data) {
+                            add_rectab(data.sNewRef,
+                                        data.sNewLabel,
+                                        parentTab,
+                                        true,
+                                        data.iNewID,
+                                        recType);
+                        });
+                    }
+                    else {
+                        $.post($(form).attr("action"), $(form).serialize());
+                    }
+                    if (selList) {
+                        $(parentTab).tabs("select", selList);
+                    }
                 }
             });
             //TODO: javascript...need to deal with ajax error
