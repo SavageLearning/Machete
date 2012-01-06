@@ -83,70 +83,62 @@
             title: '@WorkAssignments.deletetitle',
             form: $('#DeleteWorkAssignment-@Model.ID')
         });
-//        $("#deleteWorkAssignmentButton-@(Model.ID)").click(function () {
-//            $.alerts.okButton = "@WorkAssignments.deletesubmit";
-//            jConfirm('@WorkAssignments.deleteconfirmation',
-//                     '@WorkAssignments.deletetitle',
-//                     function (r) {
-//                         if (r == true) {
-//                             $('#DeleteWorkAssignment-@(Model.ID)').submit();
-//                         }
-//                     }
-//            );
-//        });
-        ////////////////////////////////////////////////////////////////
         //
         //  Edit submit event
-        //
-        $('#WorkAssignmentTab-@(Model.ID)').submit(function (e) {
-            e.preventDefault();
-            if ($('#WorkAssignmentTab-@(Model.ID)').valid()) {
-                $.post($(this).attr("action"), $(this).serialize());
-            } else {
-                return;
-            }
-            // dupSubmit is a global bit; flipped when save is triggered by duplicate button
-            if (!dupSubmit_@(Model.ID)) {
-                $(e.target).closest('.ui-tabs').tabs("select", 0);
-                dupSubmit_@(Model.ID) = false;
-            }
-            //TODO: javascript...need to deal with ajax error
-            
+        $("#WorkAssignmentTab-@(Model.ID)").mUI('formSubmit', {
+            exclusiveTab: false
         });
-        ////////////////////////////////////////////////////////////////
+//        $('#WorkAssignmentTab-@(Model.ID)').submit(function (e) {
+//            e.preventDefault();
+//            if ($('#WorkAssignmentTab-@(Model.ID)').valid()) {
+//                $.post($(this).attr("action"), $(this).serialize());
+//            } else {
+//                return;
+//            }
+//            // dupSubmit is a global bit; flipped when save is triggered by duplicate button
+//            if (!dupSubmit_@(Model.ID)) {
+//                $(e.target).closest('.ui-tabs').tabs("select", 0);
+//                dupSubmit_@(Model.ID) = false;
+//            }
+//            //TODO: javascript...need to deal with ajax error
+//            
+//        });
         //
-        // Delete submit event
+        // Duplicate submit event
+        $("#duplicate-@(Model.ID)").mUI('formClickDuplicate', {
+            editForm: $('#WorkAssignmentTab-@(Model.ID)'),
+            dupForm: $('#DuplicateWorkAssignment-@(Model.ID)')
+        });
+//        $("#duplicate-@(Model.ID)").click(function (e) { 
+//            dupSubmit_@(Model.ID) = true;
+//            // save the current edit
+//            $('#WorkAssignmentTab-@(Model.ID)').data({selList: null});
+//            $('#WorkAssignmentTab-@(Model.ID)').submit();
+//            // duplicate the current edit
+//            $('#DuplicateWorkAssignment-@(Model.ID)').submit(); 
+//        });
         //
-//        $("#DeleteWorkAssignment-@(Model.ID)").submit(function (e) {
-//            $.post($(this).attr("action"), $(this).serialize());
-//            var oTabs = $(e.target).closest('.ui-tabs');
-//            $(oTabs).find('.ui-state-active').find('span.ui-icon-close').click();
+        // duplicate form submit
+        $("#DuplicateWorkAssignment-@(Model.ID)").mUI('formSubmit', {
+            exclusiveTab: false,
+            create: true,
+            recType: "@(recType)"
+        });
+//        $("#DuplicateWorkAssignment-@(Model.ID)").submit(function (e) {
+//            if ($('#WorkAssignmentTab-@(Model.ID)').valid()) {
+//                $.post($(this).attr("action"), $(this).serialize(),
+//                        function (data) {                        
+//                            add_rectab(data.sNewRef, 
+//                                        data.sNewLabel, 
+//                                        $('#workAssignTabs-wo-@(Model.ID)'), 
+//                                        false, 
+//                                        data.iNewID, 
+//                                        "@(recType)");
+//                        }
+//                );
+//            }
 //            //TODO: javascript...need to deal with ajax error
 //            e.preventDefault();
 //        });
-        ////////////////////////////////////////////////////////////////
-        //
-        // Duplicate submit event
-        //
-        $("#duplicate-@(Model.ID)").click(function (e) { 
-            dupSubmit_@(Model.ID) = true;
-            // save the current edit
-            $('#WorkAssignmentTab-@(Model.ID)').submit();
-            // duplicate the current edit
-            $('#DuplicateWorkAssignment-@(Model.ID)').submit(); 
-        });
-        //
-        // duplicate form submit
-        $("#DuplicateWorkAssignment-@(Model.ID)").submit(function (e) {
-            if ($('#WorkAssignmentTab-@(Model.ID)').valid()) {
-                $.post($(this).attr("action"), $(this).serialize(),
-                        function (data) {                        
-                            add_rectab(data.sNewRef, data.sNewLabel, $('#workAssignTabs-wo-@(Model.ID)'), false, data.iNewID, "@(recType)");
-                        }
-                );
-            }
-            //TODO: javascript...need to deal with ajax error
-            e.preventDefault();
-        });
     });
 </script>
