@@ -157,6 +157,13 @@
             var exclusiveTab = opt.exclusiveTab || true;
             form.submit(function (e) {
                 e.preventDefault();
+                if (form.data("selList") != undefined) {
+                    selList = form.data("selList");
+                }
+
+                if (form.data("exclusiveTab") != undefined) {
+                    exclusiveTab = form.data("exclusiveTab"); 
+                }
                 if ($(form).valid()) {
                     //
                     // post create form, open tab for new records
@@ -184,6 +191,20 @@
                 }
             });
             //TODO: javascript...need to deal with ajax error
+        },
+        //
+        //
+        formClickDuplicate: function (opt) {
+            var btn = this;
+            var editForm = opt.editForm || Error("No edit form to submit");
+            var dupForm = opt.dupForm || Error("No duplicate form to submit");
+            btn.click(function (e) {
+                editForm.data("selList", -1);
+                editForm.data("exclusiveTab", false);
+                editForm.submit();
+                // duplicate the current edit
+                dupForm.submit();
+            });
         },
         //
         //
