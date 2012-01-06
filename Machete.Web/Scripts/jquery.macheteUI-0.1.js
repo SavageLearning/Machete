@@ -164,6 +164,10 @@
                 if (form.data("exclusiveTab") != undefined) {
                     exclusiveTab = form.data("exclusiveTab"); 
                 }
+
+                if (form.data("create") != undefined) {
+                    create = form.data("create"); 
+                }
                 if ($(form).valid()) {
                     //
                     // post create form, open tab for new records
@@ -200,9 +204,11 @@
             var dupForm = opt.dupForm || Error("No duplicate form to submit");
             btn.click(function (e) {
                 editForm.data("selList", -1);
-                editForm.data("exclusiveTab", false);
+                editForm.data("create", null);
                 editForm.submit();
                 // duplicate the current edit
+		dupForm.data("selList", -1);
+                dupForm.data("exclusiveTab", false);
                 dupForm.submit();
             });
         },
