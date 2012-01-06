@@ -57,7 +57,6 @@
         @Html.HiddenFor(model => model.ID);
     }
 }
-@Html.Partial("WorkAssignmentIndex", Model)
 
 @if (Lookups.getSingleEN("orderstatus", "Pending") == Model.status)
 {
@@ -65,7 +64,7 @@
         <input type="button" value="@WorkOrders.activatesubmit" class="formButton completeOrderButton" id="activateWorkOrderButton-@(Model.ID)"/>
     </div>
 } 
-
+@Html.Partial("WorkAssignmentIndex", Model)
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
         if (@(editDisable)) { 
@@ -97,64 +96,93 @@
         //
         $('#viewWorkOrder-@(Model.ID)').click(function () {
             printwindow = window.open('/WorkOrder/View/@(Model.ID)');
-            //printwindow.print();
         });
-
+        //
+        // Delete confirmation 
+        $("#deleteWorkOrderButton-@(Model.ID)").mUI('formClickDelete', {
+            ok: "@WorkOrders.deletesubmit",
+            confirm: '@WorkOrders.deleteconfirmation',
+            title: '@WorkOrders.deletetitle',
+            form: $('#DeleteWorkOrder-@Model.ID')
+        });
         ////////////////////////////////////////////////////////////////
         //
         // Confirm delete event
         //
-        $("#deleteWorkOrderButton-@(Model.ID)").click(function () {
-            $.alerts.okButton = "@WorkOrders.deletesubmit";
-            jConfirm('@WorkOrders.deleteconfirmation',
-                     '@WorkOrders.deletetitle',
-                     function (r) {
-                         if (r == true) {
-                             $('#DeleteWorkOrder-@(Model.ID)').submit();
-                         }
-                     }
-                    );
-        });
+//        $("#deleteWorkOrderButton-@(Model.ID)").click(function () {
+//            $.alerts.okButton = "@WorkOrders.deletesubmit";
+//            jConfirm('@WorkOrders.deleteconfirmation',
+//                     '@WorkOrders.deletetitle',
+//                     function (r) {
+//                         if (r == true) {
+//                             $('#DeleteWorkOrder-@(Model.ID)').submit();
+//                         }
+//                     }
+//                    );
+//        });
         ////////////////////////////////////////////////////////////////
         //
         // submit edit
-        //
-        $('#WorkOrderTab-@Model.ID').submit(function (e) {
-            if ($('#WorkOrderTab-@Model.ID').valid()) {
+        $("#WorkOrderTab-@(Model.ID)").mUI('formSubmit', {
+            exclusiveTab: false,
+            selectList: 0,
+            preProcess: function () {
                 $('#workerRequests2_WO-@(Model.ID)').find('option').attr("selected", "selected");
-                $.post($(this).attr("action"), $(this).serialize());
-                $(e.target).closest('.ui-tabs').tabs("select", 0);
             }
-            //TODO: javascript...need to deal with ajax error
-            e.preventDefault();
         });
+        //
+//        $('#WorkOrderTab-@Model.ID').submit(function (e) {
+//            if ($('#WorkOrderTab-@Model.ID').valid()) {
+//                $('#workerRequests2_WO-@(Model.ID)').find('option').attr("selected", "selected");
+//                $.post($(this).attr("action"), $(this).serialize());
+//                $(e.target).closest('.ui-tabs').tabs("select", 0);
+//            }
+//            //TODO: javascript...need to deal with ajax error
+//            e.preventDefault();
+//        });
         ////////////////////////////////////////////////////////////////
         //
         // submit delete
         //
-        $("#DeleteWorkOrder-@(Model.ID)").submit(function (e) {
-            $.post($(this).attr("action"), $(this).serialize());
-            var oTabs = $(e.target).closest('.ui-tabs').children('.ui-tabs-nav');
-            $(oTabs).find('.ui-state-active').find('span.ui-icon-close').click();
-            //TODO: javascript...need to deal with ajax error
-            $(e.target).closest('.ui-tabs').tabs("select", 0);
-            e.preventDefault();
-        });
+//        $("#DeleteWorkOrder-@(Model.ID)").submit(function (e) {
+//            $.post($(this).attr("action"), $(this).serialize());
+//            //
+//            // gets closest Tab object, then gets nav panel (horz. bar)
+//            var oTabs = $(e.target).closest('.ui-tabs').children('.ui-tabs-nav');
+//            // close open tab record
+//            $(oTabs).find('.ui-state-active').find('span.ui-icon-close').click();
+//            //TODO: javascript...need to deal with ajax error
+//            $(e.target).closest('.ui-tabs').tabs("select", 0);
+//            e.preventDefault();
+//        });
         ////////////////////////////////////////////////////////////////
         //
         // submit activate
         //
-        $("#activateWorkOrderButton-@(Model.ID)").click(function () { $('#ActivateWorkOrder-@(Model.ID)').submit(); });
-        $("#ActivateWorkOrder-@(Model.ID)").submit(function (e) {
-            $.post($(this).attr("action"), $(this).serialize());
-            var oTabs = $(e.target).closest('.ui-tabs').children('.ui-tabs-nav');
-            $(oTabs).find('.ui-state-active').find('span.ui-icon-close').click();
-            window.open('/WorkOrder/View/@(Model.ID)');
-            //TODO: javascript...need to deal with ajax error
-            $(e.target).closest('.ui-tabs').tabs("select", 0);
-            e.preventDefault();
+        $("#ActivateWorkOrder-@(Model.ID)").mUI('formSubmit', {
+            clickButton: $("#activateWorkOrderButton-@(Model.ID)"),
+            selectList: 0,
+            closeTab: true            
         });
-        $('#printMap').click(function () { openGoogleMap("@Html.Encode(Model.workSiteAddress1 + ' ' + Model.city + ' ' + Model.state)", null) });
+//        $("#activateWorkOrderButton-@(Model.ID)").click(function () { 
+//            $('#ActivateWorkOrder-@(Model.ID)').submit(); 
+//        });
+//        $("#ActivateWorkOrder-@(Model.ID)").submit(function (e) {
+//            $.post($(this).attr("action"), $(this).serialize());
+//            //
+//            var oTabs = $(e.target).closest('.ui-tabs').children('.ui-tabs-nav');
+//            $(oTabs).find('.ui-state-active').find('span.ui-icon-close').click();
+//            window.open('/WorkOrder/View/@(Model.ID)');
+//            //TODO: javascript...need to deal with ajax error
+//            $(e.target).closest('.ui-tabs').tabs("select", 0);
+//            e.preventDefault();
+//        });
+        //
+        //
+        $('#printMap').click(function () { 
+            openGoogleMap("@Html.Encode(Model.workSiteAddress1 + ' ' + Model.city + ' ' + Model.state)", 
+                null) 
+        });
         ////////////////////////////////////////////////////////////////
         //
         // change employer

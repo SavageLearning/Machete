@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------
+/*----------------------------------------------------------
 The base color for this template is #414D5B. If you'd like
 to use a different color start by replacing all instances of
 #5c87b2 with your new color. Deep red is #696969
@@ -25,7 +25,7 @@ body
 
 .dateNeeded 
 {
-    float:right; 
+    float:right;  
     border: 1px solid Black;
 }
 
@@ -462,12 +462,13 @@ div.recordButtons
 .tb-label
 {
     /*border: 1px solid red;*/
-    width: 10em;
-    margin: 1em 0 0 0;
+    width: 13em;
+    margin: 0em 0 0 0;
     font-weight: bold;
-    padding: 5px;
+    padding: 1px;
     text-align: right;
     
+    font-size: 90%;
 }
 
 .tb-header
@@ -494,7 +495,7 @@ div.recordButtons
 {
     /*border: 1px solid blue;*/
     margin:0.5em 0 0 0;
-    padding: 5px;
+    padding: 1px;
     /*font-weight: bold;*/
     /*width: 20em;*/
 }
