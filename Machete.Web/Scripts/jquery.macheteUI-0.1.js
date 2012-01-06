@@ -155,19 +155,27 @@
             var create = opt.create || null;
             var recType = opt.recType || null;
             var exclusiveTab = opt.exclusiveTab || true;
+            var preProcess = opt.preProcess || null;
+            var closeTab = opt.closTab || undefined;
+            //
+            //setup button.click to secondary submit
+            //  workorder/edit/activate.btn
+            if (opt.clickButton) {
+                opt.clickButton.click(function () {
+                    form.submit();
+                });
+            }
             form.submit(function (e) {
+                //
                 e.preventDefault();
-                if (form.data("selList") != undefined) {
-                    selList = form.data("selList");
-                }
-
-                if (form.data("exclusiveTab") != undefined) {
-                    exclusiveTab = form.data("exclusiveTab"); 
-                }
-
-                if (form.data("create") != undefined) {
-                    create = form.data("create"); 
-                }
+                //
+                if (preProcess) { preProcess(); }
+                //
+                if (form.data("selList") != undefined) { selList = form.data("selList"); }
+                if (form.data("exclusiveTab") != undefined) { exclusiveTab = form.data("exclusiveTab"); }
+                if (form.data("create") != undefined) { create = form.data("create"); }
+                //
+                //
                 if ($(form).valid()) {
                     //
                     // post create form, open tab for new records
@@ -186,6 +194,12 @@
                     }
                     else {
                         $.post($(form).attr("action"), $(form).serialize());
+                    }
+                    //
+                    //
+                    if (closeTab) {
+                        var oTabs = $(form).closest('.ui-tabs').children('.ui-tabs-nav');
+                        $(oTabs).find('.ui-state-active').find('span.ui-icon-close').click();
                     }
                     //
                     // Tab behavior after save. change tab or no...
@@ -207,7 +221,7 @@
                 editForm.data("create", null);
                 editForm.submit();
                 // duplicate the current edit
-		dupForm.data("selList", -1);
+                dupForm.data("selList", -1);
                 dupForm.data("exclusiveTab", false);
                 dupForm.submit();
             });
@@ -353,9 +367,8 @@
             $.post($(this).attr("action"), $(this).serialize());
             //
             //trigger close even
-            var oTabs = $(e.target).closest('.ui-tabs');
-            $(oTabs).find('.ui-state-active').find('span.ui-icon-close').click();
-
+            var tabNav = $(e.target).closest('.ui-tabs').children('.ui-tabs-nav');
+            $(tabNav).find('.ui-state-active').find('span.ui-icon-close').click();
         });
     }
 })(jQuery, window, document);

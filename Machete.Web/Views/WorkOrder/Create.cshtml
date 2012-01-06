@@ -20,17 +20,15 @@
 }
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
-        M_workOrderCreateForm = $('#workOrderCreateForm');
-        $('.formButton').button();       
-
-        //dateTimeWidget($(M_workOrderCreateForm).find('#dateTimeofWork'));
+        var woCreateForm = $('#workOrderCreateForm');
+        $('.formButton').button();
         ////////////////////////////////////////////////////////////////
         //
         // Toggle English required note box
         //
-        M_englishRequired = $(M_workOrderCreateForm).find('#englishRequired');
-        toggleDropDown(M_englishRequired, "@(Shared.yes)", $(M_workOrderCreateForm).find("#englishNote_@(Model.ID)"), true);
-        $(M_englishRequired).bind('change', function () { toggleDropDown(M_englishRequired, "@(Shared.yes)", $(M_workOrderCreateForm).find("#englishNote_@(Model.ID)"), false) });
+        M_englishRequired = $(woCreateForm).find('#englishRequired');
+        toggleDropDown(M_englishRequired, "@(Shared.yes)", $(woCreateForm).find("#englishNote_@(Model.ID)"), true);
+        $(M_englishRequired).bind('change', function () { toggleDropDown(M_englishRequired, "@(Shared.yes)", $(woCreateForm).find("#englishNote_@(Model.ID)"), false) });
         ////////////////////////////////////////////////////////////////
         //
         // Add validation to dynamic content
@@ -40,41 +38,58 @@
         $('#workOrderCreateForm [tabindex]').each(function () {
             $(this).attr('tabindex', parseInt($(this).attr('tabindex')) + 10)
         });
-        ////////////////////////////////////////////////////////////////
+        //
+        // Get the employerID and put it in the WO form field
+        var eid = $('#employerTabs').find(".EditPost .hiddenRecID").val();
+        woCreateForm.find('#@(idPrefix)EmployerID').val(eid);
         //
         // WorkOrder Create submit event
-        //
-        M_workOrderCreateForm.submit(function (e) {
-            //
-            // Get the employerID and put it in the WO form field
-            //
-            var eid = $('#employerTabs').find(".EditPost .hiddenRecID").val();
-            M_workOrderCreateForm.find('#@(idPrefix)EmployerID').val(eid);
-            if (M_workOrderCreateForm.valid()) {
+        woCreateForm.mUI('formSubmit', {
+            create: true,
+            exclusivetab: false,
+            recType: "@(recType)",
+            preProcess: function () {
                 $('#workerRequests2_WO-@(Model.ID)').find('option').attr("selected", "selected");
-                $.post($(this).attr("action"), $(this).serialize(),
-                    function (data) {
-                        add_rectab(data.sNewRef, data.sNewLabel, $('#workOrderTabs_@(Model.EmployerID)'), false, data.iNewID, "@(recType)");
-                }
-                );
-
             }
-            //TODO: javascript...need to deal with ajax error
-            e.preventDefault();
         });
+//        woCreateForm.submit(function (e) {
+//            //
+//            // Get the employerID and put it in the WO form field
+//            //
+//            var eid = $('#employerTabs').find(".EditPost .hiddenRecID").val();
+//            //
+//            //
+//            woCreateForm.find('#@(idPrefix)EmployerID').val(eid);
+//            if (woCreateForm.valid()) {
+//                $('#workerRequests2_WO-@(Model.ID)').find('option').attr("selected", "selected");
+//                $.post($(this).attr("action"), $(this).serialize(),
+//                    function (data) {
+//                        add_rectab(data.sNewRef,
+//                                    data.sNewLabel,
+//                                    $('#workOrderTabs_@(Model.EmployerID)'),
+//                                    false,
+//                                    data.iNewID,
+//                                    "@(recType)");
+//                    }
+//                );
+
+//            }
+//            //TODO: javascript...need to deal with ajax error
+//            e.preventDefault();
+//        });
         ////////////////////////////////////////////////////////////////
         //
         // Copy info  submit event
         //
         $('#@(idPrefix)copyEmployerInfo').bind("click.employerEvents", function (e) {
             employerTab = $('form[id^=EmployerTab]');
-            M_workOrderCreateForm.find('#@(idPrefix)contactName').val(employerTab.find('#@(empPrefix)name').val());
-            M_workOrderCreateForm.find('#@(idPrefix)workSiteAddress1').val(employerTab.find('#@(empPrefix)address1').val());
-            M_workOrderCreateForm.find('#@(idPrefix)workSiteAddress2').val(employerTab.find('#@(empPrefix)address2').val());
-            M_workOrderCreateForm.find('#@(idPrefix)city').val(employerTab.find('#@(empPrefix)city').val());
-            M_workOrderCreateForm.find('#@(idPrefix)state').val(employerTab.find('#@(empPrefix)state').val());
-            M_workOrderCreateForm.find('#@(idPrefix)zipcode').val(employerTab.find('#@(empPrefix)zipcode').val());
-            M_workOrderCreateForm.find('#@(idPrefix)phone').val(employerTab.find('#@(empPrefix)phone').val());
+            woCreateForm.find('#@(idPrefix)contactName').val(employerTab.find('#@(empPrefix)name').val());
+            woCreateForm.find('#@(idPrefix)workSiteAddress1').val(employerTab.find('#@(empPrefix)address1').val());
+            woCreateForm.find('#@(idPrefix)workSiteAddress2').val(employerTab.find('#@(empPrefix)address2').val());
+            woCreateForm.find('#@(idPrefix)city').val(employerTab.find('#@(empPrefix)city').val());
+            woCreateForm.find('#@(idPrefix)state').val(employerTab.find('#@(empPrefix)state').val());
+            woCreateForm.find('#@(idPrefix)zipcode').val(employerTab.find('#@(empPrefix)zipcode').val());
+            woCreateForm.find('#@(idPrefix)phone').val(employerTab.find('#@(empPrefix)phone').val());
         });
     });
 </script>

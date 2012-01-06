@@ -58,8 +58,6 @@
         if (@(editDisable)) { 
             $('#WorkAssignmentTab-@(Model.ID)').find('input,select,textarea').attr('disabled', 'disabled');
         }
-        dupSubmit_@(Model.ID) = null;
-        dupSubmit_@(Model.ID) = false;
         $('#activateWorkOrderButton-@(Model.workOrderID)').hide();
         $('#viewWorkAssignment-@(Model.ID)').click(function () {
             printwindow = window.open('/WorkAssignment/View/@(Model.ID)');
@@ -67,11 +65,6 @@
         $('.formButton').button();
         $('#contactName').focus();
         $.validator.unobtrusive.parseDynamicContent('#WorkAssignmentTab-@(Model.ID)');
-        //
-        // Find tabindex attribute (for tab order, not jquery tabs) and increment by 10
-//        $('#WorkAssignmentTab-@(Model.ID)').find('[tabindex]').each(function () { 
-//            $(this).attr('tabindex', parseInt($(this).attr('tabindex')) + 10);
-//         });
         //
         // wage calculations
         $('#WorkAssignmentTab-@(Model.ID)').mUI('waFormConfiguration');
@@ -88,35 +81,12 @@
         $("#WorkAssignmentTab-@(Model.ID)").mUI('formSubmit', {
             exclusiveTab: false
         });
-//        $('#WorkAssignmentTab-@(Model.ID)').submit(function (e) {
-//            e.preventDefault();
-//            if ($('#WorkAssignmentTab-@(Model.ID)').valid()) {
-//                $.post($(this).attr("action"), $(this).serialize());
-//            } else {
-//                return;
-//            }
-//            // dupSubmit is a global bit; flipped when save is triggered by duplicate button
-//            if (!dupSubmit_@(Model.ID)) {
-//                $(e.target).closest('.ui-tabs').tabs("select", 0);
-//                dupSubmit_@(Model.ID) = false;
-//            }
-//            //TODO: javascript...need to deal with ajax error
-//            
-//        });
         //
         // Duplicate submit event
         $("#duplicate-@(Model.ID)").mUI('formClickDuplicate', {
             editForm: $('#WorkAssignmentTab-@(Model.ID)'),
             dupForm: $('#DuplicateWorkAssignment-@(Model.ID)')
         });
-//        $("#duplicate-@(Model.ID)").click(function (e) { 
-//            dupSubmit_@(Model.ID) = true;
-//            // save the current edit
-//            $('#WorkAssignmentTab-@(Model.ID)').data({selList: null});
-//            $('#WorkAssignmentTab-@(Model.ID)').submit();
-//            // duplicate the current edit
-//            $('#DuplicateWorkAssignment-@(Model.ID)').submit(); 
-//        });
         //
         // duplicate form submit
         $("#DuplicateWorkAssignment-@(Model.ID)").mUI('formSubmit', {
@@ -124,21 +94,5 @@
             create: true,
             recType: "@(recType)"
         });
-//        $("#DuplicateWorkAssignment-@(Model.ID)").submit(function (e) {
-//            if ($('#WorkAssignmentTab-@(Model.ID)').valid()) {
-//                $.post($(this).attr("action"), $(this).serialize(),
-//                        function (data) {                        
-//                            add_rectab(data.sNewRef, 
-//                                        data.sNewLabel, 
-//                                        $('#workAssignTabs-wo-@(Model.ID)'), 
-//                                        false, 
-//                                        data.iNewID, 
-//                                        "@(recType)");
-//                        }
-//                );
-//            }
-//            //TODO: javascript...need to deal with ajax error
-//            e.preventDefault();
-//        });
     });
 </script>
