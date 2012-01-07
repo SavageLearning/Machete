@@ -20,7 +20,6 @@
 * 
 * For details please refer to:
 */
-
 (function ($, window, document) {
     var methods = {
         init: function (options) {
@@ -257,6 +256,20 @@
             $(form).find('input[type="text"], select, textarea').bind('change', function (e) {
                 debug.log($(e.target).attr('ID') + " changed");
             });
+        },
+        //
+        //
+        selectToggleOnValue: function (opt) {
+            var select = this;
+            var showVal = opt.showVal || "yes";
+            var target = opt.target || Error("SelectToggleOnValue not given a target to toggle.");
+            var init = opt.init || null;
+            //
+            //
+            $(select).bind('change', function () {
+                  toggleDropDown(select, showVal, target);
+            });
+            toggleDropDown(select, showVal, target);
         }
 
     };
@@ -279,6 +292,16 @@
     // machete js internal functions
     //
 
+    //
+    //
+    function toggleDropDown(select, showVal, target) {
+        //
+        if ($(select).find(':selected').text() == showVal) {
+            $(target).show();
+        } else {
+            $(target).hide();
+        }
+    }
     //
     //  parse skills drop down
     //  for the create/edit assignment page. 
