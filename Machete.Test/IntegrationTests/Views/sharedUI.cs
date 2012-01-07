@@ -95,7 +95,7 @@ namespace Machete.Test
 
             //
             //
-            WaitForElementValue(By.Id("workerCreateTab"), "Worker Information");
+            WaitForElementValue(By.Id("workerCreateTab"), "Worker information");
             _d.FindElement(By.Id("workerCreateTab")).Click();
 
             //Assert.IsTrue(false);

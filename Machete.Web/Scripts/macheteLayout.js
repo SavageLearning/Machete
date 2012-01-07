@@ -321,31 +321,6 @@ function isNumber(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
-
-function toggleDropDown(myDD, showVal, myRow, init) {
-    //
-    if ($(myDD).find(':selected').text() == showVal) {
-        if (init) $(myRow).show();
-        else $(myRow).fadeIn();
-    } else {
-        if (init) $(myRow).hide();
-        else $(myRow).fadeOut();
-    }
-}
-
-function dateTimeWidget(myObj) {
-    $(myObj).datetimepicker({
-        stepMinute: 15,
-        ampm: true,
-        hourMin: 7,
-        hourMax: 23,
-        minuteMin: 0,
-        minuteMax: 45,
-        minuteGrid: 15,
-        hourGrid: 4
-    });
-}
-
 datatable_lang_en = {
     "oPaginate": {
         "sFirst": "First page",

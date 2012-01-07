@@ -199,7 +199,7 @@
     </div>
 </div><!--tb-table main workorder table-->
 <div class="tb-table">
-    <div class="tb-row englishNoteRow" id="englishNote_@(Model.ID)">
+    <div class="tb-row englishNoteRow" id="@(idPrefix)englishRequiredNoteRow">
         <div class="tb-label tb-cell desc-label">
             @Html.LabelFor(model => model.englishRequiredNote)
         </div>
@@ -253,7 +253,20 @@
 
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
-        dateTimeWidget($("@(idPrefix)dateTimeofWork"));
+        //
+        //
+        $("@(idPrefix)dateTimeofWork").datetimepicker({
+            stepMinute: 15,
+            ampm: true,
+            hourMin: 7,
+            hourMax: 23,
+            minuteMin: 0,
+            minuteMax: 45,
+            minuteGrid: 15,
+            hourGrid: 4
+        });
+        //
+        //
         M_workerRequestTable_@(Model.ID) = $('#workerTable-@(Model.ID)').dataTable({
             "bPaginate": true,
             "bLengthChange": true,

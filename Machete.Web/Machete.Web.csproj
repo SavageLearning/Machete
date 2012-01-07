@@ -451,8 +451,6 @@
     <Content Include="Scripts\jquery.dataTables.editable-1.0.0.js" />
     <Content Include="Scripts\jquery.dataTables.plugins.js" />
     <Content Include="Scripts\jquery.form.js" />
-    <Content Include="Scripts\jquery.jeditable-1.7.1.js" />
-    <Content Include="Scripts\jquery.jeditable-1.7.1.min.js" />
     <Content Include="Scripts\jquery.ui.core.js" />
     <Content Include="Scripts\jquery.ui.datepicker.js" />
     <Content Include="Scripts\macheteLayout.js" />
