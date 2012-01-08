@@ -33,16 +33,31 @@
     }
 }
 @Html.Partial("WorkOrderIndex", Model)
+<div id="fDC_container">
+    <h1 id="fDC_title">
+    </h1>
+    <div id="fDC_content">
+        <div id="fDC_message">
+        </div>
+        <div id="fDC_panel">
+            <input type="button" id="fDC_ok" />
+            <input type="button" id="fDC_cancel" />
+        </div>
+    </div>
+</div>
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
+        $('#fDC_container').hide();
         $('#viewEmployer-@Model.ID').click(function () {
             printwindow = window.open('/Employer/View/@Model.ID');
         });
         $('.formButton').button();
         $('#employerName').focus();
         //
-        // machete UI detect changes on forms in tabs
-        $("#EmployerTab-@(Model.ID)").mUI('formDetectChanges');
+        // machete UI detect changes on forms in tabs   
+        $("#EmployerTab-@(Model.ID)").mUI('formDetectChanges', {
+            recType: "@(recType)"
+            });
         //
         // validation for elements added after page load
         $.validator.unobtrusive.parseDynamicContent($('#EmployerTab-@Model.ID'));

@@ -24,5 +24,11 @@
             recType: "@(recType)", //for add_rectab
             create: true
         });
+        //
+        // machete UI detect changes on forms in tabs   
+        $("#employerCreateForm").mUI('formDetectChanges', {
+            recType: "@(recType)"
+        });
+
     });
 </script>

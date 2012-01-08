@@ -1,12 +1,15 @@
 ﻿@model Machete.Domain.WorkAssignment
 @using Machete.Web.Resources
 @{    
-    string recType = "assignment";  
+    string recType = "WA";
+    string woRecType = "WO";
+    string idPrefix = recType + Model.ID + "-";
+    string woPrefix = woRecType + Model.workOrderID + "-";  
 }
 @using (Html.BeginForm("Create", "WorkAssignment", FormMethod.Post,
-                        new { @id = "workAssignmentCreateForm-wo-" + Model.workOrderID}))
+                        new { @id = woPrefix + "waCreateForm"}))
 {
-        <input type="submit" id="workAssignmentCreateButton-wo-@(Model.workOrderID)" class="formButton"
+        <input type="submit" id="@(woPrefix)waCreateBtn" class="formButton"
                value="@WorkAssignments.createsubmit" tabindex="9"/>
         @Html.ValidationSummary(true)
         @Html.EditorForModel()
@@ -14,18 +17,24 @@
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
         $('#activateWorkOrderButton-@(Model.workOrderID)').hide();
+        var $waForm = $('#@(woPrefix)waCreateForm');
         //jquery'ify the buttons
         $('.formButton').button();
         //Run MS validation on dynamic content        
-        $.validator.unobtrusive.parseDynamicContent('#workAssignmentCreateForm-wo-@(Model.workOrderID)');
+        $.validator.unobtrusive.parseDynamicContent('#@(woPrefix)waCreateForm');
         //
-        //
-        $('#workAssignmentCreateForm-wo-@(Model.workOrderID)').mUI('waFormConfiguration');
+        // setup earnings estimate and dropdown controls
+        $waForm.mUI('waFormConfiguration');
         //
         // WorkOrder Create submit event
-        $('#workAssignmentCreateForm-wo-@(Model.workOrderID)').mUI('formSubmit', {
+        $waForm.mUI('formSubmit', {
             exclusiveTab: false,
             create: true,
+            recType: "@(recType)"
+        });
+        //
+        // machete UI detect changes on forms in tabs   
+        $waForm.mUI('formDetectChanges', {
             recType: "@(recType)"
         });
     });
