@@ -180,7 +180,13 @@ function jqrfyTabs(myTab, myPrefix, defaultTab) {
 ///     exclusiveTab- If true then remove other tabs
 ///     recID       - 
 ///
-function add_rectab(theref, label, tabObj, exclusiveTab, recID, recTable) {
+function add_rectab(opt) {
+    var theref = opt.tabref || Error("add_rectab requires tabref"); //href for tab
+    var label = opt.label  || Error("add_rectab requires label"); //tab label
+    var tabObj = opt.tab;
+    var exclusive = opt.exclusive;
+    var recID = opt.recordID;
+    var recType = opt.recType;
     //
     //search for tab label--if it's already open, select instead of adding duplcate (datatables error)    
     var foundtab = $(tabObj).children('.ui-tabs-nav').find('li').find('a[recordID=' + recID + ']');
@@ -193,7 +199,7 @@ function add_rectab(theref, label, tabObj, exclusiveTab, recID, recTable) {
     }
     //
     // If true, look for existing tab with same label; remove for re-create
-    if (exclusiveTab) {         
+    if (exclusive) {         
         var index2 = $(tabObj).children('.ui-tabs-nav').find('li').size() - 1;
         if (index2 > 1) { //Don't blast tab 0 or tab 1 (list and create)
             tabObj.tabs("remove", index2);
@@ -205,9 +211,10 @@ function add_rectab(theref, label, tabObj, exclusiveTab, recID, recTable) {
     var tabIndex = tabObj.tabs('length');
     tabObj.tabs("select", tabIndex - 1);    // select the newly created tab
     var newTab = $(tabObj).find('.ui-tabs-selected');
+    $(newTab).attr('ID', recType + recID + '-EditTab');
     $(newTab).find('a').attr('recordID', recID); //Put recID in HTML attribute
-    $(newTab).addClass(recTable);
-    $(newTab).find('span').attr('ID', recTable+recID+'-CloseBtn');
+    $(newTab).addClass(recType);
+    $(newTab).find('span').attr('ID', recType + recID + '-CloseBtn');
     //float the close icon --ui 1.8.6 is overflow: hidden on ui-icon
     $(tabObj).find("span.ui-icon-close").attr('style', 'float: right');
 
@@ -238,7 +245,7 @@ function jqrfyWSignin(myTable, myOptions) {
 ///
 ///##Create dataTable
 ///
-function jqrfyTable(myTable, myTab, myOptions, dblclickevent, recTable) {
+function jqrfyTable(myTable, myTab, myOptions, dblclickevent, recType) {
     var oTable;
     var myLabel = $(myTable).attr('ID');
     oTable = $(myTable).dataTable(myOptions).fnSetFilteringDelay(400);
@@ -271,11 +278,14 @@ function jqrfyTable(myTable, myTab, myOptions, dblclickevent, recTable) {
             //
             // add new tab
             //TODO: where the hell is myTab coming from? when will it get clobbered?
-            add_rectab($(myTr).attr('edittabref'),
-                   $(myTr).attr('edittablabel'),
-                   myTab,
-                   exclusiveTab,
-                   myID, recTable);
+            add_rectab({
+                tabref: $(myTr).attr('edittabref'),
+                label:  $(myTr).attr('edittablabel'),
+                tab:   myTab,
+                exclusive:  exclusiveTab,
+                recordID:   myID, 
+                recType: recType
+                });
         });
     }
     return oTable;

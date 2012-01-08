@@ -81,15 +81,11 @@
             target: $('#@(idPrefix)englishRequiredNoteRow'),
             showVal: "@(Shared.yes)"
         });
-//        var englishRequired = $('#@(idPrefix)englishRequired');
-//        var englishNote = $('#@(idPrefix)englishRequiredNote');
-//        toggleDropDown(englishRequired, "@(Shared.yes)", englishNote, true);
-//        $(englishRequired).bind('change', function () {
-//            toggleDropDown(englishRequired,
-//                            "@(Shared.yes)",
-//                            englishNote,
-//                            false);
-//        });
+        //
+        // machete UI detect changes on forms in tabs   
+        $("#WorkOrderTab-@(Model.ID)").mUI('formDetectChanges', {
+            recType: "@(recType)"
+        });
         //
         // Add validation to dynamic content
         $.validator.unobtrusive.parseDynamicContent($('#WorkOrderTab-@Model.ID'));

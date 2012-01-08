@@ -21,6 +21,17 @@
 * For details please refer to:
 */
 (function ($, window, document) {
+
+    var mUI = {
+        state: {
+            changed: false,
+            whatChanged: {
+                employer: null,
+                order: null,
+                assignment: null
+            }
+        }
+    };
     var methods = {
         init: function (options) {
             // THIS
@@ -32,6 +43,7 @@
             var tabdiv = this;
             //
             // create jQuery tabs with mUI handlers
+            var confirmed = false;
             $(tabdiv).tabs({
                 // defaults
                 selected: opt.defaultTab || 0,
@@ -49,19 +61,41 @@
                 },
                 //
                 // jquery.tabs() select event
-                select: function (event, ui) {
-                    //$(ui.panel).hide();
+
+                select: function (e, ui) {
+                    console.log('select event--changed:' + mUI.state.changed + ' confirmed: ' + confirmed);
+                    //
+                    //
+                    if (mUI.state.changed) {
+                        if (!confirmed) {
+                            jConfirm('confirm', 'title', function (r) {
+                                if (r == true) {
+                                    console.log('confirm ok--changed: ' + mUI.state.changed + ', confirmed: ' + confirmed);
+                                    confirmed = true;
+                                    $(ui.tab).click();
+                                }
+                            });
+                            e.stopImmediatePropagation();
+                            return false;
+                        } else {
+                            // if confirmed==true, then ignore changed bit
+                            mUI.state.changed = false;
+                            confirmed = false;
+                        }
+                    }
                     //if ListTab, hide table and redraw it
+                    //  ListTab -- a tab with a dataTable in it
                     if ($(ui.tab).hasClass('ListTab')) {
                         // redraw datatable                
-                        var myTable = $(ui.panel).find('.display');
-                        myTable.dataTable().fnDraw();
+                        $(ui.panel).find('.display').dataTable().fnDraw();
                     }
                 },
                 //
                 // jquery.tabs() load event (This event doesn't happen for the list tab)
                 load: function (event, ui) {
                     //$(ui.panel).fadeIn();
+                    mUI.state.changed = false;
+                    console.log('tab-load--changed: ' + mUI.state.changed + ', confirmed: ' + confirmed);
                 },
                 //
                 // jquery.tabs() show event
@@ -170,6 +204,8 @@
                 //
                 if (preProcess) { preProcess(); }
                 //
+                // overiding form behavior after instantiation
+                // use with duplicate work assignment submit
                 if (form.data("selList") != undefined) { selList = form.data("selList"); }
                 if (form.data("exclusiveTab") != undefined) { exclusiveTab = form.data("exclusiveTab"); }
                 if (form.data("create") != undefined) { create = form.data("create"); }
@@ -183,12 +219,14 @@
                         // post create form, open tab for new records
                         $.post($(form).attr("action"), $(form).serialize(),
                         function (data) {
-                            add_rectab(data.sNewRef,
-                                        data.sNewLabel,
-                                        parentTab,
-                                        exclusiveTab,
-                                        data.iNewID,
-                                        recType);
+                            add_rectab({
+                                tabref: data.sNewRef,
+                                label: data.sNewLabel,
+                                tab: parentTab,
+                                exclusive: exclusiveTab,
+                                recordID: data.iNewID,
+                                recType: recType
+                            });
                         });
                     }
                     else {
@@ -229,11 +267,11 @@
         //
         formClickDelete: function (opt) {
             var btn = this;
-            var ok = opt.ok || "DELETE?!";
+            var ok = opt.ok || "OK?!";
             var confirm = opt.confirm || "CONFIRM?!";
             var title = opt.title || "TITLE?!";
             var form = opt.form || Error("No employer Delete Form defined");
-            _submitDelete(form);
+            _submitAndCloseTab(form); //setup ajax submit action
             btn.click(function (e) {
                 $.alerts.okButton = ok;
                 jConfirm(confirm,
@@ -250,11 +288,21 @@
         },
         //
         //
-        formDetectChanges: function () {
+        formDetectChanges: function (opt) {
             var form = this;
+            console.log('formDetectChanges load--changed: ' + mUI.state.changed);
+            var recType = opt.recType || Error('formDetectChanges must have a recType');
+            //
             // fires when changed AND focus moves away from element
             $(form).find('input[type="text"], select, textarea').bind('change', function (e) {
-                debug.log($(e.target).attr('ID') + " changed");
+                mUI.state.changed = true;
+                console.log('change event--changed: ' + mUI.state.changed + ', target: ' + e.target.id);
+                //
+                //
+                var changedTab = $(e.target).closest('.ui-tabs').children('.ui-tabs-nav').find('.ui-tabs-selected');
+                if (recType == 'employer') {        // defined in html
+                    mUI.state.whatChanged.employer = changedTab;
+                }
             });
         },
         //
@@ -267,7 +315,7 @@
             //
             //
             $(select).bind('change', function () {
-                  toggleDropDown(select, showVal, target);
+                toggleDropDown(select, showVal, target);
             });
             toggleDropDown(select, showVal, target);
         }
@@ -384,7 +432,7 @@
     //
     //
     //
-    function _submitDelete(form) {
+    function _submitAndCloseTab(form) {
         form.submit(function (e) {
             e.preventDefault();
             $.post($(this).attr("action"), $(this).serialize());

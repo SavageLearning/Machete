@@ -2,7 +2,10 @@
 @using Machete.Web.Helpers           
 @using Machete.Web.Resources
 @{
-    string recType = "assignment";
+    string recType = "WA";
+    string woRecType = "WO";
+    string idPrefix = recType + Model.ID + "-";
+    string woPrefix = woRecType + Model.workOrderID + "-"; 
     int editDisable = 0;
     if (!Html.IsInRole(Html.Role_AM()) && (Html.IsInRole(Html.Role_AMP()) && Model.workOrder.dateTimeofWork < DateTime.Today))
     {
@@ -10,7 +13,7 @@
     }
 }
 @using (Html.BeginForm("Edit", "WorkAssignment", FormMethod.Post,
-                        new { @class = "edittab-form EditPost", @id = "WorkAssignmentTab-" + Model.ID }))
+                        new { @class = "edittab-form EditPost", @id = idPrefix +"waForm" }))
 {
     @*<input type="button" value="@WorkAssignments.viewlink" class="formButton" id="view-@(Model.ID)" />*@
     if ((Html.IsInRole(Html.Role_AMP()) && Model.workOrder.dateTimeofWork >= DateTime.Today) || Html.IsInRole(Html.Role_AM()))
@@ -52,22 +55,20 @@
 }
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
+        var $waForm = $('#@(idPrefix)waForm');
         //
         // Block phonedesk from editing old orders
         //
         if (@(editDisable)) { 
-            $('#WorkAssignmentTab-@(Model.ID)').find('input,select,textarea').attr('disabled', 'disabled');
+            $waForm.find('input,select,textarea').attr('disabled', 'disabled');
         }
         $('#activateWorkOrderButton-@(Model.workOrderID)').hide();
-        $('#viewWorkAssignment-@(Model.ID)').click(function () {
-            printwindow = window.open('/WorkAssignment/View/@(Model.ID)');
-        });
         $('.formButton').button();
         $('#contactName').focus();
-        $.validator.unobtrusive.parseDynamicContent('#WorkAssignmentTab-@(Model.ID)');
+        $.validator.unobtrusive.parseDynamicContent('#@(idPrefix)waForm');
         //
         // wage calculations
-        $('#WorkAssignmentTab-@(Model.ID)').mUI('waFormConfiguration');
+        $waForm.mUI('waFormConfiguration');
         //
         // Delete confirmation 
         $("#deleteWorkAssignmentButton-@(Model.ID)").mUI('formClickDelete', {
@@ -77,14 +78,15 @@
             form: $('#DeleteWorkAssignment-@Model.ID')
         });
         //
+        // machete UI detect changes on forms in tabs   
+        $waForm.mUI('formDetectChanges', { recType: "@(recType)" });
+        //
         //  Edit submit event
-        $("#WorkAssignmentTab-@(Model.ID)").mUI('formSubmit', {
-            exclusiveTab: false
-        });
+        $waForm.mUI('formSubmit', { exclusiveTab: false });
         //
         // Duplicate submit event
         $("#duplicate-@(Model.ID)").mUI('formClickDuplicate', {
-            editForm: $('#WorkAssignmentTab-@(Model.ID)'),
+            editForm: $waForm,
             dupForm: $('#DuplicateWorkAssignment-@(Model.ID)')
         });
         //
