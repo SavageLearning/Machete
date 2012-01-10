@@ -206,7 +206,7 @@
                 if (preProcess) { preProcess(); }
                 //
                 // overiding form behavior after instantiation
-                // use with duplicate work assignment submit
+                // used with duplicate work assignment submit
                 if (form.data("selList") != undefined) { selList = form.data("selList"); }
                 if (form.data("exclusiveTab") != undefined) { exclusiveTab = form.data("exclusiveTab"); }
                 if (form.data("create") != undefined) { create = form.data("create"); }
@@ -233,6 +233,9 @@
                     else {
                         $.post($(form).attr("action"), $(form).serialize());
                     }
+                    //
+                    // clear changed bits
+                    mUI.state.changed = false;
                     //
                     //
                     if (closeTab) {

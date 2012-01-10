@@ -108,28 +108,31 @@ namespace Machete.Test
             Employer _emp2 = (Employer)Records.employer.Clone();
             WorkOrder _wo = (WorkOrder)Records.order.Clone();
             _wo.contactName = ui.RandomString(10);
+            // create first worker
             ui.employerCreate(_emp1);
-            //
-            // 
+            //  create 2nd worker
             ui.employerCreate(_emp2);
-            //
-            //
+            // create workorder for employer 2
             ui.workOrderCreate(_emp2, _wo);
             //
             //
             string prefix = "WO" + _wo.ID + "-";
             IJavaScriptExecutor js = driver as IJavaScriptExecutor;
             string title = (string)js.ExecuteScript("if (window.screen){window.moveTo(0, 0);window.resizeTo(window.screen.availWidth,window.screen.availHeight);};");
-
+            // click change button
             ui.WaitThenClickElement(By.Id(prefix + "changeEmployerBtn"));
+            // find new employer
             ui.WaitForElement(By.Id("employerSelectTable_searchbox")).SendKeys(_emp1.name);
+            // check for name in popup table column
             ui.WaitForElementValue(By.XPath("//table[@id='employerSelectTable']/tbody/tr/td[2]"), _emp1.name);
+            // doubleclick on row (using elem 6 b/c first elems might be off screen)
             ui.WaitAndDoubleClick(By.XPath("//table[@id='employerSelectTable']/tbody/tr/td[6]"));
             //
             // confirm dialog
             ui.WaitThenClickElement(By.Id("popup_ok"));
             ui.WaitThenClickElement(By.Id("employerListTab"));
             ui.WaitForElement(By.Id("employerTable_searchbox")).SendKeys(_emp1.name);
+            // search for employer 1
             ui.WaitForElementValue(By.XPath("//table[@id='employerTable']/tbody/tr/td[2]"), _emp1.name);
             ui.WaitAndDoubleClick(By.XPath("//table[@id='employerTable']/tbody/tr/td[6]"));
             var selectedTab = ui.WaitForElement(By.CssSelector("li.employer.ui-tabs-selected a"));

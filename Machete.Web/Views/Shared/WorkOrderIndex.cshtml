@@ -55,17 +55,13 @@
         ////////////////////////////////////////////////////////////////
         //
         // Setup work order Tabs
-        //
-        $('#workOrderTabs_@(Model.ID)').unbind('.M_workorderEvents');
-        M_workOrderTable_@(Model.ID) = null;
-        
+        //       
         $('#workOrderTabs_@(Model.ID)').mUI('createTabs', {prefix: "ui-tabs-workorder-e_@(Model.ID)-"});
         ////////////////////////////////////////////////////////////////
         //
         // Setup workorder Table
         //
-        M_workOrderTable_@(Model.ID) = $('#workOrderTable_@(Model.ID)');
-        jqrfyTable(M_workOrderTable_@(Model.ID), $('#workOrderTabs_@(Model.ID)'),
+        jqrfyTable($('#workOrderTable_@(Model.ID)'), $('#workOrderTabs_@(Model.ID)'),
         {
             "bPaginate": true,
             "bLengthChange": true,
@@ -121,7 +117,12 @@
                             {"mDataProp": "phone" },
                             {"mDataProp": "dateupdated" },
                             {"mDataProp": "Updatedby", "bSortable": false }
-            ]              
+            ],
+            // callback populates html attr with row data from JSON            
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $(nRow).attr('recordid', aData['EID']);              
+                return nRow;
+            }    
         }).fnSetFilteringDelay(250);
         $('#employerSelectTable_filter input').attr('ID', 'employerSelectTable_searchbox');
         //////////////////////////////////////////////////
