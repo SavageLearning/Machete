@@ -121,7 +121,6 @@
         //
         if (typeof $('#workOrderTabs_@(Model.EmployerID)') != "undefined") {
             $('#workOrderTabs_@(Model.EmployerID)').bind("tabsselect.M_asmt_@(Model.ID)", function (event, ui) {
-                if (eventDebug) M_conlog("EVENT", "SELECT","assignment",ui.panel.id, "");
                 //hide work order activation button. If assignment row exists, it will show button.
                 $('#activateWorkOrder-@(Model.ID)').hide();
             });

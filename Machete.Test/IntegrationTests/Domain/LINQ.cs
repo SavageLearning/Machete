@@ -18,15 +18,15 @@ namespace Machete.Test
         {
             //Arrange
             var persons = new List<Person>();
-            persons.Add(new Person { ID = 1 });
-            persons.Add(new Person { ID = 2 });
-            persons.Add(new Person { ID = 3 });
-            persons.Add(new Person { ID = 4 });
+            persons.Add(new Person { ID = 1, firstname1 = "foo1" });
+            persons.Add(new Person { ID = 2, firstname1 = "foo2" });
+            persons.Add(new Person { ID = 3, firstname1 = "foo3" });
+            persons.Add(new Person { ID = 4, firstname1 = "foo4" });
 
             var workers = new List<Worker>();
-            workers.Add(new Worker { ID = 1, dwccardnum = 12345 });
-            workers.Add(new Worker { ID = 2, dwccardnum = 12346 });
-            workers.Add(new Worker { ID = 3, dwccardnum = 12347 });
+            workers.Add(new Worker { ID = 1, dwccardnum = 12345, height = "h1" });
+            workers.Add(new Worker { ID = 2, dwccardnum = 12346, height = "h2" });
+            workers.Add(new Worker { ID = 3, dwccardnum = 12347, height = "h3" });
 
             var signins = new List<WorkerSignin>();
             signins.Add(new WorkerSignin { dwccardnum = 12345, dateforsignin = DateTime.Now });

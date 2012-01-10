@@ -11,10 +11,10 @@ var eventDate = new Date();
 var M_employerAccordion;
 //var M_employerTable;
 //var M_employerTabs;
-var M_employerCreateForm;
-var M_workOrderTable;
-var M_workOrderTabs;
-var M_workOrderCreateForm;
+//var M_employerCreateForm;
+//var M_workOrderTable;
+//var M_workOrderTabs;
+//var M_workOrderCreateForm;
 //var M_last_employerID_loaded = -1;
 //var M_last_orderID_loaded = -1;
 //var M_last_assignmentID_loaded = -1;
@@ -22,22 +22,22 @@ var M_workOrderCreateForm;
 //
 // console logging function
 //
-function M_conlog(typeStr, event, page, idtag, msg) {
-    d = new Date();
-    var timelapse = (d.getTime() - eventDate.getTime());    
-    if (typeStr == "EVENT") {
-        eventsequence = eventsequence + 1;
-    }
-    debug.log("%s:%d:%fms:%s:%s:%s:%s:  %s", spaceFill(typeStr, 5),
-                                 spaceFill(eventsequence, 3),
-                                 spaceFill(timelapse, 7),
-                                 spaceFill(event, 10),
-                                 spaceFill(page, 12),
-                                 spaceFill(idtag, 4),
-                                 idtag,
-                                 msg);
-    eventDate = d;
-}
+//function M_conlog(typeStr, event, page, idtag, msg) {
+//    d = new Date();
+//    var timelapse = (d.getTime() - eventDate.getTime());    
+//    if (typeStr == "EVENT") {
+//        eventsequence = eventsequence + 1;
+//    }
+//    debug.log("%s:%d:%fms:%s:%s:%s:%s:  %s", spaceFill(typeStr, 5),
+//                                 spaceFill(eventsequence, 3),
+//                                 spaceFill(timelapse, 7),
+//                                 spaceFill(event, 10),
+//                                 spaceFill(page, 12),
+//                                 spaceFill(idtag, 4),
+//                                 idtag,
+//                                 msg);
+//    eventDate = d;
+//}
 ////////////////////////////////////////////////////////////////
 //
 // pad log variables
