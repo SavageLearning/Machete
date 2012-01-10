@@ -1,6 +1,7 @@
 ﻿@model Machete.Domain.WorkAssignment
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
+@using Machete.Domain.Resources
 @Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID" })
 @Html.HiddenFor(model => model.workOrderID)
 @{
@@ -130,13 +131,13 @@
                     new { 
                        @id="workerAssigned-" + Model.ID
                     })           
-                    @{                    
-                        if (Model.workerAssigned != null)
-                        {
-                            myStr = Model.workerAssigned.dwccardnum + " " +
-                                           Model.workerAssigned.Person.fullName();
-                        }
+                @{                    
+                    if (Model.workerAssigned != null)
+                    {
+                        myStr = Model.workerAssigned.dwccardnum + " " +
+                                        Model.workerAssigned.Person.fullName();
                     }
+                }
                 @Html.TextBox("workerAssignedDisplay", 
                     myStr, 
                     new { 
@@ -146,40 +147,45 @@
                     })
              </div>
              <div class="tb-label tb-cell">
-                    <input type="button" value="@Machete.Domain.Resources.WorkAssignment.change" class="formButton" id="changeAssigned-@(Model.ID)"/>
-                    <input type="button" value="@Machete.Domain.Resources.WorkAssignment.delete" class="formButton" id="deleteAssigned-@(Model.ID)"/>
+                    <input type="button" value="@Machete.Domain.Resources.WorkAssignment.change" 
+                            class="formButton" 
+                            id="changeAssigned-@(Model.ID)"/>
+                    <input type="button" value="@Machete.Domain.Resources.WorkAssignment.delete" 
+                            class="formButton" 
+                            id="deleteAssigned-@(Model.ID)"/>
              </div>
         </div>
     </div>
 </div>
 }
+
 @Html.Partial("ManagerInfo")
 @Html.Partial("AdministratorInfo")
+@Html.Partial("WorkerIndex")
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
             $('#changeAssigned-@(Model.ID)').click(function () {
 
-                M_workerRequestTable_@(Model.workOrderID).fnDraw();
-                $('#workerTable-@(Model.workOrderID)').show();
-                M_workerRequestHandler_@(Model.workOrderID) = function (myID, myLabel) {
+                $('#workerTable').dataTable().fnDraw();
+                $('#workerTable').show();
+                //
+                // TODO: remove global. ugly kludge.
+                M_workerRequestHandler = function (myID, myLabel) {
                     //
                     //Anon function to handle doubleclick of record selector
                     $('#workerAssigned-@(Model.ID)').val(myID);
                     $('#workerAssignedDisplay-@(Model.ID)').val(myLabel);
                     //$('#WorkAssignmentTab-@(Model.ID)').submit();
                 }
-                $("#workerDialog-@(Model.workOrderID)").dialog({
+                $("#workerDialog").dialog({
                         height: 340,
                         width: 1000,
                         modal: true
                 });            
-                $('#workerDialog-@(Model.workOrderID)').show();
+                $('#workerDialog').show();
             });
-
-        ////////////////////////////////////////////////////////////////
         //
         // Delete confirmation 
-        //
         $('#deleteAssigned-@(Model.ID)').click(function () {
             jConfirm('@Machete.Domain.Resources.WorkAssignment.deleteassignedconfirm',
                      '@Machete.Domain.Resources.WorkAssignment.deleteassignedtitle',

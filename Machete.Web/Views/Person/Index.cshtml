@@ -15,8 +15,8 @@
         <table id="personTable" class="display">
             <thead>
                 <tr>
-                    <th class="tb-col-hidden">ID</th>
-                    <th class="tb-col-hidden">LABEL</th>
+                    <th>ID</th>
+                    <th>LABEL</th>
                     <th>@Person.active</th>
                     <th>@Person.firstname1</th>
                     <th>@Person.firstname2</th>
@@ -47,22 +47,17 @@
             "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
             "bProcessing": true,
             "aoColumns": [
-                { "bSearchable": false, "bSortable": false, "bVisible": false },
-                { "bSearchable": false, "bSortable": false, "bVisible": false },
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                { "sName": "Updatedby", "bSortable": false }
-            ],            
-            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                $(nRow).attr('edittabref', aData[0]);
-                $(nRow).attr('edittablabel', aData[1]);
-                return nRow;
-            }                
+                {"mDataProp": "tabref", "bSearchable": false, "bSortable": false, "bVisible": false },
+                {"mDataProp": "tablabel", "bSearchable": false, "bSortable": false, "bVisible": false },
+                {"mDataProp": "active" },
+                {"mDataProp": "firstname1" },
+                {"mDataProp": "firstname2" },
+                {"mDataProp": "lastname1" },
+                {"mDataProp": "lastname2" },
+                {"mDataProp": "phone" },
+                {"mDataProp": "dateupdated" },
+                { "mDataProp": "Updatedby", "bSortable": false }
+            ]                
         }, null, "@(recType)");
         $('#personTable_filter input').attr('ID','personSearchBox');
         $('#personTabs').mUI("createTabs", {prefix: "ui-tabs-person-"} );

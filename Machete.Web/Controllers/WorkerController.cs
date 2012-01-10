@@ -105,6 +105,7 @@ namespace Machete.Web.Controllers
                                      tabref = "/Worker/Edit/" + Convert.ToString(p.ID),
                                      tablabel =  p.Person.firstname1 + ' ' + p.Person.lastname1,
                                      WID =    p.ID.ToString(),
+                                     recordid = p.ID.ToString(),
                                      dwccardnum =  Convert.ToString(p.dwccardnum),
                                      active =  Convert.ToString(p.active), 
                                      firstname1 = p.Person.firstname1, 

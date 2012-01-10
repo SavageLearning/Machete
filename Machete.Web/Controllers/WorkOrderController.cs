@@ -142,7 +142,8 @@ namespace Machete.Web.Controllers
                                       dateupdated = System.String.Format("{0:MM/dd/yyyy HH:mm:ss}", p.dateupdated), 
                                       updatedby = p.Updatedby,
                                       transportMethod = Lookups.byID(p.transportMethodID, CI.TwoLetterISOLanguageName),
-                                      displayState = _getDisplayState(p)
+                                      displayState = _getDisplayState(p),
+                                      recordid = p.ID.ToString()
                          };
 
             return Json(new

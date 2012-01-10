@@ -97,6 +97,7 @@ namespace Machete.Web.Controllers
                             tablabel = _getTabLabel(p),
                             WOID = Convert.ToString(p.workOrderID),
                             WAID = Convert.ToString(p.ID),
+                            recordid = Convert.ToString(p.ID),
                             pWAID = _getFullPseudoID(p), 
                             englishlevel = Convert.ToString(p.englishLevelID),
                             skill =  Lookups.byID(p.skillID, CI.TwoLetterISOLanguageName),

@@ -49,41 +49,7 @@ function spaceFill(number, width) {
     } 
     return number;
 }
-//////////////////////////////////////////////////////////////////
-////
-//// set global ID, based on tag
-////
-//function setGlobalIDs(idtag, recordid, func) {
-//    //M_conlog("ID===", "SET", func, idtag, "BEFORE");
-//    if (recordid == null) return;
-//    if (M_emp_uitab_patt.test(idtag)) {
-//        M_last_employerID_loaded = recordid;
-//    }
-//    if (M_ord_uitab_patt.test(idtag)) {
-//        M_last_orderID_loaded = recordid;
-//    }
-//    if (M_ass_uitab_patt.test(idtag)) {
-//        M_last_assignmentID_loaded = recordid;
-//    }
-//    //M_conlog("ID===", "SET", "", idtag, "AFTER");
-//}
-//////////////////////////////////////////////////////////////////
-////
-//// get global ID, based on tag
-////
-//function getGlobalID(idtag) {
-//    var rtnval = 0; 
-//    if (M_emp_uitab_patt.test(idtag)) {
-//        rtnval = M_last_employerID_loaded;
-//    }
-//    if (M_ord_uitab_patt.test(idtag)) {
-//        rtnval = M_last_orderID_loaded;
-//    }
-//    if (M_ass_uitab_patt.test(idtag)) {
-//        rtnval = M_last_assignmentID_loaded;
-//    }
-//    return rtnval;
-//}
+
 ////////////////////////////////////////////////////////////////
 //
 //
@@ -111,40 +77,25 @@ function jqrfyTabs(myTab, myPrefix, defaultTab) {
             //if ListTab, hide table and redraw it
             if ($(ui.tab).hasClass('ListTab')) {
                 //
-                //clear out old recordID 
-                //if (eventDebug) M_conlog("EVENT", "SELECT", "jqrfyTabs", ui.panel.id, "ListTab");
-                //setGlobalIDs(ui.panel.id, 0, "jqrfyTabs");
-                //
                 // redraw datatable                
                 var myTable = $(ui.panel).find('.display');
                 myTable.dataTable().fnDraw();
 
-            } else {
-                // Get record from global variable
-                //if (eventDebug) M_conlog("EVENT", "SELECT", "jqrfyTabs", ui.panel.id, "RecordTab");
-                //var hiddenID = $(ui.panel).find('.hiddenRecID').attr('value');
-                //setGlobalIDs(ui.panel.id, hiddenID, "jqrfyTabs");
-                //
-            }
+            } 
         },
         //
         // jquery.tabs() load event (This event doesn't happen for the list tab)
         //
         load: function (event, ui) {
-            //if (eventDebug) M_conlog("EVENT", "LOAD", "jqrfyTabs", ui.panel.id, $(ui.tab).attr('href'));
+            //
             // Get record from edit tab
             var hiddenID = $(ui.panel).find('.hiddenRecID').attr('value');
-
-            // Set record ID in tabs custom attribute
-            //setGlobalIDs(ui.panel.id, hiddenID, "jqrfyTabs");
             $(ui.panel).fadeIn();
         },
         //
         // jquery.tabs() show event
         //
-        show: function (event, ui) {
-            //if (eventDebug) M_conlog("EVENT", "SHOW", "jqrfyTabs", ui.panel.id, $(ui.tab).attr('href'));
-
+        show: function (event, ui) {            
             if ($(ui.tab).hasClass('ListTab') || $(ui.tab).hasClass('GeneralTab')) {
                 $(ui.panel).fadeIn();
             }
@@ -152,8 +103,7 @@ function jqrfyTabs(myTab, myPrefix, defaultTab) {
         //
         // jquery.tabs() remove event (This event doesn't happen for the list tab)
         //
-        remove: function (event) {
-            //if (eventDebug) M_conlog("EVENT", "REMOVE", "jqrfyTabs", event.target.id, "");
+        remove: function (event) {           
         },
         idPrefix: myPrefix,
         //template to put the ui-icon-close in the tab
@@ -224,21 +174,21 @@ function add_rectab(opt) {
 //
 //
 //
-function jqrfyWSignin(myTable, myOptions) {
-    var oTable;
-    oTable = $(myTable).dataTable(myOptions).fnSetFilteringDelay(400);
-    $(myTable).find('tbody').click(function (event) {
-        $(oTable.fnSettings().aoData).each(function () {
-            $(this.nTr).removeClass('row_selected');
-        });
-        $(event.target.parentNode).addClass('row_selected');
+//function jqrfyWSignin(myTable, myOptions) {
+//    var oTable;
+//    oTable = $(myTable).dataTable(myOptions).fnSetFilteringDelay(400);
+//    $(myTable).find('tbody').click(function (event) {
+//        $(oTable.fnSettings().aoData).each(function () {
+//            $(this.nTr).removeClass('row_selected');
+//        });
+//        $(event.target.parentNode).addClass('row_selected');
 
-    });
-    $(myTable).find('tbody').dblclick(function (event) {
-        $('#dwccardnum').val($(event.target.parentNode).find('td:first').text());
-        $("#availAssignTable").dataTable().fnDraw();
-    });
-}
+//    });
+//    $(myTable).find('tbody').dblclick(function (event) {
+//        $('#dwccardnum').val($(event.target.parentNode).find('td:first').text());
+//        $("#availAssignTable").dataTable().fnDraw();
+//    });
+//}
 
 
 //////////////////////////////////////////////////////////////////
@@ -247,10 +197,38 @@ function jqrfyWSignin(myTable, myOptions) {
 ///
 function jqrfyTable(myTable, myTab, myOptions, dblclickevent, recType) {
     var oTable;
-    var myLabel = $(myTable).attr('ID');
+    var tableID = $(myTable).attr('ID');
+    //
+    // insert standard fnRowCallback for mUI row attributes. call original
+    //    handler at end
+    var origCallback = myOptions.fnRowCallback;
+    myOptions.fnRowCallback = function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+        //
+        // custom attributes to create record tabs on doubleclick
+        $(nRow).attr('edittabref', aData['tabref']);
+        $(nRow).attr('edittablabel', aData['tablabel']);
+        $(nRow).attr('recordid', aData['recordid']);
+        if (jQuery.browser.mobile) {
+            var $foo = $(nRow).find('td:nth-child(1)');
+            var footext = $foo.text();
+            var btnID = recType + aData['recordid'] + '-Btn';
+            $foo.prepend('<input type="button" class="rowButton" value="open" id="' + btnID + '"></input>');
+        }
+        // call original handler
+        if (origCallback != undefined) {
+            return origCallback(nRow, aData, iDisplayIndex, iDisplayIndexFull);
+        } else {
+            return nRow;
+        }
+    }
+    //$(myTable).find('thead tr').append('<input type="button">button</input>');
+    //myOptions.aoColumns.push({ mDataProp: "button", bSearchable: false, bSortable: false, bVisible: false });
+    //
+    // create datatable
     oTable = $(myTable).dataTable(myOptions).fnSetFilteringDelay(400);
-    $('#' + myLabel + '_filter input').attr('ID', myLabel + '_searchbox');
-    //if (eventDebug) M_conlog("INIT+", "ADD TABLE","jqrfyTable", "", "");
+    //
+    // Add unique ID for testing hook
+    $('#' + tableID + '_filter input').attr('ID', tableID + '_searchbox');    
     ////////////////////////////////////////////////////////////////
     //
     // table click event -- highlight row
@@ -265,29 +243,29 @@ function jqrfyTable(myTable, myTab, myOptions, dblclickevent, recType) {
     //
     // table doubleclick event 
     //
-    if (dblclickevent) {
-        $(myTable).find('tbody').dblclick(dblclickevent);
-    } else {
-        $(myTable).find('tbody').dblclick(function (event) {
-
+    if (!dblclickevent) {
+        dblclickevent = function (event) {
+            console.log("default dblclick event");
             var exclusiveTab = $(event.target).closest('.ui-tabs').hasClass('ExclusiveTab');
-            var myTr = event.target.parentNode;
-            var idPatt = /\d+\b/;
-            var myID = $(myTr).attr('edittabref').match(idPatt);
-            //if (eventDebug) M_conlog("EVENT", "DBLCLICK", "jqrfyTable", "", "========================");
+            var myTr = $(event.target).closest('tr');
             //
             // add new tab
-            //TODO: where the hell is myTab coming from? when will it get clobbered?
             add_rectab({
                 tabref: $(myTr).attr('edittabref'),
-                label:  $(myTr).attr('edittablabel'),
-                tab:   myTab,
-                exclusive:  exclusiveTab,
-                recordID:   myID, 
+                label: $(myTr).attr('edittablabel'),
+                tab: myTab,
+                exclusive: exclusiveTab,
+                recordID: $(myTr).attr('recordid'),
                 recType: recType
-                });
-        });
+            });
+        }
     }
+    if (!jQuery.browser.mobile) {
+        $(myTable).find('tbody').dblclick(dblclickevent);
+    } else {
+        $('.rowButton').live('click', dblclickevent);
+    } 
+
     return oTable;
 }
 //////////////////////////////////////////////////////////////////
@@ -324,7 +302,16 @@ $.fn.addItems = function (data) {
     }
 };
 
-
+//function toggleDropDown(myDD, showVal, myRow, init) {
+//    //
+//    if ($(myDD).find(':selected').text() == showVal) {
+//        if (init) $(myRow).show();
+//        else $(myRow).fadeIn();
+//    } else {
+//        if (init) $(myRow).hide();
+//        else $(myRow).fadeOut();
+//    }
+//}  
 
 // http://stackoverflow.com/questions/18082/validate-numbers-in-javascript-isnumeric/174921#174921
 function isNumber(n) {
@@ -364,3 +351,11 @@ datatable_lang_es = {
     "sProcessing": "Procesamiento de solicitudes...",
     "sSearch": "Filtrar los registros:"
 };
+
+/**
+* jQuery.browser.mobile (http://detectmobilebrowser.com/)
+*
+* jQuery.browser.mobile will be true if the browser is a mobile device
+*
+**/
+(function (a) { jQuery.browser.mobile = /android|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(a) || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|e\-|e\/|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(di|rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|xda(\-|2|g)|yas\-|your|zeto|zte\-/i.test(a.substr(0, 4)) })(navigator.userAgent || navigator.vendor || window.opera);

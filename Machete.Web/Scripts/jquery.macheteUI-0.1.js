@@ -125,7 +125,7 @@
             //
             this.dblclick(function (event) {
                 var myTr = event.target.parentNode;
-                var myID = $(myTr).attr('requestedID');
+                var myID = $(myTr).attr('recordid');
                 var orderText = $('li.WO.ui-tabs-selected a').text();
                 var employerText = 'EID #: ' + myID + ', ' + $(myTr).find('td:eq(1)').text() + ' @ ' + $(myTr).find('td:eq(2)').text();
                 var idPrefix = $('#employerSelectTable').attr('idprefix');
@@ -189,6 +189,7 @@
             var recType = opt.recType || null;
             var exclusiveTab = opt.exclusiveTab || true;
             var preProcess = opt.preProcess || null;
+            var postProcess = opt.postProcess | null;
             var closeTab = opt.closTab || undefined;
             //
             //setup button.click to secondary submit

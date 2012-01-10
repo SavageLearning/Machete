@@ -62,7 +62,7 @@
     <div class="tb-row">
         <div id="signinTab" class="tb-cell">
             <ul>
-                <li><a href="#signinList">@Machete.Web.Resources.WorkAssignments.signin</a></li>
+                <li><a href="#signinList" class="ListTab">@Machete.Web.Resources.WorkAssignments.signin</a></li>
             </ul>
             <div id="signinList">
                 <table id="signinTable" class="display">
@@ -77,9 +77,9 @@
             </div>
         </div>
 
-        <div id="assignmentTab" class="tb-cell">
+        <div id="assignmentTab" class="tb-cell ">
             <ul>
-                <li><a href="#availAssignList">@Machete.Web.Resources.WorkAssignments.assignments</a></li>
+                <li><a href="#availAssignList" class="ListTab">@Machete.Web.Resources.WorkAssignments.assignments</a></li>
             </ul>
             <div id="availAssignList">
 
@@ -153,7 +153,7 @@
     $("#assignmentTab").mUI('createTabs', {prefix: "ui-tabs-assignment-"});
     $("#signinTab").mUI('createTabs', { prefix: "ui-tabs-signin-"});
 
-    jqrfyWSignin($("#lotteryTable"), {
+    var lotteryDTOptions = {
         //"sScrollY": "300px",
         "bFilter": false,
         "bPaginate": true,
@@ -180,13 +180,23 @@
 			} );
 		},
         "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-            $(nRow).attr('requestedID', aData['WSIID']);
-            if (aData['WAID'] > 0) { // green
+            //$(nRow).attr('requestedID', aData['WSIID']);
+            if (aData['WAID'] > 0) { // green -- WA record associated with WSI record
                 $(nRow).addClass('statusGreen');
             }                
             return nRow;
-        } 
-    });
+        }
+    }
+    //
+    //
+    var wsiDblClickEvent = function (event) {
+        //dblclick event handler
+        $('#dwccardnum').val($(event.target.parentNode).find('td:first').text());
+        $("#availAssignTable").dataTable().fnDraw();
+    }
+    //
+    //
+    jqrfyTable($("#lotteryTable"), null, lotteryDTOptions, wsiDblClickEvent);
     $('#lotteryList').hide();
     $('#lotteryTable').hide();
     $('#bOpenLottery').click(function () {
@@ -205,7 +215,7 @@
         e.preventDefault();
     });
         
-    jqrfyWSignin($("#signinTable"), {
+    jqrfyTable($("#signinTable"), null, {
         //"sScrollY": "300px",
         "bPaginate": true,
         "bLengthChange": true,
@@ -231,14 +241,14 @@
 			} );
 		},
         "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-            $(nRow).attr('requestedID', aData['WSIID']);
-            //alert(aData['WID'] + "-" + aData['WSIID']);
             if (aData['WAID'] > 0) { // green
                 $(nRow).addClass('statusGreen');
             }                
             return nRow;
         } 
-    });
+    }, wsiDblClickEvent);
+    //
+    //
     jqrfyTable($("#availAssignTable"), $("#assignmentTab"),
     {
         //"sScrollY": "300px",
@@ -281,9 +291,6 @@
 			    } );
 		    },
         "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-            $(nRow).attr('edittabref', aData["tabref"]);
-            $(nRow).attr('edittablabel', aData["tablabel"]);
-            $(nRow).attr('requestedID', aData['WAID']);
             if (aData['WID'] > 0 && aData['WSIID'] > 0 && aData['status']) { // assigned
                 $(nRow).addClass('statusGreen');
             } 
@@ -298,9 +305,7 @@
             }
             if (aData['status'] == @(Lookups.getSingleEN("orderstatus", "Active"))) { // cancelled
                 $(nRow).addClass('statusBlue');
-            }
-
-            //$(nRow).attr('edittablabel', aData[1]);                
+            }                
             return nRow;
         }, 
         "fnDrawCallback": function () { assignTableCount++; }
@@ -310,9 +315,9 @@
         //
         $('#bAssign').click(function (e) {
             e.preventDefault();                
-            var assignRow = $('#availAssignTable').find('tbody').find('tr.row_selected').attr('requestedID');
-            var signinRow = $('#signinTable').find('tbody').find('tr.row_selected').attr('requestedID');
-            //alert("WSI-ID: " + signinRow + " WA-ID: " + assignRow);
+            var assignRow = $('#availAssignTable').find('tbody').find('tr.row_selected').attr('recordid');
+            var signinRow = $('#signinTable').find('tbody').find('tr.row_selected').attr('recordid');
+
             $.post("/WorkAssignment/Assign", 
                 {
                     waid: assignRow,
@@ -332,8 +337,8 @@
         //
         $('#bUnassign').click(function (e) {
             e.preventDefault();                
-            var assignRow = $('#availAssignTable').find('tbody').find('tr.row_selected').attr('requestedID');
-            var signinRow = $('#signinTable').find('tbody').find('tr.row_selected').attr('requestedID');
+            var assignRow = $('#availAssignTable').find('tbody').find('tr.row_selected').attr('recordid');
+            var signinRow = $('#signinTable').find('tbody').find('tr.row_selected').attr('recordid');
             //alert("WSI-ID: " + signinRow + " WA-ID: " + assignRow);
             $.post("/WorkAssignment/Unassign", {
                     waid: assignRow,

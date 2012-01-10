@@ -90,8 +90,6 @@
                         ],
             "aoSearchCols" : [null, null, { "sSearch": "@(Model.ID)" }, null, null, null, null, null, null, null, null, null],
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) { 
-                                    $(nRow).attr('edittabref', aData["tabref"]);
-                                    $(nRow).attr('edittablabel', aData["tablabel"]);
                                     //show activation button (need at least 1 assignment to activate)
                                     $('#activateWorkOrderButton-@(Model.ID)').show();
                                     if (aData['WID'] > 0 && aData['WSIID'] > 0 && aData['status']) { // assigned
