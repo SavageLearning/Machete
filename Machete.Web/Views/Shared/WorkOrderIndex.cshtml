@@ -91,18 +91,14 @@
                             { "mDataProp": "dateupdated" },
                             { "mDataProp": "updatedby" }
                         ],
-            "aoSearchCols" :  [null, null, { "sSearch": "@(Model.ID)" }, null, null, null, null, null, null],
-            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                        $(nRow).attr('edittabref', aData["tabref"]);
-                        $(nRow).attr('edittablabel', aData["tablabel"]);
-                        return nRow;
-                    }
+            "aoSearchCols" :  [null, null, { "sSearch": "@(Model.ID)" }, null, null, null, null, null, null]
+            
         }, null, "@(recType)" );
         ////////////////////////////////////////////////////////////////
         //
-        // WorkOrder Tab sevent (including inherited events)
+        // table for selecting employer (for workorder move functionality)
         //
-        M_employerSelect = $('#employerSelectTable').dataTable({
+        $('#employerSelectTable').dataTable({
             "bPaginate": true,
             "bLengthChange": true,
             "aaSorting": [[7, 'desc']],
@@ -125,13 +121,7 @@
                             {"mDataProp": "phone" },
                             {"mDataProp": "dateupdated" },
                             {"mDataProp": "Updatedby", "bSortable": false }
-            ],
-            // callback populates html attr with row data from JSON            
-            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                $(nRow).attr('requestedID', aData['EID']);
-                //$(nRow).attr('edittablabel', aData[1]);                
-                return nRow;
-            }                
+            ]              
         }).fnSetFilteringDelay(250);
         $('#employerSelectTable_filter input').attr('ID', 'employerSelectTable_searchbox');
         //////////////////////////////////////////////////

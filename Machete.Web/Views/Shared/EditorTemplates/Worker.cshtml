@@ -430,7 +430,14 @@
 <script type="text/javascript">
     $().ready(function () {
         DatePicker();
-        toggleDropDown($("#worker_RaceID"), "Other", $("#worker_raceother"), $("label[for=worker_raceother]"));
+        $("#worker_RaceID").mUI('selectToggleOnValue', {
+            target: $("#worker_raceother"),
+            showVal: "Other"
+        });
+//        toggleDropDown($("#worker_RaceID"),
+//            "Other",
+//            $("#worker_raceother"),
+//            $("label[for=worker_raceother]"));
         toggleDisabled();
         toggleDriverslicense();
         toggleInsuranceExpiration();

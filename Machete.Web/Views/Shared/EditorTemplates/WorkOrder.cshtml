@@ -267,7 +267,7 @@
         });
         //
         //
-        M_workerRequestTable_@(Model.ID) = $('#workerTable-@(Model.ID)').dataTable({
+        $('#workerTable-@(Model.ID)').dataTable({
             "bPaginate": true,
             "bLengthChange": true,
             "aaSorting": [[9, 'desc']],
@@ -294,16 +294,16 @@
             ],
             // callback populates html attr with row data from JSON            
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                $(nRow).attr('requestedID', aData['WID']);
+                $(nRow).attr('recordid', aData['WID']);
                 //$(nRow).attr('edittablabel', aData[1]);                
                 return nRow;
-            }                
+            }         
         }).fnSetFilteringDelay(250);
         // workRequest Dialog -doubleclick on row to select
         // create event to handle worker selection from dialog
-        $(M_workerRequestTable_@(Model.ID)).find('tbody').dblclick(function (event) {            
+        $('#workerTable-@(Model.ID)').find('tbody').dblclick(function (event) {            
             var myTr = event.target.parentNode;
-            var myID = $(myTr).attr('requestedID');  
+            var myID = $(myTr).attr('recordid');  
             var myLabel =  $(myTr).find('td:eq(0)').text() + ' '+
                                               $(myTr).find('td:eq(2)').text() + ' '+
                                               $(myTr).find('td:eq(4)').text();
@@ -323,7 +323,7 @@
         //
         //
         $('#addRequestBtn-@(Model.ID)').click(function () {
-            M_workerRequestTable_@(Model.ID).fnDraw();
+            $('#workerTable-@(Model.ID)').fnDraw();
             $('#workerTable-@(Model.ID)').show();
             //
             //Anon function to handle doubleclick of record selector

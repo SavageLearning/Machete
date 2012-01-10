@@ -86,16 +86,17 @@ namespace Machete.Web.Controllers
 
             //return what's left to datatables
             var result = from p in displayPersons
-                         select new[] { "/Person/Edit/" + Convert.ToString(p.ID),
-                                        p.firstname1 + ' ' + p.lastname1,
-                                        Convert.ToString(p.active), 
-                                        p.firstname1, 
-                                        p.firstname2, 
-                                        p.lastname1, 
-                                        p.lastname2, 
-                                        p.phone, 
-                                        Convert.ToString(p.dateupdated), 
-                                        p.Updatedby 
+                         select new { tabref = "/Person/Edit/" + Convert.ToString(p.ID),
+                                      tablabel = p.firstname1 + ' ' + p.lastname1,
+                                      active = Convert.ToString(p.active), 
+                                      firstname1 = p.firstname1, 
+                                      firstname2 = p.firstname2, 
+                                      lastname1 = p.lastname1, 
+                                      lastname2 = p.lastname2, 
+                                      phone = p.phone, 
+                                      dateupdated = Convert.ToString(p.dateupdated), 
+                                      Updatedby = p.Updatedby,
+                                      recordid = Convert.ToString(p.ID)
                          };
 
             return Json(new

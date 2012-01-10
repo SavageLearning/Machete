@@ -58,14 +58,7 @@
                             {"mDataProp": "phone" },
                             {"mDataProp": "dateupdated" },
                             { "mDataProp": "Updatedby", "bSortable": false }
-                        ],
-                                           
-            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                        $(nRow).attr('edittabref', aData['tabref']);       //set col0 to href
-                        $(nRow).attr('edittablabel', aData['tablabel']);     //set col1 to label
-                        return nRow;
-                    }
-                                    
+                        ]             
         }, null, "@(recType)");
         $('#employerTabs').mUI('createTabs', { prefix: "ui-tabs-employer-" });
     });
