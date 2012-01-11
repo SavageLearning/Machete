@@ -31,7 +31,8 @@
         //
         // machete UI detect changes on forms in tabs   
         woCreateForm.mUI('formDetectChanges', {
-            recType: "@(recType)"
+            recType: "@(recType)",
+            formLevel: 2
         });
         //
         // Add validation to dynamic content
@@ -53,7 +54,8 @@
             recType: "@(recType)",
             preProcess: function () {
                 $('#workerRequests2_WO-@(Model.ID)').find('option').attr("selected", "selected");
-            }
+            },
+            formLevel: 2
         });
         ////////////////////////////////////////////////////////////////
         //

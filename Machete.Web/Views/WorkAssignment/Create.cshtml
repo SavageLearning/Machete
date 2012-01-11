@@ -30,12 +30,14 @@
         $waForm.mUI('formSubmit', {
             exclusiveTab: false,
             create: true,
-            recType: "@(recType)"
+            recType: "@(recType)",
+            formLevel: 3
         });
         //
         // machete UI detect changes on forms in tabs   
         $waForm.mUI('formDetectChanges', {
-            recType: "@(recType)"
+            recType: "@(recType)",
+            formLevel: 3
         });
     });
 

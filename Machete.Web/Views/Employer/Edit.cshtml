@@ -56,7 +56,8 @@
         //
         // machete UI detect changes on forms in tabs   
         $("#EmployerTab-@(Model.ID)").mUI('formDetectChanges', {
-            recType: "@(recType)"
+            recType: "@(recType)",
+            formLevel: 1
             });
         //
         // validation for elements added after page load
@@ -73,7 +74,8 @@
         // edit form submit
         $('#EmployerTab-@Model.ID').mUI('formSubmit', {
             create: false,
-            selectTab: 0
+            selectTab: 0,
+            formLevel: 1
         });
     });
 </script>

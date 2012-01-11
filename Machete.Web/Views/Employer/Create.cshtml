@@ -22,13 +22,14 @@
         // Employer Create submit event
         $("#employerCreateForm").mUI('formSubmit', {
             recType: "@(recType)", //for add_rectab
-            create: true
+            create: true,
+            formLevel: 1
         });
         //
         // machete UI detect changes on forms in tabs   
         $("#employerCreateForm").mUI('formDetectChanges', {
-            recType: "@(recType)"
+            recType: "@(recType)",
+            formLevel: 1
         });
-
     });
 </script>

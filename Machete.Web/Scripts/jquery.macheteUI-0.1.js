@@ -24,12 +24,21 @@
 
     var mUI = {
         state: {
-            changed: false,
-            whatChanged: {
-                employer: null,
-                order: null,
-                assignment: null
-            }
+            changed: function (level) {
+                for (chglvl in mUI.state.changeLevel) {
+                    if (level <= chglvl) {
+                        if (mUI.state.changeLevel[chglvl]) return true;
+                    }
+                }
+                return false;
+            },
+            whatChanged: {},
+            changeLevel: {}
+            //            whatChanged: {
+            //                employer: null,
+            //                order: null,
+            //                assignment: null
+            //            }
         }
     };
     var methods = {
@@ -44,6 +53,9 @@
             //
             // create jQuery tabs with mUI handlers
             var confirmed = false;
+            //
+            var level = _checkFormLevel(opt.formLevel, "createTabs"); // Error if form level not set correctly
+            //
             $(tabdiv).tabs({
                 // defaults
                 selected: opt.defaultTab || 0,
@@ -63,10 +75,12 @@
                 // jquery.tabs() select event
 
                 select: function (e, ui) {
-                    console.log('select event--changed:' + mUI.state.changed + ' confirmed: ' + confirmed);
+                    console.log('select event: changeLevel:' + level +
+                                ' state:' + mUI.state.changeLevel[level] + 
+                                ' confirmed: ' + confirmed);
                     //
                     //
-                    if (mUI.state.changed) {
+                    if (mUI.state.changed(level)) {
                         if (!confirmed) {
                             jConfirm('confirm', 'title', function (r) {
                                 if (r == true) {
@@ -79,14 +93,13 @@
                             return false;
                         } else {
                             // if confirmed==true, then ignore changed bit
-                            mUI.state.changed = false;
+                            mUI.state.changeLevel[level] = false;
                             confirmed = false;
                         }
                     }
-                    //if ListTab, hide table and redraw it
-                    //  ListTab -- a tab with a dataTable in it
+                    //
+                    //if ListTab selected, redraw dataTable
                     if ($(ui.tab).hasClass('ListTab')) {
-                        // redraw datatable                
                         $(ui.panel).find('.display').dataTable().fnDraw();
                     }
                 },
@@ -94,8 +107,8 @@
                 // jquery.tabs() load event (This event doesn't happen for the list tab)
                 load: function (event, ui) {
                     //$(ui.panel).fadeIn();
-                    mUI.state.changed = false;
-                    console.log('tab-load--changed: ' + mUI.state.changed + ', confirmed: ' + confirmed);
+                    mUI.state.changeLevel[level] = false;
+                    console.log('tab-load--changed: ' + mUI.state.changed() + ', confirmed: ' + confirmed);
                 },
                 //
                 // jquery.tabs() show event
@@ -191,6 +204,7 @@
             var preProcess = opt.preProcess || null;
             var postProcess = opt.postProcess | null;
             var closeTab = opt.closTab || undefined;
+            var level = _checkFormLevel(opt.formLevel, "formSubmit"); // Error if form level not set correctly
             //
             //setup button.click to secondary submit
             //  workorder/edit/activate.btn
@@ -234,8 +248,14 @@
                         $.post($(form).attr("action"), $(form).serialize());
                     }
                     //
-                    // clear changed bits
-                    mUI.state.changed = false;
+                    // clear changed bit for current form level
+                    // clear changed bit for levels downstream
+                    for (chglvl in mUI.state.changeLevel) {
+                        if (level <= chglvl) {
+                            mUI.state.changeLevel[chglvl] = false;
+                            console.log("formSubmit: changeLevel[" + chglvl + "]: false");
+                        }
+                    }
                     //
                     //
                     if (closeTab) {
@@ -294,19 +314,18 @@
         //
         formDetectChanges: function (opt) {
             var form = this;
-            console.log('formDetectChanges load--changed: ' + mUI.state.changed);
+            var level = _checkFormLevel(opt.formLevel, "formDetectChanges"); // Error if form level not set correctly
+            console.log('formDetectChanges load--changed: ' + mUI.state.changed());
             var recType = opt.recType || Error('formDetectChanges must have a recType');
             //
             // fires when changed AND focus moves away from element
-            $(form).find('input[type="text"], select, textarea').bind('change', function (e) {
-                mUI.state.changed = true;
-                console.log('change event--changed: ' + mUI.state.changed + ', target: ' + e.target.id);
+            $(form).find('input[type="text"], select, textarea').bind('change', function (e) {                
                 //
                 //
                 var changedTab = $(e.target).closest('.ui-tabs').children('.ui-tabs-nav').find('.ui-tabs-selected');
-                if (recType == 'employer') {        // defined in html
-                    mUI.state.whatChanged.employer = changedTab;
-                }
+                mUI.state.changeLevel[level] = true;
+                mUI.state.whatChanged[recType] = changedTab;
+                console.log('change event--changed: ' + mUI.state.changed(level) + ', target: ' + e.target.id);
             });
         },
         //
@@ -445,5 +464,12 @@
             var tabNav = $(e.target).closest('.ui-tabs').children('.ui-tabs-nav');
             $(tabNav).find('.ui-state-active').find('span.ui-icon-close').click();
         });
+    }
+    function _checkFormLevel(level, caller) {
+        if (level === null || level === undefined || level < 1) {
+            throw new Error(caller + ": formLevel not correctly defined, formlevel: " + level);
+        }
+        console.log(caller + ": formLevel: " + level);
+        return level;
     }
 })(jQuery, window, document);
