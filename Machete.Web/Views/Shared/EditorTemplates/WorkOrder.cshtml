@@ -310,7 +310,6 @@
           // handler function created by addRequestionBtn create event
           M_workerRequestHandler_@(Model.ID)(myID, myLabel);
             $('a.ui-dialog-titlebar-close').click();
-
         });
         //////////////////////////////////////////////////
         //
@@ -323,7 +322,7 @@
         //
         //
         $('#addRequestBtn-@(Model.ID)').click(function () {
-            $('#workerTable-@(Model.ID)').fnDraw();
+            $('#workerTable-@(Model.ID)').dataTable().fnDraw();
             $('#workerTable-@(Model.ID)').show();
             //
             //Anon function to handle doubleclick of record selector
