@@ -79,10 +79,15 @@
         });
         //
         // machete UI detect changes on forms in tabs   
-        $waForm.mUI('formDetectChanges', { recType: "@(recType)" });
+        $waForm.mUI('formDetectChanges', { 
+            recType: "@(recType)",
+            formLevel: 3
+        });
         //
         //  Edit submit event
-        $waForm.mUI('formSubmit', { exclusiveTab: false });
+        $waForm.mUI('formSubmit', { exclusiveTab: false,
+            formLevel: 3
+        });
         //
         // Duplicate submit event
         $("#duplicate-@(Model.ID)").mUI('formClickDuplicate', {
@@ -94,7 +99,8 @@
         $("#DuplicateWorkAssignment-@(Model.ID)").mUI('formSubmit', {
             exclusiveTab: false,
             create: true,
-            recType: "@(recType)"
+            recType: "@(recType)",
+            formLevel: 3
         });
     });
 </script>

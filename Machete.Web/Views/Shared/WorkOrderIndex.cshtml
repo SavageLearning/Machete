@@ -56,7 +56,10 @@
         //
         // Setup work order Tabs
         //       
-        $('#workOrderTabs_@(Model.ID)').mUI('createTabs', {prefix: "ui-tabs-workorder-e_@(Model.ID)-"});
+        $('#workOrderTabs_@(Model.ID)').mUI('createTabs', {
+            prefix: "ui-tabs-workorder-e_@(Model.ID)-",
+            formLevel: 2 
+            });
         ////////////////////////////////////////////////////////////////
         //
         // Setup workorder Table

@@ -55,13 +55,11 @@
                 { "mDataProp": "lastname1" },
                 { "mDataProp": "lastname2" },
                 { "mDataProp": "memberexpirationdate" }
-            ],             
-            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                $(nRow).attr('edittabref', aData['tabref']);
-                $(nRow).attr('edittablabel', aData['tablabel']);
-                return nRow;
-            }                
+            ]          
         });
-        $('#workerTabs').mUI('createTabs', {prefix: "ui-tabs-worker-"});
+        $('#workerTabs').mUI('createTabs', {
+            prefix: "ui-tabs-worker-",
+            formLevel: 1
+            });
     });  
 </script>

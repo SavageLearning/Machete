@@ -161,29 +161,28 @@
 
 @Html.Partial("ManagerInfo")
 @Html.Partial("AdministratorInfo")
-@Html.Partial("WorkerIndex")
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
-            $('#changeAssigned-@(Model.ID)').click(function () {
+        $('#changeAssigned-@(Model.ID)').click(function () {
 
-                $('#workerTable').dataTable().fnDraw();
-                $('#workerTable').show();
+            $('#workerTable').dataTable().fnDraw();
+            $('#workerTable').show();
+            //
+            // TODO: remove global. ugly kludge.
+            M_workerRequestHandler = function (myID, myLabel) {
                 //
-                // TODO: remove global. ugly kludge.
-                M_workerRequestHandler = function (myID, myLabel) {
-                    //
-                    //Anon function to handle doubleclick of record selector
-                    $('#workerAssigned-@(Model.ID)').val(myID);
-                    $('#workerAssignedDisplay-@(Model.ID)').val(myLabel);
-                    //$('#WorkAssignmentTab-@(Model.ID)').submit();
-                }
-                $("#workerDialog").dialog({
-                        height: 340,
-                        width: 1000,
-                        modal: true
-                });            
-                $('#workerDialog').show();
-            });
+                //Anon function to handle doubleclick of record selector
+                $('#workerAssigned-@(Model.ID)').val(myID);
+                $('#workerAssignedDisplay-@(Model.ID)').val(myLabel);
+                //$('#WorkAssignmentTab-@(Model.ID)').submit();
+            }
+            $("#workerDialog").dialog({
+                    height: 340,
+                    width: 1000,
+                    modal: true
+            });            
+            $('#workerDialog').show();
+        });
         //
         // Delete confirmation 
         $('#deleteAssigned-@(Model.ID)').click(function () {

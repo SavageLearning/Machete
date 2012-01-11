@@ -28,6 +28,7 @@
         </table>
     </div>
 </div>
+@Html.Partial("WorkerIndex")
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
         $('.formButton').button();
@@ -60,7 +61,10 @@
                             { "mDataProp": "Updatedby", "bSortable": false }
                         ]             
         }, null, "@(recType)");
-        $('#employerTabs').mUI('createTabs', { prefix: "ui-tabs-employer-" });
+        $('#employerTabs').mUI('createTabs', { 
+            prefix: "ui-tabs-employer-",
+            formLevel: 1 
+            });
     });
 </script>
 
