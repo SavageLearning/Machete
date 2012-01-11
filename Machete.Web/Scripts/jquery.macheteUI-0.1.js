@@ -20,14 +20,14 @@
 * 
 * For details please refer to:
 */
-(function ($, window, document) {
+(function ($, window) {
 
     var mUI = {
         state: {
             changed: function (level) {
                 for (chglvl in mUI.state.changeLevel) {
                     if (level <= chglvl) {
-                        if (mUI.state.changeLevel[chglvl]) return true;
+                        if (mUI.state.changeLevel[chglvl]) { return true; }
                     }
                 }
                 return false;
@@ -49,15 +49,12 @@
         //
         //
         createTabs: function (opt) {
-            var tabdiv = this;
-            var changeConfirm = opt.changeConfirm || "CONFIRM?!";
-            var changeTitle = opt.changeTitle || "TITLE?!";
-            //
-            // create jQuery tabs with mUI handlers
-            var confirmed = false;
-            //
-            var level = _checkFormLevel(opt.formLevel, "createTabs"); // Error if form level not set correctly
-            //
+            var tabdiv = this,
+                changeConfirm = opt.changeConfirm || "CONFIRM?!",
+                changeTitle = opt.changeTitle || "TITLE?!",
+                confirmed = false, // create jQuery tabs with mUI handlers
+                level = _checkFormLevel(opt.formLevel, "createTabs"); // Error if form level not set correctly
+
             $(tabdiv).tabs({
                 // defaults
                 selected: opt.defaultTab || 0,
@@ -85,7 +82,7 @@
                     if (mUI.state.changed(level)) {
                         if (!confirmed) {
                             jConfirm(changeConfirm, changeTitle, function (r) {
-                                if (r == true) {
+                                if (r === true) {
                                     console.log('confirm ok--changed: ' + mUI.state.changed + ', confirmed: ' + confirmed);
                                     confirmed = true;
                                     $(ui.tab).click();
@@ -107,14 +104,14 @@
                 },
                 //
                 // jquery.tabs() load event (This event doesn't happen for the list tab)
-                load: function (event, ui) {
+                load: function () {
                     //$(ui.panel).fadeIn();
                     mUI.state.changeLevel[level] = false;
                     console.log('tab-load--changed: ' + mUI.state.changed() + ', confirmed: ' + confirmed);
                 },
                 //
                 // jquery.tabs() show event
-                show: function (event, ui) {
+                show: function () {
                     //if ($(ui.tab).hasClass('ListTab')
                     //        || $(ui.tab).hasClass('GeneralTab')) {
                     //    $(ui.panel).fadeIn();
@@ -122,7 +119,7 @@
                 },
                 //
                 // jquery.tabs() remove event (This event doesn't happen for the list tab)
-                remove: function (event) { }
+                remove: function () { }
             });
             //
             // close tab event
@@ -148,7 +145,7 @@
                 jConfirm(content.message,
                     content.title + '[' + orderText + '] TO [' + employerText + ']',
                     function (r) {
-                        if (r == true) {
+                        if (r === true) {
                             //
                             // action for doubleclick
                             $('#' + idPrefix + 'EmployerID').val(myID);
@@ -157,8 +154,7 @@
                             $('#' + idPrefix + 'CloseBtn').click();
                             event.preventDefault();
                         }
-                    }
-                );
+                    });
                 event.preventDefault();
             });
         },
@@ -173,12 +169,12 @@
             //
             // Increment tabindex by 20 to offset for employers(0) and orders (10)
             $(waForm).find('[tabindex]').each(function () {
-                $(this).attr('tabindex', parseInt($(this).attr('tabindex')) + 20)
+                $(this).attr('tabindex', parseInt($(this).attr('tabindex')) + 20);
             });
             //
             // Run only if hourly wage is 0
             // don't want to override a custom hourly wage on edit
-            if ($(hrWage).text() == "0") {
+            if ($(hrWage).text() === "0") {
                 // update earnings info based on skill
                 parseSkillsDD(waForm);
             }
@@ -190,11 +186,11 @@
                 parseSkillsDD(waForm);
                 _waFilterHourRange(waForm);
                 waEstimateEarnings(waForm);
-                });
+            });
             // presets for min/max hour dropdowns
             $(hours).bind('change', function () {
-                _waFilterHourRange(waForm); 
-                });
+                _waFilterHourRange(waForm);
+            });
             // if money fields change, recalc total
             $(waForm).find('.earnings-part').bind('change', function () {
                 waEstimateEarnings(waForm);
@@ -210,7 +206,6 @@
             var recType = opt.recType || null;
             var exclusiveTab = opt.exclusiveTab || true;
             var preProcess = opt.preProcess || null;
-            var postProcess = opt.postProcess | null;
             var closeTab = opt.closTab || undefined;
             var level = _checkFormLevel(opt.formLevel, "formSubmit"); // Error if form level not set correctly
             //
@@ -229,9 +224,9 @@
                 //
                 // overiding form behavior after instantiation
                 // used with duplicate work assignment submit
-                if (form.data("selList") != undefined) { selList = form.data("selList"); }
-                if (form.data("exclusiveTab") != undefined) { exclusiveTab = form.data("exclusiveTab"); }
-                if (form.data("create") != undefined) { create = form.data("create"); }
+                if (form.data("selList") !== undefined) { selList = form.data("selList"); }
+                if (form.data("exclusiveTab") !== undefined) { exclusiveTab = form.data("exclusiveTab"); }
+                if (form.data("create") !== undefined) { create = form.data("create"); }
                 //
                 //
                 if ($(form).valid()) {
@@ -251,8 +246,7 @@
                                 recType: recType
                             });
                         });
-                    }
-                    else {
+                    } else {
                         $.post($(form).attr("action"), $(form).serialize());
                     }
                     //
@@ -283,10 +277,19 @@
         //
         //
         formClickDuplicate: function (opt) {
-            var btn = this;
-            var editForm = opt.editForm || Error("No edit form to submit");
-            var dupForm = opt.dupForm || Error("No duplicate form to submit");
-            btn.click(function (e) {
+            var btn, editForm, dupForm;
+            btn = this;
+            if (opt.editForm) {
+                editForm = opt.editForm;
+            } else {
+                throw new Error("No edit form to submit");
+            }
+            if (opt.dupForm) {
+                dupForm = opt.dupForm;
+            } else {
+                throw new Error("No duplicate form to submit");
+            }
+            btn.click(function () {
                 editForm.data("selList", -1);
                 editForm.data("create", null);
                 editForm.submit();
@@ -297,7 +300,7 @@
             });
         },
         //
-        //
+        //        
         formClickDelete: function (opt) {
             var btn = this;
             var ok = opt.ok || "OK?!";
@@ -305,17 +308,16 @@
             var title = opt.title || "TITLE?!";
             var form = opt.form || Error("No employer Delete Form defined");
             _submitAndCloseTab(form); //setup ajax submit action
-            btn.click(function (e) {
+            btn.click(function () {
                 $.alerts.okButton = ok;
                 jConfirm(confirm,
                          title,
                          function (r) {
-                             if (r == true) {
+                             if (r === true) {
                                  //alert("delete submitted");
                                  form.submit();
                              }
-                         }
-                 );
+                         });
             });
 
         },
@@ -340,7 +342,7 @@
             var recType = opt.recType || Error('formDetectChanges must have a recType');
             //
             // fires when changed AND focus moves away from element
-            $(form).find('input[type="text"], select, textarea').bind('change', function (e) {
+            $(form).find('input[type="text"], select, textarea').bind('change', function () {
                 //
                 //
                 _setChangeState({
@@ -407,7 +409,7 @@
     //
     function toggleDropDown(select, showVal, target) {
         //
-        if ($(select).find(':selected').text() == showVal) {
+        if ($(select).find(':selected').text() === showVal) {
             $(target).show();
         } else {
             $(target).hide();
@@ -428,9 +430,9 @@
         //
         // If custom attributes exist in skill dropdown selected, change fields
         //
-        if ($(myOption).attr('wage') != null) { $(myWage).val($(myOption).attr('wage')); }
-        if ($(myOption).attr('minHour') != null) { $(myHour).val($(myOption).attr('minHour')); }
-        if ($(myOption).attr('fixedjob') == "True") { //Disable wage and hours on fixed job
+        if ($(myOption).attr('wage') !== null) { $(myWage).val($(myOption).attr('wage')); }
+        if ($(myOption).attr('minHour') !== null) { $(myHour).val($(myOption).attr('minHour')); }
+        if ($(myOption).attr('fixedjob') === "True") { //Disable wage and hours on fixed job
             $(myWage).attr('disabled', 'disabled');
             $(myHour).attr('disabled', 'disabled');
             $(myRange).attr('disabled', 'disabled');
