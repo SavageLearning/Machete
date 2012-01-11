@@ -204,4 +204,10 @@
   <data name="reportstab" xml:space="preserve">
     <value>Reports</value>
   </data>
+  <data name="changeConfirm" xml:space="preserve">
+    <value>Changes were made to one of the open records. To save your changes, click cancel and then save your work. To discard, click ok.</value>
+  </data>
+  <data name="changeTitle" xml:space="preserve">
+    <value>Discard changes?</value>
+  </data>
 </root>

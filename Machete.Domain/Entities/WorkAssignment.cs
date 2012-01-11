@@ -46,7 +46,7 @@ namespace Machete.Domain
         public int hours { get; set; }
         //
         [LocalizedDisplayName("hourRange", NameResourceType = typeof(Resources.WorkAssignment))]
-        public int hourRange { get; set; }
+        public int? hourRange { get; set; }
         //[LocalizedDisplayName("hoursChambita", NameResourceType = typeof(Resources.WorkAssignment))]
         //public bool chambita { get; set; }
         //

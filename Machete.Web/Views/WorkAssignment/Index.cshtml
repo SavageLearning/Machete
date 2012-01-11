@@ -150,8 +150,18 @@
     $('#requestedWorkers_visible').val(false);
     $('#typeofwork_grouping').val(null);
     $('#status').val(false);
-    $("#assignmentTab").mUI('createTabs', {prefix: "ui-tabs-assignment-"});
-    $("#signinTab").mUI('createTabs', { prefix: "ui-tabs-signin-"});
+    $("#assignmentTab").mUI('createTabs', {
+        prefix: "ui-tabs-assignment-", 
+        formLevel: 1,
+        changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+        changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+        });
+    $("#signinTab").mUI('createTabs', { 
+        prefix: "ui-tabs-signin-", 
+        formLevel: 1,
+        changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+        changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+        });
 
     var lotteryDTOptions = {
         //"sScrollY": "300px",

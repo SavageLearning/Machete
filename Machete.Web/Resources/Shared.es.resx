@@ -204,4 +204,10 @@
   <data name="reportstab" xml:space="preserve">
     <value>Reportes</value>
   </data>
+  <data name="changeConfirm" xml:space="preserve">
+    <value>Los cambios se hicieron a uno de los registros abiertos. Para guardar los cambios, haga clic en Cancelar y guarde su trabajo. Para descartar, haga clic en Aceptar.</value>
+  </data>
+  <data name="changeTitle" xml:space="preserve">
+    <value>Descartar los cambios?</value>
+  </data>
 </root>

@@ -50,6 +50,8 @@
         //
         createTabs: function (opt) {
             var tabdiv = this;
+            var changeConfirm = opt.changeConfirm || "CONFIRM?!";
+            var changeTitle = opt.changeTitle || "TITLE?!";
             //
             // create jQuery tabs with mUI handlers
             var confirmed = false;
@@ -76,13 +78,13 @@
 
                 select: function (e, ui) {
                     console.log('select event: changeLevel:' + level +
-                                ' state:' + mUI.state.changeLevel[level] + 
+                                ' state:' + mUI.state.changeLevel[level] +
                                 ' confirmed: ' + confirmed);
                     //
                     //
                     if (mUI.state.changed(level)) {
                         if (!confirmed) {
-                            jConfirm('confirm', 'title', function (r) {
+                            jConfirm(changeConfirm, changeTitle, function (r) {
                                 if (r == true) {
                                     console.log('confirm ok--changed: ' + mUI.state.changed + ', confirmed: ' + confirmed);
                                     confirmed = true;
@@ -252,6 +254,7 @@
                     // clear changed bit for levels downstream
                     for (chglvl in mUI.state.changeLevel) {
                         if (level <= chglvl) {
+                            $(form).find('.saveBtn').removeClass('highlightSave');
                             mUI.state.changeLevel[chglvl] = false;
                             console.log("formSubmit: changeLevel[" + chglvl + "]: false");
                         }
@@ -312,21 +315,41 @@
         },
         //
         //
+        markChanged: function (opt) {
+            var form = this;
+            _setChangeState({
+                form: form,
+                level: opt.level,
+                recType: opt.recType
+            });
+        },
+        //
+        //
         formDetectChanges: function (opt) {
             var form = this;
+            var changeConfirm = opt.changeConfirm || "CONFIRM?!";
+            var changeTitle = opt.changeTitle || "TITLE?!";
             var level = _checkFormLevel(opt.formLevel, "formDetectChanges"); // Error if form level not set correctly
             console.log('formDetectChanges load--changed: ' + mUI.state.changed());
             var recType = opt.recType || Error('formDetectChanges must have a recType');
             //
             // fires when changed AND focus moves away from element
-            $(form).find('input[type="text"], select, textarea').bind('change', function (e) {                
+            $(form).find('input[type="text"], select, textarea').bind('change', function (e) {
                 //
                 //
-                var changedTab = $(e.target).closest('.ui-tabs').children('.ui-tabs-nav').find('.ui-tabs-selected');
-                mUI.state.changeLevel[level] = true;
-                mUI.state.whatChanged[recType] = changedTab;
-                console.log('change event--changed: ' + mUI.state.changed(level) + ', target: ' + e.target.id);
+                _setChangeState({
+                    form: form,
+                    level: level,
+                    recType: recType
+                });
             });
+            window.onbeforeunload = function () {
+                if (mUI.state.changed(1)) {
+                    return changeConfirm;
+                } else {
+                    return null;
+                }
+            }
         },
         //
         //
@@ -362,7 +385,18 @@
     //
     // machete js internal functions
     //
+    function _setChangeState(opt) {
+        var form = opt.form;
+        var level = opt.level || _checkFormLevel(opt.formLevel, "_setChangeState");
+        var recType = opt.recType || Error("_setChangeState must have a recType");
+        //
+        var changedTab = $(form).closest('.ui-tabs').children('.ui-tabs-nav').find('.ui-tabs-selected');
+        $(form).find('.saveBtn').addClass('highlightSave');
+        mUI.state.changeLevel[level] = true;
+        mUI.state.whatChanged[recType] = changedTab;
+        console.log('_setChangeState-changed: ' + mUI.state.changed(level) + ', target: ' + e.target.id);
 
+    }
     //
     //
     function toggleDropDown(select, showVal, target) {
@@ -423,6 +457,8 @@
             if (isNumber(myRange)) {
                 var range = myDays * myRange * myWage;
                 $(myRangeEarnings).val("$" + range.toFixed(2));
+            } else {
+                $(myRangeEarnings).val("");
             }
         } else {
             $(myEarnings).val("@(Machete.Web.Resources.Shared.notcalculable)");
