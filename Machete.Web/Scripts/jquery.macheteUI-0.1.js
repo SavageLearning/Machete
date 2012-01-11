@@ -186,9 +186,15 @@
             waEstimateEarnings(waForm);
             _waFilterHourRange(waForm);
             // presets for skill dropdown
-            $(skillID).bind('change', function () { parseSkillsDD(waForm); });
+            $(skillID).bind('change', function () {
+                parseSkillsDD(waForm);
+                _waFilterHourRange(waForm);
+                waEstimateEarnings(waForm);
+                });
             // presets for min/max hour dropdowns
-            $(hours).bind('change', function () { _waFilterHourRange(waForm); });
+            $(hours).bind('change', function () {
+                _waFilterHourRange(waForm); 
+                });
             // if money fields change, recalc total
             $(waForm).find('.earnings-part').bind('change', function () {
                 waEstimateEarnings(waForm);
@@ -428,7 +434,7 @@
             $(myWage).attr('disabled', 'disabled');
             $(myHour).attr('disabled', 'disabled');
             $(myRange).attr('disabled', 'disabled');
-            $(waForm).find('#hourRange option[value=""]').attr("selected", "selected").show();
+            $(myForm).find('#hourRange option[value=""]').attr("selected", "selected").show();
         } else {
             $(myWage).removeAttr('disabled', 'disabled');
             $(myHour).removeAttr('disabled', 'disabled');
