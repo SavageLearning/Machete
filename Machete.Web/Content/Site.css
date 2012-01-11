@@ -583,3 +583,10 @@ input.ui-button.dispatchButton
 {
     width: 300px;
 }
+
+.highlightSave
+{
+    color: #95C41B !important;
+    border: 1px solid #95C41B !important;
+    font-weight:bolder !important;
+}

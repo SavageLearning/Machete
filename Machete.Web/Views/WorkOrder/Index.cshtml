@@ -138,7 +138,10 @@
         // Setup work order Tabs
         //
         $('.formButton').button();
-        $('#woDispatchTabs').mUI('createTabs', {prefix: "ui-tabs-dispatch-"});
+        $('#woDispatchTabs').mUI('createTabs', {
+            prefix: "ui-tabs-dispatch-", 
+            formLevel: 1
+            });
         ////////////////////////////////////////////////////////////////
         //
         // Setup workorder Table
