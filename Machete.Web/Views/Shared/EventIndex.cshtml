@@ -1,0 +1,50 @@
+﻿@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using Machete.Domain.Resources
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "event";
+    //string idPrefix = recType + Model.ID + "-";
+}
+<div id="eventList" title="TITLE?!">
+    <table id="eventTable" class="display">
+        <thead>
+            <tr>
+                <th>EDITREF</th>
+                <th>LABEL</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+
+        jqrfyTable($('#eventTable'), $('#personPartsTabs'),
+        {
+            "bPaginate": true,
+            "bLengthChange": true,
+            "aaSorting": [[8, 'desc']],
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "bServerSide": true,
+            "sAjaxSource": "/Event/AjaxHandler", 
+            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "bProcessing": true,
+            "aoColumns": [
+                {"mDataProp": "tabref", "bSearchable": false, "bSortable": false, "bVisible": false },
+                {"mDataProp": "tablabel", "bSearchable": false, "bSortable": false, "bVisible": false },
+                {"mDataProp": "recordid" },
+                {"mDataProp": "notes" },
+                {"mDataProp": "dateupdated" },
+                { "mDataProp": "Updatedby", "bSortable": false }
+            ]                
+        }, null, "@(recType)");
+        $('#eventTable_filter input').attr('ID','personSearchBox');
+    });
+</script>

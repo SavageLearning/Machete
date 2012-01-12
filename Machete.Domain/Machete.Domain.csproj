@@ -66,6 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Event.cs" />
     <Compile Include="Entities\Exceptions.cs" />
     <Compile Include="Entities\Image.cs" />
     <Compile Include="Entities\Lookup.cs" />
@@ -88,6 +89,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Employer.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Event.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Event.resx</DependentUpon>
     </Compile>
     <Compile Include="Resources\Person.Designer.cs">
       <DependentUpon>Person.resx</DependentUpon>
@@ -152,6 +158,11 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Employer.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Event.es.resx" />
+    <EmbeddedResource Include="Resources\Event.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Event.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Person.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
