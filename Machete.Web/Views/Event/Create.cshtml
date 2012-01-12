@@ -1,0 +1,8 @@
+﻿@model Machete.Domain.Event
+@using Machete.Web.Resources
+@using (Html.BeginForm("Create", "Event", FormMethod.Post, new { @id = "createtab-form" }))
+{
+    <input type="submit" id="createButton" class="formButton" value="submit?!" tabindex="9"/>
+    @Html.ValidationSummary(true)
+    @Html.EditorForModel()
+}

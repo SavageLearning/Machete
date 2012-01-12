@@ -15,6 +15,11 @@
         {
             <li><a href="/Worker/Edit/@(Model.ID)" id="workerEditTab">@Machete.Web.Resources.Persons.workerinfo</a></li>
         }
+        @if (Html.IsInRole(Html.Role_AM()))
+        {
+            <li><a href="#eventList" id="eventListTab" class="ListTab">Events?!</a> </li>
+            <li><a href="/Event/Create" id="eventCreateTab" class="CreateTab">Create Event?!</a></li>
+        }
     </ul>
     <div id="personGeneralTabRef">
         @using (Html.BeginForm("Edit", "Person", FormMethod.Post,
@@ -42,7 +47,9 @@
             }
         }
     </div>
+    @Html.Partial("EventIndex")
 </div>
+
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
         var personID = "@Model.ID";

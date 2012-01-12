@@ -21,7 +21,7 @@ namespace Machete.Domain
         public string ThumbnailMimeType { get; set; }
         [StringLength(30)]
         public string parenttable { get; set; }
-        [StringLength(10)]
+        [StringLength(20)]
         public string recordkey { get; set; }
 
         //public void make_thumbnail()
