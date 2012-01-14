@@ -100,7 +100,16 @@ namespace Machete.Data
                 new Lookup { ID=83, category = "skill", typeOfWorkID=20, speciality=false,  ltrCode="", minHour=5, wage=13,    sortorder=1,  text_EN = "Yardwork",                                    text_ES = "trabajar en el jardín",  fixedJob=false, selected=false},
                 new Lookup { ID=87, category = "skill", typeOfWorkID=21, speciality=false,  ltrCode="", minHour=3, wage=16.66666,    sortorder=9,  text_EN = "HHH Chambita 3hr",                            text_ES = "HHH Chambita 3hr",  fixedJob=true, selected=false},
                 new Lookup { ID=88, category = "skill", typeOfWorkID=20, speciality=true,  ltrCode="G", minHour=5, wage=99999, sortorder=9, text_EN = "Landscaping", text_ES = "Paisajismo", fixedJob=false, selected=false, subcategory="garden", level=2},
-                new Lookup { ID=89, category = "skill", typeOfWorkID=20, speciality=true,  ltrCode="R", minHour=5, wage=99999, sortorder=9, text_EN = "Roofing", text_ES = "Techado", fixedJob=false, selected=false, subcategory="roof", level=1}
+                new Lookup { ID=89, category = "skill", typeOfWorkID=20, speciality=true,  ltrCode="R", minHour=5, wage=99999, sortorder=9, text_EN = "Roofing", text_ES = "Techado", fixedJob=false, selected=false, subcategory="roof", level=1},
+                new Lookup { ID=90, category = "eventtype", text_EN="Recommendation",   text_ES="recomendación",    selected = true },
+                new Lookup { ID=91, category = "eventtype", text_EN="Complaint",        text_ES="Queja",            selected = false },
+                new Lookup { ID=92, category = "eventtype", text_EN="Sanction",         text_ES="Sanción",          selected = false },
+                new Lookup { ID=93, category = "memberstatus", text_EN="Active",        text_ES="Activo",           selected = true },
+                new Lookup { ID=94, category = "memberstatus", text_EN="Inactive",      text_ES="Inactivo",         selected = false },
+                new Lookup { ID=95, category = "memberstatus", text_EN="Sanctioned",    text_ES="Sancionado",       selected = false },
+                new Lookup { ID=96, category = "memberstatus", text_EN="Expired",       text_ES="Expirado",         selected = false },
+                new Lookup { ID=97, category = "memberstatus", text_EN="Expelled",      text_ES="Expulsado",       selected = false }
+
                 //last used 87
             };
         public static int getID(MacheteContext DB, string category, string text)

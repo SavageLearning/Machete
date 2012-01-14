@@ -41,6 +41,12 @@ namespace Machete.Web.Helpers
         private static SelectList typesOfWorkEN { get; set; }
         private static SelectList typesOfWorkES { get; set; }
         public static int typesOfWorkDefault { get; private set; }
+        private static SelectList eventtypeEN { get; set; }
+        private static SelectList eventtypeES { get; set; }
+        public static int eventtypeDefault { get; private set; }
+        private static SelectList memberStatusEN { get; set; }
+        private static SelectList memberStatusES { get; set; }
+        public static int memberStatusDefault { get; private set; }
         private static SelectList transportmethodsEN { get; set; }
         private static SelectList transportmethodsES { get; set; }
         public static int transportmethodDefault { get; private set; }
@@ -95,6 +101,12 @@ namespace Machete.Web.Helpers
             typesOfWorkEN = get("worktype", "en");
             typesOfWorkES = get("worktype", "es");
             typesOfWorkDefault = getDefaultID("worktype");
+            eventtypeEN = get("eventtype", "en");
+            eventtypeES = get("eventtype", "es");
+            eventtypeDefault = getDefaultID("eventtype");
+            memberStatusEN = get("memberstatus", "en");
+            memberStatusES = get("memberstatus", "es");
+            memberStatusDefault = getDefaultID("memberstatus"); 
             emplrReferencesEN = get("emplrreference", "en");
             emplrReferencesES = get("emplrreference", "es");
             emplrreferenceDefault = getDefaultID("emplrreference");
@@ -173,6 +185,17 @@ namespace Machete.Web.Helpers
         {
             if (locale == "es") return typesOfWorkES;
             return typesOfWorkEN;  //defaults to English
+        }
+
+        public static SelectList eventtype(string locale)
+        {
+            if (locale == "es") return eventtypeES;
+            return eventtypeEN;  //defaults to English
+        }
+        public static SelectList memberStatus(string locale)
+        {
+            if (locale == "es") return memberStatusES;
+            return memberStatusEN;  //defaults to English
         }
 
         public static SelectList emplrreference(string locale)

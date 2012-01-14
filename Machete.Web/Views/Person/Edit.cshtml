@@ -3,7 +3,7 @@
 @using Machete.Web.Helpers
 @{
     string recType = "person";
-    string idPrefix = recType + "-";
+    string idPrefix = recType + Model.ID + "-";
 }
 <div id="personPartsTabs">
     <ul>
@@ -18,7 +18,7 @@
         @if (Html.IsInRole(Html.Role_AM()))
         {
             <li><a href="#eventList" id="eventListTab" class="ListTab">Events?!</a> </li>
-            <li><a href="/Event/Create" id="eventCreateTab" class="CreateTab">Create Event?!</a></li>
+            <li><a href="/Event/Create?ID=@(Model.ID)" id="eventCreateTab" class="CreateTab">Create Event?!</a></li>
         }
     </ul>
     <div id="personGeneralTabRef">
@@ -27,7 +27,7 @@
         {
 
             <input type="button" value="@Persons.viewlink" class="formButton" id="view-@Model.ID" />
-            <input type="submit" value="@Persons.editsubmit" class="formButton"/>
+            <input type="submit" value="@Persons.editsubmit" class="formButton saveBtn"/>
             if (Html.IsInRole(Html.Role_AM()))
             {
                 <input id="delete-@Model.ID" type="button" value="@Persons.deletesubmit" 
@@ -52,32 +52,45 @@
 
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
-        var personID = "@Model.ID";
+        var personEditForm = $('#Persontab-@Model.ID');
+        var personPartTabs = $('#personPartsTabs');
+        var personDeleteForm = $('#DeletePerson-@Model.ID');
+        var personDeleteBtn = $("#delete-@Model.ID");
         $('#view-@Model.ID').click(function () {
             printwindow = window.open('/Person/View/@Model.ID');
         });
         $('.formButton').button();
         $('#firstname1').focus();
-        $.validator.unobtrusive.parseDynamicContent('.edittab-form');
-        $.alerts.okButton = "@Persons.deletesubmit";
-        $("#delete-@Model.ID").click(function () {
-            jConfirm('@Persons.deleteconfirmation',
-                     '@Persons.deletetitle',
-                     function (r) {
-                         if (r == true) {
-                             $('#DeletePerson-@Model.ID').submit();
-                         }
-                     }
-             );
-        });
+        $.validator.unobtrusive.parseDynamicContent(personEditForm);
         //
         //
-
-        $('#personPartsTabs').mUI('createTabs', {
+        personPartTabs.mUI('createTabs', {
             prefix: "ui-tabs-personParts-",
             formLevel: 1,
             changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
             changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
-            });
+        });
+        //
+        // delete button confirmation
+        personDeleteBtn.mUI('formClickDelete', {
+            ok: "@Persons.deletesubmit",
+            confirm: '@Persons.deleteconfirmation',
+            title: '@Persons.deletetitle',
+            form: personDeleteForm,
+            altClose: $("#@(idPrefix)CloseBtn")
+        });
+        //
+        // edit form submit
+        personEditForm.mUI('formSubmit', {
+            create: false,
+            selectTab: 0,
+            formLevel: 1
+        });
+        personEditForm.mUI('formDetectChanges', {
+            recType: "@(recType)",
+            formLevel: 1,
+            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+        });
     });
 </script>

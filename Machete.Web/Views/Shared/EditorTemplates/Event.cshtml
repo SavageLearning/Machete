@@ -1,0 +1,67 @@
+﻿@model Machete.Domain.Event
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using Machete.Domain.Resources
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "event";
+    string idPrefix = recType + Model.ID + "-";
+}
+@Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID" })
+@Html.HiddenFor(model => model.PersonID, new { @id = idPrefix + "PersonID" })
+<div class="tb-table">
+    <div class="tb-row">
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.eventType)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.DropDownListFor(model => model.eventType, 
+                                  new SelectList(Lookups.eventtype(CI.TwoLetterISOLanguageName), 
+                                                 "Value", 
+                                                 "Text",
+                                                 Model.eventType), 
+                                                 @Machete.Web.Resources.Shared.choose,
+                                  new { tabindex = "2", @class = "workerEditor", id = idPrefix + "eventType" })
+            @Html.ValidationMessageFor(model => model.eventType)
+        </div>
+        <div class="tb-label tb-cell" style="width: 6em;">
+            @Html.LabelFor(model => model.dateFrom)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.TextBox("dateFrom", Html.Encode(System.String.Format("{0:d}", Model.dateFrom)), new { @id = idPrefix + "dateFrom", @class="ui-datepicker" })
+            @Html.ValidationMessageFor(model => model.dateFrom)
+        </div>
+        <div class="tb-label tb-cell" style="width: 6em;">
+            @Html.LabelFor(model => model.dateTo)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.TextBox("dateTo", Html.Encode(System.String.Format("{0:d}", Model.dateTo)), new { @id = idPrefix + "dateTo", @class = "ui-datepicker" })
+            @Html.ValidationMessageFor(model => model.dateTo)
+        </div>
+    </div>
+</div>
+<div class="tb-table">
+    <div class="tb-row">
+
+        <div class="tb-label tb-cell">
+            @Html.LabelFor(model => model.notes)
+        </div>
+        <div class="tb-field tb-cell">
+            @Html.TextAreaFor(model => model.notes, new { @class="desc-field" , id = idPrefix + "notes"})
+            @Html.ValidationMessageFor(model => model.notes)
+        </div>
+    </div>
+</div>
+@Html.Partial("ManagerInfo")
+@Html.Partial("AdministratorInfo")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.ui-datepicker').datepicker({
+            dateFormat: 'mm/dd/yy',
+            buttonImage: '@Url.Content("~/Content/calendar.gif")',
+            buttonImageOnly: true,
+            showOn: "button"
+        });
+    });
+</script>

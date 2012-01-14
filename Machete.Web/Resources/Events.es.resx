@@ -117,130 +117,55 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="active" xml:space="preserve">
-    <value>Trabajador activo</value>
+  <data name="boxlegend" xml:space="preserve">
+    <value>Evento</value>
   </data>
-  <data name="carinsurance" xml:space="preserve">
-    <value>Seguro de automóvil</value>
+  <data name="createlink" xml:space="preserve">
+    <value>Crear un evento nuevo</value>
   </data>
-  <data name="countryoforiginID" xml:space="preserve">
-    <value>País de origen</value>
+  <data name="createsubmit" xml:space="preserve">
+    <value>Guardar</value>
   </data>
-  <data name="dateinseattle" xml:space="preserve">
-    <value>Fecha en Seattle</value>
+  <data name="createtitle" xml:space="preserve">
+    <value>Crear evento</value>
   </data>
-  <data name="dateinUSA" xml:space="preserve">
-    <value>Fecha en los EE.UU.</value>
+  <data name="deleteconfirmation" xml:space="preserve">
+    <value>¿Estás seguro que quieres eliminar este evento? Toda la información será borrada para siempre.</value>
   </data>
-  <data name="disabilitydesc" xml:space="preserve">
-    <value>Descripción de la discapacidad</value>
+  <data name="deletelink" xml:space="preserve">
+    <value>Borrar</value>
   </data>
-  <data name="driverslicense" xml:space="preserve">
-    <value>Tiene una licencia de conducir de los EE.UU.?</value>
+  <data name="deletesubmit" xml:space="preserve">
+    <value>Borrar</value>
   </data>
-  <data name="dwccardnum" xml:space="preserve">
-    <value>Afiliación #</value>
+  <data name="deletetitle" xml:space="preserve">
+    <value>Borrar evento</value>
   </data>
-  <data name="dwccardnumerror" xml:space="preserve">
-    <value>Número de la tarjeta debe ser de 5 dígitos</value>
+  <data name="editlink" xml:space="preserve">
+    <value>Editar</value>
   </data>
-  <data name="emcontoriginname" xml:space="preserve">
-    <value>Contacto de emergencia en el país de origen</value>
+  <data name="editsubmit" xml:space="preserve">
+    <value>Guardar</value>
   </data>
-  <data name="emcontoriginphone" xml:space="preserve">
-    <value>Teléfono del contacto de emergencia en el país de origen </value>
+  <data name="edittitle" xml:space="preserve">
+    <value>Editar evento</value>
   </data>
-  <data name="emcontoriginrelation" xml:space="preserve">
-    <value>Contacto de emergencia en el país de origen con relación al trabajador</value>
+  <data name="editworkerlink" xml:space="preserve">
+    <value>Editar evento</value>
   </data>
-  <data name="emcontUSAname" xml:space="preserve">
-    <value>Contacto de emergencia en los EE.UU.</value>
+  <data name="indexreturnlink" xml:space="preserve">
+    <value>Volver a la lista de eventos</value>
   </data>
-  <data name="emcontUSAphone" xml:space="preserve">
-    <value>Teléfono del contacto de emergencia en los EE.UU.</value>
+  <data name="indextitle" xml:space="preserve">
+    <value>Listar eventos</value>
   </data>
-  <data name="emcontUSArelation" xml:space="preserve">
-    <value>Contacto de emergencia en los EE.UU. con relación al trabajador</value>
+  <data name="listlink" xml:space="preserve">
+    <value>Lista de los eventos</value>
   </data>
-  <data name="englishlevelID" xml:space="preserve">
-    <value>Nivel de Inglés</value>
+  <data name="viewlink" xml:space="preserve">
+    <value>Imprimir</value>
   </data>
-  <data name="height" xml:space="preserve">
-    <value>Altura</value>
-  </data>
-  <data name="immigrantrefugee" xml:space="preserve">
-    <value>Refugiado Inmigrante?</value>
-  </data>
-  <data name="incomeID" xml:space="preserve">
-    <value>Nivel de ingresos</value>
-  </data>
-  <data name="insuranceexpiration" xml:space="preserve">
-    <value>Fecha de vencimiento del seguro de coche</value>
-  </data>
-  <data name="licenseexpirationdate" xml:space="preserve">
-    <value>Fecha de vencimiento de la licencia de conducir</value>
-  </data>
-  <data name="livealone" xml:space="preserve">
-    <value>Vive sola?</value>
-  </data>
-  <data name="livewithchildren" xml:space="preserve">
-    <value>Vive con los niños</value>
-  </data>
-  <data name="maritalstatus" xml:space="preserve">
-    <value>Estado civil</value>
-  </data>
-  <data name="memberexpirationdate" xml:space="preserve">
-    <value>fecha de vencimiento miembro</value>
-  </data>
-  <data name="neighborhoodID" xml:space="preserve">
-    <value>Barrio de Seattle</value>
-  </data>
-  <data name="numofchildren" xml:space="preserve">
-    <value>Número de niños</value>
-  </data>
-  <data name="numofchildrenRxError" xml:space="preserve">
-    <value>Los niños deben estar entre 0 y 20</value>
-  </data>
-  <data name="raceID" xml:space="preserve">
-    <value>Raza</value>
-  </data>
-  <data name="raceother" xml:space="preserve">
-    <value>Otra raza</value>
-  </data>
-  <data name="recentarrival" xml:space="preserve">
-    <value>Reciente llegada a los EE.UU.?</value>
-  </data>
-  <data name="required" xml:space="preserve">
-    <value>Este campo es obligatorio</value>
-  </data>
-  <data name="stringlength" xml:space="preserve">
-    <value>Por favor, introduzca un máximo de {1} caracteres</value>
-  </data>
-  <data name="weight" xml:space="preserve">
-    <value>Peso</value>
-  </data>
-  <data name="dateOfBirth" xml:space="preserve">
-    <value>Fecha de nacimiento</value>
-  </data>
-  <data name="skill1" xml:space="preserve">
-    <value>Habilidad (1)</value>
-  </data>
-  <data name="skill2" xml:space="preserve">
-    <value>Habilidad (2)</value>
-  </data>
-  <data name="skill3" xml:space="preserve">
-    <value>Habilidad (3)</value>
-  </data>
-  <data name="dateOfMembership" xml:space="preserve">
-    <value>Decha de la afiliación</value>
-  </data>
-  <data name="typeOfWorkID" xml:space="preserve">
-    <value>Typo de trabajador</value>
-  </data>
-  <data name="memberReactivateDate" xml:space="preserve">
-    <value>Fecha de la reactivación de miembros</value>
-  </data>
-  <data name="memberStatus" xml:space="preserve">
-    <value>Estatus de miembro</value>
+  <data name="viewtitle" xml:space="preserve">
+    <value>Ver evento</value>
   </data>
 </root>

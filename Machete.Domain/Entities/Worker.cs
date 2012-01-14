@@ -29,13 +29,19 @@ namespace Machete.Domain
         [LocalizedDisplayName("dateOfBirth", NameResourceType = typeof(Resources.Worker))]
         public DateTime dateOfBirth {get; set;}
         //
+        [Required(ErrorMessageResourceName = "memberStatus", ErrorMessageResourceType = typeof(Resources.Worker))]
+        [LocalizedDisplayName("memberStatus", NameResourceType = typeof(Resources.Worker))]
+        public int memberStatus { get; set; }
+        //
+        [LocalizedDisplayName("memberReactivateDate", NameResourceType = typeof(Resources.Worker))]
+        public DateTime? memberReactivateDate { get; set; }
+        //
         [LocalizedDisplayName("active", NameResourceType = typeof(Resources.Worker))]
         public bool active { get; set; }
         //
         [Required(ErrorMessageResourceName = "required", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("raceID", NameResourceType = typeof(Resources.Worker))]
         public int RaceID { get; set; }
-
         //
         [LocalizedDisplayName("raceother", NameResourceType = typeof(Resources.Worker))]
         [StringLength(20, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Worker))]

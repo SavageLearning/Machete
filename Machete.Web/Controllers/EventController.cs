@@ -127,7 +127,7 @@ namespace Machete.Web.Controllers
         public ActionResult Edit(int id)
         {
             var evnt = _serv.GetEvent(id);
-            return PartialView("Event", evnt);
+            return PartialView("Edit", evnt);
         }
 
         //

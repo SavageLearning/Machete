@@ -240,4 +240,10 @@
   <data name="typeOfWorkID" xml:space="preserve">
     <value>Type of worker</value>
   </data>
+  <data name="memberReactivateDate" xml:space="preserve">
+    <value>Membership reactivation date</value>
+  </data>
+  <data name="memberStatus" xml:space="preserve">
+    <value>Member status</value>
+  </data>
 </root>

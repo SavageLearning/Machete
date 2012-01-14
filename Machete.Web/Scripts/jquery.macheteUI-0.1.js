@@ -34,11 +34,6 @@
             },
             whatChanged: {},
             changeLevel: {}
-            //            whatChanged: {
-            //                employer: null,
-            //                order: null,
-            //                assignment: null
-            //            }
         }
     };
     var methods = {
@@ -306,8 +301,15 @@
             var ok = opt.ok || "OK?!";
             var confirm = opt.confirm || "CONFIRM?!";
             var title = opt.title || "TITLE?!";
-            var form = opt.form || Error("No employer Delete Form defined");
-            _submitAndCloseTab(form); //setup ajax submit action
+            var form = opt.form;
+            var altClose = opt.altClose;
+            var postDelete = opt.postDelete;
+            if (!form) throw new Error("No employer Delete Form defined");
+            _submitAndCloseTab({
+                form: form,
+                altClose: altClose,
+                postDelete: postDelete
+            }); //setup ajax submit action
             btn.click(function () {
                 $.alerts.okButton = ok;
                 jConfirm(confirm,
@@ -364,16 +366,32 @@
         selectToggleOnValue: function (opt) {
             var select = this;
             var showVal = opt.showVal || "yes";
-            var target = opt.target || Error("SelectToggleOnValue not given a target to toggle.");
-            var init = opt.init || null;
+            var target = opt.target;
+            if (!target) {
+                throw new Error("SelectToggleOnValue not given a target to toggle.");
+            }
             //
             //
             $(select).bind('change', function () {
                 toggleDropDown(select, showVal, target);
             });
             toggleDropDown(select, showVal, target);
+        },
+        selectEnableOnValue: function (opt) {
+            var select = this;
+            var enableVal = opt.enableVal;
+            var target = opt.target;
+            if (!enableVal) {
+                throw new Error("selectEnableOnValue requires an enableVal property");
+            }
+            if (!target) {
+                throw new Error("selectEnableOnValue requires a target to enable");
+            }
+            $(select).bind('change', function () {
+                EnableOnValue(select, enableVal, target);
+            });
+            EnableOnValue(select, enableVal, target);
         }
-
     };
 
     $.fn.mUI = function (method) {
@@ -413,6 +431,17 @@
             $(target).show();
         } else {
             $(target).hide();
+        }
+    }
+    //
+    //
+    function EnableOnValue(select, showVal, target) {
+        //
+        var selectedVal = $(select).find(':selected').text();
+        if (selectedVal === showVal) {
+            $(target).removeAttr('disabled', 'disabled');
+        } else {
+            $(target).attr('disabled', 'disabled');
         }
     }
     //
@@ -499,16 +528,28 @@
     //
     //
     //
-    function _submitAndCloseTab(form) {
+    function _submitAndCloseTab(opt) {
+        var form = opt.form;
+        var altClose = opt.altClose;
+        var postDelete = opt.postDelete;
         form.submit(function (e) {
             e.preventDefault();
             $.post($(this).attr("action"), $(this).serialize());
             //
             //trigger close even
-            var tabNav = $(e.target).closest('.ui-tabs').children('.ui-tabs-nav');
-            $(tabNav).find('.ui-state-active').find('span.ui-icon-close').click();
+            if (altClose) {
+                $(altClose).click();
+            } else {
+                var tabNav = $(e.target).closest('.ui-tabs').children('.ui-tabs-nav');
+                $(tabNav).find('.ui-state-active').find('span.ui-icon-close').click();
+            }
+            if (postDelete) {
+                postDelete();
+            }
         });
     }
+    //
+    //
     function _checkFormLevel(level, caller) {
         if (level === null || level === undefined || level < 1) {
             throw new Error(caller + ": formLevel not correctly defined, formlevel: " + level);
