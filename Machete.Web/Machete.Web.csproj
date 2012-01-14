@@ -255,6 +255,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Employers.es.resx</DependentUpon>
     </Compile>
+    <Compile Include="Resources\Events.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Events.resx</DependentUpon>
+    </Compile>
     <Compile Include="Resources\Reports.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -524,6 +529,11 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Employers.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Events.es.resx" />
+    <EmbeddedResource Include="Resources\Events.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Events.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Reports.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Reports.es.Designer.cs</LastGenOutput>
@@ -705,6 +715,8 @@
     <Content Include="Views\Shared\WorkerIndex.cshtml" />
     <Content Include="Views\Event\Create.cshtml" />
     <Content Include="Views\Shared\EventIndex.cshtml" />
+    <Content Include="Views\Event\Edit.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Event.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

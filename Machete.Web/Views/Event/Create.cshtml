@@ -1,8 +1,34 @@
 ﻿@model Machete.Domain.Event
 @using Machete.Web.Resources
-@using (Html.BeginForm("Create", "Event", FormMethod.Post, new { @id = "createtab-form" }))
+@{  
+    string recType = "event";
+    string idPrefix = recType + Model.ID + "-";
+}
+@using (Html.BeginForm("Create", "Event", FormMethod.Post, new { @id = "eventCreateForm" }))
 {
-    <input type="submit" id="createButton" class="formButton" value="submit?!" tabindex="9"/>
+    <input type="submit" id="eventCreateBtn" class="formButton saveBtn" value="submit?!" tabindex="9"/>
     @Html.ValidationSummary(true)
     @Html.EditorForModel()
 }
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        var eventCreateForm = $("#employerCreateForm");
+        $('.formButton').button();
+        $.validator.unobtrusive.parseDynamicContent('#eventCreateForm');
+        //
+        //
+        eventCreateForm.mUI('formSubmit', {
+            recType: "@(recType)", //for add_rectab
+            create: true,
+            formLevel: 1
+        });
+        //
+        // machete UI detect changes on forms in tabs   
+        eventCreateForm.mUI('formDetectChanges', {
+            recType: "@(recType)",
+            formLevel: 1,
+            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+        });
+    });
+</script>

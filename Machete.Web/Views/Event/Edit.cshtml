@@ -1,0 +1,67 @@
+﻿@model Machete.Domain.Event
+@using Machete.Web.Resources
+@using Machete.Web.Helpers
+@{
+    string recType = "event";
+}
+
+@using (Html.BeginForm("Edit", "Event", FormMethod.Post,
+                    new { @class = "edittab-form EditPost", 
+                          @id = "eventEditForm-" + Model.ID, 
+                          enctype = "multipart/form-data" }))
+{
+    <input type="submit" value="submit?!" class="formButton saveBtn"/>
+    
+    if (Html.IsInRole(Html.Role_AM()))
+    {
+        <input id="deleteEventBtn-@(Model.ID)" type="button" value="delete?!" 
+                class="formButton deleteButton" />
+    }
+    <br />  
+    @Html.ValidationSummary(true)
+    @Html.EditorForModel()
+
+}
+
+@if (Html.IsInRole(Html.Role_AM()))
+{
+    using (Html.BeginForm("Delete", "Event", FormMethod.Post,
+                            new { @class = "edittab-form DeletePost", @id = "deleteEventForm-" + Model.ID }))
+    {
+        @Html.HiddenFor(model => model.ID);
+    }
+}
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        $('.formButton').button();
+        var eventForm = $('#eventEditForm-@Model.ID');
+        var eventDeleteForm = $('#deleteEventForm-@Model.ID');
+        var eventDeleteBtn = $('#deleteEventBtn-@(Model.ID)');
+        //
+        //
+        eventForm.mUI('formSubmit', {
+            create: false,
+            selectTab: 0,
+            formLevel: 1
+        });
+        //
+        // post-ready validation hack
+        $.validator.unobtrusive.parseDynamicContent(eventForm);
+        //
+        // delete button confirmation
+        eventDeleteBtn.mUI('formClickDelete', {
+            ok: "@Events.deletesubmit",
+            confirm: '@Events.deleteconfirmation',
+            title: '@Events.deletetitle',
+            form: eventDeleteForm
+        });
+        //
+        // machete UI detect changes on forms in tabs   
+        eventForm.mUI('formDetectChanges', {
+            recType: "@(recType)",
+            formLevel: 1,
+            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+        });
+    });
+</script>

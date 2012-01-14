@@ -17,17 +17,19 @@
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
         $('.formButton').button();
+        var employerCreateForm = $("#employerCreateForm")
         $.validator.unobtrusive.parseDynamicContent('#employerCreateForm');
         $('#employerName').focus();
         // Employer Create submit event
-        $("#employerCreateForm").mUI('formSubmit', {
+        
+        employerCreateForm.mUI('formSubmit', {
             recType: "@(recType)", //for add_rectab
             create: true,
             formLevel: 1
         });
         //
         // machete UI detect changes on forms in tabs   
-        $("#employerCreateForm").mUI('formDetectChanges', {
+        employerCreateForm.mUI('formDetectChanges', {
             recType: "@(recType)",
             formLevel: 1,
             changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",

@@ -42,7 +42,7 @@ namespace Machete.Test
         #region persons
         public bool personCreate(Person _per)
         {
-            
+            string prefix = "person" + _per.ID + "-";
             _per.firstname1 = RandomString(4);
             _per.lastname1 = RandomString(8);
             WaitThenClickElement(By.Id("menulinkperson"));
@@ -52,7 +52,7 @@ namespace Machete.Test
             _d.FindElement(By.Id("firstname1")).SendKeys(_per.firstname1);
             _d.FindElement(By.Id("lastname1")).Clear();
             _d.FindElement(By.Id("lastname1")).SendKeys(_per.lastname1);
-            WaitThenClickElement(By.Id("createButton"));
+            WaitThenClickElement(By.Id(prefix + "SaveBtn"));
 
             //
             WaitForElement(By.Id("personSearchBox")).SendKeys(_per.lastname1);

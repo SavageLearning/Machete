@@ -2,7 +2,11 @@
 @using Machete.Web.Resources
 @using Machete.Web.Helpers
 
-
+@{
+    string recType = "worker";
+    string idPrefix = recType + "-";
+    string perPrefix = "person" + Model.ID + "-";
+}
 @using (Html.BeginForm("Edit", "Worker", FormMethod.Post,
                     new { @class = "edittab-form EditPost", 
                           @id = "workderEditTab-" + Model.ID, 
@@ -32,68 +36,45 @@
 }
 
 <script language="javascript" type="text/javascript">
-    $(document).ready(function () {        
+    $(document).ready(function () {
+        var personPartsTab = $('#personPartsTabs');
         $('.formButton').button();
-        $('#workderEditTab-@Model.ID').ajaxForm({
-            success: function() {                       
-                        $('#workderEditTab-@Model.ID').closest('.ui-tabs').tabs("select", 0);
-                     }
-        });
         //TODO: Tab order $('#contactName').focus();
         $.validator.unobtrusive.parseDynamicContent($('#workderEditTab-@Model.ID'));
-                ////////////////////////////////////////////////////////////////
         //
         // open work order view for printing
-        //
         $('#viewWorker-@(Model.ID)').click(function () {
             printwindow = window.open('/Worker/View/@(Model.ID)');
             //printwindow.print();
         });
-
-        ////////////////////////////////////////////////////////////////
         //
         // Confirm delete event
-        //
-        $("#deleteWorkerButton-@(Model.ID)").click(function () {
-            jConfirm('@Workers.deleteconfirmation',
-                     '@Workers.deletetitle',
-                     function (r) {
-                         if (r == true) {
-                             $('#deleteWorker-@(Model.ID)').submit();
-                         }
-                     }
-                    );
+        $('#deleteWorkerButton-@Model.ID').mUI('formClickDelete', {
+            ok: "@Workers.deletesubmit",
+            confirm: '@Workers.deleteconfirmation',
+            title: '@Workers.deletetitle',
+            form: $('#deleteWorker-@(Model.ID)'),
+            altClose: $('#personGeneralTab'),
+            postDelete: function () {
+                personPartsTab.tabs("url", 1, "/Worker/Create?ID=@(Model.ID)");
+                var createtab = $(personPartsTab).children('.ui-tabs-nav').find('a').get('1');
+                $(createtab).text("@(Persons.createworker)");
+            }
         });
-        ////////////////////////////////////////////////////////////////
         //
         // submit edit
+        $('#workderEditTab-@Model.ID').mUI('formSubmit', {
+            create: false,
+            selectTab: 0,
+            formLevel: 1
+        });
+        // 
         //
-//        $('#workderEditTab-@Model.ID').submit(function (e) {
-//            if ($('#workderEditTab-@Model.ID').valid()) {
-//                //$.post($(this).attr("action"), $(this).serialize());
-//                $(e.target).closest('.ui-tabs').tabs("select", 0);
-//            }
-//            //TODO: javascript...need to deal with ajax error
-//            //e.preventDefault();
-//        });
-        ////////////////////////////////////////////////////////////////
-        //
-        // submit delete
-        //
-        $("#deleteWorker-@(Model.ID)").submit(function (e) {
-            e.preventDefault();
-            $.post($(this).attr("action"), $(this).serialize());
-            //var oTabs = $(e.target).closest('.ui-tabs').children('.ui-tabs-nav');
-            //$(oTabs).find('.ui-state-active').find('span.ui-icon-close').click();
-            //TODO: javascript...need to deal with ajax error
-            //alert("foo");
-            var oTabs = $(e.target).closest('.ui-tabs');
-            $(oTabs).tabs("select", 0);            
-            var edittab = $(oTabs).children('.ui-tabs-nav').find('a').get('1');
-            $(oTabs).tabs("url", 1, "/Worker/Create?ID=@(Model.ID)");
-            $(edittab).text('edit changed the name');
-            
-            //alert("foo2");
+        $('#workderEditTab-@Model.ID').mUI('formDetectChanges', {
+            recType: "@(recType)",
+            formLevel: 1,
+            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
         });
     });
 </script>

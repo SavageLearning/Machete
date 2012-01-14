@@ -227,10 +227,9 @@
             @Html.ValidationMessageFor(model => model.description)
         </div>
     </div>
-</div><!--tb-table description fields below-->
+</div>
 @Html.Partial("ManagerInfo")
 @Html.Partial("AdministratorInfo")
-
 
 <div id="workerDialog-@(Model.ID)" title="@Machete.Domain.Resources.WorkOrder.requestTitle">
     <table id="workerTable-@(Model.ID)" class="display" style="display: none">
@@ -250,7 +249,6 @@
         </thead>
     </table>
 </div>
-
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
         //
