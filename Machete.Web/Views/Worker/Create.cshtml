@@ -2,7 +2,9 @@
 @using Machete.Web.Resources
 @using (Html.BeginForm("Create", "Worker", FormMethod.Post, new { @id = "workerCreateForm"}))
 {
-    <input type="submit" id="createWorkerBtn"  class="formButton saveBtn" value="@Workers.createsubmit" tabindex="9"/>
+    <div class="mui-button-row">
+        <input type="submit" id="createWorkerBtn"  class="formButton saveBtn" value="@Workers.createsubmit" tabindex="9"/>
+    </div>
     @Html.ValidationSummary(true)
     @Html.EditorForModel()
 }
