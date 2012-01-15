@@ -590,3 +590,24 @@ input.ui-button.dispatchButton
     border: 1px solid #95C41B !important;
     font-weight:bolder !important;
 }
+
+.mui-button-row 
+{
+    clear: left;
+}
+
+.mui-edit-block
+{
+    float: left;
+}
+
+.mui-edit-worker-picture
+{
+    float: left;
+    padding: 0 2em 2em 2em;
+}
+
+.mui-edit-worker-footer
+{
+    clear: left;
+}
