@@ -66,19 +66,19 @@
             <table id="wsiTable" class="display">
                 <thead>
                     <tr>
-                        <th class="print_off">RecordID?!</th>
+                        <th class="print_off"></th>
                         <th>@Worker.dwccardnum</th>
-                        <th>member expiration?!</th>
-                        <th>status?!</th>
-                        <th class="print_off">fullname?!</th>
+                        <th class="print_off">@WorkerSignins.memberexpiration</th>
+                        <th class="print_off">@WorkerSignins.status</th>
+                        <th>@WorkerSignins.fullname</th>
                         <th class="print_off">@WorkerSignins.datesignin</th>
                     </tr>
                 </thead>
             </table>
             </div>
         </div>
-        <div id="signinImage" class="mui-signin-imagebox print_off" style="float: left; width: 200px">
-            <p>
+        <div id="signinImage" class="mui-signin-imagebox print_off">
+@*            <p>
             @Html.Encode(WorkerSignins.expirationdate + String.Format("{0:mm/dd/yyyy}", Model.last_chkin_memberexpirationdate.ToString()))
             </p>
             @if (Model.memberexpired)
@@ -92,18 +92,22 @@
                 <p>
                     @Html.Label(WorkerSignins.noimage)
                 </p>
-            }
+            }*@
 
-                <img id="wsiImage" src="@Url.Action("GetImage", "Image", new { Model.last_chkin_image.ID })" alt="" style="width: 200px"/>
+        <img id="wsiImage" src="@Url.Action("GetImage", "Image", new { Model.last_chkin_image.ID })" alt="" style="width: 200px"/>
             
         </div>
 </div>
-
+<div id="signin-red-dialog">
+    @WorkerSignins.redmessage
+    <img align="middle" id="wsiRedImage" src="" alt="" style="width: 200px"/>
+</div>
 
 <script type="text/javascript">
     $().ready(function () {
         DatePicker();
         SigninFocus();
+        $('#signin-red-dialog').hide();
         //MyTable();
         $('.confirm_delete').click(function (event) { Confirm_button(event, this); });
         $('#wsiTable').dataTable({
@@ -111,18 +115,21 @@
                     "bLengthChange": true,
                     "bAutoWidth": false,
                     "bServerSide": true,
+                    "bInfo": true,
+                    "bSort": true,
+                    "bFilter": true,
                     "sAjaxSource": "/WorkerSignin/AjaxHandler",
                     "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
                     "bProcessing": true,
                     "iDisplayLength": -1,
                     "aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "@WorkerSignins.allrecords"]],
                     "aoColumns": [
-                        {mDataProp: "recordid"},
+                        {mDataProp: "recordid", sClass: "print_off confirm_delete"},
                         {mDataProp: "dwccardnum"},
-                        {mDataProp: "expirationDate"},
-                        {mDataProp: "memberStatus"},
+                        {mDataProp: "expirationDate", sClass: "print_off"},
+                        {mDataProp: "memberStatus", sClass: "print_off"},
                         {mDataProp: "fullname"},
-                        {mDataProp: "dateforsigninstring"}
+                        {mDataProp: "dateforsigninstring", sClass: "print_off"}
                     ],
                     "fnServerData": function ( sSource, aoData, fnCallback ) {
 			            /* Add some extra data to the sender */
@@ -149,6 +156,9 @@
                         return nRow;
                     }
         });
+        $('.dataTables_length, .dataTables_filter, .dataTables_info, #wsiTable_previous, #wsiTable_next').addClass('print_off');
+//        $('').addClass('print_off');
+//        $('').addClass('print_off');
         $('#wsiTable tbody').bind('dblclick', function(e) {
             console.log('d-click');
             var $node = $(e.target.parentNode);
@@ -160,9 +170,16 @@
             if ($(form).valid()) {
                 $.post($(this).attr("action"), $(this).serialize(), 
                     function(data) {
-                        $('#dwccardentry').val(null);
-                        $('#wsiImage').attr('src', data.imageRef);
-                        $('#wsiTable').dataTable().fnDraw();
+                        $('#dwccardentry').val(null); // clear cardnum field
+                        $('#wsiImage').attr('src', data.imageRef); //reload image
+                        $('#wsiTable').dataTable().fnDraw(); //reload datatable
+                        if (data.memberSanctioned || data.memberExpelled) {
+                            $("#wsiRedImage").attr('src', data.imageRef);
+                            $('#signin-red-dialog').dialog({ 
+                                modal: true,
+                                title: "@(WorkerSignins.redmessagetitle)"
+                                 });
+                        }
                     });
             }    
         });
@@ -191,9 +208,9 @@
 //            "iDisplayLength": -1,
 //            "aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "@WorkerSignins.allrecords"]]
 //        });
-        $('.dataTables_length').addClass('print_off');
-        $('.dataTables_filter').addClass('print_off');
-        $('.dataTables_info').addClass('print_off');
+//        $('.dataTables_length').addClass('print_off');
+//        $('.dataTables_filter').addClass('print_off');
+//        $('.dataTables_info').addClass('print_off');
 //    }
     function Confirm_button(e, t) {
         e.preventDefault();
