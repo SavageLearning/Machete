@@ -29,8 +29,15 @@ namespace Machete.Web.Controllers
 
         public FileContentResult GetImage(int ID)
         {
-            Image image = _serv.GetImage(ID);
-            return File(image.ImageData, image.ImageMimeType);
+            if (ID != 0)
+            {
+                Image image = _serv.GetImage(ID);
+                return File(image.ImageData, image.ImageMimeType);
+            }
+            else
+            {
+                return null; //File(new byte [1], "");
+            }
         }
 
         //

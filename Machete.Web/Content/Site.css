@@ -583,7 +583,8 @@ input.ui-button.dispatchButton
 {
     width: 300px;
 }
-
+/* Worker page
+----------------------------------------------------------*/
 .highlightSave
 {
     color: #95C41B !important;
@@ -610,4 +611,10 @@ input.ui-button.dispatchButton
 .mui-edit-worker-footer
 {
     clear: left;
+}
+
+/* Worker Signin
+----------------------------------------------------------*/
+.mui-signin-imagebox
+{
 }
