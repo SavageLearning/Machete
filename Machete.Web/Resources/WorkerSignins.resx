@@ -147,16 +147,31 @@
   <data name="expirationdate" xml:space="preserve">
     <value>Expiration date: </value>
   </data>
+  <data name="fullname" xml:space="preserve">
+    <value>Full name</value>
+  </data>
   <data name="indexsubmit" xml:space="preserve">
     <value>Sign in</value>
   </data>
   <data name="indextitle" xml:space="preserve">
     <value>workersignin::index</value>
   </data>
+  <data name="memberexpiration" xml:space="preserve">
+    <value>Member expiration</value>
+  </data>
   <data name="membershipexpiredmessage" xml:space="preserve">
     <value>MEMBERSHIP EXPIRED!</value>
   </data>
   <data name="noimage" xml:space="preserve">
     <value>No image available</value>
+  </data>
+  <data name="redmessage" xml:space="preserve">
+    <value>This member is marked as either sanctioned or expelled. Return their ID card to the person and instruct them to speak with a dispatcher. They are not eligible for work at this time.</value>
+  </data>
+  <data name="redmessagetitle" xml:space="preserve">
+    <value>STOP! SANCTIONED OR EXPELLED WORKER!</value>
+  </data>
+  <data name="status" xml:space="preserve">
+    <value>Status</value>
   </data>
 </root>

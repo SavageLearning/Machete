@@ -617,4 +617,7 @@ input.ui-button.dispatchButton
 ----------------------------------------------------------*/
 .mui-signin-imagebox
 {
+     float: left; 
+     width: 200px;
+     margin: 83px 10px;
 }

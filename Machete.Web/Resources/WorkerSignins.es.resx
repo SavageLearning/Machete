@@ -147,16 +147,31 @@
   <data name="expirationdate" xml:space="preserve">
     <value>Fecha de caducidad:</value>
   </data>
+  <data name="fullname" xml:space="preserve">
+    <value>Nombre completo</value>
+  </data>
   <data name="indexsubmit" xml:space="preserve">
     <value>Ingresar</value>
   </data>
   <data name="indextitle" xml:space="preserve">
     <value>ingresar::listar</value>
   </data>
+  <data name="memberexpiration" xml:space="preserve">
+    <value>Fecha de expiración</value>
+  </data>
   <data name="membershipexpiredmessage" xml:space="preserve">
     <value>MIEMBROS VENCIDO!</value>
   </data>
   <data name="noimage" xml:space="preserve">
     <value>No hay imagen disponible</value>
+  </data>
+  <data name="redmessage" xml:space="preserve">
+    <value>Este miembro se ha marcado como sancionado o expulsado. Devolver su tarjeta de identificación de la persona y darles instrucciones para hablar con un despachador. Ellos no son elegibles para el trabajo en este momento.</value>
+  </data>
+  <data name="redmessagetitle" xml:space="preserve">
+    <value>PARADA! SANCTIONADO O EXPULSADO DEL TRABAJADOR!</value>
+  </data>
+  <data name="status" xml:space="preserve">
+    <value>Estatus</value>
   </data>
 </root>
