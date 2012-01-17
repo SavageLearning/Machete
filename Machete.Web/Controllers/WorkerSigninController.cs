@@ -22,13 +22,14 @@ namespace Machete.Web.Controllers
     public class WorkerSigninController : Controller
     {
         private readonly IWorkerSigninService _serv;
-        
+        private readonly IWorkerService _wServ;
         private Logger log = LogManager.GetCurrentClassLogger();
         private System.Globalization.CultureInfo CI;
         private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "WorkerSigninController", "");
-        public WorkerSigninController(IWorkerSigninService workerSigninService)
+        public WorkerSigninController(IWorkerSigninService workerSigninService, IWorkerService workerService)
         {
             this._serv = workerSigninService;
+            this._wServ = workerService;
         }
 
         protected override void Initialize(RequestContext requestContext)
@@ -49,6 +50,7 @@ namespace Machete.Web.Controllers
             _model.last_chkin_image = new Image();
             return View(_model);
         }
+        //
         // subsequent page creations
         [HttpPost]
         [Authorize(Roles = "Manager, Administrator, Check-in")]
@@ -58,12 +60,12 @@ namespace Machete.Web.Controllers
             var _signin = new WorkerSignin();
             _signin.dwccardnum = dwccardentry;
             _signin.dateforsignin = dateforsignin;
-            //_signin.lottery_timestamp = DateTime.MinValue;
-            //TODO: Create config page that lets admin control whether unmatched card ids are recorded
+            //
+            //
             _serv.CreateWorkerSignin(_signin, this.User.Identity.Name);
             
             var _model = new WorkerSigninViewModel();
-            
+            var worker = _wServ.GetWorkerByNum(dwccardentry);
             //Get expiration date from checkin, show with next view
             _model.last_chkin_memberexpirationdate = _serv.getExpireDate(dwccardentry);         
             if (_model.last_chkin_memberexpirationdate < DateTime.Now) 
@@ -74,19 +76,32 @@ namespace Machete.Web.Controllers
             }
             //Get picture from checkin, show with next view
             var checkin_image = _serv.getImage(dwccardentry);           
-            
+            string imageRef = "/Image/GetImage/0";
             if (checkin_image != null)
             {
                 _model.last_chkin_image = checkin_image;
+                imageRef = "/Image/GetImage/" + checkin_image.ID;
             }
             else
             {
                 _model.last_chkin_image = new Image();
+
             }
-            _model.dateforsignin = dateforsignin;                       //Pass date back for date checkin continuity
-            ModelState.Remove("dwccardentry");                          // Clears previous entry from view for next iteration
-            _model.workersignins = _serv.getView(_model.dateforsignin); //Get list of signins already checked in for the day
-            return View(_model);
+            //_model.dateforsignin = dateforsignin;                       //Pass date back for date checkin continuity
+            //ModelState.Remove("dwccardentry");                          // Clears previous entry from view for next iteration
+            //_model.workersignins = _serv.getView(_model.dateforsignin); //Get list of signins already checked in for the day
+            //return View(_model);
+
+            return Json(new
+            {                
+                memberExpired = _model.memberexpired,
+                memberInactive = worker.memberStatus == LookupCache.getSingleEN("memberstatus", "Inactive") ? true : false,
+                memberSanctioned = worker.memberStatus == LookupCache.getSingleEN("memberstatus", "Sanctioned") ? true : false,
+                memberExpelled = worker.memberStatus == LookupCache.getSingleEN("memberstatus", "Expelled") ? true : false,
+                imageRef = imageRef,
+                expirationDate = _model.last_chkin_memberexpirationdate
+            },
+            JsonRequestBehavior.AllowGet);
         }
 
         //
@@ -159,7 +174,15 @@ namespace Machete.Web.Controllers
                                        lastname1 = p.lastname1,
                                        lastname2 = p.lastname2, 
                                        dateforsignin = p.dateforsignin,
+                                       dateforsigninstring = p.dateforsignin.ToShortDateString(),
                                        WAID = p.waid ?? 0,
+                                       memberStatus = LookupCache.byID(p.memberStatus, CI.TwoLetterISOLanguageName),
+                                       memberInactive = p.memberStatus == LookupCache.getSingleEN("memberstatus", "Inactive") ? true : false,
+                                       memberSanctioned = p.memberStatus == LookupCache.getSingleEN("memberstatus", "Sanctioned") ? true : false,
+                                       memberExpired = p.expirationDate < p.dateforsignin ? true : false,
+                                       memberExpelled = p.memberStatus == LookupCache.getSingleEN("memberstatus", "Expelled") ? true : false,
+                                       imageID = p.imageID,
+                                       expirationDate = p.expirationDate.ToShortDateString(),
                                        skills = _getSkillCodes(p.englishlevel, p.skill1, p.skill2, p.skill3)
                          };
             return Json(new

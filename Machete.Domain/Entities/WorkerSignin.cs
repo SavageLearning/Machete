@@ -45,7 +45,9 @@ namespace Machete.Domain
         public int englishlevel { get; set; }
         public DateTime dateforsignin { get; set; }
         public int? waid { get; set; }
-
+        public int? imageID { get; set; }
+        public DateTime expirationDate { get; set; }
+        public int memberStatus { get; set; }
 
         public WorkerSigninView(Person p, WorkerSignin s)
         {
@@ -65,7 +67,10 @@ namespace Machete.Domain
             skill1 = p.Worker.skill1;
             skill2 = p.Worker.skill2;
             skill3 = p.Worker.skill3;
+            imageID = p.Worker.ImageID;
             englishlevel = p.Worker.englishlevelID;
+            expirationDate = p.Worker.memberexpirationdate;
+            memberStatus = p.Worker.memberStatus;
         }
         public WorkerSigninView() { }
     }

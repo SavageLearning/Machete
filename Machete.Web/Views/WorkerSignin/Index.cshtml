@@ -9,21 +9,21 @@
 @*<h2 class="print_off">@WorkerSignins.indextitle</h2>*@
 <div id="container">
         <div id="signinData" class="signinColumn" style="float: left;">
-            <div id="signinForm" class="print_off">
-            @using (Html.BeginForm())
+            <div class="print_off">
+            @using (Html.BeginForm("Index", "WorkerSignin", FormMethod.Post, new { @id = "signinForm" }))
             {
                 @Html.ValidationSummary(true)
                 <div class="editor-label">
                     @Html.LabelFor(model => model.dwccardentry)
                 </div>
                 <div class="editor-field">
-                    @Html.TextBox("dwccardentry", "", new {style="width: 100px;" })
+                    @Html.TextBox("dwccardentry", "", new { style = "width: 100px;" })
                     @Html.ValidationMessageFor(model => model.dwccardentry)
                 </div>
                 <div class="editor-field">
                     @Html.TextBox("dateforsignin",
                         Html.Encode(String.Format("{0:mm/dd/yy}", Model.dateforsignin.ToShortDateString())),
-                        new { @class = "ui-datepicker", style="width: 100px;" })
+                        new { @class = "ui-datepicker", style = "width: 100px;" })
                     @Html.ValidationMessageFor(model => model.dateforsignin)
                 </div>
                 <div class="">
@@ -34,7 +34,7 @@
             }
             </div>
             <div id="signinTable">
-            <table id="myDataTable" class="display">
+@*            <table id="myDataTable" class="display">
                 <thead>
                 <tr>
                     <th class="print_off"></th>
@@ -62,10 +62,22 @@
                         <td class="print_off">@String.Format("{0:MM/dd/yyyy}", item.dateforsignin)</td>
                     </tr>
                 }
+            </table>*@
+            <table id="wsiTable" class="display">
+                <thead>
+                    <tr>
+                        <th class="print_off">RecordID?!</th>
+                        <th>@Worker.dwccardnum</th>
+                        <th>member expiration?!</th>
+                        <th>status?!</th>
+                        <th class="print_off">fullname?!</th>
+                        <th class="print_off">@WorkerSignins.datesignin</th>
+                    </tr>
+                </thead>
             </table>
             </div>
         </div>
-        <div id="signinImage" class="signinColumn print_off" style="float: left; width: 200px">
+        <div id="signinImage" class="mui-signin-imagebox print_off" style="float: left; width: 200px">
             <p>
             @Html.Encode(WorkerSignins.expirationdate + String.Format("{0:mm/dd/yyyy}", Model.last_chkin_memberexpirationdate.ToString()))
             </p>
@@ -81,10 +93,9 @@
                     @Html.Label(WorkerSignins.noimage)
                 </p>
             }
-            else
-            {
-                <img src="@Url.Action("GetImage", "Image", new { Model.last_chkin_image.ID })" alt="" style="width: 200px"/>
-            }
+
+                <img id="wsiImage" src="@Url.Action("GetImage", "Image", new { Model.last_chkin_image.ID })" alt="" style="width: 200px"/>
+            
         </div>
 </div>
 
@@ -93,9 +104,68 @@
     $().ready(function () {
         DatePicker();
         SigninFocus();
-        MyTable();
+        //MyTable();
         $('.confirm_delete').click(function (event) { Confirm_button(event, this); });
-        //$('#confirm_delete').click(function (event) { event.preventDefault(); });
+        $('#wsiTable').dataTable({
+                    "bPaginate": true,
+                    "bLengthChange": true,
+                    "bAutoWidth": false,
+                    "bServerSide": true,
+                    "sAjaxSource": "/WorkerSignin/AjaxHandler",
+                    "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+                    "bProcessing": true,
+                    "iDisplayLength": -1,
+                    "aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "@WorkerSignins.allrecords"]],
+                    "aoColumns": [
+                        {mDataProp: "recordid"},
+                        {mDataProp: "dwccardnum"},
+                        {mDataProp: "expirationDate"},
+                        {mDataProp: "memberStatus"},
+                        {mDataProp: "fullname"},
+                        {mDataProp: "dateforsigninstring"}
+                    ],
+                    "fnServerData": function ( sSource, aoData, fnCallback ) {
+			            /* Add some extra data to the sender */
+			            aoData.push( { "name": "todaysdate", "value": $('#dateforsignin').val() } );
+			            $.getJSON( sSource, aoData, function (json) { 
+				            /* Do whatever additional processing you want on the callback, then tell DataTables */
+				            fnCallback(json)
+			            } );
+		            },
+                    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                        $(nRow).attr('ID', "wsiRec" +aData['recordid']);
+                        $(nRow).find('td:first-child').html('<a href="/WorkerSignin/delete/'+aData['recordid']+'">Delete</a>');
+                        $(nRow).attr('imageRef', "/Image/GetImage/" + aData['imageID']);
+                        $(nRow).addClass('statusBlue');
+                        if (aData['memberInactive'] || aData['memberExpired']) { 
+                            $(nRow).removeClass('statusBlue');
+                            $(nRow).addClass('statusYellow');
+                        } 
+                        if (aData['memberSanctioned'] || aData['memberExpelled']) {
+                            $(nRow).removeClass('statusBlue');
+                            $(nRow).removeClass('statusYellow');
+                            $(nRow).addClass('statusRed');
+                        } 
+                        return nRow;
+                    }
+        });
+        $('#wsiTable tbody').bind('dblclick', function(e) {
+            console.log('d-click');
+            var $node = $(e.target.parentNode);
+            $('#wsiImage').attr('src', $node.attr('imageRef'));
+        });
+        $('#signinForm').submit(function(e) {
+            var form = this;
+            e.preventDefault();
+            if ($(form).valid()) {
+                $.post($(this).attr("action"), $(this).serialize(), 
+                    function(data) {
+                        $('#dwccardentry').val(null);
+                        $('#wsiImage').attr('src', data.imageRef);
+                        $('#wsiTable').dataTable().fnDraw();
+                    });
+            }    
+        });
     });
     function DatePicker() {
         $('.ui-datepicker').datepicker({
@@ -109,22 +179,22 @@
     function SigninFocus() {
         $('#dwccardentry').focus();
     }
-    function MyTable() {
-        $('#myDataTable').dataTable({
-            "bPaginate": true,
-            "bLengthChange": true,
-            "bFilter": true,
-            "bSort": true,
-            "bInfo": true,
-            "bAutoWidth": false,
-            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
-            "iDisplayLength": -1,
-            "aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "@WorkerSignins.allrecords"]]
-        });
+//    function MyTable() {
+//        $('#myDataTable').dataTable({
+//            "bPaginate": true,
+//            "bLengthChange": true,
+//            "bFilter": true,
+//            "bSort": true,
+//            "bInfo": true,
+//            "bAutoWidth": false,
+//            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+//            "iDisplayLength": -1,
+//            "aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "@WorkerSignins.allrecords"]]
+//        });
         $('.dataTables_length').addClass('print_off');
         $('.dataTables_filter').addClass('print_off');
         $('.dataTables_info').addClass('print_off');
-    }
+//    }
     function Confirm_button(e, t) {
         e.preventDefault();
         var theHref =  $(t).attr('href');
