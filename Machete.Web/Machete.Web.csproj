@@ -235,6 +235,7 @@
     <Compile Include="Controllers\WorkOrderController.cs" />
     <Compile Include="Helpers\AuthorizeExAttribute.cs" />
     <Compile Include="Helpers\CustomModelBinders.cs" />
+    <Compile Include="Helpers\GetRootException.cs" />
     <Compile Include="Helpers\IsInRole.cs" />
     <Compile Include="Helpers\ListItemToOption.cs" />
     <Compile Include="Helpers\liveSearch.cs" />

@@ -139,10 +139,25 @@ namespace Machete.Web.Controllers
         }
         //
         // GET: /WorkerSignin/Delete/5
+        [Authorize(Roles = "Administrator, Manager, Check-in")]
         public ActionResult Delete(int id)
         {
-            _serv.DeleteWorkerSignin(id);
-            return RedirectToAction("Index");
+            string status = null;
+            try
+            {
+                _serv.DeleteWorkerSignin(id);
+            }
+            catch (Exception e)
+            {
+                status = RootException.Get(e, "WorkerSigninService");
+            }
+
+            return Json(new
+            {
+                status = status ?? "OK",
+                deletedID = id
+            },
+            JsonRequestBehavior.AllowGet);
         }
 
 

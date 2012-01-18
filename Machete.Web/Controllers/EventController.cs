@@ -159,10 +159,20 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Delete(int id, FormCollection collection, string user)
         {
-            _serv.DeleteEvent(id, user);
+;
+            string status = null;
+            try
+            {
+                _serv.DeleteEvent(id, user);
+            }
+            catch (Exception e)
+            {
+                status = RootException.Get(e, "EventService");
+            }
+
             return Json(new
             {
-                status = "OK",
+                status = status ?? "OK",
                 deletedID = id
             },
             JsonRequestBehavior.AllowGet);

@@ -35,13 +35,13 @@ namespace Machete.Web.Controllers
         {
             base.Initialize(requestContext);
             System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];            
-            ViewBag.races = Lookups.race(CI.TwoLetterISOLanguageName);
-            ViewBag.languages = Lookups.language(CI.TwoLetterISOLanguageName);
-            ViewBag.neighborhoods = Lookups.neighborhood(CI.TwoLetterISOLanguageName);
-            ViewBag.incomes = Lookups.income(CI.TwoLetterISOLanguageName);
-            ViewBag.maritalstatus = Lookups.maritalstatus(CI.TwoLetterISOLanguageName);
-            ViewBag.Genders = Lookups.gender(CI.TwoLetterISOLanguageName);
-            ViewBag.countriesoforigin = Lookups.countryoforigin(CI.TwoLetterISOLanguageName);
+            //ViewBag.races = Lookups.race(CI.TwoLetterISOLanguageName);
+            //ViewBag.languages = Lookups.language(CI.TwoLetterISOLanguageName);
+            //ViewBag.neighborhoods = Lookups.neighborhood(CI.TwoLetterISOLanguageName);
+            //ViewBag.incomes = Lookups.income(CI.TwoLetterISOLanguageName);
+            //ViewBag.maritalstatus = Lookups.maritalstatus(CI.TwoLetterISOLanguageName);
+            //ViewBag.Genders = Lookups.gender(CI.TwoLetterISOLanguageName);
+            //ViewBag.countriesoforigin = Lookups.countryoforigin(CI.TwoLetterISOLanguageName);
         }
         //
         // GET: /Worker/Index
@@ -235,23 +235,26 @@ namespace Machete.Web.Controllers
         //
         // GET: /Worker/Delete/5
         #region delete
-        [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult Delete(int id)
-        {
-            var _worker = workerService.GetWorker(id);
-            var _model = new WorkerViewModel();
-            _model.worker = _worker;
-            _model.person = _worker.Person;
-            return View(_model);
-        }
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult Delete(int id, string userName)
-        {
-            workerService.DeleteWorker(id, userName);
-            levent.Level = LogLevel.Info; levent.Message = "Worker deleted";
-            levent.Properties["RecordID"] = id; log.Log(levent);
-            return RedirectToAction("Index");
+        public ActionResult Delete(int id, string user)
+        {            
+            string status = null;
+            try
+            {
+                workerService.DeleteWorker(id, user);
+            }
+            catch (Exception e)
+            {
+                status = RootException.Get(e, "WorkerService"); 
+            }
+
+            return Json(new
+            {
+                status = status ?? "OK",
+                deletedID = id
+            },
+            JsonRequestBehavior.AllowGet);
         }
         #endregion
     }

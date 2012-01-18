@@ -339,24 +339,24 @@ namespace Machete.Web.Controllers
         #endregion
         #region Delete
         //
-        // GET: /WorkOrder/Delete/5
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public ActionResult Delete(int id)
-        {
-            var workOrder = woServ.GetWorkOrder(id);
-            return View(workOrder);
-        }
-        //
         // POST: /WorkOrder/Delete/5
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public ActionResult Delete(int id, FormCollection collection, string user)
+        public ActionResult Delete(int id, string user)
         {
-            //var workOrder = woServ.GetWorkOrder(id);
-            woServ.DeleteWorkOrder(id, user);
+            string status = null;
+            try
+            {
+                woServ.DeleteWorkOrder(id, user);
+            }
+            catch (Exception e)
+            {
+                status = RootException.Get(e, "WorkOrderService");
+            }
+
             return Json(new
             {
-                status = "OK",
+                status = status ?? "OK",
                 deletedID = id
             },
             JsonRequestBehavior.AllowGet);

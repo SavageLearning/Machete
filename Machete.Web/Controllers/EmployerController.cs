@@ -213,25 +213,23 @@ namespace Machete.Web.Controllers
 
         #region Delete
         //
-        // GET: /Employer/Delete/5
-        //[Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        //public ActionResult Delete(int id)
-        //{
-        //    var employer = employerService.GetEmployer(id);
-        //    return View(employer);
-        //}
-
-        //
         // POST: /Employer/Delete/5
-
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Delete(int id, FormCollection collection, string user)
         {
-            employerService.DeleteEmployer(id, user);
+            string status = null;
+            try
+            {
+                employerService.DeleteEmployer(id, user);
+            }
+            catch (Exception e)
+            {
+                status = RootException.Get(e, "EmployerService"); 
+            }
             return Json(new
             {
-                status = "OK",
+                status = status ?? "OK",
                 deletedID = id
             },
             JsonRequestBehavior.AllowGet);

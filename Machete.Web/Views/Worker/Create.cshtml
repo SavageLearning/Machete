@@ -1,6 +1,6 @@
 ﻿@model Machete.Domain.Worker
 @using Machete.Web.Resources
-@using (Html.BeginForm("Create", "Worker", FormMethod.Post, new { @id = "workerCreateForm"}))
+@using (Html.BeginForm("Create", "Worker", FormMethod.Post, new { @id = "workerCreateForm", enctype = "multipart/form-data" }))
 {
     <div class="mui-button-row">
         <input type="submit" id="createWorkerBtn"  class="formButton saveBtn" value="@Workers.createsubmit" tabindex="9"/>

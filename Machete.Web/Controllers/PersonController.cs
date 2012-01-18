@@ -127,15 +127,32 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Create(Person person, string userName)
         {
-            if (!ModelState.IsValid)
+            Person newperson = null;
+            if (ModelState.IsValid)
             {
-                return PartialView(person);
+                newperson = personService.CreatePerson(person, userName);
             }
-            personService.CreatePerson(person, userName);
-            return RedirectToAction("Index");
+            
+            return Json(new
+            {
+                sNewRef = _getTabRef(newperson),
+                sNewLabel = _getTabLabel(newperson),
+                iNewID = (newperson == null ? 0 : newperson.ID)
+            },
+            JsonRequestBehavior.AllowGet);
         }
         #endregion
+        private string _getTabRef(Person per)
+        {
+            if (per != null) return "/Person/Edit/" + Convert.ToString(per.ID);           
+            else return null;            
+        }
 
+        private string _getTabLabel(Person per)
+        {
+            if (per != null) return per.fullName();
+            else return null;
+        }
         #region Edit
         //
         // GET: /Person/Edit/5
@@ -155,28 +172,31 @@ namespace Machete.Web.Controllers
         public ActionResult Edit(int id, FormCollection collection, string userName)
         {
             Person person = personService.GetPerson(id);
+            string status = null;
             
-            try {
-                if (TryUpdateModel(person))
+            if (TryUpdateModel(person))
+            {
+                try
                 {
                     personService.SavePerson(person, userName);
-                    return RedirectToAction("Index");
                 }
-                else
+                catch (Exception e)
                 {
-                    levent.Level = LogLevel.Error; levent.Message = "TryUpdateModel failed";
-                    levent.Properties["RecordID"] = person.ID; log.Log(levent);
-                    return PartialView(person);
+                    status = RootException.Get(e, "WorkerService");
                 }
             }
-            //catch (DbUpdateConcurrencyException ex)
-            catch
+            else
             {
-
-                levent.Level = LogLevel.Error; levent.Message = "TryUpdateModel failed";
+                status = "Controller UpdateModel failure on recordtype: person";
+                levent.Level = LogLevel.Error; levent.Message = status;
                 levent.Properties["RecordID"] = person.ID; log.Log(levent);
-                return PartialView(person);
             }
+            return Json(new
+            {
+                status = status ?? "OK"
+            },
+            JsonRequestBehavior.AllowGet);
+
         }
         #endregion
         #region View
@@ -208,8 +228,21 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator")] 
         public ActionResult Delete(int id, FormCollection collection, string user)
         {
-            personService.DeletePerson(id, user);
-            return RedirectToAction("Index");
+            string status = null;
+            try
+            {
+                personService.DeletePerson(id, user);
+            }
+            catch (Exception e)
+            {
+                status = RootException.Get(e, "WorkerService");
+            }
+            return Json(new
+            {
+                status = status ?? "OK",
+                deletedID = id
+            },
+            JsonRequestBehavior.AllowGet);
         }
         #endregion
     }

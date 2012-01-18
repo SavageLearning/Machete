@@ -13,6 +13,8 @@ using Machete.Domain;
 using Machete.Test;
 using Machete.Web.ViewModel;
 using System.Data.Entity;
+using Machete.Test.UnitTests.Controllers;
+using System.Web.Routing;
 
 namespace Machete.Test.Controllers
 {
@@ -268,16 +270,19 @@ namespace Machete.Test.Controllers
         /// delete GET returns workOrder
         /// </summary>
         [TestMethod]
-        public void WorkOrderController_delete_get_returns_workOrder()
+        public void WorkOrderController_delete_get_returns_JSON()
         {
             //Arrange
             int testid = 4242;
             WorkOrder fakeworkOrder = new WorkOrder();
             _serv.Setup(p => p.GetWorkOrder(testid)).Returns(fakeworkOrder);
             //Act
-            var result = (ViewResult)_ctrlr.Delete(testid);
+            JsonResult result = (JsonResult)_ctrlr.Delete(testid, "test user");
             //Assert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(WorkOrder));
+            IDictionary<string,object> data = new RouteValueDictionary(result.Data);
+            Assert.AreEqual("OK", data["status"]);
+            Assert.AreEqual(4242, data["deletedID"]);
+            
         }
         /// <summary>
         /// delete POST redirects to index
@@ -291,7 +296,7 @@ namespace Machete.Test.Controllers
              _ctrlr.SetFakeControllerContext();
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
-            var result = _ctrlr.Delete(testid, fakeform, "UnitTest") as JsonResult;
+            var result = _ctrlr.Delete(testid, "UnitTest") as JsonResult;
             //Assert
             Assert.AreEqual(result.Data.ToString(), "{ status = OK, deletedID = 4242 }");
         }

@@ -12,6 +12,7 @@ using System.Web.Mvc;
 using Machete.Domain;
 using Machete.Test;
 using Machete.Web.ViewModel;
+using System.Web.Routing;
 
 namespace Machete.Test.Controllers
 {
@@ -56,7 +57,7 @@ namespace Machete.Test.Controllers
         }
 
         [TestMethod]
-        public void PersonController_create_post_valid_redirects_to_Index()
+        public void PersonController_create_post_valid_returns_JSON()
         {
             //Arrange
             var person = new Person();
@@ -64,9 +65,12 @@ namespace Machete.Test.Controllers
             _serv.Setup(p => p.CreatePerson(person, "UnitTest")).Returns(person);
             var _ctrlr = new PersonController(_serv.Object);
             //Act
-            var result = (RedirectToRouteResult)_ctrlr.Create(person, "UnitTest");
+            var result = (JsonResult)_ctrlr.Create(person, "UnitTest");
             //Assert
-            Assert.AreEqual("Index", result.RouteValues["action"]);
+            IDictionary<string, object> data = new RouteValueDictionary(result.Data);
+            Assert.AreEqual(0, data["iNewID"]);
+            Assert.AreEqual(" ", data["sNewLabel"]);
+            Assert.AreEqual("/Person/Edit/0", data["sNewRef"]);
         }
 
         [TestMethod]
@@ -79,10 +83,12 @@ namespace Machete.Test.Controllers
             var _ctrlr = new PersonController(_serv.Object);
             _ctrlr.ModelState.AddModelError("TestError", "foo");
             //Act
-            var result = (PartialViewResult)_ctrlr.Create(person, "UnitTest");
+            var result = (JsonResult)_ctrlr.Create(person, "UnitTest");
             //Assert
-            var error = result.ViewData.ModelState["TestError"].Errors[0];
-            Assert.AreEqual("foo", error.ErrorMessage);
+            IDictionary<string, object> data = new RouteValueDictionary(result.Data);
+            Assert.AreEqual(0, data["iNewID"]);
+            Assert.AreEqual(null, data["sNewLabel"]);
+            Assert.AreEqual(null, data["sNewRef"]);
         }
         #endregion
         //
@@ -105,7 +111,7 @@ namespace Machete.Test.Controllers
         }
 
         [TestMethod]
-        public void PersonController_edit_post_valid_updates_model_redirects_to_index()
+        public void PersonController_edit_post_valid_updates_model_returns_JSON()
         {
             //Arrange
             _serv = new Mock<IPersonService>();
@@ -130,9 +136,10 @@ namespace Machete.Test.Controllers
             _ctrlr.SetFakeControllerContext();
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
-            var result = _ctrlr.Edit(testid, fakeform, "UnitTest") as RedirectToRouteResult;
+            var result = _ctrlr.Edit(testid, fakeform, "UnitTest") as JsonResult;
             //Assert
-            Assert.AreEqual("Index", result.RouteValues["action"]);
+            IDictionary<string, object> data = new RouteValueDictionary(result.Data);
+            Assert.AreEqual("OK", data["status"]);
             Assert.AreEqual(fakeperson, savedperson);
             Assert.AreEqual(savedperson.firstname1, "blah");
             Assert.AreEqual(savedperson.lastname1, "UnitTest");
@@ -163,10 +170,10 @@ namespace Machete.Test.Controllers
             //
             //Act
             _ctrlr.ModelState.AddModelError("TestError", "foo");
-            var result = (PartialViewResult)_ctrlr.Edit(testid, fakeform, "UnitTest");
+            var result = (JsonResult)_ctrlr.Edit(testid, fakeform, "UnitTest");
             //Assert
-            var error = result.ViewData.ModelState["TestError"].Errors[0];
-            Assert.AreEqual("foo", error.ErrorMessage);
+            IDictionary<string, object> data = new RouteValueDictionary(result.Data);
+            Assert.AreEqual("Controller UpdateModel failure on recordtype: person", data["status"]);
         }
         #endregion
 
@@ -189,7 +196,7 @@ namespace Machete.Test.Controllers
         }
 
         [TestMethod]
-        public void PersonController_delete_post_redirects_to_index()
+        public void PersonController_delete_post_returns_JSON()
         {
             //Arrange
             _serv = new Mock<IPersonService>();
@@ -199,9 +206,11 @@ namespace Machete.Test.Controllers
             _ctrlr.SetFakeControllerContext();
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
-            var result = _ctrlr.Delete(testid, fakeform, "UnitTest") as RedirectToRouteResult;
+            JsonResult result = _ctrlr.Delete(testid, fakeform, "UnitTest") as JsonResult;
             //Assert
-            Assert.AreEqual("Index", result.RouteValues["action"]);
+            IDictionary<string, object> data = new RouteValueDictionary(result.Data);
+            Assert.AreEqual("OK", data["status"]);
+            Assert.AreEqual(4242, data["deletedID"]);            
         }
     }
 }
