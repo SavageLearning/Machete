@@ -171,7 +171,7 @@
             </div>
             <div class="tb-field tb-cell">
                 @Html.DropDownListFor(model => model.neighborhoodID,
-                                    new SelectList(ViewBag.neighborhoods,
+                                             new SelectList(Lookups.neighborhood(CI.TwoLetterISOLanguageName),
                                         "Value",
                                         "Text",
                                         Model.neighborhoodID),
@@ -213,7 +213,7 @@
             </div>
             <div class="tb-field tb-cell">
                 @Html.DropDownListFor(model => model.countryoforiginID,
-            new SelectList(ViewBag.countriesoforigin,
+                     new SelectList(Lookups.countryoforigin(CI.TwoLetterISOLanguageName),
                 "Value",
                 "Text",
                 Model.countryoforiginID),
@@ -263,7 +263,7 @@
             </div>
             <div class="tb-field tb-cell">
                 @Html.DropDownListFor(model => model.maritalstatus,
-                                    new SelectList(ViewBag.maritalstatus,
+                                             new SelectList(Lookups.maritalstatus(CI.TwoLetterISOLanguageName),
                                         "Value",
                                         "Text",
                                         Model.maritalstatus),
@@ -300,7 +300,7 @@
             </div>
             <div class="tb-field tb-cell">
                 @Html.DropDownListFor(model => model.incomeID,
-                                    new SelectList(ViewBag.incomes,
+                                             new SelectList(Lookups.income(CI.TwoLetterISOLanguageName),
                                         "Value",
                                         "Text",
                                         Model.incomeID),
@@ -396,8 +396,8 @@
     <div class="tb-row">
         <img src="@Url.Action("GetImage", "Image", new { ID = Model.ImageID })" alt="no image" style="width: 200px"/>
         <div class="view_off print_off">
-            Upload new image:
-            <input type="file" name="imagefile" /></div>
+            Upload new image?!:
+            <input id="imagefile" type="file" name="imagefile" /></div>
     </div>
 </div>
 <!--Image-->

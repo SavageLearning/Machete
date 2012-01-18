@@ -55,9 +55,9 @@ namespace Machete.Test
             WaitThenClickElement(By.Id(prefix + "SaveBtn"));
 
             //
-            WaitForElement(By.Id("personSearchBox")).SendKeys(_per.lastname1);
-            WaitForElementValue(By.XPath("//table[@id='personTable']/tbody/tr/td[4]"), _per.lastname1);
-            WaitAndDoubleClick(By.XPath("//table[@id='personTable']/tbody/tr/td[6]"));
+            //WaitForElement(By.Id("personSearchBox")).SendKeys(_per.lastname1);
+            //WaitForElementValue(By.XPath("//table[@id='personTable']/tbody/tr/td[4]"), _per.lastname1);
+            //WaitAndDoubleClick(By.XPath("//table[@id='personTable']/tbody/tr/td[6]"));
 
             //
             var selectedTab = WaitForElement(By.CssSelector("li.person.ui-tabs-selected"));

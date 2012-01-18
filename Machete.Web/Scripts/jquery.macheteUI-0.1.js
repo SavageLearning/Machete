@@ -230,19 +230,22 @@
                     if (create) {
                         //
                         // post create form, open tab for new records
-                        $.post($(form).attr("action"), $(form).serialize(),
-                        function (data) {
-                            add_rectab({
-                                tabref: data.sNewRef,
-                                label: data.sNewLabel,
-                                tab: parentTab,
-                                exclusive: exclusiveTab,
-                                recordID: data.iNewID,
-                                recType: recType
-                            });
+                        //$.post($(form).attr("action"), $(form).serialize(),
+                        $(form).ajaxSubmit({
+                            success: function (data) {
+                                add_rectab({
+                                    tabref: data.sNewRef,
+                                    label: data.sNewLabel,
+                                    tab: parentTab,
+                                    exclusive: exclusiveTab,
+                                    recordID: data.iNewID,
+                                    recType: recType
+                                });
+                            }
                         });
                     } else {
-                        $.post($(form).attr("action"), $(form).serialize());
+                        //$.post($(form).attr("action"), $(form).serialize());
+                        $(form).ajaxSubmit();
                     }
                     //
                     // clear changed bit for current form level
@@ -414,13 +417,14 @@
     function _setChangeState(opt) {
         var form = opt.form;
         var level = opt.level || _checkFormLevel(opt.formLevel, "_setChangeState");
-        var recType = opt.recType || Error("_setChangeState must have a recType");
+        var recType = opt.recType;
+        if (!recType) throw new Error("_setChangeState must have a recType");
         //
         var changedTab = $(form).closest('.ui-tabs').children('.ui-tabs-nav').find('.ui-tabs-selected');
         $(form).find('.saveBtn').addClass('highlightSave');
         mUI.state.changeLevel[level] = true;
         mUI.state.whatChanged[recType] = changedTab;
-        console.log('_setChangeState-changed: ' + mUI.state.changed(level) + ', target: ' + e.target.id);
+        console.log('_setChangeState-changed: ' + mUI.state.changed(level));
 
     }
     //
@@ -534,18 +538,25 @@
         var postDelete = opt.postDelete;
         form.submit(function (e) {
             e.preventDefault();
-            $.post($(this).attr("action"), $(this).serialize());
-            //
-            //trigger close even
-            if (altClose) {
-                $(altClose).click();
-            } else {
-                var tabNav = $(e.target).closest('.ui-tabs').children('.ui-tabs-nav');
-                $(tabNav).find('.ui-state-active').find('span.ui-icon-close').click();
-            }
-            if (postDelete) {
-                postDelete();
-            }
+            $.post($(this).attr("action"), $(this).serialize(), function (data) {
+                if (data.status !== "OK") {
+                    $.alerts.okButton = "OK";
+                    jConfirm(data.status, "ERROR");
+                    return false;
+                }
+                //
+                //trigger close even
+                if (altClose) {
+                    $(altClose).click();
+                } else {
+                    var tabNav = $(e.target).closest('.ui-tabs').children('.ui-tabs-nav');
+                    $(tabNav).find('.ui-state-active').find('span.ui-icon-close').click();
+                }
+                if (postDelete) {
+                    postDelete();
+                }
+            });
+
         });
     }
     //

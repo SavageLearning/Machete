@@ -319,9 +319,7 @@ namespace Machete.Web.Controllers
                 return PartialView(_assignment);
             }
         }
-        #endregion
-
-        
+        #endregion      
         //
         //GET: /WorkAssignment/View/5
         //
@@ -334,38 +332,32 @@ namespace Machete.Web.Controllers
             return View(workAssignment);
         }
         #endregion
-
-
         #region Delete
         //
-        //JS doesn't need; keeping incase I need to degrade in the future
-        //[Authorize(Roles = "Administrator, Manager, PhoneDesk")]        
-        //public ActionResult Delete(int id)
-        //{
-        //    var workAssignment = waServ.Get(id);
-
-        //    return View(workAssignment);
-        //}
-
-        //
         // POST: /WorkAssignment/Delete/5
-
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Delete(int id, FormCollection collection, string user)
         {
-            //var _assignment = waServ.Get(id);
             waServ.Delete(id, user);
+            string status = null;
+            try
+            {
+                waServ.Delete(id, user);
+            }
+            catch (Exception e)
+            {
+                status = RootException.Get(e, "WorkAssignmentService");
+            }
+
             return Json(new
             {
-                status ="OK",
+                status = status ?? "OK",
                 deletedID = id
             },
             JsonRequestBehavior.AllowGet);
         }
         #endregion
-
-
     }
 
 

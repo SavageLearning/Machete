@@ -7,6 +7,7 @@ using Machete.Domain;
 using Machete.Data;
 using Machete.Helpers;
 using Machete.Service;
+using Machete.Web.Helpers;
 
 
 namespace Machete.Web.Controllers
@@ -112,30 +113,30 @@ namespace Machete.Web.Controllers
             }
         }
 
-        //
-        // GET: /Image/Delete/5
- 
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
 
         //
         // POST: /Image/Delete/5
 
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        [HttpPost, UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager")]
+        public ActionResult Delete(int id, string user)
         {
+            string status = null;
             try
             {
-                // TODO: Add delete logic here
- 
-                return RedirectToAction("Index");
+                _serv.DeleteImage(id, user);
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                status = RootException.Get(e, "ImageService");
             }
+
+            return Json(new
+            {
+                status = status ?? "OK",
+                deletedID = id
+            },
+            JsonRequestBehavior.AllowGet);
         }
 
     }

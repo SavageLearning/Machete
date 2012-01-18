@@ -121,8 +121,10 @@ function jqrfyTabs(myTab, myPrefix, defaultTab) {
 ///     recID       - 
 ///
 function add_rectab(opt) {
-    var theref = opt.tabref || Error("add_rectab requires tabref"); //href for tab
-    var label = opt.label  || Error("add_rectab requires label"); //tab label
+    var theref = opt.tabref;
+    if (!theref) { throw new Error("add_rectab requires tabref"); }  //href for tab
+    var label = opt.label;
+    if (!label) { throw new Error("add_rectab requires label"); } //tab label
     var tabObj = opt.tab;
     var exclusive = opt.exclusive;
     var recID = opt.recordID;
@@ -274,17 +276,18 @@ function openGoogleMap(destAddr, origAddr) {
 // add new html elements
 //
 $.fn.addItems = function (data) {
-    var elSel = this[0];    
+    var elSel = this[0];
+    var i;
     if (data == null) {
         return;
     }
-    for (var i = elSel.length; i >= 0; i--) {
+    for (i = elSel.length; i >= 0; i--) {
         elSel.remove(i);
     }
-    for (var i = 0; i < data.length; i++) {
+    for (i = 0; i < data.length; i++) {
         var text = data[i].Text;
         var value = data[i].Value;
- 
+
         var elOptNew = document.createElement('option');
         elOptNew.text = text;
         elOptNew.value = value;
