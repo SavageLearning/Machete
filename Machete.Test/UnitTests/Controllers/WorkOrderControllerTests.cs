@@ -13,7 +13,6 @@ using Machete.Domain;
 using Machete.Test;
 using Machete.Web.ViewModel;
 using System.Data.Entity;
-using Machete.Test.UnitTests.Controllers;
 using System.Web.Routing;
 
 namespace Machete.Test.Controllers
