@@ -5,33 +5,48 @@ using System.Text;
 using Machete.Data;
 using Machete.Domain;
 using System.Data.Entity;
+using System.Runtime.Caching;
 
 namespace Machete.Service
 {
     public class WorkerCache
     {
         private static MacheteContext DB { get; set; }
-        //private static readonly IDbSet<Worker> dbset;
-        private static IEnumerable<Worker> DbCache { get; set; }
+        
+        //private static IEnumerable<Worker> DbCache { get; set; }
+        private static CacheItem DbCache { get; set; }
+        
+        private static ObjectCache cache;
 
         public static void Initialize(MacheteContext db)
         {
+            cache = MemoryCache.Default;
             DB = db;
             //dbset = DB.Set<Worker>();
             FillCache();
         }
         private static void FillCache()
         {
-            DbCache = DB.Workers.AsNoTracking().Include(p => p.Person).ToList();
-            DB.Dispose();
+            IEnumerable<Worker> workers = DB.Workers.AsNoTracking().Include(p => p.Person).ToList();
+            CacheItemPolicy policy = new CacheItemPolicy();
+            policy.AbsoluteExpiration = new DateTimeOffset(DateTime.Now.AddMinutes(5));
+            CacheItem wCacheItem = new CacheItem("workerCache", workers);
+            cache.Set(wCacheItem, policy);
+            //DB.Dispose();
         }
         public static IEnumerable<Worker> getCache()
         {
-            return DbCache;
+            CacheItem wCacheItem = cache.GetCacheItem("workerCache");
+            if (wCacheItem == null) 
+            {
+                FillCache();
+                wCacheItem = cache.GetCacheItem("workerCache");
+            }
+            return wCacheItem.Value as IEnumerable<Worker>;
         }
-        public static IEnumerable<Worker> getCache(Func<Worker, bool> where)
-        {
-            return DbCache;
-        }
+        //public static IEnumerable<Worker> getCache(Func<Worker, bool> where)
+        //{
+        //    return DbCache;
+        //}
     }
 }

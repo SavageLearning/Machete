@@ -113,7 +113,6 @@ namespace Machete.Service
             //Get all the records
             IQueryable<Person> filteredP = pRepo.GetAllQ();
             IQueryable<Person> orderedP;
-            bool isDateTime = false;
             //
             //Search based on search-bar string 
             if (!string.IsNullOrEmpty(search))
