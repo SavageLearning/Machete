@@ -259,9 +259,7 @@ namespace Machete.Service
                                    firstname1 = finalrow == null ? null : finalrow.firstname1,
                                    firstname2 = finalrow == null ? null : finalrow.firstname2,
                                    lastname1 = finalrow == null ? null : finalrow.lastname1,
-                                   lastname2 = finalrow == null ? null : finalrow.lastname2,
-                                   imageID = finalrow == null ? null: finalrow.Worker.ImageID,
-                                   expirationDate = finalrow.Worker.memberexpirationdate
+                                   lastname2 = finalrow == null ? null : finalrow.lastname2
                                };
             return s_to_w_query;
 
