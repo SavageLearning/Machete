@@ -142,18 +142,18 @@ namespace Machete.Web.Controllers
             return PartialView(_model);
         } 
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
-        public ActionResult Create(Worker _model, string userName)
+        [Authorize(Roles = "PhoneDesk, Manager, Administrator")]
+        public ActionResult Create(Worker worker, string userName, HttpPostedFileBase imagefile)
         {
             if (!ModelState.IsValid)
             {
                 levent.Level = LogLevel.Error; levent.Message = "ModelState invalid";
                 log.Log(levent);
-                return PartialView(_model);
+                return PartialView(worker);
             }
-
-            workerService.CreateWorker(_model, userName);
-            return PartialView(_model);
+            if (imagefile != null) updateImage(worker, imagefile);
+            workerService.CreateWorker(worker, userName);
+            return PartialView(worker);
         }
         #endregion
         //
@@ -173,35 +173,7 @@ namespace Machete.Web.Controllers
             // TODO: catch exceptions, notify user
             if (TryUpdateModel(worker))
             {
-                if (imagefile != null)
-                {
-                    if (worker.ImageID != null)
-                    {
-                        Image image = imageServ.GetImage((int)worker.ImageID);
-                        image.ImageMimeType = imagefile.ContentType;
-                        image.parenttable = "Workers";
-                        image.filename = imagefile.FileName;
-                        image.recordkey = worker.ID.ToString();
-                        image.ImageData = new byte[imagefile.ContentLength];
-                        imagefile.InputStream.Read(image.ImageData,
-                                                   0,
-                                                   imagefile.ContentLength);
-                        imageServ.SaveImage(image, this.User.Identity.Name);
-                    }
-                    else
-                    {
-                        Image image = new Image();
-                        image.ImageMimeType = imagefile.ContentType;
-                        image.parenttable = "Workers";
-                        image.recordkey = worker.ID.ToString();
-                        image.ImageData = new byte[imagefile.ContentLength];
-                        imagefile.InputStream.Read(image.ImageData,
-                                                   0,
-                                                   imagefile.ContentLength);
-                        Image newImage = imageServ.CreateImage(image, this.User.Identity.Name);
-                        worker.ImageID = newImage.ID;
-                    }
-                }
+                if (imagefile != null) updateImage(worker, imagefile);                
                 workerService.SaveWorker(worker, userName);
                 return PartialView(worker);
             }
@@ -257,5 +229,37 @@ namespace Machete.Web.Controllers
             JsonRequestBehavior.AllowGet);
         }
         #endregion
+
+        private void updateImage(Worker worker, HttpPostedFileBase imagefile)
+        {
+            if (worker == null) throw new MacheteNullObjectException("updateImage called with null worker");
+            if (imagefile == null) throw new MacheteNullObjectException("updateImage called with null imagefile");
+            if (worker.ImageID != null)
+            {
+                Image image = imageServ.GetImage((int)worker.ImageID);
+                image.ImageMimeType = imagefile.ContentType;
+                image.parenttable = "Workers";
+                image.filename = imagefile.FileName;
+                image.recordkey = worker.ID.ToString();
+                image.ImageData = new byte[imagefile.ContentLength];
+                imagefile.InputStream.Read(image.ImageData,
+                                           0,
+                                           imagefile.ContentLength);
+                imageServ.SaveImage(image, this.User.Identity.Name);
+            }
+            else
+            {
+                Image image = new Image();
+                image.ImageMimeType = imagefile.ContentType;
+                image.parenttable = "Workers";
+                image.recordkey = worker.ID.ToString();
+                image.ImageData = new byte[imagefile.ContentLength];
+                imagefile.InputStream.Read(image.ImageData,
+                                           0,
+                                           imagefile.ContentLength);
+                Image newImage = imageServ.CreateImage(image, this.User.Identity.Name);
+                worker.ImageID = newImage.ID;
+            }
+        }
     }
 }

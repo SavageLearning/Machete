@@ -202,6 +202,7 @@
             var exclusiveTab = opt.exclusiveTab || true;
             var preProcess = opt.preProcess || null;
             var closeTab = opt.closTab || undefined;
+            var postProcess = opt.postProcess || null;
             var level = _checkFormLevel(opt.formLevel, "formSubmit"); // Error if form level not set correctly
             //
             //setup button.click to secondary submit
@@ -246,6 +247,11 @@
                     } else {
                         //$.post($(form).attr("action"), $(form).serialize());
                         $(form).ajaxSubmit();
+                    }
+                    //
+                    //
+                    if (postProcess) {
+                        postProcess();
                     }
                     //
                     // clear changed bit for current form level
@@ -441,7 +447,7 @@
     //
     function EnableOnValue(select, showVal, target) {
         //
-        var selectedVal = $(select).find(':selected').text();
+        var selectedVal = $(select).find(':selected').attr('value');
         if (selectedVal === showVal) {
             $(target).removeAttr('disabled', 'disabled');
         } else {

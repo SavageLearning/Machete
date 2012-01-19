@@ -71,34 +71,34 @@ namespace Machete.Test
             return true;
         }
 
-        public bool workerCreate(Person _per)
+        public bool workerCreate(Worker _wkr, string imagepath)
         {
-            string prefix = "worker"+_per.ID+"-";
+            string prefix = "worker"+_wkr.ID+"-";
             WaitThenClickElement(By.Id("workerCreateTab"));
             WaitForElement(By.Id(prefix + "dateOfMembership"));            
-            _d.FindElement(By.Id(prefix + "dateOfMembership")).SendKeys(DateTime.Today.ToShortDateString());            
-            _d.FindElement(By.Id(prefix + "dateOfBirth")).SendKeys(DateTime.Today.ToShortDateString());
-            _d.FindElement(By.Id(prefix + "dateinUSA")).SendKeys(DateTime.Today.ToShortDateString());
-            _d.FindElement(By.Id(prefix + "dateinseattle")).SendKeys(DateTime.Today.ToShortDateString());
-            _d.FindElement(By.Id(prefix + "memberexpirationdate")).SendKeys(DateTime.Today.ToShortDateString());
-            _d.FindElement(By.Id(prefix + "height")).SendKeys(@"6'1");
-            _d.FindElement(By.Id(prefix + "weight")).SendKeys("230lbs");
+            _d.FindElement(By.Id(prefix + "dateOfMembership")).SendKeys(_wkr.dateOfMembership.ToShortDateString());            
+            _d.FindElement(By.Id(prefix + "dateOfBirth")).SendKeys(_wkr.dateOfBirth.ToShortDateString());
+            _d.FindElement(By.Id(prefix + "dateinUSA")).SendKeys(((DateTime)_wkr.dateinUSA).ToShortDateString());
+            _d.FindElement(By.Id(prefix + "dateinseattle")).SendKeys(((DateTime)_wkr.dateinseattle).ToShortDateString());
+            _d.FindElement(By.Id(prefix + "memberexpirationdate")).SendKeys(_wkr.memberexpirationdate.ToShortDateString());
+            _d.FindElement(By.Id(prefix + "height")).SendKeys(_wkr.height);
+            _d.FindElement(By.Id(prefix + "weight")).SendKeys(_wkr.weight);
             _d.FindElement(By.Id(prefix + "dwccardnum")).Clear();
-            _d.FindElement(By.Id(prefix + "dwccardnum")).SendKeys("12345");
+            _d.FindElement(By.Id(prefix + "dwccardnum")).SendKeys(_wkr.dwccardnum.ToString());
 
+            SelectOption(By.Id(prefix + "memberStatus"), "Active");
             SelectOption(By.Id(prefix + "neighborhoodID"), "Kent");
             SelectOption(By.Id(prefix + "typeOfWorkID"), @"(DWC) Day Worker Center");
             SelectOption(By.Id(prefix + "englishlevelID"), "2");
             SelectOption(By.Id(prefix + "incomeID"), @"Less than $15,000");
             SelectOption(By.Id(prefix + "neighborhoodID"), "Kent");
+            _d.FindElement(By.Id(prefix + "imagefile")).SendKeys(imagepath);
             _d.FindElement(By.Id("createWorkerBtn")).Click();
-
             //
             //
-            WaitForElementValue(By.Id("workerCreateTab"), "Worker information");
-            _d.FindElement(By.Id("workerCreateTab")).Click();
-
-            //Assert.IsTrue(false);
+            bool result = WaitForElementValue(By.Id("workerCreateTab"), "Worker information");
+            Assert.IsTrue(result, "Create tab label not updated by formSubmit");
+            _d.FindElement(By.Id("workerCreateTab")).Click();            
             return true;
         }
         #endregion

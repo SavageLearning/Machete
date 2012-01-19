@@ -46,64 +46,40 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
-            //Get all the records
-            var allpersons = personService.GetPersons(true);
-            IEnumerable<Person> filteredPersons;
-            IEnumerable<Person> sortedPersons;
-            //Search based on search-bar string 
-            if (!string.IsNullOrEmpty(param.sSearch))
-            {
-                filteredPersons = personService.GetPersons(true)
-                    .Where(p => p.active.ToString().ContainsOIC(param.sSearch) ||
-                                p.firstname1.ContainsOIC(param.sSearch) ||
-                                p.firstname2.ContainsOIC(param.sSearch) ||
-                                p.lastname1.ContainsOIC(param.sSearch) ||
-                                p.lastname2.ContainsOIC(param.sSearch));
-            }
-            else
-            {
-                filteredPersons = allpersons;
-            }
-            //Sort the Persons based on column selection
-            var sortColIdx = Convert.ToInt32(Request["iSortCol_0"]);
-            Func<Person, string> orderingFunction = (p => sortColIdx == 2 ? p.active.ToString() : 
-                                                          sortColIdx == 3 ? p.firstname1 :
-                                                          sortColIdx == 4 ? p.firstname2 :
-                                                          sortColIdx == 5 ? p.lastname1 :
-                                                          sortColIdx == 6 ? p.lastname2 :
-                                                          sortColIdx == 7 ? p.phone :
-                                                          sortColIdx == 8 ? p.dateupdated.ToString() :
-                                                          p.Updatedby);
-            var sortDir = Request["sSortDir_0"];
-            if (sortDir == "asc")
-                sortedPersons = filteredPersons.OrderBy(orderingFunction);
-            else
-                sortedPersons = filteredPersons.OrderByDescending(orderingFunction);
+            System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+            //Get all the records            
+            ServiceIndexView<Person> personView = personService.GetIndexView(
+                CI,
+                param.sSearch,
+                string.IsNullOrEmpty(param.sSearch_2) ? (int?)null : Convert.ToInt32(param.sSearch_2),
+                string.IsNullOrEmpty(param.sSearch_5) ? (int?)null : Convert.ToInt32(param.sSearch_5),
+                param.sSortDir_0 == "asc" ? false : true,
+                param.iDisplayStart,
+                param.iDisplayLength,
+                param.sortColName()
+                );
 
-            //Limit results to the display length and offset
-            var displayPersons = sortedPersons.Skip(param.iDisplayStart)
-                                              .Take(param.iDisplayLength);
-
-            //return what's left to datatables
-            var result = from p in displayPersons
-                         select new { tabref = "/Person/Edit/" + Convert.ToString(p.ID),
-                                      tablabel = p.firstname1 + ' ' + p.lastname1,
-                                      active = Convert.ToString(p.active), 
-                                      firstname1 = p.firstname1, 
-                                      firstname2 = p.firstname2, 
-                                      lastname1 = p.lastname1, 
-                                      lastname2 = p.lastname2, 
-                                      phone = p.phone, 
-                                      dateupdated = Convert.ToString(p.dateupdated), 
-                                      Updatedby = p.Updatedby,
-                                      recordid = Convert.ToString(p.ID)
+            var result = from p in personView.query
+                         select new
+                         {
+                             tabref = "/Person/Edit/" + Convert.ToString(p.ID),
+                             tablabel = p.firstname1 + ' ' + p.lastname1,
+                             active = Convert.ToString(p.active),
+                             firstname1 = p.firstname1,
+                             firstname2 = p.firstname2,
+                             lastname1 = p.lastname1,
+                             lastname2 = p.lastname2,
+                             phone = p.phone,
+                             dateupdated = Convert.ToString(p.dateupdated),
+                             Updatedby = p.Updatedby,
+                             recordid = Convert.ToString(p.ID)
                          };
 
             return Json(new
             {
                 sEcho = param.sEcho,
-                iTotalRecords = allpersons.Count(),
-                iTotalDisplayRecords = filteredPersons.Count(),
+                iTotalRecords = personView.totalCount,
+                iTotalDisplayRecords = personView.filteredCount,
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);

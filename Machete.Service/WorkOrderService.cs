@@ -171,6 +171,7 @@ namespace Machete.Service
                         string sortColName                        
             )
         {
+            #region FILTER
             //Get all the records
             IQueryable<WorkOrder> filteredWO = woRepo.GetAllQ();
             IQueryable<WorkOrder> orderedWO;
@@ -202,13 +203,13 @@ namespace Machete.Service
                                     SqlFunctions.StringConvert((decimal)p.paperOrderNum).Contains(search) ||                                    
                                     p.contactName.Contains(search) ||
                                     p.workSiteAddress1.Contains(search) ||
-                                    p.Updatedby.Contains(search)
-                              );
+                                    p.Updatedby.Contains(search));
                 }
             }
+            #endregion 
             //
             //ORDER BY based on column selection
-            //
+            #region ORDERBY
             switch (sortColName)
             {
                 //case "WOID": orderedWO = orderDescending ? filteredWO.OrderByDescending(p => p.dateTimeofWork) : filteredWO.OrderBy(p => p.dateTimeofWork); break;
@@ -222,9 +223,9 @@ namespace Machete.Service
                 case "dateupdated": orderedWO = orderDescending ? filteredWO.OrderByDescending(p => p.dateupdated) : filteredWO.OrderBy(p => p.dateupdated); break;
                 default: orderedWO = orderDescending ? filteredWO.OrderByDescending(p => p.dateTimeofWork) : filteredWO.OrderBy(p => p.dateTimeofWork); break;
             }
+            #endregion
             //
             //SKIP & TAKE for display
-            //
             //if (displayLength != 0 && displayStart != 0)
                 orderedWO = orderedWO.Skip<WorkOrder>((int)displayStart).Take((int)displayLength);
             var filtered = filteredWO.Count();

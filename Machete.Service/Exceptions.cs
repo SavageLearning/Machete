@@ -26,4 +26,11 @@ namespace Machete.Service
         public MacheteIntegrityException(string errorMessage) : base(errorMessage) { }
         public MacheteIntegrityException(string errorMessage, Exception innerEx) : base(errorMessage, innerEx) { }
     }
+
+    public class MacheteNullObjectException : MacheteServiceException
+    {
+        new public string ErrorMessage { get { return base.Message.ToString(); } }
+        public MacheteNullObjectException(string errorMessage) : base(errorMessage) { }
+        public MacheteNullObjectException(string errorMessage, Exception innerEx) : base(errorMessage, innerEx) { }
+    }
 }

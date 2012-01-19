@@ -67,7 +67,7 @@ namespace Machete.Test.Controllers
             _wserv.Setup(p => p.CreateWorker(_worker, "UnitTest")).Returns(_worker);
             _pserv.Setup(p => p.CreatePerson(_person, "UnitTest")).Returns(_person);
             //Act
-            var result = (PartialViewResult)_ctrlr.Create(_worker, "UnitTest");
+            var result = (PartialViewResult)_ctrlr.Create(_worker, "UnitTest", null);
             //Assert
             Assert.IsInstanceOfType(result.ViewData.Model, typeof(Worker));
         }
@@ -86,7 +86,7 @@ namespace Machete.Test.Controllers
             _pserv.Setup(p => p.CreatePerson(_person, "UnitTest")).Returns(_person);
             _ctrlr.ModelState.AddModelError("TestError", "foo");
             //Act
-            var result = (PartialViewResult)_ctrlr.Create(_worker, "UnitTest");
+            var result = (PartialViewResult)_ctrlr.Create(_worker, "UnitTest", null);
             //Assert
             var error = result.ViewData.ModelState["TestError"].Errors[0];
             Assert.AreEqual("foo", error.ErrorMessage);
