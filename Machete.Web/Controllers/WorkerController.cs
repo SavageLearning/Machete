@@ -35,13 +35,6 @@ namespace Machete.Web.Controllers
         {
             base.Initialize(requestContext);
             System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];            
-            //ViewBag.races = Lookups.race(CI.TwoLetterISOLanguageName);
-            //ViewBag.languages = Lookups.language(CI.TwoLetterISOLanguageName);
-            //ViewBag.neighborhoods = Lookups.neighborhood(CI.TwoLetterISOLanguageName);
-            //ViewBag.incomes = Lookups.income(CI.TwoLetterISOLanguageName);
-            //ViewBag.maritalstatus = Lookups.maritalstatus(CI.TwoLetterISOLanguageName);
-            //ViewBag.Genders = Lookups.gender(CI.TwoLetterISOLanguageName);
-            //ViewBag.countriesoforigin = Lookups.countryoforigin(CI.TwoLetterISOLanguageName);
         }
         //
         // GET: /Worker/Index

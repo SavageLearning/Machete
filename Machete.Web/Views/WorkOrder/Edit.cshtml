@@ -112,7 +112,7 @@
         // submit edit
         $("#WorkOrderTab-@(Model.ID)").mUI('formSubmit', {
             exclusiveTab: false,
-            selectList: 0,
+            selectTab: 0,
             preProcess: function () {
                 $('#workerRequests2_WO-@(Model.ID)').find('option').attr("selected", "selected");
             },
@@ -122,7 +122,7 @@
         // submit activate
         $("#ActivateWorkOrder-@(Model.ID)").mUI('formSubmit', {
             clickButton: $("#activateWorkOrderButton-@(Model.ID)"),
-            selectList: 0,
+            selectTab: 0,
             closeTab: true,
             formLevel: 2
         });

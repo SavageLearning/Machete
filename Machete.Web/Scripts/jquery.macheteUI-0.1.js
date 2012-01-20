@@ -196,7 +196,7 @@
         formSubmit: function (opt) {
             var form = this;
             var parentTab = $(form).closest('.ui-tabs');
-            var selList = opt.selectList || 0;
+            var SelTab = opt.selectTab || 0;
             var create = opt.create || null;
             var recType = opt.recType || null;
             var exclusiveTab = opt.exclusiveTab || true;
@@ -220,7 +220,7 @@
                 //
                 // overiding form behavior after instantiation
                 // used with duplicate work assignment submit
-                if (form.data("selList") !== undefined) { selList = form.data("selList"); }
+                if (form.data("SelTab") !== undefined) { SelTab = form.data("SelTab"); }
                 if (form.data("exclusiveTab") !== undefined) { exclusiveTab = form.data("exclusiveTab"); }
                 if (form.data("create") !== undefined) { create = form.data("create"); }
                 //
@@ -235,11 +235,11 @@
                         $(form).ajaxSubmit({
                             success: function (data) {
                                 add_rectab({
-                                    tabref: data.sNewRef,
-                                    label: data.sNewLabel,
+                                    tabref: data.sNewRef, //come from JsonResult
+                                    label: data.sNewLabel, // JsonResult
                                     tab: parentTab,
                                     exclusive: exclusiveTab,
-                                    recordID: data.iNewID,
+                                    recordID: data.iNewID,  //JsonResult
                                     recType: recType
                                 });
                             }
@@ -271,8 +271,8 @@
                     }
                     //
                     // Tab behavior after save. change tab or no...
-                    if (selList >= 0) {
-                        $(parentTab).tabs("select", selList);
+                    if (SelTab >= 0) {
+                        $(parentTab).tabs("select", SelTab);
                     }
                 }
             });
@@ -294,11 +294,11 @@
                 throw new Error("No duplicate form to submit");
             }
             btn.click(function () {
-                editForm.data("selList", -1);
+                editForm.data("SelTab", -1);
                 editForm.data("create", null);
                 editForm.submit();
                 // duplicate the current edit
-                dupForm.data("selList", -1);
+                dupForm.data("SelTab", -1);
                 dupForm.data("exclusiveTab", false);
                 dupForm.submit();
             });

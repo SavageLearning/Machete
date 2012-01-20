@@ -35,8 +35,8 @@
         @if (Html.IsInRole(Html.Role_AM()))
         {
             <div class="tb-field tb-cell">
-            @Html.DropDownListFor(model => model.status, 
-                                    new SelectList(ViewBag.woStatuses, "Value", "Text", Model.status), 
+            @Html.DropDownListFor(model => model.status,
+                                         new SelectList(Lookups.orderstatus(CI.TwoLetterISOLanguageName), "Value", "Text", Model.status), 
                                     @Machete.Web.Resources.Shared.choose, 
                                     new { @id = idPrefix + "status" })
             @Html.ValidationMessageFor(model => model.status)
@@ -93,7 +93,7 @@
             @Html.LabelFor(model => model.typeOfWorkID)
         </div>
         <div class="tb-field tb-cell">
-            @Html.DropDownListFor(model => model.typeOfWorkID, new SelectList(ViewBag.typesOfWork, "Value", "Text", Model.typeOfWorkID), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })
+            @Html.DropDownListFor(model => model.typeOfWorkID, new SelectList(Lookups.typeOfWork(CI.TwoLetterISOLanguageName), "Value", "Text", Model.typeOfWorkID), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })
             @Html.ValidationMessageFor(model => model.typeOfWorkID)
         </div>*@
     </div>
@@ -151,8 +151,8 @@
             @Html.LabelFor(model => model.transportMethodID)
         </div>
         <div class="tb-field tb-cell">
-            @Html.DropDownListFor(model => model.transportMethodID, 
-            new SelectList(ViewBag.TransportMethods, "Value", "Text", Model.transportMethodID), 
+            @Html.DropDownListFor(model => model.transportMethodID,
+                     new SelectList(Lookups.transportmethod(CI.TwoLetterISOLanguageName), "Value", "Text", Model.transportMethodID), 
             @Machete.Web.Resources.Shared.choose,
                               new { tabindex = "2", id = idPrefix + "transportMethodID" })
             @Html.ValidationMessageFor(model => model.transportMethodID)

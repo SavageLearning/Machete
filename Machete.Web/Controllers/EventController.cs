@@ -10,6 +10,7 @@ using Machete.Service;
 using Machete.Web.Helpers;
 using NLog;
 using Machete.Web.Models;
+using System.Web.Routing;
 
 
 namespace Machete.Web.Controllers
@@ -30,6 +31,7 @@ namespace Machete.Web.Controllers
         //
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
+            System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
             //Get all the records
             var allEvents = _serv.GetEvents();
             IEnumerable<Event> filteredEvents;
@@ -63,9 +65,10 @@ namespace Machete.Web.Controllers
                          select new
                          {
                              tabref = _getTabRef(p),
-                             tablabel = _getTabLabel(p),
-                             recordid = Convert.ToString(p.ID),
+                             tablabel = _getTabLabel(p, CI.TwoLetterISOLanguageName),
+                             recordid = p.ID,
                              notes = p.notes,
+                             type = LookupCache.byID(p.eventType, CI.TwoLetterISOLanguageName),
                              dateupdated = Convert.ToString(p.dateupdated),
                              Updatedby = p.Updatedby
                          };
@@ -87,16 +90,19 @@ namespace Machete.Web.Controllers
         }
         //
         //
-        private string _getTabLabel(Event evnt)
+        private string _getTabLabel(Event evnt, string locale)
         {
-            return evnt.ID.ToString();
+            return evnt.dateFrom.ToShortDateString() + " " + LookupCache.byID(evnt.eventType, locale);
         }
         //
         // GET: /Event/Create
         [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult Create()
+        public ActionResult Create(int PersonID)
         {
             Event eventobj = new Event();
+            eventobj.dateFrom = DateTime.Today;
+            eventobj.dateTo = DateTime.Today;
+            eventobj.PersonID = PersonID;
             return PartialView(eventobj);
         }
 
@@ -105,6 +111,7 @@ namespace Machete.Web.Controllers
         [HttpPost, UserNameFilter]
         public ActionResult Create(Event evnt, string userName)
         {
+            System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
             if (!ModelState.IsValid)
             {
                 //TODO: This probably wont work for tabs & partials
@@ -115,7 +122,7 @@ namespace Machete.Web.Controllers
             return Json(new
             {
                 sNewRef = _getTabRef(newEvent),
-                sNewLabel = _getTabLabel(newEvent),
+                sNewLabel = _getTabLabel(newEvent, CI.TwoLetterISOLanguageName),
                 iNewID = newEvent.ID
             },
             JsonRequestBehavior.AllowGet);
