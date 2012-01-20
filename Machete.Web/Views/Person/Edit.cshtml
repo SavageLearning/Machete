@@ -18,7 +18,7 @@
         @if (Html.IsInRole(Html.Role_AM()))
         {
             <li><a href="#eventList" id="eventListTab" class="ListTab">Events?!</a> </li>
-            <li><a href="/Event/Create?ID=@(Model.ID)" id="eventCreateTab" class="CreateTab">Create Event?!</a></li>
+            <li><a href="/Event/Create?PersonID=@(Model.ID)" id="eventCreateTab" class="CreateTab">Create Event?!</a></li>
         }
     </ul>
     <div id="personGeneralTabRef">
