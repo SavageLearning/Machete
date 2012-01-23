@@ -33,7 +33,7 @@ namespace Machete.Web.Controllers
             if (ID != 0)
             {
                 Image image = _serv.GetImage(ID);
-                return File(image.ImageData, image.ImageMimeType);
+                return File(image.ImageData, image.ImageMimeType, image.filename);
             }
             else
             {

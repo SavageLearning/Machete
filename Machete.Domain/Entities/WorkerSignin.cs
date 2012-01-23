@@ -52,10 +52,10 @@ namespace Machete.Domain
         public WorkerSigninView(Person p, WorkerSignin s)
         {
             ID = s.ID;
-            firstname1 = p.firstname1;
-            firstname2 = p.firstname2;
-            lastname1 = p.lastname1;
-            lastname2 = p.lastname2;
+            firstname1 = p == null ? null : p.firstname1;
+            firstname2 = p == null ? null : p.firstname2;
+            lastname1 = p == null ? null : p.lastname1;
+            lastname2 = p == null ? null : p.lastname2;
             dateforsignin = s.dateforsignin;
             dwccardnum = s.dwccardnum;
             signinID = s.ID;
@@ -64,13 +64,13 @@ namespace Machete.Domain
             Createdby = s.Createdby;
             Updatedby = s.Updatedby;
             waid = s.WorkAssignmentID;
-            skill1 = p.Worker.skill1;
-            skill2 = p.Worker.skill2;
-            skill3 = p.Worker.skill3;
-            imageID = p.Worker.ImageID;
-            englishlevel = p.Worker.englishlevelID;
-            expirationDate = p.Worker.memberexpirationdate;
-            memberStatus = p.Worker.memberStatus;
+            skill1 = p == null ? null : p.Worker.skill1;
+            skill2 = p == null ? null : p.Worker.skill2;
+            skill3 = p == null ? null : p.Worker.skill3;
+            imageID = p == null ? null : p.Worker.ImageID;
+            englishlevel = p == null ? 0 : p.Worker.englishlevelID;
+            expirationDate = p == null ? DateTime.MinValue : p.Worker.memberexpirationdate;
+            memberStatus = p == null ? 0 : p.Worker.memberStatus;
         }
         public WorkerSigninView() { }
     }

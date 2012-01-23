@@ -78,7 +78,7 @@ namespace Machete.Test
             {
                 CI = new CultureInfo("en-US", false),
                 search = "",
-                date = DateTime.Parse("8/10/2011"),
+                date = DateTime.Today,
                 dwccardnum = null,
                 woid = null,
                 orderDescending = false,
@@ -200,7 +200,7 @@ namespace Machete.Test
         {
             //
             //Act
-            dOptions.search = "8/10/2011 9:00";
+            dOptions.search = DateTime.Today.AddHours(9).ToString();
             dOptions.orderDescending = true;
             var result = waServ.GetIndexView(dOptions);
             //
@@ -279,10 +279,10 @@ namespace Machete.Test
 
             //
             //Act
-            var woresults = woServ.GetSummary("8/10/2011");
-            var waresults = waServ.GetSummary("8/10/2011");
+            var woresults = woServ.GetSummary(DateTime.Today.ToShortDateString());
+            var waresults = waServ.GetSummary(DateTime.Today.ToShortDateString());
 
-            var joined = woServ.GetSummary("8/10/2011").Join(waServ.GetSummary("8/10/2011"),
+            var joined = woServ.GetSummary(DateTime.Today.ToShortDateString()).Join(waServ.GetSummary(DateTime.Today.ToShortDateString()),
                                         wo => new {wo.date, wo.status},
                                         wa => new {wa.date, wa.status},
                                         (wo, wa) => new

@@ -76,7 +76,7 @@ namespace Machete.Web.Controllers
             }
             //Get picture from checkin, show with next view
             var checkin_image = _serv.getImage(dwccardentry);           
-            string imageRef = "/Image/GetImage/0";
+            string imageRef = "/Content/images/NO-IMAGE-AVAILABLE.jpg";
             if (checkin_image != null)
             {
                 _model.last_chkin_image = checkin_image;
@@ -92,12 +92,22 @@ namespace Machete.Web.Controllers
             //_model.workersignins = _serv.getView(_model.dateforsignin); //Get list of signins already checked in for the day
             //return View(_model);
 
+            bool memberInactive = false;
+            bool memberSanctioned = false;
+            bool memberExpelled = false;
+            if (worker != null)
+            {
+                memberInactive = worker.memberStatus == LookupCache.getSingleEN("memberstatus", "Inactive") ? true : false;
+                memberSanctioned = worker.memberStatus == LookupCache.getSingleEN("memberstatus", "Sanctioned") ? true : false;
+                memberExpelled = worker.memberStatus == LookupCache.getSingleEN("memberstatus", "Expelled") ? true : false;            
+            }
+
             return Json(new
             {                
                 memberExpired = _model.memberexpired,
-                memberInactive = worker.memberStatus == LookupCache.getSingleEN("memberstatus", "Inactive") ? true : false,
-                memberSanctioned = worker.memberStatus == LookupCache.getSingleEN("memberstatus", "Sanctioned") ? true : false,
-                memberExpelled = worker.memberStatus == LookupCache.getSingleEN("memberstatus", "Expelled") ? true : false,
+                memberInactive = memberInactive,
+                memberSanctioned = memberSanctioned,
+                memberExpelled = memberExpelled,
                 imageRef = imageRef,
                 expirationDate = _model.last_chkin_memberexpirationdate
             },

@@ -93,8 +93,8 @@
                     @Html.Label(WorkerSignins.noimage)
                 </p>
             }*@
-
-        <img id="wsiImage" src="@Url.Action("GetImage", "Image", new { Model.last_chkin_image.ID })" alt="" style="width: 200px"/>
+        
+        <img id="wsiImage" src="/Content/images/NO-IMAGE-AVAILABLE.jpg" alt="" style="width: 200px"/>
             
         </div>
 </div>
@@ -142,7 +142,11 @@
                     "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                         $(nRow).attr('ID', "wsiRec" +aData['recordid']);
                         $(nRow).find('td:first-child').html('<a href="/WorkerSignin/delete/'+aData['recordid']+'">Delete</a>');
-                        $(nRow).attr('imageRef', "/Image/GetImage/" + aData['imageID']);
+                        if (aData['imageID']) {
+                            $(nRow).attr('imageRef', "/Image/GetImage/" + aData['imageID']);
+                        } else {
+                            $(nRow).attr('imageRef', "/Content/images/NO-IMAGE-AVAILABLE.jpg");
+                        }
                         $(nRow).addClass('statusBlue');
                         if (aData['memberInactive'] || aData['memberExpired']) { 
                             $(nRow).removeClass('statusBlue');
