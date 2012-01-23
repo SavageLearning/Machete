@@ -1,8 +1,11 @@
 ﻿@model Machete.Domain.Event
 @using Machete.Web.Resources
 @using Machete.Web.Helpers
+@using Machete.Domain
 @{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
     string recType = "event";
+    string idPrefix = recType + Model.ID + "-";
 }
 
 @using (Html.BeginForm("Edit", "Event", FormMethod.Post,
@@ -10,17 +13,16 @@
                           @id = "eventEditForm-" + Model.ID, 
                           enctype = "multipart/form-data" }))
 {
-    <input type="submit" value="submit?!" class="formButton saveBtn"/>
-    
+    <input type="submit" value="@Events.editsubmit" class="formButton saveBtn"/>
+    <input type="button" value="@Events.addfile" class="formButton" id="@(idPrefix)AddImgBtn"/>
     if (Html.IsInRole(Html.Role_AM()))
     {
-        <input id="deleteEventBtn-@(Model.ID)" type="button" value="delete?!" 
+        <input id="deleteEventBtn-@(Model.ID)" type="button" value="@Events.deletesubmit" 
                 class="formButton deleteButton" />
     }
     <br />  
     @Html.ValidationSummary(true)
     @Html.EditorForModel()
-
 }
 
 @if (Html.IsInRole(Html.Role_AM()))
@@ -31,12 +33,47 @@
         @Html.HiddenFor(model => model.ID);
     }
 }
+
+<div id="@(idPrefix)AddImageDialog">
+    @using (Html.BeginForm("AddImage", "Event", FormMethod.Post,
+            new { @id = idPrefix + "AddImageForm", enctype = "multipart/form-data" }))
+    {
+        @Html.HiddenFor(model => model.ID);
+        <input id="eventImageFile" type="file" name="imagefile"/>
+        <input type="submit" value="@Events.uploadfile" class="formButton" id="@(idPrefix)AddImgSubmit" />
+    }
+</div>
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
-        $('.formButton').button();
         var eventForm = $('#eventEditForm-@Model.ID');
         var eventDeleteForm = $('#deleteEventForm-@Model.ID');
         var eventDeleteBtn = $('#deleteEventBtn-@(Model.ID)');
+        var currentTabs = $('#personPartsTabs');
+        var eventTabIdx = $('li', currentTabs).index($('li.ui-tabs-selected', currentTabs));
+        var addImgForm = $('#@(idPrefix)AddImageForm');
+        var addImgDialog = $('#@(idPrefix)AddImageDialog');
+        var addImgBtn = $('#@(idPrefix)AddImgBtn');
+        //
+        // Diaglog box to add the image
+        addImgDialog.hide();
+        addImgForm.mUI('formSubmit', {
+            create: false,
+            formLevel: 1,
+            selectTab: -1, //do nothing
+            callback: function () {
+                console.log($(currentTabs).attr('ID') + " - " + eventTabIdx);
+                currentTabs.tabs('load', eventTabIdx);
+                $(addImgDialog).parent().find('a.ui-dialog-titlebar-close').click();
+            }
+        });
+        //
+        //
+        addImgBtn.bind('click', function () {
+            console.log("AddImgBtn clicked");
+            addImgDialog.dialog({ modal: true });
+            addImgDialog.show();
+        });
+        $('.formButton').button();
         //
         //
         eventForm.mUI('formSubmit', {

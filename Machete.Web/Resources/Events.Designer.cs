@@ -61,6 +61,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add file.
+        /// </summary>
+        public static string addfile {
+            get {
+                return ResourceManager.GetString("addfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Event.
         /// </summary>
         public static string boxlegend {
@@ -102,6 +111,15 @@ namespace Machete.Web.Resources {
         public static string deleteconfirmation {
             get {
                 return ResourceManager.GetString("deleteconfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete file.
+        /// </summary>
+        public static string deletefile {
+            get {
+                return ResourceManager.GetString("deletefile", resourceCulture);
             }
         }
         
@@ -169,6 +187,24 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Events.
+        /// </summary>
+        public static string eventtab {
+            get {
+                return ResourceManager.GetString("eventtab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type of event.
+        /// </summary>
+        public static string eventtype {
+            get {
+                return ResourceManager.GetString("eventtype", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Return to List of Event.
         /// </summary>
         public static string indexreturnlink {
@@ -192,6 +228,24 @@ namespace Machete.Web.Resources {
         public static string listlink {
             get {
                 return ResourceManager.GetString("listlink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open file.
+        /// </summary>
+        public static string openfile {
+            get {
+                return ResourceManager.GetString("openfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upload file.
+        /// </summary>
+        public static string uploadfile {
+            get {
+                return ResourceManager.GetString("uploadfile", resourceCulture);
             }
         }
         

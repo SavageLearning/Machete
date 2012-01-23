@@ -203,6 +203,7 @@
             var preProcess = opt.preProcess || null;
             var closeTab = opt.closTab || undefined;
             var postProcess = opt.postProcess || null;
+            var callback = opt.callback || null;
             var level = _checkFormLevel(opt.formLevel, "formSubmit"); // Error if form level not set correctly
             //
             //setup button.click to secondary submit
@@ -242,11 +243,14 @@
                                     recordID: data.iNewID,  //JsonResult
                                     recType: recType
                                 });
+                                callback();                                
                             }
                         });
                     } else {
                         //$.post($(form).attr("action"), $(form).serialize());
-                        $(form).ajaxSubmit();
+                        $(form).ajaxSubmit({
+                            success: callback
+                        });
                     }
                     //
                     //
@@ -303,6 +307,30 @@
                 dupForm.submit();
             });
         },
+
+        btnEventImageDelete: function (opt) {
+            var btn = this;
+            var ok = opt.ok || "OK?!";
+            var confirm = opt.confirm || "CONFIRM?!";
+            var title = opt.title || "TITLE?!";
+            var action = opt.action;
+            var params = opt.params;
+            var callback = opt.callback;
+            if (!action) throw new Error("btnEventImageDelete requires action property.");
+            if (!params) throw new Error("btnEventImageDelete requires params property.");
+            btn.click(function () {
+                $.alerts.okButton = ok;
+                jConfirm(confirm,
+                         title,
+                         function (r) {
+                             if (r === true) {
+                                 //console.log("btnEventImageDelete: delete submitted");
+                                 $.post(action, params, callback);
+                             }
+                         });
+            });
+
+        },
         //
         //        
         formClickDelete: function (opt) {
@@ -333,7 +361,7 @@
 
         },
         //
-        //
+        // public function for setChangeState
         markChanged: function (opt) {
             var form = this;
             _setChangeState({
@@ -343,7 +371,7 @@
             });
         },
         //
-        //
+        // Setup bind-change event to detect changes on forms
         formDetectChanges: function (opt) {
             var form = this;
             var changeConfirm = opt.changeConfirm || "CONFIRM?!";
@@ -371,7 +399,7 @@
             }
         },
         //
-        //
+        // Show or hide based on a select element's selected value
         selectToggleOnValue: function (opt) {
             var select = this;
             var showVal = opt.showVal || "yes";
@@ -386,6 +414,8 @@
             });
             toggleDropDown(select, showVal, target);
         },
+        //
+        // Enables a target element with a select elment selects enableVal
         selectEnableOnValue: function (opt) {
             var select = this;
             var enableVal = opt.enableVal;
@@ -420,6 +450,14 @@
     //
     // machete js internal functions
     //
+
+    //
+    //  Internal function to record what's changed:
+    //       level: refers to the hierarchy level of a given form 
+    //              ([1]employer/[2]order/[3]assignment)
+    //              the lower the number, the more general the form. 
+    //     recType: categorizes what changed
+    // whatChanged: stores a reference to the tab that changed
     function _setChangeState(opt) {
         var form = opt.form;
         var level = opt.level || _checkFormLevel(opt.formLevel, "_setChangeState");
@@ -484,8 +522,7 @@
         waEstimateEarnings(myForm);
     }
     //
-    //
-    //
+    // Estimates earnings boxes on Assignments form
     function waEstimateEarnings(waForm) {
         var myWage = $(waForm).find('#hourlyWage').val();
         var myHours = $(waForm).find('#hours').find('option:selected').val();
@@ -513,8 +550,8 @@
         }
     }
     //
-    //
-    //
+    // Filters the Hour range based on what's selected in the base #hours field
+    // TODO:2012/01/22: move to subfile with Assignment specific JS
     function _waFilterHourRange(waForm) {
         var myHours = $(waForm).find('#hours');
         var hour = $(myHours).val();
@@ -537,11 +574,12 @@
     }
     //
     //
-    //
+    // Called by formClickDelete -- sets up closing the Tab with the submit
     function _submitAndCloseTab(opt) {
         var form = opt.form;
         var altClose = opt.altClose;
         var postDelete = opt.postDelete;
+        // TODO:2012/01/22: Switch (and test) to ajaxSubmit
         form.submit(function (e) {
             e.preventDefault();
             $.post($(this).attr("action"), $(this).serialize(), function (data) {

@@ -583,6 +583,73 @@ input.ui-button.dispatchButton
 {
     width: 300px;
 }
+/* Person page
+----------------------------------------------------------*/
+div.mui-event-edit-label
+{
+    width: 6em;
+}
+
+div.mui-event-edit-field select
+{
+    width: 10em;
+}
+
+div.mui-event-edit-textarea textarea.desc-field 
+{
+    width: 30em;
+}
+mui-event-image-gallery
+{
+    float: left;
+    border-collapse:separate; 
+    border-spacing:5em;
+}
+
+div.mui-event-image-row
+{
+    /* margin, border, and padding do nothing for the table-row*/
+
+}
+
+div.mui-event-image-item img, .mui-event-image-item
+{
+    margin: 5px;
+    margin-left: 10px;
+    vertical-align: top;
+}
+
+div.mui-event-image-text-table
+{
+    float: left; 
+    clear: left;
+    padding-bottom: 5px;
+}
+
+div.mui-event-image-text-row-label
+{
+    /*border: 1px solid red;*/
+    width: 7em;
+    margin: 0em 0 0 0;
+    padding: 1px;
+    text-align: right;
+    
+    font-size: 90%;
+}
+
+div.mui-event-image-text-row-field
+{
+    /*border: 1px solid blue;*/
+    margin:0 0 0 0;
+    padding: .2px;
+    /*font-weight: bold;*/
+    width: 120px;
+    text-align: center;
+}
+div.mui-event-image-text-row-field input[type="text"]
+{
+    width: 20em;
+}
 /* Worker page
 ----------------------------------------------------------*/
 .highlightSave

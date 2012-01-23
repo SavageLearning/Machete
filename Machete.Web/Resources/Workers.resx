@@ -168,6 +168,9 @@
   <data name="printlink" xml:space="preserve">
     <value>Print worker</value>
   </data>
+  <data name="uploadnewimage" xml:space="preserve">
+    <value>Upload new image:</value>
+  </data>
   <data name="viewlink" xml:space="preserve">
     <value>Print</value>
   </data>

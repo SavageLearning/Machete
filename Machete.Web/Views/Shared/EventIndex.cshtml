@@ -6,16 +6,16 @@
     string recType = "event";
     //string idPrefix = recType + Model.ID + "-";
 }
-<div id="eventList" title="TITLE?!">
+<div id="eventList">
     <table id="eventTable" class="display">
         <thead>
             <tr>
                 <th>EDITREF</th>
                 <th>LABEL</th>
-                <th>Type?!</th>
-                <th>notes?!</th>
-                <th>dateupdated?!</th>
-                <th>Updatedby?!</th>
+                <th>@Event.eventType</th>
+                <th>@Event.notes</th>
+                <th>@Record.dateupdated</th>
+                <th>@Record.updatedby</th>
             </tr>
         </thead>
     </table>

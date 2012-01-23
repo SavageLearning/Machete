@@ -6,7 +6,7 @@
 }
 @using (Html.BeginForm("Create", "Event", FormMethod.Post, new { @id = "eventCreateForm" }))
 {
-    <input type="submit" id="eventCreateBtn" class="formButton saveBtn" value="submit?!" tabindex="9"/>
+    <input type="submit" id="eventCreateBtn" class="formButton saveBtn" value="@Events.createsubmit" tabindex="9"/>
     @Html.ValidationSummary(true)
     @Html.EditorForModel()
 }

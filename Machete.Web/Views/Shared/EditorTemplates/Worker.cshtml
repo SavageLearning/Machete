@@ -396,7 +396,7 @@
     <div class="tb-row">
         <img src="@Url.Action("GetImage", "Image", new { ID = Model.ImageID })" alt="no image" style="width: 200px"/>
         <div class="view_off print_off">
-            Upload new image?!:
+            @Workers.uploadnewimage
             <input id="@(idPrefix)imagefile" type="file" name="imagefile" /></div>
     </div>
 </div>

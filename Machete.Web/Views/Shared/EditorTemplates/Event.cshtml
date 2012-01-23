@@ -2,36 +2,38 @@
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
 @using Machete.Domain.Resources
+@using Machete.Domain
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
     string recType = "event";
     string idPrefix = recType + Model.ID + "-";
+    string jeviPrefix = "";
 }
 @Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID" })
 @Html.HiddenFor(model => model.PersonID, new { @id = idPrefix + "PersonID" })
 <div class="tb-table">
     <div class="tb-row">
-        <div class="tb-label tb-cell">
+        <div class="mui-event-edit-label tb-label tb-cell">
             @Html.LabelFor(model => model.eventType)
         </div>
-        <div class="tb-field tb-cell">
+        <div class="mui-event-edit-field tb-field tb-cell">
             @Html.DropDownListFor(model => model.eventType, 
                                   new SelectList(Lookups.eventtype(CI.TwoLetterISOLanguageName), 
                                                  "Value", 
                                                  "Text",
                                                  Model.eventType), 
                                                  @Machete.Web.Resources.Shared.choose,
-                                  new { tabindex = "2", @class = "workerEditor", id = idPrefix + "eventType" })
+                                  new { tabindex = "2", id = idPrefix + "eventType" })
             @Html.ValidationMessageFor(model => model.eventType)
         </div>
-        <div class="tb-label tb-cell" style="width: 6em;">
+        <div class="mui-event-edit-label tb-label tb-cell">
             @Html.LabelFor(model => model.dateFrom)
         </div>
         <div class="tb-field tb-cell">
             @Html.TextBox("dateFrom", Html.Encode(System.String.Format("{0:d}", Model.dateFrom)), new { @id = idPrefix + "dateFrom", @class="ui-datepicker" })
             @Html.ValidationMessageFor(model => model.dateFrom)
         </div>
-        <div class="tb-label tb-cell" style="width: 6em;">
+        <div class="mui-event-edit-label tb-label tb-cell">
             @Html.LabelFor(model => model.dateTo)
         </div>
         <div class="tb-field tb-cell">
@@ -43,25 +45,112 @@
 <div class="tb-table">
     <div class="tb-row">
 
-        <div class="tb-label tb-cell">
+        <div class="mui-event-edit-label tb-label tb-cell">
             @Html.LabelFor(model => model.notes)
         </div>
-        <div class="tb-field tb-cell">
+        <div class="mui-event-edit-textarea tb-field tb-cell">
             @Html.TextAreaFor(model => model.notes, new { @class="desc-field" , id = idPrefix + "notes"})
             @Html.ValidationMessageFor(model => model.notes)
         </div>
     </div>
 </div>
+@if (Model.JoinEventImages != null)
+{
+<hr />
+<div id="gallery" class="mui-event-image-gallery tb-table">
+    @foreach (JoinEventImage jevi in Model.JoinEventImages)
+    {   
+        jeviPrefix = "jevi" + jevi.ID + "-"; 
+        <div class="tb-row mui-event-image-row" jeviID="@(jevi.ID)" evntID="@(Model.ID)">
+            <div class="mui-event-image-item tb-cell">
+                @if (jevi.Image.ImageMimeType.StartsWith("image"))
+                {
+                    <a class="galleryImage" href="/Image/GetImage/@(jevi.ImageID)">
+                    <img src="/Image/GetImage/@(jevi.ImageID)" width="100" alt="" /></a>
+                }
+                else
+                {
+                    <a class="galleryFile" href="/Image/GetImage/@(jevi.ImageID)">
+                    <img src="@Url.Content("~/Content/images/Files-Download-File-icon.png")" width="100" alt="" /></a>
+                }
+            </div>
+            <div class="tb-table mui-event-image-text-table">
+                <div class="tb-row">
+                    <div class="mui-event-image-text-row-label tb-label tb-cell">
+                        @Html.Label("filename", "filename")
+                    </div>
+                    <div class="mui-event-image-text-row-field tb-field tb-cell">
+                        @Html.TextBox("filename", jevi.Image.filename, new { disabled = "disabled" })
+                    </div>
+                </div>
+                <div class="tb-row">
+                    <div class="mui-event-image-text-row-label tb-label tb-cell">
+                        @Html.Label("datecreated", "datecreated")
+                    </div>
+                    <div class="mui-event-image-text-row-field tb-field tb-cell">
+                        @Html.TextBox("datecreated", jevi.Image.datecreated, new { disabled = "disabled" })
+                    </div>
+                </div>
+                <div class="tb-row">
+                    <div class="mui-event-image-text-row-label tb-label tb-cell">
+                        @Html.Label("Createdby", "Createdby")
+                    </div>
+                    <div class="mui-event-image-text-row-field tb-field tb-cell">
+                        @Html.TextBox("Createdby", jevi.Image.Createdby, new { disabled="disabled"})
+                    </div>
+                </div>
+                <div class="tb-row">
+                    <div class="tb-cell">
+                    </div>
+                    <div class="tb-cell">
+                        <input type="button" value="@Events.openfile" class="formButton jeviOpenBtn" id="@(jeviPrefix)OpenBtn" style="float: left;"/>
+                        <input type="button" value="@Events.deletefile" class="formButton jeviDeleteBtn" 
+                                 id="@(jeviPrefix)DeleteBtn" style="float: right;" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+}
+<div style="clear: left;">
 @Html.Partial("ManagerInfo")
 @Html.Partial("AdministratorInfo")
-
+</div>    
 <script type="text/javascript">
     $(document).ready(function () {
+        var currentTabs = $('#personPartsTabs');
+        var eventTabIdx = $('li', currentTabs).index($('li.ui-tabs-selected', currentTabs));
         $('.ui-datepicker').datepicker({
             dateFormat: 'mm/dd/yy',
             buttonImage: '@Url.Content("~/Content/calendar.gif")',
             buttonImageOnly: true,
             showOn: "button"
+        });
+        $('.galleryImage').lightBox();
+        //
+        //
+        $('.jeviDeleteBtn').each(function (i, btn) {
+            $(btn).mUI('btnEventImageDelete', {
+                ok: "@Events.deletesubmit",
+                confirm: '@Events.deleteconfirmation',
+                title: '@Events.deletetitle',
+                params: { evntID: $(this).closest('.mui-event-image-row').attr('evntID'),
+                    jeviID: $(this).closest('.mui-event-image-row').attr('jeviID')
+                },
+                action: "/Event/DeleteImage",
+                callback: function () {
+                    currentTabs.tabs('load', eventTabIdx);
+                }
+            });
+        });
+        //
+        //
+        $('.jeviOpenBtn').each(function (i, btn) {
+            $(btn).bind('click', function () {                
+                var anchor = $(btn).closest('.mui-event-image-row').find('div.mui-event-image-item a').attr('href');
+                window.open(anchor);
+            });
         });
     });
 </script>
