@@ -19,13 +19,15 @@ namespace Machete.Web.Controllers
     public class EventController : Controller
     {
         private readonly IEventService _serv;
+        private readonly IImageService iServ;
         private Logger log = LogManager.GetCurrentClassLogger();
         private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "EmployerController", "");
         //
         //
-        public EventController(IEventService eventService)
+        public EventController(IEventService eventService, IImageService imageServ)
         {
             this._serv = eventService;
+            this.iServ = imageServ;
         }
         //
         //
@@ -140,17 +142,22 @@ namespace Machete.Web.Controllers
         //
         // POST: /Event/Edit/5
 
-        [HttpPost]
+        [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult Edit(int id, FormCollection collection, string userName)
+        public ActionResult Edit(int id, FormCollection collection, string user)
         {
             Event evnt = _serv.GetEvent(id);
-
+            string status = null;
             if (TryUpdateModel(evnt))
             {
-                _serv.SaveEvent(evnt, userName);
-                //_setLabel(event);
-                return PartialView("Edit", evnt);
+                try
+                {
+                    _serv.SaveEvent(evnt, user);
+                }
+                catch (Exception e)
+                {
+                    status = RootException.Get(e, "Event::EditPost");
+                }
             }
             else
             {
@@ -158,15 +165,54 @@ namespace Machete.Web.Controllers
                 levent.Properties["RecordID"] = evnt.ID; log.Log(levent);
                 return PartialView("Edit", evnt);
             }
+            return Json(new
+            {
+                status = status ?? "OK"
+            },
+            JsonRequestBehavior.AllowGet);
         }
-
+        //
+        // AddImage
+        [HttpPost]
+        [Authorize(Roles = "Administrator, Manager")]
+        public ActionResult AddImage(int id, string user, HttpPostedFileBase imagefile)
+        {
+            if (imagefile == null) throw new MacheteNullObjectException("AddImage called with null imagefile");
+            JoinEventImage joiner = new JoinEventImage();
+            Image image = new Image();
+            Event evnt = _serv.GetEvent(id);
+            image.ImageMimeType = imagefile.ContentType;
+            image.parenttable = "Events";
+            image.filename = imagefile.FileName;
+            image.recordkey = id.ToString();
+            image.ImageData = new byte[imagefile.ContentLength];
+            imagefile.InputStream.Read(image.ImageData,
+                                       0,
+                                       imagefile.ContentLength);
+            Image newImage = iServ.CreateImage(image, user);
+            joiner.ImageID = newImage.ID;
+            joiner.EventID = evnt.ID;
+            joiner.datecreated = DateTime.Now;
+            joiner.dateupdated = DateTime.Now;
+            joiner.Updatedby = user;
+            joiner.Createdby = user;
+            evnt.JoinEventImages.Add(joiner);
+            _serv.SaveEvent(evnt, user);
+            var foo = iServ.GetImage(newImage.ID).ImageData;
+            //_serv.GetEvent(evnt.ID);
+            
+            return Json(new
+            {
+                status = "OK"                
+            },
+            JsonRequestBehavior.AllowGet);
+        }
         //
         // GET: /Event/Delete/5
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult Delete(int id, FormCollection collection, string user)
+        public ActionResult Delete(int id, string user)
         {
-;
             string status = null;
             try
             {
@@ -185,5 +231,30 @@ namespace Machete.Web.Controllers
             JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost, UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager")]
+        public ActionResult DeleteImage(int evntID, int jeviID, string user)
+        {
+            string status = null;
+            int deletedJEVI = 0;
+            try
+            {
+                Event evnt = _serv.GetEvent(evntID);
+                JoinEventImage jevi = evnt.JoinEventImages.Single(e => e.ID == jeviID);
+                deletedJEVI = jevi.ID;
+                iServ.DeleteImage(jevi.ImageID, user);
+                evnt.JoinEventImages.Remove(jevi);
+            }
+            catch (Exception e)
+            {
+                status = RootException.Get(e, "EventController::DeleteImage");
+            }
+            return Json(new
+            {
+                status = status ?? "OK",
+                deletedID = deletedJEVI
+            },
+            JsonRequestBehavior.AllowGet);
+        }
     }
 }
