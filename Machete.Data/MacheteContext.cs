@@ -26,7 +26,8 @@ namespace Machete.Data
         public DbSet<Image> Images { get; set; }
         public DbSet<Employer> Employers { get; set; }
         public DbSet<WorkOrder> WorkOrders { get; set; }
-        public DbSet<WorkerRequest> WorkerRequests { get; set; }        
+        public DbSet<WorkerRequest> WorkerRequests { get; set; }
+        public DbSet<Event> Events {get; set;}
 
         
 
@@ -54,9 +55,10 @@ namespace Machete.Data
             modelBuilder.Configurations.Add(new PersonBuilder());
             modelBuilder.Configurations.Add(new WorkerBuilder());
             modelBuilder.Configurations.Add(new WorkerSigninBuilder());
+            modelBuilder.Configurations.Add(new EventBuilder());
+            modelBuilder.Configurations.Add(new JoinEventImageBuilder());
             modelBuilder.Entity<Employer>().ToTable("Employers");
             modelBuilder.Entity<WorkOrder>().ToTable("WorkOrders");
-            //modelBuilder.Entity<WorkerSkill>().ToTable("WorkerSkills");
             modelBuilder.Entity<WorkAssignment>().ToTable("WorkAssignments");
         }
     }
@@ -121,6 +123,29 @@ namespace Machete.Data
                 .WithMany(a => a.workAssignments)
                 .HasForeignKey(a => a.workOrderID);
 
+        }
+    }
+
+    public class EventBuilder : EntityTypeConfiguration<Event>
+    {
+        public EventBuilder()
+        {
+            HasKey(k => k.ID);
+            HasRequired(k => k.Person)
+                .WithMany(e => e.Events)
+                .HasForeignKey(k => k.PersonID);
+        }
+    }
+
+    public class JoinEventImageBuilder : EntityTypeConfiguration<JoinEventImage>
+    {
+        public JoinEventImageBuilder()
+        {
+            HasKey(k => k.ID);
+            HasRequired(k => k.Event)
+                .WithMany(d => d.JoinEventImages)
+                .HasForeignKey(k => k.EventID);
+            HasRequired(k => k.Image);
         }
     }
 }

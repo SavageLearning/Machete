@@ -10,6 +10,7 @@ namespace Machete.Domain
     {
         public int PersonID { get; set; }
         public virtual Person Person { get; set; }
+        public virtual ICollection<JoinEventImage> JoinEventImages { get; set; }
         //
         //
         [Required(ErrorMessageResourceName = "eventTyperequired", ErrorMessageResourceType = typeof(Resources.Event))]
@@ -27,5 +28,14 @@ namespace Machete.Domain
         [StringLength(4000, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Event))]
         public string notes { get; set; }
 
+    }
+
+    public class JoinEventImage : Record
+    {
+        public int EventID { get; set; }
+        public virtual Event Event { get; set; }
+
+        public int ImageID { get; set; }
+        public virtual Image Image { get; set; }
     }
 }
