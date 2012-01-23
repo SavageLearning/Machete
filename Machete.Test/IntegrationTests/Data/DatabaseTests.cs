@@ -50,7 +50,7 @@ namespace Machete.Test.Data
 
         //    var dbset = MacheteDB.Set<WorkerSignin>();
         //    //var foo1 = dbset.Where(r => r.dwccardnum == 30040).AsQueryable();
-        //    DateTime datestr = DateTime.Parse("8/10/2011");
+        //    DateTime datestr = DateTime.Today;
         //    Func<WorkerSignin, bool> where = (r => r.dwccardnum == 30040 && EntityFunctions.DiffDays(r.dateforsignin, datestr) == 0 ? true : false);
         //    var foo1 = dbset.AsQueryable().FirstOrDefault(where);
         //    Assert.IsNotNull(foo1.ID);

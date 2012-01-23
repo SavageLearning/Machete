@@ -192,22 +192,31 @@ namespace Machete.Service
             if (!string.IsNullOrEmpty(o.search))
             {
                 enumWSI = queryableWSI.ToList()
-                    .Join(WorkerCache.getCache(), s => s.dwccardnum, w => w.dwccardnum, (s, w) => new { s, w })
-                    .Where(p => p.w.dwccardnum.ToString().ContainsOIC(o.search) ||
-                                p.w.Person.firstname1.ContainsOIC(o.search) ||
-                                p.w.Person.firstname2.ContainsOIC(o.search) ||
-                                p.w.Person.lastname1.ContainsOIC(o.search) ||
-                                p.w.Person.lastname2.ContainsOIC(o.search))
-                    .Select(a => a.s);
+                            .Join(WorkerCache.getCache(), s => s.dwccardnum, w => w.dwccardnum, (s, w) => new { s, w })
+                            .Where(p => p.w.dwccardnum.ToString().ContainsOIC(o.search) ||
+                                        p.w.Person.firstname1.ContainsOIC(o.search) ||
+                                        p.w.Person.firstname2.ContainsOIC(o.search) ||
+                                        p.w.Person.lastname1.ContainsOIC(o.search) ||
+                                        p.w.Person.lastname2.ContainsOIC(o.search))
+                            .Select(a => a.s);
+                //enumWSI = queryableWSI
+                //    .Where(p => SqlFunctions.StringConvert((decimal)p.dwccardnum).Contains(o.search) ||
+                //                p.worker.Person.firstname1.Contains(o.search) ||
+                //                p.worker.Person.firstname2.Contains(o.search) ||
+                //                p.worker.Person.lastname1.Contains(o.search) ||
+                //                p.worker.Person.lastname2.Contains(o.search)).ToList();      
             }
             else
             {
                 enumWSI = queryableWSI.ToList();
             }
-
-            enumWSIV = enumWSI
+                enumWSIV = enumWSI
                         .Join(WorkerCache.getCache(), s => s.dwccardnum, w => w.dwccardnum, (s, w) => new { s, w })
                         .Select(p => new WorkerSigninView(p.w.Person, p.s));
+            //enumWSIV = enumWSI
+            //            .GroupJoin(WorkerCache.getCache(), s => s.dwccardnum, w => w.dwccardnum, (s, w) => new { s, w })
+            //            .SelectMany(jj => jj.w.DefaultIfEmpty(new Worker { ID=0, dwccardnum = 0}), (jj, row) 
+            //             => new WorkerSigninView(row.Person, jj.s));
 
             //Sort the Persons based on column selection
             switch (o.sortColName)

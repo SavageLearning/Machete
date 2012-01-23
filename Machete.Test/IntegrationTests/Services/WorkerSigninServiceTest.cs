@@ -74,7 +74,7 @@ namespace Machete.Test
             {
                 CI = new CultureInfo("en-US", false),
                 search = "",
-                date = DateTime.Parse("8/10/2011"),
+                date = DateTime.Today,
                 dwccardnum = null,
                 woid = null,
                 orderDescending = true,
@@ -86,7 +86,7 @@ namespace Machete.Test
         [TestMethod]
         public void DbSet_WorkerSigin_LotterySignin()
         {
-            var foo = _wsiServ.GetWorkerSignin(30040, DateTime.Parse("8/10/2011"));
+            var foo = _wsiServ.GetWorkerSignin(30040, DateTime.Today);
             Assert.IsNotNull(foo);
         }
         /// <summary>
@@ -95,13 +95,33 @@ namespace Machete.Test
         [TestMethod]
         public void DbSet_WorkerSignin_GetView()
         {
-            DateTime date = Convert.ToDateTime("08/10/2011");
+            DateTime date = DateTime.Today;
             IEnumerable<WorkerSigninView> filteredWSI = _wsiServ.getView(date);
             IEnumerable<WorkerSigninView> foo = filteredWSI.ToList();
             Assert.IsNotNull(filteredWSI, "WorkerSignin getView return is Null");
             Assert.IsNotNull(foo, "WorkerSignin getview.ToList() is Null");
         }
-        //
+        /// <summary>
+        /// Submit an unknown dwccardnum, verify it is recorded and returned by GetIndexView
+        /// </summary>
+        [TestMethod]
+        public void DbSet_WorkerSigninService_Integration_GetIndexView_record_unknown_worker()
+        {
+            //
+            //            
+            var _signin = new WorkerSignin();
+            _signin.dwccardnum = 42420;
+            _signin.dateforsignin = DateTime.Today;
+            _wsiServ.CreateWorkerSignin(_signin, "TestUser");
+            _dOptions.search = "42420";
+            //
+            //            
+            ServiceIndexView<WorkerSigninView> result = _wsiServ.GetIndexView(_dOptions);
+            List<WorkerSigninView> tolist = result.query.ToList();
+            //
+            //
+            Assert.AreEqual(1, result.filteredCount);
+        }
         /// <summary>
         /// Filters WSI IndexView based on dwccardnum option. should return all records.
         /// </summary>
@@ -145,7 +165,7 @@ namespace Machete.Test
         public void DbSet_TestMethod5()
         {
 
-            IEnumerable<WorkerSignin> testing = _wsiServ.GetSigninsForAssignment(Convert.ToDateTime("08/02/2011"),
+            IEnumerable<WorkerSignin> testing = _wsiServ.GetSigninsForAssignment(DateTime.Today,
                                                         "Jose",
                                                         "asc",
                                                         null,

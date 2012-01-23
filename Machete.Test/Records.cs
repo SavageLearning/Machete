@@ -122,7 +122,7 @@ namespace Machete.Test
             transportFeeExtra = 0,
             englishRequiredNote = "",
             description = "descriptiong string",
-            dateTimeofWork = DateTime.Parse("08-10-2011 00:00:00"),
+            dateTimeofWork = DateTime.Today,
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime
             Createdby = "initialization script",
@@ -167,7 +167,7 @@ namespace Machete.Test
         public static WorkerSignin signin = new WorkerSignin
         {
             dwccardnum = 30040,
-            dateforsignin = DateTime.Parse("8/10/2011"),
+            dateforsignin = DateTime.Today,
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime
             Createdby = "TestInitializer",
@@ -185,7 +185,7 @@ namespace Machete.Test
 
         public static void Initialize(MacheteContext DB)
         {
-            var dt = DateTime.Parse("8/10/2011");
+            var dt = DateTime.Today;
             Person p1 = (Person)person.Clone(); p1.Worker = (Worker)worker.Clone(); p1.Worker.dwccardnum = 30040; p1.Worker.skill1 = 62;
             p1.Worker.Person = p1;
             DB.Persons.Add(p1);
@@ -224,7 +224,7 @@ namespace Machete.Test
             em1od1as1.workerAssignedID = 1;
             em1od1as1.skillID = 70; DB.WorkAssignments.Add(em1od1as1);
 
-            em1od1.dateTimeofWork = DateTime.Parse("08-10-2011 09:00:00");
+            em1od1.dateTimeofWork = DateTime.Parse(DateTime.Today.ToShortDateString() + " 09:00:00");
             WorkAssignment em1od1as2 = (WorkAssignment)assignment.Clone(); em1od1as2.workOrder = em1od1; DB.WorkAssignments.Add(em1od1as2);
             em1od1as2.workerAssignedID = 2;
             em1od1as2.skillID = 61;
