@@ -9,21 +9,31 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Machete.Domain;
 using System.Reflection;
+using Machete.Data;
+using System.Data.Entity;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Machete.Test
 {
     [TestClass]
-    public class PersonTests
+    public class WorkerSigninTests
     {
-        private IWebDriver driver;
+        private static IWebDriver driver;
         private StringBuilder verificationErrors;
-        private string baseURL;
-        private sharedUI ui;
+        private static string baseURL;
+        private static sharedUI ui;
         private static string testdir;
         private static string testimagefile;
+        private static MacheteContext DB;
+        private static DbSet<Worker> wSet;
+        private static DbSet<WorkerSignin> wsiSet;
+        private static DbSet<Person> pSet;
 
         [ClassInitialize]
-        public static void ClassInitialize(TestContext testContext) {
+        public static void ClassInitialize(TestContext testContext)
+        {
+            // getting Project path for dummy image
             string solutionDirectory = ((EnvDTE.DTE)System.Runtime
                                                   .InteropServices
                                                   .Marshal
@@ -33,18 +43,30 @@ namespace Machete.Test
             solutionDirectory = System.IO.Path.GetDirectoryName(solutionDirectory);
             testdir = solutionDirectory + "\\Machete.test\\";
             testimagefile = testdir + "jimmy_machete.jpg";
-        }
-
-        [TestInitialize]
-        public void SetupTest()
-        {
             driver = new FirefoxDriver();
             baseURL = "http://localhost:4213/";
             ui = new sharedUI(driver, baseURL);
+            DB = new MacheteContext();
+            wsiSet = DB.Set<WorkerSignin>();
+            wSet = DB.Set<Worker>();
+            pSet = DB.Set<Person>();
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        [TestInitialize]
+        public void SetupTest()
+        {
+            //driver = new FirefoxDriver();
+            //baseURL = "http://localhost:4213/";
+            //ui = new sharedUI(driver, baseURL);
             verificationErrors = new StringBuilder();
             ui.login();
-        }
 
+        }
+        /// <summary>
+        /// 
+        /// </summary>
         [TestCleanup]
         public void TeardownTest()
         {
@@ -62,25 +84,18 @@ namespace Machete.Test
             }
             Assert.AreEqual("", verificationErrors.ToString());
         }
+        /// <summary>
+        /// 
+        /// </summary>
         [ClassCleanup]
         public static void ClassCleanup() { }
-
+        /// <summary>
+        /// 
+        /// </summary>
         [TestMethod]
-        public void SePerson_create_person()
+        public void SeWSI_create_signin()
         {
-            Person _per = (Person)Records.person.Clone();
-            ui.personCreate(_per);
+            IEnumerable<WorkerSignin> wList = wsiSet.Where(w => w.dwccardnum < 30000).AsEnumerable();
         }
-
-        [TestMethod]
-        public void SePerson_create_worker()
-        {
-            Person _per = (Person)Records.person.Clone();
-            Worker _wkr = (Worker)Records.worker.Clone();
-            ui.personCreate(_per);
-            _wkr.ID = _per.ID;
-            ui.workerCreate(_wkr, testimagefile);
-        }
-
     }
 }

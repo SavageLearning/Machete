@@ -5,6 +5,10 @@ using System.Text;
 
 namespace Machete.Data.Infrastructure
 {
+    // where T -- [ constraint ] on constructed type
+    // : class -- [ reference type constaint ] 
+    //                  specifies that type argument must be a reference type.
+    //                  class types, interface types, delegate types, array types, 
     public interface IRepository<T> where T : class
     {
         T Add(T entity);

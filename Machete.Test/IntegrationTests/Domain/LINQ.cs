@@ -13,8 +13,11 @@ namespace Machete.Test
     [TestClass]
     public class LINQ
     {
+        /// <summary>
+        /// Testing outer join of linq to entities
+        /// </summary>
         [TestMethod]
-        public void LINQ_sanity_check()
+        public void LINQ_outer_join_test()
         {
             //Arrange
             var persons = new List<Person>();
