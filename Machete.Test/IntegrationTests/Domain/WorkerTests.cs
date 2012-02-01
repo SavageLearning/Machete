@@ -23,6 +23,8 @@ namespace Machete.Test
         {
             Database.SetInitializer<MacheteContext>(new TestInitializer());
             this.MacheteDB = new MacheteContext();
+            MacheteDB.Database.Delete();
+            MacheteDB.Database.Initialize(true);
         }
         /// <summary>
         /// Inspecting how/when EntityFramework makes the link between parent/child records
@@ -31,10 +33,9 @@ namespace Machete.Test
         public void DbSet_Worker_add_worker_check_person_link() 
         {
             //Arrange
-            MacheteDB.Database.Delete();
-            MacheteDB.Database.Initialize(true);
-            Person _person1 = Records._person1;
-            Worker _worker1 = Records._worker1;
+
+            Person _person1 = (Person)Records.person.Clone();
+            Worker _worker1 = (Worker)Records.worker.Clone();
             _worker1.Person = _person1;
             _person1.firstname2 = "Worker_add_simple_record";
             _worker1.height = "Worker_add_simple_record";
@@ -53,7 +54,7 @@ namespace Machete.Test
             catch (Exception ex)
             {
                 Assert.Fail(string.Format("Unexpected exception of type {0} caught: {1}",
-                ex.GetType(), ex.Message));
+                ex.GetType(), Domain.Entities.RootException.Get(ex, "WorkerTests")));
             }
             //Assert
             Assert.IsNotNull(_person1.Worker);
@@ -71,8 +72,6 @@ namespace Machete.Test
         {
             //
             //Arrange
-            MacheteDB.Database.Delete();
-            MacheteDB.Database.Initialize(true);
             // Person1
             Person _person1 = (Person)Records.person.Clone();
             _person1.ID = 1;
@@ -129,9 +128,7 @@ namespace Machete.Test
             int reccount = 0;
             //
             //Arrange
-            MacheteDB.Database.Delete();
-            MacheteDB.Database.Initialize(true);
-            Person _person2 = Records._person2;
+            Person _person2 = (Person)Records.person.Clone();
             _person2.ID = 0;
             Worker _worker2 = Records._worker2;
             _worker2.ID = 0;

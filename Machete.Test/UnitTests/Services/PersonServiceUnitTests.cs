@@ -124,20 +124,21 @@ namespace Machete.Test.UnitTests.Services
         {
             //
             //Arrange
+            Person _p = (Person)Records.person.Clone();
             _repo = new Mock<IPersonRepository>();
             _uow = new Mock<IUnitOfWork>();
             string user = "UnitTest";
             int id = 1;
             Person dp = new Person();
             _repo.Setup(r => r.Delete(It.IsAny<Person>())).Callback((Person p) => { dp = p;  });
-            _repo.Setup(r => r.GetById(id)).Returns(Records._person1);
+            _repo.Setup(r => r.GetById(id)).Returns(_p);
             var _serv = new PersonService(_repo.Object, _uow.Object);
             //
             //Act
             _serv.DeletePerson(id, user);
             //
             //Assert
-            Assert.AreEqual(dp, Records._person1);
+            Assert.AreEqual(dp, _p);
         }
 
         [TestMethod]
@@ -145,19 +146,20 @@ namespace Machete.Test.UnitTests.Services
         {
             //
             //Arrange
+            Person _p = (Person)Records.person.Clone();
             _repo = new Mock<IPersonRepository>();
             _uow = new Mock<IUnitOfWork>();
             string user = "UnitTest";
-            Records._person1.datecreated = DateTime.MinValue;
-            Records._person1.dateupdated = DateTime.MinValue;
+            _p.datecreated = DateTime.MinValue;
+            _p.dateupdated = DateTime.MinValue;
             var _serv = new PersonService(_repo.Object, _uow.Object);
             //
             //Act
-            _serv.SavePerson(Records._person1, user);
+            _serv.SavePerson(_p, user);
             //
             //Assert
-            Assert.IsTrue(Records._person1.Updatedby == user);
-            Assert.IsTrue(Records._person1.dateupdated > DateTime.MinValue);
+            Assert.IsTrue(_p.Updatedby == user);
+            Assert.IsTrue(_p.dateupdated > DateTime.MinValue);
         }
     }
 }

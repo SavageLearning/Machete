@@ -36,7 +36,7 @@ namespace Machete.Test
         WorkOrderService _woServ;
         WorkAssignmentService _waServ;
         IUnitOfWork _unitofwork;
-        //MacheteContext MacheteDB;
+        MacheteContext DB;
         DispatchOptions _dOptions;
         //CultureInfo CI;
         
@@ -44,15 +44,19 @@ namespace Machete.Test
         public static void ClassInitialize(TestContext context) 
         {
             Database.SetInitializer<MacheteContext>(new TestInitializer());
-            Records.Initialize(new MacheteContext());
-            WorkerCache.Initialize(new MacheteContext());
-            LookupCache.Initialize(new MacheteContext());            
-            Lookups.Initialize(LookupCache.getCache());
+            
         }
 
         [TestInitialize]
         public void TestInitialize()
         {
+            DB = new MacheteContext();
+            DB.Database.Delete();
+            DB.Database.Initialize(true);
+            Records.Initialize(DB);
+            WorkerCache.Initialize(DB);
+            LookupCache.Initialize(DB);
+            Lookups.Initialize(LookupCache.getCache());
             _dbFactory = new DatabaseFactory();
             _iRepo = new ImageRepository(_dbFactory);
             _wRepo = new WorkerRepository(_dbFactory);
@@ -86,8 +90,8 @@ namespace Machete.Test
         [TestMethod]
         public void DbSet_WorkerSigin_LotterySignin()
         {
-            var foo = _wsiServ.GetWorkerSignin(30040, DateTime.Today);
-            Assert.IsNotNull(foo);
+            var result = _wsiServ.GetWorkerSignin(30040, DateTime.Today);
+            Assert.IsNotNull(result);
         }
         /// <summary>
         /// 
@@ -97,9 +101,9 @@ namespace Machete.Test
         {
             DateTime date = DateTime.Today;
             IEnumerable<WorkerSigninView> filteredWSI = _wsiServ.getView(date);
-            IEnumerable<WorkerSigninView> foo = filteredWSI.ToList();
+            IEnumerable<WorkerSigninView> result = filteredWSI.ToList();
             Assert.IsNotNull(filteredWSI, "WorkerSignin getView return is Null");
-            Assert.IsNotNull(foo, "WorkerSignin getview.ToList() is Null");
+            Assert.IsNotNull(result, "WorkerSignin getview.ToList() is Null");
         }
         /// <summary>
         /// Submit an unknown dwccardnum, verify it is recorded and returned by GetIndexView

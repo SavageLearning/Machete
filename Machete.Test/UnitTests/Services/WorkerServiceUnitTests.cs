@@ -104,15 +104,16 @@ namespace Machete.Test.UnitTests.Services
             //
             //Arrange
             string user = "UnitTest";
-            Records._worker1.Person = Records._person1;
-            Records._worker1.Person.datecreated = DateTime.MinValue;
-            Records._worker1.Person.dateupdated = DateTime.MinValue;
+            Worker _w = (Worker)Records.worker.Clone();
+            _w.Person = (Person)Records.person.Clone();
+            _w.Person.datecreated = DateTime.MinValue;
+            _w.Person.dateupdated = DateTime.MinValue;
             //Records._worker1.datecreated = DateTime.MinValue;
             //Records._worker1.dateupdated = DateTime.MinValue;
-            _repo.Setup(r => r.Add(Records._worker1)).Returns(Records._worker1);
+            _repo.Setup(r => r.Add(_w)).Returns(_w);
             //
             //Act
-            var result = _serv.CreateWorker(Records._worker1, user);
+            var result = _serv.CreateWorker(_w, user);
             //
             //Assert
             Assert.IsInstanceOfType(result, typeof(Worker));

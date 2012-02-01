@@ -45,8 +45,8 @@ namespace Machete.Test
             //Arrange
             MacheteDB.Database.Delete();
             MacheteDB.Database.Initialize(true);
-            Worker _worker3 = Records._worker3;
-            Person _person3 = Records._person3;
+            Worker _worker3 = (Worker)Records.worker.Clone();
+            Person _person3 = (Person)Records.person.Clone();
             _person3.firstname2 = "WorkerService_Intergation_CreateWorker";
             _worker3.height = "WorkerService_Intergation_CreateWorker";
             _worker3.Person = _person3;

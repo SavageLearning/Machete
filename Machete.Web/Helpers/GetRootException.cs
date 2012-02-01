@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Machete.Domain;
 
 namespace Machete.Web.Helpers
 {
     public static class RootException
     {
-        //
-        // GET: /GetRootException/
+        ////
+        //// GET: /GetRootException/
         public static string Get(Exception e, string prefix)
         {
             Exception ee = e;
@@ -20,7 +21,7 @@ namespace Machete.Web.Helpers
                 ee = ee.InnerException;
             }
             messages = messages + "\r\nInnermost exception: \"" + ee.Message + "\"";
-            return messages; 
+            return messages;
         }
     }
 }
