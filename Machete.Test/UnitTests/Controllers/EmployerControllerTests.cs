@@ -178,22 +178,6 @@ namespace Machete.Test.Controllers
 
         //
         // Testing /Delete functionality
-        //
-        //[TestMethod]
-        //public void EmployerController_delete_get_returns_employer()
-        //{
-        //    //Arrange
-        //    _serv = new Mock<IEmployerService>();
-        //    int testid = 4242;
-        //    Employer fakeemployer = new Employer();
-        //    _serv.Setup(p => p.GetEmployer(testid)).Returns(fakeemployer);
-        //    var _ctrlr = new EmployerController(_serv.Object);
-        //    //Act
-        //    var result = (PartialViewResult)_ctrlr.Delete(testid);
-        //    //Assert
-        //    Assert.IsInstanceOfType(result.ViewData.Model, typeof(Employer));
-        //}
-
         [TestMethod]
         public void EmployerController_delete_post_returns_json()
         {

@@ -24,7 +24,9 @@ namespace Machete.Test
             Database.SetInitializer<MacheteContext>(new TestInitializer());
             this.MacheteDB = new MacheteContext();
         }
-        
+        /// <summary>
+        /// Inspecting how/when EntityFramework makes the link between parent/child records
+        /// </summary>
         [TestMethod]
         public void DbSet_Worker_add_worker_check_person_link() 
         {
@@ -61,7 +63,9 @@ namespace Machete.Test
             Assert.IsTrue(_person1.ID == 1);
             Assert.IsTrue(_worker1.ID == 1);
         }
-
+        /// <summary>
+        /// Testing when Ef commits and the resulting order
+        /// </summary>
         [TestMethod]
         public void DbSet_Worker_verify_identity_assignment_order()
         {
@@ -101,11 +105,6 @@ namespace Machete.Test
                 MacheteDB.SaveChanges();
                 MacheteDB.Persons.Add(_person2);
                 MacheteDB.SaveChanges();
-                //_worker1.Person = _person1;
-                
-                //MacheteDB.Workers.Add(_worker1);
-                //MacheteDB.SaveChanges();
-
             }
             catch (Exception e)
             {
@@ -121,6 +120,9 @@ namespace Machete.Test
             Assert.IsNull(_person3.Worker);
             //Assert.IsInstanceOfType(_worker1.Person, typeof(Person));
         }
+        /// <summary>
+        /// Testing EF deduplication behavior
+        /// </summary>
         [TestMethod]
         public void DbSet_Worker_test_deduplication()
         {
