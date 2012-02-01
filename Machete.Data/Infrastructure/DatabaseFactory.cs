@@ -5,17 +5,25 @@ using System.Text;
 
 namespace Machete.Data.Infrastructure
 {
-public class DatabaseFactory : Disposable, IDatabaseFactory
-{
-    private MacheteContext dataContext;
-    public MacheteContext Get()
+    //
+    //
+    public interface IDatabaseFactory : IDisposable
     {
-        return dataContext ?? (dataContext = new MacheteContext());
+        MacheteContext Get();
     }
-    protected override void DisposeCore()
+    //
+    //
+    public class DatabaseFactory : Disposable, IDatabaseFactory
     {
-        if (dataContext != null)
-            dataContext.Dispose();
+        private MacheteContext dataContext;
+        public MacheteContext Get()
+        {
+            return dataContext ?? (dataContext = new MacheteContext());
+        }
+        protected override void DisposeCore()
+        {
+            if (dataContext != null)
+                dataContext.Dispose();
+        }
     }
-}
 }

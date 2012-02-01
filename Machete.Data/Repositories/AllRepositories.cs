@@ -8,15 +8,21 @@ using System.Data.Entity;
 
 namespace Machete.Data
 {
+    //
     // : RepositoryBase<Person> -- [ class-base ]
     //              the direct base class of the class being defined
     //                  if there is base class, then object is the base class
-    // , IPersonRepository -- [ interface-type ] 
+    // , IRepository<T> -- [ interface-type ] 
     //              defined a (weak) contract 
     //                  - which methods are available
     //                  - what their names are
     //                  - what types they take
     //                  - what types they return
+    //
+    /////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Interfaces referenced in Service layer 
+    //
     public interface IWorkerSigninRepository : IRepository<WorkerSignin> { }
     public interface IEmployerRepository : IRepository<Employer> { }
     public interface IWorkOrderRepository : IRepository<WorkOrder> { }
@@ -33,8 +39,7 @@ namespace Machete.Data
     public class WorkerSigninRepository : RepositoryBase<WorkerSignin>, IWorkerSigninRepository
     {
         private readonly IDbSet<WorkerSignin> dbset;
-        public WorkerSigninRepository(IDatabaseFactory databaseFactory)
-            : base(databaseFactory)
+        public WorkerSigninRepository(IDatabaseFactory databaseFactory) : base(databaseFactory)
         {
             dbset = base.DataContext.Set<WorkerSignin>();
         }
@@ -80,8 +85,7 @@ namespace Machete.Data
     {
         private readonly IDbSet<Worker> dbset;
         //private MacheteContext dataContext;
-        public WorkerRepository(IDatabaseFactory databaseFactory)
-            : base(databaseFactory)
+        public WorkerRepository(IDatabaseFactory databaseFactory) : base(databaseFactory)
         {
             dbset = base.DataContext.Set<Worker>();
         }
@@ -96,8 +100,7 @@ namespace Machete.Data
     public class WorkAssignmentRepository : RepositoryBase<WorkAssignment>, IWorkAssignmentRepository
     {
         private readonly IDbSet<WorkAssignment> dbset;
-        public WorkAssignmentRepository(IDatabaseFactory databaseFactory)
-            : base(databaseFactory)
+        public WorkAssignmentRepository(IDatabaseFactory databaseFactory) : base(databaseFactory)
         {
             dbset = base.DataContext.Set<WorkAssignment>();
         }

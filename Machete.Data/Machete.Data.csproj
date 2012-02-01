@@ -74,9 +74,6 @@
   <ItemGroup>
     <Compile Include="Infrastructure\DatabaseFactory.cs" />
     <Compile Include="Infrastructure\Disposable.cs" />
-    <Compile Include="Infrastructure\IDatabaseFactory.cs" />
-    <Compile Include="Infrastructure\IRepository.cs" />
-    <Compile Include="Infrastructure\IUnitOfWork.cs" />
     <Compile Include="Initialize\MacheteInitializer.cs" />
     <Compile Include="Infrastructure\RepositoryBase.cs" />
     <Compile Include="Infrastructure\UnitOfWork.cs" />
