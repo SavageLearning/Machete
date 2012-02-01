@@ -172,8 +172,6 @@
     <Compile Include="UnitTests\Controllers\EmployerControllerTests.cs" />
     <Compile Include="UnitTests\Controllers\WorkAssignmentControllerTests.cs" />
     <Compile Include="UnitTests\Controllers\WorkOrderControllerTests.cs" />
-    <Compile Include="UnitTests\DateTimeTests.cs" />
-    <Compile Include="UnitTests\LookupsTests.cs" />
     <Compile Include="UnitTests\Services\EmployerServiceUnitTests.cs" />
     <Compile Include="UnitTests\Services\WorkAassignmentServiceUnitTests.cs" />
     <Compile Include="UnitTests\Services\WorkerServiceUnitTests.cs" />
@@ -190,7 +188,6 @@
     <Compile Include="Records.cs" />
     <Compile Include="UnitTests\Services\ImageServiceUnitTests.cs" />
     <Compile Include="UnitTests\Services\PersonServiceUnitTests.cs" />
-    <Compile Include="IntegrationTests\Views\WorkerViewTests.cs" />
     <Compile Include="UnitTests\Services\WorkOrderServiceTests.cs" />
     <Compile Include="WebServer.cs" />
   </ItemGroup>

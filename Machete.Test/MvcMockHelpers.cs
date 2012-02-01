@@ -11,6 +11,8 @@ namespace Machete.Test
 {
     // Scott Hanselman's MvcMockHelper. 
     // http://www.hanselman.com/blog/ASPNETMVCSessionAtMix08TDDAndMvcMockHelpers.aspx
+    //
+    // Used in Machete Controller Unit Tests
     public static class MvcMockHelpers
     {
         public static HttpContextBase FakeHttpContext()

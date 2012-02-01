@@ -63,40 +63,5 @@ namespace Machete.Test
                         ii.dwccardnum.ToString().PadRight(11, ' '), ii.dateforsignin);
             }
         }
-
-        [TestMethod]
-        public void DbSet_TestMethod2()
-        {
-            //arrange
-            Database.SetInitializer<MacheteContext>(new MacheteInitializer());
-            MacheteContext DB = new MacheteContext();
-            var q = from s in DB.WorkerSignins.AsEnumerable()
-                    //join w in DB.Workers.AsEnumerable() on s.dwccardnum equals w.dwccardnum into outer
-                    //from o in outer.DefaultIfEmpty()
-                    //join p in DB.Persons.AsEnumerable() on o.ID equals p.ID
-                    select s;
-                   //select new WorkerSigninView()
-                   //{
-                   //    person = p,
-                   //    signin = s      
-                   //};
-            foreach (var i in q)
-            {
-            }
-        }
-
-        [TestMethod]
-        public void DbSet_TestMethod3()
-        {
-            Database.SetInitializer<MacheteContext>(new MacheteInitializer());
-            MacheteContext DB = new MacheteContext();
-            DB.Database.Delete();
-            DB.Database.Initialize(true);
-            var q = from p in DB.Persons.AsEnumerable()
-                    select p;
-            foreach (var i in q)
-            {
-            }
-        }
     }
 }
