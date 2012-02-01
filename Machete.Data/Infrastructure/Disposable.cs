@@ -29,8 +29,6 @@ namespace Machete.Data.Infrastructure
             isDisposed = true;
         }
 
-        protected virtual void DisposeCore()
-        {
-        }
+        protected virtual void DisposeCore() { }
     }
 }

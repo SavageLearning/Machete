@@ -5,6 +5,14 @@ using System.Text;
 
 namespace Machete.Data.Infrastructure
 {
+    //
+    //
+    public interface IUnitOfWork
+    {
+        void Commit();
+    }
+    //
+    //
     public class UnitOfWork : IUnitOfWork
     {
         private readonly IDatabaseFactory databaseFactory;
