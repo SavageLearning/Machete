@@ -48,7 +48,7 @@ namespace Machete.Test
             //Arrange
             MacheteDB.Database.Delete();
             MacheteDB.Database.Initialize(true);
-            Person _person = Records._person4;
+            Person _person = (Person)Records.person.Clone();
             _person.firstname2 = "PersonService_Intergation_CreatePerson";
 
             //

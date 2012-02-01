@@ -18,7 +18,7 @@ namespace Machete.Test.Data
         public void Initialize()
         {
             Database.SetInitializer<MacheteContext>(new TestInitializer());
-            this.MacheteDB = new MacheteContext();
+            MacheteDB = new MacheteContext();
         }
         /// <summary>
         /// Tests permissions to drop and re-create database
@@ -32,7 +32,7 @@ namespace Machete.Test.Data
             //Act
             try
             {
-                MacheteDB.Database.Initialize(true);
+                MacheteDB.Database.Initialize(true); // should be performed by TestInitializer
             }
             catch (Exception e)
             {
@@ -47,7 +47,6 @@ namespace Machete.Test.Data
         public void DbSet_Queryable_test()
         {
             // Arrange - load test records
-            MacheteDB.Database.Delete();
             Records.Initialize(MacheteDB);
             DbSet<WorkerSignin> dbset = MacheteDB.Set<WorkerSignin>();
             IQueryable<WorkerSignin> queryable = dbset.AsQueryable();     
@@ -81,7 +80,6 @@ namespace Machete.Test.Data
         public void DbSet_Enumerable_test()
         {
             // Arrange - load test records
-            MacheteDB.Database.Delete();
             Records.Initialize(MacheteDB);
             DbSet<WorkerSignin> dbset = MacheteDB.Set<WorkerSignin>();
             IEnumerable<WorkerSignin> enumerable = dbset.AsEnumerable();
