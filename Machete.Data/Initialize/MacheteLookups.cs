@@ -7,6 +7,9 @@ using System.Data.Entity;
 
 namespace Machete.Data
 {
+    // static -- [ class-modifier ]
+    //              cannot be instantiated, cannot be used as a type, can only contain
+    //              static members
     public static class MacheteLookup    {
         public static List<Lookup> cache {get {return _cache;} }
         private static List<Lookup> _cache = new List<Lookup>

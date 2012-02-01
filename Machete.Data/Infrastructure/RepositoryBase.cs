@@ -7,10 +7,27 @@ using Machete.Domain;
 
 namespace Machete.Data.Infrastructure
 {
-public abstract class RepositoryBase<T> where T : class
+// class-declaration is a type-declaration that declares a new class
+//
+// public   -- [ class-modifier ]
+//                  Access not limited
+// abstract -- [ class-modifier ]
+//                  class is incomplete; used as a base class.
+//                  cannot be instantiated directly
+//                  cannot be sealed
+// <T>      -- [ type parameter ]
+//                  placeholder for a type-argument supplied to created a 
+//                  constructed type
+//                  type-argument -- actual type when constructed
+public abstract class RepositoryBase<T> where T : class  //class declaration
 {
+    // private -- [ method-modifier ]
+    //             decorates a method, specifies its accessibility
+    //             Access limited to this class
     private MacheteContext dataContext;
     private readonly IDbSet<T> dbset;
+    // protected -- [ method-modifier ]
+    //                  Access limited to this class or classes derived from this class
     protected RepositoryBase(IDatabaseFactory databaseFactory)
     {
         DatabaseFactory = databaseFactory;
@@ -26,6 +43,12 @@ public abstract class RepositoryBase<T> where T : class
     {
         get { return dataContext ?? (dataContext = DatabaseFactory.Get()); }
     }
+    // virtual -- [ method-modifier ] 
+    //              runtime type of the instance determines implementation to invoke
+    // abstract -- [method-modifier] 
+    //              a virtual method with no implementation; only permitted in abstract classes
+    // non-virtual -- (Not virtual or Abstract)
+    //              compile-time type of the instance determines implem. to invoke             
     public virtual T Add(T entity)
     {
         return dbset.Add(entity);           

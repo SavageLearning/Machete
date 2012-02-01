@@ -17,14 +17,12 @@ namespace Machete.Test.Data
         [TestInitialize]
         public void Initialize()
         {
-            //var master = new DbContext("master");
-            //master.Database.ExecuteSqlCommand("ALTER DATABASE macheteDevTest SET OFFLINE WITH ROLLBACK IMMEDIATE; ALTER DATABASE macheteDevTest SET ONLINE; DROP DATABASE [macheteDevTest]");
             Database.SetInitializer<MacheteContext>(new TestInitializer());
             this.MacheteDB = new MacheteContext();
-            //MacheteDB.Database.ExecuteSqlCommand("USE master; ALTER DATABASE macheteDevTest SET OFFLINE WITH ROLLBACK IMMEDIATE; ALTER DATABASE macheteDevTest SET ONLINE; DROP DATABASE [macheteDevTest]");
-
         }
-
+        /// <summary>
+        /// Tests permissions to drop and re-create database
+        /// </summary>
         [TestMethod]
         public void DbSet_Initializer_create_machete()
         {
@@ -42,19 +40,71 @@ namespace Machete.Test.Data
             }
             
         }
-
-        //[TestMethod]
-        //public void DbSet_Queryable_test()
-        //{
-        //    Records.Initialize(MacheteDB);
-
-        //    var dbset = MacheteDB.Set<WorkerSignin>();
-        //    //var foo1 = dbset.Where(r => r.dwccardnum == 30040).AsQueryable();
-        //    DateTime datestr = DateTime.Today;
-        //    Func<WorkerSignin, bool> where = (r => r.dwccardnum == 30040 && EntityFunctions.DiffDays(r.dateforsignin, datestr) == 0 ? true : false);
-        //    var foo1 = dbset.AsQueryable().FirstOrDefault(where);
-        //    Assert.IsNotNull(foo1.ID);
-        //}
-
+        /// <summary>
+        /// Used with SQL Profiler to see what SQL is produced
+        /// </summary>
+        [TestMethod]
+        public void DbSet_Queryable_test()
+        {
+            // Arrange - load test records
+            MacheteDB.Database.Delete();
+            Records.Initialize(MacheteDB);
+            DbSet<WorkerSignin> dbset = MacheteDB.Set<WorkerSignin>();
+            IQueryable<WorkerSignin> queryable = dbset.AsQueryable();     
+            DateTime datestr = DateTime.Today;
+            // Act
+            queryable = queryable.Where(r => r.dwccardnum == 30040 && EntityFunctions.DiffDays(r.dateforsignin, datestr) == 0 ? true : false);           
+            WorkerSignin result = queryable.FirstOrDefault();
+            // Assert
+            Assert.IsNotNull(result.ID);
+            Assert.AreEqual(result.WorkerID, 1);
+            Assert.AreEqual(result.dwccardnum, 30040);
+            //exec sp_executesql N'SELECT TOP (1) 
+            //[Extent1].[ID] AS [ID], 
+            //[Extent1].[dwccardnum] AS [dwccardnum], 
+            //[Extent1].[WorkerID] AS [WorkerID], 
+            //[Extent1].[WorkAssignmentID] AS [WorkAssignmentID], 
+            //[Extent1].[dateforsignin] AS [dateforsignin], 
+            //[Extent1].[lottery_timestamp] AS [lottery_timestamp], 
+            //[Extent1].[datecreated] AS [datecreated], 
+            //[Extent1].[dateupdated] AS [dateupdated], 
+            //[Extent1].[Createdby] AS [Createdby], 
+            //[Extent1].[Updatedby] AS [Updatedby]
+            //FROM [dbo].[WorkerSignins] AS [Extent1]
+            //WHERE (CASE WHEN ((30040 = [Extent1].[dwccardnum]) AND (0 = (DATEDIFF (day, [Extent1].[dateforsignin], @p__linq__0)))) 
+            //THEN cast(1 as bit) ELSE cast(0 as bit) END) = 1',N'@p__linq__0 datetime2(7)',@p__linq__0='2011-10-31 00:00:00'
+        }
+        /// <summary>
+        /// Used with SQL profiler to see what SQL is produced
+        /// </summary>
+        [TestMethod]
+        public void DbSet_Enumerable_test()
+        {
+            // Arrange - load test records
+            MacheteDB.Database.Delete();
+            Records.Initialize(MacheteDB);
+            DbSet<WorkerSignin> dbset = MacheteDB.Set<WorkerSignin>();
+            IEnumerable<WorkerSignin> enumerable = dbset.AsEnumerable();
+            DateTime datestr = DateTime.Today;
+            // Act
+            enumerable = enumerable.Where(r => r.dwccardnum == 30040 && DateTime.Compare(r.dateforsignin.Date, datestr) == 0 ? true : false);
+            WorkerSignin result = enumerable.FirstOrDefault();
+            // Assert
+            Assert.IsNotNull(result.ID);
+            Assert.AreEqual(result.WorkerID, 1);
+            Assert.AreEqual(result.dwccardnum, 30040);
+            //SELECT 
+            //[Extent1].[ID] AS [ID], 
+            //[Extent1].[dwccardnum] AS [dwccardnum], 
+            //[Extent1].[WorkerID] AS [WorkerID], 
+            //[Extent1].[WorkAssignmentID] AS [WorkAssignmentID], 
+            //[Extent1].[dateforsignin] AS [dateforsignin], 
+            //[Extent1].[lottery_timestamp] AS [lottery_timestamp], 
+            //[Extent1].[datecreated] AS [datecreated], 
+            //[Extent1].[dateupdated] AS [dateupdated], 
+            //[Extent1].[Createdby] AS [Createdby], 
+            //[Extent1].[Updatedby] AS [Updatedby]
+            //FROM [dbo].[WorkerSignins] AS [Extent1]
+        }
     }
 }

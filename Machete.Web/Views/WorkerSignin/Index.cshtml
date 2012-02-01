@@ -6,7 +6,7 @@
     ViewBag.Title = WorkerSignins.indextitle;
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
 }
-@*<h2 class="print_off">@WorkerSignins.indextitle</h2>*@
+
 <div id="container">
         <div id="signinData" class="signinColumn" style="float: left;">
             <div class="print_off">
@@ -34,35 +34,6 @@
             }
             </div>
             <div id="signinTable">
-@*            <table id="myDataTable" class="display">
-                <thead>
-                <tr>
-                    <th class="print_off"></th>
-                    <th>@Worker.dwccardnum</th>
-                    <th>@Person.firstname1</th>
-                    <th class="print_off">@Person.firstname2</th>
-                    <th>@Person.lastname1</th>
-                    <th class="print_off">@Person.lastname2</th>
-                    <th class="print_off">@WorkerSignins.datesignin</th>
-                </tr>
-                </thead>
-                @foreach (var item in Model.workersignins)
-                {
-                    <tr>
-                        <td class="print_off">@Html.ActionLink(@WorkerSignins.deletelink,
-                                             "Delete",
-                                             new { id = item.signinID },
-                                             new { @class = "confirm_delete" })
-                        </td>
-                        <td>@item.dwccardnum</td>
-                        <td>@item.firstname1</td>
-                        <td class="print_off">@item.firstname2</td>
-                        <td>@item.lastname1</td>
-                        <td class="print_off">@item.lastname2</td>
-                        <td class="print_off">@String.Format("{0:MM/dd/yyyy}", item.dateforsignin)</td>
-                    </tr>
-                }
-            </table>*@
             <table id="wsiTable" class="display">
                 <thead>
                     <tr>
@@ -77,25 +48,8 @@
             </table>
             </div>
         </div>
-        <div id="signinImage" class="mui-signin-imagebox print_off">
-@*            <p>
-            @Html.Encode(WorkerSignins.expirationdate + String.Format("{0:mm/dd/yyyy}", Model.last_chkin_memberexpirationdate.ToString()))
-            </p>
-            @if (Model.memberexpired)
-            {
-                <div style="color: red;">
-                <p><strong>@Html.Encode(WorkerSignins.membershipexpiredmessage)</strong></p>
-                </div>
-            }
-            @if (Model.last_chkin_image.ImageData == null)
-            {
-                <p>
-                    @Html.Label(WorkerSignins.noimage)
-                </p>
-            }*@
-        
-        <img id="wsiImage" src="/Content/images/NO-IMAGE-AVAILABLE.jpg" alt="" style="width: 200px"/>
-            
+        <div id="signinImage" class="mui-signin-imagebox print_off">       
+            <img id="wsiImage" src="/Content/images/NO-IMAGE-AVAILABLE.jpg" alt="" style="width: 200px"/>            
         </div>
 </div>
 <div id="signin-red-dialog">
@@ -105,69 +59,82 @@
 
 <script type="text/javascript">
     $().ready(function () {
-        DatePicker();
-        SigninFocus();
-        $('#signin-red-dialog').hide();
-        //MyTable();
-        $('.confirm_delete').click(function (event) { Confirm_button(event, this); });
-        $('#wsiTable').dataTable({
-                    "bPaginate": true,
-                    "bLengthChange": true,
-                    "bAutoWidth": false,
-                    "bServerSide": true,
-                    "bInfo": true,
-                    "bSort": true,
-                    "bFilter": true,
-                    "sAjaxSource": "/WorkerSignin/AjaxHandler",
-                    "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
-                    "bProcessing": true,
-                    "iDisplayLength": -1,
-                    "aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "@WorkerSignins.allrecords"]],
-                    "aoColumns": [
-                        {mDataProp: "recordid", sClass: "print_off confirm_delete"},
-                        {mDataProp: "dwccardnum"},
-                        {mDataProp: "expirationDate", sClass: "print_off"},
-                        {mDataProp: "memberStatus", sClass: "print_off"},
-                        {mDataProp: "fullname"},
-                        {mDataProp: "dateforsigninstring", sClass: "print_off"}
-                    ],
-                    "fnServerData": function ( sSource, aoData, fnCallback ) {
-			            /* Add some extra data to the sender */
-			            aoData.push( { "name": "todaysdate", "value": $('#dateforsignin').val() } );
-			            $.getJSON( sSource, aoData, function (json) { 
-				            /* Do whatever additional processing you want on the callback, then tell DataTables */
-				            fnCallback(json)
-			            } );
-		            },
-                    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                        $(nRow).attr('ID', "wsiRec" +aData['recordid']);
-                        $(nRow).find('td:first-child').html('<a href="/WorkerSignin/delete/'+aData['recordid']+'">Delete</a>');
-                        if (aData['imageID']) {
-                            $(nRow).attr('imageRef', "/Image/GetImage/" + aData['imageID']);
-                        } else {
-                            $(nRow).attr('imageRef', "/Content/images/NO-IMAGE-AVAILABLE.jpg");
-                        }
-                        $(nRow).addClass('statusBlue');
-                        if (aData['memberInactive'] || aData['memberExpired']) { 
-                            $(nRow).removeClass('statusBlue');
-                            $(nRow).addClass('statusYellow');
-                        } 
-                        if (aData['memberSanctioned'] || aData['memberExpelled']) {
-                            $(nRow).removeClass('statusBlue');
-                            $(nRow).removeClass('statusYellow');
-                            $(nRow).addClass('statusRed');
-                        } 
-                        return nRow;
-                    }
+        //
+        //
+        $('.ui-datepicker').datepicker({
+            dateFormat: 'mm/dd/yy',
+            buttonImage: '@Url.Content("~/Content/calendar.gif")',
+            buttonImageOnly: true,
+            showOn: "button",
+            onClose: function () { SigninFocus(); }
         });
+        //
+        //
+        $('#dwccardentry').focus();
+        $('#signin-red-dialog').hide();
+        $('.confirm_delete').click(function (event) { Confirm_button(event, this); });
+        //
+        //
+        $('#wsiTable').dataTable({
+            "bPaginate": true,
+            "bLengthChange": true,
+            "bAutoWidth": false,
+            "bServerSide": true,
+            "bInfo": true,
+            "bSort": true,
+            "bFilter": true,
+            "sAjaxSource": "/WorkerSignin/AjaxHandler",
+            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "bProcessing": true,
+            "iDisplayLength": -1,
+            "aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "@WorkerSignins.allrecords"]],
+            "aoColumns": [
+                {mDataProp: "recordid", sClass: "print_off confirm_delete"},
+                {mDataProp: "dwccardnum"},
+                {mDataProp: "expirationDate", sClass: "print_off"},
+                {mDataProp: "memberStatus", sClass: "print_off"},
+                {mDataProp: "fullname"},
+                {mDataProp: "dateforsigninstring", sClass: "print_off"}
+            ],
+            "fnServerData": function ( sSource, aoData, fnCallback ) {
+			    /* Add some extra data to the sender */
+			    aoData.push( { "name": "todaysdate", "value": $('#dateforsignin').val() } );
+			    $.getJSON( sSource, aoData, function (json) { 
+				    /* Do whatever additional processing you want on the callback, then tell DataTables */
+				    fnCallback(json)
+			    } );
+		    },
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $(nRow).attr('ID', "wsiRec" +aData['recordid']);
+                $(nRow).find('td:first-child').html('<a href="/WorkerSignin/delete/'+aData['recordid']+'">Delete</a>');
+                if (aData['imageID']) {
+                    $(nRow).attr('imageRef', "/Image/GetImage/" + aData['imageID']);
+                } else {
+                    $(nRow).attr('imageRef', "/Content/images/NO-IMAGE-AVAILABLE.jpg");
+                }
+                $(nRow).addClass('statusBlue');
+                if (aData['memberInactive'] || aData['memberExpired']) { 
+                    $(nRow).removeClass('statusBlue');
+                    $(nRow).addClass('statusYellow');
+                } 
+                if (aData['memberSanctioned'] || aData['memberExpelled']) {
+                    $(nRow).removeClass('statusBlue');
+                    $(nRow).removeClass('statusYellow');
+                    $(nRow).addClass('statusRed');
+                } 
+                return nRow;
+            }
+        });
+        //
+        //
         $('.dataTables_length, .dataTables_filter, .dataTables_info, #wsiTable_previous, #wsiTable_next').addClass('print_off');
-//        $('').addClass('print_off');
-//        $('').addClass('print_off');
         $('#wsiTable tbody').bind('dblclick', function(e) {
             console.log('d-click');
             var $node = $(e.target.parentNode);
             $('#wsiImage').attr('src', $node.attr('imageRef'));
         });
+        //
+        //
         $('#signinForm').submit(function(e) {
             var form = this;
             e.preventDefault();
@@ -188,34 +155,6 @@
             }    
         });
     });
-    function DatePicker() {
-        $('.ui-datepicker').datepicker({
-            dateFormat: 'mm/dd/yy',
-            buttonImage: '@Url.Content("~/Content/calendar.gif")',
-            buttonImageOnly: true,
-            showOn: "button",
-            onClose: function () { SigninFocus(); }
-        });
-    }
-    function SigninFocus() {
-        $('#dwccardentry').focus();
-    }
-//    function MyTable() {
-//        $('#myDataTable').dataTable({
-//            "bPaginate": true,
-//            "bLengthChange": true,
-//            "bFilter": true,
-//            "bSort": true,
-//            "bInfo": true,
-//            "bAutoWidth": false,
-//            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
-//            "iDisplayLength": -1,
-//            "aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "@WorkerSignins.allrecords"]]
-//        });
-//        $('.dataTables_length').addClass('print_off');
-//        $('.dataTables_filter').addClass('print_off');
-//        $('.dataTables_info').addClass('print_off');
-//    }
     function Confirm_button(e, t) {
         e.preventDefault();
         var theHref =  $(t).attr('href');
@@ -225,6 +164,6 @@
                      function (r) {
                          if (r == true) { window.location = theHref; }
                      });
-                     return false;
+        return false;
     }
 </script>
