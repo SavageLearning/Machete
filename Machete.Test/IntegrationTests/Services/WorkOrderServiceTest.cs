@@ -51,7 +51,7 @@ namespace Machete.Test
             Records.Initialize(new MacheteContext());
             WorkerCache.Initialize(new MacheteContext());
             LookupCache.Initialize(new MacheteContext());
-            Lookups.Initialize(LookupCache.getCache());
+            Lookups.Initialize();
             dbFactory = new DatabaseFactory();
             woRepo = new WorkOrderRepository(dbFactory);
             uow = new UnitOfWork(dbFactory);
