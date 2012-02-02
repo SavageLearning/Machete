@@ -34,12 +34,12 @@ namespace Machete.Test
         {
             //Arrange
 
-            Person _person1 = (Person)Records.person.Clone();
-            Worker _worker1 = (Worker)Records.worker.Clone();
-            _worker1.Person = _person1;
-            _person1.firstname2 = "Worker_add_simple_record";
-            _worker1.height = "Worker_add_simple_record";
-            MacheteDB.Workers.Add(_worker1);
+            Person _p = (Person)Records.person.Clone();
+            Worker _w = (Worker)Records.worker.Clone();
+            _w.Person = _p;
+            _p.firstname2 = "Worker_add_simple_record";
+            _w.height = "Worker_add_simple_record";
+            MacheteDB.Workers.Add(_w);
             //Act
             try
             {
@@ -57,52 +57,52 @@ namespace Machete.Test
                 ex.GetType(), Domain.Entities.RootException.Get(ex, "WorkerTests")));
             }
             //Assert
-            Assert.IsNotNull(_person1.Worker);
-            Assert.IsNotNull(_worker1.Person);
-            Assert.IsInstanceOfType(_worker1.Person, typeof(Person));
-            Assert.IsInstanceOfType(_person1.Worker, typeof(Worker));
-            Assert.IsTrue(_person1.ID == 1);
-            Assert.IsTrue(_worker1.ID == 1);
+            Assert.IsNotNull(_p.Worker);
+            Assert.IsNotNull(_w.Person);
+            Assert.IsInstanceOfType(_w.Person, typeof(Person));
+            Assert.IsInstanceOfType(_p.Worker, typeof(Worker));
+            Assert.IsTrue(_p.ID == 1);
+            Assert.IsTrue(_w.ID == 1);
         }
         /// <summary>
         /// Testing when Ef commits and the resulting order
         /// </summary>
         [TestMethod]
-        public void DbSet_Worker_verify_identity_assignment_order()
+        public void DbSet_w_verify_identity_assignment_order()
         {
             //
             //Arrange
             // Person1
-            Person _person1 = (Person)Records.person.Clone();
-            _person1.ID = 1;
-            _person1.firstname2 = "Worker_add_multiple_persons_workers";
+            Person _p1 = (Person)Records.person.Clone();
+            _p1.ID = 1;
+            _p1.firstname2 = "Worker_add_multiple_ps_ws";
             // Person 2
-            Person _person2 = (Person)Records.person.Clone();
-            _person2.ID = 3;
-            _person2.firstname2 = "Worker_add_multiple_persons_workers";
+            Person _p2 = (Person)Records.person.Clone();
+            _p2.ID = 3;
+            _p2.firstname2 = "Worker_add_multiple_ps_ws";
             // Person 3
-            Person _person3 = (Person)Records.person.Clone();
-            _person3.ID = 2;
-            _person3.firstname2 = "Worker_add_multiple_persons_workers";
+            Person _p3 = (Person)Records.person.Clone();
+            _p3.ID = 2;
+            _p3.firstname2 = "Worker_add_multiple_ps_ws";
             // Worker 1
-            Worker _worker1 = (Worker)Records.worker.Clone();
-            _worker1.ID = 1;
-            _worker1.height = "Worker_add_multiple_persons_workers";
+            Worker _w1 = (Worker)Records.worker.Clone();
+            _w1.ID = 1;
+            _w1.height = "Worker_add_multiple_ps_ws";
             // Worker 2
-            Worker _worker2 = (Worker)Records.worker.Clone();
-            _worker2.ID = 3;
-            _worker2.height = "Worker_add_multiple_persons_workers";
+            Worker _w2 = (Worker)Records.worker.Clone();
+            _w2.ID = 3;
+            _w2.height = "Worker_add_multiple_ps_ws";
 
-            _person2.Worker = _worker2;
-            _person1.Worker = _worker1;
-            MacheteDB.Persons.Add(_person1);
-            MacheteDB.Persons.Add(_person3);
+            _p2.Worker = _w2;
+            _p1.Worker = _w1;
+            MacheteDB.Persons.Add(_p1);
+            MacheteDB.Persons.Add(_p3);
             //
             //Act
             try
             {
                 MacheteDB.SaveChanges();
-                MacheteDB.Persons.Add(_person2);
+                MacheteDB.Persons.Add(_p2);
                 MacheteDB.SaveChanges();
             }
             catch (Exception e)
@@ -112,12 +112,12 @@ namespace Machete.Test
             }
             //
             //Assert
-            Assert.IsTrue(_person1.ID == 1);
-            Assert.IsTrue(_person2.ID == 3);
-            Assert.IsNotNull(_person1.Worker);
-            Assert.IsNotNull(_person2.Worker);
-            Assert.IsNull(_person3.Worker);
-            //Assert.IsInstanceOfType(_worker1.Person, typeof(Person));
+            Assert.IsTrue(_p1.ID == 1);
+            Assert.IsTrue(_p2.ID == 3);
+            Assert.IsNotNull(_p1.Worker);
+            Assert.IsNotNull(_p2.Worker);
+            Assert.IsNull(_p3.Worker);
+            //Assert.IsInstanceOfType(_w1.Person, typeof(Person));
         }
         /// <summary>
         /// Testing EF deduplication behavior
@@ -128,22 +128,22 @@ namespace Machete.Test
             int reccount = 0;
             //
             //Arrange
-            Person _person2 = (Person)Records.person.Clone();
-            _person2.ID = 0;
-            Worker _worker2 = Records._worker2;
-            _worker2.ID = 0;
-            _person2.firstname2 = "Worker_test_deduplication";
-            _worker2.height = "Worker_test_deduplication";
-            _worker2.Person = _person2;
+            Person _p = (Person)Records.person.Clone();
+            _p.ID = 0;
+            Worker _w = (Worker)Records.worker.Clone();
+            _w.ID = 0;
+            _p.firstname2 = "Worker_test_deduplication";
+            _w.height = "Worker_test_deduplication";
+            _w.Person = _p;
             //
             //Act
             try
             {
-                MacheteDB.Workers.Add(_worker2);
-                MacheteDB.Persons.Add(_person2);
-                MacheteDB.Persons.Add(_person2);
+                MacheteDB.Workers.Add(_w);
+                MacheteDB.Persons.Add(_p);
+                MacheteDB.Persons.Add(_p);
                 MacheteDB.SaveChanges();
-                reccount = MacheteDB.Persons.Count(n => n.firstname1 == _person2.firstname1);
+                reccount = MacheteDB.Persons.Count(n => n.firstname1 == _p.firstname1);
             }
             catch (Exception e)
             {

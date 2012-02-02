@@ -61,6 +61,8 @@ namespace Machete.Test
             WorkerCache.Initialize(new MacheteContext());
             LookupCache.Initialize(new MacheteContext());
             Lookups.Initialize(LookupCache.getCache());
+            //
+            //
             dbFactory = new DatabaseFactory();
             waRepo = new WorkAssignmentRepository(dbFactory);
             woRepo = new WorkOrderRepository(dbFactory);
@@ -269,49 +271,6 @@ namespace Machete.Test
         {
             var result = waServ.GetSummary("");
             Assert.IsNotNull(result, "Person.ID is Null");
-        }
-
-        [TestMethod]
-        public void Integration_WA_Service_GetSummary2()
-        {
-            //
-            //Arrange
-
-            //
-            //Act
-            var woresults = woServ.GetSummary(DateTime.Today.ToShortDateString());
-            var waresults = waServ.GetSummary(DateTime.Today.ToShortDateString());
-
-            var joined = woServ.GetSummary(DateTime.Today.ToShortDateString()).Join(waServ.GetSummary(DateTime.Today.ToShortDateString()),
-                                        wo => new {wo.date, wo.status},
-                                        wa => new {wa.date, wa.status},
-                                        (wo, wa) => new
-                                        {
-                                            wo.date,
-                                            wo.status,
-                                            wo_count = wo.count,
-                                            wa_count = wa.count
-                                        }).OrderBy(a => a.date)
-                        .GroupBy(gb => gb.date)
-                        .Select(g => new { 
-                            date = g.Key,
-                            pending_wo = g.Where(c => c.status == 43).Sum(d => d.wo_count),
-                            pending_wa = g.Where(c => c.status == 43).Sum(d => d.wa_count),
-                            active_wo = g.Where(c => c.status == 42).Sum(d => d.wo_count),
-                            active_wa = g.Where(c => c.status == 42).Sum(d => d.wa_count),
-                            completed_wo = g.Where(c => c.status == 44).Sum(d => d.wo_count),
-                            completed_wa = g.Where(c => c.status == 44).Sum(d => d.wa_count),
-                            cancelled_wo = g.Where(c => c.status == 45).Sum(d => d.wo_count),
-                            cancelled_wa = g.Where(c => c.status == 45).Sum(d => d.wa_count),
-                            expired_wo = g.Where(c => c.status == 46).Sum(d => d.wo_count),
-                            expired_wa = g.Where(c => c.status == 46).Sum(d => d.wa_count)
-                        });
-
-
-            //
-            //Assert
-            Assert.IsNotNull(joined, "Person.ID is Null");
-            //Assert.IsTrue(_person.ID == 1);
         }
     }
 }
