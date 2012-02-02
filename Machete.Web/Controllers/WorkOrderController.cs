@@ -45,17 +45,7 @@ namespace Machete.Web.Controllers
             this._waServ = workAssignmentService;
             this._wrServ = requestService;
         }
-        //protected override void Initialize(RequestContext requestContext)
-        //{
-        //    base.Initialize(requestContext);
-
-        //    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
-        //    ViewBag.EmplrReferences = Lookups.emplrreference(CI.TwoLetterISOLanguageName);
-        //    ViewBag.TypesOfWork = Lookups.typeOfWork(CI.TwoLetterISOLanguageName);
-        //    ViewBag.TransportMethods = Lookups.transportmethod(CI.TwoLetterISOLanguageName);
-        //    ViewBag.woStatuses = Lookups.orderstatus(CI.TwoLetterISOLanguageName);
-        //    ViewBag.languages = Lookups.language(CI.TwoLetterISOLanguageName);
-        //}
+ 
         #region Index
         //
         // GET: /WorkOrder/

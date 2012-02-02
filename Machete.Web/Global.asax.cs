@@ -89,7 +89,7 @@ namespace Machete.Web
             Database.SetInitializer<MacheteContext>(new MacheteInitializer());
             LookupCache.Initialize(new MacheteContext());
             WorkerCache.Initialize(new MacheteContext());
-            Lookups.Initialize(LookupCache.getCache());
+            Lookups.Initialize();
         }
 
         private IUnityContainer GetUnityContainer()

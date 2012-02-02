@@ -113,16 +113,10 @@ namespace Machete.Data
                 new Lookup { ID=96, category = "memberstatus", text_EN="Expired",       text_ES="Expirado",         selected = false },
                 new Lookup { ID=97, category = "memberstatus", text_EN="Expelled",      text_ES="Expulsado",       selected = false }
 
-                //last used 87
+                //last used 97
             };
-        public static int getID(MacheteContext DB, string category, string text)
-        {
-            int count;
-            count = DB.Lookups.Where(s => s.category == category && s.text_EN == text).Count();
-            if (count > 0)
-            return DB.Lookups.SingleOrDefault(s => s.category == category && s.text_EN == text).ID;
-            return 0;
-        }
+        //
+        //
         public static void Initialize(MacheteContext context) {
             _cache.ForEach(u => context.Lookups.Add(u));
             context.SaveChanges();

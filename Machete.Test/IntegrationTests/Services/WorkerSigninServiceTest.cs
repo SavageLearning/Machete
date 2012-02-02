@@ -56,7 +56,7 @@ namespace Machete.Test
             Records.Initialize(DB);
             WorkerCache.Initialize(DB);
             LookupCache.Initialize(DB);
-            Lookups.Initialize(LookupCache.getCache());
+            Lookups.Initialize();
             _dbFactory = new DatabaseFactory();
             _iRepo = new ImageRepository(_dbFactory);
             _wRepo = new WorkerRepository(_dbFactory);
