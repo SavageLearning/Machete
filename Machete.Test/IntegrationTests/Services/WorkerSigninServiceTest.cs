@@ -111,18 +111,17 @@ namespace Machete.Test
         [TestMethod]
         public void DbSet_WorkerSigninService_Integration_GetIndexView_record_unknown_worker()
         {
-            //
             //            
-            var _signin = new WorkerSignin();
-            _signin.dwccardnum = 42420;
+            WorkerSignin _signin = new WorkerSignin();
+            int cardnum = 30040;
+            Worker _w = _wServ.GetWorkerByNum(cardnum);
+            _signin.dwccardnum = cardnum;
             _signin.dateforsignin = DateTime.Today;
-            _wsiServ.CreateWorkerSignin(_signin, "TestUser");
-            _dOptions.search = "42420";
-            //
+            _wsiServ.CreateWorkerSignin(_signin, "TestUser");            
+            _dOptions.search = _w.dwccardnum.ToString();
             //            
             ServiceIndexView<WorkerSigninView> result = _wsiServ.GetIndexView(_dOptions);
             List<WorkerSigninView> tolist = result.query.ToList();
-            //
             //
             Assert.AreEqual(1, result.filteredCount);
         }

@@ -52,7 +52,7 @@ namespace Machete.Service
         private static Regex isTimeSpecific = new Regex(@"^\s*\d{1,2}[\/-_]\d{1,2}[\/-_]\d{2,4}\s+\d{1,2}:\d{1,2}");
         private static Regex isDaySpecific = new Regex(@"^\s*\d{1,2}\/\d{1,2}\/\d{2,4}");
         private static Regex isMonthSpecific = new Regex(@"^\s*\d{1,2}\/\d{4,4}");
-        //private static Regex isYearSpecific = new Regex("(?<=%download%#)\\d+");
+        //
         //
         private Logger log = LogManager.GetCurrentClassLogger();
         private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "WorkOrderService", "");
@@ -63,7 +63,7 @@ namespace Machete.Service
         /// <param name="woRepo"></param>
         /// <param name="unitOfWork"></param>
         public WorkOrderService(IWorkOrderRepository woRepo, 
-                               IWorkAssignmentService waServ,
+                                IWorkAssignmentService waServ,
                                 IUnitOfWork unitOfWork)
         {
             this.woRepo = woRepo;
@@ -71,7 +71,7 @@ namespace Machete.Service
             this.unitOfWork = unitOfWork;            
         }
         /// <summary>
-        /// 
+        /// Gets all orders
         /// </summary>
         /// <returns></returns>
         public IEnumerable<WorkOrder> GetWorkOrders()
@@ -79,7 +79,7 @@ namespace Machete.Service
             return GetWorkOrders(null);
         }
         /// <summary>
-        /// 
+        /// Get all orders for a specific Employer, or all orders if null
         /// </summary>
         /// <param name="empID"></param>
         /// <returns></returns>
@@ -105,10 +105,15 @@ namespace Machete.Service
             var workOrder = woRepo.GetById(id);
             return workOrder;
         }
-
+        /// <summary>
+        /// Gets active orders for a given day. Active and assigned OR all active
+        /// </summary>
+        /// <param name="date">filter for the date</param>
+        /// <param name="assignedOnly">filter to only orders with fully assigned jobs</param>
+        /// <returns></returns>
         public IEnumerable<WorkOrder> GetActiveOrders(DateTime date, bool assignedOnly)
         {
-            //TODO should make statuses strongly typed (42 == active)
+            //TODO: should make statuses strongly typed (42 == active)
             // I will rot in hell for hardcoding this value -- matches the Lookups table 
             // for active orderstatus
             IQueryable<WorkOrder> query = woRepo.GetAllQ();
@@ -131,7 +136,12 @@ namespace Machete.Service
             }
             return final;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public int CompleteActiveOrders(DateTime date, string user)
         {
             IEnumerable<WorkOrder> list = this.GetActiveOrders(date, true);
@@ -314,8 +324,12 @@ namespace Machete.Service
             log.Log(levent);
         }
         #endregion
-        ///
-        ///
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="search"></param>
+        /// <returns></returns>
         private IQueryable<WorkOrder> filterDateTimeOfWork(IQueryable<WorkOrder> query, string search)
         {
 

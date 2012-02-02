@@ -16,7 +16,7 @@ namespace Machete.Test
     [TestClass]
     public class PersonServiceTest
     {
-        PersonRepository _personRepo;
+        PersonRepository _pRepo;
         DatabaseFactory _dbFactory;
         PersonService _service;
         IUnitOfWork _unitofwork;
@@ -36,9 +36,9 @@ namespace Machete.Test
             Database.SetInitializer<MacheteContext>(new TestInitializer());
             this.MacheteDB = new MacheteContext();
             _dbFactory = new DatabaseFactory();
-            _personRepo = new PersonRepository(_dbFactory);
+            _pRepo = new PersonRepository(_dbFactory);
             _unitofwork = new UnitOfWork(_dbFactory);
-            _service = new PersonService(_personRepo, _unitofwork);
+            _service = new PersonService(_pRepo, _unitofwork);
         }
 
         [TestMethod]
@@ -64,41 +64,41 @@ namespace Machete.Test
         // CreatePerson calls DbSet.Add() and  Context.SaveChanges()
         //    This leads to duplication
         //
-        //[TestMethod]
-        //public void DbSet_PersonService_Intergation_CreatePersons_NoDuplicate()
-        //{
-        //    int reccount = 0;
-        //    //
-        //    //Arrange
-        //    MacheteDB.Database.Delete();
-        //    MacheteDB.Database.Initialize(true);
-        //    Person _person4 = Records._person4;
-        //    _person4.firstname2 = "PersonService_Int_CrePer_NoDuplicate";
-        //    //
-        //    //Act
-        //    try
-        //    {
-        //        _service.CreatePerson(_person4, "UnitTest");
-        //        _service.CreatePerson(_person4, "UnitTest");
-        //        _service.CreatePerson(_person4, "UnitTest");
-        //        reccount = MacheteDB.Persons.Count(n => n.firstname1 == _person4.firstname1);
-        //    }
-        //    catch (DbEntityValidationException ex)
-        //    {
-        //        Assert.Fail(string.Format("Validation exception for field {0} caught: {1}",
-        //            ex.EntityValidationErrors.First().ValidationErrors.First().PropertyName,
-        //            ex.EntityValidationErrors.First().ValidationErrors.First().ErrorMessage));
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Assert.Fail(string.Format("Unexpected exception of type {0} caught: {1}",
-        //        ex.GetType(), ex.Message));
-        //    }
-        //    //
-        //    //Assert
-        //    Assert.IsNotNull(_person4.ID);
-        //    Assert.IsTrue(reccount == 1, "Expected record count of 1, received {0}", reccount);
-      
-        //}
+        [TestMethod]
+        public void DbSet_PersonService_Intergation_CreatePersons_TestDuplicateBehavior()
+        {
+            int reccount = 0;
+            //
+            //Arrange
+            MacheteDB.Database.Delete();
+            MacheteDB.Database.Initialize(true);
+            Person _p = (Person)Records.person.Clone();
+            _p.firstname2 = "PersonService_Int_CrePer_NoDuplicate";
+            //
+            //Act
+            try
+            {
+                _service.CreatePerson(_p, "UnitTest");
+                _service.CreatePerson(_p, "UnitTest");
+                _service.CreatePerson(_p, "UnitTest");
+                reccount = MacheteDB.Persons.Count(n => n.firstname1 == _p.firstname1);
+            }
+            catch (DbEntityValidationException ex)
+            {
+                Assert.Fail(string.Format("Validation exception for field {0} caught: {1}",
+                    ex.EntityValidationErrors.First().ValidationErrors.First().PropertyName,
+                    ex.EntityValidationErrors.First().ValidationErrors.First().ErrorMessage));
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(string.Format("Unexpected exception of type {0} caught: {1}",
+                ex.GetType(), ex.Message));
+            }
+            //
+            //Assert
+            Assert.IsNotNull(_p.ID);
+            Assert.IsTrue(reccount == 3, "Expected record count of 3, received {0}", reccount);
+
+        }
     }
 }

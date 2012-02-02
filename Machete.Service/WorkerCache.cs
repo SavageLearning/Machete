@@ -34,6 +34,12 @@ namespace Machete.Service
             cache.Set(wCacheItem, policy);
             //DB.Dispose();
         }
+        private static void FillCache(MacheteContext db)
+        {
+            DB = db;
+            FillCache();
+        }
+
         public static IEnumerable<Worker> getCache()
         {
             CacheItem wCacheItem = cache.GetCacheItem("workerCache");
@@ -43,6 +49,10 @@ namespace Machete.Service
                 wCacheItem = cache.GetCacheItem("workerCache");
             }
             return wCacheItem.Value as IEnumerable<Worker>;
+        }
+        public static void Refresh(MacheteContext db)
+        {
+            FillCache(db);            
         }
         //public static IEnumerable<Worker> getCache(Func<Worker, bool> where)
         //{

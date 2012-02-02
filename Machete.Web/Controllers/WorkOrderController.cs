@@ -311,7 +311,8 @@ namespace Machete.Web.Controllers
             return View(workOrder);
         }
         //
-        //
+        // GroupView -- Creates the view to print all orders for a given day
+        //              assignedOnly: only shows orders that are fully assigned
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult GroupView(DateTime date, bool? assignedOnly)
         {

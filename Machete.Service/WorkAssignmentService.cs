@@ -20,7 +20,6 @@ namespace Machete.Service
         IEnumerable<WorkAssignment> GetMany(Func<WorkAssignment, bool> where);
         IQueryable<WorkAssignment> GetManyQ(Func<WorkAssignment, bool> where);
         IQueryable<WorkAssignment> GetManyQ();
-        //IEnumerable<WorkAssignment> GetManyByWO(int woID);
         IQueryable<WorkAssignmentSummary> GetSummary(string search);
         WorkAssignment Get(int id);
         WorkAssignment Create(WorkAssignment workAssignment, string user);

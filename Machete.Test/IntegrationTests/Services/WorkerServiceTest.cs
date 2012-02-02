@@ -26,86 +26,68 @@ namespace Machete.Test
             //Database.SetInitializer<MacheteContext>(new MacheteInitializer());
         }
 
-
         [TestInitialize]
         public void TestInitialize()
         {
             Database.SetInitializer<MacheteContext>(new TestInitializer());
             this.MacheteDB = new MacheteContext();
+            MacheteDB.Database.Delete();
+            MacheteDB.Database.Initialize(true);
             _dbFactory = new DatabaseFactory();
             _workerRepo = new WorkerRepository(_dbFactory);
             _unitofwork = new UnitOfWork(_dbFactory);
             _service = new WorkerService(_workerRepo, _unitofwork);
         }
-
+        /// <summary>
+        /// Create a worker record from the Worker Service
+        /// </summary>
         [TestMethod]
-        public void DbSet_WorkerService_Intergation_CreateWorker()
+        public void Integration_Worker_Service_CreateWorker()
         {
             //
             //Arrange
-            MacheteDB.Database.Delete();
-            MacheteDB.Database.Initialize(true);
-            Worker _worker3 = (Worker)Records.worker.Clone();
-            Person _person3 = (Person)Records.person.Clone();
-            _person3.firstname2 = "WorkerService_Intergation_CreateWorker";
-            _worker3.height = "WorkerService_Intergation_CreateWorker";
-            _worker3.Person = _person3;
+            Worker _w = (Worker)Records.worker.Clone();
+            Person _p = (Person)Records.person.Clone();
+            _p.firstname2 = "WorkerService_Intergation_CreateWorker";
+            _w.height = "WorkerService_Intergation_CreateWorker";
+            _w.Person = _p;
             //
             //Act
-            _service.CreateWorker(_worker3, "UnitTest");
-
+            _service.CreateWorker(_w, "UnitTest");
             //
             //Assert
-            Assert.IsNotNull(_worker3.ID, "Worker.ID is Null");
-            //Assert.IsTrue(Records._person3.ID == 1, "Record did not have expected ID");
-            Assert.IsTrue(_worker3.ID == _person3.ID, "Worker.ID doesn't match Person.ID");
+            Assert.IsNotNull(_w.ID, "Worker.ID is Null");
+            Assert.IsTrue(_p.ID == 1, "Record did not have expected ID");
+            Assert.IsTrue(_w.ID == _p.ID, "Worker.ID doesn't match Person.ID");
         }
-        //[TestMethod]
-        //[ExpectedException(typeof(MissingReferenceException))]
-        //public void DbSet_WorkerService_Intergation_Detect_Missing_Person_Reference()
-        //{
-        //    //
-        //    //Arrange
-        //    MacheteDB.Database.Delete();
-        //    MacheteDB.Database.Initialize(true);
-        //    Person _person = (Person)Records.person.Clone();
-        //    Worker _worker = (Worker)Records.worker.Clone();
-        //    _person.Worker = _worker;
-        //    _person.firstname2 = "wServ_Int_Detect_Missing_Person_Ref";
-        //    _worker.height = "blah";
-        //    //
-        //    //Act
-        //    _service.CreateWorker(_worker, "UnitTest");
-        //    //
-        //    //Assert
-        //}
-        //
-        // Service level is calling commit...blew up this test. not touching now..
-        //[TestMethod]
-        //public void DbSet_WorkerService_Intergation_CreateWorkers_Duplicates()
-        //{
-        //    int reccount = 0;
-        //    //
-        //    //Arrange
-        //    MacheteDB.Database.Delete();
-        //    MacheteDB.Database.Initialize(true);
-        //    Worker _worker3 = Records._worker3;
-        //    Person _person3 = Records._person3;
-        //    _person3.firstname2 = "wServ_Int_CreateWorkers_NoDuplicate";
-        //    _worker3.height = "blah";
- 
-        //    if (_worker3.Person  == null) 
-        //        { _worker3.Person = _person3;}
-        //    //
-        //    //Act          
-        //    _service.CreateWorker(_worker3, "UnitTest");
-        //    _service.CreateWorker(_worker3, "UnitTest");
-        //    _service.CreateWorker(_worker3, "UnitTest");
-        //    reccount = MacheteDB.Workers.Count(n => n.raceother == _worker3.raceother);
-        //    //
-        //    //Assert
-        //    Assert.IsNotNull(_worker3.ID);
-        //    Assert.IsTrue(reccount == 3);
-        //}
+        /// <summary>
+        /// Create, Edit, and Save a worker record from the Worker Service
+        /// </summary>
+        [TestMethod]
+        public void Integration_Worker_Service_EditWorker()
+        {
+            //
+            //Arrange
+            Worker _w = (Worker)Records.worker.Clone();
+            Person _p = (Person)Records.person.Clone();
+            _p.firstname2 = "WorkerService_Intergation_CreateWorker";
+            _w.height = "tall";
+            _w.Person = _p;
+            //
+            //Act
+            Worker result = _service.CreateWorker(_w, "UnitTest");
+            result.height = "short"; //EF should keep _w and result the same
+            _service.SaveWorker(result, "UnitTest");
+            //
+            //Assert
+            Assert.IsNotNull(_w.ID, "Worker.ID is Null");
+            Assert.IsNotNull(result.ID, "(worker) result.ID is Null");
+            Assert.IsTrue(_p.ID == 1, "Record did not have expected ID");
+            Assert.IsTrue(result.Person.ID == 1, "Record did not have expected ID");
+            Assert.IsTrue(_w.ID == _p.ID, "Worker.ID doesn't match Person.ID");
+            Assert.IsTrue(_w.height == "short", "SaveWorker failed to save property change");
+            Assert.IsTrue(result.height == "short", "SaveWorker failed to save property change");
+            Assert.AreSame(_w, result, "CreateWorker did not return the expected object");
+        }
     }
 }
