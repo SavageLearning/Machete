@@ -42,16 +42,7 @@ namespace Machete.Web.Controllers
         protected override void Initialize(RequestContext requestContext)
         {
             base.Initialize(requestContext);
-            System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
-            
-            ViewBag.EmplrReferences = Lookups.emplrreference(CI.TwoLetterISOLanguageName);
-            ViewBag.skillList = Lookups.skill(CI.TwoLetterISOLanguageName, false);
-            ViewBag.TransportMethods = Lookups.transportmethod(CI.TwoLetterISOLanguageName);
-            ViewBag.woStatuses = Lookups.orderstatus(CI.TwoLetterISOLanguageName);
-            //ViewBag.languages = Lookups.language(CI.TwoLetterISOLanguageName);
-            ViewBag.hoursList = Lookups.hours();
-            ViewBag.daysList = Lookups.days();
-            ViewBag.skillLevelList = Lookups.skillLevels();
+            System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];            
             DB = new MacheteContext();
         }
 

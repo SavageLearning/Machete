@@ -31,7 +31,6 @@ namespace Machete.Web.Controllers
         {
             base.Initialize(requestContext);
             System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
-            ViewBag.Genders = Lookups.gender(CI.TwoLetterISOLanguageName);
         }
         #region Index
         //

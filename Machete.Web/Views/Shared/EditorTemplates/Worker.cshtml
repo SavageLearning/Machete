@@ -394,10 +394,20 @@
 </div>
 <div class="tb-table mui-edit-worker-picture">
     <div class="tb-row">
-        <img src="@Url.Action("GetImage", "Image", new { ID = Model.ImageID })" alt="no image" style="width: 200px"/>
+        @if (Model.ImageID == null || Model.ImageID == 0)
+        {
+            <img id="ImageID" src="/Content/images/NO-IMAGE-AVAILABLE.jpg" alt="no image" style="width: 200px"/>
+        }
+        else
+        {
+            <img src="@Url.Action("GetImage", "Image", new { ID = Model.ImageID })" alt="no image" style="width: 200px"/>            
+        }
         <div class="view_off print_off">
+            <div>
             @Workers.uploadnewimage
-            <input id="@(idPrefix)imagefile" type="file" name="imagefile" /></div>
+            </div>
+            <input id="@(idPrefix)imagefile" type="file" name="imagefile" />
+        </div>
     </div>
 </div>
 <!--Image-->

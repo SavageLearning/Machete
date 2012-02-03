@@ -6,7 +6,8 @@
 @Html.HiddenFor(model => model.workOrderID)
 @{
     string myStr = "";
-        }
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+}
 
 <div class="tb-table">
 
@@ -16,7 +17,7 @@
         </div>
         <div class="tb-field tb-cell">
             @Html.DropDownListFor(model => model.englishLevelID, 
-                                    new SelectList(ViewBag.skillLevelList, "Value", "Text", Model.englishLevelID), 
+                                    new SelectList(Lookups.skillLevels(), "Value", "Text", Model.englishLevelID), 
                                     @Machete.Web.Resources.Shared.choose, new {tabindex = "1"})
             @Html.ValidationMessageFor(model => model.englishLevelID)
         </div>
@@ -30,7 +31,7 @@
                     data-val="true"
                     tabindex="1"
                     class="valid"><option value="">@Shared.choose</option>
-                @foreach (var item in ViewBag.skillList)
+                @foreach (var item in Lookups.skill(CI.TwoLetterISOLanguageName, false))
                 {
                     if (Model.skillID == Convert.ToInt16(item.Value))
                     {
@@ -49,7 +50,7 @@
                     }
                 } 
             </select>
-            @*@Html.DropDownListFor(model => model.skillID, new SelectList(ViewBag.skillList, "Value", "Text", Model.skillID), @Machete.Web.Resources.Shared.choose)*@
+            @*@Html.DropDownListFor(model => model.skillID, new SelectList(Lookups.skill(CI.TwoLetterISOLanguageName), "Value", "Text", Model.skillID), @Machete.Web.Resources.Shared.choose)*@
             @Html.ValidationMessageFor(model => model.skillID)
         </div>
         <div class="tb-label tb-cell">
@@ -74,21 +75,21 @@
             @Html.LabelFor(model => model.hours)
         </div>
         <div class="tb-field tb-cell">
-            @Html.DropDownListFor(model => model.hours, new SelectList(ViewBag.hoursList, "Value", "Text", Model.hours), Shared.choose, new { tabindex = "1", @id = "hours", @class = "earnings-part" })
+            @Html.DropDownListFor(model => model.hours, new SelectList(Lookups.hours(), "Value", "Text", Model.hours), Shared.choose, new { tabindex = "1", @id = "hours", @class = "earnings-part" })
             @Html.ValidationMessageFor(model => model.hours)
         </div>
         <div class="tb-label tb-cell">
             @Html.LabelFor(model => model.hourRange)
         </div>
         <div class="tb-field tb-cell">
-            @Html.DropDownListFor(model => model.hourRange, new SelectList(ViewBag.hoursList, "Value", "Text", Model.hourRange), Shared.choose, new { tabindex = "1", @id = "hourRange", @class = "earnings-part" })
+            @Html.DropDownListFor(model => model.hourRange, new SelectList(Lookups.hours(), "Value", "Text", Model.hourRange), Shared.choose, new { tabindex = "1", @id = "hourRange", @class = "earnings-part" })
             @Html.ValidationMessageFor(model => model.hourRange)
         </div>
         <div class="tb-label tb-cell">
             @Html.LabelFor(model => model.days)
         </div>
         <div class="tb-field tb-cell">
-            @Html.DropDownListFor(model => model.days, new SelectList(ViewBag.daysList, "Value", "Text", Model.days), Shared.choose, new { tabindex = "1", @id = "days", @class = "earnings-part" })
+            @Html.DropDownListFor(model => model.days, new SelectList(Lookups.days(), "Value", "Text", Model.days), Shared.choose, new { tabindex = "1", @id = "days", @class = "earnings-part" })
             @Html.ValidationMessageFor(model => model.days)
         </div>
         <div class="tb-label tb-cell">
