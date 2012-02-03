@@ -78,6 +78,17 @@ namespace Machete.Domain
             if (this.workerAssigned != null) return this.workerAssigned + " " + this.workerAssigned.Person.fullName();
             else return null;
         }
+
+        public string getFullPseudoID()
+        {
+            if (this.workOrder == null) return null;
+            return (this.workOrder.paperOrderNum.HasValue ?
+                        System.String.Format("{0,5:D5}", this.workOrder.paperOrderNum) :
+                        System.String.Format("{0,5:D5}", this.workOrderID))
+                    + "-" + (this.pseudoID.HasValue ?
+                        System.String.Format("{0,2:D2}", this.pseudoID) :
+                        System.String.Format("{0,5:D5}", this.ID));
+        }
     }
     public class WorkAssignmentSummary
     {

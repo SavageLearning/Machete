@@ -95,7 +95,7 @@ namespace Machete.Test
         [TestMethod]
         public void SeWSI_create_signin()
         {
-            IEnumerable<WorkerSignin> wList = wsiSet.Where(w => w.dwccardnum < 30000).AsEnumerable();
+            //IEnumerable<WorkerSignin> wList = wsiSet.Where(w => w.dwccardnum < 30000).AsEnumerable();
         }
     }
 }
