@@ -87,7 +87,7 @@
             @Html.LabelFor(model => model.referredby)
         </div>
         <div class="tb-field tb-cell">
-            @Html.DropDownListFor(model => model.referredby, new SelectList(ViewBag.EmplrReferences, "Value", "Text", Model.referredby), @Machete.Web.Resources.Shared.choose, new { tabindex = "2", id = idPrefix + "referredby" })
+            @Html.DropDownListFor(model => model.referredby, new SelectList(Lookups.emplrreference(CI.TwoLetterISOLanguageName), "Value", "Text", Model.referredby), @Machete.Web.Resources.Shared.choose, new { tabindex = "2", id = idPrefix + "referredby" })
             @Html.ValidationMessageFor(model => model.referredby)
         </div>
     </div>

@@ -1,4 +1,11 @@
 ﻿@model Machete.Domain.Person
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "person";
+    string idPrefix = recType + Model.ID + "-";
+}
 <!--The table for the first name and last name-->
 <div class="tb-table">
     <div id="namerow1" class="tb-row">
@@ -61,7 +68,7 @@
             @Html.LabelFor(model => model.gender)
         </div>
         <div class="tb-field tb-cell">
-            @Html.DropDownListFor(model => model.gender, new SelectList(ViewBag.Genders, "Value", "Text", Model.gender), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })
+            @Html.DropDownListFor(model => model.gender, new SelectList(Lookups.gender(CI.TwoLetterISOLanguageName), "Value", "Text", Model.gender), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })
             @Html.ValidationMessageFor(model => model.gender)
         </div>
     </div>

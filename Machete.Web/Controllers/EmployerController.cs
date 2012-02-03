@@ -30,7 +30,6 @@ namespace Machete.Web.Controllers
         {
             base.Initialize(requestContext);
             System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
-            ViewBag.emplrReferences = Lookups.emplrreference(CI.TwoLetterISOLanguageName);
         }
         #region Index
         //
