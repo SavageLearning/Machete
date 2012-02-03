@@ -16,6 +16,8 @@ namespace Machete.Test
     {
         IWebDriver _d;
         string _url;
+        int maxwait = 10; // seconds
+        int sleepFor = 1000; //milliseconds
         public sharedUI(IWebDriver driver, string url)
         {
             _d = driver;
@@ -30,13 +32,13 @@ namespace Machete.Test
             _d.Navigate().GoToUrl(_url);
 
             _d.FindElement(By.LinkText("Logon")).Click();
-            WaitForText("Account Information", 60);
+            WaitForText("Account Information", maxwait);
             _d.FindElement(By.Id("UserName")).Clear();
             _d.FindElement(By.Id("UserName")).SendKeys("jadmin");
             _d.FindElement(By.Id("Password")).Clear();
             _d.FindElement(By.Id("Password")).SendKeys("machete");
             _d.FindElement(By.Name("logonB")).Click();
-            WaitForText("Welcome", 60);
+            WaitForText("Welcome", maxwait);
             return true;
         }
         #region persons
@@ -247,11 +249,35 @@ namespace Machete.Test
             return true;
         }
         #endregion
+        #region WorkAssignments
+        public bool WorkAssignmentCreate(Employer _emp, WorkOrder _wo, WorkAssignment _wa)
+        {
+            WaitThenClickElement(By.Id("wact-" + _wo.ID)); //the ID here is the WorkOrder.ID, not the Employer.ID
+            WaitForElement(By.Id("description"));
+            SelectOption(By.Id("englishLevelID"), _wa.englishLevelID.ToString());
+            SelectOptionByValue(By.Id("skillID"), _wa.skillID.ToString());
+            ReplaceElementText(By.Id("hourlyWage"), _wa.hourlyWage.ToString());
+            SelectOption(By.Id("hours"), _wa.hours.ToString());
+            if (_wa.hourRange.ToString().Length > 0)
+                SelectOption(By.Id("hourRange"), _wa.hourRange.ToString());
+            SelectOption(By.Id("days"), _wa.days.ToString());
+            ReplaceElementText(By.Id("description"), _wa.description);
+            _d.FindElement(By.Id("WO" + _wo.ID + "-waCreateBtn")).Click();
+            return true;
+        }
+        #endregion
         public bool SelectOption(By by, string opttext)
         {
             var dropdown = _d.FindElement(by);
             var selectElem = new SelectElement(dropdown);
             selectElem.SelectByText(opttext);
+            return true;
+        }
+        public bool SelectOptionByValue(By by, string optvalue)
+        {
+            var dropdown = _d.FindElement(by);
+            var selectElem = new SelectElement(dropdown);
+            selectElem.SelectByValue(optvalue);
             return true;
         }
         //
@@ -300,7 +326,7 @@ namespace Machete.Test
         public IWebElement WaitForElement(By by)
         {
             IWebElement elem;
-            for (int second = 0; second < 60; second++)
+            for (int second = 0; second < maxwait; second++)
             {
                 try
                 {
@@ -309,7 +335,7 @@ namespace Machete.Test
                 }
                 catch (Exception)
                 { return null; }
-                Thread.Sleep(1000);
+                Thread.Sleep(sleepFor);
             }
             return null;
         }
@@ -317,7 +343,7 @@ namespace Machete.Test
         //
         public bool WaitForElementValue(By by, string value)
         {
-            for (int second = 0; second < 60; second++)
+            for (int second = 0; second < maxwait; second++)
             {
                 try
                 {
@@ -331,7 +357,7 @@ namespace Machete.Test
                 {
                     return false;
                 }
-                Thread.Sleep(1000);
+                Thread.Sleep(sleepFor);
             }
             return false;
         }
@@ -345,7 +371,7 @@ namespace Machete.Test
                 }
                 catch (Exception)
                 { return false; }
-                Thread.Sleep(1000);
+                Thread.Sleep(sleepFor);
             }
             return false;
         }

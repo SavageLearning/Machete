@@ -89,7 +89,7 @@ namespace Machete.Web.Controllers
                             WOID = Convert.ToString(p.workOrderID),
                             WAID = Convert.ToString(p.ID),
                             recordid = Convert.ToString(p.ID),
-                            pWAID = _getFullPseudoID(p), 
+                            pWAID = p.getFullPseudoID(), 
                             englishlevel = Convert.ToString(p.englishLevelID),
                             skill =  Lookups.byID(p.skillID, CI.TwoLetterISOLanguageName),
                             hourlywage = System.String.Format("${0:f2}", p.hourlyWage),
@@ -130,17 +130,17 @@ namespace Machete.Web.Controllers
         //
         private string _getTabLabel(WorkAssignment wa)
         {
-            return Machete.Web.Resources.WorkAssignments.tabprefix + _getFullPseudoID(wa);
+            return Machete.Web.Resources.WorkAssignments.tabprefix + wa.getFullPseudoID();
         }
-        private string _getFullPseudoID(WorkAssignment wa)
-        {
-            return (wa.workOrder.paperOrderNum.HasValue ? 
-                        System.String.Format("{0,5:D5}", wa.workOrder.paperOrderNum) : 
-                        System.String.Format("{0,5:D5}", wa.workOrderID))
-                    + "-" + (wa.pseudoID.HasValue ? 
-                        System.String.Format("{0,2:D2}", wa.pseudoID) : 
-                        System.String.Format("{0,5:D5}", wa.ID));
-        }
+        //private string _getFullPseudoID(WorkAssignment wa)
+        //{
+        //    return (wa.workOrder.paperOrderNum.HasValue ? 
+        //                System.String.Format("{0,5:D5}", wa.workOrder.paperOrderNum) : 
+        //                System.String.Format("{0,5:D5}", wa.workOrderID))
+        //            + "-" + (wa.pseudoID.HasValue ? 
+        //                System.String.Format("{0,2:D2}", wa.pseudoID) : 
+        //                System.String.Format("{0,5:D5}", wa.ID));
+        //}
         
         
         //

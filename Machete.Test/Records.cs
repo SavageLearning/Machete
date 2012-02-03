@@ -67,11 +67,6 @@ namespace Machete.Test
             Createdby = "TestInitializer",
             Updatedby = "TestInitializer"
         };
-        //public static Person _person1 = (Person)person.Clone();
-        //public static Person _person2 = (Person)person.Clone();
-        //public static Person _person3 = (Person)person.Clone();
-        //public static Person _person4 = (Person)person.Clone();
-        //public static Person _person5 = (Person)person.Clone();
 
         #endregion
         #region Employers
@@ -89,7 +84,7 @@ namespace Machete.Test
             referredby = MacheteLookup.cache.First(c => c.category == "emplrreference" && c.text_EN == "Facebook").ID,
             email = "willy@wonka.com",
             notes = "A note!",
-            referredbyOther = "brother from a different mother",
+            referredbyOther = "another reference",
             blogparticipate = true,
             business = true,
             datecreated = DateTime.Now,             //datetime

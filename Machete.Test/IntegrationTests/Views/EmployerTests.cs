@@ -102,6 +102,36 @@ namespace Machete.Test
             ui.workOrderValidate(_wo);
         }
         [TestMethod]
+        public void SeEmployer_Create_and_Activate_WorkAssignment()
+        {
+            Employer _employer1 = (Employer)Records.employer.Clone();
+            WorkOrder _wo = (WorkOrder)Records.order.Clone();
+            WorkAssignment _wa1 = (WorkAssignment)Records.assignment.Clone();
+
+            _wo.contactName = ui.RandomString(10);
+            ui.employerCreate(_employer1);
+            ui.workOrderCreate(_employer1, _wo);
+            //_wo.ID = ui.getSelectedTabRecordID("WO");
+            ui.WorkAssignmentCreate(_employer1, _wo, _wa1);
+            //Get WA ID and arrange pseudoID information
+            _wa1.ID = ui.getSelectedTabRecordID("WA");
+            _wa1.workOrder = _wo;
+            _wa1.workOrderID = _wo.ID;
+            _wa1.workOrder.waPseudoIDCounter++; // from WorkASsignment
+            _wa1.pseudoID = _wa1.workOrder.waPseudoIDCounter; //TODO: refactor into base class
+            //
+            ui.WaitThenClickElement(By.Id("walt-" + _wo.ID));
+            By walt = By.XPath("//table[@id='workAssignTable-wo-" + _wo.ID + "']/tbody/tr/td[1]");
+            ui.WaitForElementValue(walt, _wa1.getFullPseudoID());
+            Assert.AreEqual(_wa1.getFullPseudoID(), driver.FindElement(walt).Text, "Unexpected PseudoID in assignment's list");
+            //
+            ui.WaitThenClickElement(By.Id("activateWorkOrderButton-"+ _wo.ID));
+            //
+            // TODO: check WO status and recid of order
+            // 
+
+        }
+        [TestMethod]
         public void SeEmployer_Create_and_move_Workorder()
         {
             Employer _emp1 = (Employer)Records.employer.Clone();
@@ -117,8 +147,8 @@ namespace Machete.Test
             //
             //
             string prefix = "WO" + _wo.ID + "-";
-            IJavaScriptExecutor js = driver as IJavaScriptExecutor;
-            string title = (string)js.ExecuteScript("if (window.screen){window.moveTo(0, 0);window.resizeTo(window.screen.availWidth,window.screen.availHeight);};");
+            //IJavaScriptExecutor js = driver as IJavaScriptExecutor;
+            //string title = (string)js.ExecuteScript("if (window.screen){window.moveTo(0, 0);window.resizeTo(window.screen.availWidth,window.screen.availHeight);};");
             // click change button
             ui.WaitThenClickElement(By.Id(prefix + "changeEmployerBtn"));
             // find new employer
