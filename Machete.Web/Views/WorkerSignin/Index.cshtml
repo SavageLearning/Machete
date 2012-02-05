@@ -59,6 +59,7 @@
 
 <script type="text/javascript">
     $().ready(function () {
+        var blankImage = "/Content/images/NO-IMAGE-AVAILABLE.jpg";
         //
         //
         $('.ui-datepicker').datepicker({
@@ -72,7 +73,23 @@
         //
         $('#dwccardentry').focus();
         $('#signin-red-dialog').hide();
-        $('.confirm_delete').click(function (event) { Confirm_button(event, this); });
+        $('.confirm_delete').live('click', function (e) {
+            e.preventDefault;
+            //TODO: event is posting and returning page, not JSON
+            var action =  $(this).attr('href');
+            $.alerts.okButton = "@WorkerSignins.deletesubmit";
+            jConfirm('@WorkerSignins.deleteconfirmation',
+                         '@WorkerSignins.deletetitle',
+                         function (r) {
+                             if (r == true) { 
+                             $.post(action, null, function() {
+                                 $('#wsiTable').dataTable().fnDraw();
+                                 $('#wsiImage').attr('src', blankImage);
+                             });
+                             }
+                         });
+            return false;
+        });
         //
         //
         $('#wsiTable').dataTable({
@@ -89,7 +106,7 @@
             "iDisplayLength": -1,
             "aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "@WorkerSignins.allrecords"]],
             "aoColumns": [
-                {mDataProp: "recordid", sClass: "print_off confirm_delete"},
+                {mDataProp: "recordid", sClass: "print_off"},
                 {mDataProp: "dwccardnum"},
                 {mDataProp: "expirationDate", sClass: "print_off"},
                 {mDataProp: "memberStatus", sClass: "print_off"},
@@ -106,11 +123,11 @@
 		    },
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $(nRow).attr('ID', "wsiRec" +aData['recordid']);
-                $(nRow).find('td:first-child').html('<a href="/WorkerSignin/delete/'+aData['recordid']+'">Delete</a>');
+                $(nRow).find('td:first-child').html('<a class="confirm_delete" href="/WorkerSignin/delete/'+aData['recordid']+'">Delete</a>');
                 if (aData['imageID']) {
                     $(nRow).attr('imageRef', "/Image/GetImage/" + aData['imageID']);
                 } else {
-                    $(nRow).attr('imageRef', "/Content/images/NO-IMAGE-AVAILABLE.jpg");
+                    $(nRow).attr('imageRef', blankImage);
                 }
                 $(nRow).addClass('statusBlue');
                 if (aData['memberInactive'] || aData['memberExpired']) { 
@@ -155,15 +172,4 @@
             }    
         });
     });
-    function Confirm_button(e, t) {
-        e.preventDefault();
-        var theHref =  $(t).attr('href');
-        $.alerts.okButton = "@WorkerSignins.deletesubmit";
-        jConfirm('@WorkerSignins.deleteconfirmation',
-                     '@WorkerSignins.deletetitle',
-                     function (r) {
-                         if (r == true) { window.location = theHref; }
-                     });
-        return false;
-    }
 </script>
