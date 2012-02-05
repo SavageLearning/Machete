@@ -65,7 +65,7 @@ namespace Machete.Web.Models
         /// Comma separated list of column names
         /// </summary>
         public string sColumns { get; set; }
-
+        #region mDataProps_accessors
         /// <summary>
         /// name of indexed column
         /// </summary>
@@ -130,14 +130,33 @@ namespace Machete.Web.Models
         /// name of indexed column
         /// </summary>
         public string mDataProp_15 { get; set; }
-
+        #endregion
+        #region FILTER_PARAMS
+        /// <summary>
+        /// filter table on a given date
+        /// </summary>
         public string todaysdate { get; set; }
+        /// <summary>
+        /// filter table on a membership card number
+        /// </summary>
         public string dwccardnum { get; set; }
         public string wa_grouping { get; set; }
         public int? typeofwork_grouping { get; set; }
         public int? status { get; set; }
         public bool showPending { get; set; }
+        //
+        //
+        public bool showInactive { get; set; }
+        public bool showSanctioned { get; set; }
+        public bool showExpired { get; set; }
+        public bool showExpelled { get; set; }
 
+
+        #endregion
+        /// <summary>
+        /// Converts iSortCol_0 to an mDataProp name
+        /// </summary>
+        /// <returns></returns>
         public string sortColName()         
         {
             int idx = this.iSortCol_0;

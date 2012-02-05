@@ -45,10 +45,12 @@
         //
         createTabs: function (opt) {
             var tabdiv = this,
-                changeConfirm = opt.changeConfirm || "CONFIRM?!",
-                changeTitle = opt.changeTitle || "TITLE?!",
+                changeConfirm = opt.changeConfirm,
+                changeTitle = opt.changeTitle,
                 confirmed = false, // create jQuery tabs with mUI handlers
                 level = _checkFormLevel(opt.formLevel, "createTabs"); // Error if form level not set correctly
+            if (!changeConfirm) throw new Error("mUI.createTabs requires a changeConfirm option");
+            if (!changeTitle) throw new Error("mUI.createTabs requires a changeTitle option");
 
             $(tabdiv).tabs({
                 // defaults
@@ -243,7 +245,7 @@
                                     recordID: data.iNewID,  //JsonResult
                                     recType: recType
                                 });
-                                callback();                                
+                                callback();
                             }
                         });
                     } else {
