@@ -41,6 +41,21 @@
     <None Include="powershell\database_backup.ps1" />
     <None Include="powershell\ssrs_export_reports.ps1" />
     <None Include="records_load.ps1" />
+    <None Include="SSRS\Active workers sorted by MemberID--All fields.rdl" />
+    <None Include="SSRS\Active workers with expired membership dates.rdl" />
+    <None Include="SSRS\Active workers with impossible membership dates.rdl" />
+    <None Include="SSRS\Active workers with one or more skills.rdl" />
+    <None Include="SSRS\Configuration\specialty report.rdl" />
+    <None Include="SSRS\Work orders-Incomplete orders by month and day.rdl" />
+    <None Include="SSRS\Work orders-Incomplete orders.rdl" />
+    <None Include="SSRS\Work orders-Monthly status report.rdl" />
+    <None Include="SSRS\Work Orders-Status distribution-Last four weeks.rdl" />
+    <None Include="SSRS\Work orders-Status summary by day.rdl" />
+    <None Include="SSRS\Work orders-Status summary pie charts.rdl" />
+    <None Include="SSRS\Work orders-Status summary.rdl" />
+    <None Include="SSRS\Workers-Monthly dispatch summary with detail.rdl" />
+    <None Include="SSRS\Workers-signins past membership expiration.rdl" />
+    <None Include="SSRS\Workers-Yearly Seattle HSD report.rdl" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="sql\Create_Views.sql" />
@@ -55,6 +70,7 @@
     <Content Include="sql\status_summary_workOrders_EN.sql" />
     <Content Include="workerSignins.sql" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
