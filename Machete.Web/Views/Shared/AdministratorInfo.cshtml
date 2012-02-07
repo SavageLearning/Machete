@@ -7,10 +7,10 @@
     <h3><a href="#">@Shared.administratorinformation</a></h3> 
     <div class="tb-table">
         <div class="tb-row">
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.ID)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.DisplayFor(model => model.ID, new { @readonly = "readonly" })
                 @Html.ValidationMessageFor(model => model.ID)
             </div>

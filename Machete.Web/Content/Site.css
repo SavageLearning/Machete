@@ -471,7 +471,7 @@ div.recordButtons
     font-weight: bold;
     padding: 1px;
     text-align: right;
-    
+    display: table-cell;
     font-size: 90%;
 }
 
@@ -482,6 +482,7 @@ div.recordButtons
     font-weight: bold;
     padding: 5px;
     text-align: left;
+    display: table-cell;
 }
 
 .tb-header-fixed
@@ -493,6 +494,7 @@ div.recordButtons
     text-align: left;
     width: 80px;
     font-size: 80%;
+    display: table-cell;
 }
 
 .tb-field
@@ -500,6 +502,7 @@ div.recordButtons
     /*border: 1px solid blue;*/
     margin:0.5em 0 0 0;
     padding: 1px;
+    display: table-cell;
     /*font-weight: bold;*/
     /*width: 20em;*/
 }
@@ -515,12 +518,15 @@ input[type="text"].ui-datepicker
     /*font-weight: bold;*/
     width: 80px;
     text-align: center;
+    display: table-cell;
+    
 }
 
 .tb-underline
 {
     font-weight: bold;
     text-decoration: underline;       
+    display: table-cell;
 }
 
 .tb-bordered_field
@@ -529,11 +535,13 @@ input[type="text"].ui-datepicker
     margin: 1em 0 0 0;    
     padding: 5px;
     text-align: left;
+    display: table-cell;
 }
 
 .tb-display
 {
     margin:0.5em 0 0 0;
+    display: table-cell;
 }
 
 .tri-col, 

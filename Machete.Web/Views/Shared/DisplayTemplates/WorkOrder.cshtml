@@ -9,18 +9,18 @@
 }
 <div class="tb-table">
     <div class="tb-row">
-        <div class="tb-label tb-cell">
+        <div class="tb-label">
             @Html.LabelFor(model => model.contactName)
         </div>
-        <div class="tb-field tb-cell">
+        <div class="tb-field">
             @Html.DisplayTextFor(model => model.contactName)            
         </div>
     </div>
     <div class="tb-row">
-        <div class="tb-label tb-cell">
+        <div class="tb-label">
             @Html.LabelFor(model => model.workSiteAddress1)
         </div>
-        <div class="tb-field tb-cell">
+        <div class="tb-field">
             @Html.DisplayTextFor(model => model.workSiteAddress1)
             @Html.DisplayTextFor(model => model.workSiteAddress2)
             <br />
@@ -30,46 +30,46 @@
         </div>
     </div>
         <div class="tb-row">
-        <div class="tb-label tb-cell">
+        <div class="tb-label">
             @Html.LabelFor(model => model.phone)
         </div>
-        <div class="tb-field tb-cell">
+        <div class="tb-field">
             @Html.DisplayTextFor(model => model.phone)            
         </div>
     </div>
     <div class="tb-row">
-        <div class="tb-label tb-cell">
+        <div class="tb-label">
             @Html.Label(WorkOrder.lunchShort)
         </div>
-        <div class="tb-field tb-cell">
+        <div class="tb-field">
             @Lookups.getBool(Model.lunchSupplied, CI.TwoLetterISOLanguageName)  
         </div>
-        <div class="tb-field tb-cell" style="font-weight: bold; ">  
+        <div class="tb-field" style="font-weight: bold; ">  
             @Html.Label(WorkOrders.transportFeeShort)        
         </div>
-        <div class="tb-field tb-cell bold" style="font-weight: bold; ">
+        <div class="tb-field bold" style="font-weight: bold; ">
             @Html.Label(WorkOrders.transportFeeExtraShort)
         </div>
-                <div class="tb-field tb-cell bold" style="font-weight: bold; ">
+                <div class="tb-field bold" style="font-weight: bold; ">
             @Html.Label(WorkOrders.transportfeetotal)
         </div>
     </div>
 
 
     <div class="tb-row">
-        <div class="tb-label tb-cell">
+        <div class="tb-label">
             @Html.Label(WorkOrders.transportMethodIDShort)
         </div>
-        <div class="tb-field tb-cell">
+        <div class="tb-field">
             @Lookups.byID(Model.transportMethodID, CI.TwoLetterISOLanguageName)
         </div>
-        <div class="tb-field tb-cell">
+        <div class="tb-field">
             @System.String.Format("{0:c}",Model.transportFee)    +
         </div>
-        <div class="tb-field tb-cell">
+        <div class="tb-field">
             @System.String.Format("{0:c}",Model.transportFeeExtra)    = 
         </div>        
-        <div class="tb-field tb-cell">
+        <div class="tb-field">
             @System.String.Format("{0:c}", Model.transportFee + Model.transportFeeExtra)   
         </div>
     </div>    
@@ -77,19 +77,19 @@
     @if (Model.englishRequired == true)
     {
         <div class="tb-row">
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.englishRequiredNote)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.DisplayTextFor(model => model.englishRequiredNote)            
             </div>
         </div>
     }
     <div class="tb-row">
-        <div class="tb-label tb-cell">
+        <div class="tb-label">
             @Html.LabelFor(model => model.description)
         </div>
-        <div class="tb-bordered_field tb-cell">
+        <div class="tb-bordered_field">
             @Html.DisplayTextFor(model => model.description)
             
         </div>

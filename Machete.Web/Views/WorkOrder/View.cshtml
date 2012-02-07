@@ -38,10 +38,10 @@ else
     <input type="button" id="printMap" class="formButton" value="@Shared.printGoogleMap"/>
 </div>
 @Html.DisplayForModel()
-<div class="tb-label tb-cell">
+<div class="tb-label">
     @Html.LabelFor(model => model.workerRequests)
 </div>
-<div class="tb-field tb-cell">
+<div class="tb-field">
     @foreach (var req in Model.workerRequests)
     {
         @System.String.Format(req.workerRequested.dwccardnum + "--" + req.fullName) <br />
@@ -51,15 +51,15 @@ else
 
     <div class="tb-table">
         <div class="tb-row">
-            <div class="tb-header-fixed tb-cell">@WorkOrders.woidcount</div>
-            <div class="tb-header-fixed tb-cell">@WorkAssignment.skillID</div>
-            <div class="tb-header-fixed tb-cell">@WorkAssignment.hourlyWage</div>
-            <div class="tb-header-fixed tb-cell">@WorkAssignments.hours</div> 
-            <div class="tb-header-fixed tb-cell">@WorkAssignments.hourRange</div>                       
-            <div class="tb-header-fixed tb-cell">@WorkAssignment.days</div>
-            <div class="tb-header-fixed tb-cell">@WorkAssignments.earnings</div>
-            <div class="tb-header-fixed tb-cell">@WorkAssignments.earningsRange</div>
-            <div class="tb-header-fixed tb-cell">@WorkAssignment.englishLevelID</div>
+            <div class="tb-header-fixed">@WorkOrders.woidcount</div>
+            <div class="tb-header-fixed">@WorkAssignment.skillID</div>
+            <div class="tb-header-fixed">@WorkAssignment.hourlyWage</div>
+            <div class="tb-header-fixed">@WorkAssignments.hours</div> 
+            <div class="tb-header-fixed">@WorkAssignments.hourRange</div>                       
+            <div class="tb-header-fixed">@WorkAssignment.days</div>
+            <div class="tb-header-fixed">@WorkAssignments.earnings</div>
+            <div class="tb-header-fixed">@WorkAssignments.earningsRange</div>
+            <div class="tb-header-fixed">@WorkAssignment.englishLevelID</div>
                         
             
         </div>
@@ -68,29 +68,29 @@ else
 {
     <div class="tb-table">
         <div class="tb-row">
-            <div class="tb-field-fixed tb-cell">@item.pseudoID</div>           
-            <div class="tb-field-fixed tb-cell">@Lookups.byID(item.skillID, CI.TwoLetterISOLanguageName)</div> 
-            <div class="tb-field-fixed tb-cell">@System.String.Format("{0:C}", item.hourlyWage)</div>
-            <div class="tb-field-fixed tb-cell">@Html.DisplayFor(modelItem => item.hours)</div>
+            <div class="tb-field-fixed">@item.pseudoID</div>           
+            <div class="tb-field-fixed">@Lookups.byID(item.skillID, CI.TwoLetterISOLanguageName)</div> 
+            <div class="tb-field-fixed">@System.String.Format("{0:C}", item.hourlyWage)</div>
+            <div class="tb-field-fixed">@Html.DisplayFor(modelItem => item.hours)</div>
             @if (item.hourRange > 0)
             {
-            <div class="tb-field-fixed tb-cell">@Html.DisplayFor(modelItem => item.hourRange)</div>
+            <div class="tb-field-fixed">@Html.DisplayFor(modelItem => item.hourRange)</div>
             }
             else
             {
-                <div class="tb-field-fixed tb-cell"></div>
+                <div class="tb-field-fixed"></div>
             }
-            <div class="tb-field-fixed tb-cell">@Html.DisplayFor(modelItem => item.days)</div>
-            <div class="tb-field-fixed tb-cell">@System.String.Format("{0:C}", item.hourlyWage * item.hours * item.days)</div>
+            <div class="tb-field-fixed">@Html.DisplayFor(modelItem => item.days)</div>
+            <div class="tb-field-fixed">@System.String.Format("{0:C}", item.hourlyWage * item.hours * item.days)</div>
             @if (item.hourRange > 0)
             {
-            <div class="tb-field-fixed tb-cell">@System.String.Format("{0:C}", item.hourlyWage * item.hourRange * item.days)</div>
+            <div class="tb-field-fixed">@System.String.Format("{0:C}", item.hourlyWage * item.hourRange * item.days)</div>
             }
             else
             {
-                <div class="tb-field-fixed tb-cell"></div>
+                <div class="tb-field-fixed"></div>
             }            
-            <div class="tb-field-fixed tb-cell">@item.englishLevelID</div>
+            <div class="tb-field-fixed">@item.englishLevelID</div>
                        
             
         </div>
@@ -100,10 +100,10 @@ else
             {
         <div class="tb-table">
             <div class="tb-row">
-                <div class="tb-underline tb-cell">
+                <div class="tb-underline">
                     @WorkAssignment.description
                 </div>
-                <div class="tb-field tb-cell">
+                <div class="tb-field">
                     @Html.DisplayFor(modelItem => item.description)
                 </div>
             </div>
@@ -111,10 +111,10 @@ else
             }
     <div class="tb-table">
         <div class="tb-row">
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 <h3>@Machete.Web.Resources.WorkOrders.workername</h3>
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @if (item.workerAssigned != null)
                 {
                   <h3>@Html.Encode(item.workerAssigned.Person.fullName())</h3>
@@ -131,28 +131,28 @@ else
 <br />
 <div class="tb-table">
     <div class="tb-row">
-        <div class="tb-label tb-cell">
+        <div class="tb-label">
         @Html.LabelFor(model => model.Createdby)
         </div>
-        <div class="tb-field tb-cell">
+        <div class="tb-field">
         @Html.DisplayFor(model => model.Createdby)
         </div>
-                <div class="tb-label tb-cell">
+                <div class="tb-label">
         @Html.LabelFor(model => model.datecreated)
         </div>
-        <div class="tb-field tb-cell">
+        <div class="tb-field">
         @Html.DisplayFor(model => model.datecreated)
         </div>
-        <div class="tb-label tb-cell">
+        <div class="tb-label">
         @Html.LabelFor(model => model.Updatedby)
         </div>
-        <div class="tb-field tb-cell">
+        <div class="tb-field">
         @Html.DisplayFor(model => model.Updatedby)
         </div>
-                <div class="tb-label tb-cell">
+                <div class="tb-label">
         @Html.LabelFor(model => model.dateupdated)
         </div>
-        <div class="tb-field tb-cell">
+        <div class="tb-field">
         @Html.DisplayFor(model => model.dateupdated)
         </div>
     </div>

@@ -11,37 +11,37 @@
     <fieldset>
     <legend>MembersModel</legend>
         <div class="tb-row">
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.UserName)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.DisplayTextFor(model => model.UserName)
                 @Html.ValidationMessageFor(model => model.UserName)
             </div>
         </div>
         <div class="tb-row">
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.Email)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.EditorFor(model => model.Email)
                 @Html.ValidationMessageFor(model => model.Email)
             </div>
         </div>
         <div class="tb-row">
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.IsApproved)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.EditorFor(model => model.IsApproved)
                 @Html.ValidationMessageFor(model => model.IsApproved)
             </div>
         </div>
         <div class="tb-row">
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.IsLockedOut)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.EditorFor(model => model.IsLockedOut)
                 @Html.ValidationMessageFor(model => model.IsLockedOut)
             </div>
@@ -59,10 +59,10 @@
         @foreach (String role in Roles.GetAllRoles())
         {   
         <div class="tb-row">
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 <label for="@role">@role:</label>
             </div>   
-            <div class="tb-label tb-cell">               
+            <div class="tb-label">               
                 @Html.CheckBox(role, Roles.IsUserInRole(Model.UserName, role))
             </div>
         </div>                        

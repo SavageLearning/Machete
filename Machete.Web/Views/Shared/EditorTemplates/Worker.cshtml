@@ -10,20 +10,20 @@
 <div class="mui-edit-block">
     <div class="tb-table">
         <div class="tb-row">
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.dwccardnum)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.TextBox("dwccardnum", Model.dwccardnum, new { @tabindex = "2", 
                                                                     @class = "workerEditor", 
                                                                     @id = idPrefix + "dwccardnum" })
                 @Html.ValidationMessageFor(model => model.dwccardnum)
             </div>
             <!--dwccardnum-->
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.dateOfMembership)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.TextBox("dateOfMembership",
                     Html.Encode(Model.dateOfMembership == DateTime.MinValue ? "" : Model.dateOfMembership.ToShortDateString()),
                                         new { @class = "ui-datepicker workerEditor", tabindex = "2", id = idPrefix + "dateOfMembership" })
@@ -32,10 +32,10 @@
             <!--dateOfMembership-->
         </div>
         <div class="tb-row">
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.memberStatus)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.DropDownListFor(model => model.memberStatus,
                                   new SelectList(Lookups.memberStatus(CI.TwoLetterISOLanguageName),
                                                  "Value",
@@ -46,10 +46,10 @@
                 @Html.ValidationMessageFor(model => model.memberStatus)
             </div>
             <!--memberStatus-->
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.memberReactivateDate)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.TextBox("memberReactivateDate",
                     Html.Encode(Model.memberReactivateDate == DateTime.MinValue ? "" :
                                 Model.memberReactivateDate == null ? "" :
@@ -60,10 +60,10 @@
             <!--memberReactivateDate-->
         </div>
         <div class="tb-row">
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.englishlevelID)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.DropDownListFor(model => model.englishlevelID,
                                   new SelectList(Lookups.skillLevels(),
                                       "Value",
@@ -73,10 +73,10 @@
                 @Html.ValidationMessageFor(model => model.englishlevelID)
             </div>
             <!--englishlevelID-->
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.memberexpirationdate)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.TextBox("memberexpirationdate",
                               Html.Encode(Model.memberexpirationdate == DateTime.MinValue ? "" : Model.memberexpirationdate.ToShortDateString()),
                                                               new { @class = "ui-datepicker workerEditor", tabindex = "2", id = idPrefix + "memberexpirationdate" })
@@ -87,10 +87,10 @@
     </div>
     <div class="tb-table">
         <div class="tb-row">
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.typeOfWorkID)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.DropDownListFor(model => model.typeOfWorkID,
                                   new SelectList(Lookups.typeOfWork(CI.TwoLetterISOLanguageName),
                                                  "Value",
@@ -105,10 +105,10 @@
     </div>
     <div class="tb-table">
         <div class="tb-row">
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.RaceID)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.DropDownListFor(model => model.RaceID,
                                            new SelectList(Lookups.race(CI.TwoLetterISOLanguageName),
                                                  "Value",
@@ -119,18 +119,18 @@
                 @Html.ValidationMessageFor(model => model.RaceID)
             </div>
             <!--RaceID-->
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.raceother)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.TextBox("raceother", Model.raceother, new { @class = "workerEditor", id = idPrefix + "raceother", tabindex = "1" })
                 @Html.ValidationMessageFor(model => model.raceother)
             </div>
             <!--raceother-->
-            @*        <div class="tb-label tb-cell">
+            @*        <div class="tb-label">
             @Html.LabelFor(model => model.active)
         </div>
-        <div class="tb-field tb-cell">
+        <div class="tb-field">
             @Html.DropDownListFor(model => model.active, 
                                   new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), 
                                                  "Value", 
@@ -142,18 +142,18 @@
         </div><!--active-->*@
         </div>
         <div class="tb-row">
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.height)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.TextBox("height", Model.height, new { @class = "workerEditor", id = idPrefix + "height", tabindex = "1" })
                 @Html.ValidationMessageFor(model => model.height)
             </div>
             <!--height-->
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.dateOfBirth)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.TextBox("dateOfBirth",
                             Html.Encode(Model.dateOfBirth == DateTime.MinValue ? "" : Model.dateOfBirth.ToShortDateString()),
                                               new { @class = "ui-datepicker workerEditor", tabindex = "2", id = idPrefix + "dateOfBirth" })
@@ -162,18 +162,18 @@
             <!--dateOfBirth-->
         </div>
         <div class="tb-row">
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.weight)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.TextBox("weight", Model.weight, new { @class = "workerEditor", id = idPrefix + "weight", tabindex = "2" })
                 @Html.ValidationMessageFor(model => model.weight)
             </div>
             <!--weight-->
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.neighborhoodID)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.DropDownListFor(model => model.neighborhoodID,
                                              new SelectList(Lookups.neighborhood(CI.TwoLetterISOLanguageName),
                                         "Value",
@@ -186,10 +186,10 @@
             <!--neighborhoodID-->
         </div>
         <div class="tb-row">
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.recentarrival)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.DropDownListFor(model => model.recentarrival,
                                     new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName),
                                         "Value",
@@ -200,10 +200,10 @@
                 @Html.ValidationMessageFor(model => model.recentarrival)
             </div>
             <!--recentarrival-->
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.dateinUSA)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.TextBox("dateinUSA",
                             Html.Encode(System.String.Format("{0:d}", Model.dateinUSA)),
                                               new { @class = "ui-datepicker workerEditor", tabindex = "1", id = idPrefix + "dateinUSA" })
@@ -212,10 +212,10 @@
             <!--dateinUSA-->
         </div>
         <div class="tb-row">
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.countryoforiginID)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.DropDownListFor(model => model.countryoforiginID,
                      new SelectList(Lookups.countryoforigin(CI.TwoLetterISOLanguageName),
                 "Value",
@@ -226,10 +226,10 @@
                 @Html.ValidationMessageFor(model => model.countryoforiginID)
             </div>
             <!--countryoforiginID-->
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.dateinseattle)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.TextBox("dateinseattle",
                             Html.Encode(System.String.Format("{0:d}", Model.dateinseattle)),
                                               new { @class = "ui-datepicker workerEditor", tabindex = "2", id = idPrefix + "dateinseattle" })
@@ -238,10 +238,10 @@
             <!--dateinseattle-->
         </div>
         <div class="tb-row">
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.disabled)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.DropDownListFor(model => model.disabled,
                                     new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName),
                                         "Value",
@@ -252,20 +252,20 @@
                 @Html.ValidationMessageFor(model => model.disabled)
             </div>
             <!--disabled-->
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.disabilitydesc)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.TextBox("disabilitydesc", Model.disabilitydesc, new { tabindex = "2", @class = "workerEditor", id = idPrefix + "disabilitydesc" })
                 @Html.ValidationMessageFor(model => model.disabilitydesc)
             </div>
             <!--disabilitydesc-->
         </div>
         <div class="tb-row">
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.maritalstatus)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.DropDownListFor(model => model.maritalstatus,
                                              new SelectList(Lookups.maritalstatus(CI.TwoLetterISOLanguageName),
                                         "Value",
@@ -275,10 +275,10 @@
                 @Html.ValidationMessageFor(model => model.maritalstatus)
             </div>
             <!--maritalstatus-->
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.livewithchildren)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.DropDownListFor(model => model.livewithchildren,
                                     new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName),
                                         "Value",
@@ -291,18 +291,18 @@
             <!--livewithchildren-->
         </div>
         <div class="tb-row">
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.numofchildren)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.TextBox("numofchildren", Model.numofchildren, new { tabindex = "1", @class = "workerEditor", id = idPrefix + "numofchildren" })
                 @Html.ValidationMessageFor(model => model.numofchildren)
             </div>
             <!--numofchildren-->
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.incomeID)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.DropDownListFor(model => model.incomeID,
                                              new SelectList(Lookups.income(CI.TwoLetterISOLanguageName),
                                         "Value",
@@ -315,10 +315,10 @@
             <!--incomeID-->
         </div>
         <div class="tb-row">
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.livealone)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.DropDownListFor(model => model.livealone,
                                     new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName),
                                         "Value",
@@ -331,10 +331,10 @@
                 @Html.ValidationMessageFor(model => model.livealone)
             </div>
             <!--livealone-->
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.immigrantrefugee)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.DropDownListFor(model => model.immigrantrefugee,
             new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName),
                 "Value",
@@ -347,10 +347,10 @@
             <!--immigrantrefugee-->
         </div>
         <div class="tb-row">
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.driverslicense)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.DropDownListFor(model => model.driverslicense,
             new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName),
                 "Value",
@@ -361,10 +361,10 @@
                 @Html.ValidationMessageFor(model => model.driverslicense)
             </div>
             <!--driverslicense-->
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.licenseexpirationdate)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.TextBox("licenseexpirationdate",
             Html.Encode(System.String.Format("{0:d}", Model.licenseexpirationdate)),
                      new { @class = "ui-datepicker workerEditor", tabindex = "2", id = idPrefix + "licenseexpirationdate" })
@@ -373,10 +373,10 @@
             <!--licenseexpirationdate-->
         </div>
         <div class="tb-row">
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.carinsurance)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.DropDownListFor(model => model.carinsurance,
             new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName),
                 "Value",
@@ -387,10 +387,10 @@
                 @Html.ValidationMessageFor(model => model.carinsurance)
             </div>
             <!--carinsurance-->
-            <div class="tb-label tb-cell">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.insuranceexpiration)
             </div>
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
                 @Html.TextBox("insuranceexpiration", Html.Encode(System.String.Format("{0:d}", Model.insuranceexpiration)), new { @class = "ui-datepicker workerEditor", tabindex = "2", id = idPrefix + "insuranceexpiration" })
                 @Html.ValidationMessageFor(model => model.insuranceexpiration)
             </div>
@@ -419,18 +419,18 @@
 <!--Image-->
 <div class="tb-table mui-edit-worker-footer">
     <div class="tb-row">
-        <div class="tb-label tri-col tb-cell" style="text-align: left">
+        <div class="tb-label tri-col" style="text-align: left">
             @Html.LabelFor(model => model.skill1)
         </div>
-        <div class="tb-label tri-col tb-cell" style="text-align: left">
+        <div class="tb-label tri-col" style="text-align: left">
             @Html.LabelFor(model => model.skill2)
         </div>
-        <div class="tb-label tri-col tb-cell" style="text-align: left">
+        <div class="tb-label tri-col" style="text-align: left">
             @Html.LabelFor(model => model.skill3)
         </div>
     </div>
     <div class="tb-row">
-        <div class="tb-field tri-col tb-cell">
+        <div class="tb-field tri-col">
             @Html.DropDownListFor(model => model.skill1,
             new SelectList(Lookups.skill(CI.TwoLetterISOLanguageName, true),
                 "Value",
@@ -439,7 +439,7 @@
                 @Machete.Web.Resources.Shared.choose)
             @Html.ValidationMessageFor(model => model.skill1)
         </div>
-        <div class="tb-field tri-col tb-cell">
+        <div class="tb-field tri-col">
             @Html.DropDownListFor(model => model.skill2,
             new SelectList(Lookups.skill(CI.TwoLetterISOLanguageName, true),
                 "Value",
@@ -447,7 +447,7 @@
                 @Machete.Web.Resources.Shared.choose)
             @Html.ValidationMessageFor(model => model.skill2)
         </div>
-        <div class="tb-field tri-col tb-cell">
+        <div class="tb-field tri-col">
             @Html.DropDownListFor(model => model.skill3,
             new SelectList(Lookups.skill(CI.TwoLetterISOLanguageName, true),
                 "Value",
@@ -457,51 +457,51 @@
         </div>
     </div>
     <div class="tb-row">
-        <div class="tb-label tri-col tb-cell" style="text-align: left">
+        <div class="tb-label tri-col" style="text-align: left">
             @Html.LabelFor(model => model.emcontUSAname)
         </div>
-        <div class="tb-label tri-col tb-cell" style="text-align: left">
+        <div class="tb-label tri-col" style="text-align: left">
             @Html.LabelFor(model => model.emcontUSArelation)
         </div>
-        <div class="tb-label tri-col tb-cell" style="text-align: left">
+        <div class="tb-label tri-col" style="text-align: left">
             @Html.LabelFor(model => model.emcontUSAphone)
         </div>
     </div>
     <div class="tb-row">
-        <div class="tb-field tri-col tb-cell">
+        <div class="tb-field tri-col">
             @Html.EditorFor(model => model.emcontUSAname)
             @Html.ValidationMessageFor(model => model.emcontUSAname)
         </div>
-        <div class="tb-field tri-col tb-cell">
+        <div class="tb-field tri-col">
             @Html.EditorFor(model => model.emcontUSArelation)
             @Html.ValidationMessageFor(model => model.emcontUSArelation)
         </div>
-        <div class="tb-field tri-col tb-cell">
+        <div class="tb-field tri-col">
             @Html.EditorFor(model => model.emcontUSAphone)
             @Html.ValidationMessageFor(model => model.emcontUSAphone)
         </div>
     </div>
     <div class="tb-row">
-        <div class="tb-label tri-col tb-cell" style="text-align: left">
+        <div class="tb-label tri-col" style="text-align: left">
             @Html.LabelFor(model => model.emcontoriginname)
         </div>
-        <div class="tb-label tri-col tb-cell" style="text-align: left">
+        <div class="tb-label tri-col" style="text-align: left">
             @Html.LabelFor(model => model.emcontoriginrelation)
         </div>
-        <div class="tb-label tri-col tb-cell" style="text-align: left">
+        <div class="tb-label tri-col" style="text-align: left">
             @Html.LabelFor(model => model.emcontoriginphone)
         </div>
     </div>
     <div class="tb-row">
-        <div class="tb-field tri-col tb-cell">
+        <div class="tb-field tri-col">
             @Html.EditorFor(model => model.emcontoriginname)
             @Html.ValidationMessageFor(model => model.emcontoriginname)
         </div>
-        <div class="tb-field tri-col tb-cell">
+        <div class="tb-field tri-col">
             @Html.EditorFor(model => model.emcontoriginrelation)
             @Html.ValidationMessageFor(model => model.emcontoriginrelation)
         </div>
-        <div class="tb-field tri-col tb-cell">
+        <div class="tb-field tri-col">
             @Html.EditorFor(model => model.emcontoriginphone)
             @Html.ValidationMessageFor(model => model.emcontoriginphone)
         </div>
