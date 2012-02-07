@@ -241,6 +241,10 @@ input[type="text"]
     border: 1px solid #CCC;
 }
 
+input[type="text"].personEditor
+{
+}
+
 input[type="text"].workerEditor
 {
     width: 6em;
