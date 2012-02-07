@@ -11,30 +11,30 @@
 @Html.HiddenFor(model => model.EmployerID, new { @id = idPrefix + "EmployerID" })
 <div class="tb-table">
     <div class="tb-row">
-        <div class="tb-label tb-cell">
+        <div class="tb-label">
             @Html.LabelFor(model => model.dateTimeofWork)
         </div>
-        <div class="tb-field tb-cell">
+        <div class="tb-field">
             @Html.TextBox("dateTimeofWork", Html.Encode(System.String.Format("{0:g}", Model.dateTimeofWork)), new { @id = idPrefix + "dateTimeofWork" })
             @Html.ValidationMessageFor(model => model.dateTimeofWork)
         </div>
-        <div class="tb-label tb-cell">
+        <div class="tb-label">
             @Html.LabelFor(model => model.paperOrderNum)
         </div>
-        <div class="tb-field tb-cell">
+        <div class="tb-field">
             @Html.TextBox("paperOrderNum", Model.paperOrderNum, new { style = "width: 5em", id = idPrefix + "paperOrderNum" })
             @Html.ValidationMessageFor(model => model.paperOrderNum)
         </div>
     </div>
     <div class="tb-row">
-        <div class="tb-label tb-cell">
+        <div class="tb-label">
             @Html.LabelFor(model => model.status)
         </div>
         
 
         @if (Html.IsInRole(Html.Role_AM()))
         {
-            <div class="tb-field tb-cell">
+            <div class="tb-field">
             @Html.DropDownListFor(model => model.status,
                                          new SelectList(Lookups.orderstatus(CI.TwoLetterISOLanguageName), "Value", "Text", Model.status), 
                                     @Machete.Web.Resources.Shared.choose, 
@@ -45,16 +45,16 @@
         }
         else
         {
-            <div class="tb-header tb-cell">
+            <div class="tb-header">
 
             @Lookups.byID(Model.status, CI.TwoLetterISOLanguageName)
             @Html.HiddenFor(model => model.status, new { @id = idPrefix + "status" })
             </div>
         }
-        <div class="tb-label tb-cell" style="width: auto">
+        <div class="tb-label" style="width: auto">
             @Html.LabelFor(model => model.timeFlexible)
         </div>
-        <div class="tb-field tb-cell" style="width: 20px">
+        <div class="tb-field" style="width: 20px">
             @Html.DropDownListFor(model => model.timeFlexible, 
                                     new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.timeFlexible), 
                                     @Machete.Web.Resources.Shared.choose, 
@@ -63,17 +63,17 @@
         </div>
     </div>
     <div class="tb-row">
-        <div class="tb-label tb-cell">
+        <div class="tb-label">
             @Html.LabelFor(model => model.contactName)
         </div>
-        <div class="tb-field tb-cell">
+        <div class="tb-field">
             @Html.TextBoxFor(model => model.contactName, new { tabindex = "1", id = idPrefix + "contactName" })
             @Html.ValidationMessageFor(model => model.contactName)
         </div>
-        <div class="tb-label tb-cell">
+        <div class="tb-label">
             @Html.LabelFor(model => model.permanentPlacement)
         </div>
-        <div class="tb-field tb-cell">
+        <div class="tb-field">
             @Html.DropDownListFor(model => model.permanentPlacement,
                                     new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.permanentPlacement),
                                     @Machete.Web.Resources.Shared.choose,
@@ -82,34 +82,34 @@
         </div>
     </div>
     <div class="tb-row">
-        <div class="tb-label tb-cell">
+        <div class="tb-label">
             @Html.LabelFor(model => model.workSiteAddress1)
         </div>
-        <div class="tb-field tb-cell">
+        <div class="tb-field">
             @Html.TextBoxFor(model => model.workSiteAddress1, new { tabindex = "1", id = idPrefix + "workSiteAddress1" })
             @Html.ValidationMessageFor(model => model.workSiteAddress1)
         </div>
-         @*<div class="tb-label tb-cell">
+         @*<div class="tb-label">
             @Html.LabelFor(model => model.typeOfWorkID)
         </div>
-        <div class="tb-field tb-cell">
+        <div class="tb-field">
             @Html.DropDownListFor(model => model.typeOfWorkID, new SelectList(Lookups.typeOfWork(CI.TwoLetterISOLanguageName), "Value", "Text", Model.typeOfWorkID), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })
             @Html.ValidationMessageFor(model => model.typeOfWorkID)
         </div>*@
     </div>
     <!--tb-row-->
     <div class="tb-row">
-        <div class="tb-label tb-cell">
+        <div class="tb-label">
             @Html.LabelFor(model => model.workSiteAddress2)
         </div>
-        <div class="tb-field tb-cell">
+        <div class="tb-field">
             @Html.TextBoxFor(model => model.workSiteAddress2, new { tabindex = "1", id = idPrefix + "workSiteAddress2" })
             @Html.ValidationMessageFor(model => model.workSiteAddress2)
         </div>
-        <div class="tb-label tb-cell englishRequired_@(Model.ID)">
+        <div class="tb-label englishRequired_@(Model.ID)">
             @Html.LabelFor(model => model.englishRequired)
         </div>
-        <div class="tb-field tb-cell englishRequired_@(Model.ID)">
+        <div class="tb-field englishRequired_@(Model.ID)">
             @Html.DropDownListFor(model => model.englishRequired, 
             new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.englishRequired), 
             @Machete.Web.Resources.Shared.choose,
@@ -119,17 +119,17 @@
     </div>
     <!--tb-row-->
     <div class="tb-row">
-        <div class="tb-label tb-cell">
+        <div class="tb-label">
             @Html.LabelFor(model => model.city)
         </div>
-        <div class="tb-field tb-cell">
+        <div class="tb-field">
             @Html.TextBoxFor(model => model.city, new { tabindex = "1", id = idPrefix + "city" })
             @Html.ValidationMessageFor(model => model.city)
         </div>
-        <div class="tb-label tb-cell">
+        <div class="tb-label">
             @Html.LabelFor(model => model.lunchSupplied)
         </div>
-        <div class="tb-field tb-cell">
+        <div class="tb-field">
             @Html.DropDownListFor(model => model.lunchSupplied, 
             new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.lunchSupplied), 
             @Machete.Web.Resources.Shared.choose,
@@ -140,17 +140,17 @@
     </div>
     <!--tb-row-->
     <div class="tb-row">
-        <div class="tb-label tb-cell">
+        <div class="tb-label">
             @Html.LabelFor(model => model.state)
         </div>
-        <div class="tb-field tb-cell">
+        <div class="tb-field">
             @Html.TextBoxFor(model => model.state, new { tabindex = "1", id = idPrefix + "state" })
             @Html.ValidationMessageFor(model => model.state)
         </div>
-        <div class="tb-label tb-cell">
+        <div class="tb-label">
             @Html.LabelFor(model => model.transportMethodID)
         </div>
-        <div class="tb-field tb-cell">
+        <div class="tb-field">
             @Html.DropDownListFor(model => model.transportMethodID,
                      new SelectList(Lookups.transportmethod(CI.TwoLetterISOLanguageName), "Value", "Text", Model.transportMethodID), 
             @Machete.Web.Resources.Shared.choose,
@@ -161,17 +161,17 @@
     <!--tb-row-->
     <div class="tb-row">
 
-    <div class="tb-label tb-cell">
+    <div class="tb-label">
             @Html.LabelFor(model => model.zipcode)
         </div>
-        <div class="tb-field tb-cell">
+        <div class="tb-field">
             @Html.TextBoxFor(model => model.zipcode, new { tabindex = "1", id = idPrefix + "zipcode" })
             @Html.ValidationMessageFor(model => model.zipcode)
         </div>
-        <div class="tb-label tb-cell">
+        <div class="tb-label">
             @Html.LabelFor(model => model.transportFee)
         </div>
-        <div class="tb-field tb-cell">      
+        <div class="tb-field">      
             @Html.TextBox("transportFee", 
             Html.Encode(System.String.Format("{0:f2}", Model.transportFee)),
                      new { tabindex = "2", @class = "money-field", id = idPrefix + "transportFee" })
@@ -180,17 +180,17 @@
     </div>
     <!--tb-row-->
     <div class="tb-row">
-        <div class="tb-label tb-cell">
+        <div class="tb-label">
             @Html.LabelFor(model => model.phone)
         </div>
-        <div class="tb-field tb-cell">
+        <div class="tb-field">
             @Html.TextBoxFor(model => model.phone, new { tabindex = "1", id = idPrefix + "phone" })
             @Html.ValidationMessageFor(model => model.phone)
         </div>
-        <div class="tb-label tb-cell">
+        <div class="tb-label">
             @Html.LabelFor(model => model.transportFeeExtra)
         </div>
-        <div class="tb-field tb-cell">
+        <div class="tb-field">
             @Html.TextBox("transportFeeExtra", 
             Html.Encode(System.String.Format("{0:f2}", Model.transportFeeExtra)),
                               new { tabindex = "2", @class = "money-field", id = idPrefix + "transportFeeExtra" })
@@ -200,29 +200,29 @@
 </div><!--tb-table main workorder table-->
 <div class="tb-table">
     <div class="tb-row englishNoteRow" id="@(idPrefix)englishRequiredNoteRow">
-        <div class="tb-label tb-cell desc-label">
+        <div class="tb-label desc-label">
             @Html.LabelFor(model => model.englishRequiredNote)
         </div>
-        <div class="tb-field tb-cell">
+        <div class="tb-field">
             @Html.TextAreaFor(model => model.englishRequiredNote, 
                 new { tabindex = "2", @class = "desc-field", id = idPrefix + "englishRequiredNote" })
             @Html.ValidationMessageFor(model => model.englishRequiredNote)
         </div>
     </div>
     <div class="tb-row">
-        <div class="tb-label tb-cell desc-label">
+        <div class="tb-label desc-label">
             @Html.LabelFor(model => model.workerRequests)
             <input type="button" value="@Machete.Domain.Resources.WorkOrder.requestAdd" class="formButton" id="addRequestBtn-@(Model.ID)"/>
             <input type="button" value="@Machete.Domain.Resources.WorkOrder.requestRemove" class="formButton" id="removeRequestBtn-@(Model.ID)"/>
         </div>
-        <div class="tb-field tb-cell desc-field">
+        <div class="tb-field desc-field">
             @Html.ListBox("workerRequests2", new SelectList(ViewBag.workerRequests, "Value", "Text"), new { @id = "workerRequests2_WO-"+ Model.ID, tabindex = "2", @style="min-width: 8em;"})
         </div>
 
-        <div class="tb-label tb-cell desc-label">
+        <div class="tb-label desc-label">
             @Html.LabelFor(model => model.description)
         </div>
-        <div class="tb-field tb-cell desc-field">
+        <div class="tb-field desc-field">
             @Html.TextAreaFor(model => model.description, new { tabindex = "3", @class = "desc-field", id = idPrefix + "description" })
             @Html.ValidationMessageFor(model => model.description)
         </div>
