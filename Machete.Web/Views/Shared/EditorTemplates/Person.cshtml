@@ -13,14 +13,14 @@
             @Html.LabelFor(model => model.firstname1)
         </div>
         <div class="tb-field tb-cell">
-            @Html.TextBoxFor(model => model.firstname1, new { tabindex = "1" })
+            @Html.TextBoxFor(model => model.firstname1, new { tabindex = "1", @class="personEditor"})
             @Html.ValidationMessageFor(model => model.firstname1)
         </div>
         <div class="tb-label tb-cell">
             @Html.LabelFor(model => model.firstname2)
         </div>
         <div class="tb-field tb-cell">
-            @Html.TextBoxFor(model => model.firstname2, new { tabindex = "1" })
+            @Html.TextBoxFor(model => model.firstname2, new { tabindex = "1", @class = "personEditor" })
             @Html.ValidationMessageFor(model => model.firstname2)
         </div>
     </div>
@@ -29,14 +29,14 @@
             @Html.LabelFor(model => model.lastname1)
         </div>
         <div class="tb-field tb-cell">
-            @Html.TextBoxFor(model => model.lastname1, new { tabindex = "1" })
+            @Html.TextBoxFor(model => model.lastname1, new { tabindex = "1", @class = "personEditor" })
             @Html.ValidationMessageFor(model => model.lastname1)
         </div>
         <div class="tb-label tb-cell">
             @Html.LabelFor(model => model.lastname2)
         </div>
         <div class="tb-field tb-cell">
-            @Html.TextBoxFor(model => model.lastname2, new { tabindex = "1" })
+            @Html.TextBoxFor(model => model.lastname2, new { tabindex = "1", @class = "personEditor" })
             @Html.ValidationMessageFor(model => model.lastname2)
         </div>
     </div>
@@ -45,14 +45,14 @@
             @Html.LabelFor(model => model.address1)
         </div>
         <div class="tb-field tb-cell">
-            @Html.TextBoxFor(model => model.address1, new { tabindex = "1" })
+            @Html.TextBoxFor(model => model.address1, new { tabindex = "1", @class = "personEditor" })
             @Html.ValidationMessageFor(model => model.address1)
         </div>
         <div class="tb-label tb-cell">
             @Html.LabelFor(model => model.phone)
         </div>
         <div class="tb-field tb-cell">
-            @Html.TextBoxFor(model => model.phone, new { tabindex = "2" })
+            @Html.TextBoxFor(model => model.phone, new { tabindex = "2", @class = "personEditor" })
             @Html.ValidationMessageFor(model => model.phone)
         </div>
     </div>
@@ -61,7 +61,7 @@
             @Html.LabelFor(model => model.address2)
         </div>
         <div class="tb-field tb-cell">
-            @Html.TextBoxFor(model => model.address2, new { tabindex = "1" })
+            @Html.TextBoxFor(model => model.address2, new { tabindex = "1", @class = "personEditor" })
             @Html.ValidationMessageFor(model => model.address2)
         </div>
         <div class="tb-label tb-cell">
@@ -77,14 +77,14 @@
             @Html.LabelFor(model => model.city)
         </div>
         <div class="tb-field tb-cell">
-            @Html.TextBoxFor(model => model.city, new { tabindex = "1" })
+            @Html.TextBoxFor(model => model.city, new { tabindex = "1", @class = "personEditor" })
             @Html.ValidationMessageFor(model => model.city)
         </div>
         <div class="tb-label tb-cell">
             @Html.LabelFor(model => model.genderother)
         </div>
         <div class="tb-field tb-cell">
-            @Html.TextBoxFor(model => model.genderother, new { tabindex = "2" })
+            @Html.TextBoxFor(model => model.genderother, new { tabindex = "2", @class = "personEditor" })
             @Html.ValidationMessageFor(model => model.genderother)
         </div>
     </div>
@@ -93,14 +93,14 @@
             @Html.LabelFor(model => model.state)
         </div>
         <div class="tb-field tb-cell">
-            @Html.TextBoxFor(model => model.state, new { tabindex = "1" })
+            @Html.TextBoxFor(model => model.state, new { tabindex = "1", @class = "personEditor" })
             @Html.ValidationMessageFor(model => model.state)
         </div>
         <div class="tb-label tb-cell">
             @Html.LabelFor(model => model.active)
         </div>
         <div class="tb-field tb-cell">
-            @Html.CheckBoxFor(model => model.active, new { tabindex = "2" })
+            @Html.CheckBoxFor(model => model.active, new { tabindex = "2", @class = "personEditor" })
             @Html.ValidationMessageFor(model => model.active)
         </div>
     </div>
@@ -109,7 +109,7 @@
             @Html.LabelFor(model => model.zipcode)
         </div>
         <div class="tb-field tb-cell">
-            @Html.TextBoxFor(model => model.zipcode, new { tabindex = "1" })
+            @Html.TextBoxFor(model => model.zipcode, new { tabindex = "1", @class = "personEditor" })
             @Html.ValidationMessageFor(model => model.zipcode)
         </div>
     </div>

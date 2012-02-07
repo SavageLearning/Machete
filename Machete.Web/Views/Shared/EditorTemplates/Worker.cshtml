@@ -14,7 +14,9 @@
                 @Html.LabelFor(model => model.dwccardnum)
             </div>
             <div class="tb-field tb-cell">
-                @Html.TextBox("dwccardnum", Model.dwccardnum, new { tabindex = "2", @class = "workerEditor", id = idPrefix + "dwccardnum" })
+                @Html.TextBox("dwccardnum", Model.dwccardnum, new { @tabindex = "2", 
+                                                                    @class = "workerEditor", 
+                                                                    @id = idPrefix + "dwccardnum" })
                 @Html.ValidationMessageFor(model => model.dwccardnum)
             </div>
             <!--dwccardnum-->
@@ -82,6 +84,8 @@
             </div>
             <!--memberexpirationdate-->
         </div>
+    </div>
+    <div class="tb-table">
         <div class="tb-row">
             <div class="tb-label tb-cell">
                 @Html.LabelFor(model => model.typeOfWorkID)
@@ -321,7 +325,9 @@
                                         "Text",
                                         Model.livealone),
                                     @Machete.Web.Resources.Shared.choose,
-                                             new { tabindex = "1", @class = "workerEditor", id = idPrefix + "livealone" })
+                                             new { @tabindex = "1", 
+                                                   @class = "workerEditor", 
+                                                   @id = idPrefix + "livealone" })
                 @Html.ValidationMessageFor(model => model.livealone)
             </div>
             <!--livealone-->
@@ -385,7 +391,7 @@
                 @Html.LabelFor(model => model.insuranceexpiration)
             </div>
             <div class="tb-field tb-cell">
-                @Html.TextBox("insuranceexpiration", Html.Encode(System.String.Format("{0:d}", Model.insuranceexpiration)), new { @class = "ui-datepicker", tabindex = "2", id = idPrefix + "insuranceexpiration" })
+                @Html.TextBox("insuranceexpiration", Html.Encode(System.String.Format("{0:d}", Model.insuranceexpiration)), new { @class = "ui-datepicker workerEditor", tabindex = "2", id = idPrefix + "insuranceexpiration" })
                 @Html.ValidationMessageFor(model => model.insuranceexpiration)
             </div>
             <!--insuranceexpiration-->
@@ -533,5 +539,6 @@
             buttonImageOnly: true,
             showOn: "button"
         });
+        $('.ui-datepicker-trigger').addClass('print_off');
     });
 </script>
