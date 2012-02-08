@@ -9,18 +9,18 @@
     CultureInfo CI = (CultureInfo)Session["Culture"];
 }
 <div class="dateNeeded">
-<div class="neededText">@WorkOrders.dateneeded</div>
-<div class="neededText">@System.String.Format("{0:dddd}", Model.dateTimeofWork)</div>
-<div class="neededText">@System.String.Format("{0:d}", Model.dateTimeofWork)</div>
-<div class="neededText">@System.String.Format("{0:t}", Model.dateTimeofWork)</div>
-@if (Model.timeFlexible == true)
-{
-    <div class="neededText">@WorkOrders.flexible</div>
-}
-else
-{
-    <div class="neededText">@WorkOrders.sharp</div>
-}
+    <div class="neededText">@WorkOrders.dateneeded</div>
+    <div class="neededText">@System.String.Format("{0:dddd}", Model.dateTimeofWork)</div>
+    <div class="neededText">@System.String.Format("{0:d}", Model.dateTimeofWork)</div>
+    <div class="neededText">@System.String.Format("{0:t}", Model.dateTimeofWork)</div>
+    @if (Model.timeFlexible == true)
+    {
+        <div class="neededText">@WorkOrders.flexible</div>
+    }
+    else
+    {
+        <div class="neededText">@WorkOrders.sharp</div>
+    }
 </div>
 
 <br />
@@ -48,22 +48,19 @@ else
     }    
 </div>
 <h4>@WorkOrders.listOfPositions</h4>
-
-    <div class="tb-table">
-        <div class="tb-row">
-            <div class="tb-header-fixed">@WorkOrders.woidcount</div>
-            <div class="tb-header-fixed">@WorkAssignment.skillID</div>
-            <div class="tb-header-fixed">@WorkAssignment.hourlyWage</div>
-            <div class="tb-header-fixed">@WorkAssignments.hours</div> 
-            <div class="tb-header-fixed">@WorkAssignments.hourRange</div>                       
-            <div class="tb-header-fixed">@WorkAssignment.days</div>
-            <div class="tb-header-fixed">@WorkAssignments.earnings</div>
-            <div class="tb-header-fixed">@WorkAssignments.earningsRange</div>
-            <div class="tb-header-fixed">@WorkAssignment.englishLevelID</div>
-                        
-            
-        </div>
+<div class="tb-table">
+    <div class="tb-row">
+        <div class="tb-header-fixed">@WorkOrders.woidcount</div>
+        <div class="tb-header-fixed">@WorkAssignment.skillID</div>
+        <div class="tb-header-fixed">@WorkAssignment.hourlyWage</div>
+        <div class="tb-header-fixed">@WorkAssignments.hours</div> 
+        <div class="tb-header-fixed">@WorkAssignments.hourRange</div>                       
+        <div class="tb-header-fixed">@WorkAssignment.days</div>
+        <div class="tb-header-fixed">@WorkAssignments.earnings</div>
+        <div class="tb-header-fixed">@WorkAssignments.earningsRange</div>
+        <div class="tb-header-fixed">@WorkAssignment.englishLevelID</div>          
     </div>
+</div>
 @foreach (var item in Model.workAssignments)
 {
     <div class="tb-table">

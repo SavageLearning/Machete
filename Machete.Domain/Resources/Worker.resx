@@ -142,7 +142,7 @@
     <value>Marital Status</value>
   </data>
   <data name="memberexpirationdate" xml:space="preserve">
-    <value>Member expiration date</value>
+    <value>Expiration date</value>
   </data>
   <data name="numofchildren" xml:space="preserve">
     <value>Number of Children</value>
@@ -154,7 +154,7 @@
     <value>This field is required</value>
   </data>
   <data name="neighborhoodID" xml:space="preserve">
-    <value>Seattle neighborhood</value>
+    <value>Neighborhood</value>
   </data>
   <data name="stringlength" xml:space="preserve">
     <value>Please enter no more than {1} characters</value>
@@ -241,7 +241,7 @@
     <value>Type of worker</value>
   </data>
   <data name="memberReactivateDate" xml:space="preserve">
-    <value>Membership reactivation date</value>
+    <value>Reactivation date</value>
   </data>
   <data name="memberStatus" xml:space="preserve">
     <value>Member status</value>

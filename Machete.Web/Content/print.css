@@ -5,6 +5,8 @@ to use a different color start by replacing all instances of
 
 
 ----------------------------------------------------------*/
+
+/* _Layout.cshtml -- style for all page bodies  */
 body
 {
     background-color: #5c87b2;
@@ -21,19 +23,6 @@ body
     width: 75px; 
     clear:left;
 
-}
-
-.dateNeeded 
-{
-    float:right; 
-    border: 1px solid Black;
-}
-
-.neededText 
-{
-    font-size: 1.5em;
-    color: #000;
-    margin: 2px;
 }
 
 a:link
@@ -347,71 +336,28 @@ div#title
 
 /* Styles for editor and display helpers
 ----------------------------------------------------------*/
-.display-label,
-.editor-label
-{
-    /*border: 1px solid red;*/
-     clear: left;
-     float: left;
-     font-weight: bold;
-     padding: 5px 15px;
-     text-align: right;
-     width: 150px;
-     margin: 0;
-}
 
-.display-field,
-.editor-field
-{
-    padding: 5px;
-    width: 200px;
-    margin: 0;
-    float: left;
-    /*border: 1px solid blue;*/
-}
-
+/* Used for description labels on forms  */
 .desc-label
 {
     vertical-align: top;
     width: 8em;
-    
 }
-
+/* Used for description fields on forms  */
 .desc-field
 {
     width: 40em;
     height: 2em !important;
 }
-
-.note-label
-{
-    vertical-align: top;   
-}
-
-.note-field
-{
-    min-height: 1em !important;
-}
-
+/* Used on workorder and workassignment;   */
 .money-field
 {
     width: 5em !important;
 }
-
-
+/*   */
 .text-box
 {
     width: 30em;
-}
-
-.text-box.multi-line
-{
-    height: 6.5em;
-}
-
-.tri-state
-{
-    width: 6em;
 }
 
 .tb-table
@@ -422,7 +368,6 @@ div#title
 .tb-row
 {
     display: table-row;
-    border: 1px solid red;
 }
 
 .tb-cell
@@ -430,22 +375,17 @@ div#title
     display: table-cell;
 }
 
-.tb-col-hidden
-{
-    display: none;
-}
-
-
 .tb-label
 {
     /*border: 1px solid red;*/
+    width: 12em;
     margin: 0em 0 0 0;
     font-weight: normal;
     font-size: 80%;
     padding: 1px;
     text-align: right;
     vertical-align: text-top;
-    width: 12em;
+    display: table-cell;
 }
 
 .tb-header
@@ -455,9 +395,9 @@ div#title
     font-weight: bold;
     padding: 5px;
     text-align: left;
-
+    display: table-cell;
 }
-
+/* WorkOrder view, formats workAssignment list */
 .tb-header-fixed
 {
     border: 1px solid black;
@@ -467,8 +407,8 @@ div#title
     text-align: left;
     width: 80px;
     font-size: 80%;
+    display: table-cell;
 }
-
 
 .tb-field
 {
@@ -476,8 +416,9 @@ div#title
     margin:0.5em 0 0 0;
     /*font-weight: bold;*/
     padding: 1px;
+    display: table-cell;
 }
-
+/* WorkOrder view, formats workAssignment list */
 .tb-field-fixed
 {
     /*border: 1px solid blue;*/
@@ -487,26 +428,30 @@ div#title
     width: 80px;
     text-align: center;
     padding: 5px;
+    display: table-cell;
 }
 
 
 .tb-underline
 {
     font-weight: bold;
-    text-decoration: underline;       
+    text-decoration: underline;
+    display: table-cell;  
 }
-
+/* WorkOrder view */
 .tb-bordered_field
 {
     border: 1px solid black;
     margin: 1em 0 0 0;    
     padding: 5px;
     text-align: left;
+    display: table-cell;
 }
 
 .tb-display
 {
     margin:0.5em 0 0 0;
+    display: table-cell;
 }
 
 
@@ -539,8 +484,25 @@ div#title
     border: 1px solid red !important;
     color: Red !important; 
 }
-
+/* Delete button formatting */
 .deleteButton
 {
     float: right;
+}
+
+/* WorkOrder --------------------------------------------------------------*/
+
+/* WorkOrder/View: Box floating in upper right */
+.dateNeeded 
+{
+    float:right; 
+    border: 1px solid Black;
+}
+
+/* WorkOrder/View: Box floating in upper right */
+.neededText 
+{
+    font-size: 1.5em;
+    color: #000;
+    margin: 2px;
 }

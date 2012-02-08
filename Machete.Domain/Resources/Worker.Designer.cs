@@ -304,7 +304,7 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Member expiration date.
+        ///   Looks up a localized string similar to Expiration date.
         /// </summary>
         public static string memberexpirationdate {
             get {
@@ -313,7 +313,7 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Membership reactivation date.
+        ///   Looks up a localized string similar to Reactivation date.
         /// </summary>
         public static string memberReactivateDate {
             get {
@@ -331,7 +331,7 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Seattle neighborhood.
+        ///   Looks up a localized string similar to Neighborhood.
         /// </summary>
         public static string neighborhoodID {
             get {

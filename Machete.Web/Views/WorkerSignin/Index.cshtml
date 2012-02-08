@@ -8,49 +8,51 @@
 }
 
 <div id="container">
-        <div id="signinData" class="signinColumn" style="float: left;">
-            <div class="print_off">
-            @using (Html.BeginForm("Index", "WorkerSignin", FormMethod.Post, new { @id = "signinForm" }))
-            {
-                @Html.ValidationSummary(true)
-                <div class="editor-label">
-                    @Html.LabelFor(model => model.dwccardentry)
+    <div id="signinData" class="signinColumn" style="float: left;">
+        <div class="print_off">
+        @using (Html.BeginForm("Index", "WorkerSignin", FormMethod.Post, new { @id = "signinForm" }))
+        {
+            @Html.ValidationSummary(true)
+            <div class="tb-table">
+                <div class="tb-row">
+                    <div class="tb-label">
+                        @Html.LabelFor(model => model.dwccardentry)
+                    </div>
+                    <div class="tb-field">
+                        @Html.TextBox("dwccardentry", "", new { style = "width: 100px;" })
+                        @Html.ValidationMessageFor(model => model.dwccardentry)
+                    </div>
+                    <div class="tb-field">
+                        @Html.TextBox("dateforsignin",
+                            Html.Encode(String.Format("{0:mm/dd/yy}", Model.dateforsignin.ToShortDateString())),
+                            new { @class = "ui-datepicker", style = "width: 100px;" })
+                        @Html.ValidationMessageFor(model => model.dateforsignin)
+                    </div>
+                    <div class="tb-field">            
+                        <input type="submit" value="@WorkerSignins.indexsubmit" />
+                    </div>
                 </div>
-                <div class="editor-field">
-                    @Html.TextBox("dwccardentry", "", new { style = "width: 100px;" })
-                    @Html.ValidationMessageFor(model => model.dwccardentry)
-                </div>
-                <div class="editor-field">
-                    @Html.TextBox("dateforsignin",
-                        Html.Encode(String.Format("{0:mm/dd/yy}", Model.dateforsignin.ToShortDateString())),
-                        new { @class = "ui-datepicker", style = "width: 100px;" })
-                    @Html.ValidationMessageFor(model => model.dateforsignin)
-                </div>
-                <div class="">
-                <p>
-                    <input type="submit" value="@WorkerSignins.indexsubmit" />
-                </p>   
-                </div>
-            }
             </div>
-            <div id="signinTable">
-            <table id="wsiTable" class="display">
-                <thead>
-                    <tr>
-                        <th class="print_off"></th>
-                        <th>@Worker.dwccardnum</th>
-                        <th class="print_off">@WorkerSignins.memberexpiration</th>
-                        <th class="print_off">@WorkerSignins.status</th>
-                        <th>@WorkerSignins.fullname</th>
-                        <th class="print_off">@WorkerSignins.datesignin</th>
-                    </tr>
-                </thead>
-            </table>
-            </div>
+        }
         </div>
-        <div id="signinImage" class="mui-signin-imagebox print_off">       
-            <img id="wsiImage" src="/Content/images/NO-IMAGE-AVAILABLE.jpg" alt="" style="width: 200px"/>            
+        <div id="signinTable">
+        <table id="wsiTable" class="display">
+            <thead>
+                <tr>
+                    <th class="print_off"></th>
+                    <th>@Worker.dwccardnum</th>
+                    <th class="print_off">@WorkerSignins.memberexpiration</th>
+                    <th class="print_off">@WorkerSignins.status</th>
+                    <th>@WorkerSignins.fullname</th>
+                    <th class="print_off">@WorkerSignins.datesignin</th>
+                </tr>
+            </thead>
+        </table>
         </div>
+    </div>
+    <div id="signinImage" class="mui-signin-imagebox print_off">       
+        <img id="wsiImage" src="/Content/images/NO-IMAGE-AVAILABLE.jpg" alt="" style="width: 200px"/>            
+    </div>
 </div>
 <div id="signin-red-dialog">
     @WorkerSignins.redmessage

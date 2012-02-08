@@ -5,6 +5,8 @@ to use a different color start by replacing all instances of
 the blue back ground #5c87b2
 Deep red background #800000
 ----------------------------------------------------------*/
+
+/* _Layout.cshtml -- style for all page bodies  */
 body
 {
     background-color: #414D5B;
@@ -22,26 +24,6 @@ body
     clear:left;
     padding: 0;
 }
-
-.dateNeeded 
-{
-    float:right;  
-    border: 1px solid Black;
-}
-
-.neededText 
-{
-    font-size: 1.5em;
-    color: #000;
-    margin: 2px;
-}
-
-.ui-timepicker-div .ui-widget-header{ margin-bottom: 8px; }
-.ui-timepicker-div dl{ text-align: left; }
-.ui-timepicker-div dl dt{ height: 25px; }
-.ui-timepicker-div dl dd{ margin: -25px 0 10px 65px; }
-.ui-timepicker-div td { font-size: 90%; }
-#ui-datepicker-div{ display: none;}
 
 a:link
 {
@@ -377,70 +359,28 @@ div.recordButtons
 
 /* Styles for editor and display helpers
 ----------------------------------------------------------*/
-.display-label,
-.editor-label
-{
-    /*border: 1px solid red;*/
-     clear: left;
-     float: left;
-     font-weight: bold;
-     padding: 5px 15px;
-     text-align: right;
-     width: auto;
-     margin: 0;
-}
 
-.display-field,
-.editor-field
-{
-    padding: 5px;
-    width: auto;
-    margin: 0;
-    float: left;
-    /*border: 1px solid blue;*/
-}
-
+/* Used for description labels on forms  */
 .desc-label
 {
     vertical-align: top;
-    width: 8em;
-    
+    width: 8em;    
 }
-
+/* Used for description fields on forms  */
 .desc-field
 {
     /*width: 20em;*/
     height: 2em !important;
 }
-
-.note-label
-{
-    vertical-align: top;   
-}
-
-.note-field
-{
-    min-height: 1em !important;
-}
-
+/* Used on workorder and workassignment;   */
 .money-field
 {
     width: 5em !important;
 }
-
+/*   */
 .text-box
 {
     width: 30em;
-}
-
-.text-box.multi-line
-{
-    height: 6.5em;
-}
-
-.tri-state
-{
-    width: 6em;
 }
 
 .tb-table
@@ -458,21 +398,16 @@ div.recordButtons
     display: table-cell;
 }
 
-.tb-col-hidden
-{
-    display: none;
-}
-
 .tb-label
 {
     /*border: 1px solid red;*/
     width: 13em;
     margin: 0em 0 0 0;
     font-weight: bold;
+    font-size: 90%;
     padding: 1px;
     text-align: right;
     display: table-cell;
-    font-size: 90%;
 }
 
 .tb-header
@@ -484,7 +419,7 @@ div.recordButtons
     text-align: left;
     display: table-cell;
 }
-
+/* WorkOrder view, formats workAssignment list */
 .tb-header-fixed
 {
     border: 1px solid black;
@@ -510,6 +445,7 @@ input[type="text"].ui-datepicker
 {
     width: 6em;
 }
+/* WorkOrder view, formats workAssignment list */
 .tb-field-fixed
 {
     /*border: 1px solid blue;*/
@@ -521,14 +457,14 @@ input[type="text"].ui-datepicker
     display: table-cell;
     
 }
-
+/* WorkOrder view: underline blank worker namespace  */
 .tb-underline
 {
     font-weight: bold;
     text-decoration: underline;       
     display: table-cell;
 }
-
+/* WorkOrder view  */
 .tb-bordered_field
 {
     border: 1px solid black;
@@ -540,7 +476,7 @@ input[type="text"].ui-datepicker
 
 .tb-display
 {
-    margin:0.5em 0 0 0;
+    margin: 0.5em 0 0 0;
     display: table-cell;
 }
 
@@ -561,22 +497,22 @@ input.ui-button.dispatchButton
     float: left;
 }
 
-.ui-button-text-only .ui-button-text
+.ui-button-text-only .ui-button-text .ui-buttonset
 {
     padding: .5em;
     float: left;
 }
-.ui-buttonset
+/*.ui-buttonset
 {
     padding: .5em;
     float: left;
-}
+}*/
 
 .completeOrderContainer
 {
     display: block;
 }
-
+/* Activate button on workorder  */
 .completeOrderButton
 {
     width: 100%;
@@ -585,7 +521,7 @@ input.ui-button.dispatchButton
     border: 1px solid red !important;
     color: Red !important; 
 }
-
+/* Delete button formatting */
 .deleteButton
 {
     float: right;
@@ -601,63 +537,60 @@ div.mui-event-edit-label
 {
     width: 6em;
 }
-
+/* Events: the dropdown for the recommendation type */
 div.mui-event-edit-field select
 {
     width: 10em;
 }
-
+/* Events: Notes for the record */
 div.mui-event-edit-textarea textarea.desc-field 
 {
     width: 30em;
 }
+/* Events: container for all the images and info  */
 mui-event-image-gallery
 {
     float: left;
-    border-collapse:separate; 
-    border-spacing:5em;
+    border-collapse: separate; 
+    border-spacing: 5em;
 }
-
+/* Events: image row container */
 div.mui-event-image-row
 {
-    /* margin, border, and padding do nothing for the table-row*/
-
+    /* margin, border, and padding do nothing for the table-row */
 }
-
+/* Events: div for each image in the event */
 div.mui-event-image-item img, .mui-event-image-item
 {
     margin: 5px;
     margin-left: 10px;
     vertical-align: top;
 }
-
+/* Events: table next to the images, one table for each image */
 div.mui-event-image-text-table
 {
     float: left; 
     clear: left;
     padding-bottom: 5px;
 }
-
+/* Events: table next to the images, label */
 div.mui-event-image-text-row-label
 {
-    /*border: 1px solid red;*/
     width: 7em;
     margin: 0em 0 0 0;
     padding: 1px;
     text-align: right;
-    
     font-size: 90%;
 }
-
+/* Events: table next to the images, field */
 div.mui-event-image-text-row-field
 {
-    /*border: 1px solid blue;*/
     margin:0 0 0 0;
     padding: .2px;
-    /*font-weight: bold;*/
     width: 120px;
     text-align: center;
 }
+/* Events: table next to the images, field */
 div.mui-event-image-text-row-field input[type="text"]
 {
     width: 20em;
@@ -692,11 +625,35 @@ div.mui-event-image-text-row-field input[type="text"]
     clear: left;
 }
 
-/* Worker Signin
-----------------------------------------------------------*/
+/* Worker Signin ----------------------------------------------------------*/
 .mui-signin-imagebox
 {
      float: left; 
      width: 200px;
      margin: 83px 10px;
 }
+
+/* WorkOrder --------------------------------------------------------------*/
+
+/* WorkOrder/View: Box floating in upper right */
+.dateNeeded 
+{
+    float:right;  
+    border: 1px solid Black;
+}
+
+/* WorkOrder/View: Box floating in upper right */
+.neededText 
+{
+    font-size: 1.5em;
+    color: #000;
+    margin: 2px;
+}
+
+/* WorkOrder - DateTimePicker popup box */
+.ui-timepicker-div .ui-widget-header{ margin-bottom: 8px; }
+.ui-timepicker-div dl{ text-align: left; }
+.ui-timepicker-div dl dt{ height: 25px; }
+.ui-timepicker-div dl dd{ margin: -25px 0 10px 65px; }
+.ui-timepicker-div td { font-size: 90%; }
+#ui-datepicker-div{ display: none;}

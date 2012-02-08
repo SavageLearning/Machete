@@ -459,9 +459,6 @@
     <Content Include="Content\images\ui-icons_f2ec64_256x240.png" />
     <Content Include="Content\images\ui-icons_f9f2bd_256x240.png" />
     <Content Include="Content\images\ui-icons_ff7519_256x240.png" />
-    <Content Include="Content\Site_Debug.css" />
-    <Content Include="Content\Site_StageProd.css" />
-    <Content Include="Content\Site_StageTest.css" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\console-log.js" />
     <Content Include="Scripts\jquery.alerts.js">

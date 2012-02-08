@@ -7,73 +7,60 @@
 @using (Html.BeginForm())
 {
     @Html.ValidationSummary(true)
-    <table border="0" cellpadding="0" cellspacing="0">
-        <tr>
-            <td>
-                <fieldset>
-                    <legend>MembersModel</legend>
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tr>
-                            <td>
-                                <div class="editor-label">
-                                    @Html.LabelFor(model => model.UserName)
-                                </div>
-                            </td>
-                            <td>
-                                <div class="editor-field">
-                                    @Html.DisplayTextFor(model => model.UserName)
-                                    @Html.ValidationMessageFor(model => model.UserName)
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="editor-label">
-                                    @Html.LabelFor(model => model.Email)
-                                </div>
-                                </td>
-                                <td>
-                                <div class="editor-field">
-                                    @Html.DisplayTextFor(model => model.Email)
-                                    @Html.ValidationMessageFor(model => model.Email)
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="editor-label">
-                                    @Html.LabelFor(model => model.IsApproved)
-                                </div>
-                                </td>
-                                <td>
-                                <div class="editor-field">
-                                    @Html.DisplayTextFor(model => model.IsApproved)
-                                    @Html.ValidationMessageFor(model => model.IsApproved)
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                    <p>
-                        <input type="submit" value="Delete" />
-                    </p>
+    <div class="tb-table">
+        <div class="tb-row">
+            <div class="tb-cell">
+                <fieldset id="accountSet">
+                    <legend>Account Info?!</legend>
+                    <div class="tb-table">
+                        <div class="tb-row">
+                            <div class="tb-label">
+                                @Html.LabelFor(model => model.UserName)
+                            </div>
+                            <div class="tb-field">
+                                @Html.EditorFor(model => model.UserName)
+                            </div>
+                        </div>
+                        <div class="tb-row">
+                            <div class="tb-label">
+                                @Html.LabelFor(model => model.Email)
+                            </div>
+                            <div class="tb-field">
+                                @Html.EditorFor(model => model.Email)
+                            </div>
+                        </div>
+                        <div class="tb-row">
+                            <div class="tb-label">
+                                @Html.LabelFor(model => model.IsApproved)
+                            </div>
+                            <div class="tb-field">
+                                @Html.EditorFor(model => model.IsApproved)
+                            </div>
+                        </div>
+                        <input type="submit" value="Delete?!" />
+                    </div>
                 </fieldset>
-            </td>
-            <td>
-                <fieldset id="rolesgroup">
-                    <legend>Roles</legend>
-                    @foreach (String role in Roles.GetAllRoles())
-                    {
-                   
-                        <p>
-                            <label for="@role">@role:</label> 
-                            @Html.CheckBox(role, Roles.IsUserInRole(Model.UserName, role))
-                        </p>
-                   
-                    }
+            </div>
+            <div class="tb-cell">
+                <fieldset id="rolesSet">
+                    <legend>Roles?!</legend>
+                    <div class="tb-table">        
+                            @foreach (String role in Roles.GetAllRoles())
+                            {
+                                <div class="tb-row">
+                                    <div class="tb-cell">
+                                        <label for="@role">@role:</label> 
+                                    </div>
+                                    <div class="tb-cell">
+                                        @Html.CheckBox(role, Roles.IsUserInRole(Model.UserName, role), new { @class = "check-box" })
+                                    </div>
+                                </div>
+                            }
+                    </div>
                 </fieldset>
-            </td>
-        </tr>
-    </table>
+            </div>
+        </div>
+    </div>
 }
 
 <div>
@@ -81,6 +68,7 @@
 </div>
 <script type="text/javascript">
     $().ready(function () {
-        $('#rolesgroup').children().children().attr('disabled', 'disabled')
+        $('input.check-box, input.text-box').attr('disabled', 'disabled');
+
     });
 </script>
