@@ -25,12 +25,12 @@
 </div>
 
 
-<fieldset class="personEditor">
+<fieldset>
     <legend>@Persons.boxlegend</legend>
     @Html.EditorFor(model => model.person)
         
 </fieldset>
-<fieldset class="workerEditor">
+<fieldset>
     <legend>@Workers.boxlegend</legend>
     @Html.EditorFor(model => model.worker)
 </fieldset>
@@ -96,6 +96,5 @@
 <script type="text/javascript">
     $().ready(function () {
         $('.view_off').hide();
-        $('.editor-field').children().attr('disabled', 'disabled')
     });
 </script>

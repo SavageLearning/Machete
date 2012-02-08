@@ -110,24 +110,23 @@
                             new { @class = "edittab-form", @id = "lotterySigninForm"}))
             {
                 @Html.ValidationSummary(true)
-                <div class="editor-label">
-                   
-                </div>
-                <div class="editor-field">
+                <div class="tb-table">
+                <div class="tb-row">
+                <div class="tb-field">
                     @Html.TextBox("lotterycardnum", "", new {style="width: 100px;" })
                     
                 </div>
-                <div class="editor-field">
+                <div class="tb-field">
                     @Html.TextBox("lotterysignindate",
                         Html.Encode(String.Format("{0:mm/dd/yy}", DateTime.Now.ToShortDateString())),
                         new { @class = "ui-datepicker", style="width: 100px;" })
                     
                 </div>
-                <div class="">
-                <p>
+                <div class="tb-field">
                     <input type="submit" value="@WorkerSignins.indexsubmit" id="lotterySubmit"/>
-                </p>   
                 </div>
+                </div>
+            </div>
             }
     <table id="lotteryTable" class="display">
         <thead>

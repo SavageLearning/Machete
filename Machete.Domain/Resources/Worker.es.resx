@@ -190,10 +190,10 @@
     <value>Estado civil</value>
   </data>
   <data name="memberexpirationdate" xml:space="preserve">
-    <value>fecha de vencimiento miembro</value>
+    <value>Fecha de vencimiento</value>
   </data>
   <data name="neighborhoodID" xml:space="preserve">
-    <value>Barrio de Seattle</value>
+    <value>Barrio</value>
   </data>
   <data name="numofchildren" xml:space="preserve">
     <value>Número de niños</value>
@@ -238,7 +238,7 @@
     <value>Typo de trabajador</value>
   </data>
   <data name="memberReactivateDate" xml:space="preserve">
-    <value>Fecha de la reactivación de miembros</value>
+    <value>Fecha de reactivación</value>
   </data>
   <data name="memberStatus" xml:space="preserve">
     <value>Estatus de miembro</value>
