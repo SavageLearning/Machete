@@ -33,7 +33,7 @@
     }
 }
 @Html.Partial("WorkOrderIndex", Model)
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
     $(document).ready(function () {
         $('#viewEmployer-@Model.ID').click(function () {
             printwindow = window.open('/Employer/View/@Model.ID');

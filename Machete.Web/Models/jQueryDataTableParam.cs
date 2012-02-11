@@ -144,12 +144,13 @@ namespace Machete.Web.Models
         public int? typeofwork_grouping { get; set; }
         public int? status { get; set; }
         public bool showPending { get; set; }
+        public bool showOrdersWorkers { get; set; }
         //
         //
-        public bool showInactive { get; set; }
-        public bool showSanctioned { get; set; }
-        public bool showExpired { get; set; }
-        public bool showExpelled { get; set; }
+        public bool showInactiveWorker { get; set; }
+        public bool showSanctionedWorker { get; set; }
+        public bool showExpiredWorker { get; set; }
+        public bool showExpelledWorker { get; set; }
 
 
         #endregion

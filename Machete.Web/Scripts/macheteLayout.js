@@ -10,26 +10,6 @@ var eventsequence = 0;
 var eventDate = new Date();
 ////////////////////////////////////////////////////////////////
 //
-// console logging function
-//
-//function M_conlog(typeStr, event, page, idtag, msg) {
-//    d = new Date();
-//    var timelapse = (d.getTime() - eventDate.getTime());    
-//    if (typeStr == "EVENT") {
-//        eventsequence = eventsequence + 1;
-//    }
-//    debug.log("%s:%d:%fms:%s:%s:%s:%s:  %s", spaceFill(typeStr, 5),
-//                                 spaceFill(eventsequence, 3),
-//                                 spaceFill(timelapse, 7),
-//                                 spaceFill(event, 10),
-//                                 spaceFill(page, 12),
-//                                 spaceFill(idtag, 4),
-//                                 idtag,
-//                                 msg);
-//    eventDate = d;
-//}
-////////////////////////////////////////////////////////////////
-//
 // pad log variables
 //
 function spaceFill(number, width) {
@@ -40,76 +20,7 @@ function spaceFill(number, width) {
     return number;
 }
 
-////////////////////////////////////////////////////////////////
-//
-//
-//
-//function jqrfyTabs(myTab, myPrefix, defaultTab) {
-//    if (defaultTab == null) defaultTab = 0;
-//    //
-//    // ## create the tab bar
-//    //http://forum.jquery.com/topic/ajaxoptions-is-null-problem
-//    var jTabs = $(myTab).tabs({
-//        selected: defaultTab,
-//        ajaxOptions: {
-//            error: function (xhr, status, index, anchor) {
-//                $(anchor.hash).html("Couldn't load this tab.");
-//            },
-//            data: {},
-//            success: function (data, textStatus) { }
-//        },
-//        //
-//        // jquery.tabs() select event
-//        //
-//        select: function (event, ui) {
-//            $(ui.panel).hide();
-//            //
-//            //if ListTab, hide table and redraw it
-//            if ($(ui.tab).hasClass('ListTab')) {
-//                //
-//                // redraw datatable                
-//                var myTable = $(ui.panel).find('.display');
-//                myTable.dataTable().fnDraw();
 
-//            } 
-//        },
-//        //
-//        // jquery.tabs() load event (This event doesn't happen for the list tab)
-//        //
-//        load: function (event, ui) {
-//            //
-//            // Get record from edit tab
-//            var hiddenID = $(ui.panel).find('.hiddenRecID').attr('value');
-//            $(ui.panel).fadeIn();
-//        },
-//        //
-//        // jquery.tabs() show event
-//        //
-//        show: function (event, ui) {            
-//            if ($(ui.tab).hasClass('ListTab') || $(ui.tab).hasClass('GeneralTab')) {
-//                $(ui.panel).fadeIn();
-//            }
-//        },
-//        //
-//        // jquery.tabs() remove event (This event doesn't happen for the list tab)
-//        //
-//        remove: function (event) {           
-//        },
-//        idPrefix: myPrefix,
-//        //template to put the ui-icon-close in the tab
-//        tabTemplate: "<li><a href='#{href}'>#{label}</a> <span class='ui-icon ui-icon-close'>Remove Tab</span></li>"
-//    });
-//    //
-//    // close tab event
-//    //
-//    $(jTabs).find("span.ui-icon-close").live("click", function (e) {
-//        var trgTabnav = $(e.target).closest('.ui-tabs');
-//        var index = trgTabnav.children('.ui-tabs-nav').index($(this).parent());
-//        trgTabnav.tabs("remove", index);
-//        trgTabnav.tabs("select", 0);            //select list tab
-//    });
-//    return jTabs;
-//}
 ////////////////////////////////////////////////////////////////////
 ///
 /// Add_rectab to tabbar
@@ -162,27 +73,6 @@ function add_rectab(opt) {
 
     return false;
 }
-////////////////////////////////////////////////////////////////
-//
-//
-//
-//function jqrfyWSignin(myTable, myOptions) {
-//    var oTable;
-//    oTable = $(myTable).dataTable(myOptions).fnSetFilteringDelay(400);
-//    $(myTable).find('tbody').click(function (event) {
-//        $(oTable.fnSettings().aoData).each(function () {
-//            $(this.nTr).removeClass('row_selected');
-//        });
-//        $(event.target.parentNode).addClass('row_selected');
-
-//    });
-//    $(myTable).find('tbody').dblclick(function (event) {
-//        $('#dwccardnum').val($(event.target.parentNode).find('td:first').text());
-//        $("#availAssignTable").dataTable().fnDraw();
-//    });
-//}
-
-
 //////////////////////////////////////////////////////////////////
 ///
 ///##Create dataTable

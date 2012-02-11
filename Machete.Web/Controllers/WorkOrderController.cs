@@ -15,6 +15,7 @@ using System.Web.Routing;
 using Machete.Web.Models;
 using System.Text.RegularExpressions;
 using System.Data.Objects;
+using Machete.Service.Helpers;
 
 namespace Machete.Web.Controllers
 {
@@ -105,35 +106,45 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
-            System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];            
-            //Get all the records            
-            ServiceIndexView<WorkOrder> allWorkOrders = woServ.GetIndexView(
-                CI,
-                param.sSearch,
-                string.IsNullOrEmpty(param.sSearch_2) ? (int?)null : Convert.ToInt32(param.sSearch_2),
-                string.IsNullOrEmpty(param.sSearch_5) ? (int?)null : Convert.ToInt32(param.sSearch_5),
-                param.sSortDir_0 == "asc" ? false : true,
-                param.iDisplayStart,
-                param.iDisplayLength,
-                param.sortColName()
-                );
-
+            viewOptions opt = new viewOptions();
+            opt.CI = (System.Globalization.CultureInfo)Session["Culture"];
+            opt.search = param.sSearch;
+            opt.EmployerID = string.IsNullOrEmpty(param.searchColName("EID")) ? (int?)null : Convert.ToInt32(param.searchColName("EID"));//employerID
+            opt.status = string.IsNullOrEmpty(param.searchColName("status")) ? (int?)null : Convert.ToInt32(param.searchColName("status"));
+            opt.orderDescending = param.sSortDir_0 == "asc" ? false : true;
+            opt.displayStart = param.iDisplayStart;
+            opt.displayLength = param.iDisplayLength;
+            opt.sortColName = param.sortColName();
+            opt.showOrdersWorkers = param.showOrdersWorkers;
+            //Get all the records
+            ServiceIndexView<WorkOrder> allWorkOrders = woServ.GetIndexView(opt);
 
             var result = from p in allWorkOrders.query
-                         select new { tabref = p.getTabRef(),
-                                      tablabel = Machete.Web.Resources.WorkOrders.tabprefix + p.getTabLabel(),
-                                      EID = Convert.ToString(p.EmployerID),
-                                      WOID = System.String.Format("{0,5:D5}", p.paperOrderNum),
-                                      dateTimeofWork =  p.dateTimeofWork.ToString(),
-                                      status = Lookups.byID(p.status, CI.TwoLetterISOLanguageName),
-                                      WAcount = p.workAssignments.Count(a => a.workOrderID == p.ID).ToString(),
-                                      contactName =  p.contactName, 
-                                      workSiteAddress1 =  p.workSiteAddress1,                                        
-                                      dateupdated = System.String.Format("{0:MM/dd/yyyy HH:mm:ss}", p.dateupdated), 
-                                      updatedby = p.Updatedby,
-                                      transportMethod = Lookups.byID(p.transportMethodID, CI.TwoLetterISOLanguageName),
-                                      displayState = _getDisplayState(p),
-                                      recordid = p.ID.ToString()
+                         select new
+                         {
+                             tabref = p.getTabRef(),
+                             tablabel = Machete.Web.Resources.WorkOrders.tabprefix + p.getTabLabel(),
+                             EID = Convert.ToString(p.EmployerID),
+                             WOID = System.String.Format("{0,5:D5}", p.paperOrderNum),
+                             dateTimeofWork = p.dateTimeofWork.ToString(),
+                             status = Lookups.byID(p.status, opt.CI.TwoLetterISOLanguageName),
+                             WAcount = p.workAssignments.Count(a => a.workOrderID == p.ID).ToString(),
+                             contactName = p.contactName,
+                             workSiteAddress1 = p.workSiteAddress1,
+                             dateupdated = System.String.Format("{0:MM/dd/yyyy HH:mm:ss}", p.dateupdated),
+                             updatedby = p.Updatedby,
+                             transportMethod = Lookups.byID(p.transportMethodID, opt.CI.TwoLetterISOLanguageName),
+                             displayState = _getDisplayState(p),
+                             recordid = p.ID.ToString(),
+                             workers = param.showOrdersWorkers ? 
+                                        from w in p.workAssignments select new 
+                                        { 
+                                            WID = w.workerAssigned != null ? (int?)w.workerAssigned.dwccardnum : null,
+                                            name = w.workerAssigned != null ? w.workerAssigned.Person.fullName() : null,
+                                            skill = Lookups.byID(w.skillID, opt.CI.TwoLetterISOLanguageName),
+                                            hours = w.hours,
+                                            wage = w.hourlyWage
+                                        } : null
                          };
 
             return Json(new

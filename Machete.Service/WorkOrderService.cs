@@ -11,6 +11,7 @@ using System.Data.Objects.SqlClient;
 using System.Data.Objects;
 using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
+using Machete.Service.Helpers;
 
 
 namespace Machete.Service
@@ -30,16 +31,8 @@ namespace Machete.Service
         WorkOrder CreateWorkOrder(WorkOrder workOrder, string user);
         void DeleteWorkOrder(int id, string user);
         void SaveWorkOrder(WorkOrder workOrder, string user);
-        ServiceIndexView<WorkOrder> GetIndexView(
-                        CultureInfo CI,
-                        string search,
-                        int? EmployerID,
-                        int? status,
-                        bool orderDescending,
-                        int displayStart,
-                        int displayLength,
-                        string sortColName
-            );
+        ServiceIndexView<WorkOrder> GetIndexView(viewOptions opt);
+
     }
 
     // Business logic for WorkOrder record management
@@ -161,25 +154,9 @@ namespace Machete.Service
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="CI"></param>
-        /// <param name="search"></param>
-        /// <param name="EmployerID"></param>
-        /// <param name="status"></param>
-        /// <param name="orderDescending"></param>
-        /// <param name="displayStart"></param>
-        /// <param name="displayLength"></param>
-        /// <param name="sortColName"></param>
+        /// <param name="o">viewOptions object</param>
         /// <returns></returns>
-        public ServiceIndexView<WorkOrder> GetIndexView(
-                        CultureInfo CI,
-                        string search,
-                        int? EmployerID,
-                        int? status,
-                        bool orderDescending,
-                        int displayStart,
-                        int displayLength,
-                        string sortColName                        
-            )
+        public ServiceIndexView<WorkOrder> GetIndexView(viewOptions o)
         {
             #region FILTER
             //Get all the records
@@ -189,55 +166,55 @@ namespace Machete.Service
             //
             //WHERE based on search-bar string 
             //
-            if (EmployerID != null)            
-                filteredWO = filteredWO.Where(p => p.EmployerID.Equals((int)EmployerID)); //EmployerID for WorkOrderIndex view
-            
-            if (status != null) 
-                filteredWO = filteredWO.Where(p => p.status.Equals((int)status)); //Work Order Status
-            
-            if (!string.IsNullOrEmpty(search))
+            if (o.EmployerID != null)
+                filteredWO = filteredWO.Where(p => p.EmployerID.Equals((int)o.EmployerID)); //EmployerID for WorkOrderIndex view
+
+            if (o.status != null)
+                filteredWO = filteredWO.Where(p => p.status.Equals((int)o.status)); //Work Order Status
+
+            if (!string.IsNullOrEmpty(o.search))
             {
                 //Using DateTime.TryParse as determiner of date/string
                 DateTime parsedTime;
-                if (isDateTime = DateTime.TryParse(search, out parsedTime))
+                if (isDateTime = DateTime.TryParse(o.search, out parsedTime))
                 {
-                    if (isMonthSpecific.IsMatch(search))  //Regex for month/year
+                    if (isMonthSpecific.IsMatch(o.search))  //Regex for month/year
                         filteredWO = filteredWO.Where(p => EntityFunctions.DiffMonths(p.dateTimeofWork, parsedTime) == 0 ? true : false);
-                    if (isDaySpecific.IsMatch(search))  //Regex for day/month/year
+                    if (isDaySpecific.IsMatch(o.search))  //Regex for day/month/year
                         filteredWO = filteredWO.Where(p =>EntityFunctions.DiffDays(p.dateTimeofWork, parsedTime) == 0 ? true : false);
-                    if (isTimeSpecific.IsMatch(search)) //Regex for day/month/year time
+                    if (isTimeSpecific.IsMatch(o.search)) //Regex for day/month/year time
                         filteredWO = filteredWO.Where(p => EntityFunctions.DiffHours(p.dateTimeofWork, parsedTime) == 0 ? true : false);
                 } else { 
                     filteredWO = filteredWO
-                        .Where(p => SqlFunctions.StringConvert((decimal)p.ID).Contains(search) ||
-                                    SqlFunctions.StringConvert((decimal)p.paperOrderNum).Contains(search) ||                                    
-                                    p.contactName.Contains(search) ||
-                                    p.workSiteAddress1.Contains(search) ||
-                                    p.Updatedby.Contains(search));
+                        .Where(p => SqlFunctions.StringConvert((decimal)p.ID).Contains(o.search) ||
+                                    SqlFunctions.StringConvert((decimal)p.paperOrderNum).Contains(o.search) ||
+                                    p.contactName.Contains(o.search) ||
+                                    p.workSiteAddress1.Contains(o.search) ||
+                                    p.Updatedby.Contains(o.search));
                 }
             }
             #endregion 
             //
             //ORDER BY based on column selection
             #region ORDERBY
-            switch (sortColName)
+            switch (o.sortColName)
             {
                 //case "WOID": orderedWO = orderDescending ? filteredWO.OrderByDescending(p => p.dateTimeofWork) : filteredWO.OrderBy(p => p.dateTimeofWork); break;
-                case "status": orderedWO = orderDescending ? filteredWO.OrderByDescending(p => p.status) : filteredWO.OrderBy(p => p.status); break;
-                case "transportMethod": orderedWO = orderDescending ? filteredWO.OrderByDescending(p => p.transportMethodID) : filteredWO.OrderBy(p => p.transportMethodID); break;
-                case "WAcount": orderedWO = orderDescending ? filteredWO.OrderByDescending(p => p.workAssignments.Count) : filteredWO.OrderBy(p => p.workAssignments.Count); break;
-                case "contactName": orderedWO = orderDescending ? filteredWO.OrderByDescending(p => p.contactName) : filteredWO.OrderBy(p => p.contactName); break;
-                case "workSiteAddress1": orderedWO = orderDescending ? filteredWO.OrderByDescending(p => p.workSiteAddress1) : filteredWO.OrderBy(p => p.workSiteAddress1); break;
-                case "updatedby": orderedWO = orderDescending ? filteredWO.OrderByDescending(p => p.Updatedby) : filteredWO.OrderBy(p => p.Updatedby); break;
-                case "WOID": orderedWO = orderDescending ? filteredWO.OrderByDescending(p => p.paperOrderNum) : filteredWO.OrderBy(p => p.paperOrderNum); break;
-                case "dateupdated": orderedWO = orderDescending ? filteredWO.OrderByDescending(p => p.dateupdated) : filteredWO.OrderBy(p => p.dateupdated); break;
-                default: orderedWO = orderDescending ? filteredWO.OrderByDescending(p => p.dateTimeofWork) : filteredWO.OrderBy(p => p.dateTimeofWork); break;
+                case "status": orderedWO = o.orderDescending ? filteredWO.OrderByDescending(p => p.status) : filteredWO.OrderBy(p => p.status); break;
+                case "transportMethod": orderedWO = o.orderDescending ? filteredWO.OrderByDescending(p => p.transportMethodID) : filteredWO.OrderBy(p => p.transportMethodID); break;
+                case "WAcount": orderedWO = o.orderDescending ? filteredWO.OrderByDescending(p => p.workAssignments.Count) : filteredWO.OrderBy(p => p.workAssignments.Count); break;
+                case "contactName": orderedWO = o.orderDescending ? filteredWO.OrderByDescending(p => p.contactName) : filteredWO.OrderBy(p => p.contactName); break;
+                case "workSiteAddress1": orderedWO = o.orderDescending ? filteredWO.OrderByDescending(p => p.workSiteAddress1) : filteredWO.OrderBy(p => p.workSiteAddress1); break;
+                case "updatedby": orderedWO = o.orderDescending ? filteredWO.OrderByDescending(p => p.Updatedby) : filteredWO.OrderBy(p => p.Updatedby); break;
+                case "WOID": orderedWO = o.orderDescending ? filteredWO.OrderByDescending(p => p.paperOrderNum) : filteredWO.OrderBy(p => p.paperOrderNum); break;
+                case "dateupdated": orderedWO = o.orderDescending ? filteredWO.OrderByDescending(p => p.dateupdated) : filteredWO.OrderBy(p => p.dateupdated); break;
+                default: orderedWO = o.orderDescending ? filteredWO.OrderByDescending(p => p.dateTimeofWork) : filteredWO.OrderBy(p => p.dateTimeofWork); break;
             }
             #endregion
             //
             //SKIP & TAKE for display
             //if (displayLength != 0 && displayStart != 0)
-                orderedWO = orderedWO.Skip<WorkOrder>((int)displayStart).Take((int)displayLength);
+            orderedWO = orderedWO.Skip<WorkOrder>((int)o.displayStart).Take((int)o.displayLength);
             var filtered = filteredWO.Count();
             var total =  woRepo.GetAllQ().Count();
             return new ServiceIndexView<WorkOrder> 
