@@ -14,6 +14,7 @@ using Machete.Test;
 using Machete.Web.ViewModel;
 using System.Data.Entity;
 using System.Web.Routing;
+using Machete.Web.Models;
 
 namespace Machete.Test.Controllers
 {
@@ -300,34 +301,16 @@ namespace Machete.Test.Controllers
             Assert.AreEqual(result.Data.ToString(), "{ status = OK, deletedID = 4242 }");
         }
         #endregion
-        //
-        // Testing /AddRequest functionality
-        //
-        [TestMethod]
-        public void WorkOrderController_addRequest_finds_duplicate()
-        {
-            //Arrange
-            _serv = new Mock<IWorkOrderService>();
-            _empServ = new Mock<IEmployerService>();
-            //int testid = 4242;
-            //int testworkerid = 4269;
-            WorkOrder fakeorder = new WorkOrder();
-            fakeorder.workerRequests = new List<WorkerRequest>();
-            fakeorder.workerRequests.Add(new WorkerRequest() { WorkerID = 4269 });
-            FormCollection fakeform = new FormCollection();
-            _waServ = new Mock<IWorkAssignmentService>();
-            _reqServ = new Mock<IWorkerService>();
-            _serv.Setup(x => x.GetWorkOrder(It.IsAny<int>())).Returns(fakeorder);
 
-            _wrServ = new Mock<IWorkerRequestService>();
-            var _ctrlr = new WorkOrderController(_serv.Object, _waServ.Object, _empServ.Object, _reqServ.Object, _wrServ.Object);
-            _ctrlr.SetFakeControllerContext();
-            _ctrlr.ValueProvider = fakeform.ToValueProvider();
+        [TestMethod]
+        public void WorkOrderController_AjaxHandler_Automapper_maps()
+        {
+            _serv = new Mock<IWorkOrderService>();
+            jQueryDataTableParam dto = new jQueryDataTableParam();
+            dto.sSearch = "searchStr";
+            //dto.
             //
-            //Act
-            //var result = _ctrlr.AddRequest(testid, testworkerid, fakeform, "UnitTest");
-            //Assert
-            //Assert.IsFalse(result);
+
         }
     }
 }

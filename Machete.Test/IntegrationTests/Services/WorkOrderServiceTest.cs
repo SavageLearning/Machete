@@ -12,6 +12,7 @@ using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Globalization;
 using Machete.Web.Helpers;
+using Machete.Service.Helpers;
 
 namespace Machete.Test
 {
@@ -126,27 +127,18 @@ namespace Machete.Test
         {
             //
             //Arrange
-            CultureInfo CI = new CultureInfo("en-US", false);
-            string search = DateTime.Today.ToShortDateString();
-            int? empID = null;
-            int? status = null;
-            bool descending = true;
-            int displayStart = 0;
-            int displayLength = 20;
-            string sortColName = "WOID";
+            viewOptions o = new viewOptions();
+            o.CI = new CultureInfo("en-US", false);
+            o.search = DateTime.Today.ToShortDateString();
+            o.EmployerID = null;
+            o.status = null;
+            o.orderDescending = true;
+            o.displayStart = 0;
+            o.displayLength = 20;
+            o.sortColName = "WOID";
             //
             //Act
-            ServiceIndexView<WorkOrder> result = woServ.GetIndexView(
-                    CI,
-                    search,
-                    empID,
-                    status,
-                    descending,
-                    displayStart, 
-                    displayLength,
-                    sortColName
-                );
-
+            ServiceIndexView<WorkOrder> result = woServ.GetIndexView(o);
             //
             //Assert
             IEnumerable<WorkOrder> query = result.query.ToList();

@@ -50,8 +50,8 @@
     </thead>
 </table>
 </div>
-<script language="javascript" type="text/javascript">
-    $(document).ready(function () {
+<script type="text/javascript">
+     $(document).ready(function () {
         ////////////////////////////////////////////////////////////////
         //
         // Setup work order Tabs
@@ -59,14 +59,14 @@
         $('#workOrderTabs_@(Model.ID)').mUI('createTabs', {
             prefix: "ui-tabs-workorder-e_@(Model.ID)-",
             formLevel: 2,
-        changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
-        changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
             });
         ////////////////////////////////////////////////////////////////
         //
         // Setup workorder Table
         //
-        jqrfyTable($('#workOrderTable_@(Model.ID)'), $('#workOrderTabs_@(Model.ID)'),
+        var oWOTable = jqrfyTable($('#workOrderTable_@(Model.ID)'), $('#workOrderTabs_@(Model.ID)'),
         {
             "bPaginate": true,
             "bLengthChange": true,
@@ -92,9 +92,54 @@
                             { "mDataProp": "dateupdated" },
                             { "mDataProp": "updatedby" }
                         ],
-            "aoSearchCols" :  [null, null, { "sSearch": "@(Model.ID)" }, null, null, null, null, null, null]
+            "aoSearchCols" :  [null, null, { "sSearch": "@(Model.ID)" }, null, null, null, null, null, null],
+            "fnServerData": function ( sSource, aoData, fnCallback ) {
+			    /* Add some extra data to the sender */
+                aoData.push( { "name": "showOrdersWorkers", "value": true});
+			    $.getJSON( sSource, aoData, function (json) { 
+				    /* Do whatever additional processing you want on the callback, then tell DataTables */
+				    fnCallback(json)
+			    })
+            },
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                if (aData['workers'] != null) {                    
+                    $('td:eq(3)', nRow).prepend('<img src="/Content/dataTables/details_open.png">');
+                }                
+                return nRow;
+            }   
             
         }, null, "@(recType)" );
+        $('#workOrderTable_@(Model.ID) tbody td img').live('click', function () {
+            var nTr = $(this).parents('tr')[0];
+
+            if ( oWOTable.fnIsOpen(nTr) )
+            {
+                /* This row is already open - close it */
+                this.src = "/Content/dataTables/details_open.png";
+                oWOTable.fnClose( nTr );
+            } else {
+                /* Open this row */
+                this.src = "/Content/dataTables/details_close.png";
+                oWOTable.fnOpen( nTr, fnFormatDetails(oWOTable, nTr), 'details' );
+            }
+        });
+
+
+        function fnFormatDetails ( oTable, nTr )
+        {
+            var aData = oTable.fnGetData( nTr );
+            var wkrList = aData['workers'];
+            var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
+            sOut += '<thead><tr><th>WID</th><th>name</th><th>skill</th><th>hours</th><th>wage</th></tr></thead>';
+            sOut += '<tbody>';
+            for (var i in wkrList)
+            {
+                var wkr = wkrList[i];
+                sOut += '<tr><td>'+wkr.WID+'</td><td>'+wkr.name+'</td><td>'+wkr.skill+'</td><td>'+wkr.hours+'</td><td>'+wkr.wage+'</td></tr>';
+            }
+            sOut += '</tbody></table>';     
+            return sOut;
+        }
         ////////////////////////////////////////////////////////////////
         //
         // table for selecting employer (for workorder move functionality)

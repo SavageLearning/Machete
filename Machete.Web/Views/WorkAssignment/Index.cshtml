@@ -32,17 +32,17 @@
 
 }        
 <div id="buttonDivider">
-        <div id="radioWorkers" class="radio">
-		    <input type="radio" id="rW1_lottery" name="radio" checked="checked" /><label for="rW1_lottery">Lottery<br />list</label>
-		    <input type="radio" id="rW1_signin" name="radio"  /><label for="rW1_signin">Sign-in<br />list</label>
-	    </div>
-        <div class="radio">
-        <input type="button" id="bOpenLottery" class="formButton dispatchButton" value="Lottery" />
-        </div>
-        <div class="radio">
-            <input type="button" id="bAssign" class="formButton dispatchButton" value="Assign" />
-            <input type="button" id="bUnassign" class="formButton dispatchButton" value="Remove"/>
-        </div>
+    <div id="radioWorkers" class="radio">
+		<input type="radio" id="rW1_lottery" name="radio" checked="checked" /><label for="rW1_lottery">Lottery<br />list</label>
+		<input type="radio" id="rW1_signin" name="radio"  /><label for="rW1_signin">Sign-in<br />list</label>
+	</div>
+    <div class="radio">
+    <input type="button" id="bOpenLottery" class="formButton dispatchButton" value="Lottery" />
+    </div>
+    <div class="radio">
+        <input type="button" id="bAssign" class="formButton dispatchButton" value="Assign" />
+        <input type="button" id="bUnassign" class="formButton dispatchButton" value="Remove"/>
+    </div>
     <div id="radioOpenFilled" class="radio">
         <input type="radio" id="rA1_requested" name="radioOpenFilled" /><label for="rA1_requested" class="dispatchButton">Requested<br/>(Active)</label>
 		<input type="radio" id="rA1_skilled" name="radioOpenFilled" /><label for="rA1_skilled" class="dispatchButton">Skilled<br />(Active)</label>
@@ -60,7 +60,7 @@
 
 <div class="tb-table" style="clear: left;">
     <div class="tb-row">
-        <div id="signinTab">
+        <div id="signinTab" class="tb-cell">
             <ul>
                 <li><a href="#signinList" class="ListTab">@Machete.Web.Resources.WorkAssignments.signin</a></li>
             </ul>
@@ -77,7 +77,7 @@
             </div>
         </div>
 
-        <div id="assignmentTab">
+        <div id="assignmentTab" class="tb-cell">
             <ul>
                 <li><a href="#availAssignList" class="ListTab">@Machete.Web.Resources.WorkAssignments.assignments</a></li>
             </ul>

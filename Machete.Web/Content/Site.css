@@ -502,11 +502,12 @@ input.ui-button.dispatchButton
     padding: .5em;
     float: left;
 }
-/*.ui-buttonset
+/* dispatch: formatting for the radio buttons */
+.ui-buttonset
 {
     padding: .5em;
     float: left;
-}*/
+}
 
 .completeOrderContainer
 {

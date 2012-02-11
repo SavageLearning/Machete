@@ -181,6 +181,10 @@ namespace Machete.Web.Helpers
         {
             return LookupCache.byID(ID, locale);
         }
+        public static string byID(int? ID, string locale)
+        {
+            return ID == null ? null : byID(ID, locale);
+        }
         //
         // create multi-lingual yes/no strings
         public static string getBool(bool val, string locale)
