@@ -32,7 +32,8 @@ go
 
 CREATE VIEW [db_datareader].[average_of_wage_by_year]
 AS
-SELECT     TOP (100) PERCENT DATEPART(yy, wo.dateTimeofWork) AS year, '$' + CONVERT(varchar, CONVERT(money, AVG(wa.hourlyWage)), 1) AS dispatchedWageAvg
+SELECT     TOP (100) PERCENT DATEPART(yy, wo.dateTimeofWork) AS year, '$' + CONVERT(varchar, CONVERT(money, SUM(wa.days * wa.hours * wa.hourlyWage) 
+                      / SUM(wa.days * wa.hours)), 1) AS dispatchedWageAvg
 FROM         dbo.WorkAssignments AS wa INNER JOIN
                       dbo.WorkOrders AS wo ON wa.workOrderID = wo.ID
 WHERE     (wo.status = 44)
@@ -106,13 +107,15 @@ GO
 
 CREATE VIEW [db_datareader].[workers_critical_attributes_EN]
 AS
-SELECT     w.dwccardnum, w.dateOfMembership, w.memberexpirationdate, p.firstname1, p.firstname2, p.lastname1, p.lastname2, w.englishlevelID,
+SELECT     w.dwccardnum AS memberID, CASE w.active WHEN 0 THEN 'No' WHEN 1 THEN 'Yes' ELSE 'Unknown' END AS activeworker, 
+                      w.dateOfMembership AS [date of membership], w.memberexpirationdate AS [member expiration date], p.firstname1, p.firstname2, p.lastname1, p.lastname2, 
+                      w.englishlevelID AS [english level],
                           (SELECT     text_EN
                             FROM          dbo.Lookups AS l
-                            WHERE      (ID = p.gender)) AS Gender,
+                            WHERE      (ID = p.gender)) AS gender,
                           (SELECT     text_EN
                             FROM          dbo.Lookups AS l
-                            WHERE      (ID = w.typeOfWorkID)) AS WorkerProgram,
+                            WHERE      (ID = w.typeOfWorkID)) AS [Worker program],
                           (SELECT     text_EN
                             FROM          dbo.Lookups AS l
                             WHERE      (ID = w.skill1)) AS Skill1,
@@ -121,7 +124,7 @@ SELECT     w.dwccardnum, w.dateOfMembership, w.memberexpirationdate, p.firstname
                             WHERE      (ID = w.skill2)) AS Skill2,
                           (SELECT     text_EN
                             FROM          dbo.Lookups AS l
-                            WHERE      (ID = w.skill3)) AS Skill3
+                            WHERE      (ID = w.skill3)) AS Skill3, w.datecreated, w.Createdby, w.dateupdated, w.Updatedby
 FROM         dbo.Persons AS p INNER JOIN
                       dbo.Workers AS w ON w.ID = p.ID
 
@@ -129,7 +132,8 @@ GO
 
 CREATE VIEW [db_datareader].[workers_EN]
 AS
-SELECT     wo.ID, p.firstname1, p.firstname2, p.lastname1, p.lastname2, p.address1, p.address2, p.city, p.state, p.zipcode, p.phone,
+SELECT     wo.ID, p.firstname1, p.firstname2, p.lastname1, p.lastname2, p.address1, p.address2, p.city, p.state, CASE WHEN p.zipcode IS NULL 
+                      THEN 'unknown' ELSE p.zipcode END AS zipcode, p.phone,
                           (SELECT     text_EN
                             FROM          dbo.Lookups AS l
                             WHERE      (ID = p.gender)) AS Gender, wo.dateOfMembership, wo.dateOfBirth, 
@@ -219,4 +223,32 @@ FROM         db_datareader.workOrders_status_summary_EN INNER JOIN
                       db_datareader.workAssignments_status_summary_EN ON 
                       db_datareader.workOrders_status_summary_EN.startdate = db_datareader.workAssignments_status_summary_EN.startdate
 ORDER BY db_datareader.workOrders_status_summary_EN.startdate DESC
+
+GO
+
+
+CREATE VIEW [db_datareader].[2011_count_of_unique_employments_divided_by_month]
+AS
+SELECT     CONVERT(VARCHAR(7), datetimeofwork, 111) AS yearmonth, COUNT(memberid) AS uniqueEmployment
+FROM         (SELECT     w.dwccardnum AS memberid, MIN(wo.dateTimeofWork) AS datetimeofwork
+                       FROM          dbo.WorkAssignments AS wa INNER JOIN
+                                              dbo.WorkOrders AS wo ON wo.ID = wa.workOrderID INNER JOIN
+                                              dbo.Workers AS w ON w.ID = wa.workerAssignedID
+                       WHERE      (DATEPART(yy, wo.dateTimeofWork) = 2011)
+                       GROUP BY w.dwccardnum) AS foo
+GROUP BY CONVERT(VARCHAR(7), datetimeofwork, 111)
+
+GO
+
+
+CREATE VIEW [db_datareader].[workers_signins_past_membership_expiration]
+AS
+SELECT     TOP (100) PERCENT dbo.WorkerSignins.dwccardnum, p.firstname1, p.firstname2, p.lastname1, p.lastname2, MAX(dbo.WorkerSignins.dateforsignin) AS latestsignin, 
+                      COUNT(w.dateOfMembership) AS countofsignins, MAX(w.memberexpirationdate) AS memberexpirationdate, DATEDIFF(dy, MAX(w.memberexpirationdate), 
+                      MAX(dbo.WorkerSignins.dateforsignin)) AS daysdelequent
+FROM         dbo.Workers AS w INNER JOIN
+                      dbo.WorkerSignins ON w.ID = dbo.WorkerSignins.WorkerID AND w.memberexpirationdate < dbo.WorkerSignins.dateforsignin INNER JOIN
+                      dbo.Persons AS p ON w.ID = p.ID
+GROUP BY dbo.WorkerSignins.dwccardnum, p.firstname1, p.firstname2, p.lastname1, p.lastname2
+
 GO
