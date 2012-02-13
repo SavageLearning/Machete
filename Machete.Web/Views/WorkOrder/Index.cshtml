@@ -148,13 +148,19 @@
         //
         // Setup workorder Table
         //
-        oTable = jqrfyTable($('#orderTable'), $('#woDispatchTabs'), orderDefs, false);
+        var oTable = jqrfyTable($('#orderTable'), $('#woDispatchTabs'), orderDefs, false);
 
-        jqrfyTable($('#orderSummaryTable'), $('#woDispatchTabs'), summaryDefs, function (event) {            
+        var woSumTable = jqrfyTable($('#orderSummaryTable'), $('#woDispatchTabs'), summaryDefs, function (event) {            
             var myTr = event.target.parentNode;
             $('#orderTable').dataTable().fnFilter($(myTr).find('td:eq(0)').text());
             $('#woDispatchTabs').tabs('select',0);
         });
+
+        $('#orderSummaryTable').find('tbody').click(function (event) {
+            var selectedDate = $(event.target.parentNode.childNodes[0]).text();
+            console.log(selectedDate);
+            $('#activeDate').val(selectedDate);
+    });
         ////////////////////////////////////////////////////////////////
         //
         // filtering buttons on details page

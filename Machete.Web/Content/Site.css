@@ -410,6 +410,25 @@ div.recordButtons
     display: table-cell;
 }
 
+.tb-label.mui-home-news
+{
+    font: 100%;
+    padding-right: 15px;
+    border: 3px;
+    border-color: black;  
+}
+
+.tb-field.mui-home-news
+{
+    font:90%;
+    padding-bottom: 8px; 
+}
+.tb-field.mui-home-news a:link
+{
+    width:200px;
+
+}
+
 .tb-header
 {
     border: 1px solid black;
