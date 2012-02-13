@@ -245,7 +245,9 @@
                                     recordID: data.iNewID,  //JsonResult
                                     recType: recType
                                 });
-                                callback();
+                                if (callback) {
+                                    callback();
+                                }
                             }
                         });
                     } else {
