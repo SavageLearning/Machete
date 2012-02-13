@@ -102,7 +102,7 @@
 			    })
             },
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                if (aData['workers'] != null) {                    
+                if (aData['workers'] != null && aData['WAcount'] > 0) {                    
                     $('td:eq(3)', nRow).prepend('<img src="/Content/dataTables/details_open.png">');
                 }                
                 return nRow;
