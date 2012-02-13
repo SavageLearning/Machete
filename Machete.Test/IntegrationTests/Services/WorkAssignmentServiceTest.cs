@@ -272,5 +272,17 @@ namespace Machete.Test
             var result = waServ.GetSummary("");
             Assert.IsNotNull(result, "Person.ID is Null");
         }
+
+        [TestMethod]
+        public void Integration_WA_Service_Delete_removes_record()
+
+        {
+            var before = waServ.GetMany();
+            Assert.IsTrue(before.Count() == 10, "Unanticipated list count from Assignment.GetMany()");
+            waServ.Delete(1, "Intg Test");
+            var after = waServ.GetMany();
+            Assert.IsTrue(after.Count() == 9, "Unanticipated list count from Assignment.GetMany()");
+            Assert.AreNotSame(before.Count(), after.Count());
+        }
     }
 }

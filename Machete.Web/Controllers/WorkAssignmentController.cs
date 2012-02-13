@@ -330,7 +330,6 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Delete(int id, FormCollection collection, string user)
         {
-            waServ.Delete(id, user);
             string status = null;
             try
             {
