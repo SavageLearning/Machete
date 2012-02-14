@@ -204,7 +204,7 @@ namespace Machete.Web.Controllers
                                        memberStatus = LookupCache.byID(p.memberStatus, CI.TwoLetterISOLanguageName),
                                        memberInactive = p.memberStatus == LookupCache.getSingleEN("memberstatus", "Inactive") ? true : false,
                                        memberSanctioned = p.memberStatus == LookupCache.getSingleEN("memberstatus", "Sanctioned") ? true : false,
-                                       memberExpired = p.expirationDate < p.dateforsignin ? true : false,
+                                       memberExpired = p.memberStatus == LookupCache.getSingleEN("memberstatus", "Expired") ? true : false,
                                        memberExpelled = p.memberStatus == LookupCache.getSingleEN("memberstatus", "Expelled") ? true : false,
                                        imageID = p.imageID,
                                        expirationDate = p.expirationDate.ToShortDateString(),

@@ -185,17 +185,6 @@ $.fn.addItems = function (data) {
     }
 };
 
-//function toggleDropDown(myDD, showVal, myRow, init) {
-//    //
-//    if ($(myDD).find(':selected').text() == showVal) {
-//        if (init) $(myRow).show();
-//        else $(myRow).fadeIn();
-//    } else {
-//        if (init) $(myRow).hide();
-//        else $(myRow).fadeOut();
-//    }
-//}  
-
 // http://stackoverflow.com/questions/18082/validate-numbers-in-javascript-isnumeric/174921#174921
 function isNumber(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);

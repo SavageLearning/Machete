@@ -69,13 +69,12 @@
                 },
                 //
                 // jquery.tabs() select event
-
                 select: function (e, ui) {
                     console.log('select event: changeLevel:' + level +
                                 ' state:' + mUI.state.changeLevel[level] +
                                 ' confirmed: ' + confirmed);
                     //
-                    //
+                    // detectChanges functionality 
                     if (mUI.state.changed(level)) {
                         if (!confirmed) {
                             jConfirm(changeConfirm, changeTitle, function (r) {
@@ -93,7 +92,7 @@
                             confirmed = false;
                         }
                     }
-                    //
+                    //                    
                     //if ListTab selected, redraw dataTable
                     if ($(ui.tab).hasClass('ListTab')) {
                         $(ui.panel).find('.display').dataTable().fnDraw();
@@ -123,6 +122,27 @@
             $(tabdiv).find("span.ui-icon-close").live("click", function (e) {
                 var trgTabnav = $(e.target).closest('.ui-tabs');
                 var index = trgTabnav.children('.ui-tabs-nav').index($(this).parent());
+                //
+                // check mUI detectChanges
+                if (mUI.state.changed(level)) {
+                    if (!confirmed) {
+                        jConfirm(changeConfirm, changeTitle, function (r) {
+                            if (r === true) {
+                                console.log('confirm ok--changed: ' + mUI.state.changed + ', confirmed: ' + confirmed);
+                                confirmed = true;
+                                $(e.target).click();
+                            }
+                        });
+                        e.stopImmediatePropagation();
+                        return false;
+                    } else {
+                        // if confirmed==true, then ignore changed bit
+                        mUI.state.changeLevel[level] = false;
+                        confirmed = false;
+                    }
+                }
+                //
+                //clean up tabs
                 trgTabnav.tabs("remove", index);
                 trgTabnav.tabs("select", 0);            //select list tab
             });
@@ -404,6 +424,7 @@
         },
         //
         // Show or hide based on a select element's selected value
+        // Used on workorder.englishRequired
         selectToggleOnValue: function (opt) {
             var select = this;
             var showVal = opt.showVal || "yes";
@@ -412,14 +433,14 @@
                 throw new Error("SelectToggleOnValue not given a target to toggle.");
             }
             //
-            //
             $(select).bind('change', function () {
-                toggleDropDown(select, showVal, target);
+                _toggleDropDown(select, showVal, target);
             });
-            toggleDropDown(select, showVal, target);
+            _toggleDropDown(select, showVal, target);
         },
         //
-        // Enables a target element with a select elment selects enableVal
+        // Enables or disables a target element with a select elment selects enableVal
+        // Used on Worker.race/disabled/driverslicense/carinsurance
         selectEnableOnValue: function (opt) {
             var select = this;
             var enableVal = opt.enableVal;
@@ -476,8 +497,8 @@
 
     }
     //
-    //
-    function toggleDropDown(select, showVal, target) {
+    // Back end for selectToggleOnValue:
+    function _toggleDropDown(select, showVal, target) {
         //
         if ($(select).find(':selected').text() === showVal) {
             $(target).show();
