@@ -94,6 +94,7 @@ namespace Machete.Web.Controllers
                             skill =  Lookups.byID(p.skillID, CI.TwoLetterISOLanguageName),
                             hourlywage = System.String.Format("${0:f2}", p.hourlyWage),
                             hours = Convert.ToString(p.hours),
+                            hourRange = p.hourRange > 0 ? Convert.ToString(p.hourRange) : "",
                             days = Convert.ToString(p.days),
                             description = p.description,
                             dateupdated = Convert.ToString(p.dateupdated), 

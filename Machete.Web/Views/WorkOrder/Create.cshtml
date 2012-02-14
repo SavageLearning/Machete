@@ -57,6 +57,9 @@
             preProcess: function () {
                 $('#workerRequests2_WO-@(Model.ID)').find('option').attr("selected", "selected");
             },
+            postProcess: function () {
+                $('html, body').animate({ scrollTop: $(document).height() }, 'slow');
+            },
             formLevel: 2
         });
         ////////////////////////////////////////////////////////////////
