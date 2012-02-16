@@ -105,7 +105,8 @@ namespace Machete.Web.Controllers
                             WSIID = p.workerSigninID ?? 0,
                             WID = p.workerAssignedID ?? 0,
                             assignedWorker = p.workerAssigned != null ? p.workerAssigned.dwccardnum + " " + p.workerAssigned.Person.fullName() : "",
-                            requestedList = p.workOrder.workerRequests.Select(a => a.fullNameAndID).ToArray()
+                            requestedList = p.workOrder.workerRequests.Select(a => a.fullNameAndID).ToArray(),
+                            asmtStatus = _getStatus(p)
                 };
  
             return Json(new
@@ -117,7 +118,22 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
-        
+        //
+        // _getStatus
+        private string _getStatus(WorkAssignment asmt)
+        {
+            if (asmt.workerAssignedID > 0 && asmt.workerSigninID > 0) // green
+                return "completed";
+            if (asmt.workerAssignedID == 0 && asmt.workOrder.status == Lookups.getSingleEN("orderstatus", "Active"))
+                return "incomplete";
+            if (asmt.workerAssignedID > 0 && asmt.workerSigninID == 0 && asmt.workOrder.status == Lookups.getSingleEN("orderstatus", "Completed"))
+                return "orphaned";
+            if (asmt.workOrder.status == Lookups.getSingleEN("orderstatus", "Cancelled"))
+                return "cancelled";
+            if (asmt.workOrder.status == Lookups.getSingleEN("orderstatus", "Active")) // blue
+                return "active";
+            return null;
+        }
         //
         // _getTabRef
         //
@@ -132,18 +148,7 @@ namespace Machete.Web.Controllers
         private string _getTabLabel(WorkAssignment wa)
         {
             return Machete.Web.Resources.WorkAssignments.tabprefix + wa.getFullPseudoID();
-        }
-        //private string _getFullPseudoID(WorkAssignment wa)
-        //{
-        //    return (wa.workOrder.paperOrderNum.HasValue ? 
-        //                System.String.Format("{0,5:D5}", wa.workOrder.paperOrderNum) : 
-        //                System.String.Format("{0,5:D5}", wa.workOrderID))
-        //            + "-" + (wa.pseudoID.HasValue ? 
-        //                System.String.Format("{0,2:D2}", wa.pseudoID) : 
-        //                System.String.Format("{0,5:D5}", wa.ID));
-        //}
-        
-        
+        }            
         //
         // GET: /WorkAssignment/Create
         //
@@ -237,28 +242,22 @@ namespace Machete.Web.Controllers
             return Json(new
             {
                 resultMsg = returnMsg,
-                result = successful
+                rtnMessage = returnMsg,
+                result = successful,
+                jobSuccess = successful
             }, JsonRequestBehavior.AllowGet);            
         }
 
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager")]
 
-        public ActionResult Unassign(int? waid, int? wsiid, string userName)
+        public JsonResult Unassign(int? waid, int? wsiid, string userName)
         {
             string returnMsg = "";
             bool successful = true;
-            WorkerSignin signin = null;
-            WorkAssignment assignment = null;
-            if (wsiid != null)
-            {
-                signin = wsiServ.GetWorkerSignin((int)wsiid);
-            }
-            if (waid != null)
-             assignment = waServ.Get((int)waid);
             try
             {
-                waServ.Unassign(signin, assignment, userName);
+                waServ.Unassign(waid, wsiid, userName);
             }
             catch (Exception e)
             {
@@ -268,10 +267,11 @@ namespace Machete.Web.Controllers
             return Json(new
             {
                 resultMsg = returnMsg,
+                rtnMessage = returnMsg,
+                jobSuccess = successful,
                 result = successful
             }, JsonRequestBehavior.AllowGet);
         }
-
         #endregion
         //
         // GET: /WorkAssignment/Edit/5
@@ -284,8 +284,7 @@ namespace Machete.Web.Controllers
             if (wa.workerAssignedID != null)
             {
                 wa.workerAssigned = wkrServ.GetWorker((int)wa.workerAssignedID);
-            }
-            //ViewBag.days2 = new SelectList(Lookups.days(), "Value", "Text", workAssignment.days);
+            }            
             return PartialView(wa);
         }
         //
@@ -296,20 +295,32 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Edit(int id, FormCollection collection, string userName)
         {
-            WorkAssignment _assignment = waServ.Get(id);
-
-            if (TryUpdateModel(_assignment))
+            WorkAssignment asmt = waServ.Get(id);
+            //check if workerAssigned changed; if so, unlink
+            int? origWorker = asmt.workerAssignedID;
+            string returnMsg = "";
+            bool success = true;             
+            try
             {
-                waServ.Save(_assignment, userName);
-                //feeding parent work order to Index
-                return PartialView(_assignment);
+                UpdateModel(asmt);
+                // If workerAssigned changed, need to unassign WSI record
+                asmt.workerAssigned = wkrServ.GetWorker((int)asmt.workerAssignedID);
+                waServ.Save(asmt, userName);
+                if (asmt.workerAssignedID != origWorker)                
+                    waServ.Unassign(asmt.ID, asmt.workerSigninID, userName);                                
             }
-            else
+            catch (Exception e)
             {
-                levent.Level = LogLevel.Error; levent.Message = "TryUpdateModel failed";
-                levent.Properties["RecordID"] = _assignment.ID; log.Log(levent);
-                return PartialView(_assignment);
-            }
+                returnMsg = e.Message.ToString();
+                levent.Level = LogLevel.Error; levent.Message = "waServ Edit failed. " + returnMsg;
+                levent.Properties["RecordID"] = asmt.ID; log.Log(levent);
+                success = false;
+            }                
+            return Json(new
+            {
+                rtnMessage = returnMsg,
+                jobSuccess = success
+            }, JsonRequestBehavior.AllowGet);
         }
         #endregion      
         //
@@ -329,9 +340,10 @@ namespace Machete.Web.Controllers
         // POST: /WorkAssignment/Delete/5
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public ActionResult Delete(int id, FormCollection collection, string user)
+        public JsonResult Delete(int id, FormCollection collection, string user)
         {
             string status = null;
+            bool jobSuccess = true;
             try
             {
                 waServ.Delete(id, user);
@@ -339,11 +351,14 @@ namespace Machete.Web.Controllers
             catch (Exception e)
             {
                 status = RootException.Get(e, "WorkAssignmentService");
+                jobSuccess = false;
             }
 
             return Json(new
             {
                 status = status ?? "OK",
+                jobSuccess = jobSuccess,
+                rtnMessage = status,
                 deletedID = id
             },
             JsonRequestBehavior.AllowGet);

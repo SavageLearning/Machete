@@ -24,9 +24,7 @@ namespace Machete.Service
         WorkAssignment Get(int id);
         WorkAssignment Create(WorkAssignment workAssignment, string user);
         bool Assign(WorkAssignment assignment, WorkerSignin signin, string user);
-        bool Unassign(WorkerSignin signin, string user);
-        bool Unassign(WorkAssignment assignment, string user);
-        bool Unassign(WorkerSignin signin, WorkAssignment assignment, string user);
+        bool Unassign(int? wsiid, int? waid, string user);
         void Delete(int id, string user);
         void Save(WorkAssignment workAssignment, string user);
         ServiceIndexView<WorkAssignment> GetIndexView(DispatchOptions o);
@@ -372,21 +370,26 @@ namespace Machete.Service
             _log(asmt.ID, user, "WSIID:" + signin.ID + " Assign successful");
             return true;
         }
-        public bool Unassign(WorkerSignin signin, string user)
+
+        public bool Unassign(int? waid, int? wsiid, string user)
         {
-            return Unassign(signin, null, user);
-        }
-        public bool Unassign(WorkAssignment assignment, string user)
-        {
-            return Unassign(null, assignment, user);
-        }
-        public bool Unassign(WorkerSignin signin, WorkAssignment asmt, string user)
-        {
+            WorkAssignment asmt = null;
+            WorkerSignin signin = null;
+            if (wsiid != null)
+            {
+                signin = wsiRepo.GetById((int)wsiid);
+            }
+            if (waid != null)
+                asmt = waRepo.GetById((int)waid);
+
+
             if (signin == null && asmt == null) throw new NullReferenceException("Signin and WorkAssignment are both null");
+            //
             //Try unassign with WorkAssignment record only
             if (signin == null) // Assignment processing
             {
-                // legacy assignment; only thing to do is clear it.                
+                // legacy assignment; only thing to do is clear it.
+                // wssid(null), 
                 if (asmt.workerSigninID == null) //throw new MacheteIntegrityException("Unassign called on non-assigned WorkAssignment");
                 {
                     asmt.workerAssignedID = null;
