@@ -122,8 +122,7 @@ namespace Machete.Service
                                 p.firstname2.Contains(search) ||
                                 p.lastname1.Contains(search) ||
                                 p.lastname2.Contains(search) ||
-                                p.phone.Contains(search) ||
-                                p.Updatedby.Contains(search));
+                                p.phone.Contains(search));
             }
 
             //

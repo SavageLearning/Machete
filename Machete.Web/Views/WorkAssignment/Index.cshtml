@@ -139,6 +139,7 @@
         </thead>
     </table>
 </div>
+@Html.Partial("WorkerIndex")
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
     assignTableCount = 0;
@@ -302,21 +303,28 @@
 			    } );
 		    },
         "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-            if (aData['WID'] > 0 && aData['WSIID'] > 0 && aData['status']) { // assigned
-                $(nRow).addClass('statusGreen');
-            } 
-            if (aData['WID'] == 0 && aData['status'] == @(Lookups.getSingleEN("orderstatus", "Completed"))) { // Unassigned
-                $(nRow).addClass('statusOrange');
-            } 
-            if (aData['WID'] > 0 && aData['WSIID'] == 0 && aData['status'] == @(Lookups.getSingleEN("orderstatus", "Completed"))) { // orphaned
-                $(nRow).addClass('statusYellow');
+            switch (aData['asmtStatus'])
+            {
+                case "active": $(nRow).addClass('statusBlue'); break;
+                case "completed": $(nRow).addClass('statusGreen'); break;
+                case "active": $(nRow).addClass('statusOrange'); break;
+                case "active": $(nRow).addClass('statusYellow'); break;
+                case "active": $(nRow).addClass('statusRed'); break;
+                default: $(nRow).addClass('statusBlue');
             }
-            if (aData['status'] == @(Lookups.getSingleEN("orderstatus", "Cancelled"))) { // cancelled
-                $(nRow).addClass('statusRed');
-            }
-            if (aData['status'] == @(Lookups.getSingleEN("orderstatus", "Active"))) { // cancelled
-                $(nRow).addClass('statusBlue');
-            }                
+//            if (aData['WID'] > 0 && aData['WSIID'] > 0 && aData['status']) { // assigned
+//                $(nRow).addClass('statusGreen');
+//            } 
+//            if (aData['WID'] == 0 && aData['status'] == @(Lookups.getSingleEN("orderstatus", "Completed"))) { // Unassigned
+//                $(nRow).addClass('statusOrange');
+//            } 
+//            if (aData['WID'] > 0 && aData['WSIID'] == 0 && aData['status'] == @(Lookups.getSingleEN("orderstatus", "Completed"))) { // orphaned
+//                $(nRow).addClass('statusYellow');
+//            }
+//            if (aData['status'] == @(Lookups.getSingleEN("orderstatus", "Cancelled"))) { // cancelled
+//                $(nRow).addClass('statusRed');
+//            }
+             
             return nRow;
         }, 
         "fnDrawCallback": function () { assignTableCount++; }

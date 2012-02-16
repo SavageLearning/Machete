@@ -114,14 +114,6 @@ namespace Machete.Web.Controllers
         {
             return emp.name;
         }
-        //private string _getLabel(Employer record)
-        //{
-        //    return record.name;
-        //}
-        //private void _setLabel(Employer record)
-        //{
-        //    record.tablabel = _getLabel(record);
-        //}
 
         #region Create
         //
@@ -146,9 +138,12 @@ namespace Machete.Web.Controllers
         public ActionResult Create(Employer employer, string userName)
         {
             if (!ModelState.IsValid)
-            {
-                //TODO: This probably wont work for tabs & partials
-                return PartialView("Create", employer);
+            {                
+                return Json(new
+                {
+                    rtnMsg = ModelState.Values.Any(x => x.Errors.Count > 0).ToString(),
+                    jobSuccess = false
+                }, JsonRequestBehavior.AllowGet);
             }
             Employer newEmployer = employerService.CreateEmployer(employer, userName);
 
@@ -156,7 +151,8 @@ namespace Machete.Web.Controllers
             {
                 sNewRef = _getTabRef(newEmployer),
                 sNewLabel = _getTabLabel(newEmployer),
-                iNewID = newEmployer.ID
+                iNewID = newEmployer.ID,
+                jobSuccess = true
             },
             JsonRequestBehavior.AllowGet);
         }
