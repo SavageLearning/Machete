@@ -43,7 +43,8 @@
                     <th>@Worker.dwccardnum</th>
                     <th class="print_off">@WorkerSignins.memberexpiration</th>
                     <th class="print_off">@WorkerSignins.status</th>
-                    <th>@WorkerSignins.fullname</th>
+                    <th>@Person.firstname1</th>
+                    <th>@Person.lastname1</th>
                     <th class="print_off">@WorkerSignins.datesignin</th>
                 </tr>
             </thead>
@@ -116,7 +117,8 @@
                 {mDataProp: "dwccardnum"},
                 {mDataProp: "expirationDate", sClass: "print_off"},
                 {mDataProp: "memberStatus", sClass: "print_off"},
-                {mDataProp: "fullname"},
+                {mDataProp: "firstname1"},
+                {mDataProp: "lastname1"},
                 {mDataProp: "dateforsigninstring", sClass: "print_off"}
             ],
             "fnServerData": function ( sSource, aoData, fnCallback ) {

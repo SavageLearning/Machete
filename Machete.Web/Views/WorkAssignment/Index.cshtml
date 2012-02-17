@@ -25,8 +25,8 @@
 </div>   
 
     <div>
-        <input type="button" value="update" id="updateBtn" />
-        @Html.LabelFor(m => m.todaysdate)
+        <input type="button" value="@(WorkAssignments.btnUpdate)" id="updateBtn" class="formButton"/>
+        <label for="todaysdate">@WorkAssignments.todaysdate</label>
         @Html.TextBoxFor(m => m.todaysdate, new { @class = "ui-datepicker", @style = "width: 15em;" })
     </div>
 
@@ -40,22 +40,22 @@
     <input type="button" disabled="true" id="bOpenLottery" class="formButton dispatchButton" value="Lottery" />
     </div>*@
     <div class="radio">
-        <input type="button" id="bAssign" class="formButton dispatchButton" value="Assign?!" />
-        <input type="button" id="bUnassign" class="formButton dispatchButton" value="Remove?!"/>
-        <input type="button" id="bClear" class="formButton dispatchButton" value="Clear?!"/>
+        <input type="button" id="bAssign" class="formButton dispatchButton" value="@(WorkAssignments.btnAssign)" />
+        <input type="button" id="bUnassign" class="formButton dispatchButton" value="@(WorkAssignments.btnUnassign)"/>
+        <input type="button" id="bClear" class="formButton dispatchButton" value="@(WorkAssignments.btnClear)"/>
     </div>
     <div id="radioOpenFilled" class="radio">
-        <input type="radio" id="rA1_requested" name="radioOpenFilled" /><label for="rA1_requested" class="dispatchButton">Requested<br/>(Active)</label>
-		<input type="radio" id="rA1_skilled" name="radioOpenFilled" /><label for="rA1_skilled" class="dispatchButton">Skilled<br />(Active)</label>
-        <input type="radio" id="rA1_open" name="radioOpenFilled" /><label for="rA1_open" class="dispatchButton">Open<br />(Active)</label>
-		<input type="radio" id="rA1_assigned" name="radioOpenFilled" /><label for="rA1_assigned" class="dispatchButton">Assigned<br />(Active)</label>
-        <input type="radio" id="rA1_completed" name="radioOpenFilled"  /><label for="rA1_completed" class="dispatchButton">Assigned<br />(Completed)</label>
-        <input type="radio" id="rA1_All" name="radioOpenFilled" checked="checked" /><label for="rA1_All">All</label>
+        <input type="radio" id="rA1_requested" name="radioOpenFilled" /><label for="rA1_requested" class="dispatchButton">@(WorkAssignments.btnRequested)<br/>@(WorkAssignments.btnSubActive)</label>
+		<input type="radio" id="rA1_skilled" name="radioOpenFilled" /><label for="rA1_skilled" class="dispatchButton">@(WorkAssignments.btnSkilled)<br />@(WorkAssignments.btnSubActive)</label>
+        <input type="radio" id="rA1_open" name="radioOpenFilled" /><label for="rA1_open" class="dispatchButton">@(WorkAssignments.btnOpen)<br />@(WorkAssignments.btnSubActive)</label>
+		<input type="radio" id="rA1_assigned" name="radioOpenFilled" /><label for="rA1_assigned" class="dispatchButton">@(WorkAssignments.btnAssigned)<br />@(WorkAssignments.btnSubActive)</label>
+        <input type="radio" id="rA1_completed" name="radioOpenFilled"  /><label for="rA1_completed" class="dispatchButton">@(WorkAssignments.btnAssigned)<br />@(WorkAssignments.btnSubCompleted)</label>
+        <input type="radio" id="rA1_All" name="radioOpenFilled" checked="checked" /><label for="rA1_All">@(WorkAssignments.btnAll)</label>
 	</div>
     <div id="radioProgram" class="radio">
-	    <input type="radio" id="rA2_DWC" name="radioProgram"  /><label for="rA2_DWC">DWC</label>
-	    <input type="radio" id="rA2_HHH" name="radioProgram"  /><label for="rA2_HHH">HHH</label>
-        <input type="radio" id="rA2_All" name="radioProgram" checked="checked" /><label for="rA2_All">All</label>
+	    <input type="radio" id="rA2_DWC" name="radioProgram"  /><label for="rA2_DWC">@(WorkAssignments.btnDWC)</label>
+	    <input type="radio" id="rA2_HHH" name="radioProgram"  /><label for="rA2_HHH">@(WorkAssignments.btnHHH)</label>
+        <input type="radio" id="rA2_All" name="radioProgram" checked="checked" /><label for="rA2_All">@(WorkAssignments.btnAll)</label>
     </div>
 </div>
 
