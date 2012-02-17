@@ -143,7 +143,7 @@ namespace Machete.Test.Controllers
             _ctrlr.SetFakeControllerContext();
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
-            var result = _ctrlr.Edit(testid, fakeform, "UnitTest") as PartialViewResult;
+            var result = _ctrlr.Edit(testid, null,  fakeform, "UnitTest") as PartialViewResult;
             //Assert
             //Assert.AreEqual("Index", result.RouteValues["action"]);
             Assert.AreEqual(fakeworkAssignment, savedworkAssignment);
@@ -172,7 +172,7 @@ namespace Machete.Test.Controllers
             //
             //Act
             _ctrlr.ModelState.AddModelError("TestError", "foo");
-            var result = (PartialViewResult)_ctrlr.Edit(testid, fakeform, "UnitTest");
+            var result = (PartialViewResult)_ctrlr.Edit(testid, null, fakeform, "UnitTest");
             //Assert
             var error = result.ViewData.ModelState["TestError"].Errors[0];
             Assert.AreEqual("foo", error.ErrorMessage);
