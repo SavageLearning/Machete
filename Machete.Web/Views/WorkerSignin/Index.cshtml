@@ -84,9 +84,13 @@
                          '@WorkerSignins.deletetitle',
                          function (r) {
                              if (r == true) { 
-                             $.post(action, null, function() {
+                             $.post(action, null, function(data) {
+
                                  $('#wsiTable').dataTable().fnDraw();
                                  $('#wsiImage').attr('src', blankImage);
+                                    if (!data.jobSuccess) {
+                                        alert(data.rtnMessage);                                        
+                                    } 
                              });
                              }
                          });

@@ -153,6 +153,7 @@ namespace Machete.Web.Controllers
         public ActionResult Delete(int id)
         {
             string status = null;
+            bool jobSuccess = true;
             try
             {
                 _serv.DeleteWorkerSignin(id);
@@ -160,10 +161,13 @@ namespace Machete.Web.Controllers
             catch (Exception e)
             {
                 status = RootException.Get(e, "WorkerSigninService");
+                jobSuccess = false;
             }
 
             return Json(new
             {
+                jobSuccess = jobSuccess,
+                rtnMessage = status,
                 status = status ?? "OK",
                 deletedID = id
             },

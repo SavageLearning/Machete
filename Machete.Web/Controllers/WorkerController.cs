@@ -78,7 +78,7 @@ namespace Machete.Web.Controllers
             switch (param.sortColName())
             {                
                 case "dwccardnum": orderedW = orderDescending ? filteredW.OrderByDescending(p => p.dwccardnum) : filteredW.OrderBy(p => p.dwccardnum); break;
-                case "active": orderedW = orderDescending ? filteredW.OrderByDescending(p => p.active) : filteredW.OrderBy(p => p.active); break;
+                case "memberStatus": orderedW = orderDescending ? filteredW.OrderByDescending(p => p.memberStatus) : filteredW.OrderBy(p => p.memberStatus); break;
                 case "firstname1": orderedW = orderDescending ? filteredW.OrderByDescending(p => p.Person.firstname1) : filteredW.OrderBy(p => p.Person.firstname1); break;
                 case "firstname2": orderedW = orderDescending ? filteredW.OrderByDescending(p => p.Person.firstname2) : filteredW.OrderBy(p => p.Person.firstname2); break;
                 case "lastname1": orderedW = orderDescending ? filteredW.OrderByDescending(p => p.Person.lastname1) : filteredW.OrderBy(p => p.Person.lastname1); break;
@@ -100,7 +100,8 @@ namespace Machete.Web.Controllers
                                      WID =    p.ID.ToString(),
                                      recordid = p.ID.ToString(),
                                      dwccardnum =  Convert.ToString(p.dwccardnum),
-                                     active =  Convert.ToString(p.active), 
+                                     active =  Convert.ToString(p.active),
+                                     memberStatus = _getStatus(p),
                                      firstname1 = p.Person.firstname1, 
                                      firstname2 = p.Person.firstname2, 
                                      lastname1 = p.Person.lastname1, 
@@ -116,6 +117,21 @@ namespace Machete.Web.Controllers
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);
+        }
+
+        string _getStatus(Worker wkr)
+        {
+            if (wkr.memberStatus == Lookups.getSingleEN("memberstatus", "Active")) // blue
+                return "active";
+            if (wkr.memberStatus == Lookups.getSingleEN("memberstatus", "Inactive")) // blue
+                return "inactive";
+            if (wkr.memberStatus == Lookups.getSingleEN("memberstatus", "Expired")) // blue
+                return "expired";
+            if (wkr.memberStatus == Lookups.getSingleEN("memberstatus", "Sanctioned")) // blue
+                return "sanctioned";
+            if (wkr.memberStatus == Lookups.getSingleEN("memberstatus", "Expelled")) // blue
+                return "expelled";
+            return null;
         }
         #endregion
         //

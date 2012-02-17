@@ -112,7 +112,6 @@ namespace Machete.Data
                 new Lookup { ID=95, category = "memberstatus", text_EN="Sanctioned",    text_ES="Sancionado",       selected = false },
                 new Lookup { ID=96, category = "memberstatus", text_EN="Expired",       text_ES="Expirado",         selected = false },
                 new Lookup { ID=97, category = "memberstatus", text_EN="Expelled",      text_ES="Expulsado",       selected = false }
-
                 //last used 97
             };
         //
