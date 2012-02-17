@@ -191,11 +191,17 @@ function isNumber(n) {
 }
 
 datatable_lang_en = {
+//    "oPaginate": {
+//        "sFirst": "First page",
+//        "sLast": "Last page",
+//        "sNext": "Next page",
+//        "sPrevious": "Previous page" 
+    //    },
     "oPaginate": {
-        "sFirst": "First page",
-        "sLast": "Last page",
-        "sNext": "Next page",
-        "sPrevious": "Previous page" 
+        "sFirst": "",
+        "sLast": "",
+        "sNext": "",
+        "sPrevious": ""
     },
     "sEmptyTable": "No data available in table",
     "sInfo": "Showing (_START_ to _END_) out of _TOTAL_ entries",
@@ -208,11 +214,17 @@ datatable_lang_en = {
 };
 
 datatable_lang_es = {
+//    "oPaginate": {
+//        "sFirst": "Primera página",
+//        "sLast": "Última página",
+//        "sNext": "Página siguiente",
+//        "sPrevious": "Página Anterior"
+    //    },
     "oPaginate": {
-        "sFirst": "Primera página",
-        "sLast": "Última página",
-        "sNext": "Página siguiente",
-        "sPrevious": "Página Anterior"
+        "sFirst": "",
+        "sLast": "",
+        "sNext": "",
+        "sPrevious": ""
     },
     "sEmptyTable": "No hay datos disponibles en el cuadro",
     "sInfo": "Mostrando a cabo (_START_ a _END_) de _TOTAL_ entradas",

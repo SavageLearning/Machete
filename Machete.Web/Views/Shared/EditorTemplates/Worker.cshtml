@@ -14,7 +14,7 @@
                 @Html.LabelFor(model => model.dwccardnum)
             </div>
             <div class="tb-field">
-                @Html.TextBox("dwccardnum", Model.dwccardnum, new { @tabindex = "2", 
+                @Html.TextBox("dwccardnum", Model.dwccardnum, new { @tabindex = "1", 
                                                                     @class = "workerEditor", 
                                                                     @id = idPrefix + "dwccardnum" })
                 @Html.ValidationMessageFor(model => model.dwccardnum)
@@ -42,7 +42,7 @@
                                                  "Text",
                                                  Model.memberStatus),
                                   @Machete.Web.Resources.Shared.choose,
-                                  new { tabindex = "2", @class = "workerEditor", id = idPrefix + "memberStatus" })
+                                  new { tabindex = "1", @class = "workerEditor", id = idPrefix + "memberStatus" })
                 @Html.ValidationMessageFor(model => model.memberStatus)
             </div>
             <!--memberStatus-->
@@ -97,7 +97,7 @@
                                                  "Text",
                                                  Model.typeOfWorkID),
                                   @Machete.Web.Resources.Shared.choose,
-                                                    new { tabindex = "2", @class = "workerEditor", id = idPrefix + "typeOfWorkID" })
+                                                    new { tabindex = "1", @class = "workerEditor", id = idPrefix + "typeOfWorkID" })
                 @Html.ValidationMessageFor(model => model.typeOfWorkID)
             </div>
             <!--typeOfWorkID-->
@@ -123,7 +123,7 @@
                 @Html.LabelFor(model => model.raceother)
             </div>
             <div class="tb-field">
-                @Html.TextBox("raceother", Model.raceother, new { @class = "workerEditor", id = idPrefix + "raceother", tabindex = "1" })
+                @Html.TextBox("raceother", Model.raceother, new { @class = "workerEditor", id = idPrefix + "raceother", tabindex = "2" })
                 @Html.ValidationMessageFor(model => model.raceother)
             </div>
             <!--raceother-->
@@ -166,7 +166,7 @@
                 @Html.LabelFor(model => model.weight)
             </div>
             <div class="tb-field">
-                @Html.TextBox("weight", Model.weight, new { @class = "workerEditor", id = idPrefix + "weight", tabindex = "2" })
+                @Html.TextBox("weight", Model.weight, new { @class = "workerEditor", id = idPrefix + "weight", tabindex = "1" })
                 @Html.ValidationMessageFor(model => model.weight)
             </div>
             <!--weight-->
@@ -180,7 +180,7 @@
                                         "Text",
                                         Model.neighborhoodID),
                                     @Machete.Web.Resources.Shared.choose,
-                                             new { tabindex = "1", @class = "workerEditor", id = idPrefix + "neighborhoodID" })
+                                             new { tabindex = "2", @class = "workerEditor", id = idPrefix + "neighborhoodID" })
                 @Html.ValidationMessageFor(model => model.neighborhoodID)
             </div>
             <!--neighborhoodID-->
@@ -196,7 +196,7 @@
                                         "Text",
                                         Model.recentarrival),
                                     @Machete.Web.Resources.Shared.choose,
-                                             new { tabindex = "2", @class = "workerEditor", id = idPrefix + "recentarrival" })
+                                             new { tabindex = "1", @class = "workerEditor", id = idPrefix + "recentarrival" })
                 @Html.ValidationMessageFor(model => model.recentarrival)
             </div>
             <!--recentarrival-->
@@ -206,7 +206,7 @@
             <div class="tb-field">
                 @Html.TextBox("dateinUSA",
                             Html.Encode(System.String.Format("{0:d}", Model.dateinUSA)),
-                                              new { @class = "ui-datepicker workerEditor", tabindex = "1", id = idPrefix + "dateinUSA" })
+                                              new { @class = "ui-datepicker workerEditor", tabindex = "2", id = idPrefix + "dateinUSA" })
                 @Html.ValidationMessageFor(model => model.dateinUSA)
             </div>
             <!--dateinUSA-->
@@ -436,7 +436,7 @@
                 "Value",
                 "Text",
                 Model.skill1),
-                @Machete.Web.Resources.Shared.choose)
+                         @Machete.Web.Resources.Shared.choose, new { tabindex = "4" })
             @Html.ValidationMessageFor(model => model.skill1)
         </div>
         <div class="tb-field tri-col">
@@ -444,7 +444,7 @@
             new SelectList(Lookups.skill(CI.TwoLetterISOLanguageName, true),
                 "Value",
                 "Text", Model.skill2),
-                @Machete.Web.Resources.Shared.choose)
+                         @Machete.Web.Resources.Shared.choose, new { tabindex = "4" })
             @Html.ValidationMessageFor(model => model.skill2)
         </div>
         <div class="tb-field tri-col">
@@ -452,7 +452,7 @@
             new SelectList(Lookups.skill(CI.TwoLetterISOLanguageName, true),
                 "Value",
                 "Text", Model.skill3),
-                @Machete.Web.Resources.Shared.choose)
+                         @Machete.Web.Resources.Shared.choose, new { tabindex = "4" })
             @Html.ValidationMessageFor(model => model.skill3)
         </div>
     </div>
@@ -469,15 +469,15 @@
     </div>
     <div class="tb-row">
         <div class="tb-field tri-col">
-            @Html.EditorFor(model => model.emcontUSAname)
+            @Html.TextBox("emcontUSAname", Model.emcontUSAname, new { tabindex = "4" })
             @Html.ValidationMessageFor(model => model.emcontUSAname)
         </div>
         <div class="tb-field tri-col">
-            @Html.EditorFor(model => model.emcontUSArelation)
+            @Html.TextBox("emcontUSArelation", Model.emcontUSArelation, new { tabindex = "4" })
             @Html.ValidationMessageFor(model => model.emcontUSArelation)
         </div>
         <div class="tb-field tri-col">
-            @Html.EditorFor(model => model.emcontUSAphone)
+            @Html.TextBox("emcontUSAphone", Model.emcontUSAphone, new { tabindex = "4" })
             @Html.ValidationMessageFor(model => model.emcontUSAphone)
         </div>
     </div>
@@ -494,15 +494,15 @@
     </div>
     <div class="tb-row">
         <div class="tb-field tri-col">
-            @Html.EditorFor(model => model.emcontoriginname)
+            @Html.TextBox("emcontUSAname", Model.emcontoriginname, new { tabindex = "4" })
             @Html.ValidationMessageFor(model => model.emcontoriginname)
         </div>
         <div class="tb-field tri-col">
-            @Html.EditorFor(model => model.emcontoriginrelation)
+            @Html.TextBox("emcontoriginrelation", Model.emcontoriginrelation, new { tabindex = "4" })
             @Html.ValidationMessageFor(model => model.emcontoriginrelation)
         </div>
         <div class="tb-field tri-col">
-            @Html.EditorFor(model => model.emcontoriginphone)
+            @Html.TextBox("emcontoriginphone", Model.emcontoriginphone, new { tabindex = "4" })
             @Html.ValidationMessageFor(model => model.emcontoriginphone)
         </div>
     </div>

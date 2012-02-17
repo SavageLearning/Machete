@@ -18,7 +18,7 @@
                     <th>LABEL</th>
                     <th>ID</th>
                     <th>@Worker.dwccardnum</th>
-                    <th>@Worker.active</th>
+                    <th>@Worker.memberStatus</th>
                     <th>@Person.firstname1</th>
                     <th>@Person.firstname2</th>
                     <th>@Person.lastname1</th>
@@ -29,7 +29,7 @@
         </table>
     </div>
 </div>
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
     $(document).ready(function () {
         jqrfyTable($('#workerTable'), $('#workerTabs'),
         {
@@ -49,7 +49,7 @@
                 { "mDataProp": "tablabel","bSearchable": false, "bSortable": false, "bVisible": false },
                 { "mDataProp": "WID","bSearchable": false, "bSortable": false, "bVisible": false },
                 { "mDataProp": "dwccardnum" },
-                { "mDataProp": "active" },
+                { "mDataProp": "memberStatus" },
                 { "mDataProp": "firstname1" },
                 { "mDataProp": "firstname2" },
                 { "mDataProp": "lastname1" },
@@ -61,7 +61,7 @@
             prefix: "ui-tabs-worker-",
             formLevel: 1,
             changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
-            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
-            });
+            changeTitle:   "@(Machete.Web.Resources.Shared.changeTitle)"
+        });
     });  
 </script>
