@@ -78,7 +78,7 @@ namespace Machete.Web.Controllers
             switch (param.sortColName())
             {                
                 case "dwccardnum": orderedW = orderDescending ? filteredW.OrderByDescending(p => p.dwccardnum) : filteredW.OrderBy(p => p.dwccardnum); break;
-                case "memberStatus": orderedW = orderDescending ? filteredW.OrderByDescending(p => p.memberStatus) : filteredW.OrderBy(p => p.memberStatus); break;
+                case "wkrStatus": orderedW = orderDescending ? filteredW.OrderByDescending(p => p.memberStatus) : filteredW.OrderBy(p => p.memberStatus); break;
                 case "firstname1": orderedW = orderDescending ? filteredW.OrderByDescending(p => p.Person.firstname1) : filteredW.OrderBy(p => p.Person.firstname1); break;
                 case "firstname2": orderedW = orderDescending ? filteredW.OrderByDescending(p => p.Person.firstname2) : filteredW.OrderBy(p => p.Person.firstname2); break;
                 case "lastname1": orderedW = orderDescending ? filteredW.OrderByDescending(p => p.Person.lastname1) : filteredW.OrderBy(p => p.Person.lastname1); break;
@@ -101,7 +101,7 @@ namespace Machete.Web.Controllers
                                      recordid = p.ID.ToString(),
                                      dwccardnum =  Convert.ToString(p.dwccardnum),
                                      active =  Convert.ToString(p.active),
-                                     memberStatus = _getStatus(p),
+                                     wkrStatus = _getStatus(p),
                                      firstname1 = p.Person.firstname1, 
                                      firstname2 = p.Person.firstname2, 
                                      lastname1 = p.Person.lastname1, 

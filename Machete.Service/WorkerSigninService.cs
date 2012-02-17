@@ -227,6 +227,8 @@ namespace Machete.Service
                 case "lastname1": enumWSIV = o.orderDescending ? enumWSIV.OrderByDescending(p => p.lastname1) : enumWSIV.OrderBy(p => p.lastname1); break;
                 case "lastname2": enumWSIV = o.orderDescending ? enumWSIV.OrderByDescending(p => p.lastname2) : enumWSIV.OrderBy(p => p.lastname2); break;
                 case "dateupdated": enumWSIV = o.orderDescending ? enumWSIV.OrderByDescending(p => p.dateupdated) : enumWSIV.OrderBy(p => p.dateupdated); break;
+                case "dateforsigninstring": enumWSIV = o.orderDescending ? enumWSIV.OrderByDescending(p => p.dateforsignin) : enumWSIV.OrderBy(p => p.dateforsignin); break;
+                case "expirationDate": enumWSIV = o.orderDescending ? enumWSIV.OrderByDescending(p => p.expirationDate) : enumWSIV.OrderBy(p => p.expirationDate); break;
                 default: enumWSIV = o.orderDescending ? enumWSIV.OrderByDescending(p => p.dateforsignin) : enumWSIV.OrderBy(p => p.dateforsignin); break;
             }
             //queryableWSI = queryableWSI.ToList();

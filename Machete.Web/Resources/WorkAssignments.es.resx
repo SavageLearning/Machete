@@ -123,6 +123,45 @@
   <data name="boxlegend" xml:space="preserve">
     <value>Asignación de trabajo</value>
   </data>
+  <data name="btnAll" xml:space="preserve">
+    <value>Todo</value>
+  </data>
+  <data name="btnAssign" xml:space="preserve">
+    <value>Asignar</value>
+  </data>
+  <data name="btnAssigned" xml:space="preserve">
+    <value>Asignado</value>
+  </data>
+  <data name="btnClear" xml:space="preserve">
+    <value>Despejar</value>
+  </data>
+  <data name="btnDWC" xml:space="preserve">
+    <value>DWC</value>
+  </data>
+  <data name="btnHHH" xml:space="preserve">
+    <value>HHH</value>
+  </data>
+  <data name="btnOpen" xml:space="preserve">
+    <value>Abierto</value>
+  </data>
+  <data name="btnRequested" xml:space="preserve">
+    <value>Pedido</value>
+  </data>
+  <data name="btnSkilled" xml:space="preserve">
+    <value>Habilidades</value>
+  </data>
+  <data name="btnSubActive" xml:space="preserve">
+    <value>(Activo)</value>
+  </data>
+  <data name="btnSubCompleted" xml:space="preserve">
+    <value>(Completado)</value>
+  </data>
+  <data name="btnUnassign" xml:space="preserve">
+    <value>Quitar</value>
+  </data>
+  <data name="btnUpdate" xml:space="preserve">
+    <value>Actualizar</value>
+  </data>
   <data name="createlink" xml:space="preserve">
     <value>Crear asignación de nuevos trabajos</value>
   </data>
@@ -200,6 +239,9 @@
   </data>
   <data name="tabprefix" xml:space="preserve">
     <value>Asignación #:</value>
+  </data>
+  <data name="todaysdate" xml:space="preserve">
+    <value>Fecha de hoy:</value>
   </data>
   <data name="total" xml:space="preserve">
     <value>min. total</value>

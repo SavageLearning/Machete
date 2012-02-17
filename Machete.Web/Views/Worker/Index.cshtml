@@ -49,13 +49,28 @@
                 { "mDataProp": "tablabel","bSearchable": false, "bSortable": false, "bVisible": false },
                 { "mDataProp": "WID","bSearchable": false, "bSortable": false, "bVisible": false },
                 { "mDataProp": "dwccardnum" },
-                { "mDataProp": "memberStatus" },
+                { "mDataProp": "wkrStatus" },
                 { "mDataProp": "firstname1" },
                 { "mDataProp": "firstname2" },
                 { "mDataProp": "lastname1" },
                 { "mDataProp": "lastname2" },
                 { "mDataProp": "memberexpirationdate" }
-            ]          
+            ],
+            // callback populates html attr with row data from JSON            
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $(nRow).attr('recordid', aData['WID']);
+                switch (aData['wkrStatus'])
+                {
+                    // magic strings in WorkAssignmentController
+                    case "active": $(nRow).addClass('statusBlue'); break;
+                    case "inactive": $(nRow).addClass('statusYellow'); break;
+                    case "expired": $(nRow).addClass('statusYellow'); break;
+                    case "sanctioned": $(nRow).addClass('statusRed'); break;
+                    case "expelled": $(nRow).addClass('statusRed'); break;
+                    default: $(nRow).addClass('statusBlue');
+                }                 
+                return nRow;
+            }        
         });
         $('#workerTabs').mUI('createTabs', {
             prefix: "ui-tabs-worker-",
