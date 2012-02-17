@@ -32,16 +32,17 @@
 
 }        
 <div id="buttonDivider">
-    <div id="radioWorkers" class="radio">
+@*    <div id="radioWorkers" class="radio">
 		<input type="radio" disabled="true" id="rW1_lottery" name="radio" checked="checked" /><label for="rW1_lottery">Lottery<br />list</label>
 		<input type="radio" disabled="true" id="rW1_signin" name="radio"  /><label for="rW1_signin">Sign-in<br />list</label>
 	</div>
     <div class="radio">
     <input type="button" disabled="true" id="bOpenLottery" class="formButton dispatchButton" value="Lottery" />
-    </div>
+    </div>*@
     <div class="radio">
-        <input type="button" id="bAssign" class="formButton dispatchButton" value="Assign" />
-        <input type="button" id="bUnassign" class="formButton dispatchButton" value="Remove"/>
+        <input type="button" id="bAssign" class="formButton dispatchButton" value="Assign?!" />
+        <input type="button" id="bUnassign" class="formButton dispatchButton" value="Remove?!"/>
+        <input type="button" id="bClear" class="formButton dispatchButton" value="Clear?!"/>
     </div>
     <div id="radioOpenFilled" class="radio">
         <input type="radio" id="rA1_requested" name="radioOpenFilled" /><label for="rA1_requested" class="dispatchButton">Requested<br/>(Active)</label>
@@ -305,26 +306,14 @@
         "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
             switch (aData['asmtStatus'])
             {
+                // magic strings in WorkAssignmentController
                 case "active": $(nRow).addClass('statusBlue'); break;
                 case "completed": $(nRow).addClass('statusGreen'); break;
-                case "active": $(nRow).addClass('statusOrange'); break;
-                case "active": $(nRow).addClass('statusYellow'); break;
-                case "active": $(nRow).addClass('statusRed'); break;
+                case "incomplete": $(nRow).addClass('statusOrange'); break;
+                case "orphaned": $(nRow).addClass('statusYellow'); break;
+                case "cancelled": $(nRow).addClass('statusRed'); break;
                 default: $(nRow).addClass('statusBlue');
-            }
-//            if (aData['WID'] > 0 && aData['WSIID'] > 0 && aData['status']) { // assigned
-//                $(nRow).addClass('statusGreen');
-//            } 
-//            if (aData['WID'] == 0 && aData['status'] == @(Lookups.getSingleEN("orderstatus", "Completed"))) { // Unassigned
-//                $(nRow).addClass('statusOrange');
-//            } 
-//            if (aData['WID'] > 0 && aData['WSIID'] == 0 && aData['status'] == @(Lookups.getSingleEN("orderstatus", "Completed"))) { // orphaned
-//                $(nRow).addClass('statusYellow');
-//            }
-//            if (aData['status'] == @(Lookups.getSingleEN("orderstatus", "Cancelled"))) { // cancelled
-//                $(nRow).addClass('statusRed');
-//            }
-             
+            }           
             return nRow;
         }, 
         "fnDrawCallback": function () { assignTableCount++; }
@@ -366,11 +355,19 @@
             function (data) {
                 if (data.result == false) {
                     alert(data.resultMsg);
-                } else {
-                    $("#updateBtn").click();     
-                }
+                    return;
+                } 
+                $("#updateBtn").click();                     
             });
         });
+        //
+        //
+        $('#bClear').click(function(e) {
+            $('#availAssignTable tbody').find('tr.row_selected').removeClass('row_selected');
+            $('#signinTable tbody').find('tr.row_selected').removeClass('row_selected');
+        });
+        //
+        //
         $('#rA1_completed').click(function (e) {
             e.preventDefault();            
             $('#wa_grouping').val('assigned'); 

@@ -126,7 +126,7 @@ namespace Machete.Web.Controllers
                 return "completed";
             if (asmt.workerAssignedID == 0 && asmt.workOrder.status == Lookups.getSingleEN("orderstatus", "Active"))
                 return "incomplete";
-            if (asmt.workerAssignedID > 0 && asmt.workerSigninID == 0 && asmt.workOrder.status == Lookups.getSingleEN("orderstatus", "Completed"))
+            if (asmt.workerAssignedID > 0 && asmt.workerSigninID == null)
                 return "orphaned";
             if (asmt.workOrder.status == Lookups.getSingleEN("orderstatus", "Cancelled"))
                 return "cancelled";
@@ -293,7 +293,7 @@ namespace Machete.Web.Controllers
         //
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public ActionResult Edit(int id, FormCollection collection, string userName)
+        public ActionResult Edit(int id, int? workerAssignedID, FormCollection collection, string userName)
         {
             WorkAssignment asmt = waServ.Get(id);
             //check if workerAssigned changed; if so, unlink
@@ -302,12 +302,13 @@ namespace Machete.Web.Controllers
             bool success = true;             
             try
             {
+                if (workerAssignedID != origWorker)
+                    waServ.Unassign(asmt.ID, asmt.workerSigninID, userName);     
                 UpdateModel(asmt);
                 // If workerAssigned changed, need to unassign WSI record
                 asmt.workerAssigned = wkrServ.GetWorker((int)asmt.workerAssignedID);
                 waServ.Save(asmt, userName);
-                if (asmt.workerAssignedID != origWorker)                
-                    waServ.Unassign(asmt.ID, asmt.workerSigninID, userName);                                
+                           
             }
             catch (Exception e)
             {
