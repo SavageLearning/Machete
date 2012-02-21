@@ -16,35 +16,6 @@ using Machete.Web.Models;
 
 namespace Machete.Web.Controllers
 {
-    public class MacheteController : Controller
-    {
-        private Logger log = LogManager.GetCurrentClassLogger();
-        private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "EmployerController", "");
-
-        protected override void OnException(ExceptionContext filterContext)
-        {
-            string returnMsg = "";
-            string modelerrors = null;
-            bool success = true;
-            if (filterContext.ExceptionHandled)
-            {
-                return;
-            }
-
-            returnMsg = RootException.Get(filterContext.Exception, this.ToString());
-            modelerrors = string.Join("; ", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage));
-            levent.Level = LogLevel.Error; levent.Message = "waServ Edit failed. " + returnMsg;
-            levent.Properties["RecordID"] = "1"; log.Log(levent);
-            success = false;
-            filterContext.Result = Json(new
-            {
-                rtnMessage = returnMsg,
-                modelErrors = modelerrors,
-                jobSuccess = success
-            }, JsonRequestBehavior.AllowGet);
-            filterContext.ExceptionHandled = true;
-        }
-    }
 
     [ElmahHandleError]
     public class EmployerController : MacheteController
@@ -69,7 +40,7 @@ namespace Machete.Web.Controllers
         {
             return View();
         }
-        #endregion
+
         /// <summary>
         /// GET: /Employer/AjaxHandler
         /// </summary>
@@ -149,6 +120,7 @@ namespace Machete.Web.Controllers
             if (emp == null) return null;
             return emp.name;
         }
+        #endregion
 
         #region Create
         /// <summary>
@@ -166,94 +138,69 @@ namespace Machete.Web.Controllers
             _model.referredby = Lookups.emplrreferenceDefault;
             return PartialView("Create", _model);
         }
-
-        //
-        // POST: /Employer/Create
-        //
+        /// <summary>
+        /// POST: /Employer/Create
+        /// </summary>
+        /// <param name="employer"></param>
+        /// <param name="userName"></param>
+        /// <returns></returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public JsonResult Create(Employer employer, string userName)
         {
-            string returnMsg = "";
-            string modelerrors = null;
-            bool success = true;
-            Employer newEmployer = null;
-            try
-            {
-                UpdateModel(employer);
-                newEmployer = eServ.CreateEmployer(employer, userName);              
-            }
-            catch (Exception e)
-            {
-                returnMsg = RootException.Get(e, "EmployerService");
-                modelerrors = string.Join("; ", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage));
-                levent.Level = LogLevel.Error; levent.Message = "waServ Edit failed. " + returnMsg;
-                levent.Properties["RecordID"] = employer.ID; log.Log(levent);
-                success = false;
-            }            
+            UpdateModel(employer);
+            Employer newEmployer = eServ.CreateEmployer(employer, userName);                          
 
             return Json(new
             {
                 sNewRef = _getTabRef(newEmployer),
                 sNewLabel = _getTabLabel(newEmployer),
-                iNewID = newEmployer != null ? newEmployer.ID : 0,
-                modelErrors = modelerrors,
-                jobSuccess = success
+                iNewID = newEmployer.ID,
+                jobSuccess = true
             },
             JsonRequestBehavior.AllowGet);
         }
         #endregion
 
         #region Edit
-        //
-        // GET: /Employer/Edit/5
-        //
+        /// <summary>
+        /// GET: /Employer/Edit/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Edit(int id)
         {
             Employer employer = eServ.GetEmployer(id);
             return PartialView("Edit", employer);
         }
-        //
-        // POST: /Employer/Edit/5
-        // TODO: catch exceptions, notify user
-        //
+        /// <summary>
+        /// POST: /Employer/Edit/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="collection"></param>
+        /// <param name="userName"></param>
+        /// <returns></returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public JsonResult Edit(int id, FormCollection collection, string userName)
         {
             Employer employer = eServ.GetEmployer(id);
-            string returnMsg = "";
-            string modelerrors = null;
-            bool success = true;
-            try
-            {
-                UpdateModel(employer);
-                eServ.SaveEmployer(employer, userName);                
-            }
-            catch (Exception e)
-            {
-                returnMsg = RootException.Get(e, "WorkAssignmentService");
-                modelerrors = string.Join("; ", ModelState.Values
-                                                .SelectMany(x => x.Errors)
-                                                .Select(x => x.ErrorMessage));
-                levent.Level = LogLevel.Error; levent.Message = "TryUpdateModel failed: " + modelerrors;
-                levent.Properties["RecordID"] = employer.ID; log.Log(levent);
-                success = false;
-            }
+            UpdateModel(employer);
+            eServ.SaveEmployer(employer, userName);                            
             return Json(new
             {
-                rtnMessage = returnMsg,
-                modelErrors = modelerrors,
-                jobSuccess = success
-            }, JsonRequestBehavior.AllowGet);
-            
+                jobSuccess = true
+            }, JsonRequestBehavior.AllowGet);            
         }
         #endregion
+
         #region View
-        //
-        //GET: /Employer/View/5
-        //
+        /// <summary>
+        /// GET: /Employer/View/ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult View(int id)
         {
@@ -265,28 +212,22 @@ namespace Machete.Web.Controllers
         #endregion
 
         #region Delete
-        //
-        // POST: /Employer/Delete/5
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="UserName"></param>
+        /// <returns></returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager")]
-        public JsonResult Delete(int id, FormCollection collection, string user)
+        public JsonResult Delete(int id, string userName)
         {
-            string status = null;
-            bool jobSuccess = true;
-            try
-            {
-                eServ.DeleteEmployer(id, user);
-            }
-            catch (Exception e)
-            {
-                status = RootException.Get(e, "EmployerService");
-                jobSuccess = false;
-            }
+            eServ.DeleteEmployer(id, userName);
+
             return Json(new
             {
-                status = status ?? "OK",
-                jobSuccess = jobSuccess,
-                rtnMessage = status,
+                status = "OK",
+                jobSuccess = true,
                 deletedID = id
             },
             JsonRequestBehavior.AllowGet);

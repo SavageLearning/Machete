@@ -121,7 +121,7 @@ namespace Machete.Test.Controllers
         }
 
         [TestMethod]
-        public void WorkAssignmentController_edit_post_valid_updates_model_redirects_to_index()
+        public void WorkAssignmentController_edit_post_valid_updates_model_returns_json()
         {
             //Arrange
             int testid = 4242;
@@ -143,16 +143,18 @@ namespace Machete.Test.Controllers
             _ctrlr.SetFakeControllerContext();
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
-            var result = _ctrlr.Edit(testid, null,  fakeform, "UnitTest") as PartialViewResult;
+            var result = _ctrlr.Edit(testid, null,  fakeform, "UnitTest") as JsonResult;
             //Assert
-            //Assert.AreEqual("Index", result.RouteValues["action"]);
+            Assert.IsInstanceOfType(result, typeof(JsonResult));
+            Assert.AreEqual("{ sNewRef = /Employer/Edit/4242, sNewLabel = blah, iNewID = 4242, jobSuccess = True }",
+                            result.Data.ToString());
             Assert.AreEqual(fakeworkAssignment, savedworkAssignment);
             Assert.AreEqual(savedworkAssignment.description, "blah");
             Assert.AreEqual(savedworkAssignment.comments, "UnitTest");
         }
 
         [TestMethod]
-        public void WorkAssignmentController_edit_post_invalid_returns_view()
+        public void WorkAssignmentController_edit_post_invalid_returns_json()
         {
             //Arrange
             var workAssignment = new WorkAssignment();
@@ -192,7 +194,7 @@ namespace Machete.Test.Controllers
             //Act
             var result = _ctrlr.Delete(testid, fakeform, "UnitTest") as JsonResult;
             //Assert
-            Assert.AreEqual(result.Data.ToString(), "{ status = OK, deletedID = 4242 }");
+            Assert.AreEqual(result.Data.ToString(), "{ status = OK, jobSuccess = True, rtnMessage = , deletedID = 4242 }");
         }
     }
 }

@@ -16,66 +16,14 @@ using Machete.Web.Helpers;
 namespace Machete.Test
 {
     [TestClass]
-    public class WorkAssignmentServiceTest
+    public class WorkAssignmentServiceTest : ServiceTest
     {
-        WorkAssignmentRepository waRepo;
-        WorkOrderRepository woRepo;
-        WorkerRepository wRepo;
-        WorkerSigninRepository wsiRepo;
-        PersonRepository pRepo;
-        ImageRepository iRepo;
-        DatabaseFactory dbFactory;
-        WorkAssignmentService waServ;
-        WorkOrderService woServ;
-        //WorkerService wServ;
-        //PersonService pServ;
-        //ImageService iServ;
-        WorkerSigninService wsiServ;
-        IUnitOfWork unitofwork;
-        ILookupRepository lRepo;
-        WorkerRequestRepository wrRepo;
-        MacheteContext MacheteDB;
-        //CultureInfo CI;
         DispatchOptions dOptions;
-        [ClassInitialize]
-        public static void ClassInitialize(TestContext context)
-        {
-            //Database.SetInitializer<MacheteContext>(new TestInitializer());
-            //Records.Initialize(new MacheteContext());
-            //WorkerCache.Initialize(new MacheteContext());
-            //LookupCache.Initialize(new MacheteContext());
-            //Lookups.Initialize(LookupCache.getCache());
-
-            //MacheteLookup.Initialize(new MacheteContext());
-
-        }
 
         [TestInitialize]
         public void TestInitialize()
         {
-            Database.SetInitializer<MacheteContext>(new TestInitializer());
-            MacheteDB = new MacheteContext();
-            MacheteDB.Database.Delete();
-            MacheteDB.Database.Initialize(true);
-            Records.Initialize(new MacheteContext());
-            WorkerCache.Initialize(new MacheteContext());
-            LookupCache.Initialize(new MacheteContext());
-            Lookups.Initialize();
-            //
-            //
-            dbFactory = new DatabaseFactory();
-            waRepo = new WorkAssignmentRepository(dbFactory);
-            woRepo = new WorkOrderRepository(dbFactory);
-            wsiRepo = new WorkerSigninRepository(dbFactory);
-            unitofwork = new UnitOfWork(dbFactory);
-            wRepo = new WorkerRepository(dbFactory);
-            pRepo = new PersonRepository(dbFactory);
-            iRepo = new ImageRepository(dbFactory);
-            lRepo = new LookupRepository(dbFactory);
-            wrRepo = new WorkerRequestRepository(dbFactory);
-            waServ = new WorkAssignmentService(waRepo, wRepo, lRepo, wsiRepo, wrRepo, unitofwork);
-            woServ = new WorkOrderService(woRepo, waServ, unitofwork);
-            wsiServ = new WorkerSigninService(wsiRepo, wRepo, pRepo, iRepo, wrRepo,  unitofwork);
+            base.Initialize();
             dOptions = new DispatchOptions
             {
                 CI = new CultureInfo("en-US", false),
@@ -95,7 +43,7 @@ namespace Machete.Test
         {       
             //
             //Act
-            var result = waServ.GetIndexView(dOptions);
+            var result = _waServ.GetIndexView(dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -108,7 +56,7 @@ namespace Machete.Test
         public void Integration_WA_Service_GetIndexView_check_workerjoin_blank_worker_ok()
         {
             dOptions.sortColName = "assignedWorker";
-            var result = waServ.GetIndexView(dOptions);
+            var result = _waServ.GetIndexView(dOptions);
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
             Assert.IsInstanceOfType(result, typeof(ServiceIndexView<WorkAssignment>));
@@ -121,7 +69,7 @@ namespace Machete.Test
             //Act
             dOptions.woid = 1;
             dOptions.orderDescending = true;
-            var result = waServ.GetIndexView(dOptions);
+            var result = _waServ.GetIndexView(dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -138,7 +86,7 @@ namespace Machete.Test
             dOptions.search = "12420";
             dOptions.woid = 1;
             dOptions.orderDescending = true;
-            var result = waServ.GetIndexView(dOptions);
+            var result = _waServ.GetIndexView(dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -156,7 +104,7 @@ namespace Machete.Test
             dOptions.search = "foostring1";
             dOptions.woid = 1;
             dOptions.orderDescending = true;
-            var result = waServ.GetIndexView(dOptions);
+            var result = _waServ.GetIndexView(dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -172,7 +120,7 @@ namespace Machete.Test
             dOptions.search = "foostring1";
             dOptions.woid = 1;
             dOptions.orderDescending = true;
-            var result = waServ.GetIndexView(dOptions);
+            var result = _waServ.GetIndexView(dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -187,7 +135,7 @@ namespace Machete.Test
         {
             dOptions.search = "Digging";
             dOptions.orderDescending = true;
-            var result = waServ.GetIndexView(dOptions);
+            var result = _waServ.GetIndexView(dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -204,7 +152,7 @@ namespace Machete.Test
             //Act
             dOptions.search = DateTime.Today.AddHours(9).ToString();
             dOptions.orderDescending = true;
-            var result = waServ.GetIndexView(dOptions);
+            var result = _waServ.GetIndexView(dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -224,7 +172,7 @@ namespace Machete.Test
             //Act
             dOptions.dwccardnum = 30040;
             dOptions.orderDescending = true;
-            var result = waServ.GetIndexView(dOptions);
+            var result = _waServ.GetIndexView(dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -241,7 +189,7 @@ namespace Machete.Test
             //Act
             dOptions.orderDescending = true;
             dOptions.wa_grouping = "requested";
-            var result = waServ.GetIndexView(dOptions);
+            var result = _waServ.GetIndexView(dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -254,11 +202,11 @@ namespace Machete.Test
         [TestMethod]
         public void Integration_WA_Service_Assign_updates_WSI_and_WA()
         {
-            WorkerSignin wsi1 = wsiServ.GetWorkerSignin(1);
-            WorkAssignment wa1 = waServ.Get(1);
-            var result = waServ.Assign(wa1, wsi1, "test script");
-            WorkerSignin wsi2 = wsiServ.GetWorkerSignin(1);
-            WorkAssignment wa2 = waServ.Get(1);
+            WorkerSignin wsi1 = _wsiServ.GetWorkerSignin(1);
+            WorkAssignment wa1 = _waServ.Get(1);
+            var result = _waServ.Assign(wa1, wsi1, "test script");
+            WorkerSignin wsi2 = _wsiServ.GetWorkerSignin(1);
+            WorkAssignment wa2 = _waServ.Get(1);
             Assert.IsNotNull(result);
             Assert.IsNotNull(wa2.workerAssignedID);
             Assert.IsNotNull(wa2.workerSigninID);
@@ -269,7 +217,7 @@ namespace Machete.Test
         [TestMethod]
         public void Integration_WA_Service_GetSummary()
         {
-            var result = waServ.GetSummary("");
+            var result = _waServ.GetSummary("");
             Assert.IsNotNull(result, "Person.ID is Null");
         }
 
@@ -277,10 +225,10 @@ namespace Machete.Test
         public void Integration_WA_Service_Delete_removes_record()
 
         {
-            var before = waServ.GetMany();
+            var before = _waServ.GetMany();
             Assert.IsTrue(before.Count() == 10, "Unanticipated list count from Assignment.GetMany()");
-            waServ.Delete(1, "Intg Test");
-            var after = waServ.GetMany();
+            _waServ.Delete(1, "Intg Test");
+            var after = _waServ.GetMany();
             Assert.IsTrue(after.Count() == 9, "Unanticipated list count from Assignment.GetMany()");
             Assert.AreNotSame(before.Count(), after.Count());
         }

@@ -241,9 +241,7 @@ namespace Machete.Web.Controllers
             }
             return Json(new
             {
-                resultMsg = returnMsg,
                 rtnMessage = returnMsg,
-                result = successful,
                 jobSuccess = successful
             }, JsonRequestBehavior.AllowGet);            
         }
@@ -266,10 +264,8 @@ namespace Machete.Web.Controllers
             }
             return Json(new
             {
-                resultMsg = returnMsg,
                 rtnMessage = returnMsg,
                 jobSuccess = successful,
-                result = successful
             }, JsonRequestBehavior.AllowGet);
         }
         #endregion
@@ -299,6 +295,7 @@ namespace Machete.Web.Controllers
             //check if workerAssigned changed; if so, unlink
             int? origWorker = asmt.workerAssignedID;
             string returnMsg = "";
+            string modelerrors = null;
             bool success = true;             
             try
             {
@@ -312,7 +309,8 @@ namespace Machete.Web.Controllers
             }
             catch (Exception e)
             {
-                returnMsg = e.Message.ToString();
+                returnMsg = RootException.Get(e, "WorkAssignmentService");
+                modelerrors = string.Join("; ", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage));
                 levent.Level = LogLevel.Error; levent.Message = "waServ Edit failed. " + returnMsg;
                 levent.Properties["RecordID"] = asmt.ID; log.Log(levent);
                 success = false;
@@ -320,6 +318,7 @@ namespace Machete.Web.Controllers
             return Json(new
             {
                 rtnMessage = returnMsg,
+                modelErrors = modelerrors,
                 jobSuccess = success
             }, JsonRequestBehavior.AllowGet);
         }

@@ -16,64 +16,14 @@ using Machete.Web.Helpers;
 namespace Machete.Test
 {
     [TestClass]
-    public class WorkerSigninServiceTest
+    public class WorkerSigninServiceTest : ServiceTest
     {
-
-        WorkerSigninRepository _wsiRepo;
-        WorkerRepository _wRepo;
-        PersonRepository _pRepo;
-        WorkOrderRepository _woRepo;
-        WorkAssignmentRepository _waRepo;
-        WorkerRequestRepository _wrRepo;
-        ILookupRepository _lRepo;
-        ImageRepository _iRepo;
-        DatabaseFactory _dbFactory;
-        WorkerSigninService _wsiServ;
-        WorkerService _wServ;
-        PersonService _pServ;
-        ImageService _iServ;
-        WorkerRequestService _wrServ;
-        WorkOrderService _woServ;
-        WorkAssignmentService _waServ;
-        IUnitOfWork _unitofwork;
-        MacheteContext DB;
         DispatchOptions _dOptions;
-        //CultureInfo CI;
-        
-        [ClassInitialize]
-        public static void ClassInitialize(TestContext context) 
-        {
-            Database.SetInitializer<MacheteContext>(new TestInitializer());
-            
-        }
 
         [TestInitialize]
         public void TestInitialize()
         {
-            DB = new MacheteContext();
-            DB.Database.Delete();
-            DB.Database.Initialize(true);
-            Records.Initialize(DB);
-            WorkerCache.Initialize(DB);
-            LookupCache.Initialize(DB);
-            Lookups.Initialize();
-            _dbFactory = new DatabaseFactory();
-            _iRepo = new ImageRepository(_dbFactory);
-            _wRepo = new WorkerRepository(_dbFactory);
-            _woRepo = new WorkOrderRepository(_dbFactory);
-            _wrRepo = new WorkerRequestRepository(_dbFactory);
-            _waRepo = new WorkAssignmentRepository(_dbFactory);
-            _wsiRepo = new WorkerSigninRepository(_dbFactory);
-            _lRepo = new LookupRepository(_dbFactory);
-            _pRepo = new PersonRepository(_dbFactory);
-            _unitofwork = new UnitOfWork(_dbFactory);
-            _pServ = new PersonService(_pRepo, _unitofwork);
-            _iServ = new ImageService(_iRepo, _unitofwork);
-            _wrServ = new WorkerRequestService(_wrRepo, _unitofwork);
-            _waServ = new WorkAssignmentService(_waRepo, _wRepo, _lRepo, _wsiRepo,_wrRepo, _unitofwork);
-            _wServ = new WorkerService(_wRepo, _unitofwork);
-            _woServ = new WorkOrderService(_woRepo, _waServ, _unitofwork);
-            _wsiServ = new WorkerSigninService(_wsiRepo, _wRepo, _pRepo, _iRepo, _wrRepo, _unitofwork);
+            base.Initialize();
             _dOptions = new DispatchOptions
             {
                 CI = new CultureInfo("en-US", false),

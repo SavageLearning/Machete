@@ -17,52 +17,17 @@ using Machete.Service.Helpers;
 namespace Machete.Test
 {
     [TestClass]
-    public class WorkOrderServiceTest
+    public class WorkOrderServiceTest : ServiceTest
     {
-        DatabaseFactory dbFactory;
-        WorkOrderRepository woRepo;
-        IWorkerRepository wRepo;
-        ILookupRepository lRepo;
-        WorkOrderService woServ;
-        WorkAssignmentService waServ;
-        IUnitOfWork uow;
-        MacheteContext MacheteDB;
-        WorkAssignmentRepository waRepo;
-        WorkerSigninRepository wsiRepo;
-        WorkerRequestRepository wrRepo;
         int active;
         int pending;
         int completed;
         int cancelled;
 
-        [ClassInitialize]
-        public static void ClassInitialize(TestContext context)
-        {
-            Database.SetInitializer<MacheteContext>(new TestInitializer());
-
-        }
-
-
         [TestInitialize]
         public void TestInitialize()
         {
-            MacheteDB = new MacheteContext();
-            MacheteDB.Database.Delete();
-            MacheteDB.Database.Initialize(true);
-            Records.Initialize(new MacheteContext());
-            WorkerCache.Initialize(new MacheteContext());
-            LookupCache.Initialize(new MacheteContext());
-            Lookups.Initialize();
-            dbFactory = new DatabaseFactory();
-            woRepo = new WorkOrderRepository(dbFactory);
-            uow = new UnitOfWork(dbFactory);
-            wRepo = new WorkerRepository(dbFactory);
-            waRepo = new WorkAssignmentRepository(dbFactory);
-            wsiRepo = new WorkerSigninRepository(dbFactory);
-            wrRepo = new WorkerRequestRepository(dbFactory);
-            lRepo = new LookupRepository(dbFactory);
-            waServ = new WorkAssignmentService(waRepo, wRepo, lRepo, wsiRepo, wrRepo, uow);
-            woServ = new WorkOrderService(woRepo, waServ, uow);
+            base.Initialize();
             active = LookupCache.getSingleEN("orderstatus", "Active");
             pending = LookupCache.getSingleEN("orderstatus", "Pending");
             completed = LookupCache.getSingleEN("orderstatus", "Completed");
@@ -76,7 +41,7 @@ namespace Machete.Test
             //Arrange
             //
             //Act
-            IEnumerable<WorkOrderSummary> result = woServ.GetSummary("").ToList();
+            IEnumerable<WorkOrderSummary> result = _woServ.GetSummary("").ToList();
             //
             //Assert
             Assert.IsNotNull(result, "GetSummary result is Null");
@@ -96,7 +61,7 @@ namespace Machete.Test
             int displayLength = 50;
             //
             //Act
-            ServiceIndexView<WOWASummary> result = woServ.CombinedSummary(search, orderdescending, displayStart, displayLength);
+            ServiceIndexView<WOWASummary> result = _woServ.CombinedSummary(search, orderdescending, displayStart, displayLength);
             WOWASummary wowa = result.query.First();
             //
             //Assert
@@ -119,7 +84,7 @@ namespace Machete.Test
         {
             //
             //Act
-            var result = woServ.GetActiveOrders(DateTime.Now, false);
+            var result = _woServ.GetActiveOrders(DateTime.Now, false);
             Assert.IsNotNull(result, "Person.ID is Null");
         }
         [TestMethod]
@@ -138,7 +103,7 @@ namespace Machete.Test
             o.sortColName = "WOID";
             //
             //Act
-            ServiceIndexView<WorkOrder> result = woServ.GetIndexView(o);
+            ServiceIndexView<WorkOrder> result = _woServ.GetIndexView(o);
             //
             //Assert
             IEnumerable<WorkOrder> query = result.query.ToList();
@@ -151,9 +116,9 @@ namespace Machete.Test
         public void Integration_WO_Service_GetWorkOrders_returns_all()
         {
             // Arrange
-            IEnumerable<WorkOrder> result = woServ.GetWorkOrders().ToList();
+            IEnumerable<WorkOrder> result = _woServ.GetWorkOrders().ToList();
             //
-            int count = MacheteDB.WorkOrders.Count();
+            int count = DB.WorkOrders.Count();
             //
             Assert.IsTrue(result.Count() == 6, "Expected record count of 6, received {0}", result.Count());
             Assert.AreEqual(result.Count(), count, "GetWorkOrders() doesn't return all orders");            
