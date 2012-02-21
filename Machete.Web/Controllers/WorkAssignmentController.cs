@@ -269,7 +269,8 @@ namespace Machete.Web.Controllers
                 waServ.Unassign(asmt.ID, asmt.workerSigninID, userName);     
             UpdateModel(asmt);
             // If workerAssigned changed, need to unassign WSI record
-            asmt.workerAssigned = wkrServ.GetWorker((int)asmt.workerAssignedID);
+            if (asmt.workerAssignedID != null)
+                asmt.workerAssigned = wkrServ.GetWorker((int)asmt.workerAssignedID);
             waServ.Save(asmt, userName);
                 
             return Json(new { jobSuccess = true }, JsonRequestBehavior.AllowGet);
