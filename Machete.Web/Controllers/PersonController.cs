@@ -18,11 +18,10 @@ using System.Data.Entity.Infrastructure;
 namespace Machete.Web.Controllers
 {
     [ElmahHandleError]
-    public class PersonController : Controller
+    public class PersonController : MacheteController
     { 
         private readonly IPersonService personService;
-        private Logger log = LogManager.GetCurrentClassLogger();
-        private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "PersonController", "");
+
         public PersonController(IPersonService personService)
         {
             this.personService = personService;
@@ -103,10 +102,8 @@ namespace Machete.Web.Controllers
         public ActionResult Create(Person person, string userName)
         {
             Person newperson = null;
-            if (ModelState.IsValid)
-            {
-                newperson = personService.CreatePerson(person, userName);
-            }
+            UpdateModel(person);
+            newperson = personService.CreatePerson(person, userName);
             
             return Json(new
             {
@@ -144,31 +141,16 @@ namespace Machete.Web.Controllers
         //
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")] 
-        public ActionResult Edit(int id, FormCollection collection, string userName)
+        public ActionResult Edit(int id, string userName)
         {
             Person person = personService.GetPerson(id);
-            string status = null;
-            
-            if (TryUpdateModel(person))
-            {
-                try
-                {
-                    personService.SavePerson(person, userName);
-                }
-                catch (Exception e)
-                {
-                    status = RootException.Get(e, "WorkerService");
-                }
-            }
-            else
-            {
-                status = "Controller UpdateModel failure on recordtype: person";
-                levent.Level = LogLevel.Error; levent.Message = status;
-                levent.Properties["RecordID"] = person.ID; log.Log(levent);
-            }
+          
+            UpdateModel(person);
+            personService.SavePerson(person, userName);
+ 
             return Json(new
             {
-                status = status ?? "OK"
+                status = "OK"
             },
             JsonRequestBehavior.AllowGet);
 
@@ -201,20 +183,13 @@ namespace Machete.Web.Controllers
 
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator")] 
-        public ActionResult Delete(int id, FormCollection collection, string user)
+        public ActionResult Delete(int id, string user)
         {
-            string status = null;
-            try
-            {
-                personService.DeletePerson(id, user);
-            }
-            catch (Exception e)
-            {
-                status = RootException.Get(e, "WorkerService");
-            }
+            personService.DeletePerson(id, user);
+
             return Json(new
             {
-                status = status ?? "OK",
+                status = "OK",
                 deletedID = id
             },
             JsonRequestBehavior.AllowGet);

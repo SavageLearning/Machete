@@ -19,16 +19,13 @@ using System.Data.Objects.SqlClient;
 namespace Machete.Web.Controllers
 {
     [ElmahHandleError]
-    public class WorkAssignmentController : Controller
+    public class WorkAssignmentController : MacheteController
     {
         private readonly IWorkAssignmentService waServ;
         private readonly IWorkerService wkrServ;
         private readonly IWorkOrderService woServ;
         private readonly IWorkerSigninService wsiServ;
-        private MacheteContext DB;
-        private string culture {get; set;}
-        private Logger log = LogManager.GetCurrentClassLogger();
-        private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "WorkAssignmentController", "");
+
         public WorkAssignmentController(IWorkAssignmentService workAssignmentService,
                                         IWorkerService workerService,
                                         IWorkOrderService workOrderService,
@@ -43,7 +40,6 @@ namespace Machete.Web.Controllers
         {
             base.Initialize(requestContext);
             System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];            
-            DB = new MacheteContext();
         }
 
         #region Index
@@ -173,11 +169,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Create(WorkAssignment assignment, string userName)
         {
-            if (!ModelState.IsValid)
-            {
-                //TODO: this may always blow up
-                return PartialView("Create", assignment);
-            }
+            UpdateModel(assignment);
             assignment.workOrder = woServ.GetWorkOrder(assignment.workOrderID);
             assignment.workOrder.waPseudoIDCounter++;
             assignment.pseudoID = assignment.workOrder.waPseudoIDCounter;
@@ -226,23 +218,13 @@ namespace Machete.Web.Controllers
         #region Assign
         public ActionResult Assign(int waid, int wsiid, string userName)
         {
-            string returnMsg = "";
-            bool successful = true;
             WorkerSignin signin = wsiServ.GetWorkerSignin(wsiid);          
             WorkAssignment assignment = waServ.Get(waid);
-            try
-            {
-                waServ.Assign(assignment, signin, userName);
-            }
-            catch (Exception e)
-            {
-                returnMsg = e.Message.ToString();
-                successful = false;
-            }
+            waServ.Assign(assignment, signin, userName);
+
             return Json(new
             {
-                rtnMessage = returnMsg,
-                jobSuccess = successful
+                jobSuccess = true
             }, JsonRequestBehavior.AllowGet);            
         }
 
@@ -251,21 +233,11 @@ namespace Machete.Web.Controllers
 
         public JsonResult Unassign(int? waid, int? wsiid, string userName)
         {
-            string returnMsg = "";
-            bool successful = true;
-            try
-            {
-                waServ.Unassign(waid, wsiid, userName);
-            }
-            catch (Exception e)
-            {
-                returnMsg = e.Message.ToString();
-                successful = false;
-            }
+            waServ.Unassign(waid, wsiid, userName);
+
             return Json(new
             {
-                rtnMessage = returnMsg,
-                jobSuccess = successful,
+                jobSuccess = true,
             }, JsonRequestBehavior.AllowGet);
         }
         #endregion
@@ -285,42 +257,22 @@ namespace Machete.Web.Controllers
         }
         //
         // POST: /WorkAssignment/Edit/5
-        // TODO: catch exceptions, notify user
-        //
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public ActionResult Edit(int id, int? workerAssignedID, FormCollection collection, string userName)
+        public ActionResult Edit(int id, int? workerAssignedID, string userName)
         {
             WorkAssignment asmt = waServ.Get(id);
             //check if workerAssigned changed; if so, unlink
             int? origWorker = asmt.workerAssignedID;
-            string returnMsg = "";
-            string modelerrors = null;
-            bool success = true;             
-            try
-            {
-                if (workerAssignedID != origWorker)
-                    waServ.Unassign(asmt.ID, asmt.workerSigninID, userName);     
-                UpdateModel(asmt);
-                // If workerAssigned changed, need to unassign WSI record
-                asmt.workerAssigned = wkrServ.GetWorker((int)asmt.workerAssignedID);
-                waServ.Save(asmt, userName);
-                           
-            }
-            catch (Exception e)
-            {
-                returnMsg = RootException.Get(e, "WorkAssignmentService");
-                modelerrors = string.Join("; ", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage));
-                levent.Level = LogLevel.Error; levent.Message = "waServ Edit failed. " + returnMsg;
-                levent.Properties["RecordID"] = asmt.ID; log.Log(levent);
-                success = false;
-            }                
-            return Json(new
-            {
-                rtnMessage = returnMsg,
-                modelErrors = modelerrors,
-                jobSuccess = success
-            }, JsonRequestBehavior.AllowGet);
+
+            if (workerAssignedID != origWorker)
+                waServ.Unassign(asmt.ID, asmt.workerSigninID, userName);     
+            UpdateModel(asmt);
+            // If workerAssigned changed, need to unassign WSI record
+            asmt.workerAssigned = wkrServ.GetWorker((int)asmt.workerAssignedID);
+            waServ.Save(asmt, userName);
+                
+            return Json(new { jobSuccess = true }, JsonRequestBehavior.AllowGet);
         }
         #endregion      
         //
@@ -342,23 +294,12 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public JsonResult Delete(int id, FormCollection collection, string user)
         {
-            string status = null;
-            bool jobSuccess = true;
-            try
-            {
-                waServ.Delete(id, user);
-            }
-            catch (Exception e)
-            {
-                status = RootException.Get(e, "WorkAssignmentService");
-                jobSuccess = false;
-            }
+            waServ.Delete(id, user);
 
             return Json(new
             {
-                status = status ?? "OK",
-                jobSuccess = jobSuccess,
-                rtnMessage = status,
+                status = "OK",
+                jobSuccess = true,
                 deletedID = id
             },
             JsonRequestBehavior.AllowGet);

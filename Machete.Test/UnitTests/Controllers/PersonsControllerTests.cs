@@ -24,7 +24,20 @@ namespace Machete.Test.Controllers
     public class PersonsControllerTests
     {
         Mock<IPersonService> _serv;
+        PersonController _ctrlr;
+        FormCollection fakeform;
 
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            _serv = new Mock<IPersonService>();
+            _ctrlr = new PersonController(_serv.Object);
+            _ctrlr.SetFakeControllerContext();
+            fakeform = new FormCollection();
+            fakeform.Add("ID", "12345");
+            fakeform.Add("firstname1", "Ronald");
+            fakeform.Add("lastname1", "Reagan");
+        }
         //
         //   Testing /Index functionality
         //
@@ -32,14 +45,11 @@ namespace Machete.Test.Controllers
         public void PersonController_index_get_returns_ActionResult()
         {
             //Arrange
-            _serv = new Mock<IPersonService>();
-            var _ctrlr = new PersonController(_serv.Object);
             //Act
             var result = (ViewResult)_ctrlr.Index();
             //Assert
             Assert.IsInstanceOfType(result, typeof(ActionResult));
         }
-        //TODO: test filter unit stuff
         //
         //   Testing /Create functionality
         //
@@ -48,8 +58,6 @@ namespace Machete.Test.Controllers
         public void PersonController_create_get_returns_person()
         {
             //Arrange
-            _serv = new Mock<IPersonService>();
-            var _ctrlr = new PersonController(_serv.Object);
             //Act
             var result = (PartialViewResult)_ctrlr.Create();
             //Assert
@@ -61,34 +69,30 @@ namespace Machete.Test.Controllers
         {
             //Arrange
             var person = new Person();
-            _serv = new Mock<IPersonService>();
             _serv.Setup(p => p.CreatePerson(person, "UnitTest")).Returns(person);
-            var _ctrlr = new PersonController(_serv.Object);
+            _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
             var result = (JsonResult)_ctrlr.Create(person, "UnitTest");
             //Assert
             IDictionary<string, object> data = new RouteValueDictionary(result.Data);
-            Assert.AreEqual(0, data["iNewID"]);
-            Assert.AreEqual(" ", data["sNewLabel"]);
-            Assert.AreEqual("/Person/Edit/0", data["sNewRef"]);
+            Assert.AreEqual(12345, data["iNewID"]);
+            Assert.AreEqual("Ronald Reagan", data["sNewLabel"]);
+            Assert.AreEqual("/Person/Edit/12345", data["sNewRef"]);
         }
 
         [TestMethod]
-        public void PersonController_create_post_invalid_returns_view()
+        [ExpectedException(typeof(InvalidOperationException),
+            "An invalid UpdateModel was inappropriately allowed.")]
+        public void PersonController_create_post_invalid_throws_exception()
         {
             //Arrange
             var person = new Person();
-            _serv = new Mock<IPersonService>();
             _serv.Setup(p => p.CreatePerson(person, "UnitTest")).Returns(person);
-            var _ctrlr = new PersonController(_serv.Object);
-            _ctrlr.ModelState.AddModelError("TestError", "foo");
+            fakeform.Remove("firstname1");
+            _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
-            var result = (JsonResult)_ctrlr.Create(person, "UnitTest");
+            _ctrlr.Create(person, "UnitTest");
             //Assert
-            IDictionary<string, object> data = new RouteValueDictionary(result.Data);
-            Assert.AreEqual(0, data["iNewID"]);
-            Assert.AreEqual(null, data["sNewLabel"]);
-            Assert.AreEqual(null, data["sNewRef"]);
         }
         #endregion
         //
@@ -136,7 +140,7 @@ namespace Machete.Test.Controllers
             _ctrlr.SetFakeControllerContext();
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
-            var result = _ctrlr.Edit(testid, fakeform, "UnitTest") as JsonResult;
+            var result = _ctrlr.Edit(testid, "UnitTest") as JsonResult;
             //Assert
             IDictionary<string, object> data = new RouteValueDictionary(result.Data);
             Assert.AreEqual("OK", data["status"]);
@@ -147,33 +151,27 @@ namespace Machete.Test.Controllers
         }
 
         [TestMethod]
-        public void PersonController_edit_post_invalid_returns_view()
+        [ExpectedException(typeof(InvalidOperationException),
+            "An invalid UpdateModel was inappropriately allowed.")]
+        public void PersonController_edit_post_invalid_throws_exception()
         {
             //Arrange
             var person = new Person();
-            int testid = 4243;
-            FormCollection fakeform = new FormCollection();
-            fakeform.Add("ID", testid.ToString());
-            fakeform.Add("firstname1", "blah");
-            fakeform.Add("lastname1", "UnitTest");
-            fakeform.Add("gender", "M");
+            int testid = 12345;
             //
             // Mock service and setup SavePerson mock
-            _serv = new Mock<IPersonService>();
             _serv.Setup(p => p.SavePerson(person, "UnitTest"));
             _serv.Setup(p => p.GetPerson(testid)).Returns(person);
             //
             // Mock HttpContext so that ModelState and FormCollection work
-            var _ctrlr = new PersonController(_serv.Object);
-            _ctrlr.SetFakeControllerContext();
+            fakeform.Remove("firstname1");
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //
             //Act
-            _ctrlr.ModelState.AddModelError("TestError", "foo");
-            var result = (JsonResult)_ctrlr.Edit(testid, fakeform, "UnitTest");
+            _ctrlr.Edit(testid, "UnitTest");
             //Assert
-            IDictionary<string, object> data = new RouteValueDictionary(result.Data);
-            Assert.AreEqual("Controller UpdateModel failure on recordtype: person", data["status"]);
+            //IDictionary<string, object> data = new RouteValueDictionary(result.Data);
+            //Assert.AreEqual("Controller UpdateModel failure on recordtype: person", data["status"]);
         }
         #endregion
 
@@ -206,7 +204,7 @@ namespace Machete.Test.Controllers
             _ctrlr.SetFakeControllerContext();
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
-            JsonResult result = _ctrlr.Delete(testid, fakeform, "UnitTest") as JsonResult;
+            JsonResult result = _ctrlr.Delete(testid, "UnitTest") as JsonResult;
             //Assert
             IDictionary<string, object> data = new RouteValueDictionary(result.Data);
             Assert.AreEqual("OK", data["status"]);
