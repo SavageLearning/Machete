@@ -176,6 +176,28 @@ namespace Machete.Test
             return true;
         }
 
+        public bool employerDelete(Employer _emp)
+        {
+            WaitThenClickElement(By.Id("deleteEmployerButton-" + _emp.ID.ToString()));
+            
+            //Thread.Sleep(5);
+            //WaitForElement(By.Id("popup_container"));
+            //_d.FindElement(By.Id("popup_ok"));
+            WaitThenClickElement(By.Id("popup_ok"));
+            
+            //WaitForElement(By.Id("employerTable_searchbox"));
+            Thread.Sleep(5000);
+            //var elem = _d.FindElement(By.Id("employerTable_searchbox"));
+            //var foo1 = elem.GetAttribute("disabled");
+            //var foo2 = elem.GetAttribute("readonly");
+            //Assert.IsTrue(elem.Displayed);
+            //Assert.IsTrue(elem.Enabled);
+            WaitForElement(By.Id("employerTable_searchbox")).SendKeys(_emp.name);
+            bool result = WaitForElementValue(By.XPath("//table[@id='employerTable']/tbody/tr/td[1]"), "No matching records found");
+            Assert.IsTrue(result, "Employer not deleted properly");
+            return true;
+        }
+
         #endregion
 
         #region workorders
@@ -383,10 +405,14 @@ namespace Machete.Test
             {
                 return _d.FindElement(by);
             }
-            catch (NoSuchElementException)
+            catch (Exception)
             {
                 return null;
             }
+            //catch (ElementNotVisibleException)
+            //{
+            //    return null;
+            //}
         }
         //
         //

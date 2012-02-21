@@ -28,6 +28,8 @@ namespace Machete.Test.Controllers
         Mock<IWorkerSigninService> _wsiServ;
         WorkAssignmentController _ctrlr;
         WorkAssignmentIndex _view;
+        FormCollection fakeform;
+
         [TestInitialize]
         public void TestInitialize()
         {
@@ -37,6 +39,9 @@ namespace Machete.Test.Controllers
             _wsiServ = new Mock<IWorkerSigninService>();
             _ctrlr = new WorkAssignmentController(_waServ.Object, _wkrServ.Object, _woServ.Object, _wsiServ.Object);
             _view = new WorkAssignmentIndex();
+            _ctrlr.SetFakeControllerContext();
+            fakeform = new FormCollection();
+            fakeform.Add("ID", "12345");
         }
         //
         //   Testing /Index functionality
@@ -68,38 +73,45 @@ namespace Machete.Test.Controllers
         [TestMethod]
         public void WorkAssignmentController_create_valid_post_returns_json()
         {
-            //Arrange
-            WorkAssignment _newWA = new WorkAssignment();
-            WorkAssignment _editor = new WorkAssignment();
-            _newWA.ID = 11;
-            _editor.Updatedby = "derp";
+            //Arrange            
+            WorkAssignment _asmt = new WorkAssignment();
+            fakeform.Add("ID", "11");
+            fakeform.Add("englishlevelID", "0");
+            fakeform.Add("skillID", "60");
+            fakeform.Add("hours", "5");
+            fakeform.Add("hourlyWage", "12");
+            fakeform.Add("days", "1");
             WorkOrder _wo = new WorkOrder();
-            _newWA.workOrder = _wo;
             _wo.paperOrderNum = 12345;
             _wo.ID = 123;
             int _num = 0;
+
             string username = "UnitTest";
-            _waServ.Setup(p => p.Create(_editor, username)).Returns(() => _newWA);
             _woServ.Setup(p => p.GetWorkOrder(_num)).Returns(() => _wo);
+            _waServ.Setup(p => p.Create(_asmt, username)).Returns(() => _asmt);
+            
+            _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
-            JsonResult result = (JsonResult)_ctrlr.Create(_editor, username);
+            JsonResult result = (JsonResult)_ctrlr.Create(_asmt, username);
             //Assert
             Assert.IsInstanceOfType(result, typeof(JsonResult));
-            Assert.AreEqual(result.Data.ToString(), "{ sNewRef = /WorkAssignment/Edit/11, sNewLabel = Assignment #: 12345-00011, iNewID = 11 }");
+            Assert.AreEqual("{ sNewRef = /WorkAssignment/Edit/12345, sNewLabel = Assignment #: 12345-01, iNewID = 12345 }", 
+                            result.Data.ToString());
         }
 
         [TestMethod]
-        public void WorkAssignmentController_create_post_invalid_returns_view()
+        [ExpectedException(typeof(InvalidOperationException),
+            "An invalid UpdateModel was inappropriately allowed.")]
+        public void WorkAssignmentController_create_post_invalid_throws_exception()
         {
             //Arrange
-            var _editor = new WorkAssignment();
-            _waServ.Setup(p => p.Create(_editor, "UnitTest")).Returns(_editor);
-            _ctrlr.ModelState.AddModelError("TestError", "foo");
+            WorkAssignment _asmt = new WorkAssignment();
+            fakeform.Add("hours", "invalid data type");
+            _waServ.Setup(p => p.Create(_asmt, "UnitTest")).Returns(_asmt);
+            _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
-            var result = (PartialViewResult)_ctrlr.Create(_editor, "UnitTest");
+            _ctrlr.Create(_asmt, "UnitTest");
             //Assert
-            var error = result.ViewData.ModelState["TestError"].Errors[0];
-            Assert.AreEqual("foo", error.ErrorMessage);
         }
         #endregion
         //
@@ -125,59 +137,67 @@ namespace Machete.Test.Controllers
         {
             //Arrange
             int testid = 4242;
+            Worker wkr = new Worker();
+            wkr.ID = 424;
             FormCollection fakeform = new FormCollection();
             fakeform.Add("ID", testid.ToString());
             fakeform.Add("description", "blah");     //Every required field must be populated,
             fakeform.Add("comments", "UnitTest");  //or result will be null.            
-            WorkAssignment fakeworkAssignment = new WorkAssignment();
-            WorkAssignment savedworkAssignment = new WorkAssignment();
+            WorkAssignment asmt = new WorkAssignment();
+            WorkAssignment savedAsmt = null;
+            asmt.workerAssignedID = wkr.ID;
+            asmt.ID = testid;
             string user = "";
-            _waServ.Setup(p => p.Get(testid)).Returns(fakeworkAssignment);
+            _waServ.Setup(p => p.Get(testid)).Returns(asmt);
             _waServ.Setup(x => x.Save(It.IsAny<WorkAssignment>(),
                                           It.IsAny<string>())
                                          ).Callback((WorkAssignment p, string str) =>
                                          {
-                                             savedworkAssignment = p;
+                                             savedAsmt = p;
                                              user = str;
                                          });
-            _ctrlr.SetFakeControllerContext();
+            _wkrServ.Setup(p => p.GetWorker((int)asmt.workerAssignedID)).Returns(wkr);
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
-            var result = _ctrlr.Edit(testid, null,  fakeform, "UnitTest") as JsonResult;
+            var result = _ctrlr.Edit(testid, null, "UnitTest") as JsonResult;
             //Assert
             Assert.IsInstanceOfType(result, typeof(JsonResult));
-            Assert.AreEqual("{ sNewRef = /Employer/Edit/4242, sNewLabel = blah, iNewID = 4242, jobSuccess = True }",
+            Assert.AreEqual("{ jobSuccess = True }",
                             result.Data.ToString());
-            Assert.AreEqual(fakeworkAssignment, savedworkAssignment);
-            Assert.AreEqual(savedworkAssignment.description, "blah");
-            Assert.AreEqual(savedworkAssignment.comments, "UnitTest");
+            Assert.AreEqual(asmt, savedAsmt);
+            Assert.AreEqual(savedAsmt.description, "blah");
+            Assert.AreEqual(savedAsmt.comments, "UnitTest");
         }
 
         [TestMethod]
-        public void WorkAssignmentController_edit_post_invalid_returns_json()
+        [ExpectedException(typeof(InvalidOperationException),
+            "An invalid UpdateModel was inappropriately allowed.")]
+        public void WorkAssignmentController_edit_post_invalid_throws_exception()
         {
             //Arrange
-            var workAssignment = new WorkAssignment();
+            var asmt = new WorkAssignment();
+            Worker wkr = new Worker();
+            wkr.ID = 424;
             int testid = 4243;
+            asmt.ID = testid;
+            asmt.workerAssignedID = wkr.ID;
             FormCollection fakeform = new FormCollection();
             fakeform.Add("ID", testid.ToString());
-            fakeform.Add("description", "blah");
+            fakeform.Add("hours", "blah");
             fakeform.Add("comments", "UnitTest");
             //
             // Mock service and setup SaveWorkAssignment mock
-            _waServ.Setup(p => p.Save(workAssignment, "UnitTest"));
-            _waServ.Setup(p => p.Get(testid)).Returns(workAssignment);
+            _waServ.Setup(p => p.Save(asmt, "UnitTest"));
+            _waServ.Setup(p => p.Get(testid)).Returns(asmt);
+            _wkrServ.Setup(p => p.GetWorker((int)asmt.workerAssignedID)).Returns(wkr);
             //
             // Mock HttpContext so that ModelState and FormCollection work
-            _ctrlr.SetFakeControllerContext();
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //
             //Act
-            _ctrlr.ModelState.AddModelError("TestError", "foo");
-            var result = (PartialViewResult)_ctrlr.Edit(testid, null, fakeform, "UnitTest");
+            //_ctrlr.ModelState.AddModelError("TestError", "foo");
+            _ctrlr.Edit(testid, null, "UnitTest");
             //Assert
-            var error = result.ViewData.ModelState["TestError"].Errors[0];
-            Assert.AreEqual("foo", error.ErrorMessage);
         }
         #endregion
 
@@ -194,7 +214,8 @@ namespace Machete.Test.Controllers
             //Act
             var result = _ctrlr.Delete(testid, fakeform, "UnitTest") as JsonResult;
             //Assert
-            Assert.AreEqual(result.Data.ToString(), "{ status = OK, jobSuccess = True, rtnMessage = , deletedID = 4242 }");
+            Assert.AreEqual("{ status = OK, jobSuccess = True, deletedID = 4242 }", 
+                            result.Data.ToString());
         }
     }
 }

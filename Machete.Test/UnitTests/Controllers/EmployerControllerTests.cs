@@ -60,8 +60,6 @@ namespace Machete.Test.Controllers
         public void EmployerController_create_get_returns_employer()
         {
             //Arrange
-            _serv = new Mock<IEmployerService>();
-            var _ctrlr = new EmployerController(_serv.Object);
             //Act
             var result = (PartialViewResult)_ctrlr.Create();
             //Assert
