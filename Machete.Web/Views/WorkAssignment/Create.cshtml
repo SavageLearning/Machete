@@ -28,11 +28,19 @@
         $waForm.mUI('waFormConfiguration');
         //
         // WorkOrder Create submit event
+        var myWage = $waForm.find('#hourlyWage');
+        var myHour = $waForm.find('#hours');
+        var myRange = $waForm.find('#hourRange');
         $waForm.mUI('formSubmit', {
             exclusiveTab: false,
             create: true,
             recType: "@(recType)",
-            formLevel: 3
+            formLevel: 3,
+            preProcess: function () {
+                $(myWage).removeAttr('disabled', 'disabled');
+                $(myHour).removeAttr('disabled', 'disabled');
+                $(myRange).removeAttr('disabled', 'disabled');
+            }
         });
         //
         // machete UI detect changes on forms in tabs   
