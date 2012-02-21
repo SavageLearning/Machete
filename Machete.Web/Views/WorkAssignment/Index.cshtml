@@ -332,8 +332,8 @@
                     wsiid: signinRow
                 },
                 function (data) {
-                    if (data.result == false) {
-                        alert(data.resultMsg);
+                    if (data.jobSuccess == false) {
+                        alert(data.rtnMessage);
                     } else {
                         $("#updateBtn").click();     
                     }
@@ -353,8 +353,8 @@
                     wsiid: signinRow
             },
             function (data) {
-                if (data.result == false) {
-                    alert(data.resultMsg);
+                if (data.jobSuccess == false) {
+                    alert(data.rtnMessage);
                     return;
                 } 
                 $("#updateBtn").click();                     

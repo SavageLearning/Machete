@@ -23,11 +23,22 @@ namespace Machete.Test.Controllers
     {
         Mock<IEmployerService> _serv;
         EmployerController _ctrlr;
+        FormCollection fakeform;
+
         [TestInitialize]
         public void TestInitialize()
         {
             _serv = new Mock<IEmployerService>();
             _ctrlr = new EmployerController(_serv.Object);
+            _ctrlr.SetFakeControllerContext();
+            fakeform = new FormCollection();
+            fakeform.Add("ID", "12345");
+            fakeform.Add("name", "blah");
+            fakeform.Add("address1", "UnitTest");
+            fakeform.Add("city", "footown");
+            fakeform.Add("state", "WA");
+            fakeform.Add("phone", "123-456-7890");
+            fakeform.Add("zipcode", "1234567890");
         }
         //
         //   Testing /Index functionality
@@ -62,30 +73,33 @@ namespace Machete.Test.Controllers
         {
             //Arrange
             var employer = new Employer();
-            _serv = new Mock<IEmployerService>();
+            employer.ID = 4242;
+            employer.name = "unit test";
             _serv.Setup(p => p.CreateEmployer(employer, "UnitTest")).Returns(employer);
-            var _ctrlr = new EmployerController(_serv.Object);
+            _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
             var result = (JsonResult)_ctrlr.Create(employer, "UnitTest");
             //Assert
             Assert.IsInstanceOfType(result, typeof(JsonResult));
-            Assert.AreEqual(result.Data.ToString(), "{ sNewRef = /Employer/Edit/0, sNewLabel = , iNewID = 0 }");
+            Assert.AreEqual("{ sNewRef = /Employer/Edit/12345, sNewLabel = blah, iNewID = 12345, jobSuccess = True }", 
+                            result.Data.ToString());
         }
 
         [TestMethod]
-        public void EmployerController_create_post_invalid_returns_view()
+        [ExpectedException(typeof(InvalidOperationException),
+            "An invalid UpdateModel was inappropriately allowed.")]
+        public void EmployerController_create_post_invalid_throws_exception()
         {
             //Arrange
             var employer = new Employer();
+            fakeform.Remove("name");
+
             _serv = new Mock<IEmployerService>();
             _serv.Setup(p => p.CreateEmployer(employer, "UnitTest")).Returns(employer);
             var _ctrlr = new EmployerController(_serv.Object);
-            _ctrlr.ModelState.AddModelError("TestError", "foo");
-            //Act
-            var result = (PartialViewResult)_ctrlr.Create(employer, "UnitTest");
-            //Assert
-            var error = result.ViewData.ModelState["TestError"].Errors[0];
-            Assert.AreEqual("foo", error.ErrorMessage);
+            _ctrlr.SetFakeControllerContext();
+            _ctrlr.ValueProvider = fakeform.ToValueProvider();
+            var result = _ctrlr.Create(employer, "UnitTest") as JsonResult;
         }
         #endregion
         //
@@ -102,25 +116,16 @@ namespace Machete.Test.Controllers
             _serv.Setup(p => p.GetEmployer(testid)).Returns(fakeemployer);
             var _ctrlr = new EmployerController(_serv.Object);
             //Act
-            var result = (PartialViewResult)_ctrlr.Edit(testid);
+            var result = _ctrlr.Edit(testid) as PartialViewResult;
             //Assert
             Assert.IsInstanceOfType(result.ViewData.Model, typeof(Employer));
         }
 
         [TestMethod]
-        public void EmployerController_edit_post_valid_updates_model_redirects_to_index()
+        public void EmployerController_edit_post_valid_updates_model_returns_json()
         {
             //Arrange
-            //_serv = new Mock<IEmployerService>();
             int testid = 4242;
-            FormCollection fakeform = new FormCollection();
-            fakeform.Add("ID", testid.ToString());
-            fakeform.Add("name", "blah");
-            fakeform.Add("address1", "UnitTest");
-            fakeform.Add("city", "footown");
-            fakeform.Add("state", "WA");
-            fakeform.Add("phone", "123-456-7890");
-            fakeform.Add("zipcode", "1234567890");
             Employer fakeemployer = new Employer();
             Employer savedemployer = new Employer();
             string user = "";
@@ -132,13 +137,12 @@ namespace Machete.Test.Controllers
                                              savedemployer = p;
                                              user = str;
                                          });
-            //var _ctrlr = new EmployerController(_serv.Object);
-            _ctrlr.SetFakeControllerContext();
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
-            var result = _ctrlr.Edit(testid, fakeform, "UnitTest") as PartialViewResult;
+            var result = _ctrlr.Edit(testid, fakeform, "UnitTest") as JsonResult;
             //Assert
-            //Assert.AreEqual("Index", result.RouteValues["action"]);
+            Assert.IsInstanceOfType(result, typeof(JsonResult));
+            Assert.AreEqual("{ jobSuccess = True }", result.Data.ToString());
             Assert.AreEqual(fakeemployer, savedemployer);
             Assert.AreEqual(savedemployer.name, "blah");
             Assert.AreEqual(savedemployer.address1, "UnitTest");
@@ -146,33 +150,26 @@ namespace Machete.Test.Controllers
         }
 
         [TestMethod]
-        public void EmployerController_edit_post_invalid_returns_view()
+        [ExpectedException(typeof(InvalidOperationException),
+            "An invalid UpdateModel was inappropriately allowed.")]
+        public void EmployerController_edit_post_invalid_throws_exception()
         {
             //Arrange
             var employer = new Employer();
             int testid = 4243;
-            FormCollection fakeform = new FormCollection();
-            fakeform.Add("ID", testid.ToString());
-            fakeform.Add("firstname1", "blah");
-            fakeform.Add("lastname1", "UnitTest");
-            fakeform.Add("gender", "M");
             //
             // Mock service and setup SaveEmployer mock
-            _serv = new Mock<IEmployerService>();
             _serv.Setup(p => p.SaveEmployer(employer, "UnitTest"));
             _serv.Setup(p => p.GetEmployer(testid)).Returns(employer);
             //
             // Mock HttpContext so that ModelState and FormCollection work
-            var _ctrlr = new EmployerController(_serv.Object);
-            _ctrlr.SetFakeControllerContext();
+            fakeform.Remove("phone");
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //
             //Act
-            _ctrlr.ModelState.AddModelError("TestError", "foo");
-            var result = (PartialViewResult)_ctrlr.Edit(testid, fakeform, "UnitTest");
+            //_ctrlr.ModelState.AddModelError("TestError", "foo");
+            _ctrlr.Edit(testid, fakeform, "UnitTest");
             //Assert
-            var error = result.ViewData.ModelState["TestError"].Errors[0];
-            Assert.AreEqual("foo", error.ErrorMessage);
         }
         #endregion
 
@@ -189,9 +186,10 @@ namespace Machete.Test.Controllers
             _ctrlr.SetFakeControllerContext();
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
-            var result = _ctrlr.Delete(testid, fakeform, "UnitTest") as JsonResult;
+            var result = _ctrlr.Delete(testid, "UnitTest") as JsonResult;
             //Assert
-            Assert.AreEqual(result.Data.ToString(), "{ status = OK, deletedID = 4242 }");
+            Assert.AreEqual("{ status = OK, jobSuccess = True, deletedID = 4242 }", 
+                            result.Data.ToString());
         }
     }
 }

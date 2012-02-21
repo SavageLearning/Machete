@@ -14,51 +14,27 @@ using System.Data.Entity.Validation;
 namespace Machete.Test
 {
     [TestClass]
-    public class PersonServiceTest
+    public class PersonServiceTest : ServiceTest
     {
-        PersonRepository _pRepo;
-        DatabaseFactory _dbFactory;
-        PersonService _service;
-        IUnitOfWork _unitofwork;
-        MacheteContext MacheteDB;
-
-        [ClassInitialize]
-        public static void ClassInitialize(TestContext context)
-        {
-            //Database.SetInitializer<MacheteContext>(new MacheteInitializer());
-        }
-
-
         [TestInitialize]
         public void TestInitialize()
         {
 
             Database.SetInitializer<MacheteContext>(new TestInitializer());
-            this.MacheteDB = new MacheteContext();
-            _dbFactory = new DatabaseFactory();
-            _pRepo = new PersonRepository(_dbFactory);
-            _unitofwork = new UnitOfWork(_dbFactory);
-            _service = new PersonService(_pRepo, _unitofwork);
+            base.Initialize();
         }
 
         [TestMethod]
         public void DbSet_PersonService_Intergation_CreatePerson()
         {
-            //
             //Arrange
-            MacheteDB.Database.Delete();
-            MacheteDB.Database.Initialize(true);
             Person _person = (Person)Records.person.Clone();
             _person.firstname2 = "PersonService_Intergation_CreatePerson";
-
-            //
             //Act
-            _service.CreatePerson(_person, "UnitTest");
-
-            //
+            _pServ.CreatePerson(_person, "UnitTest");
             //Assert
             Assert.IsNotNull(_person.ID, "Person.ID is Null");
-            Assert.IsTrue(_person.ID == 1);
+            Assert.IsTrue(_person.ID == 4);
         }
         //
         // CreatePerson calls DbSet.Add() and  Context.SaveChanges()
@@ -70,18 +46,18 @@ namespace Machete.Test
             int reccount = 0;
             //
             //Arrange
-            MacheteDB.Database.Delete();
-            MacheteDB.Database.Initialize(true);
+            DB.Database.Delete();
+            DB.Database.Initialize(true);
             Person _p = (Person)Records.person.Clone();
             _p.firstname2 = "PersonService_Int_CrePer_NoDuplicate";
             //
             //Act
             try
             {
-                _service.CreatePerson(_p, "UnitTest");
-                _service.CreatePerson(_p, "UnitTest");
-                _service.CreatePerson(_p, "UnitTest");
-                reccount = MacheteDB.Persons.Count(n => n.firstname1 == _p.firstname1);
+                _pServ.CreatePerson(_p, "UnitTest");
+                _pServ.CreatePerson(_p, "UnitTest");
+                _pServ.CreatePerson(_p, "UnitTest");
+                reccount = DB.Persons.Count(n => n.firstname1 == _p.firstname1);
             }
             catch (DbEntityValidationException ex)
             {

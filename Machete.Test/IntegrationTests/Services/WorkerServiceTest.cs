@@ -13,30 +13,12 @@ using System.Data.Entity;
 namespace Machete.Test
 {
     [TestClass]
-    public class WorkerServiceTest
+    public class WorkerServiceTest : ServiceTest
     {
-        WorkerRepository _workerRepo;
-        DatabaseFactory _dbFactory;
-        WorkerService _service;
-        IUnitOfWork _unitofwork;
-        MacheteContext MacheteDB;
-        [ClassInitialize]
-        public static void ClassInitialize(TestContext context)
-        {
-            //Database.SetInitializer<MacheteContext>(new MacheteInitializer());
-        }
-
         [TestInitialize]
         public void TestInitialize()
         {
-            Database.SetInitializer<MacheteContext>(new TestInitializer());
-            this.MacheteDB = new MacheteContext();
-            MacheteDB.Database.Delete();
-            MacheteDB.Database.Initialize(true);
-            _dbFactory = new DatabaseFactory();
-            _workerRepo = new WorkerRepository(_dbFactory);
-            _unitofwork = new UnitOfWork(_dbFactory);
-            _service = new WorkerService(_workerRepo, _unitofwork);
+            base.Initialize();
         }
         /// <summary>
         /// Create a worker record from the Worker Service
@@ -53,11 +35,11 @@ namespace Machete.Test
             _w.Person = _p;
             //
             //Act
-            _service.CreateWorker(_w, "UnitTest");
+            _wServ.CreateWorker(_w, "UnitTest");
             //
             //Assert
             Assert.IsNotNull(_w.ID, "Worker.ID is Null");
-            Assert.IsTrue(_p.ID == 1, "Record did not have expected ID");
+            Assert.IsTrue(_p.ID == 4, "Record did not have expected ID");
             Assert.IsTrue(_w.ID == _p.ID, "Worker.ID doesn't match Person.ID");
         }
         /// <summary>
@@ -75,15 +57,15 @@ namespace Machete.Test
             _w.Person = _p;
             //
             //Act
-            Worker result = _service.CreateWorker(_w, "UnitTest");
+            Worker result = _wServ.CreateWorker(_w, "UnitTest");
             result.height = "short"; //EF should keep _w and result the same
-            _service.SaveWorker(result, "UnitTest");
+            _wServ.SaveWorker(result, "UnitTest");
             //
             //Assert
             Assert.IsNotNull(_w.ID, "Worker.ID is Null");
             Assert.IsNotNull(result.ID, "(worker) result.ID is Null");
-            Assert.IsTrue(_p.ID == 1, "Record did not have expected ID");
-            Assert.IsTrue(result.Person.ID == 1, "Record did not have expected ID");
+            Assert.IsTrue(_p.ID == 4, "Record did not have expected ID");
+            Assert.IsTrue(result.Person.ID == 4, "Record did not have expected ID");
             Assert.IsTrue(_w.ID == _p.ID, "Worker.ID doesn't match Person.ID");
             Assert.IsTrue(_w.height == "short", "SaveWorker failed to save property change");
             Assert.IsTrue(result.height == "short", "SaveWorker failed to save property change");

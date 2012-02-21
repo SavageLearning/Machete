@@ -27,12 +27,10 @@ namespace Machete.Service
         private static void FillCache()
         {
             IEnumerable<Lookup> lookups = DB.Lookups.AsNoTracking().ToList();
-            //DbCache = DB.Set<Lookup>().AsNoTracking().ToList();
             CacheItemPolicy policy = new CacheItemPolicy();
             policy.AbsoluteExpiration = new DateTimeOffset(DateTime.Now.AddHours(1));
             CacheItem wCacheItem = new CacheItem("lookupCache", lookups);
             cache.Set(wCacheItem, policy);
-            //DB.Dispose();
         }
         //
         //

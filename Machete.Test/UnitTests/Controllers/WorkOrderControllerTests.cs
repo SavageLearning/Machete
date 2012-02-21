@@ -301,16 +301,5 @@ namespace Machete.Test.Controllers
             Assert.AreEqual(result.Data.ToString(), "{ status = OK, deletedID = 4242 }");
         }
         #endregion
-
-        [TestMethod]
-        public void WorkOrderController_AjaxHandler_Automapper_maps()
-        {
-            _serv = new Mock<IWorkOrderService>();
-            jQueryDataTableParam dto = new jQueryDataTableParam();
-            dto.sSearch = "searchStr";
-            //dto.
-            //
-
-        }
     }
 }

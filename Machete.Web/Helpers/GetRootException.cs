@@ -24,4 +24,9 @@ namespace Machete.Web.Helpers
             return messages;
         }
     }
+
+    public static class MacheteControllerError
+    {
+        
+    }
 }

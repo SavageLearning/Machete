@@ -170,12 +170,12 @@ namespace Machete.Web.Controllers
         }
         #endregion
 
-        private void _setCreateDefaults(WorkOrderEditor _model)
-        {
-            _model.order.transportMethodID = Lookups.transportmethodDefault;
-            _model.order.typeOfWorkID = Lookups.typesOfWorkDefault;
-            _model.order.status = Lookups.woStatusDefault;
-        }
+        //private void _setCreateDefaults(WorkOrderEditor _model)
+        //{
+        //    _model.order.transportMethodID = Lookups.transportmethodDefault;
+        //    _model.order.typeOfWorkID = Lookups.typesOfWorkDefault;
+        //    _model.order.status = Lookups.woStatusDefault;
+        //}
 
         #region Create
         /// <summary>
