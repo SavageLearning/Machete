@@ -65,7 +65,7 @@
     </div>
 } 
 @Html.Partial("WorkAssignmentIndex", Model)
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
     $(document).ready(function () {
         if (@(editDisable)) { 
             $('#WorkOrderTab-@(Model.ID)').find('input,select,textarea').attr('disabled', 'disabled');

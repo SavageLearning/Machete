@@ -31,7 +31,7 @@ namespace Machete.Test.Controllers
         Mock<IWorkerService> _reqServ;
         Mock<IWorkerRequestService> _wrServ;
         //Mock<ICollection<WorkerRequest>> _requests;
-        FormCollection fullfakeform;
+        FormCollection fakeform;
         List<WorkerRequest> workerRequest;
         WorkOrderController _ctrlr;
         int testid = 4242;
@@ -39,19 +39,21 @@ namespace Machete.Test.Controllers
         [TestInitialize]
         public void TestInitialize()
         {
-            fullfakeform = new FormCollection();
-            fullfakeform.Add("ID", testid.ToString());
-            fullfakeform.Add("workSiteAddress1", "blah");     //Every required field must be populated,
-            fullfakeform.Add("city", "UnitTest");  //or result will be null.
-            fullfakeform.Add("state", "WA");
-            fullfakeform.Add("phone", "123-456-7890");
-            fullfakeform.Add("zipcode", "12345-6789");
-            fullfakeform.Add("typeOfWorkID", "1");
-            fullfakeform.Add("dateTimeofWork", "1/1/2011");
-            fullfakeform.Add("transportMethodID", "1");
-            fullfakeform.Add("transportFee", "20.00");
-            fullfakeform.Add("contactName", "test script contact name");
-            //fullfakeform.Add("workerRequests", "30123,301234,30122,12345");
+            fakeform = new FormCollection();
+            fakeform.Add("ID", testid.ToString());
+            fakeform.Add("workSiteAddress1", "blah");     //Every required field must be populated,
+            fakeform.Add("city", "UnitTest");  //or result will be null.
+            fakeform.Add("state", "WA");
+            fakeform.Add("phone", "123-456-7890");
+            fakeform.Add("zipcode", "12345-6789");
+            fakeform.Add("typeOfWorkID", "1");
+            fakeform.Add("dateTimeofWork", "1/1/2011");
+            fakeform.Add("transportMethodID", "1");
+            fakeform.Add("transportFee", "20.00");
+            fakeform.Add("transportFeeExtra", "8.00");
+            fakeform.Add("status", "43"); // active work order
+            fakeform.Add("contactName", "test script contact name");
+            //fakeform.Add("workerRequests", "30123,301234,30122,12345");
             _serv = new Mock<IWorkOrderService>();
             _empServ = new Mock<IEmployerService>();
             _waServ = new Mock<IWorkAssignmentService>();
@@ -59,6 +61,7 @@ namespace Machete.Test.Controllers
             _wrServ = new Mock<IWorkerRequestService>();
             workerRequest = new List<WorkerRequest> { };
             _ctrlr = new WorkOrderController(_serv.Object, _waServ.Object, _empServ.Object, _reqServ.Object, _wrServ.Object);
+            _ctrlr.SetFakeControllerContext();
         }
         //
         //   Testing /Index functionality
@@ -86,26 +89,28 @@ namespace Machete.Test.Controllers
             //Arrange
             var workOrder = new WorkOrder();
             var _model = new WorkOrder();
-            _serv.Setup(p => p.CreateWorkOrder(workOrder, "UnitTest")).Returns(() => workOrder);                        
+            _serv.Setup(p => p.CreateWorkOrder(workOrder, "UnitTest")).Returns(() => workOrder);
+            _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
             var result = (JsonResult)_ctrlr.Create(workOrder, "UnitTest", workerRequest);
             //Assert
             Assert.IsInstanceOfType(result, typeof(JsonResult));
-            Assert.AreEqual(result.Data.ToString(), "{ sNewRef = /WorkOrder/Edit/0, sNewLabel = Order #: 00000 @ , iNewID = 0 }");
+            Assert.AreEqual(result.Data.ToString(), "{ sNewRef = /WorkOrder/Edit/4242, sNewLabel = Order #: 04242 @ blah, iNewID = 4242 }");
         }
 
         [TestMethod]
-        public void WorkOrderController_create_post_invalid_returns_view()
+        [ExpectedException(typeof(InvalidOperationException),
+            "An invalid UpdateModel was inappropriately allowed.")]
+        public void WorkOrderController_create_post_invalid_throws_exception()
         {
             //Arrange
             var workOrder = new WorkOrder();
             _serv.Setup(p => p.CreateWorkOrder(workOrder, "UnitTest")).Returns(workOrder);
-            _ctrlr.ModelState.AddModelError("TestError", "foo");
+            fakeform.Remove("contactName");
+            _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
-            var result = (PartialViewResult)_ctrlr.Create(workOrder, "UnitTest", workerRequest);
+            _ctrlr.Create(workOrder, "UnitTest", workerRequest);
             //Assert
-            var error = result.ViewData.ModelState["TestError"].Errors[0];
-            Assert.AreEqual("foo", error.ErrorMessage);
         }
         #endregion
         //
@@ -131,7 +136,6 @@ namespace Machete.Test.Controllers
         {
             //Arrange
             int testid = 4242;
-            FormCollection fakeform = fullfakeform;
             WorkOrder fakeworkOrder = new WorkOrder();
             fakeworkOrder.workerRequests = workerRequest;
             WorkOrder savedworkOrder = new WorkOrder();
@@ -174,7 +178,6 @@ namespace Machete.Test.Controllers
         {
             //Arrange
             int testid = 4242;
-            FormCollection fakeform = fullfakeform;
             WorkOrder fakeworkOrder = new WorkOrder();
             fakeworkOrder.workerRequests = workerRequest;
             WorkerRequest foo1 = new WorkerRequest
@@ -235,34 +238,27 @@ namespace Machete.Test.Controllers
         /// 
         /// </summary>
         [TestMethod]
-        public void WorkOrderController_edit_post_invalid_returns_view()
+        [ExpectedException(typeof(InvalidOperationException),
+            "An invalid UpdateModel was inappropriately allowed.")]
+        public void WorkOrderController_edit_post_invalid_throws_exception()
         {
             //Arrange
             var workOrder = new WorkOrder();
             workOrder.workerRequests = workerRequest;
             int testid = 4243;
-            FormCollection fakeform = new FormCollection();
-            fakeform.Add("ID", testid.ToString());
-            fakeform.Add("firstname1", "blah");
-            fakeform.Add("lastname1", "UnitTest");
-            fakeform.Add("gender", "M");
             //
             // Mock service and setup SaveWorkOrder mock
-            _serv.Setup(p => p.SaveWorkOrder(workOrder, "UnitTest"));
             _serv.Setup(p => p.GetWorkOrder(testid)).Returns(workOrder);
             //
             // Mock HttpContext so that ModelState and FormCollection work
-            _ctrlr.SetFakeControllerContext();
+            fakeform.Remove("contactName");
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //
             //Act
-            _ctrlr.ModelState.AddModelError("TestError", "foo");
             List<WorkerRequest> list = new List<WorkerRequest>();
-            var result = (JsonResult)_ctrlr.Edit(testid, fakeform, "UnitTest", list);
+            _ctrlr.Edit(testid, fakeform, "UnitTest", list);
             //Assert
-            //var error = result.ViewData.ModelState["TestError"].Errors[0];
-            //Assert.AreEqual("foo", error.ErrorMessage);
-            Assert.AreEqual(result.Data.ToString(), "{ status = ERROR, editedID = 4243 }");
+
         }
         #endregion
         #region delete tests
