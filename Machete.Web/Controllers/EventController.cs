@@ -16,18 +16,24 @@ using System.Web.Routing;
 namespace Machete.Web.Controllers
 {
     [ElmahHandleError]
-    public class EventController : Controller
+    public class EventController : MacheteController
     {
         private readonly IEventService _serv;
         private readonly IImageService iServ;
-        private Logger log = LogManager.GetCurrentClassLogger();
-        private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "EmployerController", "");
+        System.Globalization.CultureInfo CI;
+        //private Logger log = LogManager.GetCurrentClassLogger();
+        //private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "EmployerController", "");
         //
         //
         public EventController(IEventService eventService, IImageService imageServ)
         {
             this._serv = eventService;
             this.iServ = imageServ;
+        }
+        protected override void Initialize(RequestContext requestContext)
+        {
+            base.Initialize(requestContext);
+            CI = (System.Globalization.CultureInfo)Session["Culture"];
         }
         //
         //
@@ -113,12 +119,7 @@ namespace Machete.Web.Controllers
         [HttpPost, UserNameFilter]
         public ActionResult Create(Event evnt, string userName)
         {
-            System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
-            if (!ModelState.IsValid)
-            {
-                //TODO: This probably wont work for tabs & partials
-                return PartialView("Create", evnt);
-            }
+            UpdateModel(evnt);
             Event newEvent = _serv.CreateEvent(evnt, userName);
 
             return Json(new
@@ -144,32 +145,13 @@ namespace Machete.Web.Controllers
 
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult Edit(int id, FormCollection collection, string user)
+        public ActionResult Edit(int id, string user)
         {
             Event evnt = _serv.GetEvent(id);
-            string status = null;
-            if (TryUpdateModel(evnt))
-            {
-                try
-                {
-                    _serv.SaveEvent(evnt, user);
-                }
-                catch (Exception e)
-                {
-                    status = RootException.Get(e, "Event::EditPost");
-                }
-            }
-            else
-            {
-                levent.Level = LogLevel.Error; levent.Message = "TryUpdateModel failed";
-                levent.Properties["RecordID"] = evnt.ID; log.Log(levent);
-                return PartialView("Edit", evnt);
-            }
-            return Json(new
-            {
-                status = status ?? "OK"
-            },
-            JsonRequestBehavior.AllowGet);
+            UpdateModel(evnt);
+            _serv.SaveEvent(evnt, user);
+  
+            return Json(new { status = "OK" }, JsonRequestBehavior.AllowGet);
         }
         //
         // AddImage
@@ -212,20 +194,11 @@ namespace Machete.Web.Controllers
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Delete(int id, string user)
-        {
-            string status = null;
-            try
-            {
-                _serv.DeleteEvent(id, user);
-            }
-            catch (Exception e)
-            {
-                status = RootException.Get(e, "EventService");
-            }
-
+        {   
+            _serv.DeleteEvent(id, user);
             return Json(new
             {
-                status = status ?? "OK",
+                status = "OK",
                 deletedID = id
             },
             JsonRequestBehavior.AllowGet);
@@ -235,23 +208,16 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult DeleteImage(int evntID, int jeviID, string user)
         {
-            string status = null;
             int deletedJEVI = 0;
-            try
-            {
-                Event evnt = _serv.GetEvent(evntID);
-                JoinEventImage jevi = evnt.JoinEventImages.Single(e => e.ID == jeviID);
-                deletedJEVI = jevi.ID;
-                iServ.DeleteImage(jevi.ImageID, user);
-                evnt.JoinEventImages.Remove(jevi);
-            }
-            catch (Exception e)
-            {
-                status = RootException.Get(e, "EventController::DeleteImage");
-            }
+            Event evnt = _serv.GetEvent(evntID);
+            JoinEventImage jevi = evnt.JoinEventImages.Single(e => e.ID == jeviID);
+            deletedJEVI = jevi.ID;
+            iServ.DeleteImage(jevi.ImageID, user);
+            evnt.JoinEventImages.Remove(jevi);
+
             return Json(new
             {
-                status = status ?? "OK",
+                status = "OK",
                 deletedID = deletedJEVI
             },
             JsonRequestBehavior.AllowGet);
