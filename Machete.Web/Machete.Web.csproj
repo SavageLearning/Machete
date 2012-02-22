@@ -686,7 +686,6 @@
     <Content Include="Views\Shared\ManagerInfo.cshtml" />
     <Content Include="Views\WorkAssignment\Index.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\WorkOrderIndex.cshtml" />
-    <Content Include="Views\Shared\EmployerIndex.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\PersonIndex.cshtml" />
     <Content Include="Views\Shared\WorkAssignmentIndex.cshtml" />
     <Content Include="Views\WorkAssignment\Create.cshtml" />
