@@ -17,6 +17,8 @@
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
         $('html, body').animate({ scrollTop: $(document).height() }, 'slow');
+        $('#dispatchAccordion *').remove();
+        $('#dispatchAccordion').remove();
         $('#activateWorkOrderButton-@(Model.workOrderID)').hide();
         var $waForm = $('#@(woPrefix)waCreateForm');
         //jquery'ify the buttons
