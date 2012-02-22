@@ -610,7 +610,7 @@
             $.post($(this).attr("action"), $(this).serialize(), function (data) {
                 if (data.status !== "OK") {
                     $.alerts.okButton = "OK";
-                    jConfirm(data.status, "ERROR");
+                    jConfirm(data.status, "ERROR?!");
                     return false;
                 }
                 //

@@ -124,6 +124,7 @@ namespace Machete.Test
             _wa1.pseudoID = _wa1.workOrder.waPseudoIDCounter; //TODO: refactor into base class
             //
             ui.WaitThenClickElement(By.Id("walt-" + _wo.ID));
+            Thread.Sleep(2000);
             By walt = By.XPath("//table[@id='workAssignTable-wo-" + _wo.ID + "']/tbody/tr/td[1]");
             ui.WaitForElementValue(walt, _wa1.getFullPseudoID());
             Assert.AreEqual(_wa1.getFullPseudoID(), driver.FindElement(walt).Text, "Unexpected PseudoID in assignment's list");
