@@ -23,6 +23,7 @@ namespace Machete.Test.Controllers
         Mock<IPersonService> _pserv;
         Mock<IImageService> _iserv;
         WorkerController _ctrlr;
+        FormCollection fakeform;
         [TestInitialize]
         public void TestInitialize()
         {
@@ -30,6 +31,41 @@ namespace Machete.Test.Controllers
             _pserv = new Mock<IPersonService>();
             _iserv = new Mock<IImageService>();
             _ctrlr = new WorkerController(_wserv.Object, _pserv.Object, _iserv.Object);
+            _ctrlr.SetFakeControllerContext();
+            fakeform = new FormCollection();
+            fakeform.Add("ID", "12345");
+            fakeform.Add("typeOfWorkID", "1");
+            fakeform.Add("RaceID", "1");
+            fakeform.Add("height", "1");
+            fakeform.Add("weight", "1");
+            fakeform.Add("englishlevelID", "1");
+            fakeform.Add("recentarrival", "true");
+            fakeform.Add("dateinUSA", "1/1/2000");
+            fakeform.Add("dateinseattle", "1/1/2000");
+            fakeform.Add("disabled", "true");
+            fakeform.Add("maritalstatus", "1");
+            fakeform.Add("livewithchildren", "true");
+            fakeform.Add("numofchildren", "1");
+            fakeform.Add("incomeID", "1");
+            fakeform.Add("livealone", "true");
+            fakeform.Add("emcontUSAname", "");
+            fakeform.Add("emcontUSAphone", "");
+            fakeform.Add("emcontUSArelation", "");
+            fakeform.Add("dwccardnum", "12345");
+            fakeform.Add("neighborhoodID", "1");
+            fakeform.Add("immigrantrefugee", "false");
+            fakeform.Add("countryoforiginID", "1");
+            fakeform.Add("emcontoriginname", "");
+            fakeform.Add("emcontoriginphone", "");
+            fakeform.Add("emcontoriginrelation", "");
+            fakeform.Add("memberexpirationdate", "1/1/2000");
+            fakeform.Add("driverslicense", "false");
+            fakeform.Add("licenseexpirationdate", "");
+            fakeform.Add("carinsurance", "false");
+            fakeform.Add("insuranceexpiration", "");
+            fakeform.Add("dateOfBirth", "1/1/2000");
+            fakeform.Add("dateOfMembership", "1/1/2000");
+            //fakeform.Add("", "");
         }
         //
         //   Testing /Index functionality
@@ -55,7 +91,7 @@ namespace Machete.Test.Controllers
         }
 
         [TestMethod]
-        public void WorkerController_create_post_valid_redirects_to_Index()
+        public void WorkerController_create_post_valid_returns_json()
         {
             //Arrange
             var _worker = new Worker();
@@ -66,30 +102,27 @@ namespace Machete.Test.Controllers
             //
             _wserv.Setup(p => p.CreateWorker(_worker, "UnitTest")).Returns(_worker);
             _pserv.Setup(p => p.CreatePerson(_person, "UnitTest")).Returns(_person);
+            _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
-            var result = (PartialViewResult)_ctrlr.Create(_worker, "UnitTest", null);
-            //Assert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Worker));
+            var result = _ctrlr.Create(_worker, "UnitTest", null) as JsonResult;
+            Assert.IsInstanceOfType(result, typeof(JsonResult));
+            Assert.AreEqual("{ iNewID = 12345, jobSuccess = True }",
+                            result.Data.ToString());
         }
 
         [TestMethod]
-        public void WorkerController_create_post_invalid_returns_view()
+        [ExpectedException(typeof(InvalidOperationException),
+            "An invalid UpdateModel was inappropriately allowed.")]
+        public void WorkerController_create_post_invalid_throws_exception()
         {
             //Arrange
             var _worker = new Worker();
-            var _person = new Person();
-            var _viewmodel = new WorkerViewModel();
-            _viewmodel.person = _person;
-            _viewmodel.worker = _worker;
-            //
-            _wserv.Setup(p => p.CreateWorker(_worker, "UnitTest")).Returns(_worker);
-            _pserv.Setup(p => p.CreatePerson(_person, "UnitTest")).Returns(_person);
-            _ctrlr.ModelState.AddModelError("TestError", "foo");
+
+            fakeform.Remove("height");
+            _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
-            var result = (PartialViewResult)_ctrlr.Create(_worker, "UnitTest", null);
+            _ctrlr.Create(_worker, "UnitTest", null);
             //Assert
-            var error = result.ViewData.ModelState["TestError"].Errors[0];
-            Assert.AreEqual("foo", error.ErrorMessage);
         }
 
         //

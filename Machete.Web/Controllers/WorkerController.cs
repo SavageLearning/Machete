@@ -17,12 +17,13 @@ using System.Web.Routing;
 namespace Machete.Web.Controllers
 {
     [ElmahHandleError]
-    public class WorkerController : Controller
+    public class WorkerController : MacheteController
     {
         private readonly IWorkerService workerService;
         private readonly IImageService imageServ;
-        private Logger log = LogManager.GetCurrentClassLogger();
-        private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "WorkerController", "");
+        System.Globalization.CultureInfo CI;
+        //private Logger log = LogManager.GetCurrentClassLogger();
+        //private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "WorkerController", "");
 
         public WorkerController(IWorkerService workerService, 
                                 IPersonService personService,
@@ -154,15 +155,17 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "PhoneDesk, Manager, Administrator")]
         public ActionResult Create(Worker worker, string userName, HttpPostedFileBase imagefile)
         {
-            if (!ModelState.IsValid)
-            {
-                levent.Level = LogLevel.Error; levent.Message = "ModelState invalid";
-                log.Log(levent);
-                return PartialView(worker);
-            }
+            UpdateModel(worker);
             if (imagefile != null) updateImage(worker, imagefile);
-            workerService.CreateWorker(worker, userName);
-            return PartialView(worker);
+            Worker newWorker = workerService.CreateWorker(worker, userName);
+            return Json(new
+            {
+                //sNewRef = _getTabRef(newWorker),
+                //sNewLabel = _getTabLabel(newWorker),
+                iNewID = newWorker.ID,
+                jobSuccess = true
+            },
+            JsonRequestBehavior.AllowGet);
         }
         #endregion
         //
@@ -180,18 +183,15 @@ namespace Machete.Web.Controllers
         {
             Worker worker = workerService.GetWorker(id);
             // TODO: catch exceptions, notify user
-            if (TryUpdateModel(worker))
+            UpdateModel(worker);
+            
+            if (imagefile != null) updateImage(worker, imagefile);                
+            workerService.SaveWorker(worker, userName);
+            return Json(new
             {
-                if (imagefile != null) updateImage(worker, imagefile);                
-                workerService.SaveWorker(worker, userName);
-                return PartialView(worker);
-            }
-            else 
-            {
-                levent.Level = LogLevel.Error; levent.Message = "ModelState invalid";
-                levent.Properties["RecordID"] = id; log.Log(levent);
-                return View(_model);
-            }
+                jobSuccess = true
+            }, JsonRequestBehavior.AllowGet);
+
         }
         //
         //GET: /Worker/View/5
@@ -220,19 +220,11 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Delete(int id, string user)
         {            
-            string status = null;
-            try
-            {
-                workerService.DeleteWorker(id, user);
-            }
-            catch (Exception e)
-            {
-                status = RootException.Get(e, "WorkerService"); 
-            }
+            workerService.DeleteWorker(id, user);
 
             return Json(new
             {
-                status = status ?? "OK",
+                status = "OK",
                 deletedID = id
             },
             JsonRequestBehavior.AllowGet);

@@ -152,23 +152,11 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Check-in")]
         public ActionResult Delete(int id)
         {
-            string status = null;
-            bool jobSuccess = true;
-            try
-            {
-                _serv.DeleteWorkerSignin(id);
-            }
-            catch (Exception e)
-            {
-                status = RootException.Get(e, "WorkerSigninService");
-                jobSuccess = false;
-            }
-
+            _serv.DeleteWorkerSignin(id);            
             return Json(new
             {
-                jobSuccess = jobSuccess,
-                rtnMessage = status,
-                status = status ?? "OK",
+                jobSuccess = true,
+                status = "OK",
                 deletedID = id
             },
             JsonRequestBehavior.AllowGet);
