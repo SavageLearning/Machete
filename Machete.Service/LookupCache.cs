@@ -16,7 +16,6 @@ namespace Machete.Service
         public static int completed = 44;
         public static int cancelled = 45;
         public static int expired = 46;
-
     }
     public class LookupCache
     {
@@ -42,6 +41,11 @@ namespace Machete.Service
             policy.AbsoluteExpiration = new DateTimeOffset(DateTime.Now.AddHours(1));
             CacheItem wCacheItem = new CacheItem("lookupCache", lookups);
             cache.Set(wCacheItem, policy);
+            Worker.iActive = LookupCache.getSingleEN("memberstatus", "Active");
+            Worker.iSanctioned = LookupCache.getSingleEN("memberstatus", "Sanctioned");
+            Worker.iExpelled = LookupCache.getSingleEN("memberstatus", "Expelled");
+            Worker.iExpired = LookupCache.getSingleEN("memberstatus", "Expired");
+            Worker.iInactive = LookupCache.getSingleEN("memberstatus", "Inactive");
         }
         //
         //

@@ -12,6 +12,12 @@ namespace Machete.Domain
 {
     public class Worker : Record
     {
+        public static int iActive { get; set; }
+        public static int iInactive { get; set; }
+        public static int iSanctioned { get; set; }
+        public static int iExpired { get; set; }
+        public static int iExpelled { get; set; }
+
         //public int ID { get; set; }
         public virtual Person Person { get; set; }
         public virtual ICollection<WorkerSignin> workersignins { get; set; }
@@ -164,7 +170,27 @@ namespace Machete.Domain
         //
         [LocalizedDisplayName("skill3", NameResourceType = typeof(Resources.Worker))]
         public int? skill3 { get; set; }
-
+        //
+        public bool isActive 
+        {
+            get { return this.memberStatus == iActive ? true : false; }
+        }
+        public bool isInactive
+        {
+            get { return this.memberStatus == iInactive ? true : false; }
+        }
+        public bool isSanctioned
+        {
+            get { return this.memberStatus == iSanctioned ? true : false; }
+        }
+        public bool isExpired
+        {
+            get { return this.memberStatus == iExpired ? true : false; }
+        }
+        public bool isExpelled
+        {
+            get { return this.memberStatus == iExpelled ? true : false; }
+        }
     }
 }
 
