@@ -48,7 +48,7 @@ namespace Machete.Web.Controllers
             if (!string.IsNullOrEmpty(param.sSearch))
             {
                 filteredEvents = _serv.GetEvents()
-                    .Where(p => p.notes.ToString().ContainsOIC(param.sSearch));
+                    .Where(p => p.notes.ToString().Contains(param.sSearch));
             }
             else
             {

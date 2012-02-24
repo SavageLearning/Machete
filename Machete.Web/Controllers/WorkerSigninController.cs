@@ -4,15 +4,11 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Machete.Service;
-//using Machete.Helpers;
 using Machete.Web.Helpers;
 using NLog;
 using Machete.Domain;
 using Machete.Data;
-//using Microsoft.Reporting.WebForms;
 using Machete.Web.Models;
-//using System.Data.Objects.SqlClient;
-//using System.Data.Objects;
 using System.Web.Routing;
 
 namespace Machete.Web.Controllers
@@ -22,9 +18,7 @@ namespace Machete.Web.Controllers
     {
         private readonly IWorkerSigninService _serv;
         private readonly IWorkerService _wServ;
-        //private Logger log = LogManager.GetCurrentClassLogger();
-        private System.Globalization.CultureInfo CI;
-        //private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "WorkerSigninController", "");
+        private System.Globalization.CultureInfo CI;        
         public WorkerSigninController(IWorkerSigninService workerSigninService, IWorkerService workerService)
         {
             this._serv = workerSigninService;
@@ -42,31 +36,23 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Manager, Administrator, Check-in")]
         public ActionResult Index()
         {        
-            //WorkerSigninViewModel _model = new WorkerSigninViewModel();
-            //if (ViewBag.dateforsignin == null) _model.dateforsignin = DateTime.Today;
-            //else _model.dateforsignin = ViewBag.dateforsignin;
-            return View();//_model);
+            return View();
         }
         //
         // POST: /WorkerSignin/Index -- records a signin
         [HttpPost]
         [Authorize(Roles = "Manager, Administrator, Check-in")]
         public ActionResult Index(int dwccardnum, DateTime dateforsignin)
-        {
-            
+        {            
             var _signin = new WorkerSignin();
-            bool memberInactive = false;
-            bool memberSanctioned = false;
-            bool memberExpelled = false;
-            bool memberExpired = false;
             // Tthe card just swiped
             _signin.dwccardnum = dwccardnum;
             _signin.dateforsignin = dateforsignin;
             //
             //
             _serv.CreateWorkerSignin(_signin, this.User.Identity.Name);
-
             Worker worker = _wServ.GetWorkerByNum(dwccardnum);
+            if (worker == null) throw new NullReferenceException("card ID doesn't match a worker");
             //Get picture from checkin, show with next view
             Image checkin_image = _serv.getImage(dwccardnum);           
             string imageRef = "/Content/images/NO-IMAGE-AVAILABLE.jpg";
@@ -75,22 +61,12 @@ namespace Machete.Web.Controllers
                 imageRef = "/Image/GetImage/" + checkin_image.ID;
             }
 
-            
-            if (worker != null)
-            {
-                memberInactive = worker.memberStatus == LookupCache.getSingleEN("memberstatus", "Inactive") ? true : false;
-                memberSanctioned = worker.memberStatus == LookupCache.getSingleEN("memberstatus", "Sanctioned") ? true : false;
-                memberExpelled = worker.memberStatus == LookupCache.getSingleEN("memberstatus", "Expelled") ? true : false;            
-            }
-            if (worker.memberexpirationdate < DateTime.Now)            
-                memberExpired = true;            
-
             return Json(new
             {
-                memberExpired = memberExpired,
-                memberInactive = memberInactive,
-                memberSanctioned = memberSanctioned,
-                memberExpelled = memberExpelled,
+                memberExpired = worker.isExpired,
+                memberInactive = worker.isInactive,
+                memberSanctioned = worker.isSanctioned,
+                memberExpelled = worker.isExpelled,
                 imageRef = imageRef,
                 expirationDate = worker.memberexpirationdate
             },

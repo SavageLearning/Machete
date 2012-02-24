@@ -58,13 +58,13 @@ namespace Machete.Web.Controllers
             if (!string.IsNullOrEmpty(param.sSearch))
             {
                 filteredW = workerService.GetWorkers(true)
-                    .Where(p => p.dwccardnum.ToString().ContainsOIC(param.sSearch) ||
-                                p.active.ToString().ContainsOIC(param.sSearch) ||
-                                p.Person.firstname1.ContainsOIC(param.sSearch) ||
-                                p.Person.firstname2.ContainsOIC(param.sSearch) ||
-                                p.Person.lastname1.ContainsOIC(param.sSearch) ||
-                                p.Person.lastname2.ContainsOIC(param.sSearch) ||
-                                p.memberexpirationdate.ToString().ContainsOIC(param.sSearch));
+                    .Where(p => p.dwccardnum.ToString().Contains(param.sSearch) ||
+                                p.active.ToString().Contains(param.sSearch) ||
+                                p.Person.firstname1.Contains(param.sSearch) ||
+                                p.Person.firstname2.Contains(param.sSearch) ||
+                                p.Person.lastname1.Contains(param.sSearch) ||
+                                p.Person.lastname2.Contains(param.sSearch) ||
+                                p.memberexpirationdate.ToString().Contains(param.sSearch));
             }
             else
             {
