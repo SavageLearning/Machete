@@ -2,6 +2,7 @@
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
 @using Machete.Domain.Resources
+@using Machete.Service
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
 }
@@ -374,7 +375,7 @@
             $('#signin_visible').val(false);
             $('#assignedWorker_visible').val(true);
             $('#requestedWorkers_visible').val(false);
-            $('#status').val(@(Lookups.getSingleEN("orderstatus", "Completed")));
+            $('#status').val(@(woStatus.completed));
             $("#updateBtn").click();    
         });
         $('#rA1_requested').click(function (e) {
@@ -383,7 +384,7 @@
             $('#signin_visible').val(true);
             $('#assignedWorker_visible').val(false);
             $('#requestedWorkers_visible').val(true);
-            $('#status').val(@(Lookups.getSingleEN("orderstatus", "Active")));
+            $('#status').val(@(woStatus.active));
             $("#updateBtn").click();     
         });
         $('#rA1_open').click(function (e) {
@@ -392,7 +393,7 @@
             $('#signin_visible').val(true);
             $('#assignedWorker_visible').val(false);
             $('#requestedWorkers_visible').val(false);
-            $('#status').val(@(Lookups.getSingleEN("orderstatus", "Active")));
+            $('#status').val(@(woStatus.active));
             $("#updateBtn").click(); 
         });
         $('#rA1_skilled').click(function (e) {
@@ -401,7 +402,7 @@
             $('#signin_visible').val(true);
             $('#assignedWorker_visible').val(false);
             $('#requestedWorkers_visible').val(false);
-            $('#status').val(@(Lookups.getSingleEN("orderstatus", "Active")));
+            $('#status').val(@(woStatus.active));
             $("#updateBtn").click();    
           
         });
@@ -411,7 +412,7 @@
             $('#signin_visible').val(false);
             $('#assignedWorker_visible').val(true);
             $('#requestedWorkers_visible').val(true);
-            $('#status').val(@(Lookups.getSingleEN("orderstatus", "Active")));
+            $('#status').val(@(woStatus.active));
             $("#updateBtn").click();                 
         });
         $('#rA1_All').click(function (e) {

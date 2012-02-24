@@ -1,6 +1,7 @@
 ﻿@using Machete.Web.Helpers
 @using Machete.Domain.Resources
 @using Machete.Web.Resources
+@using Machete.Service
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
 }
@@ -167,23 +168,23 @@
         // filtering buttons on details page
         //
         $('#pendingOrdersBtn').click(function() {            
-            oTable.dataTable().fnFilter('@Lookups.getSingleEN("orderstatus", "Pending")', 5); //sync with DT array above
+            oTable.dataTable().fnFilter('@woStatus.pending', 5); //sync with DT array above
         });
         $('#activeOrdersBtn').click(function() {            
-            oTable.dataTable().fnFilter('@Lookups.getSingleEN("orderstatus", "Active")', 5); //sync with DT array above
+            oTable.dataTable().fnFilter('@woStatus.active', 5); //sync with DT array above
         });
         $('#completedOrdersBtn').click(function() {            
-            oTable.dataTable().fnFilter('@Lookups.getSingleEN("orderstatus", "Completed")', 5); //sync with DT array above
+            oTable.dataTable().fnFilter('@woStatus.completed', 5); //sync with DT array above
         });
         $('#expiredOrdersBtn').click(function() {            
-            oTable.dataTable().fnFilter('@Lookups.getSingleEN("orderstatus", "Expired")', 5); //sync with DT array above
+            oTable.dataTable().fnFilter('@woStatus.expired', 5); //sync with DT array above
         });
         $('#allOrdersBtn').click(function() {
             oTable.dataTable().fnFilter("");
             oTable.dataTable().fnFilter("", 5); //sync with DT array above
         });
         $('#cancelledOrdersBtn').click(function() {
-            oTable.dataTable().fnFilter('@Lookups.getSingleEN("orderstatus", "Cancelled")', 5); //sync with DT array above
+            oTable.dataTable().fnFilter('@woStatus.cancelled', 5); //sync with DT array above
         });
         ////////////////////////////////////////////////////////////////
         //

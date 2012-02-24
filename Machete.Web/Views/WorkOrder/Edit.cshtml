@@ -1,6 +1,7 @@
 ﻿@model Machete.Domain.WorkOrder
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
+@using Machete.Service
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
     string recType = "WO";
@@ -58,7 +59,7 @@
     }
 }
 
-@if (Lookups.getSingleEN("orderstatus", "Pending") == Model.status)
+@if (woStatus.pending == Model.status)
 {
     <div class="completeOrderContainer">
         <input type="button" value="@WorkOrders.activatesubmit" class="formButton completeOrderButton" id="activateWorkOrderButton-@(Model.ID)"/>

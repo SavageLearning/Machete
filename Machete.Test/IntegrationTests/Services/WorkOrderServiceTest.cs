@@ -19,19 +19,11 @@ namespace Machete.Test
     [TestClass]
     public class WorkOrderServiceTest : ServiceTest
     {
-        int active;
-        int pending;
-        int completed;
-        int cancelled;
 
         [TestInitialize]
         public void TestInitialize()
         {
             base.Initialize();
-            active = LookupCache.getSingleEN("orderstatus", "Active");
-            pending = LookupCache.getSingleEN("orderstatus", "Pending");
-            completed = LookupCache.getSingleEN("orderstatus", "Completed");
-            cancelled = LookupCache.getSingleEN("orderstatus", "Cancelled");
         }
 
         [TestMethod]
@@ -45,10 +37,10 @@ namespace Machete.Test
             //
             //Assert
             Assert.IsNotNull(result, "GetSummary result is Null");
-            Assert.IsTrue(result.Where(r => r.status == active).First().count == 2, "GetSummary returned incorrect number of Active records");
-            Assert.IsTrue(result.Where(r => r.status == pending).First().count == 1, "GetSummary returned incorrect number of Pending records");
-            Assert.IsTrue(result.Where(r => r.status == completed).First().count == 2, "GetSummary returned incorrect number of Completed records");
-            Assert.IsTrue(result.Where(r => r.status == cancelled).First().count == 1, "GetSummary returned incorrect number of Cancelled records");
+            Assert.IsTrue(result.Where(r => r.status == woStatus.active).First().count == 2, "GetSummary returned incorrect number of Active records");
+            Assert.IsTrue(result.Where(r => r.status == woStatus.pending).First().count == 1, "GetSummary returned incorrect number of Pending records");
+            Assert.IsTrue(result.Where(r => r.status == woStatus.completed).First().count == 2, "GetSummary returned incorrect number of Completed records");
+            Assert.IsTrue(result.Where(r => r.status == woStatus.cancelled).First().count == 1, "GetSummary returned incorrect number of Cancelled records");
         }
         [TestMethod]
         public void Integration_WO_Service_CombinedSummary()
