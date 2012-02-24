@@ -160,8 +160,8 @@ namespace Machete.Service
             //
             if (o.showPending == false)
             {
-                int pending = LookupCache.getSingleEN("orderstatus", "Pending");
-                queryableWA = queryableWA.Where(p => p.workOrder.status != pending);
+                //int pending = LookupCache.getSingleEN("orderstatus", "Pending");
+                queryableWA = queryableWA.Where(p => p.workOrder.status != woStatus.pending);
             }
             // 
             // wa_grouping

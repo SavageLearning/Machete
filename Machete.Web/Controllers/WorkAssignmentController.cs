@@ -120,13 +120,13 @@ namespace Machete.Web.Controllers
         {
             if (asmt.workerAssignedID > 0 && asmt.workerSigninID > 0) // green
                 return "completed";
-            if (asmt.workerAssignedID == 0 && asmt.workOrder.status == Lookups.getSingleEN("orderstatus", "Active"))
+            if (asmt.workerAssignedID == 0 && asmt.workOrder.status == woStatus.active)
                 return "incomplete";
             if (asmt.workerAssignedID > 0 && asmt.workerSigninID == null)
                 return "orphaned";
-            if (asmt.workOrder.status == Lookups.getSingleEN("orderstatus", "Cancelled"))
+            if (asmt.workOrder.status == woStatus.cancelled)
                 return "cancelled";
-            if (asmt.workOrder.status == Lookups.getSingleEN("orderstatus", "Active")) // blue
+            if (asmt.workOrder.status == woStatus.active) // blue
                 return "active";
             return null;
         }

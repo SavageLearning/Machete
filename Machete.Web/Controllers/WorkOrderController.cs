@@ -334,7 +334,7 @@ namespace Machete.Web.Controllers
         {
             var workOrder = woServ.GetWorkOrder(id);
             // lookup int value for status active
-            workOrder.status = Lookups.getSingleEN("orderstatus","Active");
+            workOrder.status = woStatus.active;
             woServ.SaveWorkOrder(workOrder, userName);         
             return Json(new
             {
