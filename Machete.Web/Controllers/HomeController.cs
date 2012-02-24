@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using Machete.Service;
 using System.Web.Helpers;
 using System.Globalization;
-using Machete.Helpers;
+using Machete.Web.Helpers;
 
 namespace Machete.Web.Controllers
 {

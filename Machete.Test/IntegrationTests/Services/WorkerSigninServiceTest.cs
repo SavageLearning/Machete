@@ -46,15 +46,15 @@ namespace Machete.Test
         /// <summary>
         /// 
         /// </summary>
-        [TestMethod]
-        public void DbSet_WorkerSignin_GetView()
-        {
-            DateTime date = DateTime.Today;
-            IEnumerable<WorkerSigninView> filteredWSI = _wsiServ.getView(date);
-            IEnumerable<WorkerSigninView> result = filteredWSI.ToList();
-            Assert.IsNotNull(filteredWSI, "WorkerSignin getView return is Null");
-            Assert.IsNotNull(result, "WorkerSignin getview.ToList() is Null");
-        }
+        //[TestMethod]
+        //public void DbSet_WorkerSignin_GetView()
+        //{
+        //    DateTime date = DateTime.Today;
+        //    IEnumerable<WorkerSigninView> filteredWSI = _wsiServ.getView(date);
+        //    IEnumerable<WorkerSigninView> result = filteredWSI.ToList();
+        //    Assert.IsNotNull(filteredWSI, "WorkerSignin getView return is Null");
+        //    Assert.IsNotNull(result, "WorkerSignin getview.ToList() is Null");
+        //}
         /// <summary>
         /// Submit an unknown dwccardnum, verify it is recorded and returned by GetIndexView
         /// </summary>
@@ -114,16 +114,16 @@ namespace Machete.Test
             Assert.AreEqual(1, result.filteredCount);
             Assert.AreEqual(5, result.totalCount);
         }
-        [TestMethod]
-        public void DbSet_TestMethod5()
-        {
+        //[TestMethod]
+        //public void DbSet_TestMethod5()
+        //{
 
-            IEnumerable<WorkerSignin> testing = _wsiServ.GetSigninsForAssignment(DateTime.Today,
-                                                        "Jose",
-                                                        "asc",
-                                                        null,
-                                                        null);
-            Assert.IsNotNull(testing, "null");
-        }
+        //    IEnumerable<WorkerSignin> testing = _wsiServ.GetSigninsForAssignment(DateTime.Today,
+        //                                                "Jose",
+        //                                                "asc",
+        //                                                null,
+        //                                                null);
+        //    Assert.IsNotNull(testing, "null");
+        //}
     }
 }

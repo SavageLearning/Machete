@@ -110,7 +110,7 @@ namespace Machete.Service
             // I will rot in hell for hardcoding this value -- matches the Lookups table 
             // for active orderstatus
             IQueryable<WorkOrder> query = woRepo.GetAllQ();
-                            query = query.Where(wo => wo.status == 42 && 
+                            query = query.Where(wo => wo.status == woStatus.active && 
                                            EntityFunctions.DiffDays(wo.dateTimeofWork, date) == 0 ? true : false)
                                     .AsQueryable();
             List<WorkOrder> list = query.ToList();

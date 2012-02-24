@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
-using Machete.Helpers;
+//using Machete.Helpers;
 using Machete.Service;
 using Machete.Web.Helpers;
 using NLog;
@@ -188,8 +188,6 @@ namespace Machete.Web.Controllers
         
         //
         // POST: /WorkAssignment/Edit/5
-        // TODO: catch exceptions, notify user
-        //
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         #region Duplicate

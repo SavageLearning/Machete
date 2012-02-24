@@ -1,4 +1,4 @@
-﻿@model Machete.Web.ViewModel.WorkerSigninViewModel
+﻿@model Machete.Domain.WorkerSignin
 @using Machete.Web.Resources
 @using Machete.Domain.Resources
 <link href="@Url.Content("~/Content/print.css")" rel="stylesheet" type="text/css" media="print" />
@@ -16,15 +16,15 @@
             <div class="tb-table">
                 <div class="tb-row">
                     <div class="tb-label">
-                        @Html.LabelFor(model => model.dwccardentry)
+                        @Html.LabelFor(model => model.dwccardnum)
                     </div>
                     <div class="tb-field">
-                        @Html.TextBox("dwccardentry", "", new { style = "width: 100px;" })
-                        @Html.ValidationMessageFor(model => model.dwccardentry)
+                        @Html.TextBox("dwccardnum", "", new { style = "width: 100px;" })
+                        @Html.ValidationMessageFor(model => model.dwccardnum)
                     </div>
                     <div class="tb-field">
                         @Html.TextBox("dateforsignin",
-                            Html.Encode(String.Format("{0:mm/dd/yy}", Model.dateforsignin.ToShortDateString())),
+                            Html.Encode(String.Format("{0:mm/dd/yy}", DateTime.Today.ToShortDateString())),
                             new { @class = "ui-datepicker", style = "width: 100px;" })
                         @Html.ValidationMessageFor(model => model.dateforsignin)
                     </div>
@@ -57,7 +57,7 @@
 </div>
 <div id="signin-red-dialog">
     @WorkerSignins.redmessage
-    <img align="middle" id="wsiRedImage" src="" alt="" style="width: 200px"/>
+    <img id="wsiRedImage" src="" alt="" style="width: 200px"/>
 </div>
 
 <script type="text/javascript">

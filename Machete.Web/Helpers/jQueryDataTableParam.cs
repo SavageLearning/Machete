@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Machete.Web.Models
+namespace Machete.Web.Helpers
 {
     /// <summary>
     /// Class that encapsulates most common parameters sent by DataTables plugin

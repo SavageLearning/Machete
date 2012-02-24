@@ -178,20 +178,20 @@ namespace Machete.Test.Controllers
         //
         // Testing /Delete functionality
         //
-        [TestMethod]
-        public void PersonController_delete_get_returns_person()
-        {
-            //Arrange
-            _serv = new Mock<IPersonService>();
-            int testid = 4242;
-            Person fakeperson = new Person();
-            _serv.Setup(p => p.GetPerson(testid)).Returns(fakeperson);
-            var _ctrlr = new PersonController(_serv.Object);
-            //Act
-            var result = (ViewResult)_ctrlr.Delete(testid);
-            //Assert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Person));
-        }
+        //[TestMethod]
+        //public void PersonController_delete_get_returns_person()
+        //{
+        //    //Arrange
+        //    _serv = new Mock<IPersonService>();
+        //    int testid = 4242;
+        //    Person fakeperson = new Person();
+        //    _serv.Setup(p => p.GetPerson(testid)).Returns(fakeperson);
+        //    var _ctrlr = new PersonController(_serv.Object);
+        //    //Act
+        //    var result = (ViewResult)_ctrlr.Delete(testid);
+        //    //Assert
+        //    Assert.IsInstanceOfType(result.ViewData.Model, typeof(Person));
+        //}
 
         [TestMethod]
         public void PersonController_delete_post_returns_JSON()

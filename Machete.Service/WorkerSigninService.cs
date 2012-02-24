@@ -19,11 +19,11 @@ namespace Machete.Service
         void CreateWorkerSignin(WorkerSignin workerSignin, string user);
         void DeleteWorkerSignin(int id);
         void SaveWorkerSignin();
-        IEnumerable<WorkerSigninView> getView(DateTime date);
+        //IEnumerable<WorkerSigninView> getView(DateTime date);
         Image getImage(int dwccardnum);
-        DateTime getExpireDate(int dwccardnum);
+        //DateTime getExpireDate(int dwccardnum);
         ServiceIndexView<WorkerSigninView> GetIndexView(DispatchOptions o);
-        IEnumerable<WorkerSignin> GetSigninsForAssignment(DateTime date, string search, string order, int? displayStart, int? displayLength);
+        //IEnumerable<WorkerSignin> GetSigninsForAssignment(DateTime date, string search, string order, int? displayStart, int? displayLength);
     }
     public class WorkerSigninService : IWorkerSigninService
     {
@@ -32,7 +32,6 @@ namespace Machete.Service
         private readonly IWorkerRequestRepository wrRepo;
         private readonly IPersonRepository personRepo;
         private readonly IUnitOfWork unitOfWork;
-        //private readonly ILookupRepository lRepo;
         private readonly IImageRepository imageRepo;
         private static int lkup_dwc;
         private static int lkup_hhh;
@@ -61,7 +60,6 @@ namespace Machete.Service
         public IQueryable<WorkerSignin> GetWorkerSigninsQ()
         {
             return signinRepo.GetAllQ();
- 
         }
         
         public WorkerSignin GetWorkerSignin(int id)
@@ -71,8 +69,7 @@ namespace Machete.Service
         }
 
         public WorkerSignin GetWorkerSignin(int dwccardnum, DateTime date)
-        {
-            //.AsQueryable().FirstOrDefault(r => r.dwccardnum == 30040 && EntityFunctions.DiffDays(r.dateforsignin, datestr) == 0 ? true : false);
+        {            
             var workerSignin = signinRepo.GetManyQ();//
             var foo = workerSignin.FirstOrDefault(r => r.dwccardnum == dwccardnum && EntityFunctions.DiffDays(r.dateforsignin, date) == 0 ? true : false);
             return foo;
@@ -110,27 +107,27 @@ namespace Machete.Service
         {
             unitOfWork.Commit();
         }
-        public IEnumerable<WorkerSignin> GetSigninsForAssignment(DateTime date, string search, string order, int? displayStart, int? displayLength)
-        {
+        //public IEnumerable<WorkerSignin> GetSigninsForAssignment(DateTime date, string search, string order, int? displayStart, int? displayLength)
+        //{
 
-            IQueryable<WorkerSignin> allWSI = signinRepo.GetAllQ();
-            IQueryable<Worker> workers = workerRepo.GetAllQ();
-            IQueryable<Person> persons = personRepo.GetAllQ();
-                if (!string.IsNullOrEmpty(search))
-                {
-                    allWSI = allWSI.Where(s => s.dateforsignin == date)
-                        .Join(workers, s => s.dwccardnum, w => w.dwccardnum, (s, w) => new { s, w })
-                        //.Join(persons, oj => oj.w.ID, p => p.ID, (oj, p) => new { oj, p })
-                        .Where(jj =>
-                                    SqlFunctions.StringConvert((decimal)jj.s.dwccardnum).Contains(search) ||
-                                    jj.w.Person.firstname1.Contains(search) ||
-                                    jj.w.Person.firstname2.Contains(search) ||
-                                    jj.w.Person.lastname1.Contains(search) ||
-                                    jj.w.Person.lastname2.Contains(search))
-                        .Select(a => a.s);
-                }
-            return allWSI.AsEnumerable();
-        }
+        //    IQueryable<WorkerSignin> allWSI = signinRepo.GetAllQ();
+        //    IQueryable<Worker> workers = workerRepo.GetAllQ();
+        //    IQueryable<Person> persons = personRepo.GetAllQ();
+        //        if (!string.IsNullOrEmpty(search))
+        //        {
+        //            allWSI = allWSI.Where(s => s.dateforsignin == date)
+        //                .Join(workers, s => s.dwccardnum, w => w.dwccardnum, (s, w) => new { s, w })
+        //                //.Join(persons, oj => oj.w.ID, p => p.ID, (oj, p) => new { oj, p })
+        //                .Where(jj =>
+        //                            SqlFunctions.StringConvert((decimal)jj.s.dwccardnum).Contains(search) ||
+        //                            jj.w.Person.firstname1.Contains(search) ||
+        //                            jj.w.Person.firstname2.Contains(search) ||
+        //                            jj.w.Person.lastname1.Contains(search) ||
+        //                            jj.w.Person.lastname2.Contains(search))
+        //                .Select(a => a.s);
+        //        }
+        //    return allWSI.AsEnumerable();
+        //}
         /// <summary>
         /// 
         /// </summary>
@@ -146,28 +143,20 @@ namespace Machete.Service
             //Search based on search-bar string
             //DateTime parsedTime;
             if (o.date != null)
-            {
                 queryableWSI = queryableWSI.Where(p => EntityFunctions.DiffDays(p.dateforsignin, o.date) == 0 ? true : false);
-
-            }
             // 
-            // typeofwork ( DWC / HHH )
-            //          
+            // typeofwork ( DWC / HHH )       
             if (o.typeofwork_grouping == lkup_dwc)
-            {
                 queryableWSI = queryableWSI
                                          .Where(wsi => wsi.worker.typeOfWorkID == lkup_dwc)
                                          .Select(wsi => wsi);
-            }
+
             if (o.typeofwork_grouping == lkup_hhh)
-            {
                 queryableWSI = queryableWSI
                                          .Where(wsi => wsi.worker.typeOfWorkID == lkup_hhh)
                                          .Select(wsi => wsi);
-            }    
             // 
             // wa_grouping
-            //
             switch (o.wa_grouping)
             {
                 case "open": queryableWSI = queryableWSI.Where(p => p.WorkAssignmentID == null); break;
@@ -233,7 +222,6 @@ namespace Machete.Service
             }
             //queryableWSI = queryableWSI.ToList();
             var filtered = enumWSIV.Count();
-            //if (param.iDisplayLength > 0 && param.iDisplayStart > 0)
             if ((int)o.displayLength >= 0)
             enumWSIV = enumWSIV.Skip<WorkerSigninView>((int)o.displayStart).Take((int)o.displayLength);
 
@@ -248,34 +236,38 @@ namespace Machete.Service
 
         }
 
-        //TODO: UnitTest getView
-        public IEnumerable<WorkerSigninView> getView(DateTime date)
-        {
-            var signins = signinRepo.GetAllQ();
-            var workers = workerRepo.GetAllQ();
-            var persons = personRepo.GetAllQ();
-            var s_to_w_query = from s in signins
-                               where s.dateforsignin == date
-                               join w in workers on s.dwccardnum equals w.dwccardnum into outer
-                               from row in outer.DefaultIfEmpty()
-                               join p in persons on row.ID equals p.ID into final
-                               from finalrow in final.DefaultIfEmpty()
-                               orderby s.datecreated descending
-                               // Changed select statement to meet Linq/Entities requirement
-                               // this form gets passed to SQL server
-                               select new WorkerSigninView {
-                                   dateforsignin = s == null ? DateTime.MinValue : s.dateforsignin,
-                                   dwccardnum = s == null ? 0 : s.dwccardnum,
-                                   signinID = s == null ? 0 : s.ID,
-                                   firstname1 = finalrow == null ? null : finalrow.firstname1,
-                                   firstname2 = finalrow == null ? null : finalrow.firstname2,
-                                   lastname1 = finalrow == null ? null : finalrow.lastname1,
-                                   lastname2 = finalrow == null ? null : finalrow.lastname2
-                               };
-            return s_to_w_query;
+        ////TODO: UnitTest getView
+        //public IEnumerable<WorkerSigninView> getView(DateTime date)
+        //{
+        //    var signins = signinRepo.GetAllQ();
+        //    var workers = workerRepo.GetAllQ();
+        //    var persons = personRepo.GetAllQ();
+        //    var s_to_w_query = from s in signins
+        //                       where s.dateforsignin == date
+        //                       join w in workers on s.dwccardnum equals w.dwccardnum into outer
+        //                       from row in outer.DefaultIfEmpty()
+        //                       join p in persons on row.ID equals p.ID into final
+        //                       from finalrow in final.DefaultIfEmpty()
+        //                       orderby s.datecreated descending
+        //                       // Changed select statement to meet Linq/Entities requirement
+        //                       // this form gets passed to SQL server
+        //                       select new WorkerSigninView {
+        //                           dateforsignin = s == null ? DateTime.MinValue : s.dateforsignin,
+        //                           dwccardnum = s == null ? 0 : s.dwccardnum,
+        //                           signinID = s == null ? 0 : s.ID,
+        //                           firstname1 = finalrow == null ? null : finalrow.firstname1,
+        //                           firstname2 = finalrow == null ? null : finalrow.firstname2,
+        //                           lastname1 = finalrow == null ? null : finalrow.lastname1,
+        //                           lastname2 = finalrow == null ? null : finalrow.lastname2
+        //                       };
+        //    return s_to_w_query;
 
-        }
-        //TODO: UnitTest getImage
+        //}
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cardrequest"></param>
+        /// <returns></returns>
         public Image getImage(int cardrequest)
         { 
             Worker w_query = workerRepo.GetAllQ().Where(w => w.dwccardnum == cardrequest).AsEnumerable().FirstOrDefault();
@@ -288,18 +280,18 @@ namespace Machete.Service
         }
         #endregion
         //TODO: UnitTest 
-        public DateTime getExpireDate(int cardrequest)
-        {
-           //IEnumerable<Worker>  w_query = workerRepo.GetManyQ(w => w.dwccardnum == cardrequest).AsEnumerable();
-            var workers = workerRepo.GetAllQ();
-            Worker w_query = workers.Where(w => w.dwccardnum == cardrequest).AsEnumerable().FirstOrDefault();
-            if (w_query == null)
-            {
-                //TODO: can't return null for datetime; better way to handle 'no record'?
-                return DateTime.MinValue;
-            }
-            return w_query.memberexpirationdate;
-        }
+        //public DateTime getExpireDate(int cardrequest)
+        //{
+        //   //IEnumerable<Worker>  w_query = workerRepo.GetManyQ(w => w.dwccardnum == cardrequest).AsEnumerable();
+        //    var workers = workerRepo.GetAllQ();
+        //    Worker w_query = workers.Where(w => w.dwccardnum == cardrequest).AsEnumerable().FirstOrDefault();
+        //    if (w_query == null)
+        //    {
+        //        //TODO: can't return null for datetime; better way to handle 'no record'?
+        //        return DateTime.MinValue;
+        //    }
+        //    return w_query.memberexpirationdate;
+        //}
     }
     public static class String
     {

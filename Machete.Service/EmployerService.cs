@@ -44,7 +44,6 @@ namespace Machete.Service
         public IEnumerable<Employer> GetEmployers(bool showInactive)
         {
             IEnumerable<Employer> employers;
-            //TODO Unit test this
             if (showInactive == false)
             {
                 employers = employerRepository.GetAll().Where(w => w.active == true);

@@ -8,12 +8,23 @@ using System.Runtime.Caching;
 
 namespace Machete.Service
 {
+
+    public static class woStatus
+    {
+        public static int active = 42;
+        public static int pending = 43;
+        public static int completed = 44;
+        public static int cancelled = 45;
+        public static int expired = 46;
+
+    }
     public class LookupCache
     {
         private static MacheteContext DB { get; set; }
         //private static IEnumerable<Lookup> DbCache { get; set; }
         private static CacheItem DbCache { get; set; }
         private static ObjectCache cache;
+
         //
         //
         public static void Initialize(MacheteContext db)
