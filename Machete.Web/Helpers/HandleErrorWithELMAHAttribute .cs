@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using System.Diagnostics;
 using Elmah;
 
-namespace Machete.Helpers
+namespace Machete.Web.Helpers
 {
     //From http://stackoverflow.com/questions/766610/
     //public class HandleErrorWithELMAHAttribute : HandleErrorAttribute

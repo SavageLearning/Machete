@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Globalization;
 using Machete.Domain;
-using Machete.Helpers;
+//using Machete.Helpers;
 using Machete.Service;
 using Machete.Web.ViewModel;
 using Machete.Web.Models;
@@ -35,7 +35,7 @@ namespace Machete.Web.Controllers
         protected override void Initialize(RequestContext requestContext)
         {
             base.Initialize(requestContext);
-            System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];            
+            CI = (System.Globalization.CultureInfo)Session["Culture"];            
         }
         //
         // GET: /Worker/Index
@@ -182,7 +182,6 @@ namespace Machete.Web.Controllers
         public ActionResult Edit(int id, Worker _model, string userName, HttpPostedFileBase imagefile)
         {
             Worker worker = workerService.GetWorker(id);
-            // TODO: catch exceptions, notify user
             UpdateModel(worker);
             
             if (imagefile != null) updateImage(worker, imagefile);                

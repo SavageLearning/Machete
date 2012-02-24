@@ -254,7 +254,7 @@
     <Compile Include="Helpers\HandleErrorWithELMAHAttribute .cs" />
     <Compile Include="IoC\UnityDependencyResolver.cs" />
     <Compile Include="Models\AccountModels.cs" />
-    <Compile Include="Models\jQueryDataTableParam.cs" />
+    <Compile Include="Helpers\jQueryDataTableParam.cs" />
     <Compile Include="Resources\Employers.es.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

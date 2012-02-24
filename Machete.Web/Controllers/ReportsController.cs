@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Machete.Helpers;
+using Machete.Web.Helpers;
 using Elmah;
 
 namespace Machete.Web.Controllers

@@ -11,7 +11,7 @@ using Machete.Web.Models;
 using System.Globalization;
 using Machete.Domain;
 using Machete.Service;
-using Machete.Helpers;
+using Machete.Web.Helpers;
 using NLog;
 
 namespace Machete.Web.Controllers

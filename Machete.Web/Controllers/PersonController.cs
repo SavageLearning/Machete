@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
-using Machete.Helpers;
+//using Machete.Helpers;
 using Machete.Service;
 using Machete.Web.Helpers;
 using NLog;
@@ -21,6 +21,7 @@ namespace Machete.Web.Controllers
     public class PersonController : MacheteController
     { 
         private readonly IPersonService personService;
+        System.Globalization.CultureInfo CI;
 
         public PersonController(IPersonService personService)
         {
@@ -29,7 +30,7 @@ namespace Machete.Web.Controllers
         protected override void Initialize(RequestContext requestContext)
         {
             base.Initialize(requestContext);
-            System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+            CI = (System.Globalization.CultureInfo)Session["Culture"];
         }
         #region Index
         //
@@ -44,7 +45,6 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
-            System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
             //Get all the records            
             ServiceIndexView<Person> personView = personService.GetIndexView(
                 CI,
@@ -137,8 +137,6 @@ namespace Machete.Web.Controllers
         }
         //
         // POST: /Person/Edit/5
-        // TODO: catch exceptions, notify user
-        //
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")] 
         public ActionResult Edit(int id, string userName)
@@ -171,12 +169,12 @@ namespace Machete.Web.Controllers
         #region Delete
         //
         // GET: /Person/Delete/5
-        [Authorize(Roles = "Administrator")]
-        public ActionResult Delete(int id)
-        {
-            var person = personService.GetPerson(id);
-            return View(person);
-        }
+        //[Authorize(Roles = "Administrator")]
+        //public ActionResult Delete(int id)
+        //{
+        //    var person = personService.GetPerson(id);
+        //    return View(person);
+        //}
 
         //
         // POST: /Person/Delete/5
