@@ -12,7 +12,7 @@ namespace Machete.Service
 {
     public interface IPersonService
     {
-        IEnumerable<Person> GetPersons(bool inactive);
+        IEnumerable<Person> GetPersons();
         Person GetPerson(int id);
         Person CreatePerson(Person person, string user);
         void DeletePerson(int id, string user);
@@ -46,19 +46,9 @@ namespace Machete.Service
             this.unitOfWork = unitOfWork;
         }  
 
-        public IEnumerable<Person> GetPersons(bool showInactive)
+        public IEnumerable<Person> GetPersons()
         {
-            IEnumerable<Person> persons;
-            //TODO Unit test this
-            if (showInactive == false)
-            {
-                persons = pRepo.GetAll().Where(w => w.active == true);
-            }
-            else
-            {
-                persons = pRepo.GetAll();
-            }
-            return persons;
+            return pRepo.GetAll();
         }
 
         public Person GetPerson(int id)

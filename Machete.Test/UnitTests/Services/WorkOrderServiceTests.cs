@@ -84,7 +84,6 @@ namespace Machete.Test.UnitTests.Services
             //Assert
             Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkOrder>));
         }
-        //TODO Test filter for workOrders
         [TestMethod]
         public void WorkOrderService_GetWorkOrder_returns_workOrder()
         {

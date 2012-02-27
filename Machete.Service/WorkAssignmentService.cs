@@ -161,7 +161,7 @@ namespace Machete.Service
             if (o.showPending == false)
             {
                 //int pending = LookupCache.getSingleEN("orderstatus", "Pending");
-                queryableWA = queryableWA.Where(p => p.workOrder.status != woStatus.pending);
+                queryableWA = queryableWA.Where(p => p.workOrder.status != WorkOrder.iPending);
             }
             // 
             // wa_grouping

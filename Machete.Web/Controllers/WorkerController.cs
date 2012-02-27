@@ -51,13 +51,13 @@ namespace Machete.Web.Controllers
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             //Get all the records
-            var allWorkers = workerService.GetWorkers(true);
+            var allWorkers = workerService.GetWorkers();
             IEnumerable<Worker> filteredW;
             IEnumerable<Worker> orderedW;
             //Search based on search-bar string 
             if (!string.IsNullOrEmpty(param.sSearch))
             {
-                filteredW = workerService.GetWorkers(true)
+                filteredW = workerService.GetWorkers()
                     .Where(p => p.dwccardnum.ToString().Contains(param.sSearch) ||
                                 p.active.ToString().Contains(param.sSearch) ||
                                 p.Person.firstname1.Contains(param.sSearch) ||

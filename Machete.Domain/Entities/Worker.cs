@@ -17,6 +17,8 @@ namespace Machete.Domain
         public static int iSanctioned { get; set; }
         public static int iExpired { get; set; }
         public static int iExpelled { get; set; }
+        public static int iDWC { get; set; } //TODO: Casa specific configuration. needs real abstraction.
+        public static int iHHH { get; set; } //TODO: Casa specific configuration. needs real abstraction.
 
         //public int ID { get; set; }
         public virtual Person Person { get; set; }
@@ -115,7 +117,7 @@ namespace Machete.Domain
         [StringLength(14, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("emcontUSAphone", NameResourceType = typeof(Resources.Worker))]
         public string emcontUSAphone { get; set; }
-        // TODO: require unique number
+        // TODO: require unique number when EF supports it
         [Required(ErrorMessageResourceName = "dwccardnum", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("dwccardnum", NameResourceType = typeof(Resources.Worker))]
         [RegularExpression("^[0-9]{5,5}$", ErrorMessageResourceName = "dwccardnumerror", ErrorMessageResourceType = typeof(Resources.Worker))]

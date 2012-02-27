@@ -78,11 +78,10 @@ namespace Machete.Test.UnitTests.Services
             //
             //Arrange
             //Act
-            var result = _serv.GetPersons(false);
+            var result = _serv.GetPersons();
             //Assert
             Assert.IsInstanceOfType(result, typeof(IEnumerable<Person>));
         }
-        //TODO Test filter for persons
         [TestMethod]
         public void PersonService_GetPerson_returns_person()
         {

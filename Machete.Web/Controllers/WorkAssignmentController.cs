@@ -120,13 +120,13 @@ namespace Machete.Web.Controllers
         {
             if (asmt.workerAssignedID > 0 && asmt.workerSigninID > 0) // green
                 return "completed";
-            if (asmt.workerAssignedID == 0 && asmt.workOrder.status == woStatus.active)
+            if (asmt.workerAssignedID == 0 && asmt.workOrder.status == WorkOrder.iActive)
                 return "incomplete";
             if (asmt.workerAssignedID > 0 && asmt.workerSigninID == null)
                 return "orphaned";
-            if (asmt.workOrder.status == woStatus.cancelled)
+            if (asmt.workOrder.status == WorkOrder.iCancelled)
                 return "cancelled";
-            if (asmt.workOrder.status == woStatus.active) // blue
+            if (asmt.workOrder.status == WorkOrder.iActive) // blue
                 return "active";
             return null;
         }
@@ -171,8 +171,9 @@ namespace Machete.Web.Controllers
         {
             UpdateModel(assignment);
             assignment.workOrder = woServ.GetWorkOrder(assignment.workOrderID);
-            assignment.workOrder.waPseudoIDCounter++;
-            assignment.pseudoID = assignment.workOrder.waPseudoIDCounter;
+            assignment.incrPseudoID();
+            //assignment.workOrder.waPseudoIDCounter++;
+            //assignment.pseudoID = assignment.workOrder.waPseudoIDCounter;
             WorkAssignment newAssignment = waServ.Create(assignment, userName);
 
             return Json(new
@@ -194,17 +195,18 @@ namespace Machete.Web.Controllers
         public ActionResult Duplicate(int id, string userName)
         {
             WorkAssignment _assignment = waServ.Get(id);
-            WorkAssignment newAssign = _assignment;
-            newAssign.workOrder.waPseudoIDCounter++;
-            newAssign.pseudoID = newAssign.workOrder.waPseudoIDCounter;
-            newAssign.workerAssigned = null;
-            newAssign.workerAssignedID = null;
-            waServ.Create(newAssign, userName);
+            WorkAssignment duplicate = _assignment;
+            duplicate.incrPseudoID();
+            //duplicate.workOrder.waPseudoIDCounter++;
+            //duplicate.pseudoID = duplicate.workOrder.waPseudoIDCounter;
+            duplicate.workerAssigned = null;
+            duplicate.workerAssignedID = null;
+            waServ.Create(duplicate, userName);
             return Json(new
             {
-                sNewRef = _getTabRef(newAssign),
-                sNewLabel = _getTabLabel(newAssign),
-                iNewID = newAssign.ID
+                sNewRef = _getTabRef(duplicate),
+                sNewLabel = _getTabLabel(duplicate),
+                iNewID = duplicate.ID
             },
             JsonRequestBehavior.AllowGet);
 

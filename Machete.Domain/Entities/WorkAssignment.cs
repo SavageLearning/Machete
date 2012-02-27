@@ -42,13 +42,10 @@ namespace Machete.Domain
         public double hourlyWage { get; set; }
         //
         [LocalizedDisplayName("hours", NameResourceType = typeof(Resources.WorkAssignment))]
-        //TODO: Either hours OR hours chamblita
         public int hours { get; set; }
         //
         [LocalizedDisplayName("hourRange", NameResourceType = typeof(Resources.WorkAssignment))]
         public int? hourRange { get; set; }
-        //[LocalizedDisplayName("hoursChambita", NameResourceType = typeof(Resources.WorkAssignment))]
-        //public bool chambita { get; set; }
         //
         [LocalizedDisplayName("days", NameResourceType = typeof(Resources.WorkAssignment))]
         [Required(ErrorMessageResourceName = "daysrequired", ErrorMessageResourceType = typeof(Resources.WorkAssignment))]
@@ -88,6 +85,12 @@ namespace Machete.Domain
                     + "-" + (this.pseudoID.HasValue ?
                         System.String.Format("{0,2:D2}", this.pseudoID) :
                         System.String.Format("{0,5:D5}", this.ID));
+        }
+        public void incrPseudoID()
+        {
+            if (this.workOrder == null) throw new ArgumentNullException("workOrder object is null");            
+            this.workOrder.waPseudoIDCounter++;
+            this.pseudoID = this.workOrder.waPseudoIDCounter;
         }
     }
     public class WorkAssignmentSummary

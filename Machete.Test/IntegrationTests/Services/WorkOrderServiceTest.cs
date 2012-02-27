@@ -37,10 +37,10 @@ namespace Machete.Test
             //
             //Assert
             Assert.IsNotNull(result, "GetSummary result is Null");
-            Assert.IsTrue(result.Where(r => r.status == woStatus.active).First().count == 2, "GetSummary returned incorrect number of Active records");
-            Assert.IsTrue(result.Where(r => r.status == woStatus.pending).First().count == 1, "GetSummary returned incorrect number of Pending records");
-            Assert.IsTrue(result.Where(r => r.status == woStatus.completed).First().count == 2, "GetSummary returned incorrect number of Completed records");
-            Assert.IsTrue(result.Where(r => r.status == woStatus.cancelled).First().count == 1, "GetSummary returned incorrect number of Cancelled records");
+            Assert.IsTrue(result.Where(r => r.status == WorkOrder.iActive).First().count == 2, "GetSummary returned incorrect number of Active records");
+            Assert.IsTrue(result.Where(r => r.status == WorkOrder.iPending).First().count == 1, "GetSummary returned incorrect number of Pending records");
+            Assert.IsTrue(result.Where(r => r.status == WorkOrder.iCompleted).First().count == 2, "GetSummary returned incorrect number of Completed records");
+            Assert.IsTrue(result.Where(r => r.status == WorkOrder.iCancelled).First().count == 1, "GetSummary returned incorrect number of Cancelled records");
         }
         [TestMethod]
         public void Integration_WO_Service_CombinedSummary()

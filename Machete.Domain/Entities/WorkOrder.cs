@@ -10,6 +10,12 @@ namespace Machete.Domain
 {
     public class WorkOrder : Record
     {
+        public static int iActive {get; set;}
+        public static int iPending {get; set;}
+        public static int iCompleted {get; set;}
+        public static int iCancelled {get; set;}
+        public static int iExpired {get; set;}
+
         //public int ID { get; set; }
         public int EmployerID { get; set; }
         public virtual Employer Employer { get; set; }
