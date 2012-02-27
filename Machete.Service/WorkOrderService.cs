@@ -78,7 +78,6 @@ namespace Machete.Service
         /// <returns></returns>
         public IEnumerable<WorkOrder> GetWorkOrders(int? empID)
         {
-            //TODO Unit test this
             if (empID == null)
             {
                 return woRepo.GetAll();
@@ -106,11 +105,10 @@ namespace Machete.Service
         /// <returns></returns>
         public IEnumerable<WorkOrder> GetActiveOrders(DateTime date, bool assignedOnly)
         {
-            //TODO: should make statuses strongly typed (42 == active)
             // I will rot in hell for hardcoding this value -- matches the Lookups table 
             // for active orderstatus
             IQueryable<WorkOrder> query = woRepo.GetAllQ();
-                            query = query.Where(wo => wo.status == woStatus.active && 
+                            query = query.Where(wo => wo.status == WorkOrder.iActive && 
                                            EntityFunctions.DiffDays(wo.dateTimeofWork, date) == 0 ? true : false)
                                     .AsQueryable();
             List<WorkOrder> list = query.ToList();
@@ -142,8 +140,7 @@ namespace Machete.Service
             foreach (WorkOrder wo in list)
             {
                 var order = this.GetWorkOrder(wo.ID);
-                //TODO use strongly typed status here
-                order.status = 44;
+                order.status = WorkOrder.iCompleted;
                 this.SaveWorkOrder(order, user);
                 count++;
             }
@@ -355,16 +352,16 @@ namespace Machete.Service
             {
                 date = g.Key,
                 weekday = Convert.ToDateTime(g.Key).ToString("dddd"),
-                pending_wo = g.Where(c => c.status == 43).Sum(d => d.wo_count),
-                pending_wa = g.Where(c => c.status == 43).Sum(d => d.wa_count),
-                active_wo = g.Where(c => c.status == 42).Sum(d => d.wo_count),
-                active_wa = g.Where(c => c.status == 42).Sum(d => d.wa_count),
-                completed_wo = g.Where(c => c.status == 44).Sum(d => d.wo_count),
-                completed_wa = g.Where(c => c.status == 44).Sum(d => d.wa_count),
-                cancelled_wo = g.Where(c => c.status == 45).Sum(d => d.wo_count),
-                cancelled_wa = g.Where(c => c.status == 45).Sum(d => d.wa_count),
-                expired_wo = g.Where(c => c.status == 46).Sum(d => d.wo_count),
-                expired_wa = g.Where(c => c.status == 46).Sum(d => d.wa_count)
+                pending_wo = g.Where(c => c.status == WorkOrder.iPending).Sum(d => d.wo_count),
+                pending_wa = g.Where(c => c.status == WorkOrder.iPending).Sum(d => d.wa_count),
+                active_wo = g.Where(c => c.status == WorkOrder.iActive).Sum(d => d.wo_count),
+                active_wa = g.Where(c => c.status == WorkOrder.iActive).Sum(d => d.wa_count),
+                completed_wo = g.Where(c => c.status == WorkOrder.iCompleted).Sum(d => d.wo_count),
+                completed_wa = g.Where(c => c.status == WorkOrder.iCompleted).Sum(d => d.wa_count),
+                cancelled_wo = g.Where(c => c.status == WorkOrder.iCancelled).Sum(d => d.wo_count),
+                cancelled_wa = g.Where(c => c.status == WorkOrder.iCancelled).Sum(d => d.wa_count),
+                expired_wo = g.Where(c => c.status == WorkOrder.iExpired).Sum(d => d.wo_count),
+                expired_wa = g.Where(c => c.status == WorkOrder.iExpired).Sum(d => d.wa_count)
             });
 
                 if (orderDescending)

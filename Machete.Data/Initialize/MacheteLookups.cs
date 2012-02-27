@@ -14,7 +14,6 @@ namespace Machete.Data
         public static List<Lookup> cache {get {return _cache;} }
         private static List<Lookup> _cache = new List<Lookup>
             {
-                //TODO: localize: How do I localize thses lookup strings?       
                 new Lookup { ID=1, category = "race", text_EN = "Afroamerican",   text_ES="Afroamericano",    selected = false },
                 new Lookup { ID=2, category = "race", text_EN = "Asian",          text_ES="Asiano",           selected = false},
                 new Lookup { ID=3, category = "race", text_EN = "Caucasian",      text_ES="Caucásico",        selected = false },

@@ -240,7 +240,6 @@ namespace Machete.Web.Controllers
         }
         //
         // POST: /WorkOrder/Edit/5
-        // TODO: de-duplicate these actions
         //[Bind(Exclude = "workerRequests")]
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
@@ -334,7 +333,7 @@ namespace Machete.Web.Controllers
         {
             var workOrder = woServ.GetWorkOrder(id);
             // lookup int value for status active
-            workOrder.status = woStatus.active;
+            workOrder.status = WorkOrder.iActive;
             woServ.SaveWorkOrder(workOrder, userName);         
             return Json(new
             {

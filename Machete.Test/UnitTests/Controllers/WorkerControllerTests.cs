@@ -178,7 +178,6 @@ namespace Machete.Test.Controllers
             _ctrlr.SetFakeControllerContext();
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
-            //TODO Solve TryUpdateModel moq problem
             var result = _ctrlr.Edit(testid, fakeworker, "UnitTest", null) as PartialViewResult;
             //Assert
             //Assert.AreEqual("Index", result.RouteValues["action"]);

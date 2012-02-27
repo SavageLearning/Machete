@@ -33,8 +33,8 @@ namespace Machete.Service
         private readonly IPersonRepository personRepo;
         private readonly IUnitOfWork unitOfWork;
         private readonly IImageRepository imageRepo;
-        private static int lkup_dwc;
-        private static int lkup_hhh;
+        //private static int lkup_dwc;
+        //private static int lkup_hhh;
         //
         //
         public WorkerSigninService(IWorkerSigninRepository workerSigninRepository, 
@@ -52,8 +52,8 @@ namespace Machete.Service
             //this.lRepo = lookupRepository;
             this.unitOfWork = unitOfWork;
             this.imageRepo = imageRepository;
-            lkup_dwc = LookupCache.getSingleEN("worktype", "(DWC) Day Worker Center");
-            lkup_hhh = LookupCache.getSingleEN("worktype", "(HHH) Household Helpers");
+            //lkup_dwc = LookupCache.getSingleEN("worktype", "(DWC) Day Worker Center");
+            //lkup_hhh = LookupCache.getSingleEN("worktype", "(HHH) Household Helpers");
         }
         #region IWorkerSigninService Members
         
@@ -145,15 +145,16 @@ namespace Machete.Service
             if (o.date != null)
                 queryableWSI = queryableWSI.Where(p => EntityFunctions.DiffDays(p.dateforsignin, o.date) == 0 ? true : false);
             // 
-            // typeofwork ( DWC / HHH )       
-            if (o.typeofwork_grouping == lkup_dwc)
+            // typeofwork ( DWC / HHH )
+            //TODO: Remove Casa specific configuration. needs real abstraction on iDWC / iHHH.
+            if (o.typeofwork_grouping == Worker.iDWC)
                 queryableWSI = queryableWSI
-                                         .Where(wsi => wsi.worker.typeOfWorkID == lkup_dwc)
+                                         .Where(wsi => wsi.worker.typeOfWorkID == Worker.iDWC)
                                          .Select(wsi => wsi);
 
-            if (o.typeofwork_grouping == lkup_hhh)
+            if (o.typeofwork_grouping == Worker.iDWC)
                 queryableWSI = queryableWSI
-                                         .Where(wsi => wsi.worker.typeOfWorkID == lkup_hhh)
+                                         .Where(wsi => wsi.worker.typeOfWorkID == Worker.iHHH)
                                          .Select(wsi => wsi);
             // 
             // wa_grouping
@@ -236,7 +237,6 @@ namespace Machete.Service
 
         }
 
-        ////TODO: UnitTest getView
         //public IEnumerable<WorkerSigninView> getView(DateTime date)
         //{
         //    var signins = signinRepo.GetAllQ();
@@ -278,8 +278,7 @@ namespace Machete.Service
             }
             return null;
         }
-        #endregion
-        //TODO: UnitTest 
+        #endregion       
         //public DateTime getExpireDate(int cardrequest)
         //{
         //   //IEnumerable<Worker>  w_query = workerRepo.GetManyQ(w => w.dwccardnum == cardrequest).AsEnumerable();
@@ -287,7 +286,7 @@ namespace Machete.Service
         //    Worker w_query = workers.Where(w => w.dwccardnum == cardrequest).AsEnumerable().FirstOrDefault();
         //    if (w_query == null)
         //    {
-        //        //TODO: can't return null for datetime; better way to handle 'no record'?
+        //        // can't return null for datetime; better way to handle 'no record'?
         //        return DateTime.MinValue;
         //    }
         //    return w_query.memberexpirationdate;

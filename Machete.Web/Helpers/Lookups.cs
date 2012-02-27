@@ -115,14 +115,17 @@ namespace Machete.Web.Helpers
 
         private static SelectList get(string category, string locale)
         {
-            //TODO: throw and catch exception if Lookup returns nothing
             string field;
+            SelectList list;
             if (locale == "es") field = "text_ES";
-            else field = "text_EN";            
-            return new SelectList(DbCache.Where(s => s.category == category),
+            else field = "text_EN";
+            
+            list = new SelectList(DbCache.Where(s => s.category == category),
                                     "ID",
                                     field,
                                     getDefaultID(category));
+            if (list == null) throw new ArgumentNullException("Get returned no lookups");
+            return list;
         }
         /// <summary>
         /// get skills with extra information
@@ -132,10 +135,10 @@ namespace Machete.Web.Helpers
         /// <param name="specializedOnly">include only specialized skills</param>
         /// <returns>List of items for an MVC dropdown box</returns>
         private static List<SelectListItemEx> getEx(string category, string locale, bool specializedOnly)
-        {
-            //TODO: throw and catch exception if Lookup returns nothing
+        {            
             IEnumerable<Lookup> prelist = DbCache.ToList().Where(s => s.category == category);
             Func<Lookup, string> textFunc;
+            if (prelist == null) throw new ArgumentNullException("No skills returned");
             if (specializedOnly) {
                 textFunc = (ll => "[" + ll.ltrCode + ll.level + "] " + (locale == "es" ? ll.text_ES : ll.text_EN));
                 prelist = prelist.Where(s => s.speciality == true).OrderBy(s => textFunc(s));
@@ -159,7 +162,7 @@ namespace Machete.Web.Helpers
         // Returns the default ID for a given category
         public static int getDefaultID(string category)
         {
-            //TODO Exception handling
+            if (category == null) throw new Exception("category label is null");
             int count;
             count = DbCache.Where(s => s.selected == true &&
                                            s.category == category)

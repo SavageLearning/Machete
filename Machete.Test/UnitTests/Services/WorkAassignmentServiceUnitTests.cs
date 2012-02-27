@@ -92,7 +92,6 @@ namespace Machete.Test.UnitTests.Services
             //Assert
             Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
         }
-        //TODO Test filter for workAssignments
         [TestMethod]
         public void WorkAssignmentService_GetWorkAssignment_returns_workAssignment()
         {

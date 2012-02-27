@@ -61,7 +61,6 @@ namespace Machete.Test.UnitTests.Services
             //Assert
             Assert.IsInstanceOfType(result, typeof(IEnumerable<Employer>));
         }
-        //TODO Test filter for employers
         [TestMethod]
         public void EmployerService_GetEmployer_returns_employer()
         {

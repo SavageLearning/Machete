@@ -120,8 +120,9 @@ namespace Machete.Test
             _wa1.ID = ui.getSelectedTabRecordID("WA");
             _wa1.workOrder = _wo;
             _wa1.workOrderID = _wo.ID;
-            _wa1.workOrder.waPseudoIDCounter++; // from WorkASsignment
-            _wa1.pseudoID = _wa1.workOrder.waPseudoIDCounter; //TODO: refactor into base class
+            _wa1.incrPseudoID();
+            //_wa1.workOrder.waPseudoIDCounter++; // from WorkASsignment
+            //_wa1.pseudoID = _wa1.workOrder.waPseudoIDCounter; //TODO: refactor into base class
             //
             ui.WaitThenClickElement(By.Id("walt-" + _wo.ID));
             Thread.Sleep(2000);
@@ -131,8 +132,11 @@ namespace Machete.Test
             //
             ui.WaitThenClickElement(By.Id("activateWorkOrderButton-"+ _wo.ID));
             //
-            // TODO: check WO status and recid of order
-            // 
+            // TODO: Selenium: check WO status and recid of order
+            // TODO: Selenium: test duplicate (pseudoID increment is visible in table)
+            // TODO: Selenium: test DispatchOption / Change Worker dialog. 
+            // TODO: Selenium: test Skill dropdown for Chambita/specialized skill, test total changes
+
 
         }
         [TestMethod]

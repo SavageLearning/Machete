@@ -77,11 +77,10 @@ namespace Machete.Test.UnitTests.Services
             //
             //Arrange
             //Act
-            var result = _serv.GetWorkers(false);
+            var result = _serv.GetWorkers();
             //Assert
             Assert.IsInstanceOfType(result, typeof(IEnumerable<Worker>));
         }
-        //TODO Test filter for workers
         [TestMethod]
         public void WorkerService_GetWorker_returns_worker()
         {

@@ -9,14 +9,6 @@ using System.Runtime.Caching;
 namespace Machete.Service
 {
 
-    public static class woStatus
-    {
-        public static int active = 42;
-        public static int pending = 43;
-        public static int completed = 44;
-        public static int cancelled = 45;
-        public static int expired = 46;
-    }
     public class LookupCache
     {
         private static MacheteContext DB { get; set; }
@@ -41,11 +33,22 @@ namespace Machete.Service
             policy.AbsoluteExpiration = new DateTimeOffset(DateTime.Now.AddHours(1));
             CacheItem wCacheItem = new CacheItem("lookupCache", lookups);
             cache.Set(wCacheItem, policy);
+            //
             Worker.iActive = LookupCache.getSingleEN("memberstatus", "Active");
             Worker.iSanctioned = LookupCache.getSingleEN("memberstatus", "Sanctioned");
             Worker.iExpelled = LookupCache.getSingleEN("memberstatus", "Expelled");
             Worker.iExpired = LookupCache.getSingleEN("memberstatus", "Expired");
             Worker.iInactive = LookupCache.getSingleEN("memberstatus", "Inactive");
+            //
+            Worker.iDWC = LookupCache.getSingleEN("worktype", "(DWC) Day Worker Center");//TODO: Remove Casa specific configuration. needs real abstraction on iDWC / iHHH.
+            Worker.iHHH = LookupCache.getSingleEN("worktype", "(HHH) Household Helpers");//TODO: Remove Casa specific configuration. needs real abstraction on iDWC / iHHH.
+
+            //
+            WorkOrder.iActive = LookupCache.getSingleEN("orderstatus", "Active");
+            WorkOrder.iPending = LookupCache.getSingleEN("orderstatus", "Pending");
+            WorkOrder.iCompleted = LookupCache.getSingleEN("orderstatus", "Completed");
+            WorkOrder.iCancelled = LookupCache.getSingleEN("orderstatus", "Cancelled");
+            WorkOrder.iExpired = LookupCache.getSingleEN("orderstatus", "Expired");
         }
         //
         //
