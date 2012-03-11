@@ -101,13 +101,13 @@
                                     if (aData['WID'] > 0 && aData['WSIID'] > 0 && aData['status']) { // assigned
                                         $(nRow).addClass('statusGreen');
                                     } 
-                                    if (aData['WID'] == 0 && aData['status'] == @(woStatus.completed)) { // Unassigned
+                                    if (aData['WID'] == 0 && aData['status'] == @(Machete.Domain.WorkOrder.iCompleted)) { // Unassigned
                                         $(nRow).addClass('statusOrange');
                                     } 
-                                    if (aData['WID'] > 0 && aData['WSIID'] == 0 && aData['status'] == @(woStatus.completed)) { // orphaned
+                                    if (aData['WID'] > 0 && aData['WSIID'] == 0 && aData['status'] == @(Machete.Domain.WorkOrder.iCompleted)) { // orphaned
                                         $(nRow).addClass('statusYellow');
                                     }
-                                    if (aData['status'] == @(woStatus.cancelled)) { // cancelled
+                                    if (aData['status'] == @(Machete.Domain.WorkOrder.iCancelled)) { // cancelled
                                         $(nRow).addClass('statusRed');
                                     }
                                     return nRow;
