@@ -12,7 +12,7 @@
     @Html.ValidationSummary(true)
     @Html.EditorForModel()
 }
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
     $(document).ready(function () {
         $('.formButton').button();
         var workerCreateForm = $('#workerCreateForm');
@@ -21,7 +21,7 @@
         // submit edit
         workerCreateForm.mUI('formSubmit', {
             recType: "@(recType)", //for add_rectab
-            create: true,
+            create: false, // worker doesn't create a new tab
             selectTab: 0,
             formLevel: 1,
             postProcess: function () {
