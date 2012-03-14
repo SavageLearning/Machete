@@ -168,23 +168,23 @@
         // filtering buttons on details page
         //
         $('#pendingOrdersBtn').click(function() {            
-            oTable.dataTable().fnFilter('@woStatus.pending', 5); //sync with DT array above
+            oTable.dataTable().fnFilter('43', 5); //sync with DT array above
         });
         $('#activeOrdersBtn').click(function() {            
-            oTable.dataTable().fnFilter('@woStatus.active', 5); //sync with DT array above
+            oTable.dataTable().fnFilter('42', 5); //sync with DT array above
         });
         $('#completedOrdersBtn').click(function() {            
-            oTable.dataTable().fnFilter('@woStatus.completed', 5); //sync with DT array above
+            oTable.dataTable().fnFilter('44', 5); //sync with DT array above
         });
         $('#expiredOrdersBtn').click(function() {            
-            oTable.dataTable().fnFilter('@woStatus.expired', 5); //sync with DT array above
+            oTable.dataTable().fnFilter('46', 5); //sync with DT array above
         });
         $('#allOrdersBtn').click(function() {
             oTable.dataTable().fnFilter("");
             oTable.dataTable().fnFilter("", 5); //sync with DT array above
         });
         $('#cancelledOrdersBtn').click(function() {
-            oTable.dataTable().fnFilter('@woStatus.cancelled', 5); //sync with DT array above
+            oTable.dataTable().fnFilter('45', 5); //sync with DT array above
         });
         ////////////////////////////////////////////////////////////////
         //
