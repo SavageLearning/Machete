@@ -121,7 +121,7 @@
                 </div>
                 <div class="tb-field">
                     @Html.TextBox("lotterysignindate",
-                        Html.Encode(String.Format("{0:mm/dd/yy}", DateTime.Now.ToShortDateString())),
+                        Html.Encode(System.String.Format("{0:mm/dd/yy}", DateTime.Now.ToShortDateString())),
                         new { @class = "ui-datepicker", style="width: 100px;" })
                     
                 </div>
