@@ -210,4 +210,7 @@
   <data name="changeTitle" xml:space="preserve">
     <value>Descartar los cambios?</value>
   </data>
+  <data name="activitytab" xml:space="preserve">
+    <value>Actividades</value>
+  </data>
 </root>

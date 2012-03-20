@@ -28,7 +28,8 @@ namespace Machete.Data
         public DbSet<WorkOrder> WorkOrders { get; set; }
         public DbSet<WorkerRequest> WorkerRequests { get; set; }
         public DbSet<Event> Events {get; set;}
-
+        public DbSet<Activity> Activities { get; set; }
+        public DbSet<ActivitySignin> ActivitySignins { get; set; }
         
 
         public virtual void Commit()
@@ -57,6 +58,8 @@ namespace Machete.Data
             modelBuilder.Configurations.Add(new WorkerSigninBuilder());
             modelBuilder.Configurations.Add(new EventBuilder());
             modelBuilder.Configurations.Add(new JoinEventImageBuilder());
+            modelBuilder.Configurations.Add(new ActivitySigninBuilder());
+            modelBuilder.Configurations.Add(new ActivityBuilder());
             modelBuilder.Entity<Employer>().ToTable("Employers");
             modelBuilder.Entity<WorkOrder>().ToTable("WorkOrders");
             modelBuilder.Entity<WorkAssignment>().ToTable("WorkAssignments");
@@ -89,6 +92,11 @@ namespace Machete.Data
         public WorkerSigninBuilder()
         {
             HasKey(k => k.ID);
+            Map(m =>
+            {
+                m.MapInheritedProperties();
+                m.ToTable("WorkerSignins");
+            });
         }
     }
 
@@ -146,6 +154,30 @@ namespace Machete.Data
                 .WithMany(d => d.JoinEventImages)
                 .HasForeignKey(k => k.EventID);
             HasRequired(k => k.Image);
+        }
+    }
+
+    public class ActivityBuilder : EntityTypeConfiguration<Activity>
+    {
+        public ActivityBuilder()
+        {
+            HasKey(k => k.ID);
+            HasMany(e => e.Signins)
+                .WithRequired(w => w.Activity)
+                .HasForeignKey(k => k.ActivityID)
+                .WillCascadeOnDelete();
+        }
+    }
+
+    public class ActivitySigninBuilder : EntityTypeConfiguration<ActivitySignin>
+    {
+        public ActivitySigninBuilder()
+        {
+            HasKey(k => k.ID);
+            Map(m => {
+                m.MapInheritedProperties();
+                m.ToTable("ActivitySignins");
+            });
         }
     }
 }

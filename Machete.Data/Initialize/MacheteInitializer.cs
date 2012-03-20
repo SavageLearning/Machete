@@ -7,8 +7,8 @@ using Machete.Domain;
 
 namespace Machete.Data
 {
-    public class MacheteInitializer : DropCreateDatabaseIfModelChanges<MacheteContext>
-    //public class MacheteInitializer : CreateDatabaseIfNotExists<MacheteContext>
+    //public class MacheteInitializer : DropCreateDatabaseIfModelChanges<MacheteContext>
+    public class MacheteInitializer : CreateDatabaseIfNotExists<MacheteContext>
     {
         
         protected override void Seed(MacheteContext DB)

@@ -348,6 +348,24 @@
         </div>
         <div class="tb-row">
             <div class="tb-label">
+                @Html.LabelFor(model => model.homeless)
+            </div>
+            <div class="tb-field">
+                @Html.DropDownListFor(model => model.homeless,
+                                    new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName),
+                                        "Value",
+                                        "Text",
+                                                 Model.homeless),
+                                    @Machete.Web.Resources.Shared.choose,
+                                             new { @tabindex = "1", 
+                                                   @class = "workerEditor",
+                                                   @id = idPrefix + "homeless"
+                                             })
+                @Html.ValidationMessageFor(model => model.homeless)
+            </div>
+        </div>
+        <div class="tb-row">
+            <div class="tb-label">
                 @Html.LabelFor(model => model.driverslicense)
             </div>
             <div class="tb-field">

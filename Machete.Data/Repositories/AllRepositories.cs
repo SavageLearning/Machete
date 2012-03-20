@@ -33,6 +33,8 @@ namespace Machete.Data
     public interface IEventRepository : IRepository<Event> { }
     public interface IImageRepository : IRepository<Image> { }
     public interface ILookupRepository : IRepository<Lookup> { }
+    public interface IActivityRepository : IRepository<Activity> { }
+    public interface IActivitySigninRepository : IRepository<ActivitySignin> { }
     /// <summary>
     /// 
     /// </summary>
@@ -48,6 +50,27 @@ namespace Machete.Data
             //return dbset.Include(a => a.worker).AsQueryable();
             return dbset.AsNoTracking().AsQueryable();
         }
+    }
+    public class ActivitySigninRepository : RepositoryBase<ActivitySignin>, IActivitySigninRepository
+    {
+        private readonly IDbSet<ActivitySignin> dbset;
+        public ActivitySigninRepository(IDatabaseFactory databaseFactory)
+            : base(databaseFactory)
+        {
+            dbset = base.DataContext.Set<ActivitySignin>();
+        }
+        override public IQueryable<ActivitySignin> GetAllQ()
+        {
+            //return dbset.Include(a => a.worker).AsQueryable();
+            return dbset.AsNoTracking().AsQueryable();
+        }
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    public class ActivityRepository : RepositoryBase<Activity>, IActivityRepository
+    {
+        public ActivityRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
     }
     /// <summary>
     /// 

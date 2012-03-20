@@ -12,7 +12,6 @@ namespace Machete.Service
     public class LookupCache
     {
         private static MacheteContext DB { get; set; }
-        //private static IEnumerable<Lookup> DbCache { get; set; }
         private static CacheItem DbCache { get; set; }
         private static ObjectCache cache;
 
@@ -30,25 +29,30 @@ namespace Machete.Service
         {
             IEnumerable<Lookup> lookups = DB.Lookups.AsNoTracking().ToList();
             CacheItemPolicy policy = new CacheItemPolicy();
+            //TODO: Put LookupCache expire time in config file
             policy.AbsoluteExpiration = new DateTimeOffset(DateTime.Now.AddHours(1));
             CacheItem wCacheItem = new CacheItem("lookupCache", lookups);
             cache.Set(wCacheItem, policy);
             //
-            Worker.iActive = LookupCache.getSingleEN("memberstatus", "Active");
-            Worker.iSanctioned = LookupCache.getSingleEN("memberstatus", "Sanctioned");
-            Worker.iExpelled = LookupCache.getSingleEN("memberstatus", "Expelled");
-            Worker.iExpired = LookupCache.getSingleEN("memberstatus", "Expired");
-            Worker.iInactive = LookupCache.getSingleEN("memberstatus", "Inactive");
+            #region WORKERS
+            Worker.iActive = getSingleEN("memberstatus", "Active");
+            Worker.iSanctioned = getSingleEN("memberstatus", "Sanctioned");
+            Worker.iExpelled = getSingleEN("memberstatus", "Expelled");
+            Worker.iExpired = getSingleEN("memberstatus", "Expired");
+            Worker.iInactive = getSingleEN("memberstatus", "Inactive");
             //
-            Worker.iDWC = LookupCache.getSingleEN("worktype", "(DWC) Day Worker Center");//TODO: Remove Casa specific configuration. needs real abstraction on iDWC / iHHH.
-            Worker.iHHH = LookupCache.getSingleEN("worktype", "(HHH) Household Helpers");//TODO: Remove Casa specific configuration. needs real abstraction on iDWC / iHHH.
-
+            Worker.iDWC = getSingleEN("worktype", "(DWC) Day Worker Center");//TODO: Remove Casa specific configuration. needs real abstraction on iDWC / iHHH.
+            Worker.iHHH = getSingleEN("worktype", "(HHH) Household Helpers");//TODO: Remove Casa specific configuration. needs real abstraction on iDWC / iHHH.
+            #endregion  
             //
-            WorkOrder.iActive = LookupCache.getSingleEN("orderstatus", "Active");
-            WorkOrder.iPending = LookupCache.getSingleEN("orderstatus", "Pending");
-            WorkOrder.iCompleted = LookupCache.getSingleEN("orderstatus", "Completed");
-            WorkOrder.iCancelled = LookupCache.getSingleEN("orderstatus", "Cancelled");
-            WorkOrder.iExpired = LookupCache.getSingleEN("orderstatus", "Expired");
+            #region WORKORDERS
+            //
+            WorkOrder.iActive = getSingleEN("orderstatus", "Active");
+            WorkOrder.iPending = getSingleEN("orderstatus", "Pending");
+            WorkOrder.iCompleted = getSingleEN("orderstatus", "Completed");
+            WorkOrder.iCancelled = getSingleEN("orderstatus", "Cancelled");
+            WorkOrder.iExpired = getSingleEN("orderstatus", "Expired");
+            #endregion
         }
         //
         //

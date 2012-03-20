@@ -100,8 +100,8 @@ namespace Machete.Service
         public ServiceIndexView<WorkAssignment> GetIndexView(DispatchOptions o)
         {
             IQueryable<WorkAssignment> queryableWA = waRepo.GetAllQ();
-            lkup_dwc = LookupCache.getSingleEN("worktype", "(DWC) Day Worker Center");
-            lkup_hhh = LookupCache.getSingleEN("worktype", "(HHH) Household Helpers");
+            lkup_dwc = Worker.iDWC;
+            lkup_hhh = Worker.iHHH;
             IEnumerable<WorkAssignment> filteredWA;
             bool isDateTime = false;
             DateTime sunday;
@@ -500,5 +500,6 @@ namespace Machete.Service
             public string sortColName;
             public string wa_grouping;
             public int? typeofwork_grouping;
+            public int? ActivityID;
     }
 }

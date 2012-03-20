@@ -43,13 +43,17 @@
                     <li>@Html.ActionLink(@Machete.Web.Resources.Shared.workorderstab, "Index", "WorkOrder", null, new { id = "menulinkworkorder" })</li>
                     <li>@Html.ActionLink(@Machete.Web.Resources.Shared.workassignmentstab, "Index", "WorkAssignment")</li>
                     <li>@Html.ActionLink(@Machete.Web.Resources.Shared.persontab, "Index", "Person", null, new { id = "menulinkperson" })</li>
-                    <li>@Html.ActionLink(@Machete.Web.Resources.Shared.workerstab, "Index", "Worker", null, new { id="menulinkworker"})</li>
+                    <li>@Html.ActionLink(@Machete.Web.Resources.Shared.workerstab, "Index", "Worker", null, new { id="menulinkworker"})</li>                    
+                    @if (Html.IsInRole(Html.Role_T()) || Html.IsInRole(Html.Role_AM()))
+                    {
+                        <li>@Html.ActionLink(@Machete.Web.Resources.Shared.activitytab, "Index", "Activity", null, new { id = "menulinkactivity" })</li>
+                    }
                     <li>@Html.ActionLink(@Machete.Web.Resources.Shared.workersignintab, "Index", "WorkerSignin", null, new { id = "menulinkworkersignin" })</li>
                 </ul>
             </div>
         </div>
 
-        <div id="main" class="clearfix">
+        <div id="main">
             @RenderBody()
             <div id="footer" class="print_off" style="Clear:Both">
             

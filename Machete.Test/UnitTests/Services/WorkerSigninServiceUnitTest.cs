@@ -103,7 +103,7 @@ namespace Machete.Test.IntegrationTests.Services
             _wsiRepo.Setup(s => s.Add(It.IsAny<WorkerSignin>())).Callback((WorkerSignin s) => { _cbsignin = s; });
             //
             //Act
-            _serv.CreateWorkerSignin(_signin, "UnitTest");
+            _serv.CreateSignin(_signin, "UnitTest");
             //
             //Assert
             Assert.AreEqual(_signin, _cbsignin);
@@ -121,7 +121,7 @@ namespace Machete.Test.IntegrationTests.Services
             _wsiRepo.Setup(s => s.Add(It.IsAny<WorkerSignin>())).Callback((WorkerSignin s) => { _cbsignin = s; });
             //
             //Act
-            _serv.CreateWorkerSignin(_signin, "UnitTest");
+            _serv.CreateSignin(_signin, "UnitTest");
             //
             //Assert
             Assert.AreEqual(_signin, _cbsignin);
@@ -145,7 +145,7 @@ namespace Machete.Test.IntegrationTests.Services
             _wsiRepo.Setup(s => s.GetAllQ()).Returns(wsiList);
             //
             //Act
-            _serv.CreateWorkerSignin(_signin, "UnitTest");
+            _serv.CreateSignin(_signin, "UnitTest");
             //
             //Assert
             Assert.IsNull(_cbsignin);

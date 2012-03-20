@@ -246,4 +246,7 @@
   <data name="memberStatus" xml:space="preserve">
     <value>Member status</value>
   </data>
+  <data name="homeless" xml:space="preserve">
+    <value>Homeless</value>
+  </data>
 </root>

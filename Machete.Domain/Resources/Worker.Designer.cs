@@ -241,6 +241,15 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Homeless.
+        /// </summary>
+        public static string homeless {
+            get {
+                return ResourceManager.GetString("homeless", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Immigrant refugree?.
         /// </summary>
         public static string immigrantrefugee {

@@ -60,7 +60,9 @@ namespace Machete.Test
         public void SeEmployer_Create_Validate_Delete()
         {
             Employer _emp = (Employer)Records.employer.Clone();
+            Employer _emp1 = (Employer)Records.employer.Clone();
             //starts with /Employer/Create
+            ui.employerCreate(_emp1);
             ui.employerCreate(_emp);
             //save from /Create opens /Employer/Edit
             ui.employerValidate(_emp);

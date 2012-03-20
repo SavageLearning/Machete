@@ -110,8 +110,14 @@ namespace Machete.Data
                 new Lookup { ID=94, category = "memberstatus", text_EN="Inactive",      text_ES="Inactivo",         selected = false },
                 new Lookup { ID=95, category = "memberstatus", text_EN="Sanctioned",    text_ES="Sancionado",       selected = false },
                 new Lookup { ID=96, category = "memberstatus", text_EN="Expired",       text_ES="Expirado",         selected = false },
-                new Lookup { ID=97, category = "memberstatus", text_EN="Expelled",      text_ES="Expulsado",       selected = false }
-                //last used 97
+                new Lookup { ID=97, category = "memberstatus", text_EN="Expelled",      text_ES="Expulsado",       selected = false },
+                new Lookup { ID=98, category = "activityName", text_EN="Basic English",      text_ES="Ingles basico",       selected = true },
+                new Lookup { ID=99, category = "activityName", text_EN="Intermediate English",      text_ES="Ingles intermedio",       selected = false },
+                new Lookup { ID=100,category = "eventtype", text_EN="Explusion",         text_ES="Expulsión",          selected = false },
+                new Lookup { ID=101,category = "activityType", text_EN="Class",         text_ES="Clase",          selected = true },
+                new Lookup { ID=102,category = "activityType", text_EN="Assembly",         text_ES="Asamblea",          selected = false },
+                new Lookup { ID=103,category = "activityType", text_EN="Volunteering",         text_ES="Voluntariado",          selected = false },
+                new Lookup { ID=104,category = "activityType", text_EN="Health & Safety",         text_ES="Salud y seguridad",          selected = false }
             };
         //
         //

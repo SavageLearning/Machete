@@ -243,4 +243,7 @@
   <data name="memberStatus" xml:space="preserve">
     <value>Estatus de miembro</value>
   </data>
+  <data name="homeless" xml:space="preserve">
+    <value>Sin hogar</value>
+  </data>
 </root>

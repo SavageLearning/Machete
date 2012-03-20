@@ -57,7 +57,7 @@ namespace Machete.Test.UnitTests.Services
             //
             //Arrange
             //Act
-            var result = _serv.GetEmployers(false);
+            var result = _serv.GetAll();
             //Assert
             Assert.IsInstanceOfType(result, typeof(IEnumerable<Employer>));
         }
@@ -71,7 +71,7 @@ namespace Machete.Test.UnitTests.Services
             
             _repo.Setup(r => r.GetById(3)).Returns(employer);           
             //Act
-            var result = _serv.GetEmployer(3);
+            var result = _serv.Get(3);
             //Assert
             Assert.IsInstanceOfType(result, typeof(Employer));
             Assert.IsTrue(result.ID == 3);
@@ -92,7 +92,7 @@ namespace Machete.Test.UnitTests.Services
             var _serv = new EmployerService(_repo.Object, _woServ.Object, _uow.Object);
             //
             //Act
-            var result = _serv.CreateEmployer(Records._employer1, user);
+            var result = _serv.Create(Records._employer1, user);
             //
             //Assert
             Assert.IsInstanceOfType(result, typeof(Employer));
@@ -118,7 +118,7 @@ namespace Machete.Test.UnitTests.Services
             var _serv = new EmployerService(_repo.Object, _woServ.Object, _uow.Object);
             //
             //Act
-            _serv.DeleteEmployer(id, user);
+            _serv.Delete(id, user);
             //
             //Assert
             Assert.AreEqual(dp, Records._employer1);
@@ -138,7 +138,7 @@ namespace Machete.Test.UnitTests.Services
             var _serv = new EmployerService(_repo.Object, _woServ.Object, _uow.Object);
             //
             //Act
-            _serv.SaveEmployer(Records._employer1, user);
+            _serv.Save(Records._employer1, user);
             //
             //Assert
             Assert.IsTrue(Records._employer1.Updatedby == user);
