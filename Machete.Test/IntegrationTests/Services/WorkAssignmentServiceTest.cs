@@ -202,10 +202,10 @@ namespace Machete.Test
         [TestMethod]
         public void Integration_WA_Service_Assign_updates_WSI_and_WA()
         {
-            WorkerSignin wsi1 = _wsiServ.GetWorkerSignin(1);
+            WorkerSignin wsi1 = _wsiServ.Get(1);
             WorkAssignment wa1 = _waServ.Get(1);
             var result = _waServ.Assign(wa1, wsi1, "test script");
-            WorkerSignin wsi2 = _wsiServ.GetWorkerSignin(1);
+            WorkerSignin wsi2 = _wsiServ.Get(1);
             WorkAssignment wa2 = _waServ.Get(1);
             Assert.IsNotNull(result);
             Assert.IsNotNull(wa2.workerAssignedID);

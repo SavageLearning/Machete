@@ -22,7 +22,7 @@ namespace Machete.Web.Helpers
             return false;
         }
     }
-    // Killing magic strings in HTML 
+    // TODO: RoleGrouphelper relies on magic strings
     public static class RoleGroupHelper
     {
         public static string[] Role_AMPCU(this HtmlHelper html) { return new[]{"Administrator", "Manager", "PhoneDesk", "Check-in", "User"}; }
@@ -30,5 +30,6 @@ namespace Machete.Web.Helpers
         public static string[] Role_AMP(this HtmlHelper html) { return new[]{"Administrator", "Manager", "PhoneDesk"}; }
         public static string[] Role_AM(this HtmlHelper html) { return new[] { "Administrator", "Manager" }; }
         public static string[] Role_A(this HtmlHelper html) {return new[]{"Administrator"}; }
+        public static string[] Role_T(this HtmlHelper html) { return new[] { "Teacher" }; }
     }  
 }

@@ -21,6 +21,13 @@
                 @Html.DisplayFor(model => model.dateupdated)
                 @Html.ValidationMessageFor(model => model.dateupdated)
             </div>
+                    <div class="tb-label">
+                @Html.LabelFor(model => model.ID)
+            </div>
+            <div class="tb-field">
+                @Html.DisplayFor(model => model.ID, new { @readonly = "readonly" })
+                @Html.ValidationMessageFor(model => model.ID)
+            </div>
         </div>
         <!--tb-row-->
         <div class="tb-row">

@@ -63,7 +63,7 @@
     </div>
 </div>
 @Html.Partial("WorkerIndex")
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
     var oTableDefaults = {
             "bPaginate": true,
             "bLengthChange": true,
@@ -168,23 +168,23 @@
         // filtering buttons on details page
         //
         $('#pendingOrdersBtn').click(function() {            
-            oTable.dataTable().fnFilter('43', 5); //sync with DT array above
+            oTable.dataTable().fnFilter('@Machete.Domain.WorkOrder.iPending', 5); //sync with DT array above
         });
         $('#activeOrdersBtn').click(function() {            
-            oTable.dataTable().fnFilter('42', 5); //sync with DT array above
+            oTable.dataTable().fnFilter('@Machete.Domain.WorkOrder.iActive', 5); //sync with DT array above
         });
         $('#completedOrdersBtn').click(function() {            
-            oTable.dataTable().fnFilter('44', 5); //sync with DT array above
+            oTable.dataTable().fnFilter('@Machete.Domain.WorkOrder.iCompleted', 5); //sync with DT array above
         });
         $('#expiredOrdersBtn').click(function() {            
-            oTable.dataTable().fnFilter('46', 5); //sync with DT array above
+            oTable.dataTable().fnFilter('@Machete.Domain.WorkOrder.iExpired', 5); //sync with DT array above
         });
         $('#allOrdersBtn').click(function() {
             oTable.dataTable().fnFilter("");
             oTable.dataTable().fnFilter("", 5); //sync with DT array above
         });
         $('#cancelledOrdersBtn').click(function() {
-            oTable.dataTable().fnFilter('45', 5); //sync with DT array above
+            oTable.dataTable().fnFilter('@Machete.Domain.WorkOrder.iCancelled', 5); //sync with DT array above
         });
         ////////////////////////////////////////////////////////////////
         //

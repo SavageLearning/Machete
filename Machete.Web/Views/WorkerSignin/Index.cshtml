@@ -74,7 +74,7 @@
         });
         //
         //
-        $('#dwccardentry').focus();
+        $('#dwccardnum').focus();
         $('#signin-red-dialog').hide();
         $('.confirm_delete').live('click', function (e) {
             e.preventDefault;
@@ -94,6 +94,7 @@
                                     } 
                              });
                              }
+                             $('#dwccardnum').focus();
                          });
             return false;
         });
@@ -166,16 +167,18 @@
             if ($(form).valid()) {
                 $.post($(this).attr("action"), $(this).serialize(), 
                     function(data) {
-                        $('#dwccardentry').val(null); // clear cardnum field
+                        $('#dwccardnum').val(null); // clear cardnum field
                         $('#wsiImage').attr('src', data.imageRef); //reload image
                         $('#wsiTable').dataTable().fnDraw(); //reload datatable
                         if (data.memberSanctioned || data.memberExpelled) {
                             $("#wsiRedImage").attr('src', data.imageRef);
                             $('#signin-red-dialog').dialog({ 
                                 modal: true,
-                                title: "@(WorkerSignins.redmessagetitle)"
+                                title: "@(WorkerSignins.redmessagetitle)",
+                                close: function(event, ui) { $('#dwccardnum').focus(); }
                                  });
                         }
+                        $('#dwccardnum').focus();
                     });
             }    
         });

@@ -22,8 +22,6 @@ namespace Machete.Web.Controllers
         private readonly IWorkerService workerService;
         private readonly IImageService imageServ;
         System.Globalization.CultureInfo CI;
-        //private Logger log = LogManager.GetCurrentClassLogger();
-        //private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "WorkerController", "");
 
         public WorkerController(IWorkerService workerService, 
                                 IPersonService personService,
@@ -58,7 +56,7 @@ namespace Machete.Web.Controllers
             if (!string.IsNullOrEmpty(param.sSearch))
             {
                 filteredW = workerService.GetWorkers()
-                    .Where(p => p.dwccardnum.ToString().Contains(param.sSearch) ||
+                    .Where(p => p.dwccardnum.ToString().ContainsOIC(param.sSearch) ||
                                 p.active.ToString().ContainsOIC(param.sSearch) ||
                                 p.Person.firstname1.ContainsOIC(param.sSearch) ||
                                 p.Person.firstname2.ContainsOIC(param.sSearch) ||
@@ -122,15 +120,15 @@ namespace Machete.Web.Controllers
 
         string _getStatus(Worker wkr)
         {
-            if (wkr.memberStatus == Lookups.getSingleEN("memberstatus", "Active")) // blue
+            if (wkr.memberStatus == Worker.iActive) // blue
                 return "active";
-            if (wkr.memberStatus == Lookups.getSingleEN("memberstatus", "Inactive")) // blue
+            if (wkr.memberStatus == Worker.iInactive) // blue
                 return "inactive";
-            if (wkr.memberStatus == Lookups.getSingleEN("memberstatus", "Expired")) // blue
+            if (wkr.memberStatus == Worker.iExpired) // blue
                 return "expired";
-            if (wkr.memberStatus == Lookups.getSingleEN("memberstatus", "Sanctioned")) // blue
+            if (wkr.memberStatus == Worker.iSanctioned) // blue
                 return "sanctioned";
-            if (wkr.memberStatus == Lookups.getSingleEN("memberstatus", "Expelled")) // blue
+            if (wkr.memberStatus == Worker.iExpelled) // blue
                 return "expelled";
             return null;
         }

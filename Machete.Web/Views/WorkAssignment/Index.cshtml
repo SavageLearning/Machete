@@ -33,13 +33,13 @@
 
 }        
 <div id="buttonDivider">
-@*    <div id="radioWorkers" class="radio">
+    <div id="radioWorkers" class="radio">
 		<input type="radio" disabled="true" id="rW1_lottery" name="radio" checked="checked" /><label for="rW1_lottery">Lottery<br />list</label>
 		<input type="radio" disabled="true" id="rW1_signin" name="radio"  /><label for="rW1_signin">Sign-in<br />list</label>
 	</div>
     <div class="radio">
-    <input type="button" disabled="true" id="bOpenLottery" class="formButton dispatchButton" value="Lottery" />
-    </div>*@
+    <input type="button" id="bOpenLottery" class="formButton dispatchButton" value="Lottery" />
+    </div>
     <div class="radio">
         <input type="button" id="bAssign" class="formButton dispatchButton" value="@(WorkAssignments.btnAssign)" />
         <input type="button" id="bUnassign" class="formButton dispatchButton" value="@(WorkAssignments.btnUnassign)"/>
@@ -173,12 +173,13 @@
         "bLengthChange": false,
         "bAutoWidth": true,
         "bServerSide": true,
+        "aaSorting": [[2, 'asc']],
         "sAjaxSource": "/WorkerSignin/AjaxHandler",
         "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
         "bProcessing": true,
         "aoColumns": [
             {"mDataProp": "dwccardnum"},
-            {"mDataProp": "skills"},
+            {"mDataProp": "lotterySequence"},
             {"mDataProp": "fullname"}
         ],
         "fnServerData": function ( sSource, aoData, fnCallback ) {
@@ -375,7 +376,7 @@
             $('#signin_visible').val(false);
             $('#assignedWorker_visible').val(true);
             $('#requestedWorkers_visible').val(false);
-            $('#status').val(@((Machete.Domain.WorkOrder.iCompleted)));
+            $('#status').val(@(Machete.Domain.WorkOrder.iCompleted));
             $("#updateBtn").click();    
         });
         $('#rA1_requested').click(function (e) {
@@ -384,7 +385,7 @@
             $('#signin_visible').val(true);
             $('#assignedWorker_visible').val(false);
             $('#requestedWorkers_visible').val(true);
-            $('#status').val(@((Machete.Domain.WorkOrder.iActive)));
+            $('#status').val(@(Machete.Domain.WorkOrder.iActive));
             $("#updateBtn").click();     
         });
         $('#rA1_open').click(function (e) {
@@ -393,7 +394,7 @@
             $('#signin_visible').val(true);
             $('#assignedWorker_visible').val(false);
             $('#requestedWorkers_visible').val(false);
-            $('#status').val(@((Machete.Domain.WorkOrder.iActive)));
+            $('#status').val(@(Machete.Domain.WorkOrder.iActive));
             $("#updateBtn").click(); 
         });
         $('#rA1_skilled').click(function (e) {
@@ -402,7 +403,7 @@
             $('#signin_visible').val(true);
             $('#assignedWorker_visible').val(false);
             $('#requestedWorkers_visible').val(false);
-            $('#status').val(@((Machete.Domain.WorkOrder.iActive)));
+            $('#status').val(@(Machete.Domain.WorkOrder.iActive));
             $("#updateBtn").click();    
           
         });
@@ -412,7 +413,7 @@
             $('#signin_visible').val(false);
             $('#assignedWorker_visible').val(true);
             $('#requestedWorkers_visible').val(true);
-            $('#status').val(@((Machete.Domain.WorkOrder.iActive)));
+            $('#status').val(@(Machete.Domain.WorkOrder.iActive));
             $("#updateBtn").click();                 
         });
         $('#rA1_All').click(function (e) {
@@ -422,16 +423,17 @@
             $('#assignedWorker_visible').val(true);
             $('#requestedWorkers_visible').val(false);
             $('#status').val(false);
+            $('#dwccardnum').val('');
             $("#updateBtn").click();                 
         });
         $('#rA2_DWC').click(function (e) {
             e.preventDefault();
-            $('#typeofwork_grouping').val(@(Lookups.getSingleEN("worktype", "(DWC) Day Worker Center")));
+            $('#typeofwork_grouping').val(@(Machete.Domain.Worker.iDWC));
             $("#updateBtn").click();                 
         });
         $('#rA2_HHH').click(function (e) {
             e.preventDefault();
-            $('#typeofwork_grouping').val(@(Lookups.getSingleEN("worktype", "(HHH) Household Helpers")));
+            $('#typeofwork_grouping').val(@(Machete.Domain.Worker.iHHH));
             $("#updateBtn").click();                 
         });
         $('#rA2_All').click(function (e) {

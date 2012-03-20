@@ -8,7 +8,8 @@ using Machete.Domain.Resources;
 
 namespace Machete.Domain
 {
-    public class WorkerSignin : Record
+    public class WorkerSignin : Signin { }
+    public abstract class Signin : Record
     {
         //public int ID { get; set; }
         public virtual Worker worker {get; set;}
@@ -16,9 +17,11 @@ namespace Machete.Domain
         [RegularExpression("^[0-9]{5,5}$", ErrorMessageResourceName = "dwccardnumerror", ErrorMessageResourceType = typeof(Resources.Worker))]
         public int dwccardnum { get; set; }
         public int? WorkerID { get; set; }
+        public int? memberStatus { get; set; }
         public int? WorkAssignmentID { get; set; }
         public DateTime dateforsignin { get; set; }
-        public DateTime? lottery_timestamp { get; set; } 
+        public DateTime? lottery_timestamp { get; set; }
+        public int? lottery_sequence { get; set; }
     }
     public class WorkerSigninView : Record
     {
@@ -48,9 +51,16 @@ namespace Machete.Domain
         public int? imageID { get; set; }
         public DateTime expirationDate { get; set; }
         public int memberStatus { get; set; }
+        public int? lotterySequence { get; set; }
+        public Person p { get; set; }
+        public Worker w { get; set; }
+        public Signin s { get; set; }
 
-        public WorkerSigninView(Person p, WorkerSignin s)
+        public WorkerSigninView(Person per, Signin sign)
         {
+            p = per;
+            w = p.Worker;
+            s = sign;
             ID = s.ID;
             firstname1 = p == null ? null : p.firstname1;
             firstname2 = p == null ? null : p.firstname2;
@@ -69,6 +79,7 @@ namespace Machete.Domain
             skill3 = p == null ? null : p.Worker.skill3;
             imageID = p == null ? null : p.Worker.ImageID;
             englishlevel = p == null ? 0 : p.Worker.englishlevelID;
+            lotterySequence = s.lottery_sequence;
             expirationDate = p == null ? DateTime.MinValue : p.Worker.memberexpirationdate;
             memberStatus = p == null ? 0 : p.Worker.memberStatus;
         }

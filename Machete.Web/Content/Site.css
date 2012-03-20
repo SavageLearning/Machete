@@ -165,7 +165,7 @@ ul#menu li#greeting
 
 ul#menu li a
 {
-    padding: 10px 20px;
+    padding: 10px 10px;
     font-weight: bold;
     text-decoration: none;
     line-height: 2.8em;
@@ -677,3 +677,24 @@ div.mui-event-image-text-row-field input[type="text"]
 .ui-timepicker-div dl dd{ margin: -25px 0 10px 65px; }
 .ui-timepicker-div td { font-size: 90%; }
 #ui-datepicker-div{ display: none;}
+
+.clearfix:after {
+	content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	line-height: 0;
+	height: 0;
+}
+ 
+.clearfix {
+	display: inline-block;
+}
+ 
+html[xmlns] .clearfix {
+	display: block;
+}
+ 
+* html .clearfix {
+	height: 1%;
+}

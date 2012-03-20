@@ -22,7 +22,7 @@ namespace Machete.Domain
         public DateTime dateFrom { get; set; }
         //
         [LocalizedDisplayName("dateTo", NameResourceType = typeof(Resources.Event))]        
-        public DateTime dateTo { get; set; }
+        public DateTime? dateTo { get; set; }
         //
         [LocalizedDisplayName("notes", NameResourceType = typeof(Resources.Event))]
         [StringLength(4000, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Event))]

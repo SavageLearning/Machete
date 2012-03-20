@@ -70,6 +70,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Activities.
+        /// </summary>
+        public static string activitytab {
+            get {
+                return ResourceManager.GetString("activitytab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Administrator information.
         /// </summary>
         public static string administratorinformation {

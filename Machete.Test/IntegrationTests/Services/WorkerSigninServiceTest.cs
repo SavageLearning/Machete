@@ -40,7 +40,7 @@ namespace Machete.Test
         [TestMethod]
         public void DbSet_WorkerSigin_LotterySignin()
         {
-            var result = _wsiServ.GetWorkerSignin(30040, DateTime.Today);
+            var result = _wsiServ.GetSignin(30040, DateTime.Today);
             Assert.IsNotNull(result);
         }
         /// <summary>

@@ -8,6 +8,7 @@ using Machete.Data;
 using Machete.Service;
 using System.Data.Entity;
 using System.Text.RegularExpressions;
+using System.Web.Security;
 
 namespace Machete.Web.Helpers
 {
@@ -30,9 +31,33 @@ namespace Machete.Web.Helpers
         public static int hoursDefault { get; private set; }
         public static int daysDefault { get; private set; }
         public static int skillLevelDefault { get; private set; }
+        public static int activityNameDefault { get; private set; }
+        public static int activityTypeDefault { get; private set; }
         public static double hourlyWageDefault { get; private set; }
         public static int skillDefault { get; private set; }
         //
+        public static SelectList maritalstatus(string locale) { return get("maritalstatus", locale); }
+        public static SelectList gender(string locale) { return get("gender", locale); }
+        public static SelectList orderstatus(string locale) { return get("orderstatus", locale); }
+        public static SelectList race(string locale) { return get("race", locale); }
+        public static SelectList language(string locale) { return get("language", locale); }
+        public static SelectList neighborhood(string locale) { return get("neighborhood", locale); }
+        public static SelectList income(string locale) { return get("income", locale); }
+        public static SelectList typeOfWork(string locale) { return get("worktype", locale); }
+        public static SelectList eventtype(string locale) { return get("eventtype", locale); }
+        public static SelectList memberStatus(string locale) { return get("memberstatus", locale); }
+        public static SelectList activityName(string locale) { return get("activityName", locale); }
+        public static SelectList activityType(string locale) { return get("activityType", locale); }
+        public static SelectList emplrreference(string locale) { return get("emplrreference", locale); }
+        public static SelectList transportmethod(string locale) { return get("transportmethod", locale); }
+        public static SelectList countryoforigin(string locale) { return get("countryoforigin", locale); }
+        public static IEnumerable<LookupNumber> hours() { return hoursNum; }
+        public static IEnumerable<LookupNumber> days() { return daysNum; }
+        public static IEnumerable<LookupNumber> skillLevels() { return skillLevelNum; }
+        public static List<SelectListItemEx> skill(string locale, bool specializedOnly)
+        {
+            return getEx("skill", locale, specializedOnly);
+        }
         //
         private static IEnumerable<LookupNumber> hoursNum { get; set; }
         private static IEnumerable<LookupNumber> daysNum { get; set; }
@@ -64,6 +89,8 @@ namespace Machete.Web.Helpers
             emplrreferenceDefault = getDefaultID("emplrreference");
             transportmethodDefault = getDefaultID("transportmethod");
             countryoforiginDefault = getDefaultID("countryoforigin");
+            activityNameDefault = getDefaultID("activityName");
+            activityTypeDefault = getDefaultID("activityType");
             //
             hourlyWageDefault = 12;
             hoursNum = new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16" }
@@ -86,31 +113,21 @@ namespace Machete.Web.Helpers
             yesnoES.Add(new SelectListItem() { Selected = false, Text = "Si", Value = "true" });
         }
 
-        public static SelectList maritalstatus(string locale) { return get("maritalstatus", locale); }
-        public static SelectList gender(string locale) { return get("gender", locale); }
-        public static SelectList orderstatus(string locale) { return get("orderstatus", locale); }
-        public static SelectList race(string locale) { return get("race", locale); }
-        public static SelectList language(string locale) { return get("language", locale); }
-        public static SelectList neighborhood(string locale) { return get("neighborhood", locale); }
-        public static SelectList income(string locale) { return get("income", locale); }
-        public static SelectList typeOfWork(string locale) { return get("worktype", locale); }
-        public static SelectList eventtype(string locale) { return get("eventtype", locale); }
-        public static SelectList memberStatus(string locale) { return get("memberstatus", locale); }
-        public static SelectList emplrreference(string locale) { return get("emplrreference", locale); }
-        public static SelectList transportmethod(string locale) { return get("transportmethod", locale); }
-        public static SelectList countryoforigin(string locale) { return get("countryoforigin", locale); }
-        public static IEnumerable<LookupNumber> hours() { return hoursNum; }
-        public static IEnumerable<LookupNumber> days() { return daysNum; }
-        public static IEnumerable<LookupNumber> skillLevels() { return skillLevelNum; }
-        public static List<SelectListItemEx> skill(string locale, bool specializedOnly)
-        {
-            return getEx("skill", locale, specializedOnly);
-        }
+
 
         public static List<SelectListItem> yesno(string locale)
         {
             if (locale == "es") return yesnoES;
             return yesnoEN;  //defaults to English
+        }
+
+        public static IEnumerable<string> getTeachers()
+        {
+            //SelectList list;
+
+            //list = new SelectList(Roles.GetUsersInRole("Teacher"), "ID", "text", "Choose?!");
+            //if (list == null) throw new ArgumentNullException("Get techers returned no teachers");
+            return Roles.GetUsersInRole("Teacher").AsEnumerable();
         }
 
         private static SelectList get(string category, string locale)
@@ -174,10 +191,10 @@ namespace Machete.Web.Helpers
         }
         //
         // Get the ID number for a given lookup string
-        public static int getSingleEN(string category, string text)
-        {
-            return LookupCache.getSingleEN(category, text);
-        }
+        //public static int getSingleEN(string category, string text)
+        //{
+        //    return LookupCache.getSingleEN(category, text);
+        //}
         //
         // Get the Id string for a given lookup number
         public static string byID(int ID, string locale)

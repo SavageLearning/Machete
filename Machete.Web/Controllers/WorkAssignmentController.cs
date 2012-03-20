@@ -87,7 +87,7 @@ namespace Machete.Web.Controllers
                             recordid = Convert.ToString(p.ID),
                             pWAID = p.getFullPseudoID(), 
                             englishlevel = Convert.ToString(p.englishLevelID),
-                            skill =  Lookups.byID(p.skillID, CI.TwoLetterISOLanguageName),
+                            skill =  LookupCache.byID(p.skillID, CI.TwoLetterISOLanguageName),
                             hourlywage = System.String.Format("${0:f2}", p.hourlyWage),
                             hours = Convert.ToString(p.hours),
                             hourRange = p.hourRange > 0 ? Convert.ToString(p.hourRange) : "",
@@ -218,7 +218,7 @@ namespace Machete.Web.Controllers
         #region Assign
         public ActionResult Assign(int waid, int wsiid, string userName)
         {
-            WorkerSignin signin = wsiServ.GetWorkerSignin(wsiid);          
+            WorkerSignin signin = wsiServ.Get(wsiid);          
             WorkAssignment assignment = waServ.Get(waid);
             waServ.Assign(assignment, signin, userName);
 

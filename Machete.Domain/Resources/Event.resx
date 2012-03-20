@@ -118,19 +118,19 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="dateFrom" xml:space="preserve">
-    <value>dateFrom</value>
+    <value>Start date:</value>
   </data>
   <data name="dateFromrequired" xml:space="preserve">
-    <value>blah</value>
+    <value>A date is required</value>
   </data>
   <data name="dateTo" xml:space="preserve">
-    <value>dateTo</value>
+    <value>End date:</value>
   </data>
   <data name="eventType" xml:space="preserve">
-    <value>eventType</value>
+    <value>Event type</value>
   </data>
   <data name="eventTyperequired" xml:space="preserve">
-    <value>blah</value>
+    <value>An event type is required</value>
   </data>
   <data name="notes" xml:space="preserve">
     <value>Notes</value>

@@ -225,6 +225,10 @@
     <Compile Include="AppStart_Combres.cs" />
     <Compile Include="App_Start\Combres.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ActivityController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controllers\ActivitySigninController.cs" />
     <Compile Include="Controllers\EmployerController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\EventController.cs" />
@@ -255,6 +259,11 @@
     <Compile Include="IoC\UnityDependencyResolver.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Helpers\jQueryDataTableParam.cs" />
+    <Compile Include="Resources\Activities.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Activities.resx</DependentUpon>
+    </Compile>
     <Compile Include="Resources\Employers.es.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -529,6 +538,13 @@
     <Content Include="Views\Person\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Activities.es.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Activities.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Activities.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Employers.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Employers.es.Designer.cs</LastGenOutput>
@@ -569,6 +585,7 @@
     <EmbeddedResource Include="Resources\Shared.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Shared.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Persons.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -591,6 +608,7 @@
     <EmbeddedResource Include="Resources\Shared.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Shared.es.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\WorkerSignins.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -722,6 +740,12 @@
     <Content Include="Views\Shared\EventIndex.cshtml" />
     <Content Include="Views\Event\Edit.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Event.cshtml" />
+    <Content Include="Views\ActivitySignin\Index.cshtml" />
+    <Content Include="Views\Activity\Index.cshtml" />
+    <Content Include="Views\Activity\Create.cshtml" />
+    <Content Include="Views\Activity\Edit.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Activity.cshtml" />
+    <Content Include="Views\Shared\ActivitySigninIndex.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

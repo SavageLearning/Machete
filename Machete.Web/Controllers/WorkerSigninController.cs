@@ -43,16 +43,17 @@ namespace Machete.Web.Controllers
         [HttpPost]
         [Authorize(Roles = "Manager, Administrator, Check-in")]
         public ActionResult Index(int dwccardnum, DateTime dateforsignin)
-        {            
+        {
+            Worker worker = _wServ.GetWorkerByNum(dwccardnum);
+            if (worker == null) throw new NullReferenceException("card ID doesn't match a worker");
             var _signin = new WorkerSignin();
             // Tthe card just swiped
             _signin.dwccardnum = dwccardnum;
             _signin.dateforsignin = dateforsignin;
+            _signin.memberStatus = worker.memberStatus;
             //
             //
-            _serv.CreateWorkerSignin(_signin, this.User.Identity.Name);
-            Worker worker = _wServ.GetWorkerByNum(dwccardnum);
-            if (worker == null) throw new NullReferenceException("card ID doesn't match a worker");
+            _serv.CreateSignin(_signin, this.User.Identity.Name);
             //Get picture from checkin, show with next view
             Image checkin_image = _serv.getImage(dwccardnum);           
             string imageRef = "/Content/images/NO-IMAGE-AVAILABLE.jpg";
@@ -79,17 +80,18 @@ namespace Machete.Web.Controllers
         // POST: /WorkOrder/Delete/5
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public ActionResult lotterySignin(int lotterycardnum, DateTime lotterysignindate, string user)
+        public ActionResult lotterySignin(int lotterycardnum, DateTime lotterysignindate, string userName)
         {
             //var workOrder = woServ.GetWorkOrder(id);
             string rtnstatus;
-            var wsi = _serv.GetWorkerSignin(lotterycardnum, lotterysignindate);
+            var wsi = _serv.GetSignin(lotterycardnum, lotterysignindate);
             if (wsi != null)
             {
                 if (wsi.lottery_timestamp == null)
                 {
+                    wsi.lottery_sequence = _serv.GetNextLotterySequence(lotterysignindate);
                     wsi.lottery_timestamp = DateTime.Now;
-                    _serv.SaveWorkerSignin();
+                    _serv.Save(wsi, userName);
                 }                
                 rtnstatus = "OK";
 
@@ -108,10 +110,11 @@ namespace Machete.Web.Controllers
         }
         //
         // GET: /WorkerSignin/Delete/5
+        [UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, Check-in")]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int id, string userName)
         {
-            _serv.DeleteWorkerSignin(id);            
+            _serv.Delete(id, userName);            
             return Json(new
             {
                 jobSuccess = true,
@@ -153,11 +156,12 @@ namespace Machete.Web.Controllers
                                        dateforsigninstring = p.dateforsignin.ToShortDateString(),
                                        WAID = p.waid ?? 0,
                                        memberStatus = LookupCache.byID(p.memberStatus, CI.TwoLetterISOLanguageName),
-                                       memberInactive = p.memberStatus == LookupCache.getSingleEN("memberstatus", "Inactive") ? true : false,
-                                       memberSanctioned = p.memberStatus == LookupCache.getSingleEN("memberstatus", "Sanctioned") ? true : false,
-                                       memberExpired = p.memberStatus == LookupCache.getSingleEN("memberstatus", "Expired") ? true : false,
-                                       memberExpelled = p.memberStatus == LookupCache.getSingleEN("memberstatus", "Expelled") ? true : false,
+                                       memberInactive = p.w.isInactive,
+                                       memberSanctioned = p.w.isSanctioned,
+                                       memberExpired = p.w.isExpired,
+                                       memberExpelled = p.w.isExpelled,
                                        imageID = p.imageID,
+                                       lotterySequence = p.lotterySequence,
                                        expirationDate = p.expirationDate.ToShortDateString(),
                                        skills = _getSkillCodes(p.englishlevel, p.skill1, p.skill2, p.skill3)
                          };
@@ -170,24 +174,6 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
-        private string _getSkillCodes(int eng, int? sk1, int? sk2, int? sk3)
-        {
-            string rtnstr = "E" + eng + " ";
-            if (sk1 !=null) {
-                var lookup = LookupCache.getBySkillID((int)sk1);
-                rtnstr = rtnstr + lookup.ltrCode + lookup.level + " ";
-            }
-            if (sk2 != null)
-            {
-                var lookup = LookupCache.getBySkillID((int)sk2);
-                rtnstr = rtnstr + lookup.ltrCode + lookup.level + " ";
-            }
-            if (sk3 != null)
-            {
-                var lookup = LookupCache.getBySkillID((int)sk3);
-                rtnstr = rtnstr + lookup.ltrCode + lookup.level;
-            }
-            return rtnstr;
-        }
+
     }
 }

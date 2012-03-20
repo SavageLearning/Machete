@@ -1,0 +1,39 @@
+﻿@model Machete.Domain.Activity
+@using Machete.Web.Resources
+@{  
+    string recType = "activity";
+    string idPrefix = recType + Model.ID + "-";
+}
+@using (Html.BeginForm("Create", "Activity", FormMethod.Post, 
+                        new { @id = "activityCreateForm" }))
+{
+    <div>
+        <input type="submit" id="@(idPrefix)SaveBtn" class="formButton saveBtn" 
+               value="@Activities.createsubmit"  tabindex="9"/>
+    </div>
+    @Html.ValidationSummary(true)
+    @Html.EditorForModel()
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.formButton').button();
+        var activityCreateForm = $("#activityCreateForm")
+        $.validator.unobtrusive.parseDynamicContent('#activityCreateForm');
+        $('#activityName').focus();
+        // Activity Create submit event
+
+        activityCreateForm.mUI('formSubmit', {
+            recType: "@(recType)", //for add_rectab
+            create: true,
+            formLevel: 1
+        });
+        //
+        // machete UI detect changes on forms in tabs   
+        activityCreateForm.mUI('formDetectChanges', {
+            recType: "@(recType)",
+            formLevel: 1,
+            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+        });
+    });
+</script>

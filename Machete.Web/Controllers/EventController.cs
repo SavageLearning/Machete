@@ -5,7 +5,6 @@ using System.Web;
 using System.Web.Mvc;
 using Machete.Domain;
 using Machete.Data;
-//using Machete.Helpers;
 using Machete.Service;
 using Machete.Web.Helpers;
 using NLog;
@@ -21,8 +20,6 @@ namespace Machete.Web.Controllers
         private readonly IEventService _serv;
         private readonly IImageService iServ;
         System.Globalization.CultureInfo CI;
-        //private Logger log = LogManager.GetCurrentClassLogger();
-        //private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "EmployerController", "");
         //
         //
         public EventController(IEventService eventService, IImageService imageServ)

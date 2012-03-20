@@ -4,9 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Machete.Data;
-using Machete.Data.Infrastructure;
 using Machete.Domain;
-//using Machete.Helpers;
 using Machete.Service;
 using Machete.Web.Helpers;
 using NLog;
@@ -20,16 +18,17 @@ namespace Machete.Web.Controllers
     [ElmahHandleError]
     public class EmployerController : MacheteController
     {
-        private readonly IEmployerService eServ;
+        private readonly IEmployerService serv;
+        private System.Globalization.CultureInfo CI;
 
         public EmployerController(IEmployerService employerService)
         {
-            this.eServ = employerService;
+            this.serv = employerService;
         }
         protected override void Initialize(RequestContext requestContext)
         {
             base.Initialize(requestContext);
-            System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+            CI = (System.Globalization.CultureInfo)Session["Culture"];
         }
         #region Index
         //
@@ -49,13 +48,13 @@ namespace Machete.Web.Controllers
         public JsonResult AjaxHandler(jQueryDataTableParam param)
         {
             //Get all the records
-            var allEmployers = eServ.GetEmployers(true);
+            var allEmployers = serv.GetAll();
             IEnumerable<Employer> filteredEmployers;
             IEnumerable<Employer> sortedEmployers;
             //Search based on search-bar string 
             if (!string.IsNullOrEmpty(param.sSearch))
             {
-                filteredEmployers = eServ.GetEmployers(true)
+                filteredEmployers = serv.GetAll()
                     .Where(p => p.active.ToString().Contains(param.sSearch) ||
                                 p.name.Contains(param.sSearch) ||
                                 p.address1.Contains(param.sSearch) ||
@@ -149,7 +148,7 @@ namespace Machete.Web.Controllers
         public JsonResult Create(Employer employer, string userName)
         {
             UpdateModel(employer);
-            Employer newEmployer = eServ.CreateEmployer(employer, userName);                          
+            Employer newEmployer = serv.Create(employer, userName);                          
 
             return Json(new
             {
@@ -171,7 +170,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Edit(int id)
         {
-            Employer employer = eServ.GetEmployer(id);
+            Employer employer = serv.Get(id);
             return PartialView("Edit", employer);
         }
         /// <summary>
@@ -185,9 +184,9 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public JsonResult Edit(int id, FormCollection collection, string userName)
         {
-            Employer employer = eServ.GetEmployer(id);
+            Employer employer = serv.Get(id);
             UpdateModel(employer);
-            eServ.SaveEmployer(employer, userName);                            
+            serv.Save(employer, userName);                            
             return Json(new
             {
                 jobSuccess = true
@@ -205,8 +204,8 @@ namespace Machete.Web.Controllers
         public ActionResult View(int id)
         {
             EmployerViewModel _vm = new EmployerViewModel();
-            _vm.employer = eServ.GetEmployer(id);
-            _vm.orders = eServ.GetOrders(id);
+            _vm.employer = serv.Get(id);
+            _vm.orders = serv.GetOrders(id);
             return View(_vm);
         }
         #endregion
@@ -222,7 +221,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public JsonResult Delete(int id, string userName)
         {
-            eServ.DeleteEmployer(id, userName);
+            serv.Delete(id, userName);
 
             return Json(new
             {

@@ -124,13 +124,13 @@ namespace Machete.Web.Controllers
                              EID = Convert.ToString(p.EmployerID),
                              WOID = System.String.Format("{0,5:D5}", p.paperOrderNum),
                              dateTimeofWork = p.dateTimeofWork.ToString(),
-                             status = Lookups.byID(p.status, opt.CI.TwoLetterISOLanguageName),
+                             status = LookupCache.byID(p.status, opt.CI.TwoLetterISOLanguageName),
                              WAcount = p.workAssignments.Count(a => a.workOrderID == p.ID).ToString(),
                              contactName = p.contactName,
                              workSiteAddress1 = p.workSiteAddress1,
                              dateupdated = System.String.Format("{0:MM/dd/yyyy HH:mm:ss}", p.dateupdated),
                              updatedby = p.Updatedby,
-                             transportMethod = Lookups.byID(p.transportMethodID, opt.CI.TwoLetterISOLanguageName),
+                             transportMethod = LookupCache.byID(p.transportMethodID, opt.CI.TwoLetterISOLanguageName),
                              displayState = _getDisplayState(p),
                              recordid = p.ID.ToString(),
                              workers = param.showOrdersWorkers ? 
@@ -138,7 +138,7 @@ namespace Machete.Web.Controllers
                                         { 
                                             WID = w.workerAssigned != null ? (int?)w.workerAssigned.dwccardnum : null,
                                             name = w.workerAssigned != null ? w.workerAssigned.Person.fullName() : null,
-                                            skill = Lookups.byID(w.skillID, opt.CI.TwoLetterISOLanguageName),
+                                            skill = LookupCache.byID(w.skillID, opt.CI.TwoLetterISOLanguageName),
                                             hours = w.hours,
                                             wage = w.hourlyWage
                                         } : null
@@ -157,7 +157,7 @@ namespace Machete.Web.Controllers
 
         private string _getDisplayState(WorkOrder wo)
         {
-            string status = Lookups.byID(wo.status, "en");
+            string status = LookupCache.byID(wo.status, "en");
             if (status == "Completed")
             {
                 if (wo.workAssignments.Count(wa => wa.workerAssignedID == null) > 0) return "Unassigned";

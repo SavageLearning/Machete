@@ -73,7 +73,7 @@ namespace Machete.Test.Controllers
             var employer = new Employer();
             employer.ID = 4242;
             employer.name = "unit test";
-            _serv.Setup(p => p.CreateEmployer(employer, "UnitTest")).Returns(employer);
+            _serv.Setup(p => p.Create(employer, "UnitTest")).Returns(employer);
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
             var result = (JsonResult)_ctrlr.Create(employer, "UnitTest");
@@ -93,7 +93,7 @@ namespace Machete.Test.Controllers
             fakeform.Remove("name");
 
             _serv = new Mock<IEmployerService>();
-            _serv.Setup(p => p.CreateEmployer(employer, "UnitTest")).Returns(employer);
+            _serv.Setup(p => p.Create(employer, "UnitTest")).Returns(employer);
             var _ctrlr = new EmployerController(_serv.Object);
             _ctrlr.SetFakeControllerContext();
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
@@ -111,7 +111,7 @@ namespace Machete.Test.Controllers
             _serv = new Mock<IEmployerService>();
             int testid = 4242;
             Employer fakeemployer = new Employer();
-            _serv.Setup(p => p.GetEmployer(testid)).Returns(fakeemployer);
+            _serv.Setup(p => p.Get(testid)).Returns(fakeemployer);
             var _ctrlr = new EmployerController(_serv.Object);
             //Act
             var result = _ctrlr.Edit(testid) as PartialViewResult;
@@ -127,8 +127,8 @@ namespace Machete.Test.Controllers
             Employer fakeemployer = new Employer();
             Employer savedemployer = new Employer();
             string user = "";
-            _serv.Setup(p => p.GetEmployer(testid)).Returns(fakeemployer);
-            _serv.Setup(x => x.SaveEmployer(It.IsAny<Employer>(),
+            _serv.Setup(p => p.Get(testid)).Returns(fakeemployer);
+            _serv.Setup(x => x.Save(It.IsAny<Employer>(),
                                           It.IsAny<string>())
                                          ).Callback((Employer p, string str) =>
                                          {
@@ -157,8 +157,8 @@ namespace Machete.Test.Controllers
             int testid = 4243;
             //
             // Mock service and setup SaveEmployer mock
-            _serv.Setup(p => p.SaveEmployer(employer, "UnitTest"));
-            _serv.Setup(p => p.GetEmployer(testid)).Returns(employer);
+            _serv.Setup(p => p.Save(employer, "UnitTest"));
+            _serv.Setup(p => p.Get(testid)).Returns(employer);
             //
             // Mock HttpContext so that ModelState and FormCollection work
             fakeform.Remove("phone");

@@ -6,7 +6,6 @@ using System.Web.Mvc;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
-//using Machete.Helpers;
 using Machete.Service;
 using Machete.Web.Helpers;
 using NLog;
@@ -167,17 +166,6 @@ namespace Machete.Web.Controllers
         #endregion
 
         #region Delete
-        //
-        // GET: /Person/Delete/5
-        //[Authorize(Roles = "Administrator")]
-        //public ActionResult Delete(int id)
-        //{
-        //    var person = personService.GetPerson(id);
-        //    return View(person);
-        //}
-
-        //
-        // POST: /Person/Delete/5
 
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator")] 

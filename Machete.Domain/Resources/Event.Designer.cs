@@ -61,7 +61,7 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to dateFrom.
+        ///   Looks up a localized string similar to Start date:.
         /// </summary>
         public static string dateFrom {
             get {
@@ -70,7 +70,7 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to blah.
+        ///   Looks up a localized string similar to A date is required.
         /// </summary>
         public static string dateFromrequired {
             get {
@@ -79,7 +79,7 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to dateTo.
+        ///   Looks up a localized string similar to End date:.
         /// </summary>
         public static string dateTo {
             get {
@@ -88,7 +88,7 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to eventType.
+        ///   Looks up a localized string similar to Event type.
         /// </summary>
         public static string eventType {
             get {
@@ -97,7 +97,7 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to blah.
+        ///   Looks up a localized string similar to An event type is required.
         /// </summary>
         public static string eventTyperequired {
             get {
