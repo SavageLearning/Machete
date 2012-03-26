@@ -85,7 +85,7 @@ namespace Machete.Service
                                          .Where(wsi => wsi.worker.typeOfWorkID == Worker.iDWC)
                                          .Select(wsi => wsi);
 
-            if (o.typeofwork_grouping == Worker.iDWC)
+            if (o.typeofwork_grouping == Worker.iHHH)
                 queryable = queryable
                                          .Where(wsi => wsi.worker.typeOfWorkID == Worker.iHHH)
                                          .Select(wsi => wsi);

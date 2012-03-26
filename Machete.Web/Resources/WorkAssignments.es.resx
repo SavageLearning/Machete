@@ -228,8 +228,17 @@
   <data name="listlinkall" xml:space="preserve">
     <value>Lista de todos los asignaciones de trabajo</value>
   </data>
+  <data name="lottery" xml:space="preserve">
+    <value>Lotería</value>
+  </data>
+  <data name="lotteryShort" xml:space="preserve">
+    <value>Ltra</value>
+  </data>
   <data name="memberID" xml:space="preserve">
     <value>Tarjeta#</value>
+  </data>
+  <data name="programShort" xml:space="preserve">
+    <value>Prog</value>
   </data>
   <data name="signin" xml:space="preserve">
     <value>Ingreso</value>

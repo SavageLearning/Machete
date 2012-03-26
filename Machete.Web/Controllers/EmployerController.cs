@@ -55,11 +55,11 @@ namespace Machete.Web.Controllers
             if (!string.IsNullOrEmpty(param.sSearch))
             {
                 filteredEmployers = serv.GetAll()
-                    .Where(p => p.active.ToString().Contains(param.sSearch) ||
-                                p.name.Contains(param.sSearch) ||
-                                p.address1.Contains(param.sSearch) ||
-                                p.phone.Contains(param.sSearch) ||
-                                p.city.Contains(param.sSearch));
+                    .Where(p => p.active.ToString().ContainsOIC(param.sSearch) ||
+                                p.name.ContainsOIC(param.sSearch) ||
+                                p.address1.ContainsOIC(param.sSearch) ||
+                                p.phone.ContainsOIC(param.sSearch) ||
+                                p.city.ContainsOIC(param.sSearch));
             }
             else
             {

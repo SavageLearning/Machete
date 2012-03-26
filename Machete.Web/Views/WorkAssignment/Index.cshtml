@@ -33,10 +33,10 @@
 
 }        
 <div id="buttonDivider">
-    <div id="radioWorkers" class="radio">
+@*    <div id="radioWorkers" class="radio">
 		<input type="radio" disabled="true" id="rW1_lottery" name="radio" checked="checked" /><label for="rW1_lottery">Lottery<br />list</label>
 		<input type="radio" disabled="true" id="rW1_signin" name="radio"  /><label for="rW1_signin">Sign-in<br />list</label>
-	</div>
+	</div>*@
     <div class="radio">
     <input type="button" id="bOpenLottery" class="formButton dispatchButton" value="Lottery" />
     </div>
@@ -50,7 +50,7 @@
 		<input type="radio" id="rA1_skilled" name="radioOpenFilled" /><label for="rA1_skilled" class="dispatchButton">@(WorkAssignments.btnSkilled)<br />@(WorkAssignments.btnSubActive)</label>
         <input type="radio" id="rA1_open" name="radioOpenFilled" /><label for="rA1_open" class="dispatchButton">@(WorkAssignments.btnOpen)<br />@(WorkAssignments.btnSubActive)</label>
 		<input type="radio" id="rA1_assigned" name="radioOpenFilled" /><label for="rA1_assigned" class="dispatchButton">@(WorkAssignments.btnAssigned)<br />@(WorkAssignments.btnSubActive)</label>
-        <input type="radio" id="rA1_completed" name="radioOpenFilled"  /><label for="rA1_completed" class="dispatchButton">@(WorkAssignments.btnAssigned)<br />@(WorkAssignments.btnSubCompleted)</label>
+        <input type="radio" id="rA1_completed" name="radioOpenFilled"  /><label for="rA1_completed" class="dispatchButton">@(WorkAssignments.btnAll)<br />@(WorkAssignments.btnSubCompleted)</label>
         <input type="radio" id="rA1_All" name="radioOpenFilled" checked="checked" /><label for="rA1_All">@(WorkAssignments.btnAll)</label>
 	</div>
     <div id="radioProgram" class="radio">
@@ -72,6 +72,8 @@
                         <tr>
                             <th>@Machete.Web.Resources.WorkAssignments.memberID</th>
                             <th>@Machete.Web.Resources.WorkAssignments.skills</th>
+                            <th>@Machete.Web.Resources.WorkAssignments.lotteryShort</th>
+                            <th>@Machete.Web.Resources.WorkAssignments.programShort</th>
                             <th>@Machete.Web.Resources.WorkAssignments.fullname</th>
                         </tr>
                     </thead>
@@ -120,9 +122,7 @@
                     
                 </div>
                 <div class="tb-field">
-                    @Html.TextBox("lotterysignindate",
-                        Html.Encode(System.String.Format("{0:mm/dd/yy}", DateTime.Now.ToShortDateString())),
-                        new { @class = "ui-datepicker", style="width: 100px;" })
+                    @Html.TextBox("lotterysignindate", "", new { @readonly="readonly"})
                     
                 </div>
                 <div class="tb-field">
@@ -135,7 +135,7 @@
         <thead>
             <tr>
                 <th>@Machete.Web.Resources.WorkAssignments.memberID</th>
-                <th>Lottery ?!</th>
+                <th>@Machete.Web.Resources.WorkAssignments.lottery</th>
                 <th>@Machete.Web.Resources.WorkAssignments.fullname</th>
             </tr>
         </thead>
@@ -171,9 +171,10 @@
         "bFilter": false,
         "bPaginate": true,
         "bLengthChange": false,
-        "bAutoWidth": true,
+        "iDisplayLength": 15,
+        "bAutoWidth": true,        
         "bServerSide": true,
-        "aaSorting": [[2, 'asc']],
+        "aaSorting": [[1, 'asc']],
         "sAjaxSource": "/WorkerSignin/AjaxHandler",
         "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
         "bProcessing": true,
@@ -215,20 +216,30 @@
     $('#lotteryTable').hide();
     $('#bOpenLottery').click(function () {
         $('#lotteryTable').dataTable().fnDraw();
+        $('#lotterysignindate').val($('#todaysdate').val());
         $('#lotteryList').dialog({
                 height: 600,
-                width: 450,
+                width: 550,
                 modal: true
         });
         $('#lotteryTable').show();
         $('#lotteryList').show();
+        $('.ui-dialog-titlebar-close').one('click', function() {
+            $('#signinTable').dataTable().fnSort( [ [2,'asc']] );
+        });
     });
+    //
+    //
+    //
     $('#lotterySigninForm').submit(function (e) {
         $.post($(this).attr("action"), $(this).serialize());
+        $('#lotterycardnum').val(null);
         $('#lotteryTable').dataTable().fnDraw();
         e.preventDefault();
     });
-        
+    //
+    //
+    //
     jqrfyTable($("#signinTable"), null, {
         //"sScrollY": "300px",
         "bPaginate": true,
@@ -241,6 +252,8 @@
         "aoColumns": [
             {"mDataProp": "dwccardnum"},
             {"mDataProp": "skills"},
+            {"mDataProp": "lotterySequence"},
+            {"mDataProp": "program"},
             {"mDataProp": "fullname"}
         ],
         "fnServerData": function ( sSource, aoData, fnCallback ) {
@@ -372,9 +385,9 @@
         //
         $('#rA1_completed').click(function (e) {
             e.preventDefault();            
-            $('#wa_grouping').val('assigned'); 
-            $('#signin_visible').val(false);
-            $('#assignedWorker_visible').val(true);
+            $('#wa_grouping').val(false); 
+            $('#signin_visible').val(true);
+            $('#assignedWorker_visible').val(false);
             $('#requestedWorkers_visible').val(false);
             $('#status').val(@(Machete.Domain.WorkOrder.iCompleted));
             $("#updateBtn").click();    
@@ -410,7 +423,7 @@
         $('#rA1_assigned').click(function (e) {
             e.preventDefault();
             $('#wa_grouping').val('assigned');
-            $('#signin_visible').val(false);
+            $('#signin_visible').val(true);
             $('#assignedWorker_visible').val(true);
             $('#requestedWorkers_visible').val(true);
             $('#status').val(@(Machete.Domain.WorkOrder.iActive));

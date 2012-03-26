@@ -55,6 +55,7 @@ namespace Machete.Domain
         public Person p { get; set; }
         public Worker w { get; set; }
         public Signin s { get; set; }
+        public int typeOfWorkID { get; set; }
 
         public WorkerSigninView(Person per, Signin sign)
         {
@@ -82,6 +83,7 @@ namespace Machete.Domain
             lotterySequence = s.lottery_sequence;
             expirationDate = p == null ? DateTime.MinValue : p.Worker.memberexpirationdate;
             memberStatus = p == null ? 0 : p.Worker.memberStatus;
+            typeOfWorkID = p == null ? 0 : p.Worker.typeOfWorkID;
         }
         public WorkerSigninView() { }
     }
