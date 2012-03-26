@@ -80,26 +80,24 @@ namespace Machete.Web.Controllers
         // POST: /WorkOrder/Delete/5
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public ActionResult lotterySignin(int lotterycardnum, DateTime lotterysignindate, string userName)
+        public ActionResult lotterySignin(int lotterycardnum, string lotterysignindate, string userName)
         {
+            DateTime signinDate = DateTime.MinValue;
             //var workOrder = woServ.GetWorkOrder(id);
-            string rtnstatus;
-            var wsi = _serv.GetSignin(lotterycardnum, lotterysignindate);
-            if (wsi != null)
-            {
-                if (wsi.lottery_timestamp == null)
-                {
-                    wsi.lottery_sequence = _serv.GetNextLotterySequence(lotterysignindate);
-                    wsi.lottery_timestamp = DateTime.Now;
-                    _serv.Save(wsi, userName);
-                }                
-                rtnstatus = "OK";
+            if (System.String.IsNullOrEmpty(lotterysignindate)) throw new ArgumentNullException("Lottery Sign-in date null or empty");
+            signinDate = DateTime.Parse(lotterysignindate);
 
-            }
-            else
+            string rtnstatus;
+            var wsi = _serv.GetSignin(lotterycardnum, signinDate);
+            if (wsi == null) throw new ArgumentNullException("Lottery cannot find Sign-in record to update");
+
+            if (wsi.lottery_timestamp == null)
             {
-                rtnstatus = "NO_WSI_REC";
-            }
+                wsi.lottery_sequence = _serv.GetNextLotterySequence(signinDate);
+                wsi.lottery_timestamp = DateTime.Now;
+                _serv.Save(wsi, userName);
+            }                
+            rtnstatus = "OK";
             var _signin = new WorkerSignin();
             return Json(new
             {
@@ -163,7 +161,8 @@ namespace Machete.Web.Controllers
                                        imageID = p.imageID,
                                        lotterySequence = p.lotterySequence,
                                        expirationDate = p.expirationDate.ToShortDateString(),
-                                       skills = _getSkillCodes(p.englishlevel, p.skill1, p.skill2, p.skill3)
+                                       skills = _getSkillCodes(p.englishlevel, p.skill1, p.skill2, p.skill3),
+                                       program = p.typeOfWorkID == Worker.iDWC ? "DWC" : "HHH"
                          };
             return Json(new
             {

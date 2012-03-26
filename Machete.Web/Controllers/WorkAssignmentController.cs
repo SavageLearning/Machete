@@ -120,9 +120,9 @@ namespace Machete.Web.Controllers
         {
             if (asmt.workerAssignedID > 0 && asmt.workerSigninID > 0) // green
                 return "completed";
-            if (asmt.workerAssignedID == 0 && asmt.workOrder.status == WorkOrder.iActive)
+            if (asmt.workerAssignedID == null && asmt.workOrder.status == WorkOrder.iCompleted)
                 return "incomplete";
-            if (asmt.workerAssignedID > 0 && asmt.workerSigninID == null)
+            if (asmt.workerAssignedID > 0 && asmt.workerSigninID == null && asmt.workOrder.status == WorkOrder.iCompleted)
                 return "orphaned";
             if (asmt.workOrder.status == WorkOrder.iCancelled)
                 return "cancelled";

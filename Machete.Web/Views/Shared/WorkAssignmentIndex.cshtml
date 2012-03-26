@@ -97,19 +97,29 @@
             "aoSearchCols" : [null, null, { "sSearch": "@(Model.ID)" }, null, null, null, null, null, null, null, null, null],
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) { 
                                     //show activation button (need at least 1 assignment to activate)
-                                    $('#activateWorkOrderButton-@(Model.ID)').show();
-                                    if (aData['WID'] > 0 && aData['WSIID'] > 0 && aData['status']) { // assigned
-                                        $(nRow).addClass('statusGreen');
-                                    } 
-                                    if (aData['WID'] == 0 && aData['status'] == @(Machete.Domain.WorkOrder.iCompleted)) { // Unassigned
-                                        $(nRow).addClass('statusOrange');
-                                    } 
-                                    if (aData['WID'] > 0 && aData['WSIID'] == 0 && aData['status'] == @(Machete.Domain.WorkOrder.iCompleted)) { // orphaned
-                                        $(nRow).addClass('statusYellow');
-                                    }
-                                    if (aData['status'] == @(Machete.Domain.WorkOrder.iCancelled)) { // cancelled
-                                        $(nRow).addClass('statusRed');
-                                    }
+                                    switch (aData['asmtStatus'])
+                                    {
+                                        // magic strings in WorkAssignmentController
+                                        case "active": $(nRow).addClass('statusBlue'); break;
+                                        case "completed": $(nRow).addClass('statusGreen'); break;
+                                        case "incomplete": $(nRow).addClass('statusOrange'); break;
+                                        case "orphaned": $(nRow).addClass('statusYellow'); break;
+                                        case "cancelled": $(nRow).addClass('statusRed'); break;
+                                        default: $(nRow).addClass('statusBlue');
+                                    }     
+                                    //$('#activateWorkOrderButton-@(Model.ID)').show();
+                                    //if (aData['WID'] > 0 && aData['WSIID'] > 0 && aData['status']) { // assigned
+                                    //    $(nRow).addClass('statusGreen');
+                                    //} 
+                                    //if (aData['WID'] == 0 && aData['status'] == @(Machete.Domain.WorkOrder.iCompleted)) { // Unassigned
+                                    //    $(nRow).addClass('statusOrange');
+                                    //} 
+                                    //if (aData['WID'] > 0 && aData['WSIID'] == 0 && aData['status'] == @(Machete.Domain.WorkOrder.iCompleted)) { // orphaned
+                                    //    $(nRow).addClass('statusYellow');
+                                    //}
+                                    //if (aData['status'] == @(Machete.Domain.WorkOrder.iCancelled)) { // cancelled
+                                    //    $(nRow).addClass('statusRed');
+                                    //}
                                     return nRow;
                             },
             "fnServerData": function ( sSource, aoData, fnCallback ) {
