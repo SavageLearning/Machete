@@ -156,6 +156,18 @@
   <data name="indextitle" xml:space="preserve">
     <value>ingresar::listar</value>
   </data>
+  <data name="lotteryClearConfirmation" xml:space="preserve">
+    <value>¿Está seguro que desea borrar este registro de la lotería? El trabajador perderá su lugar en el sorteo de la lotería.</value>
+  </data>
+  <data name="lotteryClearLink" xml:space="preserve">
+    <value>Borrar</value>
+  </data>
+  <data name="lotteryClearSubmit" xml:space="preserve">
+    <value>Borrar</value>
+  </data>
+  <data name="lotteryClearTitle" xml:space="preserve">
+    <value>Borrar el registro de la lotería</value>
+  </data>
   <data name="memberexpiration" xml:space="preserve">
     <value>Fecha de expiración</value>
   </data>

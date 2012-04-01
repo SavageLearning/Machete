@@ -106,6 +106,20 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
+        [UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager, Check-in")]
+        public ActionResult clearLottery(int id, string userName)
+        {
+            _serv.clearLottery(id, userName);
+            return Json(new
+            {
+                jobSuccess = true,
+                status = "OK",
+                deletedID = id
+            },
+            JsonRequestBehavior.AllowGet);
+        }
+
         //
         // GET: /WorkerSignin/Delete/5
         [UserNameFilter]
