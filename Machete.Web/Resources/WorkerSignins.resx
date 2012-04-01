@@ -156,6 +156,18 @@
   <data name="indextitle" xml:space="preserve">
     <value>workersignin::index</value>
   </data>
+  <data name="lotteryClearConfirmation" xml:space="preserve">
+    <value>Are you sure you want to clear this lottery record? The worker will lose their place in the lottery drawing.</value>
+  </data>
+  <data name="lotteryClearLink" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="lotteryClearSubmit" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="lotteryClearTitle" xml:space="preserve">
+    <value>Clear Lottery Record</value>
+  </data>
   <data name="memberexpiration" xml:space="preserve">
     <value>Member expiration</value>
   </data>

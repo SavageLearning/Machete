@@ -99,10 +99,20 @@ namespace Machete.Data.Infrastructure
         {
             return dbset.Where(where);
         }
+        /// <summary>
+        /// Returns tracked objects from database
+        /// </summary>
+        /// <param name="where"></param>
+        /// <returns></returns>
         public virtual IQueryable<T> GetManyQ(Func<T, bool> where)
         {
             return dbset.Where(where).AsQueryable();
         }
+        /// <summary>
+        /// Returns tracked objects from database
+        /// </summary>
+        /// <param name="where"></param>
+        /// <returns></returns>
         public virtual IQueryable<T> GetManyQ()
         {
             return dbset.AsQueryable();

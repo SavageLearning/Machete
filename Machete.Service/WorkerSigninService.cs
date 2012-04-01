@@ -16,7 +16,10 @@ namespace Machete.Service
         WorkerSignin GetSignin(int dwccardnum, DateTime date);
         void CreateSignin(WorkerSignin workerSignin, string user);
         int GetNextLotterySequence(DateTime date);
+        bool clearLottery(int id, string user);
+        bool sequenceLottery(DateTime date, string user);
     }
+
     public class WorkerSigninService : SigninServiceBase<WorkerSignin>, IWorkerSigninService
     {
         //
@@ -111,9 +114,48 @@ namespace Machete.Service
                                                      s.dwccardnum == signin.dwccardnum);
             if (sfound == 0) Create(signin, user);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
         public int GetNextLotterySequence(DateTime date)
         {
-            return repo.GetAllQ().Where(p => p.lottery_timestamp != null && EntityFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false).Count() + 1;
+            return repo.GetAllQ().Where(p => p.lottery_timestamp != null && 
+                                        EntityFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
+                                 .Count() + 1;
+        }
+
+        public bool clearLottery(int id, string user)
+        {
+            WorkerSignin wsi = repo.GetById(id);
+            DateTime date = wsi.dateforsignin;
+            wsi.lottery_sequence = null;
+            wsi.lottery_timestamp = null;
+            Save(wsi, user);
+            if (date != null)
+                sequenceLottery(date, user);
+            return true;
+        }
+
+        public bool sequenceLottery(DateTime date, string user)
+        {
+            IEnumerable<WorkerSignin> signins;
+            int i = 0;
+            // select and sort by timestamp
+            signins = repo.GetManyQ().Where(p => p.lottery_timestamp != null &&
+                                           EntityFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
+                                    .OrderBy(p => p.lottery_timestamp)
+                                    .AsEnumerable();
+            // reset sequence number
+            foreach (WorkerSignin wsi in signins)
+            {
+                i++;
+                wsi.lottery_sequence = i;                
+            }
+            // no logging as of now
+            uow.Commit();
+            return true;
         }
     }
 }

@@ -195,6 +195,13 @@
 			} );
 		},
         "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+            $(nRow).attr('ID', "wsiRec" +aData['recordid']);
+            var lotteryField = $(nRow).find('td:nth-child(2)');
+            var value = $(lotteryField).text();
+            if (lotteryField.text()) {
+                lotteryField.append('  ');
+                lotteryField.append('<a class="confirm_clearLottery" href="/WorkerSignin/clearLottery/'+aData['recordid']+'">Clear</a>');
+                }
             //$(nRow).attr('requestedID', aData['WSIID']);
             if (aData['WAID'] > 0) { // green -- WA record associated with WSI record
                 $(nRow).addClass('statusGreen');
@@ -475,6 +482,27 @@
             }
             $("#signinTable").dataTable().fnDraw();
             $("#availAssignTable").dataTable().fnDraw();            
+        });
+        $('.confirm_clearLottery').live('click', function (e) {
+            e.preventDefault;
+            //TODO: event is posting and returning page, not JSON
+            var action =  $(this).attr('href');
+            $.alerts.okButton = "@WorkerSignins.lotteryClearSubmit";
+            jConfirm('@WorkerSignins.lotteryClearConfirmation','@WorkerSignins.lotteryClearTitle',
+                function (r) {
+                    if (r == true) { 
+                        $.post(action, null, function(data) {
+                            $('#lotteryTable').dataTable().fnDraw();
+                                    
+                            if (!data.jobSuccess) {
+                                alert(data.rtnMessage);                                        
+                            } 
+                        });
+                    }
+                    $('#lotterycardnum').focus();                                                                     
+                });
+            $('#lotterycardnum').focus();                                                                     
+            return false;
         });
     });
     function DatePicker() {
