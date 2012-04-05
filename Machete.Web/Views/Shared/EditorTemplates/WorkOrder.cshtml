@@ -306,8 +306,11 @@
                                               $(myTr).find('td:eq(2)').text() + ' '+
                                               $(myTr).find('td:eq(4)').text();
           // handler function created by addRequestionBtn create event
-          M_workerRequestHandler_@(Model.ID)(myID, myLabel);
-            $('a.ui-dialog-titlebar-close').click();
+          //M_workerRequestHandler_@(Model.ID)(myID, myLabel);
+              $('#workerRequests2_WO-@(Model.ID)').append(
+                    $('<option></option>').val(myID).html(myLabel)                
+                );
+          $('a.ui-dialog-titlebar-close').click();
         });
         //////////////////////////////////////////////////
         //
@@ -324,11 +327,11 @@
             $('#workerTable-@(Model.ID)').show();
             //
             //Anon function to handle doubleclick of record selector
-            M_workerRequestHandler_@(Model.ID) = function (myID, myLabel){
-                $('#workerRequests2_WO-@(Model.ID)').append(
-                    $('<option></option>').val(myID).html(myLabel)                
-                );
-            }
+            //M_workerRequestHandler_@(Model.ID) = function (myID, myLabel){
+            //    $('#workerRequests2_WO-@(Model.ID)').append(
+            //        $('<option></option>').val(myID).html(myLabel)                
+            //    );
+            //}
             $("#workerDialog-@(Model.ID)").dialog({
                     height: 340,
                     width: 1000,
