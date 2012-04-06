@@ -78,10 +78,10 @@ namespace Machete.Domain
 
         public string getFullPseudoID()
         {
-            string WONum;
-            if (this.workOrder == null) WONum = "00000";
-            else if (this.workOrder.paperOrderNum.HasValue) WONum = this.workOrder.paperOrderNum.ToString();
-            else WONum = this.workOrderID.ToString();
+            int WONum;
+            if (this.workOrder == null) WONum = 0;
+            else if (this.workOrder.paperOrderNum.HasValue) WONum = (int)this.workOrder.paperOrderNum;
+            else WONum = this.workOrderID;
 
             return System.String.Format("{0,5:D5}", WONum)
                     + "-" + (this.pseudoID.HasValue ?
