@@ -16,7 +16,7 @@ namespace Machete.Data.Infrastructure
         T Add(T entity);
         void Delete(T entity);
         void Delete(Func<T, Boolean> predicate);
-        T GetById(long Id);
+        T GetById(int Id);
         T Get(Func<T, Boolean> where);
         IEnumerable<T> GetAll();
         IEnumerable<T> GetMany(Func<T, bool> where);
@@ -82,7 +82,7 @@ namespace Machete.Data.Infrastructure
             foreach (T obj in objects)
                 dbset.Remove(obj);
         } 
-        public virtual T GetById(long id)
+        public virtual T GetById(int id)
         {
             return dbset.Find(id);
         }

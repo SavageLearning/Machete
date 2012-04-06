@@ -230,11 +230,9 @@ namespace Machete.Web.Controllers
 
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager")]
-
         public JsonResult Unassign(int? waid, int? wsiid, string userName)
         {
             waServ.Unassign(waid, wsiid, userName);
-
             return Json(new
             {
                 jobSuccess = true,
@@ -249,10 +247,6 @@ namespace Machete.Web.Controllers
         public ActionResult Edit(int id)
         {
             WorkAssignment wa = waServ.Get(id);
-            if (wa.workerAssignedID != null)
-            {
-                wa.workerAssigned = wkrServ.GetWorker((int)wa.workerAssignedID);
-            }            
             return PartialView(wa);
         }
         //
@@ -262,15 +256,14 @@ namespace Machete.Web.Controllers
         public ActionResult Edit(int id, int? workerAssignedID, string userName)
         {
             WorkAssignment asmt = waServ.Get(id);
-            //check if workerAssigned changed; if so, unlink
+            //check if workerAssigned changed; if so, Unassign
             int? origWorker = asmt.workerAssignedID;
-
             if (workerAssignedID != origWorker)
                 waServ.Unassign(asmt.ID, asmt.workerSigninID, userName);     
+            //Update from HTML attributes
             UpdateModel(asmt);
-            // If workerAssigned changed, need to unassign WSI record
-            if (asmt.workerAssignedID != null)
-                asmt.workerAssigned = wkrServ.GetWorker((int)asmt.workerAssignedID);
+            //Save will link workerAssigned to Assignment record
+            // if changed from orphan assignment
             waServ.Save(asmt, userName);
                 
             return Json(new { jobSuccess = true }, JsonRequestBehavior.AllowGet);
