@@ -93,8 +93,12 @@ namespace Machete.Service
 
         public WorkAssignment Get(int id)
         {
-            var workAssignment = waRepo.GetById(id);
-            return workAssignment;
+            var wa = waRepo.GetById(id);
+            if (wa.workerAssignedID != null)
+            {
+                wa.workerAssigned = wRepo.GetById((int)wa.workerAssignedID);
+            }         
+            return wa;
         }
         #endregion
         public ServiceIndexView<WorkAssignment> GetIndexView(DispatchOptions o)
@@ -348,70 +352,238 @@ namespace Machete.Service
         #region ASSIGNS
         public bool Assign(WorkAssignment asmt, WorkerSignin signin, string user)
         {
+            int wid;
             //Assignments must be explicitly unassigned first; throws exception if either record is in assigned state
             if (signin == null) throw new NullReferenceException("WorkerSignin is null");
-            if (signin.WorkAssignmentID != null) throw new MacheteDispatchException("WorkerSignin already associated with WorkAssignment ID " + signin.WorkAssignmentID);
-            if (signin.WorkerID == null) throw new MacheteIntegrityException("WorkerSignin key not associated with a Worker record. Check worker record, does it have a public ID?");
             if (asmt == null) throw new NullReferenceException("WorkAssignment is null");
-            if (asmt.workerSigninID != null) throw new MacheteDispatchException("WorkAssignment already associated with WorkerSignin ID " + asmt.workerSigninID);
-            if (asmt.workerSigninID == null && asmt.workerAssignedID != null && asmt.workerAssignedID != signin.WorkerID) 
-                throw new MacheteDispatchException("Orphaned WorkAssignment, associated with Worker ID " + asmt.workerAssignedID +"; Unassign first, the assign to new Worker");
-            Worker worker = wRepo.Get(w => w.dwccardnum == signin.dwccardnum);
-            if (worker == null) throw new NullReferenceException("Worker for key " + signin.dwccardnum.ToString() + " is null");
-            if (worker.ID != signin.WorkerID) throw new MacheteIntegrityException("WorkerSignin's internal WorkerID and public worker ID don't match");
             //
-            // Link signin with 
+            // validate state of WSI and WA records
+            assignCheckWSI_WAID_must_be_null(signin);
+            assignCheckWSI_WID_cannot_be_null(signin);
+            assignCheckWA_WSIID_must_be_null(asmt);
+            assignCheckWA_legitimate_orphan(asmt, signin);
+            wid = assignCheckWSI_cardnumber_match(signin);
+            //
+            // Link signin with work assignment
             signin.WorkAssignmentID = asmt.ID;
             asmt.workerSigninID = signin.ID;
-            asmt.workerAssignedID = worker.ID;
+            asmt.workerAssignedID = wid;
+            //
+            // update timestamps and save
             asmt.updatedby(user);
             signin.updatedby(user);
             unitOfWork.Commit();
             _log(asmt.ID, user, "WSIID:" + signin.ID + " Assign successful");
             return true;
         }
-
+        /// <summary>
+        /// WorkerSignin's WAID must be null for an assignment
+        /// </summary>
+        /// <param name="wsi"></param>
+        private static void assignCheckWSI_WAID_must_be_null(WorkerSignin wsi)
+        {
+            if (wsi.WorkAssignmentID != null)
+                throw new MacheteDispatchException(
+                    "WorkerSignin already associated with WorkAssignment ID" +
+                    wsi.WorkAssignmentID);
+        }
+        /// <summary>
+        /// WorkerSignin's WID must not be null for an assignment
+        /// </summary>
+        /// <param name="wsi"></param>
+        private static void assignCheckWSI_WID_cannot_be_null(WorkerSignin wsi)
+        {
+            if (wsi.WorkerID == null)
+                throw new MacheteIntegrityException(
+                    "WorkerSignin key " + wsi.dwccardnum.ToString() + 
+                    "is not associated with a Worker record. " +
+                    "Machete cannot assign a worker when no Worker record exists.");
+        }
+        /// <summary>
+        /// WorkAssignment's WSIID must be null for an assignment
+        /// </summary>
+        /// <param name="wa"></param>
+        private static void assignCheckWA_WSIID_must_be_null(WorkAssignment wa)
+        {
+            //
+            //WA.WSIID must not point to a signin
+            if (wa.workerSigninID != null)
+                throw new MacheteDispatchException(
+                    "WorkAssignment already associated with WorkerSignin ID " +
+                    wa.workerSigninID);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="wa"></param>
+        /// <param name="wsi"></param>
+        private static void assignCheckWA_legitimate_orphan(WorkAssignment wa, WorkerSignin wsi)
+        {
+            if (wa.workerSigninID == null &&              //WA.WSIID == NULL
+                wa.workerAssignedID != null &&            //WA.WID != NULL
+                // Orphan Assignment if first two tests pass
+                // If orphan, can only assign to a WSI with the same WID. Otherwise, 
+                // user needs to unassign first
+                wa.workerAssignedID != wsi.WorkerID)   //WA.WID != WSI.WID
+                throw new MacheteDispatchException(
+                    "Orphaned WorkAssignment, associated with Worker ID " + 
+                    wa.workerAssignedID + "; Unassign first, the assign to new Worker");
+        }
+        /// <summary>
+        /// Check that WorkerSignin's Worker ID matches Worker's ID returned from cardnumber get
+        /// </summary>
+        /// <param name="wsi"></param>
+        /// <returns></returns>
+        private int assignCheckWSI_cardnumber_match(WorkerSignin wsi)
+        {
+            Worker worker = wRepo.Get(w => w.dwccardnum == wsi.dwccardnum);
+            if (worker == null) throw new NullReferenceException("Worker for key " + wsi.dwccardnum.ToString() + " is null");
+            if (worker.ID != wsi.WorkerID) throw new MacheteIntegrityException("WorkerSignin's internal WorkerID and public worker ID don't match");
+            return worker.ID;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="waid"></param>
+        /// <param name="wsiid"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public bool Unassign(int? waid, int? wsiid, string user)
         {
+            //UI lets user select either WSI or WA and click remove.
+            //Unassign decides which handlers to call
             WorkAssignment asmt = null;
             WorkerSignin signin = null;
-            if (wsiid != null)
-            {
-                signin = wsiRepo.GetById((int)wsiid);
-            }
-            if (waid != null)
-                asmt = waRepo.GetById((int)waid);
-
-
-            if (signin == null && asmt == null) throw new NullReferenceException("Signin and WorkAssignment are both null");
             //
-            //Try unassign with WorkAssignment record only
-            if (signin == null) // Assignment processing
+            // WorkerSignin but no WorkAssignment
+            if (wsiid != null && waid == null) unassignWorkerSigninOnly((int)wsiid, user);
+            //           
+            // WorkAssignment bu not WorkerSignin
+            if (waid != null && wsiid == null) unassignWorkAssignmentOnly((int)waid, user);
+            // Both
+            if (waid != null && wsiid != null) unassignBoth((int)waid, (int)wsiid, user);
+            // call error
+            if (waid == null && wsiid == null) 
+                throw new NullReferenceException("Signin and WorkAssignment are both null");
+            return true;
+        }
+
+        private void unassignWorkAssignmentOnly(int waid, string user)
+        {
+            // Get assignment
+            WorkAssignment wa = waRepo.GetById((int)waid);
+            if (wa == null) throw new NullReferenceException("WAID " + waid.ToString() + 
+                "returned a null Work Assignment record");
+            //
+            // Starting with WA:
+            // 1. Does WA.WSIID point to anything?
+            if (wa.workerSigninID == null) // No
             {
-                // legacy assignment; only thing to do is clear it.
-                // wssid(null), 
-                if (asmt.workerSigninID == null) //throw new MacheteIntegrityException("Unassign called on non-assigned WorkAssignment");
-                {
-                    asmt.workerAssignedID = null;
-                    unitOfWork.Commit();
-                    return true;
-                }
-                // Proper dispatch, called with only WorkAssignment
-                else
-                {
-                    signin = wsiRepo.GetById((long)asmt.workerSigninID);
-                }
+                // clear any orphan assignment
+                wa.workerAssignedID = null;
+                unitOfWork.Commit();
+                return;
             }
-            else if (asmt == null) //asmt must be null -- Signin processing
+            //
+            // 2. WA.WSIID points to something. Does it link back?
+            if (matchWAWSI(wa, null))
             {
-                if (signin.WorkAssignmentID == null) throw new MacheteIntegrityException("Unassign called on non-assigned WorkerSignin");
-                asmt = waRepo.GetById((long)signin.WorkAssignmentID);
+                // Unassign both
+                WorkerSignin wsi = wsiRepo.GetById((int)wa.workerSigninID);
+                unassignBoth(wa, wsi, user);
+                return;
             }
+            //
+            // 3. If points to something, but doesn't link bach, does something
+            //    match it's link?
+            WorkerSignin linkedWSI = wsiRepo.GetById((int)wa.workerSigninID);            
+            if (linkedWSI.WorkAssignmentID == null || matchWAWSI(null, linkedWSI))
+            {
+                //Something matches its link. My link to something assumed bad.
+                wa.workerSigninID = null;
+                unitOfWork.Commit();
+                return;
+            }
+            else throw new MacheteIntegrityException("Unassign found chain of mislinked records, starting with WAID " + wa.ID.ToString());                
+        }
+
+        private bool matchWAWSI(WorkAssignment wa, WorkerSignin wsi)
+        {
+            if (wa == null && wsi == null) throw new NullReferenceException("WorkAssignment and WorkerSignin objects both null.");
+            if (wa == null)
+            {
+                // only have WSI and wsi.WAID is null. no match.
+                if (wsi.WorkAssignmentID == null) return false;
+                wa = waRepo.GetById((int)wsi.WorkAssignmentID);
+                if (wa == null) throw new NullReferenceException("WorkAssignment GetById returned null");
+            }
+            if (wsi == null)
+            {
+                // only have WA and wa.WSIID is null. no match
+                if (wa.workerSigninID == null) return false;
+                wsi = wsiRepo.GetById((int)wa.workerSigninID);
+                if (wsi == null) throw new NullReferenceException("WorkerSignin GetById returned null");
+            }
+
+            if (wa.workerSigninID == wsi.ID &&
+
+                wsi.WorkAssignmentID == wa.ID &&
+
+                wa.workerAssignedID == wsi.WorkerID) return true;
+            else return false;
+        }
+
+        private void unassignWorkerSigninOnly(int wsiid, string user)
+        {
+            // get workersignin
+            WorkerSignin wsi = wsiRepo.GetById(wsiid); 
+            if (wsi == null) throw new NullReferenceException("WSIID " + wsiid.ToString() +
+                "returned a null Worker Signin record");
+            //
+            // Starting with WSI
+            // 1. Does WSI.WAID point to anything?
+            if (wsi.WorkAssignmentID == null) // No
+                return; //nothing to clear
+            //
+            // 2. WSI.WAID points to something. Does something link back?
+            if (matchWAWSI(null, wsi)) // yes
+            {
+                //Unassign both
+                WorkAssignment wa = waRepo.GetById((int)wsi.WorkAssignmentID);
+                unassignBoth(wa, wsi, user);
+                return;
+            }
+            //
+            // 3. If points to something, but something doesn't link back,
+            //    does something match it's link?
+            //if (wsi.WorkAssignmentID == null) throw new MacheteIntegrityException("Unassign called on non-assigned WorkerSignin");
+            WorkAssignment linkedWA = waRepo.GetById((int)wsi.WorkAssignmentID);
+            if (matchWAWSI(linkedWA, null))
+            {
+                //Something matches its link. My link to something assumed bad. 
+                wsi.WorkAssignmentID = null;
+                unitOfWork.Commit();
+                return;
+            }
+            else throw new MacheteIntegrityException("Unassign found chain of mislinked records, starting with WSIID " + wsi.ID.ToString());
+        }
+
+        private void unassignBoth(int waid, int wsiid, string user)
+        {
+            WorkAssignment wa = waRepo.GetById(waid);
+            WorkerSignin wsi = wsiRepo.GetById(wsiid);
+            if (matchWAWSI(wa, wsi)) 
+            {
+                unassignBoth(wa, wsi, user);
+            }
+            else throw new Exception("The Worker and the Assignment do not match");
+        }
+
+        private void unassignBoth(WorkAssignment asmt, WorkerSignin signin, string user)
+        {
             //Have both assignment and signin. 
             if (signin == null || asmt == null) throw new NullReferenceException("Signin and WorkAssignment are both null");
             //Try unassign with WorkerSignin only 
-            if (signin.WorkAssignmentID != asmt.ID) throw new MacheteIntegrityException("WorkerSignin doesn't link back to referencing Assignment");          
-            if (asmt.workerSigninID != signin.ID) throw new MacheteIntegrityException("WorkAssignment doesn't link back to referencing WorkerSignin");            
             signin.WorkAssignmentID = null;
             asmt.workerSigninID = null;
             asmt.workerAssignedID = null;
@@ -419,8 +591,8 @@ namespace Machete.Service
             signin.updatedby(user);
             unitOfWork.Commit();
             _log(asmt.ID, user, "WSIID:" + signin.ID + " Unassign successful");
-            return true;
         }
+
         #endregion
         #region CRUD
         public WorkAssignment Create(WorkAssignment workAssignment, string user)
@@ -445,10 +617,15 @@ namespace Machete.Service
             unitOfWork.Commit();
         }
 
-        public void Save(WorkAssignment workAssignment, string user)
+        public void Save(WorkAssignment wa, string user)
         {
-            workAssignment.updatedby(user);
-            _log(workAssignment.ID, user, "WorkAssignment edited");
+            //4.5.12-Moved down from Controller; solving WSI/WA integrity
+            if (wa.workerAssignedID != null)
+            {
+                wa.workerAssigned = wRepo.GetById((int)wa.workerAssignedID);
+            }
+            wa.updatedby(user);
+            _log(wa.ID, user, "WorkAssignment edited");
             unitOfWork.Commit();
         }
 
