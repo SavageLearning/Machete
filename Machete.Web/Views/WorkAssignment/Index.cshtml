@@ -217,8 +217,10 @@
         $("#availAssignTable").dataTable().fnDraw();
     }
     //
-    //
-    jqrfyTable($("#lotteryTable"), null, lotteryDTOptions, wsiDblClickEvent);
+    // 4.6.12 - removed jqrfyTable call -- causing bug with workerTable
+    //jqrfyTable($("#lotteryTable"), null, lotteryDTOptions, wsiDblClickEvent);
+    $("#lotteryTable").dataTable(lotteryDTOptions);
+    $("#lotteryTable").find('tbody').dblclick(wsiDblClickEvent);
     $('#lotteryList').hide();
     $('#lotteryTable').hide();
     $('#bOpenLottery').click(function () {
