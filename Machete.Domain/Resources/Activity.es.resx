@@ -129,6 +129,9 @@
   <data name="dateStartrequired" xml:space="preserve">
     <value>Una hora de inicio es obligatoria</value>
   </data>
+  <data name="dwccardnum" xml:space="preserve">
+    <value>Miembro #:</value>
+  </data>
   <data name="name" xml:space="preserve">
     <value>Nombre de actividad</value>
   </data>

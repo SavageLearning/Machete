@@ -73,6 +73,9 @@ namespace Machete.Web.Controllers
                              tablabel = _getTabLabel(p, CI.TwoLetterISOLanguageName),
                              recordid = p.ID,
                              notes = p.notes,
+                             datefrom = p.dateFrom.ToShortDateString(),
+                             dateto = p.dateTo == null ? "" : ((DateTime)p.dateTo).ToShortDateString(),
+                             fileCount = p.JoinEventImages.Count(),
                              type = LookupCache.byID(p.eventType, CI.TwoLetterISOLanguageName),
                              dateupdated = Convert.ToString(p.dateupdated),
                              Updatedby = p.Updatedby
