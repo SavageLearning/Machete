@@ -87,6 +87,22 @@ namespace Machete.Test.IntegrationTests.System
             Assert.AreEqual(1, result.Count(), "Failed to reactivate members");
         }
 
+        [TestMethod]
+        public void DbSet_WorkerCache_ExpireMembers_doesnt_activate_1_null_reactivation_date()
+        {
+
+            //Arrange
+            var wkr = DB.Workers.Single(w => w.dwccardnum == 30042);
+            wkr.memberReactivateDate = null;
+            DB.SaveChanges();
+            //Act
+            WorkerCache.ReactivateMembers(DB);
+            IEnumerable<Worker> result = DB.Workers.AsEnumerable()
+                .Where(p => p.memberStatus == Worker.iSanctioned);
+            //Assert
+            Assert.AreEqual(1, result.Count(), "Failed to reactivate members");
+        }
+
         private static void recInitialize(MacheteContext DB)
         {
             Person p1 = (Person)Records.person.Clone(); 

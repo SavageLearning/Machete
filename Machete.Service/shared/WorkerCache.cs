@@ -90,7 +90,8 @@ namespace Machete.Service
         {
             bool rtn = false;
             IQueryable<Worker> list = db.Workers
-                .Where(w => w.memberReactivateDate < DateTime.Now &&
+                .Where(w => w.memberReactivateDate != null &&
+                    w.memberReactivateDate < DateTime.Now &&
                     w.memberStatus == Worker.iSanctioned);
             //
             if (list.Count() > 0) rtn = true;
