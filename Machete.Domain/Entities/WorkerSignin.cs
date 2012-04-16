@@ -15,6 +15,7 @@ namespace Machete.Domain
         public virtual Worker worker {get; set;}
         [Required(ErrorMessageResourceName = "dwccardnum", ErrorMessageResourceType = typeof(Resources.Worker))]
         [RegularExpression("^[0-9]{5,5}$", ErrorMessageResourceName = "dwccardnumerror", ErrorMessageResourceType = typeof(Resources.Worker))]
+        [LocalizedDisplayName("dwccardnum", NameResourceType = typeof(Resources.Worker))]
         public int dwccardnum { get; set; }
         public int? WorkerID { get; set; }
         public int? memberStatus { get; set; }

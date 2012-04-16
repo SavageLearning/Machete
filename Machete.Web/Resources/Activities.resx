@@ -165,6 +165,9 @@
   <data name="listlink" xml:space="preserve">
     <value>List activities</value>
   </data>
+  <data name="signinlistlink" xml:space="preserve">
+    <value>Registrations</value>
+  </data>
   <data name="viewlink" xml:space="preserve">
     <value>Print</value>
   </data>

@@ -6,7 +6,7 @@
 }
 <div id="activitySigninTabs_@(Model.ActivityID)">
     <ul>
-        <li><a href="#container" id="activitySigninListTab_@(Model.ID)" class="ListTab">@Activities.listlink</a>
+        <li><a href="#container" id="activitySigninListTab_@(Model.ID)" class="ListTab">@Activities.signinlistlink</a>
         </li>
     </ul>
     <div id="container" class="clearfix">
@@ -24,7 +24,7 @@
                             @Html.TextBox("dwccardnum", "", new { style = "width: 100px;" })
                             @Html.ValidationMessageFor(model => model.dwccardnum)
                         </div>
-@*                        <div class="tb-field">
+                            @*<div class="tb-field">
                             @Html.TextBox("dateforsignin",
                             Html.Encode(String.Format("{0:mm/dd/yy}", DateTime.Today.ToShortDateString())),
                             new { @class = "ui-datepicker", style = "width: 100px;" })

@@ -132,6 +132,12 @@
   <data name="createtitle" xml:space="preserve">
     <value>Crear evento</value>
   </data>
+  <data name="dateFrom" xml:space="preserve">
+    <value>De</value>
+  </data>
+  <data name="dateTo" xml:space="preserve">
+    <value>A</value>
+  </data>
   <data name="deleteconfirmation" xml:space="preserve">
     <value>¿Estás seguro que quieres eliminar este evento? Toda la información será borrada para siempre.</value>
   </data>
@@ -164,6 +170,9 @@
   </data>
   <data name="eventtype" xml:space="preserve">
     <value>Tipo de evento</value>
+  </data>
+  <data name="fileCount" xml:space="preserve">
+    <value>Archivos adjuntos</value>
   </data>
   <data name="indexreturnlink" xml:space="preserve">
     <value>Volver a la lista de eventos</value>

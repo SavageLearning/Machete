@@ -69,7 +69,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\EdClass.cs" />
+    <Compile Include="Entities\Activity.cs" />
     <Compile Include="Entities\Event.cs" />
     <Compile Include="Entities\Exceptions.cs" />
     <Compile Include="Entities\Image.cs" />
