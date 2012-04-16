@@ -20,7 +20,7 @@ namespace Machete.Service
         {
             cache = MemoryCache.Default;
             DB = db;
-            FillCache();
+            FillCache();            
         }
         //
         //
@@ -32,6 +32,8 @@ namespace Machete.Service
             CacheItem wCacheItem = new CacheItem("workerCache", workers);
             cache.Set(wCacheItem, policy);
             //DB.Dispose();
+            ReactivateMembers(DB);
+            ExpireMembers(DB);            
         }
         //
         //
@@ -57,6 +59,48 @@ namespace Machete.Service
         public static void Refresh(MacheteContext db)
         {
             FillCache(db);            
+        }
+        /// <summary>
+        /// Expires active workers based on expiration date
+        /// </summary>
+        /// <param name="db"></param>
+        /// <returns>true if at least one record expired</returns>
+        public static bool ExpireMembers(MacheteContext db)
+        {
+            bool rtn = false;
+            IQueryable<Worker> list = db.Workers
+                .Where(w => w.memberexpirationdate < DateTime.Now && 
+                    w.memberStatus == Worker.iActive);
+            //
+            if (list.Count() > 0) rtn = true;
+            //
+            foreach (Worker wkr in list)
+            {
+                wkr.memberStatus = Worker.iExpired;                
+            }
+            db.SaveChanges();
+            return rtn;
+        }
+        /// <summary>
+        /// Reactivates sanctioned workers based on reactivation date
+        /// </summary>
+        /// <param name="db"></param>
+        /// <returns>true if at least one record reactivated</returns>
+        public static bool ReactivateMembers(MacheteContext db) 
+        {
+            bool rtn = false;
+            IQueryable<Worker> list = db.Workers
+                .Where(w => w.memberReactivateDate < DateTime.Now &&
+                    w.memberStatus == Worker.iSanctioned);
+            //
+            if (list.Count() > 0) rtn = true;
+            //
+            foreach (Worker wkr in list)
+            {
+                wkr.memberStatus = Worker.iActive;
+            }
+            db.SaveChanges();
+            return rtn;
         }
     }
 }
