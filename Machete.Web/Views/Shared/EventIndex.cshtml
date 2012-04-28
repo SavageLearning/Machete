@@ -49,7 +49,15 @@
                 {"mDataProp": "fileCount" },
                 {"mDataProp": "dateupdated" },
                 { "mDataProp": "Updatedby", "bSortable": false }
-            ]                
+            ],
+            "fnServerData": function ( sSource, aoData, fnCallback ) {
+			    /* Add some extra data to the sender */			    
+                aoData.push( { "name": "personID", "value": $('#personID').val() } );
+			    $.getJSON( sSource, aoData, function (json) { 
+				    /* Do whatever additional processing you want on the callback, then tell DataTables */
+				    fnCallback(json)
+			    } );
+		    }             
         }, null, "@(recType)");
         $('#eventTable_filter input').attr('ID','personSearchBox');
     });

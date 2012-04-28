@@ -40,7 +40,7 @@ namespace Machete.Service
         {
             this.logPrefix = "ActivitySignin";
         }
-        public ServiceIndexView<WorkerSigninView> GetIndexView(DispatchOptions o)
+        public ServiceIndexView<WorkerSigninView> GetIndexView(dispatchViewOptions o)
         {
             IQueryable<ActivitySignin> queryable = repo.GetAllQ();
             //

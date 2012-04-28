@@ -64,7 +64,7 @@ namespace Machete.Web.Controllers
             //Get all the records
             System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
 
-            ServiceIndexView<WorkAssignment> was = waServ.GetIndexView(new DispatchOptions {
+            ServiceIndexView<WorkAssignment> was = waServ.GetIndexView(new dispatchViewOptions {
                     CI = CI,
                     search = param.sSearch,
                     date = param.todaysdate == null ? null : (DateTime?)DateTime.Parse(param.todaysdate),

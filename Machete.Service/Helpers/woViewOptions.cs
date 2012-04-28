@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace Machete.Service.Helpers
 {
-    public class viewOptions
+    public class woViewOptions
     {
         public CultureInfo CI     { get; set; }
         public string search { get; set; }
@@ -24,9 +24,9 @@ namespace Machete.Service.Helpers
         public bool showExpiredWorker { get; set; }
         public bool showExpelledWorker { get; set; }
 
-        public viewOptions() { }
+        public woViewOptions() { }
 
-        public viewOptions(object o)
+        public woViewOptions(object o)
         {
             Type objectType = o.GetType();
 

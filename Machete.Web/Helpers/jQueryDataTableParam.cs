@@ -141,6 +141,7 @@ namespace Machete.Web.Helpers
         /// </summary>
         public string dwccardnum { get; set; }
         public int? activityID { get; set; }
+        public int? personID { get; set; }
         public string wa_grouping { get; set; }
         public int? typeofwork_grouping { get; set; }
         public int? status { get; set; }

@@ -27,7 +27,7 @@ namespace Machete.Service
         bool Unassign(int? wsiid, int? waid, string user);
         void Delete(int id, string user);
         void Save(WorkAssignment workAssignment, string user);
-        ServiceIndexView<WorkAssignment> GetIndexView(DispatchOptions o);
+        ServiceIndexView<WorkAssignment> GetIndexView(dispatchViewOptions o);
     }
 
     // Business logic for WorkAssignment record management
@@ -101,7 +101,7 @@ namespace Machete.Service
             return wa;
         }
         #endregion
-        public ServiceIndexView<WorkAssignment> GetIndexView(DispatchOptions o)
+        public ServiceIndexView<WorkAssignment> GetIndexView(dispatchViewOptions o)
         {
             IQueryable<WorkAssignment> queryableWA = waRepo.GetAllQ();
             lkup_dwc = Worker.iDWC;
@@ -662,7 +662,7 @@ namespace Machete.Service
 
         }
     }
-    public class DispatchOptions
+    public class dispatchViewOptions
     {
             public CultureInfo CI;
             public string search;

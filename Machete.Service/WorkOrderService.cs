@@ -31,7 +31,7 @@ namespace Machete.Service
         WorkOrder CreateWorkOrder(WorkOrder workOrder, string user);
         void DeleteWorkOrder(int id, string user);
         void SaveWorkOrder(WorkOrder workOrder, string user);
-        ServiceIndexView<WorkOrder> GetIndexView(viewOptions opt);
+        ServiceIndexView<WorkOrder> GetIndexView(woViewOptions opt);
 
     }
 
@@ -151,9 +151,9 @@ namespace Machete.Service
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="o">viewOptions object</param>
+        /// <param name="o">woViewOptions object</param>
         /// <returns></returns>
-        public ServiceIndexView<WorkOrder> GetIndexView(viewOptions o)
+        public ServiceIndexView<WorkOrder> GetIndexView(woViewOptions o)
         {
             #region FILTER
             //Get all the records

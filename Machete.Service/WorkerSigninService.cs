@@ -50,7 +50,7 @@ namespace Machete.Service
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public ServiceIndexView<WorkerSigninView> GetIndexView(DispatchOptions o)
+        public ServiceIndexView<WorkerSigninView> GetIndexView(dispatchViewOptions o)
         {
             IQueryable<WorkerSignin> queryable = repo.GetAllQ();
             //
