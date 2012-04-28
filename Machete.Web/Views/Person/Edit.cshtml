@@ -43,7 +43,9 @@
             using (Html.BeginForm("Delete", "Person", FormMethod.Post,
                                     new { @class = "edittab-form", @id = "DeletePerson-" + Model.ID }))
             {
+                @* TODO: create UI tests, remove generic "ID" label *@
                 @Html.HiddenFor(model => model.ID);
+                @Html.Hidden("personID", Model.ID);                                  
             }
         }
     </div>

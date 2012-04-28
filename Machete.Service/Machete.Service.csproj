@@ -76,7 +76,7 @@
     <Compile Include="shared\Exceptions.cs" />
     <Compile Include="Helpers\OrderSummary.cs" />
     <Compile Include="Helpers\ServiceIndexView.cs" />
-    <Compile Include="Helpers\viewOptions.cs" />
+    <Compile Include="Helpers\woViewOptions.cs" />
     <Compile Include="ImageService.cs" />
     <Compile Include="shared\LookupCache.cs" />
     <Compile Include="PersonService.cs" />

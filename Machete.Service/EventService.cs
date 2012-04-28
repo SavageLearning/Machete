@@ -12,6 +12,7 @@ namespace Machete.Service
     public interface IEventService
     {
         IEnumerable<Event> GetEvents();
+        IEnumerable<Event> GetEvents(int? PID);
         Event GetEvent(int id);
         Event CreateEvent(Event evnt, string user);
         void DeleteEvent(int id, string user);
@@ -38,6 +39,18 @@ namespace Machete.Service
         public IEnumerable<Event> GetEvents()
         {
             var events = eventRepository.GetAll();
+            return events;
+        }
+
+        public IEnumerable<Event> GetEvents(int? PID)
+        {
+            IEnumerable<Event> events;
+            if (PID == null)
+            {
+                events = eventRepository.GetAll();
+                return events;
+            }
+            events = eventRepository.GetMany(e => e.PersonID == PID);
             return events;
         }
 

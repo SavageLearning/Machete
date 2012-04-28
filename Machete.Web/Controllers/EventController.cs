@@ -38,7 +38,7 @@ namespace Machete.Web.Controllers
         {
             System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
             //Get all the records
-            var allEvents = _serv.GetEvents();
+            var allEvents = _serv.GetEvents(param.personID);
             IEnumerable<Event> filteredEvents;
             IEnumerable<Event> sortedEvents;
             //Search based on search-bar string 

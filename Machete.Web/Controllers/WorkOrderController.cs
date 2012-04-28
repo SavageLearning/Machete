@@ -103,7 +103,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
-            viewOptions opt = new viewOptions();
+            woViewOptions opt = new woViewOptions();
             opt.CI = (System.Globalization.CultureInfo)Session["Culture"];
             opt.search = param.sSearch;
             opt.EmployerID = string.IsNullOrEmpty(param.searchColName("EID")) ? (int?)null : Convert.ToInt32(param.searchColName("EID"));//employerID

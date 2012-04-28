@@ -99,7 +99,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Check-in")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
-            ServiceIndexView<WorkerSigninView> was = serv.GetIndexView(new DispatchOptions
+            ServiceIndexView<WorkerSigninView> was = serv.GetIndexView(new dispatchViewOptions
             {
                 CI = CI,
                 search = param.sSearch,

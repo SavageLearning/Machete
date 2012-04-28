@@ -16,8 +16,8 @@ namespace Machete.Service
         //T GetSignin(int dwccardnum, DateTime date);
         void CreateSignin(T workerSignin, string user);
         Image getImage(int dwccardnum);
-        ServiceIndexView<WorkerSigninView> GetIndexView(DispatchOptions o);
-        //ServiceIndexView<WorkerSigninView> GetIndexView(DispatchOptions o, IQueryable<T> repo);
+        ServiceIndexView<WorkerSigninView> GetIndexView(dispatchViewOptions o);
+        //ServiceIndexView<WorkerSigninView> GetIndexView(dispatchViewOptions o, IQueryable<T> repo);
     }
     public abstract class SigninServiceBase<T> : ServiceBase<T> where T : Signin
     {
@@ -66,11 +66,11 @@ namespace Machete.Service
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public ServiceIndexView<WorkerSigninView> GetIndexView(DispatchOptions o)
+        public ServiceIndexView<WorkerSigninView> GetIndexView(dispatchViewOptions o)
         {
             return GetIndexView(o, repo.GetAllQ());
         }
-        protected ServiceIndexView<WorkerSigninView> GetIndexView(DispatchOptions o, IQueryable<Signin> queryable)
+        protected ServiceIndexView<WorkerSigninView> GetIndexView(dispatchViewOptions o, IQueryable<Signin> queryable)
         {
             //Get all the records
             IQueryable<Signin> queryableWSI = queryable;
