@@ -200,14 +200,15 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public ActionResult View(int id)
-        {
-            EmployerViewModel _vm = new EmployerViewModel();
-            _vm.employer = serv.Get(id);
-            _vm.orders = serv.GetOrders(id);
-            return View(_vm);
-        }
+        // TODO: remove employer view model
+        //[Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        //public ActionResult View(int id)
+        //{
+        //    EmployerViewModel _vm = new EmployerViewModel();
+        //    _vm.employer = serv.Get(id);
+        //    _vm.orders = serv.GetOrders(id);
+        //    return View(_vm);
+        //}
         #endregion
 
         #region Delete

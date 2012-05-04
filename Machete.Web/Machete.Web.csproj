@@ -430,8 +430,6 @@
       <DependentUpon>WorkOrders.resx</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\WorkOrderGroupPrintView.cs" />
-    <Compile Include="ViewModel\WorkerSigninViewModel.cs" />
-    <Compile Include="ViewModel\WorkerViewModel.cs" />
     <Compile Include="ViewModel\EmployerViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -690,7 +688,6 @@
     <None Include="combres.readme" />
     <None Include="Content\images\Sorting icons.psd" />
     <Content Include="Views\Person\View.cshtml" />
-    <Content Include="Views\Worker\View.cshtml" />
     <Content Include="Views\Employer\Index.cshtml" />
     <Content Include="Views\Employer\Create.cshtml" />
     <Content Include="Views\Employer\Edit.cshtml" />

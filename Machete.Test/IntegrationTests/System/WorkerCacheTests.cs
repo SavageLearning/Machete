@@ -86,8 +86,6 @@ namespace Machete.Test.IntegrationTests.System
             //Assert
             Assert.AreEqual(1, result.Count(), "Failed to reactivate members");
         }
-
-        [TestMethod]
         public void DbSet_WorkerCache_ExpireMembers_doesnt_activate_1_null_reactivation_date()
         {
 

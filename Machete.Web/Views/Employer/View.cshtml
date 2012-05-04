@@ -1,4 +1,5 @@
-﻿@model Machete.Web.ViewModel.EmployerViewModel
+﻿@* TODO: remove employer view model for printing
+@model Machete.Web.ViewModel.EmployerViewModel
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
 @using Machete.Domain.Resources
@@ -24,4 +25,4 @@
     <h3>@Employers.boxlegend</h3>
     @Html.EditorFor(model => model.employer)
 
-@Html.DisplayFor(model => model.orders, "WorkOrderIndex")
+@Html.DisplayFor(model => model.orders, "WorkOrderIndex")*@
