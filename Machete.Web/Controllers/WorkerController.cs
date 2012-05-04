@@ -191,26 +191,6 @@ namespace Machete.Web.Controllers
 
         }
         //
-        //GET: /Worker/View/5
-        //
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk, User")]
-        public ActionResult View(int id)
-        {
-            Worker _worker = workerService.GetWorker(id);
-            WorkerViewModel _model = new WorkerViewModel();
-            _model.worker = _worker;
-            _model.person = _worker.Person;
-            if (_model.worker.ImageID != null)
-            {
-                _model.image = imageServ.GetImage((int)_worker.ImageID);
-            }
-            else
-            {
-                _model.image = new Image();
-            }
-            return View(_model);
-        }
-        //
         // GET: /Worker/Delete/5
         #region delete
         [HttpPost, UserNameFilter]

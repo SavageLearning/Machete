@@ -35,9 +35,10 @@
 @Html.Partial("WorkOrderIndex", Model)
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#viewEmployer-@Model.ID').click(function () {
-            printwindow = window.open('/Employer/View/@Model.ID');
-        });
+        // TODO: Remove Employer View Model
+        //$('#viewEmployer-@Model.ID').click(function () {
+        //    printwindow = window.open('/Employer/View/@Model.ID');
+        //});
         $('.formButton').button();
         $('#employerName').focus();
         //

@@ -96,9 +96,6 @@ namespace Machete.Test.Controllers
             //Arrange
             var _worker = new Worker();
             var _person = new Person();
-            var _viewmodel = new WorkerViewModel();
-            _viewmodel.person = _person;
-            _viewmodel.worker = _worker;
             //
             _wserv.Setup(p => p.CreateWorker(_worker, "UnitTest")).Returns(_worker);
             _pserv.Setup(p => p.CreatePerson(_person, "UnitTest")).Returns(_person);
@@ -135,9 +132,6 @@ namespace Machete.Test.Controllers
             //Arrange
             var _worker = new Worker();
             var _person = new Person();
-            var _viewmodel = new WorkerViewModel();
-            _viewmodel.person = _person;
-            _viewmodel.worker = _worker;
             int testid = 4242;
             Person fakeperson = new Person();
             _wserv.Setup(p => p.GetWorker(testid)).Returns(_worker);
@@ -160,9 +154,6 @@ namespace Machete.Test.Controllers
             Worker savedworker = new Worker();
             Person fakeperson = new Person();
             fakeworker.Person = fakeperson;
-            WorkerViewModel _viewmodel = new WorkerViewModel();
-            _viewmodel.person = fakeperson;
-            _viewmodel.worker = fakeworker;
 
             string user = "TestUser";
             _wserv.Setup(p => p.GetWorker(testid)).Returns(fakeworker);

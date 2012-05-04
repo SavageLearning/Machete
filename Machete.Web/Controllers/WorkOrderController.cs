@@ -45,9 +45,10 @@ namespace Machete.Web.Controllers
         }
  
         #region Index
-        //
-        // GET: /WorkOrder/
-        //
+        /// <summary>
+        /// Returns WorkOrder default page
+        /// </summary>
+        /// <returns></returns>
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Index()
         {
@@ -57,16 +58,23 @@ namespace Machete.Web.Controllers
         #endregion
 
         #region AJaxSummary
+        /// <summary>
+        /// Provides json grid of order summary and their statuses
+        /// </summary>
+        /// <param name="param">contains paramters for filtering</param>
+        /// <returns>JsonResult for DataTables consumption</returns>
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult AjaxSummary(jQueryDataTableParam param)
         {
             System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
-            //Get all the records
+            //
+            //pass filter parameters to service level
             ServiceIndexView<WOWASummary> filteredSummary = 
                 woServ.CombinedSummary(param.sSearch,
                     Request["sSortDir_0"] == "asc" ? false : true,
                     param.iDisplayStart,
                     param.iDisplayLength);
+            //
             //return what's left to datatables
             var result = from p in filteredSummary.query
                          select new[] { System.String.Format("{0:MM/dd/yyyy}", p.date),
@@ -96,10 +104,10 @@ namespace Machete.Web.Controllers
 
         #region Ajaxhandler
         /// <summary>
-        /// Processes display requests from DataTables.Net javascript library. Called from /Index
+        /// Provides json grid of orders
         /// </summary>
-        /// <param name="param">Datatables.Net parameters object</param>
-        /// <returns>MVC Action Result</returns>
+        /// <param name="param">contains parameters for filtering</param>
+        /// <returns>JsonResult for DataTables consumption</returns>
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
@@ -153,11 +161,15 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         } 
-
-
+        /// <summary>
+        /// determines displayState value in WorkOrder/AjaxHandler
+        /// </summary>
+        /// <param name="wo">WorkOrder</param>
+        /// <returns>status string</returns>
         private string _getDisplayState(WorkOrder wo)
         {
             string status = LookupCache.byID(wo.status, "en");
+            //TODO: Pull out WorkOrder status strings, use WorkOrder object reference
             if (status == "Completed")
             {
                 if (wo.workAssignments.Count(wa => wa.workerAssignedID == null) > 0) return "Unassigned";

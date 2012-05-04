@@ -43,10 +43,11 @@
         $.validator.unobtrusive.parseDynamicContent($('#workderEditTab-@Model.ID'));
         //
         // open work order view for printing
-        $('#viewWorker-@(Model.ID)').click(function () {
-            printwindow = window.open('/Worker/View/@(Model.ID)');
+        // TODO: remove worker print
+        //$('#viewWorker-@(Model.ID)').click(function () {
+        //    printwindow = window.open('/Worker/View/@(Model.ID)');
             //printwindow.print();
-        });
+        //});
         //
         // Confirm delete event
         $('#deleteWorkerButton-@Model.ID').mUI('formClickDelete', {

@@ -9,9 +9,10 @@ using Machete.Domain;
 
 namespace Machete.Web.ViewModel
 {
-    public class EmployerViewModel
-    {
-        public Employer employer { get; set; }
-        public IEnumerable<WorkOrder> orders { get; set; }
-    }
+    //TODO: remove employer view model (printing)
+    //public class EmployerViewModel
+    //{
+    //    public Employer employer { get; set; }
+    //    public IEnumerable<WorkOrder> orders { get; set; }
+    //}
 }
