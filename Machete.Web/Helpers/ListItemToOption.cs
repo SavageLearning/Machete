@@ -9,6 +9,11 @@ namespace System.Web.Mvc.Html
 {
     public static class SelectExtensions
     {
+        /// <summary>
+        /// Handles extra attributes for WorkAssignment skill dropdown
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         internal static string ListItemToOption(SelectListItemEx item)
         {
             TagBuilder builder = new TagBuilder("option")
@@ -34,7 +39,9 @@ namespace System.Web.Mvc.Html
 
 namespace System.Web.Mvc
 {
-
+    /// <summary>
+    /// SelectListItem with extra properties for WorkAssignment skill dropdown
+    /// </summary>
     public class SelectListItemEx : SelectListItem
     {
         public string wage

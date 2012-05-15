@@ -105,6 +105,7 @@ namespace Machete.Web.Helpers
             skillLevelDefault = 1;         
             //
             skillDefault = getDefaultID("skill");
+
             yesnoEN = new List<SelectListItem>();
             yesnoEN.Add(new SelectListItem() { Selected = false, Text = "No", Value = "false" });
             yesnoEN.Add(new SelectListItem() { Selected = false, Text = "Yes", Value = "true" });
@@ -114,7 +115,7 @@ namespace Machete.Web.Helpers
         }
 
 
-
+        //TODO: Lookups.yesno needs to use resource files, not hardcoded values
         public static List<SelectListItem> yesno(string locale)
         {
             if (locale == "es") return yesnoES;

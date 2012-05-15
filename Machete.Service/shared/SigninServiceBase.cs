@@ -81,14 +81,13 @@ namespace Machete.Service
             if (o.date != null)
                 queryableWSI = queryableWSI.Where(p => EntityFunctions.DiffDays(p.dateforsignin, o.date) == 0 ? true : false);
             // 
-            // typeofwork ( DWC / HHH )
-            //TODO: Remove Casa specific configuration. needs real abstraction on iDWC / iHHH.
-            if (o.typeofwork_grouping == Worker.iDWC)
+            // typeofwork ( DWC / HHH )            
+            if (o.typeofwork_grouping == Worker.iDWC) //TODO: Refactor GetIndexView typework -- Should check for non-null, then group on value
                 queryableWSI = queryableWSI
                                          .Where(wsi => wsi.worker.typeOfWorkID == Worker.iDWC)
                                          .Select(wsi => wsi);
 
-            if (o.typeofwork_grouping == Worker.iHHH)
+            if (o.typeofwork_grouping == Worker.iHHH) //TODO: Refactor GetIndexView typework -- Should check for non-null, then group on value
                 queryableWSI = queryableWSI
                                          .Where(wsi => wsi.worker.typeOfWorkID == Worker.iHHH)
                                          .Select(wsi => wsi);

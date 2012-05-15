@@ -164,7 +164,6 @@
     <Compile Include="IntegrationTests\Services\WorkOrderServiceTest.cs" />
     <Compile Include="IntegrationTests\System\WorkerCacheTests.cs" />
     <Compile Include="IntegrationTests\Views\PersonTests.cs" />
-    <Compile Include="IntegrationTests\Views\SeFunctionality.cs" />
     <Compile Include="IntegrationTests\Views\sharedUI.cs" />
     <Compile Include="IntegrationTests\Views\EmployerTests.cs" />
     <Compile Include="IntegrationTests\Views\WorkerSigninTests.cs" />

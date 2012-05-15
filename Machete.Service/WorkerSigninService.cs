@@ -82,13 +82,12 @@ namespace Machete.Service
             }
             // 
             // typeofwork ( DWC / HHH )
-            //TODO: Remove Casa specific configuration. needs real abstraction on iDWC / iHHH.
-            if (o.typeofwork_grouping == Worker.iDWC)
+            if (o.typeofwork_grouping == Worker.iDWC) //TODO: Refactor GetIndexView typework -- Should check for non-null, then group on value
                 queryable = queryable
                                          .Where(wsi => wsi.worker.typeOfWorkID == Worker.iDWC)
                                          .Select(wsi => wsi);
 
-            if (o.typeofwork_grouping == Worker.iHHH)
+            if (o.typeofwork_grouping == Worker.iHHH) //TODO: Refactor GetIndexView typework -- Should check for non-null, then group on value
                 queryable = queryable
                                          .Where(wsi => wsi.worker.typeOfWorkID == Worker.iHHH)
                                          .Select(wsi => wsi);
