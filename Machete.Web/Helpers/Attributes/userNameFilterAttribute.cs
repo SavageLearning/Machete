@@ -6,6 +6,9 @@ using System.Web.Mvc;
 
 namespace Machete.Web.Helpers
 {
+    /// <summary>
+    /// Controller decorator to handle UserName
+    /// </summary>
 	public class UserNameFilter : ActionFilterAttribute
 	{
 	    public override void OnActionExecuting(ActionExecutingContext filterContext)

@@ -240,22 +240,19 @@
     <Compile Include="Controllers\WorkerController.cs" />
     <Compile Include="Controllers\WorkerSigninController.cs" />
     <Compile Include="Controllers\WorkOrderController.cs" />
-    <Compile Include="Helpers\AuthorizeExAttribute.cs" />
-    <Compile Include="Helpers\CustomModelBinders.cs" />
-    <Compile Include="Helpers\GetRootException.cs" />
+    <Compile Include="Helpers\Attributes\AuthorizeExAttribute.cs" />
+    <Compile Include="Helpers\workerRequestBinder.cs" />
     <Compile Include="Helpers\IsInRole.cs" />
     <Compile Include="Helpers\ListItemToOption.cs" />
-    <Compile Include="Helpers\liveSearch.cs" />
     <Compile Include="Helpers\Lookups.cs" />
     <Compile Include="Helpers\MacheteController.cs" />
-    <Compile Include="Helpers\userNameFilterAttribute.cs" />
+    <Compile Include="Helpers\Attributes\userNameFilterAttribute.cs" />
     <Compile Include="IoC\CustomControllerActivator.cs" />
     <Compile Include="IoC\UnityControllerFactory .cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\DatePickerHelper.cs" />
-    <Compile Include="Helpers\HandleErrorWithELMAHAttribute .cs" />
+    <Compile Include="Helpers\Attributes\HandleErrorWithELMAHAttribute .cs" />
     <Compile Include="IoC\UnityDependencyResolver.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Helpers\jQueryDataTableParam.cs" />

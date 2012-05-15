@@ -104,8 +104,8 @@ namespace Machete.Service
         public ServiceIndexView<WorkAssignment> GetIndexView(dispatchViewOptions o)
         {
             IQueryable<WorkAssignment> queryableWA = waRepo.GetAllQ();
-            lkup_dwc = Worker.iDWC;
-            lkup_hhh = Worker.iHHH;
+            lkup_dwc = Worker.iDWC;//TODO: Remove Casa specific configuration. needs real abstraction on iDWC / iHHH.
+            lkup_hhh = Worker.iHHH;//TODO: Remove Casa specific configuration. needs real abstraction on iDWC / iHHH.
             IEnumerable<WorkAssignment> filteredWA;
             bool isDateTime = false;
             DateTime sunday;
@@ -129,8 +129,8 @@ namespace Machete.Service
             }
             // 
             // typeofwork ( DWC / HHH )
-            //          
-            if (o.typeofwork_grouping == lkup_dwc)
+            //
+            if (o.typeofwork_grouping == lkup_dwc) //TODO: Refactor GetIndexView typework -- Should check for non-null, then group on value
             {
                 queryableWA = queryableWA.Join(lRepo.GetAllQ(),
                                                 wa => wa.skillID,
@@ -139,7 +139,7 @@ namespace Machete.Service
                                          .Where(jj => jj.sk.typeOfWorkID == lkup_dwc)
                                          .Select(jj => jj.wa);                                             
             }
-            if (o.typeofwork_grouping == lkup_hhh)
+            if (o.typeofwork_grouping == lkup_hhh) //TODO: Refactor GetIndexView typework -- Should check for non-null, then group on value
             {
                 queryableWA = queryableWA.Join(lRepo.GetAllQ(),
                                                 wa => wa.skillID,
