@@ -8,6 +8,10 @@ using NLog;
 
 namespace Machete.Service
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public interface IService<T> where T : Record
     {
         T Get(int id);
@@ -16,12 +20,19 @@ namespace Machete.Service
         void Delete(int id, string user);
         void Save(T record, string user);
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public abstract class ServiceBase<T> where T : Record
     {
         protected readonly IRepository<T> repo;
         protected readonly IUnitOfWork uow;
         protected Logger nlog = LogManager.GetCurrentClassLogger();
-        protected LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "EmployerService", "");
+        protected LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "Service", "");
+        /// <summary>
+        /// replace with service-specific string for logging
+        /// </summary>
         protected string logPrefix = "ServiceBase";
 
         protected ServiceBase(IRepository<T> repo, IUnitOfWork uow)
