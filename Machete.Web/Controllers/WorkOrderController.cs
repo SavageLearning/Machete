@@ -27,9 +27,6 @@ namespace Machete.Web.Controllers
         private readonly IWorkerService _reqServ;
         private readonly IWorkerRequestService _wrServ;
         private readonly IWorkAssignmentService _waServ;
-        private static Regex isTimeSpecific = new Regex(@"^\s*\d{1,2}[\/-_]\d{1,2}[\/-_]\d{2,4}\s+\d{1,2}:\d{1,2}");
-        private static Regex isDaySpecific = new Regex(@"^\s*\d{1,2}\/\d{1,2}\/\d{2,4}");
-        private static Regex isMonthSpecific = new Regex(@"^\s*\d{1,2}\/\d{4,4}");
         
         public WorkOrderController(IWorkOrderService woServ, 
                                    IWorkAssignmentService workAssignmentService,
