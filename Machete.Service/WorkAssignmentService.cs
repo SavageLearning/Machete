@@ -43,9 +43,7 @@ namespace Machete.Service
         private readonly MacheteContext DB;
         private static int lkup_dwc;
         private static int lkup_hhh;
-        private static Regex isTimeSpecific = new Regex(@"^\s*\d{1,2}[\/-_]\d{1,2}[\/-_]\d{2,4}\s+\d{1,2}:\d{1,2}");
-        private static Regex isDaySpecific = new Regex(@"^\s*\d{1,2}\/\d{1,2}\/\d{2,4}");
-        private static Regex isMonthSpecific = new Regex(@"^\s*\d{1,2}\/\d{4,4}");
+
         //
         private Logger log = LogManager.GetCurrentClassLogger();
         private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "WorkAssignmentService", "");
@@ -104,205 +102,38 @@ namespace Machete.Service
         public ServiceIndexView<WorkAssignment> GetIndexView(dispatchViewOptions o)
         {
             IQueryable<WorkAssignment> queryableWA = waRepo.GetAllQ();
-            lkup_dwc = Worker.iDWC;//TODO: Remove Casa specific configuration. needs real abstraction on iDWC / iHHH.
-            lkup_hhh = Worker.iHHH;//TODO: Remove Casa specific configuration. needs real abstraction on iDWC / iHHH.
             IEnumerable<WorkAssignment> filteredWA;
-            bool isDateTime = false;
-            DateTime sunday;
-            IEnumerable<Lookup> lCache = LookupCache.getCache();
+            //
             // 
-            // DATE
+            if (o.date != null) IndexViewBase.diffDays(o, ref queryableWA); 
+            if (o.typeofwork_grouping > 0) IndexViewBase.typeOfWork(o, ref queryableWA, lRepo);
+            if (o.woid > 0) IndexViewBase.WOID(o, ref queryableWA);
+            if (o.status > 0) IndexViewBase.status(o, ref queryableWA);
+            if (o.showPending == false) IndexViewBase.filterPending(o, ref queryableWA);
+            if (!string.IsNullOrEmpty(o.wa_grouping)) IndexViewBase.waGrouping(o, ref queryableWA, lRepo);
+            if (!string.IsNullOrEmpty(o.search)) IndexViewBase.search(o, ref queryableWA, lRepo);
             //
-            if (o.date != null)
-            {
-                if (o.date.Value.DayOfWeek == DayOfWeek.Saturday)
-                {
-                    sunday = o.date.Value.AddDays(1);
-                    queryableWA = queryableWA.Where(p => EntityFunctions.DiffDays(p.workOrder.dateTimeofWork, o.date) == 0 ? true : false ||
-                        EntityFunctions.DiffDays(p.workOrder.dateTimeofWork, sunday) == 0 ? true : false
-                        );
-                }
-                else
-                {
-                    queryableWA = queryableWA.Where(p => EntityFunctions.DiffDays(p.workOrder.dateTimeofWork, o.date) == 0 ? true : false);
-                }
-            }
-            // 
-            // typeofwork ( DWC / HHH )
-            //
-            if (o.typeofwork_grouping == lkup_dwc) //TODO: Refactor GetIndexView typework -- Should check for non-null, then group on value
-            {
-                queryableWA = queryableWA.Join(lRepo.GetAllQ(),
-                                                wa => wa.skillID,
-                                                sk => sk.ID,
-                                                (wa, sk) => new { wa, sk })
-                                         .Where(jj => jj.sk.typeOfWorkID == lkup_dwc)
-                                         .Select(jj => jj.wa);                                             
-            }
-            if (o.typeofwork_grouping == lkup_hhh) //TODO: Refactor GetIndexView typework -- Should check for non-null, then group on value
-            {
-                queryableWA = queryableWA.Join(lRepo.GetAllQ(),
-                                                wa => wa.skillID,
-                                                sk => sk.ID,
-                                                (wa, sk) => new { wa, sk })
-                                         .Where(jj => jj.sk.typeOfWorkID == lkup_hhh)
-                                         .Select(jj => jj.wa);
-            }          
-            // 
-            // WOID
-            //
-            if (o.woid != null && o.woid != 0) queryableWA = queryableWA.Where(p => p.workOrderID == o.woid);
-            // 
-            // Status filtering
-            //
-            if (o.status != null && o.status != 0)
-            {
-                queryableWA = queryableWA.Where(p => p.workOrder.status == o.status);
-            }
-            // 
-            // pending filtering
-            //
-            if (o.showPending == false)
-            {
-                //int pending = LookupCache.getSingleEN("orderstatus", "Pending");
-                queryableWA = queryableWA.Where(p => p.workOrder.status != WorkOrder.iPending);
-            }
-            // 
-            // wa_grouping
-            //
-            switch (o.wa_grouping) 
-            {
-                case "open": queryableWA = queryableWA.Where(p => p.workerAssignedID == null); break;
-                case "assigned": queryableWA = queryableWA.Where(p => p.workerAssignedID != null); break;
-                case "requested": 
-                    queryableWA = queryableWA.Where(p => p.workerAssignedID == null && p.workOrder.workerRequests.Any() == true); 
-
-                    break;
-                case "skilled": queryableWA = queryableWA.Join(lRepo.GetAllQ(),
-                                    wa => wa.skillID,
-                                    sk => sk.ID,
-                                    (wa, sk) => new { wa, sk })
-                             .Where(jj => jj.sk.speciality == true && jj.wa.workerAssigned == null)
-                             .Select(jj => jj.wa);                    
-                    break;                                  
-            }
-            // 
-            // SEARCH STRING
-            //
-            if (!string.IsNullOrEmpty(o.search))
-            {
-                DateTime parsedTime;
-                if (isDateTime = DateTime.TryParse(o.search, out parsedTime))
-                {
-                    if (isMonthSpecific.IsMatch(o.search))  //Regex for month/year
-                        queryableWA = queryableWA.Where(p => EntityFunctions.DiffMonths(p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
-                    if (isDaySpecific.IsMatch(o.search))  //Regex for day/month/year
-                        queryableWA = queryableWA.Where(p => EntityFunctions.DiffDays(p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
-                    if (isTimeSpecific.IsMatch(o.search)) //Regex for day/month/year time
-                        queryableWA = queryableWA.Where(p => EntityFunctions.DiffHours(p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
-                }
-                else
-                {
-                    queryableWA = queryableWA
-                        .Join(lRepo.GetAllQ(), wa => wa.skillID, sk => sk.ID, (wa, sk) => new { wa, sk })
-                        .Where(p => SqlFunctions.StringConvert((decimal)p.wa.workOrder.paperOrderNum).Contains(o.search) ||
-                            p.wa.description.Contains(o.search) ||
-                            p.sk.text_EN.Contains(o.search) ||
-                            p.sk.text_ES.Contains(o.search) ||
-                            //p.dateupdated.ToString().ContainsOIC(param.sSearch) ||
-                            p.wa.Updatedby.Contains(o.search)).Select(p => p.wa);
-                }
-            }
-            //
-            // Skill kludge. Assuming there won't be more than 6 cascading skill matches
-            // horrible flattening job of relational data
-            //
-            int? skill1 =null; 
-            int? skill2 =null; 
-            int? skill3= null;
-            int? skill4 = null;
-            int? skill5 = null;
-            int? skill6 = null;
-            Stack<int> primeskills = new Stack<int>();
-            Stack<int> skills = new Stack<int>();
-            //
-            // filter on member ID, showing only assignments available to the member based on their
-            // skills
-            if (o.dwccardnum != null && o.dwccardnum != 0)
-            {
-                Worker worker = WorkerCache.getCache().FirstOrDefault(w => w.dwccardnum == o.dwccardnum);
-                if (worker != null)
-                {
-                    if (worker.skill1 != null) primeskills.Push((int)worker.skill1);
-                    if (worker.skill2 != null) primeskills.Push((int)worker.skill2);
-                    if (worker.skill3 != null) primeskills.Push((int)worker.skill3);
-
-                    foreach (var skillid in primeskills)
-                    {
-                        skills.Push(skillid);
-                        Lookup skill = LookupCache.getBySkillID(skillid);
-                        foreach (var subskill in lCache.Where(a => a.category == skill.category &&
-                                                                   a.subcategory == skill.subcategory &&
-                                                                   a.level < skill.level))
-                        {
-                            skills.Push(subskill.ID);
-                        }
-                    }
-                    if (skills.Count() != 0) skill1 = skills.Pop();
-                    if (skills.Count() != 0) skill2 = skills.Pop();
-                    if (skills.Count() != 0) skill3 = skills.Pop();
-                    if (skills.Count() != 0) skill4 = skills.Pop();
-                    if (skills.Count() != 0) skill5 = skills.Pop();
-                    if (skills.Count() != 0) skill6 = skills.Pop();
-                    filteredWA = queryableWA.AsEnumerable();
-                    filteredWA = filteredWA.Join(lCache,
-                                                       wa => wa.skillID,
-                                                       sk => sk.ID,
-                                                       (wa, sk) => new { wa, sk })
-                                                 .Where(jj => jj.wa.englishLevelID <= worker.englishlevelID &&
-                                                              jj.sk.typeOfWorkID.Equals(worker.typeOfWorkID) && (
-                                                              jj.wa.skillID.Equals(skill1) ||
-                                                              jj.wa.skillID.Equals(skill2) ||
-                                                              jj.wa.skillID.Equals(skill3) ||
-                                                              jj.wa.skillID.Equals(skill4) ||
-                                                              jj.wa.skillID.Equals(skill5) ||
-                                                              jj.wa.skillID.Equals(skill6) ||
-                                                              jj.sk.speciality == false)
-                                                              )
-                                                 .Select(jj => jj.wa).AsEnumerable();
-                }
-                else
-                {
-                    filteredWA = queryableWA.AsEnumerable();
-                }
-            } else
-            {
+            // filter on member ID, showing only assignments available to the member based on their skills
+            if (o.dwccardnum > 0)
+                filteredWA = IndexViewBase.filterOnSkill(o, queryableWA);
+             else
                 filteredWA = queryableWA.AsEnumerable();
-            }
+            //
+            //
+            filteredWA = filteredWA.GroupJoin(WorkerCache.getCache(),  //LINQ
+                                                wa => wa.workerAssignedID, 
+                                                wc => wc.ID, 
+                                                (wa, wc) => new { wa, wc }
+                                              )
+                            .SelectMany(jj => jj.wc.DefaultIfEmpty(new Worker { ID = 0, dwccardnum = 0}),
+                                             (jj, row) => jj.wa
+                                       );
             //
             //Sort the Persons based on column selection
-            filteredWA = filteredWA.GroupJoin(WorkerCache.getCache(), wa => wa.workerAssignedID, wc => wc.ID, (wa, wc) => new { wa, wc })
-                            .SelectMany(jj => jj.wc.DefaultIfEmpty(new Worker { ID = 0, dwccardnum = 0}),
-                            (jj, row) => jj.wa);
-
-            switch (o.sortColName)
-            {
-                case "pWAID": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => string.Format("{0,5:D5}", p.workOrder.paperOrderNum) + "-" + p.pseudoID) : filteredWA.OrderBy(p => string.Format("{0,5:D5}", p.workOrder.paperOrderNum) + "-" + p.pseudoID); break;
-                case "skill": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.skillID) : filteredWA.OrderBy(p => p.skillID); break;
-                case "earnings": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.hourlyWage * p.hours * p.days) : filteredWA.OrderBy(p => p.hourlyWage * p.hours * p.days); break;
-                case "hourlywage": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.hourlyWage) : filteredWA.OrderBy(p => p.hourlyWage); break;
-                case "hours": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.hours) : filteredWA.OrderBy(p => p.hours); break;
-                case "days": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.days) : filteredWA.OrderBy(p => p.days); break;
-                case "WOID": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.workOrderID) : filteredWA.OrderBy(p => p.workOrderID); break;
-                case "WAID": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.ID) : filteredWA.OrderBy(p => p.ID); break;
-                case "description": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.description) : filteredWA.OrderBy(p => p.description); break;
-                case "updatedby": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.Updatedby) : filteredWA.OrderBy(p => p.Updatedby); break;
-                case "dateupdated": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.dateupdated) : filteredWA.OrderBy(p => p.dateupdated); break;
-                case "assignedWorker": filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.workerAssigned == null ? 0 : p.workerAssigned.dwccardnum) : filteredWA.OrderBy(p => p.workerAssigned == null ? 0 : p.workerAssigned.dwccardnum); break;
-                default: filteredWA = o.orderDescending ? filteredWA.OrderByDescending(p => p.workOrder.dateTimeofWork) : filteredWA.OrderBy(p => p.workOrder.dateTimeofWork); break;
-            }
+            IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref filteredWA);
             filteredWA = filteredWA.ToList();
             var filtered = filteredWA.Count();
+            //
             //Limit results to the display length and offset
             if ((int)o.displayLength >= 0)
                 filteredWA = filteredWA.Skip((int)o.displayStart).Take((int)o.displayLength);
@@ -322,16 +153,15 @@ namespace Machete.Service
         /// <returns></returns>
         public IQueryable<WorkAssignmentSummary> GetSummary(string search)
         {
-            IQueryable<WorkAssignment> query;
+            IQueryable<WorkAssignment> query = waRepo.GetAllQ();
             if (!string.IsNullOrEmpty(search))
-                query = QueryDate(waRepo.GetAllQ(), search);
-            else
-                query = waRepo.GetAllQ();
-            var sum_query = from wa in query
+                IndexViewBase.filterOnDatePart(search, ref query);
+
+            var sum_query = from wa in query //LINQ
                             group wa by new
                             {
-                                dateSoW = EntityFunctions.TruncateTime(wa.workOrder.dateTimeofWork),
-                                //dateSoW = wa.workOrder.dateTimeofWork,
+                                dateSoW = EntityFunctions
+                                .TruncateTime(wa.workOrder.dateTimeofWork),                               
                                 wa.workOrder.status
                             } into dayGroup
                             select new WorkAssignmentSummary()
@@ -452,8 +282,6 @@ namespace Machete.Service
         {
             //UI lets user select either WSI or WA and click remove.
             //Unassign decides which handlers to call
-            WorkAssignment asmt = null;
-            WorkerSignin signin = null;
             //
             // WorkerSignin but no WorkAssignment
             if (wsiid != null && waid == null) unassignWorkerSigninOnly((int)wsiid, user);
@@ -644,23 +472,7 @@ namespace Machete.Service
         /// <param name="query"></param>
         /// <param name="search"></param>
         /// <returns></returns>
-        private IQueryable<WorkAssignment> QueryDate(IQueryable<WorkAssignment> query, string search)
-        {
 
-            //Using DateTime.TryParse as determiner of date/string
-            DateTime parsedTime;
-            if (DateTime.TryParse(search, out parsedTime))
-            {
-                if (isMonthSpecific.IsMatch(search))  //Regex for month/year
-                    return query.Where(p => EntityFunctions.DiffMonths(p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
-                if (isDaySpecific.IsMatch(search))  //Regex for day/month/year
-                    return query.Where(p => EntityFunctions.DiffDays(p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
-                if (isTimeSpecific.IsMatch(search)) //Regex for day/month/year time
-                    return query.Where(p => EntityFunctions.DiffHours(p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
-            }
-            return query;
-
-        }
     }
     public class dispatchViewOptions
     {

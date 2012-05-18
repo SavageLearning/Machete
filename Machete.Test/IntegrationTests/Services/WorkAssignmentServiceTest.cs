@@ -141,7 +141,7 @@ namespace Machete.Test
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
             Assert.IsInstanceOfType(result, typeof(ServiceIndexView<WorkAssignment>));
-            Assert.AreEqual(70, tolist[0].skillID);
+            Assert.AreEqual(70, tolist[0].skillID); //ID=70 is Digging
             Assert.AreEqual(1, result.filteredCount);
             Assert.AreEqual(10, result.totalCount);
         }
@@ -213,14 +213,12 @@ namespace Machete.Test
             Assert.IsNotNull(wsi2.WorkAssignmentID);
             Assert.IsNotNull(wsi2.WorkerID);
         }
-
         [TestMethod]
         public void Integration_WA_Service_GetSummary()
         {
             var result = _waServ.GetSummary("");
             Assert.IsNotNull(result, "Person.ID is Null");
         }
-
         [TestMethod]
         public void Integration_WA_Service_Delete_removes_record()
 

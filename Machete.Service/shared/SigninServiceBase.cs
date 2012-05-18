@@ -14,7 +14,7 @@ namespace Machete.Service
     public interface ISigninService<T> : IService<T> where T : Signin
     {
         //T GetSignin(int dwccardnum, DateTime date);
-        void CreateSignin(T workerSignin, string user);
+        //void CreateSignin(T workerSignin, string user);
         Image getImage(int dwccardnum);
         ServiceIndexView<WorkerSigninView> GetIndexView(dispatchViewOptions o);
         //ServiceIndexView<WorkerSigninView> GetIndexView(dispatchViewOptions o, IQueryable<T> repo);
@@ -46,7 +46,7 @@ namespace Machete.Service
         /// </summary>
         /// <param name="signin"></param>
         /// <param name="user"></param>
-        public void CreateSignin(T signin, string user)
+        public virtual void CreateSignin(T signin, string user)
         {
             //Search for worker with matching card number
             Worker wfound;
@@ -66,31 +66,22 @@ namespace Machete.Service
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public ServiceIndexView<WorkerSigninView> GetIndexView(dispatchViewOptions o)
+        public virtual ServiceIndexView<WorkerSigninView> GetIndexView(dispatchViewOptions o)
         {
             return GetIndexView(o, repo.GetAllQ());
         }
-        protected ServiceIndexView<WorkerSigninView> GetIndexView(dispatchViewOptions o, IQueryable<Signin> queryable)
+        public virtual ServiceIndexView<WorkerSigninView> GetIndexView(dispatchViewOptions o, IQueryable<Signin> queryable)
         {
             //Get all the records
             IQueryable<Signin> queryableWSI = queryable;
             IEnumerable<Signin> enumWSI;
             IEnumerable<WorkerSigninView> enumWSIV;
-            //Search based on search-bar string
-            //DateTime parsedTime;
-            if (o.date != null)
-                queryableWSI = queryableWSI.Where(p => EntityFunctions.DiffDays(p.dateforsignin, o.date) == 0 ? true : false);
-            // 
-            // typeofwork ( DWC / HHH )            
-            if (o.typeofwork_grouping == Worker.iDWC) //TODO: Refactor GetIndexView typework -- Should check for non-null, then group on value
-                queryableWSI = queryableWSI
-                                         .Where(wsi => wsi.worker.typeOfWorkID == Worker.iDWC)
-                                         .Select(wsi => wsi);
-
-            if (o.typeofwork_grouping == Worker.iHHH) //TODO: Refactor GetIndexView typework -- Should check for non-null, then group on value
-                queryableWSI = queryableWSI
-                                         .Where(wsi => wsi.worker.typeOfWorkID == Worker.iHHH)
-                                         .Select(wsi => wsi);
+            //
+            if (o.date != null) IndexViewBase.diffDays(o, ref queryableWSI);                
+            //
+            if (o.typeofwork_grouping == Worker.iDWC || o.typeofwork_grouping == Worker.iHHH)
+                IndexViewBase.typeOfWork(o, ref queryableWSI);
+            //
             // 
             // wa_grouping
             switch (o.wa_grouping)
