@@ -50,13 +50,13 @@ namespace Machete.Service
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public ServiceIndexView<WorkerSigninView> GetIndexView(dispatchViewOptions o)
+        public override ServiceIndexView<WorkerSigninView> GetIndexView(dispatchViewOptions o)
         {
             IQueryable<WorkerSignin> queryable = repo.GetAllQ();
             //
             // WHERE on dateforsignin
-            if (o.date != null)
-                queryable = queryable.Where(p => EntityFunctions.DiffDays(p.dateforsignin, o.date) == 0 ? true : false);            
+            if (o.date != null) IndexViewBase.diffDays(o, ref queryable);
+
             // 
             // WHERE on wa_grouping
             switch (o.wa_grouping)
@@ -82,23 +82,17 @@ namespace Machete.Service
             }
             // 
             // typeofwork ( DWC / HHH )
-            if (o.typeofwork_grouping == Worker.iDWC) //TODO: Refactor GetIndexView typework -- Should check for non-null, then group on value
-                queryable = queryable
-                                         .Where(wsi => wsi.worker.typeOfWorkID == Worker.iDWC)
-                                         .Select(wsi => wsi);
+            if (o.typeofwork_grouping == Worker.iDWC || o.typeofwork_grouping == Worker.iHHH) //TODO: Refactor GetIndexView typework -- Should check for non-null, then group on value
+                IndexViewBase.typeOfWork(o, ref queryable);
 
-            if (o.typeofwork_grouping == Worker.iHHH) //TODO: Refactor GetIndexView typework -- Should check for non-null, then group on value
-                queryable = queryable
-                                         .Where(wsi => wsi.worker.typeOfWorkID == Worker.iHHH)
-                                         .Select(wsi => wsi);
             return base.GetIndexView(o, queryable);
         }
         /// <summary>
-        /// 
+        /// Create a new Worker Sign-in
         /// </summary>
         /// <param name="signin"></param>
         /// <param name="user"></param>
-        public void CreateSignin(WorkerSignin signin, string user)
+        public override void CreateSignin(WorkerSignin signin, string user)
         {
             //Search for worker with matching card number
             Worker wfound;
@@ -114,7 +108,7 @@ namespace Machete.Service
             if (sfound == 0) Create(signin, user);
         }
         /// <summary>
-        /// 
+        /// count lotteries for the day and increment
         /// </summary>
         /// <param name="date"></param>
         /// <returns></returns>
@@ -124,7 +118,12 @@ namespace Machete.Service
                                         EntityFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
                                  .Count() + 1;
         }
-
+        /// <summary>
+        /// clear lottery timestamp and re-sequence
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public bool clearLottery(int id, string user)
         {
             WorkerSignin wsi = repo.GetById(id);
@@ -136,7 +135,12 @@ namespace Machete.Service
                 sequenceLottery(date, user);
             return true;
         }
-
+        /// <summary>
+        /// reset the ordinal lottery numbers
+        /// </summary>
+        /// <param name="date">date to reset numbers</param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public bool sequenceLottery(DateTime date, string user)
         {
             IEnumerable<WorkerSignin> signins;

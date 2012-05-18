@@ -6,6 +6,10 @@ using Machete.Domain;
 
 namespace Machete.Service
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class ServiceIndexView<T>
     {
         public IEnumerable<T> query { get; set; }
