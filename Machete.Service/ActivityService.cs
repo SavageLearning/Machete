@@ -40,7 +40,7 @@ namespace Machete.Service
         {
             this.logPrefix = "ActivitySignin";
         }
-        public ServiceIndexView<WorkerSigninView> GetIndexView(dispatchViewOptions o)
+        public override ServiceIndexView<WorkerSigninView> GetIndexView(dispatchViewOptions o)
         {
             IQueryable<ActivitySignin> queryable = repo.GetAllQ();
             //
@@ -55,7 +55,7 @@ namespace Machete.Service
         /// </summary>
         /// <param name="signin"></param>
         /// <param name="user"></param>
-        public void CreateSignin(ActivitySignin signin, string user)
+        public override void CreateSignin(ActivitySignin signin, string user)
         {
             //Search for worker with matching card number
             Worker wfound;
