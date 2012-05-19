@@ -36,7 +36,7 @@ namespace Machete.Service
                                    IImageRepository iRepo,
                                    IWorkerRequestRepository wrRepo,
                                    IUnitOfWork uow)
-            : base(repo, wRepo, pRepo, iRepo, wrRepo, uow)
+            : base(repo, wRepo, iRepo, wrRepo, uow)
         {
             this.logPrefix = "ActivitySignin";
         }

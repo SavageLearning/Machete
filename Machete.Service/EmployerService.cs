@@ -21,7 +21,7 @@ namespace Machete.Service
         public EmployerService(IEmployerRepository employerRepository, 
                                IWorkOrderService workorderService,
                                IUnitOfWork unitOfWork)
-                                : base(employerRepository, unitOfWork)
+                : base(employerRepository, unitOfWork)
         {            
             this._woServ = workorderService;
             this.logPrefix = "Employer";
