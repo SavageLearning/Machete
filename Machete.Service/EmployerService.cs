@@ -17,20 +17,19 @@ namespace Machete.Service
 
     public class EmployerService : ServiceBase<Employer>, IEmployerService
     {
-        private readonly IWorkOrderService _woServ;
+        private readonly IWorkOrderService woServ;
 
         public EmployerService(IEmployerRepository repo, 
                                IWorkOrderService woServ,
                                IUnitOfWork unitOfWork)
                 : base(repo, unitOfWork)
-        {            
-            this._woServ = woServ;
+        {
+            this.woServ = woServ;
             this.logPrefix = "Employer";
         }
-
         public IEnumerable<WorkOrder> GetOrders(int id)
         {
-            return _woServ.GetByEmployer(id);
+            return woServ.GetByEmployer(id);
         }
         /// <summary>
         /// 
@@ -42,14 +41,7 @@ namespace Machete.Service
             //Get all the records
             IQueryable<Employer> q = repo.GetAllQ();
             //Search based on search-bar string 
-            if (!string.IsNullOrEmpty(o.search))
-            {
-                q = q.Where(p => //p.active.ToString().Contains(o.search) ||
-                                p.name.Contains(o.search) ||
-                                p.address1.Contains(o.search) ||
-                                p.phone.Contains(o.search) ||
-                                p.city.Contains(o.search));
-            }
+            if (!string.IsNullOrEmpty(o.search)) IndexViewBase.search(o, ref q);
             //Sort the Persons based on column selection
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
             //Limit results to the display length and offset
