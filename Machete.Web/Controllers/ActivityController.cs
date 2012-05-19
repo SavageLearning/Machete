@@ -16,7 +16,7 @@ namespace Machete.Web.Controllers
 {
 
     [ElmahHandleError]
-    public class ActivityController : MacheteController
+    public class ActivityController : MacheteController 
     {
         private readonly IActivityService serv;
         private System.Globalization.CultureInfo CI;
@@ -30,16 +30,15 @@ namespace Machete.Web.Controllers
             base.Initialize(requestContext);
             CI = (System.Globalization.CultureInfo)Session["Culture"];
         }
-        #region Index
-        //
-        // GET: /Activity/
-        //
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Index()
         {
             return View();
         }
-
         /// <summary>
         /// GET: /Activity/AjaxHandler
         /// </summary>
@@ -148,7 +147,6 @@ namespace Machete.Web.Controllers
             if (emp == null) return null;
             return "/Activity/Edit/" + Convert.ToString(emp.ID);
         }
-
         private string _getTabLabel(Activity emp)
         {
             if (emp == null) return null;
@@ -156,9 +154,6 @@ namespace Machete.Web.Controllers
                     LookupCache.byID(emp.name, CI.TwoLetterISOLanguageName) + " - " +
                     emp.teacher;
         }
-        #endregion
-
-        #region Create
         /// <summary>
         /// GET: /Activity/Create
         /// </summary>
@@ -197,9 +192,6 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
-        #endregion
-
-        #region Edit
         /// <summary>
         /// GET: /Activity/Edit/5
         /// </summary>
@@ -230,25 +222,6 @@ namespace Machete.Web.Controllers
                 jobSuccess = true
             }, JsonRequestBehavior.AllowGet);
         }
-        #endregion
-
-        #region View
-        /// <summary>
-        /// GET: /Activity/View/ID
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        //[Authorize(Roles = "Administrator, Manager, Teacher")]
-        //public ActionResult View(int id)
-        //{
-        //    ActivityViewModel _vm = new ActivityViewModel();
-        //    _vm.employer = serv.Get(id);
-        //    _vm.orders = serv.GetOrders(id);
-        //    return View(_vm);
-        //}
-        #endregion
-
-        #region Delete
         /// <summary>
         /// 
         /// </summary>
@@ -269,6 +242,5 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
-        #endregion
     }
 }

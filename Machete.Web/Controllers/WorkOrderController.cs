@@ -205,7 +205,7 @@ namespace Machete.Web.Controllers
         public ActionResult Create(WorkOrder _wo, string userName, List<WorkerRequest> workerRequests2)
         {
             UpdateModel(_wo);
-            WorkOrder neworder = woServ.CreateWorkOrder(_wo, userName);           
+            WorkOrder neworder = woServ.Create(_wo, userName);           
             //
             //New requests to add
             foreach (var add in workerRequests2)
@@ -216,7 +216,7 @@ namespace Machete.Web.Controllers
                 add.createdby(userName);
                 neworder.workerRequests.Add(add);
             }
-            woServ.SaveWorkOrder(neworder, userName);
+            woServ.Save(neworder, userName);
             //
             //
             return Json(new 
@@ -236,7 +236,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Edit(int id)
         {
-            WorkOrder workOrder = woServ.GetWorkOrder(id);
+            WorkOrder workOrder = woServ.Get(id);
             ViewBag.workerRequests = workOrder.workerRequests.Select(a => 
                 new SelectListItem
                 { 
@@ -254,7 +254,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Edit(int id, FormCollection collection, string userName, List<WorkerRequest> workerRequests2)
         {
-            WorkOrder workOrder = woServ.GetWorkOrder(id);
+            WorkOrder workOrder = woServ.Get(id);
             UpdateModel(workOrder);
             //Stale requests to remove
             foreach (var rem in workOrder.workerRequests.Except<WorkerRequest>(workerRequests2, new WorkerRequestComparer()).ToArray())
@@ -273,7 +273,7 @@ namespace Machete.Web.Controllers
                 workOrder.workerRequests.Add(add);
             }
 
-            woServ.SaveWorkOrder(workOrder, userName);
+            woServ.Save(workOrder, userName);
             return Json(new
             {
                 status = "OK",
@@ -290,7 +290,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult View(int id)
         {
-            WorkOrder workOrder = woServ.GetWorkOrder(id);
+            WorkOrder workOrder = woServ.Get(id);
             return View(workOrder);
         }
         //
@@ -326,7 +326,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Delete(int id, string user)
         {
-            woServ.DeleteWorkOrder(id, user);
+            woServ.Delete(id, user);
             return Json(new
             {
                 status = "OK",
@@ -340,10 +340,10 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Activate(int id, string userName)
         {
-            var workOrder = woServ.GetWorkOrder(id);
+            var workOrder = woServ.Get(id);
             // lookup int value for status active
             workOrder.status = WorkOrder.iActive;
-            woServ.SaveWorkOrder(workOrder, userName);         
+            woServ.Save(workOrder, userName);         
             return Json(new
             {
                 status = "activated"

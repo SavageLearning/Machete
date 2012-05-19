@@ -121,7 +121,6 @@ namespace Machete.Web.Controllers
         }
         #endregion
 
-        #region Create
         /// <summary>
         /// GET: /Employer/Create
         /// </summary>
@@ -159,9 +158,6 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
-        #endregion
-
-        #region Edit
         /// <summary>
         /// GET: /Employer/Edit/5
         /// </summary>
@@ -192,26 +188,6 @@ namespace Machete.Web.Controllers
                 jobSuccess = true
             }, JsonRequestBehavior.AllowGet);            
         }
-        #endregion
-
-        #region View
-        /// <summary>
-        /// GET: /Employer/View/ID
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        // TODO: remove employer view model
-        //[Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        //public ActionResult View(int id)
-        //{
-        //    EmployerViewModel _vm = new EmployerViewModel();
-        //    _vm.employer = serv.Get(id);
-        //    _vm.orders = serv.GetOrders(id);
-        //    return View(_vm);
-        //}
-        #endregion
-
-        #region Delete
         /// <summary>
         /// 
         /// </summary>
@@ -232,6 +208,5 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
-        #endregion
     }
 }

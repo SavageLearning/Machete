@@ -80,7 +80,7 @@ namespace Machete.Test.UnitTests.Services
             //
             //Arrange
             //Act
-            var result = _serv.GetWorkOrders();
+            var result = _serv.GetAll();
             //Assert
             Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkOrder>));
         }
@@ -93,7 +93,7 @@ namespace Machete.Test.UnitTests.Services
             order.ID = 3; //This matches Records._workOrder3 ID value
             _repo.Setup(r => r.GetById(3)).Returns(order);
             //Act
-            var result = _serv.GetWorkOrder(3);
+            var result = _serv.Get(3);
             //Assert
             Assert.IsInstanceOfType(result, typeof(WorkOrder));
             Assert.IsTrue(result.ID == 3);
@@ -114,7 +114,7 @@ namespace Machete.Test.UnitTests.Services
             var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _uow.Object);
             //
             //Act
-            var result = _serv.CreateWorkOrder(Records._workOrder1, user);
+            var result = _serv.Create(Records._workOrder1, user);
             //
             //Assert
             Assert.IsInstanceOfType(result, typeof(WorkOrder));
@@ -140,7 +140,7 @@ namespace Machete.Test.UnitTests.Services
             var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _uow.Object);
             //
             //Act
-            _serv.DeleteWorkOrder(id, user);
+            _serv.Delete(id, user);
             //
             //Assert
             Assert.AreEqual(dp, Records._workOrder1);
@@ -160,7 +160,7 @@ namespace Machete.Test.UnitTests.Services
             var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _uow.Object);
             //
             //Act
-            _serv.SaveWorkOrder(Records._workOrder1, user);
+            _serv.Save(Records._workOrder1, user);
             //
             //Assert
             Assert.IsTrue(Records._workOrder1.Updatedby == user);

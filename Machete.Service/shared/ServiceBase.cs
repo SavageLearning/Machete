@@ -51,7 +51,7 @@ namespace Machete.Service
             return repo.GetById(id);
         }
 
-        public T Create(T record, string user)
+        public virtual T Create(T record, string user)
         {
             record.createdby(user);
             T created = repo.Add(record);

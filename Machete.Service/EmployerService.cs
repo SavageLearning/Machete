@@ -18,12 +18,12 @@ namespace Machete.Service
     {
         private readonly IWorkOrderService _woServ;
 
-        public EmployerService(IEmployerRepository employerRepository, 
-                               IWorkOrderService workorderService,
+        public EmployerService(IEmployerRepository repo, 
+                               IWorkOrderService woServ,
                                IUnitOfWork unitOfWork)
-                : base(employerRepository, unitOfWork)
+                : base(repo, unitOfWork)
         {            
-            this._woServ = workorderService;
+            this._woServ = woServ;
             this.logPrefix = "Employer";
         }
 
