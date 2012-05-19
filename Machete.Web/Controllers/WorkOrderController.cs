@@ -258,7 +258,7 @@ namespace Machete.Web.Controllers
             foreach (var rem in workOrder.workerRequests.Except<WorkerRequest>(workerRequests2, new WorkerRequestComparer()).ToArray())
             {
                 var request = wrServ.GetWorkerRequestsByNum(workOrder.ID, rem.WorkerID);
-                wrServ.DeleteWorkerRequest(request.ID, userName);
+                wrServ.Delete(request.ID, userName);
                 workOrder.workerRequests.Remove(rem);
             }
             //New requests to add

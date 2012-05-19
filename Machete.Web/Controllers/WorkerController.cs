@@ -211,7 +211,7 @@ namespace Machete.Web.Controllers
             if (imagefile == null) throw new MacheteNullObjectException("updateImage called with null imagefile");
             if (worker.ImageID != null)
             {
-                Image image = imageServ.GetImage((int)worker.ImageID);
+                Image image = imageServ.Get((int)worker.ImageID);
                 image.ImageMimeType = imagefile.ContentType;
                 image.parenttable = "Workers";
                 image.filename = imagefile.FileName;
@@ -220,7 +220,7 @@ namespace Machete.Web.Controllers
                 imagefile.InputStream.Read(image.ImageData,
                                            0,
                                            imagefile.ContentLength);
-                imageServ.SaveImage(image, this.User.Identity.Name);
+                imageServ.Save(image, this.User.Identity.Name);
             }
             else
             {
@@ -232,7 +232,7 @@ namespace Machete.Web.Controllers
                 imagefile.InputStream.Read(image.ImageData,
                                            0,
                                            imagefile.ContentLength);
-                Image newImage = imageServ.CreateImage(image, this.User.Identity.Name);
+                Image newImage = imageServ.Create(image, this.User.Identity.Name);
                 worker.ImageID = newImage.ID;
             }
         }

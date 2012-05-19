@@ -20,7 +20,10 @@ namespace Machete.Service
     public class PersonService : ServiceBase<Person>, IPersonService
     {
         public PersonService(IPersonRepository pRepo, 
-                             IUnitOfWork unitOfWork) : base(pRepo, unitOfWork) {}  
+                             IUnitOfWork unitOfWork) : base(pRepo, unitOfWork) 
+        {
+            this.logPrefix = "Person";
+        }  
 
         public dTableList<Person> GetIndexView(viewOptions o)
         {

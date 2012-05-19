@@ -74,7 +74,7 @@ namespace Machete.Test.UnitTests.Services
             _uow = new Mock<IUnitOfWork>();
             var _serv = new ImageService(_repo.Object, _uow.Object);
             //Act
-            var result = _serv.GetImages();
+            var result = _serv.GetAll();
             //Assert
             Assert.IsInstanceOfType(result, typeof(IEnumerable<Image>));
         }
@@ -92,7 +92,7 @@ namespace Machete.Test.UnitTests.Services
             _repo.Setup(r => r.GetById(_img.ID)).Returns(_img);
             var _serv = new ImageService(_repo.Object, _uow.Object);
             //Act
-            var result = _serv.GetImage(id);
+            var result = _serv.Get(id);
             //Assert
             Assert.IsInstanceOfType(result, typeof(Image));
             Assert.IsTrue(result.ID == id);
@@ -113,7 +113,7 @@ namespace Machete.Test.UnitTests.Services
             var _serv = new ImageService(_repo.Object, _uow.Object);
             //
             //Act
-            var result = _serv.CreateImage(_img, user);
+            var result = _serv.Create(_img, user);
             //
             //Assert
             Assert.IsInstanceOfType(result, typeof(Image));
@@ -139,7 +139,7 @@ namespace Machete.Test.UnitTests.Services
             var _serv = new ImageService(_repo.Object, _uow.Object);
             //
             //Act
-            _serv.DeleteImage(id, user);
+            _serv.Delete(id, user);
             //
             //Assert
             Assert.AreEqual(di, _rtrn_img);
@@ -159,7 +159,7 @@ namespace Machete.Test.UnitTests.Services
             var _serv = new ImageService(_repo.Object, _uow.Object);
             //
             //Act
-            _serv.SaveImage(_rtrn_img, user);
+            _serv.Save(_rtrn_img, user);
             //
             //Assert
             Assert.IsTrue(_rtrn_img.Updatedby == user);
