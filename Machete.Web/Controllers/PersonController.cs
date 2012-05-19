@@ -43,7 +43,8 @@ namespace Machete.Web.Controllers
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             //Get all the records            
-            dTableList<Person> personView = personService.GetIndexView(new viewOptions() {
+            dTableList<Person> list = personService.GetIndexView(new viewOptions() 
+            {
                 CI = CI,
                 search = param.sSearch,
                 status = string.IsNullOrEmpty(param.searchColName("status")) ? (int?)null : Convert.ToInt32(param.searchColName("status")),
@@ -52,8 +53,7 @@ namespace Machete.Web.Controllers
                 displayLength = param.iDisplayLength,
                 sortColName = param.sortColName()
             });
-
-            var result = from p in personView.query select new
+            var result = from p in list.query select new
             {
                 tabref = "/Person/Edit/" + Convert.ToString(p.ID),
                 tablabel = p.firstname1 + ' ' + p.lastname1,
@@ -67,12 +67,11 @@ namespace Machete.Web.Controllers
                 Updatedby = p.Updatedby,
                 recordid = Convert.ToString(p.ID)
             };
-
             return Json(new
             {
                 sEcho = param.sEcho,
-                iTotalRecords = personView.totalCount,
-                iTotalDisplayRecords = personView.filteredCount,
+                iTotalRecords = list.totalCount,
+                iTotalDisplayRecords = list.filteredCount,
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);

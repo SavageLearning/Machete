@@ -409,6 +409,7 @@ namespace Machete.Service
             public string wa_grouping;
             public int? typeofwork_grouping;
             public int? ActivityID;
+            public int personID;
             public bool showOrdersPending;
             public bool showOrdersWorkers;
             public bool showInactiveWorker;
