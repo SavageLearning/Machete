@@ -37,54 +37,35 @@ namespace Machete.Web.Controllers
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {            
             //Get all the records
-            var allEvents = _serv.GetEvents(param.personID);
-            IEnumerable<Event> filteredEvents;
-            IEnumerable<Event> sortedEvents;
-            //Search based on search-bar string 
-            if (!string.IsNullOrEmpty(param.sSearch))
+            dTableList<Event> list = _serv.GetIndexView(new viewOptions()
             {
-                filteredEvents = _serv.GetEvents()
-                    .Where(p => p.notes.ToString().Contains(param.sSearch));
-            }
-            else
-            {
-                filteredEvents = allEvents;
-            }
-            //Sort the Persons based on column selection
-            var sortColIdx = Convert.ToInt32(Request["iSortCol_0"]);
-            Func<Event, string> orderingFunction = (p => p.dateupdated.ToBinary().ToString());
-
-            var sortDir = Request["sSortDir_0"];
-            if (sortDir == "asc")
-                sortedEvents = filteredEvents.OrderBy(orderingFunction);
-            else
-                sortedEvents = filteredEvents.OrderByDescending(orderingFunction);
-
-            //Limit results to the display length and offset
-            var displayEvents = sortedEvents.Skip(param.iDisplayStart)
-                                                .Take(param.iDisplayLength);
-
+                CI = CI,
+                search = param.sSearch,                
+                orderDescending = param.sSortDir_0 == "asc" ? false : true,
+                displayStart = param.iDisplayStart,
+                displayLength = param.iDisplayLength,
+                sortColName = param.sortColName(),
+                personID = param.personID ?? 0
+            });
             //return what's left to datatables
-            var result = from p in displayEvents
-                         select new
-                         {
-                             tabref = _getTabRef(p),
-                             tablabel = _getTabLabel(p, CI.TwoLetterISOLanguageName),
-                             recordid = p.ID,
-                             notes = p.notes,
-                             datefrom = p.dateFrom.ToShortDateString(),
-                             dateto = p.dateTo == null ? "" : ((DateTime)p.dateTo).ToShortDateString(),
-                             fileCount = p.JoinEventImages.Count(),
-                             type = LookupCache.byID(p.eventType, CI.TwoLetterISOLanguageName),
-                             dateupdated = Convert.ToString(p.dateupdated),
-                             Updatedby = p.Updatedby
-                         };
-
+            var result = from p in list.query select new
+            {
+                tabref = _getTabRef(p),
+                tablabel = _getTabLabel(p, CI.TwoLetterISOLanguageName),
+                recordid = p.ID,
+                notes = p.notes,
+                datefrom = p.dateFrom.ToShortDateString(),
+                dateto = p.dateTo == null ? "" : ((DateTime)p.dateTo).ToShortDateString(),
+                fileCount = p.JoinEventImages.Count(),
+                type = LookupCache.byID(p.eventType, CI.TwoLetterISOLanguageName),
+                dateupdated = Convert.ToString(p.dateupdated),
+                Updatedby = p.Updatedby
+            };
             return Json(new
             {
                 sEcho = param.sEcho,
-                iTotalRecords = allEvents.Count(),
-                iTotalDisplayRecords = filteredEvents.Count(),
+                iTotalRecords = list.totalCount,
+                iTotalDisplayRecords = list.filteredCount,
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);
@@ -119,7 +100,7 @@ namespace Machete.Web.Controllers
         public ActionResult Create(Event evnt, string userName)
         {
             UpdateModel(evnt);
-            Event newEvent = _serv.CreateEvent(evnt, userName);
+            Event newEvent = _serv.Create(evnt, userName);
 
             return Json(new
             {
@@ -135,7 +116,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Edit(int id)
         {
-            var evnt = _serv.GetEvent(id);
+            var evnt = _serv.Get(id);
             return PartialView("Edit", evnt);
         }
 
@@ -146,9 +127,9 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Edit(int id, string user)
         {
-            Event evnt = _serv.GetEvent(id);
+            Event evnt = _serv.Get(id);
             UpdateModel(evnt);
-            _serv.SaveEvent(evnt, user);
+            _serv.Save(evnt, user);
   
             return Json(new { status = "OK" }, JsonRequestBehavior.AllowGet);
         }
@@ -161,7 +142,7 @@ namespace Machete.Web.Controllers
             if (imagefile == null) throw new MacheteNullObjectException("AddImage called with null imagefile");
             JoinEventImage joiner = new JoinEventImage();
             Image image = new Image();
-            Event evnt = _serv.GetEvent(id);
+            Event evnt = _serv.Get(id);
             image.ImageMimeType = imagefile.ContentType;
             image.parenttable = "Events";
             image.filename = imagefile.FileName;
@@ -178,7 +159,7 @@ namespace Machete.Web.Controllers
             joiner.Updatedby = user;
             joiner.Createdby = user;
             evnt.JoinEventImages.Add(joiner);
-            _serv.SaveEvent(evnt, user);
+            _serv.Save(evnt, user);
             var foo = iServ.GetImage(newImage.ID).ImageData;
             //_serv.GetEvent(evnt.ID);
             
@@ -194,7 +175,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Delete(int id, string user)
         {   
-            _serv.DeleteEvent(id, user);
+            _serv.Delete(id, user);
             return Json(new
             {
                 status = "OK",
@@ -208,7 +189,7 @@ namespace Machete.Web.Controllers
         public ActionResult DeleteImage(int evntID, int jeviID, string user)
         {
             int deletedJEVI = 0;
-            Event evnt = _serv.GetEvent(evntID);
+            Event evnt = _serv.Get(evntID);
             JoinEventImage jevi = evnt.JoinEventImages.Single(e => e.ID == jeviID);
             deletedJEVI = jevi.ID;
             iServ.DeleteImage(jevi.ImageID, user);

@@ -35,16 +35,20 @@ namespace Machete.Web.Controllers
             base.Initialize(requestContext);
             CI = (System.Globalization.CultureInfo)Session["Culture"];            
         }
-        //
-        // GET: /Worker/Index
-        //
-        #region index
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [Authorize(Roles = "Manager, Administrator, PhoneDesk")]
         public ActionResult Index()
         {
             return View();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
@@ -84,7 +88,11 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="wkr"></param>
+        /// <returns></returns>
         string _getStatus(Worker wkr)
         {
             if (wkr.memberStatus == Worker.iActive) // blue
@@ -99,11 +107,11 @@ namespace Machete.Web.Controllers
                 return "expelled";
             return null;
         }
-        #endregion
-        //
-        // GET: /Worker/Create
-        //
-        #region create
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <returns></returns>
         [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
         public ActionResult Create(int ID)
         {
@@ -115,7 +123,14 @@ namespace Machete.Web.Controllers
             _model.neighborhoodID = Lookups.neighborhoodDefault;
 
             return PartialView(_model);
-        } 
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="worker"></param>
+        /// <param name="userName"></param>
+        /// <param name="imagefile"></param>
+        /// <returns></returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "PhoneDesk, Manager, Administrator")]
         public ActionResult Create(Worker worker, string userName, HttpPostedFileBase imagefile)
@@ -132,16 +147,25 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
-        #endregion
-        //
-        // GET: /Worker/Edit/5
-        //
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
         public ActionResult Edit(int id)
         {
             Worker _worker = serv.Get(id);
             return PartialView(_worker);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="_model"></param>
+        /// <param name="userName"></param>
+        /// <param name="imagefile"></param>
+        /// <returns></returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "PhoneDesk, Manager, Administrator")]
         public ActionResult Edit(int id, Worker _model, string userName, HttpPostedFileBase imagefile)
@@ -157,9 +181,12 @@ namespace Machete.Web.Controllers
             }, JsonRequestBehavior.AllowGet);
 
         }
-        //
-        // GET: /Worker/Delete/5
-        #region delete
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Delete(int id, string user)
@@ -173,8 +200,11 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
-        #endregion
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="worker"></param>
+        /// <param name="imagefile"></param>
         private void updateImage(Worker worker, HttpPostedFileBase imagefile)
         {
             if (worker == null) throw new MacheteNullObjectException("updateImage called with null worker");

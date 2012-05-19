@@ -9,88 +9,66 @@ using NLog;
 
 namespace Machete.Service
 {
-    public interface IEventService
+    public interface IEventService : IService<Event>
     {
-        IEnumerable<Event> GetEvents();
-        IEnumerable<Event> GetEvents(int? PID);
-        Event GetEvent(int id);
-        Event CreateEvent(Event evnt, string user);
-        void DeleteEvent(int id, string user);
-        void SaveEvent(Event evnt, string user);
+        IQueryable<Event> GetEvents(int? PID);
+        dTableList<Event> GetIndexView(viewOptions o);
     }
 
     // Business logic for Event record management
     // Ïf I made a non-web app, would I still need the code? If yes, put in here.
-    public class EventService : IEventService
+    public class EventService : ServiceBase<Event>, IEventService
     {
-        private readonly IEventRepository eventRepository;
-        private readonly IUnitOfWork unitOfWork;
         //
-        private Logger log = LogManager.GetCurrentClassLogger();
-        private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "EventService", "");
-        private Event _event;
-        //
-        public EventService(IEventRepository eventRepository, IUnitOfWork unitOfWork)
+        public EventService(IEventRepository repo, IUnitOfWork unitOfWork) : base(repo, unitOfWork)
+        {}
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="PID"></param>
+        /// <returns></returns>
+        public IQueryable<Event> GetEvents(int? PID)
         {
-            this.eventRepository = eventRepository;
-            this.unitOfWork = unitOfWork;
-        }
-
-        public IEnumerable<Event> GetEvents()
-        {
-            var events = eventRepository.GetAll();
-            return events;
-        }
-
-        public IEnumerable<Event> GetEvents(int? PID)
-        {
-            IEnumerable<Event> events;
+            IQueryable<Event> events;
             if (PID == null)
             {
-                events = eventRepository.GetAll();
+                events = repo.GetAllQ();
                 return events;
             }
-            events = eventRepository.GetMany(e => e.PersonID == PID);
+            events = repo.GetManyQ(e => e.PersonID == PID);
             return events;
         }
-
-        public Event GetEvent(int id)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        public dTableList<Event> GetIndexView(viewOptions o)
         {
-            var evnt = eventRepository.GetById(id);
-            return evnt;
-        }
+            //Get all the records
+            IQueryable<Event> q = GetEvents(o.personID);
+            //Search based on search-bar string 
+            if (!string.IsNullOrEmpty(o.search))
+            {
+                q = repo.GetAllQ()
+                    .Where(p => p.notes.ToString().Contains(o.search));
+            }
 
-        public Event CreateEvent(Event evnt, string user)
-        {
-            evnt.createdby(user);
-            _event = eventRepository.Add(evnt);
-            unitOfWork.Commit();
-            _log(evnt.ID, user, "Event created");
-            return _event;
-        }
+            //Sort the Persons based on column selection
+            switch (o.sortColName)
+            {
+                case "dateupdated": q = o.orderDescending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated); break;
+                default: q = o.orderDescending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated); break;
+            }
 
-        public void DeleteEvent(int id, string user)
-        {
-            var evnt = eventRepository.GetById(id);
-            eventRepository.Delete(evnt);
-            _log(id, user, "Event deleted");
-            unitOfWork.Commit();
-        }
-
-        public void SaveEvent(Event evnt, string user)
-        {
-            evnt.updatedby(user);
-            _log(evnt.ID, user, "Event edited");
-            unitOfWork.Commit();
-        }
-
-        private void _log(int ID, string user, string msg)
-        {
-            levent.Level = LogLevel.Info;
-            levent.Message = msg;
-            levent.Properties["RecordID"] = ID; //magic string maps to NLog config
-            levent.Properties["username"] = user;
-            log.Log(levent);
+            //Limit results to the display length and offset
+            q = q.Skip(o.displayStart).Take(o.displayLength);
+            return new dTableList<Event>
+            {
+                query = q,
+                filteredCount = q.Count(),
+                totalCount = repo.GetAllQ().Count()
+            };
         }
     }
 }
