@@ -14,9 +14,9 @@ namespace Machete.Service
     public interface ISigninService<T> : IService<T> where T : Signin
     {
         Image getImage(int dwccardnum);
-        dTableList<wsiView> GetIndexView(dispatchViewOptions o);
+        dTableList<wsiView> GetIndexView(viewOptions o);
 
-        //dTableList<wsiView> GetIndexView(dispatchViewOptions o, IQueryable<T> repo);
+        //dTableList<wsiView> GetIndexView(viewOptions o, IQueryable<T> repo);
     }
     public abstract class SigninServiceBase<T> : ServiceBase<T> where T : Signin
     {
@@ -62,11 +62,11 @@ namespace Machete.Service
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public virtual dTableList<wsiView> GetIndexView(dispatchViewOptions o)
+        public virtual dTableList<wsiView> GetIndexView(viewOptions o)
         {
             return GetIndexView(o, repo.GetAllQ());
         }
-        public virtual dTableList<wsiView> GetIndexView(dispatchViewOptions o, IQueryable<Signin> q)
+        public virtual dTableList<wsiView> GetIndexView(viewOptions o, IQueryable<Signin> q)
         {
             //Get all the records
             IEnumerable<Signin> enumWSI;

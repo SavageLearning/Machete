@@ -140,7 +140,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Check-in")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
-            dTableList<wsiView> was = _serv.GetIndexView(new dispatchViewOptions {
+            dTableList<wsiView> was = _serv.GetIndexView(new viewOptions {
                 CI = CI,
                 search = param.sSearch,
                 date = param.todaysdate == null ? null : (DateTime?)DateTime.Parse(param.todaysdate),

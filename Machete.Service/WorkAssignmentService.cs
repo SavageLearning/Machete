@@ -19,7 +19,7 @@ namespace Machete.Service
         IQueryable<WorkAssignmentSummary> GetSummary(string search);
         bool Assign(WorkAssignment assignment, WorkerSignin signin, string user);
         bool Unassign(int? wsiid, int? waid, string user);
-        dTableList<WorkAssignment> GetIndexView(dispatchViewOptions o);
+        dTableList<WorkAssignment> GetIndexView(viewOptions o);
     }
 
     // Business logic for WorkAssignment record management
@@ -58,7 +58,7 @@ namespace Machete.Service
             }         
             return wa;
         }
-        public dTableList<WorkAssignment> GetIndexView(dispatchViewOptions o)
+        public dTableList<WorkAssignment> GetIndexView(viewOptions o)
         {
             IQueryable<WorkAssignment> q = waRepo.GetAllQ();
             IEnumerable<WorkAssignment> e;
@@ -392,21 +392,28 @@ namespace Machete.Service
             unitOfWork.Commit();
         }
     }
-    public class dispatchViewOptions
+    public class viewOptions
     {
             public CultureInfo CI;
             public string search;
             public DateTime? date;
+            public int? EmployerID { get; set; }
             public int? dwccardnum;
             public int? woid;
             public int? status;
             public bool showPending;
             public bool orderDescending;
-            public int? displayStart;
-            public int? displayLength;
+            public int displayStart = 0;
+            public int displayLength = 0;
             public string sortColName;
             public string wa_grouping;
             public int? typeofwork_grouping;
             public int? ActivityID;
+            public bool showOrdersPending;
+            public bool showOrdersWorkers;
+            public bool showInactiveWorker;
+            public bool showSanctionedWorker;
+            public bool showExpiredWorker;
+            public bool showExpelledWorker;
     }
 }

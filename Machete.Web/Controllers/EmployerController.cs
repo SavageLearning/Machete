@@ -30,16 +30,15 @@ namespace Machete.Web.Controllers
             base.Initialize(requestContext);
             CI = (System.Globalization.CultureInfo)Session["Culture"];
         }
-        #region Index
-        //
-        // GET: /Employer/
-        //
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Index()
         {
             return View();
         }
-
         /// <summary>
         /// GET: /Employer/AjaxHandler
         /// </summary>
@@ -47,45 +46,17 @@ namespace Machete.Web.Controllers
         /// <returns></returns>
         public JsonResult AjaxHandler(jQueryDataTableParam param)
         {
-            //Get all the records
-            var allEmployers = serv.GetAll();
-            IEnumerable<Employer> filteredEmployers;
-            IEnumerable<Employer> sortedEmployers;
-            //Search based on search-bar string 
-            if (!string.IsNullOrEmpty(param.sSearch))
+            dTableList<Employer> list = serv.GetIndexView(new viewOptions
             {
-                filteredEmployers = serv.GetAll()
-                    .Where(p => p.active.ToString().ContainsOIC(param.sSearch) ||
-                                p.name.ContainsOIC(param.sSearch) ||
-                                p.address1.ContainsOIC(param.sSearch) ||
-                                p.phone.ContainsOIC(param.sSearch) ||
-                                p.city.ContainsOIC(param.sSearch));
-            }
-            else
-            {
-                filteredEmployers = allEmployers;
-            }
-            //Sort the Persons based on column selection
-            var sortColIdx = Convert.ToInt32(Request["iSortCol_0"]);
-            Func<Employer, string> orderingFunction = (p => sortColIdx == 2 ? p.active.ToString() :
-                                                          sortColIdx == 3 ? p.name :
-                                                          sortColIdx == 4 ? p.address1 :
-                                                          sortColIdx == 5 ? p.city :
-                                                          sortColIdx == 6 ? p.phone :
-                                                          p.dateupdated.ToBinary().ToString());
-                                                          
-            var sortDir = Request["sSortDir_0"];
-            if (sortDir == "asc")
-                sortedEmployers = filteredEmployers.OrderBy(orderingFunction);
-            else
-                sortedEmployers = filteredEmployers.OrderByDescending(orderingFunction);
-
-            //Limit results to the display length and offset
-            var displayEmployers = sortedEmployers.Skip(param.iDisplayStart)
-                                                .Take(param.iDisplayLength);
+                search = param.sSearch,
+                sortColName = param.sortColName(),
+                displayStart = param.iDisplayStart,
+                displayLength = param.iDisplayLength,
+                orderDescending = param.sSortDir_0 == "asc" ? false : true,
+            });
 
             //return what's left to datatables
-            var result = from p in displayEmployers
+            var result = from p in list.query
                          select new { tabref = _getTabRef(p),
                                       tablabel = _getTabLabel(p),
                                       active = Convert.ToString(p.active),
@@ -102,8 +73,8 @@ namespace Machete.Web.Controllers
             return Json(new
             {
                 sEcho = param.sEcho,
-                iTotalRecords = allEmployers.Count(),
-                iTotalDisplayRecords = filteredEmployers.Count(),
+                iTotalRecords = list.totalCount,
+                iTotalDisplayRecords = list.filteredCount,
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);
@@ -113,14 +84,11 @@ namespace Machete.Web.Controllers
             if (emp == null) return null;
             return "/Employer/Edit/" + Convert.ToString(emp.ID);
         }
-
         private string _getTabLabel(Employer emp)
         {
             if (emp == null) return null;
             return emp.name;
         }
-        #endregion
-
         /// <summary>
         /// GET: /Employer/Create
         /// </summary>

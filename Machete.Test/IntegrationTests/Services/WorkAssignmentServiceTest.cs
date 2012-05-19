@@ -18,13 +18,13 @@ namespace Machete.Test
     [TestClass]
     public class WorkAssignmentServiceTest : ServiceTest
     {
-        dispatchViewOptions dOptions;
+        viewOptions dOptions;
 
         [TestInitialize]
         public void TestInitialize()
         {
             base.Initialize();
-            dOptions = new dispatchViewOptions
+            dOptions = new viewOptions
             {
                 CI = new CultureInfo("en-US", false),
                 search = "",

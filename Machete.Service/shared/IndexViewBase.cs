@@ -17,18 +17,18 @@ namespace Machete.Service
         private static Regex isDaySpecific = new Regex(@"^\s*\d{1,2}\/\d{1,2}\/\d{2,4}");
         private static Regex isMonthSpecific = new Regex(@"^\s*\d{1,2}\/\d{4,4}");
         #region SIGNINS
-        public static void diffDays<T>(dispatchViewOptions o, ref IQueryable<T> q) where T : Signin
+        public static void diffDays<T>(viewOptions o, ref IQueryable<T> q) where T : Signin
         {
             q = q.Where(p => EntityFunctions.DiffDays(p.dateforsignin, o.date) == 0 ? true : false);
         }
-        public static void typeOfWork<T>(dispatchViewOptions o, ref IQueryable<T> q) where T : Signin
+        public static void typeOfWork<T>(viewOptions o, ref IQueryable<T> q) where T : Signin
         {
             q = q.Where(wsi => wsi.worker.typeOfWorkID == o.typeofwork_grouping)
                  .Select(wsi => wsi);
         }
         #endregion
         #region WORKASSIGNMENTS
-        public static void typeOfWork(dispatchViewOptions o, ref IQueryable<WorkAssignment> q, ILookupRepository lRepo)
+        public static void typeOfWork(viewOptions o, ref IQueryable<WorkAssignment> q, ILookupRepository lRepo)
         {
             q = q.Join(lRepo.GetAllQ(),
                         wa => wa.skillID,
@@ -37,7 +37,7 @@ namespace Machete.Service
                     .Where(jj => jj.sk.typeOfWorkID == o.typeofwork_grouping)
                     .Select(jj => jj.wa);
         }
-        public static void diffDays(dispatchViewOptions o, ref IQueryable<WorkAssignment> q)
+        public static void diffDays(viewOptions o, ref IQueryable<WorkAssignment> q)
         {
             DateTime sunday;
             if (o.date.Value.DayOfWeek == DayOfWeek.Saturday)
@@ -52,19 +52,19 @@ namespace Machete.Service
                 q = q.Where(p => EntityFunctions.DiffDays(p.workOrder.dateTimeofWork, o.date) == 0 ? true : false);
             }
         }
-        public static void WOID(dispatchViewOptions o, ref IQueryable<WorkAssignment> q)
+        public static void WOID(viewOptions o, ref IQueryable<WorkAssignment> q)
         {
             q = q.Where(p => p.workOrderID == o.woid);
         }
-        public static void status(dispatchViewOptions o, ref IQueryable<WorkAssignment> q)
+        public static void status(viewOptions o, ref IQueryable<WorkAssignment> q)
         {
             q = q.Where(p => p.workOrder.status == o.status);
         }
-        public static void filterPending(dispatchViewOptions o, ref IQueryable<WorkAssignment> q)
+        public static void filterPending(viewOptions o, ref IQueryable<WorkAssignment> q)
         {
             q = q.Where(p => p.workOrder.status != WorkOrder.iPending);
         }
-        public static void waGrouping(dispatchViewOptions o, ref IQueryable<WorkAssignment> q, ILookupRepository lRepo)
+        public static void waGrouping(viewOptions o, ref IQueryable<WorkAssignment> q, ILookupRepository lRepo)
         {
             switch (o.wa_grouping)
             {
@@ -111,7 +111,7 @@ namespace Machete.Service
             if (DateTime.TryParse(search,out parsedTime))
                 filterOnDatePart(search, parsedTime, ref query);           
         }
-        public static void search(dispatchViewOptions o, ref IQueryable<WorkAssignment> q, ILookupRepository lRepo)
+        public static void search(viewOptions o, ref IQueryable<WorkAssignment> q, ILookupRepository lRepo)
         {
             bool isDateTime = false;
             DateTime parsedTime;
@@ -128,31 +128,8 @@ namespace Machete.Service
                         //p.dateupdated.ToString().ContainsOIC(param.sSearch) ||
                         p.wa.Updatedby.Contains(o.search)).Select(p => p.wa);
             }
-        }
-        public static void search(dispatchViewOptions o, ref IQueryable<WorkOrder> q)
-        {
-            bool isDateTime = false;
-            DateTime parsedTime;
-            if (isDateTime = DateTime.TryParse(o.search, out parsedTime))
-            {
-                if (isMonthSpecific.IsMatch(o.search))  //Regex for month/year
-                    q = q.Where(p => EntityFunctions.DiffMonths(p.dateTimeofWork, parsedTime) == 0 ? true : false);
-                if (isDaySpecific.IsMatch(o.search))  //Regex for day/month/year
-                    q = q.Where(p => EntityFunctions.DiffDays(p.dateTimeofWork, parsedTime) == 0 ? true : false);
-                if (isTimeSpecific.IsMatch(o.search)) //Regex for day/month/year time
-                    q = q.Where(p => EntityFunctions.DiffHours(p.dateTimeofWork, parsedTime) == 0 ? true : false);
-            }
-            else
-            {
-                q = q
-                    .Where(p => SqlFunctions.StringConvert((decimal)p.ID).Contains(o.search) ||
-                                SqlFunctions.StringConvert((decimal)p.paperOrderNum).Contains(o.search) ||
-                                p.contactName.Contains(o.search) ||
-                                p.workSiteAddress1.Contains(o.search) ||
-                                p.Updatedby.Contains(o.search));
-            }
-        }       
-        public static IEnumerable<WorkAssignment> filterOnSkill(dispatchViewOptions o, IQueryable<WorkAssignment> q)
+        }      
+        public static IEnumerable<WorkAssignment> filterOnSkill(viewOptions o, IQueryable<WorkAssignment> q)
         {
             //  "Machete --A series of good intentions, marinated in panic."
             //
@@ -236,7 +213,7 @@ namespace Machete.Service
         }
         #endregion
         #region WORKORDERS
-        public static void search(woViewOptions o, ref IQueryable<WorkOrder> q)
+        public static void search(viewOptions o, ref IQueryable<WorkOrder> q)
         {
             bool isDateTime = false;
             DateTime parsedTime;
@@ -259,11 +236,11 @@ namespace Machete.Service
                                 p.Updatedby.Contains(o.search));
             }
         }
-        public static void filterEmployer(woViewOptions o, ref IQueryable<WorkOrder> q)
+        public static void filterEmployer(viewOptions o, ref IQueryable<WorkOrder> q)
         {
             q = q.Where(p => p.EmployerID.Equals((int)o.EmployerID)); //EmployerID for WorkOrderIndex view
         }
-        public static void filterStatus(woViewOptions o, ref IQueryable<WorkOrder> q)
+        public static void filterStatus(viewOptions o, ref IQueryable<WorkOrder> q)
         {
             q = q.Where(p => p.status.Equals((int)o.status));
         }
@@ -303,6 +280,21 @@ namespace Machete.Service
                 case "WOID": q = descending ? q.OrderByDescending(p => p.paperOrderNum) : q.OrderBy(p => p.paperOrderNum); break;
                 case "dateupdated": q = descending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated); break;
                 default: q = descending ? q.OrderByDescending(p => p.dateTimeofWork) : q.OrderBy(p => p.dateTimeofWork); break;
+            }
+        }
+        #endregion
+        #region EMPLOYERS
+        public static void sortOnColName(string name, bool descending, ref IQueryable<Employer> q)
+        {
+            switch (name)
+            {
+                case "active": q = descending ? q.OrderByDescending(p => p.active) : q.OrderBy(p => p.active); break;
+                case "name": q = descending ? q.OrderByDescending(p => p.name) : q.OrderBy(p => p.name); break;
+                case "address1": q = descending ? q.OrderByDescending(p => p.address1) : q.OrderBy(p => p.address1); break;
+                case "city": q = descending ? q.OrderByDescending(p => p.city) : q.OrderBy(p => p.city); break;
+                case "phone": q = descending ? q.OrderByDescending(p => p.phone) : q.OrderBy(p => p.phone); break;
+                case "dateupdated": q = descending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated); break;
+                default: q = descending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated); break;
             }
         }
         #endregion
