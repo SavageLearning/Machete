@@ -89,7 +89,7 @@ namespace Machete.Test.Controllers
             //Arrange
             var workOrder = new WorkOrder();
             var _model = new WorkOrder();
-            _serv.Setup(p => p.CreateWorkOrder(workOrder, "UnitTest")).Returns(() => workOrder);
+            _serv.Setup(p => p.Create(workOrder, "UnitTest")).Returns(() => workOrder);
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
             var result = (JsonResult)_ctrlr.Create(workOrder, "UnitTest", workerRequest);
@@ -105,7 +105,7 @@ namespace Machete.Test.Controllers
         {
             //Arrange
             var workOrder = new WorkOrder();
-            _serv.Setup(p => p.CreateWorkOrder(workOrder, "UnitTest")).Returns(workOrder);
+            _serv.Setup(p => p.Create(workOrder, "UnitTest")).Returns(workOrder);
             fakeform.Remove("contactName");
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
@@ -124,7 +124,7 @@ namespace Machete.Test.Controllers
             int testid = 4242;
             WorkOrder fakeworkOrder = new WorkOrder();
             fakeworkOrder.workerRequests = workerRequest;
-            _serv.Setup(p => p.GetWorkOrder(testid)).Returns(fakeworkOrder);
+            _serv.Setup(p => p.Get(testid)).Returns(fakeworkOrder);
             //Act
             var result = (PartialViewResult)_ctrlr.Edit(testid);
             //Assert
@@ -140,8 +140,8 @@ namespace Machete.Test.Controllers
             fakeworkOrder.workerRequests = workerRequest;
             WorkOrder savedworkOrder = new WorkOrder();
             string user = "";
-            _serv.Setup(p => p.GetWorkOrder(testid)).Returns(fakeworkOrder);
-            _serv.Setup(x => x.SaveWorkOrder(It.IsAny<WorkOrder>(),
+            _serv.Setup(p => p.Get(testid)).Returns(fakeworkOrder);
+            _serv.Setup(x => x.Save(It.IsAny<WorkOrder>(),
                                           It.IsAny<string>())
                                          ).Callback((WorkOrder p, string str) =>
                                          {
@@ -200,8 +200,8 @@ namespace Machete.Test.Controllers
             workerRequest.Add(foo2);
             WorkOrder savedworkOrder = new WorkOrder();
             string user = "";
-            _serv.Setup(p => p.GetWorkOrder(testid)).Returns(fakeworkOrder);
-            _serv.Setup(x => x.SaveWorkOrder(It.IsAny<WorkOrder>(),
+            _serv.Setup(p => p.Get(testid)).Returns(fakeworkOrder);
+            _serv.Setup(x => x.Save(It.IsAny<WorkOrder>(),
                                           It.IsAny<string>())
                                          ).Callback((WorkOrder p, string str) =>
                                          {
@@ -248,7 +248,7 @@ namespace Machete.Test.Controllers
             int testid = 4243;
             //
             // Mock service and setup SaveWorkOrder mock
-            _serv.Setup(p => p.GetWorkOrder(testid)).Returns(workOrder);
+            _serv.Setup(p => p.Get(testid)).Returns(workOrder);
             //
             // Mock HttpContext so that ModelState and FormCollection work
             fakeform.Remove("contactName");
@@ -271,7 +271,7 @@ namespace Machete.Test.Controllers
             //Arrange
             int testid = 4242;
             WorkOrder fakeworkOrder = new WorkOrder();
-            _serv.Setup(p => p.GetWorkOrder(testid)).Returns(fakeworkOrder);
+            _serv.Setup(p => p.Get(testid)).Returns(fakeworkOrder);
             //Act
             JsonResult result = (JsonResult)_ctrlr.Delete(testid, "test user");
             //Assert

@@ -170,7 +170,7 @@ namespace Machete.Web.Controllers
         public ActionResult Create(WorkAssignment assignment, string userName)
         {
             UpdateModel(assignment);
-            assignment.workOrder = woServ.GetWorkOrder(assignment.workOrderID);
+            assignment.workOrder = woServ.Get(assignment.workOrderID);
             assignment.incrPseudoID();
             //assignment.workOrder.waPseudoIDCounter++;
             //assignment.pseudoID = assignment.workOrder.waPseudoIDCounter;

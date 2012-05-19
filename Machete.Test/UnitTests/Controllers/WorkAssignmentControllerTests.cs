@@ -87,7 +87,7 @@ namespace Machete.Test.Controllers
             int _num = 0;
 
             string username = "UnitTest";
-            _woServ.Setup(p => p.GetWorkOrder(_num)).Returns(() => _wo);
+            _woServ.Setup(p => p.Get(_num)).Returns(() => _wo);
             _waServ.Setup(p => p.Create(_asmt, username)).Returns(() => _asmt);
             
             _ctrlr.ValueProvider = fakeform.ToValueProvider();

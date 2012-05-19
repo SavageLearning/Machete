@@ -108,7 +108,7 @@ namespace Machete.Test
         public void Integration_WO_Service_GetWorkOrders_returns_all()
         {
             // Arrange
-            IEnumerable<WorkOrder> result = _woServ.GetWorkOrders().ToList();
+            IEnumerable<WorkOrder> result = _woServ.GetAll().ToList();
             //
             int count = DB.WorkOrders.Count();
             //
