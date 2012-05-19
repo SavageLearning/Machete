@@ -14,9 +14,9 @@ namespace Machete.Service
     public interface ISigninService<T> : IService<T> where T : Signin
     {
         Image getImage(int dwccardnum);
-        ServiceIndexView<WorkerSigninView> GetIndexView(dispatchViewOptions o);
+        dTableList<wsiView> GetIndexView(dispatchViewOptions o);
 
-        //ServiceIndexView<WorkerSigninView> GetIndexView(dispatchViewOptions o, IQueryable<T> repo);
+        //dTableList<wsiView> GetIndexView(dispatchViewOptions o, IQueryable<T> repo);
     }
     public abstract class SigninServiceBase<T> : ServiceBase<T> where T : Signin
     {
@@ -62,15 +62,15 @@ namespace Machete.Service
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public virtual ServiceIndexView<WorkerSigninView> GetIndexView(dispatchViewOptions o)
+        public virtual dTableList<wsiView> GetIndexView(dispatchViewOptions o)
         {
             return GetIndexView(o, repo.GetAllQ());
         }
-        public virtual ServiceIndexView<WorkerSigninView> GetIndexView(dispatchViewOptions o, IQueryable<Signin> q)
+        public virtual dTableList<wsiView> GetIndexView(dispatchViewOptions o, IQueryable<Signin> q)
         {
             //Get all the records
             IEnumerable<Signin> enumWSI;
-            IEnumerable<WorkerSigninView> enumWSIV;
+            IEnumerable<wsiView> enumWSIV;
             //
             if (o.date != null) IndexViewBase.diffDays(o, ref q);                
             //
@@ -119,7 +119,7 @@ namespace Machete.Service
             }
             enumWSIV = enumWSI
                     .Join(WorkerCache.getCache(), s => s.dwccardnum, w => w.dwccardnum, (s, w) => new { s, w })
-                    .Select(p => new WorkerSigninView(p.w.Person, p.s));
+                    .Select(p => new wsiView(p.w.Person, p.s));
 
             //Sort the Persons based on column selection
             switch (o.sortColName)
@@ -139,11 +139,11 @@ namespace Machete.Service
             //queryableWSI = queryableWSI.ToList();
             var filtered = enumWSIV.Count();
             if ((int)o.displayLength >= 0)
-                enumWSIV = enumWSIV.Skip<WorkerSigninView>((int)o.displayStart).Take((int)o.displayLength);
+                enumWSIV = enumWSIV.Skip<wsiView>((int)o.displayStart).Take((int)o.displayLength);
 
             var total = repo.GetAllQ().Count();
 
-            return new ServiceIndexView<WorkerSigninView>
+            return new dTableList<wsiView>
             {
                 query = enumWSIV,
                 filteredCount = filtered,

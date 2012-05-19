@@ -17,7 +17,7 @@ namespace Machete.Service
         Person CreatePerson(Person person, string user);
         void DeletePerson(int id, string user);
         void SavePerson(Person person, string user);
-        ServiceIndexView<Person> GetIndexView(
+        dTableList<Person> GetIndexView(
                 CultureInfo CI,
                 string search,
                 int? parentID,
@@ -89,7 +89,7 @@ namespace Machete.Service
             levent.Properties["username"] = user;
             log.Log(levent);
         }
-        public ServiceIndexView<Person> GetIndexView(
+        public dTableList<Person> GetIndexView(
                         CultureInfo CI,
                         string search,
                         int? parentID,
@@ -135,7 +135,7 @@ namespace Machete.Service
             var filtered = filteredP.Count();
             var total = pRepo.GetAllQ().Count();
             //return what's left to datatables
-            return new ServiceIndexView<Person>
+            return new dTableList<Person>
             {
                 query = orderedP,
                 filteredCount = filtered,
