@@ -11,6 +11,9 @@ using System.Data.Objects.SqlClient;
 
 namespace Machete.Service
 {
+    /// <summary>
+    /// Contains all service-layer queries for manipulating Entity lists from DB
+    /// </summary>
     public static class IndexViewBase
     {
         private static Regex isTimeSpecific = new Regex(@"^\s*\d{1,2}[\/-_]\d{1,2}[\/-_]\d{2,4}\s+\d{1,2}:\d{1,2}");
@@ -304,6 +307,57 @@ namespace Machete.Service
                             p.address1.Contains(o.search) ||
                             p.phone.Contains(o.search) ||
                             p.city.Contains(o.search));
+        }
+        #endregion
+        #region PERSONS
+        public static void search(viewOptions o, ref IQueryable<Person> q)
+        {
+            q = q
+                .Where(p => p.firstname1.Contains(o.search) ||
+                            p.firstname2.Contains(o.search) ||
+                            p.lastname1.Contains(o.search) ||
+                            p.lastname2.Contains(o.search) ||
+                            p.phone.Contains(o.search));
+        }
+        public static void sortOnColName(string name, bool descending, ref IQueryable<Person> q)
+        {
+            switch (name)
+            {
+                case "active": q = descending ? q.OrderByDescending(p => p.active) : q.OrderBy(p => p.active); break;
+                case "firstname1": q = descending ? q.OrderByDescending(p => p.firstname1) : q.OrderBy(p => p.firstname1); break;
+                case "firstname2": q = descending ? q.OrderByDescending(p => p.firstname2) : q.OrderBy(p => p.firstname2); break;
+                case "lastname1": q = descending ? q.OrderByDescending(p => p.lastname1) : q.OrderBy(p => p.lastname1); break;
+                case "lastname2": q = descending ? q.OrderByDescending(p => p.lastname2) : q.OrderBy(p => p.lastname2); break;
+                case "phone": q = descending ? q.OrderByDescending(p => p.phone) : q.OrderBy(p => p.phone); break;
+                case "dateupdated": q = descending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated); break;
+                default: q = descending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated); break;
+            }
+        }
+        #endregion
+        #region WORKERS
+        public static void search(viewOptions o, ref IQueryable<Worker> q)
+        {
+            q = q.Where(p => p.dwccardnum.ToString().ContainsOIC(o.search) ||
+                            p.active.ToString().ContainsOIC(o.search) ||
+                            p.Person.firstname1.ContainsOIC(o.search) ||
+                            p.Person.firstname2.ContainsOIC(o.search) ||
+                            p.Person.lastname1.ContainsOIC(o.search) ||
+                            p.Person.lastname2.ContainsOIC(o.search) ||
+                            p.memberexpirationdate.ToString().ContainsOIC(o.search));
+        }
+        public static void sortOnColName(string name, bool descending, ref IQueryable<Worker> q)
+        {
+            switch (name)
+            {
+                case "dwccardnum": q = descending ? q.OrderByDescending(p => p.dwccardnum) : q.OrderBy(p => p.dwccardnum); break;
+                case "wkrStatus": q = descending ? q.OrderByDescending(p => p.memberStatus) : q.OrderBy(p => p.memberStatus); break;
+                case "firstname1": q = descending ? q.OrderByDescending(p => p.Person.firstname1) : q.OrderBy(p => p.Person.firstname1); break;
+                case "firstname2": q = descending ? q.OrderByDescending(p => p.Person.firstname2) : q.OrderBy(p => p.Person.firstname2); break;
+                case "lastname1": q = descending ? q.OrderByDescending(p => p.Person.lastname1) : q.OrderBy(p => p.Person.lastname1); break;
+                case "lastname2": q = descending ? q.OrderByDescending(p => p.Person.lastname2) : q.OrderBy(p => p.Person.lastname2); break;
+                case "memberexpirationdate": q = descending ? q.OrderByDescending(p => p.memberexpirationdate) : q.OrderBy(p => p.memberexpirationdate); break;
+                default: q = descending ? q.OrderByDescending(p => p.ID) : q.OrderBy(p => p.ID); break;
+            }
         }
         #endregion
     }

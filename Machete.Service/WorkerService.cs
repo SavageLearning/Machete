@@ -9,82 +9,35 @@ using NLog;
 
 namespace Machete.Service
 {
-    public interface IWorkerService
+    public interface IWorkerService : IService<Worker>
     {
-        IEnumerable<Worker> GetWorkers();
-        Worker GetWorker(int id);
         Worker GetWorkerByNum(int dwccardnum);
-        Worker CreateWorker(Worker worker, string user);
-        void DeleteWorker(int id, string user);
-        void SaveWorker(Worker worker, string user);
+        dTableList<Worker> GetIndexView(viewOptions o);
     }
-    public class WorkerService : IWorkerService
+    public class WorkerService : ServiceBase<Worker>, IWorkerService
     {
-        private readonly IWorkerRepository workerRepository;
-        private readonly IUnitOfWork unitOfWork;
-        //
-        private Logger log = LogManager.GetCurrentClassLogger();
-        private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "WorkerService", "");
-
-        public WorkerService(IWorkerRepository workerRepository, IUnitOfWork unitOfWork)
-        {
-            this.workerRepository = workerRepository;
-            this.unitOfWork = unitOfWork;
-        }
-        #region IWorkerService Members
-        //TODO: Switch from IEnumerable to IQueryable
-        public IEnumerable<Worker> GetWorkers()
-        {
-            return workerRepository.GetAll();
-        }
-
-        public Worker GetWorker(int id)
-        {
-            var worker = workerRepository.GetById(id);
-            return worker;
-        }
-
+        public WorkerService(IWorkerRepository wRepo, IUnitOfWork uow) : base(wRepo, uow) {}
         public Worker GetWorkerByNum(int dwccardnum)
         {
-            Worker worker = workerRepository.Get(w => w.dwccardnum == dwccardnum);
+            Worker worker = repo.Get(w => w.dwccardnum == dwccardnum);
             return worker;
         }
-
-        public Worker CreateWorker(Worker worker, string user)
+        public dTableList<Worker> GetIndexView(viewOptions o)
         {
-            worker.createdby(user);
-            //worker.Person.createdby(user);
-            //if (worker.Person == null) throw new MissingReferenceException("Worker object is missing a Person reference.");
-            Worker _worker = workerRepository.Add(worker);
-            unitOfWork.Commit();
-            _log(worker.ID, user, "Worker created");
-            return _worker;
-
+            //Get all the records
+            IQueryable<Worker> q = repo.GetAllQ();
+            //Search based on search-bar string 
+            if (!string.IsNullOrEmpty(o.search)) IndexViewBase.search(o, ref q);
+            //ORDER BY based on column selection
+            IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
+            //Limit results to the display length and offset
+            q = q.Skip(o.displayStart).Take(o.displayLength);
+            return new dTableList<Worker>
+            {
+                query = q,
+                filteredCount = q.Count(),
+                totalCount = repo.GetAllQ().Count()
+            };
         }
-
-        public void DeleteWorker(int id, string user)
-        {
-            var worker = workerRepository.GetById(id);
-            _log(worker.ID, user, "Worker Deleted");
-            workerRepository.Delete(worker);
-            unitOfWork.Commit();
-        }
-
-        public void SaveWorker(Worker worker, string user)
-        {
-            worker.updatedby(user);
-            _log(worker.ID, user, "Worker edited");
-            unitOfWork.Commit();
-        }
-
-        private void _log(int ID, string user, string msg)
-        {
-            levent.Level = LogLevel.Info;
-            levent.Message = msg;
-            levent.Properties["RecordID"] = ID; //magic string maps to NLog config
-            levent.Properties["username"] = user;
-            log.Log(levent);
-        }
-        #endregion
     }
 }

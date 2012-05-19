@@ -156,7 +156,7 @@ namespace Machete.Test.Controllers
                                              savedAsmt = p;
                                              user = str;
                                          });
-            _wkrServ.Setup(p => p.GetWorker((int)asmt.workerAssignedID)).Returns(wkr);
+            _wkrServ.Setup(p => p.Get((int)asmt.workerAssignedID)).Returns(wkr);
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
             var result = _ctrlr.Edit(testid, null, "UnitTest") as JsonResult;
@@ -189,7 +189,7 @@ namespace Machete.Test.Controllers
             // Mock service and setup SaveWorkAssignment mock
             _waServ.Setup(p => p.Save(asmt, "UnitTest"));
             _waServ.Setup(p => p.Get(testid)).Returns(asmt);
-            _wkrServ.Setup(p => p.GetWorker((int)asmt.workerAssignedID)).Returns(wkr);
+            _wkrServ.Setup(p => p.Get((int)asmt.workerAssignedID)).Returns(wkr);
             //
             // Mock HttpContext so that ModelState and FormCollection work
             _ctrlr.ValueProvider = fakeform.ToValueProvider();

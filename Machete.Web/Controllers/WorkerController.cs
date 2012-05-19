@@ -19,7 +19,7 @@ namespace Machete.Web.Controllers
     [ElmahHandleError]
     public class WorkerController : MacheteController
     {
-        private readonly IWorkerService workerService;
+        private readonly IWorkerService serv;
         private readonly IImageService imageServ;
         System.Globalization.CultureInfo CI;
 
@@ -27,7 +27,7 @@ namespace Machete.Web.Controllers
                                 IPersonService personService,
                                 IImageService  imageServ)
         {
-            this.workerService = workerService;
+            this.serv = workerService;
             this.imageServ = imageServ;
         }
         protected override void Initialize(RequestContext requestContext)
@@ -48,71 +48,38 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
-            //Get all the records
-            var allWorkers = workerService.GetWorkers();
-            IEnumerable<Worker> filteredW;
-            IEnumerable<Worker> orderedW;
-            //Search based on search-bar string 
-            if (!string.IsNullOrEmpty(param.sSearch))
+            dTableList<Worker> list = serv.GetIndexView(new viewOptions()
             {
-                filteredW = workerService.GetWorkers()
-                    .Where(p => p.dwccardnum.ToString().ContainsOIC(param.sSearch) ||
-                                p.active.ToString().ContainsOIC(param.sSearch) ||
-                                p.Person.firstname1.ContainsOIC(param.sSearch) ||
-                                p.Person.firstname2.ContainsOIC(param.sSearch) ||
-                                p.Person.lastname1.ContainsOIC(param.sSearch) ||
-                                p.Person.lastname2.ContainsOIC(param.sSearch) ||
-                                p.memberexpirationdate.ToString().ContainsOIC(param.sSearch));
-            }
-            else
-            {
-                filteredW = allWorkers;
-            }
-            //
-            //ORDER BY based on column selection
-            //
-            var orderDescending = true;
-            if (param.sSortDir_0 == "asc") orderDescending = false;
+                CI = CI,
+                search = param.sSearch,
+                //status = string.IsNullOrEmpty(param.searchColName("status")) ? (int?)null : Convert.ToInt32(param.searchColName("status")),
+                orderDescending = param.sSortDir_0 == "asc" ? false : true,
+                displayStart = param.iDisplayStart,
+                displayLength = param.iDisplayLength,
+                sortColName = param.sortColName()
+            });
 
-            switch (param.sortColName())
-            {                
-                case "dwccardnum": orderedW = orderDescending ? filteredW.OrderByDescending(p => p.dwccardnum) : filteredW.OrderBy(p => p.dwccardnum); break;
-                case "wkrStatus": orderedW = orderDescending ? filteredW.OrderByDescending(p => p.memberStatus) : filteredW.OrderBy(p => p.memberStatus); break;
-                case "firstname1": orderedW = orderDescending ? filteredW.OrderByDescending(p => p.Person.firstname1) : filteredW.OrderBy(p => p.Person.firstname1); break;
-                case "firstname2": orderedW = orderDescending ? filteredW.OrderByDescending(p => p.Person.firstname2) : filteredW.OrderBy(p => p.Person.firstname2); break;
-                case "lastname1": orderedW = orderDescending ? filteredW.OrderByDescending(p => p.Person.lastname1) : filteredW.OrderBy(p => p.Person.lastname1); break;
-                case "lastname2": orderedW = orderDescending ? filteredW.OrderByDescending(p => p.Person.lastname2) : filteredW.OrderBy(p => p.Person.lastname2); break;
-                case "memberexpirationdate": orderedW = orderDescending ? filteredW.OrderByDescending(p => p.memberexpirationdate) : filteredW.OrderBy(p => p.memberexpirationdate); break;
-                default: orderedW = orderDescending ? filteredW.OrderByDescending(p => p.ID) : filteredW.OrderBy(p => p.ID); break;
-            }
-            //Sort the Persons based on column selection
-
-            //Limit results to the display length and offset
-            var displayPersons = orderedW.Skip(param.iDisplayStart)
-                                              .Take(param.iDisplayLength);
-
-            //return what's left to datatables
-            var result = from p in displayPersons
-                         select new{ 
-                                     tabref = "/Worker/Edit/" + Convert.ToString(p.ID),
-                                     tablabel =  p.Person.firstname1 + ' ' + p.Person.lastname1,
-                                     WID =    p.ID.ToString(),
-                                     recordid = p.ID.ToString(),
-                                     dwccardnum =  Convert.ToString(p.dwccardnum),
-                                     active =  Convert.ToString(p.active),
-                                     wkrStatus = _getStatus(p),
-                                     firstname1 = p.Person.firstname1, 
-                                     firstname2 = p.Person.firstname2, 
-                                     lastname1 = p.Person.lastname1, 
-                                     lastname2 = p.Person.lastname2, 
-                                     memberexpirationdate = Convert.ToString(p.memberexpirationdate)
-                         };
+            var result = from p in list.query select new
+            { 
+                tabref = "/Worker/Edit/" + Convert.ToString(p.ID),
+                tablabel =  p.Person.firstname1 + ' ' + p.Person.lastname1,
+                WID =    p.ID.ToString(),
+                recordid = p.ID.ToString(),
+                dwccardnum =  Convert.ToString(p.dwccardnum),
+                active =  Convert.ToString(p.active),
+                wkrStatus = _getStatus(p),
+                firstname1 = p.Person.firstname1, 
+                firstname2 = p.Person.firstname2, 
+                lastname1 = p.Person.lastname1, 
+                lastname2 = p.Person.lastname2, 
+                memberexpirationdate = Convert.ToString(p.memberexpirationdate)
+            };
 
             return Json(new
             {
                 sEcho = param.sEcho,
-                iTotalRecords = allWorkers.Count(),
-                iTotalDisplayRecords = filteredW.Count(),
+                iTotalRecords = list.totalCount,
+                iTotalDisplayRecords = list.filteredCount,
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);
@@ -155,7 +122,7 @@ namespace Machete.Web.Controllers
         {
             UpdateModel(worker);
             if (imagefile != null) updateImage(worker, imagefile);
-            Worker newWorker = workerService.CreateWorker(worker, userName);
+            Worker newWorker = serv.Create(worker, userName);
             return Json(new
             {
                 //sNewRef = _getTabRef(newWorker),
@@ -172,18 +139,18 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
         public ActionResult Edit(int id)
         {
-            Worker _worker = workerService.GetWorker(id);
+            Worker _worker = serv.Get(id);
             return PartialView(_worker);
         }
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "PhoneDesk, Manager, Administrator")]
         public ActionResult Edit(int id, Worker _model, string userName, HttpPostedFileBase imagefile)
         {
-            Worker worker = workerService.GetWorker(id);
+            Worker worker = serv.Get(id);
             UpdateModel(worker);
             
             if (imagefile != null) updateImage(worker, imagefile);                
-            workerService.SaveWorker(worker, userName);
+            serv.Save(worker, userName);
             return Json(new
             {
                 jobSuccess = true
@@ -197,7 +164,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Delete(int id, string user)
         {            
-            workerService.DeleteWorker(id, user);
+            serv.Delete(id, user);
 
             return Json(new
             {

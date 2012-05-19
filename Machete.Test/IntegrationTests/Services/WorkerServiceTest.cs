@@ -35,7 +35,7 @@ namespace Machete.Test
             _w.Person = _p;
             //
             //Act
-            _wServ.CreateWorker(_w, "UnitTest");
+            _wServ.Create(_w, "UnitTest");
             //
             //Assert
             Assert.IsNotNull(_w.ID, "Worker.ID is Null");
@@ -57,9 +57,9 @@ namespace Machete.Test
             _w.Person = _p;
             //
             //Act
-            Worker result = _wServ.CreateWorker(_w, "UnitTest");
+            Worker result = _wServ.Create(_w, "UnitTest");
             result.height = "short"; //EF should keep _w and result the same
-            _wServ.SaveWorker(result, "UnitTest");
+            _wServ.Save(result, "UnitTest");
             //
             //Assert
             Assert.IsNotNull(_w.ID, "Worker.ID is Null");
