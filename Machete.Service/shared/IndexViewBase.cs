@@ -7,7 +7,7 @@ using Machete.Data;
 using System.Data.Objects;
 using System.Text.RegularExpressions;
 using System.Data.Objects.SqlClient;
-using Machete.Service.Helpers;
+
 
 namespace Machete.Service
 {
@@ -296,6 +296,14 @@ namespace Machete.Service
                 case "dateupdated": q = descending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated); break;
                 default: q = descending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated); break;
             }
+        }
+        public static void search(viewOptions o, ref IQueryable<Employer> q)
+        {
+            q = q.Where(p => //p.active.ToString().Contains(o.search) ||
+                            p.name.Contains(o.search) ||
+                            p.address1.Contains(o.search) ||
+                            p.phone.Contains(o.search) ||
+                            p.city.Contains(o.search));
         }
         #endregion
     }

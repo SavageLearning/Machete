@@ -69,7 +69,7 @@ namespace Machete.Test.Controllers
         {
             //Arrange
             var person = new Person();
-            _serv.Setup(p => p.CreatePerson(person, "UnitTest")).Returns(person);
+            _serv.Setup(p => p.Create(person, "UnitTest")).Returns(person);
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
             var result = (JsonResult)_ctrlr.Create(person, "UnitTest");
@@ -87,7 +87,7 @@ namespace Machete.Test.Controllers
         {
             //Arrange
             var person = new Person();
-            _serv.Setup(p => p.CreatePerson(person, "UnitTest")).Returns(person);
+            _serv.Setup(p => p.Create(person, "UnitTest")).Returns(person);
             fakeform.Remove("firstname1");
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
@@ -106,7 +106,7 @@ namespace Machete.Test.Controllers
             _serv = new Mock<IPersonService>();
             int testid = 4242;
             Person fakeperson = new Person();
-            _serv.Setup(p => p.GetPerson(testid)).Returns(fakeperson);
+            _serv.Setup(p => p.Get(testid)).Returns(fakeperson);
             var _ctrlr = new PersonController(_serv.Object);
             //Act
             var result = (PartialViewResult)_ctrlr.Edit(testid);
@@ -128,8 +128,8 @@ namespace Machete.Test.Controllers
             Person fakeperson = new Person();
             Person savedperson = new Person();
             string user = "";
-            _serv.Setup(p => p.GetPerson(testid)).Returns(fakeperson);
-            _serv.Setup(x => x.SavePerson(It.IsAny<Person>(),
+            _serv.Setup(p => p.Get(testid)).Returns(fakeperson);
+            _serv.Setup(x => x.Save(It.IsAny<Person>(),
                                           It.IsAny<string>())
                                          ).Callback((Person p, string str) =>
                                                 {
@@ -160,8 +160,8 @@ namespace Machete.Test.Controllers
             int testid = 12345;
             //
             // Mock service and setup SavePerson mock
-            _serv.Setup(p => p.SavePerson(person, "UnitTest"));
-            _serv.Setup(p => p.GetPerson(testid)).Returns(person);
+            _serv.Setup(p => p.Save(person, "UnitTest"));
+            _serv.Setup(p => p.Get(testid)).Returns(person);
             //
             // Mock HttpContext so that ModelState and FormCollection work
             fakeform.Remove("firstname1");

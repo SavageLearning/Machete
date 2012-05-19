@@ -11,7 +11,6 @@ using System.Data.Objects.SqlClient;
 using System.Data.Objects;
 using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
-using Machete.Service.Helpers;
 namespace Machete.Service
 {
     public interface IWorkOrderService : IService<WorkOrder>

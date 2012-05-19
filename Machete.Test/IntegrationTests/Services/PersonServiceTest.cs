@@ -31,7 +31,7 @@ namespace Machete.Test
             Person _person = (Person)Records.person.Clone();
             _person.firstname2 = "PersonService_Intergation_CreatePerson";
             //Act
-            _pServ.CreatePerson(_person, "UnitTest");
+            _pServ.Create(_person, "UnitTest");
             //Assert
             Assert.IsNotNull(_person.ID, "Person.ID is Null");
             Assert.IsTrue(_person.ID == 4);
@@ -54,9 +54,9 @@ namespace Machete.Test
             //Act
             try
             {
-                _pServ.CreatePerson(_p, "UnitTest");
-                _pServ.CreatePerson(_p, "UnitTest");
-                _pServ.CreatePerson(_p, "UnitTest");
+                _pServ.Create(_p, "UnitTest");
+                _pServ.Create(_p, "UnitTest");
+                _pServ.Create(_p, "UnitTest");
                 reccount = DB.Persons.Count(n => n.firstname1 == _p.firstname1);
             }
             catch (DbEntityValidationException ex)

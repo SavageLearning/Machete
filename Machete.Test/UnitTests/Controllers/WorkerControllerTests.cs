@@ -98,7 +98,7 @@ namespace Machete.Test.Controllers
             var _person = new Person();
             //
             _wserv.Setup(p => p.CreateWorker(_worker, "UnitTest")).Returns(_worker);
-            _pserv.Setup(p => p.CreatePerson(_person, "UnitTest")).Returns(_person);
+            _pserv.Setup(p => p.Create(_person, "UnitTest")).Returns(_person);
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
             var result = _ctrlr.Create(_worker, "UnitTest", null) as JsonResult;
@@ -157,7 +157,7 @@ namespace Machete.Test.Controllers
 
             string user = "TestUser";
             _wserv.Setup(p => p.GetWorker(testid)).Returns(fakeworker);
-            _pserv.Setup(p => p.GetPerson(testid)).Returns(fakeperson);
+            _pserv.Setup(p => p.Get(testid)).Returns(fakeperson);
             _wserv.Setup(x => x.SaveWorker(It.IsAny<Worker>(),
                                           It.IsAny<string>())
                                          ).Callback((Worker p, string str) =>
