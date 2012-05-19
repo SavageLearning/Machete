@@ -16,7 +16,10 @@ namespace Machete.Service
     }
     public class WorkerService : ServiceBase<Worker>, IWorkerService
     {
-        public WorkerService(IWorkerRepository wRepo, IUnitOfWork uow) : base(wRepo, uow) {}
+        public WorkerService(IWorkerRepository wRepo, IUnitOfWork uow) : base(wRepo, uow)
+        {
+            this.logPrefix = "Worker";
+        }
         public Worker GetWorkerByNum(int dwccardnum)
         {
             Worker worker = repo.Get(w => w.dwccardnum == dwccardnum);

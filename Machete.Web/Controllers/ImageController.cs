@@ -28,17 +28,16 @@ namespace Machete.Web.Controllers
             base.Initialize(requestContext);
             System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
         }
-        //public ActionResult Index()
-        //{
-        //    var images = _serv.GetImages();
-        //    return View(images);
-        //}
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <returns></returns>
         public FileContentResult GetImage(int ID)
         {
             if (ID != 0)
             {
-                Image image = _serv.GetImage(ID);
+                Image image = _serv.Get(ID);
                 return File(image.ImageData, image.ImageMimeType, image.filename);
             }
             else
@@ -46,76 +45,5 @@ namespace Machete.Web.Controllers
                 return null; //File(new byte [1], "");
             }
         }
-
-        ////
-        //// GET: /Image/Details/5
-
-        //public ActionResult Details(int id)
-        //{
-        //    return View();
-        //}
-
-        ////
-        //// GET: /Image/Create
-
-        //public ActionResult Create()
-        //{
-        //    Image imageobj = new Image();
-        //    return View(imageobj);
-        //} 
-
-        //
-        // POST: /Image/Create
-
-        //[HttpPost]
-        //public ActionResult Create(Image image, HttpPostedFileBase imagefile)
-        //{
-        //    try
-        //    {
-        //        if (ModelState.IsValid)
-        //        {
-        //            if (imagefile != null)
-        //            {
-        //                image.ImageMimeType = imagefile.ContentType;
-        //                image.ImageData = new byte[imagefile.ContentLength];
-        //                imagefile.InputStream.Read(image.ImageData, 
-        //                                           0, 
-        //                                           imagefile.ContentLength);
-        //                _serv.CreateImage(image, this.User.Identity.Name);        
-        //            }
-        //        }
-        //        return RedirectToAction("Index");
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
-        
-        //
-        // GET: /Image/Edit/5
- 
-        //public ActionResult Edit(int id)
-        //{
-        //    var image = _serv.GetImage(id);
-        //    return View(image);
-        //}
-        //
-        // POST: /Image/Delete/5
-
-        //[HttpPost, UserNameFilter]
-        //[Authorize(Roles = "Administrator, Manager")]
-        //public ActionResult Delete(int id, string user)
-        //{
-        //    _serv.DeleteImage(id, user);
-
-        //    return Json(new
-        //    {
-        //        status = "OK",
-        //        deletedID = id
-        //    },
-        //    JsonRequestBehavior.AllowGet);
-        //}
-
     }
 }

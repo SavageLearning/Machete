@@ -44,6 +44,7 @@ namespace Machete.Service
             this.wRepo = wRepo;
             this.lRepo = lRepo;
             this.wsiRepo = wsiRepo;
+            this.logPrefix = "WorkAssignment";
         }
         /// <summary>
         ///

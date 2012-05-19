@@ -24,30 +24,24 @@ namespace Machete.Service
             int displayStart,
             int displayLength);
         dTableList<WorkOrder> GetIndexView(viewOptions opt);
-
     }
 
     // Business logic for WorkOrder record management
     // Ïf I made a non-web app, would I still need the code? If yes, put in here.
     public class WorkOrderService : ServiceBase<WorkOrder>, IWorkOrderService
     {
-        private readonly IWorkOrderRepository woRepo;
         private readonly IWorkAssignmentService waServ;
-        private readonly IUnitOfWork unitOfWork;
-        private WorkOrder _workOrder;
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="woRepo"></param>
+        /// <param name="repo"></param>
         /// <param name="unitOfWork"></param>
-        public WorkOrderService(IWorkOrderRepository woRepo, 
+        public WorkOrderService(IWorkOrderRepository repo, 
                                 IWorkAssignmentService waServ,
-                                IUnitOfWork unitOfWork) : base(woRepo, unitOfWork)
+                                IUnitOfWork unitOfWork) : base(repo, unitOfWork)
         {
-            this.woRepo = woRepo;
             this.waServ = waServ;
-            this.unitOfWork = unitOfWork;
-            this.logPrefix = "Employer";
+            this.logPrefix = "WorkOrder";
         }
 
         /// <summary>
@@ -57,7 +51,7 @@ namespace Machete.Service
         /// <returns></returns>
         public IEnumerable<WorkOrder> GetByEmployer(int id)
         {
-             return woRepo.GetMany(w => w.EmployerID == id);
+             return repo.GetMany(w => w.EmployerID == id);
         }
         /// <summary>
         /// Gets active orders for a given day. Active and assigned OR all active
@@ -69,7 +63,7 @@ namespace Machete.Service
         {
             // I will rot in hell for hardcoding this value -- matches the Lookups table 
             // for active orderstatus
-            IQueryable<WorkOrder> query = woRepo.GetAllQ();
+            IQueryable<WorkOrder> query = repo.GetAllQ();
                             query = query.Where(wo => wo.status == WorkOrder.iActive && 
                                            EntityFunctions.DiffDays(wo.dateTimeofWork, date) == 0 ? true : false)
                                     .AsQueryable();
@@ -116,7 +110,7 @@ namespace Machete.Service
         public dTableList<WorkOrder> GetIndexView(viewOptions o)
         {
             //Get all the records
-            IQueryable<WorkOrder> q = woRepo.GetAllQ();
+            IQueryable<WorkOrder> q = repo.GetAllQ();
             //
             if (o.EmployerID != null) IndexViewBase.filterEmployer(o, ref q);
             if (o.status != null) IndexViewBase.filterStatus(o, ref q);
@@ -125,7 +119,7 @@ namespace Machete.Service
             //
             q = q.Skip<WorkOrder>((int)o.displayStart).Take((int)o.displayLength);
             var filtered = q.Count();
-            var total =  woRepo.GetAllQ().Count();
+            var total =  repo.GetAllQ().Count();
             return new dTableList<WorkOrder> 
             { 
                 query = q,
@@ -141,8 +135,8 @@ namespace Machete.Service
         {
             IQueryable<WorkOrder> query;
             if (!string.IsNullOrEmpty(search)) 
-                query = IndexViewBase.filterDateTimeOfWork(woRepo.GetAllQ(), search);            
-            else query = woRepo.GetAllQ();
+                query = IndexViewBase.filterDateTimeOfWork(repo.GetAllQ(), search);            
+            else query = repo.GetAllQ();
             var group_query = from wo in query
                             group wo by new { 
                                 dateSoW = EntityFunctions.TruncateTime(wo.dateTimeofWork),                                              
@@ -165,14 +159,15 @@ namespace Machete.Service
         /// <returns></returns>
         public override WorkOrder Create(WorkOrder workOrder, string user)
         {
+            WorkOrder wo;
             workOrder.createdby(user);
-            _workOrder = woRepo.Add(workOrder);
-            _workOrder.workerRequests = new Collection<WorkerRequest>();
-            unitOfWork.Commit();
-            if (_workOrder.paperOrderNum == null) _workOrder.paperOrderNum = _workOrder.ID;
-            unitOfWork.Commit();
+            wo = repo.Add(workOrder);
+            wo.workerRequests = new Collection<WorkerRequest>();
+            uow.Commit();
+            if (wo.paperOrderNum == null) wo.paperOrderNum = wo.ID;
+            uow.Commit();
             _log(workOrder.ID, user, "WorkOrder created");
-            return _workOrder;
+            return wo;
         }
         private void _log(int ID, string user, string msg)
         {
@@ -241,5 +236,20 @@ namespace Machete.Service
                 
             };
         }
+    }
+    public class WOWASummary
+    {
+        public DateTime? date { get; set; }
+        public string weekday { get; set; }
+        public int? pending_wo { get; set; }
+        public int? pending_wa { get; set; }
+        public int? active_wo { get; set; }
+        public int? active_wa { get; set; }
+        public int? completed_wo { get; set; }
+        public int? completed_wa { get; set; }
+        public int? cancelled_wo { get; set; }
+        public int? cancelled_wa { get; set; }
+        public int? expired_wo { get; set; }
+        public int? expired_wa { get; set; }
     }
 }

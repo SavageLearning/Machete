@@ -151,7 +151,7 @@ namespace Machete.Web.Controllers
             imagefile.InputStream.Read(image.ImageData,
                                        0,
                                        imagefile.ContentLength);
-            Image newImage = iServ.CreateImage(image, user);
+            Image newImage = iServ.Create(image, user);
             joiner.ImageID = newImage.ID;
             joiner.EventID = evnt.ID;
             joiner.datecreated = DateTime.Now;
@@ -160,7 +160,7 @@ namespace Machete.Web.Controllers
             joiner.Createdby = user;
             evnt.JoinEventImages.Add(joiner);
             _serv.Save(evnt, user);
-            var foo = iServ.GetImage(newImage.ID).ImageData;
+            var foo = iServ.Get(newImage.ID).ImageData;
             //_serv.GetEvent(evnt.ID);
             
             return Json(new
@@ -192,7 +192,7 @@ namespace Machete.Web.Controllers
             Event evnt = _serv.Get(evntID);
             JoinEventImage jevi = evnt.JoinEventImages.Single(e => e.ID == jeviID);
             deletedJEVI = jevi.ID;
-            iServ.DeleteImage(jevi.ImageID, user);
+            iServ.Delete(jevi.ImageID, user);
             evnt.JoinEventImages.Remove(jevi);
 
             return Json(new
