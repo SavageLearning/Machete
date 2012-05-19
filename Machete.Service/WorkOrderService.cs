@@ -24,7 +24,7 @@ namespace Machete.Service
             bool orderDescending,
             int displayStart,
             int displayLength);
-        dTableList<WorkOrder> GetIndexView(woViewOptions opt);
+        dTableList<WorkOrder> GetIndexView(viewOptions opt);
 
     }
 
@@ -112,9 +112,9 @@ namespace Machete.Service
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="o">woViewOptions object</param>
+        /// <param name="o">viewOptions object</param>
         /// <returns></returns>
-        public dTableList<WorkOrder> GetIndexView(woViewOptions o)
+        public dTableList<WorkOrder> GetIndexView(viewOptions o)
         {
             //Get all the records
             IQueryable<WorkOrder> q = woRepo.GetAllQ();

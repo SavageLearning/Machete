@@ -35,8 +35,7 @@ namespace Machete.Web.Controllers
         //
         //
         public ActionResult AjaxHandler(jQueryDataTableParam param)
-        {
-            System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+        {            
             //Get all the records
             var allEvents = _serv.GetEvents(param.personID);
             IEnumerable<Event> filteredEvents;

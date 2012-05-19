@@ -25,7 +25,7 @@ namespace Machete.Web.Controllers
         private readonly IWorkerService wkrServ;
         private readonly IWorkOrderService woServ;
         private readonly IWorkerSigninService wsiServ;
-
+        private System.Globalization.CultureInfo CI;
         public WorkAssignmentController(IWorkAssignmentService workAssignmentService,
                                         IWorkerService workerService,
                                         IWorkOrderService workOrderService,
@@ -34,14 +34,13 @@ namespace Machete.Web.Controllers
             this.waServ = workAssignmentService;
             this.wkrServ = workerService;
             this.woServ = workOrderService;
-            this.wsiServ = signinService;
+            this.wsiServ = signinService;           
         }
         protected override void Initialize(RequestContext requestContext)
         {
             base.Initialize(requestContext);
-            System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];            
+            CI = (System.Globalization.CultureInfo)Session["Culture"];
         }
-
         #region Index
         //
         // GET: /WorkAssignment/
@@ -61,10 +60,9 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
-            //Get all the records
-            System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+            //Get all the records            
 
-            dTableList<WorkAssignment> was = waServ.GetIndexView(new dispatchViewOptions {
+            dTableList<WorkAssignment> was = waServ.GetIndexView(new viewOptions {
                     CI = CI,
                     search = param.sSearch,
                     date = param.todaysdate == null ? null : (DateTime?)DateTime.Parse(param.todaysdate),

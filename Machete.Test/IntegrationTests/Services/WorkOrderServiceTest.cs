@@ -12,7 +12,6 @@ using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Globalization;
 using Machete.Web.Helpers;
-using Machete.Service.Helpers;
 
 namespace Machete.Test
 {
@@ -84,7 +83,7 @@ namespace Machete.Test
         {
             //
             //Arrange
-            woViewOptions o = new woViewOptions();
+            viewOptions o = new viewOptions();
             o.CI = new CultureInfo("en-US", false);
             o.search = DateTime.Today.ToShortDateString();
             o.EmployerID = null;

@@ -6,7 +6,6 @@ using System.Web.Mvc;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
-//using Machete.Helpers;
 using Machete.Service;
 using Machete.Web.Helpers;
 using NLog;
@@ -15,7 +14,6 @@ using System.Web.Routing;
 using Machete.Web.Models;
 using System.Text.RegularExpressions;
 using System.Data.Objects;
-using Machete.Service.Helpers;
 
 namespace Machete.Web.Controllers
 {
@@ -108,7 +106,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
-            woViewOptions opt = new woViewOptions();
+            viewOptions opt = new viewOptions();
             opt.CI = (System.Globalization.CultureInfo)Session["Culture"];
             opt.search = param.sSearch;
             opt.EmployerID = string.IsNullOrEmpty(param.searchColName("EID")) ? (int?)null : Convert.ToInt32(param.searchColName("EID"));//employerID
