@@ -34,23 +34,39 @@ namespace Machete.Service
         /// replace with service-specific string for logging
         /// </summary>
         protected string logPrefix = "ServiceBase";
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="repo"></param>
+        /// <param name="uow"></param>
         protected ServiceBase(IRepository<T> repo, IUnitOfWork uow)
         {
             this.repo = repo;
             this.uow = uow;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<T> GetAll() 
         {
             return repo.GetAll();
         }
-
-        public T Get(int id)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual T Get(int id)
         {
             return repo.GetById(id);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="record"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public virtual T Create(T record, string user)
         {
             record.createdby(user);
@@ -59,7 +75,11 @@ namespace Machete.Service
             log(record.ID, user, logPrefix + " created");
             return created;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="user"></param>
         public void Delete(int id, string user)
         {
             T record = repo.GetById(id);
@@ -67,14 +87,23 @@ namespace Machete.Service
             log(id, user, logPrefix + " deleted");
             uow.Commit();
         }
-
-        public void Save(T record, string user)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="record"></param>
+        /// <param name="user"></param>
+        public virtual void Save(T record, string user)
         {
             record.updatedby(user);
             log(record.ID, user, logPrefix + " edited");
             uow.Commit();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <param name="user"></param>
+        /// <param name="msg"></param>
         protected void log(int ID, string user, string msg)
         {
             levent.Level = LogLevel.Info;

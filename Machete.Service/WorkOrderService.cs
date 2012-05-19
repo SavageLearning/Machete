@@ -12,13 +12,11 @@ using System.Data.Objects;
 using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
 using Machete.Service.Helpers;
-
-
 namespace Machete.Service
 {
     public interface IWorkOrderService : IService<WorkOrder>
     {
-        IEnumerable<WorkOrder> GetWorkOrders(int byEmployer);
+        IEnumerable<WorkOrder> GetByEmployer(int id);
         IEnumerable<WorkOrder> GetActiveOrders(DateTime date, bool assignedOnly);
         IQueryable<WorkOrderSummary> GetSummary(string search);
         int CompleteActiveOrders(DateTime date, string user);
@@ -26,7 +24,6 @@ namespace Machete.Service
             bool orderDescending,
             int displayStart,
             int displayLength);
-
         dTableList<WorkOrder> GetIndexView(woViewOptions opt);
 
     }
@@ -59,13 +56,10 @@ namespace Machete.Service
         /// </summary>
         /// <param name="empID"></param>
         /// <returns></returns>
-        public IEnumerable<WorkOrder> GetWorkOrders(int empID)
+        public IEnumerable<WorkOrder> GetByEmployer(int id)
         {
-
-             return woRepo.GetMany(w => w.EmployerID == empID);
-
+             return woRepo.GetMany(w => w.EmployerID == id);
         }
-
         /// <summary>
         /// Gets active orders for a given day. Active and assigned OR all active
         /// </summary>
@@ -115,7 +109,6 @@ namespace Machete.Service
             }
             return count;
         }
-
         /// <summary>
         /// 
         /// </summary>
@@ -165,7 +158,6 @@ namespace Machete.Service
 
             return group_query;
         }
-        #region CRUD
         /// <summary>
         /// 
         /// </summary>
@@ -183,7 +175,6 @@ namespace Machete.Service
             _log(workOrder.ID, user, "WorkOrder created");
             return _workOrder;
         }
-
         private void _log(int ID, string user, string msg)
         {
             levent.Level = LogLevel.Info;
@@ -192,7 +183,6 @@ namespace Machete.Service
             levent.Properties["username"] = user;
             nlog.Log(levent);
         }
-        #endregion
         /// <summary>
         /// 
         /// </summary>

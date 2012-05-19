@@ -54,7 +54,7 @@ namespace Machete.Test
             _pServ = new PersonService(_pRepo, _unitofwork);
             _iServ = new ImageService(_iRepo, _unitofwork);
             _wrServ = new WorkerRequestService(_wrRepo, _unitofwork);
-            _waServ = new WorkAssignmentService(_waRepo, _wRepo, _lRepo, _wsiRepo, _wrRepo, _unitofwork);
+            _waServ = new WorkAssignmentService(_waRepo, _wRepo, _lRepo, _wsiRepo, _unitofwork);
             _wServ = new WorkerService(_wRepo, _unitofwork);
             _woServ = new WorkOrderService(_woRepo, _waServ, _unitofwork);
             _wsiServ = new WorkerSigninService(_wsiRepo, _wRepo, _iRepo, _wrRepo, _unitofwork);
