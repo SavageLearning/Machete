@@ -223,10 +223,10 @@ namespace Machete.Test
         public void Integration_WA_Service_Delete_removes_record()
 
         {
-            var before = _waServ.GetMany();
+            var before = _waServ.GetAll();
             Assert.IsTrue(before.Count() == 10, "Unanticipated list count from Assignment.GetMany()");
             _waServ.Delete(1, "Intg Test");
-            var after = _waServ.GetMany();
+            var after = _waServ.GetAll();
             Assert.IsTrue(after.Count() == 9, "Unanticipated list count from Assignment.GetMany()");
             Assert.AreNotSame(before.Count(), after.Count());
         }

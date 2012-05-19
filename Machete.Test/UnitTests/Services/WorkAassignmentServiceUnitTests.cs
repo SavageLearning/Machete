@@ -78,7 +78,7 @@ namespace Machete.Test.UnitTests.Services
             lRepo = new Mock<ILookupRepository>();
             wsiRepo = new Mock<IWorkerSigninRepository>();
             wrRepo = new Mock<IWorkerRequestRepository>();
-            waServ = new WorkAssignmentService(waRepo.Object, wRepo.Object, lRepo.Object, wsiRepo.Object, wrRepo.Object, uow.Object);
+            waServ = new WorkAssignmentService(waRepo.Object, wRepo.Object, lRepo.Object, wsiRepo.Object, uow.Object);
             
         }
         [TestMethod]
@@ -88,7 +88,7 @@ namespace Machete.Test.UnitTests.Services
             //Arrange
 
             //Act
-            var result = waServ.GetMany();
+            var result = waServ.GetAll();
             //Assert
             Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
         }

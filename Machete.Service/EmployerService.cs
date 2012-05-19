@@ -29,7 +29,7 @@ namespace Machete.Service
 
         public IEnumerable<WorkOrder> GetOrders(int id)
         {
-            return _woServ.GetWorkOrders(id);
+            return _woServ.GetByEmployer(id);
         }
     }
 }

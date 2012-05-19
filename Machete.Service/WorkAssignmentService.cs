@@ -14,79 +14,42 @@ using System.Linq.Expressions;
 
 namespace Machete.Service
 {
-    public interface IWorkAssignmentService
-    {
-        IEnumerable<WorkAssignment> GetMany();
-        IEnumerable<WorkAssignment> GetMany(Func<WorkAssignment, bool> where);
-        IQueryable<WorkAssignment> GetManyQ(Func<WorkAssignment, bool> where);
-        IQueryable<WorkAssignment> GetManyQ();
+    public interface IWorkAssignmentService :IService<WorkAssignment>
+    {        
         IQueryable<WorkAssignmentSummary> GetSummary(string search);
-        WorkAssignment Get(int id);
-        WorkAssignment Create(WorkAssignment workAssignment, string user);
         bool Assign(WorkAssignment assignment, WorkerSignin signin, string user);
         bool Unassign(int? wsiid, int? waid, string user);
-        void Delete(int id, string user);
-        void Save(WorkAssignment workAssignment, string user);
         dTableList<WorkAssignment> GetIndexView(dispatchViewOptions o);
     }
 
     // Business logic for WorkAssignment record management
     // Ïf I made a non-web app, would I still need the code? If yes, put in here.
-    public class WorkAssignmentService : IWorkAssignmentService
+    public class WorkAssignmentService : ServiceBase<WorkAssignment>, IWorkAssignmentService
     {
         private readonly IWorkAssignmentRepository waRepo;
         private readonly IWorkerRepository wRepo;
         private readonly IWorkerSigninRepository wsiRepo;
         private readonly IUnitOfWork unitOfWork;
         private readonly ILookupRepository lRepo;
-        private readonly IWorkerRequestRepository wrRepo;
-        private readonly MacheteContext DB;
         //
-        private Logger log = LogManager.GetCurrentClassLogger();
-        private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "WorkAssignmentService", "");
-        private WorkAssignment _workAssignment;
         //
         public WorkAssignmentService(IWorkAssignmentRepository waRepo, 
                                      IWorkerRepository wRepo, 
                                      ILookupRepository lRepo, 
                                      IWorkerSigninRepository wsiRepo,
-                                     IWorkerRequestRepository wrRepo,
-                                     IUnitOfWork unitOfWork)
+                                     IUnitOfWork unitOfWork) : base(waRepo, unitOfWork)
         {
             this.waRepo = waRepo;
             this.unitOfWork = unitOfWork;
             this.wRepo = wRepo;
             this.lRepo = lRepo;
             this.wsiRepo = wsiRepo;
-            this.wrRepo = wrRepo;
-            DB = new MacheteContext();
-
         }
         /// <summary>
         ///
         /// </summary>
         /// <returns></returns>
-        #region GET__()
-        public IEnumerable<WorkAssignment> GetMany()
-        {
-            return waRepo.GetAll();
-        }
-        public IEnumerable<WorkAssignment> GetMany(Func<WorkAssignment, bool> where)
-        {
-            return waRepo.GetMany(where);
-        }
-        public IQueryable<WorkAssignment> GetManyQ()
-        {
-            return waRepo.GetAllQ().AsQueryable();
-        }
-
-        public IQueryable<WorkAssignment> GetManyQ(Func<WorkAssignment, bool> where)
-        {
-
-            return waRepo.GetAllQ().Where(where).AsQueryable();
-        }
-
-        public WorkAssignment Get(int id)
+        public override WorkAssignment Get(int id)
         {
             var wa = waRepo.GetById(id);
             if (wa.workerAssignedID != null)
@@ -95,7 +58,6 @@ namespace Machete.Service
             }         
             return wa;
         }
-        #endregion
         public dTableList<WorkAssignment> GetIndexView(dispatchViewOptions o)
         {
             IQueryable<WorkAssignment> q = waRepo.GetAllQ();
@@ -183,7 +145,6 @@ namespace Machete.Service
         /// <param name="waid"></param>
         /// <param name="wsiid"></param>
         /// <returns></returns>
-        #region ASSIGNS
         public bool Assign(WorkAssignment asmt, WorkerSignin signin, string user)
         {
             int wid;
@@ -207,7 +168,7 @@ namespace Machete.Service
             asmt.updatedby(user);
             signin.updatedby(user);
             unitOfWork.Commit();
-            _log(asmt.ID, user, "WSIID:" + signin.ID + " Assign successful");
+            log(asmt.ID, user, "WSIID:" + signin.ID + " Assign successful");
             return true;
         }
         /// <summary>
@@ -229,7 +190,7 @@ namespace Machete.Service
         {
             if (wsi.WorkerID == null)
                 throw new MacheteIntegrityException(
-                    "WorkerSignin key " + wsi.dwccardnum.ToString() + 
+                    "WorkerSignin key " + wsi.dwccardnum.ToString() +
                     "is not associated with a Worker record. " +
                     "Machete cannot assign a worker when no Worker record exists.");
         }
@@ -260,7 +221,7 @@ namespace Machete.Service
                 // user needs to unassign first
                 wa.workerAssignedID != wsi.WorkerID)   //WA.WID != WSI.WID
                 throw new MacheteDispatchException(
-                    "Orphaned WorkAssignment, associated with Worker ID " + 
+                    "Orphaned WorkAssignment, associated with Worker ID " +
                     wa.workerAssignedID + "; Unassign first, the assign to new Worker");
         }
         /// <summary>
@@ -295,16 +256,15 @@ namespace Machete.Service
             // Both
             if (waid != null && wsiid != null) unassignBoth((int)waid, (int)wsiid, user);
             // call error
-            if (waid == null && wsiid == null) 
+            if (waid == null && wsiid == null)
                 throw new NullReferenceException("Signin and WorkAssignment are both null");
             return true;
         }
-
         private void unassignWorkAssignmentOnly(int waid, string user)
         {
             // Get assignment
             WorkAssignment wa = waRepo.GetById((int)waid);
-            if (wa == null) throw new NullReferenceException("WAID " + waid.ToString() + 
+            if (wa == null) throw new NullReferenceException("WAID " + waid.ToString() +
                 "returned a null Work Assignment record");
             //
             // Starting with WA:
@@ -328,7 +288,7 @@ namespace Machete.Service
             //
             // 3. If points to something, but doesn't link bach, does something
             //    match it's link?
-            WorkerSignin linkedWSI = wsiRepo.GetById((int)wa.workerSigninID);            
+            WorkerSignin linkedWSI = wsiRepo.GetById((int)wa.workerSigninID);
             if (linkedWSI.WorkAssignmentID == null || matchWAWSI(null, linkedWSI))
             {
                 //Something matches its link. My link to something assumed bad.
@@ -336,9 +296,8 @@ namespace Machete.Service
                 unitOfWork.Commit();
                 return;
             }
-            else throw new MacheteIntegrityException("Unassign found chain of mislinked records, starting with WAID " + wa.ID.ToString());                
+            else throw new MacheteIntegrityException("Unassign found chain of mislinked records, starting with WAID " + wa.ID.ToString());
         }
-
         private bool matchWAWSI(WorkAssignment wa, WorkerSignin wsi)
         {
             if (wa == null && wsi == null) throw new NullReferenceException("WorkAssignment and WorkerSignin objects both null.");
@@ -364,11 +323,10 @@ namespace Machete.Service
                 wa.workerAssignedID == wsi.WorkerID) return true;
             else return false;
         }
-
         private void unassignWorkerSigninOnly(int wsiid, string user)
         {
             // get workersignin
-            WorkerSignin wsi = wsiRepo.GetById(wsiid); 
+            WorkerSignin wsi = wsiRepo.GetById(wsiid);
             if (wsi == null) throw new NullReferenceException("WSIID " + wsiid.ToString() +
                 "returned a null Worker Signin record");
             //
@@ -399,18 +357,16 @@ namespace Machete.Service
             }
             else throw new MacheteIntegrityException("Unassign found chain of mislinked records, starting with WSIID " + wsi.ID.ToString());
         }
-
         private void unassignBoth(int waid, int wsiid, string user)
         {
             WorkAssignment wa = waRepo.GetById(waid);
             WorkerSignin wsi = wsiRepo.GetById(wsiid);
-            if (matchWAWSI(wa, wsi)) 
+            if (matchWAWSI(wa, wsi))
             {
                 unassignBoth(wa, wsi, user);
             }
             else throw new Exception("The Worker and the Assignment do not match");
         }
-
         private void unassignBoth(WorkAssignment asmt, WorkerSignin signin, string user)
         {
             //Have both assignment and signin. 
@@ -422,34 +378,9 @@ namespace Machete.Service
             asmt.updatedby(user);
             signin.updatedby(user);
             unitOfWork.Commit();
-            _log(asmt.ID, user, "WSIID:" + signin.ID + " Unassign successful");
+            log(asmt.ID, user, "WSIID:" + signin.ID + " Unassign successful");
         }
-
-        #endregion
-        #region CRUD
-        public WorkAssignment Create(WorkAssignment workAssignment, string user)
-        {
-            workAssignment.createdby(user);
-            _workAssignment = waRepo.Add(workAssignment);
-            unitOfWork.Commit();
-            _log(workAssignment.ID, user, "WorkAssignment created");
-            return _workAssignment;
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="user"></param>
-
-        public void Delete(int id, string user)
-        {
-            var workAssignment = waRepo.GetById(id);
-            waRepo.Delete(workAssignment);
-            _log(id, user, "WorkAssignment deleted");
-            unitOfWork.Commit();
-        }
-
-        public void Save(WorkAssignment wa, string user)
+        public override void Save(WorkAssignment wa, string user)
         {
             //4.5.12-Moved down from Controller; solving WSI/WA integrity
             if (wa.workerAssignedID != null)
@@ -457,26 +388,9 @@ namespace Machete.Service
                 wa.workerAssigned = wRepo.GetById((int)wa.workerAssignedID);
             }
             wa.updatedby(user);
-            _log(wa.ID, user, "WorkAssignment edited");
+            log(wa.ID, user, "WorkAssignment edited");
             unitOfWork.Commit();
         }
-
-        private void _log(int ID, string user, string msg)
-        {
-            levent.Level = LogLevel.Info;
-            levent.Message = msg;
-            levent.Properties["RecordID"] = ID; //magic string maps to NLog config
-            levent.Properties["username"] = user;
-            log.Log(levent);
-        }
-        #endregion
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="query"></param>
-        /// <param name="search"></param>
-        /// <returns></returns>
-
     }
     public class dispatchViewOptions
     {
