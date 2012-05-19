@@ -97,7 +97,7 @@ namespace Machete.Test.Controllers
             var _worker = new Worker();
             var _person = new Person();
             //
-            _wserv.Setup(p => p.CreateWorker(_worker, "UnitTest")).Returns(_worker);
+            _wserv.Setup(p => p.Create(_worker, "UnitTest")).Returns(_worker);
             _pserv.Setup(p => p.Create(_person, "UnitTest")).Returns(_person);
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
@@ -134,7 +134,7 @@ namespace Machete.Test.Controllers
             var _person = new Person();
             int testid = 4242;
             Person fakeperson = new Person();
-            _wserv.Setup(p => p.GetWorker(testid)).Returns(_worker);
+            _wserv.Setup(p => p.Get(testid)).Returns(_worker);
             //Act
             var result = (PartialViewResult)_ctrlr.Edit(testid);
             //Assert
@@ -156,9 +156,9 @@ namespace Machete.Test.Controllers
             fakeworker.Person = fakeperson;
 
             string user = "TestUser";
-            _wserv.Setup(p => p.GetWorker(testid)).Returns(fakeworker);
+            _wserv.Setup(p => p.Get(testid)).Returns(fakeworker);
             _pserv.Setup(p => p.Get(testid)).Returns(fakeperson);
-            _wserv.Setup(x => x.SaveWorker(It.IsAny<Worker>(),
+            _wserv.Setup(x => x.Save(It.IsAny<Worker>(),
                                           It.IsAny<string>())
                                          ).Callback((Worker p, string str) =>
                                          {

@@ -21,10 +21,10 @@ namespace Machete.Web.Controllers
     public class WorkOrderController : MacheteController
     {
         private readonly IWorkOrderService woServ;
-        private readonly IEmployerService _empServ;
-        private readonly IWorkerService _reqServ;
-        private readonly IWorkerRequestService _wrServ;
-        private readonly IWorkAssignmentService _waServ;
+        private readonly IEmployerService eServ;
+        private readonly IWorkerService wServ;
+        private readonly IWorkerRequestService wrServ;
+        private readonly IWorkAssignmentService waServ;
         
         public WorkOrderController(IWorkOrderService woServ, 
                                    IWorkAssignmentService workAssignmentService,
@@ -33,10 +33,10 @@ namespace Machete.Web.Controllers
                                    IWorkerRequestService requestService)
         {
             this.woServ = woServ;
-            this._empServ = employerService;
-            this._reqServ = workerService;
-            this._waServ = workAssignmentService;
-            this._wrServ = requestService;
+            this.eServ = employerService;
+            this.wServ = workerService;
+            this.waServ = workAssignmentService;
+            this.wrServ = requestService;
         }
  
         #region Index
@@ -209,7 +209,7 @@ namespace Machete.Web.Controllers
             foreach (var add in workerRequests2)
             {
                 add.workOrder = neworder;
-                add.workerRequested = _reqServ.GetWorker(add.WorkerID);
+                add.workerRequested = wServ.Get(add.WorkerID);
                 add.updatedby(userName);
                 add.createdby(userName);
                 neworder.workerRequests.Add(add);
@@ -257,15 +257,15 @@ namespace Machete.Web.Controllers
             //Stale requests to remove
             foreach (var rem in workOrder.workerRequests.Except<WorkerRequest>(workerRequests2, new WorkerRequestComparer()).ToArray())
             {
-                var request = _wrServ.GetWorkerRequestsByNum(workOrder.ID, rem.WorkerID);
-                _wrServ.DeleteWorkerRequest(request.ID, userName);
+                var request = wrServ.GetWorkerRequestsByNum(workOrder.ID, rem.WorkerID);
+                wrServ.DeleteWorkerRequest(request.ID, userName);
                 workOrder.workerRequests.Remove(rem);
             }
             //New requests to add
             foreach (var add in workerRequests2.Except<WorkerRequest>(workOrder.workerRequests, new WorkerRequestComparer()))
             {
                 add.workOrder = workOrder;
-                add.workerRequested = _reqServ.GetWorker(add.WorkerID);
+                add.workerRequested = wServ.Get(add.WorkerID);
                 add.updatedby(userName);
                 add.createdby(userName);
                 workOrder.workerRequests.Add(add);
