@@ -41,9 +41,6 @@ namespace Machete.Service
         private readonly ILookupRepository lRepo;
         private readonly IWorkerRequestRepository wrRepo;
         private readonly MacheteContext DB;
-        private static int lkup_dwc;
-        private static int lkup_hhh;
-
         //
         private Logger log = LogManager.GetCurrentClassLogger();
         private LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "WorkAssignmentService", "");
@@ -101,48 +98,55 @@ namespace Machete.Service
         #endregion
         public ServiceIndexView<WorkAssignment> GetIndexView(dispatchViewOptions o)
         {
-            IQueryable<WorkAssignment> queryableWA = waRepo.GetAllQ();
-            IEnumerable<WorkAssignment> filteredWA;
+            IQueryable<WorkAssignment> q = waRepo.GetAllQ();
+            IEnumerable<WorkAssignment> e;
+            int count;
+            int total;
             //
             // 
-            if (o.date != null) IndexViewBase.diffDays(o, ref queryableWA); 
-            if (o.typeofwork_grouping > 0) IndexViewBase.typeOfWork(o, ref queryableWA, lRepo);
-            if (o.woid > 0) IndexViewBase.WOID(o, ref queryableWA);
-            if (o.status > 0) IndexViewBase.status(o, ref queryableWA);
-            if (o.showPending == false) IndexViewBase.filterPending(o, ref queryableWA);
-            if (!string.IsNullOrEmpty(o.wa_grouping)) IndexViewBase.waGrouping(o, ref queryableWA, lRepo);
-            if (!string.IsNullOrEmpty(o.search)) IndexViewBase.search(o, ref queryableWA, lRepo);
+            if (o.date != null) IndexViewBase.diffDays(o, ref q); 
+            if (o.typeofwork_grouping > 0) IndexViewBase.typeOfWork(o, ref q, lRepo);
+            if (o.woid > 0) IndexViewBase.WOID(o, ref q);
+            if (o.status > 0) IndexViewBase.status(o, ref q);
+            if (o.showPending == false) IndexViewBase.filterPending(o, ref q);
+            if (!string.IsNullOrEmpty(o.wa_grouping)) IndexViewBase.waGrouping(o, ref q, lRepo);
+            if (!string.IsNullOrEmpty(o.search)) IndexViewBase.search(o, ref q, lRepo);
             //
             // filter on member ID, showing only assignments available to the member based on their skills
             if (o.dwccardnum > 0)
-                filteredWA = IndexViewBase.filterOnSkill(o, queryableWA);
+                e = IndexViewBase.filterOnSkill(o, q);
              else
-                filteredWA = queryableWA.AsEnumerable();
+                e = q.AsEnumerable();
             //
             //
-            filteredWA = filteredWA.GroupJoin(WorkerCache.getCache(),  //LINQ
-                                                wa => wa.workerAssignedID, 
-                                                wc => wc.ID, 
-                                                (wa, wc) => new { wa, wc }
-                                              )
-                            .SelectMany(jj => jj.wc.DefaultIfEmpty(new Worker { ID = 0, dwccardnum = 0}),
-                                             (jj, row) => jj.wa
-                                       );
+            e = e.GroupJoin(WorkerCache.getCache(),  //LINQ
+                                wa => wa.workerAssignedID, 
+                                wc => wc.ID, 
+                                (wa, wc) => new { wa, wc }
+                            )
+                            .SelectMany(jj => jj.wc.DefaultIfEmpty(
+                                    new Worker { 
+                                                 ID = 0, 
+                                                 dwccardnum = 0
+                                               }
+                                        ),
+                                    (jj, row) => jj.wa
+                            );
             //
             //Sort the Persons based on column selection
-            IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref filteredWA);
-            filteredWA = filteredWA.ToList();
-            var filtered = filteredWA.Count();
+            IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref e);
+            e = e.ToList();
+            count = e.Count();
             //
             //Limit results to the display length and offset
             if ((int)o.displayLength >= 0)
-                filteredWA = filteredWA.Skip((int)o.displayStart).Take((int)o.displayLength);
+                e = e.Skip((int)o.displayStart).Take((int)o.displayLength);
            
-           var total = waRepo.GetAllQ().Count();
+           total = waRepo.GetAllQ().Count();
            return new ServiceIndexView<WorkAssignment>
            {
-               query = filteredWA.AsEnumerable(),
-               filteredCount = filtered,
+               query = e.AsEnumerable(),
+               filteredCount = count,
                totalCount = total
            };
       }

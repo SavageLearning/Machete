@@ -13,30 +13,26 @@ namespace Machete.Service
 {
     public interface ISigninService<T> : IService<T> where T : Signin
     {
-        //T GetSignin(int dwccardnum, DateTime date);
-        //void CreateSignin(T workerSignin, string user);
         Image getImage(int dwccardnum);
         ServiceIndexView<WorkerSigninView> GetIndexView(dispatchViewOptions o);
+
         //ServiceIndexView<WorkerSigninView> GetIndexView(dispatchViewOptions o, IQueryable<T> repo);
     }
     public abstract class SigninServiceBase<T> : ServiceBase<T> where T : Signin
     {
         protected readonly IWorkerRepository wRepo;
         protected readonly IWorkerRequestRepository wrRepo;
-        protected readonly IPersonRepository pRepo;
         protected readonly IImageRepository iRepo;
         //
         //
         protected SigninServiceBase(IRepository<T> repo,
                                    IWorkerRepository wRepo,
-                                   IPersonRepository pRepo,
                                    IImageRepository iRepo,
                                    IWorkerRequestRepository wrRepo,
                                    IUnitOfWork uow)
             : base(repo, uow)
         {
             this.wRepo = wRepo;
-            this.pRepo = pRepo;
             this.wrRepo = wrRepo;
             this.iRepo = iRepo;
             this.logPrefix = "SigninServiceBase";
@@ -70,25 +66,24 @@ namespace Machete.Service
         {
             return GetIndexView(o, repo.GetAllQ());
         }
-        public virtual ServiceIndexView<WorkerSigninView> GetIndexView(dispatchViewOptions o, IQueryable<Signin> queryable)
+        public virtual ServiceIndexView<WorkerSigninView> GetIndexView(dispatchViewOptions o, IQueryable<Signin> q)
         {
             //Get all the records
-            IQueryable<Signin> queryableWSI = queryable;
             IEnumerable<Signin> enumWSI;
             IEnumerable<WorkerSigninView> enumWSIV;
             //
-            if (o.date != null) IndexViewBase.diffDays(o, ref queryableWSI);                
+            if (o.date != null) IndexViewBase.diffDays(o, ref q);                
             //
             if (o.typeofwork_grouping == Worker.iDWC || o.typeofwork_grouping == Worker.iHHH)
-                IndexViewBase.typeOfWork(o, ref queryableWSI);
+                IndexViewBase.typeOfWork(o, ref q);
             //
             // 
             // wa_grouping
             switch (o.wa_grouping)
             {
-                case "open": queryableWSI = queryableWSI.Where(p => p.WorkAssignmentID == null); break;
-                case "assigned": queryableWSI = queryableWSI.Where(p => p.WorkAssignmentID != null); break;
-                case "skilled": queryableWSI = queryableWSI
+                case "open": q = q.Where(p => p.WorkAssignmentID == null); break;
+                case "assigned": q = q.Where(p => p.WorkAssignmentID != null); break;
+                case "skilled": q = q
                                      .Where(wsi => wsi.WorkAssignmentID == null &&
                                          wsi.worker.skill1 != null ||
                                          wsi.worker.skill2 != null ||
@@ -98,16 +93,18 @@ namespace Machete.Service
                     break;
                 case "requested":
                     if (o.date == null) throw new MacheteIntegrityException("Date cannot be null for Requested filter");
-                    queryableWSI = queryableWSI.Where(p => p.WorkAssignmentID == null);
-                    queryableWSI = queryableWSI.Join(wrRepo.GetAllQ(),
-                                                wsi => new { K1 = (int)wsi.WorkerID, K2 = (DateTime)EntityFunctions.TruncateTime(wsi.dateforsignin) },
-                                                wr => new { K1 = wr.WorkerID, K2 = (DateTime)EntityFunctions.TruncateTime(wr.workOrder.dateTimeofWork) },
-                                                (wsi, wr) => wsi);
+                    q = q.Where(p => p.WorkAssignmentID == null);
+                    q = q.Join(wrRepo.GetAllQ(), //LINQ
+                                wsi => new { K1 = (int)wsi.WorkerID, 
+                                             K2 = (DateTime)EntityFunctions.TruncateTime(wsi.dateforsignin) },
+                                wr => new {  K1 = wr.WorkerID, 
+                                             K2 = (DateTime)EntityFunctions.TruncateTime(wr.workOrder.dateTimeofWork) },
+                                (wsi, wr) => wsi);
                     break;
             }
             if (!string.IsNullOrEmpty(o.search))
             {
-                enumWSI = queryableWSI.ToList()
+                enumWSI = q.ToList()
                             .Join(WorkerCache.getCache(), s => s.dwccardnum, w => w.dwccardnum, (s, w) => new { s, w })
                             .Where(p => p.w.dwccardnum.ToString().ContainsOIC(o.search) ||
                                         p.w.Person.firstname1.ContainsOIC(o.search) ||
@@ -118,7 +115,7 @@ namespace Machete.Service
             }
             else
             {
-                enumWSI = queryableWSI.ToList();
+                enumWSI = q.ToList();
             }
             enumWSIV = enumWSI
                     .Join(WorkerCache.getCache(), s => s.dwccardnum, w => w.dwccardnum, (s, w) => new { s, w })

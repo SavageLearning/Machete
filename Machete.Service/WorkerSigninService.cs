@@ -26,11 +26,10 @@ namespace Machete.Service
         //
         public WorkerSigninService(IWorkerSigninRepository repo, 
                                    IWorkerRepository wRepo,
-                                   IPersonRepository pRepo,
                                    IImageRepository iRepo,
                                    IWorkerRequestRepository wrRepo,
                                    IUnitOfWork uow)
-            : base(repo, wRepo, pRepo, iRepo, wrRepo, uow)
+            : base(repo, wRepo, iRepo, wrRepo, uow)
         {
             this.logPrefix = "WorkerSignin";
         }
@@ -44,68 +43,6 @@ namespace Machete.Service
         {
             return repo.GetManyQ().FirstOrDefault(r => r.dwccardnum == dwccardnum &&
                             EntityFunctions.DiffDays(r.dateforsignin, date) == 0 ? true : false);
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="o"></param>
-        /// <returns></returns>
-        public override ServiceIndexView<WorkerSigninView> GetIndexView(dispatchViewOptions o)
-        {
-            IQueryable<WorkerSignin> queryable = repo.GetAllQ();
-            //
-            // WHERE on dateforsignin
-            if (o.date != null) IndexViewBase.diffDays(o, ref queryable);
-
-            // 
-            // WHERE on wa_grouping
-            switch (o.wa_grouping)
-            {
-                case "open": queryable = queryable.Where(p => p.WorkAssignmentID == null); break;
-                case "assigned": queryable = queryable.Where(p => p.WorkAssignmentID != null); break;
-                case "skilled": queryable = queryable
-                                     .Where(wsi => wsi.WorkAssignmentID == null &&
-                                         wsi.worker.skill1 != null ||
-                                         wsi.worker.skill2 != null ||
-                                         wsi.worker.skill3 != null
-                    );
-
-                    break;
-                case "requested":
-                    if (o.date == null) throw new MacheteIntegrityException("Date cannot be null for Requested filter");
-                    queryable = queryable.Where(p => p.WorkAssignmentID == null);
-                    queryable = queryable.Join(wrRepo.GetAllQ(),
-                                                wsi => new { K1 = (int)wsi.WorkerID, K2 = (DateTime)EntityFunctions.TruncateTime(wsi.dateforsignin) },
-                                                wr => new { K1 = wr.WorkerID, K2 = (DateTime)EntityFunctions.TruncateTime(wr.workOrder.dateTimeofWork) },
-                                                (wsi, wr) => wsi);
-                    break;
-            }
-            // 
-            // typeofwork ( DWC / HHH )
-            if (o.typeofwork_grouping == Worker.iDWC || o.typeofwork_grouping == Worker.iHHH) //TODO: Refactor GetIndexView typework -- Should check for non-null, then group on value
-                IndexViewBase.typeOfWork(o, ref queryable);
-
-            return base.GetIndexView(o, queryable);
-        }
-        /// <summary>
-        /// Create a new Worker Sign-in
-        /// </summary>
-        /// <param name="signin"></param>
-        /// <param name="user"></param>
-        public override void CreateSignin(WorkerSignin signin, string user)
-        {
-            //Search for worker with matching card number
-            Worker wfound;
-            wfound = wRepo.GetAllQ().FirstOrDefault(s => s.dwccardnum == signin.dwccardnum);
-            if (wfound != null)
-            {
-                signin.WorkerID = wfound.ID;
-            }
-            //Search for duplicate signin for the same day
-            int sfound = 0; ;
-            sfound = repo.GetAllQ().Count(s => s.dateforsignin == signin.dateforsignin &&
-                                                     s.dwccardnum == signin.dwccardnum);
-            if (sfound == 0) Create(signin, user);
         }
         /// <summary>
         /// count lotteries for the day and increment

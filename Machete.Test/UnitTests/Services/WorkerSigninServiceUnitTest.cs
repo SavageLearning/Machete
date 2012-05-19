@@ -97,7 +97,7 @@ namespace Machete.Test.IntegrationTests.Services
         {
             //
             //Arrange
-            var _serv = new WorkerSigninService(_wsiRepo.Object, _wRepo.Object, _pRepo.Object, _iRepo.Object, _wrRepo.Object, _uow.Object);
+            var _serv = new WorkerSigninService(_wsiRepo.Object, _wRepo.Object, _iRepo.Object, _wrRepo.Object, _uow.Object);
             var _signin = new WorkerSignin() { dwccardnum = 66666, dateforsignin = DateTime.Today };
             WorkerSignin _cbsignin = new WorkerSignin();
             _wsiRepo.Setup(s => s.Add(It.IsAny<WorkerSignin>())).Callback((WorkerSignin s) => { _cbsignin = s; });
@@ -115,7 +115,7 @@ namespace Machete.Test.IntegrationTests.Services
             //
             //Arrange
             int fakeid = 66666;
-            var _serv = new WorkerSigninService(_wsiRepo.Object, _wRepo.Object, _pRepo.Object, _iRepo.Object, _wrRepo.Object, _uow.Object);
+            var _serv = new WorkerSigninService(_wsiRepo.Object, _wRepo.Object, _iRepo.Object, _wrRepo.Object, _uow.Object);
             var _signin = new WorkerSignin() { dwccardnum = fakeid, dateforsignin = DateTime.Today };
             WorkerSignin _cbsignin = new WorkerSignin();
             _wsiRepo.Setup(s => s.Add(It.IsAny<WorkerSignin>())).Callback((WorkerSignin s) => { _cbsignin = s; });
@@ -138,7 +138,7 @@ namespace Machete.Test.IntegrationTests.Services
             IQueryable<WorkerSignin> wsiList = new WorkerSignin[] { 
                 new WorkerSignin() {dwccardnum = 12345, dateforsignin = DateTime.Today} 
             }.AsQueryable();
-            var _serv = new WorkerSigninService(_wsiRepo.Object, _wRepo.Object, _pRepo.Object, _iRepo.Object, _wrRepo.Object, _uow.Object);
+            var _serv = new WorkerSigninService(_wsiRepo.Object, _wRepo.Object, _iRepo.Object, _wrRepo.Object, _uow.Object);
             var _signin = new WorkerSignin() { dwccardnum = fakeid, dateforsignin = DateTime.Today };
             WorkerSignin _cbsignin = null;
             _wsiRepo.Setup(s => s.Add(It.IsAny<WorkerSignin>())).Callback((WorkerSignin s) => { _cbsignin = s; });
