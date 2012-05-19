@@ -24,7 +24,7 @@ namespace Machete.Domain
         public DateTime? lottery_timestamp { get; set; }
         public int? lottery_sequence { get; set; }
     }
-    public class WorkerSigninView : Record
+    public class wsiView : Record
     {
         public int dwccardnum { get; set; }
         public string firstname1 { get; set; }
@@ -58,7 +58,7 @@ namespace Machete.Domain
         public Signin s { get; set; }
         public int typeOfWorkID { get; set; }
 
-        public WorkerSigninView(Person per, Signin sign)
+        public wsiView(Person per, Signin sign)
         {
             p = per;
             w = p.Worker;
@@ -86,6 +86,6 @@ namespace Machete.Domain
             memberStatus = p == null ? 0 : p.Worker.memberStatus;
             typeOfWorkID = p == null ? 0 : p.Worker.typeOfWorkID;
         }
-        public WorkerSigninView() { }
+        public wsiView() { }
     }
 }

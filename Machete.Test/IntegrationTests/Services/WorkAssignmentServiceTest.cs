@@ -48,7 +48,7 @@ namespace Machete.Test
             //Assert
             var tolist = result.query.ToList();
             Assert.IsNotNull(result, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(ServiceIndexView<WorkAssignment>));
+            Assert.IsInstanceOfType(result, typeof(dTableList<WorkAssignment>));
             Assert.AreEqual(8, result.filteredCount); //pending excluded
             Assert.AreEqual(10, result.totalCount);            
         }
@@ -59,7 +59,7 @@ namespace Machete.Test
             var result = _waServ.GetIndexView(dOptions);
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(ServiceIndexView<WorkAssignment>));
+            Assert.IsInstanceOfType(result, typeof(dTableList<WorkAssignment>));
             Assert.AreEqual(8, result.filteredCount); //pending excluded
             Assert.AreEqual(10, result.totalCount);
         }
@@ -74,7 +74,7 @@ namespace Machete.Test
             //Assert
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(ServiceIndexView<WorkAssignment>));
+            Assert.IsInstanceOfType(result, typeof(dTableList<WorkAssignment>));
             Assert.AreEqual(3, result.filteredCount);
             Assert.AreEqual(10, result.totalCount);
         }
@@ -91,7 +91,7 @@ namespace Machete.Test
             //Assert
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(ServiceIndexView<WorkAssignment>));
+            Assert.IsInstanceOfType(result, typeof(dTableList<WorkAssignment>));
             Assert.AreEqual(12420, tolist[0].workOrder.paperOrderNum);
             Assert.AreEqual(3, result.filteredCount);
             Assert.AreEqual(10, result.totalCount);
@@ -109,7 +109,7 @@ namespace Machete.Test
             //Assert
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(ServiceIndexView<WorkAssignment>));
+            Assert.IsInstanceOfType(result, typeof(dTableList<WorkAssignment>));
             Assert.AreEqual("foostring1", tolist[0].description);
             Assert.AreEqual(1, result.filteredCount);
             Assert.AreEqual(10, result.totalCount);
@@ -125,7 +125,7 @@ namespace Machete.Test
             //Assert
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(ServiceIndexView<WorkAssignment>));
+            Assert.IsInstanceOfType(result, typeof(dTableList<WorkAssignment>));
             Assert.AreEqual("foostring2", tolist[0].Updatedby);
             Assert.AreEqual(1, result.filteredCount);
             Assert.AreEqual(10, result.totalCount);
@@ -140,7 +140,7 @@ namespace Machete.Test
             //Assert
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(ServiceIndexView<WorkAssignment>));
+            Assert.IsInstanceOfType(result, typeof(dTableList<WorkAssignment>));
             Assert.AreEqual(70, tolist[0].skillID); //ID=70 is Digging
             Assert.AreEqual(1, result.filteredCount);
             Assert.AreEqual(10, result.totalCount);
@@ -157,7 +157,7 @@ namespace Machete.Test
             //Assert
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(ServiceIndexView<WorkAssignment>));
+            Assert.IsInstanceOfType(result, typeof(dTableList<WorkAssignment>));
             Assert.AreEqual(70, tolist[0].skillID);
             Assert.AreEqual(3, result.filteredCount);
             Assert.AreEqual(10, result.totalCount);
@@ -177,7 +177,7 @@ namespace Machete.Test
             //Assert
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(ServiceIndexView<WorkAssignment>));
+            Assert.IsInstanceOfType(result, typeof(dTableList<WorkAssignment>));
             //Assert.AreEqual(61, tolist[0].skillID);
             Assert.AreEqual(7, result.filteredCount);
             Assert.AreEqual(10, result.totalCount);
@@ -194,7 +194,7 @@ namespace Machete.Test
             //Assert
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(ServiceIndexView<WorkAssignment>));
+            Assert.IsInstanceOfType(result, typeof(dTableList<WorkAssignment>));
             //Assert.AreEqual(61, tolist[0].skillID);
             Assert.AreEqual(1, result.filteredCount);
             Assert.AreEqual(10, result.totalCount);

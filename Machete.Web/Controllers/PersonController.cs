@@ -45,7 +45,7 @@ namespace Machete.Web.Controllers
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             //Get all the records            
-            ServiceIndexView<Person> personView = personService.GetIndexView(
+            dTableList<Person> personView = personService.GetIndexView(
                 CI,
                 param.sSearch,
                 string.IsNullOrEmpty(param.sSearch_2) ? (int?)null : Convert.ToInt32(param.sSearch_2),

@@ -23,7 +23,7 @@ namespace Machete.Service
         IEnumerable<WorkOrder> GetActiveOrders(DateTime date, bool assignedOnly);
         IQueryable<WorkOrderSummary> GetSummary(string search);
         int CompleteActiveOrders(DateTime date, string user);
-        ServiceIndexView<WOWASummary> CombinedSummary(string search,
+        dTableList<WOWASummary> CombinedSummary(string search,
             bool orderDescending,
             int displayStart,
             int displayLength);
@@ -31,7 +31,7 @@ namespace Machete.Service
         WorkOrder CreateWorkOrder(WorkOrder workOrder, string user);
         void DeleteWorkOrder(int id, string user);
         void SaveWorkOrder(WorkOrder workOrder, string user);
-        ServiceIndexView<WorkOrder> GetIndexView(woViewOptions opt);
+        dTableList<WorkOrder> GetIndexView(woViewOptions opt);
 
     }
 
@@ -153,7 +153,7 @@ namespace Machete.Service
         /// </summary>
         /// <param name="o">woViewOptions object</param>
         /// <returns></returns>
-        public ServiceIndexView<WorkOrder> GetIndexView(woViewOptions o)
+        public dTableList<WorkOrder> GetIndexView(woViewOptions o)
         {
             #region FILTER
             //Get all the records
@@ -214,7 +214,7 @@ namespace Machete.Service
             orderedWO = orderedWO.Skip<WorkOrder>((int)o.displayStart).Take((int)o.displayLength);
             var filtered = filteredWO.Count();
             var total =  woRepo.GetAllQ().Count();
-            return new ServiceIndexView<WorkOrder> 
+            return new dTableList<WorkOrder> 
             { 
                 query = orderedWO,
                 filteredCount = filtered,
@@ -325,7 +325,7 @@ namespace Machete.Service
         /// </summary>
         /// <param name="search"></param>
         /// <returns></returns>
-        public ServiceIndexView<WOWASummary> CombinedSummary(string search, 
+        public dTableList<WOWASummary> CombinedSummary(string search, 
             bool orderDescending,
             int displayStart,
             int displayLength)
@@ -372,7 +372,7 @@ namespace Machete.Service
                 //Limit results to the display length and offset
                 var displayedSummary = result.Skip(displayStart)
                                                     .Take(displayLength);
-            return new ServiceIndexView<WOWASummary> {
+            return new dTableList<WOWASummary> {
                 query = displayedSummary,
                 filteredCount = result.Count(),
                 totalCount = displayedSummary.Count()

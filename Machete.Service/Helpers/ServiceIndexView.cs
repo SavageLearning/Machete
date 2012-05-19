@@ -10,7 +10,7 @@ namespace Machete.Service
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class ServiceIndexView<T>
+    public class dTableList<T>
     {
         public IEnumerable<T> query { get; set; }
         public int totalCount { get; set; }

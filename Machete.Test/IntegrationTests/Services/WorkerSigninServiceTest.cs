@@ -50,8 +50,8 @@ namespace Machete.Test
         //public void DbSet_WorkerSignin_GetView()
         //{
         //    DateTime date = DateTime.Today;
-        //    IEnumerable<WorkerSigninView> filteredWSI = _wsiServ.getView(date);
-        //    IEnumerable<WorkerSigninView> result = filteredWSI.ToList();
+        //    IEnumerable<wsiView> filteredWSI = _wsiServ.getView(date);
+        //    IEnumerable<wsiView> result = filteredWSI.ToList();
         //    Assert.IsNotNull(filteredWSI, "WorkerSignin getView return is Null");
         //    Assert.IsNotNull(result, "WorkerSignin getview.ToList() is Null");
         //}
@@ -70,8 +70,8 @@ namespace Machete.Test
             //_wsiServ.CreateWorkerSignin(_signin, "TestUser");            
             //_dOptions.search = _w.dwccardnum.ToString();
             ////            
-            //ServiceIndexView<WorkerSigninView> result = _wsiServ.GetIndexView(_dOptions);
-            //List<WorkerSigninView> tolist = result.query.ToList();
+            //dTableList<wsiView> result = _wsiServ.GetIndexView(_dOptions);
+            //List<wsiView> tolist = result.query.ToList();
             ////
             //Assert.AreEqual(1, result.filteredCount);
         }
@@ -84,12 +84,12 @@ namespace Machete.Test
             //
             //Act
             _dOptions.dwccardnum = 30040;
-            ServiceIndexView<WorkerSigninView> result = _wsiServ.GetIndexView(_dOptions);
+            dTableList<wsiView> result = _wsiServ.GetIndexView(_dOptions);
             //
             //Assert
-            List<WorkerSigninView> tolist = result.query.ToList();
+            List<wsiView> tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(ServiceIndexView<WorkerSigninView>));
+            Assert.IsInstanceOfType(result, typeof(dTableList<wsiView>));
             //Assert.AreEqual(61, tolist[0].skillID);
             Assert.AreEqual(3, result.filteredCount);
             Assert.AreEqual(5, result.totalCount);
@@ -104,12 +104,12 @@ namespace Machete.Test
             //Act
             _dOptions.dwccardnum = 30040;
             _dOptions.wa_grouping = "requested";
-            ServiceIndexView<WorkerSigninView> result = _wsiServ.GetIndexView(_dOptions);
+            dTableList<wsiView> result = _wsiServ.GetIndexView(_dOptions);
             //
             //Assert
-            List<WorkerSigninView> tolist = result.query.ToList();
+            List<wsiView> tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(ServiceIndexView<WorkerSigninView>));
+            Assert.IsInstanceOfType(result, typeof(dTableList<wsiView>));
             //Assert.AreEqual(61, tolist[0].skillID);
             Assert.AreEqual(1, result.filteredCount);
             Assert.AreEqual(5, result.totalCount);

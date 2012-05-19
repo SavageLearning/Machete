@@ -66,7 +66,7 @@ namespace Machete.Web.Controllers
             System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
             //
             //pass filter parameters to service level
-            ServiceIndexView<WOWASummary> filteredSummary = 
+            dTableList<WOWASummary> filteredSummary = 
                 woServ.CombinedSummary(param.sSearch,
                     Request["sSortDir_0"] == "asc" ? false : true,
                     param.iDisplayStart,
@@ -119,7 +119,7 @@ namespace Machete.Web.Controllers
             opt.sortColName = param.sortColName();
             opt.showOrdersWorkers = param.showOrdersWorkers;
             //Get all the records
-            ServiceIndexView<WorkOrder> allWorkOrders = woServ.GetIndexView(opt);
+            dTableList<WorkOrder> allWorkOrders = woServ.GetIndexView(opt);
 
             var result = from p in allWorkOrders.query
                          select new
