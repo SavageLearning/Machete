@@ -16,14 +16,14 @@ namespace Machete.Web.Controllers
 {
 
     [ElmahHandleError]
-    public class ActivityController : MacheteController 
+    public class ActivityController : MacheteController
     {
         private readonly IActivityService serv;
         private System.Globalization.CultureInfo CI;
 
-        public ActivityController(IActivityService employerService)
+        public ActivityController(IActivityService aServ)
         {
-            this.serv = employerService;
+            this.serv = aServ;
         }
         protected override void Initialize(RequestContext requestContext)
         {
