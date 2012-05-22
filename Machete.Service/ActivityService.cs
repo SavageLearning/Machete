@@ -23,13 +23,20 @@ namespace Machete.Service
 
     public interface IActivitySigninService : ISigninService<ActivitySignin>
     {
-        void CreateSignin(ActivitySignin workerSignin, string user);
+        void CreateSignin(ActivitySignin signin, string user);
     }
 
     public class ActivitySigninService : SigninServiceBase<ActivitySignin>, IActivitySigninService
     {
-        //
-        //
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="repo"></param>
+        /// <param name="wRepo"></param>
+        /// <param name="pRepo"></param>
+        /// <param name="iRepo"></param>
+        /// <param name="wrRepo"></param>
+        /// <param name="uow"></param>
         public ActivitySigninService(IActivitySigninRepository repo,
                                    IWorkerRepository wRepo,
                                    IPersonRepository pRepo,
