@@ -1,0 +1,59 @@
+﻿@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using Machete.Domain.Resources
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "activity";
+    //string idPrefix = recType + Model.ID + "-";
+}
+<div id="activityList"> @* This div is the ui.panel  *@
+    <table id="activityTable" class="display">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>LABEL</th>
+                <th>@Activity.name</th>
+                <th>@Activity.type</th>
+                <th>@Activity.teacher</th>
+                <th>@Activities.count</th>
+                <th>@Activity.dateStart</th>
+                <th>@Activity.dateEnd</th>
+                <th>@Record.dateupdated</th>
+                <th>@Record.updatedby</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {        
+        //
+        // Create Activity table
+        jqrfyTable($('#activityTable'), $('#activityTabs'),
+        {
+            "bPaginate": true,
+            "bLengthChange": true,
+            "aaSorting": [[7, 'desc']],
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "bServerSide": true,
+            "sAjaxSource": "/Activity/AjaxHandler",
+            "bProcessing": true,
+            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "aoColumns": [                           //dataTable column definition
+                            {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                            {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                            {"mDataProp": "name" },
+                            {"mDataProp": "type" },
+                            {"mDataProp": "teacher" },
+                            {"mDataProp": "count" },
+                            {"mDataProp": "dateStart" },
+                            {"mDataProp": "dateEnd" },
+                            {"mDataProp": "dateupdated" },
+                            { "mDataProp": "Updatedby", "bSortable": false }
+                        ]             
+        }, null, "@(recType)");
+    });
+</script>
+
