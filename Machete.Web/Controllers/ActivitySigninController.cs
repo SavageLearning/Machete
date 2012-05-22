@@ -32,16 +32,21 @@ namespace Machete.Web.Controllers
             base.Initialize(requestContext);
             CI = (System.Globalization.CultureInfo)Session["Culture"];
         }
-        //
-        // GET: /WorkerSignin/
-        // Initial page creation
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [Authorize(Roles = "Manager, Administrator, Check-in")]
         public ActionResult Index()
         {
             return View();
         }
-        //
-        // POST: /WorkerSignin/Index -- records a signin
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dwccardnum"></param>
+        /// <param name="ActivityID"></param>
+        /// <returns></returns>
         [HttpPost]
         [Authorize(Roles = "Manager, Administrator, Check-in")]
         public ActionResult Index(int dwccardnum, int ActivityID)
@@ -78,9 +83,12 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
-
-        //
-        // GET: /WorkerSignin/Delete/5
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userName"></param>
+        /// <returns></returns>
         [UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, Check-in")]
         public ActionResult Delete(int id, string userName)
@@ -94,8 +102,11 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
-
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
         [Authorize(Roles = "Administrator, Manager, Check-in")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
