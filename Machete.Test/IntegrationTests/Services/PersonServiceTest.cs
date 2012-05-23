@@ -23,9 +23,11 @@ namespace Machete.Test
             Database.SetInitializer<MacheteContext>(new TestInitializer());
             base.Initialize();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         [TestMethod]
-        public void DbSet_PersonService_Intergation_CreatePerson()
+        public void Integration_Person_Service_CreatePerson()
         {
             //Arrange
             Person _person = (Person)Records.person.Clone();
@@ -36,12 +38,11 @@ namespace Machete.Test
             Assert.IsNotNull(_person.ID, "Person.ID is Null");
             Assert.IsTrue(_person.ID == 4);
         }
-        //
-        // CreatePerson calls DbSet.Add() and  Context.SaveChanges()
-        //    This leads to duplication
-        //
+        /// <summary>
+        /// CreatePerson calls DbSet.Add() and  Context.SaveChanges() This leads to duplication
+        /// </summary>
         [TestMethod]
-        public void DbSet_PersonService_Intergation_CreatePersons_TestDuplicateBehavior()
+        public void Integration_Person_Service_CreatePersons_TestDuplicateBehavior()
         {
             int reccount = 0;
             //

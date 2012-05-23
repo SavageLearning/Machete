@@ -15,7 +15,6 @@ namespace Machete.Service
     {
         Image getImage(int dwccardnum);
         dTableList<wsiView> GetIndexView(viewOptions o);
-
         //dTableList<wsiView> GetIndexView(viewOptions o, IQueryable<T> repo);
     }
     public abstract class SigninServiceBase<T> : ServiceBase<T> where T : Signin
