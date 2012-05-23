@@ -360,5 +360,63 @@ namespace Machete.Service
             }
         }
         #endregion
+        #region ACTIVITIES
+        public static void search(viewOptions o, ref IEnumerable<Activity> q, ILookupRepository lRepo)
+        {
+            q = q
+                .Where(p => LookupCache.byID(p.name, o.CI.TwoLetterISOLanguageName).ContainsOIC(o.search) ||
+                            p.notes.ContainsOIC(o.search) ||
+                            p.teacher.ContainsOIC(o.search) ||
+                            LookupCache.byID(p.type, o.CI.TwoLetterISOLanguageName).ContainsOIC(o.search) ||
+                            p.dateStart.ToString().ContainsOIC(o.search) ||
+                            p.dateEnd.ToString().ContainsOIC(o.search));
+        }
+
+        public static void sortOnColName(string name, bool descending, string isoLandCode, ref IEnumerable<Activity> q)
+        {
+            switch (name)
+            {
+                case "name":
+                    q = descending ?
+                        q.OrderByDescending(p => LookupCache.byID(p.name, isoLandCode)) :
+                        q.OrderBy(p => LookupCache.byID(p.name, isoLandCode));
+                    break;
+                case "type":
+                    q = descending ?
+                        q.OrderByDescending(p => LookupCache.byID(p.type, isoLandCode)) :
+                        q.OrderBy(p => LookupCache.byID(p.type, isoLandCode));
+                    break;
+                case "count":
+                    q = descending ?
+                        q.OrderByDescending(p => p.Signins.Count()) :
+                        q.OrderBy(p => p.Signins.Count());
+                    break;
+                case "teacher":
+                    q = descending ?
+                        q.OrderByDescending(p => p.teacher) :
+                        q.OrderBy(p => p.teacher);
+                    break;
+                case "dateStart":
+                    q = descending ?
+                        q.OrderByDescending(p => p.dateStart) :
+                        q.OrderBy(p => p.dateStart);
+                    break;
+                case "dateEnd":
+                    q = descending ?
+                        q.OrderByDescending(p => p.dateEnd) :
+                        q.OrderBy(p => p.dateEnd);
+                    break;
+                case "dateupdated":
+                    q = descending ?
+                        q.OrderByDescending(p => p.dateupdated) :
+                        q.OrderBy(p => p.dateupdated);
+                    break;
+                default:
+                    q = descending ? q.OrderByDescending(p => p.dateStart) :
+                        q.OrderBy(p => p.dateStart);
+                    break;
+            }
+        }
+        #endregion
     }
 }

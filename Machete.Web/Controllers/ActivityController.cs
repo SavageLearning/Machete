@@ -47,76 +47,17 @@ namespace Machete.Web.Controllers
         public JsonResult AjaxHandler(jQueryDataTableParam param)
         {
             //Get all the records
-            var allA = serv.GetAll();
-            IEnumerable<Activity> filteredA;
-            IEnumerable<Activity> sortedA;
-
-            //Search based on search-bar string 
-            if (!string.IsNullOrEmpty(param.sSearch))
+            dTableList<Activity> list = serv.GetIndexView(new viewOptions
             {
-                filteredA = serv.GetAll()
-                    .Where(p => LookupCache.byID(p.name, CI.TwoLetterISOLanguageName).ContainsOIC(param.sSearch) ||
-                                p.notes.ContainsOIC(param.sSearch) ||
-                                p.teacher.ContainsOIC(param.sSearch) ||
-                                LookupCache.byID(p.type, CI.TwoLetterISOLanguageName).ContainsOIC(param.sSearch) ||
-                                p.dateStart.ToString().ContainsOIC(param.sSearch) ||
-                                p.dateEnd.ToString().ContainsOIC(param.sSearch));
-            }
-            else
-            {
-                filteredA = allA;
-            }
-            //Sort the Persons based on column selection
-            var sortDesc = param.sSortDir_0 == "asc" ? false : true;
-            switch (param.sortColName())
-            {
-                case "name": 
-                    sortedA = sortDesc ?  
-                        filteredA.OrderByDescending(p => LookupCache.byID(p.name, CI.TwoLetterISOLanguageName)) :
-                        filteredA.OrderBy(p => LookupCache.byID(p.name, CI.TwoLetterISOLanguageName));
-                    break;
-                case "type": 
-                    sortedA = sortDesc ?  
-                        filteredA.OrderByDescending(p => LookupCache.byID(p.type, CI.TwoLetterISOLanguageName)) :
-                        filteredA.OrderBy(p => LookupCache.byID(p.type, CI.TwoLetterISOLanguageName));
-                    break;
-                case "count":
-                    sortedA = sortDesc ?  
-                        filteredA.OrderByDescending(p => p.Signins.Count()) :
-                        filteredA.OrderBy(p => p.Signins.Count());
-                    break;
-                case "teacher":
-                    sortedA = sortDesc ?
-                        filteredA.OrderByDescending(p => p.teacher) :
-                        filteredA.OrderBy(p => p.teacher);
-                    break;
-                case "dateStart":
-                    sortedA = sortDesc ?
-                        filteredA.OrderByDescending(p => p.dateStart) :
-                        filteredA.OrderBy(p => p.dateStart);
-                    break;
-                case "dateEnd":
-                    sortedA = sortDesc ?
-                        filteredA.OrderByDescending(p => p.dateEnd) :
-                        filteredA.OrderBy(p => p.dateEnd);
-                    break;
-                case "dateupdated":
-                    sortedA = sortDesc ?
-                        filteredA.OrderByDescending(p => p.dateupdated) :
-                        filteredA.OrderBy(p => p.dateupdated);
-                    break;
-                default:
-                    sortedA = sortDesc ? filteredA.OrderByDescending(p => p.dateStart) :
-                        filteredA.OrderBy(p => p.dateStart);
-                    break;
-            }
-
-            //Limit results to the display length and offset
-            var displayA = sortedA.Skip(param.iDisplayStart)
-                                  .Take(param.iDisplayLength);
-
+                search = param.sSearch,
+                CI = CI,
+                sortColName = param.sortColName(),
+                displayStart = param.iDisplayStart,
+                displayLength = param.iDisplayLength,
+                orderDescending = param.sSortDir_0 == "asc" ? false : true,
+            });
             //return what's left to datatables
-            var result = from p in displayA
+            var result = from p in list.query
                          select new
                          {
                              tabref = _getTabRef(p),
@@ -136,8 +77,8 @@ namespace Machete.Web.Controllers
             return Json(new
             {
                 sEcho = param.sEcho,
-                iTotalRecords = allA.Count(),
-                iTotalDisplayRecords = filteredA.Count(),
+                iTotalRecords = list.totalCount,
+                iTotalDisplayRecords = list.filteredCount,
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);
@@ -154,6 +95,15 @@ namespace Machete.Web.Controllers
                     LookupCache.byID(emp.name, CI.TwoLetterISOLanguageName) + " - " +
                     emp.teacher;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        //public JsonResult availableActivities(jQueryDataTableParam param)
+        //{
+
+        //}
         /// <summary>
         /// GET: /Activity/Create
         /// </summary>
@@ -178,10 +128,10 @@ namespace Machete.Web.Controllers
         /// <returns></returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, Teacher")]
-        public JsonResult Create(Activity employer, string userName)
+        public JsonResult Create(Activity activ, string userName)
         {
-            UpdateModel(employer);
-            Activity newActivity = serv.Create(employer, userName);
+            UpdateModel(activ);
+            Activity newActivity = serv.Create(activ, userName);
 
             return Json(new
             {
