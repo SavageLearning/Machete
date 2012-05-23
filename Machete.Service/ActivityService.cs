@@ -11,13 +11,39 @@ namespace Machete.Service
 {
     public interface IActivityService : IService<Activity>
     {
+        dTableList<Activity> GetIndexView(viewOptions o);
     }
 
     public class ActivityService : ServiceBase<Activity>, IActivityService
     {
-        public ActivityService(IActivityRepository repo, IUnitOfWork uow) : base(repo, uow)
+        private ILookupRepository lRepo;
+        public ActivityService(IActivityRepository repo, 
+            ILookupRepository lRepo,
+            IUnitOfWork uow) : base(repo, uow)
         {
             this.logPrefix = "Activity";
+            this.lRepo = lRepo;
+        }
+        public dTableList<Activity> GetIndexView(viewOptions o)
+        {
+            IEnumerable<Activity> q = repo.GetAll();
+            if (!string.IsNullOrEmpty(o.search))
+                IndexViewBase.search(o, ref q, lRepo);
+
+
+            IndexViewBase.sortOnColName(o.sortColName, 
+                                        o.orderDescending, 
+                                        o.CI.TwoLetterISOLanguageName, 
+                                        ref q);
+            //Limit results to the display length and offset
+            q = q.Skip(o.displayStart).Take(o.displayLength);
+            return new dTableList<Activity>
+            {
+                query = q,
+                filteredCount = q.Count(),
+                totalCount = repo.GetAllQ().Count()
+            };
+
         }
     }
 
