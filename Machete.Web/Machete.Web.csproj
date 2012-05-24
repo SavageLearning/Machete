@@ -740,6 +740,7 @@
     <Content Include="Views\Activity\Edit.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Activity.cshtml" />
     <Content Include="Views\Shared\ActivitySigninIndex.cshtml" />
+    <Content Include="Views\Shared\ActivityIndex.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

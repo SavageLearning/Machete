@@ -361,9 +361,15 @@ namespace Machete.Service
         }
         #endregion
         #region ACTIVITIES
-        public static void search(viewOptions o, ref IEnumerable<Activity> q, ILookupRepository lRepo)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="q"></param>
+        /// <param name="lRepo"></param>
+        public static void search(viewOptions o, ref IEnumerable<Activity> q)
         {
-            q = q
+            q = q //LookupCache will be slow and needs to be converted to IQueryable
                 .Where(p => LookupCache.byID(p.name, o.CI.TwoLetterISOLanguageName).ContainsOIC(o.search) ||
                             p.notes.ContainsOIC(o.search) ||
                             p.teacher.ContainsOIC(o.search) ||
@@ -371,7 +377,13 @@ namespace Machete.Service
                             p.dateStart.ToString().ContainsOIC(o.search) ||
                             p.dateEnd.ToString().ContainsOIC(o.search));
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="descending"></param>
+        /// <param name="isoLandCode"></param>
+        /// <param name="q"></param>
         public static void sortOnColName(string name, bool descending, string isoLandCode, ref IEnumerable<Activity> q)
         {
             switch (name)
@@ -417,6 +429,19 @@ namespace Machete.Service
                     break;
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="personID"></param>
+        public static void getUnassociated(int personID, ref IQueryable<Activity> q, IActivitySigninRepository asRepo)
+        {
+            q = q.Join(asRepo.GetAllQ(), a => a.ID, az => az.ActivityID, (a, az) => new { a, az })
+                 .Where(p => p.az.WorkerID == personID)
+                 .Select(p => p.a)
+                 .Distinct();
+
+        }
+
         #endregion
     }
 }

@@ -28,6 +28,10 @@ namespace Machete.Test
         protected WorkerRequestService _wrServ;
         protected WorkOrderService _woServ;
         protected WorkAssignmentService _waServ;
+        protected ActivityRepository _aRepo;
+        protected ActivitySigninRepository _asRepo;
+        protected ActivityService _aServ;
+        protected ActivitySigninService _asServ;
         protected IUnitOfWork _unitofwork;
         protected MacheteContext DB;
 
@@ -50,9 +54,13 @@ namespace Machete.Test
             _wsiRepo = new WorkerSigninRepository(_dbFactory);
             _lRepo = new LookupRepository(_dbFactory);
             _pRepo = new PersonRepository(_dbFactory);
+            _aRepo = new ActivityRepository(_dbFactory);
+            _asRepo = new ActivitySigninRepository(_dbFactory);
             _unitofwork = new UnitOfWork(_dbFactory);
             _pServ = new PersonService(_pRepo, _unitofwork);
             _iServ = new ImageService(_iRepo, _unitofwork);
+            _aServ = new ActivityService(_aRepo, _asRepo, _unitofwork);
+            _asServ = new ActivitySigninService(_asRepo, _wRepo, _pRepo, _iRepo, _wrRepo, _unitofwork);
             _wrServ = new WorkerRequestService(_wrRepo, _unitofwork);
             _waServ = new WorkAssignmentService(_waRepo, _wRepo, _lRepo, _wsiRepo, _unitofwork);
             _wServ = new WorkerService(_wRepo, _unitofwork);
