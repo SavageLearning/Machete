@@ -159,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IntegrationServiceHelpers.cs" />
+    <Compile Include="IntegrationTests\Services\IndexViewBaseServiceTest.cs" />
     <Compile Include="IntegrationTests\Services\WorkAssignmentServiceTest.cs" />
     <Compile Include="IntegrationTests\Services\WorkerSigninServiceTest.cs" />
     <Compile Include="IntegrationTests\Services\WorkOrderServiceTest.cs" />

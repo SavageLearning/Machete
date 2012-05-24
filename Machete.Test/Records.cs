@@ -159,6 +159,31 @@ namespace Machete.Test
         };
         public static WorkAssignment _workAssignment1 = (WorkAssignment)assignment.Clone();
         #endregion
+
+        public static Activity activity = new Activity
+        {
+            name = 98,
+            type = 90,
+            teacher = "foo",
+            notes = "foo too",
+            dateStart = DateTime.Now,
+            dateEnd = DateTime.Now,
+            datecreated = DateTime.Now,
+            dateupdated = DateTime.Now,
+            Createdby = "TestInitializer",
+            Updatedby = "TestInitializer"
+        };
+
+        public static ActivitySignin activitysignin = new ActivitySignin
+        {
+
+            dateforsignin = DateTime.Now,            
+            datecreated = DateTime.Now,
+            dateupdated = DateTime.Now,
+            Createdby = "TestInitializer",
+            Updatedby = "TestInitializer"
+        };
+
         public static WorkerSignin signin = new WorkerSignin
         {
             dwccardnum = 30040,
@@ -181,6 +206,8 @@ namespace Machete.Test
         public static void Initialize(MacheteContext DB)
         {
             var dt = DateTime.Today;
+            #region INIT persons and workers
+
             Person p1 = (Person)person.Clone(); p1.Worker = (Worker)worker.Clone(); p1.Worker.dwccardnum = 30040; p1.Worker.skill1 = 62;
             p1.Worker.Person = p1;
             DB.Persons.Add(p1);
@@ -195,11 +222,14 @@ namespace Machete.Test
             WorkerSignin wsi4 = (WorkerSignin)signin.Clone(); DB.WorkerSignins.Add(wsi4); wsi4.dwccardnum = 30043; wsi4.dateforsignin = dt;
             WorkerSignin wsi5 = (WorkerSignin)signin.Clone(); DB.WorkerSignins.Add(wsi5); wsi5.dwccardnum = 30044; wsi5.dateforsignin = dt;
             DB.SaveChanges();
+            #endregion
+            #region INIT employers
             Employer em1 = (Employer)employer.Clone(); DB.Employers.Add(em1);
             Employer em2 = (Employer)employer.Clone(); DB.Employers.Add(em2);
             Employer em3 = (Employer)employer.Clone(); DB.Employers.Add(em3);
             DB.SaveChanges();
-
+            #endregion
+            #region INIT workorders
             WorkOrder em1od1 = (WorkOrder)order.Clone();
             em1od1.Employer = em1;
             em1od1.paperOrderNum = 12420;
@@ -213,6 +243,8 @@ namespace Machete.Test
             WorkOrder em3od2 = (WorkOrder)order.Clone(); em3od2.Employer = em3; em3od2.paperOrderNum = 12424; em3od2.contactName = "Umpa5"; em3od2.status = 44; DB.WorkOrders.Add(em3od2);
             WorkOrder em3od3 = (WorkOrder)order.Clone(); em3od3.Employer = em3; em3od3.paperOrderNum = 12425; em3od3.contactName = "Umpa6"; em3od3.status = 42; DB.WorkOrders.Add(em3od3);
             DB.SaveChanges();
+            #endregion
+            #region INIT workassignments
             WorkAssignment em1od1as1 = (WorkAssignment)assignment.Clone(); em1od1as1.workOrder = em1od1; DB.WorkAssignments.Add(em1od1as1);
             em1od1as1.description = "foostring1";
             em1od1as1.Updatedby = "foostring2";
@@ -252,7 +284,16 @@ namespace Machete.Test
 
 
             em3od3.workerRequests.Add(od3wr1);
-            DB.SaveChanges();            
+            DB.SaveChanges(); 
+            #endregion
+            #region INIT ACTIVITIES
+            Activity a1 = (Activity)activity.Clone(); DB.Activities.Add(a1);
+            Activity a2 = (Activity)activity.Clone(); DB.Activities.Add(a2);
+            Activity a3 = (Activity)activity.Clone(); DB.Activities.Add(a3);
+            DB.SaveChanges();
+            ActivitySignin a1as1 = (ActivitySignin)activitysignin.Clone(); DB.ActivitySignins.Add(a1as1); a1as1.ActivityID = 1; a1as1.dwccardnum = 30040; a1as1.dateforsignin = dt; a1as1.WorkerID = 1;
+            DB.SaveChanges();
+            #endregion
         }
     }
 }

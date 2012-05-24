@@ -20,6 +20,11 @@
             <li><a href="#eventList" id="eventListTab" class="ListTab">@Events.eventtab</a> </li>
             <li><a href="/Event/Create?PersonID=@(Model.ID)" id="eventCreateTab" class="CreateTab">@Events.createlink</a></li>
         }
+        @if (Html.IsInRole(Html.Role_T()))
+        {
+            <li><a href="#actRemList" id="actRemTab" class="ListTab">@Activities.actRemTab</a></li>
+            <li><a href="#actAddList" id="actAddTab" class="ListTab">@Activities.actAddTab</a></li>            
+        }
     </ul>
     <div id="personGeneralTabRef">
         @using (Html.BeginForm("Edit", "Person", FormMethod.Post,
@@ -45,14 +50,14 @@
             {
                 @* TODO: create UI tests, remove generic "ID" label *@
                 @Html.HiddenFor(model => model.ID);
-                @Html.Hidden("personID", Model.ID);                                  
+                @Html.Hidden("personID", Model.ID);
             }
         }
     </div>
     @Html.Partial("EventIndex")
 </div>
 
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
     $(document).ready(function () {
         var personEditForm = $('#Persontab-@Model.ID');
         var personPartTabs = $('#personPartsTabs');

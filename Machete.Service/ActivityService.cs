@@ -12,23 +12,24 @@ namespace Machete.Service
     public interface IActivityService : IService<Activity>
     {
         dTableList<Activity> GetIndexView(viewOptions o);
+        dTableList<Activity> GetUnassociatedActivities(int personID);
     }
 
     public class ActivityService : ServiceBase<Activity>, IActivityService
     {
-        private ILookupRepository lRepo;
+        private IActivitySigninRepository asRepo;
         public ActivityService(IActivityRepository repo, 
-            ILookupRepository lRepo,
+            IActivitySigninRepository asRepo,
             IUnitOfWork uow) : base(repo, uow)
         {
             this.logPrefix = "Activity";
-            this.lRepo = lRepo;
+            this.asRepo = asRepo;
         }
         public dTableList<Activity> GetIndexView(viewOptions o)
         {
             IEnumerable<Activity> q = repo.GetAll();
             if (!string.IsNullOrEmpty(o.search))
-                IndexViewBase.search(o, ref q, lRepo);
+                IndexViewBase.search(o, ref q);
 
 
             IndexViewBase.sortOnColName(o.sortColName, 
@@ -44,6 +45,18 @@ namespace Machete.Service
                 totalCount = repo.GetAllQ().Count()
             };
 
+        }
+        public dTableList<Activity> GetUnassociatedActivities(int personID)
+        {
+            IQueryable<Activity> q = repo.GetAllQ();
+            IndexViewBase.getUnassociated(personID, ref q, asRepo);
+
+            return new dTableList<Activity>
+            {
+                //query = q,
+                //filteredCount = q.Count(),
+                totalCount = repo.GetAllQ().Count()
+            };
         }
     }
 
