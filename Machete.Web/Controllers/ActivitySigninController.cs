@@ -110,7 +110,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Check-in")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
-            dTableList<wsiView> was = serv.GetIndexView(new viewOptions
+            IEnumerable<asiView> was = serv.GetIndexView(new viewOptions
             {
                 CI = CI,
                 search = param.sSearch,
@@ -123,11 +123,12 @@ namespace Machete.Web.Controllers
                 sortColName = param.sortColName(),
                 wa_grouping = param.wa_grouping,
                 typeofwork_grouping = param.typeofwork_grouping,
-                ActivityID = param.activityID
+                ActivityID = param.activityID,
+                personID = param.personID ?? 0
             });
 
             //return what's left to datatables
-            var result = from p in was.query
+            var result = from p in was
                          select new
                          {
                              WSIID = p.ID,
@@ -140,7 +141,6 @@ namespace Machete.Web.Controllers
                              lastname2 = p.lastname2,
                              dateforsignin = p.dateforsignin,
                              dateforsigninstring = p.dateforsignin.ToShortDateString(),
-                             WAID = p.waid ?? 0,
                              memberStatus = LookupCache.byID(p.memberStatus, CI.TwoLetterISOLanguageName),
                              memberInactive = p.w.isInactive,
                              memberSanctioned = p.w.isSanctioned,
@@ -148,13 +148,14 @@ namespace Machete.Web.Controllers
                              memberExpelled = p.w.isExpelled,
                              imageID = p.imageID,
                              expirationDate = p.expirationDate.ToShortDateString(),
-                             skills = _getSkillCodes(p.englishlevel, p.skill1, p.skill2, p.skill3)
+                             //type = LookupCache.byID(p
+                             //activityName = p.
                          };
             return Json(new
             {
                 sEcho = param.sEcho,
-                iTotalRecords = was.totalCount,
-                iTotalDisplayRecords = was.filteredCount,
+                iTotalRecords = serv.TotalCount().ToString(),
+                iTotalDisplayRecords = was.Count(),
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);

@@ -24,10 +24,71 @@ namespace Machete.Service
         {
             q = q.Where(p => EntityFunctions.DiffDays(p.dateforsignin, o.date) == 0 ? true : false);
         }
+        public static void search<T>(viewOptions o, ref IEnumerable<T> e) where T : Signin
+        {
+            e = e.Join(WorkerCache.getCache(), s => s.dwccardnum, w => w.dwccardnum, (s, w) => new { s, w })
+                .Where(p => p.w.dwccardnum.ToString().ContainsOIC(o.search) ||
+                            p.w.Person.firstname1.ContainsOIC(o.search) ||
+                            p.w.Person.firstname2.ContainsOIC(o.search) ||
+                            p.w.Person.lastname1.ContainsOIC(o.search) ||
+                            p.w.Person.lastname2.ContainsOIC(o.search))
+                .Select(a => a.s);
+        }
         public static void typeOfWork<T>(viewOptions o, ref IQueryable<T> q) where T : Signin
         {
             q = q.Where(wsi => wsi.worker.typeOfWorkID == o.typeofwork_grouping)
                  .Select(wsi => wsi);
+        }
+        public static void waGrouping(viewOptions o, ref IQueryable<WorkerSignin> q, IWorkerRequestRepository wrRepo)
+        {
+            switch (o.wa_grouping)
+            {
+                case "open": q = q.Where(p => p.WorkAssignmentID == null); break;
+                case "assigned": q = q.Where(p => p.WorkAssignmentID != null); break;
+                case "skilled": q = q
+                                     .Where(wsi => wsi.WorkAssignmentID == null &&
+                                         wsi.worker.skill1 != null ||
+                                         wsi.worker.skill2 != null ||
+                                         wsi.worker.skill3 != null
+                    );
+
+                    break;
+                case "requested":
+                    if (o.date == null) throw new MacheteIntegrityException("Date cannot be null for Requested filter");
+                    q = q.Where(p => p.WorkAssignmentID == null);
+                    q = q.Join(wrRepo.GetAllQ(), //LINQ
+                                wsi => new
+                                {
+                                    K1 = (int)wsi.WorkerID,
+                                    K2 = (DateTime)EntityFunctions.TruncateTime(wsi.dateforsignin)
+                                },
+                                wr => new
+                                {
+                                    K1 = wr.WorkerID,
+                                    K2 = (DateTime)EntityFunctions.TruncateTime(wr.workOrder.dateTimeofWork)
+                                },
+                                (wsi, wr) => wsi);
+                    break;
+            }
+        }
+        public static void sortOnColName(string name, bool descending, IEnumerable<wsiView> e)
+        {
+            switch (name)
+            {
+                case "dwccardnum": e = descending ? e.OrderByDescending(p => p.dwccardnum) : e.OrderBy(p => p.dwccardnum); break;
+                case "firstname1": e = descending ? e.OrderByDescending(p => p.firstname1) : e.OrderBy(p => p.firstname1); break;
+                case "firstname2": e = descending ? e.OrderByDescending(p => p.firstname2) : e.OrderBy(p => p.firstname2); break;
+                case "lastname1": e = descending ? e.OrderByDescending(p => p.lastname1) : e.OrderBy(p => p.lastname1); break;
+                case "lastname2": e = descending ? e.OrderByDescending(p => p.lastname2) : e.OrderBy(p => p.lastname2); break;
+                case "dateupdated": e = descending ? e.OrderByDescending(p => p.dateupdated) : e.OrderBy(p => p.dateupdated); break;
+                case "dateforsigninstring": e = descending ? e.OrderByDescending(p => p.dateforsignin) : e.OrderBy(p => p.dateforsignin); break;
+                case "expirationDate": e = descending ? e.OrderByDescending(p => p.expirationDate) : e.OrderBy(p => p.expirationDate); break;
+                case "lotterySequence": 
+                    e = descending ? e.OrderByDescending(p => p.lotterySequence != null).ThenByDescending(p => p.lotterySequence) : 
+                    e.OrderBy(p => p.lotterySequence == null).ThenBy(p => p.lotterySequence); 
+                    break;
+                default: e = descending ? e.OrderByDescending(p => p.dateforsignin) : e.OrderBy(p => p.dateforsignin); break;
+            }
         }
         #endregion
         #region WORKASSIGNMENTS
@@ -429,19 +490,42 @@ namespace Machete.Service
                     break;
             }
         }
+        public static void sortOnColName(string name, bool descending, string isoLandCode, ref IEnumerable<asiView> e)
+        {
+            switch (name)
+            {
+                case "dwccardnum": e = descending ? e.OrderByDescending(p => p.dwccardnum) : e.OrderBy(p => p.dwccardnum); break;
+                case "firstname1": e = descending ? e.OrderByDescending(p => p.firstname1) : e.OrderBy(p => p.firstname1); break;
+                case "firstname2": e = descending ? e.OrderByDescending(p => p.firstname2) : e.OrderBy(p => p.firstname2); break;
+                case "lastname1": e = descending ? e.OrderByDescending(p => p.lastname1) : e.OrderBy(p => p.lastname1); break;
+                case "lastname2": e = descending ? e.OrderByDescending(p => p.lastname2) : e.OrderBy(p => p.lastname2); break;
+                case "dateupdated": e = descending ? e.OrderByDescending(p => p.dateupdated) : e.OrderBy(p => p.dateupdated); break;
+                case "dateforsigninstring": e = descending ? e.OrderByDescending(p => p.dateforsignin) : e.OrderBy(p => p.dateforsignin); break;
+                case "expirationDate": e = descending ? e.OrderByDescending(p => p.expirationDate) : e.OrderBy(p => p.expirationDate); break;
+                default: e = descending ? e.OrderByDescending(p => p.dateforsignin) : e.OrderBy(p => p.dateforsignin); break;
+            }
+        }
         /// <summary>
         /// 
         /// </summary>
         /// <param name="personID"></param>
         public static void getUnassociated(int personID, ref IQueryable<Activity> q, IActivitySigninRepository asRepo)
         {
-            q = q.Join(asRepo.GetAllQ(), a => a.ID, az => az.ActivityID, (a, az) => new { a, az })
-                 .Where(p => p.az.WorkerID == personID)
-                 .Select(p => p.a)
-                 .Distinct();
-
+            q = from a in q
+                join az in asRepo.GetAllQ() on a.ID equals az.ActivityID into g
+                from f in g.DefaultIfEmpty()
+                where f.WorkerID != personID || f.WorkerID == null
+                select a;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="personID"></param>
+        /// <param name="q"></param>
+        public static void GetAssociated(int personID, ref IQueryable<ActivitySignin> q)
+        {
+            q = q.Where(az => az.WorkerID == personID);
+        }
         #endregion
     }
 }

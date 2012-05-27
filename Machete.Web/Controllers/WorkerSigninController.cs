@@ -140,7 +140,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Check-in")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
-            IEnumerable<signinView> was = _serv.GetIndexView(new viewOptions {
+            IEnumerable<wsiView> was = _serv.GetIndexView(new viewOptions {
                 CI = CI,
                 search = param.sSearch,
                 date = param.todaysdate == null ? null : (DateTime?)DateTime.Parse(param.todaysdate),
@@ -155,7 +155,7 @@ namespace Machete.Web.Controllers
             });
 
             //return what's left to datatables
-            var result = from p in was.Select(z => new wsiView(z.p, z.s))
+            var result = from p in was
                          select new {  WSIID = p.ID,
                                        recordid = p.ID.ToString(),
                                        dwccardnum = p.dwccardnum,

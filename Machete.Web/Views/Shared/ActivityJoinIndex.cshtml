@@ -1,0 +1,119 @@
+﻿@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using Machete.Domain.Resources
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "Activity";
+    //string idPrefix = recType + Model.ID + "-";
+}
+<div id="actJoinList">
+    <div class="tb-table" style="clear: left;">
+        <div class="tb-row">
+            <table id="actInTable" class="display">
+                <thead>
+                    <tr>
+                        <th>
+                            ID
+                        </th>
+                        <th>
+                            LABEL
+                        </th>
+                        <th>@Activity.name
+                        </th>
+                        <th>@Activity.type
+                        </th>
+                        <th>@Activity.teacher
+                        </th>
+                        <th>@Activity.dateStart
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+            <table id="actOutTable" class="display">
+                <thead>
+                    <tr>
+                        <th>
+                            ID
+                        </th>
+                        <th>
+                            LABEL
+                        </th>
+                        <th>@Activity.name
+                        </th>
+                        <th>@Activity.type
+                        </th>
+                        <th>@Activity.teacher
+                        </th>
+                        <th>@Activity.dateStart
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        jqrfyTable($('#actOutTable'), $('#personPartsTabs'),
+        {
+            "bPaginate": true,
+            "bLengthChange": true,
+            "aaSorting": [[5, 'desc']],
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "bServerSide": true,
+            "sAjaxSource": "/Activity/AjaxHandler", 
+            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "bProcessing": true,
+            "aoColumns": [
+                            {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                            {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                            {"mDataProp": "name" },
+                            {"mDataProp": "type" },
+                            {"mDataProp": "teacher" },
+                            {"mDataProp": "dateStart" },
+            ],
+            "fnServerData": function ( sSource, aoData, fnCallback ) {
+			    /* Add some extra data to the sender */			    
+                aoData.push( { "name": "personID", "value": $('#personID').val() } );
+			    $.getJSON( sSource, aoData, function (json) { 
+				    /* Do whatever additional processing you want on the callback, then tell DataTables */
+				    fnCallback(json)
+			    } );
+		    }             
+        }, null, "@(recType)");
+                jqrfyTable($('#actInTable'), $('#personPartsTabs'),
+        {
+            "bPaginate": true,
+            "bLengthChange": true,
+            "aaSorting": [[5, 'desc']],
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "bServerSide": true,
+            "sAjaxSource": "/ActivitySignin/AjaxHandler", 
+            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "bProcessing": true,
+            "aoColumns": [
+                            {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                            {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                            {"mDataProp": "fullname" },
+                            {"mDataProp": "type" },
+                            {"mDataProp": "teacher" },
+                            {"mDataProp": "dateStart" },
+            ],
+            "fnServerData": function ( sSource, aoData, fnCallback ) {
+			    /* Add some extra data to the sender */			    
+                aoData.push( { "name": "personID", "value": $('#personID').val() } );
+			    $.getJSON( sSource, aoData, function (json) { 
+				    /* Do whatever additional processing you want on the callback, then tell DataTables */
+				    fnCallback(json)
+			    } );
+		    }             
+        }, null, "@(recType)");
+        //$('#eventTable_filter input').attr('ID','personSearchBox');
+    });
+</script>
