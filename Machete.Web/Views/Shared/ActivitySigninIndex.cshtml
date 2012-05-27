@@ -141,7 +141,7 @@
             ],
             "fnServerData": function ( sSource, aoData, fnCallback ) {
 			    /* Add some extra data to the sender */
-			    aoData.push( { "name": "todaysdate", "value": $('#activity@(Model.ActivityID)-dateStart').val() } );
+			    //aoData.push( { "name": "todaysdate", "value": $('#activity@(Model.ActivityID)-dateStart').val() } );
                 aoData.push( { "name": "activityID", "value": $('#ActivityID').val() } );
 			    $.getJSON( sSource, aoData, function (json) { 
 				    /* Do whatever additional processing you want on the callback, then tell DataTables */
