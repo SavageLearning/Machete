@@ -412,5 +412,6 @@ namespace Machete.Service
             public bool showSanctionedWorker;
             public bool showExpiredWorker;
             public bool showExpelledWorker;
+            public bool attendedActivities;
     }
 }

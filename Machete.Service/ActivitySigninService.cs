@@ -71,8 +71,9 @@ namespace Machete.Service
                     .Select(z => new asiView(z.w.Person, z.s));
 
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, o.CI.TwoLetterISOLanguageName, ref eSIV);
-            //if ((int)o.displayLength >= 0)
-            return eSIV.Skip((int)o.displayStart).Take((int)o.displayLength);
+            if ((int)o.displayLength >= 0)
+            eSIV = eSIV.Skip((int)o.displayStart).Take((int)o.displayLength);
+            return eSIV;
         }
         /// <summary>
         /// 
