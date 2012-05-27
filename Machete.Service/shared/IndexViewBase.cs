@@ -7,6 +7,7 @@ using Machete.Data;
 using System.Data.Objects;
 using System.Text.RegularExpressions;
 using System.Data.Objects.SqlClient;
+using Machete.Data.Infrastructure;
 
 
 namespace Machete.Service
@@ -509,12 +510,40 @@ namespace Machete.Service
         /// 
         /// </summary>
         /// <param name="personID"></param>
-        public static void getUnassociated(int personID, ref IQueryable<Activity> q, IActivitySigninRepository asRepo)
+        /// <param name="q"></param>
+        /// <param name="asRepo"></param>
+        public static void getUnassociated(int personID, ref IQueryable<Activity> q, IRepository<Activity> arepo, IActivitySigninRepository asRepo)
+        {
+            //
+            //SELECT extent1.* FROM  [dbo].[Activities] AS [Extent1]
+            //LEFT OUTER JOIN [dbo].[ActivitySignins] AS [Extent2] ON 
+            //        ([Extent1].[ID] = [Extent2].[ActivityID]) AND 
+            //        ([Extent2].[WorkerID] = <personID> )
+            //WHERE [Extent2].[ActivityID] IS NULL
+            q = from b in arepo.GetAllQ()
+                join aa in
+                    (from a in q
+                     join az in asRepo.GetAllQ() on a.ID equals az.ActivityID into g
+                     from f in g.DefaultIfEmpty()
+                     where f.WorkerID == personID
+                     select a)
+                 on b.ID equals aa.ID into h                
+                from i in h.DefaultIfEmpty()
+                where i == null
+                select b;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="personID"></param>
+        /// <param name="q"></param>
+        /// <param name="asRepo"></param>
+        public static void getAssociated(int personID, ref IQueryable<Activity> q, IActivitySigninRepository asRepo)
         {
             q = from a in q
                 join az in asRepo.GetAllQ() on a.ID equals az.ActivityID into g
                 from f in g.DefaultIfEmpty()
-                where f.WorkerID != personID || f.WorkerID == null
+                where f.WorkerID == personID
                 select a;
         }
         /// <summary>

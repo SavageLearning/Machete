@@ -147,13 +147,11 @@ namespace Machete.Web.Helpers
         public int? status { get; set; }
         public bool showPending { get; set; }
         public bool showOrdersWorkers { get; set; }
-        //
-        //
         public bool showInactiveWorker { get; set; }
         public bool showSanctionedWorker { get; set; }
         public bool showExpiredWorker { get; set; }
         public bool showExpelledWorker { get; set; }
-
+        public bool attendedActivities { get; set; }
 
         #endregion
         /// <summary>

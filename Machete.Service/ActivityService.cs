@@ -32,7 +32,11 @@ namespace Machete.Service
             IQueryable<Activity> q = repo.GetAllQ();
             IEnumerable<Activity> e;
 
-            if (o.personID > 0) IndexViewBase.getUnassociated(o.personID, ref q, asRepo);
+            if (o.personID > 0 && o.attendedActivities == false) 
+                IndexViewBase.getUnassociated(o.personID, ref q, repo, asRepo);
+            if (o.personID > 0 && o.attendedActivities == true)
+                IndexViewBase.getAssociated(o.personID, ref q, asRepo);
+
             e = q.AsEnumerable();
             if (!string.IsNullOrEmpty(o.search))
                 IndexViewBase.search(o, ref e);
@@ -42,7 +46,9 @@ namespace Machete.Service
                                         o.CI.TwoLetterISOLanguageName, 
                                         ref e);
             //Limit results to the display length and offset
-            return e.Skip(o.displayStart).Take(o.displayLength);
+            if (o.displayLength >= 0)
+            e = e.Skip(o.displayStart).Take(o.displayLength);
+            return e;
         }
     }
    

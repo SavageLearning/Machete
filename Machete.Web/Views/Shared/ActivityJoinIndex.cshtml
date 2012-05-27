@@ -7,54 +7,42 @@
     //string idPrefix = recType + Model.ID + "-";
 }
 <div id="actJoinList">
+    ACT-IN-TABLE
     <div class="tb-table" style="clear: left;">
         <div class="tb-row">
-            <table id="actInTable" class="display">
+            <div class="tb-cell">
+                <table id="actInTable" class="display">
                 <thead>
                     <tr>
-                        <th>
-                            ID
-                        </th>
-                        <th>
-                            LABEL
-                        </th>
-                        <th>@Activity.name
-                        </th>
-                        <th>@Activity.type
-                        </th>
-                        <th>@Activity.teacher
-                        </th>
-                        <th>@Activity.dateStart
-                        </th>
+                        <th>@Activity.name</th>
+                        <th>@Activity.type</th>
+                        <th>@Activity.teacher</th>
+                        <th>@Activity.dateStart</th>
                     </tr>
                 </thead>
             </table>
-            <table id="actOutTable" class="display">
+            </div>
+            <div class="tb-cell">
+                <table id="actOutTable" class="display">
                 <thead>
                     <tr>
-                        <th>
-                            ID
-                        </th>
-                        <th>
-                            LABEL
-                        </th>
-                        <th>@Activity.name
-                        </th>
-                        <th>@Activity.type
-                        </th>
-                        <th>@Activity.teacher
-                        </th>
-                        <th>@Activity.dateStart
-                        </th>
+                        <th>ID</th>
+                        <th>LABEL</th>
+                        <th>@Activity.name</th>
+                        <th>@Activity.type</th>
+                        <th>@Activity.teacher</th>
+                        <th>@Activity.dateStart</th>
                     </tr>
                 </thead>
             </table>
+            </div>
         </div>
     </div>
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        jqrfyTable($('#actOutTable'), $('#personPartsTabs'),
+        //jqrfyTable($('#actOutTable'), $('#personPartsTabs'),
+        $('#actOutTable').dataTable(
         {
             "bPaginate": true,
             "bLengthChange": true,
@@ -78,14 +66,15 @@
             "fnServerData": function ( sSource, aoData, fnCallback ) {
 			    /* Add some extra data to the sender */			    
                 aoData.push( { "name": "personID", "value": $('#personID').val() } );
+                aoData.push( { "name": "attendedActivities", "value": false } );
 			    $.getJSON( sSource, aoData, function (json) { 
 				    /* Do whatever additional processing you want on the callback, then tell DataTables */
 				    fnCallback(json)
 			    } );
 		    }             
-        }, null, "@(recType)");
-                jqrfyTable($('#actInTable'), $('#personPartsTabs'),
-        {
+        //}, null, "@(recType)");
+        });
+        $('#actInTable').dataTable({
             "bPaginate": true,
             "bLengthChange": true,
             "aaSorting": [[5, 'desc']],
@@ -94,13 +83,13 @@
             "bInfo": true,
             "bAutoWidth": false,
             "bServerSide": true,
-            "sAjaxSource": "/ActivitySignin/AjaxHandler", 
+            "sAjaxSource": "/Activity/AjaxHandler", 
             "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
             "bProcessing": true,
             "aoColumns": [
                             {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
                             {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
-                            {"mDataProp": "fullname" },
+                            {"mDataProp": "name" },
                             {"mDataProp": "type" },
                             {"mDataProp": "teacher" },
                             {"mDataProp": "dateStart" },
@@ -108,12 +97,13 @@
             "fnServerData": function ( sSource, aoData, fnCallback ) {
 			    /* Add some extra data to the sender */			    
                 aoData.push( { "name": "personID", "value": $('#personID').val() } );
+                aoData.push( { "name": "attendedActivities", "value": true } );
 			    $.getJSON( sSource, aoData, function (json) { 
 				    /* Do whatever additional processing you want on the callback, then tell DataTables */
 				    fnCallback(json)
 			    } );
 		    }             
-        }, null, "@(recType)");
+        });
         //$('#eventTable_filter input').attr('ID','personSearchBox');
     });
 </script>

@@ -148,8 +148,11 @@ namespace Machete.Web.Controllers
                              memberExpelled = p.w.isExpelled,
                              imageID = p.imageID,
                              expirationDate = p.expirationDate.ToShortDateString(),
-                             //type = LookupCache.byID(p
-                             //activityName = p.
+                             //type = LookupCache.byID(p.type, CI.TwoLetterISOLanguageName),
+                             //activityName = LookupCache.byID(p.name, CI.TwoLetterISOLanguageName),
+                             //teacher = p.teacher,
+                             //dateStart = p.dateStart.ToString(),
+                             //dateEnd = p.dateEnd.ToString()
                          };
             return Json(new
             {

@@ -53,9 +53,10 @@ namespace Machete.Test
             
             IQueryable<Activity> q = _aRepo.GetAllQ();
             //Act
-            IndexViewBase.getUnassociated(id, ref q, _asRepo);
+            IndexViewBase.getUnassociated(id, ref q, _aRepo, _asRepo);
             //Assert
-            Assert.IsTrue(q.Count() == 2, "Expected 2 unassociated activities, received {0}");
+            var result = q.ToList();
+            Assert.IsTrue(result.Count() == 2, "Expected 2 unassociated activities, received {0}");
         }
     }
 }

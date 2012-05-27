@@ -54,6 +54,8 @@ namespace Machete.Web.Controllers
                 sortColName = param.sortColName(),
                 displayStart = param.iDisplayStart,
                 displayLength = param.iDisplayLength,
+                attendedActivities = param.attendedActivities,
+                personID = param.personID ?? 0,
                 orderDescending = param.sSortDir_0 == "asc" ? false : true,
             });
             //return what's left to datatables

@@ -111,56 +111,10 @@ namespace Machete.Domain
     }
     public class asiView : signinView
     {
-        public int type { get; set; }
-        public string teacher { get; set; }
-        public int name { get; set; }
-        public Activity a { get; set; }
-        //public DateTime dateStart { get; set; }
-        //public DateTime dateEnd { get; set; }
         public asiView(Person per, ActivitySignin sign)
             : base(per, sign)
         {
-            type = sign.Activity.type;
-            teacher = sign.Activity.teacher;
-            name = sign.Activity.name;
-            a = sign.Activity;
         }
     }
 
-    //public class signinViewConverter : TypeConverter
-    //{
-    //    // TypeConverter extension
-    //    // http://msdn.microsoft.com/en-us/library/ayybcxe5.aspx
-    //    public override bool CanConvertFrom(ITypeDescriptorContext context,Type sourceType)
-    //    {
-    //        if (sourceType == typeof(signinView))
-    //        {
-    //            return true;
-    //        }
-    //        return base.CanConvertFrom(context, sourceType);
-    //    }
-
-    //    public override object ConvertFrom(ITypeDescriptorContext context,
-    //            CultureInfo culture, object value)
-    //    {
-    //        if (value is signinView)
-    //        {
-    //            //string[] v = ((string)value).Split(new char[] { ',' });
-    //            //return new Point(int.Parse(v[0]), int.Parse(v[1]));
-    //            return new asiView(((signinView)value).p, ((signinView)value).s);
-
-    //        }
-    //        return base.ConvertFrom(context, culture, value);
-    //    }
-
-    //    public override object ConvertTo(ITypeDescriptorContext context,
-    //       CultureInfo culture, object value, Type destinationType)
-    //    {
-    //        if (destinationType == typeof(asiView))
-    //        {
-    //            return new signinView(((asiView)value).p, ((asiView)value).s);
-    //        }
-    //        return base.ConvertTo(context, culture, value, destinationType);
-    //    }
-    //}
 }
