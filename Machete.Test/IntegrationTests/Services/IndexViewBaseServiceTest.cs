@@ -39,7 +39,7 @@ namespace Machete.Test
         //    //Assert
         //    var tolist = result.query.ToList();
         //    Assert.IsNotNull(tolist, "return value is null");
-        //    Assert.IsInstanceOfType(result, typeof(dTableList<WorkAssignment>));
+        //    Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
         //    Assert.AreEqual("foostring1", tolist[0].description);
         //    Assert.AreEqual(1, result.filteredCount);
         //    Assert.AreEqual(10, result.totalCount);
@@ -55,7 +55,7 @@ namespace Machete.Test
             //Act
             IndexViewBase.getUnassociated(id, ref q, _asRepo);
             //Assert
-            Assert.IsTrue(q.Count() == 1, "foo");
+            Assert.IsTrue(q.Count() == 2, "Expected 2 unassociated activities, received {0}");
         }
     }
 }

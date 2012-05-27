@@ -12,7 +12,7 @@ namespace Machete.Service
 {
     public interface IPersonService : IService<Person>
     {
-        dTableList<Person> GetIndexView(viewOptions o);
+        IEnumerable<Person> GetIndexView(viewOptions o);
     }
 
     // Business logic for Person record management
@@ -25,7 +25,7 @@ namespace Machete.Service
             this.logPrefix = "Person";
         }  
 
-        public dTableList<Person> GetIndexView(viewOptions o)
+        public IEnumerable<Person> GetIndexView(viewOptions o)
         {
             //Get all the records
             IQueryable<Person> q = repo.GetAllQ();
@@ -35,12 +35,7 @@ namespace Machete.Service
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
 
             q = q.Skip<Person>(o.displayStart).Take(o.displayLength);
-            return new dTableList<Person>
-            {
-                query = q,
-                filteredCount = q.Count(),
-                totalCount = repo.GetAllQ().Count()
-            };
+            return q;
         }
     }
 }
