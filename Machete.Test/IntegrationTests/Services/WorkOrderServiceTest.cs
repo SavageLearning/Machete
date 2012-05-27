@@ -52,12 +52,12 @@ namespace Machete.Test
             int displayLength = 50;
             //
             //Act
-            dTableList<WOWASummary> result = _woServ.CombinedSummary(search, orderdescending, displayStart, displayLength);
-            WOWASummary wowa = result.query.First();
+            IEnumerable<WOWASummary> result = _woServ.CombinedSummary(search, orderdescending, displayStart, displayLength);
+            WOWASummary wowa = result.First();
             //
             //Assert
-            Assert.IsNotNull(result, "CombinedSummary.dTableList is Null");
-            Assert.IsNotNull(wowa, "CombinedSummary.dTableList.query is null");
+            Assert.IsNotNull(result, "CombinedSummary.IEnumerable is Null");
+            Assert.IsNotNull(wowa, "CombinedSummary.IEnumerable.query is null");
             Assert.AreEqual(4, wowa.active_wa, "CombinedSummary returned unexpected active_wa value");
             Assert.AreEqual(2, wowa.active_wo, "CombinedSummary returned unexpected active_wo value");
             Assert.AreEqual(1, wowa.cancelled_wa, "CombinedSummary returned unexpected cancelled_wa value");
@@ -94,12 +94,12 @@ namespace Machete.Test
             o.sortColName = "WOID";
             //
             //Act
-            dTableList<WorkOrder> result = _woServ.GetIndexView(o);
+            IEnumerable<WorkOrder> result = _woServ.GetIndexView(o);
             //
             //Assert
-            IEnumerable<WorkOrder> query = result.query.ToList();
-            Assert.IsNotNull(result, "dTableList is Null");
-            Assert.IsNotNull(query, "dTableList.query is null");
+            IEnumerable<WorkOrder> query = result.ToList();
+            Assert.IsNotNull(result, "IEnumerable is Null");
+            Assert.IsNotNull(query, "IEnumerable.query is null");
             Assert.IsTrue(query.Count() == 6, "Expected 6, but GetIndexView returned {0} records", query.Count());
 
         }

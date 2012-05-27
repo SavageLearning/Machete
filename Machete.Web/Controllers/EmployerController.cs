@@ -46,7 +46,7 @@ namespace Machete.Web.Controllers
         /// <returns></returns>
         public JsonResult AjaxHandler(jQueryDataTableParam param)
         {
-            dTableList<Employer> list = serv.GetIndexView(new viewOptions
+            IEnumerable<Employer> list = serv.GetIndexView(new viewOptions
             {
                 search = param.sSearch,
                 sortColName = param.sortColName(),
@@ -56,7 +56,7 @@ namespace Machete.Web.Controllers
             });
 
             //return what's left to datatables
-            var result = from p in list.query
+            var result = from p in list
                          select new { tabref = _getTabRef(p),
                                       tablabel = _getTabLabel(p),
                                       active = Convert.ToString(p.active),
@@ -73,8 +73,8 @@ namespace Machete.Web.Controllers
             return Json(new
             {
                 sEcho = param.sEcho,
-                iTotalRecords = list.totalCount,
-                iTotalDisplayRecords = list.filteredCount,
+                iTotalRecords = serv.TotalCount(),
+                iTotalDisplayRecords = list.Count(),
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);

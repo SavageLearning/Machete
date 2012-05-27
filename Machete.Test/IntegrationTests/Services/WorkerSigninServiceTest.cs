@@ -70,7 +70,7 @@ namespace Machete.Test
             //_wsiServ.CreateWorkerSignin(_signin, "TestUser");            
             //_dOptions.search = _w.dwccardnum.ToString();
             ////            
-            //dTableList<wsiView> result = _wsiServ.GetIndexView(_dOptions);
+            //IEnumerable<wsiView> result = _wsiServ.GetIndexView(_dOptions);
             //List<wsiView> tolist = result.query.ToList();
             ////
             //Assert.AreEqual(1, result.filteredCount);
@@ -84,15 +84,15 @@ namespace Machete.Test
             //
             //Act
             _dOptions.dwccardnum = 30040;
-            dTableList<wsiView> result = _wsiServ.GetIndexView(_dOptions);
+            IEnumerable<signinView> result = _wsiServ.GetIndexView(_dOptions);
             //
             //Assert
-            List<wsiView> tolist = result.query.ToList();
+            List<signinView> tolist = result.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(dTableList<wsiView>));
+            Assert.IsInstanceOfType(result, typeof(IEnumerable<signinView>));
             //Assert.AreEqual(61, tolist[0].skillID);
-            Assert.AreEqual(3, result.filteredCount);
-            Assert.AreEqual(5, result.totalCount);
+            Assert.AreEqual(3, result.Count());
+            Assert.AreEqual(5, _wsiServ.TotalCount());
         }
         /// <summary>
         /// Filter on requested grouping
@@ -104,15 +104,15 @@ namespace Machete.Test
             //Act
             _dOptions.dwccardnum = 30040;
             _dOptions.wa_grouping = "requested";
-            dTableList<wsiView> result = _wsiServ.GetIndexView(_dOptions);
+            IEnumerable<signinView> result = _wsiServ.GetIndexView(_dOptions);
             //
             //Assert
-            List<wsiView> tolist = result.query.ToList();
+            List<signinView> tolist = result.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(dTableList<wsiView>));
+            Assert.IsInstanceOfType(result, typeof(IEnumerable<signinView>));
             //Assert.AreEqual(61, tolist[0].skillID);
-            Assert.AreEqual(1, result.filteredCount);
-            Assert.AreEqual(5, result.totalCount);
+            Assert.AreEqual(1, result.Count());
+            Assert.AreEqual(5, _wsiServ.TotalCount());
         }
         //[TestMethod]
         //public void DbSet_TestMethod5()

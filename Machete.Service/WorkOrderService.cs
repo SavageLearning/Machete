@@ -18,12 +18,13 @@ namespace Machete.Service
         IEnumerable<WorkOrder> GetByEmployer(int id);
         IEnumerable<WorkOrder> GetActiveOrders(DateTime date, bool assignedOnly);
         IQueryable<WorkOrderSummary> GetSummary(string search);
+        IQueryable<WorkOrderSummary> GetSummary();
         int CompleteActiveOrders(DateTime date, string user);
-        dTableList<WOWASummary> CombinedSummary(string search,
+        IEnumerable<WOWASummary> CombinedSummary(string search,
             bool orderDescending,
             int displayStart,
             int displayLength);
-        dTableList<WorkOrder> GetIndexView(viewOptions opt);
+        IEnumerable<WorkOrder> GetIndexView(viewOptions opt);
     }
 
     // Business logic for WorkOrder record management
@@ -107,7 +108,7 @@ namespace Machete.Service
         /// </summary>
         /// <param name="o">viewOptions object</param>
         /// <returns></returns>
-        public dTableList<WorkOrder> GetIndexView(viewOptions o)
+        public IEnumerable<WorkOrder> GetIndexView(viewOptions o)
         {
             //Get all the records
             IQueryable<WorkOrder> q = repo.GetAllQ();
@@ -118,14 +119,12 @@ namespace Machete.Service
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
             //
             q = q.Skip<WorkOrder>((int)o.displayStart).Take((int)o.displayLength);
-            var filtered = q.Count();
-            var total =  repo.GetAllQ().Count();
-            return new dTableList<WorkOrder> 
-            { 
-                query = q,
-                filteredCount = filtered,
-                totalCount = total
-            };
+
+            return q.AsEnumerable();
+        }
+        public IQueryable<WorkOrderSummary> GetSummary()
+        {
+            return GetSummary(null);
         }
         /// <summary>
         /// 
@@ -182,7 +181,7 @@ namespace Machete.Service
         /// </summary>
         /// <param name="search"></param>
         /// <returns></returns>
-        public dTableList<WOWASummary> CombinedSummary(string search, 
+        public IEnumerable<WOWASummary> CombinedSummary(string search, 
             bool orderDescending,
             int displayStart,
             int displayLength)
@@ -229,12 +228,7 @@ namespace Machete.Service
                 //Limit results to the display length and offset
                 var displayedSummary = result.Skip(displayStart)
                                                     .Take(displayLength);
-            return new dTableList<WOWASummary> {
-                query = displayedSummary,
-                filteredCount = result.Count(),
-                totalCount = displayedSummary.Count()
-                
-            };
+            return displayedSummary;
         }
     }
     public class WOWASummary

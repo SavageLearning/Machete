@@ -46,22 +46,22 @@ namespace Machete.Test
             var result = _waServ.GetIndexView(dOptions);
             //
             //Assert
-            var tolist = result.query.ToList();
+            var tolist = result.ToList();
             Assert.IsNotNull(result, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(dTableList<WorkAssignment>));
-            Assert.AreEqual(8, result.filteredCount); //pending excluded
-            Assert.AreEqual(10, result.totalCount);            
+            Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
+            Assert.AreEqual(8, result.Count()); //pending excluded
+            Assert.AreEqual(10, _waServ.TotalCount());            
         }
         [TestMethod]
         public void Integration_WA_Service_GetIndexView_check_workerjoin_blank_worker_ok()
         {
             dOptions.sortColName = "assignedWorker";
             var result = _waServ.GetIndexView(dOptions);
-            var tolist = result.query.ToList();
+            var tolist = result.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(dTableList<WorkAssignment>));
-            Assert.AreEqual(8, result.filteredCount); //pending excluded
-            Assert.AreEqual(10, result.totalCount);
+            Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
+            Assert.AreEqual(8, result.Count()); //pending excluded
+            Assert.AreEqual(10, _waServ.TotalCount());
         }
         [TestMethod]
         public void Integration_WA_Service_GetIndexView_checkwoidfilter()
@@ -72,11 +72,11 @@ namespace Machete.Test
             var result = _waServ.GetIndexView(dOptions);
             //
             //Assert
-            var tolist = result.query.ToList();
+            var tolist = result.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(dTableList<WorkAssignment>));
-            Assert.AreEqual(3, result.filteredCount);
-            Assert.AreEqual(10, result.totalCount);
+            Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
+            Assert.AreEqual(3, result.Count());
+            Assert.AreEqual(10, _waServ.TotalCount());
         }
         [TestMethod]
         public void Integration_WA_Service_GetIndexView_check_search_paperordernum()
@@ -89,12 +89,12 @@ namespace Machete.Test
             var result = _waServ.GetIndexView(dOptions);
             //
             //Assert
-            var tolist = result.query.ToList();
+            var tolist = result.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(dTableList<WorkAssignment>));
+            Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
             Assert.AreEqual(12420, tolist[0].workOrder.paperOrderNum);
-            Assert.AreEqual(3, result.filteredCount);
-            Assert.AreEqual(10, result.totalCount);
+            Assert.AreEqual(3, result.Count());
+            Assert.AreEqual(10, _waServ.TotalCount());
         }
         [TestMethod]
         public void Integration_WA_Service_GetIndexView_check_search_description()
@@ -107,12 +107,12 @@ namespace Machete.Test
             var result = _waServ.GetIndexView(dOptions);
             //
             //Assert
-            var tolist = result.query.ToList();
+            var tolist = result.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(dTableList<WorkAssignment>));
+            Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
             Assert.AreEqual("foostring1", tolist[0].description);
-            Assert.AreEqual(1, result.filteredCount);
-            Assert.AreEqual(10, result.totalCount);
+            Assert.AreEqual(1, result.Count());
+            Assert.AreEqual(10, _waServ.TotalCount());
         }
         [TestMethod]
         public void Integration_WA_Service_GetIndexView_check_search_Updatedby()
@@ -123,12 +123,12 @@ namespace Machete.Test
             var result = _waServ.GetIndexView(dOptions);
             //
             //Assert
-            var tolist = result.query.ToList();
+            var tolist = result.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(dTableList<WorkAssignment>));
+            Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
             Assert.AreEqual("foostring2", tolist[0].Updatedby);
-            Assert.AreEqual(1, result.filteredCount);
-            Assert.AreEqual(10, result.totalCount);
+            Assert.AreEqual(1, result.Count());
+            Assert.AreEqual(10, _waServ.TotalCount());
         }
         [TestMethod]
         public void Integration_WA_Service_GetIndexView_check_search_skill()
@@ -138,12 +138,12 @@ namespace Machete.Test
             var result = _waServ.GetIndexView(dOptions);
             //
             //Assert
-            var tolist = result.query.ToList();
+            var tolist = result.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(dTableList<WorkAssignment>));
+            Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
             Assert.AreEqual(70, tolist[0].skillID); //ID=70 is Digging
-            Assert.AreEqual(1, result.filteredCount);
-            Assert.AreEqual(10, result.totalCount);
+            Assert.AreEqual(1, result.Count());
+            Assert.AreEqual(10, _waServ.TotalCount());
         }
         [TestMethod]
         public void Integration_WA_Service_GetIndexView_check_searchdateTimeofWork()
@@ -155,12 +155,12 @@ namespace Machete.Test
             var result = _waServ.GetIndexView(dOptions);
             //
             //Assert
-            var tolist = result.query.ToList();
+            var tolist = result.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(dTableList<WorkAssignment>));
+            Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
             Assert.AreEqual(70, tolist[0].skillID);
-            Assert.AreEqual(3, result.filteredCount);
-            Assert.AreEqual(10, result.totalCount);
+            Assert.AreEqual(3, result.Count());
+            Assert.AreEqual(10, _waServ.TotalCount());
         }
         //
         // Simulates doubleclicking on a worker in the workerSignin list
@@ -175,12 +175,12 @@ namespace Machete.Test
             var result = _waServ.GetIndexView(dOptions);
             //
             //Assert
-            var tolist = result.query.ToList();
+            var tolist = result.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(dTableList<WorkAssignment>));
+            Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
             //Assert.AreEqual(61, tolist[0].skillID);
-            Assert.AreEqual(7, result.filteredCount);
-            Assert.AreEqual(10, result.totalCount);
+            Assert.AreEqual(7, result.Count());
+            Assert.AreEqual(10, _waServ.TotalCount());
         }
         [TestMethod]
         public void Integration_WA_Service_GetIndexView_check_requested_filter()
@@ -192,12 +192,12 @@ namespace Machete.Test
             var result = _waServ.GetIndexView(dOptions);
             //
             //Assert
-            var tolist = result.query.ToList();
+            var tolist = result.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(dTableList<WorkAssignment>));
+            Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
             //Assert.AreEqual(61, tolist[0].skillID);
-            Assert.AreEqual(1, result.filteredCount);
-            Assert.AreEqual(10, result.totalCount);
+            Assert.AreEqual(1, result.Count());
+            Assert.AreEqual(10, _waServ.TotalCount());
         }
         [TestMethod]
         public void Integration_WA_Service_Assign_updates_WSI_and_WA()

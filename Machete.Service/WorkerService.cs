@@ -12,7 +12,7 @@ namespace Machete.Service
     public interface IWorkerService : IService<Worker>
     {
         Worker GetWorkerByNum(int dwccardnum);
-        dTableList<Worker> GetIndexView(viewOptions o);
+        IEnumerable<Worker> GetIndexView(viewOptions o);
     }
     public class WorkerService : ServiceBase<Worker>, IWorkerService
     {
@@ -25,7 +25,7 @@ namespace Machete.Service
             Worker worker = repo.Get(w => w.dwccardnum == dwccardnum);
             return worker;
         }
-        public dTableList<Worker> GetIndexView(viewOptions o)
+        public IEnumerable<Worker> GetIndexView(viewOptions o)
         {
             //Get all the records
             IQueryable<Worker> q = repo.GetAllQ();
@@ -35,12 +35,7 @@ namespace Machete.Service
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
             //Limit results to the display length and offset
             q = q.Skip(o.displayStart).Take(o.displayLength);
-            return new dTableList<Worker>
-            {
-                query = q,
-                filteredCount = q.Count(),
-                totalCount = repo.GetAllQ().Count()
-            };
+            return q;
         }
     }
 }
