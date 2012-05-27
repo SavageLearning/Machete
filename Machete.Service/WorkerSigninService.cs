@@ -14,10 +14,10 @@ namespace Machete.Service
     public interface IWorkerSigninService : ISigninService<WorkerSignin>
     {
         WorkerSignin GetSignin(int dwccardnum, DateTime date);
-        void CreateSignin(WorkerSignin workerSignin, string user);
         int GetNextLotterySequence(DateTime date);
         bool clearLottery(int id, string user);
         bool sequenceLottery(DateTime date, string user);
+        IEnumerable<wsiView> GetIndexView(viewOptions o);
     }
 
     public class WorkerSigninService : SigninServiceBase<WorkerSignin>, IWorkerSigninService
@@ -96,6 +96,43 @@ namespace Machete.Service
             // no logging as of now
             uow.Commit();
             return true;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        public IEnumerable<wsiView> GetIndexView(viewOptions o)
+        {
+            //
+            IQueryable<WorkerSignin> q = repo.GetAllQ();
+            IEnumerable<WorkerSignin> e;
+            IEnumerable<wsiView> eSIV;
+            //
+            if (o.date != null) IndexViewBase.diffDays(o, ref q);                
+            //
+            if (o.typeofwork_grouping == Worker.iDWC || o.typeofwork_grouping == Worker.iHHH)
+                IndexViewBase.typeOfWork(o, ref q);
+            // 
+            // wa_grouping
+            IndexViewBase.waGrouping(o, ref q, wrRepo);
+
+            e = q.ToList();
+            if (!string.IsNullOrEmpty(o.search))
+                IndexViewBase.search(o, ref e);
+
+            eSIV = e.Join(WorkerCache.getCache(), 
+                            s => s.dwccardnum, 
+                            w => w.dwccardnum, 
+                            (s, w) => new { s, w }
+                            )
+                    .Select(z => new wsiView( z.w.Person, z.s ));
+
+            IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, eSIV);
+            //if ((int)o.displayLength >= 0)
+                return eSIV.Skip((int)o.displayStart).Take((int)o.displayLength);
+
+
         }
     }
 }

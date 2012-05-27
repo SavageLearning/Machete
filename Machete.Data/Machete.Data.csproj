@@ -80,7 +80,7 @@
     <Compile Include="Initialize\MacheteLookups.cs" />
     <Compile Include="MacheteContext.cs" />
     <Compile Include="Migrations\201203210519182_ActivitiesAndHomelessBit.cs" />
-    <Compile Include="Migrations\201203210519182_ActivitiesAndHomelessBit.Designer.cs">
+    <Compile Include="Migrations\201203210519182_ActivitiesAndHomelessBit.designer.cs">
       <DependentUpon>201203210519182_ActivitiesAndHomelessBit.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
@@ -97,6 +97,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

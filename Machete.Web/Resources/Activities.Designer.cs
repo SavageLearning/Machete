@@ -61,20 +61,11 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add Activities.
-        /// </summary>
-        public static string actAddTab {
-            get {
-                return ResourceManager.GetString("actAddTab", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Activities.
         /// </summary>
-        public static string actRemTab {
+        public static string actJoinTab {
             get {
-                return ResourceManager.GetString("actRemTab", resourceCulture);
+                return ResourceManager.GetString("actJoinTab", resourceCulture);
             }
         }
         
