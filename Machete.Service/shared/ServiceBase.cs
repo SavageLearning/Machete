@@ -19,6 +19,7 @@ namespace Machete.Service
         T Create(T record, string user);
         void Delete(int id, string user);
         void Save(T record, string user);
+        int TotalCount();
     }
     /// <summary>
     /// 
@@ -43,6 +44,10 @@ namespace Machete.Service
         {
             this.repo = repo;
             this.uow = uow;
+        }
+        public int TotalCount()
+        {
+            return repo.GetAllQ().Count();
         }
         /// <summary>
         /// 
@@ -130,10 +135,10 @@ namespace Machete.Service
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class dTableList<T>
-    {
-        public IEnumerable<T> query { get; set; }
-        public int totalCount { get; set; }
-        public int filteredCount { get; set; }
-    }
+    //public class IEnumerable<T>
+    //{
+    //    public IEnumerable<T> query { get; set; }
+    //    public int totalCount { get; set; }
+    //    public int filteredCount { get; set; }
+    //}
 }

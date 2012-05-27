@@ -47,7 +47,7 @@ namespace Machete.Web.Controllers
         public JsonResult AjaxHandler(jQueryDataTableParam param)
         {
             //Get all the records
-            dTableList<Activity> list = serv.GetIndexView(new viewOptions
+            IEnumerable<Activity> list = serv.GetIndexView(new viewOptions
             {
                 search = param.sSearch,
                 CI = CI,
@@ -57,7 +57,7 @@ namespace Machete.Web.Controllers
                 orderDescending = param.sSortDir_0 == "asc" ? false : true,
             });
             //return what's left to datatables
-            var result = from p in list.query
+            var result = from p in list
                          select new
                          {
                              tabref = _getTabRef(p),
@@ -77,8 +77,8 @@ namespace Machete.Web.Controllers
             return Json(new
             {
                 sEcho = param.sEcho,
-                iTotalRecords = list.totalCount,
-                iTotalDisplayRecords = list.filteredCount,
+                iTotalRecords = serv.TotalCount(),
+                iTotalDisplayRecords = list.Count(),
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);
@@ -95,15 +95,6 @@ namespace Machete.Web.Controllers
                     LookupCache.byID(emp.name, CI.TwoLetterISOLanguageName) + " - " +
                     emp.teacher;
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="param"></param>
-        /// <returns></returns>
-        //public JsonResult availableActivities(jQueryDataTableParam param)
-        //{
-
-        //}
         /// <summary>
         /// GET: /Activity/Create
         /// </summary>

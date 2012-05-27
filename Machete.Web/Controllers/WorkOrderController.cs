@@ -64,14 +64,14 @@ namespace Machete.Web.Controllers
             System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
             //
             //pass filter parameters to service level
-            dTableList<WOWASummary> filteredSummary = 
+            IEnumerable<WOWASummary> filteredSummary = 
                 woServ.CombinedSummary(param.sSearch,
                     Request["sSortDir_0"] == "asc" ? false : true,
                     param.iDisplayStart,
                     param.iDisplayLength);
             //
             //return what's left to datatables
-            var result = from p in filteredSummary.query
+            var result = from p in filteredSummary
                          select new[] { System.String.Format("{0:MM/dd/yyyy}", p.date),
                                          p.weekday.ToString(),
                                          p.pending_wo > 0 ? p.pending_wo.ToString(): null,
@@ -89,8 +89,8 @@ namespace Machete.Web.Controllers
             return Json(new
             {
                 sEcho = param.sEcho,
-                iTotalRecords = filteredSummary.totalCount,
-                iTotalDisplayRecords = filteredSummary.filteredCount,
+                iTotalRecords = woServ.GetSummary().Count(),
+                iTotalDisplayRecords = filteredSummary.Count(),
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);
@@ -117,9 +117,9 @@ namespace Machete.Web.Controllers
             opt.sortColName = param.sortColName();
             opt.showOrdersWorkers = param.showOrdersWorkers;
             //Get all the records
-            dTableList<WorkOrder> allWorkOrders = woServ.GetIndexView(opt);
+            IEnumerable<WorkOrder> allWorkOrders = woServ.GetIndexView(opt);
 
-            var result = from p in allWorkOrders.query
+            var result = from p in allWorkOrders
                          select new
                          {
                              tabref = p.getTabRef(),
@@ -150,8 +150,8 @@ namespace Machete.Web.Controllers
             return Json(new
             {
                 sEcho = param.sEcho,
-                iTotalRecords = allWorkOrders.totalCount,
-                iTotalDisplayRecords = allWorkOrders.filteredCount,
+                iTotalRecords = woServ.TotalCount(),
+                iTotalDisplayRecords = allWorkOrders.Count(),
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);
