@@ -12,7 +12,7 @@ namespace Machete.Service
     public interface IEventService : IService<Event>
     {
         IQueryable<Event> GetEvents(int? PID);
-        dTableList<Event> GetIndexView(viewOptions o);
+        IEnumerable<Event> GetIndexView(viewOptions o);
     }
 
     // Business logic for Event record management
@@ -43,7 +43,7 @@ namespace Machete.Service
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public dTableList<Event> GetIndexView(viewOptions o)
+        public IEnumerable<Event> GetIndexView(viewOptions o)
         {
             //Get all the records
             IQueryable<Event> q = GetEvents(o.personID);
@@ -63,12 +63,7 @@ namespace Machete.Service
 
             //Limit results to the display length and offset
             q = q.Skip(o.displayStart).Take(o.displayLength);
-            return new dTableList<Event>
-            {
-                query = q,
-                filteredCount = q.Count(),
-                totalCount = repo.GetAllQ().Count()
-            };
+            return q;
         }
     }
 }
