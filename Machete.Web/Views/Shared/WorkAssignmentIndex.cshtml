@@ -66,59 +66,62 @@
         // Create Work Assignment table
         //
         $('#activateWorkOrderButton-@(Model.ID)').hide();
-        jqrfyTable($('#workAssignTable-wo-@(Model.ID)'), $('#workAssignTabs-wo-@(Model.ID)'),
-        {
-            "bPaginate": true,
-            "bLengthChange": true,
-            "aaSorting": [[7, 'desc']],
-            "bFilter": true,
-            "bSort": true,
-            "bInfo": true,
-            "bAutoWidth": false,
-            "bServerSide": true,
-            "sAjaxSource": "/WorkAssignment/AjaxHandler",
-            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
-            "bProcessing": true,
-            "aoColumns": [
-                            { "mDataProp": "tabref", "bSearchable": false, "bSortable": false, "bVisible": false },
-                            { "mDataProp": "tablabel", "bSearchable": false, "bSortable": false, "bVisible": false },
-                            { "mDataProp": "WOID", "bSearchable": false, "bSortable": false, "bVisible": false }, 
-                            { "mDataProp": "pWAID"},
-                            { "mDataProp": "englishlevel"}, 
-                            { "mDataProp": "skill"}, 
-                            { "mDataProp": "hourlywage"}, 
-                            { "mDataProp": "hours"}, 
-                            { "mDataProp": "hourRange"},
-                            { "mDataProp": "days"},
-                            { "mDataProp": "description"},
-                            { "mDataProp": "dateupdated"},
-                            { "mDataProp": "updatedby" }
-                        ],
-            "aoSearchCols" : [null, null, { "sSearch": "@(Model.ID)" }, null, null, null, null, null, null, null, null, null],
-            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) { 
-                                    //show activation button (need at least 1 assignment to activate)
-                                    switch (aData['asmtStatus'])
-                                    {
-                                        // magic strings in WorkAssignmentController
-                                        case "active": $(nRow).addClass('statusBlue'); break;
-                                        case "completed": $(nRow).addClass('statusGreen'); break;
-                                        case "incomplete": $(nRow).addClass('statusOrange'); break;
-                                        case "orphaned": $(nRow).addClass('statusYellow'); break;
-                                        case "cancelled": $(nRow).addClass('statusRed'); break;
-                                        default: $(nRow).addClass('statusBlue');
-                                    }     
-                                    $('#activateWorkOrderButton-@(Model.ID)').show();
+        jqrfyTable({
+            table: $('#workAssignTable-wo-@(Model.ID)'), 
+            tab: $('#workAssignTabs-wo-@(Model.ID)'),
+            options: {
+                "bPaginate": true,
+                "bLengthChange": true,
+                "aaSorting": [[7, 'desc']],
+                "bFilter": true,
+                "bSort": true,
+                "bInfo": true,
+                "bAutoWidth": false,
+                "bServerSide": true,
+                "sAjaxSource": "/WorkAssignment/AjaxHandler",
+                "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+                "bProcessing": true,
+                "aoColumns": [
+                                { "mDataProp": "tabref", "bSearchable": false, "bSortable": false, "bVisible": false },
+                                { "mDataProp": "tablabel", "bSearchable": false, "bSortable": false, "bVisible": false },
+                                { "mDataProp": "WOID", "bSearchable": false, "bSortable": false, "bVisible": false }, 
+                                { "mDataProp": "pWAID"},
+                                { "mDataProp": "englishlevel"}, 
+                                { "mDataProp": "skill"}, 
+                                { "mDataProp": "hourlywage"}, 
+                                { "mDataProp": "hours"}, 
+                                { "mDataProp": "hourRange"},
+                                { "mDataProp": "days"},
+                                { "mDataProp": "description"},
+                                { "mDataProp": "dateupdated"},
+                                { "mDataProp": "updatedby" }
+                            ],
+                "aoSearchCols" : [null, null, { "sSearch": "@(Model.ID)" }, null, null, null, null, null, null, null, null, null],
+                "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) { 
+                                        //show activation button (need at least 1 assignment to activate)
+                                        switch (aData['asmtStatus'])
+                                        {
+                                            // magic strings in WorkAssignmentController
+                                            case "active": $(nRow).addClass('statusBlue'); break;
+                                            case "completed": $(nRow).addClass('statusGreen'); break;
+                                            case "incomplete": $(nRow).addClass('statusOrange'); break;
+                                            case "orphaned": $(nRow).addClass('statusYellow'); break;
+                                            case "cancelled": $(nRow).addClass('statusRed'); break;
+                                            default: $(nRow).addClass('statusBlue');
+                                        }     
+                                        $('#activateWorkOrderButton-@(Model.ID)').show();
 
-                                    return nRow;
-                            },
-            "fnServerData": function ( sSource, aoData, fnCallback ) {
-			    /* Add some extra data to the sender */
-                aoData.push( { "name": "showPending", "value": true});
-			    $.getJSON( sSource, aoData, function (json) { 
-				    /* Do whatever additional processing you want on the callback, then tell DataTables */
-				    fnCallback(json)
-			    } );
-		    }
+                                        return nRow;
+                                },
+                "fnServerData": function ( sSource, aoData, fnCallback ) {
+			        /* Add some extra data to the sender */
+                    aoData.push( { "name": "showPending", "value": true});
+			        $.getJSON( sSource, aoData, function (json) { 
+				        /* Do whatever additional processing you want on the callback, then tell DataTables */
+				        fnCallback(json)
+			        } );
+		        }
+            }
         });
         ////////////////////////////////////////////////////////////////////////////
         //

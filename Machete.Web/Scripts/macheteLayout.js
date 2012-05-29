@@ -1,11 +1,4 @@
-﻿//////////////////////////////////////////////////////////////////
-///
-///
-M_emp_uitab_patt = /employer/i;
-M_ord_uitab_patt = /workorder/i;
-M_ass_uitab_patt = /workassign/i;
-
-eventDebug = 0;
+﻿eventDebug = 0;
 var eventsequence = 0;
 var eventDate = new Date();
 ////////////////////////////////////////////////////////////////
@@ -77,7 +70,13 @@ function add_rectab(opt) {
 ///
 ///##Create dataTable
 ///
-function jqrfyTable(myTable, myTab, myOptions, dblclickevent, recType) {
+function jqrfyTable(o) {
+    var myTable         = o.table,
+        myTab           = o.tab,
+        myOptions       = o.options,
+        clickEvent      = o.clickEvent,
+        dblclickevent   = o.dblClickEvent,
+        tabLabel        = o.tabLabel;
     var oTable;
     var tableID = $(myTable).attr('ID');
     //
@@ -93,7 +92,7 @@ function jqrfyTable(myTable, myTab, myOptions, dblclickevent, recType) {
         if (jQuery.browser.mobile) {
             var $foo = $(nRow).find('td:nth-child(1)');
             var footext = $foo.text();
-            var btnID = recType + aData['recordid'] + '-Btn';
+            var btnID = tabLabel + aData['recordid'] + '-Btn';
             $foo.prepend('<input type="button" class="rowButton" value="open" id="' + btnID + '"></input>');
         }
         // call original handler
@@ -103,8 +102,6 @@ function jqrfyTable(myTable, myTab, myOptions, dblclickevent, recType) {
             return nRow;
         }
     }
-    //$(myTable).find('thead tr').append('<input type="button">button</input>');
-    //myOptions.aoColumns.push({ mDataProp: "button", bSearchable: false, bSortable: false, bVisible: false });
     //
     // create datatable
     oTable = $(myTable).dataTable(myOptions).fnSetFilteringDelay(400);
@@ -115,12 +112,16 @@ function jqrfyTable(myTable, myTab, myOptions, dblclickevent, recType) {
     //
     // table click event -- highlight row
     //
-    $(myTable).find('tbody').click(function (event) {
-        $(oTable.fnSettings().aoData).each(function () {
-            $(this.nTr).removeClass('row_selected');
-        });
-        $(event.target.parentNode).addClass('row_selected');
-    });
+    if (!clickEvent) {
+        // remove row_selected from all; add to event.target (only 1 selected)
+        clickEvent = function (event) {
+            $(oTable.fnSettings().aoData).each(function () {
+                $(this.nTr).removeClass('row_selected');
+            });
+            $(event.target.parentNode).addClass('row_selected');
+        }
+    }
+    $(myTable).find('tbody').click(clickEvent);
     ////////////////////////////////////////////////////////////////
     //
     // table doubleclick event 
@@ -138,7 +139,7 @@ function jqrfyTable(myTable, myTab, myOptions, dblclickevent, recType) {
                 tab: myTab,
                 exclusive: exclusiveTab,
                 recordID: $(myTr).attr('recordid'),
-                recType: recType
+                recType: tabLabel
             });
         }
     }

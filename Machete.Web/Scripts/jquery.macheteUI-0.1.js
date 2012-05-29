@@ -11,7 +11,7 @@
 * 
 * Copyright 2011 Savage Learning, LLC., all rights reserved.
 *
-* This source file is free software, under either the GPL v2 license or a
+* This source file is free software, under either the GPL v3 license or a
 * BSD style license, as supplied with this software.
 * 
 * This source file is distributed in the hope that it will be useful, but 

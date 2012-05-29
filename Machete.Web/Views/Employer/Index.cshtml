@@ -36,31 +36,36 @@
         //
         // Create Employer table
         //
-        jqrfyTable($('#employerTable'), $('#employerTabs'),
-        {
-            "bPaginate": true,
-            "bLengthChange": true,
-            "aaSorting": [[7, 'desc']],
-            "bFilter": true,
-            "bSort": true,
-            "bInfo": true,
-            "bAutoWidth": false,
-            "bServerSide": true,
-            "sAjaxSource": "/Employer/AjaxHandler",
-            "bProcessing": true,
-            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
-            "aoColumns": [                           //dataTable column definition
-                            {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
-                            {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
-                            {"mDataProp": "active" },
-                            {"mDataProp": "name" },
-                            {"mDataProp": "address1" },
-                            {"mDataProp": "city" },
-                            {"mDataProp": "phone" },
-                            {"mDataProp": "dateupdated" },
-                            { "mDataProp": "Updatedby", "bSortable": false }
-                        ]             
-        }, null, "@(recType)");
+        jqrfyTable({
+            table: $('#employerTable'), 
+            tab: $('#employerTabs'),
+            options: {
+                "bPaginate": true,
+                "bLengthChange": true,
+                "aaSorting": [[7, 'desc']],
+                "bFilter": true,
+                "bSort": true,
+                "bInfo": true,
+                "bAutoWidth": false,
+                "bServerSide": true,
+                "sAjaxSource": "/Employer/AjaxHandler",
+                "bProcessing": true,
+                "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+                "aoColumns": [                           //dataTable column definition
+                                {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                                {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                                {"mDataProp": "active" },
+                                {"mDataProp": "name" },
+                                {"mDataProp": "address1" },
+                                {"mDataProp": "city" },
+                                {"mDataProp": "phone" },
+                                {"mDataProp": "dateupdated" },
+                                { "mDataProp": "Updatedby", "bSortable": false }
+                            ]             
+            }, 
+            dblClickEvent: null, 
+            tabLabel: "@(recType)"
+        });
         $('#employerTabs').mUI('createTabs', { 
             prefix: "ui-tabs-employer-",
             formLevel: 1,
