@@ -249,98 +249,109 @@
     //
     //
     //
-    jqrfyTable($("#signinTable"), null, {
-        //"sScrollY": "300px",
-        "bPaginate": true,
-        "bLengthChange": true,
-        "bAutoWidth": false,
-        "bServerSide": true,
-        "sAjaxSource": "/WorkerSignin/AjaxHandler",
-        "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
-        "bProcessing": true,
-        "aoColumns": [
-            {"mDataProp": "dwccardnum"},
-            {"mDataProp": "skills"},
-            {"mDataProp": "lotterySequence"},
-            {"mDataProp": "program"},
-            {"mDataProp": "fullname"}
-        ],
-        "fnServerData": function ( sSource, aoData, fnCallback ) {
-			/* Add some extra data to the sender */
-			aoData.push( { "name": "todaysdate", "value": $('#todaysdate').val() } );
-            aoData.push( { "name": "dwccardnum", "value": $('#dwccardnum').val()} );
-            aoData.push( { "name": "wa_grouping", "value": $('#wa_grouping').val()} );
-            aoData.push( { "name": "typeofwork_grouping", "value": $('#typeofwork_grouping').val()} );            
-			$.getJSON( sSource, aoData, function (json) { 
-				/* Do whatever additional processing you want on the callback, then tell DataTables */
-				fnCallback(json)
-			} );
-		},
-        "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-            if (aData['WAID'] > 0) { // green
-                $(nRow).addClass('statusGreen');
-            }                
-            return nRow;
-        } 
-    }, wsiDblClickEvent);
-    //
-    //
-    jqrfyTable($("#availAssignTable"), $("#assignmentTab"),
-    {
-        //"sScrollY": "300px",
-        "bPaginate": true,
-        "bLengthChange": true,
-        "aaSorting": [[4, 'desc']],
-        "bFilter": true,
-        //"bSort": true,
-        "bAutoWidth": false,
-        "bInfo": true,
-        "bServerSide": true,
-        "sAjaxSource": "/WorkAssignment/AjaxHandler",
-        "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
-        "bProcessing": true,
-        "aoColumns": [
-                        { "mDataProp": "assignedWorker", "bVisible": false, "bSortable": true}, 
-                        { "mDataProp": "requestedList", "bVisible": false, "bSortable": false}, 
-                        { "mDataProp": "pWAID" },                            
-                        { "mDataProp": "dateTimeofWork"},                            
-                        { "mDataProp": "englishlevel"}, 
-                        { "mDataProp": "skill"}, 
-                        { "mDataProp": "hourlywage"}, 
-                        { "mDataProp": "hours"}, 
-                        { "mDataProp": "hourRange"}, 
-                        { "mDataProp": "days"},
-                        { "mDataProp": "earnings"},
-                        { "mDataProp": "description"},                        
-                    ],
-        "aoSearchCols" : [null, null, null, null, null, null, null, null, null, null, null],
-        "fnServerData": function ( sSource, aoData, fnCallback ) {
+    jqrfyTable({
+        table: $("#signinTable"), 
+        tab: null, 
+        options: {
+            //"sScrollY": "300px",
+            "bPaginate": true,
+            "bLengthChange": true,
+            "bAutoWidth": false,
+            "bServerSide": true,
+            "sAjaxSource": "/WorkerSignin/AjaxHandler",
+            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "bProcessing": true,
+            "aoColumns": [
+                {"mDataProp": "dwccardnum"},
+                {"mDataProp": "skills"},
+                {"mDataProp": "lotterySequence"},
+                {"mDataProp": "program"},
+                {"mDataProp": "fullname"}
+            ],
+            "fnServerData": function ( sSource, aoData, fnCallback ) {
 			    /* Add some extra data to the sender */
 			    aoData.push( { "name": "todaysdate", "value": $('#todaysdate').val() } );
                 aoData.push( { "name": "dwccardnum", "value": $('#dwccardnum').val()} );
                 aoData.push( { "name": "wa_grouping", "value": $('#wa_grouping').val()} );
-                aoData.push( { "name": "typeofwork_grouping", "value": $('#typeofwork_grouping').val()} );
-                aoData.push( { "name": "status", "value": $('#status').val()});
-                aoData.push( { "name": "showPending", "value": false});
+                aoData.push( { "name": "typeofwork_grouping", "value": $('#typeofwork_grouping').val()} );            
 			    $.getJSON( sSource, aoData, function (json) { 
 				    /* Do whatever additional processing you want on the callback, then tell DataTables */
 				    fnCallback(json)
 			    } );
 		    },
-        "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-            switch (aData['asmtStatus'])
-            {
-                // magic strings in WorkAssignmentController
-                case "active": $(nRow).addClass('statusBlue'); break;
-                case "completed": $(nRow).addClass('statusGreen'); break;
-                case "incomplete": $(nRow).addClass('statusOrange'); break;
-                case "orphaned": $(nRow).addClass('statusYellow'); break;
-                case "cancelled": $(nRow).addClass('statusRed'); break;
-                default: $(nRow).addClass('statusBlue');
-            }           
-            return nRow;
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                if (aData['WAID'] > 0) { // green
+                    $(nRow).addClass('statusGreen');
+                }                
+                return nRow;
+            } 
         }, 
-        "fnDrawCallback": function () { assignTableCount++; }
+        dblClickEvent: wsiDblClickEvent,
+        tabLabel: null
+        });
+    //
+    //
+    jqrfyTable({
+        table: $("#availAssignTable"), 
+        tab: $("#assignmentTab"),
+        options: {
+            //"sScrollY": "300px",
+            "bPaginate": true,
+            "bLengthChange": true,
+            "aaSorting": [[4, 'desc']],
+            "bFilter": true,
+            //"bSort": true,
+            "bAutoWidth": false,
+            "bInfo": true,
+            "bServerSide": true,
+            "sAjaxSource": "/WorkAssignment/AjaxHandler",
+            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "bProcessing": true,
+            "aoColumns": [
+                            { "mDataProp": "assignedWorker", "bVisible": false, "bSortable": true}, 
+                            { "mDataProp": "requestedList", "bVisible": false, "bSortable": false}, 
+                            { "mDataProp": "pWAID" },                            
+                            { "mDataProp": "dateTimeofWork"},                            
+                            { "mDataProp": "englishlevel"}, 
+                            { "mDataProp": "skill"}, 
+                            { "mDataProp": "hourlywage"}, 
+                            { "mDataProp": "hours"}, 
+                            { "mDataProp": "hourRange"}, 
+                            { "mDataProp": "days"},
+                            { "mDataProp": "earnings"},
+                            { "mDataProp": "description"},                        
+                        ],
+            "aoSearchCols" : [null, null, null, null, null, null, null, null, null, null, null],
+            "fnServerData": function ( sSource, aoData, fnCallback ) {
+			        /* Add some extra data to the sender */
+			        aoData.push( { "name": "todaysdate", "value": $('#todaysdate').val() } );
+                    aoData.push( { "name": "dwccardnum", "value": $('#dwccardnum').val()} );
+                    aoData.push( { "name": "wa_grouping", "value": $('#wa_grouping').val()} );
+                    aoData.push( { "name": "typeofwork_grouping", "value": $('#typeofwork_grouping').val()} );
+                    aoData.push( { "name": "status", "value": $('#status').val()});
+                    aoData.push( { "name": "showPending", "value": false});
+			        $.getJSON( sSource, aoData, function (json) { 
+				        /* Do whatever additional processing you want on the callback, then tell DataTables */
+				        fnCallback(json)
+			        } );
+		        },
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                switch (aData['asmtStatus'])
+                {
+                    // magic strings in WorkAssignmentController
+                    case "active": $(nRow).addClass('statusBlue'); break;
+                    case "completed": $(nRow).addClass('statusGreen'); break;
+                    case "incomplete": $(nRow).addClass('statusOrange'); break;
+                    case "orphaned": $(nRow).addClass('statusYellow'); break;
+                    case "cancelled": $(nRow).addClass('statusRed'); break;
+                    default: $(nRow).addClass('statusBlue');
+                }           
+                return nRow;
+            }, 
+            "fnDrawCallback": function () { assignTableCount++; }
+            },          
+        dblClickEvent: null,
+        tabLabel: null
         });
         //
         //

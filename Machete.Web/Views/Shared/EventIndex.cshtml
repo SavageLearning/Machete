@@ -26,39 +26,44 @@
 <script type="text/javascript">
     $(document).ready(function () {
 
-        jqrfyTable($('#eventTable'), $('#personPartsTabs'),
-        {
-            "bPaginate": true,
-            "bLengthChange": true,
-            "aaSorting": [[8, 'desc']],
-            "bFilter": true,
-            "bSort": true,
-            "bInfo": true,
-            "bAutoWidth": false,
-            "bServerSide": true,
-            "sAjaxSource": "/Event/AjaxHandler", 
-            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
-            "bProcessing": true,
-            "aoColumns": [
-                {"mDataProp": "tabref", "bSearchable": false, "bSortable": false, "bVisible": false },
-                {"mDataProp": "tablabel", "bSearchable": false, "bSortable": false, "bVisible": false },
-                {"mDataProp": "type" },
-                {"mDataProp": "notes" },
-                {"mDataProp": "datefrom" },
-                {"mDataProp": "dateto" },
-                {"mDataProp": "fileCount" },
-                {"mDataProp": "dateupdated" },
-                { "mDataProp": "Updatedby", "bSortable": false }
-            ],
-            "fnServerData": function ( sSource, aoData, fnCallback ) {
-			    /* Add some extra data to the sender */			    
-                aoData.push( { "name": "personID", "value": $('#personID').val() } );
-			    $.getJSON( sSource, aoData, function (json) { 
-				    /* Do whatever additional processing you want on the callback, then tell DataTables */
-				    fnCallback(json)
-			    } );
-		    }             
-        }, null, "@(recType)");
+        jqrfyTable({
+            table: $('#eventTable'),
+            tab: $('#personPartsTabs'),
+            options: {
+                "bPaginate": true,
+                "bLengthChange": true,
+                "aaSorting": [[8, 'desc']],
+                "bFilter": true,
+                "bSort": true,
+                "bInfo": true,
+                "bAutoWidth": false,
+                "bServerSide": true,
+                "sAjaxSource": "/Event/AjaxHandler", 
+                "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+                "bProcessing": true,
+                "aoColumns": [
+                    {"mDataProp": "tabref", "bSearchable": false, "bSortable": false, "bVisible": false },
+                    {"mDataProp": "tablabel", "bSearchable": false, "bSortable": false, "bVisible": false },
+                    {"mDataProp": "type" },
+                    {"mDataProp": "notes" },
+                    {"mDataProp": "datefrom" },
+                    {"mDataProp": "dateto" },
+                    {"mDataProp": "fileCount" },
+                    {"mDataProp": "dateupdated" },
+                    { "mDataProp": "Updatedby", "bSortable": false }
+                ],
+                "fnServerData": function ( sSource, aoData, fnCallback ) {
+			        /* Add some extra data to the sender */			    
+                    aoData.push( { "name": "personID", "value": $('#personID').val() } );
+			        $.getJSON( sSource, aoData, function (json) { 
+				        /* Do whatever additional processing you want on the callback, then tell DataTables */
+				        fnCallback(json)
+			        } );
+		        }             
+            }, 
+            dblClickEvent: null, 
+            tabLabel: "@(recType)"
+        });
         $('#eventTable_filter input').attr('ID','personSearchBox');
     });
 </script>

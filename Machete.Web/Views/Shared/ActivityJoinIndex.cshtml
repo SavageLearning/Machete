@@ -12,9 +12,10 @@
         <div class="tb-row">
             <div id="actInTab" class="tb-cell">
                 <ul>
-                <li>ACT-IN-TABLE</li>
+                <li><a href="#actInList" class="ListTab">ACT-IN-TABLE</a></li>
                 </ul>
-                <table id="actInTable" class="display">
+                <div id="actInList">
+                    <table id="actInTable" class="display">
                 <thead>
                     <tr>
                         <th>@Activity.name</th>
@@ -24,12 +25,16 @@
                     </tr>
                 </thead>
             </table>
+                </div>
             </div>
+            <input type="button" id="bActAssign" class="formButton" value="<==" />
+            <input type="button" id="bActUnassign" class="formButton" value="==>"/>
             <div id="actOutTab" class="tb-cell">
                 <ul>
-                <li>ACT-OUT-TABLE</li>
+                <li><a href="#actOutList" class="ListTab">ACT-OUT-TABLE</a></li>
                 </ul>
-                <table id="actOutTable" class="display">
+                <div id="actOutList">
+                    <table id="actOutTable" class="display">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -41,6 +46,7 @@
                     </tr>
                 </thead>
             </table>
+                </div>
             </div>
         </div>
     </div>
@@ -59,69 +65,105 @@
             changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
             changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
         });
-        //jqrfyTable($('#actOutTable'), $('#personPartsTabs'),
-        $('#actOutTable').dataTable(
-        {
-            "bPaginate": true,
-            "bLengthChange": true,
-            "aaSorting": [[5, 'desc']],
-            "bFilter": true,
-            "bSort": true,
-            "bInfo": true,
-            "bAutoWidth": false,
-            "bServerSide": true,
-            "sAjaxSource": "/Activity/AjaxHandler", 
-            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
-            "bProcessing": true,
-            "aoColumns": [
-                            {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
-                            {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
-                            {"mDataProp": "name" },
-                            {"mDataProp": "type" },
-                            {"mDataProp": "teacher" },
-                            {"mDataProp": "dateStart" },
-            ],
-            "fnServerData": function ( sSource, aoData, fnCallback ) {
-			    /* Add some extra data to the sender */			    
-                aoData.push( { "name": "personID", "value": $('#personID').val() } );
-                aoData.push( { "name": "attendedActivities", "value": false } );
-			    $.getJSON( sSource, aoData, function (json) { 
-				    /* Do whatever additional processing you want on the callback, then tell DataTables */
-				    fnCallback(json)
-			    } );
-		    }             
-        //}, null, "@(recType)");
+        jqrfyTable({
+            table: $('#actOutTable'), 
+            tab: $('#personPartsTabs'),
+            options: {
+                "bPaginate": true,
+                "bLengthChange": true,
+                "aaSorting": [[5, 'desc']],
+                "bFilter": true,
+                "bSort": true,
+                "bInfo": true,
+                "bAutoWidth": false,
+                "bServerSide": true,
+                "sAjaxSource": "/Activity/AjaxHandler", 
+                "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+                "bProcessing": true,
+                "aoColumns": [
+                                {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                                {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                                {"mDataProp": "name" },
+                                {"mDataProp": "type" },
+                                {"mDataProp": "teacher" },
+                                {"mDataProp": "dateStart" },
+                ],
+                "fnServerData": function ( sSource, aoData, fnCallback ) {
+			        /* Add some extra data to the sender */			    
+                    aoData.push( { "name": "personID", "value": $('#personID').val() } );
+                    aoData.push( { "name": "attendedActivities", "value": false } );
+			        $.getJSON( sSource, aoData, function (json) { 
+				        /* Do whatever additional processing you want on the callback, then tell DataTables */
+				        fnCallback(json)
+			        } );
+		        }             
+            }, 
+            dblClickEvent: null,
+            clickEvent: function (e) {
+                    if ( $(e.target.parentNode).hasClass('row_selected') ) 
+                        $(e.target.parentNode).removeClass('row_selected'); 
+                    else $(e.target.parentNode).addClass('row_selected'); 
+            },
+            tabLabel: "@(recType)"
+            });
+        
+        jqrfyTable({
+            table: $('#actInTable'), 
+            tab: $('#personPartsTabs'),
+            options: {
+                "bPaginate": true,
+                "bLengthChange": true,
+                "aaSorting": [[5, 'desc']],
+                "bFilter": true,
+                "bSort": true,
+                "bInfo": true,
+                "bAutoWidth": false,
+                "bServerSide": true,
+                "sAjaxSource": "/Activity/AjaxHandler", 
+                "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+                "bProcessing": true,
+                "aoColumns": [
+                                {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                                {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                                {"mDataProp": "name" },
+                                {"mDataProp": "type" },
+                                {"mDataProp": "teacher" },
+                                {"mDataProp": "dateStart" },
+                ],
+                "fnServerData": function ( sSource, aoData, fnCallback ) {
+			        /* Add some extra data to the sender */			    
+                    aoData.push( { "name": "personID", "value": $('#personID').val() } );
+                    aoData.push( { "name": "attendedActivities", "value": true } );
+			        $.getJSON( sSource, aoData, function (json) { 
+				        /* Do whatever additional processing you want on the callback, then tell DataTables */
+				        fnCallback(json)
+			        } );
+		        }      
+            }, 
+            dblClickEvent: null, 
+            tabLabel: "@(recType)"
+            });
+        //
+        // copied from WorkAssignment
+        $('#bActAssign').click(function (e) {
+            e.preventDefault();                
+            //var assignRow = $('#availAssignTable').find('tbody').find('tr.row_selected').attr('recordid');
+            //var signinRow = $('#signinTable').find('tbody').find('tr.row_selected').attr('recordid');
+            var activities = $('#actOutTable tr.row_selected').map( function () { return $(this).attr('recordid')}).get();
+            console.log("activities:" + activities);
+//            $.post("/WorkAssignment/Assign", 
+//                {
+//                    waid: assignRow,
+//                    wsiid: signinRow
+//                },
+//                function (data) {
+//                    if (data.jobSuccess == false) {
+//                        alert(data.rtnMessage);
+//                    } else {
+//                        $("#updateBtn").click();     
+//                    }
+//                }
+//            );
         });
-        $('#actInTable').dataTable({
-            "bPaginate": true,
-            "bLengthChange": true,
-            "aaSorting": [[5, 'desc']],
-            "bFilter": true,
-            "bSort": true,
-            "bInfo": true,
-            "bAutoWidth": false,
-            "bServerSide": true,
-            "sAjaxSource": "/Activity/AjaxHandler", 
-            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
-            "bProcessing": true,
-            "aoColumns": [
-                            {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
-                            {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
-                            {"mDataProp": "name" },
-                            {"mDataProp": "type" },
-                            {"mDataProp": "teacher" },
-                            {"mDataProp": "dateStart" },
-            ],
-            "fnServerData": function ( sSource, aoData, fnCallback ) {
-			    /* Add some extra data to the sender */			    
-                aoData.push( { "name": "personID", "value": $('#personID').val() } );
-                aoData.push( { "name": "attendedActivities", "value": true } );
-			    $.getJSON( sSource, aoData, function (json) { 
-				    /* Do whatever additional processing you want on the callback, then tell DataTables */
-				    fnCallback(json)
-			    } );
-		    }             
-        });
-        //$('#eventTable_filter input').attr('ID','personSearchBox');
     });
 </script>

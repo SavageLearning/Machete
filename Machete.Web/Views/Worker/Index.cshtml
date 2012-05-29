@@ -31,8 +31,10 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        jqrfyTable($('#workerTable'), $('#workerTabs'),
-        {
+        jqrfyTable({
+        table: $('#workerTable'), 
+        tab: $('#workerTabs'),
+        options: {
             "bPaginate": true,
             "bLengthChange": true,
             "aaSorting": [[9, 'desc']],
@@ -71,6 +73,9 @@
                 }                 
                 return nRow;
             }        
+        },
+        dblClickEvent: null,
+        tabLabel: null
         });
         $('#workerTabs').mUI('createTabs', {
             prefix: "ui-tabs-worker-",

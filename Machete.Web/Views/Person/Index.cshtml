@@ -33,8 +33,10 @@
 <script language="javascript" type="text/javascript">
     $(document).ready(function () {
 
-        jqrfyTable($('#personTable'), $('#personTabs'),
-        {
+        jqrfyTable({
+        table: $('#personTable'), 
+        tab: $('#personTabs'),
+        options: {
             "bPaginate": true,
             "bLengthChange": true,
             "aaSorting": [[8, 'desc']],
@@ -58,7 +60,10 @@
                 {"mDataProp": "dateupdated" },
                 { "mDataProp": "Updatedby", "bSortable": false }
             ]                
-        }, null, "@(recType)");
+        }, 
+        dblClickEvent: null, 
+        tabLabel: "@(recType)"
+        });
         $('#personTable_filter input').attr('ID','personSearchBox');
         $('#personTabs').mUI("createTabs", {
             prefix: "ui-tabs-person-",

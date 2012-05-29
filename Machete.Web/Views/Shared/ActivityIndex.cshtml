@@ -28,32 +28,37 @@
     $(document).ready(function () {        
         //
         // Create Activity table
-        jqrfyTable($('#activityTable'), $('#activityTabs'),
-        {
-            "bPaginate": true,
-            "bLengthChange": true,
-            "aaSorting": [[7, 'desc']],
-            "bFilter": true,
-            "bSort": true,
-            "bInfo": true,
-            "bAutoWidth": false,
-            "bServerSide": true,
-            "sAjaxSource": "/Activity/AjaxHandler",
-            "bProcessing": true,
-            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
-            "aoColumns": [                           //dataTable column definition
-                            {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
-                            {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
-                            {"mDataProp": "name" },
-                            {"mDataProp": "type" },
-                            {"mDataProp": "teacher" },
-                            {"mDataProp": "count" },
-                            {"mDataProp": "dateStart" },
-                            {"mDataProp": "dateEnd" },
-                            {"mDataProp": "dateupdated" },
-                            { "mDataProp": "Updatedby", "bSortable": false }
-                        ]             
-        }, null, "@(recType)");
+        jqrfyTable({
+            table: $('#activityTable'), 
+            tab: $('#activityTabs'),
+            options: {
+                "bPaginate": true,
+                "bLengthChange": true,
+                "aaSorting": [[7, 'desc']],
+                "bFilter": true,
+                "bSort": true,
+                "bInfo": true,
+                "bAutoWidth": false,
+                "bServerSide": true,
+                "sAjaxSource": "/Activity/AjaxHandler",
+                "bProcessing": true,
+                "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+                "aoColumns": [                           //dataTable column definition
+                                {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                                {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                                {"mDataProp": "name" },
+                                {"mDataProp": "type" },
+                                {"mDataProp": "teacher" },
+                                {"mDataProp": "count" },
+                                {"mDataProp": "dateStart" },
+                                {"mDataProp": "dateEnd" },
+                                {"mDataProp": "dateupdated" },
+                                { "mDataProp": "Updatedby", "bSortable": false }
+                            ]             
+            }, 
+            dblClickEvent: null, 
+            tabLabel: "@(recType)"
+            });
     });
 </script>
 
