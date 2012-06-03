@@ -111,7 +111,7 @@ namespace Machete.Web.Helpers
             yesnoEN.Add(new SelectListItem() { Selected = false, Text = "Yes", Value = "true" });
             yesnoES = new List<SelectListItem>();
             yesnoES.Add(new SelectListItem() { Selected = false, Text = "No", Value = "false" });
-            yesnoES.Add(new SelectListItem() { Selected = false, Text = "Si", Value = "true" });
+            yesnoES.Add(new SelectListItem() { Selected = false, Text = "Sí", Value = "true" });
         }
 
 

@@ -399,13 +399,13 @@ namespace Machete.Service
         #region WORKERS
         public static void search(viewOptions o, ref IQueryable<Worker> q)
         {
-            q = q.Where(p => p.dwccardnum.ToString().ContainsOIC(o.search) ||
-                            p.active.ToString().ContainsOIC(o.search) ||
-                            p.Person.firstname1.ContainsOIC(o.search) ||
-                            p.Person.firstname2.ContainsOIC(o.search) ||
-                            p.Person.lastname1.ContainsOIC(o.search) ||
-                            p.Person.lastname2.ContainsOIC(o.search) ||
-                            p.memberexpirationdate.ToString().ContainsOIC(o.search));
+            q = q.Where(p => SqlFunctions.StringConvert((decimal)p.dwccardnum).Contains(o.search) ||
+                            p.Person.firstname1.Contains(o.search) ||
+                            p.Person.firstname2.Contains(o.search) ||
+                            p.Person.lastname1.Contains(o.search) ||
+                            p.Person.lastname2.Contains(o.search) //||
+                            //EntityFunctions.p.memberexpirationdate.ToString().Contains(o.search)
+                            );
         }
         public static void sortOnColName(string name, bool descending, ref IQueryable<Worker> q)
         {

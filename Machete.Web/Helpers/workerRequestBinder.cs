@@ -20,15 +20,12 @@ namespace Machete.Web.Helpers
             .ContainsPrefix(bindingContext.ModelName);
             string searchPrefix = (hasPrefix) ? bindingContext.ModelName + "." : "";
             // Get the raw attempted value from the value provider
-            //WorkerService workerService = 
             ValueProviderResult vpr = bindingContext.ValueProvider.GetValue("workerRequests2");
             if (vpr != null)
             {
                 var incomingData = vpr.AttemptedValue;
-                //return incomingData.Split(new char[1] { ',' }).Select(data => Car.GetCars().FirstOrDefault(o => o.Id == int.Parse(data))).ToList();
                 model = incomingData.Split(new char[1] { ',' }).Select(data => new WorkerRequest
                 {
-                    //workerRequested = workerService.GetWorkerByNum(int.Parse(data)),
                     WorkerID = int.Parse(data)
                 }).ToList();
             }

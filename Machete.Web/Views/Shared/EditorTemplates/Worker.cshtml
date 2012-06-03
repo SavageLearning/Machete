@@ -190,13 +190,14 @@
                 @Html.LabelFor(model => model.recentarrival)
             </div>
             <div class="tb-field">
-                @Html.DropDownListFor(model => model.recentarrival,
+@*                @Html.DropDownListFor(model => model.recentarrival,
                                     new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName),
                                         "Value",
                                         "Text",
                                         Model.recentarrival),
                                     @Machete.Web.Resources.Shared.choose,
-                                             new { tabindex = "1", @class = "workerEditor", id = idPrefix + "recentarrival" })
+                                             new { tabindex = "1", @class = "workerEditor", id = idPrefix + "recentarrival" })*@
+                @Html.DropDownYesNoFor(model => model.recentarrival, CI, new { tabindex = "1", @class = "workerEditor", id = idPrefix + "recentarrival" })
                 @Html.ValidationMessageFor(model => model.recentarrival)
             </div>
             <!--recentarrival-->
