@@ -13,8 +13,7 @@ namespace Machete.Service
 {
     public interface ISigninService<T> : IService<T> where T : Signin
     {
-        Image getImage(int dwccardnum);
-        void CreateSignin(T signin, string user);
+        Image getImage(int dwccardnum);        
     }
     public abstract class SigninServiceBase<T> : ServiceBase<T> where T : Signin
     {
@@ -35,26 +34,7 @@ namespace Machete.Service
             this.iRepo = iRepo;
             this.logPrefix = "SigninServiceBase";
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="signin"></param>
-        /// <param name="user"></param>
-        public virtual void CreateSignin(T signin, string user)
-        {
-            //Search for worker with matching card number
-            Worker wfound;
-            wfound = wRepo.GetAllQ().FirstOrDefault(s => s.dwccardnum == signin.dwccardnum);
-            if (wfound != null)
-            {
-                signin.WorkerID = wfound.ID;
-            }
-            //Search for duplicate signin for the same day
-            int sfound = 0; ;
-            sfound = repo.GetAllQ().Count(s => s.dateforsignin == signin.dateforsignin &&
-                                                     s.dwccardnum == signin.dwccardnum);
-            if (sfound == 0) Create(signin, user);
-        }
+
         /// <summary>
         /// 
         /// </summary>

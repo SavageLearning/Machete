@@ -20,6 +20,7 @@ namespace Machete.Service
         void Delete(int id, string user);
         void Save(T record, string user);
         int TotalCount();
+        IRepository<T> GetRepo();
     }
     /// <summary>
     /// 
@@ -116,6 +117,10 @@ namespace Machete.Service
             levent.Properties["RecordID"] = ID; //magic string maps to NLog config
             levent.Properties["username"] = user;
             nlog.Log(levent);
+        }
+        public IRepository<T> GetRepo()
+        {
+            return this.repo;
         }
 
     }

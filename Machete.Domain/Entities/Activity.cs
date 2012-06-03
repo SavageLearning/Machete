@@ -38,6 +38,8 @@ namespace Machete.Domain
     public class ActivitySignin: Signin
     {
         public virtual Activity Activity { get; set; }
-        public int ActivityID { get; set; }
+        public int activityID { get; set; }
+        public int? personID { get; set; }
+        public virtual Person person {get; set;}
     }
 }

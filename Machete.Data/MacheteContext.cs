@@ -15,9 +15,10 @@ namespace Machete.Data
         public MacheteContext() : base("macheteConnection") 
         {
             //this.Configuration.LazyLoadingEnabled = false;
+            //Database.SetInitializer<MacheteContext>(
+            //  new MigrateDatabaseToLatestVersion<MacheteContext, CustomMigrationsConfiguration>());            
         }
-        
-          //Machete here defines the database to use, by convention.
+        //Machete here defines the database to use, by convention.
         public DbSet<Person> Persons { get; set; }
         public DbSet<Worker> Workers { get; set; }
         public DbSet<WorkAssignment> WorkAssignments { get; set; }
@@ -31,7 +32,6 @@ namespace Machete.Data
         public DbSet<Activity> Activities { get; set; }
         public DbSet<ActivitySignin> ActivitySignins { get; set; }
         
-
         public virtual void Commit()
         {
             try
@@ -164,7 +164,7 @@ namespace Machete.Data
             HasKey(k => k.ID);
             HasMany(e => e.Signins)
                 .WithRequired(w => w.Activity)
-                .HasForeignKey(k => k.ActivityID)
+                .HasForeignKey(k => k.activityID)
                 .WillCascadeOnDelete();
         }
     }

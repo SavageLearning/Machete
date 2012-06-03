@@ -291,7 +291,7 @@ namespace Machete.Test
             Activity a2 = (Activity)activity.Clone(); DB.Activities.Add(a2);
             Activity a3 = (Activity)activity.Clone(); DB.Activities.Add(a3);
             DB.SaveChanges();
-            ActivitySignin a1as1 = (ActivitySignin)activitysignin.Clone(); DB.ActivitySignins.Add(a1as1); a1as1.ActivityID = 1; a1as1.dwccardnum = 30040; a1as1.dateforsignin = dt; a1as1.WorkerID = 1;
+            ActivitySignin a1as1 = (ActivitySignin)activitysignin.Clone(); DB.ActivitySignins.Add(a1as1); a1as1.activityID = 1; a1as1.dwccardnum = 30040; a1as1.dateforsignin = dt; a1as1.personID = 1;
             DB.SaveChanges();
             #endregion
         }

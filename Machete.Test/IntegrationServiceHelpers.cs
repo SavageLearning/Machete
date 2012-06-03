@@ -59,7 +59,7 @@ namespace Machete.Test
             _unitofwork = new UnitOfWork(_dbFactory);
             _pServ = new PersonService(_pRepo, _unitofwork);
             _iServ = new ImageService(_iRepo, _unitofwork);
-            _aServ = new ActivityService(_aRepo, _asRepo, _unitofwork);
+            _aServ = new ActivityService(_aRepo, _asServ, _unitofwork);
             _asServ = new ActivitySigninService(_asRepo, _wRepo, _pRepo, _iRepo, _wrRepo, _unitofwork);
             _wrServ = new WorkerRequestService(_wrRepo, _unitofwork);
             _waServ = new WorkAssignmentService(_waRepo, _wRepo, _lRepo, _wsiRepo, _unitofwork);

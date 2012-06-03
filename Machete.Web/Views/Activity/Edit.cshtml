@@ -33,7 +33,7 @@
         @Html.HiddenFor(model => model.ID);
     }
 }
-@Html.Partial("ActivitySigninIndex", new ActivitySignin() { ActivityID = Model.ID})
+@Html.Partial("ActivitySigninIndex", new ActivitySignin() { activityID = Model.ID})
 <script type="text/javascript">
     $(document).ready(function () {
         $('#viewActivity-@Model.ID').click(function () {

@@ -303,7 +303,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[ActivitySignins](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[ActivityID] [int] NOT NULL,
+	[activityID] [int] NOT NULL,
 	[dwccardnum] [int] NOT NULL,
 	[WorkerID] [int] NULL,
 	[memberStatus] [int] NULL,
@@ -395,7 +395,7 @@ PRIMARY KEY CLUSTERED
 ) ON [PRIMARY]
 GO
 /****** Object:  ForeignKey [Activity_Signins]    Script Date: 03/19/2012 20:07:28 ******/
-ALTER TABLE [dbo].[ActivitySignins]  WITH CHECK ADD  CONSTRAINT [Activity_Signins] FOREIGN KEY([ActivityID])
+ALTER TABLE [dbo].[ActivitySignins]  WITH CHECK ADD  CONSTRAINT [Activity_Signins] FOREIGN KEY([activityID])
 REFERENCES [dbo].[Activities] ([ID])
 ON DELETE CASCADE
 GO

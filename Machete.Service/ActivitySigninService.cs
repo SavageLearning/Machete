@@ -16,6 +16,9 @@ namespace Machete.Service
     public interface IActivitySigninService : ISigninService<ActivitySignin>
     {
         IEnumerable<asiView> GetIndexView(viewOptions o);
+        Worker CreateSignin(ActivitySignin signin, string user);
+        IQueryable<ActivitySignin> GetManyByPersonID(int actID, int perID);
+        ActivitySignin GetByPersonID(int actID, int perID);
     }
     /// <summary>
     /// 
@@ -31,6 +34,7 @@ namespace Machete.Service
         /// <param name="iRepo"></param>
         /// <param name="wrRepo"></param>
         /// <param name="uow"></param>
+        private readonly IPersonRepository pRepo;
         public ActivitySigninService(IActivitySigninRepository repo,
                                    IWorkerRepository wRepo,
                                    IPersonRepository pRepo,
@@ -40,6 +44,7 @@ namespace Machete.Service
             : base(repo, wRepo, iRepo, wrRepo, uow)
         {
             this.logPrefix = "ActivitySignin";
+            this.pRepo = pRepo;
         }
         /// <summary>
         /// 
@@ -53,11 +58,11 @@ namespace Machete.Service
             IEnumerable<asiView> eSIV;
             //
             if (o.date != null) IndexViewBase.diffDays(o, ref q);
-            // WHERE on ActivityID
+            // WHERE on activityID
             if (o.personID > 0)
                 IndexViewBase.GetAssociated(o.personID, ref q);
-            if (o.ActivityID != null)
-                q = q.Where(p => p.ActivityID == o.ActivityID);
+            if (o.activityID != null)
+                q = q.Where(p => p.activityID == o.activityID);
             //            
             e = q.ToList();
             if (!string.IsNullOrEmpty(o.search))
@@ -80,21 +85,58 @@ namespace Machete.Service
         /// </summary>
         /// <param name="signin"></param>
         /// <param name="user"></param>
-        public override void CreateSignin(ActivitySignin signin, string user)
+        public Worker CreateSignin(ActivitySignin s, string user)
         {
-            //Search for worker with matching card number
-            Worker wfound;
-            wfound = wRepo.GetAllQ().FirstOrDefault(s => s.dwccardnum == signin.dwccardnum);
-            if (wfound != null)
+            Person p = null;
+            Worker w = null;
+            int count = 0;
+            if (s.activityID == 0) throw new ArgumentOutOfRangeException("ActivitySignin's activityID is zero");
+            //
+            // Two possible keys to find person record: personID and dwccardnum
+            // card signins will only have dwccardnums. AssignLists will only have personID.
+            if (s.personID == null && s.dwccardnum == 0)
+                throw new NullReferenceException("ActivitySignin's personID and dwccardnum are both null");
+            if (s.personID < 1 && s.dwccardnum < 1)
+                throw new NullReferenceException("ActivitySignin's personID and dwccardnum are invalid values");
+
+            if (s.personID > 0)
             {
-                signin.WorkerID = wfound.ID;
+                p = pRepo.GetById((int)s.personID);
+                w = p.Worker;
+                if (w == null) throw new NullReferenceException("Worker object is null. A Worker record must exist to assign a person to activities.");
+                if (w.dwccardnum == 0) throw new ArgumentOutOfRangeException("Membership ID in Worker record is zero.");
+                s.dwccardnum = w.dwccardnum;
             }
+            else //assuming dwccardnum pressent
+            {
+                //
+                //TODO: GENERALIZE away from 5 digit dwccardnum
+                w = wRepo.Get(ww => ww.dwccardnum == s.dwccardnum);
+                if (w == null) throw new NullReferenceException("card ID doesn't match a worker");
+                p = w.Person;
+                
+                //
+                if (w.isExpelled || w.isSanctioned) return w;
+            }
+
+            if (p == null) throw new NullReferenceException("Person record null");
+            s.personID = p.ID;
+            //
             //Search for duplicate signin for the same day
-            int sfound = 0; ;
-            sfound = repo.GetAllQ().Count(s => //s.dateforsignin == signin.dateforsignin &&
-                                                     s.ActivityID == signin.ActivityID &&
-                                                     s.dwccardnum == signin.dwccardnum);
-            if (sfound == 0) Create(signin, user);
+            count = repo.GetAllQ().Count(q => q.activityID == s.activityID &&
+                                              q.personID == p.ID);
+            if (count == 0) Create(s, user);
+            return w;
+        }
+
+        public IQueryable<ActivitySignin> GetManyByPersonID(int actID, int perID)
+        {
+            return repo.GetManyQ(az => az.activityID == actID && az.personID == perID);
+        }
+
+        public ActivitySignin GetByPersonID(int actID, int perID)
+        {
+            return repo.Get(az => az.activityID == actID && az.personID == perID);
         }
     }
 }

@@ -185,5 +185,39 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
+        //
+        //
+        [HttpPost, UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager")]
+        public JsonResult Assign(int personID, List<int> actList, string userName)
+        {
+            if (actList == null) throw new Exception("Activity List is null");
+            serv.AssignList(personID, actList, userName);
+
+            return Json(new
+            {
+                status = "OK",
+                jobSuccess = true//,
+                //deletedID = id
+            },
+            JsonRequestBehavior.AllowGet);
+        }
+        //
+        //
+        [HttpPost, UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager")]
+        public JsonResult Unassign(int personID, List<int> actList, string userName)
+        {
+            if (actList == null) throw new Exception("Activity List is null");
+            serv.UnassignList(personID, actList, userName);
+
+            return Json(new
+            {
+                status = "OK",
+                jobSuccess = true//,
+                //deletedID = id
+            },
+            JsonRequestBehavior.AllowGet);
+        }
     }
 }

@@ -331,7 +331,8 @@
                 dupForm.submit();
             });
         },
-
+        //
+        //
         btnEventImageDelete: function (opt) {
             var btn = this;
             var ok = opt.ok || "OK?!";
@@ -365,6 +366,7 @@
             var form = opt.form;
             var altClose = opt.altClose;
             var postDelete = opt.postDelete;
+            //
             if (!form) throw new Error("No employer Delete Form defined");
             _submitAndCloseTab({
                 form: form,
@@ -374,15 +376,46 @@
             btn.click(function () {
                 $.alerts.okButton = ok;
                 jConfirm(confirm,
-                         title,
-                         function (r) {
-                             if (r === true) {
-                                 //alert("delete submitted");
-                                 form.submit();
-                             }
-                         });
+                title,
+                function (r) {
+                    if (r === true) {
+                        //alert("delete submitted");
+                        form.submit();
+                    }
+                });
             });
+        },
+        //
+        //
+        postSelectedRows: function (opt) {
+            var btn = this;
+            var target = opt.targetTable;
+            var url = opt.url;
+            var personID = $(opt.person).val();
+            var tables = opt.refreshTables;
+            btn.click(function (e) {
+                var selectedTr = $(target).find('tr.row_selected');
+                e.preventDefault();
+                console.log("personID: " + personID + " activities:" + selectedTr);
 
+                var aData = new Array();
+                $(selectedTr).each(function () {
+                    var recordid = $(this).attr('recordid');
+                    var o = { 'recordid': recordid };
+                    aData.push(recordid);
+                });
+                var postData = { personID: personID, actList: aData };
+                $.post(url, $.param(postData, true), function (data) {
+                    if (data.jobSuccess == false) {
+                        alert(data.rtnMessage);
+                    } else {
+                        $(tables).each(function () {
+                            $(this).dataTable().fnDraw();
+                        });
+                    }
+
+                });
+            });
         },
         //
         // public function for setChangeState

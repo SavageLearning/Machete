@@ -35,7 +35,7 @@ namespace Machete.Service
                             p.w.Person.lastname2.ContainsOIC(o.search))
                 .Select(a => a.s);
         }
-        public static void typeOfWork<T>(viewOptions o, ref IQueryable<T> q) where T : Signin
+        public static void typeOfWork<T>(viewOptions o, ref IQueryable<T> q) where T : WorkerSignin
         {
             q = q.Where(wsi => wsi.worker.typeOfWorkID == o.typeofwork_grouping)
                  .Select(wsi => wsi);
@@ -517,15 +517,15 @@ namespace Machete.Service
             //
             //SELECT extent1.* FROM  [dbo].[Activities] AS [Extent1]
             //LEFT OUTER JOIN [dbo].[ActivitySignins] AS [Extent2] ON 
-            //        ([Extent1].[ID] = [Extent2].[ActivityID]) AND 
+            //        ([Extent1].[ID] = [Extent2].[activityID]) AND 
             //        ([Extent2].[WorkerID] = <personID> )
-            //WHERE [Extent2].[ActivityID] IS NULL
+            //WHERE [Extent2].[activityID] IS NULL
             q = from b in arepo.GetAllQ()
                 join aa in
                     (from a in q
-                     join az in asRepo.GetAllQ() on a.ID equals az.ActivityID into g
+                     join az in asRepo.GetAllQ() on a.ID equals az.activityID into g
                      from f in g.DefaultIfEmpty()
-                     where f.WorkerID == personID
+                     where f.personID == personID
                      select a)
                  on b.ID equals aa.ID into h                
                 from i in h.DefaultIfEmpty()
@@ -541,9 +541,9 @@ namespace Machete.Service
         public static void getAssociated(int personID, ref IQueryable<Activity> q, IActivitySigninRepository asRepo)
         {
             q = from a in q
-                join az in asRepo.GetAllQ() on a.ID equals az.ActivityID into g
+                join az in asRepo.GetAllQ() on a.ID equals az.activityID into g
                 from f in g.DefaultIfEmpty()
-                where f.WorkerID == personID
+                where f.personID == personID
                 select a;
         }
         /// <summary>
@@ -553,7 +553,7 @@ namespace Machete.Service
         /// <param name="q"></param>
         public static void GetAssociated(int personID, ref IQueryable<ActivitySignin> q)
         {
-            q = q.Where(az => az.WorkerID == personID);
+            q = q.Where(az => az.personID == personID);
         }
         #endregion
     }
