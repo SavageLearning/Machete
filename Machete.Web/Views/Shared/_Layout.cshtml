@@ -4,10 +4,12 @@
 <html>
 @Html.CombresLink("siteJs")
 @Html.CombresLink("siteCss")
+@*
 <script src="@Url.Content("~/Scripts/macheteLayout.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/jquery.macheteUI-0.1.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/jquery.alerts.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/jquery.lightbox-0.5.js")" type="text/javascript"></script>
+*@
 @{
     string controllerName = Request.RequestContext.RouteData.Values["controller"].ToString();
 }
@@ -65,7 +67,7 @@
     </div><!--page-->
 </body>
 </html>
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
     $(document).ready(function () {
         $('#showbanner').hide();
         $('.formButton').button();

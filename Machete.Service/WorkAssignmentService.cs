@@ -404,7 +404,7 @@ namespace Machete.Service
             public string sortColName;
             public string wa_grouping;
             public int? typeofwork_grouping;
-            public int? ActivityID;
+            public int? activityID;
             public int personID;
             public bool showOrdersPending;
             public bool showOrdersWorkers;

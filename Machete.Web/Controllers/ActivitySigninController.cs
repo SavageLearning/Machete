@@ -45,25 +45,20 @@ namespace Machete.Web.Controllers
         /// 
         /// </summary>
         /// <param name="dwccardnum"></param>
-        /// <param name="ActivityID"></param>
+        /// <param name="activityID"></param>
         /// <returns></returns>
         [HttpPost]
         [Authorize(Roles = "Manager, Administrator, Check-in")]
-        public ActionResult Index(int dwccardnum, int ActivityID)
+        public ActionResult Index(int dwccardnum, int activityID)
         {
-            var _signin = new ActivitySignin();
+            var _asi = new ActivitySignin();
             // Tthe card just swiped
-            _signin.dateforsignin = DateTime.Now;
-            _signin.ActivityID = ActivityID;
-            _signin.dwccardnum = dwccardnum;            
-            Worker worker = wServ.GetWorkerByNum(dwccardnum);
-            if (worker == null) throw new NullReferenceException("card ID doesn't match a worker");
+            _asi.dateforsignin = DateTime.Now;
+            _asi.activityID = activityID;
+            _asi.dwccardnum = dwccardnum;            
             //
             //
-            if (!worker.isExpelled && !worker.isSanctioned)
-            {
-                serv.CreateSignin(_signin, this.User.Identity.Name);
-            }
+            Worker w = serv.CreateSignin(_asi, this.User.Identity.Name);
             //Get picture from checkin, show with next view
             Image checkin_image = serv.getImage(dwccardnum);
             string imageRef = "/Content/images/NO-IMAGE-AVAILABLE.jpg";
@@ -74,12 +69,12 @@ namespace Machete.Web.Controllers
 
             return Json(new
             {
-                memberExpired = worker.isExpired,
-                memberInactive = worker.isInactive,
-                memberSanctioned = worker.isSanctioned,
-                memberExpelled = worker.isExpelled,
+                memberExpired = w.isExpired,
+                memberInactive = w.isInactive,
+                memberSanctioned = w.isSanctioned,
+                memberExpelled = w.isExpelled,
                 imageRef = imageRef,
-                expirationDate = worker.memberexpirationdate
+                expirationDate = w.memberexpirationdate
             },
             JsonRequestBehavior.AllowGet);
         }
@@ -123,7 +118,7 @@ namespace Machete.Web.Controllers
                 sortColName = param.sortColName(),
                 wa_grouping = param.wa_grouping,
                 typeofwork_grouping = param.typeofwork_grouping,
-                ActivityID = param.activityID,
+                activityID = param.activityID,
                 personID = param.personID ?? 0
             });
 

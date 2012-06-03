@@ -6,6 +6,7 @@
     string recType = "Activity";
     //string idPrefix = recType + Model.ID + "-";
 }
+
 <div id="actJoinList">
     
     <div class="tb-table" style="clear: left;">
@@ -15,16 +16,16 @@
                 <li><a href="#actInList" class="ListTab">ACT-IN-TABLE</a></li>
                 </ul>
                 <div id="actInList">
-                    <table id="actInTable" class="display">
-                <thead>
-                    <tr>
-                        <th>@Activity.name</th>
-                        <th>@Activity.type</th>
-                        <th>@Activity.teacher</th>
-                        <th>@Activity.dateStart</th>
-                    </tr>
-                </thead>
-            </table>
+                    <table id="actInTable" class="display actTable">
+                        <thead>
+                            <tr>
+                                <th>@Activity.name</th>
+                                <th>@Activity.type</th>
+                                <th>@Activity.teacher</th>
+                                <th>@Activity.dateStart</th>
+                            </tr>
+                        </thead>
+                    </table>
                 </div>
             </div>
             <input type="button" id="bActAssign" class="formButton" value="<==" />
@@ -34,18 +35,18 @@
                 <li><a href="#actOutList" class="ListTab">ACT-OUT-TABLE</a></li>
                 </ul>
                 <div id="actOutList">
-                    <table id="actOutTable" class="display">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>LABEL</th>
-                        <th>@Activity.name</th>
-                        <th>@Activity.type</th>
-                        <th>@Activity.teacher</th>
-                        <th>@Activity.dateStart</th>
-                    </tr>
-                </thead>
-            </table>
+                    <table id="actOutTable" class="display actTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>LABEL</th>
+                                <th>@Activity.name</th>
+                                <th>@Activity.type</th>
+                                <th>@Activity.teacher</th>
+                                <th>@Activity.dateStart</th>
+                            </tr>
+                        </thead>
+                    </table>
                 </div>
             </div>
         </div>
@@ -140,30 +141,29 @@
 			        } );
 		        }      
             }, 
-            dblClickEvent: null, 
+            dblClickEvent: null,
+            clickEvent: function (e) {
+                    if ( $(e.target.parentNode).hasClass('row_selected') ) 
+                        $(e.target.parentNode).removeClass('row_selected'); 
+                    else $(e.target.parentNode).addClass('row_selected'); 
+            },
             tabLabel: "@(recType)"
-            });
+        });
         //
-        // copied from WorkAssignment
-        $('#bActAssign').click(function (e) {
-            e.preventDefault();                
-            //var assignRow = $('#availAssignTable').find('tbody').find('tr.row_selected').attr('recordid');
-            //var signinRow = $('#signinTable').find('tbody').find('tr.row_selected').attr('recordid');
-            var activities = $('#actOutTable tr.row_selected').map( function () { return $(this).attr('recordid')}).get();
-            console.log("activities:" + activities);
-//            $.post("/WorkAssignment/Assign", 
-//                {
-//                    waid: assignRow,
-//                    wsiid: signinRow
-//                },
-//                function (data) {
-//                    if (data.jobSuccess == false) {
-//                        alert(data.rtnMessage);
-//                    } else {
-//                        $("#updateBtn").click();     
-//                    }
-//                }
-//            );
+        //         
+        $('#bActAssign').mUI('postSelectedRows', {
+            targetTable: $('#actOutTable'),
+            person: $('#personID'),
+            refreshTables: $('.actTable'),
+            url: '/Activity/Assign'
+        });
+        //
+        //
+        $('#bActUnassign').mUI('postSelectedRows', {
+            targetTable: $('#actInTable'),
+            person: $('#personID'),
+            refreshTables: $('.actTable'),
+            url: '/Activity/Unassign'
         });
     });
 </script>

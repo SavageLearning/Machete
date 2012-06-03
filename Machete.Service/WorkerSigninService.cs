@@ -18,6 +18,7 @@ namespace Machete.Service
         bool clearLottery(int id, string user);
         bool sequenceLottery(DateTime date, string user);
         IEnumerable<wsiView> GetIndexView(viewOptions o);
+        void CreateSignin(WorkerSignin signin, string user);
     }
 
     public class WorkerSigninService : SigninServiceBase<WorkerSignin>, IWorkerSigninService
@@ -133,6 +134,26 @@ namespace Machete.Service
                 eSIV = eSIV.Skip((int)o.displayStart).Take((int)o.displayLength);
             return eSIV;
 
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="signin"></param>
+        /// <param name="user"></param>
+        public virtual void CreateSignin(WorkerSignin signin, string user)
+        {
+            //Search for worker with matching card number
+            Worker wfound;
+            wfound = wRepo.GetAllQ().FirstOrDefault(s => s.dwccardnum == signin.dwccardnum);
+            if (wfound != null)
+            {
+                signin.WorkerID = wfound.ID;
+            }
+            //Search for duplicate signin for the same day
+            int sfound = 0; ;
+            sfound = repo.GetAllQ().Count(s => s.dateforsignin == signin.dateforsignin &&
+                                                     s.dwccardnum == signin.dwccardnum);
+            if (sfound == 0) Create(signin, user);
         }
     }
 }

@@ -20,7 +20,7 @@
             <li><a href="#eventList" id="eventListTab" class="ListTab">@Events.eventtab</a> </li>
             <li><a href="/Event/Create?PersonID=@(Model.ID)" id="eventCreateTab" class="CreateTab">@Events.createlink</a></li>
         }
-        @if (Html.IsInRole(Html.Role_T()))
+        @if (Html.IsInRole(Html.Role_T()) && Model.Worker != null)
         {
             <li><a href="#actJoinList" id="actJoinTab" class="ListTab">@Activities.actJoinTab</a></li>           
         }
