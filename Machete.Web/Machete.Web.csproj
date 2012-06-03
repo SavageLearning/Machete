@@ -241,6 +241,7 @@
     <Compile Include="Controllers\WorkerSigninController.cs" />
     <Compile Include="Controllers\WorkOrderController.cs" />
     <Compile Include="Helpers\Attributes\AuthorizeExAttribute.cs" />
+    <Compile Include="Helpers\mUIExtensions.cs" />
     <Compile Include="Helpers\workerRequestBinder.cs" />
     <Compile Include="Helpers\IsInRole.cs" />
     <Compile Include="Helpers\ListItemToOption.cs" />

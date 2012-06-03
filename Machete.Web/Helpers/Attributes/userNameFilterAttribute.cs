@@ -21,8 +21,7 @@ namespace Machete.Web.Helpers
 	            {
 	                filterContext.ActionParameters[Key] = filterContext.HttpContext.User.Identity.Name;
 	            }
-	        }
-	 
+	        }	 
 	        base.OnActionExecuting(filterContext);
 	    }
 	}
