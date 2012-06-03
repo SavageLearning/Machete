@@ -427,7 +427,6 @@
       <DependentUpon>WorkOrders.resx</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\WorkOrderGroupPrintView.cs" />
-    <Compile Include="ViewModel\EmployerViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\calendar.gif" />
