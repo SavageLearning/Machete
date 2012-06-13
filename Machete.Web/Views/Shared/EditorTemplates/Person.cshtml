@@ -68,7 +68,7 @@
             @Html.LabelFor(model => model.gender)
         </div>
         <div class="tb-field">
-            @Html.DropDownListFor(model => model.gender, new SelectList(Lookups.gender(CI.TwoLetterISOLanguageName), "Value", "Text", Model.gender), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })
+            @Html.DropDownListFor(model => model.gender, new SelectList(Lookups.gender.get(CI.TwoLetterISOLanguageName), "Value", "Text", Model.gender), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })
             @Html.ValidationMessageFor(model => model.gender)
         </div>
     </div>

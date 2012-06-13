@@ -31,17 +31,17 @@ namespace Machete.Data
         }
     }
 
-    public class CustomMigrationsConfiguration : DbMigrationsConfiguration<MacheteContext>
-    {
-        public CustomMigrationsConfiguration()
-            : base()
-        {
-            AutomaticMigrationsEnabled = true;
-            AutomaticMigrationDataLossAllowed = true;
-        }
+    //public class CustomMigrationsConfiguration : DbMigrationsConfiguration<MacheteContext>
+    //{
+    //    public CustomMigrationsConfiguration()
+    //        : base()
+    //    {
+    //        AutomaticMigrationsEnabled = true;
+    //        AutomaticMigrationDataLossAllowed = true;
+    //    }
 
-        //protected override void Seed(MacheteContext context)
-        //{
-        //}
-    }
+    //    //protected override void Seed(MacheteContext context)
+    //    //{
+    //    //}
+    //}
 }

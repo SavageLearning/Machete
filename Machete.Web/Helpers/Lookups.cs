@@ -18,10 +18,9 @@ namespace Machete.Web.Helpers
         public int defaultId { get; set; }
         public string name { get; set; }
         protected static IEnumerable<Lookup> DbCache { get; set; }
-        public LookupGroup(string name, IEnumerable<Lookup> cache)
+        public LookupGroup(string name)
         {
             if (name == null) throw new Exception("LookupGroup name is null");
-            DbCache = cache;
             this.name = name;            
             this.defaultId = getDefaultID();            
         }
@@ -53,6 +52,7 @@ namespace Machete.Web.Helpers
             SelectList list;
             if (locale == "es") field = "text_ES";
             else field = "text_EN";
+            if (DbCache == null) DbCache = LookupCache.getCache();
 
             list = new SelectList(DbCache.Where(s => s.category == this.name),
                                     "ID",
@@ -65,7 +65,7 @@ namespace Machete.Web.Helpers
 
     public class LookupSkill : LookupGroup
     {
-        public LookupSkill(string name, IEnumerable<Lookup> cache) : base(name, cache) { }
+        public LookupSkill(string name) : base(name) { }
         /// <summary>
         /// get the List of skills
         /// </summary>
@@ -104,22 +104,22 @@ namespace Machete.Web.Helpers
 
     public class Lookups
     {        
-        public static LookupGroup maritalstatus = new LookupGroup("maritalstatus", DbCache);
-        public static LookupGroup race = new LookupGroup("race", DbCache);
-        public static LookupGroup language = new LookupGroup("language", DbCache);
-        public static LookupGroup neighborhood = new LookupGroup("neighborhood", DbCache);
-        public static LookupGroup income = new LookupGroup("income", DbCache);
-        public static LookupGroup gender = new LookupGroup("gender", DbCache);
-        public static LookupGroup transportmethod = new LookupGroup("transportmethod", DbCache);
-        public static LookupGroup countryoforigin = new LookupGroup("countryoforigin", DbCache);
-        public static LookupGroup activityName = new LookupGroup("activityName", DbCache);
-        public static LookupGroup activityType = new LookupGroup("activityType", DbCache);
-        public static LookupGroup eventtype = new LookupGroup("eventtype", DbCache);
-        public static LookupGroup woStatus = new LookupGroup("orderstatus", DbCache);
-        public static LookupGroup emplrreference = new LookupGroup("emplrreference", DbCache);
-        public static LookupGroup typesOfWork = new LookupGroup("worktype", DbCache);
-        public static LookupGroup memberStatus = new LookupGroup("memberstatus", DbCache);
-        public static LookupSkill skill = new LookupSkill("skill", DbCache);
+        public static LookupGroup maritalstatus = new LookupGroup("maritalstatus");
+        public static LookupGroup race = new LookupGroup("race");
+        public static LookupGroup language = new LookupGroup("language");
+        public static LookupGroup neighborhood = new LookupGroup("neighborhood");
+        public static LookupGroup income = new LookupGroup("income");
+        public static LookupGroup gender = new LookupGroup("gender");
+        public static LookupGroup transportmethod = new LookupGroup("transportmethod");
+        public static LookupGroup countryoforigin = new LookupGroup("countryoforigin");
+        public static LookupGroup activityName = new LookupGroup("activityName");
+        public static LookupGroup activityType = new LookupGroup("activityType");
+        public static LookupGroup eventtype = new LookupGroup("eventtype");
+        public static LookupGroup woStatus = new LookupGroup("orderstatus");
+        public static LookupGroup emplrreference = new LookupGroup("emplrreference");
+        public static LookupGroup typesOfWork = new LookupGroup("worktype");
+        public static LookupGroup memberStatus = new LookupGroup("memberstatus");
+        public static LookupSkill skill = new LookupSkill("skill");
 
 
         public static int hoursDefault { get { return 5; } }
