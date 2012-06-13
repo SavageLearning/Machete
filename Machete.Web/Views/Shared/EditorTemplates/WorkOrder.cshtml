@@ -55,10 +55,7 @@
             @Html.LabelFor(model => model.timeFlexible)
         </div>
         <div class="tb-field" style="width: 20px">
-            @Html.DropDownListFor(model => model.timeFlexible, 
-                                    new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.timeFlexible), 
-                                    @Machete.Web.Resources.Shared.choose, 
-                                    new { tabindex = "2", id = idPrefix + "timeFlexible" })           
+            @Html.mUIDropDownYesNoFor(model => model.timeFlexible, new { tabindex = "2", id = idPrefix + "timeFlexible" })           
             @Html.ValidationMessageFor(model => model.timeFlexible)
         </div>
     </div>
@@ -74,10 +71,7 @@
             @Html.LabelFor(model => model.permanentPlacement)
         </div>
         <div class="tb-field">
-            @Html.DropDownListFor(model => model.permanentPlacement,
-                                    new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.permanentPlacement),
-                                    @Machete.Web.Resources.Shared.choose,
-                                    new { tabindex = "2", id = idPrefix + "permanentPlacement" })
+            @Html.mUIDropDownYesNoFor(model => model.permanentPlacement, new { tabindex = "2", id = idPrefix + "permanentPlacement" })
             @Html.ValidationMessageFor(model => model.permanentPlacement)
         </div>
     </div>
@@ -89,13 +83,6 @@
             @Html.TextBoxFor(model => model.workSiteAddress1, new { tabindex = "1", id = idPrefix + "workSiteAddress1" })
             @Html.ValidationMessageFor(model => model.workSiteAddress1)
         </div>
-         @*<div class="tb-label">
-            @Html.LabelFor(model => model.typeOfWorkID)
-        </div>
-        <div class="tb-field">
-            @Html.DropDownListFor(model => model.typeOfWorkID, new SelectList(Lookups.typeOfWork(CI.TwoLetterISOLanguageName), "Value", "Text", Model.typeOfWorkID), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })
-            @Html.ValidationMessageFor(model => model.typeOfWorkID)
-        </div>*@
     </div>
     <!--tb-row-->
     <div class="tb-row">
@@ -110,10 +97,7 @@
             @Html.LabelFor(model => model.englishRequired)
         </div>
         <div class="tb-field englishRequired_@(Model.ID)">
-            @Html.DropDownListFor(model => model.englishRequired, 
-            new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.englishRequired), 
-            @Machete.Web.Resources.Shared.choose,
-                              new { tabindex = "2", id = idPrefix + "englishRequired" })
+            @Html.mUIDropDownYesNoFor(model => model.englishRequired, new { tabindex = "2", id = idPrefix + "englishRequired" })
             @Html.ValidationMessageFor(model => model.englishRequired)
         </div>
     </div>
@@ -130,10 +114,7 @@
             @Html.LabelFor(model => model.lunchSupplied)
         </div>
         <div class="tb-field">
-            @Html.DropDownListFor(model => model.lunchSupplied, 
-            new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.lunchSupplied), 
-            @Machete.Web.Resources.Shared.choose,
-                              new { tabindex = "2", id = idPrefix + "lunchSupplied" })
+            @Html.mUIDropDownYesNoFor(model => model.lunchSupplied, new { tabindex = "2", id = idPrefix + "lunchSupplied" })
             @Html.ValidationMessageFor(model => model.lunchSupplied)
         </div>
 

@@ -29,6 +29,7 @@ namespace Machete.Web.Controllers
         {
             base.Initialize(requestContext);
             CI = (System.Globalization.CultureInfo)Session["Culture"];
+            ViewBag.idPrefix = "employer"; //TODO: integration with mUIExtension, feed idPrefix
         }
         /// <summary>
         /// 
@@ -101,7 +102,7 @@ namespace Machete.Web.Controllers
             _model.city = "Seattle";
             _model.state = "WA";
             _model.blogparticipate = false;
-            _model.referredby = Lookups.emplrreferenceDefault;
+            _model.referredby = Lookups.emplrreference.defaultId;
             return PartialView("Create", _model);
         }
         /// <summary>

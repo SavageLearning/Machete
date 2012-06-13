@@ -84,7 +84,7 @@ namespace Machete.Web.Controllers
         public ActionResult Create()
         {
             var _model = new Person();
-            _model.gender = Lookups.genderDefault;
+            _model.gender = Lookups.gender.defaultId;
             _model.active = true;
             return PartialView(_model);
         }
