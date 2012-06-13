@@ -21,7 +21,7 @@
             @Html.LabelFor(model => model.business)
         </div>
         <div class="tb-field">
-            @Html.DropDownListFor(model => model.business, new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.business), @Machete.Web.Resources.Shared.choose, new { tabindex = "2", id = idPrefix + "business" })           
+            @Html.mUIDropDownYesNoFor(model => model.business, new { tabindex = "2", id = idPrefix + "business" })           
             @Html.ValidationMessageFor(model => model.business)
         </div>
     </div><!--tb-row-->
@@ -116,7 +116,7 @@
             @Html.LabelFor(model => model.active)
         </div>
         <div class="tb-field">
-            @Html.DropDownListFor(model => model.active, new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.active), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })           
+            @Html.mUIDropDownYesNoFor(model => model.active, new { tabindex = "2" })           
             @Html.ValidationMessageFor(model => model.active)
         </div>
     </div>
@@ -125,7 +125,7 @@
             @Html.LabelFor(model => model.blogparticipate)
         </div>
         <div class="tb-field">
-            @Html.DropDownListFor(model => model.blogparticipate, new SelectList(Lookups.yesno(CI.TwoLetterISOLanguageName), "Value", "Text", Model.blogparticipate), @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })           
+            @Html.mUIDropDownYesNoFor(model => model.blogparticipate, new { tabindex = "2" })           
             @Html.ValidationMessageFor(model => model.blogparticipate)
         </div>
     </div>

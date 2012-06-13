@@ -54,7 +54,10 @@
         }
     </div>
     @Html.Partial("EventIndex")
-    @Html.Partial("ActivityJoinIndex")
+    @if (Html.IsInRole(Html.Role_T()) && Model.Worker != null)
+    {
+        @Html.Partial("ActivityJoinIndex")
+    }
 </div>
 
 <script type="text/javascript">

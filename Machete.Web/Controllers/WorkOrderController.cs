@@ -186,9 +186,9 @@ namespace Machete.Web.Controllers
             WorkOrder _wo = new WorkOrder();
             _wo.EmployerID = EmployerID;
             _wo.dateTimeofWork = DateTime.Today;
-            _wo.transportMethodID = Lookups.transportmethodDefault;
-            _wo.typeOfWorkID = Lookups.typesOfWorkDefault;
-            _wo.status = Lookups.woStatusDefault;
+            _wo.transportMethodID = Lookups.transportmethod.defaultId;
+            _wo.typeOfWorkID = Lookups.typesOfWork.defaultId;
+            _wo.status = Lookups.woStatus.defaultId;
             ViewBag.workerRequests = new List<SelectListItem> {};
             return PartialView("Create", _wo);
         }

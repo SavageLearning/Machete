@@ -117,10 +117,10 @@ namespace Machete.Web.Controllers
         {
             var _model = new Worker();
             _model.ID = ID;
-            _model.RaceID = Lookups.raceDefault;
-            _model.countryoforiginID = Lookups.countryoforiginDefault;
-            _model.englishlevelID = Lookups.languageDefault;
-            _model.neighborhoodID = Lookups.neighborhoodDefault;
+            _model.RaceID = Lookups.race.defaultId;
+            _model.countryoforiginID = Lookups.countryoforigin.defaultId;
+            _model.englishlevelID = Lookups.language.defaultId;
+            _model.neighborhoodID = Lookups.neighborhood.defaultId;
 
             return PartialView(_model);
         }

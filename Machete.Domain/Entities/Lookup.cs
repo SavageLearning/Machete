@@ -33,4 +33,6 @@ namespace Machete.Domain
         [StringLength(1)]
         public string ltrCode { get; set; }
     }
+
+
 }
