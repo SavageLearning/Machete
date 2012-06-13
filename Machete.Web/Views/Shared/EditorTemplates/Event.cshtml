@@ -18,7 +18,7 @@
         </div>
         <div class="mui-event-edit-field tb-field">
             @Html.DropDownListFor(model => model.eventType, 
-                                  new SelectList(Lookups.eventtype(CI.TwoLetterISOLanguageName), 
+                                  new SelectList(Lookups.eventtype.get(CI.TwoLetterISOLanguageName), 
                                                  "Value", 
                                                  "Text",
                                                  Model.eventType), 

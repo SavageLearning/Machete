@@ -15,7 +15,7 @@
         </div>
         <div class="tb-field">
             @Html.DropDownListFor(model => model.name, 
-                    new SelectList(Lookups.activityName(CI.TwoLetterISOLanguageName),
+                    new SelectList(Lookups.activityName.get(CI.TwoLetterISOLanguageName),
                                              "Value", "Text", Model.name), 
                     @Machete.Web.Resources.Shared.choose, 
                     new { tabindex = "1", id = idPrefix + "name" })
@@ -28,7 +28,7 @@
         </div>
         <div class="tb-field">
             @Html.DropDownListFor(model => model.type, 
-                    new SelectList(Lookups.activityType(CI.TwoLetterISOLanguageName),
+                    new SelectList(Lookups.activityType.get(CI.TwoLetterISOLanguageName),
                                                       "Value", "Text", Model.type), 
                     @Machete.Web.Resources.Shared.choose,
                              new { tabindex = "1", id = idPrefix + "type" })

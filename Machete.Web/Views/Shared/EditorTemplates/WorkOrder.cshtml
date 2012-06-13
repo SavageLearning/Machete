@@ -36,7 +36,7 @@
         {
             <div class="tb-field">
             @Html.DropDownListFor(model => model.status,
-                                         new SelectList(Lookups.orderstatus(CI.TwoLetterISOLanguageName), "Value", "Text", Model.status), 
+                                         new SelectList(Lookups.woStatus.get(CI.TwoLetterISOLanguageName), "Value", "Text", Model.status), 
                                     @Machete.Web.Resources.Shared.choose, 
                                     new { @id = idPrefix + "status" })
             @Html.ValidationMessageFor(model => model.status)
@@ -133,7 +133,7 @@
         </div>
         <div class="tb-field">
             @Html.DropDownListFor(model => model.transportMethodID,
-                     new SelectList(Lookups.transportmethod(CI.TwoLetterISOLanguageName), "Value", "Text", Model.transportMethodID), 
+                     new SelectList(Lookups.transportmethod.get(CI.TwoLetterISOLanguageName), "Value", "Text", Model.transportMethodID), 
             @Machete.Web.Resources.Shared.choose,
                               new { tabindex = "2", id = idPrefix + "transportMethodID" })
             @Html.ValidationMessageFor(model => model.transportMethodID)
