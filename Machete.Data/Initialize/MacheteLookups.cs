@@ -24,7 +24,7 @@ namespace Machete.Data
                 new Lookup { ID=8, category = "language",     text_EN = "conversational (3)", text_ES = "conversacional (3)", level=3, selected=false},
                 new Lookup { ID=9, category = "language",     text_EN = "limited(2)",        text_ES = "limitado (2)",       level=2, selected=false},
                 new Lookup { ID=10, category = "language",     text_EN = "none (1)",           text_ES = "nada (1)",           level=1, selected=true},
-                new Lookup { ID=11, category = "neighborhood",     text_EN = "Seattle",            text_ES = "Seattle",            selected=false},
+                new Lookup { ID=11, category = "neighborhood",     text_EN = "Seattle",            text_ES = "Seattle",            selected=true},
                 new Lookup { ID=12, category = "neighborhood",     text_EN = "Capitol Hill",       text_ES = "Capitol Hill",       selected=false},
                 new Lookup { ID=13, category = "neighborhood",     text_EN = "Central District",   text_ES = "Central District",   selected=false},
                 new Lookup { ID=14, category = "neighborhood",     text_EN = "South Park",         text_ES = "South Park",         selected=false},

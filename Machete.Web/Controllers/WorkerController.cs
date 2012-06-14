@@ -119,9 +119,9 @@ namespace Machete.Web.Controllers
             _model.ID = ID;
             _model.RaceID = Lookups.race.defaultId;
             _model.countryoforiginID = Lookups.countryoforigin.defaultId;
-            _model.englishlevelID = Lookups.language.defaultId;
+            _model.englishlevelID = 0;
             _model.neighborhoodID = Lookups.neighborhood.defaultId;
-
+            _model.maritalstatus = Lookups.maritalstatus.defaultId;
             return PartialView(_model);
         }
         /// <summary>
