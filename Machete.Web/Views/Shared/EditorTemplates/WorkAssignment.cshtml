@@ -16,9 +16,7 @@
             @Html.LabelFor(model => model.englishLevelID)
         </div>
         <div class="tb-field">
-            @Html.DropDownListFor(model => model.englishLevelID, 
-                                    new SelectList(Lookups.skillLevels(), "Value", "Text", Model.englishLevelID), 
-                                    @Machete.Web.Resources.Shared.choose, new {tabindex = "1"})
+            @Html.mUIDropDownListFor(model => model.englishLevelID, Lookups.skillLevels(), new {tabindex = "1"})
             @Html.ValidationMessageFor(model => model.englishLevelID)
         </div>
         <div class="tb-label">
