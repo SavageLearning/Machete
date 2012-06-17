@@ -115,7 +115,9 @@ namespace Machete.Web
             .RegisterType<IEventRepository, EventRepository>(new HttpContextLifetimeManager<IEventRepository>())
             .RegisterType<IActivityRepository, ActivityRepository>(new HttpContextLifetimeManager<IActivityRepository>())
             .RegisterType<IActivitySigninRepository, ActivitySigninRepository>(new HttpContextLifetimeManager<IActivitySigninRepository>())
-                // 
+            
+            // 
+            .RegisterType<ILookupService, LookupService>(new HttpContextLifetimeManager<ILookupService>())
             .RegisterType<IActivitySigninService, ActivitySigninService>(new HttpContextLifetimeManager<IActivitySigninService>())
             .RegisterType<IActivityService, ActivityService>(new HttpContextLifetimeManager<IActivityService>())
             .RegisterType<IEventService, EventService>(new HttpContextLifetimeManager<IEventService>())

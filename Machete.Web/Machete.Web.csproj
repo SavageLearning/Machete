@@ -229,6 +229,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controllers\ActivitySigninController.cs" />
+    <Compile Include="Controllers\ConfigController.cs" />
     <Compile Include="Controllers\EmployerController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\EventController.cs" />
@@ -742,6 +743,9 @@
     <Content Include="Views\Shared\ActivitySigninIndex.cshtml" />
     <Content Include="Views\Shared\ActivityIndex.cshtml" />
     <Content Include="Views\Shared\ActivityJoinIndex.cshtml" />
+    <Content Include="Views\Config\Index.cshtml" />
+    <Content Include="Views\Config\Create.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Config.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
