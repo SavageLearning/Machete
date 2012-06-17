@@ -45,9 +45,10 @@ namespace Machete.Web.Controllers
             //Get all the records            
             IEnumerable<Lookup> list = serv.GetIndexView(new viewOptions()
             {
-                CI = CI,
+                CI = CI, 
+                category = param.category,
                 search = param.sSearch,
-                status = string.IsNullOrEmpty(param.searchColName("status")) ? (int?)null : Convert.ToInt32(param.searchColName("status")),
+                //status = string.IsNullOrEmpty(param.searchColName("status")) ? (int?)null : Convert.ToInt32(param.searchColName("status")),
                 orderDescending = param.sSortDir_0 == "asc" ? false : true,
                 displayStart = param.iDisplayStart,
                 displayLength = param.iDisplayLength,

@@ -391,6 +391,7 @@ namespace Machete.Service
     public class viewOptions
     {
             public CultureInfo CI;
+            public string category;
             public string search;
             public DateTime? date;
             public int? EmployerID { get; set; }
