@@ -33,6 +33,7 @@ namespace Machete.Service
             //
             //Search based on search-bar string 
             if (!string.IsNullOrEmpty(o.search)) IndexViewBase.search(o, ref q);
+            if (!string.IsNullOrEmpty(o.category)) IndexViewBase.byCategory(o, ref q);
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
 
             q = q.Skip<Lookup>(o.displayStart).Take(o.displayLength);

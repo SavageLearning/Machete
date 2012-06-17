@@ -6,12 +6,16 @@
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
     string recType = "config";
 }
+
+
 <div id="configTabs" class="ExclusiveTab">
     <ul>
         <li><a href="#configList" id="configListTab" class="ListTab">@Persons.listlink</a> </li>
         <li><a href="/Config/Create" id="configCreateTab" class="CreateTab">@Persons.createlink</a></li>
     </ul>
     <div id="configList">
+        @Html.Label("Category")
+        @Html.DropDownList("category", Lookups.configCategories())
         <table id="configTable" class="display">
             <thead>
                 <tr>
@@ -57,7 +61,15 @@
                 {"mDataProp": "subcategory" },
                 {"mDataProp": "level" },
                 {"mDataProp": "ltrCode" }
-            ]                
+            ],
+            "fnServerData": function ( sSource, aoData, fnCallback ) {
+			        /* Add some extra data to the sender */
+			        aoData.push( { "name": "category", "value": $('#category').val() } );
+			        $.getJSON( sSource, aoData, function (json) { 
+				        /* Do whatever additional processing you want on the callback, then tell DataTables */
+				        fnCallback(json)
+			        } );
+		        },         
         }, 
         dblClickEvent: null, 
         tabLabel: "@(recType)"
@@ -69,5 +81,9 @@
             changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
             changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
             });
+        $('#category').click(function(e) {
+            e.preventDefault();
+            $("#configTable").dataTable().fnDraw();
+        });
     });
 </script>
