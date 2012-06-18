@@ -35,7 +35,6 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-
         jqrfyTable({
         table: $('#configTable'), 
         tab: $('#configTabs'),
@@ -82,7 +81,7 @@
             changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
             });
         $('#category').click(function(e) {
-            e.preventDefault();
+//            e.preventDefault();
             $("#configTable").dataTable().fnDraw();
         });
     });

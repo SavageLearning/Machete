@@ -188,7 +188,7 @@ namespace Machete.Web.Helpers
                 "Value", "Text", "0");
             categories = new SelectList(new[] {"maritalstatus","race","neighborhood","gender",
                 "transportmethod","countryoforigin","activityName","activityType","eventtype",
-                "woStatus","emplrreference","typesOfWork","memberStatus","skill"}
+                "orderstatus","emplrreference","worktype","memberStatus","skill"}
                 .Select(x => new SelectListItem { Value = x, Text = x}),
                 "Value", "Text", "activityName");
 
