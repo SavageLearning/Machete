@@ -86,7 +86,7 @@ namespace Machete.Web.Helpers
                     Shared.choose,
                     attribs
                 ).ToHtmlString() +
-                htmlHelper.ValidationMessageFor(expression).ToHtmlString() +
+                htmlHelper.ValidationMessageFor(expression).ToString() +
                 tbclose
                 );
         }
@@ -103,7 +103,7 @@ namespace Machete.Web.Helpers
         {
             return MvcHtmlString.Create(
                 tblabel + 
-                htmlHelper.LabelFor(expression).ToHtmlString() +
+                htmlHelper.LabelFor(expression).ToString() +
                 tbclose
                 );
         }

@@ -8,62 +8,80 @@
     string idPrefix = recType + Model.ID + "-";
 }
 @Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID" })
-<div class="mui-edit-block">
-    <div class="tb-table">
-        <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.category)
-            @Html.mUITableTextBoxFor(model => model.category,
-                         new { @tabindex = "1", @class = "configEditor", @id = idPrefix + "category" })
-            @Html.mUITableLabelFor(model => model.selected)
-            @Html.mUITableTextBoxFor(m => m.selected,
-                                  new { @tabindex = "2", @class = "configEditor", id = idPrefix + "selected" })
-        </div>
-        <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.text_EN)
-            @Html.mUITableTextBoxFor(model => model.text_EN,
-                                  new { @tabindex = "1", @class = "configEditor", @id = idPrefix + "text_EN" })
-            @Html.mUITableLabelFor(model => model.text_ES)
-            @Html.mUITableTextBoxFor(m => m.selected,
-                                           new { @tabindex = "2", @class = "configEditor", id = idPrefix + "text_ES" })
-        </div>
-        <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.subcategory)
-            @Html.mUITableTextBoxFor(model => model.subcategory,
-                                  new { @tabindex = "1", @class = "configEditor", @id = idPrefix + "subcategory" })
-            @Html.mUITableLabelFor(model => model.level)
-            @Html.mUITableTextBoxFor(m => m.level,
-                                           new { @tabindex = "2", @class = "configEditor", id = idPrefix + "level" })
-        </div>
-        <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.wage)
-            @Html.mUITableTextBoxFor(model => model.wage,
-                                  new { @tabindex = "1", @class = "configEditor", @id = idPrefix + "wage" })
-            @Html.mUITableLabelFor(model => model.minHour)
-            @Html.mUITableTextBoxFor(m => m.minHour,
-                                  new { @tabindex = "2", @class = "configEditor", id = idPrefix + "minHour" })
-        </div>
-        <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.fixedJob)
-            @Html.mUITableTextBoxFor(model => model.fixedJob,
-                new { @tabindex = "1", @class = "configEditor", @id = idPrefix + "fixedJob" })
-            @Html.mUITableLabelFor(model => model.sortorder)
-            @Html.mUITableTextBoxFor(m => m.sortorder,
-                new { @tabindex = "2", @class = "configEditor", id = idPrefix + "sortorder" })
-        </div>
-        <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.typeOfWorkID)
-            @Html.mUITableTextBoxFor(model => model.typeOfWorkID,
-                new { @tabindex = "1", @class = "configEditor", @id = idPrefix + "typeOfWorkID" })
-            @Html.mUITableLabelFor(model => model.speciality)
-            @Html.mUITableTextBoxFor(m => m.speciality,
-                new { @tabindex = "2", @class = "configEditor", id = idPrefix + "speciality" })
-        </div>
-        <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.ltrCode)
-            @Html.mUITableTextBoxFor(model => model.ltrCode,
-                new { @tabindex = "1", @class = "configEditor", @id = idPrefix + "ltrCode" })
-        </div>
+<div class="tb-table">
+<div>
+    <div class="tb-row">
+        @Html.mUITableLabelFor(model => model.category)
+        @Html.mUITableDropDownListFor(model => model.category, Lookups.configCategories(),
+                        new { @tabindex = "1", @class = "configEditor", @id = idPrefix + "category" })
+        @Html.mUITableLabelFor(model => model.selected)
+        @Html.mUIDropDownYesNoFor(m => m.selected,
+                                new { @tabindex = "2", @class = "configEditor", id = idPrefix + "selected" })
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelFor(model => model.text_EN)
+        @Html.mUITableTextBoxFor(model => model.text_EN,
+                                new { @tabindex = "1", @class = "configEditor", @id = idPrefix + "text_EN" })
+        @Html.mUITableLabelFor(model => model.text_ES)
+        @Html.mUITableTextBoxFor(m => m.selected,
+                                        new { @tabindex = "2", @class = "configEditor", id = idPrefix + "text_ES" })
+    </div>
+    </div>
+    <div id="skillRows">
+    <div class="tb-row">
+        @Html.mUITableLabelFor(model => model.subcategory)
+        @Html.mUITableTextBoxFor(model => model.subcategory,
+                                new { @tabindex = "1", @class = "configEditor skillConfig", @id = idPrefix + "subcategory" })
+        @Html.mUITableLabelFor(model => model.level)
+        @Html.mUITableTextBoxFor(m => m.level,
+                                new { @tabindex = "2", @class = "configEditor skillConfig", id = idPrefix + "level" })
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelFor(model => model.wage)
+        @Html.mUITableTextBoxFor(model => model.wage,
+                                         new { @tabindex = "1", @class = "configEditor skillConfig", @id = idPrefix + "wage" })
+        @Html.mUITableLabelFor(model => model.minHour)
+        @Html.mUITableTextBoxFor(m => m.minHour,
+                                         new { @tabindex = "2", @class = "configEditor skillConfig", id = idPrefix + "minHour" })
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelFor(model => model.fixedJob)
+        @Html.mUITableTextBoxFor(model => model.fixedJob,
+                     new { @tabindex = "1", @class = "configEditor skillConfig", @id = idPrefix + "fixedJob" })
+        @Html.mUITableLabelFor(model => model.sortorder)
+        @Html.mUITableTextBoxFor(m => m.sortorder,
+                     new { @tabindex = "2", @class = "configEditor skillConfig", id = idPrefix + "sortorder" })
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelFor(model => model.typeOfWorkID)
+        @Html.mUITableDropDownListFor(model => model.typeOfWorkID, Lookups.typesOfWork.get(lang),
+                     new { @tabindex = "1", @class = "configEditor skillConfig", @id = idPrefix + "typeOfWorkID" })
+        @Html.mUITableLabelFor(model => model.speciality)
+        @Html.mUIDropDownYesNoFor(m => m.speciality,
+                     new { @tabindex = "2", @class = "configEditor skillConfig", id = idPrefix + "speciality" })
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelFor(model => model.ltrCode)
+        @Html.mUITableTextBoxFor(model => model.ltrCode,
+                     new { @tabindex = "1", @class = "configEditor skillConfig", @id = idPrefix + "ltrCode" })
+    </div>
     </div>
 </div>
 @Html.Partial("ManagerInfo")
 @Html.Partial("AdministratorInfo")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#skillRows').hide();
+        var myCategory = $('#@(idPrefix + "category")');
+        $(myCategory).click(function (e) {
+            //e.preventDefault();
+            console.log('category clicked1');
+            if ($(myCategory).val() == "skill") {
+                $('#skillRows').show();
+            } else {
+                $('#skillRows').hide();
+            }
+        });
+    });
+</script>

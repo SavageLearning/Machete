@@ -4,13 +4,15 @@
     string recType = "config";
     string idPrefix = recType + Model.ID + "-";
 }
-@using (Html.BeginForm("Create", "Config", FormMethod.Post, 
-    new { @id = "configCreateForm" }))
+@using (Html.BeginForm("Create", "Config", FormMethod.Post,
+    new { @id = "configCreateForm", enctype = "multipart/form-data" }))
 {
+    <div>
     <input type="submit" id="@(idPrefix)SaveBtn" class="formButton saveBtn" 
             value="@Persons.createsubmit" tabindex="9"/>
+    </div>
     @Html.ValidationSummary(true)
-    @Html.EditorForModel()
+    @Html.EditorForModel("Config")
 }
 <script type="text/javascript">
     $(document).ready(function () {
