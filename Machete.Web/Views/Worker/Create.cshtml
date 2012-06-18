@@ -4,7 +4,8 @@
     string recType = "worker";
     string idPrefix = recType + Model.ID + "-";
 }
-@using (Html.BeginForm("Create", "Worker", FormMethod.Post, new { @id = "workerCreateForm", enctype = "multipart/form-data" }))
+@using (Html.BeginForm("Create", "Worker", FormMethod.Post, 
+    new { @id = "workerCreateForm", enctype = "multipart/form-data" }))
 {
     <div class="mui-button-row">
         <input type="submit" id="createWorkerBtn"  class="formButton saveBtn" value="@Workers.createsubmit" tabindex="9"/>

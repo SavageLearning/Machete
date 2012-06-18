@@ -119,7 +119,7 @@ namespace Machete.Web.Controllers
         }
         private string _getTabRef(Lookup per)
         {
-            if (per != null) return "/Lookup/Edit/" + Convert.ToString(per.ID);
+            if (per != null) return "/Config/Edit/" + Convert.ToString(per.ID);
             else return null;
         }
         private string _getTabLabel(Lookup per)
