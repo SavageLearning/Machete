@@ -329,11 +329,13 @@ namespace Machete.Test
             Assert.AreEqual(_act.notes, WaitForElement(By.Id(prefix + "notes")).GetAttribute("value"));
             return true;
         }
-        public bool activitySignIn(ActivitySignin _asi)
+        public bool activitySignIn(int dwccardnum)
         {
             WaitForElement(By.Id("dwccardnum"));
-            ReplaceElementText(By.Id("dwccardnum"), _asi.dwccardnum.ToString());
+            ReplaceElementText(By.Id("dwccardnum"), dwccardnum.ToString());
             WaitForElement(By.Id("dwccardnum")).Submit();
+            // How will this test catch an error? need to wait for and validate 
+            // name that is presented at sign-in.            
             return true;
         }
         #endregion

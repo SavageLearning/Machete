@@ -18,6 +18,8 @@ namespace Machete.Data
             //Database.SetInitializer<MacheteContext>(
             //  new MigrateDatabaseToLatestVersion<MacheteContext, CustomMigrationsConfiguration>());            
         }
+        public MacheteContext(string connectionString) : base(connectionString) { }
+
         //Machete here defines the database to use, by convention.
         public DbSet<Person> Persons { get; set; }
         public DbSet<Worker> Workers { get; set; }
