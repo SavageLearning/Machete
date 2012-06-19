@@ -1,0 +1,88 @@
+﻿@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using Machete.Domain.Resources
+@{
+    ViewBag.Title = Persons.indextitle;
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "config";
+}
+
+
+<div id="configTabs" class="ExclusiveTab">
+    <ul>
+        <li><a href="#configList" id="configListTab" class="ListTab">@Persons.listlink</a> </li>
+        <li><a href="/Config/Create" id="configCreateTab" class="CreateTab">@Persons.createlink</a></li>
+    </ul>
+    <div id="configList">
+        @Html.Label("Category")
+        @Html.DropDownList("category", Lookups.configCategories())
+        <table id="configTable" class="display">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>LABEL</th>
+                    <th>category</th>
+                    <th>selected</th>
+                    <th>text_EN</th>
+                    <th>text_ES</th>
+                    <th>subcategory</th>
+                    <th>level</th>
+                    <th>ltrCode</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        jqrfyTable({
+        table: $('#configTable'), 
+        tab: $('#configTabs'),
+        options: {
+            "bPaginate": true,
+            "bLengthChange": true,
+            "aaSorting": [[8, 'desc']],
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "bServerSide": true,
+            "sAjaxSource": "/Config/AjaxHandler", 
+            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "bProcessing": true,
+            "aoColumns": [
+                {"mDataProp": "tabref", "bSearchable": false, "bSortable": false, "bVisible": false },
+                {"mDataProp": "tablabel", "bSearchable": false, "bSortable": false, "bVisible": false },
+                {"mDataProp": "category" },
+                {"mDataProp": "selected" },
+                {"mDataProp": "text_EN" },
+                {"mDataProp": "text_ES" },
+                {"mDataProp": "subcategory" },
+                {"mDataProp": "level" },
+                {"mDataProp": "ltrCode" }
+            ],
+            "fnServerData": function ( sSource, aoData, fnCallback ) {
+			        /* Add some extra data to the sender */
+			        aoData.push( { "name": "category", "value": $('#category').val() } );
+			        $.getJSON( sSource, aoData, function (json) { 
+				        /* Do whatever additional processing you want on the callback, then tell DataTables */
+				        fnCallback(json)
+			        } );
+		        },         
+        }, 
+        dblClickEvent: null, 
+        tabLabel: "@(recType)"
+        });
+        $('#configTable_filter input').attr('ID','configSearchBox');
+        $('#configTabs').mUI("createTabs", {
+            prefix: "ui-tabs-config-",
+            formLevel: 1,
+            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+            });
+        $('#category').click(function(e) {
+//            e.preventDefault();
+            $("#configTable").dataTable().fnDraw();
+        });
+    });
+</script>

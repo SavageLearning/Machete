@@ -7,9 +7,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Machete.Domain
 {
-    public class Lookup
+    public class Lookup : Record
     {
-        public int ID { get; set; }
+        //public int ID { get; set; }
         [StringLength(50)]
         public string category { get; set; } //Race, Language, M-Status
         [StringLength(50)]

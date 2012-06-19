@@ -79,13 +79,22 @@
     <Compile Include="Infrastructure\UnitOfWork.cs" />
     <Compile Include="Initialize\MacheteLookups.cs" />
     <Compile Include="MacheteContext.cs" />
-    <Compile Include="Migrations\201205270653415_ActivityRefactor.cs" />
+    <Compile Include="Migrations\201203210519182_ActivitiesAndHomelessBit.Designer.cs" />
+    <Compile Include="Migrations\201205270653415_ActivityRefactor.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Migrations\201205270653415_ActivityRefactor.Designer.cs">
       <DependentUpon>201205270653415_ActivityRefactor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201205310458100_ActivityModelChange.cs" />
+    <Compile Include="Migrations\201205310458100_ActivityModelChange.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Migrations\201205310458100_ActivityModelChange.Designer.cs">
       <DependentUpon>201205310458100_ActivityModelChange.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201206170600479_LookupRecord.cs" />
+    <Compile Include="Migrations\201206170600479_LookupRecord.Designer.cs">
+      <DependentUpon>201206170600479_LookupRecord.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -101,7 +110,9 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Migrations\SQL\LookupRecord_fix.sql" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

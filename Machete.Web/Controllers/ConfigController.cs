@@ -17,13 +17,13 @@ using System.Data.Entity.Infrastructure;
 namespace Machete.Web.Controllers
 {
     [ElmahHandleError]
-    public class PersonController : MacheteController
-    { 
-        private readonly IPersonService personService;
+    public class ConfigController : MacheteController
+    {
+        private readonly ILookupService serv;
         System.Globalization.CultureInfo CI;
-        public PersonController(IPersonService personService)
+        public ConfigController(ILookupService serv)
         {
-            this.personService = personService;
+            this.serv = serv;
         }
         protected override void Initialize(RequestContext requestContext)
         {
@@ -43,9 +43,10 @@ namespace Machete.Web.Controllers
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             //Get all the records            
-            IEnumerable<Person> list = personService.GetIndexView(new viewOptions() 
+            IEnumerable<Lookup> list = serv.GetIndexView(new viewOptions()
             {
-                CI = CI,
+                CI = CI, 
+                category = param.category,
                 search = param.sSearch,
                 //status = string.IsNullOrEmpty(param.searchColName("status")) ? (int?)null : Convert.ToInt32(param.searchColName("status")),
                 orderDescending = param.sSortDir_0 == "asc" ? false : true,
@@ -53,24 +54,32 @@ namespace Machete.Web.Controllers
                 displayLength = param.iDisplayLength,
                 sortColName = param.sortColName()
             });
-            var result = from p in list select new
-            {
-                tabref = "/Person/Edit/" + Convert.ToString(p.ID),
-                tablabel = p.firstname1 + ' ' + p.lastname1,
-                active = Convert.ToString(p.active),
-                firstname1 = p.firstname1,
-                firstname2 = p.firstname2,
-                lastname1 = p.lastname1,
-                lastname2 = p.lastname2,
-                phone = p.phone,
-                dateupdated = Convert.ToString(p.dateupdated),
-                Updatedby = p.Updatedby,
-                recordid = Convert.ToString(p.ID)
-            };
+            var result = from p in list
+                         select new
+                         {
+                             tabref = "/Config/Edit/" + Convert.ToString(p.ID),
+                             tablabel = p.category + ' ' + p.text_EN,
+                             category = p.category,
+                             selected = p.selected,
+                             text_EN = p.text_EN,
+                             text_ES = p.text_ES,
+                             subcategory = p.subcategory,
+                             level = p.level,
+                             //wage = p.wage,
+                             //minHour = p.minHour,
+                             //fixedJob = p.fixedJob,
+                             //sortorder = p.sortorder,
+                             //typeOfWorkID = p.typeOfWorkID,
+                             //specialtiy = p.speciality,
+                             ltrCode = p.ltrCode,
+                             dateupdated = Convert.ToString(p.dateupdated),
+                             Updatedby = p.Updatedby,
+                             recordid = Convert.ToString(p.ID)
+                         };
             return Json(new
             {
                 sEcho = param.sEcho,
-                iTotalRecords = personService.TotalCount(),
+                iTotalRecords = serv.TotalCount(),
                 iTotalDisplayRecords = list.Count(),
                 aaData = result
             },
@@ -80,12 +89,10 @@ namespace Machete.Web.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")] 
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Create()
         {
-            var _model = new Person();
-            _model.gender = Lookups.gender.defaultId;
-            _model.active = true;
+            var _model = new Lookup();
             return PartialView(_model);
         }
         /// <summary>
@@ -98,26 +105,26 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Create(Person person, string userName)
         {
-            Person newperson = null;
-            UpdateModel(person);
-            newperson = personService.Create(person, userName);
-            
+            Lookup lookup = null;
+            UpdateModel(lookup);
+            lookup = serv.Create(lookup, userName);
+
             return Json(new
             {
-                sNewRef = _getTabRef(newperson),
-                sNewLabel = _getTabLabel(newperson),
-                iNewID = (newperson == null ? 0 : newperson.ID)
+                sNewRef = _getTabRef(lookup),
+                sNewLabel = _getTabLabel(lookup),
+                iNewID = (lookup == null ? 0 : lookup.ID)
             },
             JsonRequestBehavior.AllowGet);
         }
-        private string _getTabRef(Person per)
+        private string _getTabRef(Lookup per)
         {
-            if (per != null) return "/Person/Edit/" + Convert.ToString(per.ID);           
-            else return null;            
+            if (per != null) return "/Config/Edit/" + Convert.ToString(per.ID);
+            else return null;
         }
-        private string _getTabLabel(Person per)
+        private string _getTabLabel(Lookup per)
         {
-            if (per != null) return per.fullName();
+            if (per != null) return per.text_EN;
             else return null;
         }
         /// <summary>
@@ -125,11 +132,11 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")] 
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Edit(int id)
         {
-            Person person = personService.Get(id);
-            return PartialView(person);
+            Lookup lookup = serv.Get(id);
+            return PartialView(lookup);
         }
         /// <summary>
         /// 
@@ -138,12 +145,12 @@ namespace Machete.Web.Controllers
         /// <param name="userName"></param>
         /// <returns></returns>
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")] 
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Edit(int id, string userName)
         {
-            Person person = personService.Get(id);          
-            UpdateModel(person);
-            personService.Save(person, userName);
+            Lookup lookup = serv.Get(id);
+            UpdateModel(lookup);
+            serv.Save(lookup, userName);
             return Json(new
             {
                 status = "OK"
@@ -158,8 +165,8 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult View(int id)
         {
-            Person person = personService.Get(id);
-            return View(person);
+            Lookup lookup = serv.Get(id);
+            return View(lookup);
         }
         /// <summary>
         /// 
@@ -168,10 +175,10 @@ namespace Machete.Web.Controllers
         /// <param name="user"></param>
         /// <returns></returns>
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Administrator")] 
+        [Authorize(Roles = "Administrator")]
         public ActionResult Delete(int id, string user)
         {
-            personService.Delete(id, user);
+            serv.Delete(id, user);
 
             return Json(new
             {
