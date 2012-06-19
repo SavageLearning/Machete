@@ -139,6 +139,7 @@ namespace Machete.Web.Helpers
         /// <summary>
         /// filter table on a membership card number
         /// </summary>
+        public string category { get; set; }
         public string dwccardnum { get; set; }
         public int? activityID { get; set; }
         public int? personID { get; set; }

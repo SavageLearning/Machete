@@ -556,5 +556,34 @@ namespace Machete.Service
             q = q.Where(az => az.personID == personID);
         }
         #endregion
+        #region LOOKUPS
+        public static void byCategory(viewOptions o, ref IQueryable<Lookup> q)
+        {
+            q = q.Where(p => p.category == o.category);
+        }
+        public static void search(viewOptions o, ref IQueryable<Lookup> q)
+        {
+            q = q
+                .Where(p => p.text_EN.Contains(o.search) ||
+                            p.text_ES.Contains(o.search) ||
+                            p.category.Contains(o.search) ||
+                            p.subcategory.Contains(o.search));
+        }
+        public static void sortOnColName(string name, bool descending, ref IQueryable<Lookup> q)
+        {
+            switch (name)
+            {
+                case "category": q = descending ? q.OrderByDescending(p => p.category) : q.OrderBy(p => p.category); break;
+                case "text_EN": q = descending ? q.OrderByDescending(p => p.text_EN) : q.OrderBy(p => p.text_EN); break;
+                case "text_ES": q = descending ? q.OrderByDescending(p => p.text_ES) : q.OrderBy(p => p.text_ES); break;
+                case "selected": q = descending ? q.OrderByDescending(p => p.selected) : q.OrderBy(p => p.selected); break;
+                case "subcategory": q = descending ? q.OrderByDescending(p => p.subcategory) : q.OrderBy(p => p.subcategory); break;
+                //case "phone": q = descending ? q.OrderByDescending(p => p.phone) : q.OrderBy(p => p.phone); break;
+                //case "dateupdated": q = descending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated); break;
+                default: q = descending ? q.OrderByDescending(p => p.text_EN) : q.OrderBy(p => p.text_EN); break;
+            }
+        }
+        #endregion
+
     }
 }

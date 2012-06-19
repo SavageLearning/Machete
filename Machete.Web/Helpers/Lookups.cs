@@ -117,7 +117,25 @@ namespace Machete.Web.Helpers
     }
 
     public class Lookups
-    {        
+    {
+        //public enum categoriesfoo
+        //{
+        //    maritalstatus = "maritalstatus",
+        //    race = "race",
+        //    language = "",
+        //    neighborhood = "language",
+        //    gender = "gender",
+        //    transportmethod = "transportmethod",
+        //    countryoforigin = "countryoforigin",
+        //    activityName = "activityName",
+        //    activityType = "activityType",
+        //    eventtype = "eventtype",
+        //    woStatus = "woStatus",
+        //    emplrreference = "emplrreference",
+        //    typesOfWork = "typesOfWork",
+        //    memberStatus = "memberStatus",
+        //    skill = "skill"
+        //}
         public static LookupGroup maritalstatus = new LookupGroup("maritalstatus");
         public static LookupGroup race = new LookupGroup("race");
         public static LookupGroup language = new LookupGroup("language");
@@ -134,8 +152,6 @@ namespace Machete.Web.Helpers
         public static LookupGroup typesOfWork = new LookupGroup("worktype");
         public static LookupGroup memberStatus = new LookupGroup("memberstatus");
         public static LookupSkill skill = new LookupSkill("skill");
-
-
         public static int hoursDefault { get { return 5; } }
         public static int daysDefault { get { return 1;  } }
         public static int skillLevelDefault { get { return 1; } }
@@ -143,9 +159,11 @@ namespace Machete.Web.Helpers
         public static SelectList hours() { return hoursNum; }
         public static SelectList days() { return daysNum; }
         public static SelectList skillLevels() { return skillLevelNum; }
+        public static SelectList configCategories() { return categories; }
         private static IEnumerable<Lookup> DbCache { get; set; }
         private static SelectList hoursNum { get; set; }
         private static SelectList daysNum { get; set; }
+        private static SelectList categories { get; set; }
         private static SelectList skillLevelNum { get; set; }
         private static List<SelectListItem> yesnoEN { get; set; }
         private static List<SelectListItem> yesnoES { get; set; }
@@ -166,8 +184,14 @@ namespace Machete.Web.Helpers
                 "Value", "Text", "7"
                 );            
             skillLevelNum = new SelectList(new[] { "0", "1", "2", "3", "4" }
-                                            .Select(x => new SelectListItem { Value = x, Text = x }),
-                                            "Value", "Text", "0");
+                .Select(x => new SelectListItem { Value = x, Text = x }),
+                "Value", "Text", "0");
+            categories = new SelectList(new[] {"maritalstatus","race","neighborhood","gender",
+                "transportmethod","countryoforigin","activityName","activityType","eventtype",
+                "orderstatus","emplrreference","worktype","memberStatus","skill"}
+                .Select(x => new SelectListItem { Value = x, Text = x}),
+                "Value", "Text", "activityName");
+
             yesnoEN = new List<SelectListItem>();
             yesnoEN.Add(new SelectListItem() { Selected = false, Text = "No", Value = "false" });
             yesnoEN.Add(new SelectListItem() { Selected = false, Text = "Yes", Value = "true" });
