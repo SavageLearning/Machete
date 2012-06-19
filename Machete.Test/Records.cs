@@ -163,8 +163,8 @@ namespace Machete.Test //A Small Change: There once was a man in peru / Who drea
         public static Activity activity = new Activity
         {
             name = 98,
-            type = 90,
-            teacher = "foo",
+            type = 101,
+            teacher = "jadmin",
             notes = "foo too",
             dateStart = DateTime.Now,
             dateEnd = DateTime.Now,
@@ -176,7 +176,7 @@ namespace Machete.Test //A Small Change: There once was a man in peru / Who drea
 
         public static ActivitySignin activitysignin = new ActivitySignin
         {
-
+            dwccardnum = 12345,
             dateforsignin = DateTime.Now,            
             datecreated = DateTime.Now,
             dateupdated = DateTime.Now,
