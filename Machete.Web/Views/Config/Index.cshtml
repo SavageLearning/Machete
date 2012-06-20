@@ -10,8 +10,8 @@
 
 <div id="configTabs" class="ExclusiveTab">
     <ul>
-        <li><a href="#configList" id="configListTab" class="ListTab">@Persons.listlink</a> </li>
-        <li><a href="/Config/Create" id="configCreateTab" class="CreateTab">@Persons.createlink</a></li>
+        <li><a href="#configList" id="configListTab" class="ListTab">@Configs.listlink</a> </li>
+        <li><a href="/Config/Create" id="configCreateTab" class="CreateTab">@Configs.createlink</a></li>
     </ul>
     <div id="configList">
         @Html.Label("Category")
@@ -21,13 +21,13 @@
                 <tr>
                     <th>ID</th>
                     <th>LABEL</th>
-                    <th>category</th>
-                    <th>selected</th>
-                    <th>text_EN</th>
-                    <th>text_ES</th>
-                    <th>subcategory</th>
-                    <th>level</th>
-                    <th>ltrCode</th>
+                    <th>@Configs.category</th>
+                    <th>@Configs.selected</th>
+                    <th>@Configs.textEN</th>
+                    <th>@Configs.textES</th>
+                    <th>@Configs.subcategory</th>
+                    <th>@Configs.level</th>
+                    <th>@Configs.ltrCode</th>
                 </tr>
             </thead>
         </table>
