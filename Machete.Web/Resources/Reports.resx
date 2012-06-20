@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="activitiesTab" xml:space="preserve">
+    <value>Activities</value>
+  </data>
   <data name="ordersTab" xml:space="preserve">
     <value>Work Orders</value>
   </data>
