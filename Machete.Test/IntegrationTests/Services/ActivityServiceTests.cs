@@ -1,16 +1,18 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Machete.Domain;
 using Machete.Data;
+using System.Data.Entity;
 using Machete.Service;
 using Machete.Data.Infrastructure;
-using Machete.Web.Helpers;
-using System.Data.Entity;
 
-namespace Machete.Test
+namespace Machete.Test.IntegrationTests.Services
 {
-    public class ServiceTest
+    [TestClass]
+    public class ActivityServiceTests
     {
         protected WorkerSigninRepository _wsiRepo;
         protected WorkerRepository _wRepo;
@@ -34,26 +36,15 @@ namespace Machete.Test
         protected ActivitySigninService _asServ;
         protected IUnitOfWork _unitofwork;
         protected MacheteContext DB;
-
-
-        protected void Initialize()
+        [TestInitialize]
+        public void TestInitialize()
         {
-            _init(new TestInitializer(), "macheteConnection");
-        }
-        protected void Initialize(IDatabaseInitializer<MacheteContext> initializer, string connection)
-        {
-            _init(initializer, connection);
-        }
-        private void _init(IDatabaseInitializer<MacheteContext> initializer, string connection)
-        {
-            Database.SetInitializer<MacheteContext>(initializer);
-            DB = new MacheteContext(connection);
-            //DB.Database.Delete();
-            //DB.Database.Initialize(true);
-            Records.Initialize(DB);
+            //Doesn't blast the database
+            //base.Initialize(new MacheteInitializer(), "machete");
+            Database.SetInitializer<MacheteContext>(new MacheteInitializer());
+            DB = new MacheteContext("machete"); //name of DB in sql server
             WorkerCache.Initialize(DB);
             LookupCache.Initialize(DB);
-            Lookups.Initialize();
             _dbFactory = new DatabaseFactory();
             _iRepo = new ImageRepository(_dbFactory);
             _wRepo = new WorkerRepository(_dbFactory);
@@ -75,9 +66,42 @@ namespace Machete.Test
             _wServ = new WorkerService(_wRepo, _unitofwork);
             _woServ = new WorkOrderService(_woRepo, _waServ, _unitofwork);
             _wsiServ = new WorkerSigninService(_wsiRepo, _wRepo, _iRepo, _wrRepo, _unitofwork);
+        }
 
+        [TestMethod]
+        public void onehundred()
+        {
+            //for (var i = 0; i < 100; i++)
+            //    Integration_Activity_Service_CreateRandomClass();
+        }
+
+        public void Integration_Activity_Service_CreateRandomClass()
+        {
+            //Used once to create dummy data to support report creation
+            // requires change in app.config to point test database to production
+            IEnumerable<int> cardlist = DB.Workers.Select(q => q.dwccardnum).Distinct();
+            IEnumerable<int> classlist = DB.Lookups.Where(l => l.category == "activityName").Select(q => q.ID);
+            Activity a = new Activity();
+            //random date, within last 30 days
+            Random rand = new Random();
+            DateTime today = DateTime.Today.AddDays(-rand.Next(30));
+            a.dateStart = today;
+            a.dateEnd = today.AddHours(1.5);
+            a.name = classlist.ElementAt(rand.Next(classlist.Count()));
+            a.type = 101; //type==class
+            a.teacher = "UnitTest script";
+            a.notes = "From Integration_Activity_Service";
+            _aServ.Create(a, "TestScript");
+            int rAttendance = rand.Next(cardlist.Count() / 10);
+            for (var i = 0; i < rAttendance; i++)
+            {
+                ActivitySignin asi = (ActivitySignin)Records.activitysignin.Clone();
+                asi.dateforsignin = today;
+                asi.activityID = a.ID;
+                asi.dwccardnum = cardlist.ElementAt(rand.Next(cardlist.Count()));
+                _asServ.CreateSignin(asi, "TestScript");
+            }
+            //a.
         }
     }
-
-
 }
