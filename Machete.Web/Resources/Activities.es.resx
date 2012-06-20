@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="actJoinTab" xml:space="preserve">
-    <value>Activities</value>
+    <value>Actividades</value>
   </data>
   <data name="boxlegend" xml:space="preserve">
     <value>Actividad</value>
@@ -158,6 +158,18 @@
   </data>
   <data name="editworkerlink" xml:space="preserve">
     <value>Editar actividad</value>
+  </data>
+  <data name="excludeAction" xml:space="preserve">
+    <value>Excluir</value>
+  </data>
+  <data name="excludedTab" xml:space="preserve">
+    <value>Excluidos de</value>
+  </data>
+  <data name="includeAction" xml:space="preserve">
+    <value>Incluir</value>
+  </data>
+  <data name="includedTab" xml:space="preserve">
+    <value>Incluido en</value>
   </data>
   <data name="indexreturnlink" xml:space="preserve">
     <value>Volver a la lista de actividades</value>
