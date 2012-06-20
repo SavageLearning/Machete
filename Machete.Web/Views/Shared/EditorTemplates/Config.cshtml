@@ -23,7 +23,7 @@
         @Html.mUITableTextBoxFor(model => model.text_EN,
                                 new { @tabindex = "1", @class = "configEditor", @id = idPrefix + "text_EN" })
         @Html.mUITableLabelFor(model => model.text_ES)
-        @Html.mUITableTextBoxFor(m => m.selected,
+        @Html.mUITableTextBoxFor(m => m.text_ES,
                                         new { @tabindex = "2", @class = "configEditor", id = idPrefix + "text_ES" })
     </div>
     </div>
@@ -33,7 +33,7 @@
         @Html.mUITableTextBoxFor(model => model.subcategory,
                                 new { @tabindex = "1", @class = "configEditor skillConfig", @id = idPrefix + "subcategory" })
         @Html.mUITableLabelFor(model => model.level)
-        @Html.mUITableTextBoxFor(m => m.level,
+        @Html.mUITableDropDownListFor(m => m.level, Lookups.skillLevels(),
                                 new { @tabindex = "2", @class = "configEditor skillConfig", id = idPrefix + "level" })
     </div>
     <div class="tb-row">
@@ -41,15 +41,15 @@
         @Html.mUITableTextBoxFor(model => model.wage,
                                          new { @tabindex = "1", @class = "configEditor skillConfig", @id = idPrefix + "wage" })
         @Html.mUITableLabelFor(model => model.minHour)
-        @Html.mUITableTextBoxFor(m => m.minHour,
+        @Html.mUITableDropDownListFor(m => m.minHour, Lookups.hours(),
                                          new { @tabindex = "2", @class = "configEditor skillConfig", id = idPrefix + "minHour" })
     </div>
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.fixedJob)
-        @Html.mUITableTextBoxFor(model => model.fixedJob,
+        @Html.mUIDropDownYesNoFor(model => model.fixedJob,
                      new { @tabindex = "1", @class = "configEditor skillConfig", @id = idPrefix + "fixedJob" })
         @Html.mUITableLabelFor(model => model.sortorder)
-        @Html.mUITableTextBoxFor(m => m.sortorder,
+        @Html.mUITableDropDownListFor(m => m.sortorder, Lookups.hours(),
                      new { @tabindex = "2", @class = "configEditor skillConfig", id = idPrefix + "sortorder" })
     </div>
     <div class="tb-row">
