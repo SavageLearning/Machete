@@ -183,10 +183,13 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Event.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Lookup.es.resx" />
+    <EmbeddedResource Include="Resources\Lookup.es.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Lookup.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Lookup.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Person.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
