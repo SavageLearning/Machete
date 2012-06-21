@@ -35,12 +35,21 @@ namespace Machete.Test
         protected IUnitOfWork _unitofwork;
         protected MacheteContext DB;
 
+
         protected void Initialize()
         {
-            Database.SetInitializer<MacheteContext>(new TestInitializer());
-            DB = new MacheteContext();
-            DB.Database.Delete();
-            DB.Database.Initialize(true);
+            _init(new TestInitializer(), "macheteConnection");
+        }
+        protected void Initialize(IDatabaseInitializer<MacheteContext> initializer, string connection)
+        {
+            _init(initializer, connection);
+        }
+        private void _init(IDatabaseInitializer<MacheteContext> initializer, string connection)
+        {
+            Database.SetInitializer<MacheteContext>(initializer);
+            DB = new MacheteContext(connection);
+            //DB.Database.Delete();
+            //DB.Database.Initialize(true);
             Records.Initialize(DB);
             WorkerCache.Initialize(DB);
             LookupCache.Initialize(DB);
