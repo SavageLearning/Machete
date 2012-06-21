@@ -11,6 +11,8 @@ using Machete.Domain;
 using Machete.Data;
 using System.Linq;
 using System.Collections.Generic;
+using Machete.Service;
+using Machete.Data.Infrastructure;
 
 namespace Machete.Test
 {
@@ -21,6 +23,11 @@ namespace Machete.Test
         private StringBuilder verificationErrors;
         private string baseURL;
         private sharedUI ui;
+        private DatabaseFactory _dbfactory;
+        private WorkerService _wserv;
+        private WorkerRepository _wRepo;
+        private IUnitOfWork _unitofwork;
+        private MacheteContext DB;
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext) { }
@@ -28,6 +35,13 @@ namespace Machete.Test
         [TestInitialize]
         public void SetupTest()
         {
+            DB = new MacheteContext("machete"); //name of DB in sql server
+            WorkerCache.Initialize(DB);
+            LookupCache.Initialize(DB);
+            _dbfactory = new DatabaseFactory();
+            _wRepo = new WorkerRepository(_dbfactory);
+            _unitofwork = new UnitOfWork(_dbfactory);
+            _wserv = new WorkerService(_wRepo, _unitofwork);
             driver = new FirefoxDriver();
             baseURL = "http://localhost:4213/";
             ui = new sharedUI(driver, baseURL);
@@ -83,13 +97,54 @@ namespace Machete.Test
         }
         
         [TestMethod]
-        public void SeActivity_Create_signin()
+        public void SeActivity_Create_signin_simple()
         {
             Activity _act = (Activity)Records.activity.Clone();
             ui.activityCreate(_act);
 
-            ActivitySignin _asi = (ActivitySignin)Records.activitysignin.Clone();            
-            ui.activitySignIn(30311);//static int is one that I know exists. replace with something smarter.
+            ActivitySignin _asi = (ActivitySignin)Records.activitysignin.Clone();
+            var workers = DB.Workers;
+            Assert.IsTrue(ui.activitySignIn(workers.First().dwccardnum));
+        }
+
+        [TestMethod]
+        public void SeActivity_Signin_random_worker()
+        {
+            Activity _act = (Activity)Records.activity.Clone();
+            ui.activityCreate(_act);
+
+            var workers = DB.Workers;
+            IEnumerable<int> cardList = workers.Select(q => q.dwccardnum).Distinct();
+            Random rand = new Random();
+            int randCardIndex = rand.Next(cardList.Count());
+            int randCard = cardList.ElementAt(randCardIndex);
+
+            TryRandomSignins(cardList, rand);
+        }
+        void TryRandomSignins(IEnumerable<int> cardList, Random rand)
+        {
+            int randCardIndex = rand.Next(cardList.Count());
+            int randCard = cardList.ElementAt(randCardIndex);
+            bool result = ui.activitySignIn(randCard);
+            if (ui.WaitForElement(By.Id("dwcardnum")) != null)
+                TryRandomSignins(cardList, rand);
+            else Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void SeActivity_Signin_random_sactioned_worker()
+        {
+            Activity _act = (Activity)Records.activity.Clone();
+            ui.activityCreate(_act);
+
+            var workers = DB.Workers;
+            IEnumerable<int> cardList = workers.Where(q => q.memberStatus == Worker.iSanctioned || q.memberStatus == Worker.iExpelled).Select(q => q.dwccardnum).Distinct();
+            Random rand = new Random();
+            int randCardIndex = rand.Next(cardList.Count());
+            int randCard = cardList.ElementAt(randCardIndex);
+
+            Assert.IsFalse(ui.activitySignIn(randCard));
+            Assert.IsNull(ui.WaitForElement(By.Id("dwcardnum")));
         }
     }
 }
