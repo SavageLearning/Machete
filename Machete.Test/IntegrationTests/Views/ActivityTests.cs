@@ -141,6 +141,7 @@ namespace Machete.Test
 
             var workers = DB.Workers;
             IEnumerable<int> cardList = workers.Where(q => q.memberStatus == Worker.iSanctioned || q.memberStatus == Worker.iExpelled).Select(q => q.dwccardnum).Distinct();
+            Assert.AreNotEqual(0, cardList.Count());
             Random rand = new Random();
             int randCardIndex = rand.Next(cardList.Count());
             int randCard = cardList.ElementAt(randCardIndex);
