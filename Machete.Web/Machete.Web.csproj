@@ -263,6 +263,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Activities.resx</DependentUpon>
     </Compile>
+    <Compile Include="Resources\Configs.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Configs.resx</DependentUpon>
+    </Compile>
     <Compile Include="Resources\Employers.es.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -540,6 +545,11 @@
     <EmbeddedResource Include="Resources\Activities.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Activities.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Configs.es.resx" />
+    <EmbeddedResource Include="Resources\Configs.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Configs.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Employers.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

@@ -8,7 +8,10 @@
 <div id="activityTabs" class="ExclusiveTab">
     <ul>
         <li><a href="#activityList" id="activityListTab" class="ListTab">@Activities.listlink</a> </li>
-        <li><a href="/Activity/Create" id="activityCreateTab" class="CreateTab">@Activities.createlink</a></li>
+        @if (Html.IsInRole(Html.Role_AM()))
+        {
+            <li><a href="/Activity/Create" id="activityCreateTab" class="CreateTab">@Activities.createlink</a></li>
+        }
     </ul>
     @Html.Partial("ActivityIndex")
 </div>

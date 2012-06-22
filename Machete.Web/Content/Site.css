@@ -553,6 +553,47 @@ input.ui-button.dispatchButton
 }
 /* Person page
 ----------------------------------------------------------*/
+.mui-activities-join-btn
+{
+    margin: 5px;
+}
+.mui-activities-join-btn button
+{
+    padding: 10px;
+    width: 7em;
+}
+.mui-activities-join-btn button.leftArrow span.ui-icon
+{
+    float:left;
+}
+.mui-activities-join-btn button.leftArrow span.ui-button-text
+{
+    float:right;
+}
+.mui-activities-join-btn button.rightArrow span.ui-icon
+{
+    float:right;
+}
+.mui-activities-join-btn button.rightArrow span.ui-button-text
+{
+    float:left; 
+}
+.actDataEntryTab
+{
+    float: left;
+}
+
+.mui-activities-join-box
+{
+    margin-top: 7em;
+    float: left;
+}
+
+div.mui-activities-join-btn button span
+{
+    border: 10px;
+}
+
 div.mui-event-edit-label
 {
     width: 6em;
