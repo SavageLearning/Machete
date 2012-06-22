@@ -120,6 +120,9 @@
   <data name="category" xml:space="preserve">
     <value>Categoría</value>
   </data>
+  <data name="categoryRequired" xml:space="preserve">
+    <value>Una categoría se requiere</value>
+  </data>
   <data name="fixedJob" xml:space="preserve">
     <value>Trabajo Predeterminado?</value>
   </data>
@@ -141,14 +144,23 @@
   <data name="speciality" xml:space="preserve">
     <value>Habilidad de especialidad</value>
   </data>
+  <data name="stringlength" xml:space="preserve">
+    <value>Por favor, introduzca no más de {1} caracteres</value>
+  </data>
   <data name="subcategory" xml:space="preserve">
     <value>Sub-categoría</value>
   </data>
   <data name="text_EN" xml:space="preserve">
     <value>Texto de Inglés</value>
   </data>
+  <data name="text_ENRequired" xml:space="preserve">
+    <value>Una versión en Inglés del texto es necesario</value>
+  </data>
   <data name="text_ES" xml:space="preserve">
     <value>Texto en español</value>
+  </data>
+  <data name="text_ESRequired" xml:space="preserve">
+    <value>Una versión en español del texto es necesario</value>
   </data>
   <data name="typeOfWorkID" xml:space="preserve">
     <value>Tipo de trabajo</value>

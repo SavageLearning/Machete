@@ -4,8 +4,9 @@
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
     string lang = CI.TwoLetterISOLanguageName;
-    string recType = "lookup";
-    string idPrefix = recType + Model.ID + "-";
+    string recType = "config";
+    string recTypeID = recType + Model.ID;
+    string idPrefix = recTypeID + "-";
 }
 @Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID" })
 <div class="tb-table">
@@ -27,7 +28,7 @@
                                         new { @tabindex = "2", @class = "configEditor", id = idPrefix + "text_ES" })
     </div>
     </div>
-    <div id="skillRows">
+    <div id="@(idPrefix)skillRows">
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.subcategory)
         @Html.mUITableTextBoxFor(model => model.subcategory,
@@ -73,14 +74,12 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('#skillRows').hide();
-        var myCategory = $('#@(idPrefix + "category")');
-        $(myCategory).click(function (e) {
-            //e.preventDefault();
-            console.log('category clicked1');
-            if ($(myCategory).val() == "skill") {
-                $('#skillRows').show();
-            } else {
-                $('#skillRows').hide();
+        var selectDropDown = $('#@(idPrefix + "category")');
+        selectDropDown.mUI('configEnableOnSkill', {
+            enableVal: 'skill',
+            target: {
+                visible: $('#@(idPrefix)skillRows'),
+                validate: $('[id|=@(recTypeID)].skillConfig')
             }
         });
     });
