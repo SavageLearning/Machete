@@ -122,7 +122,13 @@ namespace Machete.Data
         //
         //
         public static void Initialize(MacheteContext context) {
-            _cache.ForEach(u => context.Lookups.Add(u));
+            _cache.ForEach(u => {
+                u.datecreated = DateTime.Now;
+                u.dateupdated = DateTime.Now;
+                u.Createdby = "Init T. Script";
+                u.Updatedby = "Init T. Script";
+                context.Lookups.Add(u); 
+            });
             context.SaveChanges();
         }
     }    
