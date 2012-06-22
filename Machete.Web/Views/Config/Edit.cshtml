@@ -13,10 +13,10 @@
                           @id = "configEditForm-" + Model.ID, 
                           enctype = "multipart/form-data" }))
 {
-    <input type="submit" value="@Events.editsubmit" class="formButton saveBtn"/>
+    <input type="submit" value="@Configs.editsubmit" class="formButton saveBtn"/>
     if (Html.IsInRole(Html.Role_A()))
     {
-        <input id="deleteConfigBtn-@(Model.ID)" type="button" value="@Events.deletesubmit" 
+        <input id="deleteConfigBtn-@(Model.ID)" type="button" value="@Configs.deletesubmit" 
                 class="formButton deleteButton" />
     }
     <br />  
@@ -44,7 +44,7 @@
         //
         configForm.mUI('formSubmit', {
             create: false,
-            selectTab: 2,
+            selectTab: 0,
             formLevel: 1
         });
         //
@@ -53,9 +53,9 @@
         //
         // delete button confirmation
         deleteConfigBtn.mUI('formClickDelete', {
-            ok: "@Events.deletesubmit",
-            confirm: '@Events.deleteconfirmation',
-            title: '@Events.deletetitle',
+            ok: "@Configs.deletesubmit",
+            confirm: '@Configs.deleteconfirmation',
+            title: '@Configs.deletetitle',
             form: deleteConfigForm
         });
         //

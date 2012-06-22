@@ -34,12 +34,12 @@ namespace Machete.Web.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator, Manager, Teacher")]
         public ActionResult Index()
         {
             return View();
         }
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator, Manager, Teacher")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             //Get all the records            
@@ -89,7 +89,7 @@ namespace Machete.Web.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator")]
         public ActionResult Create()
         {
             var _model = new Lookup();
@@ -102,10 +102,10 @@ namespace Machete.Web.Controllers
         /// <param name="userName"></param>
         /// <returns></returns>
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public ActionResult Create(Person person, string userName)
+        [Authorize(Roles = "Administrator")]
+        public ActionResult Create(Lookup lookup, string userName)
         {
-            Lookup lookup = null;
+            //Lookup lookup = null;
             UpdateModel(lookup);
             lookup = serv.Create(lookup, userName);
 
@@ -132,7 +132,7 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator")]
         public ActionResult Edit(int id)
         {
             Lookup lookup = serv.Get(id);
@@ -145,7 +145,7 @@ namespace Machete.Web.Controllers
         /// <param name="userName"></param>
         /// <returns></returns>
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator")]
         public ActionResult Edit(int id, string userName)
         {
             Lookup lookup = serv.Get(id);
@@ -162,7 +162,7 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator, Manager")]
         public ActionResult View(int id)
         {
             Lookup lookup = serv.Get(id);
