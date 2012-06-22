@@ -103,9 +103,9 @@ namespace Machete.Web.Controllers
         /// <returns></returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator")]
-        public ActionResult Create(Person person, string userName)
+        public ActionResult Create(Lookup lookup, string userName)
         {
-            Lookup lookup = null;
+            //Lookup lookup = null;
             UpdateModel(lookup);
             lookup = serv.Create(lookup, userName);
 

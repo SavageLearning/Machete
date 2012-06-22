@@ -254,27 +254,43 @@
                     if (create) {
                         //
                         // post create form, open tab for new records
-                        //$.post($(form).attr("action"), $(form).serialize(),
-                        $(form).ajaxSubmit({
-                            success: function (data) {
-                                add_rectab({
-                                    tabref: data.sNewRef, //come from JsonResult
-                                    label: data.sNewLabel, // JsonResult
-                                    tab: parentTab,
-                                    exclusive: exclusiveTab,
-                                    recordID: data.iNewID,  //JsonResult
-                                    recType: recType
-                                });
-                                if (callback) {
-                                    callback();
+                        $.post($(form).attr("action"), $(form).serialize(),
+                        //$(form).ajaxSubmit({ // data returned to success() differently. breaks exception handling.
+                        //success: function (data) {
+                        function (data) {
+                                if (data.jobSuccess == false) {
+                                    alert(data.rtnMessage);
+                                } else {
+                                    add_rectab({
+                                        tabref: data.sNewRef, //come from JsonResult
+                                        label: data.sNewLabel, // JsonResult
+                                        tab: parentTab,
+                                        exclusive: exclusiveTab,
+                                        recordID: data.iNewID,  //JsonResult
+                                        recType: recType
+                                    });
+                                    if (callback) {
+                                        callback();
+                                    }
                                 }
-                            }
-                        });
+                            });
                     } else {
                         //$.post($(form).attr("action"), $(form).serialize());
-                        $(form).ajaxSubmit({
-                            success: callback
-                        });
+                        //$(form).ajaxSubmit({
+                        $.post(
+                            $(form).attr("action"), //URL from form object
+                            $(form).serialize(),    //DATA from form object
+                            function (data) {       //Successful server post callback
+                                console.log("got to exception alert in formSubmit, jobSuccess is:" + data.JobSuccess);
+                                if (data.jobSuccess == false) {                                    
+                                    alert(data.rtnMessage);
+                                } else {
+                                    if (callback) {
+                                        callback();
+                                    }
+                                }
+                            }
+                        );
                     }
                     //
                     //
@@ -386,7 +402,7 @@
             });
         },
         //
-        //
+        // Used in ActivityJoinIndex
         postSelectedRows: function (opt) {
             var btn = this;
             var target = opt.targetTable;
@@ -472,7 +488,7 @@
             _toggleDropDown(select, showVal, target);
         },
         //
-        // Enables or disables a target element with a select elment selects enableVal
+        // Enables or disable HTML element with if element's value == enableVal
         // Used on Worker.race/disabled/driverslicense/carinsurance
         selectEnableOnValue: function (opt) {
             var select = this;
@@ -488,7 +504,17 @@
                 EnableOnValue(select, enableVal, target);
             });
             EnableOnValue(select, enableVal, target);
+            //opt.action = EnableOnValue;
+            //_selectActionOnValue(opt);
+        },
+        //
+        configEnableOnSkill: function (opt) {
+            opt.object = this;
+            opt.action = _validateOnValue;
+            opt.event = 'change';
+            _selectActionOnValue(opt);
         }
+
     };
 
     $.fn.mUI = function (method) {
@@ -508,6 +534,60 @@
     //
     // machete js internal functions
     //
+
+    //
+    //
+    function _validateOnValue(object, val, target) {
+        //Object is the dropdown that is triggering the different validation states
+        var visBlock = target.visible;
+        var valBlock = target.validate;
+        if (!visBlock) {
+            throw new Error("_selectActionOnValue requires a visible object to execute");
+        }
+        if (!valBlock) {
+            throw new Error("_selectActionOnValue requires a validation object to execute");
+        }
+        console.log('_validateOnValue called');
+        if ($(object).val() == val) {
+            $(visBlock).show();
+            $(valBlock).attr("data-val", true);
+        } else {
+            $(visBlock).hide();
+            $(valBlock).attr("data-val", false);
+        }
+        var myForm = $(object).closest('form');
+        $(myForm).removeData('unobtrusiveValidation');
+        $(myForm).removeData('validator');
+        $.validator.unobtrusive.parse(myForm);
+    }
+    //
+    //
+    function _selectActionOnValue(opt) {
+        var object = opt.object; ;
+        var val = opt.enableVal;
+        var target = opt.target;
+        var action = opt.action;
+        var event = opt.event;
+        if (!object) {
+            throw new Error("_selectActionOnValue requires an object property");
+        }
+        if (!val) {
+            throw new Error("_selectActionOnValue requires an enableVal property");
+        }
+        if (!target) {
+            throw new Error("_selectActionOnValue requires a target to enable");
+        }
+        if (!action) {
+            throw new Error("_selectActionOnValue requires an action to execute");
+        }
+        if (!event) {
+            throw new Error("_selectActionOnValue requires an event to execute");
+        }
+        $(object).bind(event, function () {
+            action(object, val, target);
+        });
+        action(object, val, target);
+    }
 
     //
     //  Internal function to record what's changed:

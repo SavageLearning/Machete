@@ -70,6 +70,15 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A category is required.
+        /// </summary>
+        public static string categoryRequired {
+            get {
+                return ResourceManager.GetString("categoryRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fixed job?.
         /// </summary>
         public static string fixedJob {
@@ -133,6 +142,15 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please enter no more than {1} characters.
+        /// </summary>
+        public static string stringlength {
+            get {
+                return ResourceManager.GetString("stringlength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sub-category.
         /// </summary>
         public static string subcategory {
@@ -151,11 +169,29 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An English version of text is required.
+        /// </summary>
+        public static string text_ENRequired {
+            get {
+                return ResourceManager.GetString("text_ENRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Spanish text.
         /// </summary>
         public static string text_ES {
             get {
                 return ResourceManager.GetString("text_ES", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A Spanish version of text is required.
+        /// </summary>
+        public static string text_ESRequired {
+            get {
+                return ResourceManager.GetString("text_ESRequired", resourceCulture);
             }
         }
         
