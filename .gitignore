@@ -2,7 +2,7 @@
 [Tt]humbs.db
 *.DS_Store
 *.cache
-
+log.txt.*
 #Visual Studio files
 *.[Oo]bj
 *.user
@@ -48,3 +48,6 @@ _ReSharper*/
 
 #NuGet
 packages/
+/Machete.Web/log.txt
+/Machete.Web/log.txt
+/Machete.suo

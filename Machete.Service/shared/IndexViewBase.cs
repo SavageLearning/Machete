@@ -557,6 +557,10 @@ namespace Machete.Service
         }
         #endregion
         #region LOOKUPS
+        public static void byCategory(viewOptions o, ref IQueryable<Lookup> q)
+        {
+            q = q.Where(p => p.category == o.category);
+        }
         public static void search(viewOptions o, ref IQueryable<Lookup> q)
         {
             q = q

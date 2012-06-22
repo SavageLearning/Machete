@@ -34,20 +34,21 @@ namespace Machete.Web.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator, Manager, Teacher")]
         public ActionResult Index()
         {
             return View();
         }
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator, Manager, Teacher")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             //Get all the records            
             IEnumerable<Lookup> list = serv.GetIndexView(new viewOptions()
             {
-                CI = CI,
+                CI = CI, 
+                category = param.category,
                 search = param.sSearch,
-                status = string.IsNullOrEmpty(param.searchColName("status")) ? (int?)null : Convert.ToInt32(param.searchColName("status")),
+                //status = string.IsNullOrEmpty(param.searchColName("status")) ? (int?)null : Convert.ToInt32(param.searchColName("status")),
                 orderDescending = param.sSortDir_0 == "asc" ? false : true,
                 displayStart = param.iDisplayStart,
                 displayLength = param.iDisplayLength,
@@ -88,7 +89,7 @@ namespace Machete.Web.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator")]
         public ActionResult Create()
         {
             var _model = new Lookup();
@@ -101,10 +102,10 @@ namespace Machete.Web.Controllers
         /// <param name="userName"></param>
         /// <returns></returns>
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public ActionResult Create(Person person, string userName)
+        [Authorize(Roles = "Administrator")]
+        public ActionResult Create(Lookup lookup, string userName)
         {
-            Lookup lookup = null;
+            //Lookup lookup = null;
             UpdateModel(lookup);
             lookup = serv.Create(lookup, userName);
 
@@ -118,7 +119,7 @@ namespace Machete.Web.Controllers
         }
         private string _getTabRef(Lookup per)
         {
-            if (per != null) return "/Lookup/Edit/" + Convert.ToString(per.ID);
+            if (per != null) return "/Config/Edit/" + Convert.ToString(per.ID);
             else return null;
         }
         private string _getTabLabel(Lookup per)
@@ -131,7 +132,7 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator")]
         public ActionResult Edit(int id)
         {
             Lookup lookup = serv.Get(id);
@@ -144,7 +145,7 @@ namespace Machete.Web.Controllers
         /// <param name="userName"></param>
         /// <returns></returns>
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator")]
         public ActionResult Edit(int id, string userName)
         {
             Lookup lookup = serv.Get(id);
@@ -161,7 +162,7 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator, Manager")]
         public ActionResult View(int id)
         {
             Lookup lookup = serv.Get(id);

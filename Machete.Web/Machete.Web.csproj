@@ -263,6 +263,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Activities.resx</DependentUpon>
     </Compile>
+    <Compile Include="Resources\Configs.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Configs.resx</DependentUpon>
+    </Compile>
     <Compile Include="Resources\Employers.es.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -541,6 +546,11 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Activities.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Configs.es.resx" />
+    <EmbeddedResource Include="Resources\Configs.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Configs.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Employers.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Employers.es.Designer.cs</LastGenOutput>
@@ -746,6 +756,7 @@
     <Content Include="Views\Config\Index.cshtml" />
     <Content Include="Views\Config\Create.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Config.cshtml" />
+    <Content Include="Views\Config\Edit.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

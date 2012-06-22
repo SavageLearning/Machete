@@ -11,14 +11,16 @@
     
     <div class="tb-table" style="clear: left;">
         <div class="tb-row">
-            <div id="actInTab" class="tb-cell">
+            <div id="actInTab" class="tb-cell actDataEntryTab">
                 <ul>
-                <li><a href="#actInList" class="ListTab">ACT-IN-TABLE</a></li>
+                <li><a href="#actInList" class="ListTab">@Activities.includedTab</a></li>
                 </ul>
                 <div id="actInList">
                     <table id="actInTable" class="display actTable">
                         <thead>
                             <tr>
+                                <th>ID</th>
+                                <th>LABEL</th>
                                 <th>@Activity.name</th>
                                 <th>@Activity.type</th>
                                 <th>@Activity.teacher</th>
@@ -28,11 +30,19 @@
                     </table>
                 </div>
             </div>
-            <input type="button" id="bActAssign" class="formButton" value="<==" />
-            <input type="button" id="bActUnassign" class="formButton" value="==>"/>
-            <div id="actOutTab" class="tb-cell">
+       
+            <div class="mui-activities-join-box">
+                <div class="mui-activities-join-btn">            
+                    <button id="bActAssign" class="leftArrow">@Activities.includeAction</button>
+                </div>
+                <div class="mui-activities-join-btn">
+                    <button id="bActUnassign" class="rightArrow">@Activities.excludeAction</button>
+                </div>
+            </div>
+    
+            <div id="actOutTab" class="tb-cell actDataEntryTab">
                 <ul>
-                <li><a href="#actOutList" class="ListTab">ACT-OUT-TABLE</a></li>
+                <li><a href="#actOutList" class="ListTab">@Activities.excludedTab</a></li>
                 </ul>
                 <div id="actOutList">
                     <table id="actOutTable" class="display actTable">
@@ -54,6 +64,17 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
+        $('#bActUnassign').button({
+            icons: {
+                secondary: "ui-icon-circle-triangle-e"
+            }
+         });
+
+        $('#bActAssign').button({
+            icons: {
+                primary: "ui-icon-circle-triangle-w"
+            }
+         });
         $("#actOutTab").mUI('createTabs', {
             prefix: "ui-tabs-actOut-", 
             formLevel: 3,

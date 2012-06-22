@@ -117,76 +117,55 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="actJoinTab" xml:space="preserve">
-    <value>Actividades</value>
+  <data name="category" xml:space="preserve">
+    <value>Category</value>
   </data>
-  <data name="boxlegend" xml:space="preserve">
-    <value>Actividad</value>
+  <data name="categoryRequired" xml:space="preserve">
+    <value>A category is required</value>
   </data>
-  <data name="count" xml:space="preserve">
-    <value>Asistencia</value>
+  <data name="fixedJob" xml:space="preserve">
+    <value>Fixed job?</value>
   </data>
-  <data name="createlink" xml:space="preserve">
-    <value>Crear una actividad nueva</value>
+  <data name="level" xml:space="preserve">
+    <value>Level</value>
   </data>
-  <data name="createsubmit" xml:space="preserve">
-    <value>Guardar</value>
+  <data name="ltrCode" xml:space="preserve">
+    <value>Letter code</value>
   </data>
-  <data name="createtitle" xml:space="preserve">
-    <value>Crear actividad</value>
+  <data name="minHour" xml:space="preserve">
+    <value>Minimum hour</value>
   </data>
-  <data name="deleteconfirmation" xml:space="preserve">
-    <value>¿Estás seguro que quieres eliminar esta actividad? Toda la información será borrada para siempre.</value>
+  <data name="selected" xml:space="preserve">
+    <value>Default</value>
   </data>
-  <data name="deletelink" xml:space="preserve">
-    <value>Borrar</value>
+  <data name="sortorder" xml:space="preserve">
+    <value>Sort integer</value>
   </data>
-  <data name="deletesubmit" xml:space="preserve">
-    <value>Borrar</value>
+  <data name="speciality" xml:space="preserve">
+    <value>Speciality skill</value>
   </data>
-  <data name="deletetitle" xml:space="preserve">
-    <value>Borrar actividad</value>
+  <data name="stringlength" xml:space="preserve">
+    <value>Please enter no more than {1} characters</value>
   </data>
-  <data name="editlink" xml:space="preserve">
-    <value>Editar</value>
+  <data name="subcategory" xml:space="preserve">
+    <value>Sub-category</value>
   </data>
-  <data name="editsubmit" xml:space="preserve">
-    <value>Guardar</value>
+  <data name="text_EN" xml:space="preserve">
+    <value>English text</value>
   </data>
-  <data name="edittitle" xml:space="preserve">
-    <value>Editar actividad</value>
+  <data name="text_ENRequired" xml:space="preserve">
+    <value>An English version of text is required</value>
   </data>
-  <data name="editworkerlink" xml:space="preserve">
-    <value>Editar actividad</value>
+  <data name="text_ES" xml:space="preserve">
+    <value>Spanish text</value>
   </data>
-  <data name="excludeAction" xml:space="preserve">
-    <value>Excluir</value>
+  <data name="text_ESRequired" xml:space="preserve">
+    <value>A Spanish version of text is required</value>
   </data>
-  <data name="excludedTab" xml:space="preserve">
-    <value>Excluidos de</value>
+  <data name="typeOfWorkID" xml:space="preserve">
+    <value>Type of work</value>
   </data>
-  <data name="includeAction" xml:space="preserve">
-    <value>Incluir</value>
-  </data>
-  <data name="includedTab" xml:space="preserve">
-    <value>Incluido en</value>
-  </data>
-  <data name="indexreturnlink" xml:space="preserve">
-    <value>Volver a la lista de actividades</value>
-  </data>
-  <data name="indextitle" xml:space="preserve">
-    <value>Listar actividades</value>
-  </data>
-  <data name="listlink" xml:space="preserve">
-    <value>Lista de las actividades</value>
-  </data>
-  <data name="signinlistlink" xml:space="preserve">
-    <value>Registros</value>
-  </data>
-  <data name="viewlink" xml:space="preserve">
-    <value>Imprimir</value>
-  </data>
-  <data name="viewtitle" xml:space="preserve">
-    <value>Ver actividad</value>
+  <data name="wage" xml:space="preserve">
+    <value>Wage</value>
   </data>
 </root>

@@ -187,6 +187,42 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Exclude.
+        /// </summary>
+        public static string excludeAction {
+            get {
+                return ResourceManager.GetString("excludeAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Excluded from.
+        /// </summary>
+        public static string excludedTab {
+            get {
+                return ResourceManager.GetString("excludedTab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Include.
+        /// </summary>
+        public static string includeAction {
+            get {
+                return ResourceManager.GetString("includeAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Included in.
+        /// </summary>
+        public static string includedTab {
+            get {
+                return ResourceManager.GetString("includedTab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Return to List of activities.
         /// </summary>
         public static string indexreturnlink {

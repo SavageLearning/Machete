@@ -288,6 +288,59 @@ namespace Machete.Test
             return true;
         }
         #endregion
+
+        #region activities
+        public bool activityCreate(Activity _act)
+        {
+            string prefix = "activity0-";
+            //Go to activites page
+            WaitThenClickElement(By.Id("menulinkactivity"));
+            //Go to create an activity tab
+            WaitThenClickElement(By.Id("activityCreateTab"));
+            //Wait for page to load
+            WaitForElement(By.Id(prefix + "name"));
+            //Enter information
+            SelectOptionByIndex(By.Id(prefix + "name"), _act.name - 97);
+            SelectOptionByIndex(By.Id(prefix + "type"), _act.type - 100);
+            SelectOption(By.Id(prefix + "teacher"), _act.teacher);
+            ReplaceElementText(By.Id(prefix + "notes"), _act.notes);
+            //Hit the save button
+            _d.FindElement(By.Id(prefix + "SaveBtn")).Click();
+            //Look for new tab with class: activity.ui-tabs-selected
+            var selectedTab = WaitForElement(By.CssSelector("li.activity.ui-tabs-selected"));
+            Assert.IsNotNull(selectedTab, "Failed to find Activity selected tab element");
+            IWebElement tabAnchor = selectedTab.FindElement(By.CssSelector("a"));
+            Assert.IsNotNull(tabAnchor, "Failed to find Activity selected tab element anchor");
+            _act.ID = Convert.ToInt32(tabAnchor.GetAttribute("recordid"));
+
+
+            return true;
+            
+        }
+        public bool activityValidate(Activity _act)
+        {
+            string prefix = "activity" + _act.ID + "-";
+            //Wait for the page to load
+            WaitForElement(By.Id(prefix + "name"));
+
+            Assert.AreEqual(_act.name - 97, GetOptionsIndex(By.Id(prefix + "name")));
+            Assert.AreEqual(_act.type - 100, GetOptionsIndex(By.Id(prefix + "type")));
+            Assert.AreEqual(_act.teacher, GetOptionText(By.Id(prefix + "teacher")));
+            Assert.AreEqual(_act.notes, WaitForElement(By.Id(prefix + "notes")).GetAttribute("value"));
+            return true;
+        }
+        public bool activitySignIn(int dwccardnum)
+        {
+            WaitForElement(By.Id("dwccardnum"));
+            ReplaceElementText(By.Id("dwccardnum"), dwccardnum.ToString());
+            WaitForElement(By.Id("dwccardnum")).Submit();
+            // How will this test catch an error? need to wait for and validate 
+            // name that is presented at sign-in.            
+            return true;
+        }
+        #endregion
+
+        #region dropDowns
         public bool SelectOption(By by, string opttext)
         {
             var dropdown = _d.FindElement(by);
@@ -302,6 +355,26 @@ namespace Machete.Test
             selectElem.SelectByValue(optvalue);
             return true;
         }
+        public bool SelectOptionByIndex(By by, int index)
+        {
+            var dropdown = _d.FindElement(by);
+            var selectElem = new SelectElement(dropdown);
+            selectElem.SelectByIndex(index);
+            return true;
+        }
+        public string GetOptionText(By by)
+        {
+            var dropdown = _d.FindElement(by);
+            var selectElem = new SelectElement(dropdown);
+            return selectElem.SelectedOption.Text;
+        }
+        public int GetOptionsIndex(By by)
+        {
+            var dropdown = _d.FindElement(by);
+            var selectElem = new SelectElement(dropdown);
+            return selectElem.Options.IndexOf(selectElem.SelectedOption);
+        }
+        #endregion
         //
         //
         #region utilfunctions
