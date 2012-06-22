@@ -48,8 +48,8 @@ namespace Machete.Test
         {
             Database.SetInitializer<MacheteContext>(initializer);
             DB = new MacheteContext(connection);
-            //DB.Database.Delete();
-            //DB.Database.Initialize(true);
+            DB.Database.Delete();
+            DB.Database.Initialize(true);
             Records.Initialize(DB);
             WorkerCache.Initialize(DB);
             LookupCache.Initialize(DB);
