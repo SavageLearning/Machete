@@ -104,6 +104,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Event.resx</DependentUpon>
     </Compile>
+    <Compile Include="Resources\Lookup.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Lookup.resx</DependentUpon>
+    </Compile>
     <Compile Include="Resources\Person.Designer.cs">
       <DependentUpon>Person.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -177,6 +182,14 @@
     <EmbeddedResource Include="Resources\Event.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Event.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Lookup.es.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Lookup.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Lookup.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Person.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

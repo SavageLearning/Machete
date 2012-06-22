@@ -117,76 +117,46 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="actJoinTab" xml:space="preserve">
-    <value>Actividades</value>
-  </data>
-  <data name="boxlegend" xml:space="preserve">
-    <value>Actividad</value>
-  </data>
-  <data name="count" xml:space="preserve">
-    <value>Asistencia</value>
+  <data name="category" xml:space="preserve">
+    <value>Categoría</value>
   </data>
   <data name="createlink" xml:space="preserve">
-    <value>Crear una actividad nueva</value>
+    <value>Crear configuración</value>
   </data>
   <data name="createsubmit" xml:space="preserve">
-    <value>Guardar</value>
-  </data>
-  <data name="createtitle" xml:space="preserve">
-    <value>Crear actividad</value>
+    <value>Crear</value>
   </data>
   <data name="deleteconfirmation" xml:space="preserve">
-    <value>¿Estás seguro que quieres eliminar esta actividad? Toda la información será borrada para siempre.</value>
-  </data>
-  <data name="deletelink" xml:space="preserve">
-    <value>Borrar</value>
+    <value>¿Está seguro que desea eliminar esta configuración? Eliminación de una entrada de configuración es realmente una mala idea. Si los registros de hacer referencia a él, en cualquier lugar, se dañará la base de datos. Toda la información será borrada para siempre. Si desea desactivar esta Persona, cancelación de este diálogo y desactive la casilla "activo" cuadro de la página persona.</value>
   </data>
   <data name="deletesubmit" xml:space="preserve">
     <value>Borrar</value>
   </data>
   <data name="deletetitle" xml:space="preserve">
-    <value>Borrar actividad</value>
-  </data>
-  <data name="editlink" xml:space="preserve">
-    <value>Editar</value>
+    <value>Eliminar la configuración?</value>
   </data>
   <data name="editsubmit" xml:space="preserve">
     <value>Guardar</value>
   </data>
-  <data name="edittitle" xml:space="preserve">
-    <value>Editar actividad</value>
-  </data>
-  <data name="editworkerlink" xml:space="preserve">
-    <value>Editar actividad</value>
-  </data>
-  <data name="excludeAction" xml:space="preserve">
-    <value>Excluir</value>
-  </data>
-  <data name="excludedTab" xml:space="preserve">
-    <value>Excluidos de</value>
-  </data>
-  <data name="includeAction" xml:space="preserve">
-    <value>Incluir</value>
-  </data>
-  <data name="includedTab" xml:space="preserve">
-    <value>Incluido en</value>
-  </data>
-  <data name="indexreturnlink" xml:space="preserve">
-    <value>Volver a la lista de actividades</value>
-  </data>
-  <data name="indextitle" xml:space="preserve">
-    <value>Listar actividades</value>
+  <data name="level" xml:space="preserve">
+    <value>Nivel</value>
   </data>
   <data name="listlink" xml:space="preserve">
-    <value>Lista de las actividades</value>
+    <value>Lista de configuraciones</value>
   </data>
-  <data name="signinlistlink" xml:space="preserve">
-    <value>Registros</value>
+  <data name="ltrCode" xml:space="preserve">
+    <value>Letra de código</value>
   </data>
-  <data name="viewlink" xml:space="preserve">
-    <value>Imprimir</value>
+  <data name="selected" xml:space="preserve">
+    <value>Predeterminado</value>
   </data>
-  <data name="viewtitle" xml:space="preserve">
-    <value>Ver actividad</value>
+  <data name="subcategory" xml:space="preserve">
+    <value>Sub-categoría</value>
+  </data>
+  <data name="textEN" xml:space="preserve">
+    <value>Inglés</value>
+  </data>
+  <data name="textES" xml:space="preserve">
+    <value>Español</value>
   </data>
 </root>
