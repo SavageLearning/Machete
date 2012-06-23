@@ -58,10 +58,14 @@
     <None Include="SSRS\Workers-Yearly Seattle HSD report.rdl" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="sql\ActivitySigninByEvent-SP.sql" />
+    <Content Include="sql\ClassHoursGroupedByTest-DROPCREATE.sql" />
+    <Content Include="sql\combine_ActivitySignins_and_events.sql" />
     <Content Include="sql\Create_Tables.sql" />
     <Content Include="sql\Create_Views.sql" />
     <Content Include="sql\machete_migrate_source_to_target.sql" />
     <Content Include="sql\migrate_machete_records.sql" />
+    <Content Include="sql\Query_SP_cache.sql" />
     <Content Include="sql\status_summary_combined_EN.sql" />
     <Content Include="sql\employers_EN.sql" />
     <Content Include="sql\status_summary_workAssignments_EN.sql" />
