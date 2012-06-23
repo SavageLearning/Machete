@@ -151,7 +151,7 @@ namespace Machete.Web.Controllers
             {
                 sEcho = param.sEcho,
                 iTotalRecords = woServ.TotalCount(),
-                iTotalDisplayRecords = allWorkOrders.Count(),
+                iTotalDisplayRecords = woServ.TotalCount(),
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);

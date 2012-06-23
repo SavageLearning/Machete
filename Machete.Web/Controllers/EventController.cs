@@ -65,7 +65,7 @@ namespace Machete.Web.Controllers
             {
                 sEcho = param.sEcho,
                 iTotalRecords = _serv.TotalCount(),
-                iTotalDisplayRecords = list.Count(),
+                iTotalDisplayRecords = _serv.TotalCount(),
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);

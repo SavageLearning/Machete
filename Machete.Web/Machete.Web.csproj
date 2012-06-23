@@ -316,7 +316,14 @@
     <Content Include="Content\dataTables\details_close.png" />
     <Content Include="Content\dataTables\details_open.png" />
     <Content Include="Content\favicon.ico" />
+    <Content Include="Content\images\back_disabled.png" />
+    <Content Include="Content\images\back_enabled.png" />
+    <Content Include="Content\images\back_enabled_hover.png" />
+    <Content Include="Content\images\favicon.ico" />
     <Content Include="Content\images\Files-Download-File-icon.png" />
+    <Content Include="Content\images\forward_disabled.png" />
+    <Content Include="Content\images\forward_enabled.png" />
+    <Content Include="Content\images\forward_enabled_hover.png" />
     <Content Include="Content\images\lightbox-blank.gif" />
     <Content Include="Content\images\lightbox-btn-close.gif" />
     <Content Include="Content\images\lightbox-btn-next.gif" />
