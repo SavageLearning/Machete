@@ -89,6 +89,8 @@ namespace Machete.Test
             var count = list.Count();
             Assert.IsTrue(count > 10, "There were not enough workers found whose dwccardnumbers we can use! There were only: " + count);
             int numberOfSignins = rand.Next(count / 10);
+            int originalNumberOfSignins = numberOfSignins;
+            int numberOfSanctionedSignins = 0;
             Assert.IsTrue(numberOfSignins > 0, "We decided not to sign anyone in?");
             IEnumerable<int> list1 = list.Take<int>(numberOfSignins);
             
@@ -103,29 +105,24 @@ namespace Machete.Test
                 {
                     Assert.IsTrue(ui.WaitThenClickElement(By.XPath("/html/body/div[3]/div[1]/a")), "Couldn't find button to close sanctionbox");
                     --numberOfSignins;
+                    ++numberOfSanctionedSignins;
                     Thread.Sleep(2000); // cheap hack; replace with a Selenium WaitFor
-<<<<<<< HEAD
                     lastWorkerWasSanctioned = true;
                     continue;
                 }
                 Assert.IsTrue(result, "Sign in for worker " + i + " failed!" + (lastWorkerWasSanctioned ? "This worker came directly after an attempted signin of a sanctioned worker." : ""));
-=======
-                    continue;
-                }
-                Assert.IsTrue(result, "Sign in for worker " + i + " failed!");
->>>>>>> 8229bc7f2fd21e7caf46f1206ba36cb30da19067
                 int numWorkerMatches = DB.Workers.Where(q => q.dwccardnum == i).Count();
-                numberOfSignins += numWorkerMatches - 1;
                 Thread.Sleep(2000); // cheap hack; replace with a Selenium WaitFor
                 lastWorkerWasSanctioned = false;
             }
             ui.WaitThenClickElement(By.Id("activityListTab"));
             ui.SelectOption(By.XPath("//*[@id='activityTable_length']/label/select"), "100");
-<<<<<<< HEAD
-            Assert.IsTrue(ui.WaitForElementValue(By.XPath("//table[@id='activityTable']/tbody/tr[@recordid='" + _act.ID + "']/td[4]"), numberOfSignins.ToString()), "Not the right number of workers signed in. Expected: " + numberOfSignins + ", got: " + ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr[@recordid='" + _act.ID + "']/td[4]")).Text);
-=======
-            Assert.IsTrue(ui.WaitForElementValue(By.XPath("//table[@id='activityTable']/tbody/tr[@recordid='" + _act.ID + "']/td[4]"), numberOfSignins.ToString()), "Not the right number of workers signed in.");
->>>>>>> 8229bc7f2fd21e7caf46f1206ba36cb30da19067
+            Assert.IsTrue(ui.WaitForElementValue(By.XPath("//table[@id='activityTable']/tbody/tr[@recordid='" + _act.ID + "']/td[4]"), numberOfSignins.ToString()), 
+                "Not the right number of workers signed in. Expected: " + numberOfSignins + 
+                ", got: " + ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr[@recordid='" + _act.ID + "']/td[4]")).Text +
+                ". Originally we intended to signin " +originalNumberOfSignins+ ", but we subtracted " + numberOfSanctionedSignins +
+                " for signins that turned out to be sanctioned workers, and added " + numberOfAdditionalSideEffectSignins +
+                " for dwccards that signed in multiple workers.");
         }
         
         [TestMethod]
@@ -159,11 +156,7 @@ namespace Machete.Test
             int randCard = cardList.ElementAt(randCardIndex);
             bool result = ui.activitySignIn(randCard);
             var sanctionedBox = ui.WaitForElement(By.XPath("/html/body/div[3]")); 
-<<<<<<< HEAD
             if (sanctionedBox != null && sanctionedBox.GetCssValue("display") == "block")
-=======
-            if (sanctionedBox != null && sanctionedBox.GetCssValue("display") == "block") //TODO: Find a reliable way to recursively call this function if we hit a sanctioned worker.
->>>>>>> 8229bc7f2fd21e7caf46f1206ba36cb30da19067
             {
                 ui.WaitThenClickElement(By.XPath("/html/body/div[3]/div[1]/a"));
                 TryRandomSignins(cardList, rand);
