@@ -85,7 +85,10 @@ namespace Machete.Test
             //                         [DbSet] (LINQ)(Lambda Expression) (SQL-ish)
             IEnumerable<int> list = DB.Workers.Select(q => q.dwccardnum).Distinct();
             var count = list.Count();
-            IEnumerable<int> list1 = list.Take<int>(rand.Next(count/10));
+            Assert.IsTrue(count > 10, "There were not enough workers found whose dwccardnumbers we can use! There were only: " + count);
+            int numberOfSignins = rand.Next(count / 10);
+            Assert.IsTrue(numberOfSignins > 0, "We decided not to sign anyone in?");
+            IEnumerable<int> list1 = list.Take<int>(numberOfSignins);
             Activity _act = (Activity)Records.activity.Clone();
             ui.activityCreate(_act);
             foreach (var i in list1)
@@ -93,7 +96,9 @@ namespace Machete.Test
                 ui.activitySignIn(i);
                 Thread.Sleep(2000); // cheap hack; replace with a Selenium WaitFor
             }
-
+            ui.WaitThenClickElement(By.Id("activityListTab"));
+            ui.SelectOption(By.XPath("//*[@id='activityTable_length']/label/select"), "100");
+            Assert.IsTrue(ui.WaitForElementValue(By.XPath("//table[@id='activityTable']/tbody/tr[@recordid='" + _act.ID + "']/td[4]"), numberOfSignins.ToString()));
         }
         
         [TestMethod]

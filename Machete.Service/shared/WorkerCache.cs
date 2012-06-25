@@ -26,7 +26,10 @@ namespace Machete.Service
         //
         private static void FillCache()
         {
-            IEnumerable<Worker> workers = DB.Workers.AsNoTracking().Include(p => p.Person).ToList();
+            IQueryable<Worker> workersRaw = DB.Workers;
+            IQueryable<Worker> workersNoTracking = workersRaw.AsNoTracking();
+            IQueryable<Worker> workersIncluded = workersNoTracking.Include(p => p.Person);
+            IEnumerable<Worker> workers = workersIncluded.ToList();
             CacheItemPolicy policy = new CacheItemPolicy();
             policy.AbsoluteExpiration = new DateTimeOffset(DateTime.Now.AddMinutes(5));
             CacheItem wCacheItem = new CacheItem("workerCache", workers);
