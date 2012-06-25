@@ -13,6 +13,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Machete.Service;
 using Machete.Data.Infrastructure;
+using System.Data.Entity;
 
 namespace Machete.Test
 {
@@ -35,7 +36,8 @@ namespace Machete.Test
         [TestInitialize]
         public void SetupTest()
         {
-            DB = new MacheteContext("machete"); //name of DB in sql server
+            Database.SetInitializer<MacheteContext>(new MacheteInitializer());
+            DB = new MacheteContext("machete");
             WorkerCache.Initialize(DB);
             LookupCache.Initialize(DB);
             _dbfactory = new DatabaseFactory();
@@ -89,16 +91,31 @@ namespace Machete.Test
             int numberOfSignins = rand.Next(count / 10);
             Assert.IsTrue(numberOfSignins > 0, "We decided not to sign anyone in?");
             IEnumerable<int> list1 = list.Take<int>(numberOfSignins);
+            
             Activity _act = (Activity)Records.activity.Clone();
             ui.activityCreate(_act);
+            bool lastWorkerWasSanctioned = false;
             foreach (var i in list1)
             {
-                ui.activitySignIn(i);
+                bool result = ui.activitySignIn(i);
+                var sanctionedBox = ui.WaitForElement(By.XPath("/html/body/div[3]"));
+                if (sanctionedBox != null && sanctionedBox.GetCssValue("display") == "block")
+                {
+                    Assert.IsTrue(ui.WaitThenClickElement(By.XPath("/html/body/div[3]/div[1]/a")), "Couldn't find button to close sanctionbox");
+                    --numberOfSignins;
+                    Thread.Sleep(2000); // cheap hack; replace with a Selenium WaitFor
+                    lastWorkerWasSanctioned = true;
+                    continue;
+                }
+                Assert.IsTrue(result, "Sign in for worker " + i + " failed!" + (lastWorkerWasSanctioned ? "This worker came directly after an attempted signin of a sanctioned worker." : ""));
+                int numWorkerMatches = DB.Workers.Where(q => q.dwccardnum == i).Count();
+                numberOfSignins += numWorkerMatches - 1;
                 Thread.Sleep(2000); // cheap hack; replace with a Selenium WaitFor
+                lastWorkerWasSanctioned = false;
             }
             ui.WaitThenClickElement(By.Id("activityListTab"));
             ui.SelectOption(By.XPath("//*[@id='activityTable_length']/label/select"), "100");
-            Assert.IsTrue(ui.WaitForElementValue(By.XPath("//table[@id='activityTable']/tbody/tr[@recordid='" + _act.ID + "']/td[4]"), numberOfSignins.ToString()));
+            Assert.IsTrue(ui.WaitForElementValue(By.XPath("//table[@id='activityTable']/tbody/tr[@recordid='" + _act.ID + "']/td[4]"), numberOfSignins.ToString()), "Not the right number of workers signed in. Expected: " + numberOfSignins + ", got: " + ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr[@recordid='" + _act.ID + "']/td[4]")).Text);
         }
         
         [TestMethod]
@@ -131,11 +148,13 @@ namespace Machete.Test
             int randCardIndex = rand.Next(cardList.Count());
             int randCard = cardList.ElementAt(randCardIndex);
             bool result = ui.activitySignIn(randCard);
-            /*if (ui.WaitForElement(By.Id("activitySignInListTab_0")) == null) //TODO: Find a reliable way to recursively call this function if we hit a sanctioned worker.
-            {*/
+            var sanctionedBox = ui.WaitForElement(By.XPath("/html/body/div[3]")); 
+            if (sanctionedBox != null && sanctionedBox.GetCssValue("display") == "block")
+            {
+                ui.WaitThenClickElement(By.XPath("/html/body/div[3]/div[1]/a"));
                 TryRandomSignins(cardList, rand);
-            /*}
-            else Assert.IsTrue(result);*/
+            }
+            else Assert.IsTrue(result);
         }
 
         [TestMethod]
@@ -152,7 +171,9 @@ namespace Machete.Test
             int randCard = cardList.ElementAt(randCardIndex);
 
             Assert.IsFalse(ui.activitySignIn(randCard));
-            Assert.IsNull(ui.WaitForElement(By.Id("dwcardnum")));
+            var sanctionedBox = ui.WaitForElement(By.XPath("/html/body/div[3]"));
+            Assert.IsTrue(sanctionedBox != null && sanctionedBox.GetCssValue("display") == "block", "Sanctioned worker box is not visible like it should be.");
+            ui.WaitThenClickElement(By.XPath("/html/body/div[3]/div[1]/a"));
         }
     }
 }
