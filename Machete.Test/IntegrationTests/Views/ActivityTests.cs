@@ -13,6 +13,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Machete.Service;
 using Machete.Data.Infrastructure;
+using System.Data.Entity;
 
 namespace Machete.Test
 {
@@ -35,6 +36,7 @@ namespace Machete.Test
         [TestInitialize]
         public void SetupTest()
         {
+            Database.SetInitializer<MacheteContext>(new TestInitializer());
             DB = new MacheteContext("machete"); //name of DB in sql server
             WorkerCache.Initialize(DB);
             LookupCache.Initialize(DB);
@@ -89,16 +91,28 @@ namespace Machete.Test
             int numberOfSignins = rand.Next(count / 10);
             Assert.IsTrue(numberOfSignins > 0, "We decided not to sign anyone in?");
             IEnumerable<int> list1 = list.Take<int>(numberOfSignins);
+            
             Activity _act = (Activity)Records.activity.Clone();
             ui.activityCreate(_act);
             foreach (var i in list1)
             {
-                ui.activitySignIn(i);
+                bool result = ui.activitySignIn(i);
+                var sanctionedBox = ui.WaitForElement(By.XPath("/html/body/div[3]"));
+                if (sanctionedBox != null && sanctionedBox.GetCssValue("display") == "block")
+                {
+                    Assert.IsTrue(ui.WaitThenClickElement(By.XPath("/html/body/div[3]/div[1]/a")), "Couldn't find button to close sanctionbox");
+                    --numberOfSignins;
+                    Thread.Sleep(2000); // cheap hack; replace with a Selenium WaitFor
+                    continue;
+                }
+                Assert.IsTrue(result, "Sign in for worker " + i + " failed!");
+                int numWorkerMatches = DB.Workers.Where(q => q.dwccardnum == i).Count();
+                numberOfSignins += numWorkerMatches - 1;
                 Thread.Sleep(2000); // cheap hack; replace with a Selenium WaitFor
             }
             ui.WaitThenClickElement(By.Id("activityListTab"));
             ui.SelectOption(By.XPath("//*[@id='activityTable_length']/label/select"), "100");
-            Assert.IsTrue(ui.WaitForElementValue(By.XPath("//table[@id='activityTable']/tbody/tr[@recordid='" + _act.ID + "']/td[4]"), numberOfSignins.ToString()));
+            Assert.IsTrue(ui.WaitForElementValue(By.XPath("//table[@id='activityTable']/tbody/tr[@recordid='" + _act.ID + "']/td[4]"), numberOfSignins.ToString()), "Not the right number of workers signed in.");
         }
         
         [TestMethod]
@@ -131,11 +145,13 @@ namespace Machete.Test
             int randCardIndex = rand.Next(cardList.Count());
             int randCard = cardList.ElementAt(randCardIndex);
             bool result = ui.activitySignIn(randCard);
-            /*if (ui.WaitForElement(By.Id("activitySignInListTab_0")) == null) //TODO: Find a reliable way to recursively call this function if we hit a sanctioned worker.
-            {*/
+            var sanctionedBox = ui.WaitForElement(By.XPath("/html/body/div[3]")); 
+            if (sanctionedBox != null && sanctionedBox.GetCssValue("display") == "block") //TODO: Find a reliable way to recursively call this function if we hit a sanctioned worker.
+            {
+                ui.WaitThenClickElement(By.XPath("/html/body/div[3]/div[1]/a"));
                 TryRandomSignins(cardList, rand);
-            /*}
-            else Assert.IsTrue(result);*/
+            }
+            else Assert.IsTrue(result);
         }
 
         [TestMethod]
@@ -152,7 +168,9 @@ namespace Machete.Test
             int randCard = cardList.ElementAt(randCardIndex);
 
             Assert.IsFalse(ui.activitySignIn(randCard));
-            Assert.IsNull(ui.WaitForElement(By.Id("dwcardnum")));
+            var sanctionedBox = ui.WaitForElement(By.XPath("/html/body/div[3]"));
+            Assert.IsTrue(sanctionedBox != null && sanctionedBox.GetCssValue("display") == "block", "Sanctioned worker box is not visible like it should be.");
+            ui.WaitThenClickElement(By.XPath("/html/body/div[3]/div[1]/a"));
         }
     }
 }
