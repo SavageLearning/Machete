@@ -335,7 +335,8 @@ namespace Machete.Test
             ReplaceElementText(By.Id("dwccardnum"), dwccardnum.ToString());
             WaitForElement(By.Id("dwccardnum")).Submit();
 
-            ReplaceElementText(By.XPath("//div[@id='signinTable']//div[@class='dataTables_filter print_off']//input"),dwccardnum.ToString());
+            ReplaceElementText(By.XPath("//*[@id='wsiTable_filter']/label/input"),dwccardnum.ToString());
+            WaitForElement(By.XPath("//table[@id='wsiTable']/tbody/tr/td[2]"));
             return WaitForElementValue(By.XPath("//table[@id='wsiTable']/tbody/tr/td[2]"), dwccardnum.ToString());
             // How will this test catch an error? need to wait for and validate 
             // name that is presented at sign-in.  
