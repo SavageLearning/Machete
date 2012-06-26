@@ -5,7 +5,6 @@ using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
-using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Machete.Domain;
 using Machete.Data;
@@ -166,7 +165,10 @@ namespace Machete.Test
         [TestMethod]
         public void SeActivity_Signin_random_sactioned_worker()
         {
-            Worker _sanctionedW = (Worker)Records.activity.Clone();
+            Person _per = (Person)Records.person.Clone();
+            Worker _sanctionedW = (Worker)Records.worker.Clone();
+            ui.personCreate(_per);
+            _sanctionedW.ID = _per.ID;
             _sanctionedW.memberStatus = Worker.iSanctioned; 
             string solutionDirectory = ((EnvDTE.DTE)System.Runtime
                                        .InteropServices
