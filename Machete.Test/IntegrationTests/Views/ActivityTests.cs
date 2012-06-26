@@ -166,6 +166,16 @@ namespace Machete.Test
         [TestMethod]
         public void SeActivity_Signin_random_sactioned_worker()
         {
+            Worker _sanctionedW = (Worker)Records.activity.Clone();
+            _sanctionedW.memberStatus = Worker.iSanctioned; 
+            string solutionDirectory = ((EnvDTE.DTE)System.Runtime
+                                       .InteropServices
+                                       .Marshal
+                                       .GetActiveObject("VisualStudio.DTE.10.0"))
+                            .Solution
+                            .FullName;
+            solutionDirectory = System.IO.Path.GetDirectoryName(solutionDirectory);
+            ui.workerCreate(_sanctionedW, solutionDirectory + "\\Machete.test\\jimmy_machete.jpg");
             Activity _act = (Activity)Records.activity.Clone();
             ui.activityCreate(_act);
 
