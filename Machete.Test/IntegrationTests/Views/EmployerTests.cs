@@ -133,6 +133,8 @@ namespace Machete.Test
             Assert.AreEqual(_wa1.getFullPseudoID(), driver.FindElement(walt).Text, "Unexpected PseudoID in assignment's list");
             //
             ui.WaitThenClickElement(By.Id("activateWorkOrderButton-"+ _wo.ID));
+
+            ui.WorkAssignmentValidate(_employer1, _wo, _wa1);
             //
             // TODO: Selenium: check WO status and recid of order
             // TODO: Selenium: test duplicate (pseudoID increment is visible in table)

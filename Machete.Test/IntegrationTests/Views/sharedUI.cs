@@ -8,6 +8,7 @@ using Machete.Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
+using Machete.Data;
 
 
 namespace Machete.Test
@@ -104,6 +105,7 @@ namespace Machete.Test
             return true;
         }
         #endregion
+
         #region employers
         /// <summary>
         /// 
@@ -132,6 +134,12 @@ namespace Machete.Test
             ReplaceElementText(By.Id(prefix + "email"), _emp.email);
             ReplaceElementText(By.Id(prefix + "notes"), _emp.notes);
             ReplaceElementText(By.Id(prefix + "referredbyOther"), _emp.referredbyOther);
+
+            SelectOptionByIndex(By.Id("active"), _emp.active ? 2 : 1);
+            SelectOptionByIndex(By.Id("blogparticipate"), _emp.blogparticipate ? 2 : 1);
+            SelectOptionByIndex(By.Id(prefix + "business"), _emp.business ? 2 : 1);
+            SelectOption(By.Id(prefix + "referredby"), MacheteLookup.cache.First(c => c.category == "emplrreference" && c.ID == _emp.referredby).text_EN);
+
             _d.FindElement(By.Id(prefix + "SaveBtn")).Click();
             //
             // look for new open tab with class: .employer.ui-tabs-selected
@@ -166,6 +174,7 @@ namespace Machete.Test
             getAttributeAssertEqual(_emp.address1, "address1");
             getAttributeAssertEqual(_emp.address2, "address2");
             getAttributeAssertEqual(_emp.city, "city");
+            getAttributeAssertEqual(_emp.state, "state");
             getAttributeAssertEqual(_emp.zipcode, "zipcode");
             getAttributeAssertEqual(_emp.phone, "phone");
             getAttributeAssertEqual(_emp.cellphone, "cellphone");
@@ -173,6 +182,15 @@ namespace Machete.Test
             getAttributeAssertEqual(_emp.email, "email");
             getAttributeAssertEqual(_emp.notes, "notes");
             getAttributeAssertEqual(_emp.referredbyOther, "referredbyOther");
+
+            WaitForElement(By.Id("active"));
+            Assert.AreEqual(_emp.active ? 2 : 1, GetOptionIndex(By.Id("active")) );
+            WaitForElement(By.Id("blogparticipate"));
+            Assert.AreEqual(_emp.blogparticipate ? 2 : 1, GetOptionIndex(By.Id("blogparticipate")));
+            WaitForElement(By.Id(prefix + "business"));
+            Assert.AreEqual(_emp.business ? 2 : 1, GetOptionIndex(By.Id(prefix + "business")));
+            WaitForElement(By.Id(prefix + "refferedby"));
+            Assert.AreEqual(_emp.referredby, MacheteLookup.cache.First(c => c.category == "emplrreference" && c.text_EN == GetOptionText(By.Id(prefix + "referredby"))).ID);
             return true;
         }
 
@@ -224,6 +242,21 @@ namespace Machete.Test
             //ReplaceElementText(By.Id(prefix + "transportFeeExtra"), _wo.transportFeeExtra);
             //ReplaceElementText(By.Id(prefix + "englishRequiredNote"), _wo.englishRequiredNote);
             ReplaceElementText(By.Id(prefix + "description"), _wo.description);
+
+            SelectOption(By.Id(prefix + "status"), MacheteLookup.cache.First(c => c.category == "orderstatus" && c.ID == _wo.status).text_EN);
+            SelectOptionByIndex(By.Id(prefix + "transportMethodID"), _wo.transportMethodID);
+            SelectOptionByIndex(By.Id(prefix + "timeFlexible"), _wo.timeFlexible ? 2 : 1);
+            SelectOptionByIndex(By.Id(prefix + "permanentPlacement"), _wo.permanentPlacement ? 2 : 1);
+            SelectOptionByIndex(By.Id(prefix + "englishRequired"), _wo.englishRequired ? 2 : 1);
+            SelectOptionByIndex(By.Id(prefix + "lunchSupplied"), _wo.lunchSupplied ? 2 : 1);
+            if (_wo.workerRequests != null)
+                foreach (var request in _wo.workerRequests)
+                {
+                    WaitThenClickElement(By.Id("addRequestBtn-" + _wo.ID));
+                    ReplaceElementText(By.XPath("//*[@id='workerTable-0_filter']/label/input"), request.ID.ToString());
+                    WaitThenClickElement(By.XPath("//*[@id='workerTable-0']/tbody/tr/td[1]"));
+                }
+
             //
             // save work order
             _d.FindElement(By.Id(prefix + "SaveBtn")).Click();
@@ -268,9 +301,30 @@ namespace Machete.Test
             getAttributeAssertEqual(_wo.state, "state");
             getAttributeAssertEqual(_wo.zipcode, "zipcode");
             getAttributeAssertEqual(_wo.description, "description");
+
+            WaitForElement(By.Id(prefix + "status"));
+            string optionText = GetOptionText(By.Id(prefix + "status"));
+            Assert.AreEqual(_wo.status, MacheteLookup.cache.First(c => c.category == "orderstatus" && c.text_EN == optionText).ID);
+            WaitForElement(By.Id(prefix + "timeFlexible"));
+            Assert.AreEqual(_wo.timeFlexible ? 2:1, GetOptionIndex(By.Id(prefix + "timeFlexible")));
+            WaitForElement(By.Id(prefix + "permanentPlacement"));
+            Assert.AreEqual(_wo.permanentPlacement ? 2 : 1, GetOptionIndex(By.Id(prefix + "permanentPlacement")));
+            WaitForElement(By.Id(prefix + "englishRequired"));
+            Assert.AreEqual(_wo.englishRequired ? 2 : 1, GetOptionIndex(By.Id(prefix + "englishRequired")));
+            WaitForElement(By.Id(prefix + "lunchSupplied"));
+            Assert.AreEqual(_wo.lunchSupplied ? 2 : 1, GetOptionIndex(By.Id(prefix + "lunchSupplied")));
+            WaitForElement(By.Id(prefix + "transportationMethodID"));
+            Assert.AreEqual(_wo.transportMethodID, GetOptionIndex(By.Id(prefix + "transportMethodID")));
+            WaitForElement(By.Id("workerRequests2_WO-" + _wo.ID.ToString()));
+            if (_wo.workerRequests != null)
+                foreach (var request in _wo.workerRequests)
+                {
+                    WaitForElementValue(By.XPath("//*[@id='workerRequests2_WO-" + _wo.ID + "']/option"), request.fullNameAndID);
+                }
             return true;
         }
         #endregion
+
         #region WorkAssignments
         public bool WorkAssignmentCreate(Employer _emp, WorkOrder _wo, WorkAssignment _wa)
         {
@@ -285,6 +339,31 @@ namespace Machete.Test
             SelectOption(By.Id("days"), _wa.days.ToString());
             ReplaceElementText(By.Id("description"), _wa.description);
             _d.FindElement(By.Id("WO" + _wo.ID + "-waCreateBtn")).Click();
+            return true;
+        }
+        public bool WorkAssignmentValidate(Employer _emp, WorkOrder _wo, WorkAssignment _wa)
+        {
+            WaitForElement(By.Id("workOrderTable_" + _emp.ID + "_searchbox"));
+            WaitThenClickElement(By.Id("walt-" + _wo.ID));
+            WaitForElement(By.Id("workAssignTable-wo-" + _wo.ID + "_searchbox"));
+            string idString = _wo.ID.ToString("D5") + "-" + ((int)_wa.pseudoID).ToString("D2");
+            ReplaceElementText(By.Id("workAssignTable-wo-" + _wo.ID + "_searchbox"), idString);
+            string xpath = "//*[@id='workAssignTable-wo-" + _wo.ID + "']/tbody/tr/td[.='" + idString + "']";
+            Assert.IsTrue(WaitAndDoubleClick(By.XPath(xpath)),
+                "Cannot find work assignment row to click.");
+
+            //Now, check each of the fields
+            WaitForElement(By.Id("englishLevelID"));
+            Assert.AreEqual(_wa.englishLevelID + 1,GetOptionIndex(By.Id("englishLevelID")));
+            Assert.AreEqual(_wa.hours, GetOptionIndex(By.Id("hours")));
+            if (_wa.hourRange != null)
+                Assert.AreEqual(_wa.hourRange, GetOptionIndex(By.Id("hourRange")) + 6);
+            Assert.AreEqual(_wa.days, GetOptionIndex(By.Id("days")));
+            WaitForElement(By.Id("skillID"));
+            string skillIDText = GetOptionText(By.Id("skillID"));
+            Assert.AreEqual(_wa.skillID, MacheteLookup.cache.First(c => c.category == "skill" && c.text_EN == skillIDText).ID);
+            Assert.AreEqual(_wa.hourlyWage.ToString("##.##"), WaitForElement(By.Id("hourlyWage")).Text);
+
             return true;
         }
         #endregion
@@ -323,22 +402,33 @@ namespace Machete.Test
             //Wait for the page to load
             WaitForElement(By.Id(prefix + "name"));
 
-            Assert.AreEqual(_act.name - 97, GetOptionsIndex(By.Id(prefix + "name")));
-            Assert.AreEqual(_act.type - 100, GetOptionsIndex(By.Id(prefix + "type")));
+            Assert.AreEqual(_act.name - 97, GetOptionIndex(By.Id(prefix + "name")));
+            Assert.AreEqual(_act.type - 100, GetOptionIndex(By.Id(prefix + "type")));
             Assert.AreEqual(_act.teacher, GetOptionText(By.Id(prefix + "teacher")));
             Assert.AreEqual(_act.notes, WaitForElement(By.Id(prefix + "notes")).GetAttribute("value"));
             return true;
         }
         public bool activitySignIn(int dwccardnum)
         {
+            return activitySignIn(dwccardnum, false);
+        }
+        public bool activitySignIn(int dwccardnum, bool debuggging)
+        {
             WaitForElement(By.Id("dwccardnum"));
             ReplaceElementText(By.Id("dwccardnum"), dwccardnum.ToString());
             WaitForElement(By.Id("dwccardnum")).Submit();
 
-            Thread.Sleep(2000);
-            ReplaceElementText(By.XPath("//*[@id='wsiTable_filter']/label/input"),dwccardnum.ToString());
-            WaitForElement(By.XPath("//table[@id='wsiTable']/tbody/tr/td[2]"));
-            return WaitForElementValue(By.XPath("//table[@id='wsiTable']/tbody/tr/td[2]"), dwccardnum.ToString());
+            WaitForElement(By.XPath("//*[@id='wsiTable_filter']/label/input"));
+            ReplaceElementText(By.XPath("//*[@id='wsiTable_filter']/label/input"), dwccardnum.ToString());
+
+            var tablecell = WaitForElement(By.XPath("//table[@id='wsiTable']/tbody/tr/td[2]"));
+            if (debuggging)
+                Assert.IsNotNull(tablecell);
+            bool result = WaitForElementValue(By.XPath("//table[@id='wsiTable']/tbody/tr/td[2]"), dwccardnum.ToString());
+            var tablecell2 = WaitForElement(By.XPath("//table[@id='wsiTable']/tbody/tr/td[2]"));
+            if (debuggging)
+                Assert.IsTrue(result);
+            return result;
             // How will this test catch an error? need to wait for and validate 
             // name that is presented at sign-in.  
         }
@@ -373,7 +463,7 @@ namespace Machete.Test
             var selectElem = new SelectElement(dropdown);
             return selectElem.SelectedOption.Text;
         }
-        public int GetOptionsIndex(By by)
+        public int GetOptionIndex(By by)
         {
             var dropdown = _d.FindElement(by);
             var selectElem = new SelectElement(dropdown);

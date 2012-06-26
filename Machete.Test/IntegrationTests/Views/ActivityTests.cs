@@ -98,7 +98,7 @@ namespace Machete.Test
             bool lastWorkerWasSanctioned = false;
             foreach (var i in list1)
             {
-                bool result = ui.activitySignIn(i);
+                bool result = ui.activitySignIn(i, true);
                 var sanctionedBox = ui.WaitForElement(By.XPath("/html/body/div[3]"));
                 if (sanctionedBox != null && sanctionedBox.GetCssValue("display") == "block")
                 {
