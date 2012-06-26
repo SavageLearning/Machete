@@ -335,6 +335,7 @@ namespace Machete.Test
             ReplaceElementText(By.Id("dwccardnum"), dwccardnum.ToString());
             WaitForElement(By.Id("dwccardnum")).Submit();
 
+            Thread.Sleep(2000);
             ReplaceElementText(By.XPath("//*[@id='wsiTable_filter']/label/input"),dwccardnum.ToString());
             WaitForElement(By.XPath("//table[@id='wsiTable']/tbody/tr/td[2]"));
             return WaitForElementValue(By.XPath("//table[@id='wsiTable']/tbody/tr/td[2]"), dwccardnum.ToString());
