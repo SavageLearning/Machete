@@ -79,26 +79,9 @@
     <Compile Include="Infrastructure\UnitOfWork.cs" />
     <Compile Include="Initialize\MacheteLookups.cs" />
     <Compile Include="MacheteContext.cs" />
-    <Compile Include="Migrations\201203210519182_ActivitiesAndHomelessBit.Designer.cs" />
-    <Compile Include="Migrations\201205270653415_ActivityRefactor.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Migrations\201205270653415_ActivityRefactor.Designer.cs">
-      <DependentUpon>201205270653415_ActivityRefactor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201205310458100_ActivityModelChange.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Migrations\201205310458100_ActivityModelChange.Designer.cs">
-      <DependentUpon>201205310458100_ActivityModelChange.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201206170600479_LookupRecord.cs" />
-    <Compile Include="Migrations\201206170600479_LookupRecord.Designer.cs">
-      <DependentUpon>201206170600479_LookupRecord.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201206212347057_LookupsNowNullable.cs" />
-    <Compile Include="Migrations\201206212347057_LookupsNowNullable.Designer.cs">
-      <DependentUpon>201206212347057_LookupsNowNullable.cs</DependentUpon>
+    <Compile Include="Migrations\201206260847528_InitialMigration.cs" />
+    <Compile Include="Migrations\201206260847528_InitialMigration.Designer.cs">
+      <DependentUpon>201206260847528_InitialMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -115,7 +98,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Migrations\SQL\LookupRecord_fix.sql" />
+    <Content Include="SQL\update_Casa_Prod_to_v1.5-RC1.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -9,7 +9,7 @@ namespace Machete.Data.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationsEnabled = false;
         }
 
         protected override void Seed(Machete.Data.MacheteContext context)
