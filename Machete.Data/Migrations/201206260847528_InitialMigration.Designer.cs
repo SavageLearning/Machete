@@ -4,11 +4,11 @@ namespace Machete.Data.Migrations
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.Infrastructure;
     
-    public sealed partial class LookupsNowNullable : IMigrationMetadata
+    public sealed partial class InitialMigration : IMigrationMetadata
     {
         string IMigrationMetadata.Id
         {
-            get { return "201206212347057_LookupsNowNullable"; }
+            get { return "201206260847528_InitialMigration"; }
         }
         
         string IMigrationMetadata.Source
