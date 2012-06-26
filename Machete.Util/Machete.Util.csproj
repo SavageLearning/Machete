@@ -61,6 +61,7 @@
     <Content Include="sql\ActivitySigninByEvent-SP.sql" />
     <Content Include="sql\ClassHoursGroupedByTest-DROPCREATE.sql" />
     <Content Include="sql\combine_ActivitySignins_and_events.sql" />
+    <Content Include="sql\count_all_machete_tables_rows.sql" />
     <Content Include="sql\Create_Tables.sql" />
     <Content Include="sql\Create_Views.sql" />
     <Content Include="sql\machete_migrate_source_to_target.sql" />
