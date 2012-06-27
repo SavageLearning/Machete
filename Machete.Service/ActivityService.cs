@@ -12,7 +12,7 @@ namespace Machete.Service
 {
     public interface IActivityService : IService<Activity>
     {
-        IEnumerable<Activity> GetIndexView(viewOptions o);
+        dataTableResult<Activity> GetIndexView(viewOptions o);
         void AssignList(int personID, List<int> actList, string user);
         void UnassignList(int personID, List<int> actList, string user);
     }
@@ -29,8 +29,9 @@ namespace Machete.Service
             this.logPrefix = "Activity";
             this.asServ = asServ;
         }
-        public IEnumerable<Activity> GetIndexView(viewOptions o)
+        public dataTableResult<Activity> GetIndexView(viewOptions o)
         {
+            var result = new dataTableResult<Activity>();
             IQueryable<Activity> q = repo.GetAllQ();
             IEnumerable<Activity> e;
             var asRepo = (IActivitySigninRepository)asServ.GetRepo();
@@ -49,9 +50,11 @@ namespace Machete.Service
                                         o.CI.TwoLetterISOLanguageName, 
                                         ref e);
             //Limit results to the display length and offset
-            if (o.displayLength >= 0)
-            e = e.Skip(o.displayStart).Take(o.displayLength);
-            return e;
+            //if (o.displayLength >= 0)
+            result.filteredCount = e.Count();
+            result.totalCount = repo.GetAllQ().Count();
+            result.query = e.Skip(o.displayStart).Take(o.displayLength);
+            return result;
         }
 
         public void AssignList(int personID, List<int> actList, string user)

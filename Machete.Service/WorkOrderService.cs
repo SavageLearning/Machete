@@ -24,7 +24,7 @@ namespace Machete.Service
             bool orderDescending,
             int displayStart,
             int displayLength);
-        IEnumerable<WorkOrder> GetIndexView(viewOptions opt);
+        dataTableResult<WorkOrder> GetIndexView(viewOptions opt);
     }
 
     // Business logic for WorkOrder record management
@@ -108,9 +108,10 @@ namespace Machete.Service
         /// </summary>
         /// <param name="o">viewOptions object</param>
         /// <returns></returns>
-        public IEnumerable<WorkOrder> GetIndexView(viewOptions o)
+        public dataTableResult<WorkOrder> GetIndexView(viewOptions o)
         {
             //Get all the records
+            var result = new dataTableResult<WorkOrder>();
             IQueryable<WorkOrder> q = repo.GetAllQ();
             //
             if (o.EmployerID != null) IndexViewBase.filterEmployer(o, ref q);
@@ -118,9 +119,10 @@ namespace Machete.Service
             if (!string.IsNullOrEmpty(o.search)) IndexViewBase.search(o, ref q);
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
             //
-            q = q.Skip<WorkOrder>((int)o.displayStart).Take((int)o.displayLength);
-
-            return q.AsEnumerable();
+            result.filteredCount = q.Count();
+            result.query = q.Skip<WorkOrder>((int)o.displayStart).Take((int)o.displayLength);
+            result.totalCount = repo.GetAllQ().Count();
+            return result;
         }
         public IQueryable<WorkOrderSummary> GetSummary()
         {

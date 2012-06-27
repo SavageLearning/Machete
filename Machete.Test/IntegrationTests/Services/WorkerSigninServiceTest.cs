@@ -84,14 +84,14 @@ namespace Machete.Test
             //
             //Act
             _dOptions.dwccardnum = 30040;
-            IEnumerable<signinView> result = _wsiServ.GetIndexView(_dOptions);
+            dataTableResult<wsiView> result = _wsiServ.GetIndexView(_dOptions);
             //
             //Assert
-            List<signinView> tolist = result.ToList();
+            List<wsiView> tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(IEnumerable<signinView>));
+            Assert.IsInstanceOfType(result, typeof(dataTableResult<wsiView>));
             //Assert.AreEqual(61, tolist[0].skillID);
-            Assert.AreEqual(3, result.Count());
+            Assert.AreEqual(3, result.query.Count());
             Assert.AreEqual(5, _wsiServ.TotalCount());
         }
         /// <summary>
@@ -104,14 +104,14 @@ namespace Machete.Test
             //Act
             _dOptions.dwccardnum = 30040;
             _dOptions.wa_grouping = "requested";
-            IEnumerable<signinView> result = _wsiServ.GetIndexView(_dOptions);
+            dataTableResult<wsiView> result = _wsiServ.GetIndexView(_dOptions);
             //
             //Assert
-            List<signinView> tolist = result.ToList();
+            List<wsiView> tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(IEnumerable<signinView>));
+            Assert.IsInstanceOfType(result, typeof(dataTableResult<wsiView>));
             //Assert.AreEqual(61, tolist[0].skillID);
-            Assert.AreEqual(1, result.Count());
+            Assert.AreEqual(1, result.query.Count());
             Assert.AreEqual(5, _wsiServ.TotalCount());
         }
         //[TestMethod]

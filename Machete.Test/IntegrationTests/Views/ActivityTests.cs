@@ -65,7 +65,9 @@ namespace Machete.Test
         public void SeActivity_Create_ManySignins()
         {
             //Arrange
+            int rowcount = 1;                        
             MacheteContext DB = new MacheteContext("machete"); //maps to Machete.Text\app.config ConnectionString
+            IEnumerable<int> cardlist = DB.Workers.Select(q => q.dwccardnum).Distinct();
             Random rand = new Random();
             // There's a lot in this one line. Ask questions about it.
             //                         [DbSet] (LINQ)(Lambda Expression) (SQL-ish)
@@ -74,10 +76,11 @@ namespace Machete.Test
             IEnumerable<int> list1 = list.Take<int>(rand.Next(count/10));
             Activity _act = (Activity)Records.activity.Clone();
             ui.activityCreate(_act);
-            foreach (var i in list1)
-            {
-                ui.activitySignIn(i);
-                Thread.Sleep(2000); // cheap hack; replace with a Selenium WaitFor
+            for (var i = 0; i <20; i++)
+            {                
+                ui.activitySignIn(cardlist.ElementAt(
+                                            rand.Next(cardlist.Count())),
+                                  rowcount++);                                
             }
 
         }
@@ -85,11 +88,15 @@ namespace Machete.Test
         [TestMethod]
         public void SeActivity_Create_signin()
         {
-            Activity _act = (Activity)Records.activity.Clone();
+            Random rand = new Random();
+            Activity _act= (Activity)Records.activity.Clone();
+            MacheteContext DB = new MacheteContext("machete");
+            IEnumerable<int> cardlist = DB.Workers.Select(q => q.dwccardnum).Distinct();            
             ui.activityCreate(_act);
-
+            int rowcount = 1;
             ActivitySignin _asi = (ActivitySignin)Records.activitysignin.Clone();            
-            ui.activitySignIn(30311);//static int is one that I know exists. replace with something smarter.
+            var result = ui.activitySignIn(30012,rowcount++);//static int is one that I know exists. replace with something smarter.
+            Assert.IsTrue(result, "ActivitySignin returned false");
         }
     }
 }

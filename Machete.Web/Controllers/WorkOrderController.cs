@@ -117,9 +117,9 @@ namespace Machete.Web.Controllers
             opt.sortColName = param.sortColName();
             opt.showOrdersWorkers = param.showOrdersWorkers;
             //Get all the records
-            IEnumerable<WorkOrder> allWorkOrders = woServ.GetIndexView(opt);
+            dataTableResult<WorkOrder> dtr = woServ.GetIndexView(opt);
 
-            var result = from p in allWorkOrders
+            var result = from p in dtr.query
                          select new
                          {
                              tabref = p.getTabRef(),
@@ -150,8 +150,8 @@ namespace Machete.Web.Controllers
             return Json(new
             {
                 sEcho = param.sEcho,
-                iTotalRecords = woServ.TotalCount(),
-                iTotalDisplayRecords = woServ.TotalCount(),
+                iTotalRecords = dtr.totalCount,
+                iTotalDisplayRecords = dtr.filteredCount,
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);

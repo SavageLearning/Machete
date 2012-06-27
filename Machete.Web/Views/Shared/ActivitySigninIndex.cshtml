@@ -69,7 +69,9 @@
     @WorkerSignins.redmessage
     <img id="wsiRedImage" src="" alt="" style="width: 200px"/>
 </div>
-
+<div id ="signin-unknown">
+    @WorkerSignins.unknownmessage
+</div>
 <script type="text/javascript">
     $().ready(function () {
         var blankImage = "/Content/images/NO-IMAGE-AVAILABLE.jpg";
@@ -187,20 +189,33 @@
                     function(data) {
                         //callback on signin
                         $('#dwccardnum').val(null); // clear cardnum field
-                        
+                        $('#wsiImage').attr('src', data.imageRef); //reload image
                         $('#wsiTable').dataTable().fnDraw(); //reload datatable
                         // pop modal for warning
                         if (data.memberSanctioned || data.memberExpelled) {
                             $("#wsiRedImage").attr('src', data.imageRef);
                             $('#signin-red-dialog').dialog({ 
                                 modal: true,
+                                buttons: {
+				                    Ok: function() {
+					                    $( this ).dialog( "close" );
+				                    }
+			                    },
                                 title: "@(WorkerSignins.redmessagetitle)",
                                 close: function(event, ui) { $('#dwccardnum').focus(); }
                                  });
                         }
-                        else
-                        {
-                            $('#wsiImage').attr('src', data.imageRef); //reload image
+                        if (data.jobSuccess == false) {
+                        $('#signin-unknown').dialog({ 
+                                modal: true,
+                                buttons: {
+				                    Ok: function() {
+					                    $( this ).dialog( "close" );
+				                    }
+			                    },
+                                title: "@(WorkerSignins.unknownmessagetitle)",
+                                close: function(event, ui) { $('#dwccardnum').focus(); }
+                                 });
                         }
                         $('#dwccardnum').focus();
                     });

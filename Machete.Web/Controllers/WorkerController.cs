@@ -52,7 +52,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
-            IEnumerable<Worker> list = serv.GetIndexView(new viewOptions()
+            dataTableResult<Worker> list = serv.GetIndexView(new viewOptions()
             {
                 CI = CI,
                 search = param.sSearch,
@@ -63,7 +63,7 @@ namespace Machete.Web.Controllers
                 sortColName = param.sortColName()
             });
 
-            var result = from p in list select new
+            var result = from p in list.query select new
             { 
                 tabref = "/Worker/Edit/" + Convert.ToString(p.ID),
                 tablabel =  p.Person.firstname1 + ' ' + p.Person.lastname1,
@@ -82,8 +82,8 @@ namespace Machete.Web.Controllers
             return Json(new
             {
                 sEcho = param.sEcho,
-                iTotalRecords = serv.TotalCount(),
-                iTotalDisplayRecords = serv.TotalCount(),
+                iTotalRecords = list.totalCount,
+                iTotalDisplayRecords = list.filteredCount,
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);
