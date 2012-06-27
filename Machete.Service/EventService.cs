@@ -12,7 +12,7 @@ namespace Machete.Service
     public interface IEventService : IService<Event>
     {
         IQueryable<Event> GetEvents(int? PID);
-        IEnumerable<Event> GetIndexView(viewOptions o);
+        dataTableResult<Event> GetIndexView(viewOptions o);
     }
 
     // Business logic for Event record management
@@ -43,15 +43,17 @@ namespace Machete.Service
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public IEnumerable<Event> GetIndexView(viewOptions o)
+        public dataTableResult<Event> GetIndexView(viewOptions o)
         {
+            var result = new dataTableResult<Event>();
             //Get all the records
             IQueryable<Event> q = GetEvents(o.personID);
+            result.totalCount = q.Count();
             //Search based on search-bar string 
             if (!string.IsNullOrEmpty(o.search))
             {
-                q = repo.GetAllQ()
-                    .Where(p => p.notes.ToString().Contains(o.search));
+                q = GetEvents(o.personID)
+                    .Where(p => p.notes.Contains(o.search));
             }
 
             //Sort the Persons based on column selection
@@ -62,8 +64,9 @@ namespace Machete.Service
             }
 
             //Limit results to the display length and offset
-            q = q.Skip(o.displayStart).Take(o.displayLength);
-            return q;
+            result.filteredCount = q.Count();            
+            result.query = q.Skip(o.displayStart).Take(o.displayLength);
+            return result;
         }
     }
 }

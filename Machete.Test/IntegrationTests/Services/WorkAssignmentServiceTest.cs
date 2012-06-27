@@ -46,10 +46,10 @@ namespace Machete.Test
             var result = _waServ.GetIndexView(dOptions);
             //
             //Assert
-            var tolist = result.ToList();
+            var tolist = result.query.ToList();
             Assert.IsNotNull(result, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
-            Assert.AreEqual(8, result.Count()); //pending excluded
+            Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
+            Assert.AreEqual(8, result.query.Count()); //pending excluded
             Assert.AreEqual(10, _waServ.TotalCount());            
         }
         [TestMethod]
@@ -57,10 +57,10 @@ namespace Machete.Test
         {
             dOptions.sortColName = "assignedWorker";
             var result = _waServ.GetIndexView(dOptions);
-            var tolist = result.ToList();
+            var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
-            Assert.AreEqual(8, result.Count()); //pending excluded
+            Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
+            Assert.AreEqual(8, result.query.Count()); //pending excluded
             Assert.AreEqual(10, _waServ.TotalCount());
         }
         [TestMethod]
@@ -72,10 +72,10 @@ namespace Machete.Test
             var result = _waServ.GetIndexView(dOptions);
             //
             //Assert
-            var tolist = result.ToList();
+            var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
-            Assert.AreEqual(3, result.Count());
+            Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
+            Assert.AreEqual(3, result.query.Count());
             Assert.AreEqual(10, _waServ.TotalCount());
         }
         [TestMethod]
@@ -89,11 +89,11 @@ namespace Machete.Test
             var result = _waServ.GetIndexView(dOptions);
             //
             //Assert
-            var tolist = result.ToList();
+            var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
+            Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
             Assert.AreEqual(12420, tolist[0].workOrder.paperOrderNum);
-            Assert.AreEqual(3, result.Count());
+            Assert.AreEqual(3, result.query.Count());
             Assert.AreEqual(10, _waServ.TotalCount());
         }
         [TestMethod]
@@ -107,11 +107,11 @@ namespace Machete.Test
             var result = _waServ.GetIndexView(dOptions);
             //
             //Assert
-            var tolist = result.ToList();
+            var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
+            Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
             Assert.AreEqual("foostring1", tolist[0].description);
-            Assert.AreEqual(1, result.Count());
+            Assert.AreEqual(1, result.query.Count());
             Assert.AreEqual(10, _waServ.TotalCount());
         }
         [TestMethod]
@@ -123,11 +123,11 @@ namespace Machete.Test
             var result = _waServ.GetIndexView(dOptions);
             //
             //Assert
-            var tolist = result.ToList();
+            var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
+            Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
             Assert.AreEqual("foostring2", tolist[0].Updatedby);
-            Assert.AreEqual(1, result.Count());
+            Assert.AreEqual(1, result.query.Count());
             Assert.AreEqual(10, _waServ.TotalCount());
         }
         [TestMethod]
@@ -138,11 +138,11 @@ namespace Machete.Test
             var result = _waServ.GetIndexView(dOptions);
             //
             //Assert
-            var tolist = result.ToList();
+            var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
+            Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
             Assert.AreEqual(70, tolist[0].skillID); //ID=70 is Digging
-            Assert.AreEqual(1, result.Count());
+            Assert.AreEqual(1, result.query.Count());
             Assert.AreEqual(10, _waServ.TotalCount());
         }
         [TestMethod]
@@ -155,11 +155,11 @@ namespace Machete.Test
             var result = _waServ.GetIndexView(dOptions);
             //
             //Assert
-            var tolist = result.ToList();
+            var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
+            Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
             Assert.AreEqual(70, tolist[0].skillID);
-            Assert.AreEqual(3, result.Count());
+            Assert.AreEqual(3, result.query.Count());
             Assert.AreEqual(10, _waServ.TotalCount());
         }
         //
@@ -175,11 +175,11 @@ namespace Machete.Test
             var result = _waServ.GetIndexView(dOptions);
             //
             //Assert
-            var tolist = result.ToList();
+            var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
+            Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
             //Assert.AreEqual(61, tolist[0].skillID);
-            Assert.AreEqual(7, result.Count());
+            Assert.AreEqual(7, result.query.Count());
             Assert.AreEqual(10, _waServ.TotalCount());
         }
         [TestMethod]
@@ -192,11 +192,11 @@ namespace Machete.Test
             var result = _waServ.GetIndexView(dOptions);
             //
             //Assert
-            var tolist = result.ToList();
+            var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
+            Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
             //Assert.AreEqual(61, tolist[0].skillID);
-            Assert.AreEqual(1, result.Count());
+            Assert.AreEqual(1, result.query.Count());
             Assert.AreEqual(10, _waServ.TotalCount());
         }
         [TestMethod]

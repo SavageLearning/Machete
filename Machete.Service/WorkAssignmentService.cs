@@ -19,7 +19,7 @@ namespace Machete.Service
         IQueryable<WorkAssignmentSummary> GetSummary(string search);
         bool Assign(WorkAssignment assignment, WorkerSignin signin, string user);
         bool Unassign(int? wsiid, int? waid, string user);
-        IEnumerable<WorkAssignment> GetIndexView(viewOptions o);
+        dataTableResult<WorkAssignment> GetIndexView(viewOptions o);
     }
 
     // Business logic for WorkAssignment record management
@@ -59,12 +59,11 @@ namespace Machete.Service
             }         
             return wa;
         }
-        public IEnumerable<WorkAssignment> GetIndexView(viewOptions o)
+        public dataTableResult<WorkAssignment> GetIndexView(viewOptions o)
         {
+            var result = new dataTableResult<WorkAssignment>();
             IQueryable<WorkAssignment> q = waRepo.GetAllQ();
             IEnumerable<WorkAssignment> e;
-            int count;
-            int total;
             //
             // 
             if (o.date != null) IndexViewBase.diffDays(o, ref q); 
@@ -99,14 +98,14 @@ namespace Machete.Service
             //Sort the Persons based on column selection
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref e);
             e = e.ToList();
-            count = e.Count();
+            result.filteredCount = e.Count();
             //
             //Limit results to the display length and offset
-            if ((int)o.displayLength >= 0)
-                e = e.Skip((int)o.displayStart).Take((int)o.displayLength);
+            //if ((int)o.displayLength >= 0)
+            result.query = e.Skip((int)o.displayStart).Take((int)o.displayLength);
            
-           total = waRepo.GetAllQ().Count();
-           return e;
+           result.totalCount = waRepo.GetAllQ().Count();
+           return result;
       }
         /// <summary>
         /// 

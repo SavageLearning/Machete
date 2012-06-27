@@ -17,7 +17,7 @@ namespace Machete.Service
         int GetNextLotterySequence(DateTime date);
         bool clearLottery(int id, string user);
         bool sequenceLottery(DateTime date, string user);
-        IEnumerable<wsiView> GetIndexView(viewOptions o);
+        dataTableResult<wsiView> GetIndexView(viewOptions o);
         void CreateSignin(WorkerSignin signin, string user);
     }
 
@@ -103,9 +103,10 @@ namespace Machete.Service
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public IEnumerable<wsiView> GetIndexView(viewOptions o)
+        public dataTableResult<wsiView> GetIndexView(viewOptions o)
         {
             //
+            var result = new dataTableResult<wsiView>();
             IQueryable<WorkerSignin> q = repo.GetAllQ();
             IEnumerable<WorkerSignin> e;
             IEnumerable<wsiView> eSIV;
@@ -130,9 +131,11 @@ namespace Machete.Service
                     .Select(z => new wsiView( z.w.Person, z.s ));
 
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, eSIV);
-            if ((int)o.displayLength >= 0)
-                eSIV = eSIV.Skip((int)o.displayStart).Take((int)o.displayLength);
-            return eSIV;
+            result.filteredCount = eSIV.Count();
+            result.totalCount = repo.GetAllQ().Count();
+            //if ((int)o.displayLength >= 0)
+            result.query = eSIV.Skip((int)o.displayStart).Take((int)o.displayLength);            
+            return result;
 
         }
         /// <summary>
