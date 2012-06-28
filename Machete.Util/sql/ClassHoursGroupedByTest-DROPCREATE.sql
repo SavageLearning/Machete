@@ -23,7 +23,7 @@ AS
 select wid,
 	   groupingint,
 	   duration minutes, 
-	   'After ' + testname as Grouping, 
+	   testname as Grouping, 
 	   repname.datefrom 
 from 
 (
