@@ -71,8 +71,8 @@ namespace Machete.Test.IntegrationTests.Services
         [TestMethod]
         public void onehundred()
         {
-            //for (var i = 0; i < 100; i++)
-            //    Integration_Activity_Service_CreateRandomClass();
+            for (var i = 0; i < 100; i++)
+                Integration_Activity_Service_CreateRandomClass();
         }
 
         public void Integration_Activity_Service_CreateRandomClass()
@@ -84,15 +84,15 @@ namespace Machete.Test.IntegrationTests.Services
             Activity a = new Activity();
             //random date, within last 30 days
             Random rand = new Random();
-            DateTime today = DateTime.Today.AddDays(-rand.Next(30));
-            a.dateStart = today;
-            a.dateEnd = today.AddHours(1.5);
+            DateTime today = DateTime.Today.AddDays(-rand.Next(40));
+            a.dateStart = today.AddHours(7 + rand.Next(5));
+            a.dateEnd = a.dateStart.AddHours(1.5);
             a.name = classlist.ElementAt(rand.Next(classlist.Count()));
             a.type = 101; //type==class
             a.teacher = "UnitTest script";
             a.notes = "From Integration_Activity_Service";
             _aServ.Create(a, "TestScript");
-            int rAttendance = rand.Next(cardlist.Count() / 10);
+            int rAttendance = rand.Next(cardlist.Count() / 5);
             for (var i = 0; i < rAttendance; i++)
             {
                 ActivitySignin asi = (ActivitySignin)Records.activitysignin.Clone();

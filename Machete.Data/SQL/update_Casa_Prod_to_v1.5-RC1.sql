@@ -38,6 +38,8 @@ DROP INDEX [IX_WorkerID] ON [ActivitySignins]
 DROP INDEX [IX_activityID] ON [ActivitySignins]
 ALTER TABLE [ActivitySignins] ADD [personID] [int]
 ALTER TABLE [ActivitySignins] ALTER COLUMN [activityID] [int] NOT NULL
+ALTER TABLE lookups ALTER COLUMN sortorder [int] NULL
+ALTER TABLE lookups ALTER COLUMN typeOfWorkID [int] NULL
 ALTER TABLE [ActivitySignins] ADD CONSTRAINT [FK_ActivitySignins_Persons_personID] FOREIGN KEY ([personID]) REFERENCES [Persons] ([ID])
 ALTER TABLE [ActivitySignins] ADD CONSTRAINT [FK_ActivitySignins_Activities_activityID] FOREIGN KEY ([activityID]) REFERENCES [Activities] ([ID]) ON DELETE CASCADE
 CREATE INDEX [IX_personID] ON [ActivitySignins]([personID])
