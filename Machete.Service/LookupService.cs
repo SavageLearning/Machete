@@ -19,10 +19,12 @@ namespace Machete.Service
     // Ïf I made a non-web app, would I still need the code? If yes, put in here.
     public class LookupService : ServiceBase<Lookup>, ILookupService
     {
+        private readonly ILookupRepository lrepo;
         public LookupService(ILookupRepository lRepo,
                              IUnitOfWork unitOfWork)
             : base(lRepo, unitOfWork)
         {
+            this.lrepo = lRepo;
             this.logPrefix = "Lookup";
         }
 
@@ -38,6 +40,27 @@ namespace Machete.Service
 
             q = q.Skip<Lookup>(o.displayStart).Take(o.displayLength);
             return q;
+        }
+        public override Lookup Create(Lookup record, string user)
+        {
+            // Only one record can be true in a given category
+            if (record.selected == true)
+            {
+                lrepo.clearSelected(record.category);
+                record.selected = true;
+            }
+
+            return base.Create(record, user);
+        }
+        public override void Save(Lookup record, string user)
+        {
+            // Only one record can be true in a given category
+            if (record.selected == true)
+            {
+                lrepo.clearSelected(record.category);
+                record.selected = true;
+            }
+            base.Save(record, user);
         }
     }
 }
