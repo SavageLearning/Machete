@@ -12,7 +12,7 @@ namespace Machete.Service
     public interface IEmployerService : IService<Employer>
     {
         IEnumerable<WorkOrder> GetOrders(int id);
-        IEnumerable<Employer> GetIndexView(viewOptions o);
+        dataTableResult<Employer> GetIndexView(viewOptions o);
     }
 
     public class EmployerService : ServiceBase<Employer>, IEmployerService
@@ -36,8 +36,9 @@ namespace Machete.Service
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public IEnumerable<Employer> GetIndexView(viewOptions o)
+        public dataTableResult<Employer> GetIndexView(viewOptions o)
         {
+            var result = new dataTableResult<Employer>();
             //Get all the records
             IQueryable<Employer> q = repo.GetAllQ();
             //Search based on search-bar string 
@@ -45,8 +46,10 @@ namespace Machete.Service
             //Sort the Persons based on column selection
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
             //Limit results to the display length and offset
-            q = q.Skip(o.displayStart).Take(o.displayLength);
-            return q;
+            result.filteredCount = q.Count();
+            result.totalCount = repo.GetAllQ().Count();
+            result.query = q.Skip(o.displayStart).Take(o.displayLength);
+            return result;            
         }
     }
 }

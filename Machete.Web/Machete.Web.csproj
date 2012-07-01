@@ -78,9 +78,6 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AjaxMin">
-      <HintPath>..\packages\AjaxMin.4.19.4141.18463\lib\AjaxMin.dll</HintPath>
-    </Reference>
     <Reference Include="AutoMapper">
       <HintPath>..\packages\AutoMapper.2.0.0\lib\net40-client\AutoMapper.dll</HintPath>
     </Reference>
@@ -316,7 +313,14 @@
     <Content Include="Content\dataTables\details_close.png" />
     <Content Include="Content\dataTables\details_open.png" />
     <Content Include="Content\favicon.ico" />
+    <Content Include="Content\images\back_disabled.png" />
+    <Content Include="Content\images\back_enabled.png" />
+    <Content Include="Content\images\back_enabled_hover.png" />
+    <Content Include="Content\images\favicon.ico" />
     <Content Include="Content\images\Files-Download-File-icon.png" />
+    <Content Include="Content\images\forward_disabled.png" />
+    <Content Include="Content\images\forward_enabled.png" />
+    <Content Include="Content\images\forward_enabled_hover.png" />
     <Content Include="Content\images\lightbox-blank.gif" />
     <Content Include="Content\images\lightbox-btn-close.gif" />
     <Content Include="Content\images\lightbox-btn-next.gif" />
@@ -693,7 +697,6 @@
     <Content Include="Views\Image\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="combres.readme" />
     <None Include="Content\images\Sorting icons.psd" />
     <Content Include="Views\Person\View.cshtml" />
     <Content Include="Views\Employer\Index.cshtml" />

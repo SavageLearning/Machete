@@ -121,11 +121,21 @@
     $(document).ready(function () {
         var currentTabs = $('#personPartsTabs');
         var eventTabIdx = $('li', currentTabs).index($('li.ui-tabs-selected', currentTabs));
-        $('.ui-datepicker').datepicker({
-            dateFormat: 'mm/dd/yy',
-            buttonImage: '@Url.Content("~/Content/calendar.gif")',
-            buttonImageOnly: true,
-            showOn: "button"
+//        $('.ui-datepicker').datepicker({
+//            dateFormat: 'mm/dd/yy',
+//            buttonImage: '@Url.Content("~/Content/calendar.gif")',
+//            buttonImageOnly: true,
+//            showOn: "button"
+//        });
+        $(".ui-datepicker").datetimepicker({
+            stepMinute: 15,
+            ampm: true,
+            hourMin: 7,
+            hourMax: 23,
+            minuteMin: 0,
+            minuteMax: 45,
+            minuteGrid: 15,
+            hourGrid: 4
         });
         $('.galleryImage').lightBox();
         //

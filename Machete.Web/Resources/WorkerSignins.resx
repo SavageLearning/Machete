@@ -186,4 +186,10 @@
   <data name="status" xml:space="preserve">
     <value>Status</value>
   </data>
+  <data name="unknownmessage" xml:space="preserve">
+    <value>The member ID number entered does not exist in Machete and cannot be recorded. The member number must exist before checking members into Machete.</value>
+  </data>
+  <data name="unknownmessagetitle" xml:space="preserve">
+    <value>STOP! UNKNOWN MEMBER NUMBER! SIGN-IN NOT RECORDED!</value>
+  </data>
 </root>

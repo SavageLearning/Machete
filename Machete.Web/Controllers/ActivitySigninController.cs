@@ -152,8 +152,8 @@ namespace Machete.Web.Controllers
             return Json(new
             {
                 sEcho = param.sEcho,
-                iTotalRecords = serv.TotalCount().ToString(),
-                iTotalDisplayRecords = was.Count(),
+                iTotalRecords = serv.TotalCount(),
+                iTotalDisplayRecords = serv.TotalCount(),
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);

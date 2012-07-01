@@ -94,10 +94,10 @@ namespace Machete.Test
             o.sortColName = "WOID";
             //
             //Act
-            IEnumerable<WorkOrder> result = _woServ.GetIndexView(o);
+            dataTableResult<WorkOrder> result = _woServ.GetIndexView(o);
             //
             //Assert
-            IEnumerable<WorkOrder> query = result.ToList();
+            IEnumerable<WorkOrder> query = result.query.ToList();
             Assert.IsNotNull(result, "IEnumerable is Null");
             Assert.IsNotNull(query, "IEnumerable.query is null");
             Assert.IsTrue(query.Count() == 6, "Expected 6, but GetIndexView returned {0} records", query.Count());
