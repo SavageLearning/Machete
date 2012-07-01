@@ -137,13 +137,13 @@ namespace Machete.Service
 
     }
     /// <summary>
-    /// 
+    /// Returns query for dataTables consumption. Includes counts for table display.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    //public class IEnumerable<T>
-    //{
-    //    public IEnumerable<T> query { get; set; }
-    //    public int totalCount { get; set; }
-    //    public int filteredCount { get; set; }
-    //}
+    public class dataTableResult<T>
+    {
+        public IEnumerable<T> query { get; set; }
+        public int totalCount { get; set; }
+        public int filteredCount { get; set; }
+    }
 }

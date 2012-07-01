@@ -59,6 +59,9 @@
     @WorkerSignins.redmessage
     <img id="wsiRedImage" src="" alt="" style="width: 200px"/>
 </div>
+<div id ="signin-unknown">
+    @WorkerSignins.unknownmessage
+</div>
 
 <script type="text/javascript">
     $().ready(function () {
@@ -76,6 +79,7 @@
         //
         $('#dwccardnum').focus();
         $('#signin-red-dialog').hide();
+        $('#signin-unknown').hide();
         $('.confirm_delete').live('click', function (e) {
             e.preventDefault;
             //TODO: event is posting and returning page, not JSON
@@ -106,12 +110,12 @@
             "bAutoWidth": false,
             "bServerSide": true,
             "bInfo": true,
-            "bSort": true,
-            "bFilter": true,
+//            "bSort": true,
+//            "bFilter": true,
             "sAjaxSource": "/WorkerSignin/AjaxHandler",
             "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
             "bProcessing": true,
-            "iDisplayLength": -1,
+//            "iDisplayLength": -1,
             "aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "@WorkerSignins.allrecords"]],
             "aoColumns": [
                 {mDataProp: "recordid", sClass: "print_off"},
@@ -174,7 +178,25 @@
                             $("#wsiRedImage").attr('src', data.imageRef);
                             $('#signin-red-dialog').dialog({ 
                                 modal: true,
+                                buttons: {
+				                    Ok: function() {
+					                    $( this ).dialog( "close" );
+				                    }
+			                    },
                                 title: "@(WorkerSignins.redmessagetitle)",
+                                close: function(event, ui) { $('#dwccardnum').focus(); }
+                                 });
+                        }
+                        if (data.jobSuccess == false) {
+                        $('#signin-unknown').dialog({ 
+                                modal: true,
+                                buttons: {
+				                    Ok: function() {
+					                    $( this ).dialog( "close" );
+				                    }
+			                    },
+
+                                title: "@(WorkerSignins.unknownmessagetitle)",
                                 close: function(event, ui) { $('#dwccardnum').focus(); }
                                  });
                         }

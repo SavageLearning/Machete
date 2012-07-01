@@ -213,4 +213,7 @@
   <data name="activitytab" xml:space="preserve">
     <value>Activities</value>
   </data>
+  <data name="newsupdates" xml:space="preserve">
+    <value>Machete Updates</value>
+  </data>
 </root>

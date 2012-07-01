@@ -37,7 +37,7 @@ namespace Machete.Web.Controllers
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {            
             //Get all the records
-            IEnumerable<Event> list = _serv.GetIndexView(new viewOptions()
+            dataTableResult<Event> list = _serv.GetIndexView(new viewOptions()
             {
                 CI = CI,
                 search = param.sSearch,                
@@ -48,7 +48,7 @@ namespace Machete.Web.Controllers
                 personID = param.personID ?? 0
             });
             //return what's left to datatables
-            var result = from p in list select new
+            var result = from p in list.query select new
             {
                 tabref = _getTabRef(p),
                 tablabel = _getTabLabel(p, CI.TwoLetterISOLanguageName),
@@ -64,8 +64,8 @@ namespace Machete.Web.Controllers
             return Json(new
             {
                 sEcho = param.sEcho,
-                iTotalRecords = _serv.TotalCount(),
-                iTotalDisplayRecords = list.Count(),
+                iTotalRecords = list.totalCount,
+                iTotalDisplayRecords = list.filteredCount,
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);

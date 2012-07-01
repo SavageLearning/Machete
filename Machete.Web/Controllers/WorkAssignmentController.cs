@@ -62,7 +62,7 @@ namespace Machete.Web.Controllers
         {
             //Get all the records            
 
-            IEnumerable<WorkAssignment> was = waServ.GetIndexView(new viewOptions {
+            dataTableResult<WorkAssignment> was = waServ.GetIndexView(new viewOptions {
                     CI = CI,
                     search = param.sSearch,
                     date = param.todaysdate == null ? null : (DateTime?)DateTime.Parse(param.todaysdate),
@@ -77,7 +77,7 @@ namespace Machete.Web.Controllers
                     status = param.status,
                     showPending = param.showPending
             });
-            var result = from p in was select new { 
+            var result = from p in was.query select new { 
                             tabref = _getTabRef(p),
                             tablabel = _getTabLabel(p),
                             WOID = Convert.ToString(p.workOrderID),
@@ -106,8 +106,8 @@ namespace Machete.Web.Controllers
             return Json(new
             {
                 sEcho = param.sEcho,
-                iTotalRecords = waServ.TotalCount(),
-                iTotalDisplayRecords = was.Count(),
+                iTotalRecords = was.totalCount,
+                iTotalDisplayRecords = was.filteredCount,
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);

@@ -32,7 +32,10 @@ namespace Machete.Data
     public interface IPersonRepository : IRepository<Person> { }
     public interface IEventRepository : IRepository<Event> { }
     public interface IImageRepository : IRepository<Image> { }
-    public interface ILookupRepository : IRepository<Lookup> { }
+    public interface ILookupRepository : IRepository<Lookup> 
+    {
+        void clearSelected(string category);
+    }
     public interface IActivityRepository : IRepository<Activity> { }
     public interface IActivitySigninRepository : IRepository<ActivitySignin> { }
     /// <summary>
@@ -159,7 +162,19 @@ namespace Machete.Data
     /// </summary>
     public class LookupRepository : RepositoryBase<Lookup>, ILookupRepository
     {
-        public LookupRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
+        private readonly IDbSet<Lookup> dbset;
+        public LookupRepository(IDatabaseFactory databaseFactory) : base(databaseFactory)
+        {
+            dbset = base.DataContext.Set<Lookup>();
+        }
+        public void clearSelected(string category) 
+        {
+            IEnumerable<Lookup> list  = dbset.Where(w => w.category == category).AsEnumerable();
+            foreach (var l in list)
+            {
+                l.selected = false;
+            }            
+        }
     }
 }
 

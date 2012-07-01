@@ -408,7 +408,7 @@ namespace Machete.Test
             Assert.AreEqual(_act.notes, WaitForElement(By.Id(prefix + "notes")).GetAttribute("value"));
             return true;
         }
-        public bool activitySignIn(int dwccardnum)
+        public bool activitySignIn(int dwccardnum, int rowcount)
         {
             return activitySignIn(dwccardnum, false);
         }
@@ -430,7 +430,10 @@ namespace Machete.Test
                 Assert.IsTrue(result);
             return result;
             // How will this test catch an error? need to wait for and validate 
-            // name that is presented at sign-in.  
+            // name that is presented at sign-in.
+            //$x("//table[@id='wsiTable']/tbody/tr[1]/td[2]")
+            return WaitForElementValue(By.XPath("//table[@id='wsiTable']/tbody/tr["+rowcount+"]/td[2]"), dwccardnum.ToString());
+            //return true;
         }
 
         #endregion
