@@ -9,6 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using Machete.Data;
+using System.Data.Entity;
 
 
 namespace Machete.Test
@@ -102,6 +103,26 @@ namespace Machete.Test
             bool result = WaitForElementValue(By.Id("workerCreateTab"), "Worker information");
             Assert.IsTrue(result, "Create tab label not updated by formSubmit");
             _d.FindElement(By.Id("workerCreateTab")).Click();            
+            return true;
+        }
+
+        public bool createSomeWorkers(int numWorkers, DbSet<Worker> workers)
+        {
+            for (int i = numWorkers; i >= 0; --i)
+            {
+                Person _per = (Person)Records.person.Clone();
+                Worker _wkr = (Worker)Records.worker.Clone();
+                Random rnd = new Random();
+
+                while (workers.Where(q => q.dwccardnum == _wkr.dwccardnum).Count() > 0)
+                {
+                    _wkr.dwccardnum = rnd.Next(30000, 32000);
+                }
+
+                personCreate(_per);
+                _wkr.ID = _per.ID;
+                workerCreate(_wkr, SolutionDirectory() + "\\Machete.test\\jimmy_machete.jpg");
+            }
             return true;
         }
         #endregion
@@ -416,20 +437,12 @@ namespace Machete.Test
             ReplaceElementText(By.Id("dwccardnum"), dwccardnum.ToString());
             WaitForElement(By.Id("dwccardnum")).Submit();
 
-            //WaitForElement(By.XPath("//*[@id='wsiTable_filter']/label/input"));
-            //ReplaceElementText(By.XPath("//*[@id='wsiTable_filter']/label/input"), dwccardnum.ToString());
-
-            //var tablecell = WaitForElement(By.XPath("//table[@id='wsiTable']/tbody/tr/td[2]"));
-            //    Assert.IsNotNull(tablecell);
-            //bool result = WaitForElementValue(By.XPath("//table[@id='wsiTable']/tbody/tr/td[2]"), dwccardnum.ToString());
-            //var tablecell2 = WaitForElement(By.XPath("//table[@id='wsiTable']/tbody/tr/td[2]"));
-            //    Assert.IsTrue(result);
-            //return result;
-            //  
-            // example of a Javascript XPath selector
-            //$x("//table[@id='wsiTable']/tbody/tr[1]/td[2]")
-
             return true;
+        }
+        public bool activitySignInIsSanctioned()
+        {
+            var sanctionedBox = WaitForElement(By.ClassName("ui-dialog"));
+            return sanctionedBox != null && sanctionedBox.GetCssValue("display") == "block";
         }
         public bool activitySignInValidate(int dwccardnum, int rowcount)
         {
