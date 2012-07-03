@@ -92,40 +92,33 @@ namespace Machete.Test
             //                         [DbSet] (LINQ)(Lambda Expression) (SQL-ish)
             IEnumerable<int> list = DB.Workers.Select(q => q.dwccardnum).Distinct();
             var count = list.Count();
-            Assert.IsTrue(count > 10, "There were not enough workers found whose dwccardnumbers we can use! There were only: " + count);
+            if (count < 10)
+                ui.createSomeWorkers(10, DB.Workers);
             int numberOfSignins = rand.Next(count / 10) + 1; //+1 will never lead to zero here
-            int originalNumberOfSignins = numberOfSignins;
-            int numberOfSanctionedSignins = 0;
             IEnumerable<int> list1 = list.Take<int>(numberOfSignins);
-            bool lastWorkerWasSanctioned = false;
             Activity _act = (Activity)Records.activity.Clone();
+
+            //Act
             ui.activityCreate(_act);
 
             for (var i = 0; i <= numberOfSignins; i++)
             {
                 int cardNum = list1.ElementAt(i);
                 ui.activitySignIn(cardNum);
-                var sanctionedBox = ui.WaitForElement(By.XPath("/html/body/div[3]"));
-                if (sanctionedBox != null && sanctionedBox.GetCssValue("display") == "block")
+                if (ui.activitySignInIsSanctioned())
                 {
-                    Assert.IsTrue(ui.WaitThenClickElement(By.XPath("/html/body/div[3]/div[1]/a")), "Couldn't find button to close sanctionbox");
+                    ui.WaitForElement(By.ClassName("ui-dialog")).FindElement(By.ClassName("ui-button")).Click();
                     --numberOfSignins;
-                    ++numberOfSanctionedSignins;
-                    lastWorkerWasSanctioned = true;
                     continue;
                 }
-                Assert.IsTrue(ui.activitySignInValidate(cardNum, rowcount), "Sign in for worker " + i + " failed!" + (lastWorkerWasSanctioned ? "This worker came directly after an attempted signin of a sanctioned worker." : ""));
+                Assert.IsTrue(ui.activitySignInValidate(cardNum, rowcount), "Sign in for worker " + i + " failed!"); //Assert
                 
-                rowcount += DB.Workers.Where(q => q.dwccardnum == cardNum).Count(); 
-                lastWorkerWasSanctioned = false;
+                rowcount += DB.Workers.Where(q => q.dwccardnum == cardNum).Count(); //This line ensures the test doesn't break if we try to sign in an ID that has multiple workers attached to it.
             }
             ui.WaitThenClickElement(By.Id("activityListTab"));
             ui.SelectOption(By.XPath("//*[@id='activityTable_length']/label/select"), "100");
-            Assert.IsTrue(ui.WaitForElementValue(By.XPath("//table[@id='activityTable']/tbody/tr[@recordid='" + _act.ID + "']/td[4]"), numberOfSignins.ToString()), 
-                "Not the right number of workers signed in. Expected: " + numberOfSignins + 
-                ", got: " + ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr[@recordid='" + _act.ID + "']/td[4]")).Text +
-                ". Originally we intended to signin " +originalNumberOfSignins+ ", but we subtracted " + numberOfSanctionedSignins +
-                " for signins that turned out to be sanctioned workers.");
+            //Assert
+            Assert.AreEqual(numberOfSignins.ToString(), ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr[@recordid='" + _act.ID + "']/td[4]")).Text);
         }
         
         [TestMethod]
@@ -138,12 +131,13 @@ namespace Machete.Test
             var workers = DB.Workers;
             Activity _act= (Activity)Records.activity.Clone();
             ActivitySignin _asi = (ActivitySignin)Records.activitysignin.Clone();
-            IEnumerable<int> cardlist = DB.Workers.Select(q => q.dwccardnum).Distinct();            
+            IEnumerable<int> cardlist = DB.Workers.Select(q => q.dwccardnum).Distinct();
+            int firstCardNum = workers.First().dwccardnum;
             // Act
             ui.activityCreate(_act);
-            ui.activitySignIn(workers.First().dwccardnum);
+            ui.activitySignIn(firstCardNum);
             // Assert
-            Assert.IsTrue(ui.activitySignInValidate(workers.First().dwccardnum, rowcount));
+            Assert.IsTrue(ui.activitySignInValidate(firstCardNum, rowcount));
         }
 
         [TestMethod]
@@ -154,12 +148,12 @@ namespace Machete.Test
             var workers = DB.Workers;
             IEnumerable<int> cardList = workers.Select(q => q.dwccardnum).Distinct();
             Random rand = new Random();
-            int randCard;
             int randCardIndex = rand.Next(cardList.Count());
             int rowCount = 1;
-            randCard = cardList.ElementAt(randCardIndex);
+            int randCard = cardList.ElementAt(randCardIndex);
             while (workers.First(c => c.dwccardnum == randCard).isSanctioned)
             {
+                randCardIndex = rand.Next(cardList.Count());
                 randCard = cardList.ElementAt(randCardIndex);
             }
             //Act
@@ -168,7 +162,6 @@ namespace Machete.Test
 
             //Assert
             Assert.IsTrue(ui.activitySignInValidate(randCard,rowCount));
-
         }
 
         [TestMethod]
@@ -181,7 +174,7 @@ namespace Machete.Test
 
             var workers = DB.Workers;
             IEnumerable<int> cardList = workers.Where(q => q.memberStatus == Worker.iSanctioned || q.memberStatus == Worker.iExpelled).Select(q => q.dwccardnum).Distinct();
-            Assert.AreNotEqual(0, cardList.Count());
+            Assert.AreNotEqual(0, cardList.Count()); //pre-condition. 
             Random rand = new Random();
             int randCardIndex = rand.Next(cardList.Count());
             int randCard = cardList.ElementAt(randCardIndex);
@@ -198,9 +191,7 @@ namespace Machete.Test
 
             //Assert
             Assert.IsFalse(ui.activitySignInValidate(randCard, rowcount));
-            var sanctionedBox = ui.WaitForElement(By.XPath("/html/body/div[3]"));
-            Assert.IsTrue(sanctionedBox != null && sanctionedBox.GetCssValue("display") == "block", "Sanctioned worker box is not visible like it should be.");
-            ui.WaitThenClickElement(By.XPath("/html/body/div[3]/div[1]/a"));
+            Assert.IsTrue(ui.activitySignInIsSanctioned(), "Sanctioned worker box is not visible like it should be.");
         }
     }
 }

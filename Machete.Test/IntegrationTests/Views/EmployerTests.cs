@@ -59,11 +59,14 @@ namespace Machete.Test
         [TestMethod]
         public void SeEmployer_Create_Validate_Delete()
         {
+            //Arrange
             Employer _emp = (Employer)Records.employer.Clone();
             Employer _emp1 = (Employer)Records.employer.Clone();
+            //Act
             //starts with /Employer/Create
             ui.employerCreate(_emp1);
             ui.employerCreate(_emp);
+            //Assert
             //save from /Create opens /Employer/Edit
             ui.employerValidate(_emp);
             ui.employerDelete(_emp);
@@ -75,11 +78,15 @@ namespace Machete.Test
         [TestMethod]
         public void SeEmployer_Create_workorder()
         {
+            //Arrange
             Employer _emp = (Employer)Records.employer.Clone();
             WorkOrder _wo = (WorkOrder)Records.order.Clone();
             
+            //Act
             ui.employerCreate(_emp);
             ui.workOrderCreate(_emp, _wo);
+
+            //Assert
             ui.workOrderValidate(_wo);
         }
         /// <summary>
@@ -88,9 +95,11 @@ namespace Machete.Test
         [TestMethod]
         public void SeEmployer_Create_workorder_copyinfo()
         {
+            //Arrange
             Employer _emp = (Employer)Records.employer.Clone();
             WorkOrder _wo = (WorkOrder)Records._workOrder1.Clone(); //Made this a clone so fields like workorder status and tranportation method would be filled in properly for validation.
 
+            //Act
             ui.employerCreate(_emp);
             ui.WaitThenClickElement(By.Id("workOrderCreateTab_" + _emp.ID));
             ui.WaitThenClickElement(By.Id("WO0-copyEmployerInfo"));
@@ -105,16 +114,20 @@ namespace Machete.Test
             _wo.phone = _emp.phone;
             _wo.description = "";
             _wo.status = 43;
+
+            //Assert
             ui.workOrderValidate(_wo);
         }
         [TestMethod]
         public void SeEmployer_Create_and_Activate_WorkAssignment()
         {
+            //Arrange
             Employer _employer1 = (Employer)Records.employer.Clone();
             WorkOrder _wo = (WorkOrder)Records.order.Clone();
             WorkAssignment _wa1 = (WorkAssignment)Records.assignment.Clone();
 
             _wo.contactName = ui.RandomString(10);
+            //Act
             ui.employerCreate(_employer1);
             ui.workOrderCreate(_employer1, _wo);
             //_wo.ID = ui.getSelectedTabRecordID("WO");
@@ -131,10 +144,13 @@ namespace Machete.Test
             Thread.Sleep(2000);
             By walt = By.XPath("//table[@id='workAssignTable-wo-" + _wo.ID + "']/tbody/tr/td[1]");
             ui.WaitForElementValue(walt, _wa1.getFullPseudoID());
+
+            //Assert
             Assert.AreEqual(_wa1.getFullPseudoID(), driver.FindElement(walt).Text, "Unexpected PseudoID in assignment's list");
             //
+            //Act
             ui.WaitThenClickElement(By.Id("activateWorkOrderButton-"+ _wo.ID));
-
+            //Assert
             ui.WorkAssignmentValidate(_employer1, _wo, _wa1);
             //
             // TODO: Selenium: check WO status and recid of order
