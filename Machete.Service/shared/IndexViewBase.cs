@@ -72,7 +72,7 @@ namespace Machete.Service
                     break;
             }
         }
-        public static void sortOnColName(string name, bool descending, IEnumerable<wsiView> e)
+        public static void sortOnColName(string name, bool descending, ref IEnumerable<wsiView> e)
         {
             switch (name)
             {
