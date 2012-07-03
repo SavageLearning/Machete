@@ -15,7 +15,7 @@ namespace Machete.Service
     /// </summary>
     public interface IActivitySigninService : ISigninService<ActivitySignin>
     {
-        IEnumerable<asiView> GetIndexView(viewOptions o);
+        dataTableResult<asiView> GetIndexView(viewOptions o);
         Worker CreateSignin(ActivitySignin signin, string user);
         IQueryable<ActivitySignin> GetManyByPersonID(int actID, int perID);
         ActivitySignin GetByPersonID(int actID, int perID);
@@ -51,8 +51,9 @@ namespace Machete.Service
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public IEnumerable<asiView> GetIndexView(viewOptions o)
+        public dataTableResult<asiView> GetIndexView(viewOptions o)
         {
+            var result = new dataTableResult<asiView>();
             IQueryable<ActivitySignin> q = repo.GetAllQ();
             IEnumerable<ActivitySignin> e;
             IEnumerable<asiView> eSIV;
@@ -76,9 +77,13 @@ namespace Machete.Service
                     .Select(z => new asiView(z.w.Person, z.s));
 
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, o.CI.TwoLetterISOLanguageName, ref eSIV);
+            result.filteredCount = eSIV.Count();
+            result.totalCount = repo.GetAllQ().Count();
             if ((int)o.displayLength >= 0)
-            eSIV = eSIV.Skip((int)o.displayStart).Take((int)o.displayLength);
-            return eSIV;
+                result.query = eSIV.Skip((int)o.displayStart).Take((int)o.displayLength);
+            else
+                result.query = eSIV;           
+            return result;
         }
         /// <summary>
         /// 
