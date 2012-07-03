@@ -130,7 +130,7 @@ namespace Machete.Service
                             )
                     .Select(z => new wsiView( z.w.Person, z.s ));
 
-            IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, eSIV);
+            IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref eSIV);
             result.filteredCount = eSIV.Count();
             result.totalCount = repo.GetAllQ().Count();
             //if ((int)o.displayLength >= 0)
