@@ -359,7 +359,9 @@ namespace Machete.Test
             if (_wa.hourRange != null)
                 Assert.AreEqual(_wa.hourRange, GetOptionIndex(By.Id("hourRange")) + 6);
             Assert.AreEqual(_wa.days, GetOptionIndex(By.Id("days")));
-            WaitForElement(By.Id("skillID"));
+            WaitForElement(By.Id("skillID")); //TODO: Add a wait here so it will wait for the list options to be populated before grabbing them.
+            string skillName = MacheteLookup.cache.First(c => c.category == "skill" && c.ID == 69).text_EN;
+            Assert.IsTrue(WaitForElementValue(By.XPath("//*[@id='skillID']/option[@value='69']"),skillName));
             string skillIDText = GetOptionText(By.Id("skillID"));
             Assert.AreEqual(_wa.skillID, MacheteLookup.cache.First(c => c.category == "skill" && c.text_EN == skillIDText).ID);
             Assert.AreEqual(_wa.hourlyWage.ToString("##.##"), WaitForElement(By.Id("hourlyWage")).Text);
@@ -408,7 +410,7 @@ namespace Machete.Test
             Assert.AreEqual(_act.notes, WaitForElement(By.Id(prefix + "notes")).GetAttribute("value"));
             return true;
         }
-        public bool activitySignIn(int dwccardnum, int rowcount)
+        public bool activitySignIn(int dwccardnum)
         {
             WaitForElement(By.Id("dwccardnum"));
             ReplaceElementText(By.Id("dwccardnum"), dwccardnum.ToString());
@@ -427,8 +429,12 @@ namespace Machete.Test
             // example of a Javascript XPath selector
             //$x("//table[@id='wsiTable']/tbody/tr[1]/td[2]")
 
+            return true;
+        }
+        public bool activitySignInValidate(int dwccardnum, int rowcount)
+        {
             // Example of validating a row that returns from a sign-in
-            return WaitForElementValue(By.XPath("//table[@id='wsiTable']/tbody/tr["+rowcount+"]/td[2]"), dwccardnum.ToString());
+            return WaitForElementValue(By.XPath("//table[@id='wsiTable']/tbody/tr[" + rowcount + "]/td[2]"), dwccardnum.ToString());
         }
 
         #endregion
@@ -620,6 +626,16 @@ namespace Machete.Test
             }
 
             return builder.ToString();
+        }
+        public static string SolutionDirectory()
+        {
+            string solutionDirectory = ((EnvDTE.DTE)System.Runtime
+                              .InteropServices
+                              .Marshal
+                              .GetActiveObject("VisualStudio.DTE.10.0"))
+                   .Solution
+                   .FullName;
+            return System.IO.Path.GetDirectoryName(solutionDirectory);
         }
     }
 }

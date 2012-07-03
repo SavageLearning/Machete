@@ -89,7 +89,7 @@ namespace Machete.Test
         public void SeEmployer_Create_workorder_copyinfo()
         {
             Employer _emp = (Employer)Records.employer.Clone();
-            WorkOrder _wo = new WorkOrder();
+            WorkOrder _wo = (WorkOrder)Records._workOrder1.Clone(); //Made this a clone so fields like workorder status and tranportation method would be filled in properly for validation.
 
             ui.employerCreate(_emp);
             ui.WaitThenClickElement(By.Id("workOrderCreateTab_" + _emp.ID));
@@ -104,6 +104,7 @@ namespace Machete.Test
             _wo.zipcode = _emp.zipcode;
             _wo.phone = _emp.phone;
             _wo.description = "";
+            _wo.status = 43;
             ui.workOrderValidate(_wo);
         }
         [TestMethod]

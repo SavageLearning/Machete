@@ -24,13 +24,7 @@ namespace Machete.Test
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext) {
-            string solutionDirectory = ((EnvDTE.DTE)System.Runtime
-                                                  .InteropServices
-                                                  .Marshal
-                                                  .GetActiveObject("VisualStudio.DTE.10.0"))
-                                       .Solution
-                                       .FullName;
-            solutionDirectory = System.IO.Path.GetDirectoryName(solutionDirectory);
+            string solutionDirectory = sharedUI.SolutionDirectory();
             testdir = solutionDirectory + "\\Machete.test\\";
             testimagefile = testdir + "jimmy_machete.jpg";
         }
