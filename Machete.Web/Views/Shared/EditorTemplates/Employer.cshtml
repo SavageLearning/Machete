@@ -10,124 +10,43 @@
 @Html.HiddenFor(model => model.ID, new { @class="hiddenRecID", id=idPrefix + "ID"})
 <div class="tb-table" style="float: left; clear: left;">
     <div class="tb-row">
-        <div class="tb-label">
-            @Html.LabelFor(model => model.name)
-        </div>
-        <div class="tb-field">
-            @Html.TextBoxFor(model => model.name, new { tabindex = "1", id=idPrefix + "name" })
-            @Html.ValidationMessageFor(model => model.name)
-        </div>
-        <div class="tb-label">
-            @Html.LabelFor(model => model.business)
-        </div>
-        <div class="tb-field">
-            @Html.mUIDropDownYesNoFor(model => model.business, new { tabindex = "2", id = idPrefix + "business" })           
-            @Html.ValidationMessageFor(model => model.business)
-        </div>
+        @Html.mUITableLabelAndTextBoxFor(model => model.name, new {tabindex = "1", id=idPrefix + "name"})
+        @Html.mUITableLabelFor(model => model.business)
+        @Html.mUIDropDownYesNoFor(model => model.business, new { tabindex = "2", id = idPrefix + "business" }) 
     </div><!--tb-row-->
     <div class="tb-row">
-        <div class="tb-label">
-            @Html.LabelFor(model => model.address1)
-        </div>
-        <div class="tb-field">
-            @Html.TextBoxFor(model => model.address1, new { tabindex = "1", id = idPrefix + "address1" })
-            @Html.ValidationMessageFor(model => model.address1)
-        </div>
-        <div class="tb-label">
-            @Html.LabelFor(model => model.phone)
-        </div>
-        <div class="tb-field">
-            @Html.TextBoxFor(model => model.phone, new { tabindex = "2", id = idPrefix + "phone" })
-            @Html.ValidationMessageFor(model => model.phone)
-        </div>
+        @Html.mUITableLabelAndTextBoxFor(model => model.address1, new { tabindex = "1", id = idPrefix + "address1" })
+        @Html.mUITableLabelAndTextBoxFor(model => model.phone, new { tabindex = "2", id = idPrefix + "phone" })
     </div><!--tb-row-->
     <div class="tb-row">
-        <div class="tb-label">
-            @Html.LabelFor(model => model.address2)
-        </div>
-        <div class="tb-field">
-            @Html.TextBoxFor(model => model.address2, new { tabindex = "1", id = idPrefix + "address2" })
-            @Html.ValidationMessageFor(model => model.address2)
-        </div>
-                <div class="tb-label">
-            @Html.LabelFor(model => model.cellphone)
-        </div>
-        <div class="tb-field">
-            @Html.TextBoxFor(model => model.cellphone, new { tabindex = "2", id = idPrefix + "cellphone" })
-            @Html.ValidationMessageFor(model => model.cellphone)
-        </div>
+        @Html.mUITableLabelAndTextBoxFor(model => model.address2, new { tabindex = "1", id = idPrefix + "address2" })
+        @Html.mUITableLabelAndTextBoxFor(model => model.cellphone, new { tabindex = "2", id = idPrefix + "cellphone" })
     </div><!--tb-row-->
     <div class="tb-row">
-        <div class="tb-label">
-            @Html.LabelFor(model => model.city)
-        </div>
-        <div class="tb-field">
-            @Html.TextBoxFor(model => model.city, new { tabindex = "1", id = idPrefix + "city" })
-            @Html.ValidationMessageFor(model => model.city)
-        </div>
-        <div class="tb-label">
-            @Html.LabelFor(model => model.email)
-        </div>
-        <div class="tb-field">
-            @Html.TextBoxFor(model => model.email, new { tabindex = "2", id = idPrefix + "email" })
-            @Html.ValidationMessageFor(model => model.email)
-        </div>
-
+        @Html.mUITableLabelAndTextBoxFor(model => model.city, new { tabindex = "1", id = idPrefix + "city" })
+        @Html.mUITableLabelAndTextBoxFor(model => model.email, new { tabindex = "2", id = idPrefix + "email" })
     </div>
     <!--tb-row-->
     <div class="tb-row">
-        <div class="tb-label">
-            @Html.LabelFor(model => model.state)
-        </div>
-        <div class="tb-field">
-            @Html.TextBoxFor(model => model.state, new { tabindex = "1", id = idPrefix + "state" })
-            @Html.ValidationMessageFor(model => model.state)
-        </div>
-        <div class="tb-label">
-            @Html.LabelFor(model => model.referredby)
-        </div>
-        <div class="tb-field">
-            @Html.DropDownListFor(model => model.referredby, new SelectList(Lookups.emplrreference.get(CI.TwoLetterISOLanguageName), "Value", "Text", Model.referredby), @Machete.Web.Resources.Shared.choose, new { tabindex = "2", id = idPrefix + "referredby" })
-            @Html.ValidationMessageFor(model => model.referredby)
-        </div>
+        @Html.mUITableLabelAndTextBoxFor(model => model.state, new { tabindex = "1", id = idPrefix + "state" })
+        @Html.mUITableLabelFor(model => model.referredby)
+        @Html.mUIDropDownListFor(model => model.referredby, new SelectList(Lookups.emplrreference.get(CI.TwoLetterISOLanguageName), "Value", "Text", Model.referredby), new { tabindex = "2", id = idPrefix + "referredby" })
     </div>
     <!--tb-row-->
     <div class="tb-row">
-        <div class="tb-label">
-            @Html.LabelFor(model => model.zipcode)
-        </div>
-        <div class="tb-field">
-            @Html.TextBoxFor(model => model.zipcode, new { tabindex = "1", id = idPrefix + "zipcode" })
-            @Html.ValidationMessageFor(model => model.zipcode)
-        </div>
-        <div class="tb-label">
-            @Html.LabelFor(model => model.referredbyOther)
-        </div>
-        <div class="tb-field">
-            @Html.TextBoxFor(model => model.referredbyOther, new { tabindex = "2", id = idPrefix + "referredbyOther" })
-            @Html.ValidationMessageFor(model => model.referredbyOther)
-        </div>
+        @Html.mUITableLabelAndTextBoxFor(model => model.zipcode, new { tabindex = "1", id = idPrefix + "zipcode" })
+        @Html.mUITableLabelAndTextBoxFor(model => model.referredbyOther, new { tabindex = "2", id = idPrefix + "referredbyOther" })
     </div>
 
 </div>
 <div class="tb-table" style="float: left;">
     <div class="tb-row">
-        <div class="tb-label">
-            @Html.LabelFor(model => model.active)
-        </div>
-        <div class="tb-field">
-            @Html.mUIDropDownYesNoFor(model => model.active, new { tabindex = "2" })           
-            @Html.ValidationMessageFor(model => model.active)
-        </div>
+        @Html.mUITableLabelFor(model => model.active)
+        @Html.mUIDropDownYesNoFor(model => model.active, new { tabindex = "2" })
     </div>
     <div class="tb-row">
-        <div class="tb-label">
-            @Html.LabelFor(model => model.blogparticipate)
-        </div>
-        <div class="tb-field">
-            @Html.mUIDropDownYesNoFor(model => model.blogparticipate, new { tabindex = "2" })           
-            @Html.ValidationMessageFor(model => model.blogparticipate)
-        </div>
+        @Html.mUITableLabelFor(model => model.blogparticipate)
+        @Html.mUIDropDownYesNoFor(model => model.blogparticipate, new { tabindex = "2" })
     </div>
     <div class="tb-row">
         <div class="tb-label desc-label">
