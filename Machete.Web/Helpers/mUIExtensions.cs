@@ -130,6 +130,13 @@ namespace Machete.Web.Helpers
                 );
         }
 
+        public static MvcHtmlString mUITableLabelAndTextBoxFor<TModel, TSelect>(this HtmlHelper<TModel> htmlHelper,
+            Expression<Func<TModel, TSelect>> expression,
+            object attribs)
+        {
+            return MvcHtmlString.Create(mUITableLabelFor(htmlHelper, expression).ToHtmlString() + mUITableTextBoxFor(htmlHelper, expression, attribs).ToHtmlString());
+        }
+
         public static MvcHtmlString mUITableDateTextBoxFor<TModel, TSelect>(this HtmlHelper<TModel> htmlHelper, 
             Expression<Func<TModel, TSelect>> expression,
             object attribs)
