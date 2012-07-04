@@ -380,11 +380,10 @@ namespace Machete.Test
             if (_wa.hourRange != null)
                 Assert.AreEqual(_wa.hourRange, GetOptionIndex(By.Id("hourRange")) + 6);
             Assert.AreEqual(_wa.days, GetOptionIndex(By.Id("days")));
-            WaitForElement(By.Id("skillID")); //TODO: Add a wait here so it will wait for the list options to be populated before grabbing them.
-            string skillName = MacheteLookup.cache.First(c => c.category == "skill" && c.ID == 69).text_EN;
-            Assert.IsTrue(WaitForElementValue(By.XPath("//*[@id='skillID']/option[@value='69']"),skillName));
-            string skillIDText = GetOptionText(By.Id("skillID"));
-            Assert.AreEqual(_wa.skillID, MacheteLookup.cache.First(c => c.category == "skill" && c.text_EN == skillIDText).ID);
+            WaitForElement(By.Id("skillID"));
+            string skillIDValue = GetOptionValue(By.Id("skillID"));
+            Assert.AreEqual(_wa.skillID.ToString(), skillIDValue);
+            WaitForElement(By.Id("hourlyWage")).Click(); //Added this line because I thought that it might help to bring the element in focus. Shows the root of the problem.
             Assert.AreEqual(_wa.hourlyWage.ToString("##.##"), WaitForElement(By.Id("hourlyWage")).Text);
 
             return true;
@@ -486,6 +485,12 @@ namespace Machete.Test
             var selectElem = new SelectElement(dropdown);
             return selectElem.Options.IndexOf(selectElem.SelectedOption);
         }
+        public string GetOptionValue(By by)
+        {
+            var dropdown = _d.FindElement(by);
+            var selectElem = new SelectElement(dropdown);
+            return selectElem.SelectedOption.GetAttribute("value");
+        }
         #endregion
         //
         //
@@ -581,6 +586,22 @@ namespace Machete.Test
                 Thread.Sleep(sleepFor);
             }
             return false;
+        }
+        public IWebElement WaitForElementDisplayed(By by)
+        {
+            IWebElement elem;
+            for (int second = 0; second < maxwait; second++)
+            {
+                try
+                {
+                    elem = IsElementPresent(by);
+                    if (elem != null && elem.Displayed == true) return elem;
+                }
+                catch (Exception)
+                { return null; }
+                Thread.Sleep(sleepFor);
+            }
+            return null;
         }
         #endregion
         #region privatemethods
