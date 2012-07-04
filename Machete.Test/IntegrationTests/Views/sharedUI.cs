@@ -350,15 +350,18 @@ namespace Machete.Test
         public bool WorkAssignmentCreate(Employer _emp, WorkOrder _wo, WorkAssignment _wa)
         {
             WaitThenClickElement(By.Id("wact-" + _wo.ID)); //the ID here is the WorkOrder.ID, not the Employer.ID
-            WaitForElement(By.Id("description"));
-            SelectOption(By.Id("englishLevelID"), _wa.englishLevelID.ToString());
-            SelectOptionByValue(By.Id("skillID"), _wa.skillID.ToString());
-            ReplaceElementText(By.Id("hourlyWage"), _wa.hourlyWage.ToString());
-            SelectOption(By.Id("hours"), _wa.hours.ToString());
+
+            string prefix = "WA" + _wa.ID + "-";
+
+            WaitForElement(By.Id(prefix + "description"));
+            SelectOption(By.Id(prefix + "englishLevelID"), _wa.englishLevelID.ToString());
+            SelectOptionByValue(By.Id(prefix + "skillID"), _wa.skillID.ToString());
+            ReplaceElementText(By.Id(prefix + "hourlyWage"), _wa.hourlyWage.ToString());
+            SelectOption(By.Id(prefix + "hours"), _wa.hours.ToString());
             if (_wa.hourRange.ToString().Length > 0)
-                SelectOption(By.Id("hourRange"), _wa.hourRange.ToString());
-            SelectOption(By.Id("days"), _wa.days.ToString());
-            ReplaceElementText(By.Id("description"), _wa.description);
+                SelectOption(By.Id(prefix + "hourRange"), _wa.hourRange.ToString());
+            SelectOption(By.Id(prefix + "days"), _wa.days.ToString());
+            ReplaceElementText(By.Id(prefix + "description"), _wa.description);
             _d.FindElement(By.Id("WO" + _wo.ID + "-waCreateBtn")).Click();
             return true;
         }
@@ -374,17 +377,20 @@ namespace Machete.Test
                 "Cannot find work assignment row to click.");
 
             //Now, check each of the fields
-            WaitForElement(By.Id("englishLevelID"));
-            Assert.AreEqual(_wa.englishLevelID + 1,GetOptionIndex(By.Id("englishLevelID")));
-            Assert.AreEqual(_wa.hours, GetOptionIndex(By.Id("hours")));
+
+            string prefix = "WA" + _wa.ID + "-";
+
+            WaitForElement(By.Id(prefix + "englishLevelID"));
+            Assert.AreEqual(_wa.englishLevelID + 1,GetOptionIndex(By.Id(prefix + "englishLevelID")));
+            Assert.AreEqual(_wa.hours, GetOptionIndex(By.Id(prefix + "hours")));
             if (_wa.hourRange != null)
-                Assert.AreEqual(_wa.hourRange, GetOptionIndex(By.Id("hourRange")) + 6);
-            Assert.AreEqual(_wa.days, GetOptionIndex(By.Id("days")));
-            WaitForElement(By.Id("skillID"));
-            string skillIDValue = GetOptionValue(By.Id("skillID"));
+                Assert.AreEqual(_wa.hourRange, GetOptionIndex(By.Id(prefix + "hourRange")) + 6);
+            Assert.AreEqual(_wa.days, GetOptionIndex(By.Id(prefix + "days")));
+            WaitForElement(By.Id(prefix + "skillID"));
+            string skillIDValue = GetOptionValue(By.Id(prefix + "skillID"));
             Assert.AreEqual(_wa.skillID.ToString(), skillIDValue);
-            WaitForElement(By.Id("hourlyWage")).Click(); //Added this line because I thought that it might help to bring the element in focus. Shows the root of the problem.
-            Assert.AreEqual(_wa.hourlyWage.ToString("##.##"), WaitForElement(By.Id("hourlyWage")).Text);
+            WaitForElement(By.Id(prefix + "hourlyWage"));//.Click();
+            Assert.AreEqual(_wa.hourlyWage.ToString("##.##"), WaitForElement(By.Id(prefix + "hourlyWage")).Text);
 
             return true;
         }

@@ -7,6 +7,7 @@
 @{
     string myStr = "";
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string idPrefix = "WA" + Model.ID + "-";
 }
 
 <div class="tb-table">
@@ -16,14 +17,14 @@
             @Html.LabelFor(model => model.englishLevelID)
         </div>
         <div class="tb-field">
-            @Html.mUIDropDownListFor(model => model.englishLevelID, Lookups.skillLevels(), new {tabindex = "1"})
+            @Html.mUIDropDownListFor(model => model.englishLevelID, Lookups.skillLevels(), new {tabindex = "1", @id = idPrefix + "englishLevelID"})
             @Html.ValidationMessageFor(model => model.englishLevelID)
         </div>
         <div class="tb-label">
             @Html.LabelFor(model => model.skillID)
         </div>
         <div class="tb-field">
-            <select name="skillID" id="skillID" 
+            <select name="skillID" id=@(idPrefix + "skillID") 
                     data-val-required="A skill is required (use general labor if none was specificed)" 
                     data-val-number="The field Skill must be a number." 
                     data-val="true"
@@ -66,28 +67,28 @@
             @Html.LabelFor(model => model.hourlyWage)
         </div>
         <div class="tb-field">
-            @Html.TextBox("hourlyWage", Html.Encode(System.String.Format("{0:f2}", Model.hourlyWage)), new { tabindex = "1", @class = "money-field earnings-part" })
+            @Html.TextBox("hourlyWage", Html.Encode(System.String.Format("{0:f2}", Model.hourlyWage)), new { tabindex = "1", @class = "money-field earnings-part", @id = idPrefix + "hourlyWage" })
             @Html.ValidationMessageFor(model => model.hourlyWage)
         </div>
         <div class="tb-label">
             @Html.LabelFor(model => model.hours)
         </div>
         <div class="tb-field">
-            @Html.DropDownListFor(model => model.hours, new SelectList(Lookups.hours(), "Value", "Text", Model.hours), Shared.choose, new { tabindex = "1", @id = "hours", @class = "earnings-part" })
+            @Html.DropDownListFor(model => model.hours, new SelectList(Lookups.hours(), "Value", "Text", Model.hours), Shared.choose, new { tabindex = "1", @id = idPrefix + "hours", @class = "earnings-part" })
             @Html.ValidationMessageFor(model => model.hours)
         </div>
         <div class="tb-label">
             @Html.LabelFor(model => model.hourRange)
         </div>
         <div class="tb-field">
-            @Html.DropDownListFor(model => model.hourRange, new SelectList(Lookups.hours(), "Value", "Text", Model.hourRange), Shared.choose, new { tabindex = "1", @id = "hourRange", @class = "earnings-part" })
+            @Html.DropDownListFor(model => model.hourRange, new SelectList(Lookups.hours(), "Value", "Text", Model.hourRange), Shared.choose, new { tabindex = "1", @id = idPrefix + "hourRange", @class = "earnings-part" })
             @Html.ValidationMessageFor(model => model.hourRange)
         </div>
         <div class="tb-label">
             @Html.LabelFor(model => model.days)
         </div>
         <div class="tb-field">
-            @Html.DropDownListFor(model => model.days, new SelectList(Lookups.days(), "Value", "Text", Model.days), Shared.choose, new { tabindex = "1", @id = "days", @class = "earnings-part" })
+            @Html.DropDownListFor(model => model.days, new SelectList(Lookups.days(), "Value", "Text", Model.days), Shared.choose, new { tabindex = "1", @id = idPrefix + "days", @class = "earnings-part" })
             @Html.ValidationMessageFor(model => model.days)
         </div>
         <div class="tb-label">
@@ -111,7 +112,7 @@
         </div>
         <div class="tb-field desc-field">
             @*@Html.TextAreaFor("description", Model.description, new { style = "width: 40em; height: 4em;" })*@
-            @Html.TextAreaFor(model => model.description, new { tabindex = "1", @class = "desc-field" })
+            @Html.TextAreaFor(model => model.description, new { tabindex = "1", @class = "desc-field", @id = idPrefix + "description" })
             @Html.ValidationMessageFor(model => model.description)
         </div>
     </div>
