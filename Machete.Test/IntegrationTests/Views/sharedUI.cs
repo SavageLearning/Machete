@@ -380,8 +380,8 @@ namespace Machete.Test
 
             string prefix = "WA" + _wa.ID + "-";
 
-            WaitForElement(By.Id(prefix + "englishLevelID"));
-            Assert.AreEqual(_wa.englishLevelID + 1,GetOptionIndex(By.Id(prefix + "englishLevelID")));
+            WaitForElement(By.Id(prefix + "hourRange"));
+            Assert.AreEqual(_wa.englishLevelID.ToString(), GetOptionValue(By.Id(prefix + "englishLevelID")));
             Assert.AreEqual(_wa.hours, GetOptionIndex(By.Id(prefix + "hours")));
             if (_wa.hourRange != null)
                 Assert.AreEqual(_wa.hourRange, GetOptionIndex(By.Id(prefix + "hourRange")) + 6);
@@ -389,8 +389,8 @@ namespace Machete.Test
             WaitForElement(By.Id(prefix + "skillID"));
             string skillIDValue = GetOptionValue(By.Id(prefix + "skillID"));
             Assert.AreEqual(_wa.skillID.ToString(), skillIDValue);
-            WaitForElement(By.Id(prefix + "hourlyWage"));//.Click();
-            Assert.AreEqual(_wa.hourlyWage.ToString("##.##"), WaitForElement(By.Id(prefix + "hourlyWage")).Text);
+            WaitForElement(By.Id(prefix + "hourlyWage"));
+            Assert.AreEqual(_wa.hourlyWage.ToString("F"), WaitForElement(By.Id(prefix + "hourlyWage")).GetAttribute("value"));
 
             return true;
         }
@@ -488,7 +488,8 @@ namespace Machete.Test
         public int GetOptionIndex(By by)
         {
             var dropdown = _d.FindElement(by);
-            var selectElem = new SelectElement(dropdown);
+            SelectElement selectElem;
+            selectElem = new SelectElement(dropdown);
             return selectElem.Options.IndexOf(selectElem.SelectedOption);
         }
         public string GetOptionValue(By by)

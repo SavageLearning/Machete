@@ -13,16 +13,9 @@
 <div class="tb-table">
 
     <div class="tb-row">
-        <div class="tb-label">
-            @Html.LabelFor(model => model.englishLevelID)
-        </div>
-        <div class="tb-field">
-            @Html.mUIDropDownListFor(model => model.englishLevelID, Lookups.skillLevels(), new {tabindex = "1", @id = idPrefix + "englishLevelID"})
-            @Html.ValidationMessageFor(model => model.englishLevelID)
-        </div>
-        <div class="tb-label">
-            @Html.LabelFor(model => model.skillID)
-        </div>
+        @Html.mUITableLabelFor(model => model.englishLevelID)
+        @Html.mUIDropDownListFor(model => model.englishLevelID, Lookups.skillLevels(), new {tabindex = "1", @id = idPrefix + "englishLevelID"})
+        @Html.mUITableLabelFor(model => model.skillID)
         <div class="tb-field">
             <select name="skillID" id=@(idPrefix + "skillID") 
                     data-val-required="A skill is required (use general labor if none was specificed)" 
@@ -52,45 +45,22 @@
             @*@Html.DropDownListFor(model => model.skillID, new SelectList(Lookups.skill(CI.TwoLetterISOLanguageName), "Value", "Text", Model.skillID), @Machete.Web.Resources.Shared.choose)*@
             @Html.ValidationMessageFor(model => model.skillID)
         </div>
-        <div class="tb-label">
-            @Html.LabelFor(model => model.pseudoID)
-        </div>
-        <div class="tb-field">
-            @Html.TextBox("pseudoID", Model.pseudoID, new { tabindex = "1", style = "width: 2em", @readonly = "readonly" })
-            @Html.ValidationMessageFor(model => model.pseudoID)
-        </div>
+        @Html.mUITableLabelAndTextBoxFor(model => model.pseudoID, new { tabindex = "1", style = "width: 2em", @readonly = "readonly" })
     </div>
 </div>
 <div class="tb-table">
     <div class="tb-row">
-        <div class="tb-label">
-            @Html.LabelFor(model => model.hourlyWage)
-        </div>
+            @Html.mUITableLabelFor(model => model.hourlyWage)
         <div class="tb-field">
             @Html.TextBox("hourlyWage", Html.Encode(System.String.Format("{0:f2}", Model.hourlyWage)), new { tabindex = "1", @class = "money-field earnings-part", @id = idPrefix + "hourlyWage" })
             @Html.ValidationMessageFor(model => model.hourlyWage)
         </div>
-        <div class="tb-label">
-            @Html.LabelFor(model => model.hours)
-        </div>
-        <div class="tb-field">
-            @Html.DropDownListFor(model => model.hours, new SelectList(Lookups.hours(), "Value", "Text", Model.hours), Shared.choose, new { tabindex = "1", @id = idPrefix + "hours", @class = "earnings-part" })
-            @Html.ValidationMessageFor(model => model.hours)
-        </div>
-        <div class="tb-label">
-            @Html.LabelFor(model => model.hourRange)
-        </div>
-        <div class="tb-field">
-            @Html.DropDownListFor(model => model.hourRange, new SelectList(Lookups.hours(), "Value", "Text", Model.hourRange), Shared.choose, new { tabindex = "1", @id = idPrefix + "hourRange", @class = "earnings-part" })
-            @Html.ValidationMessageFor(model => model.hourRange)
-        </div>
-        <div class="tb-label">
-            @Html.LabelFor(model => model.days)
-        </div>
-        <div class="tb-field">
-            @Html.DropDownListFor(model => model.days, new SelectList(Lookups.days(), "Value", "Text", Model.days), Shared.choose, new { tabindex = "1", @id = idPrefix + "days", @class = "earnings-part" })
-            @Html.ValidationMessageFor(model => model.days)
-        </div>
+        @Html.mUITableLabelFor(model => model.hours)
+        @Html.mUIDropDownListFor(model => model.hours, new SelectList(Lookups.hours(), "Value", "Text", Model.hours), new { tabindex = "1", @id = idPrefix + "hours", @class = "earnings-part" })
+        @Html.mUITableLabelFor(model => model.hourRange)
+        @Html.mUIDropDownListFor(model => model.hourRange, new SelectList(Lookups.hours(), "Value", "Text", Model.hourRange), new { tabindex = "1", @id = idPrefix + "hourRange", @class = "earnings-part" })
+        @Html.mUITableLabelFor(model => model.days)
+        @Html.mUIDropDownListFor(model => model.days, new SelectList(Lookups.days(), "Value", "Text", Model.days), new { tabindex = "1", @id = idPrefix + "days", @class = "earnings-part" })
         <div class="tb-label">
             @Html.Label("total", @Machete.Web.Resources.WorkAssignments.total)
         </div>
@@ -123,9 +93,7 @@
     <h3><a href="#">@Machete.Domain.Resources.WorkAssignment.dispatchinfo</a></h3>
     <div class="tb-table">
         <div class="tb-row">
-            <div class="tb-label">
-                @Html.LabelFor(model => model.workerAssignedID)
-            </div>
+            @Html.mUITableLabelFor(model => model.workerAssignedID)
             <div class="tb-display">
                 @Html.HiddenFor(model => model.workerAssignedID,
                     new { 
