@@ -95,20 +95,21 @@ namespace Machete.Test
             if (count < 10)
                 ui.createSomeWorkers(10, DB.Workers);
             int numberOfSignins = rand.Next(count / 10) + 1; //+1 will never lead to zero here
+            int numberSignedIn = numberOfSignins;
             IEnumerable<int> list1 = list.Take<int>(numberOfSignins);
             Activity _act = (Activity)Records.activity.Clone();
 
             //Act
             ui.activityCreate(_act);
 
-            for (var i = 0; i <= numberOfSignins; i++)
+            for (var i = 0; i < numberOfSignins; i++)
             {
                 int cardNum = list1.ElementAt(i);
                 ui.activitySignIn(cardNum);
                 if (ui.activitySignInIsSanctioned())
                 {
                     ui.WaitForElement(By.ClassName("ui-dialog")).FindElement(By.ClassName("ui-button")).Click();
-                    --numberOfSignins;
+                    --numberSignedIn;
                     continue;
                 }
                 Assert.IsTrue(ui.activitySignInValidate(cardNum, rowcount), "Sign in for worker " + i + " failed!"); //Assert
@@ -118,7 +119,7 @@ namespace Machete.Test
             ui.WaitThenClickElement(By.Id("activityListTab"));
             ui.SelectOption(By.XPath("//*[@id='activityTable_length']/label/select"), "100");
             //Assert
-            Assert.AreEqual(numberOfSignins.ToString(), ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr[@recordid='" + _act.ID + "']/td[4]")).Text);
+            Assert.AreEqual(numberSignedIn.ToString(), ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr[@recordid='" + _act.ID + "']/td[4]")).Text);
         }
         
         [TestMethod]

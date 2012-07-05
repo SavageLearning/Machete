@@ -14,6 +14,7 @@ namespace Machete.Web.Helpers
     public static class mUIExtensions
     {
         public static string tblabel = "<div class=\"tb-label\">";
+        public static string tbdesclabel = "<div class=\"tb-label desc-label\">";
         public static string tbfield = "<div class=\"tb-field\">";
         public static string tbclose = "</div>";
 
@@ -115,6 +116,23 @@ namespace Machete.Web.Helpers
         /// <typeparam name="TSelect"></typeparam>
         /// <param name="htmlHelper"></param>
         /// <param name="expression"></param>
+        /// <returns></returns>
+        public static MvcHtmlString mUITableDescLabelFor<TModel, TSelect>(this HtmlHelper<TModel> htmlHelper,
+            Expression<Func<TModel, TSelect>> expression)
+        {
+            return MvcHtmlString.Create(
+                tbdesclabel +
+                htmlHelper.LabelFor(expression).ToString() +
+                tbclose
+                );
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TModel"></typeparam>
+        /// <typeparam name="TSelect"></typeparam>
+        /// <param name="htmlHelper"></param>
+        /// <param name="expression"></param>
         /// <param name="attribs"></param>
         /// <returns></returns>
         public static MvcHtmlString mUITableTextBoxFor<TModel, TSelect>(this HtmlHelper<TModel> htmlHelper,
@@ -129,7 +147,6 @@ namespace Machete.Web.Helpers
                 tbclose
                 );
         }
-
         public static MvcHtmlString mUITableLabelAndTextBoxFor<TModel, TSelect>(this HtmlHelper<TModel> htmlHelper,
             Expression<Func<TModel, TSelect>> expression,
             object attribs)
