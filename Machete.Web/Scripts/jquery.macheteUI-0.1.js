@@ -258,22 +258,22 @@
                         //$(form).ajaxSubmit({ // data returned to success() differently. breaks exception handling.
                         //success: function (data) {
                         function (data) {
-                                if (data.jobSuccess == false) {
-                                    alert(data.rtnMessage);
-                                } else {
-                                    add_rectab({
-                                        tabref: data.sNewRef, //come from JsonResult
-                                        label: data.sNewLabel, // JsonResult
-                                        tab: parentTab,
-                                        exclusive: exclusiveTab,
-                                        recordID: data.iNewID,  //JsonResult
-                                        recType: recType
-                                    });
-                                    if (callback) {
-                                        callback();
-                                    }
+                            if (data.jobSuccess == false) {
+                                alert(data.rtnMessage);
+                            } else {
+                                add_rectab({
+                                    tabref: data.sNewRef, //come from JsonResult
+                                    label: data.sNewLabel, // JsonResult
+                                    tab: parentTab,
+                                    exclusive: exclusiveTab,
+                                    recordID: data.iNewID,  //JsonResult
+                                    recType: recType
+                                });
+                                if (callback) {
+                                    callback();
                                 }
-                            });
+                            }
+                        });
                     } else {
                         //$.post($(form).attr("action"), $(form).serialize());
                         //$(form).ajaxSubmit({
@@ -282,7 +282,7 @@
                             $(form).serialize(),    //DATA from form object
                             function (data) {       //Successful server post callback
                                 console.log("got to exception alert in formSubmit, jobSuccess is:" + data.JobSuccess);
-                                if (data.jobSuccess == false) {                                    
+                                if (data.jobSuccess == false) {
                                     alert(data.rtnMessage);
                                 } else {
                                     if (callback) {
@@ -662,15 +662,16 @@
     //
     // Estimates earnings boxes on Assignments form
     function waEstimateEarnings(waForm) {
-        var myID = $(this).attr('recordid');
-        var myWage = $(waForm).find('#hourlyWage').val();
-        var myHours = $(waForm).find('#hours').find('option:selected').val();
-        var myEarnings = $(waForm).find('#total');
-        var myRangeEarnings = $(waForm).find('#totalRange');
-        var myRange = $(waForm).find('#hourRange').val();
+        var myID = $(waForm).find('#ID').val();
+        var myPrefix = 'WA' + myID + '-';
+        var myWage = $(waForm).find('#' + myPrefix + 'hourlyWage').val();
+        var myHours = $(waForm).find('#' + myPrefix + 'hours').find('option:selected').val();
+        var myEarnings = $(waForm).find('#' + myPrefix + 'total');
+        var myRangeEarnings = $(waForm).find('#' + myPrefix + 'totalRange');
+        var myRange = $(waForm).find('#' + myPrefix + 'hourRange').val();
         $(myEarnings).attr('disabled', 'disabled');
         $(myRangeEarnings).attr('disabled', 'disabled');
-        var myDays = $(waForm).find('#days').find('option:selected').val();
+        var myDays = $(waForm).find('#' + myPrefix + 'days').find('option:selected').val();
         if (isNumber(myDays) &&
         isNumber(myHours) &&
         isNumber(myWage)) {
