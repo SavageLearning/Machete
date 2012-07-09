@@ -380,18 +380,25 @@ namespace Machete.Test
 
             string prefix = "WA" + _wa.ID + "-";
 
-            WaitForElement(By.Id(prefix + "hourRange"));
+            WaitForElement(By.Id(prefix + "englishLevelID"));
+            WaitForElement(By.Id(prefix + "hours")); //Doing a lot of waits up front here because I was having some problems with the englishLevelID getting
+            WaitForElement(By.Id(prefix + "hourRange")); //detached from the DOM if I grab it too early. A short sleep seemed to work, but waits make sure.
+            WaitForElement(By.Id(prefix + "days"));
+            WaitForElement(By.Id(prefix + "skillID"));
+            WaitForElement(By.Id(prefix + "hourlyWage"));
+            WaitForElement(By.Id(prefix + "total"));
+            Thread.Sleep(50);
             Assert.AreEqual(_wa.englishLevelID.ToString(), GetOptionValue(By.Id(prefix + "englishLevelID")));
             Assert.AreEqual(_wa.hours, GetOptionIndex(By.Id(prefix + "hours")));
             if (_wa.hourRange != null)
                 Assert.AreEqual(_wa.hourRange, GetOptionIndex(By.Id(prefix + "hourRange")) + 6);
             Assert.AreEqual(_wa.days, GetOptionIndex(By.Id(prefix + "days")));
-            WaitForElement(By.Id(prefix + "skillID"));
             string skillIDValue = GetOptionValue(By.Id(prefix + "skillID"));
             Assert.AreEqual(_wa.skillID.ToString(), skillIDValue);
             WaitForElement(By.Id(prefix + "hourlyWage"));
             Assert.AreEqual(_wa.hourlyWage.ToString("F"), WaitForElement(By.Id(prefix + "hourlyWage")).GetAttribute("value"));
-
+            WaitForElement(By.Id(prefix + "total"));
+            Assert.AreEqual((_wa.hourlyWage * _wa.hours * _wa.days).ToString("F"), WaitForElement(By.Id(prefix + "total")).GetAttribute("value"));
             return true;
         }
         #endregion

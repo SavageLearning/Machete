@@ -662,6 +662,7 @@
     //
     // Estimates earnings boxes on Assignments form
     function waEstimateEarnings(waForm) {
+        var myID = $(this).attr('recordid');
         var myWage = $(waForm).find('#hourlyWage').val();
         var myHours = $(waForm).find('#hours').find('option:selected').val();
         var myEarnings = $(waForm).find('#total');
