@@ -10,63 +10,44 @@
 @Html.HiddenFor(model => model.ID, new { @class="hiddenRecID", id=idPrefix + "ID"})
 <div class="tb-table" style="float: left;">
     <div class="tb-row">
-        <div class="tb-label">
-            @Html.LabelFor(model => model.name)
-        </div>
-        <div class="tb-field">
-            @Html.DropDownListFor(model => model.name, 
-                    new SelectList(Lookups.activityName.get(CI.TwoLetterISOLanguageName),
-                                             "Value", "Text", Model.name), 
-                    @Machete.Web.Resources.Shared.choose, 
-                    new { tabindex = "1", id = idPrefix + "name" })
-            @Html.ValidationMessageFor(model => model.name)
-        </div>
+        @Html.mUITableLabelFor(model => model.name)
+        @Html.mUIDropDownListFor(model => model.name, 
+                new SelectList(Lookups.activityName.get(CI.TwoLetterISOLanguageName),
+                                            "Value", "Text", Model.name),
+                new { tabindex = "1", id = idPrefix + "name" })
+     </div>
+     <div class="tb-row">
+        @Html.mUITableLabelFor(model => model.type)
+        @Html.mUIDropDownListFor(model => model.type, 
+                new SelectList(Lookups.activityType.get(CI.TwoLetterISOLanguageName),
+                                                    "Value", "Text", Model.type),
+                new { tabindex = "1", id = idPrefix + "type" })
      </div>
     <div class="tb-row">
-        <div class="tb-label">
-            @Html.LabelFor(model => model.type)
-        </div>
+        @Html.mUITableLabelFor(model => model.dateStart)
         <div class="tb-field">
-            @Html.DropDownListFor(model => model.type, 
-                    new SelectList(Lookups.activityType.get(CI.TwoLetterISOLanguageName),
-                                                      "Value", "Text", Model.type), 
-                    @Machete.Web.Resources.Shared.choose,
-                             new { tabindex = "1", id = idPrefix + "type" })
-            @Html.ValidationMessageFor(model => model.type)
-        </div>
-     </div>
-    <div class="tb-row">
-        <div class="tb-label">
-            @Html.LabelFor(model => model.dateStart)
-        </div>
-        <div class="tb-field">
-                    @Html.TextBox("dateStart", Html.Encode(System.String.Format("{0:g}",
+            @Html.TextBox("dateStart", Html.Encode(System.String.Format("{0:g}",
                                                                         Model.dateStart)),
                                                      new { @id = idPrefix + "dateStart" })
             @Html.ValidationMessageFor(model => model.dateStart)
         </div>
     </div>
     <div class="tb-row">
-        <div class="tb-label">
-            @Html.LabelFor(model => model.dateEnd)
-        </div>
+        @Html.mUITableLabelFor(model => model.dateEnd)
         <div class="tb-field">
-                    @Html.TextBox("dateEnd", Html.Encode(System.String.Format("{0:g}",
+            @Html.TextBox("dateEnd", Html.Encode(System.String.Format("{0:g}",
                                                                                  Model.dateEnd)),
                                                      new { @id = idPrefix + "dateEnd" })
             @Html.ValidationMessageFor(model => model.dateEnd)
         </div>
     </div>
     <div class="tb-row">
-        <div class="tb-label">
-            @Html.LabelFor(model => model.teacher)
-        </div>
+        @Html.mUITableLabelFor(model => model.teacher)
         <div class="tb-field">
             @Html.DropDownListFor(model => model.teacher, 
-                    new SelectList(Lookups.getTeachers(), Model.teacher), 
-                    @Machete.Web.Resources.Shared.choose, 
+                    new SelectList(Lookups.getTeachers(), Model.teacher),
+                    @Machete.Web.Resources.Shared.choose,
                     new { tabindex = "1", id = idPrefix + "teacher" })
-            @Html.ValidationMessageFor(m => m.teacher) 
         </div>
 @*        <div class="tb-label">
         </div>
@@ -76,9 +57,7 @@
 </div>
 <div class="tb-table" style="float: left;">
     <div class="tb-row">
-            <div class="tb-label desc-label">
-            @Html.LabelFor(model => model.notes)
-        </div>
+        @Html.mUITableDescLabelFor(model => model.notes)
         <div class="tb-field desc-field">
             @Html.TextAreaFor(model => model.notes, new { tabindex = "3", @class="desc-field" , id = idPrefix + "notes"})
             @Html.ValidationMessageFor(model => model.notes)

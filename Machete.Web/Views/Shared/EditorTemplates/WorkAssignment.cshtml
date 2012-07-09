@@ -65,13 +65,13 @@
             @Html.Label("total", @Machete.Web.Resources.WorkAssignments.total)
         </div>
         <div class="tb-field">
-            @Html.TextBox("total", null, new { tabindex = "1", style = "width: 6em;" })
+            @Html.TextBox( idPrefix + "total", null, new { tabindex = "1", style = "width: 6em;"})
         </div>
         <div class="tb-label">
             @Html.Label("totalRange", @Machete.Web.Resources.WorkAssignments.totalRange)
         </div>
         <div class="tb-field">
-            @Html.TextBox("totalRange", null, new { tabindex = "1", style = "width: 6em;" })
+            @Html.TextBox(idPrefix + "totalRange", null, new { tabindex = "1", style = "width: 6em;"})
         </div>
     </div>
 </div>
