@@ -328,12 +328,9 @@
     <Content Include="Content\images\lightbox-ico-loading.gif" />
     <Content Include="Content\images\NO-IMAGE-AVAILABLE.jpg" />
     <Content Include="Content\jquery.lightbox-0.5.css" />
-    <Content Include="Scripts\jquery-1.5.1-vsdoc.js" />
-    <Content Include="Scripts\jquery-1.5.1.js" />
-    <Content Include="Scripts\jquery-1.5.1.min.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-ui-1.8.11.js" />
-    <Content Include="Scripts\jquery-ui-1.8.11.min.js" />
+    <Content Include="Scripts\jquery.alerts.js" />
     <Content Include="Scripts\jquery.confirm-1.3.js" />
     <Content Include="Scripts\jquery.lightbox-0.5.js" />
     <Content Include="Scripts\jquery.macheteUI-0.1.js" />
@@ -476,13 +473,8 @@
     <Content Include="Content\images\ui-icons_ff7519_256x240.png" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\console-log.js" />
-    <Content Include="Scripts\jquery.alerts.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\jquery.dataTables.editable-1.0.0.js" />
     <Content Include="Scripts\jquery.dataTables.plugins.js" />
     <Content Include="Scripts\jquery.form.js" />
-    <Content Include="Scripts\jquery.ui.core.js" />
     <Content Include="Scripts\jquery.ui.datepicker.js" />
     <Content Include="Scripts\macheteLayout.js" />
     <Content Include="Scripts\ui.datetimepicker.js" />
@@ -490,26 +482,6 @@
     <Content Include="Content\Site.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\jquery-1.4.4.js" />
-    <Content Include="Scripts\jquery-1.4.4.min.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Scripts\jquery-1.4.4-vsdoc.js" />
-    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
-    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery-ui.js" />
-    <Content Include="Scripts\jquery-ui.min.js" />
-    <Content Include="Scripts\MicrosoftAjax.js" />
-    <Content Include="Scripts\MicrosoftAjax.debug.js" />
-    <Content Include="Scripts\MicrosoftMvcAjax.js" />
-    <Content Include="Scripts\MicrosoftMvcAjax.debug.js" />
-    <Content Include="Scripts\MicrosoftMvcValidation.js" />
-    <Content Include="Scripts\MicrosoftMvcValidation.debug.js" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Account\ChangePassword.cshtml" />
     <Content Include="Views\Account\ChangePasswordSuccess.cshtml" />
