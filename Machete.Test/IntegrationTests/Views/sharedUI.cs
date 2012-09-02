@@ -398,7 +398,7 @@ namespace Machete.Test
             WaitForElement(By.Id(prefix + "hourlyWage"));
             Assert.AreEqual(_wa.hourlyWage.ToString("F"), WaitForElement(By.Id(prefix + "hourlyWage")).GetAttribute("value"));
             WaitForElement(By.Id(prefix + "total"));
-            Assert.AreEqual((_wa.hourlyWage * _wa.hours * _wa.days).ToString("F"), WaitForElement(By.Id(prefix + "total")).GetAttribute("value"));
+            Assert.AreEqual("$"+(_wa.hourlyWage * _wa.hours * _wa.days).ToString("F"), WaitForElement(By.Id(prefix + "total")).GetAttribute("value"));
             return true;
         }
         #endregion
