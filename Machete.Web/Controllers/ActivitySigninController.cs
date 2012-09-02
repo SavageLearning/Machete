@@ -105,7 +105,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Check-in")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
-            IEnumerable<asiView> was = serv.GetIndexView(new viewOptions
+            dataTableResult<asiView> was = serv.GetIndexView(new viewOptions
             {
                 CI = CI,
                 search = param.sSearch,
@@ -123,7 +123,7 @@ namespace Machete.Web.Controllers
             });
 
             //return what's left to datatables
-            var result = from p in was
+            var result = from p in was.query
                          select new
                          {
                              WSIID = p.ID,
@@ -152,8 +152,8 @@ namespace Machete.Web.Controllers
             return Json(new
             {
                 sEcho = param.sEcho,
-                iTotalRecords = serv.TotalCount(),
-                iTotalDisplayRecords = serv.TotalCount(),
+                iTotalRecords = was.totalCount,
+                iTotalDisplayRecords = was.filteredCount,
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);
