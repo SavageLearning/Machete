@@ -10,7 +10,11 @@
         <li><a href="#activities" id="activitiesTab" >@Machete.Web.Resources.Reports.activitiesTab</a> </li>
     </ul>
     <div id="summary">
-        <h3>Note</h3>
+        <h3>Microsoft Report Server</h3>
+        Reports are generated using the Microsoft SQL Server Reporting Service (SSRS). It is a separate application from Machete.<p />
+        The report server provides a very basic page to access all reports available on it. That link is here:<p/>
+        <a href="/ReportServer/" target="_blank">SSRS - Report Server</a>
+        <h3>Report login</h3>
         Machete is not integrated into the Domain security system, so you have to type in a password for the report server. <p />
         The ID is: reports <p />
         The password is: reports
@@ -24,6 +28,8 @@
         <a href="/ReportServer/Pages/ReportViewer.aspx?%2fWork+orders-Status+summary+pie+charts&rs:Command=Render" target="_blank">Monthly work order statuses (Pie charts)</a>
     </div>
     <div id="workers">
+        <p />
+        <a href="/ReportServer/Pages/ReportViewer.aspx?%2fUnited_Way_Demographics-Filtered&rs:Command=Render" target="_blank">United Way Demographics</a>
         <p />
         <a href="/ReportServer/Pages/ReportViewer.aspx?%2fActive+workers+sorted+by+MemberID--All+fields&rs:Command=Render" target="_blank">All Workers</a>
         <p />
