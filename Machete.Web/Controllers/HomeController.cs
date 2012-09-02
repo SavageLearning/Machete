@@ -31,6 +31,10 @@ namespace Machete.Web.Controllers
         public ActionResult Wiki()
         {
             return PartialView();
+        }
+        public ActionResult Docs()
+        {
+            return PartialView();
         }      
     }   
 }

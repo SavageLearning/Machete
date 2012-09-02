@@ -10,7 +10,7 @@ Machete.suo
 [Dd]ebug/
 [Rr]elease/
 [Pp]ackages/
-packages
+packages*
 obj/*
 
 log.txt*

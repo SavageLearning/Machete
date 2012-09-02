@@ -216,4 +216,7 @@
   <data name="newsupdates" xml:space="preserve">
     <value>Machete Updates</value>
   </data>
+  <data name="docs" xml:space="preserve">
+    <value>Documentation</value>
+  </data>
 </root>
