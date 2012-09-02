@@ -133,8 +133,10 @@ namespace Machete.Service
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref eSIV);
             result.filteredCount = eSIV.Count();
             result.totalCount = repo.GetAllQ().Count();
-            //if ((int)o.displayLength >= 0)
-            result.query = eSIV.Skip((int)o.displayStart).Take((int)o.displayLength);            
+            if ((int)o.displayLength >= 0)
+                result.query = eSIV.Skip((int)o.displayStart).Take((int)o.displayLength);
+            else
+                result.query = eSIV;
             return result;
 
         }
