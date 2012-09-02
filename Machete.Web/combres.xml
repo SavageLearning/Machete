@@ -25,7 +25,7 @@
     <resourceSet name="siteJs" type="js">
         <resource path="~/Scripts/jquery-1.7.1.js" />
         <resource path="~/Scripts/jquery.form.js" />
-        <resource path="~/Scripts/jquery-ui.js" />
+        <resource path="~/Scripts/jquery-ui-1.8.11.js" />
         <resource path="~/Scripts/jquery.dataTables-1.9.0.js" />
         <resource path="~/Scripts/jquery.validate.js" />
         <resource path="~/Scripts/jquery.validate.unobtrusive.js" />
