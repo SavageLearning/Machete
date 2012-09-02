@@ -6,31 +6,34 @@
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
     string recType = "activity";
 }
-@using (Html.BeginForm("Edit", "Activity", FormMethod.Post, 
-                        new { @class = "edittab-form EditPost", @id="ActivityTab-" + Model.ID }))
+@if (Html.IsInRole(Html.Role_AMPCU()) || Html.IsInRole(Html.Role_T()))
 {
-    @*<input type="button" value="@Activities.viewlink" class="formButton" id="viewActivity-@Model.ID" />*@
-    <input type="submit" value="@Activities.editsubmit" class="formButton saveBtn"/>
+    using (Html.BeginForm("Edit", "Activity", FormMethod.Post,
+                            new { @class = "edittab-form EditPost", @id = "ActivityTab-" + Model.ID }))
+    {
+        @*<input type="button" value="@Activities.viewlink" class="formButton" id="viewActivity-@Model.ID" />*@
+        <input type="submit" value="@Activities.editsubmit" class="formButton saveBtn"/>
+        if (Html.IsInRole(Html.Role_AM()))
+        {
+            <input id="deleteActivityButton-@Model.ID" type="button" value="@Activities.deletesubmit" 
+                    class="formButton deleteButton" />
+        }
+        <br />    
+        @Html.ValidationSummary(true)
+        @Html.EditorForModel()
+
+    }
     if (Html.IsInRole(Html.Role_AM()))
     {
-        <input id="deleteActivityButton-@Model.ID" type="button" value="@Activities.deletesubmit" 
-                class="formButton deleteButton" />
-    }
-    <br />    
-    @Html.ValidationSummary(true)
-    @Html.EditorForModel()
-
-}
-@if (Html.IsInRole(Html.Role_AM()))
-{
-    //
-    // Only Managers can delete activity records
-    // The phonedesk can edit and save
-    //
-    using (Html.BeginForm("Delete", "Activity", FormMethod.Post, 
-                            new { @class = "edittab-form DeletePost", @id = "DeleteActivity-" + Model.ID }))
-    {
-        @Html.HiddenFor(model => model.ID);
+        //
+        // Only Managers can delete activity records.
+        // The phonedesk can edit and save.
+        //
+        using (Html.BeginForm("Delete", "Activity", FormMethod.Post,
+                                new { @class = "edittab-form DeletePost", @id = "DeleteActivity-" + Model.ID }))
+        {
+            @Html.HiddenFor(model => model.ID);
+        }
     }
 }
 @Html.Partial("ActivitySigninIndex", new ActivitySignin() { activityID = Model.ID})

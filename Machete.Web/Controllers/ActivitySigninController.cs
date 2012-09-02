@@ -36,7 +36,7 @@ namespace Machete.Web.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        [Authorize(Roles = "Manager, Administrator, Check-in")]
+        //[Authorize(Roles = "Manager, Administrator, Check-in")]
         public ActionResult Index()
         {
             return View();
@@ -48,7 +48,7 @@ namespace Machete.Web.Controllers
         /// <param name="activityID"></param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize(Roles = "Manager, Administrator, Check-in")]
+        //[Authorize(Roles = "Manager, Administrator, Check-in")]
         public ActionResult Index(int dwccardnum, int activityID)
         {
             var _asi = new ActivitySignin();
@@ -102,7 +102,7 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Administrator, Manager, Check-in")]
+        //[Authorize(Roles = "Administrator, Manager, Check-in")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             IEnumerable<asiView> was = serv.GetIndexView(new viewOptions
