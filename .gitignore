@@ -2,8 +2,6 @@
 [Tt]humbs.db
 *.DS_Store
 *.cache
-<<<<<<< HEAD
-<<<<<<< HEAD
 *.csproj
 Machete.suo
 .gitignore
@@ -11,12 +9,11 @@ Machete.suo
 # Build results
 [Dd]ebug/
 [Rr]elease/
-packages/
+[Pp]ackages/
+packages
 obj/*
-=======
-=======
->>>>>>> 38bd043123a039bdd3e358f779ca963378fb1cea
-log.txt.*
+
+log.txt*
 #Visual Studio files
 *.[Oo]bj
 *.user
@@ -24,10 +21,7 @@ log.txt.*
 *.pch
 *.vspscc
 *.vssscc
-<<<<<<< HEAD
->>>>>>> 77f7d958e87e4c563619f656ef7720064140a5ba
-=======
->>>>>>> 38bd043123a039bdd3e358f779ca963378fb1cea
+
 *_i.c
 *_p.c
 *.ncb
@@ -68,8 +62,4 @@ _ReSharper*/
 packages/
 /Machete.Web/log.txt
 /Machete.Web/log.txt
-<<<<<<< HEAD
 /Machete.suo
-=======
-/Machete.suo
->>>>>>> 38bd043123a039bdd3e358f779ca963378fb1cea
