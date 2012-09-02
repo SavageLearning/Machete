@@ -2,7 +2,6 @@
 [Tt]humbs.db
 *.DS_Store
 *.cache
-
 *.csproj
 Machete.suo
 .gitignore
@@ -10,10 +9,11 @@ Machete.suo
 # Build results
 [Dd]ebug/
 [Rr]elease/
-packages/
+[Pp]ackages/
+packages
 obj/*
 
-log.txt.*
+log.txt*
 #Visual Studio files
 *.[Oo]bj
 *.user
@@ -62,6 +62,4 @@ _ReSharper*/
 packages/
 /Machete.Web/log.txt
 /Machete.Web/log.txt
-
-
 /Machete.suo
