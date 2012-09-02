@@ -64,14 +64,14 @@ namespace Machete.Web.Controllers
             System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
             //
             //pass filter parameters to service level
-            IEnumerable<WOWASummary> filteredSummary = 
+            dataTableResult<WOWASummary> dtr = 
                 woServ.CombinedSummary(param.sSearch,
                     Request["sSortDir_0"] == "asc" ? false : true,
                     param.iDisplayStart,
                     param.iDisplayLength);
             //
             //return what's left to datatables
-            var result = from p in filteredSummary
+            var result = from p in dtr.query
                          select new[] { System.String.Format("{0:MM/dd/yyyy}", p.date),
                                          p.weekday.ToString(),
                                          p.pending_wo > 0 ? p.pending_wo.ToString(): null,
@@ -89,8 +89,8 @@ namespace Machete.Web.Controllers
             return Json(new
             {
                 sEcho = param.sEcho,
-                iTotalRecords = woServ.GetSummary().Count(),
-                iTotalDisplayRecords = filteredSummary.Count(),
+                iTotalRecords = dtr.totalCount,
+                iTotalDisplayRecords = dtr.filteredCount,
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);

@@ -52,8 +52,8 @@ namespace Machete.Test
             int displayLength = 50;
             //
             //Act
-            IEnumerable<WOWASummary> result = _woServ.CombinedSummary(search, orderdescending, displayStart, displayLength);
-            WOWASummary wowa = result.First();
+            dataTableResult<WOWASummary> result = _woServ.CombinedSummary(search, orderdescending, displayStart, displayLength);
+            WOWASummary wowa = result.query.First();
             //
             //Assert
             Assert.IsNotNull(result, "CombinedSummary.IEnumerable is Null");

@@ -20,7 +20,7 @@ namespace Machete.Service
         IQueryable<WorkOrderSummary> GetSummary(string search);
         IQueryable<WorkOrderSummary> GetSummary();
         int CompleteActiveOrders(DateTime date, string user);
-        IEnumerable<WOWASummary> CombinedSummary(string search,
+        dataTableResult<WOWASummary> CombinedSummary(string search,
             bool orderDescending,
             int displayStart,
             int displayLength);
@@ -183,7 +183,7 @@ namespace Machete.Service
         /// </summary>
         /// <param name="search"></param>
         /// <returns></returns>
-        public IEnumerable<WOWASummary> CombinedSummary(string search, 
+        public dataTableResult<WOWASummary> CombinedSummary(string search, 
             bool orderDescending,
             int displayStart,
             int displayLength)
@@ -191,11 +191,12 @@ namespace Machete.Service
 
             IEnumerable<WorkOrderSummary> woResult;
             IEnumerable<WorkAssignmentSummary> waResult;
-            IEnumerable<WOWASummary> result;
+            IEnumerable<WOWASummary> q;
+            var result = new dataTableResult<WOWASummary>();
             //pulling from DB here because the joins grind it to a halt
             woResult = GetSummary(search).ToList();
             waResult = waServ.GetSummary(search).ToList();
-                result = woResult.Join(waResult,
+                q = woResult.Join(waResult,
                             wo => new { wo.date, wo.status },
                             wa => new { wa.date, wa.status },
                             (wo, wa) => new
@@ -223,14 +224,14 @@ namespace Machete.Service
             });
 
                 if (orderDescending)
-                    result = result.OrderByDescending(p => p.date);
+                    q = q.OrderByDescending(p => p.date);
                 else
-                    result = result.OrderBy(p => p.date);
+                    q = q.OrderBy(p => p.date);
 
-                //Limit results to the display length and offset
-                var displayedSummary = result.Skip(displayStart)
-                                                    .Take(displayLength);
-            return displayedSummary;
+                result.filteredCount = q.Count();
+                result.query = q.Skip<WOWASummary>((int)displayStart).Take((int)displayLength);
+                result.totalCount = repo.GetAllQ().Count();
+                return result;
         }
     }
     public class WOWASummary
