@@ -68,7 +68,27 @@
         $.validator.unobtrusive.parseDynamicContent('#@(idPrefix)waForm');
         //
         // wage calculations
-        $waForm.mUI('waFormConfiguration');
+        $waForm.mUI('waFormConfiguration', {
+            days: $waForm.find('#@(idPrefix)days'),
+            hourlyWage: $waForm.find('#@(idPrefix)hourlyWage'),
+            hour: $waForm.find('#@(idPrefix)hours'),
+            range: $waForm.find('#@(idPrefix)hourRange'),
+            total: $waForm.find('#@(idPrefix)total'),
+            totalRange: $waForm.find('#@(idPrefix)totalRange'),
+            skillID: $waForm.find('#@(idPrefix)skillID'),
+            errCalcMsg: "@(Machete.Web.Resources.Shared.notcalculable)"
+        });
+        //
+        //  Edit submit event
+        $waForm.mUI('formSubmit', { 
+            exclusiveTab: false,
+            formLevel: 3,
+            preProcess: function () {
+                $waForm.find('#@(idPrefix)hourlyWage').removeAttr('disabled', 'disabled');
+                $waForm.find('#@(idPrefix)hours').removeAttr('disabled', 'disabled');
+                $waForm.find('#@(idPrefix)hourRange').removeAttr('disabled', 'disabled');
+            }
+        });
         //
         // Delete confirmation 
         $("#deleteWorkAssignmentButton-@(Model.ID)").mUI('formClickDelete', {
@@ -85,19 +105,7 @@
             changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
             changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
         });
-        //
-        //  Edit submit event
-        var myWage = $waForm.find('#hourlyWage');
-        var myHour = $waForm.find('#hours');
-        var myRange = $waForm.find('#hourRange');
-        $waForm.mUI('formSubmit', { exclusiveTab: false,
-            formLevel: 3,
-            preProcess: function () {
-                $(myWage).removeAttr('disabled', 'disabled');
-                $(myHour).removeAttr('disabled', 'disabled');
-                $(myRange).removeAttr('disabled', 'disabled');
-            }
-        });
+
         //
         // Duplicate submit event
         $("#duplicate-@(Model.ID)").mUI('formClickDuplicate', {

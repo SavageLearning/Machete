@@ -178,11 +178,12 @@
         //
         //  waFormConfiguration: Assignment Create/Edit form configuration
         //
-        waFormConfiguration: function () {
+        waFormConfiguration: function (opt) {
             var waForm = this;
-            var hrWage = $(waForm).find('#hourlyWage');
-            var skillID = $(waForm).find('#skillID');
-            var hours = $(waForm).find('#hours');
+            var hrWage = opt.hourlyWage;
+            var skillID = opt.skillID;
+            var hours = opt.hour;
+            opt.waForm = this;
             //
             // Increment tabindex by 20 to offset for employers(0) and orders (10)
             $(waForm).find('[tabindex]').each(function () {
@@ -193,24 +194,24 @@
             // don't want to override a custom hourly wage on edit
             if ($(hrWage).text() === "0") {
                 // update earnings info based on skill
-                parseSkillsDD(waForm);
+                _waParseSkillsDD(opt);
             }
             // show total estimated earnings for assignment
-            waEstimateEarnings(waForm);
-            _waFilterHourRange(waForm);
+            _waEstimateEarnings(opt);
+            _waFilterHourRange(opt);
             // presets for skill dropdown
             $(skillID).bind('change', function () {
-                parseSkillsDD(waForm);
-                _waFilterHourRange(waForm);
-                waEstimateEarnings(waForm);
+                _waParseSkillsDD(opt);
+                _waFilterHourRange(opt);
+                _waEstimateEarnings(opt);
             });
             // presets for min/max hour dropdowns
             $(hours).bind('change', function () {
-                _waFilterHourRange(waForm);
+                _waFilterHourRange(opt);
             });
             // if money fields change, recalc total
             $(waForm).find('.earnings-part').bind('change', function () {
-                waEstimateEarnings(waForm);
+                _waEstimateEarnings(opt);
             });
         },
         //
@@ -635,11 +636,11 @@
     //  for the create/edit assignment page. 
     //  bound to change event
     //
-    function parseSkillsDD(myForm) {
-        var myDD = $(myForm).find('#skillID');
-        var myWage = $(myForm).find('#hourlyWage');
-        var myHour = $(myForm).find('#hours');
-        var myRange = $(myForm).find('#hourRange');
+    function _waParseSkillsDD(opt) {
+        var myDD = opt.skillID;
+        var myWage = opt.hourlyWage;
+        var myHour = opt.hour;
+        var myRange = opt.range;
         //
         var myOption = $(myDD).find('option:selected');
         //
@@ -651,52 +652,59 @@
             $(myWage).attr('disabled', 'disabled');
             $(myHour).attr('disabled', 'disabled');
             $(myRange).attr('disabled', 'disabled');
-            $(myForm).find('#hourRange option[value=""]').attr("selected", "selected").show();
+            $(myRange).find('option[value=""]').attr("selected", "selected").show();
         } else {
             $(myWage).removeAttr('disabled', 'disabled');
             $(myHour).removeAttr('disabled', 'disabled');
             $(myRange).removeAttr('disabled', 'disabled');
         }
-        waEstimateEarnings(myForm);
+        _waEstimateEarnings(opt);
     }
     //
     // Estimates earnings boxes on Assignments form
-    function waEstimateEarnings(waForm) {
-        var myID = $(waForm).find('#ID').val();
-        var myPrefix = 'WA' + myID + '-';
-        var myWage = $(waForm).find('#' + myPrefix + 'hourlyWage').val();
-        var myHours = $(waForm).find('#' + myPrefix + 'hours').find('option:selected').val();
-        var myEarnings = $(waForm).find('#' + myPrefix + 'total');
-        var myRangeEarnings = $(waForm).find('#' + myPrefix + 'totalRange');
-        var myRange = $(waForm).find('#' + myPrefix + 'hourRange').val();
-        $(myEarnings).attr('disabled', 'disabled');
-        $(myRangeEarnings).attr('disabled', 'disabled');
-        var myDays = $(waForm).find('#' + myPrefix + 'days').find('option:selected').val();
-        if (isNumber(myDays) &&
-        isNumber(myHours) &&
-        isNumber(myWage)) {
-            var total = myDays * myHours * myWage;
+    function _waEstimateEarnings(opt) {
+        var waForm = opt.waForm;
+        var myWage = opt.hourlyWage;
+        var myHour = opt.hour;
+        var myTotal = opt.total;
+        var myTotalRange = opt.totalRange;
+        var myRange = opt.range;
+        var myDays = opt.days;
+        var rangeVal = $(myRange).val();
+        var wageVal = $(myWage).val();
+        var hourVal = $(myHour).find('option:selected').val();
+        var daysVal = $(myDays).find('option:selected').val();
+        $(myTotal).attr('disabled', 'disabled');
+        $(myTotalRange).attr('disabled', 'disabled');
 
-            $(myEarnings).val("$" + total.toFixed(2));
-            if (isNumber(myRange)) {
-                var range = myDays * myRange * myWage;
-                $(myRangeEarnings).val("$" + range.toFixed(2));
+        if (isNumber(daysVal) &&
+            isNumber(hourVal) &&
+            isNumber(wageVal)) {
+            var total = daysVal * hourVal * wageVal;
+
+            $(myTotal).val("$" + total.toFixed(2));
+            if (isNumber(rangeVal)) {
+                var range = daysVal * rangeVal * wageVal;
+                $(myTotalRange).val("$" + range.toFixed(2));
             } else {
-                $(myRangeEarnings).val("");
+                $(myTotalRange).val("");
             }
         } else {
-            $(myEarnings).val("@(Machete.Web.Resources.Shared.notcalculable)");
-            $(myRange).val("@(Machete.Web.Resources.Shared.notcalculable)");
+            $(myTotal).val(opt.errCalcMsg);
+            $(myTotalRange).val(opt.errCalcMsg);
         }
     }
     //
     // Filters the Hour range based on what's selected in the base #hours field
     // TODO:2012/01/22: move to subfile with Assignment specific JS
-    function _waFilterHourRange(waForm) {
-        var myHours = $(waForm).find('#hours');
-        var hour = $(myHours).val();
-        var range = $(waForm).find('#hourRange').val();
-        $(waForm).find('#hourRange option').each(function () {
+    function _waFilterHourRange(opt) {
+        //var myHours = opt.hour;
+        var waForm = opt.waForm;
+        var hour = $(opt.hour).val();
+        var range = $(opt.range).val();
+        var totalRange = opt.TotalRange;
+        var myRange = opt.range;
+        $(myRange).find('option').each(function () {
             var entry = this;
             var entryval = $(this).val();
             if (Number(entryval) <= Number(hour)) {
@@ -708,8 +716,8 @@
 
         });
         if (Number(hour) >= Number(range)) {
-            $(waForm).find('#hourRange option[value=""]').attr("selected", "selected").show();
-            $(waForm).find('#totalRange').val("");
+            $(myRange).find('option[value=""]').attr("selected", "selected").show();
+            $(totalRange).val("");
         }
     }
     //
