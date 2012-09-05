@@ -59,7 +59,15 @@ namespace Machete.Test //A Small Change: There once was a man in peru / Who drea
         public static Person person = new Person
         {
             firstname1 = "barack",
+            firstname2 = "\"danger\"",
             lastname1 = "obama",
+            lastname2 = ", man",
+            address1 = "12345 6th Ave NE",
+            address2 = "Apt 789",
+            city = "Gotham",
+            phone = "206-555-3825",
+            state = "CO",
+            zipcode = "67123",
             gender = MacheteLookup.cache.First(x => x.category == "gender" && x.text_EN == "Male").ID,
             active = true, //true
             datecreated = DateTime.Now,
@@ -68,6 +76,19 @@ namespace Machete.Test //A Small Change: There once was a man in peru / Who drea
             Updatedby = "TestInitializer"
         };
 
+        #endregion
+        #region Events
+        public static Event event1 = new Event
+        {
+            Createdby = "TestInitializer",
+            Updatedby = "TestInitializer",
+            datecreated = DateTime.Now,
+            dateupdated = DateTime.Now,
+            dateFrom = DateTime.Now,
+            dateTo = DateTime.Now + TimeSpan.FromDays(30),
+            eventType = MacheteLookup.cache.First(x => x.category == "eventtype" && x.text_EN == "Complaint").ID,
+            notes = "Remember Sammy Jenkis"
+        };
         #endregion
         #region Employers
         public static Employer employer = new Employer

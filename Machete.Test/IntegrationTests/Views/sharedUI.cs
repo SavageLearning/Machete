@@ -51,11 +51,41 @@ namespace Machete.Test
             _per.lastname1 = RandomString(8);
             WaitThenClickElement(By.Id("menulinkperson"));
             WaitThenClickElement(By.Id("personCreateTab"));
-            WaitThenClickElement(By.Id("firstname1"));
-            _d.FindElement(By.Id("firstname1")).Clear();
-            _d.FindElement(By.Id("firstname1")).SendKeys(_per.firstname1);
-            _d.FindElement(By.Id("lastname1")).Clear();
-            _d.FindElement(By.Id("lastname1")).SendKeys(_per.lastname1);
+            WaitThenClickElement(By.Id(prefix + "firstname1"));
+            _d.FindElement(By.Id(prefix + "firstname1")).Clear();
+            _d.FindElement(By.Id(prefix + "firstname1")).SendKeys(_per.firstname1);
+            if (_per.firstname2 != null)
+            {
+                _d.FindElement(By.Id(prefix + "firstname2")).Clear();
+                _d.FindElement(By.Id(prefix + "firstname2")).SendKeys(_per.firstname2);
+            }
+            _d.FindElement(By.Id(prefix + "lastname1")).Clear();
+            _d.FindElement(By.Id(prefix + "lastname1")).SendKeys(_per.lastname1);
+            if (_per.lastname2 != null)
+            {
+                _d.FindElement(By.Id(prefix + "lastname2")).Clear();
+                _d.FindElement(By.Id(prefix + "lastname2")).SendKeys(_per.lastname2);
+            }
+            _d.FindElement(By.Id(prefix + "address1")).Clear();
+            _d.FindElement(By.Id(prefix + "address1")).SendKeys(_per.address1);
+            _d.FindElement(By.Id(prefix + "address2")).Clear();
+            _d.FindElement(By.Id(prefix + "address2")).SendKeys(_per.address2);
+            _d.FindElement(By.Id(prefix + "phone")).Clear();
+            _d.FindElement(By.Id(prefix + "phone")).SendKeys(_per.phone);
+            SelectOption(By.Id(prefix + "gender"), MacheteLookup.cache.First(c => c.category == "gender" && c.ID == _per.gender).text_EN);
+            _d.FindElement(By.Id(prefix + "city")).Clear();
+            _d.FindElement(By.Id(prefix + "city")).SendKeys(_per.city);
+            if (_per.genderother != null)
+            {
+                _d.FindElement(By.Id(prefix + "genderOther")).Clear();
+                _d.FindElement(By.Id(prefix + "genderOther")).SendKeys(_per.genderother);
+            }
+            WaitForElement(By.Id(prefix + "state")).Clear();
+            WaitForElement(By.Id(prefix + "state")).SendKeys(_per.state);
+            if (!_per.active)
+                WaitForElement(By.Id(prefix + "active")).Click();
+            WaitForElement(By.Id(prefix + "zipcode")).Clear();
+            WaitForElement(By.Id(prefix + "zipcode")).SendKeys(_per.zipcode);
             WaitThenClickElement(By.Id(prefix + "SaveBtn"));
 
             //
@@ -63,15 +93,36 @@ namespace Machete.Test
             //WaitForElementValue(By.XPath("//table[@id='personTable']/tbody/tr/td[4]"), _per.lastname1);
             //WaitAndDoubleClick(By.XPath("//table[@id='personTable']/tbody/tr/td[6]"));
 
+            var selectedTab = WaitForElement(By.CssSelector("li.person.ui-tabs-selected"));
+            IWebElement tabAnchor = selectedTab.FindElement(By.CssSelector("a"));
+            _per.ID = Convert.ToInt32(tabAnchor.GetAttribute("recordid"));
             //
+            return true;
+        }
+        public bool personValidate(Person _per)
+        {
+            string prefix = "person" + _per.ID + "-";
             var selectedTab = WaitForElement(By.CssSelector("li.person.ui-tabs-selected"));
             Assert.IsNotNull(selectedTab, "Failed to find Person selected tab element");
             IWebElement tabAnchor = selectedTab.FindElement(By.CssSelector("a"));
             Assert.IsNotNull(tabAnchor, "Failed to find Person selected tab element anchor");
-            var name = _per.firstname1 + " " + _per.lastname1;
+            var name = _per.firstname1 + " " + (_per.firstname2 != null ? _per.firstname2 + " " : "") + _per.lastname1 + (_per.lastname2 != null ? " " + _per.lastname2: "");
 
             Assert.IsTrue(tabAnchor.Text == name, "Person anchor label doesn't match person name");
-            _per.ID = Convert.ToInt32(tabAnchor.GetAttribute("recordid"));
+
+            Assert.AreEqual(_per.firstname1, WaitForElement(By.Id(prefix + "firstname1")).GetAttribute("value"));
+            Assert.AreEqual(_per.firstname2 == null ? "" : _per.firstname2, WaitForElement(By.Id(prefix + "firstname2")).GetAttribute("value"));
+            Assert.AreEqual(_per.lastname1, WaitForElement(By.Id(prefix + "lastname1")).GetAttribute("value"));
+            Assert.AreEqual(_per.lastname2 == null ? "" : _per.lastname2, WaitForElement(By.Id(prefix + "lastname2")).GetAttribute("value"));
+            Assert.AreEqual(_per.address1, WaitForElement(By.Id(prefix + "address1")).GetAttribute("value"));
+            Assert.AreEqual(_per.address2 == null ? "" : _per.address2, WaitForElement(By.Id(prefix + "address2")).GetAttribute("value"));
+            Assert.AreEqual(_per.phone, WaitForElement(By.Id(prefix + "phone")).GetAttribute("value"));
+            Assert.AreEqual(_per.city, WaitForElement(By.Id(prefix + "city")).GetAttribute("value"));
+            Assert.AreEqual(_per.genderother == null ? "" : _per.genderother, WaitForElement(By.Id(prefix + "genderOther")).GetAttribute("value"));
+            Assert.AreEqual(_per.state, WaitForElement(By.Id(prefix + "state")).GetAttribute("value"));
+            Assert.AreEqual(_per.zipcode, WaitForElement(By.Id(prefix + "zipcode")).GetAttribute("value"));
+            Assert.AreEqual(_per.active, WaitForElement(By.Id(prefix + "active")).Selected);
+            Assert.AreEqual(_per.gender.ToString(), GetOptionValue(By.Id(prefix + "gender"))); 
             return true;
         }
 
@@ -95,14 +146,32 @@ namespace Machete.Test
             SelectOption(By.Id(prefix + "typeOfWorkID"), @"(DWC) Day Worker Center");
             SelectOption(By.Id(prefix + "englishlevelID"), "2");
             SelectOption(By.Id(prefix + "incomeID"), @"Less than $15,000");
-            SelectOption(By.Id(prefix + "neighborhoodID"), "Kent");
             _d.FindElement(By.Id(prefix + "imagefile")).SendKeys(imagepath);
             _d.FindElement(By.Id("createWorkerBtn")).Click();
             //
             //
+            _d.FindElement(By.Id("workerCreateTab")).Click();            
+            return true;
+        }
+        public bool workerValidate(Worker _wkr)
+        {
+            string prefix = "worker"+_wkr.ID+"-";
             bool result = WaitForElementValue(By.Id("workerCreateTab"), "Worker information");
             Assert.IsTrue(result, "Create tab label not updated by formSubmit");
-            _d.FindElement(By.Id("workerCreateTab")).Click();            
+
+            Assert.AreEqual(_wkr.dateOfMembership.ToShortDateString(), WaitForElement(By.Id(prefix + "dateOfMembership")).GetAttribute("value"));
+            Assert.AreEqual(_wkr.dateOfBirth.ToShortDateString(), WaitForElement(By.Id(prefix + "dateOfMembership")).GetAttribute("value"));
+            Assert.AreEqual(((DateTime)_wkr.dateinUSA).ToShortDateString(), WaitForElement(By.Id(prefix + "dateinUSA")).GetAttribute("value"));
+            Assert.AreEqual(((DateTime)_wkr.dateinseattle).ToShortDateString(), WaitForElement(By.Id(prefix + "dateinseattle")).GetAttribute("value"));
+            Assert.AreEqual(_wkr.memberexpirationdate.ToShortDateString(), WaitForElement(By.Id(prefix + "memberexpirationdate")).GetAttribute("value"));
+            Assert.AreEqual(_wkr.height, WaitForElement(By.Id(prefix + "height")).GetAttribute("value"));
+            Assert.AreEqual(_wkr.weight, WaitForElement(By.Id(prefix + "weight")).GetAttribute("value"));
+            Assert.AreEqual(_wkr.dwccardnum.ToString(), WaitForElement(By.Id(prefix + "dwccardnum")).GetAttribute("value"));
+            Assert.AreEqual("Active", GetOptionText(By.Id(prefix + "memberStatus")));
+            Assert.AreEqual("Kent", GetOptionText(By.Id(prefix + "neighborhoodID")));
+            Assert.AreEqual(@"(DWC) Day Worker Center", GetOptionText(By.Id(prefix + "typeOfWorkID")));
+            Assert.AreEqual("2", GetOptionText(By.Id(prefix + "englishlevelID")));
+            Assert.AreEqual(@"Less than $15,000", GetOptionText(By.Id(prefix + "incomeID")));
             return true;
         }
 
@@ -123,6 +192,38 @@ namespace Machete.Test
                 _wkr.ID = _per.ID;
                 workerCreate(_wkr, SolutionDirectory() + "\\Machete.test\\jimmy_machete.jpg");
             }
+            return true;
+        }
+
+        public bool eventCreate(Event _ev)
+        {
+            string prefix = "event"+ _ev.ID +"-";
+            WaitThenClickElement(By.Id("eventCreateTab"));
+            WaitForElement(By.Id(prefix + "eventType"));
+            SelectOptionByValue(By.Id(prefix + "eventType"), _ev.eventType.ToString());
+            WaitForElement(By.Id(prefix + "dateFrom")).Clear();
+            WaitForElement(By.Id(prefix + "dateFrom")).SendKeys(_ev.dateFrom.ToShortDateString());
+            if (_ev.dateTo != null)
+            {
+                WaitForElement(By.Id(prefix + "dateTo")).Clear();
+                WaitForElement(By.Id(prefix + "dateTo")).SendKeys(((DateTime)_ev.dateTo).ToShortDateString());
+            }
+            WaitForElement(By.Id(prefix + "notes")).SendKeys(_ev.notes);
+            WaitThenClickElement(By.Id("eventCreateBtn"));
+            var selectedTab = _d.FindElements(By.CssSelector("li.ui-tabs-selected"))[1];
+            IWebElement tabAnchor = selectedTab.FindElement(By.CssSelector("a"));
+            _ev.ID = Convert.ToInt32(tabAnchor.GetAttribute("recordid"));
+            return true;
+        }
+        public bool eventValidate(Event _ev)
+        {
+            string prefix = "event" + _ev.ID + "-";
+            WaitForElement(By.Id(prefix + "eventType"));
+            Assert.AreEqual(_ev.eventType.ToString(), GetOptionValue(By.Id(prefix + "eventType")));
+            Assert.AreEqual(_ev.dateFrom.ToShortDateString(), WaitForElement(By.Id(prefix + "dateFrom")).GetAttribute("value"));
+            if (_ev.dateTo != null)
+                Assert.AreEqual(((DateTime)_ev.dateTo).ToShortDateString(), WaitForElement(By.Id(prefix + "dateTo")).GetAttribute("value"));
+            Assert.AreEqual(_ev.notes, WaitForElement(By.Id(prefix + "notes")).GetAttribute("value"));
             return true;
         }
         #endregion
@@ -398,7 +499,8 @@ namespace Machete.Test
             WaitForElement(By.Id(prefix + "hourlyWage"));
             Assert.AreEqual(_wa.hourlyWage.ToString("F"), WaitForElement(By.Id(prefix + "hourlyWage")).GetAttribute("value"));
             WaitForElement(By.Id(prefix + "total"));
-            Assert.AreEqual((_wa.hourlyWage * _wa.hours * _wa.days).ToString("F"), WaitForElement(By.Id(prefix + "total")).GetAttribute("value"));
+            Assert.AreEqual("$" +(_wa.hourlyWage * _wa.hours * _wa.days).ToString("F"), WaitForElement(By.Id(prefix + "total")).GetAttribute("value"));
+            Assert.AreEqual(_wa.pseudoID.ToString(), WaitForElement(By.Id(prefix + "pseudoID")).GetAttribute("Value"));
             return true;
         }
         #endregion
@@ -684,6 +786,15 @@ namespace Machete.Test
                    .Solution
                    .FullName;
             return System.IO.Path.GetDirectoryName(solutionDirectory);
+        }
+        public static int nextAvailableDwccardnum(MacheteContext DB)
+        {
+            int attempt = 30000;
+            while (DB.Workers.Any(x => x.dwccardnum == attempt))
+            {
+                ++attempt;
+            }
+            return attempt;
         }
     }
 }
