@@ -152,11 +152,22 @@ namespace Machete.Test
             ui.WaitThenClickElement(By.Id("activateWorkOrderButton-"+ _wo.ID));
             //Assert
             ui.WorkAssignmentValidate(_employer1, _wo, _wa1);
-            //
-            // TODO: Selenium: check WO status and recid of order
+            ui.workOrderValidate(_wo);
+
+            ////Act
+            //ui.WaitThenClickElement(By.Id("duplicate-" + _wa1.ID));
+            //WorkAssignment duplicatedAssignment = (WorkAssignment)_wa1.Clone();
+            //duplicatedAssignment.incrPseudoID();
+            //duplicatedAssignment.ID = _wa1.ID + 6;
+
+            ////Assert
+            //ui.WorkAssignmentValidate(_employer1, _wo, duplicatedAssignment);
+
             // TODO: Selenium: test duplicate (pseudoID increment is visible in table)
             // TODO: Selenium: test DispatchOption / Change Worker dialog. 
             // TODO: Selenium: test Skill dropdown for Chambita/specialized skill, test total changes
+
+
 
 
         }
