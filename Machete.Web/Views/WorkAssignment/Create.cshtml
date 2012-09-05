@@ -27,21 +27,27 @@
         $.validator.unobtrusive.parseDynamicContent('#@(woPrefix)waCreateForm');
         //
         // setup earnings estimate and dropdown controls
-        $waForm.mUI('waFormConfiguration');
+        $waForm.mUI('waFormConfiguration', {
+            days: $waForm.find('#@(idPrefix)days'),
+            hourlyWage: $waForm.find('#@(idPrefix)hourlyWage'),
+            hour: $waForm.find('#@(idPrefix)hours'),
+            range: $waForm.find('#@(idPrefix)hourRange'),
+            total: $waForm.find('#@(idPrefix)total'),
+            totalRange: $waForm.find('#@(idPrefix)totalRange'),
+            skillID: $waForm.find('#@(idPrefix)skillID'),
+            errCalcMsg: "@(Machete.Web.Resources.Shared.notcalculable)"
+        });
         //
         // WorkOrder Create submit event
-        var myWage = $waForm.find('#hourlyWage');
-        var myHour = $waForm.find('#hours');
-        var myRange = $waForm.find('#hourRange');
         $waForm.mUI('formSubmit', {
             exclusiveTab: false,
             create: true,
             recType: "@(recType)",
             formLevel: 3,
             preProcess: function () {
-                $(myWage).removeAttr('disabled', 'disabled');
-                $(myHour).removeAttr('disabled', 'disabled');
-                $(myRange).removeAttr('disabled', 'disabled');
+                $waForm.find('#@(idPrefix)hourlyWage').removeAttr('disabled', 'disabled');
+                $waForm.find('#@(idPrefix)hours').removeAttr('disabled', 'disabled');
+                $waForm.find('#@(idPrefix)hourRange').removeAttr('disabled', 'disabled');
             }
         });
         //
