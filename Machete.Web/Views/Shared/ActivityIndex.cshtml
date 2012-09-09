@@ -6,6 +6,14 @@
     string recType = "activity";
     //string idPrefix = recType + Model.ID + "-";
     int maxTabs = User.Identity.IsAuthenticated == true ? 2 : 1; //If auth, 2 tab limit
+
+    //To hide JS features for unauthorized
+    int hideme = 0;
+    if (Html.IsInRole(Html.Role_AM()))
+    {
+        hideme = 1;
+    }
+    
 }
 <div id="activityList"> @* This div is the ui.panel  *@
     <table id="activityTable" class="display">
@@ -61,6 +69,34 @@
             tabLabel: "@(recType)",
             maxTabs: @(maxTabs)
             });
+
+            //pagetimer for unauthorized view
+            if (@(hideme) == 0) {
+                
+                // Reloads Activities list after 10 minutes if class tab is left open
+                var pageTimer = null;
+                $('#activityTabs').bind('tabsselect', function(event, ui) { 
+                    if ($(ui.tab).attr('id') == 'activityListTab') {
+					    try {
+                            clearTimeout(pageTimer);
+                            console.log('pageTimer cleared: ' +  pageTimer);
+					        pageTimer = null;
+                        } catch(e) {
+                            console.log('no pageTimer set');
+                        }
+                    } else { 
+                        if (pageTimer!=null) {
+                            console.log('pageTimer already exists: ' + pageTimer);
+                        } else { 
+                            pageTimer = setTimeout(function() {
+                                window.location.href= "/Activity";
+                            }, 10000);
+                            console.log('pageTimer set:' + pageTimer);
+                        }
+                    }
+                });
+            }
+
     });
 </script>
 
