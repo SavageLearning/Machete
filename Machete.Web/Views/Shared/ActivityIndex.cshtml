@@ -8,10 +8,10 @@
     int maxTabs = User.Identity.IsAuthenticated == true ? 2 : 1; //If auth, 2 tab limit
 
     //To hide JS features for unauthorized
-    int hideme = 0;
-    if (Html.IsInRole(Html.Role_AM()))
+    int authenticated = 0;
+    if (User.Identity.IsAuthenticated)
     {
-        hideme = 1;
+        authenticated = 1;
     }
     
 }
@@ -71,7 +71,7 @@
             });
 
             //pagetimer for unauthorized view
-            if (@(hideme) == 0) {
+            if (@(authenticated) == 0) {
                 
                 // Reloads Activities list after 10 minutes if class tab is left open
                 var pageTimer = null;
