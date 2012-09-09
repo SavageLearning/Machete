@@ -5,6 +5,7 @@
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
     string recType = "activity";
     //string idPrefix = recType + Model.ID + "-";
+    int maxTabs = User.Identity.IsAuthenticated == true ? 2 : 1; //If auth, 2 tab limit
 }
 <div id="activityList"> @* This div is the ui.panel  *@
     <table id="activityTable" class="display">
@@ -57,7 +58,8 @@
                             ]             
             }, 
             dblClickEvent: null, 
-            tabLabel: "@(recType)"
+            tabLabel: "@(recType)",
+            maxTabs: @(maxTabs)
             });
     });
 </script>

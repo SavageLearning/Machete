@@ -48,6 +48,7 @@
                 changeConfirm = opt.changeConfirm,
                 changeTitle = opt.changeTitle,
                 confirmed = false, // create jQuery tabs with mUI handlers
+                maxTabs = opt.maxTabs || 2,
                 level = _checkFormLevel(opt.formLevel, "createTabs"); // Error if form level not set correctly
             if (!changeConfirm) throw new Error("mUI.createTabs requires a changeConfirm option");
             if (!changeTitle) throw new Error("mUI.createTabs requires a changeTitle option");
@@ -227,6 +228,7 @@
             var closeTab = opt.closTab || undefined;
             var postProcess = opt.postProcess || null;
             var callback = opt.callback || null;
+            var maxTabs = opt.maxTabs || 2;
             var level = _checkFormLevel(opt.formLevel, "formSubmit"); // Error if form level not set correctly
             //
             //setup button.click to secondary submit
@@ -268,7 +270,8 @@
                                     tab: parentTab,
                                     exclusive: exclusiveTab,
                                     recordID: data.iNewID,  //JsonResult
-                                    recType: recType
+                                    recType: recType,
+                                    maxTabs: maxTabs
                                 });
                                 if (callback) {
                                     callback();

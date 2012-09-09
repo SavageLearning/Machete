@@ -3,17 +3,20 @@
 @using Machete.Domain.Resources
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "asi";
+    string idPrefix = recType + Model.activityID + "-";
+    int maxTabs = User.Identity.IsAuthenticated == true ? 2 : 1; //If auth, 2 tab limit
 }
-<div id="activitySigninTabs_@(Model.activityID)">
+<div id="@(idPrefix)Tabs">
     <ul>
-        <li><a href="#container" id="activitySigninListTab_@(Model.ID)" class="ListTab">@Activities.signinlistlink</a>
+        <li><a href="#container" id="@(idPrefix)ListTab" class="ListTab">@Activities.signinlistlink</a>
         </li>
     </ul>
     <div id="container" class="clearfix">
         <div id="signinData" class="signinColumn" style="float: left;">
-            @using (Html.BeginForm("Index", "ActivitySignin", FormMethod.Post, new { @id = "signinForm" }))
+            @using (Html.BeginForm("Index", "ActivitySignin", FormMethod.Post, new { id = idPrefix+"SigninForm" }))
             {
-                @Html.Hidden("activityID", Model.activityID);
+                @Html.Hidden("activityID", Model.activityID, new { id=idPrefix + "activityID"});
                 @Html.ValidationSummary(true)
                 <div class="tb-table">
                     <div class="tb-row">
@@ -21,23 +24,17 @@
                             @Html.LabelFor(model => model.dwccardnum)
                         </div>
                         <div class="tb-field">
-                            @Html.TextBox("dwccardnum", "", new { style = "width: 100px;" })
-                            @Html.ValidationMessageFor(model => model.dwccardnum)
+                            @Html.TextBox("dwccardnum", "", new { style = "width: 100px;", id="@(idPrefix)dwccardnum" })
+                            @Html.ValidationMessage("dwccardnum", new { @id ="@(idPrefix)dwccardnum"})
                         </div>
-                            @*<div class="tb-field">
-                            @Html.TextBox("dateforsignin",
-                            Html.Encode(String.Format("{0:mm/dd/yy}", DateTime.Today.ToShortDateString())),
-                            new { @class = "ui-datepicker", style = "width: 100px;" })
-                            @Html.ValidationMessageFor(model => model.dateforsignin)
-                        </div>*@
                         <div class="tb-field">
-                            <input type="submit" value="@WorkerSignins.indexsubmit" />
+                            <input type="submit" value="@(WorkerSignins.indexsubmit)" />
                         </div>
                     </div>
                 </div>
             }
             <div id="signinTable" style="float: left;">
-                <table id="wsiTable" class="display">
+                <table id="@(idPrefix)asiTable" class="display">
                     <thead>
                         <tr>
                             <th class="print_off">
@@ -59,17 +56,17 @@
                 </table>
             </div>
         </div>
-        <div id="signinImage" class="mui-signin-imagebox print_off">
-            <img id="wsiImage" src="/Content/images/NO-IMAGE-AVAILABLE.jpg" alt="" style="width: 200px" />
+        <div id="@(idPrefix)ImageDiv" class="mui-signin-imagebox print_off">
+            <img id="@(idPrefix)Image" src="/Content/images/NO-IMAGE-AVAILABLE.jpg" alt="" style="width: 200px" />
         </div>
     </div>
 </div>
 
-<div id="signin-red-dialog">
+<div id="@(idPrefix)red-dialog">
     @WorkerSignins.redmessage
-    <img id="wsiRedImage" src="" alt="" style="width: 200px"/>
+    <img id="@(idPrefix)RedImage" src="" alt="" style="width: 200px"/>
 </div>
-<div id ="signin-unknown">
+<div id ="@(idPrefix)signin-unknown">
     @WorkerSignins.unknownmessage
 </div>
 <script type="text/javascript">
@@ -77,8 +74,13 @@
         var blankImage = "/Content/images/NO-IMAGE-AVAILABLE.jpg";
         //
         //
-        $('#activitySigninTabs_@(Model.activityID)').mUI('createTabs', {
-            prefix: "ui-tabs-activitySignin-_@(Model.activityID)-",
+        $('#@(idPrefix)signin-unknown').hide();
+        $('#@(idPrefix)dwccardnum').focus();
+        $('#@(idPrefix)red-dialog').hide();
+        //
+        //
+        $('#@(idPrefix)Tabs').mUI('createTabs', {
+            prefix: "@(idPrefix)ui-tabs",
             formLevel: 2,
             changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
             changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
@@ -92,9 +94,7 @@
             onClose: function () { SigninFocus(); }
         });
         //
-        //
-        $('#dwccardnum').focus();
-        $('#signin-red-dialog').hide();
+        // Delete confirmation on signin event
         $('.confirm_delete').live('click', function (e) {
             e.preventDefault;
             //TODO: event is posting and returning page, not JSON
@@ -106,20 +106,20 @@
                              if (r == true) { 
                                  $.post(action, null, function(data) {
 
-                                     $('#wsiTable').dataTable().fnDraw();
-                                     $('#wsiImage').attr('src', blankImage);
+                                     $('#@(idPrefix)asiTable').dataTable().fnDraw();
+                                     $('#@(idPrefix)Image').attr('src', blankImage);
                                         if (!data.jobSuccess) {
                                             alert(data.rtnMessage);                                        
                                         } 
                                  });
                              }
-                             $('#dwccardnum').focus();
+                             $('#@(idPrefix)dwccardnum').focus();
                          });
             return false;
         });
         //
-        //
-        $('#wsiTable').dataTable({
+        //  Datatables
+        $('#@(idPrefix)asiTable').dataTable({
             "bPaginate": true,
             "bLengthChange": true,
             "bAutoWidth": false,
@@ -143,8 +143,7 @@
             ],
             "fnServerData": function ( sSource, aoData, fnCallback ) {
 			    /* Add some extra data to the sender */
-			    //aoData.push( { "name": "todaysdate", "value": $('#activity@(Model.activityID)-dateStart').val() } );
-                aoData.push( { "name": "activityID", "value": $('#activityID').val() } );
+                aoData.push( { "name": "activityID", "value": $('#@(idPrefix)activityID').val() } );
 			    $.getJSON( sSource, aoData, function (json) { 
 				    /* Do whatever additional processing you want on the callback, then tell DataTables */
 				    fnCallback(json)
@@ -172,29 +171,32 @@
             }
         });
         //
+        // Hide some elements for printing with css
+        $('.dataTables_length, .dataTables_filter, .dataTables_info, #@(idPrefix)asiTable_previous, #@(idPrefix)asiTable_next')
+            .addClass('print_off');
         //
-        $('.dataTables_length, .dataTables_filter, .dataTables_info, #wsiTable_previous, #wsiTable_next').addClass('print_off');
-        $('#wsiTable tbody').bind('dblclick', function(e) {
-            console.log('d-click');
+        // Datatable double-click event 
+        $('#@(idPrefix)asiTable tbody').bind('dblclick', function(e) {
+            console.log('@(idPrefix)asiTable double-click');
             var $node = $(e.target.parentNode);
-            $('#wsiImage').attr('src', $node.attr('imageRef'));
+            $('#@(idPrefix)Image').attr('src', $node.attr('imageRef'));
         });
         //
-        //
-        $('#signinForm').submit(function(e) {
+        // Submit ID number for registration
+        $('#@(idPrefix)SigninForm').submit(function(e) {
             var form = this;
             e.preventDefault();
             if ($(form).valid()) {
                 $.post($(this).attr("action"), $(this).serialize(), 
                     function(data) {
                         //callback on signin
-                        $('#dwccardnum').val(null); // clear cardnum field
-                        $('#wsiImage').attr('src', data.imageRef); //reload image
-                        $('#wsiTable').dataTable().fnDraw(); //reload datatable
+                        $('#@(idPrefix)dwccardnum').val(null); // clear cardnum field
+                        $('#@(idPrefix)Image').attr('src', data.imageRef); //reload image
+                        $('#@(idPrefix)asiTable').dataTable().fnDraw(); //reload datatable
                         // pop modal for warning
                         if (data.memberSanctioned || data.memberExpelled) {
-                            $("#wsiRedImage").attr('src', data.imageRef);
-                            $('#signin-red-dialog').dialog({ 
+                            $("#@(idPrefix)RedImage").attr('src', data.imageRef);
+                            $('#@(idPrefix)red-dialog').dialog({ 
                                 modal: true,
                                 buttons: {
 				                    Ok: function() {
@@ -202,11 +204,11 @@
 				                    }
 			                    },
                                 title: "@(WorkerSignins.redmessagetitle)",
-                                close: function(event, ui) { $('#dwccardnum').focus(); }
+                                close: function(event, ui) { $('#@(idPrefix)dwccardnum').focus(); }
                                  });
                         }
                         if (data.jobSuccess == false) {
-                        $('#signin-unknown').dialog({ 
+                        $('#@(idPrefix)signin-unknown').dialog({ 
                                 modal: true,
                                 buttons: {
 				                    Ok: function() {
@@ -214,10 +216,10 @@
 				                    }
 			                    },
                                 title: "@(WorkerSignins.unknownmessagetitle)",
-                                close: function(event, ui) { $('#dwccardnum').focus(); }
+                                close: function(event, ui) { $('#@(idPrefix)dwccardnum').focus(); }
                                  });
                         }
-                        $('#dwccardnum').focus();
+                        $('#@(idPrefix)dwccardnum').focus();
                     });
             }    
         });
