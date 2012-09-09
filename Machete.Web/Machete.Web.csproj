@@ -735,6 +735,7 @@
     <Content Include="Views\Config\Create.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Config.cshtml" />
     <Content Include="Views\Config\Edit.cshtml" />
+    <Content Include="Views\Home\Docs.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
