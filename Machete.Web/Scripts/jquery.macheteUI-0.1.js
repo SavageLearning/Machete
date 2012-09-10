@@ -34,7 +34,7 @@
             },
             whatChanged: {},
             changeLevel: {},
-            pageTimerSeconds: 10,
+            pageTimerSeconds: 600,
             pageTimer: null
         }
     };

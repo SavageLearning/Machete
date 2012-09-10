@@ -43,6 +43,13 @@ namespace Machete.Test
             WaitForText("Welcome", maxwait);
             return true;
         }
+
+        public bool logout()
+        {
+            _d.FindElement(By.LinkText("Logoff")).Click();
+            WaitForText("Logon", maxwait);
+            return true;
+        }
         #region persons
         public bool personCreate(Person _per)
         {
@@ -404,6 +411,15 @@ namespace Machete.Test
         #endregion
 
         #region activities
+        public bool activityMenuLink()
+        {
+            // find Activity link in menu
+            var activityMenuLink = WaitThenClickElement(By.Id("menulinkactivity"));
+            Assert.IsNotNull(activityMenuLink, "Failed to find Activity menu link");
+
+            return true;
+
+        }
         public bool activityCreate(Activity _act)
         {
             string prefix = "activity0-";
