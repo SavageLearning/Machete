@@ -33,7 +33,9 @@
                 return false;
             },
             whatChanged: {},
-            changeLevel: {}
+            changeLevel: {},
+            pageTimerSeconds: 10,
+            pageTimer: null
         }
     };
     var methods = {
@@ -517,6 +519,23 @@
             opt.action = _validateOnValue;
             opt.event = 'change';
             _selectActionOnValue(opt);
+        },
+        //
+        tabTimer: function (opt) {
+            var tab = this;
+            this.bind('tabsselect', function (event, ui) {
+                if ($(ui.tab).attr('id') == 'activityListTab') {
+                    $('body').unbind('mousemove', _resetTimer);
+                    $('body').unbind('keydown', _resetTimer);
+                    //$('#activeTabs #signinTable').unbind('click',resetTimer);
+                    _clearTimer();
+                } else {
+                    _setTimer();
+                    $('body').bind('mousemove', _resetTimer);
+                    $('body').bind('keydown', _resetTimer);
+                    //$('#activeTabs #signinTable').bind('click',resetTimer);
+                }
+            });
         }
 
     };
@@ -538,7 +557,34 @@
     //
     // machete js internal functions
     //
+    function _pageTimerEnd() {
+        window.location.href = "/Activity";
+    }
 
+    function _clearTimer() {
+        try {
+            clearTimeout(mUI.state.pageTimer);
+            console.log('pageTimer cleared: ' + mUI.state.pageTimer);
+            mUI.state.pageTimer = null;
+        } catch (e) {
+            console.log('no pageTimer set');
+        }
+    }
+
+    function _setTimer() {
+        if (mUI.state.pageTimer != null) {
+            console.log('pageTimer already exists: ' + mUI.state.pageTimer);
+        } else {
+            mUI.state.pageTimer = setTimeout(_pageTimerEnd, mUI.state.pageTimerSeconds * 1000);
+            console.log('pageTimer set:' + mUI.state.pageTimer);
+        }
+    }
+
+    function _resetTimer() {
+        console.log('resetting pageTimer');
+        _clearTimer();
+        _setTimer();
+    }
     //
     //
     function _validateOnValue(object, val, target) {
