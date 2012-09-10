@@ -1,18 +1,12 @@
 using System;
+using System.Data.Entity;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
+using Machete.Data;
+using Machete.Data.Infrastructure;
+using Machete.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
-using OpenQA.Selenium.Interactions;
-using Machete.Domain;
-using Machete.Data;
-using System.Linq;
-using System.Collections.Generic;
-using Machete.Service;
-using Machete.Data.Infrastructure;
-using System.Data.Entity;
 
 namespace Machete.Test
 {
@@ -48,6 +42,7 @@ namespace Machete.Test
             ui = new sharedUI(driver, baseURL);
             verificationErrors = new StringBuilder();
             //ui.login();
+            ui.gotoMachete();
         }
 
         [TestCleanup]
@@ -91,17 +86,14 @@ namespace Machete.Test
             //Arrange
 
             //Act
-            ui.logout();
             ui.activityMenuLink(); //Find Activity menu link and click
-
             //Assert
-            
-            // look for activityList
-            var activityList = WaitForElement(By.CssSelector("#activityList"));
+            //  look for activityList
+            var activityList = ui.WaitForElement(By.CssSelector("#activityList"));
             Assert.IsNotNull(activityList, "Failed to find #activityList");
 
             // look for activityTable
-            var activityTable = WaitForElement(By.CssSelector("#activityTable"));
+            var activityTable = ui.WaitForElement(By.CssSelector("#activityTable"));
             Assert.IsNotNull(activityTable, "Failed to find #activityTable");
 
         }
@@ -117,11 +109,11 @@ namespace Machete.Test
             //Assert
             
             // look for activityList
-            var activityList = WaitForElement(By.CssSelector("#activityList"));
+            var activityList = ui.WaitForElement(By.CssSelector("#activityList"));
             Assert.IsNotNull(activityList, "Failed to find #activityList");
 
             // look for activityTable
-            var activityTable = WaitForElement(By.CssSelector("#activityTable"));
+            var activityTable = ui.WaitForElement(By.CssSelector("#activityTable"));
             Assert.IsNotNull(activityTable, "Failed to find #activityTable");
 
         }

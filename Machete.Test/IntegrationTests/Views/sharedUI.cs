@@ -25,6 +25,11 @@ namespace Machete.Test
             _d = driver;
             _url = url;
         }
+        public bool gotoMachete()
+        {
+            _d.Navigate().GoToUrl(_url);
+            return true;
+        }
         /// <summary>
         /// 
         /// </summary>
