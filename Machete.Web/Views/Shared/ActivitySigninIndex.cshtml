@@ -6,6 +6,13 @@
     string recType = "asi";
     string idPrefix = recType + Model.activityID + "-";
     int maxTabs = User.Identity.IsAuthenticated == true ? 2 : 1; //If auth, 2 tab limit
+
+    //To hide JS features for unauthorized
+    int authenticated = 0;
+    if (User.Identity.IsAuthenticated)
+    {
+        authenticated = 1;
+    }
 }
 <div id="@(idPrefix)Tabs">
     <ul>
@@ -151,7 +158,11 @@
 		    },
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $(nRow).attr('ID', "wsiRec" +aData['recordid']);
-                $(nRow).find('td:first-child').html('<a class="confirm_delete" href="/WorkerSignin/delete/'+aData['recordid']+'">Delete</a>');
+                if (@(authenticated) == 0) {
+                    $(nRow).find('td:first-child').html('');
+                } else {
+                    $(nRow).find('td:first-child').html('<a class="confirm_delete" href="/WorkerSignin/delete/'+aData['recordid']+'">Delete</a>');
+                }
                 if (aData['imageID']) {
                     $(nRow).attr('imageRef', "/Image/GetImage/" + aData['imageID']);
                 } else {
