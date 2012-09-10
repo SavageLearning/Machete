@@ -73,28 +73,55 @@
             //pagetimer for unauthorized view
             if (@(authenticated) == 0) {
                 
-                // Reloads Activities list after 10 minutes if class tab is left open
+                // Reloads Activities list after 10 minutes if Activity List tab is NOT selected and interaction is idle
+                
+                var pageTimerSeconds = 10;
                 var pageTimer = null;
+
+                function pageTimerEnd() {
+                    window.location.href= "/Activity";
+                }
+
+                function clearTimer() {
+                    try {
+                        clearTimeout(pageTimer);
+                        console.log('pageTimer cleared: ' +  pageTimer);
+					    pageTimer = null;
+                    } catch(e) {
+                        console.log('no pageTimer set');
+                    }
+                }
+
+                function setTimer() {
+                    if (pageTimer!=null) {
+                        console.log('pageTimer already exists: ' + pageTimer);
+                    } else { 
+                        pageTimer = setTimeout(pageTimerEnd, pageTimerSeconds*1000);
+                        console.log('pageTimer set:' + pageTimer);
+                    }
+                }
+
+                function resetTimer() {
+                    console.log('resetting pageTimer');
+                    clearTimer();
+                    setTimer();
+                }
+
+                //When a tab is selected, set/clear time and bind/unbind idle handler
                 $('#activityTabs').bind('tabsselect', function(event, ui) { 
                     if ($(ui.tab).attr('id') == 'activityListTab') {
-					    try {
-                            clearTimeout(pageTimer);
-                            console.log('pageTimer cleared: ' +  pageTimer);
-					        pageTimer = null;
-                        } catch(e) {
-                            console.log('no pageTimer set');
-                        }
+                        $('body').unbind('mousemove',resetTimer);
+                        $('body').unbind('keydown',resetTimer);
+                        //$('#activeTabs #signinTable').unbind('click',resetTimer);
+                        clearTimer();
                     } else { 
-                        if (pageTimer!=null) {
-                            console.log('pageTimer already exists: ' + pageTimer);
-                        } else { 
-                            pageTimer = setTimeout(function() {
-                                window.location.href= "/Activity";
-                            }, 10000);
-                            console.log('pageTimer set:' + pageTimer);
-                        }
+                        setTimer();
+                        $('body').bind('mousemove',resetTimer);
+                        $('body').bind('keydown',resetTimer);
+                        //$('#activeTabs #signinTable').bind('click',resetTimer);
                     }
                 });
+
             }
 
     });
