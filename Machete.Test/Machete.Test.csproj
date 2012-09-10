@@ -157,6 +157,7 @@
     <Compile Include="IntegrationTests\Views\PersonTests.cs" />
     <Compile Include="IntegrationTests\Views\sharedUI.cs" />
     <Compile Include="IntegrationTests\Views\EmployerTests.cs" />
+    <Compile Include="IntegrationTests\Views\UnauthActivityTests.cs" />
     <Compile Include="IntegrationTests\Views\WorkerSigninTests.cs" />
     <Compile Include="MvcMockHelpers.cs">
       <SubType>Code</SubType>
