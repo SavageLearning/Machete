@@ -53,6 +53,9 @@ namespace Machete.Test
         [TestCleanup]
         public void TeardownTest()
         {
+            //Logon
+            ui.login();
+
             //Logoff
             Assert.AreEqual("", verificationErrors.ToString());
             ui.WaitForElement(By.LinkText("Logoff"));
