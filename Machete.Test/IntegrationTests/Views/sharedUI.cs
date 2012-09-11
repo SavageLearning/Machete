@@ -464,11 +464,11 @@ namespace Machete.Test
             Assert.AreEqual(_act.notes, WaitForElement(By.Id(prefix + "notes")).GetAttribute("value"));
             return true;
         }
-        public bool activitySignIn(int dwccardnum)
+        public bool activitySignIn(string textboxID, int dwccardnum)
         {
-            WaitForElement(By.Id("dwccardnum"));
-            ReplaceElementText(By.Id("dwccardnum"), dwccardnum.ToString());
-            WaitForElement(By.Id("dwccardnum")).Submit();
+            WaitForElement(By.Id(textboxID));
+            ReplaceElementText(By.Id(textboxID), dwccardnum.ToString());
+            WaitForElement(By.Id(textboxID)).Submit();
 
             return true;
         }
