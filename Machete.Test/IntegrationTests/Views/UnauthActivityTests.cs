@@ -124,6 +124,46 @@ namespace Machete.Test
         }
 
         [TestMethod]
+        public void SeActivity_unauth_maxtabs()
+        {
+            // Verify maxTabs
+            // Open activity table, click List Activities, open another activity, make sure there is only one activity tab open
+
+            //Arrange
+
+            //Act
+            ui.activityMenuLink(); //Find Activity menu link and click
+            ui.WaitAndDoubleClick(By.XPath("//table[@id='activityTable']/tbody/tr[1]"));
+            
+            //get current activity tab ID
+            var activityTabSelected = ui.WaitForElement(By.CssSelector(".ui-tabs-selected"));
+            var activityTabSelectedID = activityTabSelected.GetAttribute("id");
+
+            //go back to List Activities
+            //driver.FindElement(By.LinkText("List Activities")).Click();
+            ui.WaitThenClickElement(By.Id("activityListTab"));
+
+            // open a different record
+            var activityNewRecord = ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr[2]"));
+            int activityNewID = Convert.ToInt32(activityNewRecord.GetAttribute("recordid"));
+            var activityNewIDString = "activity" + activityNewID +"-EditTab";
+            ui.WaitAndDoubleClick(By.XPath("//table[@id='activityTable']/tbody/tr[2]"));
+
+            //get NEW current activity tab ID
+            var activityNewTabSelected = ui.WaitForElement(By.CssSelector(".ui-tabs-selected"));
+            var activityNewTabSelectedID = activityTabSelected.GetAttribute("id");
+            
+            //Assert
+            // old tab doesn't exist
+            Assert.IsNull(ui.WaitForElement(By.Id(activityTabSelectedID)));
+
+            // new tab does exist
+            // activityNewIDString;
+            Assert.IsNotNull(ui.WaitForElement(By.Id(activityNewIDString)));
+
+        }
+
+        [TestMethod]
         public void SeActivity_unauth_worker_signin()
         {
             // example from ActivityTests.cs -- SeActivity_Create_signin_simple()
@@ -141,11 +181,15 @@ namespace Machete.Test
             // Act
             //ui.activityCreate(_act);
             ui.activityMenuLink(); //Find Activity menu link and click
+            var activityRecord = ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr[1]"));
+            var activityRecordID = Convert.ToInt32(activityRecord.GetAttribute("recordid"));
             ui.WaitAndDoubleClick(By.XPath("//table[@id='activityTable']/tbody/tr[1]"));
-            ui.activitySignIn("buildme", firstCardNum);
+            ui.activitySignIn("asi" + activityRecordID + "-dwccardnum", firstCardNum);
 
             // Assert
-            Assert.IsTrue(ui.activitySignInValidate(firstCardNum, rowcount));
+            // borrowed from sharedUI.cs -- activitySignInValidate()
+            Assert.IsNotNull(ui.WaitForElementValue(By.XPath("//table[@id='asi" + activityRecordID + "-asiTable']/tbody/tr[" + rowcount + "]/td[2]"), firstCardNum.ToString()), "Did not find added record number in signin table");
+
         }
 
         [TestMethod]
