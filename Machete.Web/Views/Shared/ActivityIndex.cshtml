@@ -5,6 +5,15 @@
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
     string recType = "activity";
     //string idPrefix = recType + Model.ID + "-";
+    int maxTabs = User.Identity.IsAuthenticated == true ? 2 : 1; //If auth, 2 tab limit
+
+    //To hide JS features for unauthorized
+    int authenticated = 0;
+    if (User.Identity.IsAuthenticated)
+    {
+        authenticated = 1;
+    }
+    
 }
 <div id="activityList"> @* This div is the ui.panel  *@
     <table id="activityTable" class="display">
@@ -57,8 +66,17 @@
                             ]             
             }, 
             dblClickEvent: null, 
-            tabLabel: "@(recType)"
+            tabLabel: "@(recType)",
+            maxTabs: @(maxTabs)
             });
+
+            //pagetimer for unauthorized view
+            if (@(authenticated) == 0) {
+                // Reloads Activities list after 10 minutes if Activity List tab is NOT selected and interaction is idle               
+                //When a tab is selected, set/clear time and bind/unbind idle handler
+                $('#activityTabs').mUI('tabTimer', {});                
+            }
+
     });
 </script>
 

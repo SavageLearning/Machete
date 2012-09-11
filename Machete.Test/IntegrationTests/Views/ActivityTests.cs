@@ -1,18 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
+using Machete.Data;
+using Machete.Data.Infrastructure;
+using Machete.Domain;
+using Machete.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
-using OpenQA.Selenium.Interactions;
-using Machete.Domain;
-using Machete.Data;
-using System.Linq;
-using System.Collections.Generic;
-using Machete.Service;
-using Machete.Data.Infrastructure;
-using System.Data.Entity;
 
 namespace Machete.Test
 {
@@ -53,6 +50,9 @@ namespace Machete.Test
         [TestCleanup]
         public void TeardownTest()
         {
+            //Logon
+            ui.login();
+
             //Logoff
             Assert.AreEqual("", verificationErrors.ToString());
             ui.WaitForElement(By.LinkText("Logoff"));

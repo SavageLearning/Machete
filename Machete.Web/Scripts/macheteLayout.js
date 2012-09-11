@@ -1,20 +1,4 @@
-﻿eventDebug = 0;
-var eventsequence = 0;
-var eventDate = new Date();
-////////////////////////////////////////////////////////////////
-//
-// pad log variables
-//
-function spaceFill(number, width) {
-    width -= number.toString().length;
-    if (width > 0) {
-        return new Array(width + (/\./.test(number) ? 2 : 1)).join('_') + number;
-    } 
-    return number;
-}
-
-
-////////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////
 ///
 /// Add_rectab to tabbar
 ///
@@ -33,6 +17,7 @@ function add_rectab(opt) {
     var exclusive = opt.exclusive;
     var recID = opt.recordID;
     var recType = opt.recType;
+    var maxTabs = opt.maxTabs;
     //
     //search for tab label--if it's already open, select instead of adding duplcate (datatables error)    
     var foundtab = $(tabObj).children('.ui-tabs-nav').find('li').find('a[recordID=' + recID + ']');
@@ -45,9 +30,10 @@ function add_rectab(opt) {
     }
     //
     // If true, look for existing tab with same label; remove for re-create
-    if (exclusive) {         
+    if (exclusive) {
         var index2 = $(tabObj).children('.ui-tabs-nav').find('li').size() - 1;
-        if (index2 > 1) { //Don't blast tab 0 or tab 1 (list and create)
+        console.log("add_rectab maxTabs value:" + maxTabs);
+        if (index2 >= maxTabs) { //Don't blast tab 0 or tab 1 (list and create)
             tabObj.tabs("remove", index2);
         }
     }
@@ -71,12 +57,13 @@ function add_rectab(opt) {
 ///##Create dataTable
 ///
 function jqrfyTable(o) {
-    var myTable         = o.table,
-        myTab           = o.tab,
-        myOptions       = o.options,
-        clickEvent      = o.clickEvent,
-        dblclickevent   = o.dblClickEvent,
-        tabLabel        = o.tabLabel;
+    var myTable = o.table,
+        myTab = o.tab,
+        myOptions = o.options,
+        clickEvent = o.clickEvent,
+        dblclickevent = o.dblClickEvent,
+        tabLabel = o.tabLabel,
+        maxTabs = o.maxTabs; // Default maxTabs is 2 (list=0,create=1...)
     var oTable;
     var origCallback;
     var tableID = $(myTable).attr('ID');
@@ -142,7 +129,8 @@ function jqrfyTable(o) {
                 tab: myTab,
                 exclusive: exclusiveTab,
                 recordID: $(myTr).attr('recordid'),
-                recType: tabLabel
+                recType: tabLabel,
+                maxTabs: maxTabs
             });
         }
     }
@@ -169,25 +157,25 @@ function openGoogleMap(destAddr, origAddr) {
 //
 // add new html elements
 //
-$.fn.addItems = function (data) {
-    var elSel = this[0];
-    var i;
-    if (data == null) {
-        return;
-    }
-    for (i = elSel.length; i >= 0; i--) {
-        elSel.remove(i);
-    }
-    for (i = 0; i < data.length; i++) {
-        var text = data[i].Text;
-        var value = data[i].Value;
+//$.fn.addItems = function (data) {
+//    var elSel = this[0];
+//    var i;
+//    if (data == null) {
+//        return;
+//    }
+//    for (i = elSel.length; i >= 0; i--) {
+//        elSel.remove(i);
+//    }
+//    for (i = 0; i < data.length; i++) {
+//        var text = data[i].Text;
+//        var value = data[i].Value;
 
-        var elOptNew = document.createElement('option');
-        elOptNew.text = text;
-        elOptNew.value = value;
-        elSel.add(elOptNew, null);
-    }
-};
+//        var elOptNew = document.createElement('option');
+//        elOptNew.text = text;
+//        elOptNew.value = value;
+//        elSel.add(elOptNew, null);
+//    }
+//};
 
 // http://stackoverflow.com/questions/18082/validate-numbers-in-javascript-isnumeric/174921#174921
 function isNumber(n) {
@@ -195,12 +183,6 @@ function isNumber(n) {
 }
 
 datatable_lang_en = {
-//    "oPaginate": {
-//        "sFirst": "First page",
-//        "sLast": "Last page",
-//        "sNext": "Next page",
-//        "sPrevious": "Previous page" 
-    //    },
     "oPaginate": {
         "sFirst": "",
         "sLast": "",
@@ -218,12 +200,6 @@ datatable_lang_en = {
 };
 
 datatable_lang_es = {
-//    "oPaginate": {
-//        "sFirst": "Primera página",
-//        "sLast": "Última página",
-//        "sNext": "Página siguiente",
-//        "sPrevious": "Página Anterior"
-    //    },
     "oPaginate": {
         "sFirst": "",
         "sLast": "",
