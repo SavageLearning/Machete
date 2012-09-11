@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
+using System.Linq;
 using System.Text;
 using Machete.Data;
 using Machete.Data.Infrastructure;
+using Machete.Domain;
 using Machete.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
@@ -102,28 +105,47 @@ namespace Machete.Test
         public void SeActivity_unauth_open_record()
         {
             //Arrange
+            // example from EmployerTests.cs -- SeEmployer_Create_and_move_Workorder()
+            // var selectedTab = ui.WaitForElement(By.CssSelector("li.employer.ui-tabs-selected a"));
+            // var recID = Convert.ToInt32(selectedTab.GetAttribute("recordid"));
+
+            var activityRecord = ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr[1]"));
+            var activityRecordID = Convert.ToInt32(activityRecord.GetAttribute("recordid"));
 
             //Act
             ui.activityMenuLink(); //Find Activity menu link and click
+            ui.WaitAndDoubleClick(By.XPath("//table[@id='activityTable']/tbody/tr[1]"));
 
             //Assert
             
-            // look for activityList
-            var activityList = ui.WaitForElement(By.CssSelector("#activityList"));
-            Assert.IsNotNull(activityList, "Failed to find #activityList");
-
-            // look for activityTable
-            var activityTable = ui.WaitForElement(By.CssSelector("#activityTable"));
-            Assert.IsNotNull(activityTable, "Failed to find #activityTable");
-
+            // look for activityTab to open up
+            var activityNewTab = ui.WaitForElement(By.CssSelector("#activity" + activityRecordID + "-EditTab"));
+            Assert.IsNotNull(activityNewTab, "Failed to find #activityList");
         }
 
         [TestMethod]
         public void SeActivity_unauth_worker_signin()
         {
-            //Arrange
-            //Act
-            //Assert
+            // example from ActivityTests.cs -- SeActivity_Create_signin_simple()
+
+            // Arrange
+            Random rand = new Random();
+            int rowcount = 1;
+            MacheteContext DB = new MacheteContext("machete");
+            var workers = DB.Workers;
+            Activity _act = (Activity)Records.activity.Clone();
+            ActivitySignin _asi = (ActivitySignin)Records.activitysignin.Clone();
+            IEnumerable<int> cardlist = DB.Workers.Select(q => q.dwccardnum).Distinct();
+            int firstCardNum = workers.First().dwccardnum;
+            
+            // Act
+            //ui.activityCreate(_act);
+            ui.activityMenuLink(); //Find Activity menu link and click
+            ui.WaitAndDoubleClick(By.XPath("//table[@id='activityTable']/tbody/tr[1]"));
+            ui.activitySignIn(firstCardNum);
+
+            // Assert
+            Assert.IsTrue(ui.activitySignInValidate(firstCardNum, rowcount));
         }
 
         [TestMethod]
