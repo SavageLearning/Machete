@@ -142,7 +142,7 @@ namespace Machete.Test
             //ui.activityCreate(_act);
             ui.activityMenuLink(); //Find Activity menu link and click
             ui.WaitAndDoubleClick(By.XPath("//table[@id='activityTable']/tbody/tr[1]"));
-            ui.activitySignIn(firstCardNum);
+            ui.activitySignIn("buildme", firstCardNum);
 
             // Assert
             Assert.IsTrue(ui.activitySignInValidate(firstCardNum, rowcount));
