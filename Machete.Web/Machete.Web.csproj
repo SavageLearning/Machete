@@ -646,7 +646,9 @@
   <ItemGroup>
     <Content Include="Views\Account\Delete.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Views\ActivitySignin\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Error\Http404.cshtml" />
   </ItemGroup>
@@ -723,7 +725,6 @@
     <Content Include="Views\Shared\EventIndex.cshtml" />
     <Content Include="Views\Event\Edit.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\Event.cshtml" />
-    <Content Include="Views\ActivitySignin\Index.cshtml" />
     <Content Include="Views\Activity\Index.cshtml" />
     <Content Include="Views\Activity\Create.cshtml" />
     <Content Include="Views\Activity\Edit.cshtml" />

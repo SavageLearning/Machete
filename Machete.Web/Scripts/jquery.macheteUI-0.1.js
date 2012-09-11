@@ -33,7 +33,9 @@
                 return false;
             },
             whatChanged: {},
-            changeLevel: {}
+            changeLevel: {},
+            pageTimerSeconds: 600,
+            pageTimer: null
         }
     };
     var methods = {
@@ -48,6 +50,7 @@
                 changeConfirm = opt.changeConfirm,
                 changeTitle = opt.changeTitle,
                 confirmed = false, // create jQuery tabs with mUI handlers
+                maxTabs = opt.maxTabs || 2,
                 level = _checkFormLevel(opt.formLevel, "createTabs"); // Error if form level not set correctly
             if (!changeConfirm) throw new Error("mUI.createTabs requires a changeConfirm option");
             if (!changeTitle) throw new Error("mUI.createTabs requires a changeTitle option");
@@ -227,6 +230,7 @@
             var closeTab = opt.closTab || undefined;
             var postProcess = opt.postProcess || null;
             var callback = opt.callback || null;
+            var maxTabs = opt.maxTabs || 2;
             var level = _checkFormLevel(opt.formLevel, "formSubmit"); // Error if form level not set correctly
             //
             //setup button.click to secondary submit
@@ -268,7 +272,8 @@
                                     tab: parentTab,
                                     exclusive: exclusiveTab,
                                     recordID: data.iNewID,  //JsonResult
-                                    recType: recType
+                                    recType: recType,
+                                    maxTabs: maxTabs
                                 });
                                 if (callback) {
                                     callback();
@@ -514,6 +519,23 @@
             opt.action = _validateOnValue;
             opt.event = 'change';
             _selectActionOnValue(opt);
+        },
+        //
+        tabTimer: function (opt) {
+            var tab = this;
+            this.bind('tabsselect', function (event, ui) {
+                if ($(ui.tab).attr('id') == 'activityListTab') {
+                    $('body').unbind('mousemove', _resetTimer);
+                    $('body').unbind('keydown', _resetTimer);
+                    //$('#activeTabs #signinTable').unbind('click',resetTimer);
+                    _clearTimer();
+                } else {
+                    _setTimer();
+                    $('body').bind('mousemove', _resetTimer);
+                    $('body').bind('keydown', _resetTimer);
+                    //$('#activeTabs #signinTable').bind('click',resetTimer);
+                }
+            });
         }
 
     };
@@ -535,7 +557,34 @@
     //
     // machete js internal functions
     //
+    function _pageTimerEnd() {
+        window.location.href = "/Activity";
+    }
 
+    function _clearTimer() {
+        try {
+            clearTimeout(mUI.state.pageTimer);
+            console.log('pageTimer cleared: ' + mUI.state.pageTimer);
+            mUI.state.pageTimer = null;
+        } catch (e) {
+            console.log('no pageTimer set');
+        }
+    }
+
+    function _setTimer() {
+        if (mUI.state.pageTimer != null) {
+            console.log('pageTimer already exists: ' + mUI.state.pageTimer);
+        } else {
+            mUI.state.pageTimer = setTimeout(_pageTimerEnd, mUI.state.pageTimerSeconds * 1000);
+            console.log('pageTimer set:' + mUI.state.pageTimer);
+        }
+    }
+
+    function _resetTimer() {
+        console.log('resetting pageTimer');
+        _clearTimer();
+        _setTimer();
+    }
     //
     //
     function _validateOnValue(object, val, target) {
