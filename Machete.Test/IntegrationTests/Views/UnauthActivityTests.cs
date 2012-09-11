@@ -109,18 +109,18 @@ namespace Machete.Test
             // var selectedTab = ui.WaitForElement(By.CssSelector("li.employer.ui-tabs-selected a"));
             // var recID = Convert.ToInt32(selectedTab.GetAttribute("recordid"));
 
+            ui.activityMenuLink(); //Find Activity menu link and click
             var activityRecord = ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr[1]"));
             var activityRecordID = Convert.ToInt32(activityRecord.GetAttribute("recordid"));
-
             //Act
-            ui.activityMenuLink(); //Find Activity menu link and click
             ui.WaitAndDoubleClick(By.XPath("//table[@id='activityTable']/tbody/tr[1]"));
-
-            //Assert
-            
+            //Assert            
             // look for activityTab to open up
             var activityNewTab = ui.WaitForElement(By.CssSelector("#activity" + activityRecordID + "-EditTab"));
+            var newTabAnchor = ui.WaitForElement(By.CssSelector("#activity" + activityRecordID + "-EditTab a"));
+            int anchorID = Convert.ToInt32(newTabAnchor.GetAttribute("recordid"));
             Assert.IsNotNull(activityNewTab, "Failed to find #activityList");
+            Assert.AreEqual(activityRecordID, anchorID, "activityRecordID from datatables does not match ID in tab for record");
         }
 
         [TestMethod]
