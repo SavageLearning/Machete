@@ -151,7 +151,7 @@ namespace Machete.Test
 
             //get NEW current activity tab ID
             var activityNewTabSelected = ui.WaitForElement(By.CssSelector(".ui-tabs-selected"));
-            var activityNewTabSelectedID = activityTabSelected.GetAttribute("id");
+            var activityNewTabSelectedID = activityNewTabSelected.GetAttribute("id");
             
             //Assert
             // old tab doesn't exist
@@ -196,8 +196,22 @@ namespace Machete.Test
         public void SeActivity_unauth_exposed_actions()
         {
             //Arrange
+            ui.activityMenuLink(); //Find Activity menu link and click
+            var activityRecord = ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr[1]"));
+            var activityRecordID = activityRecord.GetAttribute("recordid");
+
             //Act
+            // Open activity tab
+            ui.WaitAndDoubleClick(By.XPath("//table[@id='activityTable']/tbody/tr[1]"));
+
+            // Look for edit and delete features on the page
+            var activityEditForm = ui.WaitForElement(By.CssSelector("#ActivityTab-" + activityRecordID));
+            var activityDeleteLink = ui.WaitForElement(By.CssSelector(".confirm_delete"));
+
             //Assert
+            Assert.IsNull(activityEditForm, "Activity Edit form is displaying for unauthorized users");
+            Assert.IsNull(activityDeleteLink, "Activity registration table is showing registration delete option to unauthorized users");
+
         }
 
     }
