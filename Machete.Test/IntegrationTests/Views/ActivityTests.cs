@@ -105,7 +105,7 @@ namespace Machete.Test
             for (var i = 0; i < numberOfSignins; i++)
             {
                 int cardNum = list1.ElementAt(i);
-                ui.activitySignIn(cardNum);
+                ui.activitySignIn("FIXME", cardNum);
                 if (ui.activitySignInIsSanctioned())
                 {
                     ui.WaitForElement(By.ClassName("ui-dialog")).FindElement(By.ClassName("ui-button")).Click();
@@ -136,7 +136,7 @@ namespace Machete.Test
             int firstCardNum = workers.First().dwccardnum;
             // Act
             ui.activityCreate(_act);
-            ui.activitySignIn(firstCardNum);
+            ui.activitySignIn("FIXME", firstCardNum);
             // Assert
             Assert.IsTrue(ui.activitySignInValidate(firstCardNum, rowcount));
         }
@@ -159,7 +159,7 @@ namespace Machete.Test
             }
             //Act
             ui.activityCreate(_act);
-            ui.activitySignIn(randCard);
+            ui.activitySignIn("FIXME", randCard);
 
             //Assert
             Assert.IsTrue(ui.activitySignInValidate(randCard,rowCount));
@@ -188,7 +188,7 @@ namespace Machete.Test
 
             ui.workerCreate(_sanctionedW, sharedUI.SolutionDirectory() + "\\Machete.test\\jimmy_machete.jpg");
             ui.activityCreate(_act);
-            ui.activitySignIn(randCard);
+            ui.activitySignIn("FIXME", randCard);
 
             //Assert
             Assert.IsFalse(ui.activitySignInValidate(randCard, rowcount));

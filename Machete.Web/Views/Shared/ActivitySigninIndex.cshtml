@@ -31,8 +31,8 @@
                             @Html.LabelFor(model => model.dwccardnum)
                         </div>
                         <div class="tb-field">
-                            @Html.TextBox("dwccardnum", "", new { style = "width: 100px;", id="@(idPrefix)dwccardnum" })
-                            @Html.ValidationMessage("dwccardnum", new { @id ="@(idPrefix)dwccardnum"})
+                            @Html.TextBox("dwccardnum", "", new { style = "width: 100px;", id=idPrefix+"dwccardnum" })
+                            @Html.ValidationMessage("dwccardnum", new { @id =idPrefix+"dwccardnum"})
                         </div>
                         <div class="tb-field">
                             <input type="submit" value="@(WorkerSignins.indexsubmit)" />
