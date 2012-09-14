@@ -13,6 +13,8 @@ using Machete.Web.ViewModel;
 using Machete.Web.Models;
 using System.Web.Routing;
 using System.Data.Entity.Infrastructure;
+using AutoMapper;
+using System.Globalization;
 
 namespace Machete.Web.Controllers
 {
@@ -28,7 +30,7 @@ namespace Machete.Web.Controllers
         protected override void Initialize(RequestContext requestContext)
         {
             base.Initialize(requestContext);
-            CI = (System.Globalization.CultureInfo)Session["Culture"];
+            CI = (CultureInfo)Session["Culture"];
         }
         /// <summary>
         /// 
@@ -43,16 +45,10 @@ namespace Machete.Web.Controllers
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             //Get all the records            
-            dataTableResult<Person> list = personService.GetIndexView(new viewOptions() 
-            {
-                CI = CI,
-                search = param.sSearch,
-                //status = string.IsNullOrEmpty(param.searchColName("status")) ? (int?)null : Convert.ToInt32(param.searchColName("status")),
-                orderDescending = param.sSortDir_0 == "asc" ? false : true,
-                displayStart = param.iDisplayStart,
-                displayLength = param.iDisplayLength,
-                sortColName = param.sortColName()
-            });
+            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
+            vo.CI = CI;
+            dataTableResult<Person> list = personService.GetIndexView(vo); 
+
             var result = from p in list.query select new
             {
                 tabref = "/Person/Edit/" + Convert.ToString(p.ID),

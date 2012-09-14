@@ -10,6 +10,7 @@ using Machete.Domain;
 using Machete.Data;
 using Machete.Web.Models;
 using System.Web.Routing;
+using AutoMapper;
 
 namespace Machete.Web.Controllers
 {
@@ -105,22 +106,9 @@ namespace Machete.Web.Controllers
         //[Authorize(Roles = "Administrator, Manager, Check-in")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
-            dataTableResult<asiView> was = serv.GetIndexView(new viewOptions
-            {
-                CI = CI,
-                search = param.sSearch,
-                date = param.todaysdate == null ? null : (DateTime?)DateTime.Parse(param.todaysdate),
-                dwccardnum = Convert.ToInt32(param.dwccardnum),
-                woid = Convert.ToInt32(param.searchColName("WOID")),
-                orderDescending = param.sSortDir_0 == "asc" ? false : true,
-                displayStart = param.iDisplayStart,
-                displayLength = param.iDisplayLength,
-                sortColName = param.sortColName(),
-                wa_grouping = param.wa_grouping,
-                typeofwork_grouping = param.typeofwork_grouping,
-                activityID = param.activityID,
-                personID = param.personID ?? 0
-            });
+            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
+            vo.CI = CI;
+            dataTableResult<asiView> was = serv.GetIndexView(vo);
 
             //return what's left to datatables
             var result = from p in was.query

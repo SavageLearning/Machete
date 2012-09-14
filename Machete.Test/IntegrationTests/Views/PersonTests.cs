@@ -131,7 +131,8 @@ namespace Machete.Test
             _san.PersonID = _per.ID;
             ui.eventCreate(_san);
             ui.activityCreate(_act);
-            ui.activitySignIn(_wkr.dwccardnum);
+            // refactored other test to identify idPrefix-dwccardnum
+            ui.activitySignIn("TODO:FIXME",_wkr.dwccardnum);
 
             //Assert
             Assert.IsTrue(ui.activitySignInIsSanctioned());

@@ -13,6 +13,7 @@ using Elmah;
 using NLog;
 using Machete.Web.Helpers;
 using System.Web.Routing;
+using AutoMapper;
 
 namespace Machete.Web.Controllers
 {
@@ -52,17 +53,9 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
-            dataTableResult<Worker> list = serv.GetIndexView(new viewOptions()
-            {
-                CI = CI,
-                search = param.sSearch,
-                //status = string.IsNullOrEmpty(param.searchColName("status")) ? (int?)null : Convert.ToInt32(param.searchColName("status")),
-                orderDescending = param.sSortDir_0 == "asc" ? false : true,
-                displayStart = param.iDisplayStart,
-                displayLength = param.iDisplayLength,
-                sortColName = param.sortColName()
-            });
-
+            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
+            vo.CI = CI;
+            dataTableResult<Worker> list = serv.GetIndexView(vo);
             var result = from p in list.query select new
             { 
                 tabref = "/Worker/Edit/" + Convert.ToString(p.ID),

@@ -72,7 +72,7 @@ namespace Machete.Service
             if (o.status > 0) IndexViewBase.status(o, ref q);
             if (o.showPending == false) IndexViewBase.filterPending(o, ref q);
             if (!string.IsNullOrEmpty(o.wa_grouping)) IndexViewBase.waGrouping(o, ref q, lRepo);
-            if (!string.IsNullOrEmpty(o.search)) IndexViewBase.search(o, ref q, lRepo);
+            if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q, lRepo);
             //
             // filter on member ID, showing only assignments available to the member based on their skills
             if (o.dwccardnum > 0)
@@ -391,7 +391,7 @@ namespace Machete.Service
     {
             public CultureInfo CI;
             public string category;
-            public string search;
+            public string sSearch;
             public DateTime? date;
             public int? EmployerID { get; set; }
             public int? dwccardnum;

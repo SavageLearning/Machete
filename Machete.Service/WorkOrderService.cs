@@ -116,7 +116,7 @@ namespace Machete.Service
             //
             if (o.EmployerID != null) IndexViewBase.filterEmployer(o, ref q);
             if (o.status != null) IndexViewBase.filterStatus(o, ref q);
-            if (!string.IsNullOrEmpty(o.search)) IndexViewBase.search(o, ref q);
+            if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
             //
             result.filteredCount = q.Count();
