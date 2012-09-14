@@ -120,7 +120,7 @@ namespace Machete.Service
             IndexViewBase.waGrouping(o, ref q, wrRepo);
 
             e = q.ToList();
-            if (!string.IsNullOrEmpty(o.search))
+            if (!string.IsNullOrEmpty(o.sSearch))
                 IndexViewBase.search(o, ref e);
 
             eSIV = e.Join(WorkerCache.getCache(), 

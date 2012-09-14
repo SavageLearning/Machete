@@ -42,7 +42,7 @@ namespace Machete.Service
                 IndexViewBase.getAssociated(o.personID, ref q, asRepo);
 
             e = q.AsEnumerable();
-            if (!string.IsNullOrEmpty(o.search))
+            if (!string.IsNullOrEmpty(o.sSearch))
                 IndexViewBase.search(o, ref e);
 
             IndexViewBase.sortOnColName(o.sortColName, 

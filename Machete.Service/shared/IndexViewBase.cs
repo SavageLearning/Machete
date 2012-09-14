@@ -28,11 +28,11 @@ namespace Machete.Service
         public static void search<T>(viewOptions o, ref IEnumerable<T> e) where T : Signin
         {
             e = e.Join(WorkerCache.getCache(), s => s.dwccardnum, w => w.dwccardnum, (s, w) => new { s, w })
-                .Where(p => p.w.dwccardnum.ToString().ContainsOIC(o.search) ||
-                            p.w.Person.firstname1.ContainsOIC(o.search) ||
-                            p.w.Person.firstname2.ContainsOIC(o.search) ||
-                            p.w.Person.lastname1.ContainsOIC(o.search) ||
-                            p.w.Person.lastname2.ContainsOIC(o.search))
+                .Where(p => p.w.dwccardnum.ToString().ContainsOIC(o.sSearch) ||
+                            p.w.Person.firstname1.ContainsOIC(o.sSearch) ||
+                            p.w.Person.firstname2.ContainsOIC(o.sSearch) ||
+                            p.w.Person.lastname1.ContainsOIC(o.sSearch) ||
+                            p.w.Person.lastname2.ContainsOIC(o.sSearch))
                 .Select(a => a.s);
         }
         public static void typeOfWork<T>(viewOptions o, ref IQueryable<T> q) where T : WorkerSignin
@@ -180,18 +180,18 @@ namespace Machete.Service
         {
             bool isDateTime = false;
             DateTime parsedTime;
-            if (isDateTime = DateTime.TryParse(o.search, out parsedTime))            
-                filterOnDatePart(o.search, parsedTime, ref q);            
+            if (isDateTime = DateTime.TryParse(o.sSearch, out parsedTime))
+                filterOnDatePart(o.sSearch, parsedTime, ref q);            
             else
             {
                 q = q
                     .Join(lRepo.GetAllQ(), wa => wa.skillID, sk => sk.ID, (wa, sk) => new { wa, sk })
-                    .Where(p => SqlFunctions.StringConvert((decimal)p.wa.workOrder.paperOrderNum).Contains(o.search) ||
-                        p.wa.description.Contains(o.search) ||
-                        p.sk.text_EN.Contains(o.search) ||
-                        p.sk.text_ES.Contains(o.search) ||
+                    .Where(p => SqlFunctions.StringConvert((decimal)p.wa.workOrder.paperOrderNum).Contains(o.sSearch) ||
+                        p.wa.description.Contains(o.sSearch) ||
+                        p.sk.text_EN.Contains(o.sSearch) ||
+                        p.sk.text_ES.Contains(o.sSearch) ||
                         //p.dateupdated.ToString().ContainsOIC(param.sSearch) ||
-                        p.wa.Updatedby.Contains(o.search)).Select(p => p.wa);
+                        p.wa.Updatedby.Contains(o.sSearch)).Select(p => p.wa);
             }
         }      
         public static IEnumerable<WorkAssignment> filterOnSkill(viewOptions o, IQueryable<WorkAssignment> q)
@@ -282,23 +282,23 @@ namespace Machete.Service
         {
             bool isDateTime = false;
             DateTime parsedTime;
-            if (isDateTime = DateTime.TryParse(o.search, out parsedTime))
+            if (isDateTime = DateTime.TryParse(o.sSearch, out parsedTime))
             {
-                if (isMonthSpecific.IsMatch(o.search))  //Regex for month/year
+                if (isMonthSpecific.IsMatch(o.sSearch))  //Regex for month/year
                     q = q.Where(p => EntityFunctions.DiffMonths(p.dateTimeofWork, parsedTime) == 0 ? true : false);
-                if (isDaySpecific.IsMatch(o.search))  //Regex for day/month/year
+                if (isDaySpecific.IsMatch(o.sSearch))  //Regex for day/month/year
                     q = q.Where(p => EntityFunctions.DiffDays(p.dateTimeofWork, parsedTime) == 0 ? true : false);
-                if (isTimeSpecific.IsMatch(o.search)) //Regex for day/month/year time
+                if (isTimeSpecific.IsMatch(o.sSearch)) //Regex for day/month/year time
                     q = q.Where(p => EntityFunctions.DiffHours(p.dateTimeofWork, parsedTime) == 0 ? true : false);
             }
             else
             {
                 q = q
-                    .Where(p => SqlFunctions.StringConvert((decimal)p.ID).Contains(o.search) ||
-                                SqlFunctions.StringConvert((decimal)p.paperOrderNum).Contains(o.search) ||
-                                p.contactName.Contains(o.search) ||
-                                p.workSiteAddress1.Contains(o.search) ||
-                                p.Updatedby.Contains(o.search));
+                    .Where(p => SqlFunctions.StringConvert((decimal)p.ID).Contains(o.sSearch) ||
+                                SqlFunctions.StringConvert((decimal)p.paperOrderNum).Contains(o.sSearch) ||
+                                p.contactName.Contains(o.sSearch) ||
+                                p.workSiteAddress1.Contains(o.sSearch) ||
+                                p.Updatedby.Contains(o.sSearch));
             }
         }
         public static void filterEmployer(viewOptions o, ref IQueryable<WorkOrder> q)
@@ -364,22 +364,22 @@ namespace Machete.Service
         }
         public static void search(viewOptions o, ref IQueryable<Employer> q)
         {
-            q = q.Where(p => //p.active.ToString().Contains(o.search) ||
-                            p.name.Contains(o.search) ||
-                            p.address1.Contains(o.search) ||
-                            p.phone.Contains(o.search) ||
-                            p.city.Contains(o.search));
+            q = q.Where(p => //p.active.ToString().Contains(o.sSearch) ||
+                            p.name.Contains(o.sSearch) ||
+                            p.address1.Contains(o.sSearch) ||
+                            p.phone.Contains(o.sSearch) ||
+                            p.city.Contains(o.sSearch));
         }
         #endregion
         #region PERSONS
         public static void search(viewOptions o, ref IQueryable<Person> q)
         {
             q = q
-                .Where(p => p.firstname1.Contains(o.search) ||
-                            p.firstname2.Contains(o.search) ||
-                            p.lastname1.Contains(o.search) ||
-                            p.lastname2.Contains(o.search) ||
-                            p.phone.Contains(o.search));
+                .Where(p => p.firstname1.Contains(o.sSearch) ||
+                            p.firstname2.Contains(o.sSearch) ||
+                            p.lastname1.Contains(o.sSearch) ||
+                            p.lastname2.Contains(o.sSearch) ||
+                            p.phone.Contains(o.sSearch));
         }
         public static void sortOnColName(string name, bool descending, ref IQueryable<Person> q)
         {
@@ -399,12 +399,12 @@ namespace Machete.Service
         #region WORKERS
         public static void search(viewOptions o, ref IQueryable<Worker> q)
         {
-            q = q.Where(p => SqlFunctions.StringConvert((decimal)p.dwccardnum).Contains(o.search) ||
-                            p.Person.firstname1.Contains(o.search) ||
-                            p.Person.firstname2.Contains(o.search) ||
-                            p.Person.lastname1.Contains(o.search) ||
-                            p.Person.lastname2.Contains(o.search) //||
-                            //EntityFunctions.p.memberexpirationdate.ToString().Contains(o.search)
+            q = q.Where(p => SqlFunctions.StringConvert((decimal)p.dwccardnum).Contains(o.sSearch) ||
+                            p.Person.firstname1.Contains(o.sSearch) ||
+                            p.Person.firstname2.Contains(o.sSearch) ||
+                            p.Person.lastname1.Contains(o.sSearch) ||
+                            p.Person.lastname2.Contains(o.sSearch) //||
+                            //EntityFunctions.p.memberexpirationdate.ToString().Contains(o.sSearch)
                             );
         }
         public static void sortOnColName(string name, bool descending, ref IQueryable<Worker> q)
@@ -432,12 +432,12 @@ namespace Machete.Service
         public static void search(viewOptions o, ref IEnumerable<Activity> q)
         {
             q = q //LookupCache will be slow and needs to be converted to IQueryable
-                .Where(p => LookupCache.byID(p.name, o.CI.TwoLetterISOLanguageName).ContainsOIC(o.search) ||
-                            p.notes.ContainsOIC(o.search) ||
-                            p.teacher.ContainsOIC(o.search) ||
-                            LookupCache.byID(p.type, o.CI.TwoLetterISOLanguageName).ContainsOIC(o.search) ||
-                            p.dateStart.ToString().ContainsOIC(o.search) ||
-                            p.dateEnd.ToString().ContainsOIC(o.search));
+                .Where(p => LookupCache.byID(p.name, o.CI.TwoLetterISOLanguageName).ContainsOIC(o.sSearch) ||
+                            p.notes.ContainsOIC(o.sSearch) ||
+                            p.teacher.ContainsOIC(o.sSearch) ||
+                            LookupCache.byID(p.type, o.CI.TwoLetterISOLanguageName).ContainsOIC(o.sSearch) ||
+                            p.dateStart.ToString().ContainsOIC(o.sSearch) ||
+                            p.dateEnd.ToString().ContainsOIC(o.sSearch));
         }
         /// <summary>
         /// 
@@ -564,10 +564,10 @@ namespace Machete.Service
         public static void search(viewOptions o, ref IQueryable<Lookup> q)
         {
             q = q
-                .Where(p => p.text_EN.Contains(o.search) ||
-                            p.text_ES.Contains(o.search) ||
-                            p.category.Contains(o.search) ||
-                            p.subcategory.Contains(o.search));
+                .Where(p => p.text_EN.Contains(o.sSearch) ||
+                            p.text_ES.Contains(o.sSearch) ||
+                            p.category.Contains(o.sSearch) ||
+                            p.subcategory.Contains(o.sSearch));
         }
         public static void sortOnColName(string name, bool descending, ref IQueryable<Lookup> q)
         {

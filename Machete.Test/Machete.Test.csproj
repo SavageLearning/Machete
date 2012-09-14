@@ -50,6 +50,9 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper">
+      <HintPath>..\packages\AutoMapper.2.1.267\lib\net40\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="Castle.Core">
       <HintPath>..\packages\Castle.Core.3.0.0.4001\lib\net40-client\Castle.Core.dll</HintPath>
     </Reference>
@@ -163,6 +166,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UnitTests\Controllers\EmployerControllerTests.cs" />
+    <Compile Include="UnitTests\Controllers\HelperTests.cs" />
     <Compile Include="UnitTests\Controllers\WorkAssignmentControllerTests.cs" />
     <Compile Include="UnitTests\Controllers\WorkOrderControllerTests.cs" />
     <Compile Include="UnitTests\Services\EmployerServiceUnitTests.cs" />

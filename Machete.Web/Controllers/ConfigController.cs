@@ -13,6 +13,7 @@ using Machete.Web.ViewModel;
 using Machete.Web.Models;
 using System.Web.Routing;
 using System.Data.Entity.Infrastructure;
+using AutoMapper;
 
 namespace Machete.Web.Controllers
 {
@@ -42,18 +43,10 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Teacher")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
-            //Get all the records            
-            IEnumerable<Lookup> list = serv.GetIndexView(new viewOptions()
-            {
-                CI = CI, 
-                category = param.category,
-                search = param.sSearch,
-                //status = string.IsNullOrEmpty(param.searchColName("status")) ? (int?)null : Convert.ToInt32(param.searchColName("status")),
-                orderDescending = param.sSortDir_0 == "asc" ? false : true,
-                displayStart = param.iDisplayStart,
-                displayLength = param.iDisplayLength,
-                sortColName = param.sortColName()
-            });
+            //Get all the records
+            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
+            vo.CI = CI;
+            IEnumerable<Lookup> list = serv.GetIndexView(vo);
             var result = from p in list
                          select new
                          {
