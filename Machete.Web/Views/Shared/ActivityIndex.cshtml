@@ -74,7 +74,12 @@
             if (@(authenticated) == 0) {
                 // Reloads Activities list after 10 minutes if Activity List tab is NOT selected and interaction is idle               
                 //When a tab is selected, set/clear time and bind/unbind idle handler
-                $('#activityTabs').mUI('tabTimer', {});                
+                $('#activityTabs').mUI('tabTimer', {});
+                
+                //reload ActivityTable data every 10 minutes
+                $('#activityTable').everyTime(600000, function() {
+					$(this).dataTable().fnDraw();
+				});   
             }
 
     });
