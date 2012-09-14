@@ -39,6 +39,7 @@
         <resource path="~/Scripts/maskedinput-1.3.js" />
         <resource path="~/Scripts/macheteLayout.js" />
         <resource path="~/Scripts/jquery.macheteUI-0.1.js" />
+        <resource path="~/Scripts/jquery.everytime-1.2.0.js" />
         <!--resource path="~/Scripts/jquery.confirm-1.3.js" /-->
     </resourceSet>
   </resourceSets>
