@@ -11,6 +11,7 @@ using NLog;
 using Machete.Web.ViewModel;
 using System.Web.Routing;
 using Machete.Web.Models;
+using AutoMapper;
 
 namespace Machete.Web.Controllers
 {
@@ -47,29 +48,24 @@ namespace Machete.Web.Controllers
         /// <returns></returns>
         public JsonResult AjaxHandler(jQueryDataTableParam param)
         {
-            dataTableResult<Employer> list = serv.GetIndexView(new viewOptions
-            {
-                search = param.sSearch,
-                sortColName = param.sortColName(),
-                displayStart = param.iDisplayStart,
-                displayLength = param.iDisplayLength,
-                orderDescending = param.sSortDir_0 == "asc" ? false : true,
-            });
-
+            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
+            vo.CI = CI;
+            dataTableResult<Employer> list = serv.GetIndexView(vo);
             //return what's left to datatables
-            var result = from p in list.query
-                         select new { tabref = _getTabRef(p),
-                                      tablabel = _getTabLabel(p),
-                                      active = Convert.ToString(p.active),
-                                      EID = Convert.ToString(p.ID),
-                                      recordid = Convert.ToString(p.ID),
-                                      name = p.name, 
-                                      address1 = p.address1, 
-                                      city = p.city, 
-                                      phone =  p.phone, 
-                                      dateupdated = Convert.ToString(p.dateupdated),
-                                      Updatedby = p.Updatedby 
-                         };
+            var result = from p in list.query select new 
+            { 
+                tabref = _getTabRef(p),
+                tablabel = _getTabLabel(p),
+                active = Convert.ToString(p.active),
+                EID = Convert.ToString(p.ID),
+                recordid = Convert.ToString(p.ID),
+                name = p.name, 
+                address1 = p.address1, 
+                city = p.city, 
+                phone =  p.phone, 
+                dateupdated = Convert.ToString(p.dateupdated),
+                Updatedby = p.Updatedby 
+            };
 
             return Json(new
             {

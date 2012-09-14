@@ -27,7 +27,7 @@ namespace Machete.Test
             _dOptions = new viewOptions
             {
                 CI = new CultureInfo("en-US", false),
-                search = "",
+                sSearch = "",
                 date = DateTime.Today,
                 dwccardnum = null,
                 woid = null,

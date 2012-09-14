@@ -27,7 +27,7 @@ namespace Machete.Test
             dOptions = new viewOptions
             {
                 CI = new CultureInfo("en-US", false),
-                search = "",
+                sSearch = "",
                 date = DateTime.Today,
                 dwccardnum = null,
                 woid = null,
@@ -83,7 +83,7 @@ namespace Machete.Test
         {            
             //
             //Act
-            dOptions.search = "12420";
+            dOptions.sSearch = "12420";
             dOptions.woid = 1;
             dOptions.orderDescending = true;
             var result = _waServ.GetIndexView(dOptions);
@@ -101,7 +101,7 @@ namespace Machete.Test
         {
             //
             //Act
-            dOptions.search = "foostring1";
+            dOptions.sSearch = "foostring1";
             dOptions.woid = 1;
             dOptions.orderDescending = true;
             var result = _waServ.GetIndexView(dOptions);
@@ -117,7 +117,7 @@ namespace Machete.Test
         [TestMethod]
         public void Integration_WA_Service_GetIndexView_check_search_Updatedby()
         {
-            dOptions.search = "foostring1";
+            dOptions.sSearch = "foostring1";
             dOptions.woid = 1;
             dOptions.orderDescending = true;
             var result = _waServ.GetIndexView(dOptions);
@@ -133,7 +133,7 @@ namespace Machete.Test
         [TestMethod]
         public void Integration_WA_Service_GetIndexView_check_search_skill()
         {
-            dOptions.search = "Digging";
+            dOptions.sSearch = "Digging";
             dOptions.orderDescending = true;
             var result = _waServ.GetIndexView(dOptions);
             //
@@ -150,7 +150,7 @@ namespace Machete.Test
         {
             //
             //Act
-            dOptions.search = DateTime.Today.AddHours(9).ToString();
+            dOptions.sSearch = DateTime.Today.AddHours(9).ToString();
             dOptions.orderDescending = true;
             var result = _waServ.GetIndexView(dOptions);
             //

@@ -85,7 +85,7 @@ namespace Machete.Test
             //Arrange
             viewOptions o = new viewOptions();
             o.CI = new CultureInfo("en-US", false);
-            o.search = DateTime.Today.ToShortDateString();
+            o.sSearch = DateTime.Today.ToShortDateString();
             o.EmployerID = null;
             o.status = null;
             o.orderDescending = true;

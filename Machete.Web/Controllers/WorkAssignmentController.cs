@@ -15,6 +15,7 @@ using System.Web.Routing;
 using Machete.Web.Models;
 using System.Data.Objects;
 using System.Data.Objects.SqlClient;
+using AutoMapper;
 
 namespace Machete.Web.Controllers
 {
@@ -61,22 +62,10 @@ namespace Machete.Web.Controllers
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             //Get all the records            
-
-            dataTableResult<WorkAssignment> was = waServ.GetIndexView(new viewOptions {
-                    CI = CI,
-                    search = param.sSearch,
-                    date = param.todaysdate == null ? null : (DateTime?)DateTime.Parse(param.todaysdate),
-                    dwccardnum = Convert.ToInt32(param.dwccardnum),
-                    woid = Convert.ToInt32(param.searchColName("WOID")),
-                    orderDescending = param.sSortDir_0 == "asc" ? false : true,
-                    displayStart = param.iDisplayStart,
-                    displayLength = param.iDisplayLength,
-                    sortColName=param.sortColName(),
-                    wa_grouping = param.wa_grouping,
-                    typeofwork_grouping = param.typeofwork_grouping,
-                    status = param.status,
-                    showPending = param.showPending
-            });
+            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
+            vo.CI = CI;
+            dataTableResult<WorkAssignment> was = waServ.GetIndexView(vo);
+            
             var result = from p in was.query select new { 
                             tabref = _getTabRef(p),
                             tablabel = _getTabLabel(p),

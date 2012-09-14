@@ -78,8 +78,9 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper">
-      <HintPath>..\packages\AutoMapper.2.0.0\lib\net40-client\AutoMapper.dll</HintPath>
+    <Reference Include="AutoMapper, Version=2.0.0.232, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\AutoMapper.2.1.267\lib\net40\AutoMapper.dll</HintPath>
     </Reference>
     <Reference Include="Combres">
       <HintPath>..\packages\combres.2.2.2.0\lib\net40\Combres.dll</HintPath>
@@ -239,6 +240,7 @@
     <Compile Include="Controllers\WorkerSigninController.cs" />
     <Compile Include="Controllers\WorkOrderController.cs" />
     <Compile Include="Helpers\Attributes\AuthorizeExAttribute.cs" />
+    <Compile Include="Helpers\MacheteMapper.cs" />
     <Compile Include="Helpers\mUIExtensions.cs" />
     <Compile Include="Helpers\workerRequestBinder.cs" />
     <Compile Include="Helpers\IsInRole.cs" />

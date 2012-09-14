@@ -51,7 +51,7 @@ namespace Machete.Test
         public void TeardownTest()
         {
             //Logon
-            ui.login();
+            //ui.login();
 
             //Logoff
             Assert.AreEqual("", verificationErrors.ToString());
@@ -101,18 +101,19 @@ namespace Machete.Test
 
             //Act
             ui.activityCreate(_act);
-
+            var idPrefix = "asi"+_act.ID+"-"; 
+ 
             for (var i = 0; i < numberOfSignins; i++)
             {
                 int cardNum = list1.ElementAt(i);
-                ui.activitySignIn("FIXME", cardNum);
+                ui.activitySignIn(idPrefix, cardNum);
                 if (ui.activitySignInIsSanctioned())
                 {
                     ui.WaitForElement(By.ClassName("ui-dialog")).FindElement(By.ClassName("ui-button")).Click();
                     --numberSignedIn;
                     continue;
                 }
-                Assert.IsTrue(ui.activitySignInValidate(cardNum, rowcount), "Sign in for worker " + i + " failed!"); //Assert
+                Assert.IsTrue(ui.activitySignInValidate(idPrefix, cardNum, rowcount), "Sign in for worker " + i + " failed!"); //Assert
                 
                 rowcount += DB.Workers.Where(q => q.dwccardnum == cardNum).Count(); //This line ensures the test doesn't break if we try to sign in an ID that has multiple workers attached to it.
             }
@@ -136,9 +137,10 @@ namespace Machete.Test
             int firstCardNum = workers.First().dwccardnum;
             // Act
             ui.activityCreate(_act);
-            ui.activitySignIn("FIXME", firstCardNum);
+            var idPrefix = "asi" + _act.ID + "-"; 
+            ui.activitySignIn(idPrefix, firstCardNum);
             // Assert
-            Assert.IsTrue(ui.activitySignInValidate(firstCardNum, rowcount));
+            Assert.IsTrue(ui.activitySignInValidate(idPrefix, firstCardNum, rowcount));
         }
 
         [TestMethod]
@@ -159,10 +161,11 @@ namespace Machete.Test
             }
             //Act
             ui.activityCreate(_act);
-            ui.activitySignIn("FIXME", randCard);
+            var idPrefix = "asi" + _act.ID + "-"; 
+            ui.activitySignIn(idPrefix, randCard);
 
             //Assert
-            Assert.IsTrue(ui.activitySignInValidate(randCard,rowCount));
+            Assert.IsTrue(ui.activitySignInValidate(idPrefix, randCard,rowCount));
         }
 
         [TestMethod]
@@ -188,10 +191,11 @@ namespace Machete.Test
 
             ui.workerCreate(_sanctionedW, sharedUI.SolutionDirectory() + "\\Machete.test\\jimmy_machete.jpg");
             ui.activityCreate(_act);
-            ui.activitySignIn("FIXME", randCard);
+            var idPrefix = "asi" + _act.ID + "-"; 
+            ui.activitySignIn(idPrefix, randCard);
 
             //Assert
-            Assert.IsFalse(ui.activitySignInValidate(randCard, rowcount));
+            Assert.IsFalse(ui.activitySignInValidate(idPrefix, randCard, rowcount));
             Assert.IsTrue(ui.activitySignInIsSanctioned(), "Sanctioned worker box is not visible like it should be.");
         }
     }

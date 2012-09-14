@@ -566,8 +566,9 @@ namespace Machete.Test
             Assert.AreEqual(_act.notes, WaitForElement(By.Id(prefix + "notes")).GetAttribute("value"));
             return true;
         }
-        public bool activitySignIn(string textboxID, int dwccardnum)
+        public bool activitySignIn(string idPrefix, int dwccardnum)
         {
+            var textboxID = idPrefix + "dwccardnum";
             WaitForElement(By.Id(textboxID));
             ReplaceElementText(By.Id(textboxID), dwccardnum.ToString());
             WaitForElement(By.Id(textboxID)).Submit();
@@ -579,10 +580,10 @@ namespace Machete.Test
             var sanctionedBox = WaitForElement(By.ClassName("ui-dialog"));
             return sanctionedBox != null && sanctionedBox.GetCssValue("display") == "block";
         }
-        public bool activitySignInValidate(int dwccardnum, int rowcount)
+        public bool activitySignInValidate(string idPrefix, int dwccardnum, int rowcount)
         {
             // Example of validating a row that returns from a sign-in
-            return WaitForElementValue(By.XPath("//table[@id='wsiTable']/tbody/tr[" + rowcount + "]/td[2]"), dwccardnum.ToString());
+            return WaitForElementValue(By.XPath("//table[@id='"+idPrefix+"asiTable']/tbody/tr[" + rowcount + "]/td[2]"), dwccardnum.ToString());
         }
 
         #endregion
