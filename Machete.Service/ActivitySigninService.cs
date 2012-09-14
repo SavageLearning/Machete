@@ -66,7 +66,7 @@ namespace Machete.Service
                 q = q.Where(p => p.activityID == o.activityID);
             //            
             e = q.ToList();
-            if (!string.IsNullOrEmpty(o.search))
+            if (!string.IsNullOrEmpty(o.sSearch))
                 IndexViewBase.search(o, ref e);
 
             eSIV = e.Join(WorkerCache.getCache(),

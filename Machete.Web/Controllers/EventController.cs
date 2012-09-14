@@ -10,6 +10,7 @@ using Machete.Web.Helpers;
 using NLog;
 using Machete.Web.Models;
 using System.Web.Routing;
+using AutoMapper;
 
 
 namespace Machete.Web.Controllers
@@ -37,16 +38,9 @@ namespace Machete.Web.Controllers
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {            
             //Get all the records
-            dataTableResult<Event> list = _serv.GetIndexView(new viewOptions()
-            {
-                CI = CI,
-                search = param.sSearch,                
-                orderDescending = param.sSortDir_0 == "asc" ? false : true,
-                displayStart = param.iDisplayStart,
-                displayLength = param.iDisplayLength,
-                sortColName = param.sortColName(),
-                personID = param.personID ?? 0
-            });
+            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
+            vo.CI = CI;
+            dataTableResult<Event> list = _serv.GetIndexView(vo);
             //return what's left to datatables
             var result = from p in list.query select new
             {

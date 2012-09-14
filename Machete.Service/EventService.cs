@@ -50,10 +50,10 @@ namespace Machete.Service
             IQueryable<Event> q = GetEvents(o.personID);
             result.totalCount = q.Count();
             //Search based on search-bar string 
-            if (!string.IsNullOrEmpty(o.search))
+            if (!string.IsNullOrEmpty(o.sSearch))
             {
                 q = GetEvents(o.personID)
-                    .Where(p => p.notes.Contains(o.search));
+                    .Where(p => p.notes.Contains(o.sSearch));
             }
 
             //Sort the Persons based on column selection

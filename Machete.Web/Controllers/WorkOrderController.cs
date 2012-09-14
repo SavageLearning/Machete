@@ -14,6 +14,8 @@ using System.Web.Routing;
 using Machete.Web.Models;
 using System.Text.RegularExpressions;
 using System.Data.Objects;
+using AutoMapper;
+using System.Globalization;
 
 namespace Machete.Web.Controllers
 {
@@ -25,6 +27,7 @@ namespace Machete.Web.Controllers
         private readonly IWorkerService wServ;
         private readonly IWorkerRequestService wrServ;
         private readonly IWorkAssignmentService waServ;
+        CultureInfo CI;
         
         public WorkOrderController(IWorkOrderService woServ, 
                                    IWorkAssignmentService workAssignmentService,
@@ -38,7 +41,12 @@ namespace Machete.Web.Controllers
             this.waServ = workAssignmentService;
             this.wrServ = requestService;
         }
- 
+        protected override void Initialize(RequestContext requestContext)
+                {
+            base.Initialize(requestContext);
+            CI = (CultureInfo)Session["Culture"];
+        }
+
         #region Index
         /// <summary>
         /// Returns WorkOrder default page
@@ -106,18 +114,10 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
-            viewOptions opt = new viewOptions();
-            opt.CI = (System.Globalization.CultureInfo)Session["Culture"];
-            opt.search = param.sSearch;
-            opt.EmployerID = string.IsNullOrEmpty(param.searchColName("EID")) ? (int?)null : Convert.ToInt32(param.searchColName("EID"));//employerID
-            opt.status = string.IsNullOrEmpty(param.searchColName("status")) ? (int?)null : Convert.ToInt32(param.searchColName("status"));
-            opt.orderDescending = param.sSortDir_0 == "asc" ? false : true;
-            opt.displayStart = param.iDisplayStart;
-            opt.displayLength = param.iDisplayLength;
-            opt.sortColName = param.sortColName();
-            opt.showOrdersWorkers = param.showOrdersWorkers;
+            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
+            vo.CI =  CI;
             //Get all the records
-            dataTableResult<WorkOrder> dtr = woServ.GetIndexView(opt);
+            dataTableResult<WorkOrder> dtr = woServ.GetIndexView(vo);
 
             var result = from p in dtr.query
                          select new
@@ -127,13 +127,13 @@ namespace Machete.Web.Controllers
                              EID = Convert.ToString(p.EmployerID),
                              WOID = System.String.Format("{0,5:D5}", p.paperOrderNum),
                              dateTimeofWork = p.dateTimeofWork.ToString(),
-                             status = LookupCache.byID(p.status, opt.CI.TwoLetterISOLanguageName),
+                             status = LookupCache.byID(p.status, CI.TwoLetterISOLanguageName),
                              WAcount = p.workAssignments.Count(a => a.workOrderID == p.ID).ToString(),
                              contactName = p.contactName,
                              workSiteAddress1 = p.workSiteAddress1,
                              dateupdated = System.String.Format("{0:MM/dd/yyyy HH:mm:ss}", p.dateupdated),
                              updatedby = p.Updatedby,
-                             transportMethod = LookupCache.byID(p.transportMethodID, opt.CI.TwoLetterISOLanguageName),
+                             transportMethod = LookupCache.byID(p.transportMethodID, CI.TwoLetterISOLanguageName),
                              displayState = _getDisplayState(p),
                              recordid = p.ID.ToString(),
                              workers = param.showOrdersWorkers ? 
@@ -141,7 +141,7 @@ namespace Machete.Web.Controllers
                                         { 
                                             WID = w.workerAssigned != null ? (int?)w.workerAssigned.dwccardnum : null,
                                             name = w.workerAssigned != null ? w.workerAssigned.Person.fullName() : null,
-                                            skill = LookupCache.byID(w.skillID, opt.CI.TwoLetterISOLanguageName),
+                                            skill = LookupCache.byID(w.skillID, CI.TwoLetterISOLanguageName),
                                             hours = w.hours,
                                             wage = w.hourlyWage
                                         } : null

@@ -33,7 +33,7 @@ namespace Machete.Service
             result.totalCount = q.Count();
             //
             //Search based on search-bar string 
-            if (!string.IsNullOrEmpty(o.search)) IndexViewBase.search(o, ref q);
+            if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
             result.filteredCount = q.Count();
             result.query = q.Skip<Person>(o.displayStart).Take(o.displayLength);

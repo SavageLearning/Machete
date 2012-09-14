@@ -20,6 +20,7 @@ using System.Data.Entity;
 
 using System.Data.Entity.ModelConfiguration;
 using Machete.Web.Helpers;
+using AutoMapper;
 
 namespace Machete.Web
 {
@@ -84,6 +85,7 @@ namespace Machete.Web
             //ModelBinders.Binders.Add(typeof(string), new workerRequestBinder());
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+            MacheteMapper.Initialize();
             IUnityContainer container = GetUnityContainer();
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
             Database.SetInitializer<MacheteContext>(new MacheteInitializer());

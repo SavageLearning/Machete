@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using Machete.Data;
+using System.Web.Routing;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Helpers;
-using NLog;
-using Machete.Web.ViewModel;
-using System.Web.Routing;
-using Machete.Web.Models;
+using System.Globalization;
+using AutoMapper;
 
 namespace Machete.Web.Controllers
 {
@@ -28,7 +25,7 @@ namespace Machete.Web.Controllers
         protected override void Initialize(RequestContext requestContext)
         {
             base.Initialize(requestContext);
-            CI = (System.Globalization.CultureInfo)Session["Culture"];
+            CI = (CultureInfo)Session["Culture"];
         }
         /// <summary>
         /// 
@@ -47,17 +44,9 @@ namespace Machete.Web.Controllers
         public JsonResult AjaxHandler(jQueryDataTableParam param)
         {
             //Get all the records
-            dataTableResult<Activity> list = serv.GetIndexView(new viewOptions
-            {
-                search = param.sSearch,
-                CI = CI,
-                sortColName = param.sortColName(),
-                displayStart = param.iDisplayStart,
-                displayLength = param.iDisplayLength,
-                attendedActivities = param.attendedActivities,
-                personID = param.personID ?? 0,
-                orderDescending = param.sSortDir_0 == "asc" ? false : true,
-            });
+            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
+            vo.CI = CI;
+            dataTableResult<Activity> list = serv.GetIndexView(vo);
             //return what's left to datatables
             var result = from p in list.query
                          select new
@@ -172,7 +161,7 @@ namespace Machete.Web.Controllers
         /// <param name="UserName"></param>
         /// <returns></returns>
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager")]
+        [Authorize(Roles = "Administrator, Manager, Teacher")]
         public JsonResult Delete(int id, string userName)
         {
             serv.Delete(id, userName);
@@ -188,7 +177,7 @@ namespace Machete.Web.Controllers
         //
         //
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager")]
+        [Authorize(Roles = "Administrator, Manager,Teacher")]
         public JsonResult Assign(int personID, List<int> actList, string userName)
         {
             if (actList == null) throw new Exception("Activity List is null");
@@ -205,7 +194,7 @@ namespace Machete.Web.Controllers
         //
         //
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager")]
+        [Authorize(Roles = "Administrator, Manager,Teacher")]
         public JsonResult Unassign(int personID, List<int> actList, string userName)
         {
             if (actList == null) throw new Exception("Activity List is null");

@@ -10,6 +10,7 @@ using Machete.Domain;
 using Machete.Data;
 using Machete.Web.Models;
 using System.Web.Routing;
+using AutoMapper;
 
 namespace Machete.Web.Controllers
 {
@@ -140,44 +141,34 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Check-in")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
-            dataTableResult<wsiView> was = _serv.GetIndexView(new viewOptions {
-                CI = CI,
-                search = param.sSearch,
-                date = param.todaysdate == null ? null : (DateTime?)DateTime.Parse(param.todaysdate),
-                dwccardnum = Convert.ToInt32(param.dwccardnum),
-                woid = Convert.ToInt32(param.searchColName("WOID")),
-                orderDescending = param.sSortDir_0 == "asc" ? false : true,
-                displayStart = param.iDisplayStart,
-                displayLength = param.iDisplayLength,
-                sortColName = param.sortColName(),
-                wa_grouping = param.wa_grouping,
-                typeofwork_grouping = param.typeofwork_grouping
-            });
-
+            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
+            vo.CI = CI;
+            dataTableResult<wsiView> was = _serv.GetIndexView(vo);
             //return what's left to datatables
-            var result = from p in was.query
-                         select new {  WSIID = p.ID,
-                                       recordid = p.ID.ToString(),
-                                       dwccardnum = p.dwccardnum,
-                                       fullname = p.fullname,
-                                       firstname1 = p.firstname1,
-                                       firstname2 = p.firstname2,
-                                       lastname1 = p.lastname1,
-                                       lastname2 = p.lastname2, 
-                                       dateforsignin = p.dateforsignin,
-                                       dateforsigninstring = p.dateforsignin.ToShortDateString(),
-                                       WAID = p.waid ?? 0,
-                                       memberStatus = LookupCache.byID(p.memberStatus, CI.TwoLetterISOLanguageName),
-                                       memberInactive = p.w.isInactive,
-                                       memberSanctioned = p.w.isSanctioned,
-                                       memberExpired = p.w.isExpired,
-                                       memberExpelled = p.w.isExpelled,
-                                       imageID = p.imageID,
-                                       lotterySequence = p.lotterySequence,
-                                       expirationDate = p.expirationDate.ToShortDateString(),
-                                       skills = _getSkillCodes(p.englishlevel, p.skill1, p.skill2, p.skill3),
-                                       program = p.typeOfWorkID == Worker.iDWC ? "DWC" : "HHH"
-                         };
+            var result = from p in was.query select new 
+            {  
+                WSIID = p.ID,
+                recordid = p.ID.ToString(),
+                dwccardnum = p.dwccardnum,
+                fullname = p.fullname,
+                firstname1 = p.firstname1,
+                firstname2 = p.firstname2,
+                lastname1 = p.lastname1,
+                lastname2 = p.lastname2, 
+                dateforsignin = p.dateforsignin,
+                dateforsigninstring = p.dateforsignin.ToShortDateString(),
+                WAID = p.waid ?? 0,
+                memberStatus = LookupCache.byID(p.memberStatus, CI.TwoLetterISOLanguageName),
+                memberInactive = p.w.isInactive,
+                memberSanctioned = p.w.isSanctioned,
+                memberExpired = p.w.isExpired,
+                memberExpelled = p.w.isExpelled,
+                imageID = p.imageID,
+                lotterySequence = p.lotterySequence,
+                expirationDate = p.expirationDate.ToShortDateString(),
+                skills = _getSkillCodes(p.englishlevel, p.skill1, p.skill2, p.skill3),
+                program = p.typeOfWorkID == Worker.iDWC ? "DWC" : "HHH"
+                };
             return Json(new
             {
                 sEcho = param.sEcho,
