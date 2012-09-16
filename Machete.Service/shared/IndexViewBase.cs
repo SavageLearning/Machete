@@ -423,6 +423,11 @@ namespace Machete.Service
         }
         #endregion
         #region ACTIVITIES
+        public static void unauthenticatedView(ref IQueryable<Activity> q)
+        {
+            q = q.Where(p => EntityFunctions.DiffMinutes(DateTime.Now, p.dateStart) <= 30 &&
+             EntityFunctions.DiffMinutes(DateTime.Now, p.dateEnd) >= -30 ? true : false);
+        }
         /// <summary>
         /// 
         /// </summary>

@@ -687,7 +687,7 @@ namespace Machete.Test
                 { return null; }
                 Thread.Sleep(sleepFor);
             }
-            return null;
+            throw new NotFoundException();
         }
         //
         //

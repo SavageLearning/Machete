@@ -46,40 +46,42 @@ namespace Machete.Web.Controllers
             //Get all the records
             var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI = CI;
+            if (!User.Identity.IsAuthenticated) vo.authenticated = false;
             dataTableResult<Activity> list = serv.GetIndexView(vo);
-            //return what's left to datatables
-            var result = from p in list.query
-                         select new
-                         {
-                             tabref = _getTabRef(p),
-                             tablabel = _getTabLabel(p),
-                             name = LookupCache.byID(p.name, CI.TwoLetterISOLanguageName),
-                             type = LookupCache.byID(p.type, CI.TwoLetterISOLanguageName),
-                             count = p.Signins.Count(),
-                             teacher = p.teacher,
-                             dateStart = p.dateStart.ToString(),
-                             dateEnd = p.dateEnd.ToString(),
-                             AID = Convert.ToString(p.ID),
-                             recordid = Convert.ToString(p.ID),
-                             dateupdated = Convert.ToString(p.dateupdated),
-                             Updatedby = p.Updatedby
-                         };
-
             return Json(new
             {
                 sEcho = param.sEcho,
                 iTotalRecords = list.totalCount,
                 iTotalDisplayRecords = list.filteredCount,
-                aaData = result
+                aaData = from p in list.query
+                         select dtResponse(ref p)
             },
             JsonRequestBehavior.AllowGet);
         }
-        private string _getTabRef(Activity emp)
+        private object dtResponse(ref Activity p)
+        {
+            return new
+            {
+                tabref = EditTabRef(p),
+                tablabel = EditTabLabel(p),
+                name = LookupCache.byID(p.name, CI.TwoLetterISOLanguageName),
+                type = LookupCache.byID(p.type, CI.TwoLetterISOLanguageName),
+                count = p.Signins.Count(),
+                teacher = p.teacher,
+                dateStart = p.dateStart.ToString(),
+                dateEnd = p.dateEnd.ToString(),
+                AID = Convert.ToString(p.ID),
+                recordid = Convert.ToString(p.ID),
+                dateupdated = Convert.ToString(p.dateupdated),
+                Updatedby = p.Updatedby
+            };
+        }
+        private string EditTabRef(Activity emp)
         {
             if (emp == null) return null;
             return "/Activity/Edit/" + Convert.ToString(emp.ID);
         }
-        private string _getTabLabel(Activity emp)
+        private string EditTabLabel(Activity emp)
         {
             if (emp == null) return null;
             return emp.dateStart.ToString() + " - " + 
@@ -117,8 +119,8 @@ namespace Machete.Web.Controllers
 
             return Json(new
             {
-                sNewRef = _getTabRef(newActivity),
-                sNewLabel = _getTabLabel(newActivity),
+                sNewRef = EditTabRef(newActivity),
+                sNewLabel = EditTabLabel(newActivity),
                 iNewID = newActivity.ID,
                 jobSuccess = true
             },
