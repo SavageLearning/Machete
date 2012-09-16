@@ -8,6 +8,7 @@ using Machete.Data;
 using System.Data.Entity;
 using Machete.Service;
 using Machete.Data.Infrastructure;
+using System.Globalization;
 
 namespace Machete.Test.IntegrationTests.Services
 {
@@ -58,9 +59,9 @@ namespace Machete.Test.IntegrationTests.Services
             _asRepo = new ActivitySigninRepository(_dbFactory);
             _unitofwork = new UnitOfWork(_dbFactory);
             _pServ = new PersonService(_pRepo, _unitofwork);
-            _iServ = new ImageService(_iRepo, _unitofwork);
-            _aServ = new ActivityService(_aRepo, _asServ, _unitofwork);
+            _iServ = new ImageService(_iRepo, _unitofwork);            
             _asServ = new ActivitySigninService(_asRepo, _wRepo, _pRepo, _iRepo, _wrRepo, _unitofwork);
+            _aServ = new ActivityService(_aRepo, _asServ, _unitofwork);
             _wrServ = new WorkerRequestService(_wrRepo, _unitofwork);
             _waServ = new WorkAssignmentService(_waRepo, _wRepo, _lRepo, _wsiRepo, _unitofwork);
             _wServ = new WorkerService(_wRepo, _unitofwork);
@@ -101,6 +102,30 @@ namespace Machete.Test.IntegrationTests.Services
                 _asServ.CreateSignin(asi, "TestScript");
             }
             //a.
+        }
+
+        [TestMethod]
+        public void Integration_Activity_Service_GetIndexView_authenticated()
+        {
+            //
+            //Arrange
+            viewOptions o = new viewOptions();
+            o.CI = new CultureInfo("en-US", false);
+            //o.sSearch = DateTime.Today.ToShortDateString();
+            o.EmployerID = null;
+            o.status = null;
+            o.displayStart = 0;
+            o.displayLength = 20;
+            o.authenticated = false;
+            //
+            //Act
+            Assert.Inconclusive("Need to add several records and count what's visible");
+            dataTableResult<Activity> result = _aServ.GetIndexView(o);
+            //
+            //Assert
+            IEnumerable<Activity> query = result.query.ToList();
+            Assert.IsNotNull(result, "IEnumerable is Null");
+            Assert.IsNotNull(query, "IEnumerable.query is null");
         }
     }
 }

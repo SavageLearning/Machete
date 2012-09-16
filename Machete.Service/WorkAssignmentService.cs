@@ -413,5 +413,6 @@ namespace Machete.Service
             public bool showExpiredWorker;
             public bool showExpelledWorker;
             public bool attendedActivities;
+            public bool authenticated = true;
     }
 }
