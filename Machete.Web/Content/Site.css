@@ -5,7 +5,15 @@ to use a different color start by replacing all instances of
 the blue back ground #5c87b2
 Deep red background #800000
 ----------------------------------------------------------*/
-
+input::-webkit-input-placeholder {
+    color:    red;
+}
+input:-moz-placeholder {
+    color:    red;
+}
+input:-ms-input-placeholder {
+    color:    red;
+}
 /* _Layout.cshtml -- style for all page bodies  */
 body
 {

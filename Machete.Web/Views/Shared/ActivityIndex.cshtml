@@ -34,6 +34,7 @@
     </table>
 </div>
 <script type="text/javascript">
+    var authenticated = @(authenticated);
     $(document).ready(function () {        
         //
         // Create Activity table
@@ -43,7 +44,7 @@
             options: {
                 "bPaginate": true,
                 "bLengthChange": true,
-                "aaSorting": [[7, 'desc']],
+                "aaSorting": [[7, 'asc']],
                 "bFilter": true,
                 "bSort": true,
                 "bInfo": true,
@@ -61,8 +62,8 @@
                                 {"mDataProp": "count" },
                                 {"mDataProp": "dateStart" },
                                 {"mDataProp": "dateEnd" },
-                                {"mDataProp": "dateupdated" },
-                                { "mDataProp": "Updatedby", "bSortable": false }
+                                {"mDataProp": "dateupdated", "bVisible": authenticated },
+                                { "mDataProp": "Updatedby", "bSortable": false, "bVisible": authenticated }
                             ]             
             }, 
             dblClickEvent: null, 
@@ -77,7 +78,7 @@
                 $('#activityTabs').mUI('tabTimer', {});
                 
                 //reload ActivityTable data every 10 minutes
-                $('#activityTable').everyTime(600000, function() {
+                $('#activityTable').everyTime(30*1000, function() {
 					$(this).dataTable().fnDraw();
 				});   
             }
