@@ -123,6 +123,9 @@
   <data name="boxlegend" xml:space="preserve">
     <value>Actividad</value>
   </data>
+  <data name="clear" xml:space="preserve">
+    <value>Borrar</value>
+  </data>
   <data name="count" xml:space="preserve">
     <value>Asistencia</value>
   </data>
@@ -182,6 +185,12 @@
   </data>
   <data name="signinlistlink" xml:space="preserve">
     <value>Registros</value>
+  </data>
+  <data name="touch" xml:space="preserve">
+    <value>Toca -----&gt;</value>
+  </data>
+  <data name="touchhere" xml:space="preserve">
+    <value>toca aqui</value>
   </data>
   <data name="viewlink" xml:space="preserve">
     <value>Imprimir</value>

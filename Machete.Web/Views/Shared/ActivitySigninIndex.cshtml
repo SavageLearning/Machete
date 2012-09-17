@@ -28,14 +28,22 @@
                 <div class="tb-table">
                     <div class="tb-row">
                         <div class="tb-label">
-                            @Html.LabelFor(model => model.dwccardnum)
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                @Html.LabelFor(model => model.dwccardnum)
+                            }
+                            else
+                            {
+                                @Html.Label(@Activities.touch)
+                            }
                         </div>
                         <div class="tb-field">
-                            @Html.TextBox("dwccardnum", "", new { style = "width: 100px;", id=idPrefix+"dwccardnum" })
-                            @Html.ValidationMessage("dwccardnum", new { @id =idPrefix+"dwccardnum"})
+                            @Html.TextBox("dwccardnum", "", new { style = "width: 100px;", id = idPrefix + "dwccardnum", placeholder = @Activities.touchhere })
+                            @Html.ValidationMessage("dwccardnum", new { @id = idPrefix + "dwccardnum" })
                         </div>
                         <div class="tb-field">
-                            <input type="submit" value="@(WorkerSignins.indexsubmit)" />
+                            <input type="submit" value="@(WorkerSignins.indexsubmit)"  id="@(idPrefix)submit"/>
+                            <input type="button" value="@(Activities.clear)" id="@(idPrefix)resetText" />
                         </div>
                     </div>
                 </div>
@@ -81,9 +89,16 @@
         var blankImage = "/Content/images/NO-IMAGE-AVAILABLE.jpg";
         //
         //
+        $('#@(idPrefix)submit').button();
+        $('#@(idPrefix)resetText').button();
         $('#@(idPrefix)signin-unknown').hide();
         $('#@(idPrefix)dwccardnum').focus();
         $('#@(idPrefix)red-dialog').hide();
+        $('#@(idPrefix)resetText').bind('click', function() {
+            console.log("reset clicked");
+            $('#@(idPrefix)dwccardnum').val('');
+            $('#@(idPrefix)dwccardnum').focus();
+        });
         //
         //
         $('#@(idPrefix)Tabs').mUI('createTabs', {
@@ -128,12 +143,12 @@
         //  Datatables
         $('#@(idPrefix)asiTable').dataTable({
             "bPaginate": true,
-            "bLengthChange": true,
+            "bLengthChange": @(authenticated),
             "bAutoWidth": false,
             "bServerSide": true,
-            "bInfo": true,
+            "bInfo": @(authenticated),
             "bSort": true,
-            "bFilter": true,
+            "bFilter": @(authenticated),
             "sAjaxSource": "/ActivitySignin/AjaxHandler",
             "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
             "bProcessing": true,
@@ -157,11 +172,11 @@
 			    } );
 		    },
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                $(nRow).attr('ID', "wsiRec" +aData['recordid']);
+                $(nRow).attr('ID', "asiRec-" +aData['recordid']);
                 if (@(authenticated) == 0) {
                     $(nRow).find('td:first-child').html('');
                 } else {
-                    $(nRow).find('td:first-child').html('<a class="confirm_delete" href="/WorkerSignin/delete/'+aData['recordid']+'">Delete</a>');
+                    $(nRow).find('td:first-child').html('<a class="confirm_delete" href="/ActivitySignin/delete/'+aData['recordid']+'">Delete</a>');
                 }
                 if (aData['imageID']) {
                     $(nRow).attr('imageRef', "/Image/GetImage/" + aData['imageID']);

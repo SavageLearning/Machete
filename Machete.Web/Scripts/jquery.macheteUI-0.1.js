@@ -34,7 +34,7 @@
             },
             whatChanged: {},
             changeLevel: {},
-            pageTimerSeconds: 600,
+            pageTimerSeconds: 2700, //45 minutes on editPage auto-close
             pageTimer: null
         }
     };
