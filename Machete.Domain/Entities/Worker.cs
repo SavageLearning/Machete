@@ -20,6 +20,10 @@ namespace Machete.Domain
         public static int iDWC { get; set; } //TODO: Casa specific configuration. needs real abstraction.
         public static int iHHH { get; set; } //TODO: Casa specific configuration. needs real abstraction.
 
+        public Worker()
+        {
+            idString = "worker";
+        }
         //public int ID { get; set; }
         public virtual Person Person { get; set; }
         public virtual ICollection<WorkerSignin> workersignins { get; set; }

@@ -10,6 +10,10 @@ namespace Machete.Domain
 {
     public class Employer : Record
     {
+        public Employer()
+        {
+            idString = "employer";
+        }
         //public int ID { get; set; }
         public virtual ICollection<WorkOrder> WorkOrders { get; set; }
         //

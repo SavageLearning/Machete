@@ -6,6 +6,8 @@
     string recType = "worker";
     string idPrefix = recType + "-";
     string perPrefix = "person" + Model.ID + "-";
+
+    string idPrefixFoo = recType + Model.ID + "-";
 }
 @using (Html.BeginForm("Edit", "Worker", FormMethod.Post,
                     new { @class = "edittab-form EditPost", 
@@ -13,7 +15,7 @@
                           enctype = "multipart/form-data" }))
 {
     @*<input type="button" value="@Workers.printlink" class="formButton" id="viewWorker-@(Model.ID)" />*@
-    <input type="submit" value="@Workers.editsubmit" class="formButton saveBtn"/>
+    <input type="submit" value="@Workers.editsubmit" class="formButton saveBtn" id="@(idPrefixFoo)SaveButton"/>
     
     if (Html.IsInRole(Html.Role_AM()))
     {

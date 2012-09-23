@@ -165,6 +165,17 @@ namespace Machete.Test
             _d.FindElement(By.Id("workerCreateTab")).Click();            
             return true;
         }
+
+        public bool workerSanction(Worker _wkr)
+        {
+            WaitThenClickElement(By.Id("workerCreateTab"));
+            WaitForElement(By.Id(_wkr.idPrefix + "memberStatus"));
+            SelectOption(By.Id(_wkr.idPrefix + "memberStatus"), "Sanctioned");
+            _d.FindElement(By.Id(_wkr.idPrefix+"SaveButton")).Click();
+            _d.FindElement(By.Id("workerCreateTab")).Click();  
+            return true;
+        }
+
         public bool workerValidate(Worker _wkr)
         {
             string prefix = "worker"+_wkr.ID+"-";
@@ -491,10 +502,10 @@ namespace Machete.Test
             WaitForElement(By.Id("walt-" + _wo.ID));
             // Look for WA datatable to have a first row (at least one record)
             By walt = By.XPath("//table[@id='workAssignTable-wo-" + _wo.ID + "']/tbody/tr/td[1]");
+            // The #####-## order number from the first column
+            var waltText =WaitForElement(walt).Text;
             WaitForElementValue(walt, _wa.getFullPseudoID());
-
-            var waListTab = WaitForElement(walt);
-            Assert.AreEqual(_wa.getFullPseudoID(), waListTab.Text, "Unexpected PseudoID in assignment's list");
+            Assert.AreEqual(_wa.getFullPseudoID(), waltText, "Unexpected PseudoID in assignment's list");
 
             WaitThenClickElement(By.Id("activateWorkOrderButton-" + _wo.ID));
             _wo.status = 42; // changing test object to reflect activate status from previous action

@@ -9,9 +9,12 @@ using Machete.Domain.Resources;
 namespace Machete.Domain
 {
     public class WorkAssignment : Record
-    {
-        //public int ID { get; set; }
-
+    {        
+        public WorkAssignment()
+        {
+            idString = "WA";
+        }
+        //public int ID { get; set; }        
         public int? workerAssignedID { get; set; }
         public virtual Worker workerAssigned { get; set; }
 
@@ -94,13 +97,7 @@ namespace Machete.Domain
             this.workOrder.waPseudoIDCounter++;
             this.pseudoID = this.workOrder.waPseudoIDCounter;
         }
-        public string idPrefix
-        {
-            get
-            {
-                return "WA" + this.ID.ToString() + "-";
-            }
-        }
+
     }
     public class WorkAssignmentSummary
     {
