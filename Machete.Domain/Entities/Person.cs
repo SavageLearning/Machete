@@ -12,8 +12,11 @@ namespace Machete.Domain
 {
     public class Person : Record
     {       
+        public Person()
+        {
+            idString = "person";
+        }
         public virtual Worker Worker { get; set; }
-        public Person() { }
         public virtual ICollection<Event> Events { get; set; }
         //
         // Used by EF for Optimistic Concurrency

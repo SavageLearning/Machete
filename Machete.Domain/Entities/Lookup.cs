@@ -9,6 +9,10 @@ namespace Machete.Domain
 {
     public class Lookup : Record
     {
+                public Lookup()
+        {
+            idString = "lookup";
+        }
         //public int ID { get; set; }
         [LocalizedDisplayName("category", NameResourceType = typeof(Resources.Lookup))]
         [StringLength(20, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Lookup))]

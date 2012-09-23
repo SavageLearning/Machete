@@ -9,6 +9,10 @@ namespace Machete.Domain
 {
     public class WorkerRequest : Record
     {
+        public WorkerRequest()
+        {
+            idString = "wkrFOOBARRequest";
+        }
         //public int ID { get; set; }
         public int WorkOrderID { get; set; }
 

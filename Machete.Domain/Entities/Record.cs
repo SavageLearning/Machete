@@ -8,6 +8,8 @@ namespace Machete.Domain
 {
     public class Record : ICloneable
     {
+        [NotMapped]
+        protected string idString { get; set; }
         public int ID { get; set; }
         public DateTime datecreated { get; set; }
         public DateTime dateupdated { get; set; }
@@ -32,6 +34,14 @@ namespace Machete.Domain
         public object Clone()
         {
             return this.MemberwiseClone();
+        }
+
+        public string idPrefix
+        {
+            get
+            {
+                return idString + this.ID.ToString() + "-";
+            }
         }
     }
 }

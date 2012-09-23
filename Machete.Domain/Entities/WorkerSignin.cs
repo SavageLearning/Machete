@@ -11,6 +11,10 @@ namespace Machete.Domain
 {
     public class WorkerSignin : Signin 
     {
+        public WorkerSignin()
+        {
+            idString = "wsi";
+        }
         public int? WorkAssignmentID { get; set; }
         public DateTime? lottery_timestamp { get; set; }
         public int? lottery_sequence { get; set; }
