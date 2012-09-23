@@ -1,13 +1,15 @@
-﻿@using Machete.Web.Helpers
+﻿@model Machete.Domain.Person
+@using Machete.Web.Helpers
 @using Machete.Web.Resources
 @using Machete.Domain.Resources
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
     string recType = "event";
-    //string idPrefix = recType + Model.ID + "-";
+    string idPrefix = recType + Model.ID + "-";
+    string parentPrefix = "person" + Model.ID + "-";
 }
 <div id="eventList">
-    <table id="eventTable" class="display">
+    <table id="@(idPrefix)eventTable" class="display">
         <thead>
             <tr>
                 <th>EDITREF</th>
@@ -27,8 +29,8 @@
     $(document).ready(function () {
 
         jqrfyTable({
-            table: $('#eventTable'),
-            tab: $('#personPartsTabs'),
+            table: $('#@(idPrefix)eventTable'),
+            tab: $('#@(parentPrefix)personPartsTabs'),
             options: {
                 "bPaginate": true,
                 "bLengthChange": true,
@@ -64,6 +66,6 @@
             dblClickEvent: null, 
             tabLabel: "@(recType)"
         });
-        $('#eventTable_filter input').attr('ID','personSearchBox');
+        $('#@(idPrefix)eventTable_filter input').attr('ID','personSearchBox');
     });
 </script>

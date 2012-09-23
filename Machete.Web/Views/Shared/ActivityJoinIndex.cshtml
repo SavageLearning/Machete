@@ -1,10 +1,12 @@
-﻿@using Machete.Web.Helpers
+﻿@model Machete.Domain.Person
+@using Machete.Web.Helpers
 @using Machete.Web.Resources
 @using Machete.Domain.Resources
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
-    string recType = "Activity";
-    //string idPrefix = recType + Model.ID + "-";
+    string recType = "aji";
+    string idPrefix = recType + Model.ID + "-";
+    string parentPrefix = "person" + Model.ID + "-";
 }
 
 <div id="actJoinList">
@@ -16,7 +18,7 @@
                 <li><a href="#actInList" class="ListTab">@Activities.includedTab</a></li>
                 </ul>
                 <div id="actInList">
-                    <table id="actInTable" class="display actTable">
+                    <table id="@(idPrefix)actInTable" class="display actTable">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -45,7 +47,7 @@
                 <li><a href="#actOutList" class="ListTab">@Activities.excludedTab</a></li>
                 </ul>
                 <div id="actOutList">
-                    <table id="actOutTable" class="display actTable">
+                    <table id="@(idPrefix)actOutTable" class="display actTable">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -88,8 +90,8 @@
             changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
         });
         jqrfyTable({
-            table: $('#actOutTable'), 
-            tab: $('#personPartsTabs'),
+            table: $('#@(idPrefix)actOutTable'), 
+            tab: $('#@(parentPrefix)personPartsTabs'),
             options: {
                 "bPaginate": true,
                 "bLengthChange": true,
@@ -130,8 +132,8 @@
             });
         
         jqrfyTable({
-            table: $('#actInTable'), 
-            tab: $('#personPartsTabs'),
+            table: $('#@(idPrefix)actInTable'), 
+            tab: $('#@(parentPrefix)personPartsTabs'),
             options: {
                 "bPaginate": true,
                 "bLengthChange": true,
@@ -173,7 +175,7 @@
         //
         //         
         $('#bActAssign').mUI('postSelectedRows', {
-            targetTable: $('#actOutTable'),
+            targetTable: $('#@(idPrefix)actOutTable'),
             person: $('#personID'),
             refreshTables: $('.actTable'),
             url: '/Activity/Assign'
@@ -181,7 +183,7 @@
         //
         //
         $('#bActUnassign').mUI('postSelectedRows', {
-            targetTable: $('#actInTable'),
+            targetTable: $('#@(idPrefix)actInTable'),
             person: $('#personID'),
             refreshTables: $('.actTable'),
             url: '/Activity/Unassign'

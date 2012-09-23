@@ -6,6 +6,7 @@
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
     string recType = "event";
     string idPrefix = recType + Model.ID + "-";
+    string parentPrefix = "person" + Model.PersonID + "-";
 }
 
 @using (Html.BeginForm("Edit", "Event", FormMethod.Post,
@@ -48,7 +49,7 @@
         var eventForm = $('#eventEditForm-@Model.ID');
         var eventDeleteForm = $('#deleteEventForm-@Model.ID');
         var eventDeleteBtn = $('#deleteEventBtn-@(Model.ID)');
-        var currentTabs = $('#personPartsTabs');
+        var currentTabs = $('#@(parentPrefix)personPartsTabs');
         var eventTabIdx = $('li', currentTabs).index($('li.ui-tabs-selected', currentTabs));
         var addImgForm = $('#@(idPrefix)AddImageForm');
         var addImgDialog = $('#@(idPrefix)AddImageDialog');
