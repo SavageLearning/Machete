@@ -213,12 +213,15 @@ namespace Machete.Test
             ui.WaitAndDoubleClick(By.XPath("//table[@id='activityTable']/tbody/tr[1]"));
 
             // Look for edit and delete features on the page
-            var activityEditForm = ui.WaitForElement(By.CssSelector("#ActivityTab-" + activityRecordID));
-            var activityDeleteLink = ui.WaitForElement(By.CssSelector(".confirm_delete"));
+
+            var formExists = ui.elementExists(By.CssSelector("#ActivityTab-" + activityRecordID));
+            //var activityEditForm = ui.WaitForElement(By.CssSelector("#ActivityTab-" + activityRecordID));
+            var linkExists = ui.elementExists(By.CssSelector(".confirm_delete"));
+            //var activityDeleteLink = ui.WaitForElement(By.CssSelector(".confirm_delete"));
 
             //Assert
-            Assert.IsNull(activityEditForm, "Activity Edit form is displaying for unauthorized users");
-            Assert.IsNull(activityDeleteLink, "Activity registration table is showing registration delete option to unauthorized users");
+            Assert.IsFalse(formExists, "Activity Edit form is displaying for unauthorized users");
+            Assert.IsFalse(linkExists, "Activity registration table is showing registration delete option to unauthorized users");
 
         }
 
