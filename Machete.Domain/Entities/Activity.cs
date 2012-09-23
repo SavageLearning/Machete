@@ -8,6 +8,18 @@ namespace Machete.Domain
 {
     public class Activity : Record
     {
+        public Activity()
+        {
+            idString = "activity";
+        }
+
+        public string idChild
+        {
+            get
+            {
+                return "asi" + this.ID + "-";
+            }
+        }
         public virtual ICollection<ActivitySignin> Signins { get; set; }
         //
         [LocalizedDisplayName("name", NameResourceType = typeof(Resources.Activity))]
@@ -33,10 +45,16 @@ namespace Machete.Domain
         [LocalizedDisplayName("notes", NameResourceType = typeof(Resources.Activity))]
         [StringLength(4000, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Activity))]
         public string notes { get; set; }
+
+
     }
 
     public class ActivitySignin: Signin
     {
+        public ActivitySignin()
+        {
+            idString = "asi";
+        }
         public virtual Activity Activity { get; set; }
         public int activityID { get; set; }
         public int? personID { get; set; }

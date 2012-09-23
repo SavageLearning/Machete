@@ -8,6 +8,10 @@ namespace Machete.Domain
 {
     public class Event : Record
     {
+        public Event()
+        {
+            idString = "event";
+        }
         public int PersonID { get; set; }
         public virtual Person Person { get; set; }
         public virtual ICollection<JoinEventImage> JoinEventImages { get; set; }

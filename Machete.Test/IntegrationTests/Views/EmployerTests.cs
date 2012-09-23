@@ -81,7 +81,7 @@ namespace Machete.Test
             //Arrange
             Employer _emp = (Employer)Records.employer.Clone();
             WorkOrder _wo = (WorkOrder)Records.order.Clone();
-            
+            _wo.status = 43; // start work order off as pending
             //Act
             ui.employerCreate(_emp);
             ui.workOrderCreate(_emp, _wo);
@@ -125,51 +125,27 @@ namespace Machete.Test
             Employer _employer1 = (Employer)Records.employer.Clone();
             WorkOrder _wo = (WorkOrder)Records.order.Clone();
             WorkAssignment _wa1 = (WorkAssignment)Records.assignment.Clone();
-
             _wo.contactName = ui.RandomString(10);
-            //Act
+            _wo.status = 43; // status = pending
+            //
+            // Create employer
             ui.employerCreate(_employer1);
+            // Create work order
             ui.workOrderCreate(_employer1, _wo);
-            //_wo.ID = ui.getSelectedTabRecordID("WO");
-            ui.WorkAssignmentCreate(_employer1, _wo, _wa1);
+            // create assignment
+            ui.workAssignmentCreate(_employer1, _wo, _wa1);
             //Get WA ID and arrange pseudoID information
-            _wa1.ID = ui.getSelectedTabRecordID("WA");
             _wa1.workOrder = _wo;
             _wa1.workOrderID = _wo.ID;
             _wa1.incrPseudoID();
-            //_wa1.workOrder.waPseudoIDCounter++; // from WorkASsignment
-            //_wa1.pseudoID = _wa1.workOrder.waPseudoIDCounter; //TODO: refactor into base class
+            // Activate assignment
+            ui.workAssignmentActivate(_employer1, _wo, _wa1);
             //
-            ui.WaitThenClickElement(By.Id("walt-" + _wo.ID));
-            Thread.Sleep(2000);
-            By walt = By.XPath("//table[@id='workAssignTable-wo-" + _wo.ID + "']/tbody/tr/td[1]");
-            ui.WaitForElementValue(walt, _wa1.getFullPseudoID());
-
-            //Assert
-            Assert.AreEqual(_wa1.getFullPseudoID(), driver.FindElement(walt).Text, "Unexpected PseudoID in assignment's list");
-            //
-            //Act
-            ui.WaitThenClickElement(By.Id("activateWorkOrderButton-"+ _wo.ID));
-            //Assert
-            ui.WorkAssignmentValidate(_employer1, _wo, _wa1);
+            ui.workAssignmentValidate(_employer1, _wo, _wa1);
             ui.workOrderValidate(_wo);
-
-            ////Act
-            //ui.WaitThenClickElement(By.Id("duplicate-" + _wa1.ID));
-            //WorkAssignment duplicatedAssignment = (WorkAssignment)_wa1.Clone();
-            //duplicatedAssignment.incrPseudoID();
-            //duplicatedAssignment.ID = _wa1.ID + 6;
-
-            ////Assert
-            //ui.WorkAssignmentValidate(_employer1, _wo, duplicatedAssignment);
-
             // TODO: Selenium: test duplicate (pseudoID increment is visible in table)
             // TODO: Selenium: test DispatchOption / Change Worker dialog. 
             // TODO: Selenium: test Skill dropdown for Chambita/specialized skill, test total changes
-
-
-
-
         }
         [TestMethod]
         public void SeEmployer_Create_and_move_Workorder()
@@ -187,8 +163,6 @@ namespace Machete.Test
             //
             //
             string prefix = "WO" + _wo.ID + "-";
-            //IJavaScriptExecutor js = driver as IJavaScriptExecutor;
-            //string title = (string)js.ExecuteScript("if (window.screen){window.moveTo(0, 0);window.resizeTo(window.screen.availWidth,window.screen.availHeight);};");
             // click change button
             ui.WaitThenClickElement(By.Id(prefix + "changeEmployerBtn"));
             // find new employer
@@ -213,25 +187,3 @@ namespace Machete.Test
 
     }
 }
-
-        #region Additional test attributes
-        //
-        // You can use the following additional attributes as you write your tests:
-        //
-        // Use ClassInitialize to run code before running the first test in the class
-        // [ClassInitialize()]
-        // public static void MyClassInitialize(TestContext testContext) { }
-        //
-        // Use ClassCleanup to run code after all tests in a class have run
-        // [ClassCleanup()]
-        // public static void MyClassCleanup() { }
-        //
-        // Use TestInitialize to run code before running each test 
-        // [TestInitialize()]
-        // public void MyTestInitialize() { }
-        //
-        // Use TestCleanup to run code after each test has run
-        // [TestCleanup()]
-        // public void MyTestCleanup() { }
-        //
-        #endregion

@@ -5,7 +5,7 @@
     string recType = "person";
     string idPrefix = recType + Model.ID + "-";
 }
-<div id="personPartsTabs">
+<div id="@(idPrefix)personPartsTabs">
     <ul>
         <li><a href="#personGeneralTabRef" id="personGeneralTab" class="GeneralTab">@Machete.Web.Resources.Persons.basicinfo</a></li>
         @if (Model.Worker == null) {
@@ -53,17 +53,17 @@
             }
         }
     </div>
-    @Html.Partial("EventIndex")
+    @Html.Partial("EventIndex", Model)
     @if (Html.IsInRole(Html.Role_T()) && Model.Worker != null)
     {
-        @Html.Partial("ActivityJoinIndex")
+        @Html.Partial("ActivityJoinIndex", Model)
     }
 </div>
 
 <script type="text/javascript">
     $(document).ready(function () {
         var personEditForm = $('#Persontab-@Model.ID');
-        var personPartTabs = $('#personPartsTabs');
+        var personPartTabs = $('#@(idPrefix)personPartsTabs');
         var personDeleteForm = $('#DeletePerson-@Model.ID');
         var personDeleteBtn = $("#delete-@Model.ID");
         $('#view-@Model.ID').click(function () {

@@ -8,6 +8,7 @@
     string recType = "event";
     string idPrefix = recType + Model.ID + "-";
     string jeviPrefix = "";
+    string parentPrefix = "person" + Model.PersonID + "-";
 }
 @Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID" })
 @Html.HiddenFor(model => model.PersonID, new { @id = idPrefix + "PersonID" })
@@ -119,7 +120,7 @@
 </div>    
 <script type="text/javascript">
     $(document).ready(function () {
-        var currentTabs = $('#personPartsTabs');
+        var currentTabs = $('#@(parentPrefix)personPartsTabs');
         var eventTabIdx = $('li', currentTabs).index($('li.ui-tabs-selected', currentTabs));
 //        $('.ui-datepicker').datepicker({
 //            dateFormat: 'mm/dd/yy',
