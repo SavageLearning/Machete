@@ -43,10 +43,11 @@ namespace Machete.Test.IntegrationTests.Services
             //Doesn't blast the database
             //base.Initialize(new MacheteInitializer(), "machete");
             Database.SetInitializer<MacheteContext>(new MacheteInitializer());
-            DB = new MacheteContext("machete"); //name of DB in sql server
+            DB = new MacheteContext("macheteProduction"); //name of DB in sql server
             WorkerCache.Initialize(DB);
             LookupCache.Initialize(DB);
             _dbFactory = new DatabaseFactory();
+            _dbFactory.Set(DB); // overriding default context to use non-test DB
             _iRepo = new ImageRepository(_dbFactory);
             _wRepo = new WorkerRepository(_dbFactory);
             _woRepo = new WorkOrderRepository(_dbFactory);
@@ -74,7 +75,7 @@ namespace Machete.Test.IntegrationTests.Services
         {
             //    Integration_Activity_Service_CreateRandomClass();
         }
-
+        [TestMethod]
         public void Integration_Activity_Service_CreateRandomClass()
         {
             //Used once to create dummy data to support report creation
@@ -102,6 +103,27 @@ namespace Machete.Test.IntegrationTests.Services
                 _asServ.CreateSignin(asi, "TestScript");
             }
             //a.
+        }
+        [TestMethod]
+        public void Integration_Activity_service_CreateClass_within_hour()
+        {
+            //Used once to create dummy data to support report creation
+            // requires change in app.config to point test database to production
+            IEnumerable<int> cardlist = DB.Workers.Select(q => q.dwccardnum).Distinct();
+            IEnumerable<int> classlist = DB.Lookups.Where(l => l.category == "activityName").Select(q => q.ID);
+            Activity a = new Activity();
+            //random date, within last 30 days
+            Random rand = new Random();
+            DateTime today = DateTime.Now;
+            a.dateStart = today;
+            a.dateEnd = a.dateStart.AddHours(1.5);
+            a.name = classlist.ElementAt(rand.Next(classlist.Count()));
+            a.type = 101; //type==class
+            a.teacher = "UnitTest script";
+            a.notes = "From Integration_Activity_Service";
+            _aServ.Create(a, "TestScript");
+            
+            Assert.IsTrue(1 == DB.Activities.Where(aa => aa.ID == a.ID).Count());
         }
 
         [TestMethod]
