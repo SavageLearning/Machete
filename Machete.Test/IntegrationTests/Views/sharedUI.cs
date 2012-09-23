@@ -377,7 +377,7 @@ namespace Machete.Test
             //ReplaceElementText(By.Id(prefix + "englishRequiredNote"), _wo.englishRequiredNote);
             ReplaceElementText(By.Id(prefix + "description"), _wo.description);
 
-            SelectOption(By.Id(prefix + "status"), MacheteLookup.cache.First(c => c.category == "orderstatus" && c.ID == _wo.status).text_EN);
+           // SelectOption(By.Id(prefix + "status"), MacheteLookup.cache.First(c => c.category == "orderstatus" && c.ID == _wo.status).text_EN);
             SelectOptionByIndex(By.Id(prefix + "transportMethodID"), _wo.transportMethodID);
             SelectOptionByIndex(By.Id(prefix + "timeFlexible"), _wo.timeFlexible ? 2 : 1);
             SelectOptionByIndex(By.Id(prefix + "permanentPlacement"), _wo.permanentPlacement ? 2 : 1);
