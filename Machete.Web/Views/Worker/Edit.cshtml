@@ -4,8 +4,9 @@
 
 @{
     string recType = "worker";
-    string idPrefix = recType + "-";
-    string perPrefix = "person" + Model.ID + "-";
+    //string idPrefix = recType + "-";
+    string parentPrefix = "person" + Model.ID + "-";
+    string idPrefix = recType + Model.ID + "-";
 }
 @using (Html.BeginForm("Edit", "Worker", FormMethod.Post,
                     new { @class = "edittab-form EditPost", 
@@ -13,7 +14,7 @@
                           enctype = "multipart/form-data" }))
 {
     @*<input type="button" value="@Workers.printlink" class="formButton" id="viewWorker-@(Model.ID)" />*@
-    <input type="submit" value="@Workers.editsubmit" class="formButton saveBtn"/>
+    <input type="submit" value="@Workers.editsubmit" class="formButton saveBtn" id="@(idPrefix)SaveButton"/>
     
     if (Html.IsInRole(Html.Role_AM()))
     {
@@ -37,7 +38,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        var personPartsTab = $('#personPartsTabs');
+        var personPartsTab = $('#@(parentPrefix)personPartsTabs');
         $('.formButton').button();
         //TODO: Tab order $('#contactName').focus();
         $.validator.unobtrusive.parseDynamicContent($('#workderEditTab-@Model.ID'));

@@ -24,7 +24,8 @@ namespace Machete.Domain
         public virtual ICollection<WorkerRequest> workerRequests { get; set; }
         //
         public WorkOrder()
-        {            
+        {
+            idString = "WO";
             this.waPseudoIDCounter = 0;
         }
         //

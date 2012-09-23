@@ -113,7 +113,7 @@ namespace Machete.Test
         }
 
         [TestMethod]
-        public void SePersion_signin_sanctioned_worker_fails()
+        public void SePerson_signin_sanctioned_worker_fails()
         {
             //Arrange
             Person _per = (Person)Records.person.Clone();
@@ -128,12 +128,14 @@ namespace Machete.Test
             ui.personCreate(_per);
             _wkr.ID = _per.ID;
             ui.workerCreate(_wkr, testimagefile);
+            //
+            ui.workerSanction(_wkr);
+            //
             _san.PersonID = _per.ID;
             ui.eventCreate(_san);
             ui.activityCreate(_act);
             // refactored other test to identify idPrefix-dwccardnum
-            ui.activitySignIn("TODO:FIXME",_wkr.dwccardnum);
-
+            ui.activitySignIn(_act.idChild,_wkr.dwccardnum);
             //Assert
             Assert.IsTrue(ui.activitySignInIsSanctioned());
         }

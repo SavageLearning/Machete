@@ -10,6 +10,10 @@ namespace Machete.Domain
 {
     public class Image : Record
     {
+        public Image()
+        {
+            idString = "image";
+        }
         //public int ID { get; set; }
         public byte[] ImageData { get; set; }
         [StringLength(30)]
