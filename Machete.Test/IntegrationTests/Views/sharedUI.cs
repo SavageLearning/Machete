@@ -18,7 +18,7 @@ namespace Machete.Test
     {
         IWebDriver _d;
         string _url;
-        int maxwait = 10; // seconds
+        int maxwait = 4; // seconds
         int sleepFor = 1000; //milliseconds
         public sharedUI(IWebDriver driver, string url)
         {
@@ -323,7 +323,7 @@ namespace Machete.Test
             Assert.AreEqual(_emp.blogparticipate ? 2 : 1, GetOptionIndex(By.Id("blogparticipate")));
             WaitForElement(By.Id(prefix + "business"));
             Assert.AreEqual(_emp.business ? 2 : 1, GetOptionIndex(By.Id(prefix + "business")));
-            WaitForElement(By.Id(prefix + "refferedby"));
+            WaitForElement(By.Id(prefix + "referredbyOther"));
             Assert.AreEqual(_emp.referredby, MacheteLookup.cache.First(c => c.category == "emplrreference" && c.text_EN == GetOptionText(By.Id(prefix + "referredby"))).ID);
             return true;
         }
@@ -331,19 +331,9 @@ namespace Machete.Test
         public bool employerDelete(Employer _emp)
         {
             WaitThenClickElement(By.Id("deleteEmployerButton-" + _emp.ID.ToString()));
-            
-            //Thread.Sleep(5);
-            //WaitForElement(By.Id("popup_container"));
-            //_d.FindElement(By.Id("popup_ok"));
             WaitThenClickElement(By.Id("popup_ok"));
-            
-            //WaitForElement(By.Id("employerTable_searchbox"));
+
             Thread.Sleep(5000);
-            //var elem = _d.FindElement(By.Id("employerTable_searchbox"));
-            //var foo1 = elem.GetAttribute("disabled");
-            //var foo2 = elem.GetAttribute("readonly");
-            //Assert.IsTrue(elem.Displayed);
-            //Assert.IsTrue(elem.Enabled);
             WaitForElement(By.Id("employerTable_searchbox")).SendKeys(_emp.name);
             bool result = WaitForElementValue(By.XPath("//table[@id='employerTable']/tbody/tr/td[1]"), "No matching records found");
             Assert.IsTrue(result, "Employer not deleted properly");
@@ -447,7 +437,7 @@ namespace Machete.Test
             Assert.AreEqual(_wo.englishRequired ? 2 : 1, GetOptionIndex(By.Id(prefix + "englishRequired")));
             WaitForElement(By.Id(prefix + "lunchSupplied"));
             Assert.AreEqual(_wo.lunchSupplied ? 2 : 1, GetOptionIndex(By.Id(prefix + "lunchSupplied")));
-            WaitForElement(By.Id(prefix + "transportationMethodID"));
+            WaitForElement(By.Id(prefix + "transportMethodID"));
             Assert.AreEqual(_wo.transportMethodID, GetOptionIndex(By.Id(prefix + "transportMethodID")));
             WaitForElement(By.Id("workerRequests2_WO-" + _wo.ID.ToString()));
             if (_wo.workerRequests != null)
@@ -460,31 +450,68 @@ namespace Machete.Test
         #endregion
 
         #region WorkAssignments
-        public bool WorkAssignmentCreate(Employer _emp, WorkOrder _wo, WorkAssignment _wa)
+        /// <summary>
+        /// Create new assignment. Last action executes Create Button, returning to List Tab.
+        /// </summary>
+        /// <param name="emp"></param>
+        /// <param name="wo"></param>
+        /// <param name="wa"></param>
+        /// <returns></returns>
+        public bool workAssignmentCreate(Employer emp, WorkOrder wo, WorkAssignment wa)
         {
-            WaitThenClickElement(By.Id("wact-" + _wo.ID)); //the ID here is the WorkOrder.ID, not the Employer.ID
+            // Click on the assignment Create Tab
+            WaitThenClickElement(By.Id("wact-" + wo.ID)); //the ID here is the WorkOrder.ID, not the Employer.ID
+            WaitForElement(By.Id(wa.idPrefix + "description"));
+            SelectOption(By.Id(wa.idPrefix + "englishLevelID"), wa.englishLevelID.ToString());
+            SelectOptionByValue(By.Id(wa.idPrefix + "skillID"), wa.skillID.ToString());
+            ReplaceElementText(By.Id(wa.idPrefix + "hourlyWage"), wa.hourlyWage.ToString());
+            SelectOption(By.Id(wa.idPrefix + "hours"), wa.hours.ToString());
+            if (wa.hourRange.ToString().Length > 0)
+                SelectOption(By.Id(wa.idPrefix + "hourRange"), wa.hourRange.ToString());
+            SelectOption(By.Id(wa.idPrefix + "days"), wa.days.ToString());
+            ReplaceElementText(By.Id(wa.idPrefix + "description"), wa.description);
 
-            string prefix = "WA" + _wa.ID + "-";
-
-            WaitForElement(By.Id(prefix + "description"));
-            SelectOption(By.Id(prefix + "englishLevelID"), _wa.englishLevelID.ToString());
-            SelectOptionByValue(By.Id(prefix + "skillID"), _wa.skillID.ToString());
-            ReplaceElementText(By.Id(prefix + "hourlyWage"), _wa.hourlyWage.ToString());
-            SelectOption(By.Id(prefix + "hours"), _wa.hours.ToString());
-            if (_wa.hourRange.ToString().Length > 0)
-                SelectOption(By.Id(prefix + "hourRange"), _wa.hourRange.ToString());
-            SelectOption(By.Id(prefix + "days"), _wa.days.ToString());
-            ReplaceElementText(By.Id(prefix + "description"), _wa.description);
-            _d.FindElement(By.Id("WO" + _wo.ID + "-waCreateBtn")).Click();
+            WaitForElement(By.Id("WO" + wo.ID + "-waCreateBtn")).Click();
+            Thread.Sleep(1000);
+            wa.ID = getSelectedTabRecordID("WA"); 
+            WaitForElement(By.Id(wa.idPrefix + "EditTab"));
+            WaitThenClickElement(By.Id("walt-" + wo.ID));
             return true;
         }
-        public bool WorkAssignmentValidate(Employer _emp, WorkOrder _wo, WorkAssignment _wa)
+        /// <summary>
+        /// Activate work order. Assumes start at WA ListTab. 
+        /// </summary>
+        /// <param name="_emp"></param>
+        /// <param name="_wo"></param>
+        /// <param name="_wa"></param>
+        /// <returns></returns>
+        public bool workAssignmentActivate(Employer _emp, WorkOrder _wo, WorkAssignment _wa)
+        {
+            // Verify we're on the WA ListTab we expected
+            WaitForElement(By.Id("walt-" + _wo.ID));
+            // Look for WA datatable to have a first row (at least one record)
+            By walt = By.XPath("//table[@id='workAssignTable-wo-" + _wo.ID + "']/tbody/tr/td[1]");
+            WaitForElementValue(walt, _wa.getFullPseudoID());
+
+            var waListTab = WaitForElement(walt);
+            Assert.AreEqual(_wa.getFullPseudoID(), waListTab.Text, "Unexpected PseudoID in assignment's list");
+
+            WaitThenClickElement(By.Id("activateWorkOrderButton-" + _wo.ID));
+            _wo.status = 42; // changing test object to reflect activate status from previous action
+            return true;
+        }
+
+        public bool workAssignmentValidate(Employer _emp, WorkOrder _wo, WorkAssignment _wa)
         {
             WaitForElement(By.Id("workOrderTable_" + _emp.ID + "_searchbox"));
+            WaitThenClickElement(By.Id("WO"+_wo.ID+"-EditTab"));
+            Thread.Sleep(2000);
             WaitThenClickElement(By.Id("walt-" + _wo.ID));
+            Thread.Sleep(2000);
             WaitForElement(By.Id("workAssignTable-wo-" + _wo.ID + "_searchbox"));
             string idString = _wo.ID.ToString("D5") + "-" + ((int)_wa.pseudoID).ToString("D2");
             ReplaceElementText(By.Id("workAssignTable-wo-" + _wo.ID + "_searchbox"), idString);
+            Thread.Sleep(2000);
             string xpath = "//*[@id='workAssignTable-wo-" + _wo.ID + "']/tbody/tr/td[.='" + idString + "']";
             Assert.IsTrue(WaitAndDoubleClick(By.XPath(xpath)),
                 "Cannot find work assignment row to click.");
@@ -689,8 +716,12 @@ namespace Machete.Test
             }
             throw new NotFoundException();
         }
-        //
-        //
+        /// <summary>
+        /// Wait for both an element to exist and for the specified value to be present.
+        /// </summary>
+        /// <param name="by"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public bool WaitForElementValue(By by, string value)
         {
             for (int second = 0; second < maxwait; second++)
@@ -743,6 +774,11 @@ namespace Machete.Test
         }
         #endregion
         #region privatemethods
+        /// <summary>
+        /// Returns element or null if not found. Catches Selenium exceptions.
+        /// </summary>
+        /// <param name="by"></param>
+        /// <returns></returns>
         private IWebElement IsElementPresent(By by)
         {
             try
@@ -753,13 +789,13 @@ namespace Machete.Test
             {
                 return null;
             }
-            //catch (ElementNotVisibleException)
-            //{
-            //    return null;
-            //}
         }
-        //
-        //
+        /// <summary>
+        /// Find element by the given By object and return true if the value matches the attribute value.
+        /// </summary>
+        /// <param name="by"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         private bool IsElementValuePresent(By by, string value)
         {
             try

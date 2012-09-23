@@ -94,6 +94,13 @@ namespace Machete.Domain
             this.workOrder.waPseudoIDCounter++;
             this.pseudoID = this.workOrder.waPseudoIDCounter;
         }
+        public string idPrefix
+        {
+            get
+            {
+                return "WA" + this.ID.ToString() + "-";
+            }
+        }
     }
     public class WorkAssignmentSummary
     {
