@@ -132,6 +132,11 @@ namespace Machete.Test
 
             //Arrange
 
+            // creates an activity within the hour
+            ActivityServiceTests test = new ActivityServiceTests();
+            test.TestInitialize();
+            test.Integration_Activity_service_CreateClass_within_hour();
+
             //Act
             ui.activityMenuLink(); //Find Activity menu link and click
             ui.WaitAndDoubleClick(By.XPath("//table[@id='activityTable']/tbody/tr[1]"));
@@ -156,11 +161,13 @@ namespace Machete.Test
             
             //Assert
             // old tab doesn't exist
-            Assert.IsNull(ui.WaitForElement(By.Id(activityTabSelectedID)));
+            //Assert.IsNull(ui.WaitForElement(By.Id(activityTabSelectedID)));
+            Assert.IsFalse(ui.elementExists(By.Id(activityTabSelectedID)));
 
             // new tab does exist
             // activityNewIDString;
             Assert.IsNotNull(ui.WaitForElement(By.Id(activityNewIDString)));
+            //Assert.IsTrue(ui.elementExists(By.Id(activityNewIDString)));
 
         }
 
@@ -170,6 +177,12 @@ namespace Machete.Test
             // example from ActivityTests.cs -- SeActivity_Create_signin_simple()
 
             // Arrange
+
+            // creates one activity within the hour
+            ActivityServiceTests test = new ActivityServiceTests();
+            test.TestInitialize();
+            test.Integration_Activity_service_CreateClass_within_hour();
+
             Random rand = new Random();
             int rowcount = 1;
             MacheteContext DB = new MacheteContext("machete");
@@ -178,14 +191,17 @@ namespace Machete.Test
             ActivitySignin _asi = (ActivitySignin)Records.activitysignin.Clone();
             IEnumerable<int> cardlist = DB.Workers.Select(q => q.dwccardnum).Distinct();
             int firstCardNum = workers.First().dwccardnum;
-            
+
             // Act
             //ui.activityCreate(_act);
             ui.activityMenuLink(); //Find Activity menu link and click
             var activityRecord = ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr[1]"));
             var activityRecordID = Convert.ToInt32(activityRecord.GetAttribute("recordid"));
+            var idPrefix = "asi" + activityRecordID + "-";
+
             ui.WaitAndDoubleClick(By.XPath("//table[@id='activityTable']/tbody/tr[1]"));
-            ui.activitySignIn("asi" + activityRecordID + "-dwccardnum", firstCardNum);
+           // ui.activitySignIn("asi" + activityRecordID + "-dwccardnum", firstCardNum);
+            ui.activitySignIn(idPrefix, firstCardNum);
 
             // Assert
             // borrowed from sharedUI.cs -- activitySignInValidate()
@@ -198,13 +214,13 @@ namespace Machete.Test
         {
             //Arrange
             ui.activityMenuLink(); //Find Activity menu link and click
-            //TODO: Create at least one Activity record that has a start time wwithin 1 hour of the current clock
-            //
-            //The line below fails because the unauthenticated login now does not have records to show
-            // because of the time.
+            
+            // creates one activity within the hour
             ActivityServiceTests test = new ActivityServiceTests();
             test.TestInitialize();
             test.Integration_Activity_service_CreateClass_within_hour();
+
+            //selects top activity on the list
             var activityRecord = ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr[1]"));
             var activityRecordID = activityRecord.GetAttribute("recordid");
 
