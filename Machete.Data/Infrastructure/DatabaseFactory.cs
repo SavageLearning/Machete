@@ -10,6 +10,7 @@ namespace Machete.Data.Infrastructure
     public interface IDatabaseFactory : IDisposable
     {
         MacheteContext Get();
+        void Set(MacheteContext context);
     }
     //
     //
@@ -19,6 +20,10 @@ namespace Machete.Data.Infrastructure
         public MacheteContext Get()
         {
             return dataContext ?? (dataContext = new MacheteContext());
+        }
+        public void Set(MacheteContext context)
+        {
+            dataContext = context;
         }
         protected override void DisposeCore()
         {
