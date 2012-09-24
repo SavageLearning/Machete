@@ -10,6 +10,7 @@ using Machete.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
+using Machete.Test.IntegrationTests.Services;
 
 namespace Machete.Test
 {
@@ -197,6 +198,13 @@ namespace Machete.Test
         {
             //Arrange
             ui.activityMenuLink(); //Find Activity menu link and click
+            //TODO: Create at least one Activity record that has a start time wwithin 1 hour of the current clock
+            //
+            //The line below fails because the unauthenticated login now does not have records to show
+            // because of the time.
+            ActivityServiceTests test = new ActivityServiceTests();
+            test.TestInitialize();
+            test.Integration_Activity_service_CreateClass_within_hour();
             var activityRecord = ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr[1]"));
             var activityRecordID = activityRecord.GetAttribute("recordid");
 
@@ -205,12 +213,15 @@ namespace Machete.Test
             ui.WaitAndDoubleClick(By.XPath("//table[@id='activityTable']/tbody/tr[1]"));
 
             // Look for edit and delete features on the page
-            var activityEditForm = ui.WaitForElement(By.CssSelector("#ActivityTab-" + activityRecordID));
-            var activityDeleteLink = ui.WaitForElement(By.CssSelector(".confirm_delete"));
+
+            var formExists = ui.elementExists(By.CssSelector("#ActivityTab-" + activityRecordID));
+            //var activityEditForm = ui.WaitForElement(By.CssSelector("#ActivityTab-" + activityRecordID));
+            var linkExists = ui.elementExists(By.CssSelector(".confirm_delete"));
+            //var activityDeleteLink = ui.WaitForElement(By.CssSelector(".confirm_delete"));
 
             //Assert
-            Assert.IsNull(activityEditForm, "Activity Edit form is displaying for unauthorized users");
-            Assert.IsNull(activityDeleteLink, "Activity registration table is showing registration delete option to unauthorized users");
+            Assert.IsFalse(formExists, "Activity Edit form is displaying for unauthorized users");
+            Assert.IsFalse(linkExists, "Activity registration table is showing registration delete option to unauthorized users");
 
         }
 

@@ -784,6 +784,20 @@ namespace Machete.Test
             return null;
         }
         #endregion
+
+        public bool elementExists(By by)
+        {
+            try
+            {
+                _d.FindElement(by);
+            }
+            catch(NoSuchElementException)
+            {
+                return false;
+            }
+            return true;
+        }
+
         #region privatemethods
         /// <summary>
         /// Returns element or null if not found. Catches Selenium exceptions.
