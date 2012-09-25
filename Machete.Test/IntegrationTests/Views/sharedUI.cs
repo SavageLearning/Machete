@@ -615,8 +615,16 @@ namespace Machete.Test
         }
         public bool activitySignInIsSanctioned()
         {
-            var sanctionedBox = WaitForElement(By.ClassName("ui-dialog"));
-            return sanctionedBox != null && sanctionedBox.GetCssValue("display") == "block";
+            //var sanctionedBox = WaitForElement(By.ClassName("ui-dialog"));
+            if (WaitForElementExists(By.ClassName("ui-dialog"))) {
+                var elem = _d.FindElement(By.ClassName("ui-dialog"));
+                if (elem.Displayed) {
+                    elem.FindElement(By.ClassName("ui-button")).Click();
+                    return true;
+                }
+            }
+
+            return false;
         }
         public bool activitySignInValidate(string idPrefix, int dwccardnum, int rowcount)
         {
@@ -727,6 +735,21 @@ namespace Machete.Test
             }
             throw new NotFoundException();
         }
+
+        public bool WaitForElementExists(By by)
+        {
+            bool elem = false;
+            for (int second = 0; second < maxwait; second++)
+            {
+                elem = elementExists(by);
+                if (elem) 
+                    return true;
+                else 
+                    Thread.Sleep(sleepFor);
+            }
+            return false;
+        }
+
         /// <summary>
         /// Wait for both an element to exist and for the specified value to be present.
         /// </summary>
