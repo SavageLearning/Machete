@@ -106,21 +106,46 @@ namespace Machete.Test
             for (var i = 0; i < numberOfSignins; i++)
             {
                 int cardNum = list1.ElementAt(i);
+                /*int cardNum;
+                if (i == 1) 
+                    cardNum = 30370;
+                else 
+                    cardNum = 30280;*/
                 ui.activitySignIn(idPrefix, cardNum);
-                if (ui.activitySignInIsSanctioned())
-                {
-                    ui.WaitForElement(By.ClassName("ui-dialog")).FindElement(By.ClassName("ui-button")).Click();
+                if (ui.activitySignInIsSanctioned()) {
                     --numberSignedIn;
                     continue;
                 }
-                Assert.IsTrue(ui.activitySignInValidate(idPrefix, cardNum, rowcount), "Sign in for worker " + i + " failed!"); //Assert
                 
-                rowcount += DB.Workers.Where(q => q.dwccardnum == cardNum).Count(); //This line ensures the test doesn't break if we try to sign in an ID that has multiple workers attached to it.
+                //Assert
+                Assert.IsTrue(ui.activitySignInValidate(idPrefix, cardNum, rowcount), "Sign in for worker " + i + " with cardNum " + cardNum + " failed!");
+
+                //This line ensures the test doesn't break if we try to sign in an ID that has multiple workers attached to it.
+                //rowcount increments ny the number of records found in the database matching that cardNum
+                rowcount += DB.Workers.Where(q => q.dwccardnum == cardNum).Count();
             }
             ui.WaitThenClickElement(By.Id("activityListTab"));
             ui.SelectOption(By.XPath("//*[@id='activityTable_length']/label/select"), "100");
+            
             //Assert
-            Assert.AreEqual(numberSignedIn.ToString(), ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr[@recordid='" + _act.ID + "']/td[4]")).Text);
+
+            //Locate record within activitylist datatable and compare the count (column 4) with numberSignedIn
+            //Assert.AreEqual(numberSignedIn.ToString(), ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr[@recordid='" + _act.ID + "']/td[4]")).Text);
+
+            //walk through pagination to search for recordid
+            var activityRecordCount = "what";
+            bool tableRecordMatch = false;
+            while (tableRecordMatch == false) {
+                if (ui.WaitForElementExists(By.XPath("//table[@id='activityTable']/tbody/tr[@recordid='" + _act.ID + "']"))) {
+                    tableRecordMatch = true;
+                    activityRecordCount = ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr[@recordid='" + _act.ID + "']/td[4]")).Text;
+                } else {
+                    //check for #activityTable_next.paginate_disabled_next
+                    Assert.IsTrue(ui.WaitThenClickElement(By.CssSelector("#activityTable_next.paginate_enabled_next")), "Could not locate record in table pagination");
+                }
+            }
+
+            Assert.AreEqual(numberSignedIn.ToString(), activityRecordCount);
         }
         
         [TestMethod]
