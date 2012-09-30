@@ -384,6 +384,8 @@ namespace Machete.Test
             SelectOptionByIndex(By.Id(prefix + "permanentPlacement"), _wo.permanentPlacement ? 2 : 1);
             SelectOptionByIndex(By.Id(prefix + "englishRequired"), _wo.englishRequired ? 2 : 1);
             SelectOptionByIndex(By.Id(prefix + "lunchSupplied"), _wo.lunchSupplied ? 2 : 1);
+            
+            Thread.Sleep(1000); //prevent race condition
             if (_wo.workerRequests != null)
                 foreach (var request in _wo.workerRequests)
                 {
@@ -392,6 +394,7 @@ namespace Machete.Test
                     WaitThenClickElement(By.XPath("//*[@id='workerTable-0']/tbody/tr/td[1]"));
                 }
 
+            Thread.Sleep(1000); //prevent race condition
             //
             // save work order
             _d.FindElement(By.Id(prefix + "SaveBtn")).Click();
@@ -516,13 +519,13 @@ namespace Machete.Test
         {
             WaitForElement(By.Id("workOrderTable_" + _emp.ID + "_searchbox"));
             WaitThenClickElement(By.Id("WO"+_wo.ID+"-EditTab"));
-            Thread.Sleep(2000);
+            Thread.Sleep(1000);
             WaitThenClickElement(By.Id("walt-" + _wo.ID));
-            Thread.Sleep(2000);
+            Thread.Sleep(1000);
             WaitForElement(By.Id("workAssignTable-wo-" + _wo.ID + "_searchbox"));
             string idString = _wo.ID.ToString("D5") + "-" + ((int)_wa.pseudoID).ToString("D2");
             ReplaceElementText(By.Id("workAssignTable-wo-" + _wo.ID + "_searchbox"), idString);
-            Thread.Sleep(2000);
+            Thread.Sleep(1000);
             string xpath = "//*[@id='workAssignTable-wo-" + _wo.ID + "']/tbody/tr/td[.='" + idString + "']";
             Assert.IsTrue(WaitAndDoubleClick(By.XPath(xpath)),
                 "Cannot find work assignment row to click.");
@@ -585,11 +588,10 @@ namespace Machete.Test
             Assert.AreEqual("$" + (hourlyWage * hourRange * daysWork).ToString("F"), WaitForElement(By.Id(prefix + "totalRange")).GetAttribute("value"), "Max Total pay doesn't match hourRange, wage and day calculation");
 
             //select fixed job and verify hourly pay is fixed
-            IWebElement skillDropdown = _d.FindElement(By.Id(prefix + "skillID"));
-            //var skillIndex = _d.FindElement(By.CssSelector("#" + prefix + "skillID option:not[fixedjob='False']")).GetAttribute("index");
-            IWebElement skillIndex = skillDropdown.FindElement(By.CssSelector("option:not[fixedjob='False']"));
-            SelectOptionByIndex(By.Id(prefix + "skillID"), Convert.ToInt32(skillIndex));
-            Assert.IsTrue(WaitForElement(By.Id(prefix + "hourlyWage")).GetAttribute("disabled") == "disabled", "Hourly Wage should be fixed (disabled) in response to skill selection");
+            String skillValue = MacheteLookup.cache.First(x => x.category == "skill" && x.text_EN == "DWC Chambita 1hr").ID.ToString();
+            SelectOptionByValue(By.Id(prefix + "skillID"), skillValue);
+            Thread.Sleep(1000); // to avoid race condition
+            Assert.AreEqual("true", WaitForElement(By.Id(prefix + "hourlyWage")).GetAttribute("disabled"), "Hourly Wage should be fixed (disabled) in response to skill selection");
 
             return true;
         }

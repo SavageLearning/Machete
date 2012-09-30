@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
@@ -106,22 +107,19 @@ namespace Machete.Test
             for (var i = 0; i < numberOfSignins; i++)
             {
                 int cardNum = list1.ElementAt(i);
-                /*int cardNum;
-                if (i == 1) 
-                    cardNum = 30370;
-                else 
-                    cardNum = 30280;*/
                 ui.activitySignIn(idPrefix, cardNum);
+                Thread.Sleep(1000);//prevent race condition
                 if (ui.activitySignInIsSanctioned()) {
                     --numberSignedIn;
                     continue;
                 }
                 
                 //Assert
+                Thread.Sleep(3000);//prevent race condition
                 Assert.IsTrue(ui.activitySignInValidate(idPrefix, cardNum, rowcount), "Sign in for worker " + i + " with cardNum " + cardNum + " failed!");
 
                 //This line ensures the test doesn't break if we try to sign in an ID that has multiple workers attached to it.
-                //rowcount increments ny the number of records found in the database matching that cardNum
+                //rowcount increments by the number of records found in the database matching that cardNum
                 rowcount += DB.Workers.Where(q => q.dwccardnum == cardNum).Count();
             }
             ui.WaitThenClickElement(By.Id("activityListTab"));
