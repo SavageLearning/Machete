@@ -164,6 +164,7 @@ namespace Machete.Test
             //
             string prefix = "WO" + _wo.ID + "-";
             // click change button
+            Thread.Sleep(3000);
             ui.WaitThenClickElement(By.Id(prefix + "changeEmployerBtn"));
             // find new employer
             ui.WaitForElement(By.Id("employerSelectTable_searchbox")).SendKeys(_emp1.name);
