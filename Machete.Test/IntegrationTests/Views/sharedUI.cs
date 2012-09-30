@@ -16,7 +16,7 @@ namespace Machete.Test
 {
     class sharedUI
     {
-        IWebDriver _d;
+        public IWebDriver _d;
         string _url;
         int maxwait = 4; // seconds
         int sleepFor = 1000; //milliseconds
@@ -360,7 +360,7 @@ namespace Machete.Test
             WaitThenClickElement(By.Id("workOrderCreateTab_" + _emp.ID));
             WaitForElement(By.Id(prefix + "contactName"));
             ReplaceElementText(By.Id(prefix + "contactName"), _wo.contactName);
-            //ReplaceElementText(By.Id(prefix + "dateTimeofWork"), _wo.dateTimeofWork);
+            //ReplaceElementText(By.Id(prefix + "dateTimeofWork"), String.Format("{MM/dd/yyyy hh:mm tt}", _wo.dateTimeofWork));
             ReplaceElementText(By.Id(prefix + "paperOrderNum"), _wo.paperOrderNum.ToString());
             //ReplaceElementText(By.Id(prefix + "timeFlexible"), _wo.timeFlexible.ToString());
             //ReplaceElementText(By.Id(prefix + "permanentPlacement"), _wo.permanentPlacement);
@@ -551,6 +551,46 @@ namespace Machete.Test
             WaitForElement(By.Id(prefix + "total"));
             Assert.AreEqual("$" +(_wa.hourlyWage * _wa.hours * _wa.days).ToString("F"), WaitForElement(By.Id(prefix + "total")).GetAttribute("value"));
             Assert.AreEqual(_wa.pseudoID.ToString(), WaitForElement(By.Id(prefix + "pseudoID")).GetAttribute("Value"));
+
+            // Now change field values and check field relationships
+
+            //reset to default values
+            SelectOptionByIndex(By.Id(prefix + "englishLevelID"), 0);
+            SelectOptionByIndex(By.Id(prefix + "skillID"), 0);
+            ReplaceElementText(By.Id(prefix + "hourlyWage"), "0");
+            SelectOptionByIndex(By.Id(prefix + "hours"), 0);
+            SelectOptionByIndex(By.Id(prefix + "hourRange"), 0);
+            SelectOptionByIndex(By.Id(prefix + "days"), 0);
+            SelectOptionByIndex(By.Id(prefix + "hourRange"), 0);
+
+            //check default form response
+            Assert.AreEqual("not calculable", WaitForElement(By.Id(prefix + "total")).GetAttribute("value"));
+            Assert.AreEqual("not calculable", WaitForElement(By.Id(prefix + "totalRange")).GetAttribute("value"));
+            
+            //change skill and make sure wage and hours changed
+            SelectOptionByIndex(By.Id(prefix + "skillID"), 1);
+            Assert.IsFalse(Convert.ToInt32(WaitForElement(By.Id(prefix + "hourlyWage")).GetAttribute("value")) == 0, "Hourly Wage failed reaction to skill selection");
+            Assert.IsFalse(GetOptionIndex(By.Id(prefix + "hours")) == 0, "Hours dropdown failed reaction to skill selection");
+
+            //set hourly range and days then check total and max total
+            SelectOptionByIndex(By.Id(prefix + "hourRange"), 3);
+            SelectOptionByIndex(By.Id(prefix + "days"), 1);
+
+            int hourlyWage = Convert.ToInt32(WaitForElement(By.Id(prefix + "hourlyWage")).GetAttribute("value"));
+            int hoursWork = Convert.ToInt32(WaitForElement(By.Id(prefix + "hours")).GetAttribute("value"));
+            int hourRange = Convert.ToInt32(GetOptionValue(By.Id(prefix + "hourRange")));
+            int daysWork = Convert.ToInt32(GetOptionValue(By.Id(prefix + "days")));
+
+            Assert.AreEqual("$" + (hourlyWage * hoursWork * daysWork).ToString("F"), WaitForElement(By.Id(prefix + "total")).GetAttribute("value"), "Total pay doesn't match hour, wage and day calculation");
+            Assert.AreEqual("$" + (hourlyWage * hourRange * daysWork).ToString("F"), WaitForElement(By.Id(prefix + "totalRange")).GetAttribute("value"), "Max Total pay doesn't match hourRange, wage and day calculation");
+
+            //select fixed job and verify hourly pay is fixed
+            IWebElement skillDropdown = _d.FindElement(By.Id(prefix + "skillID"));
+            //var skillIndex = _d.FindElement(By.CssSelector("#" + prefix + "skillID option:not[fixedjob='False']")).GetAttribute("index");
+            IWebElement skillIndex = skillDropdown.FindElement(By.CssSelector("option:not[fixedjob='False']"));
+            SelectOptionByIndex(By.Id(prefix + "skillID"), Convert.ToInt32(skillIndex));
+            Assert.IsTrue(WaitForElement(By.Id(prefix + "hourlyWage")).GetAttribute("disabled") == "disabled", "Hourly Wage should be fixed (disabled) in response to skill selection");
+
             return true;
         }
         #endregion
