@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
@@ -142,14 +143,17 @@ namespace Machete.Test
             ui.WaitAndDoubleClick(By.XPath("//table[@id='activityTable']/tbody/tr[1]"));
             
             //get current activity tab ID
+            Thread.Sleep(1000); //prevent race condition
             var activityTabSelected = ui.WaitForElement(By.CssSelector(".ui-tabs-selected"));
             var activityTabSelectedID = activityTabSelected.GetAttribute("id");
 
             //go back to List Activities
             //driver.FindElement(By.LinkText("List Activities")).Click();
+            //Thread.Sleep(1000); //prevent race condition
             ui.WaitThenClickElement(By.Id("activityListTab"));
 
             // open a different record
+            Thread.Sleep(3000); //prevent race condition
             var activityNewRecord = ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr[2]"));
             int activityNewID = Convert.ToInt32(activityNewRecord.GetAttribute("recordid"));
             var activityNewIDString = "activity" + activityNewID +"-EditTab";
