@@ -12,35 +12,35 @@ namespace Machete.Test
 {
     public class ServiceTest
     {
-        protected WorkerSigninRepository _wsiRepo;
-        protected WorkerRepository _wRepo;
-        protected PersonRepository _pRepo;
-        protected WorkOrderRepository _woRepo;
-        protected WorkAssignmentRepository _waRepo;
-        protected WorkerRequestRepository _wrRepo;
-        protected ILookupRepository _lRepo;
-        protected ImageRepository _iRepo;
-        protected DatabaseFactory _dbFactory;
-        protected WorkerSigninService _wsiServ;
-        protected WorkerService _wServ;
-        protected PersonService _pServ;
-        protected ImageService _iServ;
-        protected WorkerRequestService _wrServ;
-        protected WorkOrderService _woServ;
-        protected WorkAssignmentService _waServ;
-        protected ActivityRepository _aRepo;
-        protected ActivitySigninRepository _asRepo;
-        protected ActivityService _aServ;
-        protected ActivitySigninService _asServ;
-        protected IUnitOfWork _unitofwork;
-        protected MacheteContext DB;
-
+        public WorkerSigninRepository _wsiRepo;
+        public WorkerRepository _wRepo;
+        public PersonRepository _pRepo;
+        public WorkOrderRepository _woRepo;
+        public WorkAssignmentRepository _waRepo;
+        public WorkerRequestRepository _wrRepo;
+        public ILookupRepository _lRepo;
+        public ImageRepository _iRepo;
+        public DatabaseFactory _dbFactory;
+        public WorkerSigninService _wsiServ;
+        public WorkerService _wServ;
+        public PersonService _pServ;
+        public ImageService _iServ;
+        public WorkerRequestService _wrServ;
+        public WorkOrderService _woServ;
+        public WorkAssignmentService _waServ;
+        public ActivityRepository _aRepo;
+        public ActivitySigninRepository _asRepo;
+        public ActivityService _aServ;
+        public ActivitySigninService _asServ;
+        public IUnitOfWork _unitofwork;
+        public MacheteContext DB;
+        public ServiceTest() { }
 
         protected void Initialize()
         {
             _init(new TestInitializer(), "macheteConnection");
         }
-        protected void Initialize(IDatabaseInitializer<MacheteContext> initializer, string connection)
+        public void Initialize(IDatabaseInitializer<MacheteContext> initializer, string connection)
         {
             _init(initializer, connection);
         }

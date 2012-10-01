@@ -115,7 +115,7 @@ namespace Machete.Test
                 }
                 
                 //Assert
-                Thread.Sleep(3000);//prevent race condition
+                Thread.Sleep(4000);//prevent race condition
                 Assert.IsTrue(ui.activitySignInValidate(idPrefix, cardNum, rowcount), "Sign in for worker " + i + " with cardNum " + cardNum + " failed!");
 
                 //This line ensures the test doesn't break if we try to sign in an ID that has multiple workers attached to it.
@@ -221,5 +221,133 @@ namespace Machete.Test
             Assert.IsFalse(ui.activitySignInValidate(idPrefix, randCard, rowcount));
             Assert.IsTrue(ui.activitySignInIsSanctioned(), "Sanctioned worker box is not visible like it should be.");
         }
+
+        [TestMethod]
+        public void SeActivity_test_pagination()
+        {
+            // Arrange
+            ServiceTest SeDB = new ServiceTest();
+            SeDB.Initialize(new MacheteInitializer(), "macheteConnection");
+            int count = SeDB._aServ.GetAll().Count();
+            if (count < 20)
+            {
+                Person _person = (Person)Records.person.Clone();
+                SeDB._pServ.Create(_person, "ME");
+            }
+
+            // Act
+            ui.WaitThenClickElement(By.Id("menulinkactivity"));
+            var recordID = ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr")).GetAttribute("recordid");
+            ui.WaitThenClickElement(By.CssSelector("#activityTable_next.paginate_enabled_next"));
+            Thread.Sleep(1000); // Prevent race condition
+            var recordIDPage = ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr")).GetAttribute("recordid");
+
+            // Assert
+            Assert.AreNotEqual(recordID, recordIDPage, "Pagination for Activities List appears to not be working");
+        }
+
+        [TestMethod]
+        public void SeActivity_test_search()
+        {
+            // Arrange
+            ServiceTest SeDB = new ServiceTest();
+            SeDB.Initialize(new MacheteInitializer(), "macheteConnection");
+            int count = SeDB._aServ.GetAll().Count();
+            if (count < 20)
+            {
+                Activity _activity = (Activity)Records.activity.Clone();
+                SeDB._aServ.Create(_activity, "ME");
+            }
+
+            // Act
+            ui.WaitThenClickElement(By.Id("menulinkactivity"));
+            
+            // Test bad search first
+            ui.WaitForElement(By.Id("activityTable_searchbox")).SendKeys("bk45kjdsgjk4j3lkt6j3lkjgre");
+            bool result =ui.WaitForElementValue(By.XPath("//table[@id='activityTable']/tbody/tr/td[1]"), "No matching records found");
+            Assert.IsTrue(result, "Activity search results should be empty");
+
+            // Test good search first
+            ui.WaitForElement(By.Id("activityTable_searchbox")).Clear();
+            ui.WaitForElement(By.Id("activityTable_searchbox")).SendKeys("jadmin");
+            result = ui.WaitForElementValue(By.XPath("//table[@id='activityTable']/tbody/tr[5]/td[3]"), "jadmin");
+            Assert.IsTrue(result, "Activities search not returning proper results");
+        }
+
+        [TestMethod]
+        public void SeActivity_test_record_limit()
+        {
+            // Arrange
+            ServiceTest SeDB = new ServiceTest();
+            SeDB.Initialize(new MacheteInitializer(), "macheteConnection");
+            int count = SeDB._aServ.GetAll().Count();
+            if (count < 100)
+            {
+                Activity _activity = (Activity)Records.activity.Clone();
+                SeDB._aServ.Create(_activity, "ME");
+            }
+
+            // Act
+            ui.WaitThenClickElement(By.Id("menulinkactivity"));
+
+            // Test default
+            Thread.Sleep(3000); //prevent race condition
+            int recCount = ui._d.FindElements(By.XPath("//table[@id='activityTable']/tbody/tr")).Count;
+            Assert.AreEqual(recCount, 10, "Default record limiter is not set to 10");
+
+            // Test 25
+            ui.SelectOption(By.XPath("//*[@id='activityTable_length']/label/select"), "25");
+            Thread.Sleep(1000); //prevent race condition
+            recCount = ui._d.FindElements(By.XPath("//table[@id='activityTable']/tbody/tr")).Count;
+            Assert.AreEqual(recCount, 25, "Record limiter set to 25 is not working");
+
+            // Test 50
+            ui.SelectOption(By.XPath("//*[@id='activityTable_length']/label/select"), "50");
+            Thread.Sleep(1000); //prevent race condition
+            recCount = ui._d.FindElements(By.XPath("//table[@id='activityTable']/tbody/tr")).Count;
+            Assert.AreEqual(recCount, 50, "Record limiter set to 50 is not working");
+
+            // Test 100
+            ui.SelectOption(By.XPath("//*[@id='activityTable_length']/label/select"), "100");
+            Thread.Sleep(1000); //prevent race condition
+            recCount = ui._d.FindElements(By.XPath("//table[@id='activityTable']/tbody/tr")).Count;
+            Assert.AreEqual(recCount, 100, "Record limiter set to 100 is not working");
+        }
+
+        [TestMethod]
+        public void SeActivity_test_column_sorting()
+        {
+            // Arrange
+            ServiceTest SeDB = new ServiceTest();
+            SeDB.Initialize(new MacheteInitializer(), "macheteConnection");
+            int count = SeDB._aServ.GetAll().Count();
+            if (count < 100)
+            {
+                Activity _activity = (Activity)Records.activity.Clone();
+                SeDB._aServ.Create(_activity, "ME");
+            }
+
+            // Act
+            ui.WaitThenClickElement(By.Id("menulinkactivity"));
+
+            // Test default - End Time column should be sort ascending
+            IWebElement defaultSortCol = ui.WaitForElement(By.XPath("//th[@class='sorting_asc']"));
+            Assert.AreEqual("End time", defaultSortCol.Text, "Activity End time isn't the default sort column");
+
+            //Test Attendance Ascending
+            ui.WaitThenClickElement(By.XPath("//th[contains(.,'Attendance')]"));
+            Thread.Sleep(1000);
+            int recVal = Convert.ToInt32(ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr/td[4]")).Text);
+            Assert.AreEqual(0, recVal, "Activity attendance ascending sort isn't working");
+
+            //Test Attendance Descending
+            ui.WaitThenClickElement(By.XPath("//th[contains(.,'Attendance')]"));
+            Thread.Sleep(1000);
+            int recValDesc = Convert.ToInt32(ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr/td[4]")).Text);
+            Assert.IsTrue(recValDesc > recVal, "Activity attendance desccending sort isn't working");
+
+        }
+
     }
+
 }

@@ -153,7 +153,7 @@ namespace Machete.Test
             ui.WaitThenClickElement(By.Id("activityListTab"));
 
             // open a different record
-            Thread.Sleep(3000); //prevent race condition
+            Thread.Sleep(5000); //prevent race condition
             var activityNewRecord = ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr[2]"));
             int activityNewID = Convert.ToInt32(activityNewRecord.GetAttribute("recordid"));
             var activityNewIDString = "activity" + activityNewID +"-EditTab";
