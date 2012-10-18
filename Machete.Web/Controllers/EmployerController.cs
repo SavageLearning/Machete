@@ -20,11 +20,13 @@ namespace Machete.Web.Controllers
     public class EmployerController : MacheteController
     {
         private readonly IEmployerService serv;
+        private readonly IWorkOrderService woServ;
         private System.Globalization.CultureInfo CI;
 
-        public EmployerController(IEmployerService employerService)
+        public EmployerController(IEmployerService employerService, IWorkOrderService workorderService)
         {
             this.serv = employerService;
+            this.woServ = workorderService;
         }
         protected override void Initialize(RequestContext requestContext)
         {
@@ -129,6 +131,30 @@ namespace Machete.Web.Controllers
         {
             var model = new EmployerWoConbined();
             return PartialView(model);
+        }
+
+        [HttpPost, UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        public JsonResult CreateCombined(EmployerWoConbined combined, string userName)
+        {
+            UpdateModel(combined);
+            //split the combined model into domain models
+            Employer mEmployer = Mapper.Map<EmployerWoConbined, Employer>(combined);
+            WorkOrder mWO = Mapper.Map<EmployerWoConbined, WorkOrder>(combined);
+            //update domain
+            Employer newEmployer = serv.Create(mEmployer, userName);
+            WorkOrder newWO = woServ.Create(mWO, userName);
+            //re-combine for display
+            EmployerWoConbined result = Mapper.Map<Employer, EmployerWoConbined>(newEmployer);
+            result = Mapper.Map<WorkOrder, EmployerWoConbined>(newWO, result);
+            return Json(new
+            {
+                iEmployerID = newEmployer.ID,
+                iWorkOrderID = newWO.ID,
+                EmployerWoConbined = result,
+                jobSuccess = true
+            },
+            JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>

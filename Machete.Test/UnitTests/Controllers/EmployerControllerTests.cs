@@ -22,6 +22,7 @@ namespace Machete.Test.Controllers
     public class EmployersControllerTests
     {
         Mock<IEmployerService> _serv;
+        Mock<IWorkOrderService> _woServ;
         EmployerController _ctrlr;
         FormCollection fakeform;
 
@@ -29,7 +30,8 @@ namespace Machete.Test.Controllers
         public void TestInitialize()
         {
             _serv = new Mock<IEmployerService>();
-            _ctrlr = new EmployerController(_serv.Object);
+            _woServ = new Mock<IWorkOrderService>();
+            _ctrlr = new EmployerController(_serv.Object, _woServ.Object);
             _ctrlr.SetFakeControllerContext();
             fakeform = new FormCollection();
             fakeform.Add("ID", "12345");
@@ -94,7 +96,8 @@ namespace Machete.Test.Controllers
 
             _serv = new Mock<IEmployerService>();
             _serv.Setup(p => p.Create(employer, "UnitTest")).Returns(employer);
-            var _ctrlr = new EmployerController(_serv.Object);
+            _woServ = new Mock<IWorkOrderService>();
+            _ctrlr = new EmployerController(_serv.Object, _woServ.Object);
             _ctrlr.SetFakeControllerContext();
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             var result = _ctrlr.Create(employer, "UnitTest") as JsonResult;
@@ -112,7 +115,8 @@ namespace Machete.Test.Controllers
             int testid = 4242;
             Employer fakeemployer = new Employer();
             _serv.Setup(p => p.Get(testid)).Returns(fakeemployer);
-            var _ctrlr = new EmployerController(_serv.Object);
+            _woServ = new Mock<IWorkOrderService>();
+            _ctrlr = new EmployerController(_serv.Object, _woServ.Object);
             //Act
             var result = _ctrlr.Edit(testid) as PartialViewResult;
             //Assert
@@ -180,7 +184,8 @@ namespace Machete.Test.Controllers
             _serv = new Mock<IEmployerService>();
             int testid = 4242;
             FormCollection fakeform = new FormCollection();
-            var _ctrlr = new EmployerController(_serv.Object);
+            _woServ = new Mock<IWorkOrderService>();
+            _ctrlr = new EmployerController(_serv.Object, _woServ.Object);
             _ctrlr.SetFakeControllerContext();
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
