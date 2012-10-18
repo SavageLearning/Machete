@@ -28,7 +28,7 @@ namespace Machete.Web.Helpers
                 .ForMember(vo => vo.displayLength, opt => opt.MapFrom(dt => dt.iDisplayLength))
                 .ForMember(vo => vo.orderDescending, opt => opt.MapFrom(dt => dt.sSortDir_0 == "asc" ? false : true));
             // Splitting Combined into parts
-            Mapper.CreateMap<EmployerWoConbined, Employer>()
+            Mapper.CreateMap<EmployerWoCombined, Employer>()
                 .ForMember(e => e.WorkOrders, opt => opt.Ignore())
                 .ForMember(e => e.active, opt => opt.Ignore())
                 .ForMember(e => e.ID, opt => opt.Ignore())
@@ -37,7 +37,7 @@ namespace Machete.Web.Helpers
                 .ForMember(e => e.Createdby, opt => opt.Ignore())
                 .ForMember(e => e.Updatedby, opt => opt.Ignore());
             // Splitting Combined into parts
-            Mapper.CreateMap<EmployerWoConbined, WorkOrder>()
+            Mapper.CreateMap<EmployerWoCombined, WorkOrder>()
                 .ForMember(wo => wo.EmployerID, opt => opt.Ignore())
                 .ForMember(wo => wo.Employer, opt => opt.Ignore())
                 .ForMember(wo => wo.workAssignments, opt => opt.Ignore())
@@ -56,7 +56,7 @@ namespace Machete.Web.Helpers
                 .ForMember(wo => wo.Createdby, opt => opt.Ignore())
                 .ForMember(wo => wo.Updatedby, opt => opt.Ignore());
             // re-combineing to view model object
-            Mapper.CreateMap<Employer, EmployerWoConbined>()
+            Mapper.CreateMap<Employer, EmployerWoCombined>()
                 .ForMember(e => e.contactName, opt => opt.Ignore())
                 .ForMember(e => e.workSiteAddress1, opt => opt.Ignore())
                 .ForMember(e => e.workSiteAddress2, opt => opt.Ignore())
@@ -72,7 +72,7 @@ namespace Machete.Web.Helpers
                 .ForMember(e => e.dateTimeofWork, opt => opt.Ignore())
                 .ForMember(e => e.timeFlexible, opt => opt.Ignore());
             // re-combineing to view model object
-            Mapper.CreateMap<WorkOrder, EmployerWoConbined>()
+            Mapper.CreateMap<WorkOrder, EmployerWoCombined>()
                 .ForMember(wo => wo.business, opt => opt.Ignore())
                 .ForMember(wo => wo.name, opt => opt.Ignore())
                 .ForMember(wo => wo.address1, opt => opt.Ignore())
