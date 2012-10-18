@@ -129,24 +129,24 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult CreateCombined()
         {
-            var model = new EmployerWoConbined();
+            var model = new EmployerWoCombined();
             return PartialView(model);
         }
 
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public JsonResult CreateCombined(EmployerWoConbined combined, string userName)
+        public JsonResult CreateCombined(EmployerWoCombined combined, string userName)
         {
             UpdateModel(combined);
             //split the combined model into domain models
-            Employer mEmployer = Mapper.Map<EmployerWoConbined, Employer>(combined);
-            WorkOrder mWO = Mapper.Map<EmployerWoConbined, WorkOrder>(combined);
+            Employer mEmployer = Mapper.Map<EmployerWoCombined, Employer>(combined);
+            WorkOrder mWO = Mapper.Map<EmployerWoCombined, WorkOrder>(combined);
             //update domain
             Employer newEmployer = serv.Create(mEmployer, userName);
             WorkOrder newWO = woServ.Create(mWO, userName);
             //re-combine for display
-            EmployerWoConbined result = Mapper.Map<Employer, EmployerWoConbined>(newEmployer);
-            result = Mapper.Map<WorkOrder, EmployerWoConbined>(newWO, result);
+            EmployerWoCombined result = Mapper.Map<Employer, EmployerWoCombined>(newEmployer);
+            result = Mapper.Map<WorkOrder, EmployerWoCombined>(newWO, result);
             return Json(new
             {
                 iEmployerID = newEmployer.ID,
