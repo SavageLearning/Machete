@@ -123,6 +123,14 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
+
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        public ActionResult CreateCombined()
+        {
+            var model = new EmployerWoConbined();
+            return PartialView(model);
+        }
+
         /// <summary>
         /// GET: /Employer/Edit/5
         /// </summary>
