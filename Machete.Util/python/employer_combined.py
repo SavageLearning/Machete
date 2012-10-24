@@ -1,7 +1,5 @@
 import collections
 import ConfigParser
-import urllib
-import urllib2
 import smtplib
 import string
 from datetime import datetime
@@ -66,6 +64,7 @@ db = MySQLdb.connect(db_config['host'],
 cursor = db.cursor()
 
 # only grab webform entries without success = true in webform_machete table
+#TODO: put id in config file
 id = '2339'
 cursor.execute("SELECT * from \
     webform_submitted_data LEFT OUTER JOIN \
@@ -117,7 +116,7 @@ def mail(subject='error', message='Error occurred'):
 # login to machete
 s = requests.session()
 s.config['keep_alive'] = True
-
+#TODO: Put URL in ini config file
 login_response = s.post(url='http://192.168.2.109/Account/Logon',
     data={'UserName': machete_config['user'], 'Password': machete_config['pw']})
 
