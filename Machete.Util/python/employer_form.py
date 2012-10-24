@@ -1,7 +1,5 @@
 import collections
 import ConfigParser
-import urllib
-import urllib2
 import smtplib
 import string
 
