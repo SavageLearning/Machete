@@ -55,6 +55,7 @@ except ConfigParser.Error as err:
 db_config = dict(_settings.items('db'))
 machete_config = dict(_settings.items('machete'))
 smtp_config = dict(_settings.items('smtp'))
+webform_config = dict(_settings.items('webform'))
 
 # Open connection to Database
 db = MySQLdb.connect(db_config['host'],
@@ -65,12 +66,11 @@ cursor = db.cursor()
 
 # only grab webform entries without success = true in webform_machete table
 #TODO: put id in config file
-id = '2339'
 cursor.execute("SELECT * from \
     webform_submitted_data LEFT OUTER JOIN \
     webform_machete ON webform_machete.sid = webform_submitted_data.sid \
     WHERE (webform_machete.success <> 1 OR webform_machete.success IS NULL) \
-    AND webform_submitted_data.nid=%s", id)
+    AND webform_submitted_data.nid=%s", webform_config['id'])
 
 form_data = cursor.fetchall()
 
@@ -117,7 +117,7 @@ def mail(subject='error', message='Error occurred'):
 s = requests.session()
 s.config['keep_alive'] = True
 #TODO: Put URL in ini config file
-login_response = s.post(url='http://192.168.2.109/Account/Logon',
+login_response = s.post(url=machete_config['base_url'] + '/Account/Logon',
     data={'UserName': machete_config['user'], 'Password': machete_config['pw']})
 
 if ('Login was unsuccessful' in login_response.text):
@@ -134,7 +134,7 @@ for send_data in all_submissions:
     send_data['dateTimeofWork'] = dt_obj.strftime("%m-%d-%Y %I:%M:%S %p")
 
     try:
-        post_response = s.post(url='http://192.168.2.109/Employer/CreateCombined',
+        post_response = s.post(url=machete_config['base_url'] + '/Employer/CreateCombined',
                                                            data=send_data)
     except:
         print "!````````````` Update failed (MAIL SEND)"
