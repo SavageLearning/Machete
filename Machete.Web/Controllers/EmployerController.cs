@@ -137,21 +137,23 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public JsonResult CreateCombined(EmployerWoCombined combined, string userName)
         {
-            UpdateModel(combined);
+            //UpdateModel(combined);
             //split the combined model into domain models
-            Employer mEmployer = Mapper.Map<EmployerWoCombined, Employer>(combined);
-            WorkOrder mWO = Mapper.Map<EmployerWoCombined, WorkOrder>(combined);
+            Employer mappedEmployer = Mapper.Map<EmployerWoCombined, Employer>(combined);
+            WorkOrder mappedWO = Mapper.Map<EmployerWoCombined, WorkOrder>(combined);
             //update domain
-            Employer newEmployer = serv.Create(mEmployer, userName);
-            WorkOrder newWO = woServ.Create(mWO, userName);
+            Employer newEmployer = serv.Create(mappedEmployer, userName);
+            mappedWO.EmployerID = newEmployer.ID;
+            mappedWO.status = LookupCache.getCache().Where(a => a.category == "orderstatus" && a.text_EN == "Pending").Single().ID;
+            WorkOrder newWO = woServ.Create(mappedWO, userName);
             //re-combine for display
-            EmployerWoCombined result = Mapper.Map<Employer, EmployerWoCombined>(newEmployer);
-            result = Mapper.Map<WorkOrder, EmployerWoCombined>(newWO, result);
+            //EmployerWoCombined result = Mapper.Map<Employer, EmployerWoCombined>(newEmployer);
+            //result = Mapper.Map<WorkOrder, EmployerWoCombined>(newWO, result);
             return Json(new
             {
                 iEmployerID = newEmployer.ID,
                 iWorkOrderID = newWO.ID,
-                EmployerWoConbined = result,
+                //EmployerWoConbined = result,
                 jobSuccess = true
             },
             JsonRequestBehavior.AllowGet);
