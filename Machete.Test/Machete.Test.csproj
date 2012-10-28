@@ -144,7 +144,6 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\Combres.cs" />
     <Compile Include="IntegrationServiceHelpers.cs" />
     <Compile Include="IntegrationTests\Services\ActivityServiceTests.cs" />
     <Compile Include="IntegrationTests\Services\IndexViewBaseServiceTest.cs" />
@@ -209,12 +208,9 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="combres.readme" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\combres.xml" />
-    <Content Include="App_Data\combres_full_with_annotation.xml" />
     <Content Include="jimmy_machete.jpg" />
   </ItemGroup>
   <ItemGroup>
