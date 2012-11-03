@@ -44,7 +44,8 @@ fields = {
     26: 'email',
     27: 'address2',
     28: 'contactName',
-    29: 'wo_phone'
+    29: 'wo_phone',
+    32: 'transportMethodID'
 }
 
 field_names = list(fields[key] for key in sorted(fields))
