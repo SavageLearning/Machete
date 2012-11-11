@@ -53,7 +53,7 @@
   <ItemGroup>
     <Reference Include="EntityFramework, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EntityFramework.4.3.1\lib\net40\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net40\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
@@ -79,9 +79,13 @@
     <Compile Include="Infrastructure\UnitOfWork.cs" />
     <Compile Include="Initialize\MacheteLookups.cs" />
     <Compile Include="MacheteContext.cs" />
-    <Compile Include="Migrations\201206260847528_InitialMigration.cs" />
-    <Compile Include="Migrations\201206260847528_InitialMigration.Designer.cs">
-      <DependentUpon>201206260847528_InitialMigration.cs</DependentUpon>
+    <Compile Include="Migrations\201211112012339_InitialMigrations.cs" />
+    <Compile Include="Migrations\201211112012339_InitialMigrations.Designer.cs">
+      <DependentUpon>201211112012339_InitialMigrations.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201211112024571_AddOnlineSourceBit.cs" />
+    <Compile Include="Migrations\201211112024571_AddOnlineSourceBit.Designer.cs">
+      <DependentUpon>201211112024571_AddOnlineSourceBit.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -99,6 +103,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="SQL\update_Casa_Prod_to_v1.5-RC1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201211112012339_InitialMigrations.resx">
+      <DependentUpon>201211112012339_InitialMigrations.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201211112024571_AddOnlineSourceBit.resx">
+      <DependentUpon>201211112024571_AddOnlineSourceBit.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
