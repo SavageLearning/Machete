@@ -20,6 +20,9 @@ namespace Machete.Domain
         [LocalizedDisplayName("active", NameResourceType = typeof(Resources.Employer))]
         public bool active { get; set; }
         //
+        [LocalizedDisplayName("onlineSource", NameResourceType = typeof(Resources.Employer))]
+        public bool onlineSource { get; set; }
+        //
         [LocalizedDisplayName("isbusiness", NameResourceType = typeof(Resources.Employer))]
         public bool business { get; set; }
         [LocalizedDisplayName("name", NameResourceType = typeof(Resources.Employer))]

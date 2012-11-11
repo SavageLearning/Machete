@@ -29,6 +29,9 @@ namespace Machete.Domain
             this.waPseudoIDCounter = 0;
         }
         //
+        [LocalizedDisplayName("onlineSource", NameResourceType = typeof(Resources.WorkOrder))]
+        public bool onlineSource { get; set; }
+        //
         [LocalizedDisplayName("paperOrderNum", NameResourceType = typeof(Resources.WorkOrder))]
         [RegularExpression(@"^$|^[\d]{1,5}$", ErrorMessageResourceName = "paperOrderNumFormat", ErrorMessageResourceType = typeof(Resources.WorkOrder))]
         public int? paperOrderNum { get; set; }

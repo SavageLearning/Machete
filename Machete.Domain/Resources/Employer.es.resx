@@ -156,6 +156,9 @@
   <data name="notes" xml:space="preserve">
     <value>Notas</value>
   </data>
+  <data name="onlineSource" xml:space="preserve">
+    <value>Creado por formulario web pedido?</value>
+  </data>
   <data name="phone" xml:space="preserve">
     <value>Teléfono</value>
   </data>
