@@ -282,11 +282,12 @@
                         });
                     } else {
                         //$.post($(form).attr("action"), $(form).serialize());
-                        //$(form).ajaxSubmit({
-                        $.post(
-                            $(form).attr("action"), //URL from form object
-                            $(form).serialize(),    //DATA from form object
-                            function (data) {       //Successful server post callback
+                        $(form).ajaxSubmit({
+                            dataType: 'json', 
+                        //$.post(
+                          //  $(form).attr("action"), //URL from form object
+                            //$(form).serialize(),    //DATA from form object
+                            success: function (data) {       //Successful server post callback
                                 console.log("got to exception alert in formSubmit, jobSuccess is:" + data.JobSuccess);
                                 if (data.jobSuccess == false) {
                                     alert(data.rtnMessage);
@@ -296,7 +297,7 @@
                                     }
                                 }
                             }
-                        );
+                        });
                     }
                     //
                     //

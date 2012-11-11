@@ -3,11 +3,7 @@
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="macheteStageProd">
-      <ConnectionProperties>
-        <DataProvider>SQL</DataProvider>
-        <ConnectString>Data Source=SAVAGE2K8R2\SQLEXPRESS;Initial Catalog=machete</ConnectString>
-        <IntegratedSecurity>true</IntegratedSecurity>
-      </ConnectionProperties>
+      <DataSourceReference>/Data Sources/macheteStageProd</DataSourceReference>
       <rd:SecurityType>Integrated</rd:SecurityType>
       <rd:DataSourceID>d40b4ed2-fa77-42b6-b5fd-2d32e9f328e8</rd:DataSourceID>
     </DataSource>
@@ -1747,5 +1743,6 @@ ORDER BY startdate DESC</CommandText>
     </ReportParameter>
   </ReportParameters>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportServerUrl>http://machete/ReportServer</rd:ReportServerUrl>
   <rd:ReportID>3d1d3461-2e69-4ab8-9f72-6934ba6ec2f4</rd:ReportID>
 </Report>
