@@ -23,6 +23,7 @@
                     <th>@Employer.phone</th>
                     <th>@Record.dateupdated</th>
                     <th>@Record.updatedby</th>
+                    <th>onelineSource</th>
                 </tr>
             </thead>
         </table>
@@ -60,7 +61,8 @@
                                 {"mDataProp": "city" },
                                 {"mDataProp": "phone" },
                                 {"mDataProp": "dateupdated" },
-                                { "mDataProp": "Updatedby", "bSortable": false }
+                                { "mDataProp": "Updatedby", "bSortable": false },
+                                { "mDataProp": "onlineSource", "bSearchable": false, "bSortable": false, "bVisible": false }
                             ]             
             }, 
             dblClickEvent: null, 

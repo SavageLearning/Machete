@@ -119,43 +119,56 @@ namespace Machete.Web.Controllers
             //Get all the records
             dataTableResult<WorkOrder> dtr = woServ.GetIndexView(vo);
 
-            var result = from p in dtr.query
-                         select new
-                         {
-                             tabref = p.getTabRef(),
-                             tablabel = Machete.Web.Resources.WorkOrders.tabprefix + p.getTabLabel(),
-                             EID = Convert.ToString(p.EmployerID),
-                             WOID = System.String.Format("{0,5:D5}", p.paperOrderNum),
-                             dateTimeofWork = p.dateTimeofWork.ToString(),
-                             status = LookupCache.byID(p.status, CI.TwoLetterISOLanguageName),
-                             WAcount = p.workAssignments.Count(a => a.workOrderID == p.ID).ToString(),
-                             contactName = p.contactName,
-                             workSiteAddress1 = p.workSiteAddress1,
-                             dateupdated = System.String.Format("{0:MM/dd/yyyy HH:mm:ss}", p.dateupdated),
-                             updatedby = p.Updatedby,
-                             transportMethod = LookupCache.byID(p.transportMethodID, CI.TwoLetterISOLanguageName),
-                             displayState = _getDisplayState(p),
-                             recordid = p.ID.ToString(),
-                             workers = param.showOrdersWorkers ? 
-                                        from w in p.workAssignments select new 
-                                        { 
-                                            WID = w.workerAssigned != null ? (int?)w.workerAssigned.dwccardnum : null,
-                                            name = w.workerAssigned != null ? w.workerAssigned.Person.fullName() : null,
-                                            skill = LookupCache.byID(w.skillID, CI.TwoLetterISOLanguageName),
-                                            hours = w.hours,
-                                            wage = w.hourlyWage
-                                        } : null
-                         };
-
             return Json(new
             {
                 sEcho = param.sEcho,
                 iTotalRecords = dtr.totalCount,
                 iTotalDisplayRecords = dtr.filteredCount,
-                aaData = result
+                aaData = from p in dtr.query
+                         select dtResponse(ref p, param.showOrdersWorkers)
             },
             JsonRequestBehavior.AllowGet);
-        } 
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="p"></param>
+        /// <param name="showWorkers"></param>
+        /// <returns></returns>
+        public object dtResponse(ref WorkOrder p, bool showWorkers)
+        {
+            int ID = p.ID;
+            return new 
+            {
+                tabref = p.getTabRef(),
+                tablabel = Machete.Web.Resources.WorkOrders.tabprefix + p.getTabLabel(),
+                EID = Convert.ToString(p.EmployerID),
+                WOID = System.String.Format("{0,5:D5}", p.paperOrderNum),
+                dateTimeofWork = p.dateTimeofWork.ToString(),
+                status = LookupCache.byID(p.status, CI.TwoLetterISOLanguageName),
+                WAcount = p.workAssignments.Count(a => a.workOrderID == ID).ToString(),
+                contactName = p.contactName,
+                workSiteAddress1 = p.workSiteAddress1,
+                dateupdated = System.String.Format("{0:MM/dd/yyyy HH:mm:ss}", p.dateupdated),
+                updatedby = p.Updatedby,
+                transportMethod = LookupCache.byID(p.transportMethodID, CI.TwoLetterISOLanguageName),
+                displayState = _getDisplayState(p),
+                onlineSource = p.onlineSource,
+                recordid = p.ID.ToString(),
+                workers = showWorkers ?
+                        from w in p.workAssignments
+                        select new
+                        {
+                            WID = w.workerAssigned != null ? (int?)w.workerAssigned.dwccardnum : null,
+                            name = w.workerAssigned != null ? w.workerAssigned.Person.fullName() : null,
+                            skill = LookupCache.byID(w.skillID, CI.TwoLetterISOLanguageName),
+                            hours = w.hours,
+                            wage = w.hourlyWage
+                        } : null
+            };
+        }
+
+
         /// <summary>
         /// determines displayState value in WorkOrder/AjaxHandler
         /// </summary>

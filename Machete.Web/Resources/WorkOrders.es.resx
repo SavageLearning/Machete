@@ -306,4 +306,7 @@
   <data name="changeemployer" xml:space="preserve">
     <value>Cambiar de empleador</value>
   </data>
+  <data name="btnOnline" xml:space="preserve">
+    <value>Online</value>
+  </data>
 </root>

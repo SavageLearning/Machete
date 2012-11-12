@@ -146,6 +146,7 @@ namespace Machete.Web.Helpers
         public string wa_grouping { get; set; }
         public int? typeofwork_grouping { get; set; }
         public int? status { get; set; }
+        public bool? onlineSource { get; set; }
         public bool showPending { get; set; }
         public bool showOrdersPending { get; set; }
         public bool showOrdersWorkers { get; set; }
