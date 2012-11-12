@@ -37,6 +37,9 @@
     <None Include="docs\machete cheetsheets.vsd" />
     <None Include="docs\Machete-Create user.doc" />
     <None Include="docs\Machete-Create user.pdf" />
+    <None Include="docs\Machete_Manual-v1.2.pdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="machete_image_load.ps1" />
     <None Include="powershell\database_backup.ps1" />
     <None Include="powershell\ssrs_export_reports.ps1" />
