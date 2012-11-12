@@ -58,7 +58,7 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
-        private object dtResponse(ref Activity p)
+        public object dtResponse(ref Activity p)
         {
             return new
             {
