@@ -315,4 +315,7 @@
   <data name="empChgConfirmSubmit" xml:space="preserve">
     <value>Move</value>
   </data>
+  <data name="btnOnline" xml:space="preserve">
+    <value>Online</value>
+  </data>
 </root>

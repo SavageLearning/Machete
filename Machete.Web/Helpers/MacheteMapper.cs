@@ -17,9 +17,10 @@ namespace Machete.Web.Helpers
             Mapper.CreateMap<jQueryDataTableParam, viewOptions>()
                 .ForMember(vo => vo.personID, opt => opt.MapFrom(dt => dt.personID ?? 0))
                 .ForMember(vo => vo.CI, opt => opt.Ignore())
+                .ForMember(vo => vo.onlineSource, opt => opt.MapFrom(dt => string.IsNullOrEmpty(dt.searchColName("onlineSource")) ? null : dt.searchColName("onlineSource")))
                 .ForMember(vo => vo.authenticated, opt => opt.Ignore())
-                .ForMember(vo => vo.status, opt => opt.MapFrom(dt => string.IsNullOrEmpty(dt.searchColName("status")) ? (int?)null : Convert.ToInt32(dt.searchColName("status"))))
-                .ForMember(vo => vo.EmployerID, opt => opt.MapFrom(dt => string.IsNullOrEmpty(dt.searchColName("EID")) ? (int?)null : Convert.ToInt32(dt.searchColName("EID"))))
+                .ForMember(vo => vo.status, opt => opt.MapFrom(dt => string.IsNullOrEmpty(dt.searchColName("status")) ? null : (int?)Convert.ToInt32(dt.searchColName("status"))))
+                .ForMember(vo => vo.EmployerID, opt => opt.MapFrom(dt => string.IsNullOrEmpty(dt.searchColName("EID")) ? null : (int?)Convert.ToInt32(dt.searchColName("EID"))))
                 .ForMember(vo => vo.sortColName, opt => opt.MapFrom(dt => dt.sortColName()))
                 .ForMember(vo => vo.dwccardnum, opt => opt.MapFrom(dt => Convert.ToInt32(dt.dwccardnum)))
                 .ForMember(vo => vo.woid, opt => opt.MapFrom(dt => Convert.ToInt32(dt.searchColName("WOID"))))
@@ -27,6 +28,7 @@ namespace Machete.Web.Helpers
                 .ForMember(vo => vo.displayStart, opt => opt.MapFrom(dt => dt.iDisplayStart))
                 .ForMember(vo => vo.displayLength, opt => opt.MapFrom(dt => dt.iDisplayLength))
                 .ForMember(vo => vo.orderDescending, opt => opt.MapFrom(dt => dt.sSortDir_0 == "asc" ? false : true));
+            #region WoCombined
             // Splitting Combined into parts
             Mapper.CreateMap<EmployerWoCombined, Employer>()
                 .ForMember(e => e.WorkOrders, opt => opt.Ignore())
@@ -87,7 +89,7 @@ namespace Machete.Web.Helpers
                 .ForMember(wo => wo.wo_state, opt => opt.MapFrom(c => c.state))
                 .ForMember(wo => wo.wo_phone, opt => opt.MapFrom(c => c.phone))
                 .ForMember(wo => wo.wo_zipcode, opt => opt.MapFrom(c => c.zipcode));
-
+            #endregion
         }
     }
 }

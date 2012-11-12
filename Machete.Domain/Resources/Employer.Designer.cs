@@ -232,6 +232,15 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Duplicate Employer.
+        /// </summary>
+        public static string returnCustomer {
+            get {
+                return ResourceManager.GetString("returnCustomer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to State.
         /// </summary>
         public static string state {

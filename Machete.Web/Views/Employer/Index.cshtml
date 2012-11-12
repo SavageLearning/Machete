@@ -11,6 +11,8 @@
         <li><a href="/Employer/Create" id="employerCreateTab" class="CreateTab">@Employers.createlink</a></li>
     </ul>
     <div id="employerList"> @* This div is the ui.panel  *@
+        <input type="button" value="@Machete.Web.Resources.WorkOrders.btnAll" class="formButton" id="allOrdersBtn"/>
+        <input type="button" value="@Machete.Web.Resources.WorkOrders.btnOnline" class="formButton" id="onlineOrdersBtn"/>
         <table id="employerTable" class="display">
             <thead>
                 <tr>
@@ -23,6 +25,7 @@
                     <th>@Employer.phone</th>
                     <th>@Record.dateupdated</th>
                     <th>@Record.updatedby</th>
+                    <th>onelineSource</th>
                 </tr>
             </thead>
         </table>
@@ -36,7 +39,7 @@
         //
         // Create Employer table
         //
-        jqrfyTable({
+        var oTable = jqrfyTable({
             table: $('#employerTable'), 
             tab: $('#employerTabs'),
             options: {
@@ -60,7 +63,8 @@
                                 {"mDataProp": "city" },
                                 {"mDataProp": "phone" },
                                 {"mDataProp": "dateupdated" },
-                                { "mDataProp": "Updatedby", "bSortable": false }
+                                { "mDataProp": "Updatedby", "bSortable": false },
+                                { "mDataProp": "onlineSource", "bSearchable": false, "bSortable": true, "bVisible": true }
                             ]             
             }, 
             dblClickEvent: null, 
@@ -72,6 +76,13 @@
             changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
             changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
             });
+        $('#allOrdersBtn').click(function() {
+            oTable.dataTable().fnResetAllFilters();
+        });
+        $('#onlineOrdersBtn').click(function() {
+            oTable.dataTable().fnResetAllFilters(false);
+            oTable.dataTable().fnFilter(true, 9); //sync with DT array above
+        });
     });
 </script>
 

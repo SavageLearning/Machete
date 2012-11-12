@@ -84,6 +84,7 @@
     <Compile Include="shared\ServiceBase.cs" />
     <Compile Include="shared\ServiceExceptions.cs" />
     <Compile Include="shared\SigninServiceBase.cs" />
+    <Compile Include="shared\viewOptions.cs" />
     <Compile Include="WorkAssignmentService.cs" />
     <Compile Include="shared\WorkerCache.cs" />
     <Compile Include="WorkerRequestService.cs" />
