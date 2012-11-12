@@ -309,6 +309,10 @@ namespace Machete.Service
         {
             q = q.Where(p => p.status.Equals((int)o.status));
         }
+        public static void filterOnlineSource(viewOptions o, ref IQueryable<WorkOrder> q)
+        {
+            q = q.Where(p => p.onlineSource == true);
+        }
         /// <summary>
         /// 
         /// </summary>
@@ -369,6 +373,10 @@ namespace Machete.Service
                             p.address1.Contains(o.sSearch) ||
                             p.phone.Contains(o.sSearch) ||
                             p.city.Contains(o.sSearch));
+        }
+        public static void filterOnlineSource(viewOptions o, ref IQueryable<Employer> q)
+        {
+            q = q.Where(p => p.onlineSource.Equals(true));
         }
         #endregion
         #region PERSONS

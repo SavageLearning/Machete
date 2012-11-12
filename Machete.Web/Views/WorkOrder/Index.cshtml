@@ -42,6 +42,7 @@
         <input type="button" value="@Machete.Web.Resources.WorkOrders.btnCancelled" class="formButton" id="cancelledOrdersBtn"/>
         <input type="button" value="@Machete.Web.Resources.WorkOrders.btnExpired" class="formButton" id="expiredOrdersBtn"/>
         <input type="button" value="@Machete.Web.Resources.WorkOrders.btnAll" class="formButton" id="allOrdersBtn"/>
+        <input type="button" value="@Machete.Web.Resources.WorkOrders.btnOnline" class="formButton" id="onlineOrdersBtn"/>
         <table id="orderTable" class="display">
             <thead>
                 <tr>
@@ -56,7 +57,8 @@
                     <th>@WorkOrder.contactName</th>
                     <th>@WorkOrder.workSiteAddress1</th>
                     <th>@Record.dateupdated</th>
-                    <th>@Record.updatedby</th>                    
+                    <th>@Record.updatedby</th>
+                    <th>onelineSource</th>                  
                 </tr>
             </thead>
         </table>        
@@ -89,7 +91,8 @@
                             { "mDataProp": "contactName" },
                             { "mDataProp": "workSiteAddress1" },
                             { "mDataProp": "dateupdated" },
-                            { "mDataProp": "updatedby" }
+                            { "mDataProp": "updatedby" },
+                            { "mDataProp": "onlineSource", "bSearchable": false, "bSortable": true, "bVisible": true }
                         ],
             "aoSearchCols" :  [null, null, null, null, null, null, null, null, null, null, null, null],
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
@@ -180,23 +183,32 @@
         // filtering buttons on details page
         //
         $('#pendingOrdersBtn').click(function() {            
+            oTable.dataTable().fnResetAllFilters(false);
             oTable.dataTable().fnFilter('@Machete.Domain.WorkOrder.iPending', 5); //sync with DT array above
         });
         $('#activeOrdersBtn').click(function() {            
+            oTable.dataTable().fnResetAllFilters(false);
             oTable.dataTable().fnFilter('@Machete.Domain.WorkOrder.iActive', 5); //sync with DT array above
         });
         $('#completedOrdersBtn').click(function() {            
+            oTable.dataTable().fnResetAllFilters(false);
             oTable.dataTable().fnFilter('@Machete.Domain.WorkOrder.iCompleted', 5); //sync with DT array above
         });
         $('#expiredOrdersBtn').click(function() {            
+            oTable.dataTable().fnResetAllFilters(false);
             oTable.dataTable().fnFilter('@Machete.Domain.WorkOrder.iExpired', 5); //sync with DT array above
         });
         $('#allOrdersBtn').click(function() {
-            oTable.dataTable().fnFilter("");
-            oTable.dataTable().fnFilter("", 5); //sync with DT array above
+            oTable.dataTable().fnResetAllFilters();
+//            oTable.dataTable().fnFilter("");
+//            oTable.dataTable().fnFilter("", 5); //sync with DT array above
         });
         $('#cancelledOrdersBtn').click(function() {
             oTable.dataTable().fnFilter('@Machete.Domain.WorkOrder.iCancelled', 5); //sync with DT array above
+        });
+        $('#onlineOrdersBtn').click(function() {
+            oTable.dataTable().fnResetAllFilters(false);
+            oTable.dataTable().fnFilter(true, 12); //sync with DT array above
         });
         ////////////////////////////////////////////////////////////////
         //
