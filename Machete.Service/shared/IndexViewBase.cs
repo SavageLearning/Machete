@@ -309,6 +309,10 @@ namespace Machete.Service
         {
             q = q.Where(p => p.status.Equals((int)o.status));
         }
+        public static void filterOnlineSource(viewOptions o, ref IQueryable<WorkOrder> q)
+        {
+            q = q.Where(p => p.onlineSource == true);
+        }
         /// <summary>
         /// 
         /// </summary>
@@ -342,6 +346,7 @@ namespace Machete.Service
                 case "contactName": q = descending ? q.OrderByDescending(p => p.contactName) : q.OrderBy(p => p.contactName); break;
                 case "workSiteAddress1": q = descending ? q.OrderByDescending(p => p.workSiteAddress1) : q.OrderBy(p => p.workSiteAddress1); break;
                 case "updatedby": q = descending ? q.OrderByDescending(p => p.Updatedby) : q.OrderBy(p => p.Updatedby); break;
+                case "onlineSource": q = descending ? q.OrderByDescending(p => p.onlineSource) : q.OrderBy(p => p.onlineSource); break;
                 case "WOID": q = descending ? q.OrderByDescending(p => p.paperOrderNum) : q.OrderBy(p => p.paperOrderNum); break;
                 case "dateupdated": q = descending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated); break;
                 default: q = descending ? q.OrderByDescending(p => p.dateTimeofWork) : q.OrderBy(p => p.dateTimeofWork); break;
@@ -358,6 +363,7 @@ namespace Machete.Service
                 case "address1": q = descending ? q.OrderByDescending(p => p.address1) : q.OrderBy(p => p.address1); break;
                 case "city": q = descending ? q.OrderByDescending(p => p.city) : q.OrderBy(p => p.city); break;
                 case "phone": q = descending ? q.OrderByDescending(p => p.phone) : q.OrderBy(p => p.phone); break;
+                case "onlineSource": q = descending ? q.OrderByDescending(p => p.onlineSource) : q.OrderBy(p => p.onlineSource); break;
                 case "dateupdated": q = descending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated); break;
                 default: q = descending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated); break;
             }
@@ -369,6 +375,10 @@ namespace Machete.Service
                             p.address1.Contains(o.sSearch) ||
                             p.phone.Contains(o.sSearch) ||
                             p.city.Contains(o.sSearch));
+        }
+        public static void filterOnlineSource(viewOptions o, ref IQueryable<Employer> q)
+        {
+            q = q.Where(p => p.onlineSource == true);
         }
         #endregion
         #region PERSONS

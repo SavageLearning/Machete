@@ -43,6 +43,8 @@ namespace Machete.Service
             IQueryable<Employer> q = repo.GetAllQ();
             //Search based on search-bar string 
             if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
+
+            if (o.onlineSource == true) IndexViewBase.filterOnlineSource(o, ref q);
             //Sort the Persons based on column selection
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
             //Limit results to the display length and offset
