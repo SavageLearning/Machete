@@ -142,6 +142,8 @@ namespace Machete.Web.Controllers
             //split the combined model into domain models
             Employer mappedEmployer = Mapper.Map<EmployerWoCombined, Employer>(combined);
             WorkOrder mappedWO = Mapper.Map<EmployerWoCombined, WorkOrder>(combined);
+            mappedEmployer.onlineSource = true;
+            mappedWO.onlineSource = true;
             //update domain
             Employer newEmployer = serv.Create(mappedEmployer, userName);
             mappedWO.EmployerID = newEmployer.ID;
