@@ -4,7 +4,8 @@
 *.cache
 *.csproj
 Machete.suo
-.gitignore
+
+*.Web.Publish.xml
 
 # Build results
 [Dd]ebug/
