@@ -7,9 +7,9 @@ namespace Machete.Data.Migrations
     {
         public override void Up()
         {
-            AlterColumn("dbo.WorkOrders", "onlineSource", c => c.Boolean());
-            AlterColumn("dbo.Employers", "onlineSource", c => c.Boolean());
-            AlterColumn("dbo.Employers", "returnCustomer", c => c.Boolean(nullable: false, defaultValue: false));
+            AddColumn("dbo.WorkOrders", "onlineSource", c => c.Boolean());
+            AddColumn("dbo.Employers", "onlineSource", c => c.Boolean());
+            AddColumn("dbo.Employers", "returnCustomer", c => c.Boolean(nullable: false, defaultValue: false));
         }
         
         public override void Down()
