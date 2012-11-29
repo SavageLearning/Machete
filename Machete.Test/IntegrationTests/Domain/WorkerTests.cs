@@ -30,7 +30,7 @@ namespace Machete.Test
         /// Inspecting how/when EntityFramework makes the link between parent/child records
         /// </summary>
         [TestMethod]
-        public void DbSet_Worker_add_worker_check_person_link() 
+        public void Integration_Worker_add_worker_check_person_link() 
         {
             //Arrange
 
@@ -68,7 +68,7 @@ namespace Machete.Test
         /// Testing when Ef commits and the resulting order
         /// </summary>
         [TestMethod]
-        public void DbSet_w_verify_identity_assignment_order()
+        public void Integration_w_verify_identity_assignment_order()
         {
             //
             //Arrange
@@ -123,7 +123,7 @@ namespace Machete.Test
         /// Testing EF deduplication behavior
         /// </summary>
         [TestMethod]
-        public void DbSet_Worker_test_deduplication()
+        public void Integration_Worker_test_deduplication()
         {
             int reccount = 0;
             //
