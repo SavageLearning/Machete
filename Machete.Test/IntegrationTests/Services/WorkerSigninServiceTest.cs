@@ -38,7 +38,7 @@ namespace Machete.Test
             };
         }
         [TestMethod]
-        public void DbSet_WorkerSigin_LotterySignin()
+        public void Integration_WorkerSigin_LotterySignin()
         {
             var result = _wsiServ.GetSignin(30040, DateTime.Today);
             Assert.IsNotNull(result);
@@ -47,7 +47,7 @@ namespace Machete.Test
         /// 
         /// </summary>
         //[TestMethod]
-        //public void DbSet_WorkerSignin_GetView()
+        //public void Integration_WorkerSignin_GetView()
         //{
         //    DateTime date = DateTime.Today;
         //    IEnumerable<wsiView> filteredWSI = _wsiServ.getView(date);
@@ -59,7 +59,7 @@ namespace Machete.Test
         /// Submit an unknown dwccardnum, verify it is recorded and returned by GetIndexView
         /// </summary>
         [TestMethod]
-        public void DbSet_WorkerSigninService_Integration_GetIndexView_record_unknown_worker()
+        public void Integration_WorkerSigninService_Integration_GetIndexView_record_unknown_worker()
         {
             ////            
             //WorkerSignin _signin = new WorkerSignin();
@@ -79,7 +79,7 @@ namespace Machete.Test
         /// Filters WSI IndexView based on dwccardnum option. should return all records.
         /// </summary>
         [TestMethod]
-        public void DbSet_WorkerSigninService_Intergation_GetIndexView_check_search_dwccardnum()
+        public void Integration_WorkerSigninService_Intergation_GetIndexView_check_search_dwccardnum()
         {
             //
             //Act
@@ -98,7 +98,7 @@ namespace Machete.Test
         /// Filter on requested grouping
         /// </summary>
         [TestMethod]
-        public void DbSet_WorkerSigninService_Intergation_GetIndexView_workerRequested()
+        public void Integration_WorkerSigninService_Intergation_GetIndexView_workerRequested()
         {
             //
             //Act
@@ -115,7 +115,7 @@ namespace Machete.Test
             Assert.AreEqual(5, _wsiServ.TotalCount());
         }
         //[TestMethod]
-        //public void DbSet_TestMethod5()
+        //public void Integration_TestMethod5()
         //{
 
         //    IEnumerable<WorkerSignin> testing = _wsiServ.GetSigninsForAssignment(DateTime.Today,

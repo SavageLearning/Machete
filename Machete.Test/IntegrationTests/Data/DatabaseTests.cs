@@ -24,7 +24,7 @@ namespace Machete.Test.Data
         /// Tests permissions to drop and re-create database
         /// </summary>
         [TestMethod]
-        public void DbSet_Initializer_create_machete()
+        public void Integration_Initializer_create_machete()
         {
             
             //Arrange
@@ -44,7 +44,7 @@ namespace Machete.Test.Data
         /// Used with SQL Profiler to see what SQL is produced
         /// </summary>
         [TestMethod]
-        public void DbSet_Queryable_test()
+        public void Integration_Queryable_test()
         {
             // Arrange - load test records
             Records.Initialize(MacheteDB);
@@ -77,7 +77,7 @@ namespace Machete.Test.Data
         /// Used with SQL profiler to see what SQL is produced
         /// </summary>
         [TestMethod]
-        public void DbSet_Enumerable_test()
+        public void Integration_Enumerable_test()
         {
             // Arrange - load test records
             Records.Initialize(MacheteDB);

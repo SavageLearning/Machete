@@ -30,7 +30,7 @@ namespace Machete.Test.IntegrationTests.System
         }
 
         [TestMethod]
-        public void DbSet_WorkerCache_ExpireMembers_expires_1_active()
+        public void Integration_WorkerCache_ExpireMembers_expires_1_active()
         {
 
             //Arrange
@@ -43,7 +43,7 @@ namespace Machete.Test.IntegrationTests.System
         }
 
         [TestMethod]
-        public void DbSet_WorkerCache_ExpireMembers_doesnt_expire_1_inactive()
+        public void Integration_WorkerCache_ExpireMembers_doesnt_expire_1_inactive()
         {
 
             //Arrange
@@ -59,7 +59,7 @@ namespace Machete.Test.IntegrationTests.System
         }
 
         [TestMethod]
-        public void DbSet_WorkerCache_ReactivateMembers_activates_1_sanctioned()
+        public void Integration_WorkerCache_ReactivateMembers_activates_1_sanctioned()
         {
 
             //Arrange
@@ -72,7 +72,7 @@ namespace Machete.Test.IntegrationTests.System
         }
 
         [TestMethod]
-        public void DbSet_WorkerCache_ExpireMembers_doesnt_activate_1_current_sanction()
+        public void Integration_WorkerCache_ExpireMembers_doesnt_activate_1_current_sanction()
         {
 
             //Arrange
@@ -86,7 +86,7 @@ namespace Machete.Test.IntegrationTests.System
             //Assert
             Assert.AreEqual(1, result.Count(), "Failed to reactivate members");
         }
-        public void DbSet_WorkerCache_ExpireMembers_doesnt_activate_1_null_reactivation_date()
+        public void Integration_WorkerCache_ExpireMembers_doesnt_activate_1_null_reactivation_date()
         {
 
             //Arrange
