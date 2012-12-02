@@ -74,6 +74,12 @@ namespace Machete.Web.ViewModel
         [StringLength(4000, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Domain.Resources.Employer))]
         public string notes { get; set; }
         //
+        [LocalizedDisplayName("onlineSource", NameResourceType = typeof(Domain.Resources.Employer))]
+        public bool? onlineSource { get; set; }
+        //
+        [LocalizedDisplayName("returnCustomer", NameResourceType = typeof(Domain.Resources.Employer))]
+        public bool returnCustomer { get; set; }
+        //
         // WorkOrder field
         //
         //
