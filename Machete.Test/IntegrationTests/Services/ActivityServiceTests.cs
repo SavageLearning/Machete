@@ -43,7 +43,7 @@ namespace Machete.Test.IntegrationTests.Services
             //Doesn't blast the database
             //base.Initialize(new MacheteInitializer(), "machete");
             Database.SetInitializer<MacheteContext>(new MacheteInitializer());
-            DB = new MacheteContext("macheteProduction"); //name of DB in sql server
+            DB = new MacheteContext("macheteConnection"); //name of DB in sql server
             WorkerCache.Initialize(DB);
             LookupCache.Initialize(DB);
             _dbFactory = new DatabaseFactory();
