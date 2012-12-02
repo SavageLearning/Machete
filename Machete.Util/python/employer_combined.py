@@ -16,37 +16,37 @@ NOT_A_FIELD = -1000
 
 fields = {
     NOT_A_FIELD: 'sid',
-    1: 'business',
-    2: 'name',
-    3: 'address1',
-    4: 'city',
-    5: 'state',
-    6: 'zipcode',
-    7: 'phone',
-    8: 'cellphone',
-    9: 'referredBy',
-    10: 'referredbyOther',
-    11: 'blogparticipate',
-    12: 'notes',
-    13: 'workSiteAddress1',
-    14: 'workSiteAddress2',
-    15: 'wo_city',
-    16: 'wo_state',
-    17: 'wo_zipcode',
-    18: 'typeOfWorkID',
-    19: 'englishRequired',
-    20: 'englishRequiredNote',
-    21: 'lunchSupplied',
-    22: 'description',
-    23: 'date_needed',
-    24: 'time_needed',
-    25: 'timeFlexible',
-    26: 'email',
-    27: 'address2',
-    28: 'contactName',
-    29: 'wo_phone',
-    32: 'transportMethodID',
-    33: 'returnCustomer'
+    2: 'business',
+    3: 'name',
+    4: 'address1',
+    5: 'address2',
+    6: 'city',
+    7: 'state',
+    8: 'zipcode',
+    9: 'phone',
+    10: 'cellphone',
+    11: 'email',
+    12: 'referredBy',
+    13: 'referredbyOther',
+    14: 'blogparticipate',
+    15: 'returnCustomer',
+    16: 'notes',
+    18: 'contactName',
+    19: 'workSiteAddress1',
+    20: 'workSiteAddress2',
+    21: 'wo_city',
+    22: 'wo_state',
+    23: 'wo_zipcode',
+    24: 'wo_phone',
+    25: 'typeOfWorkID',
+    26: 'englishRequired',
+    27: 'englishRequiredNote',
+    28: 'lunchSupplied',
+    29: 'description',
+    30: 'date_needed',
+    31: 'time_needed',
+    32: 'timeFlexible',
+    33: 'transportMethodID',
 }
 
 field_names = list(fields[key] for key in sorted(fields))
@@ -71,7 +71,6 @@ db = MySQLdb.connect(db_config['host'],
 cursor = db.cursor()
 
 # only grab webform entries without success = true in webform_machete table
-#TODO: put id in config file
 cursor.execute("SELECT * from \
     webform_submitted_data LEFT OUTER JOIN \
     webform_machete ON webform_machete.sid = webform_submitted_data.sid \
@@ -123,7 +122,6 @@ def log_entry(entry):
 
 
 # Send e-mail
-# DOES NOT WORK FROM VM, but works from external server
 def mail(subject='error', message='Error occurred'):
     mailServer = smtplib.SMTP(smtp_config['server'], smtp_config['port'])
     mailServer.ehlo()
@@ -142,23 +140,22 @@ def mail(subject='error', message='Error occurred'):
     server.sendmail(smtp_config['user'], smtp_config['to'], body)
     server.quit()
 
-
-log_entry("Script started")
 if entry_count > 0:
-	log_entry("Entry Count: %s" % entry_count)
+    log_entry("Script started")
+    log_entry("Entry Count: %s" % entry_count)
 
 # login to machete
 s = requests.session()
 s.config['keep_alive'] = True
-#TODO: Put URL in ini config file
 login_response = s.post(url=machete_config['base_url'] + '/Account/Logon',
                         data={'UserName': machete_config['user'],
-                        'Password': machete_config['pw']})
+                        'Password': machete_config['pw']}, verify=False,
+                        cert=(machete_config['cert'], machete_config['key']))
 
 if ('Login was unsuccessful' in login_response.text):
     print "!-------------- login failed"
     log_entry("Failed to login to Machete")
-#    mail("Machete login failed", "Script could not login to machete")
+    mail("Machete login failed", "Script could not login to machete")
     exit()
 
 # Process submissions
@@ -171,12 +168,13 @@ for send_data in all_submissions:
     try:
         post_response = s.post(
             url=machete_config['base_url'] + '/Employer/CreateCombined',
-            data=send_data)
+                data=send_data, verify=False, 
+                cert=(machete_config['cert'], machete_config['key']))
     except:
         print "!-------------- Update failed (MAIL SEND)"
         log_entry("Failed post to Machete")
-#        mail("Machete post failed",
-#            "Posting the form to the Machete URL failed")
+        mail("Machete post failed",
+            "Posting the form to the Machete URL failed")
 
     print "-------------- post_response: ", post_response.text
 
@@ -198,8 +196,8 @@ for send_data in all_submissions:
             except:
                 print "!-------------- Update webform_machete table failed"
                 log_entry("Failed to update webform_machete table")
-#                mail("update DB failed", "Updating webform_machete \
-#                                                     table failed")
+                mail("update DB failed", "Updating webform_machete \
+                                                     table failed")
         else:
             try:
                 cursor.execute("INSERT INTO webform_machete (sid, success, \
@@ -210,8 +208,8 @@ for send_data in all_submissions:
             except:
                 print "!-------------- Insert into webform_machete table failed"
                 log_entry("Failed to insert into webform_machete table")
-#                mail("Insert DB failed", "Inserting into webform_machete
-#                                                    table failed")
+                mail("Insert DB failed", "Inserting into webform_machete \
+                                                    table failed")
     else:  # jobSuccess failed
         print "JobFailed!"
         if (existing_entry > 0):
@@ -224,8 +222,8 @@ for send_data in all_submissions:
             except:
                 print "-------------- Update webform_machete table failed"
                 log_entry("Failed to update webform_machete table")
-#                mail("update DB failed", "Updating webform_machete \
-#                                                    table failed")
+                mail("update DB failed", "Updating webform_machete \
+                                                    table failed")
         else:
             print "no existing entry"
             try:
@@ -236,9 +234,12 @@ for send_data in all_submissions:
             except:
                 print "!-------------- Insert into webform_machete table failed"
                 log_entry("Failed to insert into webform_machete table")
-#                mail("Insert DB failed", "Inserting into webform_machete \
-#                                                    table failed")
+                mail("Insert DB failed", "Inserting into webform_machete \
+                                                    table failed")
 
 db.close()
-log_entry("Script finished")
+
+if entry_count > 0:
+    log_entry("Script finished")
+
 log_file.close()
