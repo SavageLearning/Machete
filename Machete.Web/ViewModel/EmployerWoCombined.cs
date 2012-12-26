@@ -75,10 +75,13 @@ namespace Machete.Web.ViewModel
         public string notes { get; set; }
         //
         [LocalizedDisplayName("onlineSource", NameResourceType = typeof(Domain.Resources.Employer))]
-        public bool? onlineSource { get; set; }
+        public bool onlineSource { get; set; }
         //
         [LocalizedDisplayName("returnCustomer", NameResourceType = typeof(Domain.Resources.Employer))]
         public bool returnCustomer { get; set; }
+        //
+        [LocalizedDisplayName("receiveUpdates", NameResourceType = typeof(Domain.Resources.Employer))]
+        public bool receiveUpdates { get; set; }
         //
         // WorkOrder field
         //

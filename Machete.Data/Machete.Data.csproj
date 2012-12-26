@@ -104,6 +104,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Migrations\migration_commands.txt" />
+    <Content Include="SQL\201211112024571_AddOnlineSourceBit.sql" />
+    <Content Include="SQL\20121225_date_reset_cleanup.sql" />
+    <Content Include="SQL\create_migration_table.sql" />
+    <Content Include="SQL\null_in_lookups.sql" />
     <Content Include="SQL\update_Casa_Prod_to_v1.5-RC1.sql" />
   </ItemGroup>
   <ItemGroup>
