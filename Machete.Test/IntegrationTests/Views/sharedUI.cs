@@ -280,8 +280,8 @@ namespace Machete.Test
             ReplaceElementText(By.Id(prefix + "notes"), _emp.notes);
             ReplaceElementText(By.Id(prefix + "referredbyOther"), _emp.referredbyOther);
 
-            SelectOptionByIndex(By.Id("active"), _emp.active ? 2 : 1);
-            SelectOptionByIndex(By.Id("blogparticipate"), _emp.blogparticipate ? 2 : 1);
+            SelectOptionByIndex(By.Id(prefix + "active"), _emp.active ? 2 : 1);
+            SelectOptionByIndex(By.Id(prefix + "blogparticipate"), _emp.blogparticipate ? 2 : 1);
             SelectOptionByIndex(By.Id(prefix + "business"), _emp.business ? 2 : 1);
             SelectOption(By.Id(prefix + "referredby"), MacheteLookup.cache.First(c => c.category == "emplrreference" && c.ID == _emp.referredby).text_EN);
 
@@ -328,10 +328,10 @@ namespace Machete.Test
             getAttributeAssertEqual(_emp.notes, "notes");
             getAttributeAssertEqual(_emp.referredbyOther, "referredbyOther");
 
-            WaitForElement(By.Id("active"));
-            Assert.AreEqual(_emp.active ? 2 : 1, GetOptionIndex(By.Id("active")) );
-            WaitForElement(By.Id("blogparticipate"));
-            Assert.AreEqual(_emp.blogparticipate ? 2 : 1, GetOptionIndex(By.Id("blogparticipate")));
+            WaitForElement(By.Id(prefix + "active"));
+            Assert.AreEqual(_emp.active ? 2 : 1, GetOptionIndex(By.Id(prefix + "active")));
+            WaitForElement(By.Id(prefix + "blogparticipate"));
+            Assert.AreEqual(_emp.blogparticipate ? 2 : 1, GetOptionIndex(By.Id(prefix + "blogparticipate")));
             WaitForElement(By.Id(prefix + "business"));
             Assert.AreEqual(_emp.business ? 2 : 1, GetOptionIndex(By.Id(prefix + "business")));
             WaitForElement(By.Id(prefix + "referredbyOther"));
