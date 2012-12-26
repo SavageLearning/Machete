@@ -226,8 +226,7 @@ namespace Machete.Test
         public void SeActivity_test_pagination()
         {
             // Arrange
-            ServiceTest SeDB = new ServiceTest();
-            SeDB.Initialize(new MacheteInitializer(), "macheteConnection");
+            ServiceTest SeDB = new ServiceTest().LoadContext();
             int count = SeDB._aServ.GetAll().Count();
             if (count < 20)
             {
@@ -250,8 +249,7 @@ namespace Machete.Test
         public void SeActivity_test_search()
         {
             // Arrange
-            ServiceTest SeDB = new ServiceTest();
-            SeDB.Initialize(new MacheteInitializer(), "macheteConnection");
+            ServiceTest SeDB = new ServiceTest().LoadContext();
             int count = SeDB._aServ.GetAll().Count();
             if (count < 20)
             {
@@ -278,13 +276,13 @@ namespace Machete.Test
         public void SeActivity_test_record_limit()
         {
             // Arrange
-            ServiceTest SeDB = new ServiceTest();
-            SeDB.Initialize(new MacheteInitializer(), "macheteConnection");
+            ServiceTest SeDB = new ServiceTest().LoadContext();
             int count = SeDB._aServ.GetAll().Count();
-            if (count < 100)
+            while (count < 100)
             {
                 Activity _activity = (Activity)Records.activity.Clone();
                 SeDB._aServ.Create(_activity, "ME");
+                count = SeDB._aServ.GetAll().Count();
             }
 
             // Act
@@ -318,8 +316,7 @@ namespace Machete.Test
         public void SeActivity_test_column_sorting()
         {
             // Arrange
-            ServiceTest SeDB = new ServiceTest();
-            SeDB.Initialize(new MacheteInitializer(), "macheteConnection");
+            ServiceTest SeDB = new ServiceTest().LoadContext();
             int count = SeDB._aServ.GetAll().Count();
             if (count < 100)
             {

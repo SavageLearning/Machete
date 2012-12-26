@@ -40,6 +40,11 @@ namespace Machete.Test
         {
             _init(new TestInitializer(), "macheteConnection");
         }
+        public ServiceTest LoadContext()
+        {
+            _makeContext();
+            return this;
+        }
         public void Initialize(IDatabaseInitializer<MacheteContext> initializer, string connection)
         {
             _init(initializer, connection);
@@ -54,6 +59,10 @@ namespace Machete.Test
             WorkerCache.Initialize(DB);
             LookupCache.Initialize(DB);
             Lookups.Initialize();
+            _makeContext();
+        }
+        private void _makeContext()
+        {
             _dbFactory = new DatabaseFactory();
             _iRepo = new ImageRepository(_dbFactory);
             _wRepo = new WorkerRepository(_dbFactory);
