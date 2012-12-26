@@ -130,7 +130,7 @@
     <value>Dirección (2)</value>
   </data>
   <data name="blogparticipate" xml:space="preserve">
-    <value>Se compromete a participar en el blog?</value>
+    <value>Participar en el blog?</value>
   </data>
   <data name="cellphone" xml:space="preserve">
     <value>Teléfono celular</value>
@@ -157,7 +157,7 @@
     <value>Notas</value>
   </data>
   <data name="onlineSource" xml:space="preserve">
-    <value>Creado por formulario web pedido?</value>
+    <value>Creado por web?</value>
   </data>
   <data name="phone" xml:space="preserve">
     <value>Teléfono</value>
@@ -167,6 +167,9 @@
   </data>
   <data name="phonerequired" xml:space="preserve">
     <value>Por lo menos un número de teléfono es obligatorio</value>
+  </data>
+  <data name="receiveUpdates" xml:space="preserve">
+    <value>Recibir actualizaciones por email?</value>
   </data>
   <data name="referredby" xml:space="preserve">
     <value>Empleadores se refirieron a la Casa Latina de</value>

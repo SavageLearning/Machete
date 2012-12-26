@@ -79,6 +79,12 @@
         @Html.mUITableLabelAndTextBoxFor(model => model.phone, new { tabindex = "1", id = idPrefix + "phone" })
         @Html.mUITableLabelAndTextBoxFor(model => model.transportFeeExtra, new { tabindex = "2", @class = "money-field", id = idPrefix + "transportFeeExtra" })
     </div>
+    </div>
+    <!--tb-row-->
+    <div class="tb-row">
+        @Html.mUITableLabelFor(model => model.onlineSource)
+        @Html.mUIDropDownYesNoFor(model => model.onlineSource, new { tabindex = "1", id = idPrefix + "onlineSource" })
+    </div>
 </div><!--tb-table main workorder table-->
 <div class="tb-table">
     <div class="tb-row englishNoteRow" id="@(idPrefix)englishRequiredNoteRow">

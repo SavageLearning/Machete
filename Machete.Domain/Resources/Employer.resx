@@ -130,7 +130,7 @@
     <value>Address (2)</value>
   </data>
   <data name="blogparticipate" xml:space="preserve">
-    <value>Agrees to participate in blog?</value>
+    <value>Participate in blog?</value>
   </data>
   <data name="cellphone" xml:space="preserve">
     <value>Cell phone</value>
@@ -157,7 +157,7 @@
     <value>Notes</value>
   </data>
   <data name="onlineSource" xml:space="preserve">
-    <value>Created by Online Order Form?</value>
+    <value>Created online?</value>
   </data>
   <data name="phone" xml:space="preserve">
     <value>Phone number</value>
@@ -167,6 +167,9 @@
   </data>
   <data name="phonerequired" xml:space="preserve">
     <value>At least one phone number is required</value>
+  </data>
+  <data name="receiveUpdates" xml:space="preserve">
+    <value>Receive email updates?</value>
   </data>
   <data name="referredby" xml:space="preserve">
     <value>Employer referred to Casa Latina by</value>
