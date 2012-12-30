@@ -35,7 +35,7 @@ namespace Machete.Test
         public void SetupTest()
         {
             Database.SetInitializer<MacheteContext>(new MacheteInitializer());
-            DB = new MacheteContext("machete");
+            DB = new MacheteContext();
             WorkerCache.Initialize(DB);
             LookupCache.Initialize(DB);
             _dbfactory = new DatabaseFactory();
@@ -189,7 +189,7 @@ namespace Machete.Test
 
             Random rand = new Random();
             int rowcount = 1;
-            MacheteContext DB = new MacheteContext("machete");
+            MacheteContext DB = new MacheteContext();
             var workers = DB.Workers;
             Activity _act = (Activity)Records.activity.Clone();
             ActivitySignin _asi = (ActivitySignin)Records.activitysignin.Clone();

@@ -34,7 +34,7 @@ namespace Machete.Test
         public void SetupTest()
         {
             Database.SetInitializer<MacheteContext>(new MacheteInitializer());
-            DB = new MacheteContext("machete");
+            DB = new MacheteContext();
             WorkerCache.Initialize(DB);
             LookupCache.Initialize(DB);
             _dbfactory = new DatabaseFactory();
@@ -86,13 +86,13 @@ namespace Machete.Test
         {
             //Arrange
             int rowcount = 1;                        
-            MacheteContext DB = new MacheteContext("machete"); //maps to Machete.Text\app.config ConnectionString
+            MacheteContext DB = new MacheteContext(); //maps to Machete.Text\app.config ConnectionString
             IEnumerable<int> cardlist = DB.Workers.Select(q => q.dwccardnum).Distinct();
             Random rand = new Random();
             // There's a lot in this one line. Ask questions about it.
             //                         [DbSet] (LINQ)(Lambda Expression) (SQL-ish)
-            IEnumerable<int> list = DB.Workers.Select(q => q.dwccardnum).Distinct();
-            var count = list.Count();
+            IEnumerable<int> list = DB.Workers.Select(q => q.dwccardnum).Distinct().ToList();
+             var count = list.Count();
             if (count < 10)
                 ui.createSomeWorkers(10, DB.Workers);
             int numberOfSignins = rand.Next(count / 10) + 1; //+1 will never lead to zero here
@@ -152,7 +152,7 @@ namespace Machete.Test
             // Arrange
             Random rand = new Random();
             int rowcount = 1;
-            MacheteContext DB = new MacheteContext("machete");
+            MacheteContext DB = new MacheteContext();
             var workers = DB.Workers;
             Activity _act= (Activity)Records.activity.Clone();
             ActivitySignin _asi = (ActivitySignin)Records.activitysignin.Clone();
