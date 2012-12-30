@@ -38,7 +38,7 @@ namespace Machete.Test
         public void SetupTest()
         {
             Database.SetInitializer<MacheteContext>(new MacheteInitializer());
-            DB = new MacheteContext("machete");
+            DB = new MacheteContext();
             WorkerCache.Initialize(DB);
             LookupCache.Initialize(DB);
             driver = new FirefoxDriver();

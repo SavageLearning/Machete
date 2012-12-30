@@ -1,0 +1,4 @@
+﻿Update-Database -sourcemigration 201211112012339_InitialMigrations -targetmigration 201211112024571_AddOnlineSourceBit -script
+
+refresh migration script
+add-migration 201211112024571_AddOnlineSourceBit
