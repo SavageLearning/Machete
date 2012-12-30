@@ -47,6 +47,7 @@ fields = {
     31: 'time_needed',
     32: 'timeFlexible',
     33: 'transportMethodID',
+    43: 'receiveUpdates'
 }
 
 field_names = list(fields[key] for key in sorted(fields))
@@ -147,10 +148,16 @@ if entry_count > 0:
 # login to machete
 s = requests.session()
 s.config['keep_alive'] = True
-login_response = s.post(url=machete_config['base_url'] + '/Account/Logon',
+try:
+    login_response = s.post(url=machete_config['base_url'] + '/Account/Logon',
                         data={'UserName': machete_config['user'],
                         'Password': machete_config['pw']}, verify=False,
                         cert=(machete_config['cert'], machete_config['key']))
+except:
+    print "!-------------- machete connection rejected"
+    mail("Machete connection rejected", "Exception raised while trying to connect to machete")
+    log_entry("Machete connection rejected")
+    exit()
 
 if ('Login was unsuccessful' in login_response.text):
     print "!-------------- login failed"
