@@ -105,7 +105,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Migrations\migration_commands.txt" />
-    <Content Include="SQL\201211112024571_AddOnlineSourceBit.sql" />
+    <Content Include="SQL\201211112024571_AddOnlineSourceBit.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="SQL\20121225_date_reset_cleanup.sql" />
     <Content Include="SQL\create_migration_table.sql" />
     <Content Include="SQL\null_in_lookups.sql" />
