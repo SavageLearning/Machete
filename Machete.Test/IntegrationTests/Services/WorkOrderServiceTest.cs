@@ -48,7 +48,7 @@ namespace Machete.Test
             base.Initialize();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
         public void Integration_WO_Service_GetSummary()
         {
             //
@@ -64,7 +64,7 @@ namespace Machete.Test
             Assert.IsTrue(result.Where(r => r.status == WorkOrder.iCompleted).First().count == 2, "GetSummary returned incorrect number of Completed records");
             Assert.IsTrue(result.Where(r => r.status == WorkOrder.iCancelled).First().count == 1, "GetSummary returned incorrect number of Cancelled records");
         }
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
         public void Integration_WO_Service_CombinedSummary()
         {
             //
@@ -93,7 +93,7 @@ namespace Machete.Test
             Assert.AreEqual(1, wowa.pending_wo, "CombinedSummary returned unexpected pending_wo value");
 
         }
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
         public void Integration_WO_Service_get_GroupView()
         {
             //
@@ -101,7 +101,7 @@ namespace Machete.Test
             var result = _woServ.GetActiveOrders(DateTime.Now, false);
             Assert.IsNotNull(result, "Person.ID is Null");
         }
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
         public void Integration_WO_Service_GetIndexView()
         {
             //
@@ -126,7 +126,7 @@ namespace Machete.Test
             Assert.IsTrue(query.Count() == 6, "Expected 6, but GetIndexView returned {0} records", query.Count());
 
         }
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
         public void Integration_WO_Service_GetWorkOrders_returns_all()
         {
             // Arrange
