@@ -68,7 +68,7 @@ namespace Machete.Test
         [ClassCleanup]
         public static void ClassCleanup() { }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Persons)]
         public void SePerson_create_person()
         {
             //Arrange
@@ -79,7 +79,7 @@ namespace Machete.Test
             ui.personValidate(_per);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Persons)]
         public void SePerson_create_worker()
         {
             //Arrange
@@ -95,7 +95,7 @@ namespace Machete.Test
             ui.workerValidate(_wkr);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Persons)]
         public void SePerson_create_event()
         {
             //Arrange
@@ -112,7 +112,7 @@ namespace Machete.Test
             ui.eventValidate(_ev);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Persons)]
         public void SePerson_signin_sanctioned_worker_fails()
         {
             //Arrange

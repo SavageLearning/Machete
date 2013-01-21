@@ -70,7 +70,7 @@ namespace Machete.Test
         [ClassCleanup]
         public static void ClassCleanup() { }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Activities)]
         public void SeActivity_Create_Validate()
         {
             //Arrange
@@ -81,7 +81,7 @@ namespace Machete.Test
             ui.activityValidate(_act);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Activities)]
         public void SeActivity_Create_ManySignins()
         {
             //Arrange
@@ -145,8 +145,8 @@ namespace Machete.Test
 
             Assert.AreEqual(numberSignedIn.ToString(), activityRecordCount);
         }
-        
-        [TestMethod]
+
+        [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Activities)]
         public void SeActivity_Create_signin_simple()
         {
             // Arrange
@@ -166,7 +166,7 @@ namespace Machete.Test
             Assert.IsTrue(ui.activitySignInValidate(idPrefix, firstCardNum, rowcount));
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Activities)]
         public void SeActivity_Signin_random_worker()
         {
             //Arrange
@@ -191,7 +191,7 @@ namespace Machete.Test
             Assert.IsTrue(ui.activitySignInValidate(idPrefix, randCard,rowCount));
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Activities)]
         public void SeActivity_Signin_random_sactioned_worker()
         {
             //Arrange
@@ -222,7 +222,7 @@ namespace Machete.Test
             Assert.IsTrue(ui.activitySignInIsSanctioned(), "Sanctioned worker box is not visible like it should be.");
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Activities)]
         public void SeActivity_test_pagination()
         {
             // Arrange
@@ -245,7 +245,7 @@ namespace Machete.Test
             Assert.AreNotEqual(recordID, recordIDPage, "Pagination for Activities List appears to not be working");
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Activities)]
         public void SeActivity_test_search()
         {
             // Arrange
@@ -272,7 +272,7 @@ namespace Machete.Test
             Assert.IsTrue(result, "Activities search not returning proper results");
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Activities)]
         public void SeActivity_test_record_limit()
         {
             // Arrange
@@ -312,7 +312,7 @@ namespace Machete.Test
             Assert.AreEqual(recCount, 100, "Record limiter set to 100 is not working");
         }
 
-        [TestMethod]
+       [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Activities)]
         public void SeActivity_test_column_sorting()
         {
             // Arrange

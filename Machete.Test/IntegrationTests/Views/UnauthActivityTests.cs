@@ -85,7 +85,7 @@ namespace Machete.Test
         //    assert that .managerAccordion doesn't exist on the page
         //    assert that .confirm_delete in class table doesn't exist
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Activities)]
         public void SeActivity_unauth_page_load()
         {
             //Arrange
@@ -103,7 +103,7 @@ namespace Machete.Test
 
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Activities)]
         public void SeActivity_unauth_open_record()
         {
             //Arrange
@@ -125,7 +125,7 @@ namespace Machete.Test
             Assert.AreEqual(activityRecordID, anchorID, "activityRecordID from datatables does not match ID in tab for record");
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Activities)]
         public void SeActivity_unauth_maxtabs()
         {
             // Verify maxTabs
@@ -175,7 +175,7 @@ namespace Machete.Test
 
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Activities)]
         public void SeActivity_unauth_worker_signin()
         {
             // example from ActivityTests.cs -- SeActivity_Create_signin_simple()
@@ -213,7 +213,7 @@ namespace Machete.Test
 
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Activities)]
         public void SeActivity_unauth_exposed_actions()
         {
             //Arrange

@@ -56,7 +56,7 @@ namespace Machete.Test
         /// 
         /// 
         /// </summary>
-        [TestMethod]
+        [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Employers)]
         public void SeEmployer_Create_Validate_Delete()
         {
             //Arrange
@@ -75,7 +75,7 @@ namespace Machete.Test
         /// <summary>
         /// 
         /// </summary>
-        [TestMethod]
+        [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Employers)]
         public void SeEmployer_Create_workorder()
         {
             //Arrange
@@ -92,7 +92,7 @@ namespace Machete.Test
         /// <summary>
         /// 
         /// </summary>
-        [TestMethod]
+        [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Employers)]
         public void SeEmployer_Create_workorder_copyinfo()
         {
             //Arrange
@@ -118,7 +118,7 @@ namespace Machete.Test
             //Assert
             ui.workOrderValidate(_wo);
         }
-        [TestMethod]
+        [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Employers)]
         public void SeEmployer_Create_and_Activate_WorkAssignment()
         {
             //Arrange
@@ -147,7 +147,7 @@ namespace Machete.Test
             // TODO: Selenium: test DispatchOption / Change Worker dialog. 
             // TODO: Selenium: test Skill dropdown for Chambita/specialized skill, test total changes
         }
-        [TestMethod]
+        [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Employers)]
         public void SeEmployer_Create_and_move_Workorder()
         {
             Employer _emp1 = (Employer)Records.employer.Clone();
