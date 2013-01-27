@@ -124,12 +124,6 @@ def log_entry(entry):
 
 # Send e-mail
 def mail(subject='error', message='Error occurred'):
-    mailServer = smtplib.SMTP(smtp_config['server'], smtp_config['port'])
-    mailServer.ehlo()
-    mailServer.starttls()
-    mailServer.ehlo()
-    mailServer.login(smtp_config['user'], smtp_config['pw'])
-
     body = string.join((
         "From: %s" % smtp_config['user'],
         "To: %s" % smtp_config['to'],
@@ -137,9 +131,9 @@ def mail(subject='error', message='Error occurred'):
         "",
         message
     ), "\r\n")
-    server = smtplib.SMTP('localhost')
-    server.sendmail(smtp_config['user'], smtp_config['to'], body)
-    server.quit()
+    mailServer = smtplib.SMTP('localhost') 
+    mailServer.sendmail(smtp_config['user'], smtp_config['to'].split(','), body)
+    mailServer.quit()
 
 if entry_count > 0:
     log_entry("Script started")
