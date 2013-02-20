@@ -403,15 +403,6 @@
         });
         //
         //
-        $('#rA1_completed').click(function (e) {
-            e.preventDefault();            
-            $('#wa_grouping').val(false); 
-            $('#signin_visible').val(true);
-            $('#assignedWorker_visible').val(false);
-            $('#requestedWorkers_visible').val(false);
-            $('#status').val(@(Machete.Domain.WorkOrder.iCompleted));
-            $("#updateBtn").click();    
-        });
         $('#rA1_requested').click(function (e) {
             e.preventDefault();
             $('#wa_grouping').val('requested'); 
@@ -448,6 +439,15 @@
             $('#requestedWorkers_visible').val(true);
             $('#status').val(@(Machete.Domain.WorkOrder.iActive));
             $("#updateBtn").click();                 
+        });
+        $('#rA1_completed').click(function (e) {
+            e.preventDefault();            
+            $('#wa_grouping').val('completed'); 
+            $('#signin_visible').val(true);
+            $('#assignedWorker_visible').val(true);
+            $('#requestedWorkers_visible').val(false);
+            $('#status').val(@(Machete.Domain.WorkOrder.iCompleted));
+            $("#updateBtn").click();    
         });
         $('#rA1_All').click(function (e) {
             e.preventDefault();

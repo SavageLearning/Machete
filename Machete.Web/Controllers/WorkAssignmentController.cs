@@ -211,6 +211,8 @@ namespace Machete.Web.Controllers
             //duplicate.pseudoID = duplicate.workOrder.waPseudoIDCounter;
             duplicate.workerAssigned = null;
             duplicate.workerAssignedID = null;
+            duplicate.workerSiginin = null;
+            duplicate.workerSigninID = null;
             waServ.Create(duplicate, userName);
             return Json(new
             {

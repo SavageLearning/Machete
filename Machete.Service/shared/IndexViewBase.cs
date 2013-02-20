@@ -154,6 +154,7 @@ namespace Machete.Service
         }
         public static void waGrouping(viewOptions o, ref IQueryable<WorkAssignment> q, ILookupRepository lRepo)
         {
+            var completedID = LookupCache.getSingleEN("orderstatus", "Completed");
             switch (o.wa_grouping)
             {
                 case "open": q = q.Where(p => p.workerAssignedID == null); break;
@@ -168,6 +169,9 @@ namespace Machete.Service
                                     (wa, sk) => new { wa, sk })
                              .Where(jj => jj.sk.speciality == true && jj.wa.workerAssigned == null)
                              .Select(jj => jj.wa);
+                    break;
+                case "completed":
+                    q = q.Where(wa => wa.workOrder.status == completedID);
                     break;
             }
         }
@@ -458,6 +462,7 @@ namespace Machete.Service
         #region ACTIVITIES
         public static void unauthenticatedView(ref IQueryable<Activity> q)
         {
+            // Shows classes within 30min of start and up to 30min after end
             q = q.Where(p => EntityFunctions.DiffMinutes(DateTime.Now, p.dateStart) <= 30 &&
              EntityFunctions.DiffMinutes(DateTime.Now, p.dateEnd) >= -30 ? true : false);
         }

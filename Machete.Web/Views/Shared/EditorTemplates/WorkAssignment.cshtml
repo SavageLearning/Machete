@@ -45,7 +45,7 @@
             @*@Html.DropDownListFor(model => model.skillID, new SelectList(Lookups.skill(CI.TwoLetterISOLanguageName), "Value", "Text", Model.skillID), @Machete.Web.Resources.Shared.choose)*@
             @Html.ValidationMessageFor(model => model.skillID)
         </div>
-        @Html.mUITableLabelAndTextBoxFor(model => model.pseudoID, new { tabindex = "1", style = "width: 2em", @readonly = "readonly", @id = idPrefix + "pseudoID" })
+        @*@Html.mUITableLabelAndTextBoxFor(model => model.pseudoID, new { tabindex = "1", style = "width: 2em", @readonly = "readonly", @id = idPrefix + "pseudoID" })*@
     </div>
 </div>
 <div class="tb-table">
@@ -59,6 +59,8 @@
         @Html.mUIDropDownListFor(model => model.hours, new SelectList(Lookups.hours(), "Value", "Text", Model.hours), new { tabindex = "1", @id = idPrefix + "hours", @class = "earnings-part" })
         @Html.mUITableLabelFor(model => model.hourRange)
         @Html.mUIDropDownListFor(model => model.hourRange, new SelectList(Lookups.hours(), "Value", "Text", Model.hourRange), new { tabindex = "1", @id = idPrefix + "hourRange", @class = "earnings-part" })
+    </div>
+    <div class="tb-row">
         @Html.mUITableLabelFor(model => model.days)
         @Html.mUIDropDownListFor(model => model.days, new SelectList(Lookups.days(), "Value", "Text", Model.days), new { tabindex = "1", @id = idPrefix + "days", @class = "earnings-part" })
         <div class="tb-label">

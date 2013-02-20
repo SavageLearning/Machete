@@ -223,7 +223,7 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Employer referred to Casa Latina by.
+        ///   Looks up a localized string similar to Employer referred by.
         /// </summary>
         public static string referredby {
             get {

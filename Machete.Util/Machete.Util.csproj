@@ -41,6 +41,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="machete_image_load.ps1" />
+    <None Include="powershell\addWeeklyScheduledClasses.ps1" />
     <None Include="powershell\database_backup.ps1" />
     <None Include="powershell\ssrs_export_reports.ps1" />
     <None Include="records_load.ps1" />
