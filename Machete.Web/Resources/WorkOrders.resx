@@ -127,7 +127,7 @@
     <value>Work Order</value>
   </data>
   <data name="createlink" xml:space="preserve">
-    <value>Create new work order</value>
+    <value>Create New Work Order</value>
   </data>
   <data name="createnolinkmsg" xml:space="preserve">
     <value>To create a new work order, you must first select an existing employer record or create a new employer. Click on the menu box (above) to create or select an employer. Alternatively, you can view an existing work order (below) and then view all orders for that employer.</value>
@@ -169,7 +169,7 @@
     <value>workorder::index</value>
   </data>
   <data name="listlink" xml:space="preserve">
-    <value>List work orders</value>
+    <value>List Work Orders</value>
   </data>
   <data name="listlinkall" xml:space="preserve">
     <value>List of ALL work orders</value>

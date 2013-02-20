@@ -172,7 +172,7 @@
     <value>Receive email updates?</value>
   </data>
   <data name="referredby" xml:space="preserve">
-    <value>Employer referred to Casa Latina by</value>
+    <value>Employer referred by</value>
   </data>
   <data name="referredbyOther" xml:space="preserve">
     <value>Other reference</value>
