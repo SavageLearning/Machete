@@ -5,14 +5,14 @@
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
     string recType = "WO";
-    //string idPrefix = recType + Model.ID + "-";
+    string idPrefix = recType + Model.ID + "-";
 }
 <div id="workOrderTabs_@(Model.ID)" >
     <ul>
-        <li><a href="#workOrderList" id="workOrderListTab_@(Model.ID)" class="ListTab">@WorkOrders.listlink</a> </li>
+        <li><a href="#@(idPrefix)workOrderList" id="workOrderListTab_@(Model.ID)" class="ListTab">@WorkOrders.listlink</a> </li>
         <li><a href="/WorkOrder/Create?EmployerID=@(Model.ID)" id="workOrderCreateTab_@(Model.ID)" class="CreateTab">@WorkOrders.createlink</a></li>        
     </ul>
-    <div id="workOrderList">
+    <div id="@(idPrefix)workOrderList">
         <table id="workOrderTable_@(Model.ID)" class="display">
             <thead>
                 <tr>
