@@ -45,7 +45,7 @@
             @*@Html.DropDownListFor(model => model.skillID, new SelectList(Lookups.skill(CI.TwoLetterISOLanguageName), "Value", "Text", Model.skillID), @Machete.Web.Resources.Shared.choose)*@
             @Html.ValidationMessageFor(model => model.skillID)
         </div>
-        @*@Html.mUITableLabelAndTextBoxFor(model => model.pseudoID, new { tabindex = "1", style = "width: 2em", @readonly = "readonly", @id = idPrefix + "pseudoID" })*@
+        @Html.mUITableLabelAndTextBoxFor(model => model.pseudoID, new { tabindex = "1", style = "width: 2em", @readonly = "readonly", @id = idPrefix + "pseudoID" })
     </div>
 </div>
 <div class="tb-table">
