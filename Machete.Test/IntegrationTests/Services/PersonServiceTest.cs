@@ -37,14 +37,11 @@ using System.Data.Entity.Validation;
 namespace Machete.Test
 {
     [TestClass]
-    public class PersonServiceTest : ServiceTest
+    public class PersonServiceTest : FluentRecordBase
     {
         [TestInitialize]
         public void TestInitialize()
         {
-
-            Database.SetInitializer<MacheteContext>(new TestInitializer());
-            base.Initialize();
         }
         /// <summary>
         /// 
@@ -53,13 +50,10 @@ namespace Machete.Test
         public void Integration_Person_Service_CreatePerson()
         {
             //Arrange
-            Person _person = (Person)Records.person.Clone();
-            _person.firstname2 = "PersonService_Intergation_CreatePerson";
             //Act
-            _pServ.Create(_person, "UnitTest");
+            var result = ToPerson();
             //Assert
-            Assert.IsNotNull(_person.ID, "Person.ID is Null");
-            Assert.IsTrue(_person.ID == 4);
+            Assert.IsNotNull(result.ID, "Person.ID is Null");
         }
         /// <summary>
         /// CreatePerson calls DbSet.Add() and  Context.SaveChanges() This leads to duplication
@@ -70,19 +64,17 @@ namespace Machete.Test
             int reccount = 0;
             //
             //Arrange
-            DB.Database.Delete();
-            DB.Database.Initialize(true);
             Person _p = (Person)Records.person.Clone();
-            _p.firstname2 = "PersonService_Int_CrePer_NoDuplicate";
+            _p.firstname1 = "Firstname " + RandomString(5);
             //
             //Act
             try
             {
-                _pServ.Create(_p, "UnitTest");
-                _pServ.Create(_p, "UnitTest");
-                _pServ.Create(_p, "UnitTest");
+                ToServPerson().Create(_p, "UnitTest");
+                ToServPerson().Create(_p, "UnitTest");
+                ToServPerson().Create(_p, "UnitTest");
                 reccount = DB.Persons.Count(n => n.firstname1 == _p.firstname1);
-            }
+           } 
             catch (DbEntityValidationException ex)
             {
                 Assert.Fail(string.Format("Validation exception for field {0} caught: {1}",

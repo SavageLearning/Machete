@@ -39,13 +39,12 @@ using Machete.Web.Helpers;
 namespace Machete.Test
 {
     [TestClass]
-    public class WorkOrderServiceTest : ServiceTest
+    public class WorkOrderServiceTest : FluentRecordBase
     {
 
         [TestInitialize]
         public void TestInitialize()
         {
-            base.Initialize();
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
@@ -55,7 +54,7 @@ namespace Machete.Test
             //Arrange
             //
             //Act
-            IEnumerable<WorkOrderSummary> result = _woServ.GetSummary("").ToList();
+            IEnumerable<WorkOrderSummary> result = ToServWorkOrder().GetSummary("").ToList();
             //
             //Assert
             Assert.IsNotNull(result, "GetSummary result is Null");
@@ -75,7 +74,7 @@ namespace Machete.Test
             int displayLength = 50;
             //
             //Act
-            dataTableResult<WOWASummary> result = _woServ.CombinedSummary(search, orderdescending, displayStart, displayLength);
+            dataTableResult<WOWASummary> result = ToServWorkOrder().CombinedSummary(search, orderdescending, displayStart, displayLength);
             WOWASummary wowa = result.query.First();
             //
             //Assert
@@ -98,7 +97,7 @@ namespace Machete.Test
         {
             //
             //Act
-            var result = _woServ.GetActiveOrders(DateTime.Now, false);
+            var result = ToServWorkOrder().GetActiveOrders(DateTime.Now, false);
             Assert.IsNotNull(result, "Person.ID is Null");
         }
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
@@ -106,6 +105,8 @@ namespace Machete.Test
         {
             //
             //Arrange
+            AddWorkOrder().AddWorkOrder().AddWorkOrder();
+            AddWorkOrder().AddWorkOrder().AddWorkOrder();
             viewOptions o = new viewOptions();
             o.CI = new CultureInfo("en-US", false);
             o.sSearch = DateTime.Today.ToShortDateString();
@@ -117,7 +118,7 @@ namespace Machete.Test
             o.sortColName = "WOID";
             //
             //Act
-            dataTableResult<WorkOrder> result = _woServ.GetIndexView(o);
+            dataTableResult<WorkOrder> result = ToServWorkOrder().GetIndexView(o);
             //
             //Assert
             IEnumerable<WorkOrder> query = result.query.ToList();
@@ -130,7 +131,7 @@ namespace Machete.Test
         public void Integration_WO_Service_GetWorkOrders_returns_all()
         {
             // Arrange
-            IEnumerable<WorkOrder> result = _woServ.GetAll().ToList();
+            IEnumerable<WorkOrder> result = ToServWorkOrder().GetAll().ToList();
             //
             int count = DB.WorkOrders.Count();
             //

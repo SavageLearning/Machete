@@ -15,32 +15,24 @@ using OpenQA.Selenium.Firefox;
 namespace Machete.Test
 {
     [TestClass]
-    public class ActivityTests
+    public class ActivityTests : FluentRecordBase
     {
-        private IWebDriver driver;
+        static IWebDriver driver;
         private StringBuilder verificationErrors;
-        private string baseURL;
+        static string baseURL;
         private sharedUI ui;
-        private DatabaseFactory _dbfactory;
-        private WorkerService _wserv;
-        private WorkerRepository _wRepo;
-        private IUnitOfWork _unitofwork;
-        private MacheteContext DB;
 
         [ClassInitialize]
-        public static void ClassInitialize(TestContext testContext) { }
+        public static void ClassInitialize(TestContext testContext)
+        {
+
+        }
 
         [TestInitialize]
         public void SetupTest()
         {
-            Database.SetInitializer<MacheteContext>(new MacheteInitializer());
-            DB = new MacheteContext();
-            WorkerCache.Initialize(DB);
-            LookupCache.Initialize(DB);
-            _dbfactory = new DatabaseFactory();
-            _wRepo = new WorkerRepository(_dbfactory);
-            _unitofwork = new UnitOfWork(_dbfactory);
-            _wserv = new WorkerService(_wRepo, _unitofwork);
+            Initialize(new MacheteInitializer(), "macheteWeb");
+            Assert.IsNotNull(DB);
             driver = new FirefoxDriver();
             baseURL = "http://localhost:4213/";
             ui = new sharedUI(driver, baseURL);
@@ -74,7 +66,7 @@ namespace Machete.Test
         public void SeActivity_Create_Validate()
         {
             //Arrange
-            Activity _act = (Activity)Records.activity.Clone();
+            var _act = (Activity)Records.activity.Clone();
             //Act
             ui.activityCreate(_act);
             //Assert
@@ -84,9 +76,9 @@ namespace Machete.Test
         [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Activities)]
         public void SeActivity_Create_ManySignins()
         {
+            var userstring = "SeActivity_Create_ManySignins";
             //Arrange
             int rowcount = 1;                        
-            MacheteContext DB = new MacheteContext(); //maps to Machete.Text\app.config ConnectionString
             IEnumerable<int> cardlist = DB.Workers.Select(q => q.dwccardnum).Distinct();
             Random rand = new Random();
             // There's a lot in this one line. Ask questions about it.
@@ -94,7 +86,20 @@ namespace Machete.Test
             IEnumerable<int> list = DB.Workers.Select(q => q.dwccardnum).Distinct().ToList();
              var count = list.Count();
             if (count < 10)
-                ui.createSomeWorkers(10, DB.Workers);
+            {
+                for (int i = 10; i >= 0; --i)
+                {
+                    var _per = (Person) Records.person.Clone();
+                    var _wkr = (Worker) Records.worker.Clone();
+                    var next = Records.GetNextMemberID(DB.Workers);
+                    _wkr.dwccardnum = next;
+                    ToServPerson().Save(_per, userstring);
+                    _wkr.ID = _per.ID;
+                    ToServWorker().Save(_wkr, userstring);
+                }
+            }
+            //
+            //
             int numberOfSignins = rand.Next(count / 10) + 1; //+1 will never lead to zero here
             int numberSignedIn = numberOfSignins;
             IEnumerable<int> list1 = list.Take<int>(numberOfSignins);
@@ -150,20 +155,19 @@ namespace Machete.Test
         public void SeActivity_Create_signin_simple()
         {
             // Arrange
-            Random rand = new Random();
             int rowcount = 1;
-            MacheteContext DB = new MacheteContext();
-            var workers = DB.Workers;
-            Activity _act= (Activity)Records.activity.Clone();
+            Activity _act = (Activity)Records.activity.Clone();
             ActivitySignin _asi = (ActivitySignin)Records.activitysignin.Clone();
-            IEnumerable<int> cardlist = DB.Workers.Select(q => q.dwccardnum).Distinct();
-            int firstCardNum = workers.First().dwccardnum;
+            var worker = AddWorker(status: Worker.iActive).ToWorker();
             // Act
+            ui.refreshCache();
+            ui.gotoMachete();
             ui.activityCreate(_act);
             var idPrefix = "asi" + _act.ID + "-"; 
-            ui.activitySignIn(idPrefix, firstCardNum);
+            ui.activitySignIn(idPrefix, worker.dwccardnum);
+            var result = ui.activitySignInValidate(idPrefix, worker.dwccardnum, rowcount);
             // Assert
-            Assert.IsTrue(ui.activitySignInValidate(idPrefix, firstCardNum, rowcount));
+            Assert.IsTrue(result);
         }
 
         [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Activities)]
@@ -226,12 +230,12 @@ namespace Machete.Test
         public void SeActivity_test_pagination()
         {
             // Arrange
-            ServiceTest SeDB = new ServiceTest().LoadContext();
-            int count = SeDB._aServ.GetAll().Count();
+            FluentRecordBase SeDB = new FluentRecordBase();
+            int count = SeDB.ToServActivity().GetAll().Count();
             if (count < 20)
             {
                 Person _person = (Person)Records.person.Clone();
-                SeDB._pServ.Create(_person, "ME");
+                SeDB.ToServPerson().Create(_person, "ME");
             }
 
             // Act
@@ -249,12 +253,12 @@ namespace Machete.Test
         public void SeActivity_test_search()
         {
             // Arrange
-            ServiceTest SeDB = new ServiceTest().LoadContext();
-            int count = SeDB._aServ.GetAll().Count();
+            FluentRecordBase SeDB = new FluentRecordBase();
+            int count = SeDB.ToServActivity().GetAll().Count();
             if (count < 20)
             {
                 Activity _activity = (Activity)Records.activity.Clone();
-                SeDB._aServ.Create(_activity, "ME");
+                SeDB.ToServActivity().Create(_activity, "ME");
             }
 
             // Act
@@ -276,20 +280,20 @@ namespace Machete.Test
         public void SeActivity_test_record_limit()
         {
             // Arrange
-            ServiceTest SeDB = new ServiceTest().LoadContext();
-            int count = SeDB._aServ.GetAll().Count();
+            int count = ToServActivity().GetAll().Count();
             while (count < 100)
             {
                 Activity _activity = (Activity)Records.activity.Clone();
-                SeDB._aServ.Create(_activity, "ME");
-                count = SeDB._aServ.GetAll().Count();
+                ToServActivity().Create(_activity, "ME");
+                count = ToServActivity().GetAll().Count();
             }
 
             // Act
             ui.WaitThenClickElement(By.Id("menulinkactivity"));
 
             // Test default
-            Thread.Sleep(3000); //prevent race condition
+            ui.WaitForText("Showing (1 to 10)");
+            //Thread.Sleep(3000); //prevent race condition
             int recCount = ui._d.FindElements(By.XPath("//table[@id='activityTable']/tbody/tr")).Count;
             Assert.AreEqual(recCount, 10, "Default record limiter is not set to 10");
 
@@ -316,12 +320,12 @@ namespace Machete.Test
         public void SeActivity_test_column_sorting()
         {
             // Arrange
-            ServiceTest SeDB = new ServiceTest().LoadContext();
-            int count = SeDB._aServ.GetAll().Count();
+            FluentRecordBase SeDB = new FluentRecordBase();
+            int count = SeDB.ToServActivity().GetAll().Count();
             if (count < 100)
             {
                 Activity _activity = (Activity)Records.activity.Clone();
-                SeDB._aServ.Create(_activity, "ME");
+                SeDB.ToServActivity().Create(_activity, "ME");
             }
 
             // Act

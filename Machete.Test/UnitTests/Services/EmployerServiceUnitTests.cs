@@ -109,13 +109,14 @@ namespace Machete.Test.UnitTests.Services
             _uow = new Mock<IUnitOfWork>();
             _woServ = new Mock<IWorkOrderService>();
             string user = "UnitTest";
-            Records._employer1.datecreated = DateTime.MinValue;
-            Records._employer1.dateupdated = DateTime.MinValue;
-            _repo.Setup(r => r.Add(Records._employer1)).Returns(Records._employer1);
+            var _e = (Employer)Records.employer.Clone();
+            _e.datecreated = DateTime.MinValue;
+            _e.dateupdated = DateTime.MinValue;
+            _repo.Setup(r => r.Add(_e)).Returns(_e);
             var _serv = new EmployerService(_repo.Object, _woServ.Object, _uow.Object);
             //
             //Act
-            var result = _serv.Create(Records._employer1, user);
+            var result = _serv.Create(_e, user);
             //
             //Assert
             Assert.IsInstanceOfType(result, typeof(Employer));
@@ -133,18 +134,20 @@ namespace Machete.Test.UnitTests.Services
             _repo = new Mock<IEmployerRepository>();
             _uow = new Mock<IUnitOfWork>();
             _woServ = new Mock<IWorkOrderService>();
+            var _e = (Employer)Records.employer.Clone();
+
             string user = "UnitTest";
             int id = 1;
             Employer dp = new Employer();
             _repo.Setup(r => r.Delete(It.IsAny<Employer>())).Callback((Employer p) => { dp = p; });
-            _repo.Setup(r => r.GetById(id)).Returns(Records._employer1);
+            _repo.Setup(r => r.GetById(id)).Returns(_e);
             var _serv = new EmployerService(_repo.Object, _woServ.Object, _uow.Object);
             //
             //Act
             _serv.Delete(id, user);
             //
             //Assert
-            Assert.AreEqual(dp, Records._employer1);
+            Assert.AreEqual(dp, _e);
         }
 
         [TestMethod]
@@ -155,17 +158,19 @@ namespace Machete.Test.UnitTests.Services
             _repo = new Mock<IEmployerRepository>();
             _uow = new Mock<IUnitOfWork>(); 
             _woServ = new Mock<IWorkOrderService>();
+            var _e = (Employer)Records.employer.Clone();
+
             string user = "UnitTest";
-            Records._employer1.datecreated = DateTime.MinValue;
-            Records._employer1.dateupdated = DateTime.MinValue;
+            _e.datecreated = DateTime.MinValue;
+            _e.dateupdated = DateTime.MinValue;
             var _serv = new EmployerService(_repo.Object, _woServ.Object, _uow.Object);
             //
             //Act
-            _serv.Save(Records._employer1, user);
+            _serv.Save(_e, user);
             //
             //Assert
-            Assert.IsTrue(Records._employer1.Updatedby == user);
-            Assert.IsTrue(Records._employer1.dateupdated > DateTime.MinValue);
+            Assert.IsTrue(_e.Updatedby == user);
+            Assert.IsTrue(_e.dateupdated > DateTime.MinValue);
         }
     }
 }

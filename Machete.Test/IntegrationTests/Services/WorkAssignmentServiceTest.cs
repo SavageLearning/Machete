@@ -39,14 +39,13 @@ using Machete.Web.Helpers;
 namespace Machete.Test
 {
     [TestClass]
-    public class WorkAssignmentServiceTest : ServiceTest
+    public class WorkAssignmentServiceTest : FluentRecordBase
     {
         viewOptions dOptions;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            base.Initialize();
             dOptions = new viewOptions
             {
                 CI = new CultureInfo("en-US", false),
@@ -63,28 +62,34 @@ namespace Machete.Test
         }
         [TestMethod]
         public void Integration_WA_Service_GetIndexView_basic()
-        {       
+        {   
+            //
+            // Arrange
+            var desc = "DESCRIPTION " + RandomString(20);
+            AddWorkAssignment(desc: desc).AddWorkAssignment(desc: desc);
+            AddWorkAssignment(desc: desc).AddWorkAssignment(desc: desc);
+            AddWorkAssignment(desc: desc).AddWorkAssignment(desc: desc);
+            AddWorkAssignment(desc: desc).AddWorkAssignment(desc: desc);
+            dOptions.sSearch = desc;
             //
             //Act
-            var result = _waServ.GetIndexView(dOptions);
+            var result = ToServWorkAssignment().GetIndexView(dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
             Assert.IsNotNull(result, "return value is null");
             Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
             Assert.AreEqual(8, result.query.Count()); //pending excluded
-            Assert.AreEqual(10, _waServ.TotalCount());            
         }
         [TestMethod]
         public void Integration_WA_Service_GetIndexView_check_workerjoin_blank_worker_ok()
         {
             dOptions.sortColName = "assignedWorker";
-            var result = _waServ.GetIndexView(dOptions);
+            var result = ToServWorkAssignment().GetIndexView(dOptions);
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
             Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
             Assert.AreEqual(8, result.query.Count()); //pending excluded
-            Assert.AreEqual(10, _waServ.TotalCount());
         }
         [TestMethod]
         public void Integration_WA_Service_GetIndexView_checkwoidfilter()
@@ -92,14 +97,14 @@ namespace Machete.Test
             //Act
             dOptions.woid = 1;
             dOptions.orderDescending = true;
-            var result = _waServ.GetIndexView(dOptions);
+            var result = ToServWorkAssignment().GetIndexView(dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
             Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
             Assert.AreEqual(3, result.query.Count());
-            Assert.AreEqual(10, _waServ.TotalCount());
+            Assert.AreEqual(10, ToServWorkAssignment().TotalCount());
         }
         [TestMethod]
         public void Integration_WA_Service_GetIndexView_check_search_paperordernum()
@@ -109,7 +114,7 @@ namespace Machete.Test
             dOptions.sSearch = "12420";
             dOptions.woid = 1;
             dOptions.orderDescending = true;
-            var result = _waServ.GetIndexView(dOptions);
+            var result = ToServWorkAssignment().GetIndexView(dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -117,7 +122,7 @@ namespace Machete.Test
             Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
             Assert.AreEqual(12420, tolist[0].workOrder.paperOrderNum);
             Assert.AreEqual(3, result.query.Count());
-            Assert.AreEqual(10, _waServ.TotalCount());
+            Assert.AreEqual(10, ToServWorkAssignment().TotalCount());
         }
         [TestMethod]
         public void Integration_WA_Service_GetIndexView_check_search_description()
@@ -127,7 +132,8 @@ namespace Machete.Test
             dOptions.sSearch = "foostring1";
             dOptions.woid = 1;
             dOptions.orderDescending = true;
-            var result = _waServ.GetIndexView(dOptions);
+            var serv = ToServWorkAssignment();
+            var result = AddWorkAssignment(desc: "foostring1").ToServWorkAssignment().GetIndexView(dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -135,7 +141,6 @@ namespace Machete.Test
             Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
             Assert.AreEqual("foostring1", tolist[0].description);
             Assert.AreEqual(1, result.query.Count());
-            Assert.AreEqual(10, _waServ.TotalCount());
         }
         [TestMethod]
         public void Integration_WA_Service_GetIndexView_check_search_Updatedby()
@@ -143,7 +148,7 @@ namespace Machete.Test
             dOptions.sSearch = "foostring1";
             dOptions.woid = 1;
             dOptions.orderDescending = true;
-            var result = _waServ.GetIndexView(dOptions);
+            var result = ToServWorkAssignment().GetIndexView(dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -151,14 +156,14 @@ namespace Machete.Test
             Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
             Assert.AreEqual("foostring2", tolist[0].Updatedby);
             Assert.AreEqual(1, result.query.Count());
-            Assert.AreEqual(10, _waServ.TotalCount());
+            Assert.AreEqual(10, ToServWorkAssignment().TotalCount());
         }
         [TestMethod]
         public void Integration_WA_Service_GetIndexView_check_search_skill()
         {
             dOptions.sSearch = "Digging";
             dOptions.orderDescending = true;
-            var result = _waServ.GetIndexView(dOptions);
+            var result = ToServWorkAssignment().GetIndexView(dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -166,7 +171,7 @@ namespace Machete.Test
             Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
             Assert.AreEqual(70, tolist[0].skillID); //ID=70 is Digging
             Assert.AreEqual(1, result.query.Count());
-            Assert.AreEqual(10, _waServ.TotalCount());
+            Assert.AreEqual(10, ToServWorkAssignment().TotalCount());
         }
         [TestMethod]
         public void Integration_WA_Service_GetIndexView_check_searchdateTimeofWork()
@@ -175,7 +180,7 @@ namespace Machete.Test
             //Act
             dOptions.sSearch = DateTime.Today.AddHours(9).ToString();
             dOptions.orderDescending = true;
-            var result = _waServ.GetIndexView(dOptions);
+            var result = ToServWorkAssignment().GetIndexView(dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -183,7 +188,7 @@ namespace Machete.Test
             Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
             Assert.AreEqual(70, tolist[0].skillID);
             Assert.AreEqual(3, result.query.Count());
-            Assert.AreEqual(10, _waServ.TotalCount());
+            Assert.AreEqual(10, ToServWorkAssignment().TotalCount());
         }
         //
         // Simulates doubleclicking on a worker in the workerSignin list
@@ -191,28 +196,31 @@ namespace Machete.Test
         [TestMethod]
         public void Integration_WA_Service_GetIndexView_check_searchdwccardnum()
         {
-            //
-            //Act
-            dOptions.dwccardnum = 30040;
+            //arrange
+            //var skill = LookupCache.getSingleEN("skill","painter (rollerbrush)");
+            var skill = 61;
+            var w = AddWorker(skill1: skill).ToWorker();
+            dOptions.dwccardnum = w.dwccardnum;
             dOptions.orderDescending = true;
-            var result = _waServ.GetIndexView(dOptions);
+            AddWorkAssignment(skill: skill);
+            //Act
+            var result = ToServWorkAssignment().GetIndexView(dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
             Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
-            //Assert.AreEqual(61, tolist[0].skillID);
-            Assert.AreEqual(7, result.query.Count());
-            Assert.AreEqual(10, _waServ.TotalCount());
+            Assert.AreEqual(1, result.query.Count());
         }
         [TestMethod]
         public void Integration_WA_Service_GetIndexView_check_requested_filter()
         {
-            //
+            //Arrange
+            AddWorkerRequest().AddWorkAssignment();
             //Act
             dOptions.orderDescending = true;
             dOptions.wa_grouping = "requested";
-            var result = _waServ.GetIndexView(dOptions);
+            var result = ToServWorkAssignment().GetIndexView(dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
@@ -220,16 +228,15 @@ namespace Machete.Test
             Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
             //Assert.AreEqual(61, tolist[0].skillID);
             Assert.AreEqual(1, result.query.Count());
-            Assert.AreEqual(10, _waServ.TotalCount());
         }
         [TestMethod]
         public void Integration_WA_Service_Assign_updates_WSI_and_WA()
         {
-            WorkerSignin wsi1 = _wsiServ.Get(1);
-            WorkAssignment wa1 = _waServ.Get(1);
-            var result = _waServ.Assign(wa1, wsi1, "test script");
-            WorkerSignin wsi2 = _wsiServ.Get(1);
-            WorkAssignment wa2 = _waServ.Get(1);
+            WorkerSignin wsi1 = ToWorkerSignin();
+            WorkAssignment wa1 = ToWorkAssignment();
+            var result = ToServWorkAssignment().Assign(wa1, wsi1, "test script");
+            WorkerSignin wsi2 = ToWorkerSignin();
+            WorkAssignment wa2 = ToWorkAssignment();
             Assert.IsNotNull(result);
             Assert.IsNotNull(wa2.workerAssignedID);
             Assert.IsNotNull(wa2.workerSigninID);
@@ -239,17 +246,17 @@ namespace Machete.Test
         [TestMethod]
         public void Integration_WA_Service_GetSummary()
         {
-            var result = _waServ.GetSummary("");
+            var result = ToServWorkAssignment().GetSummary("");
             Assert.IsNotNull(result, "Person.ID is Null");
         }
         [TestMethod]
         public void Integration_WA_Service_Delete_removes_record()
 
         {
-            var before = _waServ.GetAll();
+            var before = ToServWorkAssignment().GetAll();
             Assert.IsTrue(before.Count() == 10, "Unanticipated list count from Assignment.GetMany()");
-            _waServ.Delete(1, "Intg Test");
-            var after = _waServ.GetAll();
+            ToServWorkAssignment().Delete(1, "Intg Test");
+            var after = ToServWorkAssignment().GetAll();
             Assert.IsTrue(after.Count() == 9, "Unanticipated list count from Assignment.GetMany()");
             Assert.AreNotSame(before.Count(), after.Count());
         }

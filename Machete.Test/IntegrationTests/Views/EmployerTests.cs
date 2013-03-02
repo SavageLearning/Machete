@@ -12,12 +12,13 @@ using Machete.Domain;
 namespace Machete.Test
 {
     [TestClass]
-    public class EmployerTests
+    public class EmployerTests : FluentRecordBase
     {
         private IWebDriver driver;
         private StringBuilder verificationErrors;
         private string baseURL;
         private sharedUI ui;
+        private FluentRecordBase _frb;
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext) { }
@@ -25,6 +26,7 @@ namespace Machete.Test
         [TestInitialize]
         public void SetupTest()
         {
+            _frb = new FluentRecordBase();
             driver = new FirefoxDriver();
             baseURL = "http://localhost:4213/";
             ui = new sharedUI(driver, baseURL);
@@ -60,8 +62,8 @@ namespace Machete.Test
         public void SeEmployer_Create_Validate_Delete()
         {
             //Arrange
-            Employer _emp = (Employer)Records.employer.Clone();
-            Employer _emp1 = (Employer)Records.employer.Clone();
+            Employer _emp = CloneEmployer();
+            Employer _emp1 = CloneEmployer();
             //Act
             //starts with /Employer/Create
             ui.employerCreate(_emp1);
@@ -79,8 +81,8 @@ namespace Machete.Test
         public void SeEmployer_Create_workorder()
         {
             //Arrange
-            Employer _emp = (Employer)Records.employer.Clone();
-            WorkOrder _wo = (WorkOrder)Records.order.Clone();
+            Employer _emp = CloneEmployer();
+            WorkOrder _wo = CloneWorkOrder();
             _wo.status = 43; // start work order off as pending
             //Act
             ui.employerCreate(_emp);
@@ -96,8 +98,8 @@ namespace Machete.Test
         public void SeEmployer_Create_workorder_copyinfo()
         {
             //Arrange
-            Employer _emp = (Employer)Records.employer.Clone();
-            WorkOrder _wo = (WorkOrder)Records._workOrder1.Clone(); //Made this a clone so fields like workorder status and tranportation method would be filled in properly for validation.
+            Employer _emp = _frb.ToEmployer();
+            WorkOrder _wo = _frb.ToWorkOrder(); //Made this a clone so fields like workorder status and tranportation method would be filled in properly for validation.
 
             //Act
             ui.employerCreate(_emp);
@@ -122,9 +124,9 @@ namespace Machete.Test
         public void SeEmployer_Create_and_Activate_WorkAssignment()
         {
             //Arrange
-            Employer _employer1 = (Employer)Records.employer.Clone();
-            WorkOrder _wo = (WorkOrder)Records.order.Clone();
-            WorkAssignment _wa1 = (WorkAssignment)Records.assignment.Clone();
+            Employer _employer1 = CloneEmployer();
+            WorkOrder _wo = CloneWorkOrder();
+            WorkAssignment _wa1 = CloneWorkAssignment();
             _wo.contactName = ui.RandomString(10);
             _wo.status = 43; // status = pending
             //
@@ -150,9 +152,9 @@ namespace Machete.Test
         [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Employers)]
         public void SeEmployer_Create_and_move_Workorder()
         {
-            Employer _emp1 = (Employer)Records.employer.Clone();
-            Employer _emp2 = (Employer)Records.employer.Clone();
-            WorkOrder _wo = (WorkOrder)Records.order.Clone();
+            Employer _emp1 = CloneEmployer();
+            Employer _emp2 = CloneEmployer();
+            WorkOrder _wo = CloneWorkOrder();
             _wo.contactName = ui.RandomString(10);
             // create first worker
             ui.employerCreate(_emp1);
@@ -182,7 +184,7 @@ namespace Machete.Test
             ui.WaitAndDoubleClick(By.XPath("//table[@id='employerTable']/tbody/tr/td[6]"));
             var selectedTab = ui.WaitForElement(By.CssSelector("li.employer.ui-tabs-selected a"));
             var recID = Convert.ToInt32(selectedTab.GetAttribute("recordid"));
-            ui.WaitForElement(By.Id("workOrderList"));
+            ui.WaitForElement(By.Id("workOrderListTab_" + _emp1.ID));
             Assert.IsTrue(ui.WaitForElementValue(By.XPath("//table[@id='workOrderTable_" + recID.ToString() + "']/tbody/tr/td[5]"), _wo.contactName));
         }
 

@@ -85,7 +85,7 @@ namespace Machete.Test
             //Arrange
             Person _per = (Person)Records.person.Clone();
             Worker _wkr = (Worker)Records.worker.Clone();
-
+            _wkr.memberexpirationdate = DateTime.Now.AddYears(1);
             //Act
             ui.personCreate(_per);
             _wkr.ID = _per.ID;

@@ -37,14 +37,12 @@ using System.Data.Entity.Validation;
 namespace Machete.Test
 {
     [TestClass]
-    public class IVBServiceTest : ServiceTest
+    public class IvbFluentRecordBase : FluentRecordBase
     {
         [TestInitialize]
         public void TestInitialize()
         {
-
-            Database.SetInitializer<MacheteContext>(new TestInitializer());
-            base.Initialize();
+            base.Initialize(new TestInitializer(), "macheteConnection");
         }
         /// <summary>
         /// 
@@ -74,9 +72,9 @@ namespace Machete.Test
             //Arrange
             int id = 1;
             
-            IQueryable<Activity> q = _aRepo.GetAllQ();
+            IQueryable<Activity> q = ToRepoActivity().GetAllQ();
             //Act
-            IndexViewBase.getUnassociated(id, ref q, _aRepo, _asRepo);
+            IndexViewBase.getUnassociated(id, ref q, ToRepoActivity(), ToRepoActivitySignin());
             //Assert
             var result = q.ToList();
             Assert.IsTrue(result.Count() == 2, "Expected 2 unassociated activities, received {0}");

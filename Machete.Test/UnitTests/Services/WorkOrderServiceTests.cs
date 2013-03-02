@@ -129,15 +129,16 @@ namespace Machete.Test.UnitTests.Services
             //Arrange
             _repo = new Mock<IWorkOrderRepository>();
             _uow = new Mock<IUnitOfWork>();
+            var _wo = (WorkOrder)Records.order.Clone();
             string user = "UnitTest";
-            Records._workOrder1.datecreated = DateTime.MinValue;
-            Records._workOrder1.dateupdated = DateTime.MinValue;
-            _repo.Setup(r => r.Add(Records._workOrder1)).Returns(Records._workOrder1);
+            _wo.datecreated = DateTime.MinValue;
+            _wo.dateupdated = DateTime.MinValue;
+            _repo.Setup(r => r.Add(_wo)).Returns(_wo);
             _waServ = new Mock<IWorkAssignmentService>();
             var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _uow.Object);
             //
             //Act
-            var result = _serv.Create(Records._workOrder1, user);
+            var result = _serv.Create(_wo, user);
             //
             //Assert
             Assert.IsInstanceOfType(result, typeof(WorkOrder));
@@ -154,11 +155,12 @@ namespace Machete.Test.UnitTests.Services
             //Arrange
             _repo = new Mock<IWorkOrderRepository>();
             _uow = new Mock<IUnitOfWork>();
+            var _wo = (WorkOrder)Records.order.Clone();
             string user = "UnitTest";
             int id = 1;
             WorkOrder dp = new WorkOrder();
             _repo.Setup(r => r.Delete(It.IsAny<WorkOrder>())).Callback((WorkOrder p) => { dp = p; });
-            _repo.Setup(r => r.GetById(id)).Returns(Records._workOrder1);
+            _repo.Setup(r => r.GetById(id)).Returns(_wo);
             _waServ = new Mock<IWorkAssignmentService>();
             var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _uow.Object);
             //
@@ -166,7 +168,7 @@ namespace Machete.Test.UnitTests.Services
             _serv.Delete(id, user);
             //
             //Assert
-            Assert.AreEqual(dp, Records._workOrder1);
+            Assert.AreEqual(dp, _wo);
         }
 
         [TestMethod]
@@ -177,17 +179,18 @@ namespace Machete.Test.UnitTests.Services
             _repo = new Mock<IWorkOrderRepository>();
             _uow = new Mock<IUnitOfWork>();
             string user = "UnitTest";
-            Records._workOrder1.datecreated = DateTime.MinValue;
-            Records._workOrder1.dateupdated = DateTime.MinValue;
+            var _wo = (WorkOrder)Records.order.Clone();
+            _wo.datecreated = DateTime.MinValue;
+            _wo.dateupdated = DateTime.MinValue;
             _waServ = new Mock<IWorkAssignmentService>();
             var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _uow.Object);
             //
             //Act
-            _serv.Save(Records._workOrder1, user);
+            _serv.Save(_wo, user);
             //
             //Assert
-            Assert.IsTrue(Records._workOrder1.Updatedby == user);
-            Assert.IsTrue(Records._workOrder1.dateupdated > DateTime.MinValue);
+            Assert.IsTrue(_wo.Updatedby == user);
+            Assert.IsTrue(_wo.dateupdated > DateTime.MinValue);
         }
     }
 }
