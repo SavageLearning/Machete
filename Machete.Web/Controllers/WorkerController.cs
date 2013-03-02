@@ -216,6 +216,16 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
+        [Authorize(Roles = "Administrator, Manager")]
+        public ActionResult RefreshCache()
+        {
+            serv.RefreshCache();
+            return Json(new
+            {
+                status = "OK"
+            },
+JsonRequestBehavior.AllowGet);
+        }
         /// <summary>
         /// 
         /// </summary>
@@ -223,6 +233,7 @@ namespace Machete.Web.Controllers
         /// <param name="imagefile"></param>
         private void updateImage(Worker worker, HttpPostedFileBase imagefile)
         {
+            // TODO: Move this to the business layer
             if (worker == null) throw new MacheteNullObjectException("updateImage called with null worker");
             if (imagefile == null) throw new MacheteNullObjectException("updateImage called with null imagefile");
             if (worker.ImageID != null)

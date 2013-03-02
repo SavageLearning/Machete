@@ -86,7 +86,6 @@
     <Compile Include="shared\SigninServiceBase.cs" />
     <Compile Include="shared\viewOptions.cs" />
     <Compile Include="WorkAssignmentService.cs" />
-    <Compile Include="shared\WorkerCache.cs" />
     <Compile Include="WorkerRequestService.cs" />
     <Compile Include="WorkerService.cs" />
     <Compile Include="WorkerSigninService.cs" />
