@@ -53,9 +53,6 @@
     <Reference Include="AutoMapper">
       <HintPath>..\packages\AutoMapper.2.1.267\lib\net40\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.Core">
-      <HintPath>..\packages\Castle.Core.3.0.0.4001\lib\net40-client\Castle.Core.dll</HintPath>
-    </Reference>
     <Reference Include="Combres, Version=2.2.2.6, Culture=neutral, PublicKeyToken=1ca6b37997dd7536, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\combres.2.2.2.6\lib\net40\Combres.dll</HintPath>
@@ -123,11 +120,13 @@
     <Reference Include="WebActivator">
       <HintPath>..\packages\WebActivator.1.4.4\lib\net40\WebActivator.dll</HintPath>
     </Reference>
-    <Reference Include="WebDriver">
-      <HintPath>..\packages\Selenium.WebDriver.2.28.0\lib\net40\WebDriver.dll</HintPath>
+    <Reference Include="WebDriver, Version=2.31.1.0, Culture=neutral, PublicKeyToken=1c2bd1631853048f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Selenium.WebDriver.2.31.1\lib\net40\WebDriver.dll</HintPath>
     </Reference>
-    <Reference Include="WebDriver.Support">
-      <HintPath>..\packages\Selenium.Support.2.28.0\lib\net40\WebDriver.Support.dll</HintPath>
+    <Reference Include="WebDriver.Support, Version=2.31.1.0, Culture=neutral, PublicKeyToken=1c2bd1631853048f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Selenium.Support.2.31.1\lib\net40\WebDriver.Support.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -136,7 +135,8 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IntegrationServiceHelpers.cs" />
+    <Compile Include="FluentRecordBase.cs" />
+    <Compile Include="FluentRecordTests.cs" />
     <Compile Include="IntegrationTests\Services\ActivityServiceTests.cs" />
     <Compile Include="IntegrationTests\Services\IndexViewBaseServiceTest.cs" />
     <Compile Include="IntegrationTests\Services\WorkAssignmentServiceTest.cs" />
@@ -151,6 +151,11 @@
     <Compile Include="IntegrationTests\Views\WorkerSigninTests.cs" />
     <Compile Include="MvcMockHelpers.cs">
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rx\WO.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WO.resx</DependentUpon>
     </Compile>
     <Compile Include="TC.cs" />
     <Compile Include="UnitTests\Controllers\EmployerControllerTests.cs" />
@@ -208,6 +213,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="IntegrationTests\Controllers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Rx\WO.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>WO.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

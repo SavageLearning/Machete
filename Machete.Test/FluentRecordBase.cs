@@ -86,17 +86,7 @@ namespace Machete.Test
             _user = user;
         }
 
-        public FluentRecordBase LoadContext()
-        {
-            _makeContext();
-            return this;
-        }
         public FluentRecordBase Initialize(IDatabaseInitializer<MacheteContext> initializer, string connection)
-        {
-            _init(initializer, connection);
-            return this;
-        }
-        private FluentRecordBase _init(IDatabaseInitializer<MacheteContext> initializer, string connection)
         {
             Database.SetInitializer<MacheteContext>(initializer);
             DB = new MacheteContext(connection);
@@ -106,30 +96,6 @@ namespace Machete.Test
             _dbFactory = new DatabaseFactory();
             _dbFactory.Set(DB);
             return this;
-        }
-        private void _makeContext()
-        {
-            _repoI = new ImageRepository(_dbFactory);
-            _repoW = new WorkerRepository(_dbFactory);
-            _repoWO = new WorkOrderRepository(_dbFactory);
-            _repoWR = new WorkerRequestRepository(_dbFactory);
-            _repoWA = new WorkAssignmentRepository(_dbFactory);
-            _repoWSI = new WorkerSigninRepository(_dbFactory);
-            _repoL = new LookupRepository(_dbFactory);
-            _repoP = new PersonRepository(_dbFactory);
-            _repoA = new ActivityRepository(_dbFactory);
-            _repoAS = new ActivitySigninRepository(_dbFactory);
-            _uow = new UnitOfWork(_dbFactory);
-            _servP = new PersonService(_repoP, _uow);
-            _servI = new ImageService(_repoI, _uow);
-            _servA = new ActivityService(_repoA, _servAS, _uow);
-            _servAS = new ActivitySigninService(_repoAS, _repoW, _repoP, _repoI, _repoWR, _uow);
-            _servWR = new WorkerRequestService(_repoWR, _uow);
-            _servWA = new WorkAssignmentService(_repoWA, _repoW, _repoL, _repoWSI, _uow);
-            _servW = new WorkerService(_repoW, _uow);
-            _servWO = new WorkOrderService(_repoWO, _servWA, _uow);
-            _servWSI = new WorkerSigninService(_repoWSI, _repoW, _repoI, _repoWR, _uow);
-            _servE = new EmployerService(_repoE, _servWO, _uow);
         }
 
         public FluentRecordBase AddDBFactory()
@@ -196,6 +162,14 @@ namespace Machete.Test
             return _emp;
         }
 
+        public Employer CloneEmployer()
+        {
+            var e = (Employer)Records.employer.Clone();
+            e.name = RandomString(10);
+            e.email = e.name + "@random.com";
+            return e;
+        }
+
         #endregion  
 
         #region WorkOrders
@@ -257,6 +231,19 @@ namespace Machete.Test
             return _wo;
         }
 
+        public WorkOrder CloneWorkOrder()
+        {
+            var wo = (WorkOrder)Records.order.Clone();
+            wo.contactName = RandomString(10);
+            return wo;
+        }
+
+        public void Reload<T>(T entity) where T : Record
+        {
+            if (DB == null) AddDBFactory();
+             DB.Entry<T>(entity).Reload();
+        }
+
         #endregion 
 
         #region WorkAssignments
@@ -296,6 +283,7 @@ namespace Machete.Test
 
         public FluentRecordBase AddWorkAssignment(
             string desc = null,
+            int? skill = null,
             DateTime? datecreated = null,
             DateTime? dateupdated = null
         )
@@ -310,6 +298,7 @@ namespace Machete.Test
             if (datecreated != null) _wa.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _wa.dateupdated = (DateTime)dateupdated;
             if (desc != null) _wa.description = desc;
+            if (skill != null) _wa.skillID = (int)skill;
             //
             // ACT
             _servWA.Create(_wa, _user);
@@ -320,6 +309,13 @@ namespace Machete.Test
         {
             if (_wa == null) AddWorkAssignment();
             return _wa;
+        }
+
+        public WorkAssignment CloneWorkAssignment()
+        {
+            var wa = (WorkAssignment)Records.assignment.Clone();
+            wa.description = RandomString(10);
+            return wa;
         }
 
         #endregion 
@@ -480,6 +476,10 @@ namespace Machete.Test
         }
 
         public FluentRecordBase AddWorker(
+            int? skill1 = null,
+            int? skill2 = null,
+            int? skill3 = null,
+            int? status = null,
             DateTime? datecreated = null,
             DateTime? dateupdated = null
         )
@@ -488,18 +488,28 @@ namespace Machete.Test
             // DEPENDENCIES
             if (_p == null) AddPerson();
             if (_servW == null) AddServWorker();
-
             //
             // ARRANGE
             _w = (Worker)Records.worker.Clone();
             _w.Person = _p;
+            if (skill1 != null) _w.skill1 = skill1;
+            if (skill2 != null) _w.skill2 = skill2;
+            if (skill3 != null) _w.skill3 = skill3;
+            if (status != null) _w.memberStatus = (int)status;
             if (datecreated != null) _w.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _w.dateupdated = (DateTime)dateupdated;
-            _w.dwccardnum = _w.dwccardnum;
+            // kludge
+            _w.dwccardnum = Records.GetNextMemberID(DB.Workers);
             //
             // ACT
             _servW.Create(_w, _user);
             return this;
+        }
+
+        public int GetNextMemberID()
+        {
+            if (_dbFactory == null) AddDBFactory();
+            return Records.GetNextMemberID(DB.Workers);
         }
 
         public Worker ToWorker()
@@ -819,7 +829,7 @@ namespace Machete.Test
 
         public FluentRecordBase AddUOW()
         {
-            //TODO DO SOMETHING
+            _uow = new UnitOfWork(_dbFactory);
             return this;
         }
 

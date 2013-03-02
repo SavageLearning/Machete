@@ -10,6 +10,7 @@ using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using Machete.Data;
 using System.Data.Entity;
+using Machete.Test.Rx;
 
 
 namespace Machete.Test
@@ -18,13 +19,21 @@ namespace Machete.Test
     {
         public IWebDriver _d;
         string _url;
-        int maxwait = 4; // seconds
+        public int maxwait = 4; // seconds
         int sleepFor = 1000; //milliseconds
         public sharedUI(IWebDriver driver, string url)
         {
             _d = driver;
             _url = url;
         }
+
+        public bool refreshCache()
+        {
+            _d.Navigate().GoToUrl("http://localhost:4213/worker/refreshcache");
+            return true;
+
+        }
+
         public bool gotoMachete()
         {
             _d.Navigate().GoToUrl(_url);
@@ -211,9 +220,10 @@ namespace Machete.Test
                     _wkr.dwccardnum = rnd.Next(30000, 32000);
                 }
 
-                personCreate(_per);
+                //personCreate(_per);
+                
                 _wkr.ID = _per.ID;
-                workerCreate(_wkr, SolutionDirectory() + "\\Machete.test\\jimmy_machete.jpg");
+                //workerCreate(_wkr, SolutionDirectory() + "\\Machete.test\\jimmy_machete.jpg");
             }
             return true;
         }
@@ -509,17 +519,26 @@ namespace Machete.Test
             var waltText =WaitForElement(walt).Text;
             WaitForElementValue(walt, _wa.getFullPseudoID());
             Assert.AreEqual(_wa.getFullPseudoID(), waltText, "Unexpected PseudoID in assignment's list");
-
+            Thread.Sleep(1000);
             WaitThenClickElement(By.Id("activateWorkOrderButton-" + _wo.ID));
             _wo.status = 42; // changing test object to reflect activate status from previous action
             return true;
         }
 
+        public static string GetID(string s, params object[] list)
+        {
+            return String.Format(s, list);
+
+        }
+
         public bool workAssignmentValidate(Employer _emp, WorkOrder _wo, WorkAssignment _wa)
         {
-            WaitForElement(By.Id("workOrderTable_" + _emp.ID + "_searchbox"));
-            WaitThenClickElement(By.Id("WO"+_wo.ID+"-EditTab"));
             Thread.Sleep(1000);
+            WaitThenClickElement(By.Id("WO" + _wo.ID + "-EditTab"));
+            Thread.Sleep(1000);
+            WaitThenClickElement(By.Id("WO" + _wo.ID + "-EditTab"));
+            Thread.Sleep(1000);
+            WaitForElement(By.Id("walt-" + _wo.ID));
             WaitThenClickElement(By.Id("walt-" + _wo.ID));
             Thread.Sleep(1000);
             WaitForElement(By.Id("workAssignTable-wo-" + _wo.ID + "_searchbox"));
@@ -751,7 +770,7 @@ namespace Machete.Test
         public bool WaitThenClickElement(By by)
         {
             IWebElement elem = WaitForElement(by);
-            if (elem != null) 
+            if (elem != null && elem.Displayed) 
             {
                 elem.Click();
                 return true;
@@ -770,7 +789,7 @@ namespace Machete.Test
                 try
                 {
                     elem = IsElementPresent(by);
-                    if (elem != null) return elem;
+                    if (elem != null && elem.Displayed) return elem;
                 }
                 catch (Exception)
                 { return null; }
@@ -819,6 +838,12 @@ namespace Machete.Test
             }
             return false;
         }
+
+        public bool WaitForText(String what)
+        {
+            return WaitForText(what, maxwait);
+        }
+
         public bool WaitForText(String what, int waitfor)
         {
             for (int second = 0; second < waitfor; second++)

@@ -64,7 +64,6 @@ namespace Machete.Test.IntegrationTests.Services
         public void TestInitialize()
         {
             //Doesn't blast the database
-            //base.Initialize(new MacheteInitializer(), "machete");
             Database.SetInitializer<MacheteContext>(new MacheteInitializer());
             DB = new MacheteContext("macheteConnection"); //name of DB in sql server
             WorkerCache.Initialize(DB);
@@ -130,8 +129,6 @@ namespace Machete.Test.IntegrationTests.Services
         [TestMethod]
         public void Integration_Activity_service_CreateClass_within_hour()
         {
-            //Used once to create dummy data to support report creation
-            // requires change in app.config to point test database to production
             IEnumerable<int> cardlist = DB.Workers.Select(q => q.dwccardnum).Distinct();
             IEnumerable<int> classlist = DB.Lookups.Where(l => l.category == "activityName").Select(q => q.ID);
             Activity a = new Activity();

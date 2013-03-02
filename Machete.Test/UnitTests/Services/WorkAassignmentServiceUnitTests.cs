@@ -136,12 +136,13 @@ namespace Machete.Test.UnitTests.Services
             //
             //Arrange
             string user = "UnitTest";
-            Records._workAssignment1.datecreated = DateTime.MinValue;
-            Records._workAssignment1.dateupdated = DateTime.MinValue;
-            waRepo.Setup(r => r.Add(Records._workAssignment1)).Returns(Records._workAssignment1);
+            var _wa = (WorkAssignment)Records.assignment.Clone();
+            _wa.datecreated = DateTime.MinValue;
+            _wa.dateupdated = DateTime.MinValue;
+            waRepo.Setup(r => r.Add(_wa)).Returns(_wa);
             //
             //Act
-            var result = waServ.Create(Records._workAssignment1, user);
+            var result = waServ.Create(_wa, user);
             //
             //Assert
             Assert.IsInstanceOfType(result, typeof(WorkAssignment));
@@ -157,31 +158,35 @@ namespace Machete.Test.UnitTests.Services
             //Arrange
             string user = "UnitTest";
             int id = 1;
+            var _wa = (WorkAssignment)Records.assignment.Clone();
+
             WorkAssignment dp = new WorkAssignment();
            waRepo.Setup(r => r.Delete(It.IsAny<WorkAssignment>())).Callback((WorkAssignment p) => { dp = p; });
-            waRepo.Setup(r => r.GetById(id)).Returns(Records._workAssignment1);
+            waRepo.Setup(r => r.GetById(id)).Returns(_wa);
             //
             //Act
             waServ.Delete(id, user);
             //
             //Assert
-            Assert.AreEqual(dp, Records._workAssignment1);
+            Assert.AreEqual(dp, _wa);
         }
         [TestMethod]
         public void WorkAssignmentService_SaveWorkAssignment_updates_timestamp()
         {
             //
             //Arrange
+            var _wa = (WorkAssignment)Records.assignment.Clone();
+
             string user = "UnitTest";
-            Records._workAssignment1.datecreated = DateTime.MinValue;
-            Records._workAssignment1.dateupdated = DateTime.MinValue;
+            _wa.datecreated = DateTime.MinValue;
+            _wa.dateupdated = DateTime.MinValue;
             //
             //Act
-            waServ.Save(Records._workAssignment1, user);
+            waServ.Save(_wa, user);
             //
             //Assert
-            Assert.IsTrue(Records._workAssignment1.Updatedby == user);
-            Assert.IsTrue(Records._workAssignment1.dateupdated > DateTime.MinValue);
+            Assert.IsTrue(_wa.Updatedby == user);
+            Assert.IsTrue(_wa.dateupdated > DateTime.MinValue);
         }
     }
 }

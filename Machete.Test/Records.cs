@@ -28,12 +28,40 @@ using System.Text;
 using Machete.Domain;
 using Machete.Data;
 using System.Collections.ObjectModel;
+using System.Data.Entity;
 
-namespace Machete.Test //A Small Change: There once was a man in peru / Who dreamed he was eating his shoe / He woke with a fright / In the middle of the night / To find that his dream had come true.
+namespace Machete.Test 
 {
     public class Records
     {
         #region Workers
+
+        public static int GetNextMemberID(DbSet<Worker> db)
+        {
+            var next = 10001;
+            var last = db.OrderByDescending(x => x.dwccardnum).FirstOrDefault();
+            if (last == null) return next;
+            if (last.dwccardnum < 10000) return next;
+            else return last.dwccardnum + 1;
+
+        }
+
+        public static Image image = new Image
+        {
+            
+            Createdby = "initialization script",
+            Updatedby = "initialization script"
+        };
+
+        public static Lookup lookup = new Lookup
+        {
+            category = "test category",
+            text_EN = "Test EN",
+            text_ES = "Test ES",
+            Createdby = "initialization script",
+            Updatedby = "initialization script"
+        };
+
         public static Worker worker = new Worker
         {   
             typeOfWorkID = 20,
@@ -72,7 +100,8 @@ namespace Machete.Test //A Small Change: There once was a man in peru / Who drea
             Createdby = "initialization script",
             Updatedby = "initialization script",
             dateOfBirth = DateTime.Now,
-            dateOfMembership = DateTime.Now
+            dateOfMembership = DateTime.Now,
+            memberStatus = MacheteLookup.cache.First(x => x.category == "memberstatus" && x.text_EN == "Active").ID
         };
         public static Worker _worker1 = (Worker)worker.Clone();
         public static Worker _worker2 = (Worker)worker.Clone();
@@ -82,9 +111,7 @@ namespace Machete.Test //A Small Change: There once was a man in peru / Who drea
         public static Person person = new Person
         {
             firstname1 = "barack",
-            firstname2 = "\"danger\"",
             lastname1 = "obama",
-            lastname2 = ", man",
             address1 = "12345 6th Ave NE",
             address2 = "Apt 789",
             city = "Gotham",
@@ -113,7 +140,6 @@ namespace Machete.Test //A Small Change: There once was a man in peru / Who drea
             notes = "Remember Sammy Jenkis"
         };
         #endregion
-        #region Employers
         public static Employer employer = new Employer
         {
             name = "Willy Wonka",
@@ -137,11 +163,6 @@ namespace Machete.Test //A Small Change: There once was a man in peru / Who drea
             Updatedby = "TestInitializer"
         };
 
-        public static Employer _employer1 = (Employer)employer.Clone();
-        public static Employer _employer2 = (Employer)employer.Clone();
-        public static Employer _employer3 = (Employer)employer.Clone();
-        #endregion
-        #region WorkOrders
         public static WorkOrder order = new WorkOrder
         {
             contactName = "Umpa Lumpa",
@@ -168,16 +189,6 @@ namespace Machete.Test //A Small Change: There once was a man in peru / Who drea
             Updatedby = "initialization script"
         };
 
-        public static WorkOrder _workOrder1 = (WorkOrder)order.Clone();
-        public static WorkOrder _workOrder2 = (WorkOrder)order.Clone();
-        public static WorkOrder _workOrder3 = (WorkOrder)order.Clone();
-        public static WorkOrder _workOrder4 = (WorkOrder)order.Clone();
-        public static WorkOrder _workOrder5 = (WorkOrder)order.Clone();
-        public static WorkOrder _workOrder6 = (WorkOrder)order.Clone();
-        
-        #endregion
-
-        #region workassignments
         public static WorkAssignment assignment = new WorkAssignment
         {
             //ID = 1,
@@ -201,8 +212,6 @@ namespace Machete.Test //A Small Change: There once was a man in peru / Who drea
             Createdby = "initialization script",
             Updatedby = "initialization script"
         };
-        public static WorkAssignment _workAssignment1 = (WorkAssignment)assignment.Clone();
-        #endregion
 
         public static Activity activity = new Activity
         {

@@ -36,12 +36,12 @@ using System.Data.Entity;
 namespace Machete.Test
 {
     [TestClass]
-    public class WorkerServiceTest : ServiceTest
+    public class WorkerServiceTest : FluentRecordBase
     {
         [TestInitialize]
         public void TestInitialize()
         {
-            base.Initialize();
+            base.Initialize(new TestInitializer(), "macheteConnection");
         }
         /// <summary>
         /// Create a worker record from the Worker Service
@@ -58,7 +58,7 @@ namespace Machete.Test
             _w.Person = _p;
             //
             //Act
-            _wServ.Create(_w, "UnitTest");
+            ToServWorker().Create(_w, "UnitTest");
             //
             //Assert
             Assert.IsNotNull(_w.ID, "Worker.ID is Null");
@@ -80,9 +80,9 @@ namespace Machete.Test
             _w.Person = _p;
             //
             //Act
-            Worker result = _wServ.Create(_w, "UnitTest");
+            Worker result = ToServWorker().Create(_w, "UnitTest");
             result.height = "short"; //EF should keep _w and result the same
-            _wServ.Save(result, "UnitTest");
+            ToServWorker().Save(result, "UnitTest");
             //
             //Assert
             Assert.IsNotNull(_w.ID, "Worker.ID is Null");

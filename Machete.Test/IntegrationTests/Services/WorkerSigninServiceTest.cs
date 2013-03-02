@@ -39,14 +39,14 @@ using Machete.Web.Helpers;
 namespace Machete.Test
 {
     [TestClass]
-    public class WorkerSigninServiceTest : ServiceTest
+    public class WorkerSigninServiceTest : FluentRecordBase
     {
         viewOptions _dOptions;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            base.Initialize();
+            base.Initialize(new TestInitializer(), "macheteConnection");
             _dOptions = new viewOptions
             {
                 CI = new CultureInfo("en-US", false),
@@ -63,7 +63,7 @@ namespace Machete.Test
         [TestMethod]
         public void Integration_WorkerSigin_LotterySignin()
         {
-            var result = _wsiServ.GetSignin(30040, DateTime.Today);
+            var result = ToServWorkerSignin().GetSignin(30040, DateTime.Today);
             Assert.IsNotNull(result);
         }
         /// <summary>
@@ -107,7 +107,7 @@ namespace Machete.Test
             //
             //Act
             _dOptions.dwccardnum = 30040;
-            dataTableResult<wsiView> result = _wsiServ.GetIndexView(_dOptions);
+            dataTableResult<wsiView> result = ToServWorkerSignin().GetIndexView(_dOptions);
             //
             //Assert
             List<wsiView> tolist = result.query.ToList();
@@ -115,7 +115,7 @@ namespace Machete.Test
             Assert.IsInstanceOfType(result, typeof(dataTableResult<wsiView>));
             //Assert.AreEqual(61, tolist[0].skillID);
             Assert.AreEqual(3, result.query.Count());
-            Assert.AreEqual(5, _wsiServ.TotalCount());
+            Assert.AreEqual(5, ToServWorkerSignin().TotalCount());
         }
         /// <summary>
         /// Filter on requested grouping
@@ -127,7 +127,7 @@ namespace Machete.Test
             //Act
             _dOptions.dwccardnum = 30040;
             _dOptions.wa_grouping = "requested";
-            dataTableResult<wsiView> result = _wsiServ.GetIndexView(_dOptions);
+            dataTableResult<wsiView> result = ToServWorkerSignin().GetIndexView(_dOptions);
             //
             //Assert
             List<wsiView> tolist = result.query.ToList();
@@ -135,7 +135,7 @@ namespace Machete.Test
             Assert.IsInstanceOfType(result, typeof(dataTableResult<wsiView>));
             //Assert.AreEqual(61, tolist[0].skillID);
             Assert.AreEqual(1, result.query.Count());
-            Assert.AreEqual(5, _wsiServ.TotalCount());
+            Assert.AreEqual(5, ToServWorkerSignin().TotalCount());
         }
         //[TestMethod]
         //public void Integration_TestMethod5()
