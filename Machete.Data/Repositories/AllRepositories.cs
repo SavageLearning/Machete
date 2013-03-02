@@ -50,7 +50,10 @@ namespace Machete.Data
     public interface IEmployerRepository : IRepository<Employer> { }
     public interface IWorkOrderRepository : IRepository<WorkOrder> { }
     public interface IWorkerRequestRepository : IRepository<WorkerRequest> { }
-    public interface IWorkerRepository : IRepository<Worker> { }
+    public interface IWorkerRepository : IRepository<Worker> 
+    {
+        void RefreshCache();
+    }
     public interface IWorkAssignmentRepository : IRepository<WorkAssignment> { }
     public interface IPersonRepository : IRepository<Person> { }
     public interface IEventRepository : IRepository<Event> { }
@@ -141,6 +144,23 @@ namespace Machete.Data
         override public IQueryable<Worker> GetAllQ()
         {
             return dbset.Include(a => a.Person).AsNoTracking().AsQueryable();
+        }
+        public override Worker Add(Worker entity)
+        {
+
+            var w = base.Add(entity);
+            RefreshCache();
+            return w;
+        }
+        public override void Delete(Worker entity)
+        {
+            base.Delete(entity);
+            RefreshCache();
+        }
+
+        public void RefreshCache()
+        {
+            WorkerCache.Refresh(base.DataContext);
         }
     }
     /// <summary>

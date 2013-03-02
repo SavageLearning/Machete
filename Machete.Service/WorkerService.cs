@@ -35,6 +35,7 @@ namespace Machete.Service
     public interface IWorkerService : IService<Worker>
     {
         Worker GetWorkerByNum(int dwccardnum);
+        void RefreshCache();
         dataTableResult<Worker> GetIndexView(viewOptions o);
     }
     public class WorkerService : ServiceBase<Worker>, IWorkerService
@@ -48,6 +49,12 @@ namespace Machete.Service
             Worker worker = repo.Get(w => w.dwccardnum == dwccardnum);
             return worker;
         }
+
+        public void RefreshCache()
+        {
+            ((IWorkerRepository)repo).RefreshCache();
+        }
+
         public dataTableResult<Worker> GetIndexView(viewOptions o)
         {
             var result = new dataTableResult<Worker>();
