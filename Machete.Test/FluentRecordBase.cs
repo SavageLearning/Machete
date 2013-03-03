@@ -736,7 +736,9 @@ namespace Machete.Test
 
         public FluentRecordBase AddActivity(
             DateTime? datecreated = null,
-            DateTime? dateupdated = null
+            DateTime? dateupdated = null,
+            DateTime? startTime = null,
+            DateTime? endTime = null
         )
         {
             //
@@ -747,6 +749,8 @@ namespace Machete.Test
             _a = (Activity)Records.activity.Clone();
             if (datecreated != null) _a.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _a.dateupdated = (DateTime)dateupdated;
+            if (startTime != null) _a.dateStart = (DateTime)startTime;
+            if (endTime != null) _a.dateEnd = (DateTime)endTime;
             //
             // ACT
             _servA.Create(_a, _user);
