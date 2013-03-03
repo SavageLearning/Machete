@@ -37,12 +37,21 @@ using System.Data.Entity.Validation;
 namespace Machete.Test
 {
     [TestClass]
-    public class IvbFluentRecordBase : FluentRecordBase
+    public class IvbFluentRecordBase
     {
+        FluentRecordBase frb;
         [TestInitialize]
         public void TestInitialize()
         {
-            base.Initialize(new TestInitializer(), "macheteConnection");
+            frb = new FluentRecordBase();
+            frb.Initialize(new TestInitializer(), "macheteConnection");
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            frb.Dispose();
+            frb = null;
         }
         /// <summary>
         /// 
@@ -70,14 +79,17 @@ namespace Machete.Test
         public void Integration_IVB_activity_getUnassociated()
         {
             //Arrange
-            int id = 1;
-            
-            IQueryable<Activity> q = ToRepoActivity().GetAllQ();
+            var worker = frb.ToWorker();
+            frb.AddActivity().AddActivity();
+            frb.AddActivitySignin(worker: worker);
+
+            IQueryable<Activity> q = frb.ToRepoActivity().GetAllQ();
+            var count = q.Count();
             //Act
-            IndexViewBase.getUnassociated(id, ref q, ToRepoActivity(), ToRepoActivitySignin());
+            IndexViewBase.getUnassociated(worker.ID, ref q, frb.ToRepoActivity(), frb.ToRepoActivitySignin());
             //Assert
             var result = q.ToList();
-            Assert.IsTrue(result.Count() == 2, "Expected 2 unassociated activities, received {0}");
+            Assert.AreEqual(count - 1, result.Count());
         }
     }
 }

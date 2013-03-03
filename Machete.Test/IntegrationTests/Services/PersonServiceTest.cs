@@ -37,11 +37,22 @@ using System.Data.Entity.Validation;
 namespace Machete.Test
 {
     [TestClass]
-    public class PersonServiceTest : FluentRecordBase
+    public class PersonServiceTest
     {
+        FluentRecordBase frb;
+
         [TestInitialize]
         public void TestInitialize()
         {
+            frb = new FluentRecordBase();
+            frb.Initialize(new TestInitializer(), "macheteConnection");
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            frb.Dispose();
+            frb = null;
         }
         /// <summary>
         /// 
@@ -51,7 +62,7 @@ namespace Machete.Test
         {
             //Arrange
             //Act
-            var result = ToPerson();
+            var result = frb.ToPerson();
             //Assert
             Assert.IsNotNull(result.ID, "Person.ID is Null");
         }
@@ -64,16 +75,15 @@ namespace Machete.Test
             int reccount = 0;
             //
             //Arrange
-            Person _p = (Person)Records.person.Clone();
-            _p.firstname1 = "Firstname " + RandomString(5);
+            Person _p = frb.ClonePerson();
             //
             //Act
             try
             {
-                ToServPerson().Create(_p, "UnitTest");
-                ToServPerson().Create(_p, "UnitTest");
-                ToServPerson().Create(_p, "UnitTest");
-                reccount = DB.Persons.Count(n => n.firstname1 == _p.firstname1);
+                frb.ToServPerson().Create(_p, "UnitTest");
+                frb.ToServPerson().Create(_p, "UnitTest");
+                frb.ToServPerson().Create(_p, "UnitTest");
+                reccount = frb.ToServPerson().GetAll().Count(n => n.firstname1 == _p.firstname1);
            } 
             catch (DbEntityValidationException ex)
             {
