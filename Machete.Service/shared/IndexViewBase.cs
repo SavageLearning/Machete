@@ -565,10 +565,12 @@ namespace Machete.Service
             //WHERE [Extent2].[activityID] IS NULL
             q = from b in arepo.GetAllQ()
                 join aa in
+                    // joins activities (a) to activity signins (az) 
+                    // where az.personID
                     (from a in q
-                     join az in asRepo.GetAllQ() on a.ID equals az.activityID into g
-                     from f in g.DefaultIfEmpty()
-                     where f.personID == personID
+                     join az in asRepo.GetAllQ() on a.ID equals az.activityID into grouped
+                     from az2 in grouped.DefaultIfEmpty()
+                     where az2.personID == personID
                      select a)
                  on b.ID equals aa.ID into h                
                 from i in h.DefaultIfEmpty()

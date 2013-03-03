@@ -32,7 +32,7 @@ using System.Runtime.Caching;
 namespace Machete.Service
 {
 
-    public class LookupCache
+    public static class LookupCache
     {
         private static MacheteContext DB { get; set; }
         private static CacheItem DbCache { get; set; }
@@ -45,6 +45,12 @@ namespace Machete.Service
             cache = MemoryCache.Default;
             DB = db;
             FillCache();
+        }
+        public static void Dispose()
+        {
+            DB = null;
+            DbCache = null;
+            cache = null;
         }
         //
         //
