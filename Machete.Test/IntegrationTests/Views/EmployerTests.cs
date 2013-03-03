@@ -12,13 +12,13 @@ using Machete.Domain;
 namespace Machete.Test
 {
     [TestClass]
-    public class EmployerTests : FluentRecordBase
+    public class EmployerTests
     {
         private IWebDriver driver;
         private StringBuilder verificationErrors;
         private string baseURL;
         private sharedUI ui;
-        private FluentRecordBase _frb;
+        private FluentRecordBase frb;
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext) { }
@@ -26,7 +26,7 @@ namespace Machete.Test
         [TestInitialize]
         public void SetupTest()
         {
-            _frb = new FluentRecordBase();
+            frb = new FluentRecordBase();
             driver = new FirefoxDriver();
             baseURL = "http://localhost:4213/";
             ui = new sharedUI(driver, baseURL);
@@ -62,8 +62,8 @@ namespace Machete.Test
         public void SeEmployer_Create_Validate_Delete()
         {
             //Arrange
-            Employer _emp = CloneEmployer();
-            Employer _emp1 = CloneEmployer();
+            Employer _emp = frb.CloneEmployer();
+            Employer _emp1 = frb.CloneEmployer();
             //Act
             //starts with /Employer/Create
             ui.employerCreate(_emp1);
@@ -81,8 +81,8 @@ namespace Machete.Test
         public void SeEmployer_Create_workorder()
         {
             //Arrange
-            Employer _emp = CloneEmployer();
-            WorkOrder _wo = CloneWorkOrder();
+            Employer _emp = frb.CloneEmployer();
+            WorkOrder _wo = frb.CloneWorkOrder();
             _wo.status = 43; // start work order off as pending
             //Act
             ui.employerCreate(_emp);
@@ -98,8 +98,8 @@ namespace Machete.Test
         public void SeEmployer_Create_workorder_copyinfo()
         {
             //Arrange
-            Employer _emp = _frb.ToEmployer();
-            WorkOrder _wo = _frb.ToWorkOrder(); //Made this a clone so fields like workorder status and tranportation method would be filled in properly for validation.
+            Employer _emp = frb.ToEmployer();
+            WorkOrder _wo = frb.ToWorkOrder(); //Made this a clone so fields like workorder status and tranportation method would be filled in properly for validation.
 
             //Act
             ui.employerCreate(_emp);
@@ -124,9 +124,9 @@ namespace Machete.Test
         public void SeEmployer_Create_and_Activate_WorkAssignment()
         {
             //Arrange
-            Employer _employer1 = CloneEmployer();
-            WorkOrder _wo = CloneWorkOrder();
-            WorkAssignment _wa1 = CloneWorkAssignment();
+            Employer _employer1 = frb.CloneEmployer();
+            WorkOrder _wo = frb.CloneWorkOrder();
+            WorkAssignment _wa1 = frb.CloneWorkAssignment();
             _wo.contactName = ui.RandomString(10);
             _wo.status = 43; // status = pending
             //
@@ -152,9 +152,9 @@ namespace Machete.Test
         [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Employers)]
         public void SeEmployer_Create_and_move_Workorder()
         {
-            Employer _emp1 = CloneEmployer();
-            Employer _emp2 = CloneEmployer();
-            WorkOrder _wo = CloneWorkOrder();
+            Employer _emp1 = frb.CloneEmployer();
+            Employer _emp2 = frb.CloneEmployer();
+            WorkOrder _wo = frb.CloneWorkOrder();
             _wo.contactName = ui.RandomString(10);
             // create first worker
             ui.employerCreate(_emp1);

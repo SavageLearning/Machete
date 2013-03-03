@@ -92,10 +92,17 @@ namespace Machete.Test
             DB = new MacheteContext(connection);
             WorkerCache.Initialize(DB);
             LookupCache.Initialize(DB);
-            Lookups.Initialize();
+            //Lookups.Initialize();
             _dbFactory = new DatabaseFactory();
             _dbFactory.Set(DB);
             return this;
+        }
+
+        public void Dispose()
+        {
+            WorkerCache.Dispose();
+            LookupCache.Dispose();
+            DB.Dispose();
         }
 
         public FluentRecordBase AddDBFactory()
@@ -207,7 +214,8 @@ namespace Machete.Test
 
         public FluentRecordBase AddWorkOrder(
             DateTime? datecreated = null,
-            DateTime? dateupdated = null
+            DateTime? dateupdated = null,
+            int? paperordernum = null
         )
         {
             //
@@ -219,6 +227,7 @@ namespace Machete.Test
             _wo.Employer = _emp;
             if (datecreated != null) _wo.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _wo.dateupdated = (DateTime)dateupdated;
+            if (paperordernum != null) _wo.paperOrderNum = paperordernum;
             //
             // ACT
             _servWO.Create(_wo, _user);
@@ -285,7 +294,8 @@ namespace Machete.Test
             string desc = null,
             int? skill = null,
             DateTime? datecreated = null,
-            DateTime? dateupdated = null
+            DateTime? dateupdated = null,
+            string updatedby = null
         )
         {
             //
@@ -298,6 +308,7 @@ namespace Machete.Test
             if (datecreated != null) _wa.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _wa.dateupdated = (DateTime)dateupdated;
             if (desc != null) _wa.description = desc;
+            if (updatedby != null) _user = updatedby;
             if (skill != null) _wa.skillID = (int)skill;
             //
             // ACT
@@ -372,7 +383,7 @@ namespace Machete.Test
             _wsi.dwccardnum = _w.dwccardnum;
             //
             // ACT
-            _servWSI.Create(_wsi, _user);
+            _servWSI.CreateSignin(_wsi, _user);
             return this;
         }
 
@@ -439,6 +450,14 @@ namespace Machete.Test
         {
             if (_p == null) AddPerson();
             return _p;
+        }
+
+        public Person ClonePerson()
+        {
+            var p = (Person)Records.person.Clone();
+            p.firstname1 = RandomString(5);
+            p.lastname1 = RandomString(8);
+            return p;
         }
 
         #endregion 
@@ -802,23 +821,27 @@ namespace Machete.Test
 
         public FluentRecordBase AddActivitySignin(
             DateTime? datecreated = null,
-            DateTime? dateupdated = null
+            DateTime? dateupdated = null,
+            Worker worker = null
         )
         {
             //
             // DEPENDENCIES
             if (_a == null) AddActivity();
+            if (worker != null) _w = worker;
             if (_w == null) AddWorker();
             //
             // ARRANGE
             _as = (ActivitySignin)Records.activitysignin.Clone();
             _as.Activity = _a;
+            _as.activityID = _a.ID;
             if (datecreated != null) _as.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _as.dateupdated = (DateTime)dateupdated;
             _as.dwccardnum = _w.dwccardnum;
+            _as.dateforsignin = DateTime.Now;
             //
             // ACT
-            _servAS.Create(_as, _user);
+            _servAS.CreateSignin(_as, _user);
             return this;
         }
 
@@ -829,7 +852,6 @@ namespace Machete.Test
         }
 
         #endregion 
-
 
         public FluentRecordBase AddUOW()
         {
