@@ -16,17 +16,12 @@ using Machete.Test.IntegrationTests.Services;
 namespace Machete.Test
 {
     [TestClass]
-    public class UnauthActivityTests
+    public class UnauthActivityTests : FluentRecordBase
     {
         private IWebDriver driver;
         private StringBuilder verificationErrors;
         private string baseURL;
         private sharedUI ui;
-        private DatabaseFactory _dbfactory;
-        private WorkerService _wserv;
-        private WorkerRepository _wRepo;
-        private IUnitOfWork _unitofwork;
-        private MacheteContext DB;
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext) { }
@@ -34,14 +29,7 @@ namespace Machete.Test
         [TestInitialize]
         public void SetupTest()
         {
-            Database.SetInitializer<MacheteContext>(new MacheteInitializer());
-            DB = new MacheteContext();
-            WorkerCache.Initialize(DB);
-            LookupCache.Initialize(DB);
-            _dbfactory = new DatabaseFactory();
-            _wRepo = new WorkerRepository(_dbfactory);
-            _unitofwork = new UnitOfWork(_dbfactory);
-            _wserv = new WorkerService(_wRepo, _unitofwork);
+            base.Initialize(new MacheteInitializer(), "macheteWeb");
             driver = new FirefoxDriver();
             baseURL = "http://localhost:4213/";
             ui = new sharedUI(driver, baseURL);
@@ -134,9 +122,10 @@ namespace Machete.Test
             //Arrange
 
             // creates an activity within the hour
-            ActivityServiceTests test = new ActivityServiceTests();
-            test.TestInitialize();
-            test.Integration_Activity_service_CreateClass_within_hour();
+            AddActivity(startTime: DateTime.Now, endTime: DateTime.Now.AddHours(1));
+            Thread.Sleep(1000); //prevent race condition
+            AddActivity(startTime: DateTime.Now, endTime: DateTime.Now.AddHours(1));
+
 
             //Act
             ui.activityMenuLink(); //Find Activity menu link and click
@@ -153,7 +142,7 @@ namespace Machete.Test
             ui.WaitThenClickElement(By.Id("activityListTab"));
 
             // open a different record
-            Thread.Sleep(5000); //prevent race condition
+            Thread.Sleep(1000); //prevent race condition
             var activityNewRecord = ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr[2]"));
             int activityNewID = Convert.ToInt32(activityNewRecord.GetAttribute("recordid"));
             var activityNewIDString = "activity" + activityNewID +"-EditTab";
@@ -183,13 +172,10 @@ namespace Machete.Test
             // Arrange
 
             // creates one activity within the hour
-            ActivityServiceTests test = new ActivityServiceTests();
-            test.TestInitialize();
-            test.Integration_Activity_service_CreateClass_within_hour();
+            AddActivity(startTime: DateTime.Now, endTime: DateTime.Now.AddHours(1));
 
             Random rand = new Random();
             int rowcount = 1;
-            MacheteContext DB = new MacheteContext();
             var workers = DB.Workers;
             Activity _act = (Activity)Records.activity.Clone();
             ActivitySignin _asi = (ActivitySignin)Records.activitysignin.Clone();
@@ -220,9 +206,7 @@ namespace Machete.Test
             ui.activityMenuLink(); //Find Activity menu link and click
             
             // creates one activity within the hour
-            ActivityServiceTests test = new ActivityServiceTests();
-            test.TestInitialize();
-            test.Integration_Activity_service_CreateClass_within_hour();
+            AddActivity(startTime: DateTime.Now, endTime: DateTime.Now.AddHours(1));
 
             //selects top activity on the list
             var activityRecord = ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr[1]"));

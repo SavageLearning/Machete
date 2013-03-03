@@ -330,10 +330,10 @@ namespace Machete.Test
 
             // Act
             ui.WaitThenClickElement(By.Id("menulinkactivity"));
-
+            Thread.Sleep(1000);
             // Test default - End Time column should be sort ascending
-            IWebElement defaultSortCol = ui.WaitForElement(By.XPath("//th[@class='sorting_asc']"));
-            Assert.AreEqual("End time", defaultSortCol.Text, "Activity End time isn't the default sort column");
+            IWebElement defaultSortCol = ui.WaitForElement(By.XPath("//th[contains(@class, 'sorting_desc')]"));
+            Assert.AreEqual("Start time", defaultSortCol.Text, "Activity Start time isn't the default sort column");
 
             //Test Attendance Ascending
             ui.WaitThenClickElement(By.XPath("//th[contains(.,'Attendance')]"));
