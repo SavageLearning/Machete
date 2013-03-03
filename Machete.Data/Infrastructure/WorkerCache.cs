@@ -32,7 +32,7 @@ using System.Runtime.Caching;
 
 namespace Machete.Data
 {
-    public class WorkerCache
+    public static class WorkerCache
     {
         private static MacheteContext DB { get; set; }
         private static CacheItem DbCache { get; set; }        
@@ -44,6 +44,13 @@ namespace Machete.Data
             cache = MemoryCache.Default;
             DB = db;
             FillCache();            
+        }
+
+        public static void Dispose()
+        {
+            DB = null;
+            DbCache = null;
+            cache = null;
         }
         //
         //
