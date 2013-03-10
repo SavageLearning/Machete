@@ -335,6 +335,8 @@
     <Content Include="Content\images\lightbox-btn-prev.gif" />
     <Content Include="Content\images\lightbox-ico-loading.gif" />
     <Content Include="Content\images\NO-IMAGE-AVAILABLE.jpg" />
+    <Content Include="Content\images\pdf.png" />
+    <Content Include="Content\images\zip.png" />
     <Content Include="Content\jquery.lightbox-0.5.css" />
     <Content Include="Content\ui\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\ui\images\ui-bg_flat_75_ffffff_40x100.png" />
