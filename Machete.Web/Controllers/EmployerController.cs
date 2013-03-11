@@ -170,16 +170,16 @@ namespace Machete.Web.Controllers
             //update domain
             Employer newEmployer = serv.Create(mappedEmployer, userName);
             mappedWO.EmployerID = newEmployer.ID;
-            mappedWO.status = LookupCache.getCache().Where(a => a.category == "orderstatus" && a.text_EN == "Pending").Single().ID;
+            mappedWO.status = LookupCache.getCache()
+                                         .Where(a => a.category == "orderstatus" && 
+                                                     a.text_EN  == "Pending")
+                                         .Single().ID;
             WorkOrder newWO = woServ.Create(mappedWO, userName);
-            //re-combine for display
-            //EmployerWoCombined result = Mapper.Map<Employer, EmployerWoCombined>(newEmployer);
-            //result = Mapper.Map<WorkOrder, EmployerWoCombined>(newWO, result);
+            // return 
             return Json(new
             {
                 iEmployerID = newEmployer.ID,
                 iWorkOrderID = newWO.ID,
-                //EmployerWoConbined = result,
                 jobSuccess = true
             },
             JsonRequestBehavior.AllowGet);
