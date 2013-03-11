@@ -170,5 +170,9 @@ namespace Machete.Web.ViewModel
         //
         [LocalizedDisplayName("timeFlexible", NameResourceType = typeof(Domain.Resources.WorkOrder))]
         public bool timeFlexible { get; set; }
+
+        [LocalizedDisplayName("transportMethodID", NameResourceType = typeof(Domain.Resources.WorkOrder))]
+        [Required(ErrorMessageResourceName = "transportMethodIDrequired", ErrorMessageResourceType = typeof(Domain.Resources.WorkOrder))]
+        public int transportMethodID { get; set; }
     }
 }
