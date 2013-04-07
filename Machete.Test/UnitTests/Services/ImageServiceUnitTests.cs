@@ -88,7 +88,7 @@ namespace Machete.Test.UnitTests.Services
         //
         #endregion
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Images)]
         public void ImageService_GetImages_returns_Enumerable()
         {
             //
@@ -102,7 +102,7 @@ namespace Machete.Test.UnitTests.Services
             Assert.IsInstanceOfType(result, typeof(IEnumerable<Image>));
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Images)]
         public void ImageService_GetImage_returns_image()
         {
             //
@@ -121,7 +121,7 @@ namespace Machete.Test.UnitTests.Services
             Assert.IsTrue(result.ID == id);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Images)]
         public void ImageService_CreateImage_returns_person()
         {
             //
@@ -146,7 +146,7 @@ namespace Machete.Test.UnitTests.Services
             Assert.IsTrue(result.dateupdated > DateTime.MinValue);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Images)]
         public void ImageService_DeleteImage()
         {
             //
@@ -168,7 +168,7 @@ namespace Machete.Test.UnitTests.Services
             Assert.AreEqual(di, _rtrn_img);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Images)]
         public void ImageService_SaveImage_updates_timestamp()
         {
             //

@@ -71,7 +71,7 @@ namespace Machete.Test
         private WorkerSignin  _wsi;
         private Activity  _a;
         private ActivitySignin _as;
-        private Event _e;
+        //private Event _e;
         private Lookup _l;
         private Image _i;
         private string _user = "FluentRecordBase";
@@ -107,7 +107,7 @@ namespace Machete.Test
 
         public FluentRecordBase AddDBFactory()
         {
-            Initialize(new TestInitializer(), "macheteConnection");
+            Initialize(new MacheteInitializer(), "macheteConnection");
             _uow = new UnitOfWork(_dbFactory);
             return this;
         }
@@ -215,7 +215,9 @@ namespace Machete.Test
         public FluentRecordBase AddWorkOrder(
             DateTime? datecreated = null,
             DateTime? dateupdated = null,
-            int? paperordernum = null
+            DateTime? dateTimeOfWork = null, 
+            int? paperordernum = null,
+            int? status = null
         )
         {
             //
@@ -228,6 +230,8 @@ namespace Machete.Test
             if (datecreated != null) _wo.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _wo.dateupdated = (DateTime)dateupdated;
             if (paperordernum != null) _wo.paperOrderNum = paperordernum;
+            if (dateTimeOfWork != null) _wo.dateTimeofWork = (DateTime)dateTimeOfWork;
+            if (status != null) _wo.status = (int)status;
             //
             // ACT
             _servWO.Create(_wo, _user);
@@ -295,16 +299,19 @@ namespace Machete.Test
             int? skill = null,
             DateTime? datecreated = null,
             DateTime? dateupdated = null,
-            string updatedby = null
+            string updatedby = null,
+            bool assignWorker = false
         )
         {
             //
             // DEPENDENCIES
             if (_wo == null) AddWorkOrder();
+            if (assignWorker == true && _w == null) AddWorker();
             //
             // ARRANGE
             _wa = (WorkAssignment)Records.assignment.Clone();
             _wa.workOrder = _wo;
+            if (assignWorker) _wa.workerAssigned = _w;
             if (datecreated != null) _wa.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _wa.dateupdated = (DateTime)dateupdated;
             if (desc != null) _wa.description = desc;
@@ -585,7 +592,7 @@ namespace Machete.Test
             // ARRANGE
             _wr = (WorkerRequest)Records.request.Clone();
             _wr.workOrder = _wo;
-            _wr.WorkerID = _w.ID;
+            _wr.workerRequested = _w;
             if (datecreated != null) _wr.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _wr.dateupdated = (DateTime)dateupdated;
             //

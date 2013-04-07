@@ -44,7 +44,7 @@ namespace Machete.Test
         public void TestInitialize()
         {
             frb = new FluentRecordBase();
-            frb.Initialize(new TestInitializer(), "macheteConnection");
+            frb.Initialize(new MacheteInitializer(), "macheteConnection");
         }
 
         [TestCleanup]
@@ -75,7 +75,7 @@ namespace Machete.Test
         //    Assert.AreEqual(10, result.totalCount);
         //}
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.Fluent)]
         public void Integration_IVB_activity_getUnassociated()
         {
             //Arrange

@@ -40,7 +40,7 @@ namespace Machete.Test.Controllers
         Mock<IWorkerService> _wserv;
         Mock<IPersonService> _pserv;
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
         public void WorkerSignin_getView_finds_joined_records()
         {
             //arrange

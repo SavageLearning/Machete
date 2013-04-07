@@ -104,8 +104,8 @@ namespace Machete.Test.UnitTests.Services
             waServ = new WorkAssignmentService(waRepo.Object, wRepo.Object, lRepo.Object, wsiRepo.Object, uow.Object);
             
         }
-        [TestMethod]
-        public void WorkAssignmentService_GetWorkAssignments_returns_Enumerable()
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WAs)]
+        public void Unit_WA_Service_GetWorkAssignments_returns_Enumerable()
         {
             //
             //Arrange
@@ -115,8 +115,8 @@ namespace Machete.Test.UnitTests.Services
             //Assert
             Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
         }
-        [TestMethod]
-        public void WorkAssignmentService_GetWorkAssignment_returns_workAssignment()
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WAs)]
+        public void Unit_WA_Service_GetWorkAssignment_returns_workAssignment()
         {
             //
             //Arrange
@@ -130,8 +130,8 @@ namespace Machete.Test.UnitTests.Services
             Assert.IsTrue(result.ID == 1);
         }
 
-        [TestMethod]
-        public void WorkAssignmentService_CreateWorkAssignment_returns_workAssignment()
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WAs)]
+        public void Unit_WA_Service_CreateWorkAssignment_returns_workAssignment()
         {
             //
             //Arrange
@@ -151,8 +151,8 @@ namespace Machete.Test.UnitTests.Services
             Assert.IsTrue(result.datecreated > DateTime.MinValue);
             Assert.IsTrue(result.dateupdated > DateTime.MinValue);
         }
-        [TestMethod]
-        public void WorkAssignmentService_DeleteWorkAssignment()
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WAs)]
+        public void Unit_WA_Service_DeleteWorkAssignment()
         {
             //
             //Arrange
@@ -170,8 +170,8 @@ namespace Machete.Test.UnitTests.Services
             //Assert
             Assert.AreEqual(dp, _wa);
         }
-        [TestMethod]
-        public void WorkAssignmentService_SaveWorkAssignment_updates_timestamp()
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WAs)]
+        public void Unit_WA_Service_SaveWorkAssignment_updates_timestamp()
         {
             //
             //Arrange

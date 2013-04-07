@@ -52,7 +52,7 @@ namespace Machete.Test.IntegrationTests.System
             recInitialize(DB);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Workers)]
         public void Integration_WorkerCache_ExpireMembers_expires_1_active()
         {
 
@@ -65,7 +65,7 @@ namespace Machete.Test.IntegrationTests.System
             Assert.AreEqual(1, result.Count(), "Failed to expire members");
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Workers)]
         public void Integration_WorkerCache_ExpireMembers_doesnt_expire_1_inactive()
         {
 
@@ -81,7 +81,7 @@ namespace Machete.Test.IntegrationTests.System
             Assert.AreEqual(0, result.Count(), "Failed to expire members");
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Workers)]
         public void Integration_WorkerCache_ReactivateMembers_activates_1_sanctioned()
         {
 
@@ -94,7 +94,7 @@ namespace Machete.Test.IntegrationTests.System
             Assert.AreEqual(3, result.Count(), "Failed to reactivate members");
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Workers)]
         public void Integration_WorkerCache_ExpireMembers_doesnt_activate_1_current_sanction()
         {
 
@@ -109,6 +109,8 @@ namespace Machete.Test.IntegrationTests.System
             //Assert
             Assert.AreEqual(1, result.Count(), "Failed to reactivate members");
         }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Workers)]
         public void Integration_WorkerCache_ExpireMembers_doesnt_activate_1_null_reactivation_date()
         {
 

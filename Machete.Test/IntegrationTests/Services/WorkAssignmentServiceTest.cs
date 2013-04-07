@@ -48,7 +48,7 @@ namespace Machete.Test
         public void TestInitialize()
         {
             frb = new FluentRecordBase();
-            frb.Initialize(new TestInitializer(), "macheteConnection");
+            frb.Initialize(new MacheteInitializer(), "macheteConnection");
             dOptions = new viewOptions
             {
                 CI = new CultureInfo("en-US", false),
@@ -72,7 +72,7 @@ namespace Machete.Test
         }
 
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
         public void Integration_WA_Service_GetIndexView_basic()
         {   
             //
@@ -93,21 +93,29 @@ namespace Machete.Test
             Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
             Assert.AreEqual(8, result.query.Count()); //pending excluded
         }
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
         public void Integration_WA_Service_GetIndexView_check_workerjoin_blank_worker_ok()
         {
+            frb.AddWorkAssignment(assignWorker: true);
             dOptions.sortColName = "assignedWorker";
+            dOptions.woid = frb.ToWorkOrder().ID;
+            dOptions.wa_grouping = "assigned";
             var result = frb.ToServWorkAssignment().GetIndexView(dOptions);
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
             Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
-            Assert.AreEqual(8, result.query.Count()); //pending excluded
+            Assert.AreEqual(1, result.query.Count()); //pending excluded
         }
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
         public void Integration_WA_Service_GetIndexView_checkwoidfilter()
         {
+            //Arrange
+            frb.AddWorkOrder()
+               .AddWorkAssignment()
+               .AddWorkAssignment()
+               .AddWorkAssignment();
             //Act
-            dOptions.woid = 1;
+            dOptions.woid = frb.ToWorkOrder().ID;
             dOptions.orderDescending = true;
             var result = frb.ToServWorkAssignment().GetIndexView(dOptions);
             //
@@ -116,18 +124,17 @@ namespace Machete.Test
             Assert.IsNotNull(tolist, "return value is null");
             Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
             Assert.AreEqual(3, result.query.Count());
-            Assert.AreEqual(10, frb.ToServWorkAssignment().TotalCount());
         }
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
         public void Integration_WA_Service_GetIndexView_check_search_paperordernum()
         { 
             //
             // arrange
-            frb.AddWorkOrder().AddWorkAssignment().AddWorkAssignment().AddWorkAssignment();
-            frb.AddWorkOrder(paperordernum: 12420).AddWorkAssignment().AddWorkAssignment();
+            frb.AddWorkOrder().AddWorkAssignment().AddWorkAssignment();
+            var ordernum = frb.ToWorkOrder().ID;
             //
             //Act
-            dOptions.sSearch = "12420";
+            dOptions.sSearch = ordernum.ToString();
             dOptions.orderDescending = true;
             var result = frb.ToServWorkAssignment().GetIndexView(dOptions);
             //
@@ -135,11 +142,10 @@ namespace Machete.Test
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
             Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
-            Assert.AreEqual(12420, tolist[0].workOrder.paperOrderNum);
+            Assert.AreEqual(ordernum, tolist[0].workOrder.paperOrderNum);
             Assert.AreEqual(2, result.query.Count());
-            Assert.AreEqual(5, frb.ToServWorkAssignment().TotalCount());
         }
-        [TestMethod]
+        [TestMethod, TestCategory(TC.Fluent)]
         public void Integration_WA_Service_GetIndexView_check_search_description()
         {
             //
@@ -157,14 +163,15 @@ namespace Machete.Test
             Assert.AreEqual("foostring1", tolist[0].description);
             Assert.AreEqual(1, result.query.Count());
         }
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
         public void Integration_WA_Service_GetIndexView_check_search_Updatedby()
         {
-            var updatedby = "foostring1";
+            var updatedby = frb.RandomString(10);
             frb.AddWorkAssignment();
             frb.AddWorkAssignment(updatedby: updatedby);
             dOptions.sSearch = updatedby;
             dOptions.orderDescending = true;
+            dOptions.woid = frb.ToWorkOrder().ID;
             var result = frb.ToServWorkAssignment().GetIndexView(dOptions);
             //
             //Assert
@@ -173,13 +180,16 @@ namespace Machete.Test
             Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
             Assert.AreEqual(updatedby, tolist[0].Updatedby);
             Assert.AreEqual(1, result.query.Count());
-            Assert.AreEqual(2, frb.ToServWorkAssignment().TotalCount());
         }
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
         public void Integration_WA_Service_GetIndexView_check_search_skill()
         {
+            // arrange
+            frb.AddWorkAssignment(skill: 70);
             dOptions.sSearch = "Digging";
             dOptions.orderDescending = true;
+            dOptions.woid = frb.ToWorkOrder().ID;
+            // Act
             var result = frb.ToServWorkAssignment().GetIndexView(dOptions);
             //
             //Assert
@@ -188,29 +198,30 @@ namespace Machete.Test
             Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
             Assert.AreEqual(70, tolist[0].skillID); //ID=70 is Digging
             Assert.AreEqual(1, result.query.Count());
-            Assert.AreEqual(10, frb.ToServWorkAssignment().TotalCount());
         }
-        [TestMethod]
-        public void Integration_WA_Service_GetIndexView_check_searchdateTimeofWork()
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
+        public void Integration_WA_Service_GetIndexView_check_searchWODateTimeofWork()
         {
-            //
-            //Act
-            dOptions.sSearch = DateTime.Today.AddHours(9).ToString();
+            //Arrange
+            var time = DateTime.Today.AddHours(9);
+            frb.AddWorkOrder(dateTimeOfWork: time)
+                .AddWorkAssignment( );
+            dOptions.sSearch = time.ToString();
             dOptions.orderDescending = true;
+            dOptions.woid = frb.ToWorkOrder().ID;
+            //Act
             var result = frb.ToServWorkAssignment().GetIndexView(dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
             Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
-            Assert.AreEqual(70, tolist[0].skillID);
-            Assert.AreEqual(3, result.query.Count());
-            Assert.AreEqual(10, frb.ToServWorkAssignment().TotalCount());
+            Assert.AreEqual(1, result.query.Count());
         }
         //
         // Simulates doubleclicking on a worker in the workerSignin list
         // 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
         public void Integration_WA_Service_GetIndexView_check_searchdwccardnum()
         {
             //arrange
@@ -219,6 +230,7 @@ namespace Machete.Test
             var w = frb.AddWorker(skill1: skill).ToWorker();
             dOptions.dwccardnum = w.dwccardnum;
             dOptions.orderDescending = true;
+            dOptions.woid = frb.ToWorkOrder().ID;
             frb.AddWorkAssignment(skill: skill);
             //Act
             var result = frb.ToServWorkAssignment().GetIndexView(dOptions);
@@ -229,7 +241,7 @@ namespace Machete.Test
             Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
             Assert.AreEqual(1, result.query.Count());
         }
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
         public void Integration_WA_Service_GetIndexView_check_requested_filter()
         {
             //Arrange
@@ -237,6 +249,7 @@ namespace Machete.Test
             //Act
             dOptions.orderDescending = true;
             dOptions.wa_grouping = "requested";
+            dOptions.woid = frb.ToWorkOrder().ID;
             var result = frb.ToServWorkAssignment().GetIndexView(dOptions);
             //
             //Assert
@@ -246,7 +259,7 @@ namespace Machete.Test
             //Assert.AreEqual(61, tolist[0].skillID);
             Assert.AreEqual(1, result.query.Count());
         }
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
         public void Integration_WA_Service_Assign_updates_WSI_and_WA()
         {
             var wsi1 = frb.ToWorkerSignin();
@@ -260,26 +273,26 @@ namespace Machete.Test
             Assert.IsNotNull(wsi2.WorkAssignmentID);
             Assert.IsNotNull(wsi2.WorkerID);
         }
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
         public void Integration_WA_Service_GetSummary()
         {
             var result = frb.ToServWorkAssignment().GetSummary("");
             Assert.IsNotNull(result, "Person.ID is Null");
         }
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
         public void Integration_WA_Service_Delete_removes_record()
 
         {
-            Assert.AreEqual(0, frb.ToServWorkAssignment().GetAll().Count());
             frb.AddWorkAssignment().AddWorkAssignment().AddWorkAssignment().AddWorkAssignment().AddWorkAssignment();
             frb.AddWorkAssignment().AddWorkAssignment().AddWorkAssignment().AddWorkAssignment().AddWorkAssignment();
+            dOptions.woid = frb.ToWorkOrder().ID;
+            var before = frb.ToServWorkAssignment().GetIndexView(dOptions);
+            Assert.AreEqual(10, before.query.Count());
 
-            var before = frb.ToServWorkAssignment().GetAll();
-            Assert.AreEqual(10, before.Count());
             frb.ToServWorkAssignment().Delete(frb.ToWorkAssignment().ID, "Intg Test");
-            var after = frb.ToServWorkAssignment().GetAll();
-            Assert.AreEqual(9, after.Count());
-            Assert.AreNotSame(before.Count(), after.Count());
+            var after = frb.ToServWorkAssignment().GetIndexView(dOptions);
+            Assert.AreEqual(9, after.query.Count());
+            Assert.AreNotSame(before.query.Count(), after.query.Count());
         }
     }
 }

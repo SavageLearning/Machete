@@ -85,8 +85,6 @@ namespace Machete.Service
         /// <returns></returns>
         public IEnumerable<WorkOrder> GetActiveOrders(DateTime date, bool assignedOnly)
         {
-            // I will rot in hell for hardcoding this value -- matches the Lookups table 
-            // for active orderstatus
             IQueryable<WorkOrder> query = repo.GetAllQ();
                             query = query.Where(wo => wo.status == WorkOrder.iActive && 
                                            EntityFunctions.DiffDays(wo.dateTimeofWork, date) == 0 ? true : false)

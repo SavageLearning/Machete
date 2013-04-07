@@ -57,7 +57,7 @@ namespace Machete.Test
         /// <summary>
         /// 
         /// </summary>
-        [TestMethod]
+        [TestMethod, TestCategory(TC.Fluent)]
         public void Integration_Person_Service_CreatePerson()
         {
             //Arrange
@@ -69,7 +69,7 @@ namespace Machete.Test
         /// <summary>
         /// CreatePerson calls DbSet.Add() and  Context.SaveChanges() This leads to duplication
         /// </summary>
-        [TestMethod]
+        [TestMethod, TestCategory(TC.Fluent)]
         public void Integration_Person_Service_CreatePersons_TestDuplicateBehavior()
         {
             int reccount = 0;
@@ -80,6 +80,8 @@ namespace Machete.Test
             //Act
             try
             {
+                // Using Service Create to test behavior when same object is created
+                // 3 times. Expecting 3 different records. 
                 frb.ToServPerson().Create(_p, "UnitTest");
                 frb.ToServPerson().Create(_p, "UnitTest");
                 frb.ToServPerson().Create(_p, "UnitTest");

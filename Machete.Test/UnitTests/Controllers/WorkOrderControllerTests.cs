@@ -89,7 +89,7 @@ namespace Machete.Test.Controllers
         //
         //   Testing /Index functionality
         //
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WorkOrders)]
         public void WorkOrderController_index_get_returns_enumerable_list()
         {
             var result = (ViewResult)_ctrlr.Index();
@@ -99,14 +99,14 @@ namespace Machete.Test.Controllers
         //   Testing /Create functionality
         //
         #region createtests
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WorkOrders)]
         public void WorkOrderController_create_get_returns_workOrder()
         {
             var result = (PartialViewResult)_ctrlr.Create(0);
             Assert.IsInstanceOfType(result.ViewData.Model, typeof(WorkOrder));
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WorkOrders)]
         public void WorkOrderController_create_valid_post_returns_JSON()
         {
             //Arrange
@@ -121,7 +121,7 @@ namespace Machete.Test.Controllers
             Assert.AreEqual(result.Data.ToString(), "{ sNewRef = /WorkOrder/Edit/4242, sNewLabel = Order #: 04242 @ blah, iNewID = 4242 }");
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WorkOrders)]
         [ExpectedException(typeof(InvalidOperationException),
             "An invalid UpdateModel was inappropriately allowed.")]
         public void WorkOrderController_create_post_invalid_throws_exception()
@@ -140,7 +140,7 @@ namespace Machete.Test.Controllers
         //   Testing /Edit functionality
         //
         #region edittests
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WorkOrders)]
         public void WorkOrderController_edit_get_returns_workOrder()
         {
             //Arrange
@@ -154,7 +154,7 @@ namespace Machete.Test.Controllers
             Assert.IsInstanceOfType(result.ViewData.Model, typeof(WorkOrder));
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WorkOrders)]
         public void WorkOrderController_edit_post_valid_updates_model_redirects_to_index()
         {
             //Arrange
@@ -196,7 +196,7 @@ namespace Machete.Test.Controllers
             //Assert.AreEqual(savedworkOrder.workerRequests.Count(), 5);
 
         }
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WorkOrders)]
         public void WorkOrderController_edit_post_workerRequests_finds_duplicates()
         {
             //Arrange
@@ -260,7 +260,7 @@ namespace Machete.Test.Controllers
         /// <summary>
         /// 
         /// </summary>
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WorkOrders)]
         [ExpectedException(typeof(InvalidOperationException),
             "An invalid UpdateModel was inappropriately allowed.")]
         public void WorkOrderController_edit_post_invalid_throws_exception()
@@ -288,7 +288,7 @@ namespace Machete.Test.Controllers
         /// <summary>
         /// delete GET returns workOrder
         /// </summary>
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WorkOrders)]
         public void WorkOrderController_delete_get_returns_JSON()
         {
             //Arrange
@@ -306,7 +306,7 @@ namespace Machete.Test.Controllers
         /// <summary>
         /// delete POST redirects to index
         /// </summary>
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WorkOrders)]
         public void WorkOrderController_delete_post_returns_json()
         {
             //Arrange

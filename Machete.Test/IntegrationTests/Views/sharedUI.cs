@@ -956,7 +956,7 @@ namespace Machete.Test
             string solutionDirectory = ((EnvDTE.DTE)System.Runtime
                               .InteropServices
                               .Marshal
-                              .GetActiveObject("VisualStudio.DTE.10.0"))
+                              .GetActiveObject("VisualStudio.DTE.11.0"))
                    .Solution
                    .FullName;
             return System.IO.Path.GetDirectoryName(solutionDirectory);

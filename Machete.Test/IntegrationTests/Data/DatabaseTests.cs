@@ -36,12 +36,14 @@ namespace Machete.Test.Data
     [TestClass]
     public class DatabaseTests
     {
-        MacheteContext MacheteDB;
+        FluentRecordBase frb;
+
+
         [TestInitialize]
         public void Initialize()
         {
-            Database.SetInitializer<MacheteContext>(new TestInitializer());
-            MacheteDB = new MacheteContext();
+            frb = new FluentRecordBase();
+            frb.Initialize(new TestInitializer(), "macheteConnection");
         }
         /// <summary>
         /// Tests permissions to drop and re-create database
@@ -49,7 +51,8 @@ namespace Machete.Test.Data
         [TestMethod]
         public void Integration_Initializer_create_machete()
         {
-            
+            Database.SetInitializer<MacheteContext>(new TestInitializer());
+            var MacheteDB = new MacheteContext();
             //Arrange
             MacheteDB.Database.Delete();
             //Act
@@ -66,35 +69,21 @@ namespace Machete.Test.Data
         /// <summary>
         /// Used with SQL Profiler to see what SQL is produced
         /// </summary>
-        [TestMethod]
+        [TestMethod, TestCategory(TC.Fluent)]
         public void Integration_Queryable_test()
         {
             // Arrange - load test records
-            Records.Initialize(MacheteDB);
-            DbSet<WorkerSignin> dbset = MacheteDB.Set<WorkerSignin>();
-            IQueryable<WorkerSignin> queryable = dbset.AsQueryable();     
-            DateTime datestr = DateTime.Today;
+            var worker = frb.AddWorkerSignin().ToWorker();
+            var signin = frb.ToWorkerSignin();
             // Act
-            queryable = queryable.Where(r => r.dwccardnum == 30040 && EntityFunctions.DiffDays(r.dateforsignin, datestr) == 0 ? true : false);           
-            WorkerSignin result = queryable.FirstOrDefault();
+            var q = frb.ToRepoWorkerSignin().GetAllQ();
+            q = q.Where(r => r.dwccardnum == signin.dwccardnum
+                          && EntityFunctions.DiffDays(r.dateforsignin, signin.dateforsignin) == 0 ? true : false);           
+            WorkerSignin result = q.FirstOrDefault();
             // Assert
             Assert.IsNotNull(result.ID);
-            Assert.AreEqual(result.WorkerID, 1);
-            Assert.AreEqual(result.dwccardnum, 30040);
-            //exec sp_executesql N'SELECT TOP (1) 
-            //[Extent1].[ID] AS [ID], 
-            //[Extent1].[dwccardnum] AS [dwccardnum], 
-            //[Extent1].[WorkerID] AS [WorkerID], 
-            //[Extent1].[WorkAssignmentID] AS [WorkAssignmentID], 
-            //[Extent1].[dateforsignin] AS [dateforsignin], 
-            //[Extent1].[lottery_timestamp] AS [lottery_timestamp], 
-            //[Extent1].[datecreated] AS [datecreated], 
-            //[Extent1].[dateupdated] AS [dateupdated], 
-            //[Extent1].[Createdby] AS [Createdby], 
-            //[Extent1].[Updatedby] AS [Updatedby]
-            //FROM [dbo].[WorkerSignins] AS [Extent1]
-            //WHERE (CASE WHEN ((30040 = [Extent1].[dwccardnum]) AND (0 = (DATEDIFF (day, [Extent1].[dateforsignin], @p__linq__0)))) 
-            //THEN cast(1 as bit) ELSE cast(0 as bit) END) = 1',N'@p__linq__0 datetime2(7)',@p__linq__0='2011-10-31 00:00:00'
+            Assert.AreEqual(result.WorkerID, worker.ID);
+            Assert.AreEqual(result.dwccardnum, worker.dwccardnum);
         }
         /// <summary>
         /// Used with SQL profiler to see what SQL is produced
@@ -103,29 +92,17 @@ namespace Machete.Test.Data
         public void Integration_Enumerable_test()
         {
             // Arrange - load test records
-            Records.Initialize(MacheteDB);
-            DbSet<WorkerSignin> dbset = MacheteDB.Set<WorkerSignin>();
-            IEnumerable<WorkerSignin> enumerable = dbset.AsEnumerable();
-            DateTime datestr = DateTime.Today;
+            var worker = frb.AddWorkerSignin().ToWorker();
+            var signin = frb.ToWorkerSignin();
+            IEnumerable<WorkerSignin> e = frb.ToRepoWorkerSignin().GetAll().AsEnumerable();
             // Act
-            enumerable = enumerable.Where(r => r.dwccardnum == 30040 && DateTime.Compare(r.dateforsignin.Date, datestr) == 0 ? true : false);
-            WorkerSignin result = enumerable.FirstOrDefault();
+            e = e.Where(r => r.dwccardnum == signin.dwccardnum 
+                          && DateTime.Compare(r.dateforsignin.Date, signin.dateforsignin) == 0 ? true : false);
+            WorkerSignin result = e.FirstOrDefault();
             // Assert
             Assert.IsNotNull(result.ID);
-            Assert.AreEqual(result.WorkerID, 1);
-            Assert.AreEqual(result.dwccardnum, 30040);
-            //SELECT 
-            //[Extent1].[ID] AS [ID], 
-            //[Extent1].[dwccardnum] AS [dwccardnum], 
-            //[Extent1].[WorkerID] AS [WorkerID], 
-            //[Extent1].[WorkAssignmentID] AS [WorkAssignmentID], 
-            //[Extent1].[dateforsignin] AS [dateforsignin], 
-            //[Extent1].[lottery_timestamp] AS [lottery_timestamp], 
-            //[Extent1].[datecreated] AS [datecreated], 
-            //[Extent1].[dateupdated] AS [dateupdated], 
-            //[Extent1].[Createdby] AS [Createdby], 
-            //[Extent1].[Updatedby] AS [Updatedby]
-            //FROM [dbo].[WorkerSignins] AS [Extent1]
+            Assert.AreEqual(result.WorkerID, worker.ID);
+            Assert.AreEqual(result.dwccardnum, worker.dwccardnum);
         }
     }
 }

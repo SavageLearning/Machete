@@ -83,7 +83,7 @@ namespace Machete.Test
             emcontUSAname = "Bill Clinton", //string
             emcontUSAphone = "1234567890",  //string
             emcontUSArelation = "idol",     //string
-            dwccardnum = 12345,             //int
+            dwccardnum = 0,             //int
             neighborhoodID = MacheteLookup.cache.First(x => x.category == "neighborhood" && x.text_EN == "Seattle").ID,             //byte
             immigrantrefugee = true,        //bool
             countryoforiginID = MacheteLookup.cache.First(x => x.category == "countryoforigin" && x.text_EN == "USA").ID,        //string
@@ -103,9 +103,6 @@ namespace Machete.Test
             dateOfMembership = DateTime.Now,
             memberStatus = MacheteLookup.cache.First(x => x.category == "memberstatus" && x.text_EN == "Active").ID
         };
-        public static Worker _worker1 = (Worker)worker.Clone();
-        public static Worker _worker2 = (Worker)worker.Clone();
-        public static Worker _worker3 = (Worker)worker.Clone();
         #endregion
         #region Persons
         public static Person person = new Person

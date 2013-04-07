@@ -94,7 +94,7 @@ namespace Machete.Test.UnitTests.Services
             _uow = new Mock<IUnitOfWork>();
             _serv = new WorkerService(_repo.Object, _uow.Object);
         }
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Workers)]
         public void WorkerService_GetWorkers_returns_Enumerable()
         {
             //
@@ -104,7 +104,7 @@ namespace Machete.Test.UnitTests.Services
             //Assert
             Assert.IsInstanceOfType(result, typeof(IEnumerable<Worker>));
         }
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Workers)]
         public void WorkerService_GetWorker_returns_worker()
         {
             //
@@ -120,7 +120,7 @@ namespace Machete.Test.UnitTests.Services
             Assert.IsTrue(result.ID == id);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Workers)]
         public void WorkerService_CreateWorker_returns_worker()
         {
             //
@@ -147,7 +147,7 @@ namespace Machete.Test.UnitTests.Services
             Assert.IsTrue(result.Person.dateupdated == DateTime.MinValue);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Workers)]
         public void WorkerService_DeleteWorker()
         {
             //
@@ -158,17 +158,17 @@ namespace Machete.Test.UnitTests.Services
             int id = 1;
             Worker dp = new Worker();
             _repo.Setup(r => r.Delete(It.IsAny<Worker>())).Callback((Worker p) => { dp = p; });
-            _repo.Setup(r => r.GetById(id)).Returns(Records._worker1);
+            _repo.Setup(r => r.GetById(id)).Returns(Records.worker);
             var _serv = new WorkerService(_repo.Object, _uow.Object);
             //
             //Act
             _serv.Delete(id, user);
             //
             //Assert
-            Assert.AreEqual(dp, Records._worker1);
+            Assert.AreEqual(dp, Records.worker);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Workers)]
         public void WorkerService_SaveWorker_updates_timestamp()
         {
             //
@@ -176,16 +176,16 @@ namespace Machete.Test.UnitTests.Services
             _repo = new Mock<IWorkerRepository>();
             _uow = new Mock<IUnitOfWork>();
             string user = "UnitTest";
-            Records._worker1.datecreated = DateTime.MinValue;
-            Records._worker1.dateupdated = DateTime.MinValue;
+            Records.worker.datecreated = DateTime.MinValue;
+            Records.worker.dateupdated = DateTime.MinValue;
             var _serv = new WorkerService(_repo.Object, _uow.Object);
             //
             //Act
-            _serv.Save(Records._worker1, user);
+            _serv.Save(Records.worker, user);
             //
             //Assert
-            Assert.IsTrue(Records._worker1.Updatedby == user);
-            Assert.IsTrue(Records._worker1.dateupdated > DateTime.MinValue);
+            Assert.IsTrue(Records.worker.Updatedby == user);
+            Assert.IsTrue(Records.worker.dateupdated > DateTime.MinValue);
         }
     }
 }

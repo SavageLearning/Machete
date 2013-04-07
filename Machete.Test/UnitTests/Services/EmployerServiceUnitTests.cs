@@ -74,7 +74,7 @@ namespace Machete.Test.UnitTests.Services
         }
 
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Employers)]
         public void EmployerService_GetEmployers_returns_Enumerable()
         {
             //
@@ -84,7 +84,7 @@ namespace Machete.Test.UnitTests.Services
             //Assert
             Assert.IsInstanceOfType(result, typeof(IEnumerable<Employer>));
         }
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Employers)]
         public void EmployerService_GetEmployer_returns_employer()
         {
             //
@@ -100,7 +100,7 @@ namespace Machete.Test.UnitTests.Services
             Assert.IsTrue(result.ID == 3);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Employers)]
         public void EmployerService_CreateEmployer_returns_employer()
         {
             //
@@ -126,7 +126,7 @@ namespace Machete.Test.UnitTests.Services
             Assert.IsTrue(result.dateupdated > DateTime.MinValue);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Employers)]
         public void EmployerService_DeleteEmployer()
         {
             //
@@ -150,7 +150,7 @@ namespace Machete.Test.UnitTests.Services
             Assert.AreEqual(dp, _e);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Employers)]
         public void EmployerService_SaveEmployer_updates_timestamp()
         {
             //

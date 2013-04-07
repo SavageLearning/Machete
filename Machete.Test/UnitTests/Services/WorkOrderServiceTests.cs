@@ -97,7 +97,7 @@ namespace Machete.Test.UnitTests.Services
             _waServ = new Mock<IWorkAssignmentService>();
             _serv = new WorkOrderService(_repo.Object, _waServ.Object, _uow.Object);
         }
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
         public void WorkOrderService_GetWorkOrders_returns_Enumerable()
         {
             //
@@ -107,7 +107,7 @@ namespace Machete.Test.UnitTests.Services
             //Assert
             Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkOrder>));
         }
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
         public void WorkOrderService_GetWorkOrder_returns_workOrder()
         {
             //
@@ -122,7 +122,7 @@ namespace Machete.Test.UnitTests.Services
             Assert.IsTrue(result.ID == 3);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
         public void WorkOrderService_CreateWorkOrder_returns_workOrder()
         {
             //
@@ -148,7 +148,7 @@ namespace Machete.Test.UnitTests.Services
             Assert.IsTrue(result.dateupdated > DateTime.MinValue);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
         public void WorkOrderService_DeleteWorkOrder()
         {
             //
@@ -171,7 +171,7 @@ namespace Machete.Test.UnitTests.Services
             Assert.AreEqual(dp, _wo);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
         public void WorkOrderService_SaveWorkOrder_updates_timestamp()
         {
             //

@@ -95,7 +95,7 @@ namespace Machete.Test.UnitTests.Services
             _uow = new Mock<IUnitOfWork>();
             _serv = new PersonService(_repo.Object, _uow.Object);
         }
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Persons)]
         public void PersonService_GetPersons_returns_Enumerable()
         {
             //
@@ -105,7 +105,7 @@ namespace Machete.Test.UnitTests.Services
             //Assert
             Assert.IsInstanceOfType(result, typeof(IEnumerable<Person>));
         }
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Persons)]
         public void PersonService_GetPerson_returns_person()
         {
             //
@@ -120,7 +120,7 @@ namespace Machete.Test.UnitTests.Services
             Assert.IsTrue(result.ID == 3);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Persons)]
         public void PersonService_CreatePerson_returns_person()
         {
             //
@@ -141,7 +141,7 @@ namespace Machete.Test.UnitTests.Services
             Assert.IsTrue(result.dateupdated >  DateTime.MinValue);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Persons)]
         public void PersonService_DeletePerson()
         {
             //
@@ -163,7 +163,7 @@ namespace Machete.Test.UnitTests.Services
             Assert.AreEqual(dp, _p);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Persons)]
         public void PersonService_SavePerson_updates_timestamp()
         {
             //

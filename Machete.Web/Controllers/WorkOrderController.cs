@@ -334,8 +334,7 @@ namespace Machete.Web.Controllers
         public ActionResult GroupView(DateTime date, bool? assignedOnly)
         {
             WorkOrderGroupPrintView view = new WorkOrderGroupPrintView();
-            if (assignedOnly == true) 
-                view.orders = woServ.GetActiveOrders(date, true );
+            if (assignedOnly == true) view.orders = woServ.GetActiveOrders(date, true );
             else view.orders = woServ.GetActiveOrders(date, false);
             return View(view);
         }

@@ -93,7 +93,7 @@ namespace Machete.Test.Controllers
         //
         //   Testing /Index functionality
         //
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Workers)]
         public void WorkerController_index_get_WorkIndexViewModel()
         {
             //Arrange           
@@ -103,7 +103,7 @@ namespace Machete.Test.Controllers
             Assert.IsInstanceOfType(result, typeof(ViewResult));
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Workers)]
         public void WorkerController_create_get_returns_person()
         {
             //Arrange
@@ -113,7 +113,7 @@ namespace Machete.Test.Controllers
             Assert.IsInstanceOfType(result.ViewData.Model, typeof(Worker));
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Workers)]
         public void WorkerController_create_post_valid_returns_json()
         {
             //Arrange
@@ -130,7 +130,7 @@ namespace Machete.Test.Controllers
                             result.Data.ToString());
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Workers)]
         [ExpectedException(typeof(InvalidOperationException),
             "An invalid UpdateModel was inappropriately allowed.")]
         public void WorkerController_create_post_invalid_throws_exception()
@@ -149,7 +149,7 @@ namespace Machete.Test.Controllers
         //   Testing /Edit functionality
         //
         #region edittests
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Workers)]
         public void WorkerController_edit_get_returns_worker()
         {
             //Arrange
@@ -164,7 +164,7 @@ namespace Machete.Test.Controllers
             Assert.IsInstanceOfType(result.ViewData.Model, typeof(Worker));
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Workers)]
         public void WorkerController_edit_post_valid_updates_model_redirects_to_index()
         {
             //Arrange
