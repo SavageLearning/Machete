@@ -92,12 +92,12 @@ namespace Machete.Test.IntegrationTests.Services
             _wsiServ = new WorkerSigninService(_wsiRepo, _wRepo, _iRepo, _wrRepo, _unitofwork);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Activities)]
         public void onehundred()
         {
             //    Integration_Activity_Service_CreateRandomClass();
         }
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Activities)]
         public void Integration_Activity_Service_CreateRandomClass()
         {
             //Used once to create dummy data to support report creation
@@ -126,7 +126,7 @@ namespace Machete.Test.IntegrationTests.Services
             }
             //a.
         }
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Activities)]
         public void Integration_Activity_service_CreateClass_within_hour()
         {
             IEnumerable<int> cardlist = DB.Workers.Select(q => q.dwccardnum).Distinct();
@@ -146,7 +146,7 @@ namespace Machete.Test.IntegrationTests.Services
             Assert.IsTrue(1 == DB.Activities.Where(aa => aa.ID == a.ID).Count());
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Activities)]
         public void Integration_Activity_Service_GetIndexView_authenticated()
         {
             //

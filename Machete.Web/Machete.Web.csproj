@@ -21,6 +21,10 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>4.0</OldToolsVersion>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -81,9 +85,9 @@
     <Reference Include="AjaxMin">
       <HintPath>..\packages\AjaxMin.4.48.4489.28432\lib\net20\AjaxMin.dll</HintPath>
     </Reference>
-    <Reference Include="AutoMapper, Version=2.0.0.232, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+    <Reference Include="AutoMapper, Version=2.1.267.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\AutoMapper.2.1.267\lib\net40\AutoMapper.dll</HintPath>
+      <HintPath>..\packages\AutoMapper.2.2.0\lib\net40\AutoMapper.dll</HintPath>
     </Reference>
     <Reference Include="Combres, Version=2.2.2.6, Culture=neutral, PublicKeyToken=1ca6b37997dd7536, processorArchitecture=MSIL">
       <HintPath>..\packages\combres.2.2.2.6\lib\net40\Combres.dll</HintPath>
@@ -153,7 +157,7 @@
     <Reference Include="System.Web.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL "/>
+    <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL " />
     <Reference Include="System.Web.Helpers">
       <Private>True</Private>
     </Reference>
@@ -697,6 +701,7 @@
     <Content Include="Views\Image\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ClassDiagram1.cd" />
     <None Include="Content\documentation\Machete_Manual-v1.2.pdf" />
     <None Include="Content\images\Sorting icons.psd" />
     <Content Include="Views\Person\View.cshtml" />
@@ -762,6 +767,7 @@
     <Content Include="Views\Config\Edit.cshtml" />
     <Content Include="Views\Home\Docs.cshtml" />
     <Content Include="Views\Employer\CreateCombined.cshtml" />
+    <None Include="Properties\PublishProfiles\Profile1.pubxml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

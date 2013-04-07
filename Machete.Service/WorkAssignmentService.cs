@@ -103,7 +103,7 @@ namespace Machete.Service
              else
                 e = q.AsEnumerable();
             //
-            //
+            // getting worker info from cache, joining to Work Assignments
             e = e.GroupJoin(WorkerCache.getCache(),  //LINQ
                                 wa => wa.workerAssignedID, 
                                 wc => wc.ID, 

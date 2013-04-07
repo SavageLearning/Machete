@@ -64,7 +64,7 @@ namespace Machete.Test.Controllers
         //
         //   Testing /Index functionality
         //
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
         public void PersonController_index_get_returns_ActionResult()
         {
             //Arrange
@@ -77,7 +77,7 @@ namespace Machete.Test.Controllers
         //   Testing /Create functionality
         //
         #region createtests
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
         public void PersonController_create_get_returns_person()
         {
             //Arrange
@@ -87,7 +87,7 @@ namespace Machete.Test.Controllers
             Assert.IsInstanceOfType(result.ViewData.Model, typeof(Person));
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
         public void PersonController_create_post_valid_returns_JSON()
         {
             //Arrange
@@ -103,7 +103,7 @@ namespace Machete.Test.Controllers
             Assert.AreEqual("/Person/Edit/12345", data["sNewRef"]);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
         [ExpectedException(typeof(InvalidOperationException),
             "An invalid UpdateModel was inappropriately allowed.")]
         public void PersonController_create_post_invalid_throws_exception()
@@ -122,7 +122,7 @@ namespace Machete.Test.Controllers
         //   Testing /Edit functionality
         //
         #region edittests
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
         public void PersonController_edit_get_returns_person()
         {
             //Arrange
@@ -137,7 +137,7 @@ namespace Machete.Test.Controllers
             Assert.IsInstanceOfType(result.ViewData.Model, typeof(Person));
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
         public void PersonController_edit_post_valid_updates_model_returns_JSON()
         {
             //Arrange
@@ -173,7 +173,7 @@ namespace Machete.Test.Controllers
             Assert.AreEqual(savedperson.gender, 47);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
         [ExpectedException(typeof(InvalidOperationException),
             "An invalid UpdateModel was inappropriately allowed.")]
         public void PersonController_edit_post_invalid_throws_exception()
@@ -201,7 +201,7 @@ namespace Machete.Test.Controllers
         //
         // Testing /Delete functionality
         //
-        //[TestMethod]
+        //[TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
         //public void PersonController_delete_get_returns_person()
         //{
         //    //Arrange
@@ -216,7 +216,7 @@ namespace Machete.Test.Controllers
         //    Assert.IsInstanceOfType(result.ViewData.Model, typeof(Person));
         //}
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
         public void PersonController_delete_post_returns_JSON()
         {
             //Arrange

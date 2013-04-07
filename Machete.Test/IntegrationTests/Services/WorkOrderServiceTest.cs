@@ -39,12 +39,28 @@ using Machete.Web.Helpers;
 namespace Machete.Test
 {
     [TestClass]
-    public class WorkOrderServiceTest : FluentRecordBase
+    public class WorkOrderServiceTest 
     {
+        viewOptions dOptions;
+        FluentRecordBase frb;
 
         [TestInitialize]
         public void TestInitialize()
         {
+            frb = new FluentRecordBase();
+            frb.Initialize(new MacheteInitializer(), "macheteConnection");
+            dOptions = new viewOptions
+            {
+                CI = new CultureInfo("en-US", false),
+                sSearch = "",
+                date = DateTime.Today,
+                dwccardnum = null,
+                woid = null,
+                orderDescending = false,
+                sortColName = "WOID",
+                displayStart = 0,
+                displayLength = 20
+            };
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
@@ -52,13 +68,20 @@ namespace Machete.Test
         {
             //
             //Arrange
+            var Date = frb.ToServWorkOrder().GetSummary().OrderByDescending(o => o.date).First().date.Value.AddDays(1);
+            frb.AddWorkOrder(status: WorkOrder.iCancelled, dateTimeOfWork: Date).AddWorkAssignment()
+               .AddWorkOrder(status: WorkOrder.iPending, dateTimeOfWork: Date).AddWorkAssignment()
+               .AddWorkOrder(status: WorkOrder.iCompleted, dateTimeOfWork: Date).AddWorkAssignment()
+               .AddWorkOrder(status: WorkOrder.iCompleted, dateTimeOfWork: Date).AddWorkAssignment()
+               .AddWorkOrder(status: WorkOrder.iActive, dateTimeOfWork: Date).AddWorkAssignment()
+               .AddWorkOrder(status: WorkOrder.iActive, dateTimeOfWork: Date).AddWorkAssignment();
             //
             //Act
-            IEnumerable<WorkOrderSummary> result = ToServWorkOrder().GetSummary("").ToList();
+            IEnumerable<WorkOrderSummary> result = frb.ToServWorkOrder().GetSummary(Date.ToShortDateString()).ToList();
             //
             //Assert
             Assert.IsNotNull(result, "GetSummary result is Null");
-            Assert.IsTrue(result.Where(r => r.status == WorkOrder.iActive).First().count == 2, "GetSummary returned incorrect number of Active records");
+            Assert.AreEqual(2, result.Where(r => r.status == WorkOrder.iActive).First().count, "GetSummary returned incorrect number of Active records");
             Assert.IsTrue(result.Where(r => r.status == WorkOrder.iPending).First().count == 1, "GetSummary returned incorrect number of Pending records");
             Assert.IsTrue(result.Where(r => r.status == WorkOrder.iCompleted).First().count == 2, "GetSummary returned incorrect number of Completed records");
             Assert.IsTrue(result.Where(r => r.status == WorkOrder.iCancelled).First().count == 1, "GetSummary returned incorrect number of Cancelled records");
@@ -72,9 +95,16 @@ namespace Machete.Test
             bool orderdescending = true;
             int displayStart = 0;
             int displayLength = 50;
+            var Date = frb.ToServWorkOrder().GetSummary().OrderByDescending(o => o.date).First().date.Value.AddDays(1);
+            frb.AddWorkOrder(status: WorkOrder.iCancelled, dateTimeOfWork: Date).AddWorkAssignment()
+               .AddWorkOrder(status: WorkOrder.iPending, dateTimeOfWork: Date).AddWorkAssignment().AddWorkAssignment()
+               .AddWorkOrder(status: WorkOrder.iCompleted, dateTimeOfWork: Date).AddWorkAssignment().AddWorkAssignment()
+               .AddWorkOrder(status: WorkOrder.iCompleted, dateTimeOfWork: Date).AddWorkAssignment()
+               .AddWorkOrder(status: WorkOrder.iActive, dateTimeOfWork: Date).AddWorkAssignment().AddWorkAssignment()
+               .AddWorkOrder(status: WorkOrder.iActive, dateTimeOfWork: Date).AddWorkAssignment().AddWorkAssignment();
             //
             //Act
-            dataTableResult<WOWASummary> result = ToServWorkOrder().CombinedSummary(search, orderdescending, displayStart, displayLength);
+            dataTableResult<WOWASummary> result = frb.ToServWorkOrder().CombinedSummary(search, orderdescending, displayStart, displayLength);
             WOWASummary wowa = result.query.First();
             //
             //Assert
@@ -95,9 +125,11 @@ namespace Machete.Test
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
         public void Integration_WO_Service_get_GroupView()
         {
+            // Arrange
+            frb.AddWorkOrder(status: WorkOrder.iActive, dateTimeOfWork: DateTime.Now).AddWorkAssignment();
             //
             //Act
-            var result = ToServWorkOrder().GetActiveOrders(DateTime.Now, false);
+            var result = frb.ToServWorkOrder().GetActiveOrders(DateTime.Now, assignedOnly:false);
             Assert.IsNotNull(result, "Person.ID is Null");
         }
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
@@ -105,11 +137,13 @@ namespace Machete.Test
         {
             //
             //Arrange
-            AddWorkOrder().AddWorkOrder().AddWorkOrder();
-            AddWorkOrder().AddWorkOrder().AddWorkOrder();
+            var Date = frb.ToServWorkOrder().GetSummary().OrderByDescending(a => a.date).First().date.Value.AddDays(1);
+
+            frb.AddWorkOrder(dateTimeOfWork: Date).AddWorkOrder(dateTimeOfWork: Date).AddWorkOrder(dateTimeOfWork: Date);
+            frb.AddWorkOrder(dateTimeOfWork: Date).AddWorkOrder(dateTimeOfWork: Date).AddWorkOrder(dateTimeOfWork: Date);
             viewOptions o = new viewOptions();
             o.CI = new CultureInfo("en-US", false);
-            o.sSearch = DateTime.Today.ToShortDateString();
+            o.sSearch = Date.ToShortDateString();
             o.EmployerID = null;
             o.status = null;
             o.orderDescending = true;
@@ -118,25 +152,14 @@ namespace Machete.Test
             o.sortColName = "WOID";
             //
             //Act
-            dataTableResult<WorkOrder> result = ToServWorkOrder().GetIndexView(o);
+            dataTableResult<WorkOrder> result = frb.ToServWorkOrder().GetIndexView(o);
             //
             //Assert
             IEnumerable<WorkOrder> query = result.query.ToList();
             Assert.IsNotNull(result, "IEnumerable is Null");
             Assert.IsNotNull(query, "IEnumerable.query is null");
-            Assert.IsTrue(query.Count() == 6, "Expected 6, but GetIndexView returned {0} records", query.Count());
+            Assert.AreEqual(6, query.Count(), "Expected 6, but GetIndexView returned {0} records", query.Count());
 
-        }
-        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
-        public void Integration_WO_Service_GetWorkOrders_returns_all()
-        {
-            // Arrange
-            IEnumerable<WorkOrder> result = ToServWorkOrder().GetAll().ToList();
-            //
-            int count = DB.WorkOrders.Count();
-            //
-            Assert.IsTrue(result.Count() == 6, "Expected record count of 6, received {0}", result.Count());
-            Assert.AreEqual(result.Count(), count, "GetWorkOrders() doesn't return all orders");            
         }
     }
 }

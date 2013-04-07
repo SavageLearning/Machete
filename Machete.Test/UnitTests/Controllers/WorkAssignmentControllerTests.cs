@@ -69,8 +69,8 @@ namespace Machete.Test.Controllers
         //
         //   Testing /Index functionality
         //
-        [TestMethod]
-        public void WorkAssignmentController_index_get_returns_WorkAssignmentIndexViewModel()
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WAs)]
+        public void Unit_WA_Controller_index_get_returns_WorkAssignmentIndexViewModel()
         {
             //Arrange
 
@@ -83,8 +83,8 @@ namespace Machete.Test.Controllers
         //   Testing /Create functionality
         //
         #region createtests
-        [TestMethod]
-        public void WorkAssignmentController_create_get_returns_workAssignment()
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WAs)]
+        public void Unit_WA_Controller_create_get_returns_workAssignment()
         {
             //Arrange
             //Act
@@ -93,8 +93,8 @@ namespace Machete.Test.Controllers
             Assert.IsInstanceOfType(result.ViewData.Model, typeof(WorkAssignment));
         }
 
-        [TestMethod]
-        public void WorkAssignmentController_create_valid_post_returns_json()
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WAs)]
+        public void Unit_WA_Controller_create_valid_post_returns_json()
         {
             //Arrange            
             WorkAssignment _asmt = new WorkAssignment();
@@ -122,10 +122,10 @@ namespace Machete.Test.Controllers
                             result.Data.ToString());
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WAs)]
         [ExpectedException(typeof(InvalidOperationException),
             "An invalid UpdateModel was inappropriately allowed.")]
-        public void WorkAssignmentController_create_post_invalid_throws_exception()
+        public void Unit_WA_Controller_create_post_invalid_throws_exception()
         {
             //Arrange
             WorkAssignment _asmt = new WorkAssignment();
@@ -141,8 +141,8 @@ namespace Machete.Test.Controllers
         //   Testing /Edit functionality
         //
         #region edittests
-        [TestMethod]
-        public void WorkAssignmentController_edit_get_returns_workAssignment()
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WAs)]
+        public void Unit_WA_Controller_edit_get_returns_workAssignment()
         {
             //Arrange            
             int testid = 4242;
@@ -155,8 +155,8 @@ namespace Machete.Test.Controllers
             Assert.IsInstanceOfType(result.ViewData.Model, typeof(WorkAssignment));
         }
 
-        [TestMethod]
-        public void WorkAssignmentController_edit_post_valid_updates_model_returns_json()
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WAs)]
+        public void Unit_WA_Controller_edit_post_valid_updates_model_returns_json()
         {
             //Arrange
             int testid = 4242;
@@ -192,10 +192,10 @@ namespace Machete.Test.Controllers
             Assert.AreEqual(savedAsmt.comments, "UnitTest");
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WAs)]
         [ExpectedException(typeof(InvalidOperationException),
             "An invalid UpdateModel was inappropriately allowed.")]
-        public void WorkAssignmentController_edit_post_invalid_throws_exception()
+        public void Unit_WA_Controller_edit_post_invalid_throws_exception()
         {
             //Arrange
             var asmt = new WorkAssignment();
@@ -224,8 +224,8 @@ namespace Machete.Test.Controllers
         }
         #endregion
 
-        [TestMethod]
-        public void WorkAssignmentController_delete_post_returns_json()
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WAs)]
+        public void Unit_WA_Controller_delete_post_returns_json()
         {
             //Arrange
             int testid = 4242;

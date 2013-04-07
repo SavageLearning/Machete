@@ -68,7 +68,7 @@ namespace Machete.Test.UnitTests.Controllers
         //
         //   Testing /Index functionality
         //
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
         public void EmployerController_index_get_returns_enumerable_list()
         {
             //Arrange
@@ -81,7 +81,7 @@ namespace Machete.Test.UnitTests.Controllers
         //   Testing /Create functionality
         //
         #region createtests
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
         public void EmployerController_create_get_returns_employer()
         {
             //Arrange
@@ -91,7 +91,7 @@ namespace Machete.Test.UnitTests.Controllers
             Assert.IsInstanceOfType(result.ViewData.Model, typeof(Employer));
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
         public void EmployerController_create_valid_post_returns_json()
         {
             //Arrange
@@ -106,7 +106,7 @@ namespace Machete.Test.UnitTests.Controllers
                             result.Data.ToString());
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
         public void EmployerController_createcombined_valid_post_returns_json()
         {
             //Arrange
@@ -124,7 +124,7 @@ namespace Machete.Test.UnitTests.Controllers
             Assert.AreEqual("{ iEmployerID = 4242, iWorkOrderID = 4243, jobSuccess = True }", result.Data.ToString());
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
         [ExpectedException(typeof(InvalidOperationException),
             "An invalid UpdateModel was inappropriately allowed.")]
         public void EmployerController_create_post_invalid_throws_exception()
@@ -148,7 +148,7 @@ namespace Machete.Test.UnitTests.Controllers
         //   Testing /Edit functionality
         //
         #region edittests
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
         public void EmployerController_edit_get_returns_employer()
         {
             //Arrange
@@ -164,7 +164,7 @@ namespace Machete.Test.UnitTests.Controllers
             Assert.IsInstanceOfType(result.ViewData.Model, typeof(Employer));
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
         public void EmployerController_edit_post_valid_updates_model_returns_json()
         {
             //Arrange
@@ -191,7 +191,7 @@ namespace Machete.Test.UnitTests.Controllers
             Assert.AreEqual(savedemployer.city, "footown");
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
         [ExpectedException(typeof(InvalidOperationException),
             "An invalid UpdateModel was inappropriately allowed.")]
         public void EmployerController_edit_post_invalid_throws_exception()
@@ -216,7 +216,7 @@ namespace Machete.Test.UnitTests.Controllers
 
         //
         // Testing /Delete functionality
-        [TestMethod]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
         public void EmployerController_delete_post_returns_json()
         {
             //Arrange

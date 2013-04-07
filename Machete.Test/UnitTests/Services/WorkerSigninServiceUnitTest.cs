@@ -115,7 +115,7 @@ namespace Machete.Test.IntegrationTests.Services
             _uow = new Mock<IUnitOfWork>();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
         public void WorkerSigninService_Create_without_worker_match_succeeds()
         {
             //
@@ -132,7 +132,7 @@ namespace Machete.Test.IntegrationTests.Services
             Assert.AreEqual(_signin, _cbsignin);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
         public void WorkerSigninService_Create_with_worker_match_succeeds()
         {
             //
@@ -152,7 +152,7 @@ namespace Machete.Test.IntegrationTests.Services
             Assert.AreEqual(_signin.dwccardnum, fakeid);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
         public void WorkerSigninService_Create_deduplicate_succeeds()
         {
             //

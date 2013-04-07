@@ -60,7 +60,7 @@ namespace Machete.Test
                 displayLength = 20
             };
         }
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
         public void Integration_WorkerSigin_LotterySignin()
         {
             var result = ToServWorkerSignin().GetSignin(30040, DateTime.Today);
@@ -81,7 +81,7 @@ namespace Machete.Test
         /// <summary>
         /// Submit an unknown dwccardnum, verify it is recorded and returned by GetIndexView
         /// </summary>
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
         public void Integration_WorkerSigninService_Integration_GetIndexView_record_unknown_worker()
         {
             ////            
@@ -101,7 +101,7 @@ namespace Machete.Test
         /// <summary>
         /// Filters WSI IndexView based on dwccardnum option. should return all records.
         /// </summary>
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
         public void Integration_WorkerSigninService_Intergation_GetIndexView_check_search_dwccardnum()
         {
             //
@@ -120,7 +120,7 @@ namespace Machete.Test
         /// <summary>
         /// Filter on requested grouping
         /// </summary>
-        [TestMethod]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
         public void Integration_WorkerSigninService_Intergation_GetIndexView_workerRequested()
         {
             //
