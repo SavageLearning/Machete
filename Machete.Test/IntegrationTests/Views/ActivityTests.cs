@@ -15,12 +15,14 @@ using OpenQA.Selenium.Firefox;
 namespace Machete.Test
 {
     [TestClass]
-    public class ActivityTests : FluentRecordBase
+    public class ActivityTests 
     {
         static IWebDriver driver;
         private StringBuilder verificationErrors;
         static string baseURL;
         private sharedUI ui;
+        viewOptions dOptions;
+        FluentRecordBase frb;
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext)
@@ -31,8 +33,8 @@ namespace Machete.Test
         [TestInitialize]
         public void SetupTest()
         {
-            Initialize(new MacheteInitializer(), "macheteWeb");
-            Assert.IsNotNull(DB);
+            frb = new FluentRecordBase();
+            frb.Initialize(new MacheteInitializer(), "macheteConnection");
             driver = new FirefoxDriver();
             baseURL = "http://localhost:4213/";
             ui = new sharedUI(driver, baseURL);
@@ -79,27 +81,16 @@ namespace Machete.Test
             var userstring = "SeActivity_Create_ManySignins";
             //Arrange
             int rowcount = 1;                        
-            IEnumerable<int> cardlist = DB.Workers.Select(q => q.dwccardnum).Distinct();
             Random rand = new Random();
-            // There's a lot in this one line. Ask questions about it.
-            //                         [DbSet] (LINQ)(Lambda Expression) (SQL-ish)
-            IEnumerable<int> list = DB.Workers.Select(q => q.dwccardnum).Distinct().ToList();
-             var count = list.Count();
-            if (count < 10)
+
+            if (frb.ToRepoWorker().GetAllQ().Select(q => q.dwccardnum).Distinct().Count() <= 10)
             {
-                for (int i = 10; i >= 0; --i)
-                {
-                    var _per = (Person) Records.person.Clone();
-                    var _wkr = (Worker) Records.worker.Clone();
-                    var next = Records.GetNextMemberID(DB.Workers);
-                    _wkr.dwccardnum = next;
-                    ToServPerson().Save(_per, userstring);
-                    _wkr.ID = _per.ID;
-                    ToServWorker().Save(_wkr, userstring);
-                }
+                frb.AddWorker();
             }
             //
             //
+            IEnumerable<int> list = frb.ToRepoWorker().GetAllQ().Select(q => q.dwccardnum).Distinct().ToList();
+            var count = list.Count();
             int numberOfSignins = rand.Next(count / 10) + 1; //+1 will never lead to zero here
             int numberSignedIn = numberOfSignins;
             IEnumerable<int> list1 = list.Take<int>(numberOfSignins);
@@ -125,7 +116,7 @@ namespace Machete.Test
 
                 //This line ensures the test doesn't break if we try to sign in an ID that has multiple workers attached to it.
                 //rowcount increments by the number of records found in the database matching that cardNum
-                rowcount += DB.Workers.Where(q => q.dwccardnum == cardNum).Count();
+                rowcount += frb.ToRepoWorker().GetAllQ().Where(q => q.dwccardnum == cardNum).Count();
             }
             ui.WaitThenClickElement(By.Id("activityListTab"));
             ui.SelectOption(By.XPath("//*[@id='activityTable_length']/label/select"), "100");
@@ -158,7 +149,7 @@ namespace Machete.Test
             int rowcount = 1;
             Activity _act = (Activity)Records.activity.Clone();
             ActivitySignin _asi = (ActivitySignin)Records.activitysignin.Clone();
-            var worker = AddWorker(status: Worker.iActive).ToWorker();
+            var worker = frb.AddWorker(status: Worker.iActive).ToWorker();
             // Act
             ui.refreshCache();
             ui.gotoMachete();
@@ -175,13 +166,12 @@ namespace Machete.Test
         {
             //Arrange
             Activity _act = (Activity)Records.activity.Clone();
-            var workers = DB.Workers;
-            IEnumerable<int> cardList = workers.Select(q => q.dwccardnum).Distinct();
+            IEnumerable<int> cardList = frb.ToRepoWorker().GetAllQ().Select(q => q.dwccardnum).Distinct();
             Random rand = new Random();
             int randCardIndex = rand.Next(cardList.Count());
             int rowCount = 1;
             int randCard = cardList.ElementAt(randCardIndex);
-            while (workers.First(c => c.dwccardnum == randCard).isSanctioned)
+            while (frb.ToRepoWorker().GetAllQ().First(c => c.dwccardnum == randCard).isSanctioned)
             {
                 randCardIndex = rand.Next(cardList.Count());
                 randCard = cardList.ElementAt(randCardIndex);
@@ -203,8 +193,8 @@ namespace Machete.Test
             Worker _sanctionedW = (Worker)Records.worker.Clone();
             Activity _act = (Activity)Records.activity.Clone();
 
-            var workers = DB.Workers;
-            IEnumerable<int> cardList = workers.Where(q => q.memberStatus == Worker.iSanctioned || q.memberStatus == Worker.iExpelled).Select(q => q.dwccardnum).Distinct();
+            
+            IEnumerable<int> cardList = frb.ToRepoWorker().GetAllQ().Where(q => q.memberStatus == Worker.iSanctioned || q.memberStatus == Worker.iExpelled).Select(q => q.dwccardnum).Distinct();
             Assert.AreNotEqual(0, cardList.Count()); //pre-condition. 
             Random rand = new Random();
             int randCardIndex = rand.Next(cardList.Count());
@@ -214,7 +204,8 @@ namespace Machete.Test
             //Act
             ui.personCreate(_per);
             _sanctionedW.ID = _per.ID;
-            _sanctionedW.memberStatus = Worker.iSanctioned; 
+            _sanctionedW.memberStatus = Worker.iSanctioned;
+            _sanctionedW.dwccardnum = frb.GetNextMemberID();
 
             ui.workerCreate(_sanctionedW, sharedUI.SolutionDirectory() + "\\Machete.test\\jimmy_machete.jpg");
             ui.activityCreate(_act);
@@ -280,12 +271,12 @@ namespace Machete.Test
         public void SeActivity_test_record_limit()
         {
             // Arrange
-            int count = ToServActivity().GetAll().Count();
+            int count = frb.ToServActivity().GetAll().Count();
             while (count < 100)
             {
                 Activity _activity = (Activity)Records.activity.Clone();
-                ToServActivity().Create(_activity, "ME");
-                count = ToServActivity().GetAll().Count();
+                frb.ToServActivity().Create(_activity, "ME");
+                count = frb.ToServActivity().GetAll().Count();
             }
 
             // Act
@@ -320,12 +311,11 @@ namespace Machete.Test
         public void SeActivity_test_column_sorting()
         {
             // Arrange
-            FluentRecordBase SeDB = new FluentRecordBase();
-            int count = SeDB.ToServActivity().GetAll().Count();
+            int count = frb.ToServActivity().GetAll().Count();
             if (count < 100)
             {
                 Activity _activity = (Activity)Records.activity.Clone();
-                SeDB.ToServActivity().Create(_activity, "ME");
+                frb.ToServActivity().Create(_activity, "ME");
             }
 
             // Act

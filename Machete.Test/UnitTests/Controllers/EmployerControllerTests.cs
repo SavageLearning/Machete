@@ -49,6 +49,7 @@ namespace Machete.Test.UnitTests.Controllers
         [TestInitialize]
         public void TestInitialize()
         {
+            WorkOrder.iPending = 123;
             serv = new Mock<IEmployerService>();
             woServ = new Mock<IWorkOrderService>();
             ctrlr = new EmployerController(serv.Object, woServ.Object);

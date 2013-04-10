@@ -149,18 +149,21 @@ namespace Machete.Test
         public void Integration_WA_Service_GetIndexView_check_search_description()
         {
             //
+            // Arrange
+            var description = frb.RandomString(30);
+            var wo = frb.AddWorkAssignment(desc: description).ToWorkOrder();
+            //
             //Act
-            dOptions.sSearch = "foostring1";
-            dOptions.woid = 1;
+            dOptions.sSearch = description;
+            dOptions.woid = wo.ID;
             dOptions.orderDescending = true;
-            var serv = frb.ToServWorkAssignment();
-            var result = frb.AddWorkAssignment(desc: "foostring1").ToServWorkAssignment().GetIndexView(dOptions);
+            var result = frb.ToServWorkAssignment().GetIndexView(dOptions);
             //
             //Assert
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
             Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
-            Assert.AreEqual("foostring1", tolist[0].description);
+            Assert.AreEqual(description, tolist[0].description);
             Assert.AreEqual(1, result.query.Count());
         }
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]

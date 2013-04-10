@@ -43,7 +43,7 @@ namespace Machete.Test.Data
         public void Initialize()
         {
             frb = new FluentRecordBase();
-            frb.Initialize(new TestInitializer(), "macheteConnection");
+            frb.Initialize(new TestInitializer(), "macheteDevTest");
         }
         /// <summary>
         /// Tests permissions to drop and re-create database

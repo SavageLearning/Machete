@@ -39,14 +39,16 @@ using Machete.Web.Helpers;
 namespace Machete.Test
 {
     [TestClass]
-    public class WorkerSigninServiceTest : FluentRecordBase
+    public class WorkerSigninServiceTest
     {
+        FluentRecordBase frb;
         viewOptions _dOptions;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            base.Initialize(new TestInitializer(), "macheteConnection");
+            frb = new FluentRecordBase();
+            frb.Initialize(new MacheteInitializer(), "macheteConnection");
             _dOptions = new viewOptions
             {
                 CI = new CultureInfo("en-US", false),
@@ -63,8 +65,15 @@ namespace Machete.Test
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
         public void Integration_WorkerSigin_LotterySignin()
         {
-            var result = ToServWorkerSignin().GetSignin(30040, DateTime.Today);
-            Assert.IsNotNull(result);
+            // Arrange
+            frb.AddWorker().AddWorkerSignin();
+            var w = frb.ToWorker();
+            var wsi = frb.ToWorkerSignin();
+            // Act
+            var result = frb.ToServWorkerSignin().GetSignin(w.dwccardnum, wsi.dateforsignin);
+            // Assert
+            Assert.AreEqual(w.dwccardnum, result.dwccardnum);
+            Assert.AreEqual(wsi.dateforsignin, result.dateforsignin);
         }
         /// <summary>
         /// 
@@ -105,17 +114,19 @@ namespace Machete.Test
         public void Integration_WorkerSigninService_Intergation_GetIndexView_check_search_dwccardnum()
         {
             //
+            // Arrange
+            frb.AddWorker(skill1:61).AddWorkerSignin();
+            var w = frb.ToWorker();
+            var wsi = frb.ToWorkerSignin();
+            //
             //Act
-            _dOptions.dwccardnum = 30040;
-            dataTableResult<wsiView> result = ToServWorkerSignin().GetIndexView(_dOptions);
+            _dOptions.dwccardnum = w.dwccardnum;
+            dataTableResult<wsiView> result = frb.ToServWorkerSignin().GetIndexView(_dOptions);
             //
             //Assert
             List<wsiView> tolist = result.query.ToList();
-            Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(dataTableResult<wsiView>));
-            //Assert.AreEqual(61, tolist[0].skillID);
-            Assert.AreEqual(3, result.query.Count());
-            Assert.AreEqual(5, ToServWorkerSignin().TotalCount());
+            Assert.AreEqual(1, result.query.Count());
+            Assert.AreEqual(61, tolist[0].skill1);
         }
         /// <summary>
         /// Filter on requested grouping
@@ -124,29 +135,19 @@ namespace Machete.Test
         public void Integration_WorkerSigninService_Intergation_GetIndexView_workerRequested()
         {
             //
+            // Arrange
+            frb.AddWorker(skill1: 61).AddWorkerSignin().AddWorkerRequest();
+            var w = frb.ToWorker();
+            //
             //Act
-            _dOptions.dwccardnum = 30040;
+            _dOptions.dwccardnum = w.dwccardnum;
             _dOptions.wa_grouping = "requested";
-            dataTableResult<wsiView> result = ToServWorkerSignin().GetIndexView(_dOptions);
+            dataTableResult<wsiView> result = frb.ToServWorkerSignin().GetIndexView(_dOptions);
             //
             //Assert
             List<wsiView> tolist = result.query.ToList();
-            Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(dataTableResult<wsiView>));
-            //Assert.AreEqual(61, tolist[0].skillID);
+            Assert.AreEqual(61, tolist[0].skill1);
             Assert.AreEqual(1, result.query.Count());
-            Assert.AreEqual(5, ToServWorkerSignin().TotalCount());
         }
-        //[TestMethod]
-        //public void Integration_TestMethod5()
-        //{
-
-        //    IEnumerable<WorkerSignin> testing = _wsiServ.GetSigninsForAssignment(DateTime.Today,
-        //                                                "Jose",
-        //                                                "asc",
-        //                                                null,
-        //                                                null);
-        //    Assert.IsNotNull(testing, "null");
-        //}
     }
 }

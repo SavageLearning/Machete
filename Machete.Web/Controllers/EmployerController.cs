@@ -170,10 +170,7 @@ namespace Machete.Web.Controllers
             //update domain
             Employer newEmployer = serv.Create(mappedEmployer, userName);
             mappedWO.EmployerID = newEmployer.ID;
-            mappedWO.status = LookupCache.getCache()
-                                         .Where(a => a.category == "orderstatus" && 
-                                                     a.text_EN  == "Pending")
-                                         .Single().ID;
+            mappedWO.status = WorkOrder.iPending;
             WorkOrder newWO = woServ.Create(mappedWO, userName);
             // return 
             return Json(new

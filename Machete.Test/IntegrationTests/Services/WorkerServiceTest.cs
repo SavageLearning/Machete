@@ -88,6 +88,7 @@ namespace Machete.Test
             _p.firstname2 = "WorkerService_Intergation_CreateWorker";
             _w.height = "tall";
             _w.Person = _p;
+            _w.dwccardnum = frb.GetNextMemberID();
             //
             //Act
             Worker result = frb.ToServWorker().Create(_w, "UnitTest");
