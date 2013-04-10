@@ -361,7 +361,7 @@ namespace Machete.Test
             if (_repoWSI == null) AddRepoWorkerSignin();
             if (_repoW == null) AddRepoWorker();
             if (_repoL == null) AddRepoImage();
-            if (_repoWSI == null) AddRepoWorkerRequest();
+            if (_repoWR == null) AddRepoWorkerRequest();
             if (_uow == null) AddUOW();
             _servWSI = new WorkerSigninService(_repoWSI, _repoW, _repoI, _repoWR, _uow);
             return this;

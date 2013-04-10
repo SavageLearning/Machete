@@ -26,6 +26,8 @@ namespace Machete.Test
         private static string testdir;
         private static string testimagefile;
         private MacheteContext DB;
+        viewOptions dOptions;
+        FluentRecordBase frb;
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext) {
@@ -41,6 +43,8 @@ namespace Machete.Test
             DB = new MacheteContext();
             WorkerCache.Initialize(DB);
             LookupCache.Initialize(DB);
+            frb = new FluentRecordBase();
+            frb.Initialize(new MacheteInitializer(), "macheteConnection");
             driver = new FirefoxDriver();
             baseURL = "http://localhost:4213/";
             ui = new sharedUI(driver, baseURL);
@@ -89,6 +93,7 @@ namespace Machete.Test
             //Act
             ui.personCreate(_per);
             _wkr.ID = _per.ID;
+            _wkr.dwccardnum = frb.GetNextMemberID();
             ui.workerCreate(_wkr, testimagefile);
 
             //Assert

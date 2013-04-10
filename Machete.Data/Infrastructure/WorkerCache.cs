@@ -29,6 +29,7 @@ using Machete.Data;
 using Machete.Domain;
 using System.Data.Entity;
 using System.Runtime.Caching;
+using System.Data.Entity.Validation;
 
 namespace Machete.Data
 {
@@ -133,7 +134,19 @@ namespace Machete.Data
             {
                 wkr.memberStatus = Worker.iActive;
             }
-            db.SaveChanges();
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbEntityValidationException e)
+            {
+                StringBuilder str = new StringBuilder();
+                var foo = (from eve in e.EntityValidationErrors
+                           from error in eve.ValidationErrors
+                           select error.ErrorMessage).Aggregate<string>((c,n) => c + ", [" + n + "]");
+                          
+                throw new Exception(foo, e);
+            }
             return rtn;
         }
     }

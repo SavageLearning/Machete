@@ -68,6 +68,7 @@
     <Content Include="sql\count_all_machete_tables_rows.sql" />
     <Content Include="sql\Create_Tables.sql" />
     <Content Include="sql\Create_Views.sql" />
+    <Content Include="sql\insert_teacher_role.sql" />
     <Content Include="sql\machete_migrate_source_to_target.sql" />
     <Content Include="sql\migrate_machete_records.sql" />
     <Content Include="sql\Query_SP_cache.sql" />
