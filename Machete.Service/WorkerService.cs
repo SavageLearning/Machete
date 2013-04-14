@@ -50,6 +50,13 @@ namespace Machete.Service
             return worker;
         }
 
+        public override Worker Create(Worker record, string user)
+        {
+            var result = base.Create(record, user);
+            RefreshCache();
+            return result;
+        }
+
         public void RefreshCache()
         {
             ((IWorkerRepository)repo).RefreshCache();

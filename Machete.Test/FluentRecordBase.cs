@@ -507,7 +507,9 @@ namespace Machete.Test
             int? skill3 = null,
             int? status = null,
             DateTime? datecreated = null,
-            DateTime? dateupdated = null
+            DateTime? dateupdated = null,
+            DateTime? memberexpirationdate = null,
+            DateTime? memberReactivateDate = null
         )
         {
             //
@@ -524,6 +526,8 @@ namespace Machete.Test
             if (status != null) _w.memberStatus = (int)status;
             if (datecreated != null) _w.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _w.dateupdated = (DateTime)dateupdated;
+            if (memberexpirationdate != null) _w.memberexpirationdate = (DateTime)memberexpirationdate;
+            if (memberReactivateDate != null) _w.memberReactivateDate = (DateTime)memberReactivateDate;
             // kludge
             _w.dwccardnum = Records.GetNextMemberID(DB.Workers);
             //

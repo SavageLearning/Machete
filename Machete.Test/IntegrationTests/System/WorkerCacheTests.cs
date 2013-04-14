@@ -32,24 +32,33 @@ using Machete.Domain;
 using Machete.Service;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
+using System.Globalization;
 
 namespace Machete.Test.IntegrationTests.System
 {
     [TestClass]
     public class WorkerCacheTests
     {
-        MacheteContext DB;
+        viewOptions dOptions;
+        FluentRecordBase frb;
 
         [TestInitialize]
         public void TestInitialize()
         {
-
-            Database.SetInitializer<MacheteContext>(new TestInitializer());
-            this.DB = new MacheteContext();
-            DB.Database.Delete(); // double delete because of DB isnt clearing for all tests
-            DB.Database.Initialize(true); 
-            LookupCache.Initialize(DB); //Needed before WorkerCache
-            recInitialize(DB);
+            frb = new FluentRecordBase();
+            frb.Initialize(new MacheteInitializer(), "macheteConnection");
+            dOptions = new viewOptions
+            {
+                CI = new CultureInfo("en-US", false),
+                sSearch = "",
+                date = DateTime.Today,
+                dwccardnum = null,
+                woid = null,
+                orderDescending = false,
+                sortColName = "WOID",
+                displayStart = 0,
+                displayLength = 20
+            };
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Workers)]
@@ -57,10 +66,12 @@ namespace Machete.Test.IntegrationTests.System
         {
 
             //Arrange
+            frb.AddWorker(status: Worker.iActive, skill1: 62, memberexpirationdate: DateTime.Now.AddDays(-1));
+            var _w = frb.ToWorker();
             //Act
-            WorkerCache.ExpireMembers(DB);
-            IEnumerable<Worker> result = DB.Workers.AsEnumerable()
-                .Where(p => p.memberStatus == Worker.iExpired);
+            WorkerCache.ExpireMembers(frb.DB);
+            IEnumerable<Worker> result = frb.ToRepoWorker().GetAll().AsEnumerable()
+                .Where(p => p.memberStatus == Worker.iExpired && p.dwccardnum == _w.dwccardnum);
             //Assert
             Assert.AreEqual(1, result.Count(), "Failed to expire members");
         }
@@ -70,13 +81,12 @@ namespace Machete.Test.IntegrationTests.System
         {
 
             //Arrange
-            var wkr = DB.Workers.Single(w => w.dwccardnum == 30040);
-            wkr.memberStatus = Worker.iInactive;
-            DB.SaveChanges();
+            frb.AddWorker(status: Worker.iInactive, skill1: 62, memberexpirationdate: DateTime.Now.AddDays(-1));
+            var _w = frb.ToWorker();
             //Act
-            WorkerCache.ExpireMembers(DB);
-            IEnumerable<Worker> result = DB.Workers.AsEnumerable()
-                .Where(p => p.memberStatus == Worker.iExpired);
+            WorkerCache.ExpireMembers(frb.DB);
+            IEnumerable<Worker> result = frb.ToRepoWorker().GetAll().AsEnumerable()
+                .Where(p => p.memberStatus == Worker.iExpired && p.dwccardnum == _w.dwccardnum);
             //Assert
             Assert.AreEqual(0, result.Count(), "Failed to expire members");
         }
@@ -86,12 +96,15 @@ namespace Machete.Test.IntegrationTests.System
         {
 
             //Arrange
+            frb.AddWorker(status: Worker.iSanctioned, memberReactivateDate: DateTime.Now.AddDays(-1),
+                memberexpirationdate: DateTime.Now.AddDays(1));
+            var _w = frb.ToWorker();
             //Act
-            WorkerCache.ReactivateMembers(DB);
-            IEnumerable<Worker> result = DB.Workers.AsEnumerable()
-                .Where(p => p.memberStatus == Worker.iActive);
+            WorkerCache.ReactivateMembers(frb.DB);
+            IEnumerable<Worker> result = frb.ToRepoWorker().GetAll().AsEnumerable()
+                .Where(p => p.memberStatus == Worker.iActive && p.dwccardnum == _w.dwccardnum);
             //Assert
-            Assert.AreEqual(3, result.Count(), "Failed to reactivate members");
+            Assert.AreEqual(1, result.Count(), "Failed to reactivate members");
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Workers)]
@@ -99,13 +112,13 @@ namespace Machete.Test.IntegrationTests.System
         {
 
             //Arrange
-            var wkr = DB.Workers.Single(w => w.dwccardnum == 30042);
-            wkr.memberReactivateDate = DateTime.Now.AddMonths(1);
-            DB.SaveChanges();
+            frb.AddWorker(status: Worker.iSanctioned, memberReactivateDate: DateTime.Now.AddMonths(1),
+                memberexpirationdate: DateTime.Now.AddDays(1));
+            var _w = frb.ToWorker();
             //Act
-            WorkerCache.ReactivateMembers(DB);
-            IEnumerable<Worker> result = DB.Workers.AsEnumerable()
-                .Where(p => p.memberStatus == Worker.iSanctioned);
+            WorkerCache.ReactivateMembers(frb.DB);
+            IEnumerable<Worker> result = frb.ToRepoWorker().GetAll().AsEnumerable()
+                .Where(p => p.memberStatus == Worker.iSanctioned && p.dwccardnum == _w.dwccardnum);
             //Assert
             Assert.AreEqual(1, result.Count(), "Failed to reactivate members");
         }
@@ -115,13 +128,13 @@ namespace Machete.Test.IntegrationTests.System
         {
 
             //Arrange
-            var wkr = DB.Workers.Single(w => w.dwccardnum == 30042);
-            wkr.memberReactivateDate = null;
-            DB.SaveChanges();
+            frb.AddWorker(status: Worker.iSanctioned, 
+                    memberexpirationdate: DateTime.Now.AddDays(1));
+            var _w = frb.ToWorker();
             //Act
-            WorkerCache.ReactivateMembers(DB);
-            IEnumerable<Worker> result = DB.Workers.AsEnumerable()
-                .Where(p => p.memberStatus == Worker.iSanctioned);
+            WorkerCache.ReactivateMembers(frb.DB);
+            IEnumerable<Worker> result = frb.ToRepoWorker().GetAll().AsEnumerable()
+                .Where(p => p.memberStatus == Worker.iSanctioned && p.dwccardnum == _w.dwccardnum);
             //Assert
             Assert.AreEqual(1, result.Count(), "Failed to reactivate members");
         }
