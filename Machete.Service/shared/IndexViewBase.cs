@@ -58,6 +58,11 @@ namespace Machete.Service
                             p.w.Person.lastname2.ContainsOIC(o.sSearch))
                 .Select(a => a.s);
         }
+        public static void dwccardnum<T>(viewOptions o, ref IQueryable<T> q) where T : Signin
+        {
+            q = q.Where(wsi => wsi.dwccardnum == o.dwccardnum)
+                 .Select(wsi => wsi);
+        }
         public static void typeOfWork<T>(viewOptions o, ref IQueryable<T> q) where T : WorkerSignin
         {
             q = q.Where(wsi => wsi.worker.typeOfWorkID == o.typeofwork_grouping)
@@ -460,11 +465,11 @@ namespace Machete.Service
         }
         #endregion
         #region ACTIVITIES
-        public static void unauthenticatedView(ref IQueryable<Activity> q)
+        public static void unauthenticatedView(DateTime date, ref IQueryable<Activity> q)
         {
             // Shows classes within 30min of start and up to 30min after end
-            q = q.Where(p => EntityFunctions.DiffMinutes(DateTime.Now, p.dateStart) <= 30 &&
-             EntityFunctions.DiffMinutes(DateTime.Now, p.dateEnd) >= -30 ? true : false);
+            q = q.Where(p => EntityFunctions.DiffMinutes(date, p.dateStart) <= 30 &&
+             EntityFunctions.DiffMinutes(date, p.dateEnd) >= -30 ? true : false);
         }
         /// <summary>
         /// 

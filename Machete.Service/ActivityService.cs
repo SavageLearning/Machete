@@ -64,8 +64,10 @@ namespace Machete.Service
             if (o.personID > 0 && o.attendedActivities == true)
                 IndexViewBase.getAssociated(o.personID, ref q, asRepo);
             if (!o.authenticated)
-                IndexViewBase.unauthenticatedView(ref q);
-
+            {
+                if (o.date == null) o.date = DateTime.Now;
+                IndexViewBase.unauthenticatedView((DateTime)o.date, ref q);
+            }
 
             e = q.AsEnumerable();
             if (!string.IsNullOrEmpty(o.sSearch))

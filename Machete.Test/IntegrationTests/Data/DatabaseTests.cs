@@ -51,14 +51,12 @@ namespace Machete.Test.Data
         [TestMethod]
         public void Integration_Initializer_create_machete()
         {
-            Database.SetInitializer<MacheteContext>(new TestInitializer());
-            var MacheteDB = new MacheteContext();
             //Arrange
-            MacheteDB.Database.Delete();
+            frb.DB.Database.Delete();
             //Act
             try
             {
-                MacheteDB.Database.Initialize(true); // should be performed by TestInitializer
+                frb.DB.Database.Initialize(true); // should be performed by TestInitializer
             }
             catch (Exception e)
             {
