@@ -195,4 +195,7 @@
   <data name="transportProgram" xml:space="preserve">
     <value>Transport program (if used)</value>
   </data>
+  <data name="surcharge" xml:space="preserve">
+    <value>Surcharge</value>
+  </data>
 </root>
