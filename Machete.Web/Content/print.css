@@ -242,7 +242,7 @@ table td
 {
   padding: 1px;   
   border: solid 1px black;
-  font-size: 55%;
+  font-size: 80%;
 }
 
 table th
@@ -251,7 +251,7 @@ table th
   text-align: left;
   background-color: #e8eef4; 
   border: solid 1px black;   
-  font-size: 55%;
+  font-size: 70%;
 }
 
 /* MISC  

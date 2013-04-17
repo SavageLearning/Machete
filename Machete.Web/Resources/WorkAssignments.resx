@@ -190,10 +190,10 @@
     <value>Duplicate Assignment</value>
   </data>
   <data name="earnings" xml:space="preserve">
-    <value>Est. Earnings (minimum)</value>
+    <value>Est. Earnings (min)</value>
   </data>
   <data name="earningsRange" xml:space="preserve">
-    <value>Est. Earnings (maximum)</value>
+    <value>Est. Earnings (max)</value>
   </data>
   <data name="editlink" xml:space="preserve">
     <value>Edit</value>
