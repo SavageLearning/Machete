@@ -1,4 +1,5 @@
 ﻿Update-Database -sourcemigration 201211112012339_InitialMigrations -targetmigration 201211112024571_AddOnlineSourceBit -script
+Update-Database -sourcemigration 201211112024571_AddOnlineSourceBit -targetmigration 201304160508212_AddSurchargeField -script
 
 refresh migration script
 add-migration 201211112024571_AddOnlineSourceBit
