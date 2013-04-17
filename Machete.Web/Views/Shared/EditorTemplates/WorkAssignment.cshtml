@@ -50,7 +50,7 @@
 </div>
 <div class="tb-table">
     <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.hourlyWage)
+        @Html.mUITableLabelFor(model => model.hourlyWage)
         <div class="tb-field">
             @Html.TextBox("hourlyWage", Html.Encode(System.String.Format("{0:f2}", Model.hourlyWage)), new { tabindex = "1", @class = "money-field earnings-part", @id = idPrefix + "hourlyWage" })
             @Html.ValidationMessageFor(model => model.hourlyWage)
@@ -74,6 +74,11 @@
         </div>
         <div class="tb-field">
             @Html.TextBox(idPrefix + "totalRange", null, new { tabindex = "1", style = "width: 6em;"})
+        </div>
+        @Html.mUITableLabelFor(model => model.surcharge)
+        <div class="tb-field">
+            @Html.TextBox("surcharge", Html.Encode(System.String.Format("{0:f2}", Model.surcharge)), new { tabindex = "1", @class = "money-field earnings-part", @id = idPrefix + "surcharge" })
+            @Html.ValidationMessageFor(model => model.surcharge)
         </div>
     </div>
 </div>
