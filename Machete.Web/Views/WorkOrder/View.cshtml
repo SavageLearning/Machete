@@ -1,5 +1,5 @@
 ﻿@model Machete.Domain.WorkOrder
-@using Machete.Domain.Resources           
+@using Machete.Domain.Resources
 @using Machete.Web.Resources
 @using Machete.Web.Helpers
 @using System.Globalization
@@ -26,13 +26,13 @@
 <br />
 @if (Model.paperOrderNum.HasValue)
 {
-<h2>@WorkOrders.boxlegend# @Model.paperOrderNum</h2>
+    <h2>@WorkOrders.boxlegend# @Model.paperOrderNum</h2>
 }
 else
 {
     <h2>@WorkOrders.boxlegend# @Model.ID</h2>
 }
-<h3>@Employers.boxlegend: @Model.Employer.name</h3> 
+<h3>@Employers.boxlegend: @Model.Employer.name</h3>
 <div class="recordButtons print_off">
     <input type="button" id="printOrder" class="formButton" value="@WorkOrders.printWorkOrder"/>
     <input type="button" id="printMap" class="formButton" value="@Shared.printGoogleMap"/>
@@ -45,115 +45,119 @@ else
     @foreach (var req in Model.workerRequests)
     {
         @System.String.Format(req.workerRequested.dwccardnum + "--" + req.fullName) <br />
-    }    
+    }
 </div>
 <h4>@WorkOrders.listOfPositions</h4>
-<div class="tb-table">
-    <div class="tb-row">
-        <div class="tb-header-fixed">@WorkOrders.woidcount</div>
-        <div class="tb-header-fixed">@WorkAssignment.skillID</div>
-        <div class="tb-header-fixed">@WorkAssignment.hourlyWage</div>
-        <div class="tb-header-fixed">@WorkAssignments.hours</div> 
-        <div class="tb-header-fixed">@WorkAssignments.hourRange</div>                       
-        <div class="tb-header-fixed">@WorkAssignment.days</div>
-        <div class="tb-header-fixed">@WorkAssignments.earnings</div>
-        <div class="tb-header-fixed">@WorkAssignments.earningsRange</div>
-        <div class="tb-header-fixed">@WorkAssignment.englishLevelID</div>          
-    </div>
-</div>
+<table>
+    <thead>
+        <tr>
+            <td>@WorkOrders.woidcount</td>
+            <td>@WorkAssignment.skillID</td>
+            <td>@WorkAssignment.hourlyWage</td>
+            <td>@WorkAssignments.hours</td>
+            <td>@WorkAssignments.hourRange</td>
+            <td>@WorkAssignment.days</td>
+            <td>@WorkAssignment.surcharge</td>
+            <td>@WorkAssignments.earnings</td>
+            <td>@WorkAssignments.earningsRange</td>
+            <td>@WorkAssignment.englishLevelID</td>
+        </tr>
+    </thead>
 @foreach (var item in Model.workAssignments)
 {
-    <div class="tb-table">
-        <div class="tb-row">
-            <div class="tb-field-fixed">@item.pseudoID</div>           
-            <div class="tb-field-fixed">@Lookups.byID(item.skillID, CI.TwoLetterISOLanguageName)</div> 
-            <div class="tb-field-fixed">@System.String.Format("{0:C}", item.hourlyWage)</div>
-            <div class="tb-field-fixed">@Html.DisplayFor(modelItem => item.hours)</div>
-            @if (item.hourRange > 0)
-            {
-            <div class="tb-field-fixed">@Html.DisplayFor(modelItem => item.hourRange)</div>
-            }
-            else
-            {
-                <div class="tb-field-fixed"></div>
-            }
-            <div class="tb-field-fixed">@Html.DisplayFor(modelItem => item.days)</div>
-            <div class="tb-field-fixed">@System.String.Format("{0:C}", item.hourlyWage * item.hours * item.days)</div>
-            @if (item.hourRange > 0)
-            {
-            <div class="tb-field-fixed">@System.String.Format("{0:C}", item.hourlyWage * item.hourRange * item.days)</div>
-            }
-            else
-            {
-                <div class="tb-field-fixed"></div>
-            }            
-            <div class="tb-field-fixed">@item.englishLevelID</div>
-                       
-            
-        </div>
-    </div>
-    
-            if (item.description != null)
-            {
-        <div class="tb-table">
+    <tr>
+        <td>@item.pseudoID</td>
+        <td>@Lookups.byID(item.skillID, CI.TwoLetterISOLanguageName)</td>
+        <td>@System.String.Format("{0:C}", item.hourlyWage)</td>
+        <td>@Html.DisplayFor(modelItem => item.hours)</td>
+        @if (item.hourRange > 0)
+        {
+            <td>@Html.DisplayFor(modelItem => item.hourRange)</td>
+        }
+        else
+        {
+            <td></td>
+        }
+        <td>@Html.DisplayFor(modelItem => item.days)</td>
+        <td>@System.String.Format("{0:C}", item.surcharge)</td>
+        <td>@System.String.Format("{0:C}", ((item.days * item.surcharge) + (item.hourlyWage * item.hours * item.days)))</td>
+        @if (item.hourRange > 0)
+        {
+            <td>@System.String.Format("{0:C}", ((item.days * item.surcharge) + (item.hourlyWage * item.hourRange * item.days)))</td>
+        }
+        else
+        {
+            <td></td>
+        }
+        <td>@item.englishLevelID</td>
+    </tr>
+    <tr>
+        <td colspan="10">
+                    <div class="tb-table">
             <div class="tb-row">
-                <div class="tb-underline">
-                    @WorkAssignment.description
+                <div class="tb-label">
+                    <h3>@Machete.Web.Resources.WorkOrders.workername</h3>
                 </div>
                 <div class="tb-field">
-                    @Html.DisplayFor(modelItem => item.description)
+                    @if (item.workerAssigned != null)
+                    {
+                        <h3>@Html.Encode(item.workerAssigned.Person.fullName())</h3>
+                    }
+                    else
+                    {
+                        @Html.Encode("_____________________________________________")
+                    }
                 </div>
             </div>
-        </div>
+
+            @if (item.description != null)
+            {
+                <div class="tb-row">
+                    <div class="tb-label">
+                        @WorkAssignment.description
+                    </div>
+                    <div class="tb-field">
+                        @Html.DisplayFor(modelItem => item.description)
+                    </div>
+                </div>
             }
-    <div class="tb-table">
-        <div class="tb-row">
-            <div class="tb-label">
-                <h3>@Machete.Web.Resources.WorkOrders.workername</h3>
-            </div>
-            <div class="tb-field">
-                @if (item.workerAssigned != null)
-                {
-                  <h3>@Html.Encode(item.workerAssigned.Person.fullName())</h3>
-                }
-                else
-                {
-                    @Html.Encode("_____________________________________________")
-                }
-            </div>
         </div>
-    </div>
-    <br />
+            </td>
+    </tr>
 }
+</table>
+
 <br />
-<div class="tb-table">
-    <div class="tb-row">
-        <div class="tb-label">
-        @Html.LabelFor(model => model.Createdby)
-        </div>
-        <div class="tb-field">
-        @Html.DisplayFor(model => model.Createdby)
-        </div>
-                <div class="tb-label">
-        @Html.LabelFor(model => model.datecreated)
-        </div>
-        <div class="tb-field">
-        @Html.DisplayFor(model => model.datecreated)
-        </div>
-        <div class="tb-label">
-        @Html.LabelFor(model => model.Updatedby)
-        </div>
-        <div class="tb-field">
-        @Html.DisplayFor(model => model.Updatedby)
-        </div>
-                <div class="tb-label">
-        @Html.LabelFor(model => model.dateupdated)
-        </div>
-        <div class="tb-field">
-        @Html.DisplayFor(model => model.dateupdated)
-        </div>
-    </div>
-</div>
+<table>
+  <tr>
+        <td>
+            @Html.LabelFor(model => model.Createdby)
+        </td>
+        <td>
+            @Html.LabelFor(model => model.datecreated)
+        </td>
+        <td>
+            @Html.LabelFor(model => model.Updatedby)
+        </td>
+        <td>
+            @Html.LabelFor(model => model.dateupdated)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.DisplayFor(model => model.Createdby)
+        </td>
+        <td>
+            @Html.DisplayFor(model => model.datecreated)
+        </td>
+        <td>
+            @Html.DisplayFor(model => model.Updatedby)
+        </td>        
+        <td>
+            @Html.DisplayFor(model => model.dateupdated)
+        </td>
+    </tr>
+</table>
 <script type="text/javascript">
     $(document).ready(function () {
         $('.formButton').button();
