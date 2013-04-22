@@ -80,10 +80,10 @@ else
         }
         <td>@Html.DisplayFor(modelItem => item.days)</td>
         <td>@System.String.Format("{0:C}", item.surcharge)</td>
-        <td>@System.String.Format("{0:C}", ((item.days * item.surcharge) + (item.hourlyWage * item.hours * item.days)))</td>
+        <td>@System.String.Format("{0:C}", item.getMinEarnings)</td>
         @if (item.hourRange > 0)
         {
-            <td>@System.String.Format("{0:C}", ((item.days * item.surcharge) + (item.hourlyWage * item.hourRange * item.days)))</td>
+            <td>@System.String.Format("{0:C}", item.getMaxEarnings)</td>
         }
         else
         {

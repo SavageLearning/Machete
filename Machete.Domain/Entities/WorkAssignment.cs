@@ -125,6 +125,21 @@ namespace Machete.Domain
             this.pseudoID = this.workOrder.waPseudoIDCounter;
         }
 
+        public double getMinEarnings
+        {
+            get 
+            {
+                return (this.days * this.surcharge) + (this.hourlyWage * this.hours * this.days);
+            }
+        }
+        public double getMaxEarnings
+        {
+            get
+            {
+                if (this.hourRange == null) return 0;
+                return (this.days * this.surcharge) + (this.hourlyWage * (int)this.hourRange * this.days);
+            }
+        }
     }
     public class WorkAssignmentSummary
     {
