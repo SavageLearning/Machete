@@ -143,7 +143,7 @@ namespace Machete.Service
             IndexViewBase.waGrouping(o, ref q, wrRepo);
             //
             // dwccardnum populated
-            if (o.dwccardnum.HasValue) IndexViewBase.dwccardnum(o, ref q);
+            if (o.dwccardnum > 0) IndexViewBase.dwccardnum(o, ref q);
             e = q.ToList();
             if (!string.IsNullOrEmpty(o.sSearch))
                 IndexViewBase.search(o, ref e);
