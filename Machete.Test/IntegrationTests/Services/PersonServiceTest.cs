@@ -45,7 +45,7 @@ namespace Machete.Test
         public void TestInitialize()
         {
             frb = new FluentRecordBase();
-            frb.Initialize(new TestInitializer(), "macheteConnection");
+            frb.Initialize(new MacheteInitializer(), "macheteConnection");
         }
 
         [TestCleanup]
