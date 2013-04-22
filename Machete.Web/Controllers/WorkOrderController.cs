@@ -225,6 +225,7 @@ namespace Machete.Web.Controllers
             _wo.transportMethodID = Lookups.transportmethod.defaultId;
             _wo.typeOfWorkID = Lookups.typesOfWork.defaultId;
             _wo.status = Lookups.woStatus.defaultId;
+            _wo.timeFlexible = true;
             ViewBag.workerRequests = new List<SelectListItem> {};
             return PartialView("Create", _wo);
         }
