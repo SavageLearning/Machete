@@ -206,7 +206,7 @@ namespace Machete.Web.Helpers
                 .Select(x => new LookupNumber { Value = x, Text = x }),
                 "Value", "Text", "7"
                 );            
-            skillLevelNum = new SelectList(new[] { "0", "1", "2", "3", "4" }
+            skillLevelNum = new SelectList(new[] { "0", "1", "2", "3" }
                 .Select(x => new SelectListItem { Value = x, Text = x }),
                 "Value", "Text", "0");
             categories = new SelectList(new[] {"maritalstatus","race","neighborhood","gender",
