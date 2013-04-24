@@ -21,7 +21,6 @@ namespace Machete.Test
         private StringBuilder verificationErrors;
         static string baseURL;
         private sharedUI ui;
-        viewOptions dOptions;
         FluentRecordBase frb;
 
         [ClassInitialize]
@@ -78,7 +77,6 @@ namespace Machete.Test
         [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Activities)]
         public void SeActivity_Create_ManySignins()
         {
-            var userstring = "SeActivity_Create_ManySignins";
             //Arrange
             int rowcount = 1;                        
             Random rand = new Random();

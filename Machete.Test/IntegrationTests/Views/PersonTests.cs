@@ -26,7 +26,6 @@ namespace Machete.Test
         private static string testdir;
         private static string testimagefile;
         private MacheteContext DB;
-        viewOptions dOptions;
         FluentRecordBase frb;
 
         [ClassInitialize]
