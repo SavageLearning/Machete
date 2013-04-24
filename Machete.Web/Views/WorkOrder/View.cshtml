@@ -66,30 +66,30 @@ else
 @foreach (var item in Model.workAssignments)
 {
     <tr>
-        <td>@item.pseudoID</td>
-        <td>@Lookups.byID(item.skillID, CI.TwoLetterISOLanguageName)</td>
-        <td>@System.String.Format("{0:C}", item.hourlyWage)</td>
-        <td>@Html.DisplayFor(modelItem => item.hours)</td>
+        <td class="tb-field-fixed">@item.pseudoID</td>
+        <td class="tb-field-fixed">@Lookups.byID(item.skillID, CI.TwoLetterISOLanguageName)</td>
+        <td class="tb-field-fixed">@System.String.Format("{0:C}", item.hourlyWage)</td>
+        <td class="tb-field-fixed">@Html.DisplayFor(modelItem => item.hours)</td>
         @if (item.hourRange > 0)
         {
-            <td>@Html.DisplayFor(modelItem => item.hourRange)</td>
+            <td class="tb-field-fixed">@Html.DisplayFor(modelItem => item.hourRange)</td>
         }
         else
         {
             <td></td>
         }
-        <td>@Html.DisplayFor(modelItem => item.days)</td>
-        <td>@System.String.Format("{0:C}", item.surcharge)</td>
-        <td>@System.String.Format("{0:C}", item.getMinEarnings)</td>
+        <td class="tb-field-fixed">@Html.DisplayFor(modelItem => item.days)</td>
+        <td class="tb-field-fixed">@System.String.Format("{0:C}", item.surcharge)</td>
+        <td class="tb-field-fixed">@System.String.Format("{0:C}", item.getMinEarnings)</td>
         @if (item.hourRange > 0)
         {
-            <td>@System.String.Format("{0:C}", item.getMaxEarnings)</td>
+            <td class="tb-field-fixed">@System.String.Format("{0:C}", item.getMaxEarnings)</td>
         }
         else
         {
             <td></td>
         }
-        <td>@item.englishLevelID</td>
+        <td class="tb-field-fixed">@item.englishLevelID</td>
     </tr>
     <tr>
         <td colspan="10">
