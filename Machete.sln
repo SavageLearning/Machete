@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2010
+# Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A89D8B77-274B-4032-8A72-0DFC7879BD44}"
 	ProjectSection(SolutionItems) = preProject
 		Local.testsettings = Local.testsettings
@@ -92,7 +92,6 @@ Global
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.StageProd|Any CPU.ActiveCfg = StageProd|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.StageProd|Any CPU.Build.0 = StageProd|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.StageProd|Mixed Platforms.ActiveCfg = StageProd|Any CPU
-		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.StageProd|Mixed Platforms.Build.0 = StageProd|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.StageProd|x86.ActiveCfg = StageProd|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.StageTest|Any CPU.ActiveCfg = StageTest|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.StageTest|Any CPU.Build.0 = StageTest|Any CPU
