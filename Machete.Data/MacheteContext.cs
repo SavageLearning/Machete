@@ -31,6 +31,7 @@ using System.Data.Entity.ModelConfiguration;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Validation;
 using System.Diagnostics;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace Machete.Data
 {
     public class MacheteContext : DbContext
@@ -116,7 +117,9 @@ namespace Machete.Data
     {
         public WorkerSigninBuilder()
         {
-            HasKey(k => k.ID);
+            HasKey(k => k.ID)
+            .Property(x => x.ID)
+            .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             Map(m =>
             {
                 m.MapInheritedProperties();
@@ -198,7 +201,9 @@ namespace Machete.Data
     {
         public ActivitySigninBuilder()
         {
-            HasKey(k => k.ID);
+            HasKey(k => k.ID)
+            .Property(x => x.ID)
+            .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             Map(m => {
                 m.MapInheritedProperties();
                 m.ToTable("ActivitySignins");
