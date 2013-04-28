@@ -36,6 +36,8 @@ using Machete.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Collections.Generic;
+using OpenQA.Selenium.Chrome;
+using System.Configuration;
 
 namespace Machete.Test
 {
@@ -60,7 +62,7 @@ namespace Machete.Test
             string solutionDirectory = sharedUI.SolutionDirectory();
             testdir = solutionDirectory + "\\Machete.test\\";
             testimagefile = testdir + "jimmy_machete.jpg";
-            driver = new FirefoxDriver();
+            driver = new ChromeDriver(ConfigurationManager.AppSettings["CHROMEDRIVERPATH"]);
             baseURL = "http://localhost:4213/";
             ui = new sharedUI(driver, baseURL);
             DB = new MacheteContext();

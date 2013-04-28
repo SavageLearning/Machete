@@ -243,12 +243,13 @@ namespace Machete.Test
             }
             WaitForElement(By.Id(prefix + "notes")).SendKeys(_ev.notes);
             WaitThenClickElement(By.Id("eventCreateBtn"));
+            Thread.Sleep(1000); // need tabs to change; should build label and wait on it
             var selectedTab = _d.FindElements(By.CssSelector("li.ui-tabs-selected"))[1];
             IWebElement tabAnchor = selectedTab.FindElement(By.CssSelector("a"));
             _ev.ID = Convert.ToInt32(tabAnchor.GetAttribute("recordid"));
             return true;
         }
-        public bool eventValidate(Event _ev)
+        public bool eventValidate(ref Event _ev)
         {
             string prefix = "event" + _ev.ID + "-";
             WaitForElement(By.Id(prefix + "eventType"));

@@ -30,6 +30,7 @@ using System.Web.Mvc;
 using Machete.Domain;
 using Machete.Web.ViewModel;
 using Machete.Web.Helpers;
+using Machete.Data;
 
 namespace Machete.Test.UnitTests.Controllers
 {
@@ -65,6 +66,9 @@ namespace Machete.Test.UnitTests.Controllers
                            {"zipcode", "1234567890"}
                        };
             MacheteMapper.Initialize();
+            // TODO: Include Lookups in Dependency Injection, remove initialize statements
+            LookupCache.Initialize(new MacheteContext());
+            Lookups.Initialize();
         }
         //
         //   Testing /Index functionality

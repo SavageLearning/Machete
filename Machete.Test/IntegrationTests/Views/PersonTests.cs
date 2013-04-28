@@ -13,6 +13,8 @@ using System.Reflection;
 using Machete.Data;
 using System.Data.Entity;
 using Machete.Service;
+using OpenQA.Selenium.Chrome;
+using System.Configuration;
 
 namespace Machete.Test
 {
@@ -25,7 +27,7 @@ namespace Machete.Test
         private sharedUI ui;
         private static string testdir;
         private static string testimagefile;
-        private MacheteContext DB;
+        //private MacheteContext DB;
         FluentRecordBase frb;
 
         [ClassInitialize]
@@ -38,13 +40,13 @@ namespace Machete.Test
         [TestInitialize]
         public void SetupTest()
         {
-            Database.SetInitializer<MacheteContext>(new MacheteInitializer());
-            DB = new MacheteContext();
-            WorkerCache.Initialize(DB);
-            LookupCache.Initialize(DB);
+            //Database.SetInitializer<MacheteContext>(new MacheteInitializer());
+            //DB = new MacheteContext();
+            //WorkerCache.Initialize(DB);
+            //LookupCache.Initialize(DB);
             frb = new FluentRecordBase();
             frb.Initialize(new MacheteInitializer(), "macheteConnection");
-            driver = new FirefoxDriver();
+            driver = new ChromeDriver(ConfigurationManager.AppSettings["CHROMEDRIVERPATH"]);
             baseURL = "http://localhost:4213/";
             ui = new sharedUI(driver, baseURL);
             verificationErrors = new StringBuilder();
@@ -113,7 +115,7 @@ namespace Machete.Test
             ui.eventCreate(_ev);
 
             //Assert
-            ui.eventValidate(_ev);
+            ui.eventValidate(ref _ev);
         }
 
         [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Persons)]
@@ -122,7 +124,7 @@ namespace Machete.Test
             //Arrange
             Person _per = (Person)Records.person.Clone();
             Worker _wkr = (Worker)Records.worker.Clone();
-            _wkr.dwccardnum = sharedUI.nextAvailableDwccardnum(DB);
+            _wkr.dwccardnum = sharedUI.nextAvailableDwccardnum(frb.DB);
             Event _san = (Event)Records.event1.Clone();
             _san.Person = _per;
             _san.eventType = MacheteLookup.cache.First(x => x.category == "eventtype" && x.text_EN == "Sanction").ID;
