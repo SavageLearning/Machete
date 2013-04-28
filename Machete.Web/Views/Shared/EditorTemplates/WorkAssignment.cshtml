@@ -25,6 +25,7 @@
                     class="valid"><option value="">@Shared.choose</option>
                 @foreach (var item in Lookups.getSkill(CI.TwoLetterISOLanguageName, false))
                 {
+                    @*kludgy way to print selected or not. couldn't get other syntax to work*@
                     if (Model.skillID == Convert.ToInt16(item.Value))
                     {
                         <option value="@(item.Value)" 
