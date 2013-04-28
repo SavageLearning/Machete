@@ -187,12 +187,13 @@ namespace Machete.Web.Helpers
         /// <returns></returns>
         public static List<SelectListItemEx> getSkill(string locale, bool specializedOnly)
         {
-            IEnumerable<Lookup> prelist = LookupCache.getCache().ToList().Where(s => s.category == LType.skill.ToString());
-            Func<Lookup, string> textFunc;
+            IEnumerable<Lookup> prelist = LookupCache.getCache()
+                                                     .Where(s => s.category == LType.skill.ToString());
+            Func<Lookup, string> textFunc; //anon function
             if (prelist == null) throw new ArgumentNullException("No skills returned");
             if (specializedOnly)
             {
-                //TODO: Not scalable on i18n. Kludge.
+                //TODO: Selection of ES/EN not scalable on i18n. Kludge.
                 textFunc = (ll => "[" + ll.ltrCode + ll.level + "] " + (locale == "es" ? ll.text_ES : ll.text_EN));
                 prelist = prelist.Where(s => s.speciality == true).OrderBy(s => textFunc(s)); //LINQ & FUNC
             }
