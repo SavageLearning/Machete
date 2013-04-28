@@ -11,6 +11,8 @@ using Machete.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.Chrome;
+using System.Configuration;
 
 namespace Machete.Test
 {
@@ -34,7 +36,7 @@ namespace Machete.Test
         {
             frb = new FluentRecordBase();
             frb.Initialize(new MacheteInitializer(), "macheteConnection");
-            driver = new FirefoxDriver();
+            driver = new ChromeDriver(ConfigurationManager.AppSettings["CHROMEDRIVERPATH"]);
             baseURL = "http://localhost:4213/";
             ui = new sharedUI(driver, baseURL);
             verificationErrors = new StringBuilder();

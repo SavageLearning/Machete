@@ -36,6 +36,7 @@ using Machete.Domain;
 using Machete.Test;
 using Machete.Web.ViewModel;
 using System.Web;
+using Machete.Web.Helpers;
 
 namespace Machete.Test.Controllers
 {
@@ -89,6 +90,9 @@ namespace Machete.Test.Controllers
             fakeform.Add("dateOfBirth", "1/1/2000");
             fakeform.Add("dateOfMembership", "1/1/2000");
             //fakeform.Add("", "");
+            // TODO: Include Lookups in Dependency Injection, remove initialize statements
+            LookupCache.Initialize(new MacheteContext());
+            Lookups.Initialize();
         }
         //
         //   Testing /Index functionality

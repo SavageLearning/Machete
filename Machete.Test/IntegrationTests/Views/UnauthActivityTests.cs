@@ -12,6 +12,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using Machete.Test.IntegrationTests.Services;
+using OpenQA.Selenium.Chrome;
+using System.Configuration;
 
 namespace Machete.Test
 {
@@ -30,7 +32,7 @@ namespace Machete.Test
         public void SetupTest()
         {
             base.Initialize(new MacheteInitializer(), "macheteWeb");
-            driver = new FirefoxDriver();
+            driver = new ChromeDriver(ConfigurationManager.AppSettings["CHROMEDRIVERPATH"]);
             baseURL = "http://localhost:4213/";
             ui = new sharedUI(driver, baseURL);
             verificationErrors = new StringBuilder();

@@ -8,6 +8,8 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Machete.Domain;
+using OpenQA.Selenium.Chrome;
+using System.Configuration;
 
 namespace Machete.Test
 {
@@ -27,7 +29,7 @@ namespace Machete.Test
         public void SetupTest()
         {
             frb = new FluentRecordBase();
-            driver = new FirefoxDriver();
+            driver = new ChromeDriver(ConfigurationManager.AppSettings["CHROMEDRIVERPATH"]);
             baseURL = "http://localhost:4213/";
             ui = new sharedUI(driver, baseURL);
             verificationErrors = new StringBuilder();
@@ -99,7 +101,7 @@ namespace Machete.Test
         {
             //Arrange
             Employer _emp = frb.ToEmployer();
-            WorkOrder _wo = frb.ToWorkOrder(); //Made this a clone so fields like workorder status and tranportation method would be filled in properly for validation.
+            WorkOrder _wo = frb.ToWorkOrder(); 
 
             //Act
             ui.employerCreate(_emp);

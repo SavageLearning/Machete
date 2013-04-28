@@ -162,7 +162,7 @@ namespace Machete.Test
 
         public static WorkOrder order = new WorkOrder
         {
-            contactName = "Umpa Lumpa",
+            contactName = "Oompa Loompa",
             workSiteAddress1 = "2400 Main Ave E",
             workSiteAddress2 = "Apt 207",
             status = 42,
@@ -171,6 +171,7 @@ namespace Machete.Test
             zipcode = "12345",
             phone = "123-456-7890",
             typeOfWorkID = 20,
+            timeFlexible = true,
             englishRequired = false,
             lunchSupplied = false,
             permanentPlacement = false,
@@ -178,7 +179,7 @@ namespace Machete.Test
             transportFee = 20.75,
             transportFeeExtra = 0,
             englishRequiredNote = "",
-            description = "descriptiong string",
+            description = "description string",
             dateTimeofWork = DateTime.Today,
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime

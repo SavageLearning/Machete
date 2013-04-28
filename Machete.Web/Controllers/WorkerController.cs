@@ -133,11 +133,11 @@ namespace Machete.Web.Controllers
         {
             var _model = new Worker();
             _model.ID = ID;
-            _model.RaceID = Lookups.race.defaultId;
-            _model.countryoforiginID = Lookups.countryoforigin.defaultId;
+            _model.RaceID = Lookups.getDefaultID(LType.race);
+            _model.countryoforiginID = Lookups.getDefaultID(LType.countryoforigin);
             _model.englishlevelID = 0;
-            _model.neighborhoodID = Lookups.neighborhood.defaultId;
-            _model.maritalstatus = Lookups.maritalstatus.defaultId;
+            _model.neighborhoodID = Lookups.getDefaultID(LType.neighborhood);
+            _model.maritalstatus = Lookups.getDefaultID(LType.maritalstatus);
             return PartialView(_model);
         }
         /// <summary>

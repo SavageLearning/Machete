@@ -103,7 +103,7 @@ namespace Machete.Web.Controllers
         public ActionResult Create()
         {
             var _model = new Person();
-            _model.gender = Lookups.gender.defaultId;
+            _model.gender = Lookups.getDefaultID(LType.gender);
             _model.active = true;
             return PartialView(_model);
         }

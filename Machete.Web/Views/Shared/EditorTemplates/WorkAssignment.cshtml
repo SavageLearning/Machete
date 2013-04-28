@@ -23,7 +23,7 @@
                     data-val="true"
                     tabindex="1"
                     class="valid"><option value="">@Shared.choose</option>
-                @foreach (var item in Lookups.skill.get(CI.TwoLetterISOLanguageName, false))
+                @foreach (var item in Lookups.getSkill(CI.TwoLetterISOLanguageName, false))
                 {
                     if (Model.skillID == Convert.ToInt16(item.Value))
                     {

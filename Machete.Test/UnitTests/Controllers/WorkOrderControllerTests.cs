@@ -38,6 +38,7 @@ using Machete.Web.ViewModel;
 using System.Data.Entity;
 using System.Web.Routing;
 using Machete.Web.Models;
+using Machete.Web.Helpers;
 
 namespace Machete.Test.Controllers
 {
@@ -85,6 +86,9 @@ namespace Machete.Test.Controllers
             workerRequest = new List<WorkerRequest> { };
             _ctrlr = new WorkOrderController(_serv.Object, _waServ.Object, _empServ.Object, _reqServ.Object, _wrServ.Object);
             _ctrlr.SetFakeControllerContext();
+            // TODO: Include Lookups in Dependency Injection, remove initialize statements
+            LookupCache.Initialize(new MacheteContext());
+            Lookups.Initialize();
         }
         //
         //   Testing /Index functionality
