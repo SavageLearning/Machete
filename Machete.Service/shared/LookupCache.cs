@@ -114,9 +114,9 @@ namespace Machete.Service
         {
             return getCache().Single(s => s.ID == skillid).speciality;
         }
-        public static Lookup getBySkillID(int skillid)
+        public static Lookup getByID(int id)
         {
-            return getCache().Single(s => s.ID == skillid);
+            return getCache().Single(s => s.ID == id);
         }
         //
         // Get the Id string for a given lookup number
