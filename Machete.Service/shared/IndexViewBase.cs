@@ -254,7 +254,7 @@ namespace Machete.Service
                 foreach (var skillid in primeskills)
                 {
                     skills.Push(skillid);
-                    Lookup skill = LookupCache.getBySkillID(skillid);
+                    Lookup skill = LookupCache.getByID(skillid);
                     foreach (var subskill in LookupCache.getCache()
                         .Where(a => a.category == skill.category &&
                                     a.subcategory == skill.subcategory &&
