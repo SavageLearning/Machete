@@ -48,6 +48,7 @@ namespace Machete.Data
     //
     public interface IWorkerSigninRepository : IRepository<WorkerSignin> { }
     public interface IEmployerRepository : IRepository<Employer> { }
+    public interface IEmailRepository : IRepository<Email> { }
     public interface IWorkOrderRepository : IRepository<WorkOrder> { }
     public interface IWorkerRequestRepository : IRepository<WorkerRequest> { }
     public interface IWorkerRepository : IRepository<Worker> 
@@ -107,6 +108,13 @@ namespace Machete.Data
     public class EmployerRepository : RepositoryBase<Employer>, IEmployerRepository
     {
         public EmployerRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    public class EmailRepository : RepositoryBase<Email>, IEmailRepository
+    {
+        public EmailRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
     }
     /// <summary>
     /// 
