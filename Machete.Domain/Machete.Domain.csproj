@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\Activity.cs" />
+    <Compile Include="Entities\Emails.cs" />
     <Compile Include="Entities\Event.cs" />
     <Compile Include="Entities\Exceptions.cs" />
     <Compile Include="Entities\Image.cs" />
@@ -89,6 +90,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Activity.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Email.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Email.resx</DependentUpon>
     </Compile>
     <Compile Include="Resources\Employer.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -169,6 +175,11 @@
     <EmbeddedResource Include="Resources\Activity.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Activity.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Email.es.resx" />
+    <EmbeddedResource Include="Resources\Email.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Email.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Employer.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
