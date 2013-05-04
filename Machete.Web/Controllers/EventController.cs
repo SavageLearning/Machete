@@ -158,8 +158,9 @@ namespace Machete.Web.Controllers
         {
             if (imagefile == null) throw new MacheteNullObjectException("AddImage called with null imagefile");
             JoinEventImage joiner = new JoinEventImage();
-            Image image = new Image();
             Event evnt = _serv.Get(id);
+            // TODO:The following code should be in the Service layer
+            Image image = new Image();
             image.ImageMimeType = imagefile.ContentType;
             image.parenttable = "Events";
             image.filename = imagefile.FileName;
@@ -175,10 +176,11 @@ namespace Machete.Web.Controllers
             joiner.dateupdated = DateTime.Now;
             joiner.Updatedby = user;
             joiner.Createdby = user;
+            // TODO: This tightly couples the MVC straight down to EF. 
+            // breaks layering. Should be abstracted.
             evnt.JoinEventImages.Add(joiner);
             _serv.Save(evnt, user);
             var foo = iServ.Get(newImage.ID).ImageData;
-            //_serv.GetEvent(evnt.ID);
             
             return Json(new
             {
