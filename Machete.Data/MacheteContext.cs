@@ -52,6 +52,7 @@ namespace Machete.Data
         public DbSet<WorkerSignin> WorkerSignins { get; set; }
         public DbSet<Image> Images { get; set; }
         public DbSet<Employer> Employers { get; set; }
+        public DbSet<Email> Emails { get; set; }
         public DbSet<WorkOrder> WorkOrders { get; set; }
         public DbSet<WorkerRequest> WorkerRequests { get; set; }
         public DbSet<Event> Events {get; set;}
@@ -84,8 +85,10 @@ namespace Machete.Data
             modelBuilder.Configurations.Add(new WorkerSigninBuilder());
             modelBuilder.Configurations.Add(new EventBuilder());
             modelBuilder.Configurations.Add(new JoinEventImageBuilder());
+            modelBuilder.Configurations.Add(new JoinWorkorderEmailBuilder());
             modelBuilder.Configurations.Add(new ActivitySigninBuilder());
             modelBuilder.Configurations.Add(new ActivityBuilder());
+            modelBuilder.Configurations.Add(new EmailBuilder());
             modelBuilder.Entity<Employer>().ToTable("Employers");
             modelBuilder.Entity<WorkOrder>().ToTable("WorkOrders");
             modelBuilder.Entity<WorkAssignment>().ToTable("WorkAssignments");
@@ -140,6 +143,25 @@ namespace Machete.Data
         }
     }
 
+    public class EmailBuilder : EntityTypeConfiguration<Email>
+    {
+        public EmailBuilder()
+        {
+            HasKey(e => e.ID);
+        }
+    }
+
+    public class JoinWorkorderEmailBuilder : EntityTypeConfiguration<JoinWorkorderEmail>
+    {
+        public JoinWorkorderEmailBuilder()
+        {
+            HasKey(k => k.ID);
+            HasRequired(k => k.WorkOrder)
+                .WithMany(d => d.JoinWorkorderEmails)
+                .HasForeignKey(k => k.WorkOrderID);
+            HasRequired(k => k.Email);
+        }
+    }
     public class WorkOrderBuilder : EntityTypeConfiguration<WorkOrder>
     {
         public WorkOrderBuilder()
