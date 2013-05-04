@@ -37,6 +37,7 @@ namespace Machete.Domain
         { 
             idString = "email";
         }
+
         [LocalizedDisplayName("emailFrom", NameResourceType = typeof(Resources.Email))]
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Email))]
         [Required(ErrorMessageResourceName = "emailFrom", ErrorMessageResourceType = typeof(Resources.Email))]
@@ -56,5 +57,16 @@ namespace Machete.Domain
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Email))]
         [Required(ErrorMessageResourceName = "body", ErrorMessageResourceType = typeof(Resources.Email))]
         public string body { get; set; }
+    }
+
+
+    public class JoinWorkorderEmail : Record
+    {
+        public int WorkOrderID { get; set; }
+        public virtual WorkOrder WorkOrder { get; set; }
+
+        public int EmailID { get; set; }
+        public virtual Email Email { get; set; }
+
     }
 }

@@ -45,6 +45,8 @@ namespace Machete.Domain
 
         public virtual ICollection<WorkAssignment> workAssignments { get; set; }
         public virtual ICollection<WorkerRequest> workerRequests { get; set; }
+        public virtual ICollection<JoinWorkorderEmail> JoinWorkorderEmails { get; set; }
+
         //
         public WorkOrder()
         {
