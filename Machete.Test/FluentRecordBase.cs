@@ -48,6 +48,7 @@ namespace Machete.Test
         private LookupRepository _repoL;
         private ImageRepository _repoI;
         private EmployerRepository _repoE;
+        private EmailRepository _repoEM;
         private DatabaseFactory _dbFactory;
         private WorkerSigninService _servWSI;
         private WorkerService _servW;
@@ -59,10 +60,12 @@ namespace Machete.Test
         private ActivityService _servA;
         private ActivitySigninService _servAS;
         private EmployerService _servE;
+        private EmailService _servEM;
         private LookupService _servL;
         private IUnitOfWork _uow;
         public MacheteContext DB { get; set; }
         private Employer _emp;
+        private Email _email;
         private WorkOrder _wo;
         private WorkAssignment _wa;
         private Person _p;
@@ -863,6 +866,76 @@ namespace Machete.Test
         }
 
         #endregion 
+
+        #region Emails
+
+        public FluentRecordBase AddRepoEmail()
+        {
+            if (_dbFactory == null) AddDBFactory();
+
+            _repoEM = new EmailRepository(_dbFactory);
+            return this;
+        }
+
+        public EmailRepository ToRepoEmail()
+        {
+            if (_repoEM == null) AddRepoEmail();
+            return _repoEM;
+        }
+
+        public FluentRecordBase AddServEmail()
+        {
+            //
+            // DEPENDENCIES
+            if (_repoEM == null) AddRepoEmail();
+            if (_uow == null) AddUOW();
+            _servEM = new EmailService(_repoEM, _uow);
+            return this;
+        }
+
+        public EmailService ToServEmail()
+        {
+            if (_servEM == null) AddServEmail();
+            return _servEM;
+        }
+
+        public FluentRecordBase AddEmail(
+            DateTime? datecreated = null,
+            DateTime? dateupdated = null
+        )
+        {
+            //
+            // DEPENDENCIES
+            if (_servEM == null) AddServEmail();
+            //
+            // ARRANGE
+            _email = (Email)Records.email.Clone();
+            if (datecreated != null) _p.datecreated = (DateTime)datecreated;
+            if (dateupdated != null) _p.dateupdated = (DateTime)dateupdated;
+            //
+            // ACT
+            _servEM.Create(_email, _user);
+            return this;
+        }
+
+        public Email ToEmail()
+        {
+            if (_email == null) AddEmail();
+            return _email;
+        }
+
+        public Email CloneEmail()
+        {
+            var p = (Email)Records.email.Clone();
+            p.emailFrom = "joe@foo.com";
+            p.emailTo = "foo@joe.com";
+            p.subject = RandomString(5);
+            p.body = RandomString(8);
+            return p;
+        }
+
+        #endregion 
+
 
         public FluentRecordBase AddUOW()
         {
