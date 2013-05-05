@@ -74,6 +74,7 @@ namespace Machete.Data
                         Trace.TraceInformation("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage);
                     }
                 }
+                throw new Exception("Entity Valdiation errors: See debug log");
             }
         }
 
