@@ -133,6 +133,7 @@
     <Compile Include="FluentRecordTests.cs" />
     <Compile Include="IntegrationTests\Services\ActivityServiceTests.cs" />
     <Compile Include="IntegrationTests\Services\IndexViewBaseServiceTest.cs" />
+    <Compile Include="IntegrationTests\Services\EmailServiceTests.cs" />
     <Compile Include="IntegrationTests\Services\WorkAssignmentServiceTest.cs" />
     <Compile Include="IntegrationTests\Services\WorkerSigninServiceTest.cs" />
     <Compile Include="IntegrationTests\Services\WorkOrderServiceTest.cs" />
