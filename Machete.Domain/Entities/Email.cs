@@ -60,7 +60,7 @@ namespace Machete.Domain
 
         public int transmitAttempts { get; set; }
 
-        public DateTime lastAttempt { get; set; }
+        public DateTime? lastAttempt { get; set; }
 
 
     }
