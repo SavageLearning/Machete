@@ -88,6 +88,24 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string String1 {
+            get {
+                return ResourceManager.GetString("String1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter no more than {1} characters.
+        /// </summary>
+        internal static string stringlength {
+            get {
+                return ResourceManager.GetString("stringlength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Subject:.
         /// </summary>
         internal static string subject {

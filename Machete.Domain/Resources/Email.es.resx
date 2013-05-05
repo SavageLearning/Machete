@@ -126,6 +126,9 @@
   <data name="emailTo" xml:space="preserve">
     <value>Para:</value>
   </data>
+  <data name="stringlength" xml:space="preserve">
+    <value>Por favor, introduzca un máximo de {1} caracteres</value>
+  </data>
   <data name="subject" xml:space="preserve">
     <value>Asunto:</value>
   </data>
