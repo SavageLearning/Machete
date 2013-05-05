@@ -1,5 +1,11 @@
-﻿Update-Database -sourcemigration 201211112012339_InitialMigrations -targetmigration 201211112024571_AddOnlineSourceBit -script
+﻿##
+## These package manage console commands auto-generate the sql scripts to update an existing production machete DB
+##
+Update-Database -sourcemigration 201211112012339_InitialMigrations -targetmigration 201211112024571_AddOnlineSourceBit -script
 Update-Database -sourcemigration 201211112024571_AddOnlineSourceBit -targetmigration 201304160508212_AddSurchargeField -script
+Update-Database -sourcemigration 201304160508212_AddSurchargeField -targetmigration 201305050151353_AddEmailTable -script
 
 refresh migration script
 add-migration 201211112024571_AddOnlineSourceBit
+add-migration 201304160508212_AddSurchargeField
+Add-Migration 201305050151353_AddEmailTable
