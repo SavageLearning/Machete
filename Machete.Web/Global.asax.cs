@@ -126,20 +126,20 @@ namespace Machete.Web
             .RegisterInstance<MembershipProvider>(Membership.Provider)
             .RegisterType<IDatabaseFactory, DatabaseFactory>(new HttpContextLifetimeManager<IDatabaseFactory>())
             .RegisterType<IUnitOfWork, UnitOfWork>(new HttpContextLifetimeManager<IUnitOfWork>())
-                // 
+            // 
             .RegisterType<IPersonRepository, PersonRepository>(new HttpContextLifetimeManager<IPersonRepository>())
             .RegisterType<IWorkerSigninRepository, WorkerSigninRepository>(new HttpContextLifetimeManager<IWorkerSigninRepository>())
             .RegisterType<IWorkerRepository, WorkerRepository>(new HttpContextLifetimeManager<IWorkerRepository>())
             .RegisterType<IWorkerRequestRepository, WorkerRequestRepository>(new HttpContextLifetimeManager<IWorkerRequestRepository>())
             .RegisterType<IImageRepository, ImageRepository>(new HttpContextLifetimeManager<IImageRepository>())
             .RegisterType<IEmployerRepository, EmployerRepository>(new HttpContextLifetimeManager<IEmployerRepository>())
+            .RegisterType<IEmailRepository, EmailRepository>(new HttpContextLifetimeManager<IEmailRepository>())
             .RegisterType<IWorkOrderRepository, WorkOrderRepository>(new HttpContextLifetimeManager<IWorkOrderRepository>())
             .RegisterType<IWorkAssignmentRepository, WorkAssignmentRepository>(new HttpContextLifetimeManager<IWorkAssignmentRepository>())
             .RegisterType<ILookupRepository, LookupRepository>(new HttpContextLifetimeManager<ILookupRepository>())
             .RegisterType<IEventRepository, EventRepository>(new HttpContextLifetimeManager<IEventRepository>())
             .RegisterType<IActivityRepository, ActivityRepository>(new HttpContextLifetimeManager<IActivityRepository>())
             .RegisterType<IActivitySigninRepository, ActivitySigninRepository>(new HttpContextLifetimeManager<IActivitySigninRepository>())
-            
             // 
             .RegisterType<ILookupService, LookupService>(new HttpContextLifetimeManager<ILookupService>())
             .RegisterType<IActivitySigninService, ActivitySigninService>(new HttpContextLifetimeManager<IActivitySigninService>())
@@ -150,6 +150,7 @@ namespace Machete.Web
             .RegisterType<IWorkerService, WorkerService>(new HttpContextLifetimeManager<IWorkerService>())
             .RegisterType<IWorkerRequestService, WorkerRequestService>(new HttpContextLifetimeManager<IWorkerRequestService>())
             .RegisterType<IEmployerService, EmployerService>(new HttpContextLifetimeManager<IEmployerService>())
+            .RegisterType<IEmailService, EmailService>(new HttpContextLifetimeManager<IEmailService>())
             .RegisterType<IWorkOrderService, WorkOrderService>(new HttpContextLifetimeManager<IWorkOrderService>())
             .RegisterType<IWorkAssignmentService, WorkAssignmentService>(new HttpContextLifetimeManager<IWorkAssignmentService>())
             .RegisterType<IImageService, ImageService>(new HttpContextLifetimeManager<IImageService>());
