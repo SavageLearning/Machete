@@ -126,6 +126,12 @@
   <data name="emailTo" xml:space="preserve">
     <value>To:</value>
   </data>
+  <data name="String1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="stringlength" xml:space="preserve">
+    <value>Please enter no more than {1} characters</value>
+  </data>
   <data name="subject" xml:space="preserve">
     <value>Subject:</value>
   </data>
