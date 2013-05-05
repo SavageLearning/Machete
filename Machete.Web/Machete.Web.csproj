@@ -236,6 +236,7 @@
     </Compile>
     <Compile Include="Controllers\ActivitySigninController.cs" />
     <Compile Include="Controllers\ConfigController.cs" />
+    <Compile Include="Controllers\EmailController.cs" />
     <Compile Include="Controllers\EmployerController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\EventController.cs" />
@@ -767,6 +768,9 @@
     <Content Include="Views\Home\Docs.cshtml" />
     <Content Include="Views\Employer\CreateCombined.cshtml" />
     <None Include="Properties\PublishProfiles\Profile1.pubxml" />
+    <Content Include="Views\Email\Index.cshtml" />
+    <Content Include="Views\Email\Create.cshtml" />
+    <Content Include="Views\Email\Edit.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

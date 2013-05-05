@@ -1,0 +1,93 @@
+﻿@model IEnumerable<Machete.Domain.Email>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th>
+            emailFrom
+        </th>
+        <th>
+            emailTo
+        </th>
+        <th>
+            subject
+        </th>
+        <th>
+            body
+        </th>
+        <th>
+            transmitAttempts
+        </th>
+        <th>
+            lastAttempt
+        </th>
+        <th>
+            datecreated
+        </th>
+        <th>
+            dateupdated
+        </th>
+        <th>
+            Createdby
+        </th>
+        <th>
+            Updatedby
+        </th>
+        <th>
+            idPrefix
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.emailFrom)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.emailTo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.subject)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.body)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.transmitAttempts)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.lastAttempt)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.datecreated)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.dateupdated)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Createdby)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Updatedby)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.idPrefix)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
+
+</table>
