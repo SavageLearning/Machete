@@ -57,6 +57,12 @@ namespace Machete.Domain
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Email))]
         [Required(ErrorMessageResourceName = "body", ErrorMessageResourceType = typeof(Resources.Email))]
         public string body { get; set; }
+
+        public int transmitAttempts { get; set; }
+
+        public DateTime lastAttempt { get; set; }
+
+
     }
 
 
