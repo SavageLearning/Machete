@@ -1,0 +1,27 @@
+﻿@model Machete.Domain.Email
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "email";
+    string idPrefix = recType + Model.ID + "-";
+}
+@Html.HiddenFor(model => model.ID, new { @class="hiddenRecID", id=idPrefix + "ID"})
+<div class="tb-table" style="float: left; clear: left;">
+    <div class="tb-row">
+        @Html.mUITableLabelAndTextBoxFor(model => model.emailFrom, new {tabindex = "1", id=idPrefix + "emailFrom"})
+        @Html.mUITableLabelAndTextBoxFor(model => model.emailTo, new {tabindex = "2", id=idPrefix + "emailTo"})
+    </div><!--tb-row-->
+</div>
+
+<div style="clear: left;"></div>
+@Html.Partial("ManagerInfo", Model)
+@Html.Partial("AdministratorInfo", Model)
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+</script>
