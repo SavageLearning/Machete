@@ -88,7 +88,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Create New Activity.
+        ///   Looks up a localized string similar to Create New Email.
         /// </summary>
         public static string createlink {
             get {

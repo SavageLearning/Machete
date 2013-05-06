@@ -74,10 +74,6 @@ namespace Machete.Web.Controllers
             JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Create()
-        {
-            return View();
-        }
         private string _getTabRef(Email email)
         {
             if (email == null) return null;
@@ -88,6 +84,17 @@ namespace Machete.Web.Controllers
             if (email == null) return null;
             return email.subject;
         }
+        /// <summary>
+        /// GET: /Email/Create
+        /// </summary>
+        /// <returns>PartialView</returns>
+        [Authorize(Roles = "Administrator, Manager")]
+        public ActionResult Create()
+        {
+            var _model = new Email();
+            return PartialView("Create", _model);
+        }
+        
         //
         // POST: /Email/Create
 
