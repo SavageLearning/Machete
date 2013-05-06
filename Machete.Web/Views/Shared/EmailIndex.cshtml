@@ -15,6 +15,8 @@
                 <th>@Email.emailFrom</th>
                 <th>@Email.emailTo</th>
                 <th>@Email.subject</th>
+                <th>attempts</th>
+                <th>last attempt</th>
                 <th>@Record.dateupdated</th>
                 <th>@Record.updatedby</th>
             </tr>
@@ -45,7 +47,9 @@
                                 {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
                                 {"mDataProp": "emailFrom" },
                                 {"mDataProp": "emailTo" },
-                                {"mDataProp": "subjet" },
+                                { "mDataProp": "subject" },
+                                { "mDataProp": "transmitAttempts" },
+                                { "mDataProp": "lastAttempt" },
                                 {"mDataProp": "dateupdated", "bVisible": true },
                                 { "mDataProp": "Updatedby", "bSortable": false, "bVisible": true }
                             ]             

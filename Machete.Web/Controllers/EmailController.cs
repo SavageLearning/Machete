@@ -57,7 +57,19 @@ namespace Machete.Web.Controllers
                 iTotalRecords = list.totalCount,
                 iTotalDisplayRecords = list.filteredCount,
                 aaData = from p in list.query
-                         select p
+                         select new
+                         {
+                             recordid = Convert.ToString(p.ID),
+                             tabref = _getTabRef(p),
+                             tablabel = _getTabLabel(p),
+                             emailFrom = p.emailFrom,
+                             emailTo = p.emailTo,
+                             subject = p.subject,
+                             transmitAttempts = p.transmitAttempts.ToString(),
+                             lastAttempt = p.lastAttempt.ToString(),
+                             dateupdated = Convert.ToString(p.dateupdated),
+                             Updatedby = p.Updatedby
+                         }
             },
             JsonRequestBehavior.AllowGet);
         }
@@ -65,8 +77,17 @@ namespace Machete.Web.Controllers
         public ActionResult Create()
         {
             return View();
-        } 
-
+        }
+        private string _getTabRef(Email email)
+        {
+            if (email == null) return null;
+            return "/Email/Edit/" + Convert.ToString(email.ID);
+        }
+        private string _getTabLabel(Email email)
+        {
+            if (email == null) return null;
+            return email.subject;
+        }
         //
         // POST: /Email/Create
 
