@@ -127,7 +127,7 @@
     <value>Attendance</value>
   </data>
   <data name="createlink" xml:space="preserve">
-    <value>Create New Activity</value>
+    <value>Create New Email</value>
   </data>
   <data name="createsubmit" xml:space="preserve">
     <value>Save</value>
