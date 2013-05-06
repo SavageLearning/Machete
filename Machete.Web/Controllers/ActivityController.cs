@@ -39,7 +39,7 @@ namespace Machete.Web.Controllers
     public class ActivityController : MacheteController
     {
         private readonly IActivityService serv;
-        private System.Globalization.CultureInfo CI;
+        private CultureInfo CI;
 
         public ActivityController(IActivityService aServ)
         {
@@ -64,6 +64,7 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
+        //[Authorize(Roles = "Administrator, Manager, Teacher")]
         public JsonResult AjaxHandler(jQueryDataTableParam param)
         {
             //Get all the records
@@ -81,7 +82,7 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
-        public object dtResponse(ref Activity p)
+        private object dtResponse(ref Activity p)
         {
             return new
             {
