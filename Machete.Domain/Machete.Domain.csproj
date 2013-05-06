@@ -178,7 +178,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Email.es.resx" />
     <EmbeddedResource Include="Resources\Email.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Email.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Employer.es.resx">

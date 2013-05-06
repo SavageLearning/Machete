@@ -1,0 +1,60 @@
+﻿@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using Machete.Domain.Resources
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "email";
+    //string idPrefix = recType + Model.ID + "-";
+}
+<div id="emailList"> @* This div is the ui.panel  *@
+    <table id="emailTable" class="display">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>LABEL</th>
+                <th>@Email.emailFrom</th>
+                <th>@Email.emailTo</th>
+                <th>@Email.subject</th>
+                <th>@Record.dateupdated</th>
+                <th>@Record.updatedby</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {        
+        //
+        // Create Email table
+        jqrfyTable({
+            table: $('#emailTable'), 
+            tab: $('#emailTabs'),
+            options: {
+                "bPaginate": true,
+                "bLengthChange": true,
+                "aaSorting": [[5, 'desc']],
+                "bFilter": true,
+                "bSort": true,
+                "bInfo": true,
+                "bAutoWidth": false,
+                "bServerSide": true,
+                "sAjaxSource": "/Email/AjaxHandler",
+                "bProcessing": true,
+                "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+                "aoColumns": [                           //dataTable column definition
+                                {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                                {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                                {"mDataProp": "emailFrom" },
+                                {"mDataProp": "emailTo" },
+                                {"mDataProp": "subjet" },
+                                {"mDataProp": "dateupdated", "bVisible": true },
+                                { "mDataProp": "Updatedby", "bSortable": false, "bVisible": true }
+                            ]             
+            }, 
+            dblClickEvent: null, 
+            tabLabel: "@(recType)",
+            maxTabs: 2
+            });
+
+    });
+</script>
+

@@ -7,32 +7,60 @@ using System.Web;
 using System.Web.Mvc;
 using Machete.Domain;
 using Machete.Data;
+using Machete.Web.Helpers;
+using Machete.Service;
+using System.Web.Routing;
+using System.Globalization;
+using AutoMapper;
 
 namespace Machete.Web.Controllers
-{ 
-    public class EmailController : Controller
+{
+    [ElmahHandleError]
+    public class EmailController : MacheteController
     {
-        private MacheteContext db = new MacheteContext();
+        private readonly IEmailService serv;
+        private CultureInfo CI;
 
-        //
-        // GET: /Email/
-
-        public ViewResult Index()
+        public EmailController(IEmailService eServ)
         {
-            return View(db.Emails.ToList());
+            this.serv = eServ;
         }
-
-        //
-        // GET: /Email/Details/5
-
-        public ViewResult Details(int id)
+        protected override void Initialize(RequestContext requestContext)
         {
-            Email email = db.Emails.Find(id);
-            return View(email);
+            base.Initialize(requestContext);
+            CI = (CultureInfo)Session["Culture"];
         }
-
-        //
-        // GET: /Email/Create
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        //[Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        public ActionResult Index()
+        {
+            return View();
+        }
+        /// <summary>
+        /// GET: /Activity/AjaxHandler
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        public JsonResult AjaxHandler(jQueryDataTableParam param)
+        {
+            //Get all the records
+            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
+            vo.CI = CI;
+            dataTableResult<Email> list = serv.GetIndexView(vo);
+            return Json(new
+            {
+                sEcho = param.sEcho,
+                iTotalRecords = list.totalCount,
+                iTotalDisplayRecords = list.filteredCount,
+                aaData = from p in list.query
+                         select p
+            },
+            JsonRequestBehavior.AllowGet);
+        }
 
         public ActionResult Create()
         {
@@ -47,8 +75,8 @@ namespace Machete.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Emails.Add(email);
-                db.SaveChanges();
+                //db.Emails.Add(email);
+                //db.SaveChanges();
                 return RedirectToAction("Index");  
             }
 
@@ -60,8 +88,8 @@ namespace Machete.Web.Controllers
  
         public ActionResult Edit(int id)
         {
-            Email email = db.Emails.Find(id);
-            return View(email);
+            //Email email = db.Emails.Find(id);
+            return View();
         }
 
         //
@@ -72,8 +100,8 @@ namespace Machete.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(email).State = EntityState.Modified;
-                db.SaveChanges();
+                //db.Entry(email).State = EntityState.Modified;
+                //db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(email);
@@ -84,8 +112,8 @@ namespace Machete.Web.Controllers
  
         public ActionResult Delete(int id)
         {
-            Email email = db.Emails.Find(id);
-            return View(email);
+            //Email email = db.Emails.Find(id);
+            return View();
         }
 
         //
@@ -94,16 +122,10 @@ namespace Machete.Web.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {            
-            Email email = db.Emails.Find(id);
-            db.Emails.Remove(email);
-            db.SaveChanges();
+            //Email email = db.Emails.Find(id);
+            //db.Emails.Remove(email);
+            //db.SaveChanges();
             return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            db.Dispose();
-            base.Dispose(disposing);
         }
     }
 }

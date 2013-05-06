@@ -276,6 +276,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Configs.resx</DependentUpon>
     </Compile>
+    <Compile Include="Resources\Emails.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Emails.resx</DependentUpon>
+    </Compile>
     <Compile Include="Resources\Employers.es.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -556,6 +561,12 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Configs.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Emails.es.resx" />
+    <EmbeddedResource Include="Resources\Emails.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Emails.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Employers.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Employers.es.Designer.cs</LastGenOutput>
@@ -771,6 +782,7 @@
     <Content Include="Views\Email\Index.cshtml" />
     <Content Include="Views\Email\Create.cshtml" />
     <Content Include="Views\Email\Edit.cshtml" />
+    <Content Include="Views\Shared\EmailIndex.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
