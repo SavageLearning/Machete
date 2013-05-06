@@ -94,45 +94,52 @@ namespace Machete.Web.Controllers
             var _model = new Email();
             return PartialView("Create", _model);
         }
-        
-        //
-        // POST: /Email/Create
 
-        [HttpPost]
-        public ActionResult Create(Email email)
+        [HttpPost, UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager, Teacher")]
+        public JsonResult Create(Email email, string userName)
         {
-            if (ModelState.IsValid)
-            {
-                //db.Emails.Add(email);
-                //db.SaveChanges();
-                return RedirectToAction("Index");  
-            }
+            UpdateModel(email);
+            Email newEmail = serv.Create(email, userName);
 
-            return View(email);
+            return Json(new
+            {
+                sNewRef = _getTabRef(newEmail),
+                sNewLabel = _getTabLabel(newEmail),
+                iNewID = newEmail.ID,
+                jobSuccess = true
+            },
+            JsonRequestBehavior.AllowGet);
         }
-        
-        //
-        // GET: /Email/Edit/5
- 
+        /// <summary>
+        /// GET: /Email/Edit/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Edit(int id)
         {
-            //Email email = db.Emails.Find(id);
-            return View();
+            Email email = serv.Get(id);
+            return PartialView("Edit", email);
         }
-
-        //
-        // POST: /Email/Edit/5
-
-        [HttpPost]
-        public ActionResult Edit(Email email)
+        /// <summary>
+        /// POST: /Email/Edit/5
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="collection"></param>
+        /// <param name="userName"></param>
+        /// <returns></returns>
+        [HttpPost, UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager")]
+        public JsonResult Edit(int id, FormCollection collection, string userName)
         {
-            if (ModelState.IsValid)
+            Email email = serv.Get(id);
+            UpdateModel(email);
+            serv.Save(email, userName);
+            return Json(new
             {
-                //db.Entry(email).State = EntityState.Modified;
-                //db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(email);
+                jobSuccess = true
+            }, JsonRequestBehavior.AllowGet);
         }
 
         //

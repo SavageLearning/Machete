@@ -155,7 +155,7 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        //[Authorize(Roles = "Administrator, Manager, Teacher")]
+        [Authorize(Roles = "Administrator, Manager, Teacher")]
         public ActionResult Edit(int id)
         {
             Activity employer = serv.Get(id);

@@ -1,107 +1,85 @@
 ﻿@model Machete.Domain.Email
-
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using Machete.Domain
 @{
-    ViewBag.Title = "Edit";
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "email";
+
+    //To hide JS features for unauthorized
+    int hideme = 0;
+    if (Html.IsInRole(Html.Role_AM()))
+    {
+        hideme = 1;
+    }
 }
+@if (Html.IsInRole(Html.Role_AMPCU()) || Html.IsInRole(Html.Role_T()))
+{
+    using (Html.BeginForm("Edit", "Email", FormMethod.Post,
+                            new { @class = "edittab-form EditPost", @id = "EmailTab-" + Model.ID }))
+    {
+        @*<input type="button" value="@Emails.viewlink" class="formButton" id="viewEmail-@Model.ID" />*@
+        <input type="submit" value="@Emails.editsubmit" class="formButton saveBtn"/>
+        if (Html.IsInRole(Html.Role_AM()))
+        {
+            <input id="deleteEmailButton-@Model.ID" type="button" value="@Emails.deletesubmit" 
+                    class="formButton deleteButton" />
+        }
+        <br />    
+        @Html.ValidationSummary(true)
+        @Html.EditorForModel()
 
-<h2>Edit</h2>
-
-<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
-
-@using (Html.BeginForm()) {
-    @Html.ValidationSummary(true)
-    <fieldset>
-        <legend>Email</legend>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.emailFrom)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.emailFrom)
-            @Html.ValidationMessageFor(model => model.emailFrom)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.emailTo)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.emailTo)
-            @Html.ValidationMessageFor(model => model.emailTo)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.subject)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.subject)
-            @Html.ValidationMessageFor(model => model.subject)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.body)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.body)
-            @Html.ValidationMessageFor(model => model.body)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.transmitAttempts)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.transmitAttempts)
-            @Html.ValidationMessageFor(model => model.transmitAttempts)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.lastAttempt)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.lastAttempt)
-            @Html.ValidationMessageFor(model => model.lastAttempt)
-        </div>
-
-        @Html.HiddenFor(model => model.ID)
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.datecreated)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.datecreated)
-            @Html.ValidationMessageFor(model => model.datecreated)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.dateupdated)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.dateupdated)
-            @Html.ValidationMessageFor(model => model.dateupdated)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Createdby)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Createdby)
-            @Html.ValidationMessageFor(model => model.Createdby)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Updatedby)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Updatedby)
-            @Html.ValidationMessageFor(model => model.Updatedby)
-        </div>
-
-        <p>
-            <input type="submit" value="Save" />
-        </p>
-    </fieldset>
+    }
+    if (Html.IsInRole(Html.Role_AM()))
+    {
+        //
+        // Only Managers can delete email records.
+        // The phonedesk can edit and save.
+        //
+        using (Html.BeginForm("Delete", "Email", FormMethod.Post,
+                                new { @class = "edittab-form DeletePost", @id = "DeleteEmail-" + Model.ID }))
+        {
+            @Html.HiddenFor(model => model.ID);
+        }
+    }
 }
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#viewEmail-@Model.ID').click(function () {
+            printwindow = window.open('/Email/View/@Model.ID');
+        });
+        $('.formButton').button();
+        $('#emailName').focus();
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
+        //Checks Html.Role_AM() == true
+        if (@(hideme)) {
+
+            //
+            // machete UI detect changes on forms in tabs   
+            $("#EmailTab-@(Model.ID)").mUI('formDetectChanges', {
+                recType: "@(recType)",
+                formLevel: 1,
+                changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+                changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+            });
+            //
+            // validation for elements added after page load
+            $.validator.unobtrusive.parseDynamicContent($('#EmailTab-@Model.ID'));
+            //
+            // delete button confirmation
+            $("#deleteEmailButton-@Model.ID").mUI('formClickDelete', {
+                ok: "@(Emails.deletesubmit)",
+                confirm: '@(Emails.deleteconfirmation)',
+                title: '@(Emails.deletetitle)',
+                form: $('#DeleteEmail-@Model.ID')
+            });
+            //
+            // edit form submit
+            $('#EmailTab-@Model.ID').mUI('formSubmit', {
+                create: false,
+                selectTab: 0,
+                formLevel: 1
+            });
+        }
+    });
+</script>
