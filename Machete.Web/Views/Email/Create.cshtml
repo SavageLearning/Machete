@@ -1,105 +1,39 @@
 ﻿@model Machete.Domain.Email
-
-@{
-    ViewBag.Title = "Create";
+@using Machete.Web.Resources
+@{  
+    string recType = "email";
+    string idPrefix = recType + Model.ID + "-";
 }
-
-<h2>Create</h2>
-
-<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
-
-@using (Html.BeginForm()) {
+@using (Html.BeginForm("Create", "Email", FormMethod.Post, 
+                        new { @id = "emailCreateForm" }))
+{
+    <div>
+        <input type="submit" id="@(idPrefix)SaveBtn" class="formButton saveBtn" 
+               value="@Emails.createsubmit"  tabindex="9"/>
+    </div>
     @Html.ValidationSummary(true)
-    <fieldset>
-        <legend>Email</legend>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.emailFrom)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.emailFrom)
-            @Html.ValidationMessageFor(model => model.emailFrom)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.emailTo)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.emailTo)
-            @Html.ValidationMessageFor(model => model.emailTo)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.subject)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.subject)
-            @Html.ValidationMessageFor(model => model.subject)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.body)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.body)
-            @Html.ValidationMessageFor(model => model.body)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.transmitAttempts)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.transmitAttempts)
-            @Html.ValidationMessageFor(model => model.transmitAttempts)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.lastAttempt)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.lastAttempt)
-            @Html.ValidationMessageFor(model => model.lastAttempt)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.datecreated)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.datecreated)
-            @Html.ValidationMessageFor(model => model.datecreated)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.dateupdated)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.dateupdated)
-            @Html.ValidationMessageFor(model => model.dateupdated)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Createdby)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Createdby)
-            @Html.ValidationMessageFor(model => model.Createdby)
-        </div>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.Updatedby)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Updatedby)
-            @Html.ValidationMessageFor(model => model.Updatedby)
-        </div>
-
-        <p>
-            <input type="submit" value="Create" />
-        </p>
-    </fieldset>
+    @Html.EditorForModel()
 }
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.formButton').button();
+        var emailCreateForm = $("#emailCreateForm")
+        $.validator.unobtrusive.parseDynamicContent('#emailCreateForm');
+        $('#emailName').focus();
+        // Email Create submit event
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
+        emailCreateForm.mUI('formSubmit', {
+            recType: "@(recType)", //for add_rectab
+            create: true,
+            formLevel: 1
+        });
+        //
+        // machete UI detect changes on forms in tabs   
+        emailCreateForm.mUI('formDetectChanges', {
+            recType: "@(recType)",
+            formLevel: 1,
+            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+        });
+    });
+</script>
