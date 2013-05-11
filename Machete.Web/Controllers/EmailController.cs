@@ -94,7 +94,12 @@ namespace Machete.Web.Controllers
             var _model = new Email();
             return PartialView("Create", _model);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="userName"></param>
+        /// <returns></returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, Teacher")]
         public JsonResult Create(Email email, string userName)
@@ -141,26 +146,25 @@ namespace Machete.Web.Controllers
                 jobSuccess = true
             }, JsonRequestBehavior.AllowGet);
         }
-
-        //
-        // GET: /Email/Delete/5
- 
-        public ActionResult Delete(int id)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="UserName"></param>s
+        /// <returns></returns>
+        [HttpPost, UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager")]
+        public JsonResult Delete(int id, string userName)
         {
-            //Email email = db.Emails.Find(id);
-            return View();
-        }
+            serv.Delete(id, userName);
 
-        //
-        // POST: /Email/Delete/5
-
-        [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id)
-        {            
-            //Email email = db.Emails.Find(id);
-            //db.Emails.Remove(email);
-            //db.SaveChanges();
-            return RedirectToAction("Index");
+            return Json(new
+            {
+                status = "OK",
+                jobSuccess = true,
+                deletedID = id
+            },
+            JsonRequestBehavior.AllowGet);
         }
     }
 }
