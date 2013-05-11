@@ -184,7 +184,7 @@ namespace Machete.Web.Controllers
         /// 
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="UserName"></param>
+        /// <param name="UserName"></param>s
         /// <returns></returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, Teacher")]
