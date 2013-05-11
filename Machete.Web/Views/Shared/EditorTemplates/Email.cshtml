@@ -10,9 +10,21 @@
 @Html.HiddenFor(model => model.ID, new { @class="hiddenRecID", id=idPrefix + "ID"})
 <div class="tb-table" style="float: left; clear: left;">
     <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.emailFrom, new {tabindex = "1", id=idPrefix + "emailFrom"})
-        @Html.mUITableLabelAndTextBoxFor(model => model.emailTo, new {tabindex = "2", id=idPrefix + "emailTo"})
+        @Html.mUITableLabelAndTextBoxFor(model => model.emailFrom, 
+            new {tabindex = "1", id=idPrefix + "emailFrom", @class="emailField email"})
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelAndTextBoxFor(model => model.emailTo, 
+            new {tabindex = "1", id=idPrefix + "emailTo", @class="emailField email"})
     </div><!--tb-row-->
+    <div class="tb-row">
+        @Html.mUITableLabelAndTextBoxFor(m => m.subject,
+            new {tabindex = "1", id=idPrefix + "subject", @class="emailField"})
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelFor(m => m.body)
+        @Html.TextAreaFor(m => m.body, new {tabindex = "1", id=idPrefix + "body", @class="emailField"})
+    </div>
 </div>
 
 <div style="clear: left;"></div>
