@@ -171,7 +171,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles="Administrator, Manager, Phonedesk")]
         public ActionResult ConfirmDialog(int woid, string userName)
         {
-            var email = serv.GetConfirmEmailByWorkOrder(woid);
+            var email = serv.GetLatestConfirmEmailBy(woid);
             if (email == null)
             {
                 email = new Email();

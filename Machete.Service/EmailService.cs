@@ -11,7 +11,7 @@ namespace Machete.Service
     public interface IEmailService : IService<Email>
     {
         dataTableResult<Email> GetIndexView(viewOptions o);
-        Email GetConfirmEmailByWorkOrder(int woid);
+        Email GetLatestConfirmEmailBy(int woid);
     }
 
     public class EmailService : ServiceBase<Email>, IEmailService
@@ -24,7 +24,7 @@ namespace Machete.Service
             _woServ = woServ;
         }
 
-        public Email GetConfirmEmailByWorkOrder(int woid)
+        public Email GetLatestConfirmEmailBy(int woid)
         {
             var wo = _woServ.Get(woid);
             if (wo == null) throw new MacheteServiceException("Cannot find workorder.");
