@@ -166,5 +166,12 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
+
+        [UserNameFilter]
+        [Authorize(Roles="Administrator, Manager, Phonedesk")]
+        public ActionResult ConfirmDialog(int woid, string userName)
+        {
+            return PartialView();
+        }
     }
 }
