@@ -11,13 +11,26 @@ namespace Machete.Service
     public interface IEmailService : IService<Email>
     {
         dataTableResult<Email> GetIndexView(viewOptions o);
+        Email GetConfirmEmailByWorkOrder(int woid);
     }
 
     public class EmailService : ServiceBase<Email>, IEmailService
     {
-        public EmailService(IEmailRepository emRepo, IUnitOfWork uow) : base(emRepo, uow)
+        IWorkOrderService _woServ;
+
+        public EmailService(IEmailRepository emRepo, IWorkOrderService woServ, IUnitOfWork uow) : base(emRepo, uow)
         {
             this.logPrefix = "Email";
+            _woServ = woServ;
+        }
+
+        public Email GetConfirmEmailByWorkOrder(int woid)
+        {
+            var wo = _woServ.Get(woid);
+            if (wo == null) throw new MacheteServiceException("Cannot find workorder.");
+            var emailJoiner = wo.JoinWorkorderEmails.OrderByDescending(e => e.datecreated).FirstOrDefault();
+            if (emailJoiner == null) {return null;}
+            return emailJoiner.Email;
         }
 
         public dataTableResult<Email> GetIndexView(viewOptions o)
