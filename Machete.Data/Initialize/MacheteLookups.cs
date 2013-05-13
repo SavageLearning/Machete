@@ -116,7 +116,7 @@ namespace Machete.Data
                 new Lookup { ID=80, category = LCategory.countryoforigin,     text_EN = "Russia", text_ES = "Rusia", selected=false},
                 new Lookup { ID=81, category = LCategory.countryoforigin,     text_EN = "Argentina", text_ES = "Argentina", selected=false},
                 new Lookup { ID=82, category = LCategory.countryoforigin,     text_EN = "Brazil", text_ES = "Brasil", selected=false},
-                new Lookup { ID=60, category = LCategory.skill, typeOfWorkID=20, speciality=false,  ltrCode="", minHour=5, wage=12,    sortorder=2,  text_EN = "general labor",                               text_ES = "general del trabajo",                      selected=true},
+                new Lookup { ID=60, category = LCategory.skill, key=LKey.Default, typeOfWorkID=20, speciality=false,  ltrCode="", minHour=5, wage=12,    sortorder=2,  text_EN = "general labor",                               text_ES = "general del trabajo",                      selected=true},
                 new Lookup { ID=61, category = LCategory.skill, typeOfWorkID=20, speciality=true,   ltrCode="P", minHour=5, wage=15,    sortorder=5,  text_EN = "painter (rollerbrush)",                       text_ES = "pintor (rollerbrush)",                     selected=false, subcategory="paint", level=1 },
                 new Lookup { ID=62, category = LCategory.skill, typeOfWorkID=20, speciality=true,   ltrCode="P", minHour=5, wage=18,    sortorder=5,  text_EN = "painter (spray)",                             text_ES = "pintor (spray)",                           selected=false, subcategory="paint", level=2 },
                 new Lookup { ID=63, category = LCategory.skill, typeOfWorkID=20, speciality=true,   ltrCode="B", minHour=5, wage=15,    sortorder=9,  text_EN = "insulation / sheetrock / taping / drywall",   text_ES = "aislamiento / yeso / grabación / yeso",    selected=false, subcategory="build", level=1 },
@@ -165,7 +165,7 @@ namespace Machete.Data
                 u.Updatedby = "Init T. Script";
                 context.Lookups.Add(u); 
             });
-            context.SaveChanges();
+            context.Commit();
         }
     }    
 }

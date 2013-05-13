@@ -56,5 +56,9 @@ namespace Machete.Domain
         public const string Sent = "sent";
         public const string TransmitError = "transmiterror";
     }
+    public struct LKey
+    {
+        public const string Default = "default";
+    }
 
 }
