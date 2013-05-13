@@ -181,7 +181,7 @@ namespace Machete.Web.Controllers
                 dateforsignin = p.dateforsignin,
                 dateforsigninstring = p.dateforsignin.ToShortDateString(),
                 WAID = p.waid ?? 0,
-                memberStatus = LookupCache.byID(p.memberStatus, CI.TwoLetterISOLanguageName),
+                memberStatus = LookupCache.textByID(p.memberStatus, CI.TwoLetterISOLanguageName),
                 memberInactive = p.w.isInactive,
                 memberSanctioned = p.w.isSanctioned,
                 memberExpired = p.w.isExpired,
@@ -190,7 +190,7 @@ namespace Machete.Web.Controllers
                 lotterySequence = p.lotterySequence,
                 expirationDate = p.expirationDate.ToShortDateString(),
                 skills = _getSkillCodes(p.englishlevel, p.skill1, p.skill2, p.skill3),
-                program = p.typeOfWorkID == Worker.iDWC ? "DWC" : "HHH"
+                program = LookupCache.getByID(p.typeOfWorkID).ltrCode
                 };
             return Json(new
             {

@@ -88,8 +88,8 @@ namespace Machete.Web.Controllers
             {
                 tabref = EditTabRef(p),
                 tablabel = EditTabLabel(p),
-                name = LookupCache.byID(p.name, CI.TwoLetterISOLanguageName),
-                type = LookupCache.byID(p.type, CI.TwoLetterISOLanguageName),
+                name = LookupCache.textByID(p.name, CI.TwoLetterISOLanguageName),
+                type = LookupCache.textByID(p.type, CI.TwoLetterISOLanguageName),
                 count = p.Signins.Count(),
                 teacher = p.teacher,
                 dateStart = p.dateStart.ToString(),
@@ -109,7 +109,7 @@ namespace Machete.Web.Controllers
         {
             if (emp == null) return null;
             return emp.dateStart.ToString() + " - " + 
-                    LookupCache.byID(emp.name, CI.TwoLetterISOLanguageName) + " - " +
+                    LookupCache.textByID(emp.name, CI.TwoLetterISOLanguageName) + " - " +
                     emp.teacher;
         }
         /// <summary>

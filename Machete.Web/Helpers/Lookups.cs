@@ -100,7 +100,7 @@ namespace Machete.Web.Helpers
         // Get the Id string for a given lookup number
         public static string byID(int ID, string locale)
         {
-            return LookupCache.byID(ID, locale);
+            return LookupCache.textByID(ID, locale);
         }
         public static string byID(int? ID, string locale)
         {
@@ -162,7 +162,7 @@ namespace Machete.Web.Helpers
             return list;
         }
         /// <summary>
-        /// get the List of skills
+        /// get the List of skills. used in Worker.cshtml & WorkAssignment.cshtml
         /// </summary>
         /// <param name="locale"></param>
         /// <param name="specializedOnly">only return specialized entries</param>
