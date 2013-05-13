@@ -124,7 +124,7 @@ namespace Machete.Web.Controllers
             _model.city = "Seattle";
             _model.state = "WA";
             _model.blogparticipate = false;
-            _model.referredby = Lookups.getDefaultID(LType.emplrreference);
+            _model.referredby = Lookups.getDefaultID(LCategory.emplrreference);
             return PartialView("Create", _model);
         }
         /// <summary>
