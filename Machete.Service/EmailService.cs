@@ -12,6 +12,7 @@ namespace Machete.Service
     {
         dataTableResult<Email> GetIndexView(viewOptions o);
         Email GetLatestConfirmEmailBy(int woid);
+        IEnumerable<Email> GetMany(Func<Email, bool> predicate);
     }
 
     public class EmailService : ServiceBase<Email>, IEmailService
@@ -31,6 +32,11 @@ namespace Machete.Service
             var emailJoiner = wo.JoinWorkorderEmails.OrderByDescending(e => e.datecreated).FirstOrDefault();
             if (emailJoiner == null) {return null;}
             return emailJoiner.Email;
+        }
+
+        public IEnumerable<Email> GetMany(Func<Email, bool> predicate)
+        {
+            return repo.GetMany(predicate);
         }
 
         public dataTableResult<Email> GetIndexView(viewOptions o)

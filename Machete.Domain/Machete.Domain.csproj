@@ -70,6 +70,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.cs" />
     <Compile Include="Entities\Activity.cs" />
     <Compile Include="Entities\Email.cs" />
     <Compile Include="Entities\Event.cs" />
