@@ -70,11 +70,11 @@ namespace Machete.Domain
         [LocalizedDisplayName("sortorder", NameResourceType = typeof(Resources.Lookup))]
         public int? sortorder { get; set; }
         [LocalizedDisplayName("typeOfWorkID", NameResourceType = typeof(Resources.Lookup))]
-        public int? typeOfWorkID { get; set; } // 1 DWC, 2 HHH
+        public int? typeOfWorkID { get; set; } 
         [LocalizedDisplayName("speciality", NameResourceType = typeof(Resources.Lookup))]
         public bool speciality { get; set; }
         [LocalizedDisplayName("ltrCode", NameResourceType = typeof(Resources.Lookup))]
-        [StringLength(1, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Lookup))]
+        [StringLength(3, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Lookup))]
         public string ltrCode { get; set; }
         /// <summary>
         /// Set only for records that correspond to internal component or status
