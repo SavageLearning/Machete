@@ -136,7 +136,7 @@ namespace Machete.Service
             //
             if (o.date != null) IndexViewBase.diffDays(o, ref q);                
             //
-            if (o.typeofwork_grouping == Worker.iDWC || o.typeofwork_grouping == Worker.iHHH)
+            if (o.typeofwork_grouping != null)
                 IndexViewBase.typeOfWork(o, ref q);
             // 
             // wa_grouping

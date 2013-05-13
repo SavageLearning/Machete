@@ -74,7 +74,7 @@ namespace Machete.Web.Controllers
                 datefrom = p.dateFrom.ToShortDateString(),
                 dateto = p.dateTo == null ? "" : ((DateTime)p.dateTo).ToShortDateString(),
                 fileCount = p.JoinEventImages.Count(),
-                type = LookupCache.byID(p.eventType, CI.TwoLetterISOLanguageName),
+                type = LookupCache.textByID(p.eventType, CI.TwoLetterISOLanguageName),
                 dateupdated = Convert.ToString(p.dateupdated),
                 Updatedby = p.Updatedby
             };
@@ -97,7 +97,7 @@ namespace Machete.Web.Controllers
         //
         private string _getTabLabel(Event evnt, string locale)
         {
-            return evnt.dateFrom.ToShortDateString() + " " + LookupCache.byID(evnt.eventType, locale);
+            return evnt.dateFrom.ToShortDateString() + " " + LookupCache.textByID(evnt.eventType, locale);
         }
         //
         // GET: /Event/Create

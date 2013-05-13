@@ -40,8 +40,6 @@ namespace Machete.Domain
         public static int iSanctioned { get; set; }
         public static int iExpired { get; set; }
         public static int iExpelled { get; set; }
-        public static int iDWC { get; set; } //TODO: Casa specific configuration. needs real abstraction.
-        public static int iHHH { get; set; } //TODO: Casa specific configuration. needs real abstraction.
 
         public Worker()
         {
