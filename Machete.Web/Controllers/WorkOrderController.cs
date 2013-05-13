@@ -222,9 +222,9 @@ namespace Machete.Web.Controllers
             WorkOrder _wo = new WorkOrder();
             _wo.EmployerID = EmployerID;
             _wo.dateTimeofWork = DateTime.Today;
-            _wo.transportMethodID = Lookups.getDefaultID(LType.transportmethod);
-            _wo.typeOfWorkID = Lookups.getDefaultID(LType.worktype);
-            _wo.status = Lookups.getDefaultID(LType.orderstatus);
+            _wo.transportMethodID = Lookups.getDefaultID(LCategory.transportmethod);
+            _wo.typeOfWorkID = Lookups.getDefaultID(LCategory.worktype);
+            _wo.status = Lookups.getDefaultID(LCategory.orderstatus);
             _wo.timeFlexible = true;
             ViewBag.workerRequests = new List<SelectListItem> {};
             return PartialView("Create", _wo);
