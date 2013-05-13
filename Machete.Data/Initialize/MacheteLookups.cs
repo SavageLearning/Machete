@@ -141,7 +141,10 @@ namespace Machete.Data
                 new Lookup { ID=101,category = "activityType", text_EN="Class",         text_ES="Clase",          selected = true },
                 new Lookup { ID=102,category = "activityType", text_EN="Assembly",         text_ES="Asamblea",          selected = false },
                 new Lookup { ID=103,category = "activityType", text_EN="Volunteering",         text_ES="Voluntariado",          selected = false },
-                new Lookup { ID=104,category = "activityType", text_EN="Health & Safety",         text_ES="Salud y seguridad",          selected = false }
+                new Lookup { ID=104,category = "activityType", text_EN="Health & Safety",         text_ES="Salud y seguridad",          selected = false },
+                new Lookup { ID=105,category = category.emailstatus, text_EN="Ready to send",         text_ES="Listo para enviar",          selected = false },
+                new Lookup { ID=106,category = category.emailstatus, text_EN="Sent",         text_ES="Enviado",          selected = false },
+                new Lookup { ID=107,category = category.emailstatus, text_EN="Transmit error",         text_ES="Error en la transmisión",          selected = false }
             };
         //
         //
