@@ -480,10 +480,10 @@ namespace Machete.Service
         public static void search(viewOptions o, ref IEnumerable<Activity> q)
         {
             q = q //LookupCache will be slow and needs to be converted to IQueryable
-                .Where(p => LookupCache.byID(p.name, o.CI.TwoLetterISOLanguageName).ContainsOIC(o.sSearch) ||
+                .Where(p => LookupCache.textByID(p.name, o.CI.TwoLetterISOLanguageName).ContainsOIC(o.sSearch) ||
                             p.notes.ContainsOIC(o.sSearch) ||
                             p.teacher.ContainsOIC(o.sSearch) ||
-                            LookupCache.byID(p.type, o.CI.TwoLetterISOLanguageName).ContainsOIC(o.sSearch) ||
+                            LookupCache.textByID(p.type, o.CI.TwoLetterISOLanguageName).ContainsOIC(o.sSearch) ||
                             p.dateStart.ToString().ContainsOIC(o.sSearch) ||
                             p.dateEnd.ToString().ContainsOIC(o.sSearch));
         }
@@ -500,13 +500,13 @@ namespace Machete.Service
             {
                 case "name":
                     q = descending ?
-                        q.OrderByDescending(p => LookupCache.byID(p.name, isoLandCode)) :
-                        q.OrderBy(p => LookupCache.byID(p.name, isoLandCode));
+                        q.OrderByDescending(p => LookupCache.textByID(p.name, isoLandCode)) :
+                        q.OrderBy(p => LookupCache.textByID(p.name, isoLandCode));
                     break;
                 case "type":
                     q = descending ?
-                        q.OrderByDescending(p => LookupCache.byID(p.type, isoLandCode)) :
-                        q.OrderBy(p => LookupCache.byID(p.type, isoLandCode));
+                        q.OrderByDescending(p => LookupCache.textByID(p.type, isoLandCode)) :
+                        q.OrderBy(p => LookupCache.textByID(p.type, isoLandCode));
                     break;
                 case "count":
                     q = descending ?

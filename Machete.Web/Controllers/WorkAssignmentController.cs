@@ -97,7 +97,7 @@ namespace Machete.Web.Controllers
                             recordid = Convert.ToString(p.ID),
                             pWAID = p.getFullPseudoID(), 
                             englishlevel = Convert.ToString(p.englishLevelID),
-                            skill =  LookupCache.byID(p.skillID, CI.TwoLetterISOLanguageName),
+                            skill =  LookupCache.textByID(p.skillID, CI.TwoLetterISOLanguageName),
                             hourlywage = System.String.Format("${0:f2}", p.hourlyWage),
                             hours = Convert.ToString(p.hours),
                             hourRange = p.hourRange > 0 ? Convert.ToString(p.hourRange) : "",

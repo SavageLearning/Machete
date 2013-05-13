@@ -147,18 +147,13 @@ namespace Machete.Web.Controllers
                              lastname2 = p.lastname2,
                              dateforsignin = p.dateforsignin,
                              dateforsigninstring = p.dateforsignin.ToShortDateString(),
-                             memberStatus = LookupCache.byID(p.memberStatus, CI.TwoLetterISOLanguageName),
+                             memberStatus = LookupCache.textByID(p.memberStatus, CI.TwoLetterISOLanguageName),
                              memberInactive = p.w.isInactive,
                              memberSanctioned = p.w.isSanctioned,
                              memberExpired = p.w.isExpired,
                              memberExpelled = p.w.isExpelled,
                              imageID = p.imageID,
                              expirationDate = p.expirationDate.ToShortDateString(),
-                             //type = LookupCache.byID(p.type, CI.TwoLetterISOLanguageName),
-                             //activityName = LookupCache.byID(p.name, CI.TwoLetterISOLanguageName),
-                             //teacher = p.teacher,
-                             //dateStart = p.dateStart.ToString(),
-                             //dateEnd = p.dateEnd.ToString()
                          };
             return Json(new
             {

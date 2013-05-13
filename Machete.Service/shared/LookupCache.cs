@@ -70,8 +70,6 @@ namespace Machete.Service
             Worker.iExpired = getByKeys(LCategory.memberstatus, LMemberStatus.Expired);
             Worker.iInactive = getByKeys(LCategory.memberstatus, LMemberStatus.Inactive);
             //
-            Worker.iDWC = getByKeys(LCategory.worktype, "(DWC) Day Worker Center");//TODO: Remove Casa specific configuration. needs real abstraction on iDWC / iHHH.
-            Worker.iHHH = getByKeys(LCategory.worktype, "(HHH) Household Helpers");//TODO: Remove Casa specific configuration. needs real abstraction on iDWC / iHHH.
             #endregion  
             #region WORKORDERS
             WorkOrder.iActive = getByKeys(LCategory.orderstatus, LOrderStatus.Active);
@@ -123,7 +121,7 @@ namespace Machete.Service
         }
         //
         // Get the Id string for a given lookup number
-        public static string byID(int ID, string locale)
+        public static string textByID(int ID, string locale)
         {
             Lookup record;
             try
