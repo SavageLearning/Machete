@@ -33,6 +33,10 @@ namespace Machete.Domain
 {
     public class Email : Record
     {
+        public static int iReadyToSend { get; set; }
+        public static int iSent { get; set; }
+        public static int iTransmitError { get; set; }
+
         public Email()
         { 
             idString = "email";
@@ -59,7 +63,7 @@ namespace Machete.Domain
         public string body { get; set; }
 
         public int transmitAttempts { get; set; }
-
+        public int  status { get; set; }
         public DateTime? lastAttempt { get; set; }
 
 

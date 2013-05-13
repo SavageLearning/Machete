@@ -73,14 +73,17 @@ namespace Machete.Service
             Worker.iDWC = getSingleEN("worktype", "(DWC) Day Worker Center");//TODO: Remove Casa specific configuration. needs real abstraction on iDWC / iHHH.
             Worker.iHHH = getSingleEN("worktype", "(HHH) Household Helpers");//TODO: Remove Casa specific configuration. needs real abstraction on iDWC / iHHH.
             #endregion  
-            //
             #region WORKORDERS
-            //
             WorkOrder.iActive = getSingleEN("orderstatus", "Active");
             WorkOrder.iPending = getSingleEN("orderstatus", "Pending");
             WorkOrder.iCompleted = getSingleEN("orderstatus", "Completed");
             WorkOrder.iCancelled = getSingleEN("orderstatus", "Cancelled");
             WorkOrder.iExpired = getSingleEN("orderstatus", "Expired");
+            #endregion
+            #region EMAILS
+            Email.iReadyToSend = getSingleEN("emailstatus", "Ready to send");
+            Email.iSent = getSingleEN("emailstatus", "Sent");
+            Email.iTransmitError = getSingleEN("emailstatus", "Transmit error");
             #endregion
         }
         //

@@ -888,8 +888,9 @@ namespace Machete.Test
             //
             // DEPENDENCIES
             if (_repoEM == null) AddRepoEmail();
+            if (_servWO == null) AddServWorkOrder();
             if (_uow == null) AddUOW();
-            _servEM = new EmailService(_repoEM, _uow);
+            _servEM = new EmailService(_repoEM, _servWO, _uow);
             return this;
         }
 
