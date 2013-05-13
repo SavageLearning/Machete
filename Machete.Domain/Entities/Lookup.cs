@@ -76,6 +76,10 @@ namespace Machete.Domain
         [LocalizedDisplayName("ltrCode", NameResourceType = typeof(Resources.Lookup))]
         [StringLength(1, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Lookup))]
         public string ltrCode { get; set; }
+        /// <summary>
+        /// Set only for records that correspond to internal component or status
+        /// </summary>
+        public string key { get; set; }
     }
 
 

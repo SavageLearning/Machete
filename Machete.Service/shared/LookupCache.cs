@@ -64,26 +64,26 @@ namespace Machete.Service
             cache.Set(wCacheItem, policy);
             //
             #region WORKERS
-            Worker.iActive = getSingleEN("memberstatus", "Active");
-            Worker.iSanctioned = getSingleEN("memberstatus", "Sanctioned");
-            Worker.iExpelled = getSingleEN("memberstatus", "Expelled");
-            Worker.iExpired = getSingleEN("memberstatus", "Expired");
-            Worker.iInactive = getSingleEN("memberstatus", "Inactive");
+            Worker.iActive = getByKeys(LCategory.memberstatus, LMemberStatus.Active);
+            Worker.iSanctioned = getByKeys(LCategory.memberstatus, LMemberStatus.Sanctioned);
+            Worker.iExpelled = getByKeys(LCategory.memberstatus, LMemberStatus.Expelled);
+            Worker.iExpired = getByKeys(LCategory.memberstatus, LMemberStatus.Expired);
+            Worker.iInactive = getByKeys(LCategory.memberstatus, LMemberStatus.Inactive);
             //
-            Worker.iDWC = getSingleEN("worktype", "(DWC) Day Worker Center");//TODO: Remove Casa specific configuration. needs real abstraction on iDWC / iHHH.
-            Worker.iHHH = getSingleEN("worktype", "(HHH) Household Helpers");//TODO: Remove Casa specific configuration. needs real abstraction on iDWC / iHHH.
+            Worker.iDWC = getByKeys(LCategory.worktype, "(DWC) Day Worker Center");//TODO: Remove Casa specific configuration. needs real abstraction on iDWC / iHHH.
+            Worker.iHHH = getByKeys(LCategory.worktype, "(HHH) Household Helpers");//TODO: Remove Casa specific configuration. needs real abstraction on iDWC / iHHH.
             #endregion  
             #region WORKORDERS
-            WorkOrder.iActive = getSingleEN("orderstatus", "Active");
-            WorkOrder.iPending = getSingleEN("orderstatus", "Pending");
-            WorkOrder.iCompleted = getSingleEN("orderstatus", "Completed");
-            WorkOrder.iCancelled = getSingleEN("orderstatus", "Cancelled");
-            WorkOrder.iExpired = getSingleEN("orderstatus", "Expired");
+            WorkOrder.iActive = getByKeys(LCategory.orderstatus, LOrderStatus.Active);
+            WorkOrder.iPending = getByKeys(LCategory.orderstatus, LOrderStatus.Pending);
+            WorkOrder.iCompleted = getByKeys(LCategory.orderstatus, LOrderStatus.Completed);
+            WorkOrder.iCancelled = getByKeys(LCategory.orderstatus, LOrderStatus.Cancelled);
+            WorkOrder.iExpired = getByKeys(LCategory.orderstatus, LOrderStatus.Expired);
             #endregion
             #region EMAILS
-            Email.iReadyToSend = getSingleEN("emailstatus", "Ready to send");
-            Email.iSent = getSingleEN("emailstatus", "Sent");
-            Email.iTransmitError = getSingleEN("emailstatus", "Transmit error");
+            Email.iReadyToSend = getByKeys(LCategory.emailstatus, LEmailStatus.ReadyToSend);
+            Email.iSent = getByKeys(LCategory.emailstatus, LEmailStatus.Sent);
+            Email.iTransmitError = getByKeys(LCategory.emailstatus, LEmailStatus.TransmitError);
             #endregion
         }
         //
@@ -142,16 +142,16 @@ namespace Machete.Service
         }
         //
         // Get the ID number for a given lookup string
-        public static int getSingleEN(string category, string text)
+        public static int getByKeys(string category, string key)
         {
             int rtnint = 0;
             try
             {
-                rtnint = getCache().Single(s => s.category == category && s.text_EN == text).ID;
+                rtnint = getCache().Single(s => s.category == category && s.key == key).ID;
             }
             catch
             {
-                throw new MacheteIntegrityException("Unable to Lookup Category: " + category + ", text: " + text);
+                throw new MacheteIntegrityException("Unable to Lookup Category: " + category + ", text: " + key);
             }
             return rtnint;
         }
@@ -166,7 +166,6 @@ namespace Machete.Service
             catch {
                 throw new MacheteIntegrityException("getSkillsByWorkType throws exception for worktype ID:" +worktypeID);
             }
-
         }
     }
 }

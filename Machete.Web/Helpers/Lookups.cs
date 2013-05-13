@@ -37,26 +37,6 @@ using System.Globalization;
 namespace Machete.Web.Helpers
 {
 
-    public enum LType
-    {
-        maritalstatus,
-        race,
-        language,
-        neighborhood,
-        gender,
-        transportmethod,
-        countryoforigin,
-        activityName,
-        activityType,
-        eventtype,
-        emplrreference,
-        memberstatus,
-        skill,
-        income,
-        orderstatus,
-        worktype
-    }
-
     public class Lookups
     {
         public static int hoursDefault { get { return 5; } }
@@ -90,11 +70,13 @@ namespace Machete.Web.Helpers
             skillLevelNum = new SelectList(new[] { "0", "1", "2", "3" }
                 .Select(x => new SelectListItem { Value = x, Text = x }),
                 "Value", "Text", "0");
-            categories = new SelectList(new[] {"maritalstatus","race","neighborhood","gender",
-                "transportmethod","countryoforigin","activityName","activityType","eventtype",
-                "orderstatus","emplrreference","worktype","memberStatus","skill"}
+            categories = new SelectList(new[] {
+                LCategory.maritalstatus, LCategory.race, LCategory.neighborhood, LCategory.gender,
+                LCategory.transportmethod, LCategory.countryoforigin, LCategory.activityName, 
+                LCategory.activityType, LCategory.eventtype, LCategory.orderstatus, LCategory.emplrreference, 
+                LCategory.worktype, LCategory.memberstatus,LCategory.skill}
                 .Select(x => new SelectListItem { Value = x, Text = x}),
-                "Value", "Text", "activityName");
+                "Value", "Text", LCategory.activityName);
 
             yesnoEN = new List<SelectListItem>();
             yesnoEN.Add(new SelectListItem() { Selected = false, Text = "No", Value = "false" });
@@ -146,16 +128,16 @@ namespace Machete.Web.Helpers
         /// Gets the default ID for the group
         /// </summary>
         /// <returns></returns>
-        public static int getDefaultID(LType type)
+        public static int getDefaultID(string type)
         {
             int count;
             count = LookupCache.getCache()
                 .Where(s => s.selected == true &&
-                            s.category == type.ToString())
+                            s.category == type)
                 .Count();
             if (count > 0) return LookupCache.getCache()
                                              .Where(s => s.selected == true &&
-                                                         s.category == type.ToString())
+                                                         s.category == type)
                                              .SingleOrDefault().ID;
             return count;
         }
@@ -164,7 +146,7 @@ namespace Machete.Web.Helpers
         /// </summary>
         /// <param name="locale"></param>
         /// <returns></returns>
-        public static SelectList get(LType type, string locale)
+        public static SelectList get(string type, string locale)
         {
             string field;
             SelectList list;
@@ -172,7 +154,7 @@ namespace Machete.Web.Helpers
             else field = "text_EN";
             //if (LookupCol == null) LookupCol = LookupCache.getCache();
 
-            list = new SelectList(LookupCache.getCache().Where(s => s.category == type.ToString()),
+            list = new SelectList(LookupCache.getCache().Where(s => s.category == type),
                                     "ID",
                                     field,
                                     getDefaultID(type));
@@ -188,7 +170,7 @@ namespace Machete.Web.Helpers
         public static List<SelectListItemEx> getSkill(string locale, bool specializedOnly)
         {
             IEnumerable<Lookup> prelist = LookupCache.getCache()
-                                                     .Where(s => s.category == LType.skill.ToString());
+                                                     .Where(s => s.category == LCategory.skill);
             Func<Lookup, string> textFunc; //anon function
             if (prelist == null) throw new ArgumentNullException("No skills returned");
             if (specializedOnly)

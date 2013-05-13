@@ -159,7 +159,7 @@ namespace Machete.Service
         }
         public static void waGrouping(viewOptions o, ref IQueryable<WorkAssignment> q, ILookupRepository lRepo)
         {
-            var completedID = LookupCache.getSingleEN("orderstatus", "Completed");
+            //var completedID = LookupCache.getByKeys(LCategory.orderstatus, LOrderStatus.Completed);
             switch (o.wa_grouping)
             {
                 case "open": q = q.Where(p => p.workerAssignedID == null); break;
@@ -176,7 +176,7 @@ namespace Machete.Service
                              .Select(jj => jj.wa);
                     break;
                 case "completed":
-                    q = q.Where(wa => wa.workOrder.status == completedID);
+                    q = q.Where(wa => wa.workOrder.status == WorkOrder.iCompleted);
                     break;
             }
         }
@@ -628,8 +628,6 @@ namespace Machete.Service
                 case "text_ES": q = descending ? q.OrderByDescending(p => p.text_ES) : q.OrderBy(p => p.text_ES); break;
                 case "selected": q = descending ? q.OrderByDescending(p => p.selected) : q.OrderBy(p => p.selected); break;
                 case "subcategory": q = descending ? q.OrderByDescending(p => p.subcategory) : q.OrderBy(p => p.subcategory); break;
-                //case "phone": q = descending ? q.OrderByDescending(p => p.phone) : q.OrderBy(p => p.phone); break;
-                //case "dateupdated": q = descending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated); break;
                 default: q = descending ? q.OrderByDescending(p => p.text_EN) : q.OrderBy(p => p.text_EN); break;
             }
         }
