@@ -30,7 +30,7 @@
     <div class="tb-row">
         @Html.mUITableLabelAndTextBoxFor(model => model.state, new { tabindex = "1", id = idPrefix + "state" })
         @Html.mUITableLabelFor(model => model.referredby)
-        @Html.mUIDropDownListFor(model => model.referredby, new SelectList(Lookups.get(LCategory.emplrreference, CI.TwoLetterISOLanguageName), "Value", "Text", Model.referredby), new { tabindex = "2", id = idPrefix + "referredby" })
+        @Html.mUIDropDownListFor(model => model.referredby, new SelectList(Lookups.get(Machete.Domain.LCategory.emplrreference, CI.TwoLetterISOLanguageName), "Value", "Text", Model.referredby), new { tabindex = "2", id = idPrefix + "referredby" })
     </div>
     <!--tb-row-->
     <div class="tb-row">
