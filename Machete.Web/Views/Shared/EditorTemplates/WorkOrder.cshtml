@@ -21,7 +21,7 @@
         @if (Html.IsInRole(Html.Role_AM()))
         {
             @Html.mUIDropDownListFor(model => model.status,
-                                         new SelectList(Lookups.get(LType.orderstatus, CI.TwoLetterISOLanguageName), "Value", "Text", Model.status),
+                                         new SelectList(Lookups.get(Machete.Domain.LCategory.orderstatus, CI.TwoLetterISOLanguageName), "Value", "Text", Model.status),
                                     new { @id = idPrefix + "status" })
                 
         }
@@ -66,7 +66,7 @@
         @Html.mUITableLabelAndTextBoxFor(model => model.state, new { tabindex = "1", id = idPrefix + "state" })
         @Html.mUITableLabelFor(model => model.transportMethodID)
         @Html.mUIDropDownListFor(model => model.transportMethodID,
-                     new SelectList(Lookups.get(LType.transportmethod, CI.TwoLetterISOLanguageName), "Value", "Text", Model.transportMethodID),
+                     new SelectList(Lookups.get(Machete.Domain.LCategory.transportmethod, CI.TwoLetterISOLanguageName), "Value", "Text", Model.transportMethodID),
                               new { tabindex = "2", id = idPrefix + "transportMethodID" })
     </div>
     <!--tb-row-->

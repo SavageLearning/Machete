@@ -55,7 +55,7 @@
     </div>
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.typeOfWorkID)
-        @Html.mUITableDropDownListFor(model => model.typeOfWorkID, Lookups.get(LType.worktype, lang),
+        @Html.mUITableDropDownListFor(model => model.typeOfWorkID, Lookups.get(Machete.Domain.LCategory.worktype, lang),
                      new { @tabindex = "1", @class = "configEditor skillConfig", @id = idPrefix + "typeOfWorkID" })
         @Html.mUITableLabelFor(model => model.speciality)
         @Html.mUIDropDownYesNoFor(m => m.speciality,

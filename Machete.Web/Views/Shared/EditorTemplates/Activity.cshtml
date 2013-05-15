@@ -12,14 +12,14 @@
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.name)
         @Html.mUIDropDownListFor(model => model.name, 
-                new SelectList(Lookups.get(LType.activityName, CI.TwoLetterISOLanguageName),
+                new SelectList(Lookups.get(Machete.Domain.LCategory.activityName, CI.TwoLetterISOLanguageName),
                                             "Value", "Text", Model.name),
                 new { tabindex = "1", id = idPrefix + "name" })
      </div>
      <div class="tb-row">
         @Html.mUITableLabelFor(model => model.type)
         @Html.mUIDropDownListFor(model => model.type, 
-                new SelectList(Lookups.get(LType.activityType, CI.TwoLetterISOLanguageName),
+                new SelectList(Lookups.get(Machete.Domain.LCategory.activityType, CI.TwoLetterISOLanguageName),
                                                     "Value", "Text", Model.type),
                 new { tabindex = "1", id = idPrefix + "type" })
      </div>
