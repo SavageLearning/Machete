@@ -5,6 +5,7 @@ using Machete.Service;
 using System.Globalization;
 using Machete.Data;
 using MWS.Core;
+using Machete.Domain;
 
 namespace MWS.Test
 {
@@ -32,7 +33,7 @@ namespace MWS.Test
         [TestMethod]
         public void TestMethod1()
         {
-            var eServ = frb.ToServEmail();
+            var eServ = frb.AddEmail(status: Email.iReadyToSend).ToServEmail();
             var mgr = new EmailManager(eServ);
             mgr.ProcessQueue();
         }
