@@ -128,14 +128,14 @@ namespace Machete.Test
             dateFrom = DateTime.Now,
             dateTo = DateTime.Now + TimeSpan.FromDays(30),
             eventType = MacheteLookup.cache.First(x => x.category == "eventtype" && x.text_EN == "Complaint").ID,
-            notes = "Remember Sammy Jenkis"
+            notes = "Event note"
         };
 
         public static Email email = new Email
         {
-            emailTo = "joe@boo.com",
-            emailFrom = "boo@joe.com",
-            subject = "subject",
+            emailTo = "jciispam@gmail.com",
+            emailFrom = "jciispam@gmail.com",
+            subject = "machete email queue test",
             body = "foo",
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime
@@ -171,8 +171,8 @@ namespace Machete.Test
             workSiteAddress1 = "2400 Main Ave E",
             workSiteAddress2 = "Apt 207",
             status = 42,
-            city = "london",
-            state = "uk",
+            city = "Seattle",
+            state = "WA",
             zipcode = "12345",
             phone = "123-456-7890",
             typeOfWorkID = 20,
