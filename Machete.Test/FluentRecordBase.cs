@@ -115,6 +115,12 @@ namespace Machete.Test
             return this;
         }
 
+        public DatabaseFactory ToFactory()
+        {
+            if (_dbFactory == null) AddDBFactory();
+            return _dbFactory;
+        }
+
         #region Employers
 
         public FluentRecordBase AddRepoEmployer()

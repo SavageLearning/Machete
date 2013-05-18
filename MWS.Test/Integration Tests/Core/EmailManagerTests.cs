@@ -34,7 +34,7 @@ namespace MWS.Test
         public void Integration_Email_MWS_ProcessQueue()
         {
             var eServ = frb.AddEmail(status: Email.iReadyToSend).ToServEmail();
-            var mgr = new EmailManager(eServ);
+            var mgr = new EmailManager(eServ, frb.ToFactory());
             mgr.ProcessQueue();
         }
 
@@ -43,7 +43,7 @@ namespace MWS.Test
         {
             // ARRANGE
             var eServ = frb.AddEmail(status: Email.iReadyToSend).ToServEmail();
-            var mgr = new EmailManager(eServ);
+            var mgr = new EmailManager(eServ, frb.ToFactory());
             // ACT
             var cfg = mgr.LoadEmailConfig();
             // ASSERT
