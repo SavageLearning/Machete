@@ -901,6 +901,7 @@ namespace Machete.Test
         }
 
         public FluentRecordBase AddEmail(
+            int? status = null,
             DateTime? datecreated = null,
             DateTime? dateupdated = null
         )
@@ -911,8 +912,9 @@ namespace Machete.Test
             //
             // ARRANGE
             _email = (Email)Records.email.Clone();
-            if (datecreated != null) _p.datecreated = (DateTime)datecreated;
-            if (dateupdated != null) _p.dateupdated = (DateTime)dateupdated;
+            if (datecreated != null) _email.datecreated = (DateTime)datecreated;
+            if (dateupdated != null) _email.dateupdated = (DateTime)dateupdated;
+            if (status != null) _email.status = (int)status;
             //
             // ACT
             _servEM.Create(_email, _user);
