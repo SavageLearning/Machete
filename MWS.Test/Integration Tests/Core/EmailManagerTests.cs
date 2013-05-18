@@ -30,12 +30,29 @@ namespace MWS.Test
             frb = null;
         }
 
-        [TestMethod]
-        public void TestMethod1()
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.MWS), TestCategory(TC.Emails)]
+        public void Integration_Email_MWS_ProcessQueue()
         {
             var eServ = frb.AddEmail(status: Email.iReadyToSend).ToServEmail();
             var mgr = new EmailManager(eServ);
             mgr.ProcessQueue();
+        }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.MWS), TestCategory(TC.Emails)]
+        public void Integration_Email_MWS_Load_EmailConfig()
+        {
+            // ARRANGE
+            var eServ = frb.AddEmail(status: Email.iReadyToSend).ToServEmail();
+            var mgr = new EmailManager(eServ);
+            // ACT
+            var cfg = mgr.LoadEmailConfig();
+            // ASSERT
+            Assert.IsNotNull(cfg);
+            Assert.IsNotNull(cfg.host);
+            Assert.IsTrue(cfg.port > 0);
+            Assert.IsNotNull(cfg.userName);
+            Assert.IsNotNull(cfg.password);
+
         }
     }
 }
