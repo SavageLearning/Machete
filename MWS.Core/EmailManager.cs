@@ -10,28 +10,58 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
+using Machete.Data.Infrastructure;
+using System.Diagnostics;
 
 namespace MWS.Core
 {
     public class EmailManager
     {
         IEmailService serv;
+        MacheteContext db;
 
-        public EmailManager(IEmailService eServ)
+        public EmailManager(IEmailService eServ, IDatabaseFactory dbfactory)
         {
             serv = eServ;
+            db = dbfactory.Get(); ;
         }
 
         public void ProcessQueue()
         {
             var cfg = LoadEmailConfig();
-            var list = serv.GetAll().Where(e => e.status == Email.iReadyToSend);
-            foreach (var e in list)
+            var emaillist = serv.GetAll().Where(e => e.status == Email.iReadyToSend);
+            var exceptionlist = new Stack<Exception>();
+            foreach (var e in emaillist)
             {
-                // attempt to send email
-                SendEmail(e, cfg);
-                // 
+                try
+                {
+                    SendEmail(e, cfg);
+                    e.status = Email.iSent;
+                }
+                catch (Exception ex)
+                {
+                    //  don't log the a repeating message 
+                    // keep the queue from flooding eventlog/debug
+                    if (exceptionlist.Count() == 0 || 
+                        exceptionlist.Peek().Message != ex.Message)
+                    {
+                        exceptionlist.Push(ex);
+                    }
+                }
             }
+            // compile exception messages and log
+            if (exceptionlist.Count() > 0)
+            {
+                var sb = new StringBuilder();
+                sb.AppendLine(new System.String('-', 40));
+                foreach (Exception exx in exceptionlist)
+                {
+                    sb.AppendLine(exx.Message);
+                }
+                sb.AppendLine(new System.String('-', 40));
+                Debug.WriteLine(sb.ToString());
+            }
+            db.Commit();
         }
 
         public bool SendEmail(Email email, EmailConfig cfg)
