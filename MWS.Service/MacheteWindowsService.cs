@@ -11,10 +11,10 @@ using System.Timers;
 
 namespace MWS.Service
 {
-    public partial class ServiceHost : ServiceBase
+    public partial class MacheteWindowsService : ServiceBase
     {
         private static System.Timers.Timer aTimer;
-        public ServiceHost()
+        public MacheteWindowsService()
         {
             InitializeComponent();
             if (!System.Diagnostics.EventLog.SourceExists(EVcfg.source))

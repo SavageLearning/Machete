@@ -41,7 +41,6 @@
             // 
             this.MacheteServiceInstaller.ServiceName = "MacheteWindowsService";
             this.MacheteServiceInstaller.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
-            this.MacheteServiceInstaller.AfterInstall += new System.Configuration.Install.InstallEventHandler(this.serviceInstaller1_AfterInstall);
             // 
             // ProjectInstaller
             // 
