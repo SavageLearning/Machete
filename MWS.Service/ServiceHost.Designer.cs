@@ -28,10 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            this.ServiceName = "Service1";
+            this.MWSEventLog = new System.Diagnostics.EventLog();
+            ((System.ComponentModel.ISupportInitialize)(this.MWSEventLog)).BeginInit();
+            // 
+            // ServiceHost
+            // 
+            this.ServiceName = "MacheteWindowsService";
+            ((System.ComponentModel.ISupportInitialize)(this.MWSEventLog)).EndInit();
+
         }
 
         #endregion
+
+        private System.Diagnostics.EventLog MWSEventLog;
     }
 }
