@@ -17,7 +17,7 @@ namespace MWS.Service
             ServiceBase[] ServicesToRun;
             ServicesToRun = new ServiceBase[] 
             { 
-                new ServiceHost() 
+                new MacheteWindowsService() 
             };
             ServiceBase.Run(ServicesToRun);
         }

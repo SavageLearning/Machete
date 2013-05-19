@@ -1,6 +1,6 @@
 ﻿namespace MWS.Service
 {
-    partial class ServiceHost
+    partial class MacheteWindowsService
     {
         /// <summary> 
         /// Required designer variable.
@@ -30,6 +30,11 @@
         {
             this.MWSEventLog = new System.Diagnostics.EventLog();
             ((System.ComponentModel.ISupportInitialize)(this.MWSEventLog)).BeginInit();
+            // 
+            // MWSEventLog
+            // 
+            this.MWSEventLog.Log = "MWSLog";
+            this.MWSEventLog.Source = "MacheteWindowsService";
             // 
             // ServiceHost
             // 
