@@ -55,6 +55,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IOC\InstallBootstrapper.cs" />
+    <Compile Include="IOC\MacheteServiceInstaller.cs" />
+    <Compile Include="IOC\MacheteServiceProcessInstaller.cs" />
     <Compile Include="MacheteWindowsService.cs">
       <SubType>Component</SubType>
     </Compile>
