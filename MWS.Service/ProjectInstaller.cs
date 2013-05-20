@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Practices.Unity;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,30 +14,15 @@ namespace MWS.Service
     public partial class ProjectInstaller : System.Configuration.Install.Installer
     {
         private System.ComponentModel.IContainer components = null;
-        private System.ServiceProcess.ServiceProcessInstaller MacheteServiceProcessInstaller;
-        private System.ServiceProcess.ServiceInstaller MacheteServiceInstaller;
 
         public ProjectInstaller()
         {
-            this.MacheteServiceProcessInstaller = new System.ServiceProcess.ServiceProcessInstaller();
-            this.MacheteServiceInstaller = new System.ServiceProcess.ServiceInstaller();
-            // 
-            // MacheteServiceProcessInstaller
-            // 
-            this.MacheteServiceProcessInstaller.Account = System.ServiceProcess.ServiceAccount.LocalSystem;
-            this.MacheteServiceProcessInstaller.Password = null;
-            this.MacheteServiceProcessInstaller.Username = null;
-            // 
-            // MacheteServiceInstaller
-            // 
-            this.MacheteServiceInstaller.ServiceName = "MacheteWindowsService";
-            this.MacheteServiceInstaller.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
-            // 
-            // ProjectInstaller
-            // 
-            this.Installers.AddRange(new System.Configuration.Install.Installer[] {
-            this.MacheteServiceProcessInstaller,
-            this.MacheteServiceInstaller});
+            var bootstrapper = new InstallBootstrapper();
+            IUnityContainer container = bootstrapper.Build();
+            IEnumerable<Installer> installers = container.ResolveAll<Installer>();
+            Installers.AddRange(installers.ToArray());
+            //
+            //
             EventLogInstaller installer = FindInstaller(this.Installers);
             if (installer != null)
             {
