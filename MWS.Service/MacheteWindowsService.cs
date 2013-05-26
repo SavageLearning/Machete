@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Practices.Unity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -11,22 +12,48 @@ using System.Timers;
 
 namespace MWS.Service
 {
-    public partial class MacheteWindowsService : ServiceBase
+    public class MacheteWindowsService : ServiceBase
     {
         private static System.Timers.Timer aTimer;
-        public MacheteWindowsService()
+        private System.Diagnostics.EventLog MWSEventLog;
+        private System.ComponentModel.IContainer components = null;
+        private IUnityContainer container;
+
+        public MacheteWindowsService(IUnityContainer unity)
         {
-            InitializeComponent();
+            
+            this.MWSEventLog = new System.Diagnostics.EventLog();
+            ((System.ComponentModel.ISupportInitialize)(this.MWSEventLog)).BeginInit();
+            // 
+            // MWSEventLog
+            // 
+            this.MWSEventLog.Log = EVcfg.log;
+            this.MWSEventLog.Source = EVcfg.source;
+            // 
+            // ServiceHost
+            // 
+            this.ServiceName = "MacheteWindowsService";
+            ((System.ComponentModel.ISupportInitialize)(this.MWSEventLog)).EndInit();
+
             if (!System.Diagnostics.EventLog.SourceExists(EVcfg.source))
             {
                 System.Diagnostics.EventLog.CreateEventSource(
                     EVcfg.source, EVcfg.log);
             }
-            MWSEventLog.Source = EVcfg.source;
-            MWSEventLog.Log = EVcfg.log;
+            container = unity;
+            if (unity == null) MWSEventLog.WriteEntry("Unity container is null");
 
             aTimer = new System.Timers.Timer(10000);
             aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
         }
 
         protected override void OnStart(string[] args)

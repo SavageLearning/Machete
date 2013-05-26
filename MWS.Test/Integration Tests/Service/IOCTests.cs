@@ -23,5 +23,11 @@ namespace MWS.Test.Integration_Tests.Service
             // Assert
             Assert.AreEqual(2, result.ToArray().Count(), "InstallBootstrapper for service does not return expected number of objects");
         }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.MWS), TestCategory(TC.Emails)]
+        public void Integration_ProjectInstaller_MWS_Program_Main_gets_to_service()
+        {
+            MWS.Service.Program.Main();
+        }
     }
 }

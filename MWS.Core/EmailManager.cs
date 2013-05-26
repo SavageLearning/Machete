@@ -15,15 +15,22 @@ using System.Diagnostics;
 
 namespace MWS.Core
 {
-    public class EmailManager
+    public interface IEmailManager
+    {
+        void ProcessQueue();
+        bool SendEmail(Email email, EmailConfig cfg);
+        EmailConfig LoadEmailConfig();
+    }
+
+    public class EmailManager : IEmailManager
     {
         IEmailService serv;
-        MacheteContext db;
+        IUnitOfWork db;
 
-        public EmailManager(IEmailService eServ, IDatabaseFactory dbfactory)
+        public EmailManager(IEmailService eServ, IUnitOfWork uow)
         {
             serv = eServ;
-            db = dbfactory.Get(); ;
+            db =uow;
         }
 
         public void ProcessQueue()
