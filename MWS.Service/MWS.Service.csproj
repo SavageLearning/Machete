@@ -55,13 +55,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IOC\InstallBootstrapper.cs" />
-    <Compile Include="IOC\MacheteServiceInstaller.cs" />
-    <Compile Include="IOC\MacheteServiceProcessInstaller.cs" />
-    <Compile Include="MacheteWindowsService.cs">
+    <Compile Include="IOC\MacheteServiceInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="MacheteWindowsService.Designer.cs">
-      <DependentUpon>MacheteWindowsService.cs</DependentUpon>
+    <Compile Include="IOC\MacheteServiceProcessInstaller.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="IOC\ServiceBootstrapper.cs" />
+    <Compile Include="MacheteWindowsService.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="ProjectInstaller.cs">
@@ -73,15 +75,22 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Machete.Data\Machete.Data.csproj">
+      <Project>{a9f879bc-ca11-4470-a655-8541b5da41a1}</Project>
+      <Name>Machete.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Machete.Domain\Machete.Domain.csproj">
+      <Project>{48f672e8-4513-4f7e-a296-c0ccc87f9aa1}</Project>
+      <Name>Machete.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Machete.Service\Machete.Service.csproj">
+      <Project>{ba69bb65-147a-42d8-a6f5-5d1e57e2d783}</Project>
+      <Name>Machete.Service</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MWS.Core\MWS.Core.csproj">
       <Project>{a8de6677-0e32-4229-8b83-9a3c17c87e85}</Project>
       <Name>MWS.Core</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="MacheteWindowsService.resx">
-      <DependentUpon>MacheteWindowsService.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

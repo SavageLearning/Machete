@@ -952,6 +952,13 @@ namespace Machete.Test
             return this;
         }
 
+        public IUnitOfWork ToUOW()
+        {
+            if (_uow == null) AddUOW();
+
+            return _uow;
+        }
+
         public string RandomString(int size)
         {
             StringBuilder builder = new StringBuilder();
