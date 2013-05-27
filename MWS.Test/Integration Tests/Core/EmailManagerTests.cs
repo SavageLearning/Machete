@@ -33,9 +33,26 @@ namespace MWS.Test
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.MWS), TestCategory(TC.Emails)]
         public void Integration_Email_MWS_ProcessQueue()
         {
+            // Arrange
             var eServ = frb.AddEmail(status: Email.iReadyToSend).ToServEmail();
+            // Act
             var mgr = new EmailManager(eServ, frb.ToUOW());
+            // Assert
             mgr.ProcessQueue();
+        }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.MWS), TestCategory(TC.Emails)]
+        public void Integration_Email_GetEmailsToSend()
+        {
+            // Arrange
+            var eServ = frb.AddEmail(status: Email.iReadyToSend).ToServEmail();
+            // Act
+            var emaillist = eServ.GetEmailsToSend();
+            foreach (var foo in emaillist)
+            {
+                
+            }
+            // Assert
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.MWS), TestCategory(TC.Emails)]
