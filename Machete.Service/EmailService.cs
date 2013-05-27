@@ -13,6 +13,7 @@ namespace Machete.Service
         dataTableResult<Email> GetIndexView(viewOptions o);
         Email GetLatestConfirmEmailBy(int woid);
         IEnumerable<Email> GetMany(Func<Email, bool> predicate);
+        IEnumerable<Email> GetEmailsToSend();
     }
 
     public class EmailService : ServiceBase<Email>, IEmailService
@@ -37,6 +38,11 @@ namespace Machete.Service
         public IEnumerable<Email> GetMany(Func<Email, bool> predicate)
         {
             return repo.GetMany(predicate);
+        }
+
+        public IEnumerable<Email> GetEmailsToSend()
+        {
+            return repo.GetManyQ().Where(e => e.status == Email.iReadyToSend).AsEnumerable();
         }
 
         public dataTableResult<Email> GetIndexView(viewOptions o)
