@@ -69,7 +69,6 @@ namespace MWS.Test
             Assert.IsTrue(cfg.port > 0);
             Assert.IsNotNull(cfg.userName);
             Assert.IsNotNull(cfg.password);
-
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.ServiceProcess;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 
@@ -19,15 +20,18 @@ namespace MWS.Service
         private System.Diagnostics.EventLog MWSEventLog;
         private System.ComponentModel.IContainer components = null;
         internal IUnityContainer container;
+        private bool running { get; set; }
 
         public MacheteWindowsService(IUnityContainer unity)
         {
+            running = false;
             setupEventLog();
             if (unity == null) throw new Exception("Unity container is null");
             container = unity;
 
             aTimer = new System.Timers.Timer(10000);
             aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+            
         }
 
         private void setupEventLog()
@@ -79,20 +83,38 @@ namespace MWS.Service
 
         private void OnTimedEvent(object source, ElapsedEventArgs e)
         {
-            MWSEventLog.WriteEntry(string.Format("{0}", source.GetType().ToString()));
-            if (container == null) throw new Exception("Unity container is null");
+            var sb = new StringBuilder();
+            sb.AppendLine(string.Format("EmailManager.ProcessQueue executed at {0}", e.SignalTime));
+
+            if (running == true) return;  // return if prior event is still running
+            running = true;
+            sb.Append(ProcessEmailQueue());
+            running = false;
+            MWSEventLog.WriteEntry(sb.ToString());
+        }
+
+        public string ProcessEmailQueue()
+        {
+            var sb = new StringBuilder();
             try
             {
+                if (container == null) throw new Exception("Unity container is null");
                 var em = container.Resolve<EmailManager>();
                 em.ProcessQueue();
-                MWSEventLog.WriteEntry(string.Format("EmailManager.ProcessQueue executed at {0}", e.SignalTime));
-
+                if (em.sentStack.Count() > 0)
+                {
+                    sb.AppendLine(string.Format("{0}", em.getSent()));
+                }
+                if (em.exceptionStack.Count() > 0)
+                {
+                    sb.AppendLine(string.Format("SendEmail exceptions: {0}", em.getExceptions()));
+                }
             }
             catch (Exception ex)
             {
-                MWSEventLog.WriteEntry(string.Format("Exception caught: {0}, Inner: {1}", ex.Message, ex.InnerException.Message));
-
+                sb.AppendLine(string.Format("Exception caught: {0}", ex.Message));
             }
+            return sb.ToString();
         }
 
     }

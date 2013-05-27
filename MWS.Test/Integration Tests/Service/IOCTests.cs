@@ -1,16 +1,36 @@
-﻿using Machete.Test;
+﻿using Machete.Data;
+using Machete.Service;
+using Machete.Test;
 using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MWS.Service;
 using System.Collections.Generic;
 using System.Configuration.Install;
 using System.Linq;
+using System.ServiceProcess;
 
 namespace MWS.Test.Integration_Tests.Service
 {
     [TestClass]
     public class IOCTests
     {
+        FluentRecordBase frb;
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            frb = new FluentRecordBase();
+            frb.Initialize(new MacheteInitializer(), "macheteConnection");
+            LookupCache.Initialize(frb.DB);
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            frb.Dispose();
+            frb = null;
+        }
+
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.MWS), TestCategory(TC.Emails)]
         public void Integration_ProjectInstaller_MWS_Build_returns_container()
         {
@@ -27,7 +47,11 @@ namespace MWS.Test.Integration_Tests.Service
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.MWS), TestCategory(TC.Emails)]
         public void Integration_ProjectInstaller_MWS_Program_Main_gets_to_service()
         {
-            MWS.Service.Program.Main();
+            //var bootstrapper = new ServiceBootstrapper();
+            //IUnityContainer container = bootstrapper.Build();
+            //var mws = new MacheteWindowsService(container);
+            //var result = mws.ProcessEmailQueue();
+            //Assert.IsTrue(string.IsNullOrEmpty(result));
         }
     }
 }
