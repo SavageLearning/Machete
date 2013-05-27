@@ -26,6 +26,8 @@ namespace MWS.Core
     {
         IEmailService serv;
         IUnitOfWork db;
+        public Stack<Exception> exceptionStack { get; set; }
+        public Stack<Email> sentStack { get; set; }
 
         public EmailManager(IEmailService eServ, IUnitOfWork uow)
         {
@@ -37,38 +39,64 @@ namespace MWS.Core
         {
             var cfg = LoadEmailConfig();
             var emaillist = serv.GetEmailsToSend();
-            var exceptionlist = new Stack<Exception>();
+            exceptionStack = new Stack<Exception>();
+            sentStack = new Stack<Email>();
             foreach (var e in emaillist)
             {
                 try
                 {
                     SendEmail(e, cfg);
                     e.status = Email.iSent;
+                    sentStack.Push(e);
                 }
                 catch (Exception ex)
                 {
                     //  don't log the a repeating message 
                     // keep the queue from flooding eventlog/debug
-                    if (exceptionlist.Count() == 0 || 
-                        exceptionlist.Peek().Message != ex.Message)
+                    if (exceptionStack.Count() == 0 || 
+                        exceptionStack.Peek().Message != ex.Message)
                     {
-                        exceptionlist.Push(ex);
+                        exceptionStack.Push(ex);
                     }
                 }
             }
-            // compile exception messages and log
-            if (exceptionlist.Count() > 0)
+            db.Commit();
+        }
+        /// <summary>
+        /// String of exception messages, 1 per line
+        /// </summary>
+        /// <returns></returns>
+        public string getExceptions()
+        {
+            var sb = new StringBuilder();
+            if (exceptionStack.Count() > 0)
             {
-                var sb = new StringBuilder();
                 sb.AppendLine(new System.String('-', 40));
-                foreach (Exception exx in exceptionlist)
+                foreach (Exception exx in exceptionStack)
                 {
                     sb.AppendLine(exx.Message);
                 }
                 sb.AppendLine(new System.String('-', 40));
-                Debug.WriteLine(sb.ToString());
             }
-            db.Commit();
+            return sb.ToString();
+        }
+
+        public string getSent()
+        {
+            var sb = new StringBuilder();
+            if (sentStack.Count() > 0)
+            {
+                sb.AppendLine(new System.String('-', 40));
+                foreach (Email exx in sentStack)
+                {
+                    sb.AppendLine(
+                        System.String.Format("EmailID: {2}, To: {0}, Subject: {1}, Attempts: {3}",
+                        exx.emailTo, exx.subject, exx.ID, exx.transmitAttempts)
+                        );
+                }
+                sb.AppendLine(new System.String('-', 40));
+            }
+            return sb.ToString();
         }
 
         public bool SendEmail(Email email, EmailConfig cfg)
@@ -85,11 +113,7 @@ namespace MWS.Core
         public EmailConfig LoadEmailConfig()
         {
             var cfg = new EmailConfig();
-            cfg.host = ConfigurationManager.AppSettings["EmailServerHostName"];
-            cfg.port = Convert.ToInt16(ConfigurationManager.AppSettings["EmailServerPort"]);
-            cfg.enableSSL = Convert.ToBoolean(ConfigurationManager.AppSettings["EmailEnableSSL"]);
-            cfg.userName = ConfigurationManager.AppSettings["EmailAccount"];
-            cfg.password = ConfigurationManager.AppSettings["EmailPassword"];
+            if (!cfg.IsComplete) throw new Exception("EmailConfig incomplete. Needs host, port, userName, & password");
             return cfg;
         }
     }
@@ -102,5 +126,37 @@ namespace MWS.Core
         public string password {get; set;}
         public bool enableSSL { get; set; }
 
+        public EmailConfig()
+        {
+            port = 0;
+            enableSSL = false;
+            host = ConfigurationManager.AppSettings["EmailServerHostName"];
+            port = Convert.ToInt16(ConfigurationManager.AppSettings["EmailServerPort"]);
+            enableSSL = Convert.ToBoolean(ConfigurationManager.AppSettings["EmailEnableSSL"]);
+            userName = ConfigurationManager.AppSettings["EmailAccount"];
+            password = ConfigurationManager.AppSettings["EmailPassword"];
+        }
+
+        public bool IsComplete
+        {
+            get
+            {
+                if (host == null) return false;
+                if (port == 0) return false;
+                if (userName == null) return false;
+                if (password == null) return false;
+                return true;
+            }
+        }
+
+        public string GetMissingConfigEntries()
+        {
+            var sb = new StringBuilder();
+            if (host == null) sb.AppendLine("EmailConfig.host is null");
+            if (port == 0) sb.AppendLine("EmailConfig.port is 0");
+            if (userName == null) sb.AppendLine("EmailConfig.userName is null");
+            if (password == null) sb.AppendLine("EmailConfig.password is null");
+            return sb.ToString();
+        }
     }
 }
