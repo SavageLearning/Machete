@@ -17,14 +17,27 @@ namespace MWS.Service
     {
         public IUnityContainer Build()
         {
-            IUnityContainer container = new UnityContainer();
-            container.RegisterType<IEmailManager, EmailManager>();
-            container.RegisterInstance<MacheteWindowsService>(new MacheteWindowsService(container));
-            container.RegisterType<IEmailRepository, EmailRepository>();
-            container.RegisterType<IEmailService, EmailService>();
-            container.RegisterType<IUnitOfWork, UnitOfWork>();
-            container.RegisterType<IDatabaseFactory, DatabaseFactory>();
-            return container;
+            IUnityContainer c = new UnityContainer();
+            c.RegisterType<IEmailManager, EmailManager>();
+            c.RegisterInstance<MacheteWindowsService>(new MacheteWindowsService(c));
+            c.RegisterType<IEmailRepository, EmailRepository>();
+            c.RegisterType<IEmailService, EmailService>();
+            c.RegisterType<IWorkOrderRepository, WorkOrderRepository>();
+            c.RegisterType<IWorkOrderService, WorkOrderService>();
+            c.RegisterType<IWorkAssignmentRepository, WorkAssignmentRepository>();
+            c.RegisterType<IWorkAssignmentService, WorkAssignmentService>();
+            c.RegisterType<IWorkerRepository, WorkerRepository>();
+            c.RegisterType<IWorkerService, WorkerService>();
+            c.RegisterType<IWorkerSigninRepository, WorkerSigninRepository>();
+            c.RegisterType<IWorkerSigninService, WorkerSigninService>();
+            c.RegisterType<ILookupRepository, LookupRepository>();
+            c.RegisterType<ILookupService, LookupService>();
+            //c.RegisterType<IEmailRepository, EmailRepository>();
+            //c.RegisterType<IEmailService, EmailService>();
+
+            c.RegisterType<IUnitOfWork, UnitOfWork>();
+            c.RegisterType<IDatabaseFactory, DatabaseFactory>();
+            return c;
         }
     }
 }
