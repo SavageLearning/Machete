@@ -36,7 +36,7 @@ namespace MWS.Core
         public void ProcessQueue()
         {
             var cfg = LoadEmailConfig();
-            var emaillist = serv.GetAll().Where(e => e.status == Email.iReadyToSend);
+            var emaillist = serv.GetEmailsToSend();
             var exceptionlist = new Stack<Exception>();
             foreach (var e in emaillist)
             {
