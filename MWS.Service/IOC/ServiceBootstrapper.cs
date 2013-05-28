@@ -32,11 +32,10 @@ namespace MWS.Service
             c.RegisterType<IWorkerSigninService, WorkerSigninService>();
             c.RegisterType<ILookupRepository, LookupRepository>();
             c.RegisterType<ILookupService, LookupService>();
-            //c.RegisterType<IEmailRepository, EmailRepository>();
-            //c.RegisterType<IEmailService, EmailService>();
-
             c.RegisterType<IUnitOfWork, UnitOfWork>();
             c.RegisterType<IDatabaseFactory, DatabaseFactory>();
+            // LookupCache will populate static values in the domain for service lookups
+            c.RegisterInstance<ILookupCache>(new LookupCache(c.Resolve<Func<IDatabaseFactory>>()));
             return c;
         }
     }

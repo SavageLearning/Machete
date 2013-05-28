@@ -95,7 +95,6 @@ namespace Machete.Test
             Database.SetInitializer<MacheteContext>(initializer);
             DB = new MacheteContext(connection);
             WorkerCache.Initialize(DB);
-            //Lookups.Initialize();
             _dbFactory = new DatabaseFactory();
             _dbFactory.Set(DB);
             return this;
@@ -111,6 +110,7 @@ namespace Machete.Test
         {
             Initialize(new MacheteInitializer(), "macheteConnection");
             _uow = new UnitOfWork(_dbFactory);
+            AddLookupCache();
             return this;
         }
 

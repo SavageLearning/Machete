@@ -219,4 +219,7 @@
   <data name="docs" xml:space="preserve">
     <value>Documentation</value>
   </data>
+  <data name="All" xml:space="preserve">
+    <value>All</value>
+  </data>
 </root>
