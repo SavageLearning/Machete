@@ -50,6 +50,7 @@ namespace Machete.Test
         private EmployerRepository _repoE;
         private EmailRepository _repoEM;
         private DatabaseFactory _dbFactory;
+        private LookupCache _lcache;
         private WorkerSigninService _servWSI;
         private WorkerService _servW;
         private PersonService _servP;
@@ -94,7 +95,6 @@ namespace Machete.Test
             Database.SetInitializer<MacheteContext>(initializer);
             DB = new MacheteContext(connection);
             WorkerCache.Initialize(DB);
-            LookupCache.Initialize(DB);
             //Lookups.Initialize();
             _dbFactory = new DatabaseFactory();
             _dbFactory.Set(DB);
@@ -104,7 +104,6 @@ namespace Machete.Test
         public void Dispose()
         {
             WorkerCache.Dispose();
-            LookupCache.Dispose();
             DB.Dispose();
         }
 
@@ -119,6 +118,19 @@ namespace Machete.Test
         {
             if (_dbFactory == null) AddDBFactory();
             return _dbFactory;
+        }
+
+        public FluentRecordBase AddLookupCache()
+        {
+            if (_dbFactory == null) AddDBFactory();
+            _lcache = new LookupCache(() => _dbFactory); // it wants Func<IDatabaseFactory>, it gets it
+            return this;
+        }
+
+        public LookupCache ToLookupCache()
+        {
+            if (_lcache == null) AddLookupCache();
+            return _lcache;
         }
 
         #region Employers
@@ -292,8 +304,9 @@ namespace Machete.Test
             if (_repoW == null) AddRepoWorker();
             if (_repoL == null) AddRepoLookup();
             if (_repoWSI == null) AddRepoWorkerSignin();
+            if (_lcache == null) AddLookupCache();
             if (_uow == null) AddUOW();
-            _servWA = new WorkAssignmentService(_repoWA, _repoW, _repoL, _repoWSI, _uow);
+            _servWA = new WorkAssignmentService(_repoWA, _repoW, _repoL, _repoWSI, _lcache, _uow);
             return this;
         }
 
@@ -762,8 +775,9 @@ namespace Machete.Test
             // DEPENDENCIES
             if (_repoA == null) AddRepoActivity();
             if (_servAS == null) AddServActivitySignin();
+            if (_lcache == null) AddLookupCache();
             if (_uow == null) AddUOW();
-            _servA = new ActivityService(_repoA, _servAS, _uow);
+            _servA = new ActivityService(_repoA, _servAS, _lcache, _uow);
             return this;
         }
 
