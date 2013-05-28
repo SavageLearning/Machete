@@ -29,6 +29,10 @@
         <input type="button" value="@(WorkAssignments.btnUpdate)" id="updateBtn" class="formButton"/>
         <label for="todaysdate">@WorkAssignments.todaysdate</label>
         @Html.TextBoxFor(m => m.todaysdate, new { @class = "ui-datepicker", @style = "width: 15em;" })
+            @Html.DropDownList("TypeOfWorkList",
+                        new SelectList(Lookups.get(Machete.Domain.LCategory.worktype, CI.TwoLetterISOLanguageName),
+                        "Value", "Text"), Shared.All, new { id = "TypeOfWorkList" })
+
     </div>
 
 }        
@@ -53,11 +57,12 @@
         <input type="radio" id="rA1_completed" name="radioOpenFilled"  /><label for="rA1_completed" class="dispatchButton">@(WorkAssignments.btnAll)<br />@(WorkAssignments.btnSubCompleted)</label>
         <input type="radio" id="rA1_All" name="radioOpenFilled" checked="checked" /><label for="rA1_All">@(WorkAssignments.btnAll)</label>
 	</div>
-    <div id="radioProgram" class="radio">
+@*    <div id="radioProgram" class="radio">
 	    <input type="radio" id="rA2_DWC" name="radioProgram"  /><label for="rA2_DWC">@(WorkAssignments.btnDWC)</label>
 	    <input type="radio" id="rA2_HHH" name="radioProgram"  /><label for="rA2_HHH">@(WorkAssignments.btnHHH)</label>
         <input type="radio" id="rA2_All" name="radioProgram" checked="checked" /><label for="rA2_All">@(WorkAssignments.btnAll)</label>
-    </div>
+    </div>*@
+                
 </div>
 
 <div class="tb-table" style="clear: left;">
@@ -459,21 +464,21 @@
             $('#dwccardnum').val('');
             $("#updateBtn").click();                 
         });
-        $('#rA2_DWC').click(function (e) {
+        $('#TypeOfWorkList').click(function (e) {
             e.preventDefault();
-            $('#typeofwork_grouping').val(@(Machete.Domain.Worker.iDWC));
+            $('#typeofwork_grouping').val($('#TypeOfWorkList').val());
             $("#updateBtn").click();                 
         });
-        $('#rA2_HHH').click(function (e) {
-            e.preventDefault();
-            $('#typeofwork_grouping').val(@(Machete.Domain.Worker.iHHH));
-            $("#updateBtn").click();                 
-        });
-        $('#rA2_All').click(function (e) {
-            e.preventDefault();
-            $('#typeofwork_grouping').val(null);
-            $("#updateBtn").click();                 
-        });
+        //$('#rA2_HHH').click(function (e) {
+        //    e.preventDefault();
+        //    $('#typeofwork_grouping').val(2);
+        //    $("#updateBtn").click();                 
+        //});
+        //$('#rA2_All').click(function (e) {
+        //    e.preventDefault();
+        //    $('#typeofwork_grouping').val(null);
+        //    $("#updateBtn").click();                 
+        //});
           
         $("#updateBtn").click(function (e) {
             e.preventDefault();

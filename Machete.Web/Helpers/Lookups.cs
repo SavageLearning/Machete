@@ -37,7 +37,7 @@ using System.Globalization;
 namespace Machete.Web.Helpers
 {
 
-    public class Lookups
+    public static class Lookups
     {
         public static int hoursDefault { get { return 5; } }
         public static int daysDefault { get { return 1;  } }
@@ -53,12 +53,14 @@ namespace Machete.Web.Helpers
         private static SelectList skillLevelNum { get; set; }
         private static List<SelectListItem> yesnoEN { get; set; }
         private static List<SelectListItem> yesnoES { get; set; }
+        private static ILookupCache lcache;
         //
         // Initialize once to prevent re-querying DB
         //
         //public static void Initialize(IEnumerable<Lookup> cache)
-        public static void Initialize()
+        public static void Initialize(ILookupCache lc)
         {
+            lcache = lc;
             hoursNum = new SelectList(new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16" }
                 .Select(x => new LookupNumber { Value = x, Text = x }),
                 "Value", "Text", "7"
@@ -100,7 +102,7 @@ namespace Machete.Web.Helpers
         // Get the Id string for a given lookup number
         public static string byID(int ID, string locale)
         {
-            return LookupCache.textByID(ID, locale);
+            return lcache.textByID(ID, locale);
         }
         public static string byID(int? ID, string locale)
         {
@@ -131,11 +133,11 @@ namespace Machete.Web.Helpers
         public static int getDefaultID(string type)
         {
             int count;
-            count = LookupCache.getCache()
+            count = lcache.getCache()
                 .Where(s => s.selected == true &&
                             s.category == type)
                 .Count();
-            if (count > 0) return LookupCache.getCache()
+            if (count > 0) return lcache.getCache()
                                              .Where(s => s.selected == true &&
                                                          s.category == type)
                                              .SingleOrDefault().ID;
@@ -154,7 +156,7 @@ namespace Machete.Web.Helpers
             else field = "text_EN";
             //if (LookupCol == null) LookupCol = LookupCache.getCache();
 
-            list = new SelectList(LookupCache.getCache().Where(s => s.category == type),
+            list = new SelectList(lcache.getCache().Where(s => s.category == type),
                                     "ID",
                                     field,
                                     getDefaultID(type));
@@ -169,7 +171,7 @@ namespace Machete.Web.Helpers
         /// <returns></returns>
         public static List<SelectListItemEx> getSkill(string locale, bool specializedOnly)
         {
-            IEnumerable<Lookup> prelist = LookupCache.getCache()
+            IEnumerable<Lookup> prelist = lcache.getCache()
                                                      .Where(s => s.category == LCategory.skill);
             Func<Lookup, string> textFunc; //anon function
             if (prelist == null) throw new ArgumentNullException("No skills returned");

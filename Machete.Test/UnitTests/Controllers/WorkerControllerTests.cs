@@ -45,6 +45,7 @@ namespace Machete.Test.Controllers
     {
         Mock<IWorkerService> _wserv;
         Mock<IPersonService> _pserv;
+        Mock<ILookupCache> lcache;
         Mock<IImageService> _iserv;
         WorkerController _ctrlr;
         FormCollection fakeform;
@@ -54,6 +55,7 @@ namespace Machete.Test.Controllers
             _wserv = new Mock<IWorkerService>();
             _pserv = new Mock<IPersonService>();
             _iserv = new Mock<IImageService>();
+            lcache = new Mock<ILookupCache>();
             _ctrlr = new WorkerController(_wserv.Object, _pserv.Object, _iserv.Object);
             _ctrlr.SetFakeControllerContext();
             fakeform = new FormCollection();
@@ -91,8 +93,7 @@ namespace Machete.Test.Controllers
             fakeform.Add("dateOfMembership", "1/1/2000");
             //fakeform.Add("", "");
             // TODO: Include Lookups in Dependency Injection, remove initialize statements
-            LookupCache.Initialize(new MacheteContext());
-            Lookups.Initialize();
+            Lookups.Initialize(lcache.Object);
         }
         //
         //   Testing /Index functionality

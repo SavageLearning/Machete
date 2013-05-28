@@ -226,7 +226,7 @@ namespace Machete.Service
                         p.wa.Updatedby.Contains(o.sSearch)).Select(p => p.wa);
             }
         }      
-        public static IEnumerable<WorkAssignment> filterOnSkill(viewOptions o, IQueryable<WorkAssignment> q)
+        public static IEnumerable<WorkAssignment> filterOnSkill(viewOptions o, IQueryable<WorkAssignment> q, ILookupCache lc)
         {
             //  "Machete --A series of good intentions, marinated in panic."
             //
@@ -254,8 +254,8 @@ namespace Machete.Service
                 foreach (var skillid in primeskills)
                 {
                     skills.Push(skillid);
-                    Lookup skill = LookupCache.getByID(skillid);
-                    foreach (var subskill in LookupCache.getCache()
+                    Lookup skill = lc.getByID(skillid);
+                    foreach (var subskill in lc.getCache()
                         .Where(a => a.category == skill.category &&
                                     a.subcategory == skill.subcategory &&
                                     a.level < skill.level))
@@ -269,7 +269,7 @@ namespace Machete.Service
                 if (skills.Count() != 0) skill4 = skills.Pop();
                 if (skills.Count() != 0) skill5 = skills.Pop();
                 if (skills.Count() != 0) skill6 = skills.Pop();
-                filteredWA = filteredWA.Join(LookupCache.getCache(), //LINQ
+                filteredWA = filteredWA.Join(lc.getCache(), //LINQ
                                                    wa => wa.skillID,
                                                    sk => sk.ID,
                                                    (wa, sk) => new { wa, sk }
@@ -477,13 +477,13 @@ namespace Machete.Service
         /// <param name="o"></param>
         /// <param name="q"></param>
         /// <param name="lRepo"></param>
-        public static void search(viewOptions o, ref IEnumerable<Activity> q)
+        public static void search(viewOptions o, ref IEnumerable<Activity> q, LookupCache lcache)
         {
             q = q //LookupCache will be slow and needs to be converted to IQueryable
-                .Where(p => LookupCache.textByID(p.name, o.CI.TwoLetterISOLanguageName).ContainsOIC(o.sSearch) ||
+                .Where(p => lcache.textByID(p.name, o.CI.TwoLetterISOLanguageName).ContainsOIC(o.sSearch) ||
                             p.notes.ContainsOIC(o.sSearch) ||
                             p.teacher.ContainsOIC(o.sSearch) ||
-                            LookupCache.textByID(p.type, o.CI.TwoLetterISOLanguageName).ContainsOIC(o.sSearch) ||
+                            lcache.textByID(p.type, o.CI.TwoLetterISOLanguageName).ContainsOIC(o.sSearch) ||
                             p.dateStart.ToString().ContainsOIC(o.sSearch) ||
                             p.dateEnd.ToString().ContainsOIC(o.sSearch));
         }
@@ -494,19 +494,19 @@ namespace Machete.Service
         /// <param name="descending"></param>
         /// <param name="isoLandCode"></param>
         /// <param name="q"></param>
-        public static void sortOnColName(string name, bool descending, string isoLandCode, ref IEnumerable<Activity> q)
+        public static void sortOnColName(string name, bool descending, string isoLandCode, ref IEnumerable<Activity> q, LookupCache lc)
         {
             switch (name)
             {
                 case "name":
                     q = descending ?
-                        q.OrderByDescending(p => LookupCache.textByID(p.name, isoLandCode)) :
-                        q.OrderBy(p => LookupCache.textByID(p.name, isoLandCode));
+                        q.OrderByDescending(p => lc.textByID(p.name, isoLandCode)) :
+                        q.OrderBy(p => lc.textByID(p.name, isoLandCode));
                     break;
                 case "type":
                     q = descending ?
-                        q.OrderByDescending(p => LookupCache.textByID(p.type, isoLandCode)) :
-                        q.OrderBy(p => LookupCache.textByID(p.type, isoLandCode));
+                        q.OrderByDescending(p => lc.textByID(p.type, isoLandCode)) :
+                        q.OrderBy(p => lc.textByID(p.type, isoLandCode));
                     break;
                 case "count":
                     q = descending ?

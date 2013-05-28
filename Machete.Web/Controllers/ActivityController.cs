@@ -39,10 +39,12 @@ namespace Machete.Web.Controllers
     public class ActivityController : MacheteController
     {
         private readonly IActivityService serv;
+        private readonly LookupCache lcache;
         private CultureInfo CI;
 
-        public ActivityController(IActivityService aServ)
+        public ActivityController(IActivityService aServ, LookupCache lc)
         {
+            this.lcache = lc;
             this.serv = aServ;
         }
         protected override void Initialize(RequestContext requestContext)
@@ -88,8 +90,8 @@ namespace Machete.Web.Controllers
             {
                 tabref = EditTabRef(p),
                 tablabel = EditTabLabel(p),
-                name = LookupCache.textByID(p.name, CI.TwoLetterISOLanguageName),
-                type = LookupCache.textByID(p.type, CI.TwoLetterISOLanguageName),
+                name = lcache.textByID(p.name, CI.TwoLetterISOLanguageName),
+                type = lcache.textByID(p.type, CI.TwoLetterISOLanguageName),
                 count = p.Signins.Count(),
                 teacher = p.teacher,
                 dateStart = p.dateStart.ToString(),
@@ -109,7 +111,7 @@ namespace Machete.Web.Controllers
         {
             if (emp == null) return null;
             return emp.dateStart.ToString() + " - " + 
-                    LookupCache.textByID(emp.name, CI.TwoLetterISOLanguageName) + " - " +
+                    lcache.textByID(emp.name, CI.TwoLetterISOLanguageName) + " - " +
                     emp.teacher;
         }
         /// <summary>
@@ -155,7 +157,7 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Administrator, Manager, Teacher")]
+        //[Authorize(Roles = "Administrator, Manager, Teacher")]
         public ActionResult Edit(int id)
         {
             Activity employer = serv.Get(id);
