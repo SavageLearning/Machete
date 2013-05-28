@@ -43,13 +43,15 @@ namespace Machete.Web.Controllers
     {
         private readonly IEventService _serv;
         private readonly IImageService iServ;
+        private readonly LookupCache lcache;
         System.Globalization.CultureInfo CI;
         //
         //
-        public EventController(IEventService eventService, IImageService imageServ)
+        public EventController(IEventService eventService, IImageService imageServ, LookupCache lc)
         {
             this._serv = eventService;
             this.iServ = imageServ;
+            this.lcache = lc;
         }
         protected override void Initialize(RequestContext requestContext)
         {
@@ -74,7 +76,7 @@ namespace Machete.Web.Controllers
                 datefrom = p.dateFrom.ToShortDateString(),
                 dateto = p.dateTo == null ? "" : ((DateTime)p.dateTo).ToShortDateString(),
                 fileCount = p.JoinEventImages.Count(),
-                type = LookupCache.textByID(p.eventType, CI.TwoLetterISOLanguageName),
+                type = lcache.textByID(p.eventType, CI.TwoLetterISOLanguageName),
                 dateupdated = Convert.ToString(p.dateupdated),
                 Updatedby = p.Updatedby
             };
@@ -97,7 +99,7 @@ namespace Machete.Web.Controllers
         //
         private string _getTabLabel(Event evnt, string locale)
         {
-            return evnt.dateFrom.ToShortDateString() + " " + LookupCache.textByID(evnt.eventType, locale);
+            return evnt.dateFrom.ToShortDateString() + " " + LookupCache.byID(evnt.eventType, locale);
         }
         //
         // GET: /Event/Create

@@ -49,16 +49,20 @@ namespace Machete.Web.Controllers
         private readonly IWorkerService wkrServ;
         private readonly IWorkOrderService woServ;
         private readonly IWorkerSigninService wsiServ;
+        private readonly ILookupCache lcache;
         private System.Globalization.CultureInfo CI;
         public WorkAssignmentController(IWorkAssignmentService workAssignmentService,
                                         IWorkerService workerService,
                                         IWorkOrderService workOrderService,
-                                        IWorkerSigninService signinService)
+                                        IWorkerSigninService signinService,
+                                        ILookupCache lc)
+
         {
             this.waServ = workAssignmentService;
             this.wkrServ = workerService;
             this.woServ = workOrderService;
-            this.wsiServ = signinService;           
+            this.wsiServ = signinService;
+            this.lcache = lc;
         }
         protected override void Initialize(RequestContext requestContext)
         {
@@ -97,7 +101,7 @@ namespace Machete.Web.Controllers
                             recordid = Convert.ToString(p.ID),
                             pWAID = p.getFullPseudoID(), 
                             englishlevel = Convert.ToString(p.englishLevelID),
-                            skill =  LookupCache.textByID(p.skillID, CI.TwoLetterISOLanguageName),
+                            skill =  lcache.textByID(p.skillID, CI.TwoLetterISOLanguageName),
                             hourlywage = System.String.Format("${0:f2}", p.hourlyWage),
                             hours = Convert.ToString(p.hours),
                             hourRange = p.hourRange > 0 ? Convert.ToString(p.hourRange) : "",

@@ -19,7 +19,6 @@ namespace MWS.Test
         {
             frb = new FluentRecordBase();
             frb.Initialize(new MacheteInitializer(), "macheteConnection");
-            LookupCache.Initialize(frb.DB);
 
         }
 

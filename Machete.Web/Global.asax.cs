@@ -111,9 +111,8 @@ namespace Machete.Web
             IUnityContainer container = GetUnityContainer();
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
             Database.SetInitializer<MacheteContext>(new MacheteInitializer());
-            LookupCache.Initialize(new MacheteContext());
             WorkerCache.Initialize(new MacheteContext());
-            Lookups.Initialize();
+            Lookups.Initialize(container.Resolve<LookupCache>());
         }
 
         private IUnityContainer GetUnityContainer()
@@ -154,6 +153,8 @@ namespace Machete.Web
             .RegisterType<IWorkOrderService, WorkOrderService>(new HttpContextLifetimeManager<IWorkOrderService>())
             .RegisterType<IWorkAssignmentService, WorkAssignmentService>(new HttpContextLifetimeManager<IWorkAssignmentService>())
             .RegisterType<IImageService, ImageService>(new HttpContextLifetimeManager<IImageService>());
+            // 
+            container.RegisterInstance<ILookupCache>(new LookupCache(container.Resolve<Func<IDatabaseFactory>>()));
             return container;
         }
     }
