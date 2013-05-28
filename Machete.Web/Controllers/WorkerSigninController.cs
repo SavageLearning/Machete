@@ -42,11 +42,15 @@ namespace Machete.Web.Controllers
     {
         private readonly IWorkerSigninService _serv;
         private readonly IWorkerService _wServ;
+        private readonly LookupCache lcache;
         private System.Globalization.CultureInfo CI;        
-        public WorkerSigninController(IWorkerSigninService workerSigninService, IWorkerService workerService)
+        public WorkerSigninController(IWorkerSigninService workerSigninService, 
+                                      IWorkerService workerService, 
+                                      LookupCache lc)
         {
             this._serv = workerSigninService;
             this._wServ = workerService;
+            this.lcache = lc;
         }
 
         protected override void Initialize(RequestContext requestContext)
@@ -181,7 +185,7 @@ namespace Machete.Web.Controllers
                 dateforsignin = p.dateforsignin,
                 dateforsigninstring = p.dateforsignin.ToShortDateString(),
                 WAID = p.waid ?? 0,
-                memberStatus = LookupCache.textByID(p.memberStatus, CI.TwoLetterISOLanguageName),
+                memberStatus = lcache.textByID(p.memberStatus, CI.TwoLetterISOLanguageName),
                 memberInactive = p.w.isInactive,
                 memberSanctioned = p.w.isSanctioned,
                 memberExpired = p.w.isExpired,
@@ -190,7 +194,7 @@ namespace Machete.Web.Controllers
                 lotterySequence = p.lotterySequence,
                 expirationDate = p.expirationDate.ToShortDateString(),
                 skills = _getSkillCodes(p.englishlevel, p.skill1, p.skill2, p.skill3),
-                program = LookupCache.getByID(p.typeOfWorkID).ltrCode
+                program = lcache.getByID(p.typeOfWorkID).ltrCode
                 };
             return Json(new
             {
@@ -208,17 +212,17 @@ namespace Machete.Web.Controllers
             string rtnstr = "E" + eng + " ";
             if (sk1 != null)
             {
-                var lookup = LookupCache.getByID((int)sk1);
+                var lookup = lcache.getByID((int)sk1);
                 rtnstr = rtnstr + lookup.ltrCode + lookup.level + " ";
             }
             if (sk2 != null)
             {
-                var lookup = LookupCache.getByID((int)sk2);
+                var lookup = lcache.getByID((int)sk2);
                 rtnstr = rtnstr + lookup.ltrCode + lookup.level + " ";
             }
             if (sk3 != null)
             {
-                var lookup = LookupCache.getByID((int)sk3);
+                var lookup = lcache.getByID((int)sk3);
                 rtnstr = rtnstr + lookup.ltrCode + lookup.level;
             }
             return rtnstr;

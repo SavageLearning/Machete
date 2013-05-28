@@ -28,25 +28,37 @@ using System.Text;
 using Machete.Data;
 using Machete.Domain;
 using System.Runtime.Caching;
+using Machete.Data.Infrastructure;
 
 namespace Machete.Service
 {
-
-    public static class LookupCache
+    public interface ILookupCache
     {
-        private static MacheteContext DB { get; set; }
-        private static CacheItem DbCache { get; set; }
-        private static ObjectCache cache;
+        void Dispose();
+        IEnumerable<Lookup> getCache();
+        void Refresh();
+        bool isSpecialized(int skillid);
+        Lookup getByID(int id);
+        string textByID(int ID, string locale);
+        int getByKeys(string category, string key);
+        IEnumerable<int> getSkillsByWorkType(int worktypeID);
+    }
+    public class LookupCache : ILookupCache
+    {
+        private Func<IDatabaseFactory> DB { get; set; }
+        private CacheItem DbCache { get; set; }
+        private ObjectCache cache;
+
 
         //
         //
-        public static void Initialize(MacheteContext db)
+        public LookupCache(Func<IDatabaseFactory> db)
         {
             cache = MemoryCache.Default;
             DB = db;
             FillCache();
         }
-        public static void Dispose()
+        public void Dispose()
         {
             DB = null;
             DbCache = null;
@@ -55,9 +67,9 @@ namespace Machete.Service
         //
         // TODO: This should be included in the Unity Container. 
         //
-        private static void FillCache()
+        private void FillCache()
         {
-            IEnumerable<Lookup> lookups = DB.Lookups.AsNoTracking().ToList();
+            IEnumerable<Lookup> lookups = DB().Get().Lookups.AsNoTracking().ToList();
             CacheItemPolicy policy = new CacheItemPolicy();
             //TODO: Put LookupCache expire time in config file
             policy.AbsoluteExpiration = new DateTimeOffset(DateTime.Now.AddHours(1));
@@ -87,14 +99,7 @@ namespace Machete.Service
         }
         //
         //
-        private static void FillCache(MacheteContext db)
-        {
-            DB = db;
-            FillCache();
-        }
-        //
-        //
-        public static IEnumerable<Lookup> getCache()
+        public IEnumerable<Lookup> getCache()
         {
             CacheItem wCacheItem = cache.GetCacheItem("lookupCache");
             if (wCacheItem == null)
@@ -106,23 +111,23 @@ namespace Machete.Service
         }
         //
         //
-        public static void Refresh(MacheteContext db)
+        public void Refresh()
         {
-            FillCache(db);
+            FillCache();
         }
         //
         //
-        public static bool isSpecialized(int skillid)
+        public bool isSpecialized(int skillid)
         {
             return getCache().Single(s => s.ID == skillid).speciality;
         }
-        public static Lookup getByID(int id)
+        public Lookup getByID(int id)
         {
             return getCache().Single(s => s.ID == id);
         }
         //
         // Get the Id string for a given lookup number
-        public static string textByID(int ID, string locale)
+        public string textByID(int ID, string locale)
         {
             Lookup record;
             try
@@ -141,7 +146,7 @@ namespace Machete.Service
         }
         //
         // Get the ID number for a given lookup string
-        public static int getByKeys(string category, string key)
+        public int getByKeys(string category, string key)
         {
             int rtnint = 0;
             try
@@ -156,7 +161,7 @@ namespace Machete.Service
         }
         //
         //
-        public static IEnumerable<int> getSkillsByWorkType(int worktypeID)
+        public IEnumerable<int> getSkillsByWorkType(int worktypeID)
         {
             try
             {

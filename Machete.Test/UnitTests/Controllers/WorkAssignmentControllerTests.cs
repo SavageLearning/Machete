@@ -35,6 +35,7 @@ using System.Web.Mvc;
 using Machete.Domain;
 using Machete.Test;
 using Machete.Web.ViewModel;
+using Machete.Web.Helpers;
 
 namespace Machete.Test.Controllers
 {
@@ -52,6 +53,7 @@ namespace Machete.Test.Controllers
         WorkAssignmentController _ctrlr;
         WorkAssignmentIndex _view;
         FormCollection fakeform;
+        Mock<ILookupCache> lcache;
 
         [TestInitialize]
         public void TestInitialize()
@@ -60,11 +62,13 @@ namespace Machete.Test.Controllers
             _wkrServ = new Mock<IWorkerService>();
             _woServ = new Mock<IWorkOrderService>();
             _wsiServ = new Mock<IWorkerSigninService>();
-            _ctrlr = new WorkAssignmentController(_waServ.Object, _wkrServ.Object, _woServ.Object, _wsiServ.Object);
+            lcache = new Mock<ILookupCache>();
+            _ctrlr = new WorkAssignmentController(_waServ.Object, _wkrServ.Object, _woServ.Object, _wsiServ.Object, lcache.Object);
             _view = new WorkAssignmentIndex();
             _ctrlr.SetFakeControllerContext();
             fakeform = new FormCollection();
             fakeform.Add("ID", "12345");
+            Lookups.Initialize(lcache.Object);
         }
         //
         //   Testing /Index functionality
@@ -87,6 +91,8 @@ namespace Machete.Test.Controllers
         public void Unit_WA_Controller_create_get_returns_workAssignment()
         {
             //Arrange
+            var lc = new List<Lookup>();
+            lcache.Setup(p => p.getCache()).Returns(() => lc);
             //Act
             var result = (PartialViewResult)_ctrlr.Create(0);
             //Assert

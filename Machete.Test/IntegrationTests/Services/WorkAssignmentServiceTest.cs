@@ -49,7 +49,6 @@ namespace Machete.Test
         {
             frb = new FluentRecordBase();
             frb.Initialize(new MacheteInitializer(), "macheteConnection");
-            LookupCache.Initialize(frb.DB);
             dOptions = new viewOptions
             {
                 CI = new CultureInfo("en-US", false),
@@ -229,7 +228,7 @@ namespace Machete.Test
         public void Integration_WA_Service_GetIndexView_check_searchdwccardnum()
         {
             //arrange
-            var skill = LookupCache.getByKeys(LCategory.skill,LKey.Default);
+            var skill = frb.ToLookupCache().getByKeys(LCategory.skill,LKey.Default);
             var w = frb.AddWorker(skill1: skill).ToWorker();
             dOptions.dwccardnum = w.dwccardnum;
             dOptions.orderDescending = true;

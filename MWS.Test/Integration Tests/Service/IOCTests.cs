@@ -21,7 +21,6 @@ namespace MWS.Test.Integration_Tests.Service
         {
             frb = new FluentRecordBase();
             frb.Initialize(new MacheteInitializer(), "macheteConnection");
-            LookupCache.Initialize(frb.DB);
         }
 
         [TestCleanup]

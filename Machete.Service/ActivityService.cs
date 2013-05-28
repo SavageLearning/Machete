@@ -45,11 +45,14 @@ namespace Machete.Service
     public class ActivityService : ServiceBase<Activity>, IActivityService
     {
         private IActivitySigninService asServ;
+        private LookupCache lcache;
         public ActivityService(IActivityRepository repo,
             IActivitySigninService asServ,
+            LookupCache lc,
             IUnitOfWork uow) : base(repo, uow)
         {
             this.logPrefix = "Activity";
+            this.lcache = lc;
             this.asServ = asServ;
         }
         public dataTableResult<Activity> GetIndexView(viewOptions o)
@@ -71,12 +74,13 @@ namespace Machete.Service
 
             e = q.AsEnumerable();
             if (!string.IsNullOrEmpty(o.sSearch))
-                IndexViewBase.search(o, ref e);
+                IndexViewBase.search(o, ref e, lcache);
 
             IndexViewBase.sortOnColName(o.sortColName, 
                                         o.orderDescending, 
                                         o.CI.TwoLetterISOLanguageName, 
-                                        ref e);
+                                        ref e,
+                                        lcache);
             //Limit results to the display length and offset
             //if (o.displayLength >= 0)
             result.filteredCount = e.Count();

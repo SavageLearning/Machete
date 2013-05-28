@@ -50,19 +50,22 @@ namespace Machete.Web.Controllers
         private readonly IWorkerService wServ;
         private readonly IWorkerRequestService wrServ;
         private readonly IWorkAssignmentService waServ;
+        private readonly ILookupCache lcache;
         CultureInfo CI;
         
         public WorkOrderController(IWorkOrderService woServ, 
                                    IWorkAssignmentService workAssignmentService,
                                    IEmployerService employerService,
                                    IWorkerService workerService,
-                                   IWorkerRequestService requestService)
+                                   IWorkerRequestService requestService, 
+                                   ILookupCache lc)
         {
             this.woServ = woServ;
             this.eServ = employerService;
             this.wServ = workerService;
             this.waServ = workAssignmentService;
             this.wrServ = requestService;
+            this.lcache = lc;
         }
         protected override void Initialize(RequestContext requestContext)
                 {
@@ -168,13 +171,13 @@ namespace Machete.Web.Controllers
                 EID = Convert.ToString(p.EmployerID),
                 WOID = System.String.Format("{0,5:D5}", p.paperOrderNum),
                 dateTimeofWork = p.dateTimeofWork.ToString(),
-                status = LookupCache.textByID(p.status, CI.TwoLetterISOLanguageName),
+                status = lcache.textByID(p.status, CI.TwoLetterISOLanguageName),
                 WAcount = p.workAssignments.Count(a => a.workOrderID == ID).ToString(),
                 contactName = p.contactName,
                 workSiteAddress1 = p.workSiteAddress1,
                 dateupdated = System.String.Format("{0:MM/dd/yyyy HH:mm:ss}", p.dateupdated),
                 updatedby = p.Updatedby,
-                transportMethod = LookupCache.textByID(p.transportMethodID, CI.TwoLetterISOLanguageName),
+                transportMethod = lcache.textByID(p.transportMethodID, CI.TwoLetterISOLanguageName),
                 displayState = _getDisplayState(p),
                 onlineSource = p.onlineSource,
                 recordid = p.ID.ToString(),
@@ -184,7 +187,7 @@ namespace Machete.Web.Controllers
                         {
                             WID = w.workerAssigned != null ? (int?)w.workerAssigned.dwccardnum : null,
                             name = w.workerAssigned != null ? w.workerAssigned.Person.fullName() : null,
-                            skill = LookupCache.textByID(w.skillID, CI.TwoLetterISOLanguageName),
+                            skill = lcache.textByID(w.skillID, CI.TwoLetterISOLanguageName),
                             hours = w.hours,
                             wage = w.hourlyWage
                         } : null
@@ -199,7 +202,7 @@ namespace Machete.Web.Controllers
         /// <returns>status string</returns>
         private string _getDisplayState(WorkOrder wo)
         {
-            string status = LookupCache.textByID(wo.status, "en");
+            string status = lcache.textByID(wo.status, "en");
             //TODO: Pull out WorkOrder status strings, use WorkOrder object reference
             if (status == "Completed")
             {
