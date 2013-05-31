@@ -99,7 +99,7 @@ namespace Machete.Web.Controllers
         //
         private string _getTabLabel(Event evnt, string locale)
         {
-            return evnt.dateFrom.ToShortDateString() + " " + LookupCache.byID(evnt.eventType, locale);
+            return evnt.dateFrom.ToShortDateString() + " " + lcache.textByID(evnt.eventType, locale);
         }
         //
         // GET: /Event/Create

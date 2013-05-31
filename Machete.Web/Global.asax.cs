@@ -107,12 +107,12 @@ namespace Machete.Web
             ModelBinders.Binders.Add(typeof(List<WorkerRequest>), new workerRequestBinder());
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
-            MacheteMapper.Initialize();
+            Database.SetInitializer<MacheteContext>(new MacheteInitializer());
             IUnityContainer container = GetUnityContainer();
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
-            Database.SetInitializer<MacheteContext>(new MacheteInitializer());
-            WorkerCache.Initialize(new MacheteContext());
-            Lookups.Initialize(container.Resolve<LookupCache>());
+            WorkerCache.Initialize(new MacheteContext()); //TODO: migrate to Unity DI container
+            Lookups.Initialize(container.Resolve<LookupCache>()); // Static object; used in cshtml files; used instead of proper view models
+            MacheteMapper.Initialize(); // AutoMapper
         }
 
         private IUnityContainer GetUnityContainer()
