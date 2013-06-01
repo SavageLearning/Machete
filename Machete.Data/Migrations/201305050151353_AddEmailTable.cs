@@ -35,6 +35,7 @@ namespace Machete.Data.Migrations
                         subject = c.String(nullable: false, maxLength: 100),
                         body = c.String(nullable: false, maxLength: 50),
                         transmitAttempts = c.Int(nullable: false),
+                        status = c.Int(nullable: false),
                         lastAttempt = c.DateTime(),
                         datecreated = c.DateTime(nullable: false),
                         dateupdated = c.DateTime(nullable: false),
@@ -43,6 +44,9 @@ namespace Machete.Data.Migrations
                     })
                 .PrimaryKey(t => t.ID);
             
+            AddColumn("dbo.Lookups", "emailTemplate", c => c.String());
+            AddColumn("dbo.Lookups", "key", c => c.String(maxLength: 30));
+            AlterColumn("dbo.Lookups", "ltrCode", c => c.String(maxLength: 3));
         }
         
         public override void Down()
@@ -51,6 +55,9 @@ namespace Machete.Data.Migrations
             DropIndex("dbo.JoinWorkorderEmails", new[] { "WorkOrderID" });
             DropForeignKey("dbo.JoinWorkorderEmails", "EmailID", "dbo.Emails");
             DropForeignKey("dbo.JoinWorkorderEmails", "WorkOrderID", "dbo.WorkOrders");
+            AlterColumn("dbo.Lookups", "ltrCode", c => c.String(maxLength: 1));
+            DropColumn("dbo.Lookups", "key");
+            DropColumn("dbo.Lookups", "emailTemplate");
             DropTable("dbo.Emails");
             DropTable("dbo.JoinWorkorderEmails");
         }

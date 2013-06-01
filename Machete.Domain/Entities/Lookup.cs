@@ -77,13 +77,14 @@ namespace Machete.Domain
         [LocalizedDisplayName("ltrCode", NameResourceType = typeof(Resources.Lookup))]
         [StringLength(3, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Lookup))]
         public string ltrCode { get; set; }
-        //[LocalizedDisplayName("emailTemplate", NameResourceType = typeof(Resources.Lookup))]
-        //[StringLength(8000, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Lookup))]
-        //[Column(TypeName = "nvarchar(MAX)")]
-        //public string emailTemplate { get; set; }
+        [LocalizedDisplayName("emailTemplate", NameResourceType = typeof(Resources.Lookup))]
+        [StringLength(8000, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Lookup))]
+        [Column(TypeName = "nvarchar(MAX)")]
+        public string emailTemplate { get; set; }
         /// <summary>
         /// Set only for records that correspond to internal component or status
         /// </summary>
+        [StringLength(30, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Lookup))]
         public string key { get; set; }
     }
 
