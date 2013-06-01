@@ -48,8 +48,6 @@ namespace Machete.Service
         private Func<IDatabaseFactory> DB { get; set; }
         private CacheItem DbCache { get; set; }
         private ObjectCache cache;
-
-
         //
         //
         public LookupCache(Func<IDatabaseFactory> db)
