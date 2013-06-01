@@ -6,6 +6,7 @@ using System.Globalization;
 using Machete.Data;
 using MWS.Core;
 using Machete.Domain;
+using Microsoft.Practices.Unity;
 
 namespace MWS.Test
 {
@@ -13,12 +14,15 @@ namespace MWS.Test
     public class EmailManagerTests
     {
         FluentRecordBase frb;
+        LookupCache cache;
 
         [TestInitialize]
         public void TestInitialize()
         {
             frb = new FluentRecordBase();
             frb.Initialize(new MacheteInitializer(), "macheteConnection");
+            // populates domain constants
+            cache = new LookupCache(() => frb.ToFactory()); //Func<> to DB Factory
 
         }
 
@@ -30,7 +34,7 @@ namespace MWS.Test
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.MWS), TestCategory(TC.Emails)]
-        public void Integration_Email_MWS_ProcessQueue()
+        public void Integration_Email_MWS_ProcessQueue_send_one_email()
         {
             // Arrange
             var eServ = frb.AddEmail(status: Email.iReadyToSend).ToServEmail();
@@ -38,6 +42,8 @@ namespace MWS.Test
             var mgr = new EmailManager(eServ, frb.ToUOW());
             // Assert
             mgr.ProcessQueue();
+            //Assert.AreEqual(1, mgr.sentStack.Count);
+            Assert.AreEqual(0, mgr.exceptionStack.Count);
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.MWS), TestCategory(TC.Emails)]
