@@ -345,6 +345,10 @@ div.recordButtons {
     /*width: 20em;*/
     height: 2em !important;
 }
+.email-field {
+    height: 30em !important;
+    width: 40em;
+}
 /* Used on workorder and workassignment;   */
 .money-field {
     width: 5em !important;

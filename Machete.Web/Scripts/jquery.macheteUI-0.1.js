@@ -510,15 +510,16 @@
                 EnableOnValue(select, enableVal, target);
             });
             EnableOnValue(select, enableVal, target);
-            //opt.action = EnableOnValue;
-            //_selectActionOnValue(opt);
         },
         //
-        configEnableOnSkill: function (opt) {
-            opt.object = this;
-            opt.action = _validateOnValue;
-            opt.event = 'change';
-            _selectActionOnValue(opt);
+        configEnableOnValue: function (opt) {
+            var object = this;
+            var event = 'change';
+            var cfgArray = opt;
+            $(object).bind(event, function () {
+                _validateOnValue(object, cfgArray);
+            });
+            _validateOnValue(object, cfgArray);
         },
         //
         tabTimer: function (opt) {
@@ -587,59 +588,28 @@
     }
     //
     //
-    function _validateOnValue(object, val, target) {
+    function _validateOnValue(object, cfgArray) {
         //Object is the dropdown that is triggering the different validation states
-        var visBlock = target.visible;
-        var valBlock = target.validate;
-        if (!visBlock) {
-            throw new Error("_selectActionOnValue requires a visible object to execute");
+        var myArray = cfgArray;
+        if (!myArray) {
+            throw new Error("_validateOnValue configuration array empty or null");
         }
-        if (!valBlock) {
-            throw new Error("_selectActionOnValue requires a validation object to execute");
+        for (var i = 0; i < myArray.length; i++) {
+            var entry = myArray[i];
+            console.log('_validateOnValue called for value: ' + entry.enableOnValue);
+            if ($(object).val() == entry.enableOnValue) {
+                $(entry.targets).show();
+                $(entry.validators).attr("data-val", true);
+            } else {
+                $(entry.targets).hide();
+                $(entry.validators).attr("data-val", false);
+            }
+            var myForm = $(object).closest('form');
+            $(myForm).removeData('unobtrusiveValidation');
+            $(myForm).removeData('validator');
+            $.validator.unobtrusive.parse(myForm);
         }
-        console.log('_validateOnValue called');
-        if ($(object).val() == val) {
-            $(visBlock).show();
-            $(valBlock).attr("data-val", true);
-        } else {
-            $(visBlock).hide();
-            $(valBlock).attr("data-val", false);
-        }
-        var myForm = $(object).closest('form');
-        $(myForm).removeData('unobtrusiveValidation');
-        $(myForm).removeData('validator');
-        $.validator.unobtrusive.parse(myForm);
     }
-    //
-    //
-    function _selectActionOnValue(opt) {
-        var object = opt.object; ;
-        var val = opt.enableVal;
-        var target = opt.target;
-        var action = opt.action;
-        var event = opt.event;
-        if (!object) {
-            throw new Error("_selectActionOnValue requires an object property");
-        }
-        if (!val) {
-            throw new Error("_selectActionOnValue requires an enableVal property");
-        }
-        if (!target) {
-            throw new Error("_selectActionOnValue requires a target to enable");
-        }
-        if (!action) {
-            throw new Error("_selectActionOnValue requires an action to execute");
-        }
-        if (!event) {
-            throw new Error("_selectActionOnValue requires an event to execute");
-        }
-        $(object).bind(event, function () {
-            action(object, val, target);
-        });
-        action(object, val, target);
-    }
-
-    //
     //  Internal function to record what's changed:
     //       level: refers to the hierarchy level of a given form 
     //              ([1]employer/[2]order/[3]assignment)
