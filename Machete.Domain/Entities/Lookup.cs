@@ -27,6 +27,7 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Machete.Domain
 {
@@ -76,6 +77,10 @@ namespace Machete.Domain
         [LocalizedDisplayName("ltrCode", NameResourceType = typeof(Resources.Lookup))]
         [StringLength(3, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Lookup))]
         public string ltrCode { get; set; }
+        //[LocalizedDisplayName("emailTemplate", NameResourceType = typeof(Resources.Lookup))]
+        //[StringLength(8000, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Lookup))]
+        //[Column(TypeName = "nvarchar(MAX)")]
+        //public string emailTemplate { get; set; }
         /// <summary>
         /// Set only for records that correspond to internal component or status
         /// </summary>
