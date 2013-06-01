@@ -14,6 +14,7 @@ namespace Machete.Domain
 {
     public struct LCategory
     {
+        // used in Lookups.key ; max length 30 characters
         public const string race = "race";
         public const string language = "language";
         public const string neighborhood = "neighborhood";
