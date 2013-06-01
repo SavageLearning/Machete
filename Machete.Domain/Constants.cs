@@ -32,7 +32,7 @@ namespace Machete.Domain
         public const string activityName = "activityName";
         public const string activityType = "activityType";
         public const string emailstatus = "emailstatus";
-        public const string emailtemplate = "emailtemplate";
+        public const string emailTemplate = "emailTemplate";
     }
 
     public struct LMemberStatus
