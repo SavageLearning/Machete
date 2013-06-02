@@ -512,6 +512,8 @@
             EnableOnValue(select, enableVal, target);
         },
         //
+        // Used in config.cshtml. Shows/hides based on class and skill
+        // selected in dropdown
         configEnableOnValue: function (opt) {
             var object = this;
             var event = 'change';
@@ -521,6 +523,18 @@
             });
             _validateOnValue(object, cfgArray);
         },
+        //
+        //
+        selectDDPopulatesField: function (opt) {
+            var object = this;
+            var event = 'change';
+            var cfg = opt;
+            $(object).bind(event, function () {
+                _insertTemplate(object, cfg);
+            });
+            //_insertTemplate(object, cfg);
+        },
+        //
         //
         tabTimer: function (opt) {
             var tab = this;
@@ -586,6 +600,13 @@
         _clearTimer();
         _setTimer();
     }
+    //
+    //
+    function _insertTemplate(object, cfg) {
+        var foo = $(object).find('option:selected').attr(cfg.attrName);
+        cfg.target.val(foo);
+    }
+
     //
     //
     function _validateOnValue(object, cfgArray) {
