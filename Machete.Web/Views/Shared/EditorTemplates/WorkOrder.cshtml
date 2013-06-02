@@ -28,7 +28,6 @@
         else
         {
             <div class="tb-header">
-
             @Lookups.byID(Model.status, CI.TwoLetterISOLanguageName)
             @Html.HiddenFor(model => model.status, new { @id = idPrefix + "status" })
             </div>
