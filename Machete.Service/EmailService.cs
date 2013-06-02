@@ -14,6 +14,7 @@ namespace Machete.Service
         Email GetLatestConfirmEmailBy(int woid);
         IEnumerable<Email> GetMany(Func<Email, bool> predicate);
         IEnumerable<Email> GetEmailsToSend();
+        Email GetExclusive(int eid, string user);
     }
 
     public class EmailService : ServiceBase<Email>, IEmailService
@@ -35,6 +36,16 @@ namespace Machete.Service
             return emailJoiner.Email;
         }
 
+        public Email GetExclusive(int eid, string user)
+        {
+            var e =  repo.GetById(eid);
+            e.status = Email.iPending;
+            e.updatedby(user);
+            log(e.ID, user, logPrefix + " edited");
+            uow.Commit();
+            return e;
+        }
+
         public IEnumerable<Email> GetMany(Func<Email, bool> predicate)
         {
             return repo.GetMany(predicate);
@@ -42,7 +53,7 @@ namespace Machete.Service
 
         public IEnumerable<Email> GetEmailsToSend()
         {
-            return repo.GetManyQ().Where(e => e.status == Email.iReadyToSend).AsEnumerable();
+            return repo.GetManyQ().Where(e => e.status == Email.iReadyToSend).ToList();
         }
 
         public dataTableResult<Email> GetIndexView(viewOptions o)

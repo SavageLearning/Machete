@@ -90,6 +90,8 @@ namespace Machete.Service
             #region EMAILS
             Email.iReadyToSend = getByKeys(LCategory.emailstatus, LEmailStatus.ReadyToSend);
             Email.iSent = getByKeys(LCategory.emailstatus, LEmailStatus.Sent);
+            Email.iSending = getByKeys(LCategory.emailstatus, LEmailStatus.Sending);
+            Email.iPending = getByKeys(LCategory.emailstatus, LEmailStatus.Pending);
             Email.iTransmitError = getByKeys(LCategory.emailstatus, LEmailStatus.TransmitError);
             #endregion
         }

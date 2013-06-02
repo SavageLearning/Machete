@@ -54,9 +54,12 @@ namespace Machete.Domain
     }
     public struct LEmailStatus
     {
+        public const string Pending = "pending";
         public const string ReadyToSend = "readytosend";
+        public const string Sending = "sending";
         public const string Sent = "sent";
         public const string TransmitError = "transmiterror";
+
     }
     public struct LKey
     {
