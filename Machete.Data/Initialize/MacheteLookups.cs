@@ -154,6 +154,8 @@ namespace Machete.Data
                 new Lookup { ID=105,category = LCategory.emailstatus, key= LEmailStatus.ReadyToSend, text_EN="Ready to send",         text_ES="Listo para enviar",          selected = false },
                 new Lookup { ID=106,category = LCategory.emailstatus, key= LEmailStatus.Sent, text_EN="Sent",         text_ES="Enviado",          selected = false },
                 new Lookup { ID=107,category = LCategory.emailstatus, key= LEmailStatus.TransmitError, text_EN="Transmit error",         text_ES="Error en la transmisión",          selected = false },
+                new Lookup { ID=107,category = LCategory.emailstatus, key= LEmailStatus.Sending, text_EN="Sending",         text_ES="Envío",          selected = false },
+                new Lookup { ID=107,category = LCategory.emailstatus, key= LEmailStatus.Pending, text_EN="Pending",         text_ES="Pendiente",          selected = false },
                 new Lookup { ID=108,category = LCategory.emailTemplate, key= LKey.Default, text_EN="default template (English)", text_ES="plantilla predeterminada (Ingles)", selected=true, emailTemplate="Thanks for using Machete! You can change this in the Config section."}
             };
         //

@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Configuration;
 using Machete.Data.Infrastructure;
 using System.Diagnostics;
+using System.Data.Entity.Infrastructure;
 
 namespace MWS.Core
 {
@@ -43,25 +44,50 @@ namespace MWS.Core
             sentStack = new Stack<Email>();
             foreach (var e in emaillist)
             {
+
+                if (!setStatusToSending(e))
+                {
+                    // failed concurrency check; another process has changed the record, skipping
+                    continue;
+                }
                 try
                 {
                     SendEmail(e, cfg);
-                    e.status = Email.iSent;
+                    e.status = Email.iSent; // record sent
                     sentStack.Push(e);
                 }
                 catch (Exception ex)
                 {
-                    //  don't log the a repeating message 
-                    // keep the queue from flooding eventlog/debug
+                    //  don't log the repeating message 
                     if (exceptionStack.Count() == 0 || 
                         exceptionStack.Peek().Message != ex.Message)
                     {
                         exceptionStack.Push(ex);
                     }
+                    e.status = Email.iTransmitError;
+                }
+                finally
+                {
+                    e.transmitAttempts += 1;
+                    db.Commit();
                 }
             }
-            db.Commit();
         }
+
+        public bool setStatusToSending(Email em)
+        {
+            try
+            {
+                em.status = Email.iSending; // lock out edits
+                db.Commit();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                return false;
+            }
+            return true;
+        }
+
         /// <summary>
         /// String of exception messages, 1 per line
         /// </summary>

@@ -19,11 +19,13 @@ namespace Machete.Web.Controllers
     public class EmailController : MacheteController
     {
         private readonly IEmailService serv;
+        private readonly ILookupCache lcache;
         private CultureInfo CI;
 
-        public EmailController(IEmailService eServ)
+        public EmailController(IEmailService eServ, ILookupCache lc)
         {
             this.serv = eServ;
+            lcache = lc;
         }
         protected override void Initialize(RequestContext requestContext)
         {
@@ -65,6 +67,7 @@ namespace Machete.Web.Controllers
                              emailFrom = p.emailFrom,
                              emailTo = p.emailTo,
                              subject = p.subject,
+                             status = lcache.textByID(p.status, CI.TwoLetterISOLanguageName),
                              transmitAttempts = p.transmitAttempts.ToString(),
                              lastAttempt = p.lastAttempt.ToString(),
                              dateupdated = Convert.ToString(p.dateupdated),
@@ -121,10 +124,12 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [UserNameFilter]
         [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int id, string userName)
         {
-            Email email = serv.Get(id);
+            // lock on read for fail
+            Email email = serv.GetExclusive(id, userName);
             return PartialView("Edit", email);
         }
         /// <summary>
