@@ -83,4 +83,13 @@ namespace System.Web.Mvc
             set;
         }
     }
+
+    public class SelectListItemEmail : SelectListItem
+    {
+        public string template
+        {
+            get;
+            set;
+        }
+    }
 }

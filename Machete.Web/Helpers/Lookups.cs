@@ -163,6 +163,21 @@ namespace Machete.Web.Helpers
             if (list == null) throw new ArgumentNullException("Get returned no lookups");
             return list;
         }
+
+        public static List<SelectListItemEmail> getEmailTemplates(string locale)
+        {
+            IEnumerable<Lookup> prelist = lcache.getCache()
+                                         .Where(s => s.category == LCategory.emailTemplate);
+            return new List<SelectListItemEmail>(prelist
+                .Select(x => new SelectListItemEmail
+                {
+                    Selected = x.selected,
+                    Value = Convert.ToString(x.ID),
+                    Text = locale == "es" ? x.text_ES : x.text_EN,
+                    template = x.emailTemplate
+                }));
+        }
+
         /// <summary>
         /// get the List of skills. used in Worker.cshtml & WorkAssignment.cshtml
         /// </summary>

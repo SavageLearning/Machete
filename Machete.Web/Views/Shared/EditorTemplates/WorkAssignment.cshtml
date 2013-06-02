@@ -18,12 +18,12 @@
         @Html.mUITableLabelFor(model => model.skillID)
         <div class="tb-field">
             <select name="skillID" id=@(idPrefix + "skillID") 
-                    data-val-required="A skill is required (use general labor if none was specificed)" 
+                    data-val-required="A skill is required (use general labor if none was specified)" 
                     data-val-number="The field Skill must be a number." 
                     data-val="true"
                     tabindex="1"
                     class="valid"><option value="">@Shared.choose</option>
-                @foreach (var item in Lookups.getSkill(CI.TwoLetterISOLanguageName, false))
+                @foreach (var item in Lookups.getSkill(CI.TwoLetterISOLanguageName, specializedOnly: false))
                 {
                     @*kludgy way to print selected or not. couldn't get other syntax to work*@
                     if (Model.skillID == Convert.ToInt16(item.Value))

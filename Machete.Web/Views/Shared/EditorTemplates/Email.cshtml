@@ -9,9 +9,27 @@
 }
 @Html.HiddenFor(model => model.ID, new { @class="hiddenRecID", id=idPrefix + "ID"})
 <div class="tb-table" style="float: left; clear: left;">
-    <div class="tb-row">
+@*    <div class="tb-row">
         @Html.mUITableLabelAndTextBoxFor(model => model.emailFrom, 
             new {tabindex = "1", id=idPrefix + "emailFrom", @class="emailField email"})
+    </div>*@
+    <div class="tb-row">
+        <div class="tb-label">
+            @Html.Label("templateLabel")
+        </div>
+        <div class="tb-field">
+            @*@Html.DropDownList("templateChooser", Lookups.getEmailTemplates(CI.TwoLetterISOLanguageName),
+                        new { @tabindex = "1", @class = "emailField", @id = idPrefix + "templateChooser" })*@
+            <select name="templateChooser" id=@(idPrefix + "templateChooser")
+                    tabindex="1"
+                    class=""><option value="">@Shared.choose</option>
+                @foreach (var item in Lookups.getEmailTemplates(CI.TwoLetterISOLanguageName))
+                {
+                    <option value="@(item.Value)"
+                            template="@(item.template)">@item.Text</option>
+                }
+            </select>
+        </div>
     </div>
     <div class="tb-row">
         @Html.mUITableLabelAndTextBoxFor(model => model.emailTo, 
