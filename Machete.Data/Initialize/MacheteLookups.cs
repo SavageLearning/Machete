@@ -153,7 +153,8 @@ namespace Machete.Data
                 new Lookup { ID=104,category = LCategory.activityType, text_EN="Health & Safety",         text_ES="Salud y seguridad",          selected = false },
                 new Lookup { ID=105,category = LCategory.emailstatus, key= LEmailStatus.ReadyToSend, text_EN="Ready to send",         text_ES="Listo para enviar",          selected = false },
                 new Lookup { ID=106,category = LCategory.emailstatus, key= LEmailStatus.Sent, text_EN="Sent",         text_ES="Enviado",          selected = false },
-                new Lookup { ID=107,category = LCategory.emailstatus, key= LEmailStatus.TransmitError, text_EN="Transmit error",         text_ES="Error en la transmisión",          selected = false }
+                new Lookup { ID=107,category = LCategory.emailstatus, key= LEmailStatus.TransmitError, text_EN="Transmit error",         text_ES="Error en la transmisión",          selected = false },
+                new Lookup { ID=108,category = LCategory.emailTemplate, key= LKey.Default, text_EN="default template (English)", text_ES="plantilla predeterminada (Ingles)", selected=true, emailTemplate="Thanks for using Machete! You can change this in the Config section."}
             };
         //
         //

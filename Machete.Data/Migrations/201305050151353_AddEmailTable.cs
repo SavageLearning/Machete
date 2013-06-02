@@ -33,7 +33,7 @@ namespace Machete.Data.Migrations
                         emailFrom = c.String(nullable: false, maxLength: 50),
                         emailTo = c.String(nullable: false, maxLength: 50),
                         subject = c.String(nullable: false, maxLength: 100),
-                        body = c.String(nullable: false, maxLength: 50),
+                        body = c.String(nullable: false),
                         transmitAttempts = c.Int(nullable: false),
                         status = c.Int(nullable: false),
                         lastAttempt = c.DateTime(),

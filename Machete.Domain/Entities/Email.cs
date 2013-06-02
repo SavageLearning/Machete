@@ -28,6 +28,7 @@ using System.Text;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Machete.Domain.Resources;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Machete.Domain
 {
@@ -44,7 +45,6 @@ namespace Machete.Domain
 
         [LocalizedDisplayName("emailFrom", NameResourceType = typeof(Resources.Email))]
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Email))]
-        [Required(ErrorMessageResourceName = "emailFrom", ErrorMessageResourceType = typeof(Resources.Email))]
         public string emailFrom { get; set; }
         //
         [LocalizedDisplayName("emailTo", NameResourceType = typeof(Resources.Email))]
@@ -58,15 +58,14 @@ namespace Machete.Domain
         public string subject { get; set; }
         //
         [LocalizedDisplayName("body", NameResourceType = typeof(Resources.Email))]
-        [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Email))]
+        [StringLength(8000, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Email))]
         [Required(ErrorMessageResourceName = "body", ErrorMessageResourceType = typeof(Resources.Email))]
+		[Column(TypeName = "nvarchar(MAX)")]
         public string body { get; set; }
 
         public int transmitAttempts { get; set; }
         public int  status { get; set; }
         public DateTime? lastAttempt { get; set; }
-
-
     }
 
 
