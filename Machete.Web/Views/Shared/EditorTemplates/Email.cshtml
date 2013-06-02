@@ -52,6 +52,10 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-
+        var selectDropDown = $('#@(idPrefix + "templateChooser")');
+        selectDropDown.mUI('selectDDPopulatesField', {
+            attrName: 'template',
+            target: $('#@(idPrefix + "body")')
+        });
     });
 </script>
