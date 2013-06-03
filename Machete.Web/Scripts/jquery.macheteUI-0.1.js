@@ -333,20 +333,18 @@
         formClickDuplicate: function (opt) {
             var btn, editForm, dupForm;
             btn = this;
-            if (opt.editForm) {
-                editForm = opt.editForm;
-            } else {
-                throw new Error("No edit form to submit");
-            }
+            editForm = opt.editForm;
             if (opt.dupForm) {
                 dupForm = opt.dupForm;
             } else {
                 throw new Error("No duplicate form to submit");
             }
             btn.click(function () {
-                editForm.data("SelTab", -1);
-                editForm.data("create", null);
-                editForm.submit();
+                if (editForm) {
+                    editForm.data("SelTab", -1);
+                    editForm.data("create", null);
+                    editForm.submit();
+                }
                 // duplicate the current edit
                 dupForm.data("SelTab", -1);
                 dupForm.data("exclusiveTab", false);

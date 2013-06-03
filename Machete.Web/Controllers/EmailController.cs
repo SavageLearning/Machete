@@ -119,6 +119,29 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
+
+        [HttpPost, UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        public ActionResult Duplicate(int id, string userName)
+        {
+            Email e = serv.Get(id);
+            Email duplicate = e;
+            duplicate.status = Email.iPending;
+            duplicate.lastAttempt = null;
+            duplicate.transmitAttempts = 0;
+
+            serv.Create(duplicate, userName);
+            return Json(new
+            {
+                sNewRef = _getTabRef(duplicate),
+                sNewLabel = _getTabLabel(duplicate),
+                iNewID = duplicate.ID
+            },
+            JsonRequestBehavior.AllowGet);
+
+        }
+
+
         /// <summary>
         /// GET: /Email/Edit/5
         /// </summary>
