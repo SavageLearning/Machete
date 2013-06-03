@@ -39,9 +39,19 @@ namespace Machete.Service
         public Email GetExclusive(int eid, string user)
         {
             var e =  repo.GetById(eid);
-            e.status = Email.iPending;
+            if (e.status == Email.iSending ||
+                e.status == Email.iSent)
+            {
+                return null;
+            }
+            // user will have to re-send when editing a ReadyToSend
+            if (e.status == Email.iReadyToSend)
+            {
+                e.status = Email.iPending;
+            }
+            // transmit errors will remain as error re-sent
             e.updatedby(user);
-            log(e.ID, user, logPrefix + " edited");
+            log(e.ID, user, logPrefix + " get exclusive for email");
             uow.Commit();
             return e;
         }
@@ -53,7 +63,11 @@ namespace Machete.Service
 
         public IEnumerable<Email> GetEmailsToSend()
         {
-            return repo.GetManyQ().Where(e => e.status == Email.iReadyToSend).ToList();
+            return repo.GetManyQ()
+                       .Where(e => e.status == Email.iReadyToSend ||
+                           (e.status == Email.iTransmitError && e.transmitAttempts < 10)
+                           )
+                       .ToList();
         }
 
         public dataTableResult<Email> GetIndexView(viewOptions o)

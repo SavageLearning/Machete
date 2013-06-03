@@ -5,37 +5,35 @@
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
     string recType = "email";
-
 }
-@if (Html.IsInRole(Html.Role_AMPCU()) || Html.IsInRole(Html.Role_T()))
-{
-    using (Html.BeginForm("Edit", "Email", FormMethod.Post,
-                            new { @class = "edittab-form EditPost", @id = "EmailTab-" + Model.ID }))
-    {
-        <input type="submit" value="@Emails.editsubmit" class="formButton saveBtn"/>
-        if (Html.IsInRole(Html.Role_AM()))
-        {
-            <input id="deleteEmailButton-@Model.ID" type="button" value="@Emails.deletesubmit" 
-                    class="formButton deleteButton" />
-        }
-        <br />    
-        @Html.ValidationSummary(true)
-        @Html.EditorForModel()
 
-    }
+@using (Html.BeginForm("Edit", "Email", FormMethod.Post,
+                        new { @class = "edittab-form EditPost", @id = "EmailTab-" + Model.ID }))
+{
+    <input type="submit" value="@Emails.editsubmit" class="formButton saveBtn"/>
     if (Html.IsInRole(Html.Role_AM()))
     {
-        //
-        // Only Managers can delete email records.
-        // The phonedesk can edit and save.
-        //
-        using (Html.BeginForm("Delete", "Email", FormMethod.Post,
-                                new { @class = "edittab-form DeletePost", @id = "DeleteEmail-" + Model.ID }))
-        {
-            @Html.HiddenFor(model => model.ID);
-        }
+        <input id="deleteEmailButton-@Model.ID" type="button" value="@Emails.deletesubmit" 
+                class="formButton deleteButton" />
+    }
+    <br />    
+    @Html.ValidationSummary(true)
+    @Html.DisplayForModel()
+
+}
+@if (Html.IsInRole(Html.Role_AM()))
+{
+    //
+    // Only Managers can delete email records.
+    // The phonedesk can edit and save.
+    //
+    using (Html.BeginForm("Delete", "Email", FormMethod.Post,
+                            new { @class = "edittab-form DeletePost", @id = "DeleteEmail-" + Model.ID }))
+    {
+        @Html.HiddenFor(model => model.ID);
     }
 }
+
 <script type="text/javascript">
     $(document).ready(function () {
         $('.formButton').button();

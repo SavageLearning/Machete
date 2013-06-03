@@ -130,7 +130,13 @@ namespace Machete.Web.Controllers
         {
             // lock on read for fail
             Email email = serv.GetExclusive(id, userName);
-            return PartialView("Edit", email);
+            if (email != null)
+            {
+                return PartialView("Edit", email);
+            }
+            email = serv.Get(id);
+            return PartialView("View", email);
+
         }
         /// <summary>
         /// POST: /Email/Edit/5

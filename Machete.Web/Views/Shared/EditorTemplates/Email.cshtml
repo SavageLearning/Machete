@@ -1,6 +1,7 @@
 ﻿@model Machete.Domain.Email
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
+@using Machete.Domain
 
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
@@ -13,12 +14,33 @@
         @Html.mUITableLabelAndTextBoxFor(model => model.emailFrom, 
             new {tabindex = "1", id=idPrefix + "emailFrom", @class="emailField email"})
     </div>*@
-    <div>
-
+    <div class="tb-row">
+        <div class="tb-label">
+            @Html.Label("$$$templateLabel")
+        </div>
+        @if (Html.IsInRole(Html.Role_AM()) 
+             && ( Model.status == Email.iPending 
+                || Model.status == Email.iReadyToSend
+                || Model.status == Email.iTransmitError
+                )
+            )
+        {
+            @Html.mUIDropDownListFor(model => model.status,
+                                new SelectList(Lookups.get(Machete.Domain.LCategory.emailstatus, CI.TwoLetterISOLanguageName), "Value", "Text", Model.status),
+                        new { @id = idPrefix + "status" })
+                
+        }
+        else
+        { 
+            <div class="tb-header">
+            @Lookups.byID(Model.status, CI.TwoLetterISOLanguageName)
+            @Html.HiddenFor(model => model.status, new { @id = idPrefix + "status" })
+            </div>
+        }
     </div>
     <div class="tb-row">
         <div class="tb-label">
-            @Html.Label("templateLabel")
+            @Html.Label("$$$templateLabel")
         </div>
         <div class="tb-field">
             <select name="templateChooser" id=@(idPrefix + "templateChooser")

@@ -1,0 +1,69 @@
+﻿@model Machete.Domain.Email
+
+<fieldset>
+    <legend>Email</legend>
+
+    <div class="display-label">emailFrom</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.emailFrom)
+    </div>
+
+    <div class="display-label">emailTo</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.emailTo)
+    </div>
+
+    <div class="display-label">subject</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.subject)
+    </div>
+
+    <div class="display-label">body</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.body)
+    </div>
+
+    <div class="display-label">transmitAttempts</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.transmitAttempts)
+    </div>
+
+    <div class="display-label">status</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.status)
+    </div>
+
+    <div class="display-label">lastAttempt</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.lastAttempt)
+    </div>
+
+    <div class="display-label">datecreated</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.datecreated)
+    </div>
+
+    <div class="display-label">dateupdated</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.dateupdated)
+    </div>
+
+    <div class="display-label">Createdby</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Createdby)
+    </div>
+
+    <div class="display-label">Updatedby</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Updatedby)
+    </div>
+
+    <div class="display-label">idPrefix</div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.idPrefix)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
