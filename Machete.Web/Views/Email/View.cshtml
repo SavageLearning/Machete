@@ -7,10 +7,10 @@
     string recType = "email";
 }
 
-@using (Html.BeginForm("Edit", "Email", FormMethod.Post,
-                        new { @class = "edittab-form EditPost", @id = "EmailTab-" + Model.ID }))
+@using (Html.BeginForm("Duplicate", "Email", FormMethod.Post,
+                        new { @class = "edittab-form DuplicatePost", @id = "DuplicateEmail-" + Model.ID }))
 {
-    <input type="submit" value="@Emails.editsubmit" class="formButton saveBtn"/>
+    <input type="button" value="$$$duplicate" class="formButton" id="duplicate-@(Model.ID)"/>
     if (Html.IsInRole(Html.Role_AM()))
     {
         <input id="deleteEmailButton-@Model.ID" type="button" value="@Emails.deletesubmit" 
@@ -46,9 +46,6 @@
             changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
         });
         //
-        // validation for elements added after page load
-        $.validator.unobtrusive.parseDynamicContent($('#EmailTab-@Model.ID'));
-        //
         // delete button confirmation
         $("#deleteEmailButton-@Model.ID").mUI('formClickDelete', {
             ok: "@(Emails.deletesubmit)",
@@ -58,10 +55,14 @@
         });
         //
         // edit form submit
-        $('#EmailTab-@Model.ID').mUI('formSubmit', {
-            create: false,
-            selectTab: 0,
-            formLevel: 1
+        $('#duplicate-@Model.ID').mUI('formClickDuplicate', {
+            dupForm: $('#DuplicateEmail-@(Model.ID)')
         });
+        $("#DuplicateEmail-@(Model.ID)").mUI('formSubmit', {
+            exclusiveTab: false,
+            create: true,
+            recType: "@(recType)",
+            formLevel: 1
+         });
     });
 </script>
