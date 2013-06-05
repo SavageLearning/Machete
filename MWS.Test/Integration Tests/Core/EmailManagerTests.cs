@@ -61,7 +61,7 @@ namespace MWS.Test
                 emailTo = "jciispam@gmail.com",
                 subject = "testing",
                 body = "testing",
-                status = Email.iReadyToSend,
+                statusID = Email.iReadyToSend,
                 datecreated = DateTime.Now,
                 dateupdated = DateTime.Now
             };
@@ -69,9 +69,9 @@ namespace MWS.Test
             db1.SaveChanges();   // initial save, context 1
             var db2 = new MacheteContext();
             var e2 = db2.Emails.Find(e1.ID);
-            e2.status = Email.iSending;
+            e2.statusID = Email.iSending;
             db2.SaveChanges();  // context 2 saves on top of context 1
-            e1.status = Email.iPending;
+            e1.statusID = Email.iPending;
             // Act
             db1.SaveChanges(); // context 1 tries to save again, throws exception
         }

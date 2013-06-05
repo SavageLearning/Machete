@@ -117,4 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="body" xml:space="preserve">
+    <value>Mensaje</value>
+  </data>
+  <data name="emailFrom" xml:space="preserve">
+    <value>De:</value>
+  </data>
+  <data name="emailTo" xml:space="preserve">
+    <value>Para:</value>
+  </data>
+  <data name="stringlength" xml:space="preserve">
+    <value>Por favor, introduzca un máximo de {1} caracteres</value>
+  </data>
+  <data name="subject" xml:space="preserve">
+    <value>Asunto:</value>
+  </data>
 </root>

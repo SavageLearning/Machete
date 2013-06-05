@@ -12,6 +12,7 @@ using Machete.Service;
 using System.Web.Routing;
 using System.Globalization;
 using AutoMapper;
+using Machete.Web.ViewModel;
 
 namespace Machete.Web.Controllers
 {
@@ -67,7 +68,7 @@ namespace Machete.Web.Controllers
                              emailFrom = p.emailFrom,
                              emailTo = p.emailTo,
                              subject = p.subject,
-                             status = lcache.textByID(p.status, CI.TwoLetterISOLanguageName),
+                             status = lcache.textByID(p.statusID, CI.TwoLetterISOLanguageName),
                              transmitAttempts = p.transmitAttempts.ToString(),
                              lastAttempt = p.lastAttempt.ToString(),
                              dateupdated = Convert.ToString(p.dateupdated),
@@ -94,7 +95,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Create()
         {
-            var _model = new Email();
+            var _model = Mapper.Map<Email, EmailView>(new Email());
             return PartialView("Create", _model);
         }
         /// <summary>
@@ -105,9 +106,10 @@ namespace Machete.Web.Controllers
         /// <returns></returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, Teacher")]
-        public JsonResult Create(Email email, string userName)
+        public JsonResult Create(EmailView emailview, string userName)
         {
-            UpdateModel(email);
+            UpdateModel(emailview);
+            var email = Mapper.Map<EmailView, Email>(emailview);
             Email newEmail = serv.Create(email, userName);
 
             return Json(new
@@ -126,7 +128,7 @@ namespace Machete.Web.Controllers
         {
             Email e = serv.Get(id);
             Email duplicate = e;
-            duplicate.status = Email.iPending;
+            duplicate.statusID = Email.iPending;
             duplicate.lastAttempt = null;
             duplicate.transmitAttempts = 0;
 
@@ -151,14 +153,17 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Edit(int id, string userName)
         {
+            EmailView emailview;
             // lock on read for fail
             Email email = serv.GetExclusive(id, userName);
             if (email != null)
             {
-                return PartialView("Edit", email);
+                emailview = Mapper.Map<Email, EmailView>(email);
+                return PartialView("Edit", emailview);
             }
             email = serv.Get(id);
-            return PartialView("View", email);
+            emailview = Mapper.Map<Email, EmailView>(email);
+            return PartialView("View", emailview);
 
         }
         /// <summary>
@@ -170,10 +175,10 @@ namespace Machete.Web.Controllers
         /// <returns></returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager")]
-        public JsonResult Edit(int id, FormCollection collection, string userName)
+        public JsonResult Edit(EmailView emailview, FormCollection collection, string userName)
         {
-            Email email = serv.Get(id);
-            UpdateModel(email);
+            UpdateModel(emailview);
+            var email = Mapper.Map<EmailView, Email>(emailview);
             serv.Save(email, userName);
             return Json(new
             {
@@ -213,7 +218,7 @@ namespace Machete.Web.Controllers
             }
             else
             {
-                return PartialView("Edit", email);
+                return Edit(email.ID, userName);
             }
         }
     }

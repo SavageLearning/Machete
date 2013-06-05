@@ -934,7 +934,7 @@ namespace Machete.Test
             _email = (Email)Records.email.Clone();
             if (datecreated != null) _email.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _email.dateupdated = (DateTime)dateupdated;
-            if (status != null) _email.status = (int)status;
+            if (status != null) _email.statusID = (int)status;
             //
             // ACT
             _servEM.Create(_email, _user);

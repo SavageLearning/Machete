@@ -1,0 +1,73 @@
+﻿@model Machete.Web.ViewModel.EmailView
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using Machete.Domain
+
+@Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID", id = idPrefix + "ID" })
+<div class="tb-table" style="float: left; clear: left;">
+    @*    <div class="tb-row">
+        @Html.mUITableLabelAndTextBoxFor(model => model.emailFrom, 
+            new {tabindex = "1", id=idPrefix + "emailFrom", @class="emailField email"})
+    </div>*@
+    <div class="tb-row">
+        <div class="tb-label">
+            @Html.Label("$$$templateLabel")
+        </div>
+        @if (Html.IsInRole(Html.Role_AM()) && Model.editable)
+        {
+            @Html.mUIDropDownListFor(model => model.statusID,
+                                    Model.statusCategories,
+                                    new { @id = idPrefix + "status" })
+        }
+        else
+        { 
+            <div class="tb-header">
+                @Model.status
+                @Html.HiddenFor(model => model.statusID, new { @id = idPrefix + "status" })
+            </div>
+        }
+    </div>
+    <div class="tb-row">
+        <div class="tb-label">
+            @Html.Label("$$$templateLabel")
+        </div>
+        <div class="tb-field">
+            <select name="templateChooser" id="@(idPrefix + "templateChooser")"
+                    tabindex="1"
+                    class="">
+                <option value="">@Shared.choose</option>
+                @foreach (var item in Model.templates)
+                {
+                    <option value="@(item.Value)" template="@(item.template)">@item.Text</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelAndTextBoxFor(model => model.emailTo,
+            new { tabindex = "1", id = idPrefix + "emailTo", @class = "emailField email" })
+    </div>
+    <!--tb-row-->
+    <div class="tb-row">
+        @Html.mUITableLabelAndTextBoxFor(m => m.subject,
+            new { tabindex = "1", id = idPrefix + "subject", @class = "emailField" })
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelFor(m => m.body)
+        @Html.TextAreaFor(m => m.body, new { tabindex = "1", id = idPrefix + "body", @class = "emailField" })
+    </div>
+</div>
+
+<div style="clear: left;"></div>
+@Html.Partial("ManagerInfo", Model)
+@Html.Partial("AdministratorInfo", Model)
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var selectDropDown = $('#@(idPrefix + "templateChooser")');
+        selectDropDown.mUI('selectDDPopulatesField', {
+            attrName: 'template',
+            target: $('#@(idPrefix + "body")')
+        });
+    });
+</script>
