@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="body" xml:space="preserve">
+    <value>Email message</value>
+  </data>
   <data name="boxlegend" xml:space="preserve">
     <value>Activity</value>
   </data>
@@ -159,6 +162,12 @@
   <data name="edittitle" xml:space="preserve">
     <value>email::edit</value>
   </data>
+  <data name="emailFrom" xml:space="preserve">
+    <value>From:</value>
+  </data>
+  <data name="emailTo" xml:space="preserve">
+    <value>To:</value>
+  </data>
   <data name="excludeAction" xml:space="preserve">
     <value>Exclude</value>
   </data>
@@ -182,6 +191,12 @@
   </data>
   <data name="signinlistlink" xml:space="preserve">
     <value>Registrations</value>
+  </data>
+  <data name="stringlength" xml:space="preserve">
+    <value>Please enter no more than {1} characters</value>
+  </data>
+  <data name="subject" xml:space="preserve">
+    <value>Subject:</value>
   </data>
   <data name="viewlink" xml:space="preserve">
     <value>Print</value>

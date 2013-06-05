@@ -53,7 +53,7 @@ namespace MWS.Core
                 try
                 {
                     SendEmail(e, cfg);
-                    e.status = Email.iSent; // record sent
+                    e.statusID = Email.iSent; // record sent
                     sentStack.Push(e);
                 }
                 catch (Exception ex)
@@ -64,7 +64,7 @@ namespace MWS.Core
                     {
                         exceptionStack.Push(ex);
                     }
-                    e.status = Email.iTransmitError;
+                    e.statusID = Email.iTransmitError;
                 }
                 finally
                 {
@@ -78,7 +78,7 @@ namespace MWS.Core
         {
             try
             {
-                em.status = Email.iSending; // lock out edits
+                em.statusID = Email.iSending; // lock out edits
                 db.Commit();
             }
             catch (DbUpdateConcurrencyException ex)

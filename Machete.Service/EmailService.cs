@@ -39,15 +39,15 @@ namespace Machete.Service
         public Email GetExclusive(int eid, string user)
         {
             var e =  repo.GetById(eid);
-            if (e.status == Email.iSending ||
-                e.status == Email.iSent)
+            if (e.statusID == Email.iSending ||
+                e.statusID == Email.iSent)
             {
                 return null;
             }
             // user will have to re-send when editing a ReadyToSend
-            if (e.status == Email.iReadyToSend)
+            if (e.statusID == Email.iReadyToSend)
             {
-                e.status = Email.iPending;
+                e.statusID = Email.iPending;
             }
             // transmit errors will remain as error re-sent
             e.updatedby(user);
@@ -64,8 +64,8 @@ namespace Machete.Service
         public IEnumerable<Email> GetEmailsToSend()
         {
             return repo.GetManyQ()
-                       .Where(e => e.status == Email.iReadyToSend ||
-                           (e.status == Email.iTransmitError && e.transmitAttempts < 10)
+                       .Where(e => e.statusID == Email.iReadyToSend ||
+                           (e.statusID == Email.iTransmitError && e.transmitAttempts < 10)
                            )
                        .ToList();
         }

@@ -44,28 +44,20 @@ namespace Machete.Domain
             idString = "email";
         }
 
-        [LocalizedDisplayName("emailFrom", NameResourceType = typeof(Resources.Email))]
-        [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Email))]
+        [StringLength(50)]
         public string emailFrom { get; set; }
         //
-        [LocalizedDisplayName("emailTo", NameResourceType = typeof(Resources.Email))]
-        [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Email))]
-        [Required(ErrorMessageResourceName = "emailTo", ErrorMessageResourceType = typeof(Resources.Email))]
+        [StringLength(50),Required()]
         public string emailTo { get; set; }
         //
-        [LocalizedDisplayName("subject", NameResourceType = typeof(Resources.Email))]
-        [StringLength(100, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Email))]
-        [Required(ErrorMessageResourceName = "subject", ErrorMessageResourceType = typeof(Resources.Email))]
+        [StringLength(100),Required()]
         public string subject { get; set; }
         //
-        [LocalizedDisplayName("body", NameResourceType = typeof(Resources.Email))]
-        [StringLength(8000, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Email))]
-        [Required(ErrorMessageResourceName = "body", ErrorMessageResourceType = typeof(Resources.Email))]
+        [StringLength(8000),Required()]
 		[Column(TypeName = "nvarchar(MAX)")]
         public string body { get; set; }
-
         public int transmitAttempts { get; set; }
-        public int  status { get; set; }
+        public int  statusID { get; set; }
         public DateTime? lastAttempt { get; set; }
 
         [Timestamp]

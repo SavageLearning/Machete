@@ -69,6 +69,8 @@ namespace Machete.Web.Helpers
                 .ForMember(wo => wo.wo_zipcode, opt => opt.MapFrom(c => c.zipcode))
                 .IgnoreAllNonExisting();
             #endregion
+            Mapper.CreateMap<Email, EmailView>().IgnoreAllNonExisting();
+            Mapper.CreateMap<EmailView, Email>().IgnoreAllNonExisting();
         }
         // Thank you stackoverflow, allows IgnoreAllNonExisting!
         public static IMappingExpression<TSource, TDestination> IgnoreAllNonExisting<TSource, TDestination>(

@@ -92,11 +92,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Activity.resx</DependentUpon>
     </Compile>
-    <Compile Include="Resources\Email.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Email.resx</DependentUpon>
-    </Compile>
     <Compile Include="Resources\Employer.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -177,11 +172,6 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Activity.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Email.es.resx" />
-    <EmbeddedResource Include="Resources\Email.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Email.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Employer.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Employer.es.Designer.cs</LastGenOutput>
@@ -247,6 +237,9 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\DEPRECIATE_THESE.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

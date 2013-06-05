@@ -61,6 +61,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Email message.
+        /// </summary>
+        public static string body {
+            get {
+                return ResourceManager.GetString("body", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Activity.
         /// </summary>
         public static string boxlegend {
@@ -187,6 +196,24 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to From:.
+        /// </summary>
+        public static string emailFrom {
+            get {
+                return ResourceManager.GetString("emailFrom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To:.
+        /// </summary>
+        public static string emailTo {
+            get {
+                return ResourceManager.GetString("emailTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Exclude.
         /// </summary>
         public static string excludeAction {
@@ -255,6 +282,24 @@ namespace Machete.Web.Resources {
         public static string signinlistlink {
             get {
                 return ResourceManager.GetString("signinlistlink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter no more than {1} characters.
+        /// </summary>
+        public static string stringlength {
+            get {
+                return ResourceManager.GetString("stringlength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Subject:.
+        /// </summary>
+        public static string subject {
+            get {
+                return ResourceManager.GetString("subject", resourceCulture);
             }
         }
         
