@@ -20,7 +20,7 @@
         </div>
         <div class="tb-row">
             @Html.mUITableLabelFor(model => model.memberStatus)
-            @Html.mUITableDropDownListFor(model => model.memberStatus, Lookups.get(Machete.Domain.LCategory.memberstatus, lang),
+            @Html.mUITableDropDownListFor(model => model.memberStatus, Lookups.getSelectList(Machete.Domain.LCategory.memberstatus),
                 new { tabindex = "1", @class = "workerEditor", id = idPrefix + "memberStatus" })
             @Html.mUITableLabelFor(model => model.memberReactivateDate)
             @Html.mUITableDateTextBoxFor(m => m.memberReactivateDate,
@@ -38,14 +38,14 @@
     <div class="tb-table">
         <div class="tb-row">
             @Html.mUITableLabelFor(model => model.typeOfWorkID)
-            @Html.mUITableDropDownListFor(model => model.typeOfWorkID, Lookups.get(Machete.Domain.LCategory.worktype, lang), 
+            @Html.mUITableDropDownListFor(model => model.typeOfWorkID, Lookups.getSelectList(Machete.Domain.LCategory.worktype), 
                 new { tabindex = "1", @class = "workerEditor", id = idPrefix + "typeOfWorkID" })
         </div>
     </div>
     <div class="tb-table">
         <div class="tb-row">
             @Html.mUITableLabelFor(model => model.RaceID)
-            @Html.mUITableDropDownListFor(model => model.RaceID, Lookups.get(Machete.Domain.LCategory.race, lang),
+            @Html.mUITableDropDownListFor(model => model.RaceID, Lookups.getSelectList(Machete.Domain.LCategory.race),
                 new { tabindex = "1", @class = "workerEditor", id = idPrefix + "RaceID" })
             @Html.mUITableLabelFor(model => model.raceother)
             @Html.mUITableTextBoxFor(m => m.raceother, 
@@ -61,7 +61,7 @@
             @Html.mUITableLabelFor(model => model.weight)
             @Html.mUITableTextBoxFor(m => m.weight, new { @class = "workerEditor", id = idPrefix + "weight", tabindex = "1" })
             @Html.mUITableLabelFor(model => model.neighborhoodID)
-            @Html.mUITableDropDownListFor(model => model.neighborhoodID, Lookups.get(Machete.Domain.LCategory.neighborhood, lang),
+            @Html.mUITableDropDownListFor(model => model.neighborhoodID, Lookups.getSelectList(Machete.Domain.LCategory.neighborhood),
                     new { tabindex = "2", @class = "workerEditor", id = idPrefix + "neighborhoodID" })
         </div>
         <div class="tb-row">
@@ -72,7 +72,7 @@
         </div>
         <div class="tb-row">
             @Html.mUITableLabelFor(model => model.countryoforiginID)
-            @Html.mUIDropDownListFor(model => model.countryoforiginID, Lookups.get(Machete.Domain.LCategory.countryoforigin,lang),
+            @Html.mUIDropDownListFor(model => model.countryoforiginID, Lookups.getSelectList(Machete.Domain.LCategory.countryoforigin),
                         new { tabindex = "1", @class = "workerEditor", id = idPrefix + "countryoforiginID" })
             @Html.mUITableLabelFor(model => model.dateinseattle)
             @Html.mUITableDateTextBoxFor(m => m.dateinseattle, new { @class = "ui-datepicker workerEditor", tabindex = "2", id = idPrefix + "dateinseattle" })
@@ -85,7 +85,7 @@
         </div>
         <div class="tb-row">
             @Html.mUITableLabelFor(model => model.maritalstatus)
-            @Html.mUIDropDownListFor(model => model.maritalstatus, Lookups.get(Machete.Domain.LCategory.maritalstatus,lang),
+            @Html.mUIDropDownListFor(model => model.maritalstatus, Lookups.getSelectList(Machete.Domain.LCategory.maritalstatus),
                                         new { tabindex = "1", @class = "workerEditor", id = idPrefix + "maritalstatus" })
             @Html.mUITableLabelFor(model => model.livewithchildren)
             @Html.mUIDropDownYesNoFor(model => model.livewithchildren, new { tabindex = "2", @class = "workerEditor", id = idPrefix + "livewithchildren" })
@@ -94,7 +94,7 @@
             @Html.mUITableLabelFor(model => model.numofchildren)
             @Html.mUITableTextBoxFor(m => m.numofchildren, new { tabindex = "1", @class = "workerEditor", id = idPrefix + "numofchildren" })
             @Html.mUITableLabelFor(model => model.incomeID)
-            @Html.mUIDropDownListFor(model => model.incomeID, Lookups.get(Machete.Domain.LCategory.income, lang),
+            @Html.mUIDropDownListFor(model => model.incomeID, Lookups.getSelectList(Machete.Domain.LCategory.income),
                                         new { tabindex = "2", @class = "workerEditor", id = idPrefix + "incomeID" })
         </div>
         <div class="tb-row">
@@ -155,7 +155,7 @@
     <div class="tb-row">
         <div class="tb-field tri-col">
             @Html.DropDownListFor(model => model.skill1,
-            new SelectList(Lookups.getSkill(lang, true),
+            new SelectList(Lookups.getSkill(true),
                 "Value",
                 "Text",
                 Model.skill1),
@@ -164,7 +164,7 @@
         </div>
         <div class="tb-field tri-col">
             @Html.DropDownListFor(model => model.skill2,
-            new SelectList(Lookups.getSkill(lang, true),
+            new SelectList(Lookups.getSkill(true),
                 "Value",
                 "Text", Model.skill2),
                          @Machete.Web.Resources.Shared.choose, new { tabindex = "4" })
@@ -172,7 +172,7 @@
         </div>
         <div class="tb-field tri-col">
             @Html.DropDownListFor(model => model.skill3,
-            new SelectList(Lookups.getSkill(lang, true),
+            new SelectList(Lookups.getSkill(true),
                 "Value",
                 "Text", Model.skill3),
                          @Machete.Web.Resources.Shared.choose, new { tabindex = "4" })

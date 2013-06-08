@@ -40,7 +40,8 @@ namespace Machete.Domain
         public static int iSent { get; set; }
         public static int iTransmitError { get; set; }
         public Email()
-        { 
+        {
+            statusID = Email.iPending;
             idString = "email";
         }
 

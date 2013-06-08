@@ -68,9 +68,8 @@ namespace Machete.Test.UnitTests.Controllers
                            {"phone", "123-456-7890"},
                            {"zipcode", "1234567890"}
                        };
-            MacheteMapper.Initialize();
-            // TODO: Include Lookups in Dependency Injection, remove initialize statements
             Lookups.Initialize(lcache.Object);
+            MacheteMapper.Initialize();
         }
         //
         //   Testing /Index functionality

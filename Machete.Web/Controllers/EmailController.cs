@@ -95,8 +95,8 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Create()
         {
-            var _model = Mapper.Map<Email, EmailView>(new Email());
-            return PartialView("Create", _model);
+            var emailview = Mapper.Map<Email, EmailView>(new Email());
+            return PartialView("Create", emailview);
         }
         /// <summary>
         /// 
