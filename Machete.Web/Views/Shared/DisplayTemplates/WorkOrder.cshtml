@@ -42,7 +42,7 @@
             @Html.Label(WorkOrder.lunchShort)
         </div>
         <div class="tb-field">
-            @Lookups.getBool(Model.lunchSupplied, CI.TwoLetterISOLanguageName)  
+            @Lookups.getBool(Model.lunchSupplied)  
         </div>
         <div class="tb-field" style="font-weight: bold; ">  
             @Html.Label(WorkOrders.transportFeeShort)        
@@ -61,7 +61,7 @@
             @Html.Label(WorkOrders.transportMethodIDShort)
         </div>
         <div class="tb-field">
-            @Lookups.byID(Model.transportMethodID, CI.TwoLetterISOLanguageName)
+            @Lookups.byID(Model.transportMethodID)
         </div>
         <div class="tb-field">
             @System.String.Format("{0:c}",Model.transportFee)    +

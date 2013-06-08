@@ -97,6 +97,7 @@ namespace Machete.Test
             WorkerCache.Initialize(DB);
             _dbFactory = new DatabaseFactory();
             _dbFactory.Set(DB);
+            ILookupCache lcache = new LookupCache(() => _dbFactory);
             return this;
         }
 

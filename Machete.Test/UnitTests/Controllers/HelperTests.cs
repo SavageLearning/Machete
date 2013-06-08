@@ -28,12 +28,23 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AutoMapper;
 using Machete.Web.Helpers;
+using Moq;
+using Machete.Service;
 
 namespace Machete.Test.UnitTests.Controllers
 {
     [TestClass]
     public class HelperTests
     {
+        Mock<ILookupCache> lcache;
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            lcache = new Mock<ILookupCache>();
+            Lookups.Initialize(lcache.Object);
+        }
+
         [TestMethod]
         public void Call_Mapper_autoValidate()
         {

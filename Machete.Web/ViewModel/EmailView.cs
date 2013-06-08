@@ -39,25 +39,8 @@ namespace Machete.Web.ViewModel
         //
         // view-only fields
         //
-        public string recType { get; set; }
-        public string idPrefix { get; set; }
-
         public List<SelectListItemEmail> templates { get; set; }
-        public SelectList statusCategories { get; set; }
-
-        public EmailView(Email email, string locale)
-        {
-            status = Lookups.byID(email.statusID, locale);
-            templates = Lookups.getEmailTemplates(locale);
-            statusCategories = Lookups.get(Machete.Domain.LCategory.emailstatus, locale);
-            recType = "email";
-            idPrefix = recType + ID + "-";
-        }
-
-        public EmailView(string locale)
-        {
-        }
-
+        public EmailView() { }
         public bool editable
         {
             get
@@ -69,6 +52,13 @@ namespace Machete.Web.ViewModel
                     return true;
                 }
                 return false;
+            }
+        }
+        public SelectList EmailStatuses
+        {
+            get 
+            {
+                return Lookups.getSelectList(Machete.Domain.LCategory.emailstatus);
             }
         }
     }

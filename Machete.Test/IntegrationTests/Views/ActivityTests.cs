@@ -189,31 +189,16 @@ namespace Machete.Test
         public void SeActivity_Signin_random_sactioned_worker()
         {
             //Arrange
-            Person _per = (Person)Records.person.Clone();
-            Worker _sanctionedW = (Worker)Records.worker.Clone();
-            Activity _act = (Activity)Records.activity.Clone();
-
-            
-            IEnumerable<int> cardList = frb.ToRepoWorker().GetAllQ().Where(q => q.memberStatus == Worker.iSanctioned || q.memberStatus == Worker.iExpelled).Select(q => q.dwccardnum).Distinct();
-            Assert.AreNotEqual(0, cardList.Count()); //pre-condition. 
-            Random rand = new Random();
-            int randCardIndex = rand.Next(cardList.Count());
-            int randCard = cardList.ElementAt(randCardIndex);
-            int rowcount = 1;
-
-            //Act
-            ui.personCreate(_per);
-            _sanctionedW.ID = _per.ID;
-            _sanctionedW.memberStatus = Worker.iSanctioned;
-            _sanctionedW.dwccardnum = frb.GetNextMemberID();
-
-            ui.workerCreate(_sanctionedW, sharedUI.SolutionDirectory() + "\\Machete.test\\jimmy_machete.jpg");
+            var _act = (Activity)Records.activity.Clone();
+            var _sanctionedW = frb.AddWorker(status: Worker.iSanctioned).ToWorker();
+            ui.refreshCache();
+            ui.gotoMachete();
             ui.activityCreate(_act);
             var idPrefix = "asi" + _act.ID + "-"; 
-            ui.activitySignIn(idPrefix, randCard);
+            ui.activitySignIn(idPrefix, _sanctionedW.dwccardnum);
 
             //Assert
-            Assert.IsFalse(ui.activitySignInValidate(idPrefix, randCard, rowcount));
+            Assert.IsFalse(ui.activitySignInValidate(idPrefix, _sanctionedW.dwccardnum, 1));
             Assert.IsTrue(ui.activitySignInIsSanctioned(), "Sanctioned worker box is not visible like it should be.");
         }
 

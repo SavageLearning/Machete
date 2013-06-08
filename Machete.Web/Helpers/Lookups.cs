@@ -33,6 +33,7 @@ using System.Data.Entity;
 using System.Text.RegularExpressions;
 using System.Web.Security;
 using System.Globalization;
+using System.Threading;
 
 namespace Machete.Web.Helpers
 {
@@ -100,19 +101,19 @@ namespace Machete.Web.Helpers
         }
         //
         // Get the Id string for a given lookup number
-        public static string byID(int ID, string locale)
+        public static string byID(int ID)
         {
-            return lcache.textByID(ID, locale);
+            return lcache.textByID(ID, Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant());
         }
-        public static string byID(int? ID, string locale)
+        public static string byID(int? ID)
         {
-            return ID == null ? null : byID(ID, locale);
+            return ID == null ? null : byID((int)ID);
         }
         //
         // create multi-lingual yes/no strings
-        public static string getBool(bool val, string locale)
+        public static string getBool(bool val)
         {
-            if (locale == "es")
+            if (Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant() == "es")
             {
                 if (val) return "sí"; 
                 else return "no";
@@ -120,10 +121,9 @@ namespace Machete.Web.Helpers
             if (val) return "yes";
             else return "no";
         }
-        public static string getBool(bool? val, string locale)
+        public static string getBool(bool? val)
         {            
-            if (val == null) val = false;
-            return getBool((bool)val, locale);
+            return getBool(val ?? false);
         }
 
         /// <summary>
@@ -137,10 +137,13 @@ namespace Machete.Web.Helpers
                 .Where(s => s.selected == true &&
                             s.category == type)
                 .Count();
-            if (count > 0) return lcache.getCache()
-                                             .Where(s => s.selected == true &&
-                                                         s.category == type)
-                                             .SingleOrDefault().ID;
+            if (count > 0)
+            {
+                return lcache.getCache()
+                            .Where(s => s.selected == true &&
+                                        s.category == type)
+                            .SingleOrDefault().ID;
+            }
             return count;
         }
         /// <summary>
@@ -148,14 +151,13 @@ namespace Machete.Web.Helpers
         /// </summary>
         /// <param name="locale"></param>
         /// <returns></returns>
-        public static SelectList get(string type, string locale)
+        public static SelectList getSelectList(string type)
         {
+            var locale = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant();
             string field;
             SelectList list;
-            if (locale == "es") field = "text_ES";
+            if (locale == "ES") field = "text_ES";
             else field = "text_EN";
-            //if (LookupCol == null) LookupCol = LookupCache.getCache();
-
             list = new SelectList(lcache.getCache().Where(s => s.category == type),
                                     "ID",
                                     field,
@@ -164,8 +166,9 @@ namespace Machete.Web.Helpers
             return list;
         }
 
-        public static List<SelectListItemEmail> getEmailTemplates(string locale)
+        public static List<SelectListItemEmail> getEmailTemplates()
         {
+            var locale = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant();
             IEnumerable<Lookup> prelist = lcache.getCache()
                                          .Where(s => s.category == LCategory.emailTemplate);
             return new List<SelectListItemEmail>(prelist
@@ -184,8 +187,9 @@ namespace Machete.Web.Helpers
         /// <param name="locale"></param>
         /// <param name="specializedOnly">only return specialized entries</param>
         /// <returns></returns>
-        public static List<SelectListItemEx> getSkill(string locale, bool specializedOnly)
+        public static List<SelectListItemEx> getSkill(bool specializedOnly)
         {
+            var locale = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant();
             IEnumerable<Lookup> prelist = lcache.getCache()
                                                      .Where(s => s.category == LCategory.skill);
             Func<Lookup, string> textFunc; //anon function

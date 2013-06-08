@@ -28,6 +28,8 @@ using Machete.Service;
 using System.Globalization;
 using Machete.Web.ViewModel;
 using Machete.Domain;
+using System.Web.Mvc;
+using System.Collections.Generic;
 
 
 namespace Machete.Web.Helpers
@@ -69,7 +71,10 @@ namespace Machete.Web.Helpers
                 .ForMember(wo => wo.wo_zipcode, opt => opt.MapFrom(c => c.zipcode))
                 .IgnoreAllNonExisting();
             #endregion
-            Mapper.CreateMap<Email, EmailView>().IgnoreAllNonExisting();
+            Mapper.CreateMap<Email, EmailView>()
+                .ForMember(ev => ev.status, opt => opt.MapFrom(e => Lookups.byID(e.statusID)))
+                .ForMember(ev => ev.templates, opt => opt.UseValue(Lookups.getEmailTemplates()))
+                .IgnoreAllNonExisting();
             Mapper.CreateMap<EmailView, Email>().IgnoreAllNonExisting();
         }
         // Thank you stackoverflow, allows IgnoreAllNonExisting!

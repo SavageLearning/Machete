@@ -23,7 +23,7 @@
                     data-val="true"
                     tabindex="1"
                     class="valid"><option value="">@Shared.choose</option>
-                @foreach (var item in Lookups.getSkill(CI.TwoLetterISOLanguageName, specializedOnly: false))
+                @foreach (var item in Lookups.getSkill(specializedOnly: false))
                 {
                     @*kludgy way to print selected or not. couldn't get other syntax to work*@
                     if (Model.skillID == Convert.ToInt16(item.Value))
@@ -43,7 +43,7 @@
                     }
                 } 
             </select>
-            @*@Html.DropDownListFor(model => model.skillID, new SelectList(Lookups.skill(CI.TwoLetterISOLanguageName), "Value", "Text", Model.skillID), @Machete.Web.Resources.Shared.choose)*@
+            @*@Html.DropDownListFor(model => model.skillID, new SelectList(Lookups.skill(), "Value", "Text", Model.skillID), @Machete.Web.Resources.Shared.choose)*@
             @Html.ValidationMessageFor(model => model.skillID)
         </div>
         @Html.mUITableLabelAndTextBoxFor(model => model.pseudoID, new { tabindex = "1", style = "width: 2em", @readonly = "readonly", @id = idPrefix + "pseudoID" })
