@@ -12,6 +12,7 @@ namespace Machete.Service
     {
         dataTableResult<Email> GetIndexView(viewOptions o);
         Email GetLatestConfirmEmailBy(int woid);
+        WorkOrder GetAssociatedWorkOrderFor(Email email);
         IEnumerable<Email> GetMany(Func<Email, bool> predicate);
         IEnumerable<Email> GetEmailsToSend();
         Email GetExclusive(int eid, string user);
@@ -34,6 +35,19 @@ namespace Machete.Service
             var emailJoiner = wo.JoinWorkorderEmails.OrderByDescending(e => e.datecreated).FirstOrDefault();
             if (emailJoiner == null) {return null;}
             return emailJoiner.Email;
+        }
+
+        public WorkOrder GetAssociatedWorkOrderFor(Email email)
+        {
+            if (!email.isJoinedToWorkOrder) throw new MacheteServiceException("No WorkOrder associated with Email");
+            try
+            {
+                return email.JoinWorkorderEmails.Single().WorkOrder;
+            }
+            catch (Exception ex)
+            {
+                throw new MacheteIntegrityException("Email is associated with more than one Workorder", ex);
+            }
         }
 
         public Email GetExclusive(int eid, string user)

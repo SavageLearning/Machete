@@ -51,7 +51,7 @@
             new { tabindex = "1", id = Model.idPrefix + "subject", @class = "emailField" })
     </div>
     <div class="tb-row">
-        @Html.mUITableLabelFor(m => m.body)
+        @Html.mUITableDescLabelFor(m => m.body)
         @Html.TextAreaFor(m => m.body, new { tabindex = "1", id = Model.idPrefix + "body", @class = "emailField" })
     </div>
 </div>

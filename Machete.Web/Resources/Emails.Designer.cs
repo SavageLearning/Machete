@@ -70,7 +70,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Activity.
+        ///   Looks up a localized string similar to Email.
         /// </summary>
         public static string boxlegend {
             get {
@@ -205,56 +205,11 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to To:.
+        ///   Looks up a localized string similar to Email to:.
         /// </summary>
         public static string emailTo {
             get {
                 return ResourceManager.GetString("emailTo", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Exclude.
-        /// </summary>
-        public static string excludeAction {
-            get {
-                return ResourceManager.GetString("excludeAction", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Excluded from.
-        /// </summary>
-        public static string excludedTab {
-            get {
-                return ResourceManager.GetString("excludedTab", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Include.
-        /// </summary>
-        public static string includeAction {
-            get {
-                return ResourceManager.GetString("includeAction", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Included in.
-        /// </summary>
-        public static string includedTab {
-            get {
-                return ResourceManager.GetString("includedTab", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Return to List of emails.
-        /// </summary>
-        public static string indexreturnlink {
-            get {
-                return ResourceManager.GetString("indexreturnlink", resourceCulture);
             }
         }
         
