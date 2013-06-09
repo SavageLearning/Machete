@@ -142,6 +142,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Emails.
+        /// </summary>
+        public static string emailstab {
+            get {
+                return ResourceManager.GetString("emailstab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Employers.
         /// </summary>
         public static string employerstab {

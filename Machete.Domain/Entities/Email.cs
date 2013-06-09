@@ -45,6 +45,9 @@ namespace Machete.Domain
             idString = "email";
         }
 
+        public virtual ICollection<JoinWorkorderEmail> JoinWorkorderEmails { get; set; }
+
+
         [StringLength(50)]
         public string emailFrom { get; set; }
         //
@@ -63,6 +66,15 @@ namespace Machete.Domain
 
         [Timestamp]
         public byte[] RowVersion { get; set; }
+
+        public bool isJoinedToWorkOrder
+        {
+            get
+            {
+                if (this.JoinWorkorderEmails.Count() > 0) return true;
+                return false;
+            }
+        }
     }
 
 

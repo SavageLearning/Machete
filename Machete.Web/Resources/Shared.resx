@@ -222,4 +222,7 @@
   <data name="All" xml:space="preserve">
     <value>All</value>
   </data>
+  <data name="emailstab" xml:space="preserve">
+    <value>Emails</value>
+  </data>
 </root>

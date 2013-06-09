@@ -67,6 +67,7 @@ namespace Machete.Web.Controllers
                              tablabel = _getTabLabel(p),
                              emailFrom = p.emailFrom,
                              emailTo = p.emailTo,
+                             relatedTo = _getRelatedObject(p),
                              subject = p.subject,
                              status = lcache.textByID(p.statusID, CI.TwoLetterISOLanguageName),
                              transmitAttempts = p.transmitAttempts.ToString(),
@@ -87,6 +88,14 @@ namespace Machete.Web.Controllers
         {
             if (email == null) return null;
             return email.subject;
+        }
+        private string _getRelatedObject(Email email)
+        {
+            if (email.isJoinedToWorkOrder)
+            {
+                return "WO: " + serv .GetAssociatedWorkOrderFor(email).paperOrderNum.ToString();
+            }
+            return string.Empty;
         }
         /// <summary>
         /// GET: /Email/Create

@@ -121,7 +121,7 @@
     <value>Email message</value>
   </data>
   <data name="boxlegend" xml:space="preserve">
-    <value>Activity</value>
+    <value>Email</value>
   </data>
   <data name="clear" xml:space="preserve">
     <value>Clear</value>
@@ -166,22 +166,7 @@
     <value>From:</value>
   </data>
   <data name="emailTo" xml:space="preserve">
-    <value>To:</value>
-  </data>
-  <data name="excludeAction" xml:space="preserve">
-    <value>Exclude</value>
-  </data>
-  <data name="excludedTab" xml:space="preserve">
-    <value>Excluded from</value>
-  </data>
-  <data name="includeAction" xml:space="preserve">
-    <value>Include</value>
-  </data>
-  <data name="includedTab" xml:space="preserve">
-    <value>Included in</value>
-  </data>
-  <data name="indexreturnlink" xml:space="preserve">
-    <value>Return to List of emails</value>
+    <value>Email to:</value>
   </data>
   <data name="indextitle" xml:space="preserve">
     <value>email::index</value>
