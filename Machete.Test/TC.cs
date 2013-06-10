@@ -23,6 +23,7 @@ namespace Machete.Test
         public const string Activities = "Area-Activities";
         public const string Employers = "Area-Employers";
         public const string Emails = "Area-Emails";
+        public const string Events = "Area-Events";
         public const string Persons = "Area-Persons";
         public const string WSIs = "Area-WorkerSignins";
         public const string WAs = "Area-WorkAssignment";

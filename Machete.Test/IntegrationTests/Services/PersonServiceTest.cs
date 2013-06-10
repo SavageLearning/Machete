@@ -57,7 +57,7 @@ namespace Machete.Test
         /// <summary>
         /// 
         /// </summary>
-        [TestMethod, TestCategory(TC.Fluent)]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Persons)]
         public void Integration_Person_Service_CreatePerson()
         {
             //Arrange
@@ -69,7 +69,7 @@ namespace Machete.Test
         /// <summary>
         /// CreatePerson calls DbSet.Add() and  Context.SaveChanges() This leads to duplication
         /// </summary>
-        [TestMethod, TestCategory(TC.Fluent)]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Persons)]
         public void Integration_Person_Service_CreatePersons_TestDuplicateBehavior()
         {
             int reccount = 0;
