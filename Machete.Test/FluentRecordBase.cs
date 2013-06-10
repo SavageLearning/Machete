@@ -49,6 +49,7 @@ namespace Machete.Test
         private ImageRepository _repoI;
         private EmployerRepository _repoE;
         private EmailRepository _repoEM;
+        private EventRepository _repoEV;
         private DatabaseFactory _dbFactory;
         private LookupCache _lcache;
         private WorkerSigninService _servWSI;
@@ -62,11 +63,13 @@ namespace Machete.Test
         private ActivitySigninService _servAS;
         private EmployerService _servE;
         private EmailService _servEM;
+        private EventService _servEV;
         private LookupService _servL;
         private IUnitOfWork _uow;
         public MacheteContext DB { get; set; }
         private Employer _emp;
         private Email _email;
+        private Event _event;
         private WorkOrder _wo;
         private WorkAssignment _wa;
         private Person _p;
@@ -958,6 +961,66 @@ namespace Machete.Test
             return p;
         }
 
+        #endregion 
+
+        #region Events
+
+        public FluentRecordBase AddRepoEvent()
+        {
+            if (_dbFactory == null) AddDBFactory();
+
+            _repoEV = new EventRepository(_dbFactory);
+            return this;
+        }
+
+        public EventRepository ToRepoEvent()
+        {
+            if (_repoEV == null) AddRepoEvent();
+            return _repoEV;
+        }
+
+        public FluentRecordBase AddServEvent()
+        {
+            //
+            // DEPENDENCIES
+            if (_repoEV == null) AddRepoEvent();
+            if (_uow == null) AddUOW();
+            _servEV = new EventService(_repoEV, _uow);
+            return this;
+        }
+
+        public EventService ToServEvent()
+        {
+            if (_servEV == null) AddServEvent();
+            return _servEV;
+        }
+
+        public FluentRecordBase AddEvent(
+            DateTime? datecreated = null,
+            DateTime? dateupdated = null
+        )
+        {
+            //
+            // DEPENDENCIES
+            if (_servEV == null) AddServEvent();
+            if (_p == null) AddPerson();
+            //
+            // ARRANGE
+            _event = (Event)Records.event1.Clone();
+            _event.PersonID = _p.ID;
+            if (datecreated != null) _event.datecreated = (DateTime)datecreated;
+            if (dateupdated != null) _event.dateupdated = (DateTime)dateupdated;
+            //
+            // ACT
+            _servEV.Create(_event, _user);
+            return this;
+        }
+
+        public Event ToEvent()
+        {
+            if (_event == null) AddEvent();
+            return _event;
+        }
         #endregion 
 
 
