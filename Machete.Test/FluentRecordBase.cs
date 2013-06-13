@@ -1010,6 +1010,8 @@ namespace Machete.Test
             _event.PersonID = _p.ID;
             if (datecreated != null) _event.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _event.dateupdated = (DateTime)dateupdated;
+            _event.Updatedby = _user;
+            _event.Createdby = _user;
             //
             // ACT
             _servEV.Create(_event, _user);

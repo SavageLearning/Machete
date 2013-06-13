@@ -86,7 +86,7 @@ namespace Machete.Data
             modelBuilder.Configurations.Add(new WorkerSigninBuilder());
             modelBuilder.Configurations.Add(new EventBuilder());
             modelBuilder.Configurations.Add(new JoinEventImageBuilder());
-            modelBuilder.Configurations.Add(new JoinWorkorderEmailBuilder());
+            //modelBuilder.Configurations.Add(new JoinWorkorderEmailBuilder());
             modelBuilder.Configurations.Add(new ActivitySigninBuilder());
             modelBuilder.Configurations.Add(new ActivityBuilder());
             modelBuilder.Configurations.Add(new EmailBuilder());
@@ -152,17 +152,17 @@ namespace Machete.Data
         }
     }
 
-    public class JoinWorkorderEmailBuilder : EntityTypeConfiguration<JoinWorkorderEmail>
-    {
-        public JoinWorkorderEmailBuilder()
-        {
-            HasKey(k => k.ID);
-            HasRequired(k => k.WorkOrder)
-                .WithMany(d => d.JoinWorkorderEmails)
-                .HasForeignKey(k => k.WorkOrderID);
-            HasRequired(k => k.Email);
-        }
-    }
+    //public class JoinWorkorderEmailBuilder : EntityTypeConfiguration<JoinWorkorderEmail>
+    //{
+    //    public JoinWorkorderEmailBuilder()
+    //    {
+    //        HasKey(k => k.ID);
+    //        HasRequired(k => k.WorkOrder)
+    //            .WithMany(d => d.JoinWorkorderEmails)
+    //            .HasForeignKey(k => k.WorkOrderID);
+    //        HasRequired(k => k.Email);
+    //    }
+    //}
     public class WorkOrderBuilder : EntityTypeConfiguration<WorkOrder>
     {
         public WorkOrderBuilder()

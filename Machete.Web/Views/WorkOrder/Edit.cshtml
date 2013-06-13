@@ -130,6 +130,8 @@
             openGoogleMap("@Html.Encode(Model.workSiteAddress1 + ' ' + Model.city + ' ' + Model.state)", 
                 null) 
         });
+        //
+        // emailConfirm
         $('#@(idPrefix)emailConfirm').click(function () {
             $('#@(idPrefix)emailPopup').html('');
             $('#@(idPrefix)emailPopup').dialog({
