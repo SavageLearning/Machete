@@ -12,7 +12,7 @@
             <tr>
                 <th>ID</th>
                 <th>LABEL</th>
-                <th>$$$Related to:</th>
+                <th>$$$Email ID:</th>
                 <th>@Emails.emailTo</th>
                 <th>@Emails.subject</th>
                 <th>$$$status</th>
@@ -34,7 +34,7 @@
             options: {
                 "bPaginate": true,
                 "bLengthChange": true,
-                "aaSorting": [[5, 'desc']],
+                "aaSorting": [[8, 'desc']],
                 "bFilter": true,
                 "bSort": true,
                 "bInfo": true,
@@ -46,7 +46,7 @@
                 "aoColumns": [                           //dataTable column definition
                                 {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
                                 {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
-                                { "mDataProp": "relatedTo" },
+                                { "mDataProp": "recordid" },
                                 {"mDataProp": "emailTo" },
                                 { "mDataProp": "subject" },
                                 { "mDataProp": "status" },

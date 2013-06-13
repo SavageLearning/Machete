@@ -112,9 +112,9 @@ namespace Machete.Service
                 case "dateupdated": e = descending ? e.OrderByDescending(p => p.dateupdated) : e.OrderBy(p => p.dateupdated); break;
                 case "dateforsigninstring": e = descending ? e.OrderByDescending(p => p.dateforsignin) : e.OrderBy(p => p.dateforsignin); break;
                 case "expirationDate": e = descending ? e.OrderByDescending(p => p.expirationDate) : e.OrderBy(p => p.expirationDate); break;
-                case "lotterySequence": 
-                    e = descending ? e.OrderByDescending(p => p.lotterySequence != null).ThenByDescending(p => p.lotterySequence) : 
-                    e.OrderBy(p => p.lotterySequence == null).ThenBy(p => p.lotterySequence); 
+                case "lotterySequence":
+                    e = descending ? e.OrderByDescending(p => p.lotterySequence != null).ThenByDescending(p => p.lotterySequence) :
+                    e.OrderBy(p => p.lotterySequence == null).ThenBy(p => p.lotterySequence);
                     break;
                 default: e = descending ? e.OrderByDescending(p => p.dateforsignin) : e.OrderBy(p => p.dateforsignin); break;
             }
@@ -195,7 +195,7 @@ namespace Machete.Service
             if (isTimeSpecific.IsMatch(search)) //Regex for day/month/year time
                 query = query.Where(p => EntityFunctions.DiffHours(p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
             //throw new ArgumentException("Date string not valid for Month,Day, or Hour pattern");
- 
+
         }
         /// <summary>
         /// Filter WA queryable on a partial date string
@@ -205,15 +205,15 @@ namespace Machete.Service
         public static void filterOnDatePart(string search, ref IQueryable<WorkAssignment> query)
         {
             DateTime parsedTime;
-            if (DateTime.TryParse(search,out parsedTime))
-                filterOnDatePart(search, parsedTime, ref query);           
+            if (DateTime.TryParse(search, out parsedTime))
+                filterOnDatePart(search, parsedTime, ref query);
         }
         public static void search(viewOptions o, ref IQueryable<WorkAssignment> q, ILookupRepository lRepo)
         {
             bool isDateTime = false;
             DateTime parsedTime;
             if (isDateTime = DateTime.TryParse(o.sSearch, out parsedTime))
-                filterOnDatePart(o.sSearch, parsedTime, ref q);            
+                filterOnDatePart(o.sSearch, parsedTime, ref q);
             else
             {
                 q = q
@@ -225,7 +225,7 @@ namespace Machete.Service
                         //p.dateupdated.ToString().ContainsOIC(param.sSearch) ||
                         p.wa.Updatedby.Contains(o.sSearch)).Select(p => p.wa);
             }
-        }      
+        }
         public static IEnumerable<WorkAssignment> filterOnSkill(viewOptions o, IQueryable<WorkAssignment> q, ILookupCache lc)
         {
             //  "Machete --A series of good intentions, marinated in panic."
@@ -287,7 +287,7 @@ namespace Machete.Service
                                         .Select(jj => jj.wa).AsEnumerable();
             }
 
-            return filteredWA;            
+            return filteredWA;
         }
         public static void sortOnColName(string name, bool descending, ref IEnumerable<WorkAssignment> q)
         {
@@ -446,7 +446,7 @@ namespace Machete.Service
                             p.Person.firstname2.Contains(o.sSearch) ||
                             p.Person.lastname1.Contains(o.sSearch) ||
                             p.Person.lastname2.Contains(o.sSearch) //||
-                            //EntityFunctions.p.memberexpirationdate.ToString().Contains(o.sSearch)
+                //EntityFunctions.p.memberexpirationdate.ToString().Contains(o.sSearch)
                             );
         }
         public static void sortOnColName(string name, bool descending, ref IQueryable<Worker> q)
@@ -577,7 +577,7 @@ namespace Machete.Service
                      from az2 in grouped.DefaultIfEmpty()
                      where az2.personID == personID
                      select a)
-                 on b.ID equals aa.ID into h                
+                 on b.ID equals aa.ID into h
                 from i in h.DefaultIfEmpty()
                 where i == null
                 select b;
@@ -632,6 +632,41 @@ namespace Machete.Service
             }
         }
         #endregion
+        #region EMAILS
+        public static void filterOnWorkorder(viewOptions o, ref IQueryable<Email> q)
+        {
+            if (o.woid == 0) return;
+            q = q.SelectMany(email => email.WorkOrders.Where(w => w.ID == o.woid), (email, wo) => email);
+        }
 
+        public static void filterOnEmployer(viewOptions o, ref IQueryable<Email> q)
+        {
+            if (o.EmployerID == null) return;
+            q = q.Where(ee => ee.ID == (int)o.EmployerID)
+                 .SelectMany(e => e.WorkOrders, (e, wo) => wo)
+                 .SelectMany(wwo => wwo.Emails, (wwo, email) => email);
+        }
+
+        public static void filterOnID(viewOptions o, ref IQueryable<Email> q)
+        {
+            q = q.Where(e => e.ID == o.emailID);
+        }
+
+        public static void sortOnColName(string name, bool descending, ref IEnumerable<Email> e)
+        {
+            switch (name)
+            {
+                case "recordid": e = descending ? e.OrderByDescending(p => p.ID) : e.OrderBy(p => p.ID);break;
+                case "emailTo": e = descending ? e.OrderByDescending(p => p.emailTo) : e.OrderBy(p => p.emailTo); break;
+                case "subject": e = descending ? e.OrderByDescending(p => p.subject) : e.OrderBy(p => p.subject); break;
+                case "status": e = descending ? e.OrderByDescending(p => p.statusID) : e.OrderBy(p => p.statusID); break;
+                case "transmitAttempts": e = descending ? e.OrderByDescending(p => p.transmitAttempts) : e.OrderBy(p => p.transmitAttempts); break;
+                case "lastAttempt": e = descending ? e.OrderByDescending(p => p.lastAttempt) : e.OrderBy(p => p.lastAttempt); break;
+                case "dateupdated": e = descending ? e.OrderByDescending(p => p.dateupdated) : e.OrderBy(p => p.dateupdated); break;
+                //case "": q = descending ? q.OrderByDescending(p => p) : q.OrderBy(p => p);break;
+                default: e = descending ? e.OrderByDescending(p => p.dateupdated) : e.OrderBy(p => p.dateupdated); break;
+            }
+        }
+        #endregion
     }
 }

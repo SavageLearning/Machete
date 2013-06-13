@@ -45,7 +45,7 @@ namespace Machete.Domain
             idString = "email";
         }
 
-        public virtual ICollection<JoinWorkorderEmail> JoinWorkorderEmails { get; set; }
+        public virtual ICollection<WorkOrder> WorkOrders { get; set; }
 
 
         [StringLength(50)]
@@ -58,7 +58,7 @@ namespace Machete.Domain
         public string subject { get; set; }
         //
         [StringLength(8000),Required()]
-		[Column(TypeName = "nvarchar(MAX)")]
+        [Column(TypeName = "nvarchar(MAX)")]
         public string body { get; set; }
         public int transmitAttempts { get; set; }
         public int  statusID { get; set; }
@@ -66,13 +66,29 @@ namespace Machete.Domain
 
         [Timestamp]
         public byte[] RowVersion { get; set; }
-
-        public bool isJoinedToWorkOrder
+        [NotMapped]
+        public bool isAssociatedToWorkOrder
         {
             get
             {
-                if (this.JoinWorkorderEmails.Count() > 0) return true;
+                if (this.WorkOrders.Count() > 0) return true;
                 return false;
+            }
+        }
+        [NotMapped]
+        public IQueryable<WorkOrder> AssociatedWorkOrders
+        {
+            get
+            {
+                return this.WorkOrders.AsQueryable();
+            }
+        }
+        [NotMapped]
+        public WorkOrder currentAssociatedWorkorder
+        {
+            get
+            {
+                return this.AssociatedWorkOrders.OrderByDescending(wo => wo.paperOrderNum).FirstOrDefault();
             }
         }
     }

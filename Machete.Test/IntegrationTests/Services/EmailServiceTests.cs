@@ -66,14 +66,55 @@ namespace Machete.Test.IntegrationTests.Services
             frb = null;
         }
 
-        [TestMethod]
-        public void Integration_Activity_Service_CreateEmail()
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Emails)]
+        public void Integration_Email_Service_CreateAndValidateKey()
         {
             //Arrange
             //Act
             var result = frb.ToEmail();
             //Assert
             Assert.IsNotNull(result.ID, "Email.ID is null");
+        }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Emails)]
+        public void Integration_Email_Service_CreateWithWorkOrderID_joins_successfully()
+        {
+            var wo = frb.ToWorkOrder();
+            var email = frb.ToEmail();
+            var serv = frb.ToServEmail();
+            //ACT
+            var result = serv.CreateWithWorkorder(email, wo.ID, "interation test");
+            // ASSERT
+            Assert.IsNotNull(result.ID, "Email.ID is null");
+            Assert.IsNotNull(result.WorkOrders);
+            Assert.AreEqual(wo.ID, result.WorkOrders.SingleOrDefault().ID);
+        }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Emails)]
+        public void Integration_Email_Service_GetIndex_filterOn_recordid()
+        {
+            var serv = frb.ToServEmail();
+            var _em = frb.ToEmail();
+            dOptions.sortColName = "RelatedTo";
+            dOptions.emailID = _em.ID;
+            // ACT
+            var result = serv.GetIndexView(dOptions);
+            // ASSERT
+            Assert.AreEqual(1, result.filteredCount);
+        }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Emails)]
+        public void Integration_Email_Service_getIndex_filterOn_woid()
+        {
+            var wo = frb.ToWorkOrder();
+            var email = frb.ToEmail();
+            var serv = frb.ToServEmail();
+            var joinedEmail = serv.CreateWithWorkorder(email, wo.ID, "interation test");
+            dOptions.woid = wo.ID;
+            // ACT
+            var result = serv.GetIndexView(dOptions);
+            // ASSERT
+            Assert.AreEqual(1, result.filteredCount);
         }
     }
 }

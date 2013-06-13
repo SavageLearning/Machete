@@ -4,6 +4,7 @@
 @using Machete.Domain
 
 @Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID", id = Model.idPrefix + "ID" })
+@Html.HiddenFor(model => model.woid, new { @class = "hiddenRecID", id = Model.idPrefix + "WOID" })
 <div class="tb-table" style="float: left; clear: left;">
     @*    <div class="tb-row">
         @Html.mUITableLabelAndTextBoxFor(model => model.emailFrom, 

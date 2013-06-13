@@ -63,11 +63,11 @@ namespace Machete.Web.Controllers
                          select new
                          {
                              recordid = Convert.ToString(p.ID),
+                             //relatedTo = _getRelatedTo(p),
                              tabref = _getTabRef(p),
                              tablabel = _getTabLabel(p),
                              emailFrom = p.emailFrom,
                              emailTo = p.emailTo,
-                             relatedTo = _getRelatedObject(p),
                              subject = p.subject,
                              status = lcache.textByID(p.statusID, CI.TwoLetterISOLanguageName),
                              transmitAttempts = p.transmitAttempts.ToString(),
@@ -89,14 +89,15 @@ namespace Machete.Web.Controllers
             if (email == null) return null;
             return email.subject;
         }
-        private string _getRelatedObject(Email email)
-        {
-            if (email.isJoinedToWorkOrder)
-            {
-                return "WO: " + serv .GetAssociatedWorkOrderFor(email).paperOrderNum.ToString();
-            }
-            return string.Empty;
-        }
+        //private string _getRelatedTo(Email email)
+        //{
+        //    if (email.WorkOrders.Count() > 0)
+        //    {
+        //     return "WO: "+ email.WorkOrders.First().paperOrderNum;
+        //    }
+        //    return string.Empty;
+        //}
+
         /// <summary>
         /// GET: /Email/Create
         /// </summary>
@@ -117,9 +118,17 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Teacher")]
         public JsonResult Create(EmailView emailview, string userName)
         {
+            Email newEmail;
             UpdateModel(emailview);
             var email = Mapper.Map<EmailView, Email>(emailview);
-            Email newEmail = serv.Create(email, userName);
+            if (emailview.woid.HasValue)
+            {
+                newEmail = serv.CreateWithWorkorder(email, (int)emailview.woid, userName);
+            }
+            else
+            {
+                newEmail = serv.Create(email, userName);
+            }
 
             return Json(new
             {
@@ -222,8 +231,12 @@ namespace Machete.Web.Controllers
             var email = serv.GetLatestConfirmEmailBy(woid);
             if (email == null)
             {
-                email = new Email();
-                return PartialView("Create", email);
+                var emailview = Mapper.Map<Email, EmailView>(new Email());
+                var wo = serv.GetAssociatedWorkOrderFor(woid);
+                emailview.woid = woid;
+                emailview.emailTo = wo.Employer.email;
+                emailview.subject = string.Format("$$$Casa Latina work order {0} confirmation", wo.paperOrderNum);
+                return PartialView("Create", emailview);
             }
             else
             {
