@@ -92,6 +92,26 @@ function jqrfyTable(o) {
             return nRow;
         }
     }
+    myOptions.fnServerData = function (sSource, aoData, fnCallback) {
+        $.ajax({
+            "dataType": 'json',
+            "type": "GET",
+            "url": sSource,
+            "data": aoData,
+            "success": function (result) {
+                if (result.jobSuccess == false) {
+                    alert(result.rtnMessage);
+                }
+                else {
+                    fnCallback(result);
+                }
+            },
+            "failure": function (result) {
+                alert(result);
+            }
+        });
+    }
+
     //
     // create datatable
     oTable = $(myTable).dataTable(myOptions).fnSetFilteringDelay(400);
