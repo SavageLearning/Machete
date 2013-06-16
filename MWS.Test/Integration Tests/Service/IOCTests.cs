@@ -46,11 +46,11 @@ namespace MWS.Test.Integration_Tests.Service
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.MWS), TestCategory(TC.Emails)]
         public void Integration_ProjectInstaller_MWS_Program_Main_gets_to_service()
         {
-            //var bootstrapper = new ServiceBootstrapper();
-            //IUnityContainer container = bootstrapper.Build();
-            //var mws = new MacheteWindowsService(container);
-            //var result = mws.ProcessEmailQueue();
-            //Assert.IsTrue(string.IsNullOrEmpty(result));
+            var bootstrapper = new ServiceBootstrapper();
+            IUnityContainer container = bootstrapper.Build();
+            var mws = new MacheteWindowsService(container);
+            var result = mws.ProcessEmailQueue();
+            Assert.IsTrue(string.IsNullOrEmpty(result));
         }
     }
 }

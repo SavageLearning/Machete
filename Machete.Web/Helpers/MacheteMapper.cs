@@ -76,7 +76,12 @@ namespace Machete.Web.Helpers
                 .ForMember(ev => ev.status, opt => opt.MapFrom(e => Lookups.byID(e.statusID)))
                 .ForMember(ev => ev.templates, opt => opt.UseValue(Lookups.getEmailTemplates()))
                 .IgnoreAllNonExisting();
-            Mapper.CreateMap<EmailView, Email>().IgnoreAllNonExisting();
+            Mapper.CreateMap<EmailView, Email>()
+                .ForMember(e => e.Updatedby, opt => opt.Ignore())
+                .ForMember(e => e.Createdby, opt => opt.Ignore())
+                .ForMember(e => e.datecreated, opt => opt.Ignore())
+                .ForMember(e => e.dateupdated, opt => opt.Ignore())
+                .IgnoreAllNonExisting();
         }
         // Thank you stackoverflow, allows IgnoreAllNonExisting!
         public static IMappingExpression<TSource, TDestination> IgnoreAllNonExisting<TSource, TDestination>(
