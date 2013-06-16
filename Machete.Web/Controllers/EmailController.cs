@@ -195,8 +195,9 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public JsonResult Edit(EmailView emailview, FormCollection collection, string userName)
         {
-            UpdateModel(emailview);
-            var email = Mapper.Map<EmailView, Email>(emailview);
+            //UpdateModel(emailview);
+            var email = serv.Get(emailview.ID);
+            var newemail = Mapper.Map<EmailView, Email>(emailview, email);
             serv.Save(email, userName);
             return Json(new
             {

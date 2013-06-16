@@ -24,11 +24,11 @@ namespace Machete.Service
     public class EmailService : ServiceBase<Email>, IEmailService
     {
         IWorkOrderService _woServ;
-
+        int transmitlimit = 10;
         public EmailService(IEmailRepository emRepo, IWorkOrderService woServ, IUnitOfWork uow) : base(emRepo, uow)
         {
             this.logPrefix = "Email";
-            _woServ = woServ;
+            _woServ = woServ;            
         }
 
         public Email CreateWithWorkorder(Email email, int woid, string userName)
@@ -108,9 +108,8 @@ namespace Machete.Service
         {
             return repo.GetManyQ()
                        .Where(e => e.statusID == Email.iReadyToSend ||
-                           (e.statusID == Email.iTransmitError && e.transmitAttempts < 10)
-                           )
-                       .ToList();
+                           (e.statusID == Email.iTransmitError && e.transmitAttempts < transmitlimit)
+                           ).ToList();
         }
 
         public dataTableResult<Email> GetIndexView(viewOptions o)

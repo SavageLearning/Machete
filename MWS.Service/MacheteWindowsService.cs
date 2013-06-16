@@ -3,6 +3,7 @@ using MWS.Core;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace MWS.Service
         private System.ComponentModel.IContainer components = null;
         internal IUnityContainer container;
         private bool running { get; set; }
+        private int interval = 60000; // 1 minute
 
         public MacheteWindowsService(IUnityContainer unity)
         {
@@ -29,7 +31,13 @@ namespace MWS.Service
             if (unity == null) throw new Exception("Unity container is null");
             container = unity;
 
-            aTimer = new System.Timers.Timer(10000);
+            if (ConfigurationManager.AppSettings["TimerInterval"] != null)
+            {
+                interval = Convert.ToInt32(ConfigurationManager.AppSettings["TimerInterval"]);
+            }
+
+
+            aTimer = new System.Timers.Timer(interval);
             aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             
         }
@@ -83,10 +91,10 @@ namespace MWS.Service
 
         private void OnTimedEvent(object source, ElapsedEventArgs e)
         {
+            if (running == true) return;  // return if prior event is still running
+
             var sb = new StringBuilder();
             sb.AppendLine(string.Format("EmailManager.ProcessQueue executed at {0}", e.SignalTime));
-
-            if (running == true) return;  // return if prior event is still running
             running = true;
             sb.Append(ProcessEmailQueue());
             running = false;
@@ -100,6 +108,7 @@ namespace MWS.Service
             {
                 if (container == null) throw new Exception("Unity container is null");
                 var em = container.Resolve<EmailManager>();
+                sb.AppendLine(em.getDiagnostics());
                 em.ProcessQueue();
                 if (em.sentStack.Count() > 0)
                 {

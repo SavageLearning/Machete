@@ -35,23 +35,33 @@ namespace MWS.Core
             serv = eServ;
             db =uow;
         }
-
+        public string getDiagnostics()
+        {
+            var sb = new StringBuilder();
+            sb.AppendFormat("Total emails in database: {0}", serv.TotalCount().ToString());
+            return sb.ToString();
+        }
         public void ProcessQueue()
         {
-            var cfg = LoadEmailConfig();
+            EmailConfig cfg = LoadEmailConfig();
             var emaillist = serv.GetEmailsToSend();
             exceptionStack = new Stack<Exception>();
             sentStack = new Stack<Email>();
             foreach (var e in emaillist)
             {
-
-                if (!setStatusToSending(e))
+                bool locked = setStatusToSending(e);
+                if (!locked)
                 {
                     // failed concurrency check; another process has changed the record, skipping
+                    exceptionStack.Push(new Exception(string.Format("Failed to lock Email, ID: {0}", e.ID)));
                     continue;
                 }
                 try
                 {
+                    if (e.emailFrom == null)
+                    {
+                        e.emailFrom = cfg.userName;
+                    }
                     SendEmail(e, cfg);
                     e.statusID = Email.iSent; // record sent
                     sentStack.Push(e);
@@ -68,6 +78,7 @@ namespace MWS.Core
                 }
                 finally
                 {
+                    e.lastAttempt = DateTime.Now;
                     e.transmitAttempts += 1;
                     db.Commit();
                 }
@@ -97,6 +108,7 @@ namespace MWS.Core
             var sb = new StringBuilder();
             if (exceptionStack.Count() > 0)
             {
+                sb.AppendLine();
                 sb.AppendLine(new System.String('-', 40));
                 foreach (Exception exx in exceptionStack)
                 {
@@ -116,8 +128,8 @@ namespace MWS.Core
                 foreach (Email exx in sentStack)
                 {
                     sb.AppendLine(
-                        System.String.Format("EmailID: {2}, To: {0}, Subject: {1}, Attempts: {3}",
-                        exx.emailTo, exx.subject, exx.ID, exx.transmitAttempts)
+                        System.String.Format("EmailID: {2}, To: {0}, Subject: {1}, Attempts: {3}, Status: {4}",
+                        exx.emailTo, exx.subject, exx.ID, exx.transmitAttempts, exx.statusID)
                         );
                 }
                 sb.AppendLine(new System.String('-', 40));
