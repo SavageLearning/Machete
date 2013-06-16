@@ -27,7 +27,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
-//using System.Web;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using Machete.Web.Resources;
@@ -53,7 +53,7 @@ namespace Machete.Web.Models
 
         [DataType(DataType.Password)]
         [LocalizedDisplayName("PasswordConfirm", NameResourceType = typeof(ValidationStrings))]
-        [Compare("NewPassword", ErrorMessageResourceName = "PasswordCompare", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [System.ComponentModel.DataAnnotations.Compare("NewPassword", ErrorMessageResourceName = "PasswordCompare", ErrorMessageResourceType = typeof(ValidationStrings))]
         public string ConfirmPassword { get; set; }
     }
 
@@ -71,7 +71,7 @@ namespace Machete.Web.Models
         
         [DataType(DataType.Password)]
         [LocalizedDisplayName("PasswordConfirm", NameResourceType = typeof(ValidationStrings))]
-        [Compare("NewPassword", ErrorMessageResourceName = "PasswordCompare", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [System.ComponentModel.DataAnnotations.Compare("NewPassword", ErrorMessageResourceName = "PasswordCompare", ErrorMessageResourceType = typeof(ValidationStrings))]
         public string ConfirmPassword { get; set; }
     }
 
@@ -157,7 +157,7 @@ namespace Machete.Web.Models
         [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         [DataType(DataType.Password)]
         [LocalizedDisplayName("PasswordConfirm", NameResourceType = typeof(ValidationStrings))]
-        [Compare("Password", ErrorMessageResourceName="PasswordsMustMatch", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessageResourceName = "PasswordsMustMatch", ErrorMessageResourceType = typeof(ValidationStrings))]
         public string ConfirmPassword { get; set; }
 
         [StringLength(256)]
