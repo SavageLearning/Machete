@@ -95,8 +95,13 @@ namespace Machete.Test
 
         public FluentRecordBase Initialize(IDatabaseInitializer<MacheteContext> initializer, string connection)
         {
-            Database.SetInitializer<MacheteContext>(initializer);
             DB = new MacheteContext(connection);
+            return Initialize(initializer, DB);
+        }
+
+        public FluentRecordBase Initialize(IDatabaseInitializer<MacheteContext> initializer, MacheteContext DB)
+        {
+            Database.SetInitializer<MacheteContext>(initializer);
             WorkerCache.Initialize(DB);
             _dbFactory = new DatabaseFactory();
             _dbFactory.Set(DB);

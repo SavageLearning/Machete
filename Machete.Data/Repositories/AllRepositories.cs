@@ -28,6 +28,8 @@ using System.Web;
 using Machete.Domain;
 using Machete.Data.Infrastructure;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Text;
 
 namespace Machete.Data
 {
@@ -48,7 +50,10 @@ namespace Machete.Data
     //
     public interface IWorkerSigninRepository : IRepository<WorkerSignin> { }
     public interface IEmployerRepository : IRepository<Employer> { }
-    public interface IEmailRepository : IRepository<Email> { }
+    public interface IEmailRepository : IRepository<Email> 
+    {
+        IEnumerable<Email> GetEmailsToSend();
+    }
     public interface IWorkOrderRepository : IRepository<WorkOrder> { }
     public interface IWorkerRequestRepository : IRepository<WorkerRequest> { }
     public interface IWorkerRepository : IRepository<Worker> 
@@ -70,11 +75,7 @@ namespace Machete.Data
     /// </summary>
     public class WorkerSigninRepository : RepositoryBase<WorkerSignin>, IWorkerSigninRepository
     {
-        private readonly IDbSet<WorkerSignin> dbset;
-        public WorkerSigninRepository(IDatabaseFactory databaseFactory) : base(databaseFactory)
-        {
-            dbset = base.DataContext.Set<WorkerSignin>();
-        }
+        public WorkerSigninRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
         override public IQueryable<WorkerSignin> GetAllQ()
         {
             //return dbset.Include(a => a.worker).AsQueryable();
@@ -83,12 +84,8 @@ namespace Machete.Data
     }
     public class ActivitySigninRepository : RepositoryBase<ActivitySignin>, IActivitySigninRepository
     {
-        private readonly IDbSet<ActivitySignin> dbset;
         public ActivitySigninRepository(IDatabaseFactory databaseFactory)
-            : base(databaseFactory)
-        {
-            dbset = base.DataContext.Set<ActivitySignin>();
-        }
+            : base(databaseFactory) { }
         override public IQueryable<ActivitySignin> GetAllQ()
         {
             //return dbset.Include(a => a.worker).AsQueryable();
@@ -115,17 +112,24 @@ namespace Machete.Data
     public class EmailRepository : RepositoryBase<Email>, IEmailRepository
     {
         public EmailRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
+        public IEnumerable<Email> GetEmailsToSend()
+        {
+            //var emails = dbset.Where(e => e.statusID == Email.iReadyToSend ||
+            //               (e.statusID == Email.iTransmitError && e.transmitAttempts < 10)
+            //               );
+            var sb = new StringBuilder();
+            sb.AppendFormat("select * from Emails e  with (UPDLOCK) where e.statusID = {0} or ", Email.iReadyToSend);
+            sb.AppendFormat("(e.statusID = {0} and e.transmitAttempts < 10)", Email.iTransmitError);
+            var set = (DbSet<Email>)dbset;
+            return set.SqlQuery(sb.ToString()).AsEnumerable();
+        }
     }
     /// <summary>
     /// 
     /// </summary>
     public class WorkOrderRepository : RepositoryBase<WorkOrder>, IWorkOrderRepository
     {
-        private readonly IDbSet<WorkOrder> dbset;
-        public WorkOrderRepository(IDatabaseFactory databaseFactory) : base(databaseFactory)
-        {
-            dbset = base.DataContext.Set<WorkOrder>();
-        }
+        public WorkOrderRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
         override public IQueryable<WorkOrder> GetAllQ()
         {
             return dbset.Include(a => a.workAssignments).Include(a => a.workerRequests).AsNoTracking().AsQueryable();
@@ -143,12 +147,7 @@ namespace Machete.Data
     /// </summary>
     public class WorkerRepository : RepositoryBase<Worker>, IWorkerRepository
     {
-        private readonly IDbSet<Worker> dbset;
-        //private MacheteContext dataContext;
-        public WorkerRepository(IDatabaseFactory databaseFactory) : base(databaseFactory)
-        {
-            dbset = base.DataContext.Set<Worker>();
-        }
+        public WorkerRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
         override public IQueryable<Worker> GetAllQ()
         {
             return dbset.Include(a => a.Person).AsNoTracking().AsQueryable();
@@ -176,11 +175,7 @@ namespace Machete.Data
     /// </summary>
     public class WorkAssignmentRepository : RepositoryBase<WorkAssignment>, IWorkAssignmentRepository
     {
-        private readonly IDbSet<WorkAssignment> dbset;
-        public WorkAssignmentRepository(IDatabaseFactory databaseFactory) : base(databaseFactory)
-        {
-            dbset = base.DataContext.Set<WorkAssignment>();
-        }
+        public WorkAssignmentRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
 
         override public IQueryable<WorkAssignment> GetAllQ()
         {
@@ -213,11 +208,7 @@ namespace Machete.Data
     /// </summary>
     public class LookupRepository : RepositoryBase<Lookup>, ILookupRepository
     {
-        private readonly IDbSet<Lookup> dbset;
-        public LookupRepository(IDatabaseFactory databaseFactory) : base(databaseFactory)
-        {
-            dbset = base.DataContext.Set<Lookup>();
-        }
+        public LookupRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
         public void clearSelected(string category) 
         {
             IEnumerable<Lookup> list  = dbset.Where(w => w.category == category).AsEnumerable();

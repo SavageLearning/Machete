@@ -13,6 +13,7 @@ using System.Configuration;
 using Machete.Data.Infrastructure;
 using System.Diagnostics;
 using System.Data.Entity.Infrastructure;
+//using System.Transactions;
 
 namespace MWS.Core
 {
@@ -35,70 +36,27 @@ namespace MWS.Core
             serv = eServ;
             db =uow;
         }
+
         public string getDiagnostics()
         {
             var sb = new StringBuilder();
             sb.AppendFormat("Total emails in database: {0}", serv.TotalCount().ToString());
             return sb.ToString();
         }
+
         public void ProcessQueue()
         {
-            EmailConfig cfg = LoadEmailConfig();
-            var emaillist = serv.GetEmailsToSend();
             exceptionStack = new Stack<Exception>();
             sentStack = new Stack<Email>();
+            //
+            EmailConfig cfg = LoadEmailConfig();
+            var emaillist = serv.GetEmailsToSend();
             foreach (var e in emaillist)
             {
-                bool locked = setStatusToSending(e);
-                if (!locked)
-                {
-                    // failed concurrency check; another process has changed the record, skipping
-                    exceptionStack.Push(new Exception(string.Format("Failed to lock Email, ID: {0}", e.ID)));
-                    continue;
-                }
-                try
-                {
-                    if (e.emailFrom == null)
-                    {
-                        e.emailFrom = cfg.userName;
-                    }
-                    SendEmail(e, cfg);
-                    e.statusID = Email.iSent; // record sent
-                    sentStack.Push(e);
-                }
-                catch (Exception ex)
-                {
-                    //  don't log the repeating message 
-                    if (exceptionStack.Count() == 0 || 
-                        exceptionStack.Peek().Message != ex.Message)
-                    {
-                        exceptionStack.Push(ex);
-                    }
-                    e.statusID = Email.iTransmitError;
-                }
-                finally
-                {
-                    e.lastAttempt = DateTime.Now;
-                    e.transmitAttempts += 1;
-                    db.Commit();
-                }
+                SendEmail(e, cfg);
             }
+            db.Commit();
         }
-
-        public bool setStatusToSending(Email em)
-        {
-            try
-            {
-                em.statusID = Email.iSending; // lock out edits
-                db.Commit();
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                return false;
-            }
-            return true;
-        }
-
         /// <summary>
         /// String of exception messages, 1 per line
         /// </summary>
@@ -137,14 +95,35 @@ namespace MWS.Core
             return sb.ToString();
         }
 
-        public bool SendEmail(Email email, EmailConfig cfg)
+        public bool SendEmail(Email e, EmailConfig cfg)
         {
-            var client = new SmtpClient(cfg.host, cfg.port)
+            try
             {
-                Credentials = new NetworkCredential(cfg.userName, cfg.password),
-                EnableSsl = cfg.enableSSL
-            };
-            client.Send(email.emailFrom, email.emailTo, email.subject, email.body);
+                if (e.emailFrom == null) e.emailFrom = cfg.userName;
+                var client = new SmtpClient(cfg.host, cfg.port)
+                {
+                    Credentials = new NetworkCredential(cfg.userName, cfg.password),
+                    EnableSsl = cfg.enableSSL
+                };
+                client.Send(e.emailFrom, e.emailTo, e.subject, e.body);
+                e.statusID = Email.iSent; // record sent
+                sentStack.Push(e);
+            }
+            catch (Exception ex)
+            {
+                //  don't log the repeating message 
+                if (exceptionStack.Count() == 0 ||
+                    exceptionStack.Peek().Message != ex.Message)
+                {
+                    exceptionStack.Push(ex);
+                }
+                e.statusID = Email.iTransmitError;
+            }
+            finally
+            {
+                e.lastAttempt = DateTime.Now;
+                e.transmitAttempts += 1;
+            }
             return true;
         }
 
@@ -153,48 +132,6 @@ namespace MWS.Core
             var cfg = new EmailConfig();
             if (!cfg.IsComplete) throw new Exception("EmailConfig incomplete. Needs host, port, userName, & password");
             return cfg;
-        }
-    }
-
-    public class EmailConfig
-    {
-        public string host { get; set; }
-        public int port { get; set; }
-        public string userName { get; set; }
-        public string password {get; set;}
-        public bool enableSSL { get; set; }
-
-        public EmailConfig()
-        {
-            port = 0;
-            enableSSL = false;
-            host = ConfigurationManager.AppSettings["EmailServerHostName"];
-            port = Convert.ToInt16(ConfigurationManager.AppSettings["EmailServerPort"]);
-            enableSSL = Convert.ToBoolean(ConfigurationManager.AppSettings["EmailEnableSSL"]);
-            userName = ConfigurationManager.AppSettings["EmailAccount"];
-            password = ConfigurationManager.AppSettings["EmailPassword"];
-        }
-
-        public bool IsComplete
-        {
-            get
-            {
-                if (host == null) return false;
-                if (port == 0) return false;
-                if (userName == null) return false;
-                if (password == null) return false;
-                return true;
-            }
-        }
-
-        public string GetMissingConfigEntries()
-        {
-            var sb = new StringBuilder();
-            if (host == null) sb.AppendLine("EmailConfig.host is null");
-            if (port == 0) sb.AppendLine("EmailConfig.port is 0");
-            if (userName == null) sb.AppendLine("EmailConfig.userName is null");
-            if (password == null) sb.AppendLine("EmailConfig.password is null");
-            return sb.ToString();
         }
     }
 }
