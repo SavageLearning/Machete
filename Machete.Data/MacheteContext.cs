@@ -34,7 +34,7 @@ using System.Diagnostics;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace Machete.Data
 {
-    public class MacheteContext : DbContext
+    public class MacheteContext : DbContext, IDisposable
     {
         public MacheteContext() : base("macheteConnection") 
         {
@@ -57,8 +57,8 @@ namespace Machete.Data
         public DbSet<WorkerRequest> WorkerRequests { get; set; }
         public DbSet<Event> Events {get; set;}
         public DbSet<Activity> Activities { get; set; }
-        public DbSet<ActivitySignin> ActivitySignins { get; set; }
-        
+        public DbSet<ActivitySignin> ActivitySignins { get; set; }              
+
         public virtual void Commit()
         {
             try
@@ -152,17 +152,6 @@ namespace Machete.Data
         }
     }
 
-    //public class JoinWorkorderEmailBuilder : EntityTypeConfiguration<JoinWorkorderEmail>
-    //{
-    //    public JoinWorkorderEmailBuilder()
-    //    {
-    //        HasKey(k => k.ID);
-    //        HasRequired(k => k.WorkOrder)
-    //            .WithMany(d => d.JoinWorkorderEmails)
-    //            .HasForeignKey(k => k.WorkOrderID);
-    //        HasRequired(k => k.Email);
-    //    }
-    //}
     public class WorkOrderBuilder : EntityTypeConfiguration<WorkOrder>
     {
         public WorkOrderBuilder()

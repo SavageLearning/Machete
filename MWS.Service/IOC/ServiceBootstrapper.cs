@@ -33,7 +33,7 @@ namespace MWS.Service
             c.RegisterType<ILookupRepository, LookupRepository>();
             c.RegisterType<ILookupService, LookupService>();
             c.RegisterType<IUnitOfWork, UnitOfWork>();
-            c.RegisterType<IDatabaseFactory, DatabaseFactory>();
+            c.RegisterInstance<IDatabaseFactory>(new DatabaseFactory());
             // LookupCache will populate static values in the domain for service lookups
             c.RegisterInstance<ILookupCache>(new LookupCache(c.Resolve<Func<IDatabaseFactory>>()));
             return c;

@@ -39,7 +39,8 @@ namespace MWS.Test
         {
             // Arrange
             var eServ = frb.ToServEmail();
-            (new EmailManager(eServ, frb.ToUOW())).ProcessQueue(); // clear queue
+            var em = new EmailManager(eServ, frb.ToUOW());
+            em.ProcessQueue(); // clear queue
             frb.AddEmail(status: Email.iReadyToSend);
             var mgr = new EmailManager(eServ, frb.ToUOW());
             // Act

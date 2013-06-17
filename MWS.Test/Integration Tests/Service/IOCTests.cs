@@ -4,10 +4,12 @@ using Machete.Test;
 using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MWS.Service;
+using System;
 using System.Collections.Generic;
 using System.Configuration.Install;
 using System.Linq;
 using System.ServiceProcess;
+using System.Transactions;
 
 namespace MWS.Test.Integration_Tests.Service
 {
@@ -19,21 +21,23 @@ namespace MWS.Test.Integration_Tests.Service
         [TestInitialize]
         public void TestInitialize()
         {
-            frb = new FluentRecordBase();
-            frb.Initialize(new MacheteInitializer(), "macheteConnection");
+            //frb = new FluentRecordBase();
+            //frb.Initialize(new MacheteInitializer(), "macheteConnection");
         }
 
         [TestCleanup]
         public void TestCleanup()
         {
-            frb.Dispose();
-            frb = null;
+            //frb.Dispose();
+            //frb = null;
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.MWS), TestCategory(TC.Emails)]
         public void Integration_ProjectInstaller_MWS_Build_returns_container()
         {
             // Arrange
+            frb = new FluentRecordBase();
+            frb.Initialize(new MacheteInitializer(), "macheteConnection");
             var bootstrapper = new InstallBootstrapper();
             IUnityContainer container = bootstrapper.Build();
             // Act
@@ -41,6 +45,8 @@ namespace MWS.Test.Integration_Tests.Service
             
             // Assert
             Assert.AreEqual(2, result.ToArray().Count(), "InstallBootstrapper for service does not return expected number of objects");
+            frb.Dispose();
+            frb = null;
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.MWS), TestCategory(TC.Emails)]
@@ -50,7 +56,7 @@ namespace MWS.Test.Integration_Tests.Service
             IUnityContainer container = bootstrapper.Build();
             var mws = new MacheteWindowsService(container);
             var result = mws.ProcessEmailQueue();
-            Assert.IsTrue(string.IsNullOrEmpty(result));
+            Assert.IsFalse(string.IsNullOrEmpty(result));
         }
     }
 }
