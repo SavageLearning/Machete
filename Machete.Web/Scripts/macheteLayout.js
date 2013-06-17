@@ -92,7 +92,11 @@ function jqrfyTable(o) {
             return nRow;
         }
     }
+
     myOptions.fnServerData = function (sSource, aoData, fnCallback) {
+        if (myOptions.fnServerDataExtra) {
+            aoData.push(myOptions.fnServerDataExtra);
+        }
         $.ajax({
             "dataType": 'json',
             "type": "GET",

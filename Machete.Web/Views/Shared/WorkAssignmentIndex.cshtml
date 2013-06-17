@@ -113,14 +113,7 @@
 
                                         return nRow;
                                 },
-                "fnServerData": function ( sSource, aoData, fnCallback ) {
-			        /* Add some extra data to the sender */
-                    aoData.push( { "name": "showPending", "value": true});
-			        $.getJSON( sSource, aoData, function (json) { 
-				        /* Do whatever additional processing you want on the callback, then tell DataTables */
-				        fnCallback(json)
-			        } );
-		        }
+                "fnServerDataExtra":  { "name": "showPending", "value": true}
             }
         });
         ////////////////////////////////////////////////////////////////////////////
