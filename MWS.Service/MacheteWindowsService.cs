@@ -25,7 +25,7 @@ namespace MWS.Service
         private System.ComponentModel.IContainer components = null;
         internal IUnityContainer container;
         private bool running { get; set; }
-        private int interval = 60000; // 1 minute
+        private int interval = 5000; // 5 seconds
 
         public MacheteWindowsService(IUnityContainer unity)
         {
@@ -36,7 +36,7 @@ namespace MWS.Service
 
             if (ConfigurationManager.AppSettings["TimerInterval"] != null)
             {
-                interval = Convert.ToInt32(ConfigurationManager.AppSettings["TimerInterval"]);
+                interval = Convert.ToInt32(ConfigurationManager.AppSettings["TimerInterval"]) * 1000;
             }
             Email.iTransmitAttempts = Convert.ToInt32(ConfigurationManager.AppSettings["TransmitAttempts"]);
 
