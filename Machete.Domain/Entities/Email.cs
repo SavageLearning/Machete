@@ -34,11 +34,30 @@ namespace Machete.Domain
 {
     public class Email : Record
     {
+        /// <summary>
+        /// Integer for this state defined in Lookups
+        /// </summary>        
         public static int iPending { get; set; }
+        /// <summary>
+        /// Integer for this state defined in Lookups
+        /// </summary>        
         public static int iReadyToSend { get; set; }
+        /// <summary>
+        /// Integer for this state defined in Lookups
+        /// </summary>        
         public static int iSending { get; set; }
+        /// <summary>
+        /// Integer for this state defined in Lookups
+        /// </summary>        
         public static int iSent { get; set; }
+        /// <summary>
+        /// Integer for this state defined in Lookups
+        /// </summary>
         public static int iTransmitError { get; set; }
+        /// <summary>
+        /// Limit on the number of attempts to send emails. Read from Config file.
+        /// </summary>
+        public static int iTransmitAttempts { get; set; }
         public Email()
         {
             statusID = Email.iPending;

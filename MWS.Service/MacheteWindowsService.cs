@@ -1,5 +1,6 @@
 ﻿using Machete.Data;
 using Machete.Data.Infrastructure;
+using Machete.Domain;
 using Microsoft.Practices.Unity;
 using MWS.Core;
 using System;
@@ -37,7 +38,7 @@ namespace MWS.Service
             {
                 interval = Convert.ToInt32(ConfigurationManager.AppSettings["TimerInterval"]);
             }
-
+            Email.iTransmitAttempts = Convert.ToInt32(ConfigurationManager.AppSettings["TransmitAttempts"]);
 
             aTimer = new System.Timers.Timer(interval);
             aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
@@ -132,6 +133,8 @@ namespace MWS.Service
 
                     var em = container.Resolve<EmailManager>();
                     sb.AppendLine(em.getDiagnostics());
+                    sb.AppendLine("AppSettings.config location:");
+                    sb.AppendLine(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile);
                     em.ProcessQueue();
                     if (em.sentStack.Count() > 0)
                     {

@@ -99,7 +99,7 @@ namespace MWS.Core
         {
             try
             {
-                if (e.emailFrom == null) e.emailFrom = cfg.userName;
+                e.emailFrom = cfg.userName;
                 var client = new SmtpClient(cfg.host, cfg.port)
                 {
                     Credentials = new NetworkCredential(cfg.userName, cfg.password),
