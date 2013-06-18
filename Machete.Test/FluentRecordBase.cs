@@ -203,7 +203,7 @@ namespace Machete.Test
         {
             var e = (Employer)Records.employer.Clone();
             e.name = RandomString(10);
-            e.email = e.name + "@random.com";
+            e.email = "jciispam@gmail.com";
             return e;
         }
 
