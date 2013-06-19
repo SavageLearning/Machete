@@ -331,9 +331,20 @@ namespace Machete.Web.Controllers
             WorkOrder workOrder = woServ.Get(id);
             return View(workOrder);
         }
-        //
-        // GroupView -- Creates the view to print all orders for a given day
-        //              assignedOnly: only shows orders that are fully assigned
+
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        public ActionResult ViewEmailConfirmation(int id)
+        {
+            WorkOrder workOrder = woServ.Get(id);
+            return PartialView(workOrder);
+        }
+        /// <summary>
+        /// Creates the view to print all orders for a given day
+        /// assignedOnly: only shows orders that are fully assigned
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="assignedOnly"></param>
+        /// <returns></returns>
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult GroupView(DateTime date, bool? assignedOnly)
         {
