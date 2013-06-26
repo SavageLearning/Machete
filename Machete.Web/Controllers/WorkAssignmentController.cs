@@ -103,6 +103,7 @@ namespace Machete.Web.Controllers
                             hourRange = p.hourRange > 0 ? Convert.ToString(p.hourRange) : "",
                             days = Convert.ToString(p.days),
                             description = p.description,
+                            WOdescription = p.workOrder.description, // add the work order description to list of things sent
                             dateupdated = Convert.ToString(p.dateupdated), 
                             updatedby = p.Updatedby,
                             dateTimeofWork = p.workOrder.dateTimeofWork.ToString(),
