@@ -43,7 +43,7 @@ namespace Machete.Domain
                 return "asi" + this.ID + "-";
             }
         }
-        public virtual ICollection<ActivitySignin> Signins { get; set; }
+        public virtual ICollection<ActivityScheduleSignin> Signins { get; set; }
         //
         [LocalizedDisplayName("name", NameResourceType = typeof(Resources.ActivitySchedule))]
         [Required(ErrorMessageResourceName = "namerequired", ErrorMessageResourceType = typeof(Resources.ActivitySchedule))]
@@ -111,9 +111,9 @@ namespace Machete.Domain
         //
     }
 
-    public class ActivitySignin: Signin
+    public class ActivityScheduleSignin: Signin
     {
-        public ActivitySignin()
+        public ActivityScheduleSignin()
         {
             idString = "asi";
         }
