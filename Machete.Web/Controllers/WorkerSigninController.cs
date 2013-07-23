@@ -71,7 +71,7 @@ namespace Machete.Web.Controllers
             Worker worker = _wServ.GetWorkerByNum(dwccardnum);
             if (worker == null) throw new NullReferenceException("card ID doesn't match a worker");
             var _signin = new WorkerSignin();
-            // Tthe card just swiped
+            // The card just swiped
             _signin.dwccardnum = dwccardnum;
             _signin.dateforsignin = dateforsignin;
             _signin.memberStatus = worker.memberStatus;
