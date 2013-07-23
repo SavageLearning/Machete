@@ -121,8 +121,8 @@ namespace Machete.Web.Controllers
         {
             var _model = new Employer();
             _model.active = true;
-            _model.city = "Seattle";
-            _model.state = "WA";
+        //    _model.city = "Seattle"; // no null types allowed in var
+        //    _model.state = "WA";     // no null types allowed in var
             _model.blogparticipate = false;
             _model.referredby = Lookups.getDefaultID(LType.emplrreference);
             return PartialView("Create", _model);
