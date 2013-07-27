@@ -82,7 +82,8 @@ namespace Machete.Domain
         public int transmitAttempts { get; set; }
         public int  statusID { get; set; }
         public DateTime? lastAttempt { get; set; }
-
+        public string attachment { get; set; }
+        public string attachmentContentType { get; set; }
         [Timestamp]
         public byte[] RowVersion { get; set; }
         [NotMapped]

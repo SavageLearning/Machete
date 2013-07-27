@@ -34,6 +34,8 @@ namespace Machete.Web.ViewModel
 
         public int transmitAttempts { get; set; }
         public string status { get; set; }
+        public string attachment { get; set; }
+        public string attachmentContentType { get; set; }
         public int statusID { get; set; }
         public DateTime? lastAttempt { get; set; }
         public int? woid { get; set; }
