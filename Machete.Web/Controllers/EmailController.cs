@@ -198,7 +198,7 @@ namespace Machete.Web.Controllers
             //UpdateModel(emailview);
             var email = serv.Get(emailview.ID);
             var newemail = Mapper.Map<EmailView, Email>(emailview, email);
-            serv.Save(email, userName);
+            serv.Save(newemail, userName);
             return Json(new
             {
                 jobSuccess = true
