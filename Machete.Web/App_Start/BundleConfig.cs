@@ -40,11 +40,11 @@ namespace Machete.Web
             //bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
             //            "~/Scripts/modernizr-*"));
 
-            bundles.Add(new StyleBundle("~/bundles/css")
+            bundles.Add(new StyleBundle("~/Content/css")
                 .Include("~/Content/Site.css",
                 "~/Content/confirm/jquery.alerts.css",
                 "~/Content/dataTables/demo_table_jui.css",
-                "~/Content/ui/jquery-ui-1.8.6.custom.css"));
+                "~/Content/jquery-ui-1.8.6.custom.css"));
 
                         //"~/Content/themes/base/jquery.ui.core.css",
                         //"~/Content/themes/base/jquery.ui.resizable.css",
