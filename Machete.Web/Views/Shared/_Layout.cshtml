@@ -1,6 +1,8 @@
 ﻿@using Machete.Web.Helpers
 <!DOCTYPE html>
 <html>
+@Scripts.Render("~/bundles/jquery")
+
 @*
 <script src="@Url.Content("~/Scripts/macheteLayout.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/jquery.macheteUI-0.1.js")" type="text/javascript"></script>
@@ -11,8 +13,7 @@
     string controllerName = Request.RequestContext.RouteData.Values["controller"].ToString();
 }
 <head>
-    @Styles.Render("~/bundles/css")
-    @Scripts.Render("~/bundles/jquery")
+    @Styles.Render("~/Content/css")
     <title>@Machete.Web.Resources.Shared.title@ViewBag.title</title>
     <link rel="shortcut icon" href="/Content/favicon.ico" type="image/png"/>
     <link rel="icon" href="/Content/favicon.ico" type="image/png"/> 

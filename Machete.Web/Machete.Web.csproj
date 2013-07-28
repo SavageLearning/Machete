@@ -14,7 +14,7 @@
     <RootNamespace>Machete.Web</RootNamespace>
     <AssemblyName>Machete.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <MvcBuildViews>false</MvcBuildViews>
+    <MvcBuildViews>true</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -359,11 +359,27 @@
     <Content Include="Content\confirm\info.gif" />
     <Content Include="Content\confirm\jquery.alerts.css" />
     <Content Include="Content\confirm\title.gif" />
+    <Content Include="Content\dataTables\back_disabled.jpg" />
+    <Content Include="Content\dataTables\back_disabled.png" />
+    <Content Include="Content\dataTables\back_enabled.jpg" />
+    <Content Include="Content\dataTables\back_enabled.png" />
+    <Content Include="Content\dataTables\back_enabled_hover.png" />
     <Content Include="Content\dataTables\demo_page.css" />
     <Content Include="Content\dataTables\demo_table.css" />
     <Content Include="Content\dataTables\demo_table_jui.css" />
     <Content Include="Content\dataTables\details_close.png" />
     <Content Include="Content\dataTables\details_open.png" />
+    <Content Include="Content\dataTables\forward_disabled.jpg" />
+    <Content Include="Content\dataTables\forward_disabled.png" />
+    <Content Include="Content\dataTables\forward_enabled.jpg" />
+    <Content Include="Content\dataTables\forward_enabled.png" />
+    <Content Include="Content\dataTables\forward_enabled_hover.png" />
+    <Content Include="Content\dataTables\sort_asc.png" />
+    <Content Include="Content\dataTables\sort_asc_disabled.png" />
+    <Content Include="Content\dataTables\sort_both.png" />
+    <Content Include="Content\dataTables\sort_desc.png" />
+    <Content Include="Content\dataTables\sort_desc_disabled.png" />
+    <Content Include="Content\dataTables\ui-bg_highlight-soft_75_cccccc_1x100.png" />
     <Content Include="Content\favicon.ico" />
     <Content Include="Content\images\404error.jpg" />
     <Content Include="Content\images\back_disabled.jpg" />
@@ -390,21 +406,46 @@
     <Content Include="Content\images\sort_both.png" />
     <Content Include="Content\images\sort_desc.png" />
     <Content Include="Content\images\sort_desc_disabled.png" />
+    <Content Include="Content\images\ui-anim_basic_16x16.gif" />
+    <Content Include="Content\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
+    <Content Include="Content\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
     <Content Include="Content\images\ui-bg_diamond_10_4f4221_10x8.png" />
     <Content Include="Content\images\ui-bg_diamond_20_372806_10x8.png" />
     <Content Include="Content\images\ui-bg_diamond_25_675423_10x8.png" />
     <Content Include="Content\images\ui-bg_diamond_25_d5ac5d_10x8.png" />
     <Content Include="Content\images\ui-bg_diamond_8_261803_10x8.png" />
     <Content Include="Content\images\ui-bg_diamond_8_443113_10x8.png" />
+    <Content Include="Content\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\images\ui-bg_flat_10_000000_40x100.png" />
     <Content Include="Content\images\ui-bg_flat_75_ddd4b0_40x100.png" />
+    <Content Include="Content\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\images\ui-bg_glass_100_f6f6f6_1x400.png" />
+    <Content Include="Content\images\ui-bg_glass_100_fdf5ce_1x400.png" />
+    <Content Include="Content\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\images\ui-bg_gloss-wave_35_f6a828_500x100.png" />
     <Content Include="Content\images\ui-bg_highlight-hard_65_fee4bd_1x100.png" />
+    <Content Include="Content\images\ui-bg_highlight-soft_100_eeeeee_1x100.png" />
+    <Content Include="Content\images\ui-bg_highlight-soft_75_ffe45c_1x100.png" />
     <Content Include="Content\images\ui-icons_070603_256x240.png" />
+    <Content Include="Content\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\images\ui-icons_228ef1_256x240.png" />
+    <Content Include="Content\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="Content\images\ui-icons_e8e2b5_256x240.png" />
     <Content Include="Content\images\ui-icons_e9cd86_256x240.png" />
+    <Content Include="Content\images\ui-icons_ef8c08_256x240.png" />
     <Content Include="Content\images\ui-icons_efec9f_256x240.png" />
     <Content Include="Content\images\ui-icons_f2ec64_256x240.png" />
     <Content Include="Content\images\ui-icons_f9f2bd_256x240.png" />
     <Content Include="Content\images\ui-icons_ff7519_256x240.png" />
+    <Content Include="Content\images\ui-icons_ffd27a_256x240.png" />
+    <Content Include="Content\images\ui-icons_ffffff_256x240.png" />
     <Content Include="Content\images\zip.png" />
     <Content Include="Content\jquery.lightbox-0.5.css" />
     <Content Include="Content\machete_1_close_crop.png">
@@ -416,48 +457,8 @@
     <Content Include="Content\Site.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\ui\images\ui-anim_basic_16x16.gif" />
-    <Content Include="Content\ui\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
-    <Content Include="Content\ui\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
-    <Content Include="Content\ui\images\ui-bg_flat_0_aaaaaa_40x100.png" />
-    <Content Include="Content\ui\images\ui-bg_flat_10_000000_40x100.png" />
-    <Content Include="Content\ui\images\ui-bg_flat_75_ffffff_40x100.png" />
-    <Content Include="Content\ui\images\ui-bg_glass_100_f6f6f6_1x400.png" />
-    <Content Include="Content\ui\images\ui-bg_glass_100_fdf5ce_1x400.png" />
-    <Content Include="Content\ui\images\ui-bg_glass_55_fbf9ee_1x400.png" />
-    <Content Include="Content\ui\images\ui-bg_glass_65_ffffff_1x400.png" />
-    <Content Include="Content\ui\images\ui-bg_glass_75_dadada_1x400.png" />
-    <Content Include="Content\ui\images\ui-bg_glass_75_e6e6e6_1x400.png" />
-    <Content Include="Content\ui\images\ui-bg_glass_95_fef1ec_1x400.png" />
-    <Content Include="Content\ui\images\ui-bg_gloss-wave_35_f6a828_500x100.png" />
-    <Content Include="Content\ui\images\ui-bg_highlight-soft_100_eeeeee_1x100.png" />
-    <Content Include="Content\ui\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
-    <Content Include="Content\ui\images\ui-bg_highlight-soft_75_ffe45c_1x100.png" />
-    <Content Include="Content\ui\images\ui-icons_222222_256x240.png" />
-    <Content Include="Content\ui\images\ui-icons_228ef1_256x240.png" />
-    <Content Include="Content\ui\images\ui-icons_2e83ff_256x240.png" />
-    <Content Include="Content\ui\images\ui-icons_454545_256x240.png" />
-    <Content Include="Content\ui\images\ui-icons_888888_256x240.png" />
-    <Content Include="Content\ui\images\ui-icons_cd0a0a_256x240.png" />
-    <Content Include="Content\ui\images\ui-icons_ef8c08_256x240.png" />
-    <Content Include="Content\ui\images\ui-icons_ffd27a_256x240.png" />
-    <Content Include="Content\ui\images\ui-icons_ffffff_256x240.png" />
-    <Content Include="Content\ui\jquery-ui-1.8.6.custom.css" />
-    <Content Include="Content\ui\jquery-ui-1.9.2.custom.css" />
-    <Content Include="Content\ui\smoothness\images\ui-bg_flat_0_aaaaaa_40x100.png" />
-    <Content Include="Content\ui\smoothness\images\ui-bg_flat_75_ffffff_40x100.png" />
-    <Content Include="Content\ui\smoothness\images\ui-bg_glass_55_fbf9ee_1x400.png" />
-    <Content Include="Content\ui\smoothness\images\ui-bg_glass_65_ffffff_1x400.png" />
-    <Content Include="Content\ui\smoothness\images\ui-bg_glass_75_dadada_1x400.png" />
-    <Content Include="Content\ui\smoothness\images\ui-bg_glass_75_e6e6e6_1x400.png" />
-    <Content Include="Content\ui\smoothness\images\ui-bg_glass_95_fef1ec_1x400.png" />
-    <Content Include="Content\ui\smoothness\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
-    <Content Include="Content\ui\smoothness\images\ui-icons_222222_256x240.png" />
-    <Content Include="Content\ui\smoothness\images\ui-icons_2e83ff_256x240.png" />
-    <Content Include="Content\ui\smoothness\images\ui-icons_454545_256x240.png" />
-    <Content Include="Content\ui\smoothness\images\ui-icons_888888_256x240.png" />
-    <Content Include="Content\ui\smoothness\images\ui-icons_cd0a0a_256x240.png" />
-    <Content Include="Content\ui\smoothness\jquery-ui-1.8.11.custom.css" />
+    <Content Include="Content\jquery-ui-1.8.6.custom.css" />
+    <Content Include="Content\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="notes.txt" />
