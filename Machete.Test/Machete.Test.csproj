@@ -197,7 +197,7 @@
       <Name>Machete.Service</Name>
     </ProjectReference>
     <ProjectReference Include="..\Machete.Web\Machete.Web.csproj">
-      <Project>{FE22D839-09AA-4DE8-BAF7-E29C6EB2EECC}</Project>
+      <Project>{d2c4c806-4d23-4e62-b96d-23bdab953c73}</Project>
       <Name>Machete.Web</Name>
     </ProjectReference>
   </ItemGroup>

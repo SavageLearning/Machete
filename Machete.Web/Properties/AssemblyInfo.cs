@@ -21,6 +21,7 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -43,7 +44,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("3e3c2473-a8a4-439b-bdbe-d69ff834f15a")]
+[assembly: Guid("d242f273-bfde-45b2-8f3f-d30a35621225")]
 
 // Version information for an assembly consists of the following four values:
 //

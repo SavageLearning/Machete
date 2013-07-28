@@ -44,6 +44,7 @@ using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration;
 using Machete.Web.Helpers;
 using AutoMapper;
+using System.Web.Optimization;
 
 namespace Machete.Web
 {
@@ -104,6 +105,13 @@ namespace Machete.Web
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
+            // from MVC 4 template
+            //WebApiConfig.Register(GlobalConfiguration.Configuration);
+            //FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            //RouteConfig.RegisterRoutes(RouteTable.Routes);
+            BundleConfig.RegisterBundles(BundleTable.Bundles);
+            //AuthConfig.RegisterAuth();
+
             ModelBinders.Binders.Add(typeof(List<WorkerRequest>), new workerRequestBinder());
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
