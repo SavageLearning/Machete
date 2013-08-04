@@ -95,14 +95,7 @@
                                 { "mDataProp": "updatedby" }
                             ],
                 "aoSearchCols" :  [null, null, { "sSearch": "@(Model.ID)" }, null, null, null, null, null, null],
-                "fnServerData": function ( sSource, aoData, fnCallback ) {
-			        /* Add some extra data to the sender */
-                    aoData.push( { "name": "showOrdersWorkers", "value": true});
-			        $.getJSON( sSource, aoData, function (json) { 
-				        /* Do whatever additional processing you want on the callback, then tell DataTables */
-				        fnCallback(json)
-			        })
-                },
+                "fnServerDataExtra": [{ name: "showOrdersWorkers", value: true }],
                 "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                     if (aData['workers'] != null && aData['WAcount'] > 0) {                    
                         $('td:eq(3)', nRow).prepend('<img src="/Content/dataTables/details_open.png">');

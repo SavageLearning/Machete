@@ -106,6 +106,7 @@ namespace Machete.Service
             if (o.woid > 0) IndexViewBase.filterOnWorkorder(o, ref q);
             if (o.emailID.HasValue) IndexViewBase.filterOnID(o, ref q);
             if (o.EmployerID.HasValue) IndexViewBase.filterOnEmployer(o, ref q);
+            if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
 
             IEnumerable<Email> e = q.AsEnumerable();
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref e);

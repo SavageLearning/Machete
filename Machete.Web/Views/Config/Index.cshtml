@@ -61,14 +61,9 @@
                 {"mDataProp": "level" },
                 {"mDataProp": "ltrCode" }
             ],
-            "fnServerData": function ( sSource, aoData, fnCallback ) {
-			        /* Add some extra data to the sender */
-			        aoData.push( { "name": "category", "value": $('#category').val() } );
-			        $.getJSON( sSource, aoData, function (json) { 
-				        /* Do whatever additional processing you want on the callback, then tell DataTables */
-				        fnCallback(json)
-			        } );
-		        },         
+            "fnServerDataExtra": [
+                { "name": "category", "value": $('#category').val() }
+            ],         
         }, 
         dblClickEvent: null, 
         tabLabel: "@(recType)"
