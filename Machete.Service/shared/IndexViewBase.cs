@@ -647,6 +647,14 @@ namespace Machete.Service
                  .SelectMany(wwo => wwo.Emails, (wwo, email) => email);
         }
 
+        public static void search(viewOptions o, ref IQueryable<Email> q)
+        {
+            q = q.Where(p => //p.active.ToString().Contains(o.sSearch) ||
+                            p.subject.Contains(o.sSearch) ||
+                            p.emailTo.Contains(o.sSearch) ||
+                            p.Updatedby.Contains(o.sSearch));
+        }
+
         public static void filterOnID(viewOptions o, ref IQueryable<Email> q)
         {
             q = q.Where(e => e.ID == o.emailID);

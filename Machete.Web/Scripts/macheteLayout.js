@@ -94,14 +94,15 @@ function jqrfyTable(o) {
     }
 
     myOptions.fnServerData = function (sSource, aoData, fnCallback) {
+        var aoDataConcatenated = aoData;
         if (myOptions.fnServerDataExtra) {
-            aoData.push(myOptions.fnServerDataExtra);
+            aoDataConcatenated= aoData.concat(myOptions.fnServerDataExtra);
         }
         $.ajax({
             "dataType": 'json',
             "type": "GET",
             "url": sSource,
-            "data": aoData,
+            "data": aoDataConcatenated,
             "success": function (result) {
                 if (result.jobSuccess == false) {
                     alert(result.rtnMessage);

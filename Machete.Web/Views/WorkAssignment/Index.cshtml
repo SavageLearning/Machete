@@ -188,17 +188,12 @@
             {"mDataProp": "lotterySequence"},
             {"mDataProp": "fullname"}
         ],
-        "fnServerData": function ( sSource, aoData, fnCallback ) {
-			/* Add some extra data to the sender */
-			aoData.push( { "name": "todaysdate", "value": $('#todaysdate').val() } );
-            aoData.push( { "name": "dwccardnum", "value": $('#dwccardnum').val()} );
-            aoData.push( { "name": "wa_grouping", "value": $('#wa_grouping').val()} );
-            aoData.push( { "name": "typeofwork_grouping", "value": $('#typeofwork_grouping').val()} );            
-			$.getJSON( sSource, aoData, function (json) { 
-				/* Do whatever additional processing you want on the callback, then tell DataTables */
-				fnCallback(json)
-			} );
-		},
+        "fnServerDataExtra": [
+            { "name": "todaysdate", "value": $('#todaysdate').val() },
+            { "name": "dwccardnum", "value": $('#dwccardnum').val()},
+            { "name": "wa_grouping", "value": $('#wa_grouping').val()},
+            { "name": "typeofwork_grouping", "value": $('#typeofwork_grouping').val()}
+        ],           
         "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
             $(nRow).attr('ID', "wsiRec" +aData['recordid']);
             var lotteryField = $(nRow).find('td:nth-child(2)');
@@ -273,17 +268,12 @@
                 {"mDataProp": "program"},
                 {"mDataProp": "fullname"}
             ],
-            "fnServerData": function ( sSource, aoData, fnCallback ) {
-			    /* Add some extra data to the sender */
-			    aoData.push( { "name": "todaysdate", "value": $('#todaysdate').val() } );
-                aoData.push( { "name": "dwccardnum", "value": $('#dwccardnum').val()} );
-                aoData.push( { "name": "wa_grouping", "value": $('#wa_grouping').val()} );
-                aoData.push( { "name": "typeofwork_grouping", "value": $('#typeofwork_grouping').val()} );            
-			    $.getJSON( sSource, aoData, function (json) { 
-				    /* Do whatever additional processing you want on the callback, then tell DataTables */
-				    fnCallback(json)
-			    } );
-		    },
+            "fnServerDataExtra": [
+                { "name": "todaysdate", "value": $('#todaysdate').val() },
+                { "name": "dwccardnum", "value": $('#dwccardnum').val()},
+                { "name": "wa_grouping", "value": $('#wa_grouping').val()},
+                { "name": "typeofwork_grouping", "value": $('#typeofwork_grouping').val()}
+            ],            
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 if (aData['WAID'] > 0) { // green
                     $(nRow).addClass('statusGreen');
@@ -327,19 +317,14 @@
                             { "mDataProp": "description"},                        
                         ],
             "aoSearchCols" : [null, null, null, null, null, null, null, null, null, null, null],
-            "fnServerData": function ( sSource, aoData, fnCallback ) {
-			        /* Add some extra data to the sender */
-			        aoData.push( { "name": "todaysdate", "value": $('#todaysdate').val() } );
-                    aoData.push( { "name": "dwccardnum", "value": $('#dwccardnum').val()} );
-                    aoData.push( { "name": "wa_grouping", "value": $('#wa_grouping').val()} );
-                    aoData.push( { "name": "typeofwork_grouping", "value": $('#typeofwork_grouping').val()} );
-                    aoData.push( { "name": "status", "value": $('#status').val()});
-                    aoData.push( { "name": "showPending", "value": false});
-			        $.getJSON( sSource, aoData, function (json) { 
-				        /* Do whatever additional processing you want on the callback, then tell DataTables */
-				        fnCallback(json)
-			        } );
-		        },
+            "fnServerDataExtra": [
+                { "name": "todaysdate", "value": $('#todaysdate').val() },
+                { "name": "dwccardnum", "value": $('#dwccardnum').val()},
+                { "name": "wa_grouping", "value": $('#wa_grouping').val()},
+                { "name": "typeofwork_grouping", "value": $('#typeofwork_grouping').val()},
+                { "name": "status", "value": $('#status').val()},
+                { "name": "showPending", "value": false}
+                ],
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 switch (aData['asmtStatus'])
                 {
