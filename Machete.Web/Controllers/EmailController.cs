@@ -121,6 +121,7 @@ namespace Machete.Web.Controllers
             Email newEmail;
             UpdateModel(emailview);
             var email = Mapper.Map<EmailView, Email>(emailview);
+            email.attachmentContentType = System.Net.Mime.MediaTypeNames.Application.Octet;
             if (emailview.woid.HasValue)
             {
                 newEmail = serv.CreateWithWorkorder(email, (int)emailview.woid, userName);

@@ -378,6 +378,21 @@
         },
         //
         //        
+        btnAttachWorkOrder: function (opt) {
+            var btn = this;
+            var url = opt.url;
+            var field = opt.field;
+            if (!url) throw new Error("url is a required property");
+            if (!field) throw new Error("field is a required property");
+            btn.click(function (e) {
+                e.preventDefault();
+                console.log('attachWO called');
+                $.get(url, function (data) {
+                    console.log(data);
+                    field.val(data);
+                });
+            });
+        },
         formClickDelete: function (opt) {
             var btn = this;
             var ok = opt.ok || "OK?!";
