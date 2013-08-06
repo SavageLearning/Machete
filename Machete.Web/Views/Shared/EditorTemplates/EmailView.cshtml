@@ -3,7 +3,7 @@
 @using Machete.Web.Resources
 @using Machete.Domain
 
-@Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID", id = Model.idPrefix + "ID" })
+@Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID", id = Model.idPrefix + "EMAILID" })
 @Html.HiddenFor(model => model.woid, new { @class = "hiddenRecID", id = Model.idPrefix + "WOID" })
 <div class="tb-table" style="float: left; clear: left;">
     @*    <div class="tb-row">
@@ -41,6 +41,9 @@
                 }
             </select>
         </div>
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelAndTextBoxFor(model => model.attachment, new { @id = Model.idPrefix + "attachment" })
     </div>
     <div class="tb-row">
         @Html.mUITableLabelAndTextBoxFor(model => model.emailTo,

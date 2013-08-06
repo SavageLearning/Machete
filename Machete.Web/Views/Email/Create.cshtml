@@ -10,9 +10,12 @@
     <div>
         <input type="submit" id="@(idPrefix)SaveBtn" class="formButton saveBtn" 
                value="@Emails.createsubmit"  tabindex="9"/>
+        <input type="button" id="@(Model.idPrefix)attachWO" class="formButton" value="$$$attach WO" />
+
     </div>
     @Html.ValidationSummary(true)
     @Html.EditorForModel()
+
 }
 <script type="text/javascript">
     $(document).ready(function () {
@@ -32,8 +35,12 @@
         emailCreateForm.mUI('formDetectChanges', {
             recType: "@(recType)",
             formLevel: 1,
-            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
-            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+            changeConfirm: "@(Shared.changeConfirm)",
+            changeTitle: "@(Shared.changeTitle)"
+        });
+        $('#@(Model.idPrefix)attachWO').mUI('btnAttachWorkOrder', {
+            url: '/WorkOrder/View/@(Model.woid)',
+            field: $('#@(Model.idPrefix)attachment')
         });
     });
 </script>
