@@ -21,6 +21,9 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+
+// how did this get so unbelievably huge?
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,19 +31,46 @@ using System.Web;
 using System.Web.Mvc;
 using Machete.Web.Helpers;
 using Elmah;
+using Machete.Data;
+using Machete.Data.Infrastructure;
+using Machete.Domain;
+using Machete.Service;
+using NLog;
+using Machete.Web.ViewModel;
+using Machete.Web.Models;
+using System.Web.Routing;
+using System.Text.RegularExpressions;
+using System.Data.Objects;
+using AutoMapper;
+using System.Globalization;
+
 
 namespace Machete.Web.Controllers
 {
     [ElmahHandleError]
     public class ReportsController : Controller
     {
-        //
-        // GET: /Reports/
+        /// <summary>
+        /// MVC Controller for Machete Reports
+        /// </summary>
+        /// <returns></returns>
         [Authorize(Roles = "Administrator, Manager")]
+        #region Index 
+        // how do you declare two versions of this?
         public ActionResult Index()
         {
-            return View();
-        }
+            //the wrong way; get these from View layer
+            DateTime reportDate = new DateTime(2012, 07, 01);
+            DateTime beginDate = new DateTime(reportDate.Year, reportDate.Month, 01);
+            DateTime endDate = new DateTime(reportDate.Year, reportDate.Month, System.DateTime.DaysInMonth(reportDate.Year, reportDate.Month));
 
+            //ACK fix this
+            var result = Machete.Models.ReportModel.MonthlyWithDetail(beginDate, endDate);
+
+            return View();
+            //return Json(result,
+            //JsonRequestBehavior.AllowGet);
+        }
+        #endregion
     }
 }

@@ -634,6 +634,13 @@ namespace Machete.Service
             }
         }
         #endregion
-
+        #region REPORTS
+//        public static void monthlyStatus(DateTime month, ref IQueryable<WorkAssignment> q)
+//        {
+//            if Worker !=
+//                }
+//            }
+//
+        #endregion
     }
 }
