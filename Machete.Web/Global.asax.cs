@@ -152,7 +152,8 @@ namespace Machete.Web
             .RegisterType<IEmployerService, EmployerService>(new HttpContextLifetimeManager<IEmployerService>())
             .RegisterType<IWorkOrderService, WorkOrderService>(new HttpContextLifetimeManager<IWorkOrderService>())
             .RegisterType<IWorkAssignmentService, WorkAssignmentService>(new HttpContextLifetimeManager<IWorkAssignmentService>())
-            .RegisterType<IImageService, ImageService>(new HttpContextLifetimeManager<IImageService>());
+            .RegisterType<IImageService, ImageService>(new HttpContextLifetimeManager<IImageService>())
+            .RegisterType<IReportService, ReportService>(new HttpContextLifetimeManager<IReportService>());
             return container;
         }
     }
