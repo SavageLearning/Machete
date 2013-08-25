@@ -852,9 +852,6 @@
     <Content Include="Views\WorkOrder\View.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\WorkOrder\ViewEmailConfirmation.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\_ViewStart.cshtml" />
   </ItemGroup>
   <ItemGroup>
