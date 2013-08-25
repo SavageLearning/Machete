@@ -50,13 +50,19 @@ namespace Machete.Service
         public IQueryable<MonthlyWithDetailReport> MonthlyWithDetail(DateTime beginDate, DateTime endDate) //no drilldown
         {
             IQueryable<MonthlyWithDetailReport> query;
-            query = 
-                //uses workersignins, workassignments, workers
-                // stuck here ^ ->
-            var q = db.WorkerSignins
+
+            var wsiQ = wsiRepo.GetAllQ();
+            var wsiWhere = q.Where(foo => foo.dateforsignin >= beginDate &&
+                                            foo.dateforsignin <= endDate);
+            var waQ = waRepo.GetAllQ();
+
+            var wQ = wRepo.GetAllQ();
+
+            //uses workersignins, workassignments, workers
+            query = wsiQ
                 .Where(wsi => wsi.dateforsignin >= beginDate &&
                               wsi.dateforsignin <= endDate)
-                .GroupJoin(db.WorkAssignments, // necessary for left outer join
+                .GroupJoin(waQ, // necessary for left outer join
                       wsi => wsi.WorkAssignmentID,
                       wa => wa.ID,
                       (wsi, wa) => new
@@ -68,7 +74,7 @@ namespace Machete.Service
                           wadays = wa.FirstOrDefault().days == null ? 0 : wa.FirstOrDefault().days,
                           wawage = wa.FirstOrDefault().hourlyWage == null ? 0 : wa.FirstOrDefault().hourlyWage
                       })
-                .Join(db.Workers, // inner join
+                .Join(wQ, // inner join
                     x => x.wsi.WorkerID,
                     w => w.ID,
                     (xx, ww) => new
@@ -84,7 +90,7 @@ namespace Machete.Service
                         totalIncome = (xx.wahours * xx.wadays * xx.wawage),
                     })
                 .GroupBy(a => a.xx.wsi.dateforsignin)
-                .Select(group => new mwdData
+                .Select(group => new MonthlyWithDetailReport
                 {
                     date = group.Key,
                     // and the second half of 'make SQL do the math'. all the above stuff was to get to
@@ -102,9 +108,11 @@ namespace Machete.Service
                 })
                 .OrderBy(a => a.date);
 
-            return q;
+            return query;
         }
 
+        //wasn't sure if this should remain with Report.cs or be here at service
+        //level, so a copy of it remains here, alone, unused, probably depressed
         public class mwdData
         {
             /// A class containing all of the data for the Monthly Report with Details
