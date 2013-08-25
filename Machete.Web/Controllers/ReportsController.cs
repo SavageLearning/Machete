@@ -52,26 +52,18 @@ namespace Machete.Web.Controllers
     {
         // Initialize the following:
         // I am assuming for the moment that I'll only need what's in ReportService.cs
-        private readonly IWorkerSigninRepository wsiRepo;
-        private readonly IWorkAssignmentRepository waRepo;
-        private readonly IWorkerRepository wRepo;
+        private readonly IReportService repServ;
         // Oh, there's also this, which is the culture info setting:
         CultureInfo CI;
 
-        //Dependency injection (see Global.asax.cs):
-        // Again, this is copied from the service layer; Global.asax.cs does not seem to
-        // provide configuration for the Controller level, so I'm assuming there's some
-        // magic I haven't seen yet.
-        public ReportsController(IWorkerSigninRepository wsiRepo,
-                             IWorkAssignmentRepository waRepo,
-                             IWorkerRepository wRepo)
+        // Right?
+        public ReportsController(IReportService repServ)
         {
-            this.wsiRepo = wsiRepo;
-            this.waRepo = waRepo;
-            this.wRepo = wRepo;
+            this.repServ = repServ;
         }
 
-        //Not entirely sure what we are initializing. The other controllers do not explain much.
+        //Not entirely sure what we are initializing here, below.
+        //The other controllers do not explain much.
         //However, they all have this.
         protected override void Initialize(RequestContext requestContext)
         {
@@ -82,7 +74,7 @@ namespace Machete.Web.Controllers
         /// MVC Controller for Machete Reports
         /// </summary>
         /// <returns></returns>
-        [Authorize(Roles = "Administrator, Manager")]
+        [Authorize(Roles = "Administrator, Manager")] //others?
         #region Index 
         // A simple MVC index view
         public ActionResult Index()
@@ -90,6 +82,7 @@ namespace Machete.Web.Controllers
             return View();
         }
         #endregion
+        // Get ready to handle some AJAX, baby
         #region AjaxHandler
         /// <summary>
         /// Provides json grid of first report 
@@ -100,32 +93,25 @@ namespace Machete.Web.Controllers
         /// <param name="param">contains paramters for filtering</param>
         /// <returns>JsonResult for DataTables consumption</returns>
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public ActionResult AjaxSummary(jQueryDataTableParam param)
+        public ActionResult AjaxMwd(DateTime mwdDate)
         {
             System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
             //
             //pass filter parameters to service level
-            dataTableResult<mwdViewData> mvd =
-                woServ.CombinedSummary(param.sSearch,
-                    Request["sSortDir_0"] == "asc" ? false : true,
-                    param.iDisplayStart,
-                    param.iDisplayLength);
+            dataTableResult<mwdViewData> mvd = repServ.mwdView(mwdDate); //wtf?
             //
             //return what's left to datatables
             var result = from d in mvd.query
                          select new[] { System.String.Format("{0:MM/dd/yyyy}", d.date),
                                          d.date.ToString(),
                                          d.TotalSignins > 0 ? d.TotalSignins.ToString() : "0",
-                                         d.totalDWCSignins > 0 ? d.totalDWCSignins.ToString(),
-                                         d.totalHHHSignins.ToString(),
-                                         d.dispatchedDWCSignins.ToString(),
-                                         d.dispatchedHHHSignins.ToString(),
-                                         d.totalHours.ToString(),
-                                         d.totalIncome.ToString()
+                                         d.totalDWCSignins > 0 ? d.totalDWCSignins.ToString() : "0",
+                                         d.totalHHHSignins > 0 ? d.totalHHHSignins.ToString() : "0",
+                                         d.dispatchedDWCSignins > 0 ? d.dispatchedDWCSignins.ToString() : "0",
+                                         d.dispatchedHHHSignins > 0 ? d.dispatchedHHHSignins.ToString() : "0",
+                                         d.totalHours > 0 ? d.totalHours.ToString() : "0",
+                                         d.totalIncome > 0 ? d.totalIncome.ToString() : "0"
                          };
-                                         p.weekday.ToString(),
-                                         p.pending_wo > 0 ? p.pending_wo.ToString(): null,
-
 
             return Json(new
             {

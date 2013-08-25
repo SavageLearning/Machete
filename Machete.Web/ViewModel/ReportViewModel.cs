@@ -41,6 +41,7 @@ namespace Machete.Web.ViewModel
     //and see if I could get it working...
     //might be more worth it to create an actual array
     //but that would double the work
+    // yes, referring to previous comment, why does this exist? not sure this is necessary....
     public class mwdViewData
     {
         /// A class containing all of the data for the Monthly Report with Details
@@ -57,6 +58,6 @@ namespace Machete.Web.ViewModel
         public int dispatchedHHHSignins { get; set; }
         public int totalHours { get; set; }
         public double totalIncome { get; set; }
-        // public double avgIncomePerHour { get; set; }
+        public double avgIncomePerHour { get; set; }
     }
 }
