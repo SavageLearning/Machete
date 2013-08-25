@@ -20,18 +20,17 @@ namespace Machete.Service
     public interface IReportService
     {
         IQueryable<MonthlyWithDetailReport> MonthlyWithDetail(DateTime beginDate, DateTime endDate);
+        dataTableResult<mwdData> mwdView(DateTime mwdDate);
     }
 
     public class ReportService : IReportService
     {
-        //private readonly IReportService reportServ;
-
+        // Initialize the following:
         private readonly IWorkerSigninRepository wsiRepo;
         private readonly IWorkAssignmentRepository waRepo;
         private readonly IWorkerRepository wRepo;
 
-        //private readonly ILookupRepository lRepo; //meh? necesary?
-
+        //Dependency injection (see Global.asax.cs):
         public ReportService(IWorkerSigninRepository wsiRepo,
                              IWorkAssignmentRepository waRepo,
                              IWorkerRepository wRepo)
@@ -52,10 +51,7 @@ namespace Machete.Service
             IQueryable<MonthlyWithDetailReport> query;
 
             var wsiQ = wsiRepo.GetAllQ();
-            var wsiWhere = q.Where(foo => foo.dateforsignin >= beginDate &&
-                                            foo.dateforsignin <= endDate);
             var waQ = waRepo.GetAllQ();
-
             var wQ = wRepo.GetAllQ();
 
             //uses workersignins, workassignments, workers
@@ -111,25 +107,69 @@ namespace Machete.Service
             return query;
         }
 
-        //wasn't sure if this should remain with Report.cs or be here at service
-        //level, so a copy of it remains here, alone, unused, probably depressed
-        public class mwdData
+        public dataTableResult<mwdData> mwdView(DateTime userDate)
         {
-            /// A class containing all of the data for the Monthly Report with Details
-            /// DateTime date, int totalDWCSignins, int totalHHHSignins
-            /// dispatchedDWCSignins, int dispatchedHHHSignins
-            /// int totalHours, double totalIncome, ...
-            /// double totalAverage (commented out, not working)
-            public DateTime date { get; set; }
-            public int totalSignins { get; set; }
-            public int totalDWCSignins { get; set; }
-            public int totalHHHSignins { get; set; }
-            public int dispatchedDWCSignins { get; set; }
-            public int dispatchedHHHSignins { get; set; }
-            public int totalHours { get; set; }
-            public double totalIncome { get; set; }
-            // public double avgIncomePerHour { get; set; }
+            DateTime beginDate;
+            DateTime endDate;
+            IEnumerable<MonthlyWithDetailReport> mwdResult;
+            IEnumerable<mwdData> q; //not the Star Trek character
+                                    // ^ not a helpful comment
+                                    // q is the query for the monthlyWithDetail result
+                                    // after it's been passed to a list
+            var result = new dataTableResult<mwdData>();
+            
+            beginDate = new DateTime(userDate.Year, userDate.Month, 1);
+            endDate = new DateTime(userDate.Year, userDate.Month, System.DateTime.DaysInMonth(userDate.Year, userDate.Month));
+
+            // Grr, does this go here or in the controller?
+            // int numOfRows = System.DateTime.DaysInMonth(userDate.Year, userDate.Month);
+
+            mwdResult = MonthlyWithDetail(beginDate, endDate).ToList();
+
+            q = mwdResult
+                .Select(g => new mwdData
+                {
+                    date = g.date,
+                    totalSignins = g.totalSignins,
+                    totalDWCSignins = g.totalDWCSignins,
+                    totalHHHSignins = g.totalHHHSignins,
+                    dispatchedDWCSignins = g.dispatchedDWCSignins,
+                    dispatchedHHHSignins = g.dispatchedHHHSignins,
+                    totalHours = g.totalHours,
+                    totalIncome = g.totalIncome,
+                    avgIncomePerHour = g.totalIncome / g.totalHours
+                });
+
+            q = q.OrderBy(p => p.date);
+
+            result.filteredCount = q.Count();
+            // no idea what the following does:
+            //result.query = q.Skip<mwdData>((int)displayStart).Take((int)displayLength);
+            result.totalCount = waRepo.GetAllQ().Count();
+            return result;
         }
+
+
     }
 
+    //wasn't sure if this should remain with Report.cs or be here at service
+    //level, so a copy of it remains here, nullable, which I'm not sure is good
+    //design
+    public class mwdData
+    {
+        /// A class containing all of the data for the Monthly Report with Details
+        /// DateTime date, int totalDWCSignins, int totalHHHSignins
+        /// dispatchedDWCSignins, int dispatchedHHHSignins
+        /// int totalHours, double totalIncome, ...
+        /// double totalAverage (commented out, not working)
+        public DateTime? date { get; set; }
+        public int? totalSignins { get; set; }
+        public int? totalDWCSignins { get; set; }
+        public int? totalHHHSignins { get; set; }
+        public int? dispatchedDWCSignins { get; set; }
+        public int? dispatchedHHHSignins { get; set; }
+        public int? totalHours { get; set; }
+        public double? totalIncome { get; set; }
+        public double? avgIncomePerHour { get; set; }
+    }
 }

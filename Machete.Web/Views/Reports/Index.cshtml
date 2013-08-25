@@ -5,6 +5,13 @@
 *** That will have to be changed when we get out of the stub.
 *** This goes for ALL buttons/tabs.
 *@
+@using Machete.Web.Helpers
+@using Machete.Domain.Resources
+@using Machete.Web.Resources
+@using Machete.Service
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+}
 
 <div id="reportTabs">
     <ul>
@@ -13,6 +20,11 @@
         <li><a href="#orders" id="ordersTab" >Work Orders</a> </li>
         <li><a href="#activities" id="activitiesTab" >Activities</a> </li>
     </ul>
+    <div id="summaryTabs">
+        <ul>
+            <li><a href="#monthlywithdetail">Monthly, With Detail</a></li>
+        </ul>
+    </div>
     <div id="summary"> @* this div is still the ui panel, now with dropdown reports *@
         <input type="button" value="Data Only" class="formButton" id="dataOnlyBtn" />
         <input type="button" value="Pie Chart" class="formButton" id="pieChartBtn" />
@@ -34,7 +46,7 @@
             <h3 style="color:blue;">BLUE FISH</h3>
         </div>
         <div id="sorryNoPieCharts">
-            <h3 style="color:red;">Sorry, pie charts aren't available yet!</h3>
+            <h3 style="color:red;">Sorry, pie charts aren't available yet! Wait for the next update!</h3>
         </div>
     </div>
     <div id="workers" style="display:none;">
@@ -121,22 +133,28 @@
             }
     };
 
+        // the following code creates tabs from listed item tags in the HTML
         $('#reportTabs').mUI('createTabs', {
             prefix: "ui-tabs-reports-",
             formLevel: 1,
             changeConfirm: "(Machete.Web.Resources.Shared.changeConfirm)",
             changeTitle: "(Machete.Web.Resources.Shared.changeTitle)"
-            // ^ absolutely no idea what these do 
-            // we're about to find out!
+
+        });
+
+        //same thing, for summary report tabs
+        $('#summaryTabs').mUI('createTabs', {
+            prefix: "ui-tabs-reports-summary-",
+            formLevel: 1, //could be horribly wring about this
+            changeConfirm: "(Machete.Web.Resources.Shared.changeConfirm)",
+            changeTitle: "Machete.Web.Resources.Shared.changeTitle)"
         });
 
         $('#dataOnlyBtn').click(function () {
-            $('#dataOnlyDiv').show();
             $('#sorryNoPieCharts').hide();
         });
 
         $('#pieChartBtn').click(function () {
-            $('#dataOnlyDiv').hide();
             $('#sorryNoPieCharts').show();
         });
     });
