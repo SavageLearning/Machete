@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EventHandler.cs" />
     <Compile Include="IOC\InstallBootstrapper.cs" />
     <Compile Include="IOC\MacheteServiceInstaller.cs">
       <SubType>Component</SubType>

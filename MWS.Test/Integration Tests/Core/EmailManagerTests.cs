@@ -58,8 +58,8 @@ namespace MWS.Test
             var db1 = new MacheteContext();
             var e1 = new Email()
             {
-                emailFrom = "jciispam@gmail.com",
-                emailTo = "jciispam@gmail.com",
+                emailFrom = "changeme@gmail.com",
+                emailTo = "changeme@gmail.com",
                 subject = "testing",
                 body = "testing",
                 statusID = Email.iReadyToSend,

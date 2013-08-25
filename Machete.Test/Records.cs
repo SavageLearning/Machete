@@ -133,14 +133,25 @@ namespace Machete.Test
 
         public static Email email = new Email
         {
-            emailTo = "jciispam@gmail.com",
-            emailFrom = "jciispam@gmail.com",
+            emailTo = "changeme@gmail.com",
+            emailFrom = "changeme@gmail.com",
             subject = "machete email queue test",
             body = "foo",
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime
             Createdby = "TestInitializer",
-            Updatedby = "TestInitializer"
+            Updatedby = "TestInitializer",
+            attachment = @"<!DOCTYPE html>
+<html>
+<body>
+
+<h1>My First Heading</h1>
+
+<p>My first paragraph.</p>
+
+</body>
+</html>",
+            attachmentContentType = System.Net.Mime.MediaTypeNames.Text.Html
         };
         public static Employer employer = new Employer
         {

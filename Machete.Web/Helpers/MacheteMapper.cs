@@ -81,6 +81,7 @@ namespace Machete.Web.Helpers
                 .ForMember(e => e.Createdby, opt => opt.Ignore())
                 .ForMember(e => e.datecreated, opt => opt.Ignore())
                 .ForMember(e => e.dateupdated, opt => opt.Ignore())
+                //.ForMember(e => e.attachment, opt => System.Web)
                 .IgnoreAllNonExisting();
         }
         // Thank you stackoverflow, allows IgnoreAllNonExisting!

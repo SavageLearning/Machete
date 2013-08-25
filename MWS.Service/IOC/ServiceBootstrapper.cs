@@ -15,28 +15,34 @@ namespace MWS.Service
 {
     public class ServiceBootstrapper
     {
+        public IUnityContainer container { get; set; }
+
+        public ServiceBootstrapper()
+        {
+            container = new UnityContainer();
+        }
+
         public IUnityContainer Build()
         {
-            IUnityContainer c = new UnityContainer();
-            c.RegisterType<IEmailManager, EmailManager>();
-            c.RegisterInstance<MacheteWindowsService>(new MacheteWindowsService(c));
-            c.RegisterType<IEmailRepository, EmailRepository>();
-            c.RegisterType<IEmailService, EmailService>();
-            c.RegisterType<IWorkOrderRepository, WorkOrderRepository>();
-            c.RegisterType<IWorkOrderService, WorkOrderService>();
-            c.RegisterType<IWorkAssignmentRepository, WorkAssignmentRepository>();
-            c.RegisterType<IWorkAssignmentService, WorkAssignmentService>();
-            c.RegisterType<IWorkerRepository, WorkerRepository>();
-            c.RegisterType<IWorkerService, WorkerService>();
-            c.RegisterType<IWorkerSigninRepository, WorkerSigninRepository>();
-            c.RegisterType<IWorkerSigninService, WorkerSigninService>();
-            c.RegisterType<ILookupRepository, LookupRepository>();
-            c.RegisterType<ILookupService, LookupService>();
-            c.RegisterType<IUnitOfWork, UnitOfWork>();
-            c.RegisterInstance<IDatabaseFactory>(new DatabaseFactory());
+            container.RegisterType<IEmailManager, EmailManager>();
+            container.RegisterInstance<MacheteWindowsService>(new MacheteWindowsService(container));
+            container.RegisterType<IEmailRepository, EmailRepository>();
+            container.RegisterType<IEmailService, EmailService>();
+            container.RegisterType<IWorkOrderRepository, WorkOrderRepository>();
+            container.RegisterType<IWorkOrderService, WorkOrderService>();
+            container.RegisterType<IWorkAssignmentRepository, WorkAssignmentRepository>();
+            container.RegisterType<IWorkAssignmentService, WorkAssignmentService>();
+            container.RegisterType<IWorkerRepository, WorkerRepository>();
+            container.RegisterType<IWorkerService, WorkerService>();
+            container.RegisterType<IWorkerSigninRepository, WorkerSigninRepository>();
+            container.RegisterType<IWorkerSigninService, WorkerSigninService>();
+            container.RegisterType<ILookupRepository, LookupRepository>();
+            container.RegisterType<ILookupService, LookupService>();
+            container.RegisterType<IUnitOfWork, UnitOfWork>();
+            container.RegisterInstance<IDatabaseFactory>(new DatabaseFactory());
             // LookupCache will populate static values in the domain for service lookups
-            c.RegisterInstance<ILookupCache>(new LookupCache(c.Resolve<Func<IDatabaseFactory>>()));
-            return c;
+            container.RegisterInstance<ILookupCache>(new LookupCache(container.Resolve<Func<IDatabaseFactory>>()));
+            return container;
         }
     }
 }
