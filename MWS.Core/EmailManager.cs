@@ -13,6 +13,7 @@ using System.Configuration;
 using Machete.Data.Infrastructure;
 using System.Diagnostics;
 using System.Data.Entity.Infrastructure;
+using System.IO;
 //using System.Transactions;
 
 namespace MWS.Core
@@ -105,7 +106,17 @@ namespace MWS.Core
                     Credentials = new NetworkCredential(cfg.userName, cfg.password),
                     EnableSsl = cfg.enableSSL
                 };
-                client.Send(e.emailFrom, e.emailTo, e.subject, e.body);
+                var msg = new MailMessage(e.emailFrom, e.emailTo);
+                var a = Attachment.CreateAttachmentFromString(e.attachment, e.attachmentContentType);
+                a.Name = "Order.html";
+                msg.Subject = e.subject;
+                msg.Body = e.body;
+                msg.Attachments.Add(a
+                    //Attachment.CreateAttachmentFromString(e.attachment, e.attachmentContentType)
+                );
+                client.Send(msg);
+
+                //client.Send(e.emailFrom, e.emailTo, e.subject, e.body);
                 e.statusID = Email.iSent; // record sent
                 sentStack.Push(e);
             }
@@ -132,6 +143,15 @@ namespace MWS.Core
             var cfg = new EmailConfig();
             if (!cfg.IsComplete) throw new Exception("EmailConfig incomplete. Needs host, port, userName, & password");
             return cfg;
+        }
+        public static Stream GenerateStreamFromString(string s)
+        {
+            MemoryStream stream = new MemoryStream();
+            StreamWriter writer = new StreamWriter(stream);
+            writer.Write(s);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
         }
     }
 }

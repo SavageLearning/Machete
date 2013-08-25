@@ -21,7 +21,7 @@ namespace MWS.Service
     public class MacheteWindowsService : ServiceBase
     {
         private static System.Timers.Timer aTimer;
-        private System.Diagnostics.EventLog MWSEventLog;
+        public System.Diagnostics.EventLog MWSEventLog;
         private System.ComponentModel.IContainer components = null;
         internal IUnityContainer container;
         private bool running { get; set; }
@@ -30,10 +30,10 @@ namespace MWS.Service
         public MacheteWindowsService(IUnityContainer unity)
         {
             running = false;
-            setupEventLog();
             if (unity == null) throw new Exception("Unity container is null");
             container = unity;
-
+            this.ServiceName = EVcfg.source;
+            this.MWSEventLog = container.Resolve<IEventHandler>().MWSEventLog;
             if (ConfigurationManager.AppSettings["TimerInterval"] != null)
             {
                 interval = Convert.ToInt32(ConfigurationManager.AppSettings["TimerInterval"]) * 1000;
@@ -43,28 +43,6 @@ namespace MWS.Service
             aTimer = new System.Timers.Timer(interval);
             aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             
-        }
-
-        private void setupEventLog()
-        {
-            this.MWSEventLog = new System.Diagnostics.EventLog();
-            ((System.ComponentModel.ISupportInitialize)(this.MWSEventLog)).BeginInit();
-            // 
-            // MWSEventLog
-            // 
-            this.MWSEventLog.Log = EVcfg.log;
-            this.MWSEventLog.Source = EVcfg.source;
-            // 
-            // ServiceHost
-            // 
-            this.ServiceName = EVcfg.source;
-            ((System.ComponentModel.ISupportInitialize)(this.MWSEventLog)).EndInit();
-
-            if (!System.Diagnostics.EventLog.SourceExists(EVcfg.source))
-            {
-                System.Diagnostics.EventLog.CreateEventSource(
-                    EVcfg.source, EVcfg.log);
-            }
         }
 
         protected override void Dispose(bool disposing)
@@ -94,7 +72,7 @@ namespace MWS.Service
 
         private void OnTimedEvent(object source, ElapsedEventArgs e)
         {
-            if (running == true) return;  // return if prior event is still running
+             if (running == true) return;  // return if prior event is still running
 
             var sb = new StringBuilder();
             sb.AppendLine(string.Format("EmailManager.ProcessQueue executed at {0}", e.SignalTime));
