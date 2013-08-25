@@ -98,13 +98,13 @@ namespace Machete.Web.Controllers
             System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
             //
             //pass filter parameters to service level
-            dataTableResult<mwdViewData> mvd = repServ.mwdView(mwdDate); //wtf?
+            dataTableResult<mwdData> mvd = repServ.mwdView(mwdDate); //wtf?
             //
             //return what's left to datatables
             var result = from d in mvd.query
                          select new[] { System.String.Format("{0:MM/dd/yyyy}", d.date),
                                          d.date.ToString(),
-                                         d.TotalSignins > 0 ? d.TotalSignins.ToString() : "0",
+                                         d.totalSignins > 0 ? d.totalSignins.ToString() : "0",
                                          d.totalDWCSignins > 0 ? d.totalDWCSignins.ToString() : "0",
                                          d.totalHHHSignins > 0 ? d.totalHHHSignins.ToString() : "0",
                                          d.dispatchedDWCSignins > 0 ? d.dispatchedDWCSignins.ToString() : "0",
@@ -115,36 +115,10 @@ namespace Machete.Web.Controllers
 
             return Json(new
             {
-                sEcho = param.sEcho,
+                //sEcho = param.sEcho,
                 iTotalRecords = mvd.totalCount,
                 iTotalDisplayRecords = mvd.filteredCount,
                 aaData = result
-            },
-            JsonRequestBehavior.AllowGet);
-        }
-        #endregion
-
-        #region Ajaxhandler
-        /// <summary>
-        /// Provides json grid of orders
-        /// </summary>
-        /// <param name="param">contains parameters for filtering</param>
-        /// <returns>JsonResult for DataTables consumption</returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public ActionResult AjaxHandler(jQueryDataTableParam param)
-        {
-            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
-            vo.CI = CI;
-            //Get all the records
-            dataTableResult<WorkOrder> dtr = woServ.GetIndexView(vo);
-
-            return Json(new
-            {
-                sEcho = param.sEcho,
-                iTotalRecords = dtr.totalCount,
-                iTotalDisplayRecords = dtr.filteredCount,
-                aaData = from p in dtr.query
-                         select dtResponse(ref p, param.showOrdersWorkers)
             },
             JsonRequestBehavior.AllowGet);
         }
