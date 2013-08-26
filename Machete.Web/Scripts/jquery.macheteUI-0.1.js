@@ -388,9 +388,9 @@
                 e.preventDefault();
                 console.log('attachWO called');
                 $.get(url, function (data) {
-                    var encoded = $('<div/>').text(data).html();
-                    console.log(encoded);
-                    field.val(encoded);
+                    //var encoded = $('<div/>').text(data).html();
+                    console.log(data);
+                    field.val(data);
                 });
             });
         },

@@ -43,7 +43,8 @@
         </div>
     </div>
     <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.attachment, new { @id = Model.idPrefix + "attachment" })
+        @*@Html.mUITableLabelAndTextBoxFor(model => model.attachment, new { @id = Model.idPrefix + "attachment" })*@
+        @Html.mUITableLabelAndTextBoxFor(m => m.attachment, new { @id = Model.idPrefix + "attachment" })
     </div>
     <div class="tb-row">
         @Html.mUITableLabelAndTextBoxFor(model => model.emailTo,
