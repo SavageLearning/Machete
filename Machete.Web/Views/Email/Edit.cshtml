@@ -69,6 +69,9 @@
                 var encoded = $('<div/>').text($(field).val()).html();
                 console.log(encoded);
                 field.val(encoded);
+            },
+            postProcess: function () {
+                $('#EmailTab-@Model.ID').closest('.ui-dialog').find('a.ui-dialog-titlebar-close').click();
             }
         });
     });
