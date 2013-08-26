@@ -120,11 +120,38 @@
   <data name="activitiesTab" xml:space="preserve">
     <value>Activities</value>
   </data>
+  <data name="avgIncome" xml:space="preserve">
+    <value>Average</value>
+  </data>
+  <data name="date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="dwcDispatch" xml:space="preserve">
+    <value>DWC Dispatched</value>
+  </data>
+  <data name="dwcSignins" xml:space="preserve">
+    <value>DWC Signins</value>
+  </data>
+  <data name="hhhDispatch" xml:space="preserve">
+    <value>HHH Dispatched</value>
+  </data>
+  <data name="hhhSignins" xml:space="preserve">
+    <value>HHH Signins</value>
+  </data>
   <data name="ordersTab" xml:space="preserve">
     <value>Work Orders</value>
   </data>
   <data name="summaryTab" xml:space="preserve">
     <value>Summaries</value>
+  </data>
+  <data name="totalHours" xml:space="preserve">
+    <value>Total Hours</value>
+  </data>
+  <data name="totalIncome" xml:space="preserve">
+    <value>Total Income</value>
+  </data>
+  <data name="totalSignins" xml:space="preserve">
+    <value>Total Signins</value>
   </data>
   <data name="workersTab" xml:space="preserve">
     <value>Workers</value>
