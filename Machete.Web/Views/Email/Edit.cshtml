@@ -63,7 +63,13 @@
         $('#EmailTab-@Model.ID').mUI('formSubmit', {
             create: false,
             selectTab: 0,
-            formLevel: 1
+            formLevel: 1,
+            preProcess: function () {
+                var field = $('#@(Model.idPrefix)attachment');
+                var encoded = $('<div/>').text($(field).val()).html();
+                console.log(encoded);
+                field.val(encoded);
+            }
         });
     });
 </script>
