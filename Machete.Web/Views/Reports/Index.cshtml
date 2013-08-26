@@ -15,38 +15,44 @@
 
 <div id="reportTabs">
     <ul>
-        <li><a href="#summary" id="summaryTab" >Summaries</a> </li>
-        <li><a href="#workers" id="workersTab" >Workers</a> </li>
-        <li><a href="#orders" id="ordersTab" >Work Orders</a> </li>
-        <li><a href="#activities" id="activitiesTab" >Activities</a> </li>
+        <li><a href="#summary" id="summaryTab" >@Machete.Web.Resources.Reports.summaryTab</a> </li>
+        <li><a href="#workers" id="workersTab" >@Machete.Web.Resources.Reports.workersTab</a> </li>
+        <li><a href="#orders" id="ordersTab" >@Machete.Web.Resources.Reports.ordersTab</a> </li>
+        <li><a href="#activities" id="activitiesTab" >@Machete.Web.Resources.Reports.activitiesTab</a> </li>
     </ul>
-    <div id="summaryTabs">
-        <ul>
-            <li><a href="#monthlywithdetail">Monthly, With Detail</a></li>
-        </ul>
-    </div>
-    <div id="summary"> @* this div is still the ui panel, now with dropdown reports *@
-        <input type="button" value="Data Only" class="formButton" id="dataOnlyBtn" />
-        <input type="button" value="Pie Chart" class="formButton" id="pieChartBtn" />
-        <table id="summaryTable" class="display">
-            <thead>
-                <tr>
-                    <th>Total Signins</th>
-                    <th>DWC Signins</th>
-                    <th>HHH Signins</th>
-                    <th>DWC Dispatch</th>
-                    <th>HHH Disptach</th>
-                    <th>Total Hours</th>
-                    <th>Total Income</th>
-                    <th>Average Hourly</th>
-                </tr>
-            </thead>
-        </table>
-        <div id="dataOnlyDiv">
-            <h3 style="color:blue;">BLUE FISH</h3>
+    <div id="summaryReports">
+        <h3><a href="#">Machete Summary Reports</a></h3>
+        <div>
+            <p>Open the menus below to select different types of summary reports.</p>
+            <p id="stayTuned" title="Next update: Print buttons!">Use the buttons at the top of the report to toggle the display.</p>
         </div>
-        <div id="sorryNoPieCharts">
-            <h3 style="color:red;">Sorry, pie charts aren't available yet! Wait for the next update!</h3>
+        
+        <h3><a href="#">Monthly, With Detail</a></h3>
+        <div id="mwdTable">
+            <input type="button" value="Data Only" class="formButton" id="dataOnlyBtn" />
+            <input type="button" value="Pie Chart" class="formButton" id="pieChartBtn" />
+            @Html.TextBox("activeDate", @DateTime.Today.ToShortDateString(), new { @style = "width: 6em;", @class = "ui-datepicker", @id = "mwdDate" })
+            <table id="mwdSummaryTable" class="display">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.date</th>
+                        <th>@Machete.Web.Resources.Reports.totalSignins</th>
+                        <th>@Machete.Web.Resources.Reports.dwcSignins</th>
+                        <th>@Machete.Web.Resources.Reports.hhhSignins</th>
+                        <th>@Machete.Web.Resources.Reports.dwcDispatch</th>
+                        <th>@Machete.Web.Resources.Reports.hhhDispatch</th>
+                        <th>@Machete.Web.Resources.Reports.totalHours</th>
+                        <th>@Machete.Web.Resources.Reports.totalIncome</th>
+                        <th>@Machete.Web.Resources.Reports.avgIncome</th>
+                    </tr>
+                </thead>
+            </table>
+            <div id="dataOnlyDiv">
+                <h3 style="color:blue;">BLUE FISH</h3>
+            </div>
+            <div id="sorryNoPieCharts">
+                <h3 style="color:red;">Sorry, pie charts aren't available yet! Just wait for the next update!</h3>
+            </div>
         </div>
     </div>
     <div id="workers" style="display:none;">
@@ -86,70 +92,34 @@
 </div>
 
 <script type="text/javascript">
-//what button?
+    // ready or not, we want these
+    $('#sorryNoPieCharts').hide();
+    $('#mwdSummary').hide();
+
+//    
     $(document).ready(function () {
-        $('.formButton').button();
+        //$(function () { $("#stayTuned").tooltip(); }); 
+        // for some reason trying to use tooltips breaks the whole page
 
-        ///////////////////////////////////////////
-        //
-        // This is the table display, requires an
-        // AjaxHandler at the controller level --
-        // TODO: Add AjaxHandler at controller level
-        // (Reports.cs)
-        //
-        //
-    var oTable = {
-        "bPaginate": true,
-        "bLengthChange": true,
-        "aaSorting": [[4, "desc"]],
-        "bFilter": true,
-        "bSort": true,
-        "bInfo": true,
-        "iDeferLoading": true,
-        "bAutoWidth": false,
-        "bServerSide": true,
-        "sAjaxSource": "/Reports/AjaxHandler", // this doesn't exist yet
-        "bProcessing": true,
-        "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
-            "aoColumns": [
-                            { "mDataProp": "tabref", "bSearchable": false, "bSortable": false, "bVisible": false },
-                            { "mDataProp": "tablabel", "bSearchable": false, "bSortable": false, "bVisible": false },
-                            { "mDataProp": "EID", "bSearchable": false, "bSortable": false, "bVisible": false },
-                            { "mDataProp": "date" }, // not sure about the top three, so started here
-                            { "mDataProp": "totalSignins" },
-                            { "mDataProp": "totalDWCSignins" },
-                            { "mDataProp": "totalHHHSignins" },
-                            { "mDataProp": "dispatchedDWCSignins" },
-                            { "mDataProp": "dispatchedHHHSignins" },
-                            { "mDataProp": "totalHours" },
-                            { "mDataProp": "totalIncome" },
-                            { "mDataProp": "avgIncomePerHour" },
-            ],
-            "aoSearchCols": [null, null, null, null, null, null, null, null, null, null, null, null],
-            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                $(nRow).attr("edittabref", aData["tabref"]);
-                $(nRow).attr("edittablabel", aData["tablabel"]);
-                return nRow;
-            }
-    };
+        ///TABS//////////////////////////////////////|X|
+        // the following code creates
+        // tabs from listed item tags 
+        // in the HTML, by ID $("#id")
+        $(function () { $("#reportTabs").tabs() });
+        $(function () { $("#summaryReports").accordion() });
 
-        // the following code creates tabs from listed item tags in the HTML
-        $('#reportTabs').mUI('createTabs', {
-            prefix: "ui-tabs-reports-",
-            formLevel: 1,
-            changeConfirm: "(Machete.Web.Resources.Shared.changeConfirm)",
-            changeTitle: "(Machete.Web.Resources.Shared.changeTitle)"
-
+        ///SHOW REPORTS/////////////////////////////|X|
+        // when these are clicked on, their reports
+        // will be shown.
+        $('#monthlyWithDetail').click(function () {
+            $('#mwdSummary').show();
         });
 
-        //same thing, for summary report tabs
-        $('#summaryTabs').mUI('createTabs', {
-            prefix: "ui-tabs-reports-summary-",
-            formLevel: 1, //could be horribly wring about this
-            changeConfirm: "(Machete.Web.Resources.Shared.changeConfirm)",
-            changeTitle: "Machete.Web.Resources.Shared.changeTitle)"
-        });
 
+        ////PIE CHARTS/////////////////////////|X|
+        // Buttons for showing and hiding
+        // the Pie Charts feature ...
+        // ... which doesn't exist yet!
         $('#dataOnlyBtn').click(function () {
             $('#sorryNoPieCharts').hide();
         });
@@ -157,9 +127,56 @@
         $('#pieChartBtn').click(function () {
             $('#sorryNoPieCharts').show();
         });
+
+        // the date-picker
+        $('.ui-datepicker').datepicker({
+            dateFormat: 'mm/dd/yy'
+        });
+
+
+        ////AND THEN, ALL HELL BREAKS LOOSE////|X|
+        // Datatables uses something called Hungarian
+        // notation wherein they put the purpose of
+        // a given variable to the left of the
+        // variable name. E.g., i is integer, o is
+        // object. More at datatables.net.
+        $('#mwdSummaryTable').dataTable({
+            "bPaginate": false, // to enable pagination (this report has fixed size)
+            //"bLengthChange": true, //requires pagination
+            //"aLengthMenu": [[35, 70, 105, -1], [35, 70, 105, dataSourceLength*]],
+            //"iDisplayLength": -1, //number of rows to use with pagination
+            "bAutoWidth": false,
+            "bInfo": true, //shows information about data being displayed on the page
+            "bSort": false, //enable or disable sorting of columns
+            "bFilter": false, //enable or disable filtering of data
+            "bServerSide": true, //server side processing, req. source
+            "sAjaxSource": "/Reports/AjaxMwd", //source for server side processing
+            "bProcessing": true, //enable processing indicator [==========       ] 60% done etc.
+            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName), //internationalisation
+            "aoColumns": [
+                { mDataProp: "date" },
+                { mDataProp: "totalSignins" },
+                { mDataProp: "totalDWCSignins" },
+                { mDataProp: "totalHHHSignins" },
+                { mDataProp: "dispatchedDWCSignins" },
+                { mDataProp: "dispatchedHHHSignins" },
+                { mDataProp: "totalHours" },
+                { mDataProp: "totalIncome" },
+                { mDataProp: "avgIncomePerHour" }
+            ], //these are the column names in the array
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                /* Add some extra data to the sender */
+                aoData.push({ "name": "mwdDate", "value": $('#mwdDate').val() });
+                $.getJSON(sSource, aoData, function (json) {
+                    /* Do whatever additional processing you want on the callback, then tell DataTables */
+                    fnCallback(json)
+                });
+            },
+            //end fnServerData (notes included, more at datatables.net)
+        });
+        //end hell
     });
-    $('.ui-datepicker').datepicker({
-        dateFormat: 'mm/yy'
-    });
+    // end document ready
+
 </script>
 

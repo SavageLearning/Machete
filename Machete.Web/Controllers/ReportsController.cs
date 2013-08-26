@@ -83,7 +83,7 @@ namespace Machete.Web.Controllers
         }
         #endregion
         // Get ready to handle some AJAX, baby
-        #region AjaxHandler
+        #region AjaxHandlers
         /// <summary>
         /// Provides json grid of first report 
         /// This is temporary -- we will need
@@ -92,13 +92,14 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="param">contains paramters for filtering</param>
         /// <returns>JsonResult for DataTables consumption</returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator, Manager")]
+        //and then, all hell breaks loose
         public ActionResult AjaxMwd(DateTime mwdDate)
         {
             System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
             //
             //pass filter parameters to service level
-            dataTableResult<mwdData> mvd = repServ.mwdView(mwdDate); //wtf?
+            dataTableResult<mwdData> mvd = repServ.mwdView(mwdDate); //view date
             //
             //return what's left to datatables
             var result = from d in mvd.query
@@ -110,7 +111,8 @@ namespace Machete.Web.Controllers
                                          d.dispatchedDWCSignins > 0 ? d.dispatchedDWCSignins.ToString() : "0",
                                          d.dispatchedHHHSignins > 0 ? d.dispatchedHHHSignins.ToString() : "0",
                                          d.totalHours > 0 ? d.totalHours.ToString() : "0",
-                                         d.totalIncome > 0 ? d.totalIncome.ToString() : "0"
+                                         d.totalIncome > 0 ? d.totalIncome.ToString() : "0",
+                                         d.avgIncomePerHour > 0 ? d.avgIncomePerHour.ToString() : "0"
                          };
 
             return Json(new
