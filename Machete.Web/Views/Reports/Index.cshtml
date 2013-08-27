@@ -165,13 +165,14 @@
                 { mDataProp: "avgIncomePerHour" }
             ], //these are the column names in the array
             "fnServerData": function (sSource, aoData, fnCallback) {
-                /* Add some extra data to the sender */
-                aoData.push({ "name": "mwdDate", "value": $('#mwdDate').val() });
-                $.getJSON(sSource, aoData, function (json) {
-                    /* Do whatever additional processing you want on the callback, then tell DataTables */
-                    fnCallback(json)
-                });
+                $.getJSON(sSource,
+                    [{ "name": "mwdDate", "value": $("#mwdDate").val() }],
+                    function (json) { fnCallback(json) });
+              
             },
+            //note the difference twn this preceding fn and fns in other views,
+            //here we are just trying to pass a single item (#mwdDate) as date
+            //in aoData to the ajaxHandler
             //end fnServerData (notes included, more at datatables.net)
         });
         //end hell
