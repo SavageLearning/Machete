@@ -94,15 +94,21 @@ namespace Machete.Web.Controllers
         /// <returns>JsonResult for DataTables consumption</returns>
         [Authorize(Roles = "Administrator, Manager")]
         //and then, all hell breaks loose
-        public ActionResult AjaxMwd(DateTime mwdDate)
+        public ActionResult AjaxMwd(jQueryDataTableParam param)
         {
-            System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
-            //
+            DateTime mwdDate;
+            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param); 
+            //jQuery passes in parameters that must be mapped to viewOptions
+            //following the format of the other files here
+            //vo.CI = (System.Globalization.CultureInfo)Session["Culture"]; 
+            //Set culture setting to whatever current session setting is
+            if (vo.date != null) mwdDate = DateTime.Parse(vo.date.ToString());
+            else mwdDate = DateTime.Now;
             //pass filter parameters to service level
-            dataTableResult<mwdData> mvd = repServ.mwdView(mwdDate); //view date
+            dataTableResult<mwdData> mwd = repServ.mwdBetterView(mwdDate); //view date
             //
             //return what's left to datatables
-            var result = from d in mvd.query
+            var result = from d in mwd.query
                          select new[] { System.String.Format("{0:MM/dd/yyyy}", d.date),
                                          d.date.ToString(),
                                          d.totalSignins > 0 ? d.totalSignins.ToString() : "0",
@@ -118,8 +124,8 @@ namespace Machete.Web.Controllers
             return Json(new
             {
                 //sEcho = param.sEcho,
-                iTotalRecords = mvd.totalCount,
-                iTotalDisplayRecords = mvd.filteredCount,
+                iTotalRecords = mwd.totalCount,
+                iTotalDisplayRecords = mwd.filteredCount,
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);

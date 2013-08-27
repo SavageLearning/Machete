@@ -21,6 +21,7 @@ namespace Machete.Service
     {
         IQueryable<MonthlyWithDetailReport> MonthlyWithDetail(DateTime beginDate, DateTime endDate);
         dataTableResult<mwdData> mwdView(DateTime mwdDate);
+        dataTableResult<mwdData> mwdBetterView(DateTime mwdDate);
     }
 
     public class ReportService : IReportService
@@ -149,6 +150,46 @@ namespace Machete.Service
             return result;
         }
 
+        public dataTableResult<mwdData> mwdBetterView(DateTime mwdDate)
+        {
+            DateTime beginDate;
+            DateTime endDate;
+            IEnumerable<MonthlyWithDetailReport> mwdResult;
+            IEnumerable<mwdData> q; //not the Star Trek character
+            // ^ not a helpful comment
+            // q is the query for the monthlyWithDetail result
+            // after it's been passed to a list
+            var result = new dataTableResult<mwdData>(); //note the type. define it well.
+
+            beginDate = new DateTime(mwdDate.Year, mwdDate.Month, 1);
+            endDate = new DateTime(mwdDate.Year, mwdDate.Month, System.DateTime.DaysInMonth(mwdDate.Year, mwdDate.Month));
+
+            mwdResult = MonthlyWithDetail(beginDate, endDate).ToList();
+
+            q = mwdResult
+                .Select(g => new mwdData
+                {
+                    date = g.date,
+                    totalSignins = g.totalSignins,
+                    totalDWCSignins = g.totalDWCSignins,
+                    totalHHHSignins = g.totalHHHSignins,
+                    dispatchedDWCSignins = g.dispatchedDWCSignins,
+                    dispatchedHHHSignins = g.dispatchedHHHSignins,
+                    totalHours = g.totalHours,
+                    totalIncome = g.totalIncome,
+                    avgIncomePerHour = g.totalIncome / g.totalHours
+                });
+
+            q = q.OrderBy(p => p.date);
+
+            result.filteredCount = q.Count();
+            // usually the following has a skip...take method applied, but we are looking for fixed length on the first report
+            result.query = q;
+            result.totalCount = waRepo.GetAllQ().Count();
+            return result;
+        }
+
+
 
     }
 
@@ -172,4 +213,5 @@ namespace Machete.Service
         public double? totalIncome { get; set; }
         public double? avgIncomePerHour { get; set; }
     }
+
 }
