@@ -109,16 +109,17 @@ namespace Machete.Web.Controllers
             //
             //return what's left to datatables
             var result = from d in mwd.query
-                         select new[] { System.String.Format("{0:MM/dd/yyyy}", d.date),
-                                        // d.date.ToString(),
-                                         d.totalSignins > 0 ? d.totalSignins.ToString() : "0",
-                                         d.totalDWCSignins > 0 ? d.totalDWCSignins.ToString() : "0",
-                                         d.totalHHHSignins > 0 ? d.totalHHHSignins.ToString() : "0",
-                                         d.dispatchedDWCSignins > 0 ? d.dispatchedDWCSignins.ToString() : "0",
-                                         d.dispatchedHHHSignins > 0 ? d.dispatchedHHHSignins.ToString() : "0",
-                                         d.totalHours > 0 ? d.totalHours.ToString() : "0",
-                                         d.totalIncome > 0 ? d.totalIncome.ToString() : "0",
-                                         d.avgIncomePerHour > 0 ? d.avgIncomePerHour.ToString() : "0"
+                         select new { 
+                             date = System.String.Format("{0:MM/dd/yyyy}", d.date),
+                                    // instead of d.date.ToString(),
+                             totalSignins = d.totalSignins > 0 ? d.totalSignins.ToString() : "0",
+                             totalDWCSignins =  d.totalDWCSignins > 0 ? d.totalDWCSignins.ToString() : "0",
+                             totalHHHSignins =  d.totalHHHSignins > 0 ? d.totalHHHSignins.ToString() : "0",
+                             dispatchedDWCSignins = d.dispatchedDWCSignins > 0 ? d.dispatchedDWCSignins.ToString() : "0",
+                             dispatchedHHHSignins = d.dispatchedHHHSignins > 0 ? d.dispatchedHHHSignins.ToString() : "0",
+                             totalHours = d.totalHours > 0 ? d.totalHours.ToString() : "0",
+                             totalIncome = d.totalIncome > 0 ? d.totalIncome.ToString() : "0",
+                             avgIncomePerHour = d.avgIncomePerHour > 0 ? d.avgIncomePerHour.ToString() : "0"
                          };
 
             return Json(new
