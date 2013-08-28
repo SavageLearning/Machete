@@ -1,0 +1,154 @@
+﻿@{
+    ViewBag.Title = "Worker Reports";
+}
+    <div id="workerReports">
+        <h3><a href="#">Machete Worker Reports</a></h3>
+        <div>
+            <p>Open the menus below to select different types of summary reports.</p>
+            <p id="stayTuned" title="Next update: Print buttons!">Use the buttons at the top of the report to toggle the display.</p>
+        </div>
+        
+        <h3><a href="#">United Way Demographics</a></h3>
+        <div id="mwdTable">
+            <input type="button" value="Data Only" class="formButton" id="dataOnlyBtn" />
+            <input type="button" value="Pie Chart" class="formButton" id="pieChartBtn" />
+            @Html.TextBox("activeDate", "", new { @style = "width: 6em;", @class = "ui-datepicker", @id = "mwdDate" })
+            <table id="mwdSummaryTable" class="display">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.date</th>
+                        <th>etc</th>
+                    </tr>
+                </thead>
+            </table>
+            <div id="sorryNoPieCharts">
+                <h3 style="color:red;">Sorry, pie charts aren't available quite yet! Just wait for the next update!</h3>
+            </div>
+        </div>
+
+        <h3><a href="#" target="_blank">All Workers</a></h3>
+        <div id="mwdTable">
+            <input type="button" value="Data Only" class="formButton" id="dataOnlyBtn" />
+            <input type="button" value="Pie Chart" class="formButton" id="pieChartBtn" />
+            @Html.TextBox("activeDate", "", new { @style = "width: 6em;", @class = "ui-datepicker", @id = "mwdDate" })
+            <table id="mwdSummaryTable" class="display">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.date</th>
+                        <th>etc</th>
+                    </tr>
+                </thead>
+            </table>
+            <div id="sorryNoPieCharts">
+                <h3 style="color:red;">Sorry, pie charts aren't available quite yet! Just wait for the next update!</h3>
+            </div>
+    </div>
+        <h3><a href="#" target="_blank">Active workers with expired memberships</a></h3>
+        <div id="mwdTable">
+            <input type="button" value="Data Only" class="formButton" id="dataOnlyBtn" />
+            <input type="button" value="Pie Chart" class="formButton" id="pieChartBtn" />
+            @Html.TextBox("activeDate", "", new { @style = "width: 6em;", @class = "ui-datepicker", @id = "mwdDate" })
+            <table id="mwdSummaryTable" class="display">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.date</th>
+                        <th>etc</th>
+                    </tr>
+                </thead>
+            </table>
+            <div id="sorryNoPieCharts">
+                <h3 style="color:red;">Sorry, pie charts aren't available quite yet! Just wait for the next update!</h3>
+            </div>
+    </div>
+        <h3><a href="#" target="_blank">Active workers with impossible membership dates</a></h3>
+        <div id="mwdTable">
+            <input type="button" value="Data Only" class="formButton" id="dataOnlyBtn" />
+            <input type="button" value="Pie Chart" class="formButton" id="pieChartBtn" />
+            @Html.TextBox("activeDate", "", new { @style = "width: 6em;", @class = "ui-datepicker", @id = "mwdDate" })
+            <table id="mwdSummaryTable" class="display">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.date</th>
+                        <th>etc</th>
+                    </tr>
+                </thead>
+            </table>
+            <div id="sorryNoPieCharts">
+                <h3 style="color:red;">Sorry, pie charts aren't available quite yet! Just wait for the next update!</h3>
+            </div>
+    </div>
+        <h3><a href="#" target="_blank">Active workers with specialty skills</a></h3>
+        <div id="mwdTable">
+            <input type="button" value="Data Only" class="formButton" id="dataOnlyBtn" />
+            <input type="button" value="Pie Chart" class="formButton" id="pieChartBtn" />
+            @Html.TextBox("activeDate", "", new { @style = "width: 6em;", @class = "ui-datepicker", @id = "mwdDate" })
+            <table id="mwdSummaryTable" class="display">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.date</th>
+                        <th>etc</th>
+                    </tr>
+                </thead>
+            </table>
+            <div id="sorryNoPieCharts">
+                <h3 style="color:red;">Sorry, pie charts aren't available quite yet! Just wait for the next update!</h3>
+            </div>
+    </div>
+        <h3><a href="#" target="_blank">Workers-Signins with expired memberships</a></h3>
+        <div id="mwdTable">
+            <input type="button" value="Data Only" class="formButton" id="dataOnlyBtn" />
+            <input type="button" value="Pie Chart" class="formButton" id="pieChartBtn" />
+            @Html.TextBox("activeDate", "", new { @style = "width: 6em;", @class = "ui-datepicker", @id = "mwdDate" })
+            <table id="mwdSummaryTable" class="display">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.date</th>
+                        <th>etc</th>
+                    </tr>
+                </thead>
+            </table>
+            <div id="sorryNoPieCharts">
+                <h3 style="color:red;">Sorry, pie charts aren't available quite yet! Just wait for the next update!</h3>
+            </div>
+    </div>
+        <h3><a href="#" target="_blank">Workers-Yearly client profile report</a></h3>
+        <div id="mwdTable">
+            <input type="button" value="Data Only" class="formButton" id="dataOnlyBtn" />
+            <input type="button" value="Pie Chart" class="formButton" id="pieChartBtn" />
+            @Html.TextBox("activeDate", "", new { @style = "width: 6em;", @class = "ui-datepicker", @id = "mwdDate" })
+            <table id="mwdSummaryTable" class="display">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.date</th>
+                        <th>etc</th>
+                    </tr>
+                </thead>
+            </table>
+            <div id="sorryNoPieCharts">
+                <h3 style="color:red;">Sorry, pie charts aren't available quite yet! Just wait for the next update!</h3>
+            </div>
+    </div>
+        <h3><a href="#" target="_blank">Workers-Detailed Membership report</a></h3>
+        <div id="mwdTable">
+            <input type="button" value="Data Only" class="formButton" id="dataOnlyBtn" />
+            <input type="button" value="Pie Chart" class="formButton" id="pieChartBtn" />
+            @Html.TextBox("activeDate", "", new { @style = "width: 6em;", @class = "ui-datepicker", @id = "mwdDate" })
+            <table id="mwdSummaryTable" class="display">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.date</th>
+                        <th>etc</th>
+                    </tr>
+                </thead>
+            </table>
+            <div id="sorryNoPieCharts">
+                <h3 style="color:red;">Sorry, pie charts aren't available quite yet! Just wait for the next update!</h3>
+            </div>
+        </div>
+    </div>
+<script type="text/javascript">
+    $("#workerReports").accordion({
+        collapsible: true,
+        autoHeight: false
+    });
+</script>

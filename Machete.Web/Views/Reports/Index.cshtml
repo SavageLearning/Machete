@@ -15,7 +15,7 @@
 
 <div id="reportTabs">
     <ul>
-        <li><a href="#summary" id="summaryTab" >@Machete.Web.Resources.Reports.summaryTab</a> </li>
+        <li><a href="#summaryReports" id="summaryTab" >@Machete.Web.Resources.Reports.summaryTab</a> </li>
         <li><a href="#workers" id="workersTab" >@Machete.Web.Resources.Reports.workersTab</a> </li>
         <li><a href="#orders" id="ordersTab" >@Machete.Web.Resources.Reports.ordersTab</a> </li>
         <li><a href="#activities" id="activitiesTab" >@Machete.Web.Resources.Reports.activitiesTab</a> </li>
@@ -31,7 +31,7 @@
         <div id="mwdTable">
             <input type="button" value="Data Only" class="formButton" id="dataOnlyBtn" />
             <input type="button" value="Pie Chart" class="formButton" id="pieChartBtn" />
-            @Html.TextBox("activeDate", @DateTime.Today.ToShortDateString(), new { @style = "width: 6em;", @class = "ui-datepicker", @id = "mwdDate" })
+            @Html.TextBox("activeDate", "", new { @style = "width: 6em;", @class = "ui-datepicker", @id = "mwdDate" })
             <table id="mwdSummaryTable" class="display">
                 <thead>
                     <tr>
@@ -47,56 +47,23 @@
                     </tr>
                 </thead>
             </table>
-            <div id="dataOnlyDiv">
-                <h3 style="color:blue;">BLUE FISH</h3>
-            </div>
             <div id="sorryNoPieCharts">
-                <h3 style="color:red;">Sorry, pie charts aren't available yet! Just wait for the next update!</h3>
+                <h3 style="color:red;">Sorry, pie charts aren't available quite yet! Just wait for the next update!</h3>
             </div>
         </div>
     </div>
-    <div id="workers" style="display:none;">
-        <p />
-        <a href="/ReportServer/Pages/ReportViewer.aspx?%2fUnited_Way_Demographics-Filtered&rs:Command=Render" target="_blank">United Way Demographics</a>
-        <p />
-        <a href="/ReportServer/Pages/ReportViewer.aspx?%2fActive+workers+sorted+by+MemberID--All+fields&rs:Command=Render" target="_blank">All Workers</a>
-        <p />
-        <a href="/ReportServer/Pages/ReportViewer.aspx?%2fActive+workers+with+expired+membership+dates&rs:Command=Render" target="_blank">Active workers with expired memberships</a>
-        <p />
-        <a href="/ReportServer/Pages/ReportViewer.aspx?%2fActive+workers+with+impossible+membership+dates&rs:Command=Render" target="_blank">Active workers with impossible membership dates</a>
-        <p />
-        <a href="/ReportServer/Pages/ReportViewer.aspx?%2fActive+workers+with+one+or+more+skills&rs:Command=Render" target="_blank">Active workers with specialty skills</a>
-        <p />
-        <a href="/ReportServer/Pages/ReportViewer.aspx?%2fWorkers-signins+past+membership+expiration&rs:Command=Render" target="_blank">Workers-Signins with expired memberships</a>
-        <p />
-        <a href="/ReportServer/Pages/ReportView.aspx?%2fWorkers-Yearly+Seattle+HSD+report&rs:Command=Render" target="_blank">Workers-Yearly client profile report</a>
-        <p />
-        <a href="/ReportServer/Pages/ReportView.aspx?%2fWorkers-Detailed+report&rs:Command=Render" target="_blank">Workers-Detailed Membership report</a>
+    <div id="workers">
+        @Html.Partial("Workers")
     </div>
-    <div id="orders" style="display:none;">
-        <p />
-        <a href="/ReportServer/Pages/ReportViewer.aspx?%2fWork+orders-Status+summary+by+day&rs:Command=Render" target="_blank">Daily work order statuses</a>
-        <p />
-        <a href="/ReportServer/Pages/ReportViewer.aspx?%2fWork+orders-Incomplete+orders&rs:Command=Render" target="_blank">Incomplete Work Orders (List)</a>
-        <p />
-        <a href="/ReportServer/Pages/ReportViewer.aspx?%2fWork+orders-Status+summary&rs:Command=Render" target="_blank">Monthly work order and assignment statuses (bar charts)</a>
-        <p />
-        <a href="/ReportServer/Pages/ReportViewer.aspx?%2fYearToYearComparisonReport&rs:Command=Render" target="_blank">Comparison of work orders from 2011 to 2012 by month.</a>
+    <div id="orders">
+        @Html.Partial("Orders")
     </div>
-    <div id="activities" style="display:none;">
-        <p />
-        <a href="/ReportServer/Pages/ReportViewer.aspx?%2fActivities-Class+hours+split+by+test+date&rs:Command=Render" target="_blank">Activities-Class hours split by test date</a>
-        <p />
-        <a href="/ReportServer/Pages/ReportViewer.aspx?%2fActivities-Worker+class+hours+by+month+and+year&rs:Command=Render" target="_blank">Activities-Worker class hours by month and year</a>
+    <div id="activities">
+        @Html.Partial("Activities")
     </div>
 </div>
 
 <script type="text/javascript">
-    // ready or not, we want these
-    $('#sorryNoPieCharts').hide();
-    $('#mwdSummary').hide();
-
-//    
     $(document).ready(function () {
         //$(function () { $("#stayTuned").tooltip(); }); 
         // for some reason trying to use tooltips breaks the whole page
@@ -105,21 +72,13 @@
         // the following code creates
         // tabs from listed item tags 
         // in the HTML, by ID $("#id")
-        $(function () { $("#reportTabs").tabs() });
-        $(function () {
-            $("#summaryReports").accordion({
+        $('#reportTabs').tabs();
+        $("#summaryReports").accordion({
                 collapsible: true,
                 autoHeight: false
             });
-        });
-
-        ///SHOW REPORTS/////////////////////////////|X|
-        // when these are clicked on, their reports
-        // will be shown.
-        $('#monthlyWithDetail').click(function () {
-            $('#mwdSummary').show();
-        });
-
+        
+        $('#sorryNoPieCharts').hide();
 
         ////PIE CHARTS/////////////////////////|X|
         // Buttons for showing and hiding
@@ -133,13 +92,29 @@
             $('#sorryNoPieCharts').show();
         });
 
-        // the date-picker
+        // the date-picker ////////////////////|X|
+        // these options draw more attention to the
+        // month and year, but maybe we should just
+        // select a month and calculate the date
+        // later!
         $('.ui-datepicker').datepicker({
-            dateFormat: 'mm/dd/yy'
+            dateFormat: 'MM yy',
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
         });
 
+    //    $('.ui-datepicker').focus(function () {
+    //        $(".ui-datepicker-calendar").hide();
+    //        $("#mwdTable").position({
+    //            my: "center top",
+    //            at: "center bottom",
+    //            of: $(this)
+    //    });
+    //});
 
-        ////AND THEN, ALL HELL BREAKS LOOSE////|X|
+
+        ////DATATABLES////////////////////////////////////////////////////////////////////////////|X|
         // Datatables uses something called Hungarian
         // notation wherein they put the purpose of
         // a given variable to the left of the
@@ -156,7 +131,7 @@
             "bFilter": false, //enable or disable filtering of data
             "bServerSide": true, //server side processing, req. source
             "sAjaxSource": "/Reports/AjaxMwd", //source for server side processing
-            "bProcessing": true, //enable processing indicator [==========       ] 60% done etc.
+            "bProcessing": true, //enable processing indicator
             "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName), //internationalisation
             "aoColumns": [
                 { mDataProp: "date" },
@@ -168,13 +143,8 @@
                 { mDataProp: "totalHours" },
                 { mDataProp: "totalIncome" },
                 { mDataProp: "avgIncomePerHour" }
-            ], //these are the column names in the array
-            //"fnServerData": function (sSource, aoData, fnCallback) {
-            //    $.getJSON(sSource,
-            //        [{ "name": "mwdDate", "value": $("#mwdDate").val() }],
-            //        function (json) { fnCallback(json) });
-            //  
-            //},
+            ], //these are the column names in the array; number must match # of cols. in table
+            //TODO: Get DataTables refresh working. Datepicker / Monthpicker isn't the priority.
         });
         //end hell
     });
