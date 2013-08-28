@@ -110,7 +110,7 @@ namespace Machete.Web.Controllers
             //return what's left to datatables
             var result = from d in mwd.query
                          select new[] { System.String.Format("{0:MM/dd/yyyy}", d.date),
-                                         d.date.ToString(),
+                                        // d.date.ToString(),
                                          d.totalSignins > 0 ? d.totalSignins.ToString() : "0",
                                          d.totalDWCSignins > 0 ? d.totalDWCSignins.ToString() : "0",
                                          d.totalHHHSignins > 0 ? d.totalHHHSignins.ToString() : "0",
@@ -123,9 +123,9 @@ namespace Machete.Web.Controllers
 
             return Json(new
             {
-                //sEcho = param.sEcho,
-                iTotalRecords = mwd.totalCount,
-                iTotalDisplayRecords = mwd.filteredCount,
+                iTotalRecords = mwd.totalCount, //total records, before filtering
+                iTotalDisplayRecords = mwd.filteredCount, //total records, after filtering
+                sEcho = param.sEcho, //unaltered copy of sEcho sent from the client side
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);
