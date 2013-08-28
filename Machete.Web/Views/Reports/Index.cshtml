@@ -106,7 +106,12 @@
         // tabs from listed item tags 
         // in the HTML, by ID $("#id")
         $(function () { $("#reportTabs").tabs() });
-        $(function () { $("#summaryReports").accordion() });
+        $(function () {
+            $("#summaryReports").accordion({
+                collapsible: true,
+                autoHeight: false
+            });
+        });
 
         ///SHOW REPORTS/////////////////////////////|X|
         // when these are clicked on, their reports
