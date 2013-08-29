@@ -31,7 +31,7 @@
         <div id="mwdTable">
             <input type="button" value="Data Only" class="formButton" id="dataOnlyBtn" />
             <input type="button" value="Pie Chart" class="formButton" id="pieChartBtn" />
-            @Html.TextBox("activeDate", "", new { @style = "width: 6em;", @class = "ui-datepicker", @id = "mwdDate" })
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "width: 6em;", @class = "ui-datepicker", @id = "mwdDate" })
             <table id="mwdSummaryTable" class="display">
                 <thead>
                     <tr>
@@ -68,7 +68,7 @@
         //$(function () { $("#stayTuned").tooltip(); }); 
         // for some reason trying to use tooltips breaks the whole page
 
-        ///TABS//////////////////////////////////////|X|
+        ///TABS and ACCORDIONS///////////////////////|X|
         // the following code creates
         // tabs from listed item tags 
         // in the HTML, by ID $("#id")
@@ -92,35 +92,13 @@
             $('#sorryNoPieCharts').show();
         });
 
-        // the date-picker ////////////////////|X|
-        // these options draw more attention to the
-        // month and year, but maybe we should just
-        // select a month and calculate the date
-        // later!
-        $('.ui-datepicker').datepicker({
-            dateFormat: 'MM yy',
-            changeMonth: true,
-            changeYear: true,
-            showButtonPanel: true,
-        });
-
-    //    $('.ui-datepicker').focus(function () {
-    //        $(".ui-datepicker-calendar").hide();
-    //        $("#mwdTable").position({
-    //            my: "center top",
-    //            at: "center bottom",
-    //            of: $(this)
-    //    });
-    //});
-
-
         ////DATATABLES////////////////////////////////////////////////////////////////////////////|X|
         // Datatables uses something called Hungarian
         // notation wherein they put the purpose of
         // a given variable to the left of the
         // variable name. E.g., i is integer, o is
         // object. More at datatables.net.
-        $('#mwdSummaryTable').dataTable({
+        var mwdTableDefaults = {
             "bPaginate": false, // to enable pagination (this report has fixed size)
             //"bLengthChange": true, //requires pagination
             //"aLengthMenu": [[35, 70, 105, -1], [35, 70, 105, dataSourceLength*]],
@@ -145,8 +123,27 @@
                 { mDataProp: "avgIncomePerHour" }
             ], //these are the column names in the array; number must match # of cols. in table
             //TODO: Get DataTables refresh working. Datepicker / Monthpicker isn't the priority.
+        };
+
+        $('#mwdSummaryTable').dataTable(mwdTableDefaults)
+
+        //////////////// the date-picker /////////////////|X|
+        // these options draw more attention to the
+        // month and year, but the day is still there.
+        // apparently there is no way around this without
+        // using a different plugin.
+        $('.ui-datepicker').datepicker({
+            onSelect: function (date) {
+                $('#mwdSummaryTable').dataTable(mwdTableDefaults).fnReloadAjax();
+            },
+            dateFormat: 'mm/dd/yy',
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true
         });
+
         //end hell
+
     });
     // end document ready
 
