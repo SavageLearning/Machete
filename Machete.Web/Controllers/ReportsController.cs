@@ -7,6 +7,7 @@
 // Contact:  savagelearning
 // 
 // Copyright 2011 Savage Learning, LLC., all rights reserved.
+// Some portions 2013 Life Computer Upgrades, LLC, all rights reserved.
 // 
 // This source file is free software, under either the GPL v3 license or a
 // BSD style license, as supplied with this software.
@@ -19,11 +20,10 @@
 // http://www.savagelearning.com/ 
 //    or
 // http://www.github.com/jcii/machete/
+//
+// forked at http://www.github.com/chaim1221/machete/
 // 
 #endregion
-
-// how did this get so unbelievably huge?
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -98,20 +98,25 @@ namespace Machete.Web.Controllers
         {
             DateTime mwdDate;
             var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param); 
-            //jQuery passes in parameters that must be mapped to viewOptions
-            //following the format of the other files here
+            // jQuery passes in parameters that must be mapped to viewOptions
+            // following the format of the other files here;
+            // The only thing we're using it for here is the date, but this could
+            // be extended to other features.
+            // Set culture setting to whatever current session setting is
             //vo.CI = (System.Globalization.CultureInfo)Session["Culture"]; 
-            //Set culture setting to whatever current session setting is
+            // Commented out because this does not seem to be needed beyond
+            // the view layer.
+            // Take the date from the view and assign it to this.mwdDate
             if (vo.date != null) mwdDate = DateTime.Parse(vo.date.ToString());
             else mwdDate = DateTime.Now;
             //pass filter parameters to service level
-            dataTableResult<mwdData> mwd = repServ.mwdBetterView(mwdDate); //view date
+            // Call view model from service layer:
+            dataTableResult<mwdData> mwd = repServ.mwdBetterView(mwdDate);
             //
             //return what's left to datatables
             var result = from d in mwd.query
                          select new { 
                              date = System.String.Format("{0:MM/dd/yyyy}", d.date),
-                                    // instead of d.date.ToString(),
                              totalSignins = d.totalSignins > 0 ? d.totalSignins.ToString() : "0",
                              totalDWCSignins =  d.totalDWCSignins > 0 ? d.totalDWCSignins.ToString() : "0",
                              totalHHHSignins =  d.totalHHHSignins > 0 ? d.totalHHHSignins.ToString() : "0",
