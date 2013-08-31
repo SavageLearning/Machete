@@ -155,11 +155,8 @@ namespace Machete.Service
             DateTime beginDate;
             DateTime endDate;
             IEnumerable<MonthlyWithDetailReport> mwdResult;
-            IEnumerable<mwdData> q; //not the Star Trek character
-            // ^ not a helpful comment
-            // q is the query for the monthlyWithDetail result
-            // after it's been passed to a list
-            var result = new dataTableResult<mwdData>(); //note the type. define it well.
+            IEnumerable<mwdData> q; // query for monthlyWithDetail result
+            var result = new dataTableResult<mwdData>(); // note the type. define it well.
 
             beginDate = new DateTime(mwdDate.Year, mwdDate.Month, 1);
             endDate = new DateTime(mwdDate.Year, mwdDate.Month, System.DateTime.DaysInMonth(mwdDate.Year, mwdDate.Month));
@@ -177,13 +174,16 @@ namespace Machete.Service
                     dispatchedHHHSignins = g.dispatchedHHHSignins,
                     totalHours = g.totalHours,
                     totalIncome = g.totalIncome,
-                    avgIncomePerHour = g.totalIncome / g.totalHours
+                    avgIncomePerHour = g.totalHours != 0 ? (g.totalIncome / g.totalHours) : 0 
                 });
 
             q = q.OrderBy(p => p.date);
 
             result.filteredCount = q.Count();
-            // usually the following has a skip...take method applied, but we are looking for fixed length on the first report
+            // usually the following has a skip...take method applied
+            // but, we are looking for fixed length on the first report
+            // data should include one month and already be organized as such
+            // dataTables rows can be defined at view level
             result.query = q;
             result.totalCount = waRepo.GetAllQ().Count();
             return result;

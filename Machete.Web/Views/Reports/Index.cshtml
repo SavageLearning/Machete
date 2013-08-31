@@ -1,11 +1,4 @@
-﻿@************************************************************************
-*** Notes:
-*** We will need a model here; also, the button names are generated in
-*** Machete by the .resx file values based on the Culture setting...
-*** That will have to be changed when we get out of the stub.
-*** This goes for ALL buttons/tabs.
-*@
-@using Machete.Web.Helpers
+﻿@using Machete.Web.Helpers
 @using Machete.Domain.Resources
 @using Machete.Web.Resources
 @using Machete.Service
@@ -24,7 +17,7 @@
         <h3><a href="#">Machete Summary Reports</a></h3>
         <div>
             <p>Open the menus below to select different types of summary reports.</p>
-            <p id="stayTuned" title="Next update: Print buttons!">Use the buttons at the top of the report to toggle the display.</p>
+            <p>Use the buttons at the top of the report to toggle the display.</p>
         </div>
         
         <h3><a href="#">Monthly, With Detail</a></h3>
@@ -65,8 +58,6 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        //$(function () { $("#stayTuned").tooltip(); }); 
-        // for some reason trying to use tooltips breaks the whole page
 
         ///TABS and ACCORDIONS///////////////////////|X|
         // the following code creates
@@ -104,6 +95,7 @@
             //"aLengthMenu": [[35, 70, 105, -1], [35, 70, 105, dataSourceLength*]],
             //"iDisplayLength": -1, //number of rows to use with pagination
             "bAutoWidth": false,
+            "bDestroy": false,
             "bInfo": true, //shows information about data being displayed on the page
             "bSort": false, //enable or disable sorting of columns
             "bFilter": false, //enable or disable filtering of data
@@ -122,10 +114,19 @@
                 { mDataProp: "totalIncome" },
                 { mDataProp: "avgIncomePerHour" }
             ], //these are the column names in the array; number must match # of cols. in table
-            //TODO: Get DataTables refresh working. Datepicker / Monthpicker isn't the priority.
+
+            // I guess we're supposed to assume that the following options are what are already being handed
+            // to Ajax. It would be nice if they'd say that in the documentation.
+            "fnServerData": function ( sSource, aoData, fnCallback ) {
+                aoData.push({ "name": "mwdDate", "value": $('#mwdDate').val() })
+            }
         };
 
-        $('#mwdSummaryTable').dataTable(mwdTableDefaults)
+        var mwdNewTable = jQuery.extend(true, {}, mwdTableDefaults);
+
+        mwdNewTable["bDestroy"] = "true,";
+
+        $('#mwdSummaryTable').dataTable(mwdTableDefaults);
 
         //////////////// the date-picker /////////////////|X|
         // these options draw more attention to the
@@ -134,7 +135,7 @@
         // using a different plugin.
         $('.ui-datepicker').datepicker({
             onSelect: function (date) {
-                $('#mwdSummaryTable').dataTable(mwdTableDefaults).fnReloadAjax();
+                $('#mwdSummaryTable').dataTable(mwdNewTable).fnReloadAjax();
             },
             dateFormat: 'mm/dd/yy',
             changeMonth: true,
