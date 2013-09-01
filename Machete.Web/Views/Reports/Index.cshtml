@@ -118,8 +118,9 @@
             // I guess we're supposed to assume that the following options are what are already being handed
             // to Ajax. It would be nice if they'd say that in the documentation.
             "fnServerData": function ( sSource, aoData, fnCallback ) {
-                aoData.push({ "name": "mwdDate", "value": $('#mwdDate').val() })
+                aoData.push({ "name": "todaysdate", "value": $('#mwdDate').val() })
             }
+            //Unfortunately that breaks the report.
         };
 
         var mwdNewTable = jQuery.extend(true, {}, mwdTableDefaults);
@@ -134,15 +135,20 @@
         // apparently there is no way around this without
         // using a different plugin.
         $('.ui-datepicker').datepicker({
-            onSelect: function (date) {
-                $('#mwdSummaryTable').dataTable(mwdNewTable).fnReloadAjax();
-            },
+//            onSelect: function (date) {
+//                $('#mwdSummaryTable').dataTable(mwdNewTable).fnReloadAjax();
+//            },
             dateFormat: 'mm/dd/yy',
             changeMonth: true,
             changeYear: true,
-            showButtonPanel: true
+            showButtonPanel: true,
+            showOtherMonths: true,
+            selectOtherMonths: true
         });
-
+        $('.ui-datepicker').change(function (event) {
+            mwdNewTable["todaysdate"] = $('#mwdDate').val();
+            $('#mwdSummaryTable').dataTable(mwdNewTable).fnReloadAjax();
+        });
         //end hell
 
     });
