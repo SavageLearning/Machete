@@ -114,13 +114,13 @@
                 { mDataProp: "totalIncome" },
                 { mDataProp: "avgIncomePerHour" }
             ], //these are the column names in the array; number must match # of cols. in table
-
-            // I guess we're supposed to assume that the following options are what are already being handed
-            // to Ajax. It would be nice if they'd say that in the documentation.
             "fnServerData": function ( sSource, aoData, fnCallback ) {
-                aoData.push({ "name": "todaysdate", "value": $('#mwdDate').val() })
+                aoData.push({ "name": "todaysdate", "value": $('#mwdDate').val() });
+                $.getJSON(sSource, aoData, function (json) {
+                    /* Do whatever additional processing you want on the callback, then tell DataTables */
+                    fnCallback(json)
+                });
             }
-            //Unfortunately that breaks the report.
         };
 
         var mwdNewTable = jQuery.extend(true, {}, mwdTableDefaults);
