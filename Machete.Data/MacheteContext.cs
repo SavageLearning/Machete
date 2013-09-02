@@ -95,6 +95,7 @@ namespace Machete.Data
             modelBuilder.Entity<WorkAssignment>().ToTable("WorkAssignments");
         }
     }
+
     public class PersonBuilder : EntityTypeConfiguration<Person>
     {
         public PersonBuilder()
@@ -104,6 +105,7 @@ namespace Machete.Data
             HasOptional(p => p.Worker).WithRequired(p => p.Person).WillCascadeOnDelete();
         }
     }
+
     public class WorkerBuilder : EntityTypeConfiguration<Worker>
     {
         public WorkerBuilder() 
@@ -117,6 +119,7 @@ namespace Machete.Data
                 .HasForeignKey(a => a.workerAssignedID);
         }
     }
+
     public class WorkerSigninBuilder : EntityTypeConfiguration<WorkerSignin>
     {
         public WorkerSigninBuilder()
@@ -162,6 +165,7 @@ namespace Machete.Data
             .HasForeignKey(e => e.EmployerID);
         }
     }
+
     public class WorkAssignmentBuilder : EntityTypeConfiguration<WorkAssignment>
     {
         public WorkAssignmentBuilder()

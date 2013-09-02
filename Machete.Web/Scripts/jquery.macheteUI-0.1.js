@@ -218,15 +218,15 @@
         },
         //
         //
-        formSubmit: function (opt) {
+        tabFormSubmit: function (opt) {
             var form = this;
             var parentTab = $(form).closest('.ui-tabs');
             var SelTab = opt.selectTab || 0;
             var create = opt.create || null;
             var recType = opt.recType || null;
             var exclusiveTab = opt.exclusiveTab || true;
-            var preProcess = opt.preProcess || null;
             var closeTab = opt.closTab || undefined;
+            var preProcess = opt.preProcess || null;
             var postProcess = opt.postProcess || null;
             var callback = opt.callback || null;
             var maxTabs = opt.maxTabs || 2;
@@ -330,6 +330,41 @@
         },
         //
         //
+        formSubmit: function (opt) {
+            var form = this;
+            var preProcess = opt.preProcess || null; //always happens before submit
+            var postProcess = opt.postProcess || null; // always happens after submit
+            var callback = opt.callback || null; // happens after submit if submit successful
+  
+            form.submit(function (e) {
+                e.preventDefault();
+                //
+                if (preProcess) { preProcess(); }
+
+                if ($(form).valid()) {
+                    //
+                    $(form).ajaxSubmit({
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.jobSuccess == false) {
+                                alert(data.rtnMessage);
+                            } else {
+                                if (callback) {
+                                    callback();
+                                }
+                            }
+                        }
+
+                    });
+                    //
+                    if (postProcess) {
+                        postProcess();
+                    }
+                }
+            });
+        },
+        //
+        //
         formClickDuplicate: function (opt) {
             var btn, editForm, dupForm;
             btn = this;
@@ -389,11 +424,13 @@
                 console.log('attachWO called');
                 $.get(url, function (data) {
                     //var encoded = $('<div/>').text(data).html();
-                    console.log(data);
+                    //console.log(data);
                     field.val(data);
                 });
             });
         },
+        //
+        //
         formClickDelete: function (opt) {
             var btn = this;
             var ok = opt.ok || "OK?!";
@@ -404,9 +441,11 @@
             var postDelete = opt.postDelete;
             //
             if (!form) throw new Error("No employer Delete Form defined");
+            
+            // default assumes that formClickDelete called on a MacheteTab object
             _submitAndCloseTab({
                 form: form,
-                altClose: altClose,
+                altClose: altClose, // whats called on form.submit below
                 postDelete: postDelete
             }); //setup ajax submit action
             btn.click(function () {
