@@ -1,0 +1,30 @@
+﻿@model Machete.Web.ViewModel.EmailView
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "email";
+}
+
+@using (Html.BeginForm("Duplicate", "Email", FormMethod.Post,
+                        new { @class = "edittab-form DuplicatePost", @id = "DuplicateEmail-" + Model.ID }))
+{
+    <input type="button" value="$$$duplicate" class="formButton" id="duplicate-@(Model.ID)"/>
+    
+    <br />    
+    @Html.ValidationSummary(true)
+    @Html.DisplayForModel()
+
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.formButton').button();
+
+        //
+        // edit form submit
+        $('#duplicate-@Model.ID').mUI('formClickDuplicate', {
+            dupForm: $('#DuplicateEmail-@(Model.ID)')
+        });
+    });
+</script>
