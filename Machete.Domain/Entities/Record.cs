@@ -33,7 +33,7 @@ namespace Machete.Domain
     public class Record : ICloneable
     {
         [NotMapped]
-        protected string idString { get; set; }
+        public string idString { get; set; }
         public int ID { get; set; }
         public DateTime datecreated { get; set; }
         public DateTime dateupdated { get; set; }

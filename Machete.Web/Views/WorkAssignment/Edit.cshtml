@@ -80,7 +80,7 @@
         });
         //
         //  Edit submit event
-        $waForm.mUI('formSubmit', { 
+        $waForm.mUI('tabFormSubmit', { 
             exclusiveTab: false,
             formLevel: 3,
             preProcess: function () {
@@ -114,7 +114,7 @@
         });
         //
         // duplicate form submit
-        $("#DuplicateWorkAssignment-@(Model.ID)").mUI('formSubmit', {
+        $("#DuplicateWorkAssignment-@(Model.ID)").mUI('tabFormSubmit', {
             exclusiveTab: false,
             create: true,
             recType: "@(recType)",
