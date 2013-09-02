@@ -57,7 +57,7 @@
         $('#duplicate-@Model.ID').mUI('formClickDuplicate', {
             dupForm: $('#DuplicateEmail-@(Model.ID)')
         });
-        $("#DuplicateEmail-@(Model.ID)").mUI('formSubmit', {
+        $("#DuplicateEmail-@(Model.ID)").mUI('tabFormSubmit', {
             exclusiveTab: false,
             create: true,
             recType: "@(recType)",

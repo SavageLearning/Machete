@@ -108,6 +108,7 @@ namespace Machete.Web.Controllers
             var emailview = Mapper.Map<Email, EmailView>(new Email());
             return PartialView("Create", emailview);
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -233,6 +234,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles="Administrator, Manager, Phonedesk")]
         public ActionResult ConfirmDialog(int woid, string userName)
         {
+            // get most recent email for a work order
             var email = serv.GetLatestConfirmEmailBy(woid);
             if (email == null)
             {
@@ -241,11 +243,25 @@ namespace Machete.Web.Controllers
                 emailview.woid = woid;
                 emailview.emailTo = wo.Employer.email;
                 emailview.subject = string.Format("$$$Casa Latina work order {0} confirmation", wo.paperOrderNum);
-                return PartialView("Create", emailview);
+                return PartialView("CreateDialog", emailview);
             }
             else
             {
-                return Edit(email.ID, userName);
+                //
+                // This block is almost an exact cut n paste of /Email/Edit GET call above
+                // not abstracting it because it will change if the frontend is refactored with
+                // a browser MVC framework (angularjs for example)
+                EmailView emailview;
+                // lock on read for fail
+                var  lockedemail = serv.GetExclusive(email.ID, userName);
+                if (lockedemail != null)
+                {
+                    emailview = Mapper.Map<Email, EmailView>(lockedemail);
+                    return PartialView("EditDialog", emailview);
+                }
+                lockedemail = serv.Get(email.ID);
+                emailview = Mapper.Map<Email, EmailView>(lockedemail);
+                return PartialView("ViewDialog", emailview);
             }
         }
     }

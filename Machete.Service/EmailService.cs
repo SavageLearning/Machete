@@ -68,7 +68,12 @@ namespace Machete.Service
         {
             return _woServ.Get(woid);
         }
-
+        /// <summary>
+        /// Makes sure an email being edited doesn't get sent by service during edit
+        /// </summary>
+        /// <param name="eid"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public Email GetExclusive(int eid, string user)
         {
             var e =  repo.GetById(eid);
