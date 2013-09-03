@@ -359,6 +359,9 @@
     <Content Include="Content\confirm\info.gif" />
     <Content Include="Content\confirm\jquery.alerts.css" />
     <Content Include="Content\confirm\title.gif" />
+    <Content Include="Content\SiteForEmail.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\dataTables\back_disabled.jpg" />
     <Content Include="Content\dataTables\back_disabled.png" />
     <Content Include="Content\dataTables\back_enabled.jpg" />
@@ -486,6 +489,7 @@
     </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -876,6 +880,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Email\ViewDialog.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\WorkOrder\ViewForEmail.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

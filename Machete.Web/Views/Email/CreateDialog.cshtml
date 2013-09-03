@@ -45,7 +45,7 @@
             changeTitle: "@(Shared.changeTitle)"
         });
         $('#@(Model.idPrefix)attachWO').mUI('btnAttachWorkOrder', {
-            url: '/WorkOrder/View/@(Model.woid)',
+            url: '/WorkOrder/ViewForEmail/@(Model.woid)',
             field: $('#@(Model.idPrefix)attachment')
         });
     });

@@ -140,7 +140,7 @@
                 modal: true
             });
             $.ajax({
-                url: "Email/ConfirmDialog",
+                url: "/Email/ConfirmDialog",
                 data: {woid: "@(Model.ID)"},
                 success: function(data) {
                     $('#@(idPrefix)emailPopup').html(data);

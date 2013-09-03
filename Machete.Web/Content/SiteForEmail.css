@@ -1,0 +1,338 @@
+input::-webkit-input-placeholder {
+    color: red;
+}
+
+input:-moz-placeholder {
+    color: red;
+}
+
+input:-ms-input-placeholder {
+    color: red;
+}
+/* _Layout.cshtml -- style for all page bodies  */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #414D5B;
+    color: #607286;
+    font-size: 75%;
+    font-family: Verdana, Tahoma, Arial, "Helvetica Neue", Helvetica, Sans-Serif;
+
+}
+p, ul {
+    margin-bottom: 20px;
+    line-height: 1.6em;
+}
+
+/* HEADINGS   
+----------------------------------------------------------*/
+h1, h2, h3, h4, h5, h6 {
+    color: #000;
+    font-size: 1.5em;
+}
+
+h1.emailview {
+    color: #fff;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    font-size: 3em;
+}
+
+h2 {
+    padding: 0 0 10px 0;
+}
+
+h3 {
+    font-size: 1.2em;
+}
+
+h4 {
+    font-size: 1.1em;
+}
+
+h5, h6 {
+    font-size: 1em;
+}
+
+/* this rule styles <h2> tags that are the 
+first child of the left and right table columns */
+.rightColumn > h1, .rightColumn > h2, .leftColumn > h1, .leftColumn > h2 {
+    margin-top: 0;
+}
+
+/* PRIMARY LAYOUT ELEMENTS   
+----------------------------------------------------------*/
+
+/* you can specify a greater or lesser percentage for the 
+page width. Or, you can specify an exact pixel width. */
+.page {
+    margin-right: auto;
+    margin-left: auto;
+    width: 97%;
+}
+
+#header {
+    position: relative;
+    margin-bottom: 0px;
+    padding: 0;
+    color: #000;
+}
+
+#header h1 {
+    margin: 0;
+    padding: 5px 0;
+    border: none;
+    color: #fff;
+    font-weight: bold;
+    font-size: 32px !important;
+    line-height: 2em;
+}
+
+#main {
+    margin-bottom: 30px;
+    padding: 20px 10px 10px 10px;
+    _height: 1px;
+    background-color: #fff;
+    /* only IE6 applies CSS properties starting with an underscore */
+}
+
+#footer {
+    margin: 0;
+    padding: 10px 0;
+    color: #999;
+    text-align: center;
+    font-size: .9em;
+    line-height: normal;
+}
+
+
+/* FORM LAYOUT ELEMENTS   
+----------------------------------------------------------*/
+
+fieldset {
+    margin: 0 0 1.5em 0;
+    padding: 0 1.4em 1.4em 1.4em;
+    border: 1px solid #ddd;
+}
+
+legend {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+textarea {
+    min-height: 75px;
+}
+
+    textarea.emailField {
+        width: 400px;
+        height: 10em;
+    }
+
+
+
+/* TABLE
+----------------------------------------------------------*/
+
+table {
+    border: solid 1px #e8eef4;
+    border-collapse: collapse;
+}
+
+    table td {
+        padding: 5px;
+        border: solid 1px #e8eef4;
+    }
+
+    table th {
+        padding: 6px 5px;
+        border: solid 1px #e8eef4;
+        background-color: #e8eef4;
+        text-align: left;
+    }
+
+/* MISC  
+----------------------------------------------------------*/
+.clear {
+    clear: both;
+}
+
+.error {
+    color: Red;
+}
+
+
+div#title {
+    display: block;
+    float: left;
+    padding: 0 0 0 0;
+    text-align: left;
+}
+
+/* Styles for editor and display helpers
+----------------------------------------------------------*/
+
+/* Used for description labels on forms  */
+.desc-label {
+    width: 8em;
+    vertical-align: top;
+}
+/* Used for description fields on forms  */
+.desc-field {
+    /*width: 20em;*/
+    height: 2em !important;
+}
+
+.email-field {
+    width: 40em;
+    height: 30em !important;
+}
+/* Used on workorder and workassignment;   */
+.money-field {
+    width: 5em !important;
+}
+/*   */
+.text-box {
+    width: 30em;
+}
+
+.tb-table {
+    display: table;
+}
+
+.tb-row {
+    display: table-row;
+}
+
+.tb-cell {
+    display: table-cell;
+}
+
+.tb-label label {
+    display: table-cell;
+    margin: 0em 0 0 0;
+    padding: 5px;
+    width: 13em;
+    text-align: right;
+    font-weight: bold;
+    font-size: 90%;
+    /*border: 1px solid red;*/
+}
+
+.tb-header {
+    display: table-cell;
+    margin: 1em 0 0 0;
+    padding: 5px;
+    border: 1px solid black;
+    text-align: left;
+    font-weight: bold;
+}
+/* WorkOrder view, formats workAssignment list */
+.tb-header-fixed {
+    display: table-cell;
+    margin: 1em 0 0 0;
+    padding: 5px;
+    width: 80px;
+    border: 1px solid black;
+    text-align: left;
+    font-weight: bold;
+    font-size: 80%;
+}
+
+.tb-field {
+    display: table-cell;
+    margin: 0.5em 0 0 0;
+    padding: 1px;
+    /*border: 1px solid blue;*/
+    /*font-weight: bold;*/
+    /*width: 20em;*/
+}
+
+/* WorkOrder view, formats workAssignment list */
+.tb-field-fixed {
+    display: table-cell;
+    margin: 0.5em 0 0 0;
+    padding: 5px;
+    width: 80px;
+    text-align: center;
+    /*border: 1px solid blue;*/
+    /*font-weight: bold;*/
+}
+/* WorkOrder view: underline blank worker namespace  */
+.tb-underline {
+    display: table-cell;
+    text-decoration: underline;
+    font-weight: bold;
+}
+/* WorkOrder view  */
+.tb-bordered_field {
+    display: table-cell;
+    margin: 1em 0 0 0;
+    padding: 5px;
+    border: 1px solid black;
+    text-align: left;
+}
+
+.tb-display {
+    display: table-cell;
+    margin: 0.5em 0 0 0;
+}
+
+.tri-col,
+.tri-col select,
+.tri-col input[type="text"] {
+    width: 200px;
+}
+
+.print_off {
+}
+
+
+.ui-button-text-only .ui-button-text .ui-buttonset {
+    float: left;
+    padding: .5em;
+}
+/* dispatch: formatting for the radio buttons */
+.ui-buttonset {
+    float: left;
+    padding: .5em;
+}
+
+
+/* WorkOrder --------------------------------------------------------------*/
+
+/* WorkOrder/View: Box floating in upper right */
+.dateNeeded {
+    float: right;
+    border: 1px solid Black;
+}
+
+/* WorkOrder/View: Box floating in upper right */
+.neededText {
+    margin: 2px;
+    color: #000;
+    font-size: 1.5em;
+}
+
+
+.clearfix:after {
+    display: block;
+    visibility: hidden;
+    clear: both;
+    height: 0;
+    content: ".";
+    line-height: 0;
+}
+
+.clearfix {
+    display: inline-block;
+}
+
+html[xmlns] .clearfix {
+    display: block;
+}
+
+* html .clearfix {
+    height: 1%;
+}
+
