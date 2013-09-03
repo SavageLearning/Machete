@@ -180,6 +180,8 @@ namespace Machete.Web.Controllers
                 transportMethod = lcache.textByID(p.transportMethodID, CI.TwoLetterISOLanguageName),
                 displayState = _getDisplayState(p),
                 onlineSource = p.onlineSource,
+                emailSentCount = p.Emails.Where(e => e.statusID == Email.iSent || e.statusID == Email.iReadyToSend).Count(),
+                emailErrorCount = p.Emails.Where(e => e.statusID == Email.iTransmitError).Count(),
                 recordid = p.ID.ToString(),
                 workers = showWorkers ?
                         from w in p.workAssignments

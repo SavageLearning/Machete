@@ -379,6 +379,8 @@ namespace Machete.Service
                 case "workSiteAddress1": q = descending ? q.OrderByDescending(p => p.workSiteAddress1) : q.OrderBy(p => p.workSiteAddress1); break;
                 case "updatedby": q = descending ? q.OrderByDescending(p => p.Updatedby) : q.OrderBy(p => p.Updatedby); break;
                 case "onlineSource": q = descending ? q.OrderByDescending(p => p.onlineSource) : q.OrderBy(p => p.onlineSource); break;
+                case "emailSentCount": q = descending ? q.OrderByDescending(p => p.Emails.Count()) : q.OrderBy(p => p.Emails.Count()); break;
+                case "emailErrorCount": q = descending ? q.OrderByDescending(p => p.Emails.Count()) : q.OrderBy(p => p.Emails.Count()); break;
                 case "WOID": q = descending ? q.OrderByDescending(p => p.paperOrderNum) : q.OrderBy(p => p.paperOrderNum); break;
                 case "dateupdated": q = descending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated); break;
                 default: q = descending ? q.OrderByDescending(p => p.dateTimeofWork) : q.OrderBy(p => p.dateTimeofWork); break;
