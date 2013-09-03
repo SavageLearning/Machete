@@ -56,9 +56,11 @@
                     <th>@WorkOrders.assigncount</th>
                     <th>@WorkOrder.contactName</th>
                     <th>@WorkOrder.workSiteAddress1</th>
+                    <th>$$$online Source</th>                  
+                    <th>$$$email Sent</th>                  
+                    <th>$$$email Error</th>  
                     <th>@Record.dateupdated</th>
-                    <th>@Record.updatedby</th>
-                    <th>onelineSource</th>                  
+                    <th>@Record.updatedby</th>                
                 </tr>
             </thead>
         </table>        
@@ -90,9 +92,11 @@
                             { "mDataProp": "WAcount" },
                             { "mDataProp": "contactName" },
                             { "mDataProp": "workSiteAddress1" },
+                            { "mDataProp": "onlineSource", "bSearchable": false, "bSortable": true, "bVisible": true },
+                            { "mDataProp": "emailSentCount", "bSearchable": false, "bSortable": true, "bVisible": true },
+                            { "mDataProp": "emailErrorCount", "bSearchable": false, "bSortable": true, "bVisible": true },
                             { "mDataProp": "dateupdated" },
-                            { "mDataProp": "updatedby" },
-                            { "mDataProp": "onlineSource", "bSearchable": false, "bSortable": true, "bVisible": true }
+                            { "mDataProp": "updatedby" }
                         ],
             "aoSearchCols" :  [null, null, null, null, null, null, null, null, null, null, null, null],
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
