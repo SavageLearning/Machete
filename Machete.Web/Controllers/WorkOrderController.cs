@@ -331,6 +331,13 @@ namespace Machete.Web.Controllers
             WorkOrder workOrder = woServ.Get(id);
             return View(workOrder);
         }
+
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        public ActionResult ViewForEmail(int id)
+        {
+            WorkOrder workOrder = woServ.Get(id);
+            return PartialView(workOrder);
+        }
         /// <summary>
         /// Creates the view to print all orders for a given day
         /// assignedOnly: only shows orders that are fully assigned
