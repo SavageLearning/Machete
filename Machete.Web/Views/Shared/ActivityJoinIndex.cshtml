@@ -112,10 +112,12 @@
                                 {"mDataProp": "teacher" },
                                 {"mDataProp": "dateStart" },
                 ],
-                "fnServerDataExtra": [	    
+                "fnServerDataExtra": function () {
+                    return [
                     { "name": "personID", "value": $('#personID').val() },
                     { "name": "attendedActivities", "value": false }
-                ],
+                    ]
+                },
             }, 
             dblClickEvent: null,
             clickEvent: function (e) {
@@ -149,10 +151,12 @@
                                 {"mDataProp": "teacher" },
                                 {"mDataProp": "dateStart" },
                 ],
-                "fnServerDataExtra": [
+                "fnServerDataExtra": function () {
+                    return [
                     { "name": "personID", "value": $('#personID').val() },
                     { "name": "attendedActivities", "value": true }
-                ],     
+                    ]
+                },
             }, 
             dblClickEvent: null,
             clickEvent: function (e) {

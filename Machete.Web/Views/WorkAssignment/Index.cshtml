@@ -188,12 +188,14 @@
             {"mDataProp": "lotterySequence"},
             {"mDataProp": "fullname"}
         ],
-        "fnServerDataExtra": [
+        "fnServerDataExtra": function () {
+            return [
             { "name": "todaysdate", "value": $('#todaysdate').val() },
-            { "name": "dwccardnum", "value": $('#dwccardnum').val()},
-            { "name": "wa_grouping", "value": $('#wa_grouping').val()},
-            { "name": "typeofwork_grouping", "value": $('#typeofwork_grouping').val()}
-        ],           
+            { "name": "dwccardnum", "value": $('#dwccardnum').val() },
+            { "name": "wa_grouping", "value": $('#wa_grouping').val() },
+            { "name": "typeofwork_grouping", "value": $('#typeofwork_grouping').val() }
+            ]
+        },
         "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
             $(nRow).attr('ID', "wsiRec" +aData['recordid']);
             var lotteryField = $(nRow).find('td:nth-child(2)');
@@ -249,8 +251,7 @@
     //
     //
     //
-    jqrfyTable({
-        table: $("#signinTable"), 
+    $("#signinTable").mUI('createTable', {
         tab: null, 
         options: {
             //"sScrollY": "300px",
@@ -268,12 +269,14 @@
                 {"mDataProp": "program"},
                 {"mDataProp": "fullname"}
             ],
-            "fnServerDataExtra": [
+            "fnServerDataExtra": function () {
+                return [
                 { "name": "todaysdate", "value": $('#todaysdate').val() },
-                { "name": "dwccardnum", "value": $('#dwccardnum').val()},
-                { "name": "wa_grouping", "value": $('#wa_grouping').val()},
-                { "name": "typeofwork_grouping", "value": $('#typeofwork_grouping').val()}
-            ],            
+                { "name": "dwccardnum", "value": $('#dwccardnum').val() },
+                { "name": "wa_grouping", "value": $('#wa_grouping').val() },
+                { "name": "typeofwork_grouping", "value": $('#typeofwork_grouping').val() }
+                ]
+            },
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 if (aData['WAID'] > 0) { // green
                     $(nRow).addClass('statusGreen');
@@ -286,8 +289,7 @@
         });
     //
     //
-    jqrfyTable({
-        table: $("#availAssignTable"), 
+    $("#availAssignTable").mUI('createTable', { 
         tab: $("#assignmentTab"),
         options: {
             //"sScrollY": "300px",
@@ -317,14 +319,16 @@
                             { "mDataProp": "description"},                        
                         ],
             "aoSearchCols" : [null, null, null, null, null, null, null, null, null, null, null],
-            "fnServerDataExtra": [
-                { "name": "todaysdate", "value": $('#todaysdate').val() },
-                { "name": "dwccardnum", "value": $('#dwccardnum').val()},
-                { "name": "wa_grouping", "value": $('#wa_grouping').val()},
-                { "name": "typeofwork_grouping", "value": $('#typeofwork_grouping').val()},
-                { "name": "status", "value": $('#status').val()},
-                { "name": "showPending", "value": false}
-                ],
+            "fnServerDataExtra": function () {
+                return [
+                    { "name": "todaysdate", "value": $('#todaysdate').val() },
+                    { "name": "dwccardnum", "value": $('#dwccardnum').val() },
+                    { "name": "wa_grouping", "value": $('#wa_grouping').val() },
+                    { "name": "typeofwork_grouping", "value": $('#typeofwork_grouping').val() },
+                    { "name": "status", "value": $('#status').val() },
+                    { "name": "showPending", "value": false }
+                ]
+            },
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 switch (aData['asmtStatus'])
                 {

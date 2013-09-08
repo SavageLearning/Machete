@@ -35,8 +35,7 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        jqrfyTable({
-        table: $('#configTable'), 
+        $('#configTable').mUI('createTable', {
         tab: $('#configTabs'),
         options: {
             "bPaginate": true,
@@ -61,9 +60,11 @@
                 {"mDataProp": "level" },
                 {"mDataProp": "ltrCode" }
             ],
-            "fnServerDataExtra": [
-                { "name": "category", "value": $('#category').val() }
-            ],         
+            "fnServerDataExtra": function () {
+                return [
+                    { "name": "category", "value": $('#category').val() }
+                ]
+            },
         }, 
         dblClickEvent: null, 
         tabLabel: "@(recType)"
