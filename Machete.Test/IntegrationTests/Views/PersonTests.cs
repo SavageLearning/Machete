@@ -27,7 +27,6 @@ namespace Machete.Test
         private sharedUI ui;
         private static string testdir;
         private static string testimagefile;
-        //private MacheteContext DB;
         FluentRecordBase frb;
 
         [ClassInitialize]
@@ -40,10 +39,6 @@ namespace Machete.Test
         [TestInitialize]
         public void SetupTest()
         {
-            //Database.SetInitializer<MacheteContext>(new MacheteInitializer());
-            //DB = new MacheteContext();
-            //WorkerCache.Initialize(DB);
-            //LookupCache.Initialize(DB);
             frb = new FluentRecordBase();
             frb.Initialize(new MacheteInitializer(), "macheteConnection");
             driver = new ChromeDriver(ConfigurationManager.AppSettings["CHROMEDRIVERPATH"]);
@@ -124,6 +119,7 @@ namespace Machete.Test
             //Arrange
             Person _per = (Person)Records.person.Clone();
             Worker _wkr = (Worker)Records.worker.Clone();
+            _wkr.memberexpirationdate = DateTime.Now.AddYears(1);
             _wkr.dwccardnum = sharedUI.nextAvailableDwccardnum(frb.DB);
             Event _san = (Event)Records.event1.Clone();
             _san.Person = _per;

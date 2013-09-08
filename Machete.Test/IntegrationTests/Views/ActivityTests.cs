@@ -190,7 +190,7 @@ namespace Machete.Test
         {
             //Arrange
             var _act = (Activity)Records.activity.Clone();
-            var _sanctionedW = frb.AddWorker(status: Worker.iSanctioned).ToWorker();
+            var _sanctionedW = frb.AddWorker(status: Worker.iSanctioned, memberexpirationdate: DateTime.Now.AddYears(1)).ToWorker();
             ui.refreshCache();
             ui.gotoMachete();
             ui.activityCreate(_act);
