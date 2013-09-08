@@ -179,8 +179,9 @@ namespace Machete.Test
         {
             WaitThenClickElement(By.Id("workerCreateTab"));
             WaitForElement(By.Id(_wkr.idPrefix + "memberStatus"));
+            WaitThenClickElement(By.Id(_wkr.idPrefix + "memberStatus"));
             SelectOption(By.Id(_wkr.idPrefix + "memberStatus"), "Sanctioned");
-            _d.FindElement(By.Id(_wkr.idPrefix+"SaveButton")).Click();
+            WaitThenClickElement(By.Id(_wkr.idPrefix + "SaveButton"));
             _d.FindElement(By.Id("workerCreateTab")).Click();  
             return true;
         }
