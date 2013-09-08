@@ -96,7 +96,7 @@ function jqrfyTable(o) {
     myOptions.fnServerData = function (sSource, aoData, fnCallback) {
         var aoDataConcatenated = aoData;
         if (myOptions.fnServerDataExtra) {
-            aoDataConcatenated= aoData.concat(myOptions.fnServerDataExtra);
+            aoDataConcatenated= aoData.concat(myOptions.fnServerDataExtra());
         }
         $.ajax({
             "dataType": 'json',

@@ -54,7 +54,7 @@
                     {"mDataProp": "dateupdated" },
                     { "mDataProp": "Updatedby", "bSortable": false }
                 ],
-                "fnServerDataExtra": [{ "name": "personID", "value": $('#personID').val() }], 
+                "fnServerDataExtra": function () { return [{ "name": "personID", "value": $('#personID').val() }] },
             },
             dblClickEvent: null, 
             tabLabel: "@(recType)"

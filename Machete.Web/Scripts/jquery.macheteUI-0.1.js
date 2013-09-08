@@ -44,6 +44,119 @@
         //
         //
         //
+        createTable: function(opt) {
+            var myTable = this,
+                myTab = opt.tab,
+                myOptions = opt.options,
+                clickEvent = opt.clickEvent,
+                dblclickevent = opt.dblClickEvent,
+                tabLabel = opt.tabLabel,
+                maxTabs = opt.maxTabs; // Default maxTabs is 2 (list=0,create=1...)
+            var oTable;
+            var origCallback;
+            var tableID = $(myTable).attr('ID');
+            //
+            // insert standard fnRowCallback for mUI row attributes. call original
+            //    handler at end
+            if ("fnRowCallback" in myOptions) {
+                origCallback = myOptions.fnRowCallback;
+            }
+            myOptions.fnRowCallback = function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                //
+                // custom attributes to create record tabs on doubleclick
+                $(nRow).attr('edittabref', aData['tabref']);
+                $(nRow).attr('edittablabel', aData['tablabel']);
+                $(nRow).attr('recordid', aData['recordid']);
+                if (jQuery.browser.mobile) {
+                    var $foo = $(nRow).find('td:nth-child(1)');
+                    var footext = $foo.text();
+                    var btnID = tabLabel + aData['recordid'] + '-Btn';
+                    $foo.prepend('<input type="button" class="rowButton" value="open" id="' + btnID + '"></input>');
+                }
+                // call original handler
+                if (origCallback != undefined) {
+                    return origCallback(nRow, aData, iDisplayIndex, iDisplayIndexFull);
+                } else {
+                    return nRow;
+                }
+            }
+
+            myOptions.fnServerData = function (sSource, aoData, fnCallback) {
+                var aoDataConcatenated = aoData;
+                if (myOptions.fnServerDataExtra) {
+                    aoDataConcatenated = aoData.concat(myOptions.fnServerDataExtra());
+                }
+                $.ajax({
+                    "dataType": 'json',
+                    "type": "GET",
+                    "url": sSource,
+                    "data": aoDataConcatenated,
+                    "success": function (result) {
+                        if (result.jobSuccess == false) {
+                            alert(result.rtnMessage);
+                        }
+                        else {
+                            fnCallback(result);
+                        }
+                    },
+                    "failure": function (result) {
+                        alert(result);
+                    }
+                });
+            }
+
+            //
+            // create datatable
+            oTable = $(myTable).dataTable(myOptions).fnSetFilteringDelay(400);
+            //
+            // Add unique ID for testing hook
+            $('#' + tableID + '_filter input').attr('ID', tableID + '_searchbox');
+            ////////////////////////////////////////////////////////////////
+            //
+            // table click event -- highlight row
+            //
+            if (!clickEvent) {
+                // remove row_selected from all; add to event.target (only 1 selected)
+                clickEvent = function (event) {
+                    $(oTable.fnSettings().aoData).each(function () {
+                        $(this.nTr).removeClass('row_selected');
+                    });
+                    $(event.target.parentNode).addClass('row_selected');
+                }
+            }
+            $(myTable).find('tbody').click(clickEvent);
+            ////////////////////////////////////////////////////////////////
+            //
+            // table doubleclick event 
+            //
+            if (!dblclickevent) {
+                dblclickevent = function (event) {
+                    console.log("default dblclick event");
+                    var exclusiveTab = $(event.target).closest('.ui-tabs').hasClass('ExclusiveTab');
+                    var myTr = $(event.target).closest('tr');
+                    //
+                    // add new tab
+                    add_rectab({
+                        tabref: $(myTr).attr('edittabref'),
+                        label: $(myTr).attr('edittablabel'),
+                        tab: myTab,
+                        exclusive: exclusiveTab,
+                        recordID: $(myTr).attr('recordid'),
+                        recType: tabLabel,
+                        maxTabs: maxTabs
+                    });
+                }
+            }
+            if (!jQuery.browser.mobile) {
+                $(myTable).find('tbody').dblclick(dblclickevent);
+            } else {
+                $('.rowButton').live('click', dblclickevent);
+            }
+
+        },
+        //
+        //
+        //
         createTabs: function (opt) {
             var tabdiv = this,
                 changeConfirm = opt.changeConfirm,
