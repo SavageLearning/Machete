@@ -5,6 +5,13 @@
 
 @Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID", id = Model.idPrefix + "EMAILID" })
 @Html.HiddenFor(model => model.woid, new { @class = "hiddenRecID", id = Model.idPrefix + "WOID" })
+
+<div >
+    <input type="button" id="@(Model.idPrefix)attachWO" class="formButton" value="$$$attach WO" />
+    <input type="button" id="@(Model.idPrefix)reattachWO" class="formButton" value="$$$re-attach WO" />
+    <input type="button" id="@(Model.idPrefix)clearWO" class="formButton" value="$$$clear WO" />
+    <input type="button" id="@(Model.idPrefix)viewWO" class="formButton" value="$$$view WO" />
+</div>
 <div class="tb-table" style="float: left; clear: left;">
     @*    <div class="tb-row">
         @Html.mUITableLabelAndTextBoxFor(model => model.emailFrom, 
@@ -68,9 +75,18 @@
 <script type="text/javascript">
     $(document).ready(function () {
         var selectDropDown = $('#@(Model.idPrefix + "templateChooser")');
+        var attachmentURL = '/WorkOrder/ViewForEmail/@(Model.woid)';
+        console.log("attachmentURL: "+attachmentURL);
         selectDropDown.mUI('selectDDPopulatesField', {
             attrName: 'template',
             target: $('#@(Model.idPrefix + "body")')
+        });
+        $('#@(Model.idPrefix)attachWO').mUI('btnAttachWorkOrder', {
+            url: attachmentURL,
+            field: $('#@(Model.idPrefix)attachment'),
+            reattach: $('#@(Model.idPrefix)reattachWO'),
+            clear: $('#@(Model.idPrefix)clearWO'),
+            view: $('#@(Model.idPrefix)viewWO')
         });
     });
 </script>

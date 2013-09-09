@@ -530,17 +530,65 @@
             var btn = this;
             var url = opt.url;
             var field = opt.field;
+            var reattachBtn = opt.reattach;
+            var clearBtn = opt.clear;
+            var viewBtn = opt.ciew;
             if (!url) throw new Error("url is a required property");
             if (!field) throw new Error("field is a required property");
-            btn.click(function (e) {
+
+            var attachFunc = function (e) {
                 e.preventDefault();
-                console.log('attachWO called');
-                $.get(url, function (data) {
-                    //var encoded = $('<div/>').text(data).html();
-                    //console.log(data);
-                    field.val(data);
+                console.log('attachWO called ' + url);
+                //$.get(url, function (data) {
+                //    //var encoded = $('<div/>').text(data).html();
+                //    console.log(data);
+                //    field.val(data);
+                //});
+                $.ajax({
+                    "dataType": 'html',
+                    "type": "GET",
+                    "url": url,
+                    "success": function (result) {
+                        if (result.jobSuccess == false) {
+                            alert(result.rtnMessage);
+                        }
+                        else {
+                            field.val(result);
+                            _applyAttachmentBtnMask(attachElems);
+
+                        }
+                    },
+                    "failure": function (result) {
+                        alert(result);
+                    }
                 });
-            });
+                _applyAttachmentBtnMask(attachElems);
+
+            };
+            attachElems = {
+                attach: btn,
+                reattach: reattachBtn,
+                view: viewBtn,
+                clear: clearBtn,
+                field: field
+            };
+            btn.click(attachFunc);
+            if (reattachBtn) {
+                reattachBtn.click(attachFunc);
+            }
+            if (viewBtn) {
+                viewBtn.click(function (e) {
+                    _applyAttachmentBtnMask(attachElems);
+
+                });
+            }
+            if (clearBtn) {
+                clearBtn.click(function (e) {
+                    field.val('');
+                    _applyAttachmentBtnMask(attachElems);
+                });
+            }
+            _applyAttachmentBtnMask(attachElems);
         },
         //
         //
@@ -965,5 +1013,26 @@
         }
         console.log(caller + ": formLevel: " + level);
         return level;
+    }
+
+    function _applyAttachmentBtnMask(opt) {
+        var btn = opt.attach;
+        var reattachBtn = opt.reattach;
+        var clearBtn = opt.clear;
+        var viewBtn = opt.view;
+        var field = opt.field;
+        if (field.val())
+        {
+            $(btn).hide();
+            $(reattachBtn).show();
+            $(viewBtn).show();
+            $(clearBtn).show();
+        } else
+        {
+            $(btn).show();
+            $(reattachBtn).hide();
+            $(viewBtn).hide();
+            $(clearBtn).hide();
+        }
     }
 })(jQuery, window, document);
