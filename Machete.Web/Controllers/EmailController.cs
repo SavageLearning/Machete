@@ -257,10 +257,12 @@ namespace Machete.Web.Controllers
                 if (lockedemail != null)
                 {
                     emailview = Mapper.Map<Email, EmailView>(lockedemail);
+                    emailview.woid = woid;
                     return PartialView("EditDialog", emailview);
                 }
                 lockedemail = serv.Get(email.ID);
                 emailview = Mapper.Map<Email, EmailView>(lockedemail);
+                emailview.woid = woid;
                 return PartialView("ViewDialog", emailview);
             }
         }

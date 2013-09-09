@@ -17,7 +17,7 @@
         }
         <br />    
         @Html.ValidationSummary(true)
-        @Html.EditorForModel()
+        @Html.EditorForModel(Model)
     }
     
     if (Html.IsInRole(Html.Role_AM()))
