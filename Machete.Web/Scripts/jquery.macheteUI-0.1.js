@@ -525,14 +525,14 @@
 
         },
         //
-        //        
+        // Attaches a workorder to an email   
         btnAttachWorkOrder: function (opt) {
             var btn = this;
             var url = opt.url;
             var field = opt.field;
             var reattachBtn = opt.reattach;
             var clearBtn = opt.clear;
-            var viewBtn = opt.ciew;
+            var viewBtn = opt.view;
             if (!url) throw new Error("url is a required property");
             if (!field) throw new Error("field is a required property");
 
@@ -578,6 +578,9 @@
             }
             if (viewBtn) {
                 viewBtn.click(function (e) {
+                    myWindow = window.open('', '');
+                    myWindow.document.write(field.val());
+                    myWindow.focus();
                     _applyAttachmentBtnMask(attachElems);
 
                 });
