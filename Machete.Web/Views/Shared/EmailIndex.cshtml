@@ -16,6 +16,7 @@
                 <th>@Emails.emailTo</th>
                 <th>@Emails.subject</th>
                 <th>$$$status</th>
+                <th>$$$attchmnt</th>
                 <th>$$$attempts</th>
                 <th>$$$last attempt</th>
                 <th>@Record.dateupdated</th>
@@ -44,15 +45,16 @@
                 "bProcessing": true,
                 "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
                 "aoColumns": [                           //dataTable column definition
-                                {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
-                                {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                                { "mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                                { "mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
                                 { "mDataProp": "recordid" },
-                                {"mDataProp": "emailTo" },
+                                { "mDataProp": "emailTo" },
                                 { "mDataProp": "subject" },
                                 { "mDataProp": "status" },
+                                { "mDataProp": "hasAttachment", "bSortable": false, "bVisible": true },
                                 { "mDataProp": "transmitAttempts" },
                                 { "mDataProp": "lastAttempt" },
-                                {"mDataProp": "dateupdated", "bVisible": true },
+                                { "mDataProp": "dateupdated", "bVisible": true },
                                 { "mDataProp": "Updatedby", "bSortable": false, "bVisible": true }
                             ]             
             }, 

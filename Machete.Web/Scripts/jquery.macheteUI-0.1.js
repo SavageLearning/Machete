@@ -533,6 +533,7 @@
             var reattachBtn = opt.reattach;
             var clearBtn = opt.clear;
             var viewBtn = opt.view;
+            var woid = opt.woid;
             if (!url) throw new Error("url is a required property");
             if (!field) throw new Error("field is a required property");
 
@@ -570,12 +571,16 @@
                 reattach: reattachBtn,
                 view: viewBtn,
                 clear: clearBtn,
-                field: field
+                field: field,
+                woid: woid
             };
+            //attach buttons
             btn.click(attachFunc);
+            //reattach button
             if (reattachBtn) {
                 reattachBtn.click(attachFunc);
             }
+            // show the existing attachment
             if (viewBtn) {
                 viewBtn.click(function (e) {
                     myWindow = window.open('', '');
@@ -585,6 +590,7 @@
 
                 });
             }
+            // clear the attachment
             if (clearBtn) {
                 clearBtn.click(function (e) {
                     field.val('');
@@ -1024,15 +1030,24 @@
         var clearBtn = opt.clear;
         var viewBtn = opt.view;
         var field = opt.field;
+        var woid = opt.woid;
         if (field.val())
         {
             $(btn).hide();
-            $(reattachBtn).show();
+            if (woid) {
+                $(reattachBtn).show();
+            } else {
+                $(reattachBtn).hide();
+            }
             $(viewBtn).show();
             $(clearBtn).show();
         } else
         {
-            $(btn).show();
+            if (woid) {
+                $(btn).show();
+            } else {
+                $(btn).hide();
+            }
             $(reattachBtn).hide();
             $(viewBtn).hide();
             $(clearBtn).hide();
