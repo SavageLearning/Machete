@@ -83,6 +83,7 @@
         });
         $('#@(Model.idPrefix)attachWO').mUI('btnAttachWorkOrder', {
             url: attachmentURL,
+            woid: @(Model.woid.GetValueOrDefault()),
             field: $('#@(Model.idPrefix)attachment'),
             reattach: $('#@(Model.idPrefix)reattachWO'),
             clear: $('#@(Model.idPrefix)clearWO'),
