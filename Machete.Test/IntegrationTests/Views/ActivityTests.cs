@@ -111,7 +111,7 @@ namespace Machete.Test
                 }
                 
                 //Assert
-                Thread.Sleep(4000);//prevent race condition
+                Thread.Sleep(1000);//prevent race condition
                 Assert.IsTrue(ui.activitySignInValidate(idPrefix, cardNum, rowcount), "Sign in for worker " + i + " with cardNum " + cardNum + " failed!");
 
                 //This line ensures the test doesn't break if we try to sign in an ID that has multiple workers attached to it.
