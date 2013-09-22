@@ -141,6 +141,12 @@
   <data name="ordersTab" xml:space="preserve">
     <value>Work Orders</value>
   </data>
+  <data name="summaryHeader" xml:space="preserve">
+    <value>Machete Summary Reports</value>
+  </data>
+  <data name="summaryInstructions" xml:space="preserve">
+    <value>Open the menus below to select different types of summary reports. Use the buttons at the top of the report to toggle the display.</value>
+  </data>
   <data name="summaryTab" xml:space="preserve">
     <value>Summaries</value>
   </data>

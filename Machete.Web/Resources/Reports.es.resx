@@ -141,6 +141,12 @@
   <data name="ordersTab" xml:space="preserve">
     <value>Órdenes</value>
   </data>
+  <data name="summaryHeader" xml:space="preserve">
+    <value>Informes periódicos</value>
+  </data>
+  <data name="summaryInstructions" xml:space="preserve">
+    <value>Utiliza los menús abajo para elegir los distintos tipos de reportajes periódicos. Puede utilizar los botones por encima del reporte para alternar la visualización.</value>
+  </data>
   <data name="summaryTab" xml:space="preserve">
     <value>Resúmenes</value>
   </data>
