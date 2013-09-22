@@ -5,7 +5,6 @@
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
 }
-
 <div id="reportTabs">
     <ul>
         <li><a href="#summaryReports" id="summaryTab" >@Machete.Web.Resources.Reports.summaryTab</a> </li>
@@ -25,7 +24,8 @@
         <div id="mwdTable">
             <input type="button" value="Data Only" class="formButton" id="dataOnlyBtn" />
             <input type="button" value="Pie Chart" class="formButton" id="pieChartBtn" />
-            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "width: 6em;", @class = "ui-datepicker", @id = "mwdDate" })
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-datepicker", @id = "mwdDate" })
+            <span id="mwdHelp"><em>Select any day in a month to see results.</em></span>
             <table id="mwdSummaryTable" class="display">
                 <thead>
                     <tr>
@@ -43,17 +43,24 @@
             </table>
             <div id="sorryNoPieCharts">
                 <h3 style="color:red;">Sorry, pie charts aren't available quite yet! Just wait for the next update!</h3>
+                <!-- please note, this only exists in English because it won't be sticking around long -->
             </div>
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-    $('#summaryPopup').hide();
-
     $(document).ready(function () {
+        // hide the following ///////////////////////|X|
+        //         
+        $('#mwdTable').hide()
+        $('#summaryPopup').hide();
+        $('#sorryNoPieCharts').hide();
+        $('#mwdHelp').hide();
+        //
+        //
 
-        ///TABS and ACCORDIONS///////////////////////|X|
+        // TABS and ACCORDIONS and TOOLTIPS //////// |X|
         // the following code creates
         // tabs from listed item tags 
         // in the HTML, by ID $("#id")
@@ -70,12 +77,17 @@
                 active: false,
                 autoHeight: false
             });
-        $('#sorryNoPieCharts').hide();
 
+        $('#mwdLink').click(
+            function () {
+                $('#mwdTable').show("fold", 36);
+            });
         $('#summaryReports').click(
             function () {
                 $('#summaryHeader').unbind('mouseenter mouseleave');
             });
+        //
+        //
 
         ////PIE CHARTS/////////////////////////|X|
         // Buttons for showing and hiding
@@ -88,12 +100,12 @@
         $('#pieChartBtn').click(function () {
             $('#sorryNoPieCharts').show();
         });
+        //
+        //
 
         ////DATATABLES////////////////////////////////////////////////////////////////////////////|X|
-        // Datatables uses something called Hungarian
-        // notation wherein they put the purpose of
-        // a given variable to the left of the
-        // variable name. E.g., i is integer, o is
+        // Datatables uses something called Hungarian notation wherein they put the purpose of
+        // a given variable to the left of the variable name. E.g., i is integer, o is
         // object. More at datatables.net.
         var mwdTableDefaults = {
             "bPaginate": false, // to enable pagination (this report has fixed size)
@@ -140,22 +152,30 @@
         // month and year, but the day is still there.
         // apparently there is no way around this without
         // using a different plugin.
-        $('.ui-datepicker').datepicker({
-            inline: true,
-            showOtherMonths: true,
-            dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], 
+        $('.ui-datepicker').hover(
+            function () {
+                $('#mwdHelp').delay(2000).show();
+                },
+            function () {
+                $('#mwdHelp').hide();
         });
 
-//        $('#monthpicker_widget').bind('onchange', function (e) {
-//            alert("input change");
-//        });
+        $('.ui-datepicker').datepicker( {
+            autoSize: true,
+            changeMonth: true,
+            changeYear: true,
+            constrainInput:true,
+            dateFormat: 'mm/dd/yy',
+            duration: "slow",
+            showButtonPanel: false,
+            showOn: "focus"
+        });
 
-//        $('.ui-datepicker').change(function (event) {
-//            mwdNewTable["todaysdate"] = $('#mwdDate').val();
-//            $('#mwdSummaryTable').dataTable(mwdNewTable).fnReloadAjax();
-//        });
-        //end hell
-
+        $('.ui-datepicker').change(
+            function (event) {
+                mwdNewTable["todaysdate"] = $('#mwdDate').val();
+                $('#mwdSummaryTable').dataTable(mwdNewTable).fnReloadAjax();
+            });
     });
     // end document ready
 
