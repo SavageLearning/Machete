@@ -133,6 +133,24 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Machete Summary Reports.
+        /// </summary>
+        public static string summaryHeader {
+            get {
+                return ResourceManager.GetString("summaryHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open the menus below to select different types of summary reports. Use the buttons at the top of the report to toggle the display..
+        /// </summary>
+        public static string summaryInstructions {
+            get {
+                return ResourceManager.GetString("summaryInstructions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Summaries.
         /// </summary>
         public static string summaryTab {

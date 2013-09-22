@@ -9,18 +9,19 @@
 <div id="reportTabs">
     <ul>
         <li><a href="#summaryReports" id="summaryTab" >@Machete.Web.Resources.Reports.summaryTab</a> </li>
-        <li><a href="#workers" id="workersTab" >@Machete.Web.Resources.Reports.workersTab</a> </li>
-        <li><a href="#orders" id="ordersTab" >@Machete.Web.Resources.Reports.ordersTab</a> </li>
-        <li><a href="#activities" id="activitiesTab" >@Machete.Web.Resources.Reports.activitiesTab</a> </li>
+        <!-- only doing summary reports for now -->
     </ul>
-    <div id="summaryReports">
-        <h3><a href="#">Machete Summary Reports</a></h3>
-        <div>
-            <p>Open the menus below to select different types of summary reports.</p>
-            <p>Use the buttons at the top of the report to toggle the display.</p>
+    <div id="summaryHeader">
+        <h3 style="padding-left: .5em;">@Machete.Web.Resources.Reports.summaryHeader</h3>
+        <div id="summaryPopup">
+            <p id="summaryInstructions" style="padding-left:.5em">
+                @Machete.Web.Resources.Reports.summaryInstructions
+                </p>
         </div>
-        
-        <h3><a href="#">Monthly, With Detail</a></h3>
+    </div>
+
+    <div id="summaryReports">
+        <h3><a href="#" id="mwdLink">Monthly, With Detail</a></h3>
         <div id="mwdTable">
             <input type="button" value="Data Only" class="formButton" id="dataOnlyBtn" />
             <input type="button" value="Pie Chart" class="formButton" id="pieChartBtn" />
@@ -45,18 +46,11 @@
             </div>
         </div>
     </div>
-    <div id="workers">
-        @Html.Partial("Workers")
-    </div>
-    <div id="orders">
-        @Html.Partial("Orders")
-    </div>
-    <div id="activities">
-        @Html.Partial("Activities")
-    </div>
 </div>
 
 <script type="text/javascript">
+    $('#summaryPopup').hide();
+
     $(document).ready(function () {
 
         ///TABS and ACCORDIONS///////////////////////|X|
@@ -64,12 +58,24 @@
         // tabs from listed item tags 
         // in the HTML, by ID $("#id")
         $('#reportTabs').tabs();
-        $("#summaryReports").accordion({
+        $('#summaryHeader').hover(
+            function () {
+                $('#summaryPopup').show("fold", 36);
+            },
+            function () {
+                $('#summaryPopup').delay(7200).hide("fold", 36);
+        });
+        $('#summaryReports').accordion({
                 collapsible: true,
+                active: false,
                 autoHeight: false
             });
-        
         $('#sorryNoPieCharts').hide();
+
+        $('#summaryReports').click(
+            function () {
+                $('#summaryHeader').unbind('mouseenter mouseleave');
+            });
 
         ////PIE CHARTS/////////////////////////|X|
         // Buttons for showing and hiding
@@ -135,20 +141,19 @@
         // apparently there is no way around this without
         // using a different plugin.
         $('.ui-datepicker').datepicker({
-//            onSelect: function (date) {
-//                $('#mwdSummaryTable').dataTable(mwdNewTable).fnReloadAjax();
-//            },
-            dateFormat: 'mm/dd/yy',
-            changeMonth: true,
-            changeYear: true,
-            showButtonPanel: true,
+            inline: true,
             showOtherMonths: true,
-            selectOtherMonths: true
+            dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], 
         });
-        $('.ui-datepicker').change(function (event) {
-            mwdNewTable["todaysdate"] = $('#mwdDate').val();
-            $('#mwdSummaryTable').dataTable(mwdNewTable).fnReloadAjax();
-        });
+
+//        $('#monthpicker_widget').bind('onchange', function (e) {
+//            alert("input change");
+//        });
+
+//        $('.ui-datepicker').change(function (event) {
+//            mwdNewTable["todaysdate"] = $('#mwdDate').val();
+//            $('#mwdSummaryTable').dataTable(mwdNewTable).fnReloadAjax();
+//        });
         //end hell
 
     });
