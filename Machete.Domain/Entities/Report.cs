@@ -5,6 +5,31 @@ using System.Text;
 
 namespace Machete.Domain.Entities
 {
+    public class DailyCasaLatinaReport
+    {
+        public int dwcList { get; set; }
+        public int dwcPropio { get; set; }
+        public int hhhList { get; set; }
+        public int hhhPropio { get; set; }
+        public int totalSignins { get; set; }
+        public int cancelledJobs { get; set; }
+        public int dwcFuture { get; set; }
+        public int dwcPropioFuture { get; set; }
+        public int hhhFuture { get; set; }
+        public int hhhPropioFuture { get; set; }
+        public int futureTotal { get; set; }
+    }
+
+    public class WeeklyElCentroReport
+    {
+        public int totalSignins { get; set; }
+        public int noWeekJobs { get; set; }
+        public string weekJobsSector { get; set; }
+        public int weekEstDailyHours { get; set; }
+        public double weekEstPayment { get; set; }
+        public double weekHourlyWage { get; set; }
+    }
+
     public class MonthlyWithDetailReport
     {
         /// A class containing all of the data for the Monthly Report with Details
