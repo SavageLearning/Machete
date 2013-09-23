@@ -17,6 +17,10 @@
                 @Machete.Web.Resources.Reports.summaryInstructions
                 </p>
         </div>
+        <div id="sorryNoPieCharts">
+            <h3 style="color:red;">Sorry, pie charts aren't available quite yet! Just wait for the next update!</h3>
+            <!-- please note, this only exists in English because it won't be sticking around long -->
+        </div>
     </div>
 
     <div id="summaryReports">
@@ -43,16 +47,12 @@
                     </tr>
                 </thead>
             </table>
-            <div id="sorryNoDclPieCharts">
-                <h3 style="color:red;">Sorry, pie charts aren't available quite yet! Just wait for the next update!</h3>
-                <!-- please note, this only exists in English because it won't be sticking around long -->
-            </div>
         </div>
         <h3><a href="#" id="wecLink">Weekly (El Centro)</a></h3>
         <div id="wecTable">
-            <input type="button" value="Data Only" class="formButton" id="dclDataOnlyBtn" />
-            <input type="button" value="Pie Chart" class="formButton" id="dclPieChartBtn" />
-            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-dcl-datepicker", @id = "dclDate" })
+            <input type="button" value="Data Only" class="formButton" id="wecDataOnlyBtn" />
+            <input type="button" value="Pie Chart" class="formButton" id="wecPieChartBtn" />
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-wec-datepicker", @id = "wecDate" })
             <span id="wecHelp"><em>Select a day to see results for that week.</em></span>
             <table id="wecSummaryTable" class="display">
                 <thead>
@@ -66,16 +66,12 @@
                     </tr>
                 </thead>
             </table>
-            <div id="sorryNoDclPieCharts">
-                <h3 style="color:red;">Sorry, pie charts aren't available quite yet! Just wait for the next update!</h3>
-                <!-- please note, this only exists in English because it won't be sticking around long -->
-            </div>
         </div>
         <h3><a href="#" id="mwdLink">Monthly, With Detail</a></h3>
         <div id="mwdTable">
             <input type="button" value="Data Only" class="formButton" id="dataOnlyBtn" />
             <input type="button" value="Pie Chart" class="formButton" id="pieChartBtn" />
-            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-datepicker", @id = "mwdDate" })
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-mwd-datepicker", @id = "mwdDate" })
             <span id="mwdHelp"><em>Select any day in a month to see results.</em></span>
             <table id="mwdSummaryTable" class="display">
                 <thead>
@@ -92,10 +88,6 @@
                     </tr>
                 </thead>
             </table>
-            <div id="sorryNoPieCharts">
-                <h3 style="color:red;">Sorry, pie charts aren't available quite yet! Just wait for the next update!</h3>
-                <!-- please note, this only exists in English because it won't be sticking around long -->
-            </div>
         </div>
     </div>
 </div>
@@ -104,46 +96,68 @@
     $(document).ready(function () {
         // hide the following ///////////////////////|X|
         //         
-        $('#mwdTable').hide()
+        $('#dclTable').hide(); // Daily (Casa Latina) table
+        $('#wecTable').hide(); // Weekly (El Centro) table
+        $('#mwdTable').hide(); // Monthly With Detail
+        // These  (above ) may be better hidden by using partial views. But so many files for the reports...
         $('#summaryPopup').hide();
         $('#sorryNoPieCharts').hide();
+        // The preceding pop up in the header area when various events occur...
+        $('#dclHelp').hide();
+        $('#wecHelp').hide();
         $('#mwdHelp').hide();
-        //
-        //
+        // these three show up when someone is taking their time picking a date
+        // to instruct them how to proceed.
 
-        // TABS and ACCORDIONS and TOOLTIPS //////// |X|
-        // the following code creates
-        // tabs from listed item tags 
+        //////// TABS and ACCORDIONS and TOOLTIPS //////// |X|
+        // the following code creates tabs from listed item tags 
         // in the HTML, by ID $("#id")
         $('#reportTabs').tabs();
         $('#summaryHeader').hover(
             function () {
-                $('#summaryPopup').show("fold", 36);
+                $('#summaryPopup').show("fold", 400);
             },
             function () {
-                $('#summaryPopup').delay(7200).hide("fold", 36);
-        });
+                $('#summaryPopup').delay(5000).hide("fold", 400);
+            });
+        $('#summaryHeader').click(
+            function () {
+                $('#summaryPopup').show();
+            },
+            function () {
+                $('#summaryHeader').unbind('mouseenter mouseleave');
+            });
+        // Shows for five seconds on hover, stays on click.
+        // the hover is later unbound to avoid clonkiness.
+
+        // The reports start in accordion format, closed.
         $('#summaryReports').accordion({
                 collapsible: true,
                 active: false,
                 autoHeight: false
             });
 
-        $('#mwdLink').click(
-            function () {
-                $('#mwdTable').show("fold", 36);
-            });
+        // A click anywhere in the summary reports div keeps the header help
+        // from showing up again, unless page is reloaded. This helps eliminate
+        // clunkiness.
         $('#summaryReports').click(
             function () {
                 $('#summaryHeader').unbind('mouseenter mouseleave');
+        //    },
+        //    function () {
+        //        $('#summaryReports')
+        //            .filter(":not(:has(.selected))") 
+        //            .accordion("activate", 0);
             });
-        //
-        //
+        // commented out while troubleshooting accordion panelse that won't close
 
-        ////PIE CHARTS/////////////////////////|X|
+
+        ///////////////////////////// PIE CHARTS /////////////////////////|X|
         // Buttons for showing and hiding
         // the Pie Charts feature ...
         // ... which doesn't exist yet!
+        //
+
         $('#dataOnlyBtn').click(function () {
             $('#sorryNoPieCharts').hide();
         });
@@ -151,18 +165,79 @@
         $('#pieChartBtn').click(function () {
             $('#sorryNoPieCharts').show();
         });
+
         //
         //
 
-        ////DATATABLES////////////////////////////////////////////////////////////////////////////|X|
-        // Datatables uses something called Hungarian notation wherein they put the purpose of
-        // a given variable to the left of the variable name. E.g., i is integer, o is
+        //////////////////////////////////////// DATATABLES //////////////////////////////////////|X|
+        // Datatables uses something called Hungarian notation wherein they put the purpose
+        // of a given variable to the left of the variable name. E.g., i is integer, o is
         // object. More at datatables.net.
+        //
+
+        var dclTableDefaults = {
+            "bPaginate": false, // to enable pagination (this report has fixed size)
+            "bAutoWidth": false,
+            "bDestroy": false,
+            "bInfo": true, //shows information about data being displayed on the page
+            "bSort": false, //enable or disable sorting of columns
+            "bFilter": false, //enable or disable filtering of data
+            "bServerSide": true, //server side processing, req. source
+            "sAjaxSource": "/Reports/AjaxMwd", //source for server side processing
+            "bProcessing": true, //enable processing indicator
+            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName), //internationalisation
+            "aoColumns": [
+                { mDataProp: "dwcList" },
+                { mDataProp: "dwcPropio" },
+                { mDataProp: "hhhList" },
+                { mDataProp: "hhhPropio" },
+                { mDataProp: "totalSignins" },
+                { mDataProp: "cancelledJobs" },
+                { mDataProp: "dwcFuture" },
+                { mDataProp: "dwcPropioFuture" },
+                { mDataProp: "hhhFuture" },
+                { mDataProp: "hhhPropioFuture" },
+                { mDataProp: "futureTotal" },
+            ], //these are the column names in the array; number must match # of cols. in table
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                aoData.push({ "name": "todaysdate", "value": $('#dclDate').val() });
+                $.getJSON(sSource, aoData, function (json) {
+                    /* Do whatever additional processing you want on the callback, then tell DataTables */
+                    fnCallback(json)
+                });
+            }
+        };
+
+        var wecTableDefaults = {
+            "bPaginate": false, // to enable pagination (this report has fixed size)
+            "bAutoWidth": false,
+            "bDestroy": false,
+            "bInfo": true, //shows information about data being displayed on the page
+            "bSort": false, //enable or disable sorting of columns
+            "bFilter": false, //enable or disable filtering of data
+            "bServerSide": true, //server side processing, req. source
+            "sAjaxSource": "/Reports/AjaxMwd", //source for server side processing
+            "bProcessing": true, //enable processing indicator
+            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName), //internationalisation
+            "aoColumns": [
+                { mDataProp: "totalSignins" },
+                { mDataProp: "noWeekJobs" },
+                { mDataProp: "weekJobsSector" },
+                { mDataProp: "weekEstDailyHours" },
+                { mDataProp: "weekEstPayment" },
+                { mDataProp: "weekHourlyWage" },
+            ], // column names; must match # of cols. in table
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                aoData.push({ "name": "todaysdate", "value": $('#wecDate').val() });
+                $.getJSON(sSource, aoData, function (json) {
+                    /* Do whatever additional processing you want on the callback, then tell DataTables */
+                    fnCallback(json)
+                });
+            }
+        };
+
         var mwdTableDefaults = {
             "bPaginate": false, // to enable pagination (this report has fixed size)
-            //"bLengthChange": true, //requires pagination
-            //"aLengthMenu": [[35, 70, 105, -1], [35, 70, 105, dataSourceLength*]],
-            //"iDisplayLength": -1, //number of rows to use with pagination
             "bAutoWidth": false,
             "bDestroy": false,
             "bInfo": true, //shows information about data being displayed on the page
@@ -182,7 +257,7 @@
                 { mDataProp: "totalHours" },
                 { mDataProp: "totalIncome" },
                 { mDataProp: "avgIncomePerHour" }
-            ], //these are the column names in the array; number must match # of cols. in table
+            ], // column names; must match # of cols. in table
             "fnServerData": function ( sSource, aoData, fnCallback ) {
                 aoData.push({ "name": "todaysdate", "value": $('#mwdDate').val() });
                 $.getJSON(sSource, aoData, function (json) {
@@ -192,37 +267,96 @@
             }
         };
 
+        var dclNewTable = jQuery.extend(true, {}, dclTableDefaults);
+        var wecNewTable = jQuery.extend(true, {}, wecTableDefaults);
         var mwdNewTable = jQuery.extend(true, {}, mwdTableDefaults);
 
+        dclNewTable["bDestroy"] = "true,";
+        wecNewTable["bDestroy"] = "true,";
         mwdNewTable["bDestroy"] = "true,";
 
+        $('#dclSummaryTable').dataTable(dclTableDefaults);
+        $('#wecSummaryTable').dataTable(wecTableDefaults);
         $('#mwdSummaryTable').dataTable(mwdTableDefaults);
 
-        //////////////// the date-picker /////////////////|X|
-        // these options draw more attention to the
-        // month and year, but the day is still there.
-        // apparently there is no way around this without
-        // using a different plugin.
-        $('.ui-datepicker').hover(
-            function () {
-                $('#mwdHelp').delay(2000).show();
-                },
-            function () {
-                $('#mwdHelp').hide();
-        });
+        //////////////// the date-pickerers /////////////////|X|
+        //
+        // Daily, Casa Latina datepicker
+        //
 
-        $('.ui-datepicker').datepicker( {
+        $('.ui-dcl-datepicker').hover(
+            function () {
+                $('#dclHelp').delay(2000).show();
+            },
+            function () {
+                $('#dclHelp').hide();
+            });
+        
+        $('.ui-dcl-datepicker').datepicker({
             autoSize: true,
             changeMonth: true,
             changeYear: true,
-            constrainInput:true,
+            constrainInput: true,
             dateFormat: 'mm/dd/yy',
             duration: "slow",
             showButtonPanel: false,
             showOn: "focus"
         });
 
-        $('.ui-datepicker').change(
+        $('.ui-dcl-datepicker').change(
+            function (event) {
+                mwdNewTable["todaysdate"] = $('#dclDate').val();
+                $('#dclSummaryTable').dataTable(mwdNewTable).fnReloadAjax();
+            });
+
+        //
+        // Weekly, El Centro datepicker
+        //
+        $('.ui-wec-datepicker').hover(
+            function () {
+                $('#wecHelp').delay(2000).show();
+            },
+            function () {
+                $('#wecHelp').hide();
+            });
+
+        $('.ui-wec-datepicker').datepicker({
+            autoSize: true,
+            changeMonth: true,
+            changeYear: true,
+            constrainInput: true,
+            dateFormat: 'mm/dd/yy',
+            duration: "slow",
+            showButtonPanel: false,
+            showOn: "focus"
+        });
+
+        $('.ui-wec-datepicker').change(
+            function (event) {
+                mwdNewTable["todaysdate"] = $('#wecDate').val();
+                $('#wecSummaryTable').dataTable(mwdNewTable).fnReloadAjax();
+            });
+
+        $('.ui-mwd-datepicker').hover(
+            function () {
+                $('#mwdHelp').delay(2000).show();
+            },
+            function () {
+                $('#mwdHelp').hide();
+            });
+
+        $('.ui-mwd-datepicker').datepicker({
+            autoSize: true,
+            changeMonth: true,
+            changeYear: true,
+            constrainInput: true,
+            dateFormat: 'mm/dd/yy',
+            duration: "slow",
+            showButtonPanel: false,
+            showOn: "focus"
+        });
+
+        $('.ui-mwd-datepicker').change(
             function (event) {
                 mwdNewTable["todaysdate"] = $('#mwdDate').val();
                 $('#mwdSummaryTable').dataTable(mwdNewTable).fnReloadAjax();

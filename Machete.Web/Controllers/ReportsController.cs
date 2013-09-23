@@ -62,28 +62,132 @@ namespace Machete.Web.Controllers
             this.repServ = repServ;
         }
 
-        //Not entirely sure what we are initializing here, below.
-        //The other controllers do not explain much.
-        //However, they all have this.
+        /// <summary>
+        /// Initialize the controller context for the reports.
+        /// </summary>
+        /// <param name="requestContext">RequestContext</param>
         protected override void Initialize(RequestContext requestContext)
         {
             base.Initialize(requestContext);
             CI = (CultureInfo)Session["Culture"];
         }
+
         /// <summary>
         /// MVC Controller for Machete Reports
         /// </summary>
-        /// <returns></returns>
-        [Authorize(Roles = "Administrator, Manager")] //others?
+        /// <returns>View()</returns>
+        [Authorize(Roles = "Administrator, Manager")] 
         #region Index 
+
         // A simple MVC index view
         public ActionResult Index()
         {
             return View();
         }
         #endregion
-        // Get ready to handle some AJAX, baby
+
         #region AjaxHandlers
+        /// <summary>
+        /// Daily, Casa Latina == dcl. This is a daily report for Machete, different than the Work Order
+        /// Status summary, and part of the summary reports.
+        /// </summary>
+        /// <param name="param">jQueryDataTableParam</param>
+        /// <returns>json object for use with datatables, etc.</returns>
+        public ActionResult AjaxDcl(jQueryDataTableParam param)
+        {
+            DateTime dclDate;
+            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
+            // jQuery passes in parameters that must be mapped to viewOptions
+            // following the format of the other files here;
+            // The only thing we're using it for here is the date, but this could
+            // be extended to other features.
+            // Set culture setting to whatever current session setting is
+            //vo.CI = (System.Globalization.CultureInfo)Session["Culture"]; 
+            // Commented out because this does not seem to be needed beyond
+            // the view layer.
+            // Take the date from the view and assign it to this.mwdDate
+            if (vo.date != null) dclDate = DateTime.Parse(vo.date.ToString());
+            else dclDate = DateTime.Now;
+            //pass filter parameters to service level
+            // Call view model from service layer:
+            dataTableResult<dclData> dcl = repServ.mwdBetterView(dclDate);
+            //
+            //return what's left to datatables
+            var result = from d in dcl.query
+                         select new
+                         {
+                             //date = System.String.Format("{0:MM/dd/yyyy}", d.date),
+                             //daily report, needs no date-- already displayed at view level
+                             dwcList = "why",
+                             dwcPropio = "are",
+                             hhhList = "you",
+                             hhhPropio = "going",
+                             totalSignins = "west",
+                             cancelledJobs = "when",
+                             dwcFuture = "the game",
+                             dwcPropioFuture = "lies",
+                             hhhFuture = "to",
+                             hhhPropioFuture = "the",
+                             futureTotal = "east"
+                         };
+
+            return Json(new
+            {
+                iTotalRecords = dcl.totalCount, //total records, before filtering
+                iTotalDisplayRecords = dcl.filteredCount, //total records, after filtering
+                sEcho = param.sEcho, //unaltered copy of sEcho sent from the client side
+                aaData = result
+            },
+            JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 'WEC' is 'Weekly, El Centro' -- a weekly report for Machete that comes from
+        /// El Centro's requirements for weekly summaries (Staten Is., N.Y.); AjaxWec is
+        /// the weekly report controller.
+        /// </summary>
+        /// <param name="param">jQueryDataTableParam</param>
+        /// <returns>json object for use with datatables, etc.</returns>
+        public ActionResult AjaxWec(jQueryDataTableParam param)
+        {
+            DateTime wecDate;
+            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
+            // jQuery passes in parameters that must be mapped to viewOptions
+            // following the format of the other files here;
+            // The only thing we're using it for here is the date, but this could
+            // be extended to other features.
+            // Set culture setting to whatever current session setting is
+            //vo.CI = (System.Globalization.CultureInfo)Session["Culture"]; 
+            // Commented out because this does not seem to be needed beyond
+            // the view layer.
+            // Take the date from the view and assign it to this.mwdDate
+            if (vo.date != null) wecDate = DateTime.Parse(vo.date.ToString());
+            else wecDate = DateTime.Now;
+            //pass filter parameters to service level
+            // Call view model from service layer:
+            dataTableResult<wecData> wec = repServ.mwdBetterView(wecDate);
+            //
+            //return what's left to datatables
+            var result = from d in wec.query
+                         select new
+                         {
+                             totalSignins = d.totalSignins > 0 ? d.totalSignins.ToString() : "0",
+                             noWeekJobs = "you",
+                             weekJobsSector = "have been",
+                             weekEstDailyHours = "eaten",
+                             weekEstPayment = "by a grue",
+                             weekHourlyWage = d.avgIncomePerHour > 0 ? d.avgIncomePerHour.ToString() : "0"
+                         };
+
+            return Json(new
+            {
+                iTotalRecords = wec.totalCount, //total records, before filtering
+                iTotalDisplayRecords = wec.filteredCount, //total records, after filtering
+                sEcho = param.sEcho, //unaltered copy of sEcho sent from the client side
+                aaData = result
+            },
+            JsonRequestBehavior.AllowGet);
+        }
+
         /// <summary>
         /// Provides json grid of first report 
         /// This is temporary -- we will need
