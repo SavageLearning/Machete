@@ -20,6 +20,57 @@
     </div>
 
     <div id="summaryReports">
+        <h3><a href="#" id="dclLink">Daily (Casa Latina)</a></h3>
+        <div id="dclTable">
+            <input type="button" value="Data Only" class="formButton" id="dclDataOnlyBtn" />
+            <input type="button" value="Pie Chart" class="formButton" id="dclPieChartBtn" />
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-dcl-datepicker", @id = "dclDate" })
+            <span id="dclHelp"><em>Select a day to see results.</em></span>
+            <table id="dclSummaryTable" class="display">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.dwcList</th>
+                        <th>@Machete.Web.Resources.Reports.dwcPropio</th>
+                        <th>@Machete.Web.Resources.Reports.hhhList</th>
+                        <th>@Machete.Web.Resources.Reports.hhhPropio</th>
+                        <th>@Machete.Web.Resources.Reports.totalSignins</th>
+                        <th>@Machete.Web.Resources.Reports.cancelledJobs</th>
+                        <th>@Machete.Web.Resources.Reports.dwcFuture</th>
+                        <th>@Machete.Web.Resources.Reports.dwcPropioFuture</th>
+                        <th>@Machete.Web.Resources.Reports.hhhFuture</th>
+                        <th>@Machete.Web.Resources.Reports.hhhPropioFuture</th>
+                        <th>@Machete.Web.Resources.Reports.futureTotal</th>
+                    </tr>
+                </thead>
+            </table>
+            <div id="sorryNoDclPieCharts">
+                <h3 style="color:red;">Sorry, pie charts aren't available quite yet! Just wait for the next update!</h3>
+                <!-- please note, this only exists in English because it won't be sticking around long -->
+            </div>
+        </div>
+        <h3><a href="#" id="wecLink">Weekly (El Centro)</a></h3>
+        <div id="wecTable">
+            <input type="button" value="Data Only" class="formButton" id="dclDataOnlyBtn" />
+            <input type="button" value="Pie Chart" class="formButton" id="dclPieChartBtn" />
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-dcl-datepicker", @id = "dclDate" })
+            <span id="wecHelp"><em>Select a day to see results for that week.</em></span>
+            <table id="wecSummaryTable" class="display">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.totalSignins</th>
+                        <th>@Machete.Web.Resources.Reports.noWeekJobs</th>
+                        <th>@Machete.Web.Resources.Reports.weekJobsSect</th>
+                        <th>@Machete.Web.Resources.Reports.weekEstDailyHours</th>
+                        <th>@Machete.Web.Resources.Reports.weekEstPayment</th>
+                        <th>@Machete.Web.Resources.Reports.weekHourlyWage</th>
+                    </tr>
+                </thead>
+            </table>
+            <div id="sorryNoDclPieCharts">
+                <h3 style="color:red;">Sorry, pie charts aren't available quite yet! Just wait for the next update!</h3>
+                <!-- please note, this only exists in English because it won't be sticking around long -->
+            </div>
+        </div>
         <h3><a href="#" id="mwdLink">Monthly, With Detail</a></h3>
         <div id="mwdTable">
             <input type="button" value="Data Only" class="formButton" id="dataOnlyBtn" />

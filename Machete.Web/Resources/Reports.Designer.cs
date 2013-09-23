@@ -79,6 +79,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancelled Jobs.
+        /// </summary>
+        public static string cancelledJobs {
+            get {
+                return ResourceManager.GetString("cancelledJobs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Date.
         /// </summary>
         public static string date {
@@ -97,11 +106,56 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DWC Future.
+        /// </summary>
+        public static string dwcFuture {
+            get {
+                return ResourceManager.GetString("dwcFuture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DWC List.
+        /// </summary>
+        public static string dwcList {
+            get {
+                return ResourceManager.GetString("dwcList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DWC Requested.
+        /// </summary>
+        public static string dwcPropio {
+            get {
+                return ResourceManager.GetString("dwcPropio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DWC Req. (Fut.).
+        /// </summary>
+        public static string dwcPropioFuture {
+            get {
+                return ResourceManager.GetString("dwcPropioFuture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DWC Signins.
         /// </summary>
         public static string dwcSignins {
             get {
                 return ResourceManager.GetString("dwcSignins", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Future.
+        /// </summary>
+        public static string futureTotal {
+            get {
+                return ResourceManager.GetString("futureTotal", resourceCulture);
             }
         }
         
@@ -115,11 +169,56 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to HHH Future.
+        /// </summary>
+        public static string hhhFuture {
+            get {
+                return ResourceManager.GetString("hhhFuture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HHH List.
+        /// </summary>
+        public static string hhhList {
+            get {
+                return ResourceManager.GetString("hhhList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HHH Requested.
+        /// </summary>
+        public static string hhhPropio {
+            get {
+                return ResourceManager.GetString("hhhPropio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HHH Req. (Fut.).
+        /// </summary>
+        public static string hhhPropioFuture {
+            get {
+                return ResourceManager.GetString("hhhPropioFuture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to HHH Signins.
         /// </summary>
         public static string hhhSignins {
             get {
                 return ResourceManager.GetString("hhhSignins", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Number of jobs.
+        /// </summary>
+        public static string noWeekJobs {
+            get {
+                return ResourceManager.GetString("noWeekJobs", resourceCulture);
             }
         }
         
@@ -183,6 +282,42 @@ namespace Machete.Web.Resources {
         public static string totalSignins {
             get {
                 return ResourceManager.GetString("totalSignins", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hours of work.
+        /// </summary>
+        public static string weekEstDailyHours {
+            get {
+                return ResourceManager.GetString("weekEstDailyHours", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Est. Income.
+        /// </summary>
+        public static string weekEstPayment {
+            get {
+                return ResourceManager.GetString("weekEstPayment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Average Hourly.
+        /// </summary>
+        public static string weekHourlyWage {
+            get {
+                return ResourceManager.GetString("weekHourlyWage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Top req. skills.
+        /// </summary>
+        public static string weekJobsSect {
+            get {
+                return ResourceManager.GetString("weekJobsSect", resourceCulture);
             }
         }
         
