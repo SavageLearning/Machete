@@ -47,7 +47,22 @@ namespace Machete.Service
         //    return MonthlyWithDetail(null);
         //}
 
-        public IQueryable<MonthlyWithDetailReport> MonthlyWithDetail(DateTime beginDate, DateTime endDate) //no drilldown
+        public IQueryable<DailyCasaLatinaReport> DailyCasaLatina(DateTime dateForReport);
+
+        public IQueryable<WeeklyElCentroReport> WeeklyElCentro(DateTime beginDate, DateTime endDate)
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// LINQ to Entities query for the Monthly With Detail report,
+        /// a Machete report that returns basic information about work
+        /// orders at a monthly interval.
+        /// </summary>
+        /// <param name="beginDate">The start date for the query.</param>
+        /// <param name="endDate">The end date for the query.</param>
+        /// <returns>IQueryable</returns>
+        public IQueryable<MonthlyWithDetailReport> MonthlyWithDetail(DateTime beginDate, DateTime endDate)
         {
             IQueryable<MonthlyWithDetailReport> query;
 
@@ -77,8 +92,8 @@ namespace Machete.Service
                     (xx, ww) => new
                     {
                         xx,
-                        // these are the analogous 'case' statements in the SQL. im transforming them to 1s or 0s 
-                        // so that I can sum them below. This is the first half of 'make SQL do the math'
+                        // these are analogous to 'case' statements in SQL, transforming booleans to 1s or 0s 
+                        // to sum them below. This is the first half of 'make SQL Server do the math'
                         DWC = (ww.typeOfWorkID == 20 ? 1 : 0),
                         HHH = (ww.typeOfWorkID == 21 ? 1 : 0),
                         DWCdispatched = (ww.typeOfWorkID == 20 && xx.wsi.WorkAssignmentID != null ? 1 : 0),
@@ -188,21 +203,52 @@ namespace Machete.Service
             result.totalCount = waRepo.GetAllQ().Count();
             return result;
         }
-
-
-
     }
 
-    //wasn't sure if this should remain with Report.cs or be here at service
-    //level, so a copy of it remains here, nullable, which I'm not sure is good
-    //design
+    /// <summary>
+    /// A class to contain the data for the Daily Report for Casa Latina
+    /// int dwcList, int dwcPropio, int hhhList, int hhhPropio, int
+    /// totalSignins, int cancelledJobs, int dwcFuture, int
+    /// dwcPropioFuture, int hhhFuture, int hhhPropioFuture,
+    /// int futureTotal
+    /// </summary>
+    public class dclData
+    {
+        public int? dwcList { get; set; }
+        public int? dwcPropio { get; set; }
+        public int? hhhList { get; set; }
+        public int? hhhPropio { get; set; }
+        public int? totalSignins { get; set; }
+        public int? cancelledJobs { get; set; }
+        public int? dwcFuture { get; set; }
+        public int? dwcPropioFuture { get; set; }
+        public int? hhhFuture { get; set; }
+        public int? hhhPropioFuture { get; set; }
+        public int? futureTotal { get; set; }
+    }
+    /// <summary>
+    /// A class to contain the data for the Weekly Report for El Centro
+    /// int totalSignins, int noWeekJobs, int weekJobsSector, int
+    /// weekEstDailyHours, double weekEstPayment, double weekHourlyWage
+    /// </summary>
+    public class wecData 
+    {
+        public int? totalSignins { get; set; }
+        public int? noWeekJobs { get; set; }
+        public int? weekJobsSector { get; set; }
+        public int? weekEstDailyHours { get; set; }
+        public double? weekEstPayment { get; set; }
+        public double? weekHourlyWage { get; set; }
+    }
+
+    /// <summary>
+    /// A class containing all of the data for the Monthly Report with Details
+    /// DateTime date, int totalDWCSignins, int totalHHHSignins
+    /// dispatchedDWCSignins, int dispatchedHHHSignins
+    /// </summary>
     public class mwdData
     {
-        /// A class containing all of the data for the Monthly Report with Details
-        /// DateTime date, int totalDWCSignins, int totalHHHSignins
-        /// dispatchedDWCSignins, int dispatchedHHHSignins
-        /// int totalHours, double totalIncome, ...
-        /// double totalAverage (commented out, not working)
+
         public DateTime? date { get; set; }
         public int? totalSignins { get; set; }
         public int? totalDWCSignins { get; set; }
