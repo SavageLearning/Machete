@@ -123,20 +123,53 @@
   <data name="avgIncome" xml:space="preserve">
     <value>Average</value>
   </data>
+  <data name="cancelledJobs" xml:space="preserve">
+    <value>Cancelled Jobs</value>
+  </data>
   <data name="date" xml:space="preserve">
     <value>Date</value>
   </data>
   <data name="dwcDispatch" xml:space="preserve">
     <value>DWC Dispatched</value>
   </data>
+  <data name="dwcFuture" xml:space="preserve">
+    <value>DWC Future</value>
+  </data>
+  <data name="dwcList" xml:space="preserve">
+    <value>DWC List</value>
+  </data>
+  <data name="dwcPropio" xml:space="preserve">
+    <value>DWC Requested</value>
+  </data>
+  <data name="dwcPropioFuture" xml:space="preserve">
+    <value>DWC Req. (Fut.)</value>
+  </data>
   <data name="dwcSignins" xml:space="preserve">
     <value>DWC Signins</value>
+  </data>
+  <data name="futureTotal" xml:space="preserve">
+    <value>Total Future</value>
   </data>
   <data name="hhhDispatch" xml:space="preserve">
     <value>HHH Dispatched</value>
   </data>
+  <data name="hhhFuture" xml:space="preserve">
+    <value>HHH Future</value>
+  </data>
+  <data name="hhhList" xml:space="preserve">
+    <value>HHH List</value>
+  </data>
+  <data name="hhhPropio" xml:space="preserve">
+    <value>HHH Requested</value>
+  </data>
+  <data name="hhhPropioFuture" xml:space="preserve">
+    <value>HHH Req. (Fut.)</value>
+  </data>
   <data name="hhhSignins" xml:space="preserve">
     <value>HHH Signins</value>
+  </data>
+  <data name="noWeekJobs" xml:space="preserve">
+    <value>Number of jobs</value>
   </data>
   <data name="ordersTab" xml:space="preserve">
     <value>Work Orders</value>
@@ -158,6 +191,18 @@
   </data>
   <data name="totalSignins" xml:space="preserve">
     <value>Total Signins</value>
+  </data>
+  <data name="weekEstDailyHours" xml:space="preserve">
+    <value>Hours of work</value>
+  </data>
+  <data name="weekEstPayment" xml:space="preserve">
+    <value>Est. Income</value>
+  </data>
+  <data name="weekHourlyWage" xml:space="preserve">
+    <value>Average Hourly</value>
+  </data>
+  <data name="weekJobsSect" xml:space="preserve">
+    <value>Top req. skills</value>
   </data>
   <data name="workersTab" xml:space="preserve">
     <value>Workers</value>
