@@ -19,39 +19,91 @@ namespace Machete.Service
 
     public interface IReportService
     {
+        IQueryable<DailyCasaLatinaReport> DailyCasaLatina(DateTime dateRequested);
+        IQueryable<WeeklyElCentroReport> WeeklyElCentro(DateTime beginDate, DateTime endDate);
         IQueryable<MonthlyWithDetailReport> MonthlyWithDetail(DateTime beginDate, DateTime endDate);
+        dataTableResult<dclData> dclView(DateTime dclDate);
+        dataTableResult<wecData> wecView(DateTime wecDate);
         dataTableResult<mwdData> mwdView(DateTime mwdDate);
-        dataTableResult<mwdData> mwdBetterView(DateTime mwdDate);
     }
 
     public class ReportService : IReportService
     {
         // Initialize the following:
-        private readonly IWorkerSigninRepository wsiRepo;
+        private readonly IWorkOrderRepository woRepo;
         private readonly IWorkAssignmentRepository waRepo;
         private readonly IWorkerRepository wRepo;
+        private readonly IWorkerSigninRepository wsiRepo;
 
-        //Dependency injection (see Global.asax.cs):
-        public ReportService(IWorkerSigninRepository wsiRepo,
+        //Inject constructor (see Global.asax.cs):
+        public ReportService(IWorkOrderRepository woRepo,
                              IWorkAssignmentRepository waRepo,
-                             IWorkerRepository wRepo)
+                             IWorkerRepository wRepo,
+                             IWorkerSigninRepository wsiRepo)
         {
-            this.wsiRepo = wsiRepo;
+            this.woRepo = woRepo;
             this.waRepo = waRepo;
             this.wRepo = wRepo;
+            this.wsiRepo = wsiRepo;
         }
 
-        //not sure how to do this yet
-        //public IQueryable<MonthlyWithDetailReport> MonthlyWithDetail()
-        //{
-        //    return MonthlyWithDetail(null);
-        //}
-
-        public IQueryable<DailyCasaLatinaReport> DailyCasaLatina(DateTime dateForReport);
-
-        public IQueryable<WeeklyElCentroReport> WeeklyElCentro(DateTime beginDate, DateTime endDate)
+        public IQueryable<DailyCasaLatinaReport> DailyCasaLatina(DateTime dateRequested)
         {
             return null;
+        }
+
+        /// <summary>
+        /// L2E query for Weekly El Centro (wec) report for Machete
+        /// returns information about work orders and earnings at a
+        /// weekly interval.
+        /// </summary>
+        /// <param name="beginDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
+        public IQueryable<WeeklyElCentroReport> WeeklyElCentro(DateTime beginDate, DateTime endDate)
+        {
+            IQueryable<WeeklyElCentroReport> query;
+
+            var wsiQ = wsiRepo.GetAllQ();
+            var waQ = waRepo.GetAllQ();
+            var woQ = woRepo.GetAllQ();
+
+            query = wsiQ //begin "with" clause; first line is "FROM"
+                        .GroupJoin(waQ, wsi => wsi.ID, wa => wa.workerAssignedID,
+                                       (wsi, wa) => new //LEFT JOIN
+                                            {
+                                                wsi, //seems wsi-wawsi, but works (left join)
+                                                waid = wa.FirstOrDefault().ID == null ? 0 : 1, //to sum, below
+                                                waworkorderid = wa.FirstOrDefault().workOrderID == null ? 0 : 1, //same
+                                                wahours = wa.FirstOrDefault().hours == null ? 0 : wa.FirstOrDefault().hours, //already ok
+                                                wahourlywage = wa.FirstOrDefault().hourlyWage == null ? 0 : wa.FirstOrDefault().hourlyWage
+                                            }
+                                  )
+                        .GroupJoin(woQ, wsiwa => wsiwa.waworkorderid, wo => wo.ID, // xx is the h
+                                       (wsiwa, wsiwawo) => new //prepare ye to receive thy second left join
+                                            {
+                                                wsiwa,
+                                                wodatetimeofwork = wsiwawo.FirstOrDefault().dateTimeofWork == null ? default(DateTime) : wsiwawo.FirstOrDefault().dateTimeofWork
+                                            }
+                                  )
+                        .Where(www => www.wodatetimeofwork >= beginDate //WHERE
+                                   && www.wodatetimeofwork <= endDate)
+                //end "WITH" clause; assume "FROM" already handled
+                        .GroupBy(gb => gb.wodatetimeofwork)
+                        .Select(wec => new WeeklyElCentroReport
+                                    {
+                                        date = wec.Key,
+                                        totalSignins = wec.Count(), //this was orig. wsiQ, so a count is a count of wsi
+                                        noWeekJobs = wec.Sum(nwj => nwj.wsiwa.waid),
+                                        //weekJobsSector = and this would be the reason they're all commented out
+                                        weekEstDailyHours = wec.Sum(wedh => wedh.wsiwa.wahours),
+                                        weekEstPayment = wec.Sum(wep => wep.wsiwa.wahourlywage * wep.wsiwa.wahours),
+                                        weekHourlyWage = wec.Sum(whw => whw.wsiwa.wahourlywage * whw.wsiwa.wahours) / wec.Sum(whwtwo => whwtwo.wsiwa.wahours)
+                                    }
+                               )
+                        .OrderBy(fini => fini.date);
+
+            return query;
         }
 
         /// <summary>
@@ -80,8 +132,8 @@ namespace Machete.Service
                       (wsi, wa) => new
                       {
                           wsi,
-                          // In SQL, the transformations below would be done in the select; makes this unusual
-                          // checkign for null b/c it will be null if there's no match in the left outer join
+                          // In SQL, the transformations below would be done in the select;
+                          // checking for null b/c it will be null if there's no match in the left outer join
                           wahours = wa.FirstOrDefault().hours == null ? 0 : wa.FirstOrDefault().hours,
                           wadays = wa.FirstOrDefault().days == null ? 0 : wa.FirstOrDefault().days,
                           wawage = wa.FirstOrDefault().hourlyWage == null ? 0 : wa.FirstOrDefault().hourlyWage
@@ -123,49 +175,77 @@ namespace Machete.Service
             return query;
         }
 
-        public dataTableResult<mwdData> mwdView(DateTime userDate)
+
+        public dataTableResult<dclData> dclView(DateTime dclDate)
+        {
+            DateTime dateRequested;
+            IEnumerable<DailyCasaLatinaReport> dclResult;
+            IEnumerable<dclData> q;
+            var result = new dataTableResult<dclData>();
+
+            dateRequested = dclDate;
+
+            dclResult = DailyCasaLatina(dateRequested); // not sending to list...
+
+            q = dclResult
+                .Select( g => new dclData
+                {
+                    dwcList = g.dwcList,
+                    dwcPropio = g.dwcPropio,
+                    hhhList = g.hhhList,
+                    hhhPropio = g.hhhPropio,
+                    totalSignins = g.totalSignins,
+                    cancelledJobs = g.cancelledJobs,
+                    dwcFuture = g.dwcFuture,
+                    dwcPropioFuture = g.dwcPropioFuture,
+                    hhhFuture = g.hhhFuture,
+                    hhhPropioFuture = g.hhhPropioFuture,
+                    futureTotal = g.futureTotal
+                });
+
+            // no need for an order by. this should be a single line of data.
+
+            result.filteredCount = q.Count(); //even though should be '1',
+            result.query = q; //these need to stay set properly to be
+            result.totalCount = waRepo.GetAllQ().Count(); // returned
+            return result; // ...for DataTables.
+        }
+
+        public dataTableResult<wecData> wecView(DateTime wecDate)
         {
             DateTime beginDate;
             DateTime endDate;
-            IEnumerable<MonthlyWithDetailReport> mwdResult;
-            IEnumerable<mwdData> q; //not the Star Trek character
-                                    // ^ not a helpful comment
-                                    // q is the query for the monthlyWithDetail result
-                                    // after it's been passed to a list
-            var result = new dataTableResult<mwdData>();
-            
-            beginDate = new DateTime(userDate.Year, userDate.Month, 1);
-            endDate = new DateTime(userDate.Year, userDate.Month, System.DateTime.DaysInMonth(userDate.Year, userDate.Month));
+            IEnumerable<WeeklyElCentroReport> wecResult;
+            IEnumerable<wecData> q; // query for monthlyWithDetail result
+            var result = new dataTableResult<wecData>(); // note the type. define it well.
 
-            // Grr, does this go here or in the controller?
-            // int numOfRows = System.DateTime.DaysInMonth(userDate.Year, userDate.Month);
+            beginDate = new DateTime(wecDate.Year, wecDate.Month, (wecDate.Day - 6));
+            endDate = wecDate;
 
-            mwdResult = MonthlyWithDetail(beginDate, endDate).ToList();
+            wecResult = WeeklyElCentro(beginDate, endDate).ToList();
 
-            q = mwdResult
-                .Select(g => new mwdData
+            q = wecResult
+                .Select(g => new wecData
                 {
-                    date = g.date,
                     totalSignins = g.totalSignins,
-                    totalDWCSignins = g.totalDWCSignins,
-                    totalHHHSignins = g.totalHHHSignins,
-                    dispatchedDWCSignins = g.dispatchedDWCSignins,
-                    dispatchedHHHSignins = g.dispatchedHHHSignins,
-                    totalHours = g.totalHours,
-                    totalIncome = g.totalIncome,
-                    avgIncomePerHour = g.totalIncome / g.totalHours
+                    noWeekJobs = g.noWeekJobs,
+//                    weekJobsSector = g.weekJobsSector,
+                    weekEstDailyHours = g.weekEstDailyHours,
+                    weekEstPayment = g.weekEstPayment,
+                    weekHourlyWage = g.weekEstDailyHours != 0 ? (g.weekEstPayment / g.weekEstDailyHours) : 0
                 });
 
             q = q.OrderBy(p => p.date);
 
             result.filteredCount = q.Count();
-            // no idea what the following does:
-            //result.query = q.Skip<mwdData>((int)displayStart).Take((int)displayLength);
+            // data should include one month and already be organized as such
+            // dataTables rows can be defined at view level
+            result.query = q;
             result.totalCount = waRepo.GetAllQ().Count();
             return result;
         }
 
-        public dataTableResult<mwdData> mwdBetterView(DateTime mwdDate)
+        public dataTableResult<mwdData> mwdView(DateTime mwdDate)
         {
             DateTime beginDate;
             DateTime endDate;
@@ -195,8 +275,6 @@ namespace Machete.Service
             q = q.OrderBy(p => p.date);
 
             result.filteredCount = q.Count();
-            // usually the following has a skip...take method applied
-            // but, we are looking for fixed length on the first report
             // data should include one month and already be organized as such
             // dataTables rows can be defined at view level
             result.query = q;
@@ -233,9 +311,10 @@ namespace Machete.Service
     /// </summary>
     public class wecData 
     {
+        public DateTime? date { get; set; }
         public int? totalSignins { get; set; }
         public int? noWeekJobs { get; set; }
-        public int? weekJobsSector { get; set; }
+//        public string? weekJobsSector { get; set; }
         public int? weekEstDailyHours { get; set; }
         public double? weekEstPayment { get; set; }
         public double? weekHourlyWage { get; set; }

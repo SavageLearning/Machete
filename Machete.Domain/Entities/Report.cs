@@ -22,9 +22,10 @@ namespace Machete.Domain.Entities
 
     public class WeeklyElCentroReport
     {
+        public DateTime date { get; set; }
         public int totalSignins { get; set; }
         public int noWeekJobs { get; set; }
-        public string weekJobsSector { get; set; }
+//        public string weekJobsSector { get; set; }
         public int weekEstDailyHours { get; set; }
         public double weekEstPayment { get; set; }
         public double weekHourlyWage { get; set; }

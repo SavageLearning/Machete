@@ -96,39 +96,33 @@ namespace Machete.Web.Controllers
         public ActionResult AjaxDcl(jQueryDataTableParam param)
         {
             DateTime dclDate;
-            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
+
             // jQuery passes in parameters that must be mapped to viewOptions
-            // following the format of the other files here;
-            // The only thing we're using it for here is the date, but this could
-            // be extended to other features.
-            // Set culture setting to whatever current session setting is
-            //vo.CI = (System.Globalization.CultureInfo)Session["Culture"]; 
-            // Commented out because this does not seem to be needed beyond
-            // the view layer.
+            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
+
             // Take the date from the view and assign it to this.mwdDate
             if (vo.date != null) dclDate = DateTime.Parse(vo.date.ToString());
             else dclDate = DateTime.Now;
-            //pass filter parameters to service level
+            // pass filter parameters to service level
             // Call view model from service layer:
-            dataTableResult<dclData> dcl = repServ.mwdBetterView(dclDate);
+            dataTableResult<dclData> dcl = repServ.dclView(dclDate);
             //
             //return what's left to datatables
             var result = from d in dcl.query
                          select new
                          {
-                             //date = System.String.Format("{0:MM/dd/yyyy}", d.date),
                              //daily report, needs no date-- already displayed at view level
-                             dwcList = "why",
-                             dwcPropio = "are",
-                             hhhList = "you",
-                             hhhPropio = "going",
-                             totalSignins = "west",
-                             cancelledJobs = "when",
-                             dwcFuture = "the game",
-                             dwcPropioFuture = "lies",
-                             hhhFuture = "to",
-                             hhhPropioFuture = "the",
-                             futureTotal = "east"
+                             dwcList = d.dwcList > 0 ? d.dwcList : 0,
+                             dwcPropio = d.dwcPropio > 0 ? d.dwcPropio : 0,
+                             hhhList = d.hhhList > 0 ? d.hhhList : 0,
+                             hhhPropio = d.hhhPropio > 0 ? d.hhhPropio : 0,
+                             totalSignins = d.totalSignins > 0 ? d.totalSignins : 0,
+                             cancelledJobs = d.cancelledJobs > 0 ? d.totalSignins : 0,
+                             dwcFuture = d.dwcFuture > 0 ? d.dwcFuture : 0,
+                             dwcPropioFuture = d.dwcPropioFuture > 0 ? d.dwcPropioFuture : 0,
+                             hhhFuture = d.hhhFuture > 0 ? d.hhhFuture : 0,
+                             hhhPropioFuture = d.hhhPropioFuture > 0 ? d.hhhPropioFuture : 0,
+                             futureTotal = d.futureTotal > 0 ? d.futureTotal : 0
                          };
 
             return Json(new
@@ -150,32 +144,26 @@ namespace Machete.Web.Controllers
         public ActionResult AjaxWec(jQueryDataTableParam param)
         {
             DateTime wecDate;
-            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
             // jQuery passes in parameters that must be mapped to viewOptions
-            // following the format of the other files here;
-            // The only thing we're using it for here is the date, but this could
-            // be extended to other features.
-            // Set culture setting to whatever current session setting is
-            //vo.CI = (System.Globalization.CultureInfo)Session["Culture"]; 
-            // Commented out because this does not seem to be needed beyond
-            // the view layer.
+            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
             // Take the date from the view and assign it to this.mwdDate
             if (vo.date != null) wecDate = DateTime.Parse(vo.date.ToString());
             else wecDate = DateTime.Now;
             //pass filter parameters to service level
             // Call view model from service layer:
-            dataTableResult<wecData> wec = repServ.mwdBetterView(wecDate);
+            dataTableResult<wecData> wec = repServ.wecView(wecDate);
             //
             //return what's left to datatables
             var result = from d in wec.query
                          select new
                          {
+                             date = System.String.Format("{0:MM/dd/yyyy}", d.date),
                              totalSignins = d.totalSignins > 0 ? d.totalSignins.ToString() : "0",
-                             noWeekJobs = "you",
-                             weekJobsSector = "have been",
-                             weekEstDailyHours = "eaten",
-                             weekEstPayment = "by a grue",
-                             weekHourlyWage = d.avgIncomePerHour > 0 ? d.avgIncomePerHour.ToString() : "0"
+                             noWeekJobs = d.noWeekJobs > 0 ? d.noWeekJobs.ToString() : "0",
+                             //weekJobsSector = d.weekJobsSector == null ? "None" : d.weekJobsSector,
+                             weekEstDailyHours = d.weekEstDailyHours > 0 ? d.weekEstDailyHours.ToString() : "0",
+                             weekEstPayment = d.weekEstPayment > 0 ? d.weekEstPayment.ToString() : "0",
+                             weekHourlyWage = d.weekHourlyWage > 0 ? d.weekHourlyWage.ToString() : "0"
                          };
 
             return Json(new
@@ -215,7 +203,7 @@ namespace Machete.Web.Controllers
             else mwdDate = DateTime.Now;
             //pass filter parameters to service level
             // Call view model from service layer:
-            dataTableResult<mwdData> mwd = repServ.mwdBetterView(mwdDate);
+            dataTableResult<mwdData> mwd = repServ.mwdView(mwdDate);
             //
             //return what's left to datatables
             var result = from d in mwd.query
