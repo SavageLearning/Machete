@@ -57,9 +57,10 @@
             <table id="wecSummaryTable" class="display">
                 <thead>
                     <tr>
+                        <th>@Machete.Web.Resources.Reports.date</th>
                         <th>@Machete.Web.Resources.Reports.totalSignins</th>
                         <th>@Machete.Web.Resources.Reports.noWeekJobs</th>
-                        <th>@Machete.Web.Resources.Reports.weekJobsSect</th>
+                        <!--<th>Machete.Web.Resources.Reports.weekJobsSect</th>-->
                         <th>@Machete.Web.Resources.Reports.weekEstDailyHours</th>
                         <th>@Machete.Web.Resources.Reports.weekEstPayment</th>
                         <th>@Machete.Web.Resources.Reports.weekHourlyWage</th>
@@ -220,9 +221,10 @@
             "bProcessing": true, //enable processing indicator
             "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName), //internationalisation
             "aoColumns": [
+                { mDataProp: "date" },
                 { mDataProp: "totalSignins" },
                 { mDataProp: "noWeekJobs" },
-                { mDataProp: "weekJobsSector" },
+//                { mDataProp: "weekJobsSector" },
                 { mDataProp: "weekEstDailyHours" },
                 { mDataProp: "weekEstPayment" },
                 { mDataProp: "weekHourlyWage" },
@@ -362,7 +364,6 @@
                 $('#mwdSummaryTable').dataTable(mwdNewTable).fnReloadAjax();
             });
     });
-    // end document ready
-
+    // end DOM ready check
 </script>
 
