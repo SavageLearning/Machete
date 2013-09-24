@@ -47,6 +47,12 @@ namespace Machete.Service
             this.wsiRepo = wsiRepo;
         }
 
+        /// <summary>
+        /// L2E query for daily Casa Latina Machete report
+        /// Returns information about daily lists, future jobs
+        /// </summary>
+        /// <param name="dateRequested">A single DateTime parameter</param>
+        /// <returns>IQueryable</returns>
         public IQueryable<DailyCasaLatinaReport> DailyCasaLatina(DateTime dateRequested)
         {
             return null;
@@ -57,9 +63,9 @@ namespace Machete.Service
         /// returns information about work orders and earnings at a
         /// weekly interval.
         /// </summary>
-        /// <param name="beginDate"></param>
-        /// <param name="endDate"></param>
-        /// <returns></returns>
+        /// <param name="beginDate">Start date for the query.</param>
+        /// <param name="endDate">End date for the query.</param>
+        /// <returns>IQueryable</returns>
         public IQueryable<WeeklyElCentroReport> WeeklyElCentro(DateTime beginDate, DateTime endDate)
         {
             IQueryable<WeeklyElCentroReport> query;
@@ -98,7 +104,7 @@ namespace Machete.Service
                                         //weekJobsSector = and this would be the reason they're all commented out
                                         weekEstDailyHours = wec.Sum(wedh => wedh.wsiwa.wahours),
                                         weekEstPayment = wec.Sum(wep => wep.wsiwa.wahourlywage * wep.wsiwa.wahours),
-                                        weekHourlyWage = wec.Sum(whw => whw.wsiwa.wahourlywage * whw.wsiwa.wahours) / wec.Sum(whwtwo => whwtwo.wsiwa.wahours)
+                                        weekHourlyWage = wec.Sum(whwtwo => whwtwo.wsiwa.wahours) == 0 ? 0 : wec.Sum(whw => whw.wsiwa.wahourlywage * whw.wsiwa.wahours) / wec.Sum(whwtwo => whwtwo.wsiwa.wahours)
                                     }
                                )
                         .OrderBy(fini => fini.date);
