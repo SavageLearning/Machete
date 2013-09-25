@@ -78,8 +78,8 @@ namespace Machete.Service
                                       (wa, wr) => new
                                       {
                                           wa,
-                                          reqWorkerID = wr.FirstOrDefault().WorkerID,
-                                          reqOrderID = wr.FirstOrDefault().WorkOrderID
+                                          reqWorkerID = wr.FirstOrDefault().WorkerID == null ? 0 : wr.FirstOrDefault().WorkerID,
+                                          reqOrderID = wr.FirstOrDefault().WorkOrderID == null ? 0 : wr.FirstOrDefault().WorkOrderID
                                       }) 
                              .GroupJoin(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
                                       (wr, wo) => new
@@ -100,8 +100,8 @@ namespace Machete.Service
                                       (wa, wr) => new
                                       {
                                           wa,
-                                          reqWorkerID = wr.FirstOrDefault().WorkerID,
-                                          reqOrderID = wr.FirstOrDefault().WorkOrderID
+                                          reqWorkerID = wr.FirstOrDefault().WorkerID == null ? 0 : wr.FirstOrDefault().WorkerID,
+                                          reqOrderID = wr.FirstOrDefault().WorkOrderID == null ? 0 : wr.FirstOrDefault().WorkOrderID
                                       }) 
                              .GroupJoin(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
                                       (wr, wo) => new
@@ -122,14 +122,14 @@ namespace Machete.Service
                                       (wa, wr) => new
                                       {
                                           wa,
-                                          reqWorkerID = wr.FirstOrDefault().WorkerID,
-                                          reqOrderID = wr.FirstOrDefault().WorkOrderID
+                                          reqWorkerID = wr.FirstOrDefault().WorkerID == null ? 0 : wr.FirstOrDefault().WorkerID,
+                                          reqOrderID = wr.FirstOrDefault().WorkOrderID == null ? 0 : wr.FirstOrDefault().WorkOrderID
                                       }) 
                              .GroupJoin(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
                                       (wr, wo) => new
                                       {
                                           wr,
-                                          timeOfWork = wo.FirstOrDefault().dateTimeofWork
+                                          timeOfWork = wo.FirstOrDefault().dateTimeofWork == null ? DateTime.MinValue : wo.FirstOrDefault().dateTimeofWork
                                       }) 
                              .GroupJoin(wQ, wo => wo.wr.wa.workerAssignedID, w => w.ID,
                                      (wo, w) => new 
@@ -144,14 +144,14 @@ namespace Machete.Service
                                       (wa, wr) => new
                                       {
                                           wa,
-                                          reqWorkerID = wr.FirstOrDefault().WorkerID,
-                                          reqOrderID = wr.FirstOrDefault().WorkOrderID
+                                          reqWorkerID = wr.FirstOrDefault().WorkerID == null ? 0 : wr.FirstOrDefault().WorkerID,
+                                          reqOrderID = wr.FirstOrDefault().WorkOrderID == null ? 0 : wr.FirstOrDefault().WorkOrderID
                                       }) 
                              .GroupJoin(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
                                       (wr, wo) => new
                                       {
                                           wr,
-                                          timeOfWork = wo.FirstOrDefault().dateTimeofWork
+                                          timeOfWork = wo.FirstOrDefault().dateTimeofWork == null ? DateTime.MinValue : wo.FirstOrDefault().dateTimeofWork
                                       }) 
                              .GroupJoin(wQ, wo => wo.wr.wa.workerAssignedID, w => w.ID,
                                      (wo, w) => new 
@@ -167,14 +167,14 @@ namespace Machete.Service
                                       (wa, wr) => new
                                       {
                                           wa,
-                                          reqWorkerID = wr.FirstOrDefault().WorkerID,
-                                          reqOrderID = wr.FirstOrDefault().WorkOrderID
+                                          reqWorkerID = wr.FirstOrDefault().WorkerID == null ? 0 : wr.FirstOrDefault().WorkerID,
+                                          reqOrderID = wr.FirstOrDefault().WorkOrderID == null ? 0 : wr.FirstOrDefault().WorkOrderID
                                       }) 
                              .GroupJoin(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
                                       (wr, wo) => new
                                       {
                                           wr,
-                                          timeOfWork = wo.FirstOrDefault().dateTimeofWork
+                                          timeOfWork = wo.FirstOrDefault().dateTimeofWork == null ? DateTime.MinValue : wo.FirstOrDefault().dateTimeofWork
                                       }) 
                              .GroupJoin(lQ, wo => wo.wr.wa.skillID, l => l.ID,
                                      (wo, l) => new 
@@ -189,14 +189,14 @@ namespace Machete.Service
                                       (wa, wr) => new
                                       {
                                           wa,
-                                          reqWorkerID = wr.FirstOrDefault().WorkerID,
-                                          reqOrderID = wr.FirstOrDefault().WorkOrderID
+                                          reqWorkerID = wr.FirstOrDefault().WorkerID == null ? 0 : wr.FirstOrDefault().WorkerID,
+                                          reqOrderID = wr.FirstOrDefault().WorkOrderID == null ? 0 : wr.FirstOrDefault().WorkOrderID
                                       })
                              .GroupJoin(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
                                       (wr, wo) => new
                                       {
                                           wr,
-                                          timeOfWork = wo.FirstOrDefault().dateTimeofWork
+                                          timeOfWork = wo.FirstOrDefault().dateTimeofWork == null ? DateTime.MinValue : wo.FirstOrDefault().dateTimeofWork
                                       })
                              .GroupJoin(wQ, wo => wo.wr.wa.workerAssignedID, w => w.ID,
                                      (wo, w) => new
@@ -211,14 +211,14 @@ namespace Machete.Service
                                       (wa, wr) => new
                                       {
                                           wa,
-                                          reqWorkerID = wr.FirstOrDefault().WorkerID,
-                                          reqOrderID = wr.FirstOrDefault().WorkOrderID
+                                          reqWorkerID = wr.FirstOrDefault().WorkerID == null ? 0 : wr.FirstOrDefault().WorkerID,
+                                          reqOrderID = wr.FirstOrDefault().WorkOrderID == null ? 0 : wr.FirstOrDefault().WorkOrderID
                                       }) 
                              .GroupJoin(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
                                       (wr, wo) => new
                                       {
                                           wr,
-                                          timeOfWork = wo.FirstOrDefault().dateTimeofWork
+                                          timeOfWork = wo.FirstOrDefault().dateTimeofWork == null ? DateTime.MinValue : wo.FirstOrDefault().dateTimeofWork
                                       }) 
                              .GroupJoin(lQ, wo => wo.wr.wa.skillID, l => l.ID,
                                      (wo, l) => new 
@@ -233,14 +233,14 @@ namespace Machete.Service
                                       (wa, wr) => new
                                       {
                                           wa,
-                                          reqWorkerID = wr.FirstOrDefault().WorkerID,
-                                          reqOrderID = wr.FirstOrDefault().WorkOrderID
+                                          reqWorkerID = wr.FirstOrDefault().WorkerID == null ? 0 : wr.FirstOrDefault().WorkerID,
+                                          reqOrderID = wr.FirstOrDefault().WorkOrderID == null ? 0 : wr.FirstOrDefault().WorkOrderID
                                       }) 
                              .GroupJoin(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
                                       (wr, wo) => new
                                       {
                                           wr,
-                                          timeOfWork = wo.FirstOrDefault().dateTimeofWork
+                                          timeOfWork = wo.FirstOrDefault().dateTimeofWork == null ? DateTime.MinValue : wo.FirstOrDefault().dateTimeofWork
                                       }) 
                              .GroupJoin(wQ, wo => wo.wr.wa.workerAssignedID, w => w.ID,
                                      (wo, w) => new 
