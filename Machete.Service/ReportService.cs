@@ -34,17 +34,23 @@ namespace Machete.Service
         private readonly IWorkAssignmentRepository waRepo;
         private readonly IWorkerRepository wRepo;
         private readonly IWorkerSigninRepository wsiRepo;
+        private readonly IWorkerRequestRepository wrRepo;
+        private readonly ILookupRepository lookRepo;
 
         //Inject constructor (see Global.asax.cs):
         public ReportService(IWorkOrderRepository woRepo,
                              IWorkAssignmentRepository waRepo,
                              IWorkerRepository wRepo,
-                             IWorkerSigninRepository wsiRepo)
+                             IWorkerSigninRepository wsiRepo,
+                             IWorkerRequestRepository wrRepo,
+                             ILookupRepository lookRepo)
         {
             this.woRepo = woRepo;
             this.waRepo = waRepo;
             this.wRepo = wRepo;
             this.wsiRepo = wsiRepo;
+            this.wrRepo = wrRepo;
+            this.lookRepo = lookRepo;
         }
 
         /// <summary>
@@ -55,7 +61,77 @@ namespace Machete.Service
         /// <returns>IQueryable</returns>
         public IQueryable<DailyCasaLatinaReport> DailyCasaLatina(DateTime dateRequested)
         {
-            return null;
+            IQueryable<DailyCasaLatinaReport> query;
+
+            var waQ = waRepo.GetAllQ();
+            var wQ = wRepo.GetAllQ();
+            var woQ = woRepo.GetAllQ();
+            var wrQ = wrRepo.GetAllQ();
+            var lQ = lookRepo.GetAllQ();
+
+            int dwc = 20;
+            int hhh = 21;
+            int complete = 44;
+
+            query = waQ
+                       .GroupJoin(lQ, dalet => dalet.skillID, look => look.ID,
+                                     (dalet, look) => new
+                                     {
+                                         dalet,
+                                         enSkillText = look.FirstOrDefault().text_EN
+                                     }) //currently envisioning a left outer join of
+                                        //all .skillID, with English text available
+                                        //for column and condition matches from the
+                                        //next three joins.
+                       .GroupJoin(wrQ, gimel => gimel.dalet.workOrderID, wr => wr.WorkOrderID,
+                                      (gimel, wr) => new
+                                      {
+                                          gimel,
+                                          reqWorkerID = wr.FirstOrDefault().WorkerID,
+                                          reqOrderID = wr.FirstOrDefault().WorkOrderID
+                                      }) //now envisioning a join on the original table
+                                         //where any match in workerID is joined. THIS
+                                         //IS A PROBLEM, I actually need to join on two
+                                         //conditions to avoid duplicates.
+                       .GroupJoin(woQ, bet => bet.gimel.dalet.workOrderID, wo => wo.ID,
+                                      (bet, wo) => new
+                                      {
+                                          bet,
+                                          timeOfWork = wo.FirstOrDefault().dateTimeofWork
+                                      }) //now envisioning yet another join where the
+                                         //dateTimeofWork property from woQ is stamped
+                                         //onto all matches of woQ's ID column. since
+                                         //woQ.ID is the common point of reference for
+                                         //like, everything, there should be no nulls.
+                       .GroupJoin(wQ, alef => alef.bet.gimel.dalet.workerAssignedID, w => w.ID,
+                                     (alef, w) => new
+                                    {
+                                        alef,
+                                        listDWC = alef.bet.reqOrderID == 0 ? (w.FirstOrDefault().typeOfWorkID == dwc ? 1 : 0) : 0,
+                                        propioDWC = alef.bet.reqWorkerID == alef.bet.gimel.dalet.workerAssignedID ? 
+                                                        (w.FirstOrDefault().typeOfWorkID == dwc ? 1 : 0) : 0,
+                                        listHHH = alef.bet.reqOrderID == 0 ? (w.FirstOrDefault().typeOfWorkID == hhh ? 1 : 0) : 0,
+                                        propioHHH = alef.bet.reqWorkerID == alef.bet.gimel.dalet.workerAssignedID ?
+                                                        (w.FirstOrDefault().typeOfWorkID == hhh ? 1 : 0) : 0,
+                                        // here I'm stuck because there's no way to do the future conditions.
+                                    })  
+                       .Where(x => x.alef.timeOfWork == dateRequested)
+                       .GroupBy(y => y.alef.bet.gimel.dalet.ID)
+                       .Select(group => new DailyCasaLatinaReport 
+                                    {
+                                        dwcList = group.Sum(z => z.listDWC),
+                                        dwcPropio = group.Sum(z => z.propioDWC),
+                                        hhhList = group.Sum(z => z.listHHH),
+                                        hhhPropio = group.Sum(z => z.propioHHH),
+                                        totalSignins = 0,
+                                        dwcFuture = 0,
+                                        dwcPropioFuture = 0,
+                                        hhhFuture = 0,
+                                        hhhPropioFuture = 0,
+                                        futureTotal = 0
+                                    });
+
+            return query;
         }
 
         /// <summary>
@@ -78,7 +154,7 @@ namespace Machete.Service
                         .GroupJoin(waQ, wsi => wsi.ID, wa => wa.workerAssignedID,
                                        (wsi, wa) => new //LEFT JOIN
                                             {
-                                                wsi, //seems wsi-wawsi, but works (left join)
+                                                wsi, //seems wsi-wawsi, but works (left in left join, then:)
                                                 waid = wa.FirstOrDefault().ID == null ? 0 : 1, //to sum, below
                                                 waworkorderid = wa.FirstOrDefault().workOrderID == null ? 0 : 1, //same
                                                 wahours = wa.FirstOrDefault().hours == null ? 0 : wa.FirstOrDefault().hours, //already ok
