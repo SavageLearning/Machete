@@ -15,10 +15,15 @@
         <div id="summaryPopup">
             <p id="summaryInstructions" style="padding-left:.5em">
                 @Machete.Web.Resources.Reports.summaryInstructions
-                </p>
+            </p>
+            <input type="button" value="Hide" class="formButton" id="summaryHide" />
         </div>
-        <div id="sorryNoPieCharts">
+        <div id="sorryNoPieCharts" style="padding-left:.5em">
             <h3 style="color:red;">Sorry, pie charts aren't available quite yet! Just wait for the next update!</h3>
+            <!-- please note, this only exists in English because it won't be sticking around long -->
+        </div>
+        <div id="sorryNoPrintView" style="padding-left:.5em">
+            <h3 style="color:red;">Sorry, report printing isn't quite done yet! Please excuse our mess!</h3>
             <!-- please note, this only exists in English because it won't be sticking around long -->
         </div>
     </div>
@@ -28,8 +33,9 @@
         <div id="dclTable">
             <input type="button" value="Data Only" class="formButton" id="dclDataOnlyBtn" />
             <input type="button" value="Pie Chart" class="formButton" id="dclPieChartBtn" />
+            <input type="button" value="Print Report" class="formButton" id="dclPrintReport" />
             @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-dcl-datepicker", @id = "dclDate" })
-            <span id="dclHelp"><em>Select a day to see results.</em></span>
+            <p id="dclHelp"><em>Select a day to see results.</em></p>
             <table id="dclSummaryTable" class="display">
                 <thead>
                     <tr>
@@ -52,8 +58,9 @@
         <div id="wecTable">
             <input type="button" value="Data Only" class="formButton" id="wecDataOnlyBtn" />
             <input type="button" value="Pie Chart" class="formButton" id="wecPieChartBtn" />
+            <input type="button" value="Print Report" class="formButton" id="wecPrintReport" />
             @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-wec-datepicker", @id = "wecDate" })
-            <span id="wecHelp"><em>Select a day to see results for that week.</em></span>
+            <p id="wecHelp"><em>Select a day to see results for that week.</em></p>
             <table id="wecSummaryTable" class="display">
                 <thead>
                     <tr>
@@ -70,10 +77,11 @@
         </div>
         <h3><a href="#" id="mwdLink">Monthly, With Detail</a></h3>
         <div id="mwdTable">
-            <input type="button" value="Data Only" class="formButton" id="dataOnlyBtn" />
-            <input type="button" value="Pie Chart" class="formButton" id="pieChartBtn" />
+            <input type="button" value="Data Only" class="formButton" id="mwdDataOnlyBtn" />
+            <input type="button" value="Pie Chart" class="formButton" id="mwdPieChartBtn" />
+            <input type="button" value="Print Report" class="formButton" id="mwdPrintReport" />
             @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-mwd-datepicker", @id = "mwdDate" })
-            <span id="mwdHelp"><em>Select any day in a month to see results.</em></span>
+            <p id="mwdHelp"><em>Select any day in a month to see results.</em></p>
             <table id="mwdSummaryTable" class="display">
                 <thead>
                     <tr>
@@ -96,13 +104,14 @@
 <script type="text/javascript">
     $(document).ready(function () {
         // hide the following ///////////////////////|X|
-        //         
+        //  
         $('#dclTable').hide(); // Daily (Casa Latina) table
         $('#wecTable').hide(); // Weekly (El Centro) table
         $('#mwdTable').hide(); // Monthly With Detail
         // These  (above ) may be better hidden by using partial views. But so many files for the reports...
         $('#summaryPopup').hide();
         $('#sorryNoPieCharts').hide();
+        $('#sorryNoPrintView').hide();
         // The preceding pop up in the header area when various events occur...
         $('#dclHelp').hide();
         $('#wecHelp').hide();
@@ -116,20 +125,16 @@
         $('#reportTabs').tabs();
         $('#summaryHeader').hover(
             function () {
-                $('#summaryPopup').show("fold", 400);
+                $('#summaryPopup').show("fold", 1000);
             },
             function () {
-                $('#summaryPopup').delay(5000).hide("fold", 400);
+                $('#summaryHeader').off('hover')
             });
-        $('#summaryHeader').click(
+        $('#summaryHide').click(
             function () {
-                $('#summaryPopup').show();
-            },
-            function () {
-                $('#summaryHeader').unbind('mouseenter mouseleave');
+                $('#summaryPopup').hide();
             });
-        // Shows for five seconds on hover, stays on click.
-        // the hover is later unbound to avoid clonkiness.
+        // Shows for ten seconds on hover, hides when button clicked.
 
         // The reports start in accordion format, closed.
         $('#summaryReports').accordion({
@@ -159,12 +164,40 @@
         // ... which doesn't exist yet!
         //
 
-        $('#dataOnlyBtn').click(function () {
+        $('#dclDataOnlyBtn').click(function () {
             $('#sorryNoPieCharts').hide();
         });
 
-        $('#pieChartBtn').click(function () {
-            $('#sorryNoPieCharts').show();
+        $('#dclPieChartBtn').click(function () {
+            $('#sorryNoPieCharts').show("fold", 400);
+        });
+
+        $('#dclPrintReport').click(function () {
+            $('#sorryNoPrintView').show("fold", 400);
+        });
+
+        $('#wecDataOnlyBtn').click(function () {
+            $('#sorryNoPieCharts').hide();
+        });
+
+        $('#wecPieChartBtn').click(function () {
+            $('#sorryNoPieCharts').show("fold", 400);
+        });
+
+        $('#wecPrintReport').click(function () {
+            $('#sorryNoPrintView').show("fold", 400);
+        });
+
+        $('#mwdDataOnlyBtn').click(function () {
+            $('#sorryNoPieCharts').hide();
+        });
+
+        $('#mwdPieChartBtn').click(function () {
+            $('#sorryNoPieCharts').show("fold", 400);
+        });
+
+        $('#mwdPrintReport').click(function () {
+            $('#sorryNoPrintView').show("fold", 400);
         });
 
         //
@@ -184,7 +217,7 @@
             "bSort": false, //enable or disable sorting of columns
             "bFilter": false, //enable or disable filtering of data
             "bServerSide": true, //server side processing, req. source
-            "sAjaxSource": "/Reports/AjaxMwd", //source for server side processing
+            "sAjaxSource": "/Reports/AjaxDcl", //source for server side processing
             "bProcessing": true, //enable processing indicator
             "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName), //internationalisation
             "aoColumns": [
@@ -217,7 +250,7 @@
             "bSort": false, //enable or disable sorting of columns
             "bFilter": false, //enable or disable filtering of data
             "bServerSide": true, //server side processing, req. source
-            "sAjaxSource": "/Reports/AjaxMwd", //source for server side processing
+            "sAjaxSource": "/Reports/AjaxWec", //source for server side processing
             "bProcessing": true, //enable processing indicator
             "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName), //internationalisation
             "aoColumns": [
@@ -277,9 +310,17 @@
         wecNewTable["bDestroy"] = "true,";
         mwdNewTable["bDestroy"] = "true,";
 
-        $('#dclSummaryTable').dataTable(dclTableDefaults);
-        $('#wecSummaryTable').dataTable(wecTableDefaults);
-        $('#mwdSummaryTable').dataTable(mwdTableDefaults);
+        $('#dclLink').click(function () {
+            $('#dclSummaryTable').dataTable(dclTableDefaults);
+        });
+
+        $('#wecLink').click(function () {
+            $('#wecSummaryTable').dataTable(wecTableDefaults);
+        });
+
+        $('#mwdLink').click(function () {
+            $('#mwdSummaryTable').dataTable(mwdTableDefaults);
+        });
 
         //////////////// the date-pickerers /////////////////|X|
         //
@@ -288,7 +329,7 @@
 
         $('.ui-dcl-datepicker').hover(
             function () {
-                $('#dclHelp').delay(2000).show();
+                $('#dclHelp').delay(2000).show("fade", 1000);
             },
             function () {
                 $('#dclHelp').hide();
@@ -307,8 +348,8 @@
 
         $('.ui-dcl-datepicker').change(
             function (event) {
-                mwdNewTable["todaysdate"] = $('#dclDate').val();
-                $('#dclSummaryTable').dataTable(mwdNewTable).fnReloadAjax();
+                dclNewTable["todaysdate"] = $('#dclDate').val();
+                $('#dclSummaryTable').dataTable(dclNewTable).fnReloadAjax();
             });
 
         //
@@ -316,10 +357,10 @@
         //
         $('.ui-wec-datepicker').hover(
             function () {
-                $('#wecHelp').delay(2000).show();
+                $('#wecHelp').show("fade", 1000);
             },
             function () {
-                $('#wecHelp').hide();
+                $('#wecHelp').hide("fade", 2000).off('hover');
             });
 
         $('.ui-wec-datepicker').datepicker({
@@ -330,18 +371,22 @@
             dateFormat: 'mm/dd/yy',
             duration: "slow",
             showButtonPanel: false,
-            showOn: "focus"
+            showOn: "focus",
+            beforeShowDay: function (date) {
+                var day = date.getDay();
+                return [(day > 5), ''];
+            }
         });
 
         $('.ui-wec-datepicker').change(
             function (event) {
-                mwdNewTable["todaysdate"] = $('#wecDate').val();
-                $('#wecSummaryTable').dataTable(mwdNewTable).fnReloadAjax();
+                wecNewTable["todaysdate"] = $('#wecDate').val();
+                $('#wecSummaryTable').dataTable(wecNewTable).fnReloadAjax();
             });
 
         $('.ui-mwd-datepicker').hover(
             function () {
-                $('#mwdHelp').delay(2000).show();
+                $('#mwdHelp').show("fade", 1000);
             },
             function () {
                 $('#mwdHelp').hide();
