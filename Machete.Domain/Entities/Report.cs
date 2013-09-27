@@ -7,6 +7,7 @@ namespace Machete.Domain.Entities
 {
     public class DailyCasaLatinaReport
     {
+        public DateTime date { get; set; }
         public int dwcList { get; set; }
         public int dwcPropio { get; set; }
         public int hhhList { get; set; }
