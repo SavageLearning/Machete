@@ -111,7 +111,7 @@ namespace Machete.Web.Controllers
             var result = from d in dcl.query
                          select new
                          {
-                             //daily report, needs no date-- already displayed at view level
+                             date = System.String.Format("{0:MM/dd/yyyy}", d.date) ?? System.String.Format("{0:MM/dd/yyyy}", DateTime.Now),
                              dwcList = d.dwcList > 0 ? d.dwcList : 0,
                              dwcPropio = d.dwcPropio > 0 ? d.dwcPropio : 0,
                              hhhList = d.hhhList > 0 ? d.hhhList : 0,

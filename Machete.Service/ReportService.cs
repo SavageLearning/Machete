@@ -61,7 +61,12 @@ namespace Machete.Service
         /// <returns>IQueryable</returns>
         public IQueryable<DailyCasaLatinaReport> DailyCasaLatina(DateTime dateRequested)
         {
+            //dateRequested = Convert.ToDateTime(dateRequested.Date);
+            //not sure yet if above hack is needed
             IQueryable<DailyCasaLatinaReport> query;
+
+            DateTime beginDate = new DateTime(dateRequested.Year, dateRequested.Month, dateRequested.Day, 0, 0, 0);
+            DateTime endDate = new DateTime(dateRequested.Year, dateRequested.Month, dateRequested.Day, 11, 59, 59);
 
             var waQ = waRepo.GetAllQ();
             var wQ = wRepo.GetAllQ();
@@ -73,209 +78,154 @@ namespace Machete.Service
             int hhh = 21;
             int cancelled = 45;
 
-            var dwcList = waQ
-                             .GroupJoin(wrQ, wa => wa.workOrderID, wr => wr.WorkOrderID,
-                                      (wa, wr) => new
-                                      {
-                                          wa,
-                                          reqWorkerID = wr.FirstOrDefault().WorkerID == null ? 0 : wr.FirstOrDefault().WorkerID,
-                                          reqOrderID = wr.FirstOrDefault().WorkOrderID == null ? 0 : wr.FirstOrDefault().WorkOrderID
-                                      }) 
-                             .GroupJoin(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
+            var futureDWC = waQ
+                               .GroupJoin(wrQ, wa => wa.workOrderID, wr => wr.WorkOrderID,
+                                              (wa, wr) => new
+                                              {
+                                               wa,
+                                               reqWorkerID = wr.FirstOrDefault().WorkerID == null ? 0 : wr.FirstOrDefault().WorkerID,
+                                               reqOrderID = wr.FirstOrDefault().WorkOrderID == null ? 0 : wr.FirstOrDefault().WorkOrderID
+                                              })
+                               .GroupJoin(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
+                                              (wr, wo) => new
+                                              {
+                                               wr,
+                                               timeOfWork = wo.FirstOrDefault().dateTimeofWork == null ? default(DateTime) : wo.FirstOrDefault().dateTimeofWork
+                                              })
+                               .GroupJoin(lQ, wo => wo.wr.wa.skillID, l => l.ID,
+                                            (wo, l) => new
+                                            {
+                                             wo,
+                                             dwcFuture = (l.FirstOrDefault().text_EN.Contains("/hhh/".ToLower()) ? 0 : (wo.wr.reqOrderID == 0 ? 1 : 0)) == null ? 0 : (l.FirstOrDefault().text_EN.Contains("/hhh/".ToLower()) ? 0 : (wo.wr.reqOrderID == 0 ? 1 : 0)),
+                                             //dwcFuturePatron = wo.wr.reqOrderID == wo.wr.wa.workOrderID ? (wo.wr.reqWorkerID == wo.wr.wa.workOrderID ? (l.FirstOrDefault().typeOfWorkID == dwc ? 1 : 0) : 0) : 0,
+                                             //hhhFuture = l.FirstOrDefault().text_EN.Contains("/hhh/".ToLower()) ? (wo.wr.reqOrderID == 0 ? 1 : 0) : 0,
+                                             //hhhFuturePatron = wo.wr.reqOrderID == wo.wr.wa.workOrderID ? (wo.wr.reqWorkerID == wo.wr.wa.workOrderID ? (l.FirstOrDefault().typeOfWorkID == hhh ? 1 : 0) : 0) : 0
+                                            })
+                               .Where(whr => whr.wo.timeOfWork > endDate)
+                               .Sum(a => (int?)a.dwcFuture) ?? 0;
+
+            var futureDWCPatron = waQ
+                                     .GroupJoin(wrQ, wa => wa.workOrderID, wr => wr.WorkOrderID,
+                                                    (wa, wr) => new
+                                                 {
+                                                     wa,
+                                                     reqWorkerID = wr.FirstOrDefault().WorkerID == null ? 0 : wr.FirstOrDefault().WorkerID,
+                                                     reqOrderID = wr.FirstOrDefault().WorkOrderID == null ? 0 : wr.FirstOrDefault().WorkOrderID
+                                                 })
+                              .GroupJoin(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
                                       (wr, wo) => new
                                       {
                                           wr,
-                                          timeOfWork = wo.FirstOrDefault().dateTimeofWork
-                                      }) 
-                             .GroupJoin(wQ, wo => wo.wr.wa.workerAssignedID, w => w.ID,
-                                     (wo, w) => new 
-                                     { 
-                                         wo,
-                                         dwcList = wo.wr.reqOrderID == 0 ? (w.FirstOrDefault().typeOfWorkID == dwc ? 1 : 0) : 0
-                                     })
-                             .Where(why => why.wo.timeOfWork == dateRequested)
-                             .Sum(wow => wow.dwcList);
-            var dwcPropio = waQ
-                             .GroupJoin(wrQ, wa => wa.workOrderID, wr => wr.WorkOrderID,
-                                      (wa, wr) => new
-                                      {
-                                          wa,
-                                          reqWorkerID = wr.FirstOrDefault().WorkerID == null ? 0 : wr.FirstOrDefault().WorkerID,
-                                          reqOrderID = wr.FirstOrDefault().WorkOrderID == null ? 0 : wr.FirstOrDefault().WorkOrderID
-                                      }) 
-                             .GroupJoin(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
-                                      (wr, wo) => new
-                                      {
-                                          wr,
-                                          timeOfWork = wo.FirstOrDefault().dateTimeofWork
-                                      }) 
-                             .GroupJoin(wQ, wo => wo.wr.wa.workerAssignedID, w => w.ID,
-                                     (wo, w) => new 
-                                     { 
-                                         wo,
-                                         dwcPatron = wo.wr.reqOrderID == wo.wr.wa.workOrderID ? (wo.wr.reqWorkerID == wo.wr.wa.workOrderID ? (w.FirstOrDefault().typeOfWorkID == dwc ? 1 : 0): 0) : 0
-                                     })
-                             .Where(why => why.wo.timeOfWork == dateRequested)
-                             .Sum(wow => wow.dwcPatron);
-            var hhhList = waQ
-                             .GroupJoin(wrQ, wa => wa.workOrderID, wr => wr.WorkOrderID,
-                                      (wa, wr) => new
-                                      {
-                                          wa,
-                                          reqWorkerID = wr.FirstOrDefault().WorkerID == null ? 0 : wr.FirstOrDefault().WorkerID,
-                                          reqOrderID = wr.FirstOrDefault().WorkOrderID == null ? 0 : wr.FirstOrDefault().WorkOrderID
-                                      }) 
-                             .GroupJoin(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
-                                      (wr, wo) => new
-                                      {
-                                          wr,
-                                          timeOfWork = wo.FirstOrDefault().dateTimeofWork == null ? DateTime.MinValue : wo.FirstOrDefault().dateTimeofWork
-                                      }) 
-                             .GroupJoin(wQ, wo => wo.wr.wa.workerAssignedID, w => w.ID,
-                                     (wo, w) => new 
-                                     { 
-                                         wo,
-                                         hhhList = wo.wr.reqOrderID == 0 ? (w.FirstOrDefault().typeOfWorkID == hhh ? 1 : 0) : 0
-                                     })
-                             .Where(why => why.wo.timeOfWork == dateRequested)
-                             .Sum(wow => wow.hhhList);
-            var hhhPropio = waQ
-                             .GroupJoin(wrQ, wa => wa.workOrderID, wr => wr.WorkOrderID,
-                                      (wa, wr) => new
-                                      {
-                                          wa,
-                                          reqWorkerID = wr.FirstOrDefault().WorkerID == null ? 0 : wr.FirstOrDefault().WorkerID,
-                                          reqOrderID = wr.FirstOrDefault().WorkOrderID == null ? 0 : wr.FirstOrDefault().WorkOrderID
-                                      }) 
-                             .GroupJoin(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
-                                      (wr, wo) => new
-                                      {
-                                          wr,
-                                          timeOfWork = wo.FirstOrDefault().dateTimeofWork == null ? DateTime.MinValue : wo.FirstOrDefault().dateTimeofWork
-                                      }) 
-                             .GroupJoin(wQ, wo => wo.wr.wa.workerAssignedID, w => w.ID,
-                                     (wo, w) => new 
-                                     { 
-                                         wo,
-                                         hhhPatron = wo.wr.reqOrderID == wo.wr.wa.workOrderID ? (wo.wr.reqWorkerID == wo.wr.wa.workOrderID ? (w.FirstOrDefault().typeOfWorkID == hhh ? 1 : 0): 0) : 0
-                                     })
-                             .Where(why => why.wo.timeOfWork == dateRequested)
-                             .Sum(wow => wow.hhhPatron);
-            var totalSignins = dwcList + dwcPropio + hhhList + hhhPropio;
-            var dwcFuture = waQ
-                             .GroupJoin(wrQ, wa => wa.workOrderID, wr => wr.WorkOrderID,
-                                      (wa, wr) => new
-                                      {
-                                          wa,
-                                          reqWorkerID = wr.FirstOrDefault().WorkerID == null ? 0 : wr.FirstOrDefault().WorkerID,
-                                          reqOrderID = wr.FirstOrDefault().WorkOrderID == null ? 0 : wr.FirstOrDefault().WorkOrderID
-                                      }) 
-                             .GroupJoin(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
-                                      (wr, wo) => new
-                                      {
-                                          wr,
-                                          timeOfWork = wo.FirstOrDefault().dateTimeofWork == null ? DateTime.MinValue : wo.FirstOrDefault().dateTimeofWork
-                                      }) 
-                             .GroupJoin(lQ, wo => wo.wr.wa.skillID, l => l.ID,
-                                     (wo, l) => new 
-                                     { 
-                                         wo,
-                                         hhhFuture = l.FirstOrDefault().text_EN.Contains("/hhh/".ToLower()) ? 0 : (wo.wr.reqOrderID == 0 ? 1 : 0)
-                                     })
-                             .Where(why => why.wo.timeOfWork > dateRequested)
-                             .Sum(wow => wow.hhhFuture);
-            var dwcPropioFuture = waQ
-                             .GroupJoin(wrQ, wa => wa.workOrderID, wr => wr.WorkOrderID,
+                                          timeOfWork = wo.FirstOrDefault().dateTimeofWork == null ? default(DateTime) : wo.FirstOrDefault().dateTimeofWork
+                                          //timeOfWork = EntityFunctions.TruncateTime(wo.FirstOrDefault().dateTimeofWork) ?? DateTime.Now
+                                          //the commented line failed miserably
+                                      })
+                              .GroupJoin(lQ, wo => wo.wr.wa.skillID, l => l.ID,
+                                            (wo, l) => new
+                                            {
+                                             wo,
+                                                dwcFuturePatron = wo.wr.reqOrderID == wo.wr.wa.workOrderID ? (wo.wr.reqWorkerID == wo.wr.wa.workOrderID ? (l.FirstOrDefault().typeOfWorkID == dwc ? 1 : 0) : 0) : 0,
+                                            })
+                                .Where(whr => whr.wo.timeOfWork > endDate)
+                                //.Sum(b => b.dwcFuturePatron == null ? 0 : b.dwcFuturePatron);
+                                           .Sum(a => (int?)a.dwcFuturePatron) ?? 0;
+
+            
+            var futureHHH = waQ
+                               .GroupJoin(wrQ, wa => wa.workOrderID, wr => wr.WorkOrderID,
+                                              (wa, wr) => new
+                                           {
+                                               wa,
+                                               reqWorkerID = wr.FirstOrDefault().WorkerID == null ? 0 : wr.FirstOrDefault().WorkerID,
+                                               reqOrderID = wr.FirstOrDefault().WorkOrderID == null ? 0 : wr.FirstOrDefault().WorkOrderID
+                                           })
+                               .GroupJoin(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
+                                              (wr, wo) => new
+                                              {
+                                               wr,
+                                               timeOfWork = wo.FirstOrDefault().dateTimeofWork == null ? default(DateTime) : wo.FirstOrDefault().dateTimeofWork
+                                              })
+                              .GroupJoin(lQ, wo => wo.wr.wa.skillID, l => l.ID,
+                                            (wo, l) => new
+                                            {
+                                                wo,
+                                                hhhFuture = l.FirstOrDefault().text_EN.Contains("/hhh/".ToLower()) ? (wo.wr.reqOrderID == 0 ? 1 : 0) : 0,
+                                            })
+                                      .Where(whr => whr.wo.timeOfWork > endDate)
+                                      //.Sum(c => c.hhhFuture == null ? 0 : c.hhhFuture);
+                                      .Sum(a => (int?)a.hhhFuture) ?? 0;
+
+            var futureHHHPatron = waQ
+                                     .GroupJoin(wrQ, wa => wa.workOrderID, wr => wr.WorkOrderID,
+                                                    (wa, wr) => new
+                                                    {
+                                                        wa,
+                                                        reqWorkerID = wr.FirstOrDefault().WorkerID == null ? 0 : wr.FirstOrDefault().WorkerID,
+                                                        reqOrderID = wr.FirstOrDefault().WorkOrderID == null ? 0 : wr.FirstOrDefault().WorkOrderID
+                                                    })
+                                     .GroupJoin(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
+                                                    (wr, wo) => new
+                                                    {
+                                                        wr,
+                                                        timeOfWork = wo.FirstOrDefault().dateTimeofWork == null ? default(DateTime) : wo.FirstOrDefault().dateTimeofWork
+                                                    })
+                                     .GroupJoin(lQ, wo => wo.wr.wa.skillID, l => l.ID,
+                                            (wo, l) => new
+                                            {
+                                                wo,
+                                                hhhFuturePatron = wo.wr.reqOrderID == wo.wr.wa.workOrderID ? (wo.wr.reqWorkerID == wo.wr.wa.workOrderID ? (l.FirstOrDefault().typeOfWorkID == hhh ? 1 : 0) : 0) : 0
+                                            })
+                                     .Where(whr => whr.wo.timeOfWork > endDate)
+                                     //.Sum(d => d.hhhFuturePatron == null ? 0 : d.hhhFuturePatron);
+                                     .Sum(a => (int?)a.hhhFuturePatron) ?? 0;
+
+ 
+            query = waQ
+                              .GroupJoin(wrQ, wa => wa.workOrderID, wr => wr.WorkOrderID,
                                       (wa, wr) => new
                                       {
                                           wa,
                                           reqWorkerID = wr.FirstOrDefault().WorkerID == null ? 0 : wr.FirstOrDefault().WorkerID,
                                           reqOrderID = wr.FirstOrDefault().WorkOrderID == null ? 0 : wr.FirstOrDefault().WorkOrderID
                                       })
-                             .GroupJoin(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
+                              .GroupJoin(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
                                       (wr, wo) => new
                                       {
                                           wr,
-                                          timeOfWork = wo.FirstOrDefault().dateTimeofWork == null ? DateTime.MinValue : wo.FirstOrDefault().dateTimeofWork
+                                          cancelledJobs = wo.FirstOrDefault().status == cancelled ? 1 : 0,
+                                          timeOfWork = wo.FirstOrDefault().dateTimeofWork == null ? default(DateTime) : wo.FirstOrDefault().dateTimeofWork
                                       })
-                             .GroupJoin(wQ, wo => wo.wr.wa.workerAssignedID, w => w.ID,
+                              .GroupJoin(wQ, wo => wo.wr.wa.workerAssignedID, w => w.ID,
                                      (wo, w) => new
                                      {
                                          wo,
-                                         dwcFuturePatron = wo.wr.reqOrderID == wo.wr.wa.workOrderID ? (wo.wr.reqWorkerID == wo.wr.wa.workOrderID ? (w.FirstOrDefault().typeOfWorkID == dwc ? 1 : 0) : 0) : 0
+                                         dwcList = wo.wr.reqOrderID == 0 ? (w.FirstOrDefault().typeOfWorkID == dwc ? 1 : 0) : 0,
+                                         dwcPatron = wo.wr.reqOrderID == wo.wr.wa.workOrderID ? (wo.wr.reqWorkerID == wo.wr.wa.workOrderID ? (w.FirstOrDefault().typeOfWorkID == dwc ? 1 : 0) : 0) : 0,
+                                         hhhList = wo.wr.reqOrderID == 0 ? (w.FirstOrDefault().typeOfWorkID == hhh ? 1 : 0) : 0,
+                                         hhhPatron = wo.wr.reqOrderID == wo.wr.wa.workOrderID ? (wo.wr.reqWorkerID == wo.wr.wa.workOrderID ? (w.FirstOrDefault().typeOfWorkID == hhh ? 1 : 0) : 0) : 0,
                                      })
-                             .Where(why => why.wo.timeOfWork > dateRequested)
-                             .Sum(wow => wow.dwcFuturePatron);
-            var hhhFuture = waQ
-                             .GroupJoin(wrQ, wa => wa.workOrderID, wr => wr.WorkOrderID,
-                                      (wa, wr) => new
-                                      {
-                                          wa,
-                                          reqWorkerID = wr.FirstOrDefault().WorkerID == null ? 0 : wr.FirstOrDefault().WorkerID,
-                                          reqOrderID = wr.FirstOrDefault().WorkOrderID == null ? 0 : wr.FirstOrDefault().WorkOrderID
-                                      }) 
-                             .GroupJoin(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
-                                      (wr, wo) => new
-                                      {
-                                          wr,
-                                          timeOfWork = wo.FirstOrDefault().dateTimeofWork == null ? DateTime.MinValue : wo.FirstOrDefault().dateTimeofWork
-                                      }) 
-                             .GroupJoin(lQ, wo => wo.wr.wa.skillID, l => l.ID,
-                                     (wo, l) => new 
-                                     { 
-                                         wo,
-                                         hhhFuture = l.FirstOrDefault().text_EN.Contains("/hhh/".ToLower()) ? (wo.wr.reqOrderID == 0 ? 1 : 0) : 0
-                                     })
-                             .Where(why => why.wo.timeOfWork > dateRequested)
-                             .Sum(wow => wow.hhhFuture);
-            var hhhPropioFuture = waQ
-                             .GroupJoin(wrQ, wa => wa.workOrderID, wr => wr.WorkOrderID,
-                                      (wa, wr) => new
-                                      {
-                                          wa,
-                                          reqWorkerID = wr.FirstOrDefault().WorkerID == null ? 0 : wr.FirstOrDefault().WorkerID,
-                                          reqOrderID = wr.FirstOrDefault().WorkOrderID == null ? 0 : wr.FirstOrDefault().WorkOrderID
-                                      }) 
-                             .GroupJoin(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
-                                      (wr, wo) => new
-                                      {
-                                          wr,
-                                          timeOfWork = wo.FirstOrDefault().dateTimeofWork == null ? DateTime.MinValue : wo.FirstOrDefault().dateTimeofWork
-                                      }) 
-                             .GroupJoin(wQ, wo => wo.wr.wa.workerAssignedID, w => w.ID,
-                                     (wo, w) => new 
-                                     { 
-                                         wo,
-                                         hhhFuturePatron = wo.wr.reqOrderID == wo.wr.wa.workOrderID ? (wo.wr.reqWorkerID == wo.wr.wa.workOrderID ? (w.FirstOrDefault().typeOfWorkID == hhh ? 1 : 0): 0) : 0
-                                     })
-                             .Where(why => why.wo.timeOfWork > dateRequested)
-                             .Sum(wow => wow.hhhFuturePatron);
-            var futureTotal = dwcFuture + dwcPropioFuture + hhhFuture + hhhPropioFuture;
-
-            query = waQ
-                       .GroupJoin(woQ, wa => wa.workOrderID, wo => wo.ID,
-                                      (wa, wo) => new
-                                      {wa,
-                                          cancelledJobs = wo.FirstOrDefault().status == cancelled ? 1 : 0,
-                                          timeOfWork = wo.FirstOrDefault().dateTimeofWork
-                                      })
-                       .Where(wh => wh.timeOfWork == dateRequested)
-                       .GroupBy(gb => gb.wa.ID)
-                       .Select(group => new DailyCasaLatinaReport
+                              .Where(whr => whr.wo.timeOfWork >= beginDate 
+                                         && whr.wo.timeOfWork <= endDate)
+                                         //THIS SHOULD GET THE WHOLE DAY
+                              //.Where(whr => whr.wo.timeOfWork == dateRequested.Date)
+                              //    THERE SHOULD ONLY BE ONE DAMNED DATE HERE
+                              .GroupBy(gb => EntityFunctions.TruncateTime(gb.wo.timeOfWork)) //GRRR
+                              .Select(group => new DailyCasaLatinaReport
                               {
-                                 dwcList = dwcList,
-                                 dwcPropio = dwcPropio,
-                                 hhhList = hhhList,
-                                 hhhPropio = hhhPropio,
-                                 totalSignins = totalSignins,
-                                 cancelledJobs = group.Sum(who => who.cancelledJobs),
-                                 dwcFuture = dwcFuture,
-                                 dwcPropioFuture = dwcPropioFuture,
-                                 hhhFuture = hhhFuture,
-                                 hhhPropioFuture = hhhPropioFuture,
-                                 futureTotal = futureTotal
-                         });
-
+                                  date = group.Key ?? DateTime.Now,
+                                  dwcList = group.Sum(a => a.dwcList),
+                                  dwcPropio = group.Sum(a => a.dwcPatron),
+                                  hhhList = group.Sum(a => a.hhhList),
+                                  hhhPropio = group.Sum(a => a.hhhPatron),
+                                  totalSignins = group.Sum(a => a.dwcList) + group.Sum(a => a.dwcPatron) + group.Sum(a => a.hhhList) + group.Sum(a => a.hhhPatron),
+                                  cancelledJobs = group.Sum(a => a.wo.cancelledJobs),
+                                  dwcFuture = futureDWC == null ? 0 : futureDWC,
+                                  dwcPropioFuture = futureDWCPatron == null ? 0 : futureDWCPatron,
+                                  hhhFuture = futureHHH == null ? 0 : futureHHH,
+                                  hhhPropioFuture = futureHHHPatron == null ? 0 : futureHHHPatron,
+                                  futureTotal = (futureDWC == null ? 0 : futureDWC) + (futureDWCPatron == null ? 0 : futureDWCPatron) + (futureHHH == null ? 0 : futureHHH) + (futureHHHPatron == null ? 0 : futureHHHPatron)
+                              }
+                              );
             return query;
         }
 
@@ -417,6 +367,7 @@ namespace Machete.Service
             q = dclResult
                 .Select( g => new dclData
                 {
+                    date = g.date,
                     dwcList = g.dwcList,
                     dwcPropio = g.dwcPropio,
                     hhhList = g.hhhList,
@@ -454,6 +405,7 @@ namespace Machete.Service
             q = wecResult
                 .Select(g => new wecData
                 {
+                    date = g.date,
                     totalSignins = g.totalSignins,
                     noWeekJobs = g.noWeekJobs,
 //                    weekJobsSector = g.weekJobsSector,
@@ -519,6 +471,7 @@ namespace Machete.Service
     /// </summary>
     public class dclData
     {
+        public DateTime? date { get; set; }
         public int? dwcList { get; set; }
         public int? dwcPropio { get; set; }
         public int? hhhList { get; set; }

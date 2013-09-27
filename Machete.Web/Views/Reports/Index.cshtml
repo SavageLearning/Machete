@@ -39,6 +39,7 @@
             <table id="dclSummaryTable" class="display">
                 <thead>
                     <tr>
+                        <th>@Machete.Web.Resources.Reports.date</th>
                         <th>@Machete.Web.Resources.Reports.dwcList</th>
                         <th>@Machete.Web.Resources.Reports.dwcPropio</th>
                         <th>@Machete.Web.Resources.Reports.hhhList</th>
@@ -149,14 +150,7 @@
         $('#summaryReports').click(
             function () {
                 $('#summaryHeader').unbind('mouseenter mouseleave');
-        //    },
-        //    function () {
-        //        $('#summaryReports')
-        //            .filter(":not(:has(.selected))") 
-        //            .accordion("activate", 0);
             });
-        // commented out while troubleshooting accordion panelse that won't close
-
 
         ///////////////////////////// PIE CHARTS /////////////////////////|X|
         // Buttons for showing and hiding
@@ -218,21 +212,22 @@
             "bFilter": false, //enable or disable filtering of data
             "bServerSide": true, //server side processing, req. source
             "sAjaxSource": "/Reports/AjaxDcl", //source for server side processing
-            "bProcessing": true, //enable processing indicator
+            "bProcessing": false, //enable processing indicator
             "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName), //internationalisation
             "aoColumns": [
-                { mDataProp: "dwcList" },
-                { mDataProp: "dwcPropio" },
-                { mDataProp: "hhhList" },
-                { mDataProp: "hhhPropio" },
-                { mDataProp: "totalSignins" },
+                { mDataProp: "date" }, //have to add this otherwise dt assumes
+                { mDataProp: "dwcList" }, //an entire month of data is coming.
+                { mDataProp: "dwcPropio" }, //why, I don't know. Also, it's
+                { mDataProp: "hhhList" }, //broken now and I don't know why.
+                { mDataProp: "hhhPropio" }, //these are similar to the other
+                { mDataProp: "totalSignins" }, //reports.
                 { mDataProp: "cancelledJobs" },
                 { mDataProp: "dwcFuture" },
                 { mDataProp: "dwcPropioFuture" },
                 { mDataProp: "hhhFuture" },
                 { mDataProp: "hhhPropioFuture" },
                 { mDataProp: "futureTotal" },
-            ], //these are the column names in the array; number must match # of cols. in table
+            ], //these are the column names in the array; total # must match
             "fnServerData": function (sSource, aoData, fnCallback) {
                 aoData.push({ "name": "todaysdate", "value": $('#dclDate').val() });
                 $.getJSON(sSource, aoData, function (json) {
@@ -251,17 +246,19 @@
             "bFilter": false, //enable or disable filtering of data
             "bServerSide": true, //server side processing, req. source
             "sAjaxSource": "/Reports/AjaxWec", //source for server side processing
-            "bProcessing": true, //enable processing indicator
+            "bProcessing": false, //enable processing indicator
             "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName), //internationalisation
             "aoColumns": [
                 { mDataProp: "date" },
                 { mDataProp: "totalSignins" },
                 { mDataProp: "noWeekJobs" },
 //                { mDataProp: "weekJobsSector" },
+// this is commented out at the moment because it
+// is another set of data that we haven't touched yet.
                 { mDataProp: "weekEstDailyHours" },
                 { mDataProp: "weekEstPayment" },
                 { mDataProp: "weekHourlyWage" },
-            ], // column names; must match # of cols. in table
+            ], // column names must match # of cols. in table
             "fnServerData": function (sSource, aoData, fnCallback) {
                 aoData.push({ "name": "todaysdate", "value": $('#wecDate').val() });
                 $.getJSON(sSource, aoData, function (json) {
@@ -280,7 +277,7 @@
             "bFilter": false, //enable or disable filtering of data
             "bServerSide": true, //server side processing, req. source
             "sAjaxSource": "/Reports/AjaxMwd", //source for server side processing
-            "bProcessing": true, //enable processing indicator
+            "bProcessing": false, //enable processing indicator
             "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName), //internationalisation
             "aoColumns": [
                 { mDataProp: "date" },
@@ -311,15 +308,15 @@
         mwdNewTable["bDestroy"] = "true,";
 
         $('#dclLink').click(function () {
-            $('#dclSummaryTable').dataTable(dclTableDefaults);
+            $('#dclSummaryTable').dataTable(dclNewTable);
         });
 
         $('#wecLink').click(function () {
-            $('#wecSummaryTable').dataTable(wecTableDefaults);
+            $('#wecSummaryTable').dataTable(wecNewTable);
         });
 
         $('#mwdLink').click(function () {
-            $('#mwdSummaryTable').dataTable(mwdTableDefaults);
+            $('#mwdSummaryTable').dataTable(mwdNewTable);
         });
 
         //////////////// the date-pickerers /////////////////|X|
