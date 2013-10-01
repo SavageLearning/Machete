@@ -14,12 +14,12 @@ using NLog;
 
 namespace Machete.Service
 {
-    // Other interfaces seem to implement IService, which is a tool for writing a type of record.
-    // See [workingDirectory]\Machete.Service\shared\ServiceBase.cs -- didn't do that here.
+    // Other interfaces implement IService, which is a tool for writing a type of record.
+    // No writing necessary here. Only reporting.
 
     public interface IReportService
     {
-        IQueryable<DailyCasaLatinaReport> DailyCasaLatina(DateTime dateRequested);
+        IQueryable<DailyCasaLatinaReport> DailyCasaLatina(DateTime beginDate, DateTime endDate);
         IQueryable<WeeklyElCentroReport> WeeklyElCentro(DateTime beginDate, DateTime endDate);
         IQueryable<MonthlyWithDetailReport> MonthlyWithDetail(DateTime beginDate, DateTime endDate);
         dataTableResult<dclData> dclView(DateTime dclDate);
@@ -59,173 +59,60 @@ namespace Machete.Service
         /// </summary>
         /// <param name="dateRequested">A single DateTime parameter</param>
         /// <returns>IQueryable</returns>
-        public IQueryable<DailyCasaLatinaReport> DailyCasaLatina(DateTime dateRequested)
+        public IQueryable<DailyCasaLatinaReport> DailyCasaLatina(DateTime beginDate, DateTime endDate)
         {
             //dateRequested = Convert.ToDateTime(dateRequested.Date);
             //not sure yet if above hack is needed
             IQueryable<DailyCasaLatinaReport> query;
 
-            DateTime beginDate = new DateTime(dateRequested.Year, dateRequested.Month, dateRequested.Day, 0, 0, 0);
-            DateTime endDate = new DateTime(dateRequested.Year, dateRequested.Month, dateRequested.Day, 11, 59, 59);
-
             var waQ = waRepo.GetAllQ();
             var wQ = wRepo.GetAllQ();
             var woQ = woRepo.GetAllQ();
             var wrQ = wrRepo.GetAllQ();
-            var lQ = lookRepo.GetAllQ();
+            //var lQ = lookRepo.GetAllQ();
+            //int dwc = 20;
+            //int hhh = 21;
+            //int cancelled = 45;
 
-            int dwc = 20;
-            int hhh = 21;
-            int cancelled = 45;
-
-            var futureDWC = waQ
-                               .GroupJoin(wrQ, wa => wa.workOrderID, wr => wr.WorkOrderID,
-                                              (wa, wr) => new
-                                              {
-                                               wa,
-                                               reqWorkerID = wr.FirstOrDefault().WorkerID == null ? 0 : wr.FirstOrDefault().WorkerID,
-                                               reqOrderID = wr.FirstOrDefault().WorkOrderID == null ? 0 : wr.FirstOrDefault().WorkOrderID
-                                              })
-                               .GroupJoin(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
-                                              (wr, wo) => new
-                                              {
-                                               wr,
-                                               timeOfWork = wo.FirstOrDefault().dateTimeofWork == null ? default(DateTime) : wo.FirstOrDefault().dateTimeofWork
-                                              })
-                               .GroupJoin(lQ, wo => wo.wr.wa.skillID, l => l.ID,
-                                            (wo, l) => new
-                                            {
-                                             wo,
-                                             dwcFuture = (l.FirstOrDefault().text_EN.Contains("/hhh/".ToLower()) ? 0 : (wo.wr.reqOrderID == 0 ? 1 : 0)) == null ? 0 : (l.FirstOrDefault().text_EN.Contains("/hhh/".ToLower()) ? 0 : (wo.wr.reqOrderID == 0 ? 1 : 0)),
-                                             //dwcFuturePatron = wo.wr.reqOrderID == wo.wr.wa.workOrderID ? (wo.wr.reqWorkerID == wo.wr.wa.workOrderID ? (l.FirstOrDefault().typeOfWorkID == dwc ? 1 : 0) : 0) : 0,
-                                             //hhhFuture = l.FirstOrDefault().text_EN.Contains("/hhh/".ToLower()) ? (wo.wr.reqOrderID == 0 ? 1 : 0) : 0,
-                                             //hhhFuturePatron = wo.wr.reqOrderID == wo.wr.wa.workOrderID ? (wo.wr.reqWorkerID == wo.wr.wa.workOrderID ? (l.FirstOrDefault().typeOfWorkID == hhh ? 1 : 0) : 0) : 0
-                                            })
-                               .Where(whr => whr.wo.timeOfWork > endDate)
-                               .Sum(a => (int?)a.dwcFuture) ?? 0;
-
-            var futureDWCPatron = waQ
-                                     .GroupJoin(wrQ, wa => wa.workOrderID, wr => wr.WorkOrderID,
-                                                    (wa, wr) => new
-                                                 {
-                                                     wa,
-                                                     reqWorkerID = wr.FirstOrDefault().WorkerID == null ? 0 : wr.FirstOrDefault().WorkerID,
-                                                     reqOrderID = wr.FirstOrDefault().WorkOrderID == null ? 0 : wr.FirstOrDefault().WorkOrderID
-                                                 })
-                              .GroupJoin(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
-                                      (wr, wo) => new
-                                      {
-                                          wr,
-                                          timeOfWork = wo.FirstOrDefault().dateTimeofWork == null ? default(DateTime) : wo.FirstOrDefault().dateTimeofWork
-                                          //timeOfWork = EntityFunctions.TruncateTime(wo.FirstOrDefault().dateTimeofWork) ?? DateTime.Now
-                                          //the commented line failed miserably
-                                      })
-                              .GroupJoin(lQ, wo => wo.wr.wa.skillID, l => l.ID,
-                                            (wo, l) => new
-                                            {
-                                             wo,
-                                                dwcFuturePatron = wo.wr.reqOrderID == wo.wr.wa.workOrderID ? (wo.wr.reqWorkerID == wo.wr.wa.workOrderID ? (l.FirstOrDefault().typeOfWorkID == dwc ? 1 : 0) : 0) : 0,
-                                            })
-                                .Where(whr => whr.wo.timeOfWork > endDate)
-                                //.Sum(b => b.dwcFuturePatron == null ? 0 : b.dwcFuturePatron);
-                                           .Sum(a => (int?)a.dwcFuturePatron) ?? 0;
-
-            
-            var futureHHH = waQ
-                               .GroupJoin(wrQ, wa => wa.workOrderID, wr => wr.WorkOrderID,
-                                              (wa, wr) => new
-                                           {
-                                               wa,
-                                               reqWorkerID = wr.FirstOrDefault().WorkerID == null ? 0 : wr.FirstOrDefault().WorkerID,
-                                               reqOrderID = wr.FirstOrDefault().WorkOrderID == null ? 0 : wr.FirstOrDefault().WorkOrderID
-                                           })
-                               .GroupJoin(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
-                                              (wr, wo) => new
-                                              {
-                                               wr,
-                                               timeOfWork = wo.FirstOrDefault().dateTimeofWork == null ? default(DateTime) : wo.FirstOrDefault().dateTimeofWork
-                                              })
-                              .GroupJoin(lQ, wo => wo.wr.wa.skillID, l => l.ID,
-                                            (wo, l) => new
-                                            {
-                                                wo,
-                                                hhhFuture = l.FirstOrDefault().text_EN.Contains("/hhh/".ToLower()) ? (wo.wr.reqOrderID == 0 ? 1 : 0) : 0,
-                                            })
-                                      .Where(whr => whr.wo.timeOfWork > endDate)
-                                      //.Sum(c => c.hhhFuture == null ? 0 : c.hhhFuture);
-                                      .Sum(a => (int?)a.hhhFuture) ?? 0;
-
-            var futureHHHPatron = waQ
-                                     .GroupJoin(wrQ, wa => wa.workOrderID, wr => wr.WorkOrderID,
-                                                    (wa, wr) => new
-                                                    {
-                                                        wa,
-                                                        reqWorkerID = wr.FirstOrDefault().WorkerID == null ? 0 : wr.FirstOrDefault().WorkerID,
-                                                        reqOrderID = wr.FirstOrDefault().WorkOrderID == null ? 0 : wr.FirstOrDefault().WorkOrderID
-                                                    })
-                                     .GroupJoin(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
-                                                    (wr, wo) => new
-                                                    {
-                                                        wr,
-                                                        timeOfWork = wo.FirstOrDefault().dateTimeofWork == null ? default(DateTime) : wo.FirstOrDefault().dateTimeofWork
-                                                    })
-                                     .GroupJoin(lQ, wo => wo.wr.wa.skillID, l => l.ID,
-                                            (wo, l) => new
-                                            {
-                                                wo,
-                                                hhhFuturePatron = wo.wr.reqOrderID == wo.wr.wa.workOrderID ? (wo.wr.reqWorkerID == wo.wr.wa.workOrderID ? (l.FirstOrDefault().typeOfWorkID == hhh ? 1 : 0) : 0) : 0
-                                            })
-                                     .Where(whr => whr.wo.timeOfWork > endDate)
-                                     //.Sum(d => d.hhhFuturePatron == null ? 0 : d.hhhFuturePatron);
-                                     .Sum(a => (int?)a.hhhFuturePatron) ?? 0;
-
- 
             query = waQ
-                              .GroupJoin(wrQ, wa => wa.workOrderID, wr => wr.WorkOrderID,
-                                      (wa, wr) => new
-                                      {
-                                          wa,
-                                          reqWorkerID = wr.FirstOrDefault().WorkerID == null ? 0 : wr.FirstOrDefault().WorkerID,
-                                          reqOrderID = wr.FirstOrDefault().WorkOrderID == null ? 0 : wr.FirstOrDefault().WorkOrderID
-                                      })
-                              .GroupJoin(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
-                                      (wr, wo) => new
-                                      {
-                                          wr,
-                                          cancelledJobs = wo.FirstOrDefault().status == cancelled ? 1 : 0,
-                                          timeOfWork = wo.FirstOrDefault().dateTimeofWork == null ? default(DateTime) : wo.FirstOrDefault().dateTimeofWork
-                                      })
-                              .GroupJoin(wQ, wo => wo.wr.wa.workerAssignedID, w => w.ID,
-                                     (wo, w) => new
-                                     {
-                                         wo,
-                                         dwcList = wo.wr.reqOrderID == 0 ? (w.FirstOrDefault().typeOfWorkID == dwc ? 1 : 0) : 0,
-                                         dwcPatron = wo.wr.reqOrderID == wo.wr.wa.workOrderID ? (wo.wr.reqWorkerID == wo.wr.wa.workOrderID ? (w.FirstOrDefault().typeOfWorkID == dwc ? 1 : 0) : 0) : 0,
-                                         hhhList = wo.wr.reqOrderID == 0 ? (w.FirstOrDefault().typeOfWorkID == hhh ? 1 : 0) : 0,
-                                         hhhPatron = wo.wr.reqOrderID == wo.wr.wa.workOrderID ? (wo.wr.reqWorkerID == wo.wr.wa.workOrderID ? (w.FirstOrDefault().typeOfWorkID == hhh ? 1 : 0) : 0) : 0,
-                                     })
-                              .Where(whr => whr.wo.timeOfWork >= beginDate 
-                                         && whr.wo.timeOfWork <= endDate)
-                                         //THIS SHOULD GET THE WHOLE DAY
-                              //.Where(whr => whr.wo.timeOfWork == dateRequested.Date)
-                              //    THERE SHOULD ONLY BE ONE DAMNED DATE HERE
-                              .GroupBy(gb => EntityFunctions.TruncateTime(gb.wo.timeOfWork)) //GRRR
-                              .Select(group => new DailyCasaLatinaReport
-                              {
-                                  date = group.Key ?? DateTime.Now,
-                                  dwcList = group.Sum(a => a.dwcList),
-                                  dwcPropio = group.Sum(a => a.dwcPatron),
-                                  hhhList = group.Sum(a => a.hhhList),
-                                  hhhPropio = group.Sum(a => a.hhhPatron),
-                                  totalSignins = group.Sum(a => a.dwcList) + group.Sum(a => a.dwcPatron) + group.Sum(a => a.hhhList) + group.Sum(a => a.hhhPatron),
-                                  cancelledJobs = group.Sum(a => a.wo.cancelledJobs),
-                                  dwcFuture = futureDWC == null ? 0 : futureDWC,
-                                  dwcPropioFuture = futureDWCPatron == null ? 0 : futureDWCPatron,
-                                  hhhFuture = futureHHH == null ? 0 : futureHHH,
-                                  hhhPropioFuture = futureHHHPatron == null ? 0 : futureHHHPatron,
-                                  futureTotal = (futureDWC == null ? 0 : futureDWC) + (futureDWCPatron == null ? 0 : futureDWCPatron) + (futureHHH == null ? 0 : futureHHH) + (futureHHHPatron == null ? 0 : futureHHHPatron)
-                              }
-                              );
+                .GroupJoin(wrQ,
+                    wa => new { waid = (int)wa.workOrderID, waw = (int?)wa.workerAssignedID },
+                    wr => new { waid = (int)wr.WorkOrderID, waw = (int?)wr.WorkerID },
+                    (wa, wr) => new { wa, 
+                        reqOrderID = wr.FirstOrDefault().WorkOrderID,
+                        reqWorkerID = wr.FirstOrDefault().WorkerID
+                    })
+                .GroupJoin(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
+                    (wr, wo) => new
+                    {
+                        wr,
+                        cancelledJobs = wo.FirstOrDefault().status == WorkOrder.iCancelled ? 1 : 0,
+                        timeOfWork = wo.FirstOrDefault().dateTimeofWork == null ? DateTime.Now : EntityFunctions.TruncateTime(wo.FirstOrDefault().dateTimeofWork)
+                    })
+                .GroupJoin(wQ, wo => wo.wr.wa.workerAssignedID, w => w.ID,
+                    (wo, w) => new {
+                        wo,
+                        dwcList = w.FirstOrDefault().typeOfWorkID == Worker.iDWC ? (wo.wr.reqWorkerID == w.FirstOrDefault().ID ? 0 : 1) : 0,
+                        hhhList = w.FirstOrDefault().typeOfWorkID == Worker.iHHH ? (wo.wr.reqWorkerID == w.FirstOrDefault().ID ? 0 : 1) : 0,
+                        dwcPatron = w.FirstOrDefault().typeOfWorkID == Worker.iDWC ? (wo.wr.reqWorkerID == w.FirstOrDefault().ID ? 1 : 0) : 0,
+                        hhhPatron = w.FirstOrDefault().typeOfWorkID == Worker.iHHH ? (wo.wr.reqWorkerID == w.FirstOrDefault().ID ? 1 : 0) : 0
+                    })
+                .Where(whr => whr.wo.timeOfWork >= beginDate
+                           && whr.wo.timeOfWork <= endDate)
+                .GroupBy(gb => gb.wo.timeOfWork)
+                .Select(group => new DailyCasaLatinaReport
+                    {
+                        date = group.Key ?? DateTime.Now, //second condition can't be reached AFAIK
+                        dwcList = group.Sum(a => a.dwcList == null ? 0 : a.dwcList),
+                        dwcPropio = group.Sum(a => a.dwcPatron == null ? 0 : a.dwcPatron),
+                        hhhList = group.Sum(a => a.hhhList == null ? 0 : a.hhhList),
+                        hhhPropio = group.Sum(a => a.hhhPatron == null ? 0 : a.hhhPatron),
+                        totalSignins = group.Sum(a => a.dwcList == null ? 0 : a.dwcList) + group.Sum(a => a.dwcPatron == null ? 0 : a.dwcPatron) + group.Sum(a => a.hhhList == null ? 0 : a.hhhList) + group.Sum(a => a.hhhPatron == null ? 0 : a.hhhPatron),
+                        totalAssignments = group.Count(),
+                        cancelledJobs = group.Sum(a => a.wo.cancelledJobs == null ? 0 : a.wo.cancelledJobs)
+                    })
+                .OrderBy(fini => fini.date);
+
             return query;
         }
 
@@ -243,42 +130,71 @@ namespace Machete.Service
 
             var wsiQ = wsiRepo.GetAllQ();
             var waQ = waRepo.GetAllQ();
-            var woQ = woRepo.GetAllQ();
 
-            query = wsiQ //begin "with" clause; first line is "FROM"
-                        .GroupJoin(waQ, wsi => wsi.ID, wa => wa.workerAssignedID,
-                                       (wsi, wa) => new //LEFT JOIN
-                                            {
-                                                wsi, //seems wsi-wawsi, but works (left in left join, then:)
-                                                waid = wa.FirstOrDefault().ID == null ? 0 : 1, //to sum, below
-                                                waworkorderid = wa.FirstOrDefault().workOrderID == null ? 0 : 1, //same
-                                                wahours = wa.FirstOrDefault().hours == null ? 0 : wa.FirstOrDefault().hours, //already ok
-                                                wahourlywage = wa.FirstOrDefault().hourlyWage == null ? 0 : wa.FirstOrDefault().hourlyWage
-                                            }
-                                  )
-                        .GroupJoin(woQ, wsiwa => wsiwa.waworkorderid, wo => wo.ID, // xx is the h
-                                       (wsiwa, wsiwawo) => new //prepare ye to receive thy second left join
-                                            {
-                                                wsiwa,
-                                                wodatetimeofwork = wsiwawo.FirstOrDefault().dateTimeofWork == null ? default(DateTime) : wsiwawo.FirstOrDefault().dateTimeofWork
-                                            }
-                                  )
-                        .Where(www => www.wodatetimeofwork >= beginDate //WHERE
-                                   && www.wodatetimeofwork <= endDate)
-                //end "WITH" clause; assume "FROM" already handled
-                        .GroupBy(gb => gb.wodatetimeofwork)
-                        .Select(wec => new WeeklyElCentroReport
-                                    {
-                                        date = wec.Key,
-                                        totalSignins = wec.Count(), //this was orig. wsiQ, so a count is a count of wsi
-                                        noWeekJobs = wec.Sum(nwj => nwj.wsiwa.waid),
-                                        //weekJobsSector = and this would be the reason they're all commented out
-                                        weekEstDailyHours = wec.Sum(wedh => wedh.wsiwa.wahours),
-                                        weekEstPayment = wec.Sum(wep => wep.wsiwa.wahourlywage * wep.wsiwa.wahours),
-                                        weekHourlyWage = wec.Sum(whwtwo => whwtwo.wsiwa.wahours) == 0 ? 0 : wec.Sum(whw => whw.wsiwa.wahourlywage * whw.wsiwa.wahours) / wec.Sum(whwtwo => whwtwo.wsiwa.wahours)
-                                    }
-                               )
-                        .OrderBy(fini => fini.date);
+            query = wsiQ
+                .GroupJoin(waQ, wsi => wsi.ID, wa => wa.workerAssignedID,
+                    (wsi, wa) => new //LEFT JOIN
+                        {
+                            wsi, //seems wsi-wawsi, but works (left in left join, then:)
+                            waid = wa.FirstOrDefault().ID == null ? 0 : 1, //to sum, below
+                            waworkorderid = wa.FirstOrDefault().workOrderID == null ? 0 : 1, //same
+                            wahours = wa.FirstOrDefault().hours == null ? 0 : wa.FirstOrDefault().hours, //already ok
+                            wahourlywage = wa.FirstOrDefault().hourlyWage == null ? 0 : wa.FirstOrDefault().hourlyWage
+                        }
+                     )
+                .Where(whr => whr.wsi.dateforsignin >= beginDate
+                           && whr.wsi.dateforsignin <= endDate)
+                .GroupBy(gb => gb.wsi.dateforsignin)
+                .Select(wec => new WeeklyElCentroReport
+                          {
+                              date = wec.Key == null ? new DateTime(2013, 1, 1, 0, 0, 0) : wec.Key,
+                              totalSignins = wec.Count(), //this was orig. wsiQ, so a count is a count of wsi
+                              noWeekJobs = wec.Sum(nwj => nwj.waid),
+                              weekEstDailyHours = wec.Sum(wedh => wedh.wahours),
+                              weekEstPayment = wec.Sum(wep => wep.wahourlywage * wep.wahours),
+                              weekHourlyWage = wec.Sum(whwtwo => whwtwo.wahours) == 0 ? 0 : wec.Sum(whw => whw.wahourlywage * whw.wahours) / wec.Sum(whwtwo => whwtwo.wahours)
+                          }
+                     );
+
+            return query;
+        }
+
+        public IQueryable<WeeklyJobsBySector> WeeklyJobs(DateTime beginDate, DateTime endDate)
+        {
+            IQueryable<WeeklyJobsBySector> query;
+
+            var waQ = waRepo.GetAllQ();
+            var woQ = woRepo.GetAllQ();
+            var lQ = lookRepo.GetAllQ();
+
+            query = waQ
+                .GroupJoin(woQ,
+                    wa => wa.workOrderID,
+                    wo => wo.ID,
+                    (wa, wo) => new
+                    {
+                        wa,
+                        workDate = wo.FirstOrDefault().dateTimeofWork
+                    })
+                .GroupJoin(lQ,
+                    wawo => wawo.wa.skillID,
+                    l => l.ID,
+                    (wawo, l) => new
+                    {
+                        wawo,
+                        enText = l.FirstOrDefault().text_EN
+                    })
+                .Where(whr => whr.wawo.workDate >= beginDate
+                           && whr.wawo.workDate <= endDate)
+                .GroupBy(gb => new { gb.enText, gb.wawo.workDate })
+                .OrderByDescending(ob => ob.Key.workDate)
+                .ThenByDescending(ob => ob.Count())
+                .Select(group => new WeeklyJobsBySector
+                {
+                    jobsDate = group.Key.workDate,
+                    jobsEngText = group.Key.enText,
+                    jobsCount = group.Count()
+                });
 
             return query;
         }
@@ -355,35 +271,53 @@ namespace Machete.Service
 
         public dataTableResult<dclData> dclView(DateTime dclDate)
         {
-            DateTime dateRequested;
-            IEnumerable<DailyCasaLatinaReport> dclResult;
+            IEnumerable<DailyCasaLatinaReport> dclCurrent;
+            //IEnumerable<DailyCasaLatinaReport> dclFuture;
             IEnumerable<dclData> q;
             var result = new dataTableResult<dclData>();
 
-            dateRequested = dclDate;
+            DateTime beginDate = new DateTime(dclDate.Year, dclDate.Month, dclDate.Day, 0, 0, 0);
+            DateTime endDate = new DateTime(dclDate.Year, dclDate.Month, dclDate.Day, 23, 59, 59).AddDays(DateTime.DaysInMonth(dclDate.Year, dclDate.Month + 1));
 
-            dclResult = DailyCasaLatina(dateRequested); // not sending to list...
+            //new DateTime(dclDate.Year, dclDate.Month, dclDate.Day, 23, 59, 59);
+            //DateTime futureDate =
 
-            q = dclResult
-                .Select( g => new dclData
+            dclCurrent = DailyCasaLatina(beginDate, endDate).ToList(); 
+            //dclFuture = DailyCasaLatina(endDate, futureDate).ToList();
+
+            q = dclCurrent
+                //.Join(dclFuture,
+                //    cur => cur.date,
+                //    fut => fut.date,
+                //    (cur, fut) => new
+                //    { cur,
+                //        fut.dwcList,
+                //        fut.dwcPropio,
+                //        fut.hhhList,
+                //        fut.hhhPropio,
+                //        fut.totalSignins
+                //    })
+                //.GroupBy(gb => gb.cur.date)
+                .Select(group => new dclData
                 {
-                    date = g.date,
-                    dwcList = g.dwcList,
-                    dwcPropio = g.dwcPropio,
-                    hhhList = g.hhhList,
-                    hhhPropio = g.hhhPropio,
-                    totalSignins = g.totalSignins,
-                    cancelledJobs = g.cancelledJobs,
-                    dwcFuture = g.dwcFuture,
-                    dwcPropioFuture = g.dwcPropioFuture,
-                    hhhFuture = g.hhhFuture,
-                    hhhPropioFuture = g.hhhPropioFuture,
-                    futureTotal = g.futureTotal
+                    date = group.date,
+                    dwcList = group.dwcList,
+                    dwcPropio = group.dwcPropio,
+                    hhhList = group.hhhList,
+                    hhhPropio = group.hhhPropio,
+                    totalSignins = group.totalSignins,
+                    totalAssignments = group.totalAssignments,
+                    cancelledJobs = group.cancelledJobs//,
+                    //futureDWC = group.FirstOrDefault().dwcList,
+                    //futureDWCpropio = group.FirstOrDefault().dwcPropio,
+                    //futureHHH = group.FirstOrDefault().hhhList,
+                    //futureHHHpropio = group.FirstOrDefault().hhhPropio,
+                    //futureTotal = group.FirstOrDefault().totalSignins
                 });
 
-            // no need for an order by. this should be a single line of data.
+            q = q.OrderBy(p => p.date);
 
-            result.filteredCount = q.Count(); //even though should be '1',
+            result.filteredCount = q.Count(); //should theoretically be "1",
             result.query = q; //these need to stay set properly to be
             result.totalCount = waRepo.GetAllQ().Count(); // returned
             return result; // ...for DataTables.
@@ -394,31 +328,49 @@ namespace Machete.Service
             DateTime beginDate;
             DateTime endDate;
             IEnumerable<WeeklyElCentroReport> wecResult;
+            IEnumerable<WeeklyJobsBySector> wecJobs;
             IEnumerable<wecData> q; // query for monthlyWithDetail result
             var result = new dataTableResult<wecData>(); // note the type. define it well.
 
-            beginDate = new DateTime(wecDate.Year, wecDate.Month, (wecDate.Day - 6));
-            endDate = wecDate;
+            beginDate = new DateTime(wecDate.Year, wecDate.Month, wecDate.Day, 0, 0, 0).AddDays(-6);
+            endDate = new DateTime(wecDate.Year, wecDate.Month, wecDate.Day, 23, 59, 59);
 
-            wecResult = WeeklyElCentro(beginDate, endDate).ToList();
+            wecResult = WeeklyElCentro(beginDate, endDate).ToList();            
+            wecJobs = WeeklyJobs(beginDate, endDate).ToList();
+
+            //.Select(x => x.enText).Aggregate("", (str, obj) => str + obj + " (" + group.Count().ToString() + ")")
 
             q = wecResult
+                .GroupJoin(wecJobs,
+                    res => res.date,
+                    job => job.jobsDate,
+                    (res, job) => new {
+                        date = res.date,
+                        total = res.totalSignins,
+                        week = res.noWeekJobs,
+                        hours = res.weekEstDailyHours,
+                        pay = res.weekEstPayment,
+                        jobDate = job.First().jobsDate,
+                        jobText = wecJobs
+                            .Where(whr => whr.jobsDate == job.FirstOrDefault().jobsDate)
+                            .Aggregate("", (a, b) => a + b.jobsEngText + " (" + b.jobsCount.ToString() + "), "),
+                        jobCount = job.First().jobsCount})
+                .GroupBy(gb => new { gb.jobText, gb.date })
+                .OrderBy(ob => ob.Key.date)
                 .Select(g => new wecData
                 {
-                    date = g.date,
-                    totalSignins = g.totalSignins,
-                    noWeekJobs = g.noWeekJobs,
-//                    weekJobsSector = g.weekJobsSector,
-                    weekEstDailyHours = g.weekEstDailyHours,
-                    weekEstPayment = g.weekEstPayment,
-                    weekHourlyWage = g.weekEstDailyHours != 0 ? (g.weekEstPayment / g.weekEstDailyHours) : 0
+                    date = g.Key.date,
+                    totalSignins = g.FirstOrDefault().total,
+                    noWeekJobs = g.FirstOrDefault().week,
+                    weekJobsSector = g.FirstOrDefault().jobText,
+                    weekEstDailyHours = g.FirstOrDefault().hours,
+                    weekEstPayment = g.FirstOrDefault().pay,
+                    weekHourlyWage = g.FirstOrDefault().hours == 0 ? 0 : (g.FirstOrDefault().pay / g.FirstOrDefault().hours)
                 });
 
             q = q.OrderBy(p => p.date);
 
             result.filteredCount = q.Count();
-            // data should include one month and already be organized as such
-            // dataTables rows can be defined at view level
             result.query = q;
             result.totalCount = waRepo.GetAllQ().Count();
             return result;
@@ -448,7 +400,7 @@ namespace Machete.Service
                     dispatchedHHHSignins = g.dispatchedHHHSignins,
                     totalHours = g.totalHours,
                     totalIncome = g.totalIncome,
-                    avgIncomePerHour = g.totalHours != 0 ? (g.totalIncome / g.totalHours) : 0 
+                    avgIncomePerHour = g.totalHours != 0 ? (g.totalIncome / g.totalHours) : 0
                 });
 
             q = q.OrderBy(p => p.date);
@@ -478,11 +430,14 @@ namespace Machete.Service
         public int? hhhPropio { get; set; }
         public int? totalSignins { get; set; }
         public int? cancelledJobs { get; set; }
-        public int? dwcFuture { get; set; }
-        public int? dwcPropioFuture { get; set; }
-        public int? hhhFuture { get; set; }
-        public int? hhhPropioFuture { get; set; }
-        public int? futureTotal { get; set; }
+        public int? totalAssignments { get; set; }
+        //public DateTime? futureDate { get; set; }
+        //public int? futureDWC { get; set; }
+        //public int? futureDWCpropio { get; set; }
+        //public int? futureHHH { get; set; }
+        //public int? futureHHHpropio { get; set; }
+        //public int? futureTotal { get; set; }
+        //public int? futureCancelled { get; set; }
     }
     /// <summary>
     /// A class to contain the data for the Weekly Report for El Centro
@@ -494,7 +449,7 @@ namespace Machete.Service
         public DateTime? date { get; set; }
         public int? totalSignins { get; set; }
         public int? noWeekJobs { get; set; }
-//        public string? weekJobsSector { get; set; }
+        public string weekJobsSector { get; set; }
         public int? weekEstDailyHours { get; set; }
         public double? weekEstPayment { get; set; }
         public double? weekHourlyWage { get; set; }

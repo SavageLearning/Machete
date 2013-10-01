@@ -111,18 +111,19 @@ namespace Machete.Web.Controllers
             var result = from d in dcl.query
                          select new
                          {
-                             date = System.String.Format("{0:MM/dd/yyyy}", d.date) ?? System.String.Format("{0:MM/dd/yyyy}", DateTime.Now),
-                             dwcList = d.dwcList > 0 ? d.dwcList : 0,
-                             dwcPropio = d.dwcPropio > 0 ? d.dwcPropio : 0,
-                             hhhList = d.hhhList > 0 ? d.hhhList : 0,
-                             hhhPropio = d.hhhPropio > 0 ? d.hhhPropio : 0,
-                             totalSignins = d.totalSignins > 0 ? d.totalSignins : 0,
-                             cancelledJobs = d.cancelledJobs > 0 ? d.totalSignins : 0,
-                             dwcFuture = d.dwcFuture > 0 ? d.dwcFuture : 0,
-                             dwcPropioFuture = d.dwcPropioFuture > 0 ? d.dwcPropioFuture : 0,
-                             hhhFuture = d.hhhFuture > 0 ? d.hhhFuture : 0,
-                             hhhPropioFuture = d.hhhPropioFuture > 0 ? d.hhhPropioFuture : 0,
-                             futureTotal = d.futureTotal > 0 ? d.futureTotal : 0
+                            date = System.String.Format("{0:MM/dd/yyyy}", d.date) ?? System.String.Format("{0:MM/dd/yyyy}", DateTime.Now),
+                            dwcList = d.dwcList > 0 ? d.dwcList : 0,
+                            dwcPropio = d.dwcPropio > 0 ? d.dwcPropio : 0,
+                            hhhList = d.hhhList > 0 ? d.hhhList : 0,
+                            hhhPropio = d.hhhPropio > 0 ? d.hhhPropio : 0,
+                            totalSignins = d.totalSignins > 0 ? d.totalSignins : 0,
+                            totalAssignments = d.totalAssignments > 0 ? d.totalAssignments : 0,
+                            cancelledJobs = d.cancelledJobs > 0 ? d.cancelledJobs : 0
+                            //dwcFuture = d.futureDWC > 0 ? d.futureDWC : 0,
+                            //dwcPropioFuture = d.futureDWCpropio > 0 ? d.futureDWCpropio : 0,
+                            //hhhFuture = d.futureHHH > 0 ? d.futureHHH : 0,
+                            //hhhPropioFuture = d.futureHHHpropio > 0 ? d.futureHHHpropio : 0,
+                            //futuretotal = d.futureTotal > 0 ? d.futureTotal : 0
                          };
 
             return Json(new
@@ -155,16 +156,16 @@ namespace Machete.Web.Controllers
             //
             //return what's left to datatables
             var result = from d in wec.query
-                         select new
-                         {
-                             date = System.String.Format("{0:MM/dd/yyyy}", d.date),
-                             totalSignins = d.totalSignins > 0 ? d.totalSignins.ToString() : "0",
-                             noWeekJobs = d.noWeekJobs > 0 ? d.noWeekJobs.ToString() : "0",
-                             //weekJobsSector = d.weekJobsSector == null ? "None" : d.weekJobsSector,
-                             weekEstDailyHours = d.weekEstDailyHours > 0 ? d.weekEstDailyHours.ToString() : "0",
-                             weekEstPayment = d.weekEstPayment > 0 ? d.weekEstPayment.ToString() : "0",
-                             weekHourlyWage = d.weekHourlyWage > 0 ? d.weekHourlyWage.ToString() : "0"
-                         };
+                select new
+                {
+                    date = System.String.Format("{0:MM/dd/yyyy}", d.date),
+                    totalSignins = d.totalSignins > 0 ? d.totalSignins.ToString() : "0",
+                    noWeekJobs = d.noWeekJobs > 0 ? d.noWeekJobs.ToString() : "0",
+                    weekJobsSector = d.weekJobsSector == null ? "None" : d.weekJobsSector,
+                    weekEstDailyHours = d.weekEstDailyHours > 0 ? d.weekEstDailyHours.ToString() : "0",
+                    weekEstPayment = d.weekEstPayment > 0 ? d.weekEstPayment.ToString() : "0",
+                    weekHourlyWage = d.weekHourlyWage > 0 ? d.weekHourlyWage.ToString() : "0"
+                };
 
             return Json(new
             {
