@@ -13,12 +13,8 @@ namespace Machete.Domain.Entities
         public int hhhList { get; set; }
         public int hhhPropio { get; set; }
         public int totalSignins { get; set; }
+        public int totalAssignments { get; set; }
         public int cancelledJobs { get; set; }
-        public int dwcFuture { get; set; }
-        public int dwcPropioFuture { get; set; }
-        public int hhhFuture { get; set; }
-        public int hhhPropioFuture { get; set; }
-        public int futureTotal { get; set; }
     }
 
     public class WeeklyElCentroReport
@@ -30,6 +26,13 @@ namespace Machete.Domain.Entities
         public int weekEstDailyHours { get; set; }
         public double weekEstPayment { get; set; }
         public double weekHourlyWage { get; set; }
+    }
+
+    public class WeeklyJobsBySector
+    {
+        public DateTime jobsDate { get; set; }
+        public string jobsEngText { get; set; }
+        public int jobsCount { get; set; }
     }
 
     public class MonthlyWithDetailReport

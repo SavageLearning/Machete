@@ -259,6 +259,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Total Assignments.
+        /// </summary>
+        public static string totalAssignments {
+            get {
+                return ResourceManager.GetString("totalAssignments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Total Hours.
         /// </summary>
         public static string totalHours {

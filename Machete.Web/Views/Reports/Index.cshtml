@@ -13,10 +13,10 @@
     <div id="summaryHeader">
         <h3 style="padding-left: .5em;">@Machete.Web.Resources.Reports.summaryHeader</h3>
         <div id="summaryPopup">
-            <p id="summaryInstructions" style="padding-left:.5em">
-                @Machete.Web.Resources.Reports.summaryInstructions
-            </p>
-            <input type="button" value="Hide" class="formButton" id="summaryHide" />
+                <p id="summaryInstructions" style="padding-left:.5em">
+                    @Machete.Web.Resources.Reports.summaryInstructions
+                    <input type="button" value="Hide" class="formButton" id="summaryHide" />
+                </p>
         </div>
         <div id="sorryNoPieCharts" style="padding-left:.5em">
             <h3 style="color:red;">Sorry, pie charts aren't available quite yet! Just wait for the next update!</h3>
@@ -35,7 +35,7 @@
             <input type="button" value="Pie Chart" class="formButton" id="dclPieChartBtn" />
             <input type="button" value="Print Report" class="formButton" id="dclPrintReport" />
             @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-dcl-datepicker", @id = "dclDate" })
-            <p id="dclHelp"><em>Select a day to see results.</em></p>
+            <p id="dclHelp" style="display:inline;"><em>Select a day to see results.</em></p>
             <table id="dclSummaryTable" class="display">
                 <thead>
                     <tr>
@@ -45,12 +45,13 @@
                         <th>@Machete.Web.Resources.Reports.hhhList</th>
                         <th>@Machete.Web.Resources.Reports.hhhPropio</th>
                         <th>@Machete.Web.Resources.Reports.totalSignins</th>
+                        <th>@Machete.Web.Resources.Reports.totalAssignments</th>
                         <th>@Machete.Web.Resources.Reports.cancelledJobs</th>
-                        <th>@Machete.Web.Resources.Reports.dwcFuture</th>
+@*                        <th>@Machete.Web.Resources.Reports.dwcFuture</th>
                         <th>@Machete.Web.Resources.Reports.dwcPropioFuture</th>
                         <th>@Machete.Web.Resources.Reports.hhhFuture</th>
                         <th>@Machete.Web.Resources.Reports.hhhPropioFuture</th>
-                        <th>@Machete.Web.Resources.Reports.futureTotal</th>
+                        <th>@Machete.Web.Resources.Reports.futureTotal</th>*@
                     </tr>
                 </thead>
             </table>
@@ -61,14 +62,14 @@
             <input type="button" value="Pie Chart" class="formButton" id="wecPieChartBtn" />
             <input type="button" value="Print Report" class="formButton" id="wecPrintReport" />
             @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-wec-datepicker", @id = "wecDate" })
-            <p id="wecHelp"><em>Select a day to see results for that week.</em></p>
+            <p id="wecHelp" style="display:inline;"><em>Select a day to see results for that week.</em></p>
             <table id="wecSummaryTable" class="display">
                 <thead>
                     <tr>
                         <th>@Machete.Web.Resources.Reports.date</th>
                         <th>@Machete.Web.Resources.Reports.totalSignins</th>
                         <th>@Machete.Web.Resources.Reports.noWeekJobs</th>
-                        <!--<th>Machete.Web.Resources.Reports.weekJobsSect</th>-->
+                        <th>@Machete.Web.Resources.Reports.weekJobsSect</th>
                         <th>@Machete.Web.Resources.Reports.weekEstDailyHours</th>
                         <th>@Machete.Web.Resources.Reports.weekEstPayment</th>
                         <th>@Machete.Web.Resources.Reports.weekHourlyWage</th>
@@ -82,7 +83,7 @@
             <input type="button" value="Pie Chart" class="formButton" id="mwdPieChartBtn" />
             <input type="button" value="Print Report" class="formButton" id="mwdPrintReport" />
             @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-mwd-datepicker", @id = "mwdDate" })
-            <p id="mwdHelp"><em>Select any day in a month to see results.</em></p>
+            <p id="mwdHelp" style="display:inline;"><em>Select any day in a month to see results.</em></p>
             <table id="mwdSummaryTable" class="display">
                 <thead>
                     <tr>
@@ -159,7 +160,7 @@
         //
 
         $('#dclDataOnlyBtn').click(function () {
-            $('#sorryNoPieCharts').hide();
+            $('#sorryNoPieCharts').hide("puff");
         });
 
         $('#dclPieChartBtn').click(function () {
@@ -171,7 +172,7 @@
         });
 
         $('#wecDataOnlyBtn').click(function () {
-            $('#sorryNoPieCharts').hide();
+            $('#sorryNoPieCharts').hide("puff");
         });
 
         $('#wecPieChartBtn').click(function () {
@@ -183,7 +184,7 @@
         });
 
         $('#mwdDataOnlyBtn').click(function () {
-            $('#sorryNoPieCharts').hide();
+            $('#sorryNoPieCharts').hide("puff");
         });
 
         $('#mwdPieChartBtn').click(function () {
@@ -221,12 +222,13 @@
                 { mDataProp: "hhhList" }, //broken now and I don't know why.
                 { mDataProp: "hhhPropio" }, //these are similar to the other
                 { mDataProp: "totalSignins" }, //reports.
-                { mDataProp: "cancelledJobs" },
-                { mDataProp: "dwcFuture" },
-                { mDataProp: "dwcPropioFuture" },
-                { mDataProp: "hhhFuture" },
-                { mDataProp: "hhhPropioFuture" },
-                { mDataProp: "futureTotal" },
+                { mDataProp: "totalAssignments" },
+                { mDataProp: "cancelledJobs" } //,
+                //{ mDataProp: "dwcFuture" },
+                //{ mDataProp: "dwcPropioFuture" },
+                //{ mDataProp: "hhhFuture" },
+                //{ mDataProp: "hhhPropioFuture" },
+                //{ mDataProp: "futureTotal" },
             ], //these are the column names in the array; total # must match
             "fnServerData": function (sSource, aoData, fnCallback) {
                 aoData.push({ "name": "todaysdate", "value": $('#dclDate').val() });
@@ -252,9 +254,7 @@
                 { mDataProp: "date" },
                 { mDataProp: "totalSignins" },
                 { mDataProp: "noWeekJobs" },
-//                { mDataProp: "weekJobsSector" },
-// this is commented out at the moment because it
-// is another set of data that we haven't touched yet.
+                { mDataProp: "weekJobsSector" },
                 { mDataProp: "weekEstDailyHours" },
                 { mDataProp: "weekEstPayment" },
                 { mDataProp: "weekHourlyWage" },
@@ -326,10 +326,10 @@
 
         $('.ui-dcl-datepicker').hover(
             function () {
-                $('#dclHelp').delay(2000).show("fade", 1000);
+                $('#dclHelp').show("fade", 2200);
             },
             function () {
-                $('#dclHelp').hide();
+                $('#dclHelp').hide("fade", 2200);
             });
         
         $('.ui-dcl-datepicker').datepicker({
@@ -354,10 +354,10 @@
         //
         $('.ui-wec-datepicker').hover(
             function () {
-                $('#wecHelp').show("fade", 1000);
+                $('#wecHelp').show("fade", 2200);
             },
             function () {
-                $('#wecHelp').hide("fade", 2000).off('hover');
+                $('#wecHelp').hide("fade", 2200);
             });
 
         $('.ui-wec-datepicker').datepicker({
@@ -383,10 +383,10 @@
 
         $('.ui-mwd-datepicker').hover(
             function () {
-                $('#mwdHelp').show("fade", 1000);
+                $('#mwdHelp').show("fade", 2200);
             },
             function () {
-                $('#mwdHelp').hide();
+                $('#mwdHelp').hide("fade", 2200);
             });
 
         $('.ui-mwd-datepicker').datepicker({

@@ -183,6 +183,9 @@
   <data name="summaryTab" xml:space="preserve">
     <value>Resúmenes</value>
   </data>
+  <data name="totalAssignments" xml:space="preserve">
+    <value>Asignaciones Totales</value>
+  </data>
   <data name="totalHours" xml:space="preserve">
     <value>Horas Trabajadas</value>
   </data>
