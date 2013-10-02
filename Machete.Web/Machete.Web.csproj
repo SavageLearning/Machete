@@ -730,7 +730,9 @@
     <Content Include="Views\Shared\EditorTemplates\WorkAssignment.cshtml" />
     <Content Include="Views\WorkAssignment\Edit.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\WorkAssignmentSurvey.cshtml" />
-    <Content Include="packages.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
