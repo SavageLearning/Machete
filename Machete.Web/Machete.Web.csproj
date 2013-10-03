@@ -775,6 +775,7 @@
     <Content Include="Views\Config\Edit.cshtml" />
     <Content Include="Views\Home\Docs.cshtml" />
     <Content Include="Views\Employer\CreateCombined.cshtml" />
+    <None Include="Properties\PublishProfiles\MacheteReports.pubxml" />
     <None Include="Properties\PublishProfiles\Profile1.pubxml" />
     <Content Include="Views\Reports\Workers.cshtml" />
     <Content Include="Views\Reports\Orders.cshtml" />
