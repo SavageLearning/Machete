@@ -148,8 +148,8 @@ namespace Machete.Service
                 .Select(wec => new WeeklyElCentroReport
                           {
                               date = wec.Key == null ? new DateTime(2013, 1, 1, 0, 0, 0) : wec.Key,
-                              totalSignins = wec.Count(), //this was orig. wsiQ, so a count is a count of wsi
-                              noWeekJobs = wec.Sum(nwj => nwj.waid),
+                              totalSignins = wec.Count() > 0 ? wec.Count() : 0, //this was orig. wsiQ, so a count is a count of wsi
+                              noWeekJobs = wec.Sum(nwj => nwj.waid), // should never be null, see above
                               weekEstDailyHours = wec.Sum(wedh => wedh.wahours),
                               weekEstPayment = wec.Sum(wep => wep.wahourlywage * wep.wahours),
                               weekHourlyWage = wec.Sum(whwtwo => whwtwo.wahours) == 0 ? 0 : wec.Sum(whw => whw.wahourlywage * whw.wahours) / wec.Sum(whwtwo => whwtwo.wahours)
@@ -192,8 +192,8 @@ namespace Machete.Service
                 .Select(group => new WeeklyJobsBySector
                 {
                     jobsDate = group.Key.workDate,
-                    jobsEngText = group.Key.enText,
-                    jobsCount = group.Count()
+                    jobsEngText = group.Key.enText ?? "",
+                    jobsCount = group.Count() > 0 ? group.Count() : 0
                 });
 
             return query;
@@ -340,6 +340,7 @@ namespace Machete.Service
 
             //.Select(x => x.enText).Aggregate("", (str, obj) => str + obj + " (" + group.Count().ToString() + ")")
 
+            //there is a random bug here where 'job' comes up empty.
             q = wecResult
                 .GroupJoin(wecJobs,
                     res => res.date,
