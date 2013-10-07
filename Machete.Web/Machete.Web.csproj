@@ -83,7 +83,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AjaxControlToolkit">
-      <HintPath>..\packages\AjaxControlToolkit.7.0725\lib\40\AjaxControlToolkit.dll</HintPath>
+      <HintPath>..\packages\AjaxControlToolkit.7.1005\lib\40\AjaxControlToolkit.dll</HintPath>
     </Reference>
     <Reference Include="AjaxMin, Version=4.97.4951.28478, Culture=neutral, PublicKeyToken=21ef50ce11b5d80f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
