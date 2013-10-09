@@ -32,18 +32,23 @@ using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Validation;
 using System.Diagnostics;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Common;
+using EFTracingProvider;
+using System.Data.Entity.Infrastructure;
 namespace Machete.Data
 {
     public class MacheteContext : DbContext
     {
-        public MacheteContext() : base("macheteConnection") 
+        static string defaultDbName = "macheteConnection";
+        public MacheteContext()
+            : base(defaultDbName) 
         {
             //this.Configuration.LazyLoadingEnabled = false;
             //Database.SetInitializer<MacheteContext>(
             //  new MigrateDatabaseToLatestVersion<MacheteContext, CustomMigrationsConfiguration>());            
         }
         public MacheteContext(string connectionString) : base(connectionString) { }
-
+        protected MacheteContext(DbConnection existingConnection) : base(existingConnection, true) { }
         //Machete here defines the database to use, by convention.
         public DbSet<Person> Persons { get; set; }
         public DbSet<Worker> Workers { get; set; }
@@ -89,6 +94,38 @@ namespace Machete.Data
             modelBuilder.Entity<Employer>().ToTable("Employers");
             modelBuilder.Entity<WorkOrder>().ToTable("WorkOrders");
             modelBuilder.Entity<WorkAssignment>().ToTable("WorkAssignments");
+        }
+
+        private static DbConnection CreateConnection(String nameOrConnectionString)
+        {
+            var connectionString = "";
+            var providerName = "";
+
+            if (nameOrConnectionString == null)
+            {
+                nameOrConnectionString = defaultDbName;
+                providerName = "System.Data.SqlClient";
+            }
+
+            return (CreateConnection(connectionString, providerName));
+        }
+
+        private static DbConnection CreateConnection(String connectionString, String providerInvariantName)
+        {
+            var wrapperConnectionString = String.Format(@"wrappedProvider={0};{1}", providerInvariantName, connectionString);
+            var connection = new EFTracingConnection { ConnectionString = wrapperConnectionString };
+            return (connection);
+        }
+
+        public static MacheteContext CreateTracingContext(String nameOrConnectionString, Action<CommandExecutionEventArgs> logAction, Boolean logToConsole = true, String logToFile = null)
+        {
+            EFTracingProviderConfiguration.LogToFile = logToFile;
+            EFTracingProviderConfiguration.LogToConsole = logToConsole;
+            EFTracingProviderConfiguration.LogAction = logAction;
+
+            var ctx = new MacheteContext(CreateConnection(nameOrConnectionString));
+            (ctx as IObjectContextAdapter).ObjectContext.EnableTracing();
+            return (ctx);
         }
     }
     public class PersonBuilder : EntityTypeConfiguration<Person>

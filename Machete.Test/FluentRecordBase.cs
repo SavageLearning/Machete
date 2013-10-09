@@ -58,6 +58,7 @@ namespace Machete.Test
         private WorkAssignmentService _servWA;
         private ActivityService _servA;
         private ActivitySigninService _servAS;
+        private ReportService _servR;
         private EmployerService _servE;
         private LookupService _servL;
         private IUnitOfWork _uow;
@@ -110,6 +111,12 @@ namespace Machete.Test
             Initialize(new MacheteInitializer(), "macheteConnection");
             _uow = new UnitOfWork(_dbFactory);
             return this;
+        }
+
+        public MacheteContext ToContext()
+        {
+            if (_dbFactory == null) AddDBFactory();
+            return _dbFactory.Get();
         }
 
         #region Employers
@@ -863,6 +870,30 @@ namespace Machete.Test
         }
 
         #endregion 
+
+        #region Reports
+
+        public FluentRecordBase AddServReports()
+        {
+            //
+            // DEPENDENCIES
+            if (_repoWO == null) AddRepoWorkOrder();
+            if (_repoWA == null) AddRepoWorkAssignment();
+            if (_repoW == null) AddRepoWorker();
+            if (_repoWSI == null) AddRepoWorkerSignin();
+            if (_repoAS == null) AddRepoWorkerRequest();
+            if (_repoL == null) AddRepoLookup();
+            _servR = new ReportService(_repoWO, _repoWA, _repoW, _repoWSI, _repoWR, _repoL);
+            return this;
+        }
+
+        public ReportService ToServReports()
+        {
+            if (_servR == null) AddServReports();
+            return _servR;
+        }
+
+        #endregion
 
         public FluentRecordBase AddUOW()
         {
