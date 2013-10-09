@@ -338,11 +338,8 @@ namespace Machete.Service
             wecResult = WeeklyElCentro(beginDate, endDate).ToList();            
             wecJobs = WeeklyJobs(beginDate, endDate).ToList();
 
-            //.Select(x => x.enText).Aggregate("", (str, obj) => str + obj + " (" + group.Count().ToString() + ")")
-
-            //there is a random bug here where 'job' comes up empty.
             q = wecResult
-                .GroupJoin(wecJobs,
+                .Join(wecJobs,
                     res => res.date,
                     job => job.jobsDate,
                     (res, job) => new {
@@ -351,11 +348,11 @@ namespace Machete.Service
                         week = res.noWeekJobs,
                         hours = res.weekEstDailyHours,
                         pay = res.weekEstPayment,
-                        jobDate = job.First().jobsDate,
+                        jobDate = job.jobsDate,
                         jobText = wecJobs
-                            .Where(whr => whr.jobsDate == job.FirstOrDefault().jobsDate)
+                            .Where(whr => whr.jobsDate == job.jobsDate)
                             .Aggregate("", (a, b) => a + b.jobsEngText + " (" + b.jobsCount.ToString() + "), "),
-                        jobCount = job.First().jobsCount})
+                        jobCount = job.jobsCount})
                 .GroupBy(gb => new { gb.jobText, gb.date })
                 .OrderBy(ob => ob.Key.date)
                 .Select(g => new wecData
