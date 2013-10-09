@@ -128,31 +128,34 @@ namespace Machete.Service
         {
             IQueryable<WeeklyElCentroReport> query;
 
-            var wsiQ = wsiRepo.GetAllQ();
             var waQ = waRepo.GetAllQ();
+            var woQ = woRepo.GetAllQ();
+            var wsiQ = wsiRepo.GetAllQ();
 
-            query = wsiQ
-                .GroupJoin(waQ, wsi => wsi.ID, wa => wa.workerAssignedID,
-                    (wsi, wa) => new //LEFT JOIN
-                        {
-                            wsi, //seems wsi-wawsi, but works (left in left join, then:)
-                            waid = wa.FirstOrDefault().ID == null ? 0 : 1, //to sum, below
-                            waworkorderid = wa.FirstOrDefault().workOrderID == null ? 0 : 1, //same
-                            wahours = wa.FirstOrDefault().hours == null ? 0 : wa.FirstOrDefault().hours, //already ok
-                            wahourlywage = wa.FirstOrDefault().hourlyWage == null ? 0 : wa.FirstOrDefault().hourlyWage
-                        }
-                     )
-                .Where(whr => whr.wsi.dateforsignin >= beginDate
-                           && whr.wsi.dateforsignin <= endDate)
-                .GroupBy(gb => gb.wsi.dateforsignin)
+            query = waQ
+                .GroupJoin(woQ,
+                    wa => wa.workOrderID,
+                    wo => wo.ID,
+                    (wa, wo) => new {
+                        wa,
+                        woDate = wo.FirstOrDefault().dateTimeofWork == null ? DateTime.Now : EntityFunctions.TruncateTime(wo.FirstOrDefault().dateTimeofWork)
+                    })
+                .Where(whr => whr.woDate >= beginDate
+                           && whr.woDate <= endDate)
+                .GroupBy(gb => gb.woDate)
                 .Select(wec => new WeeklyElCentroReport
                           {
-                              date = wec.Key == null ? new DateTime(2013, 1, 1, 0, 0, 0) : wec.Key,
-                              totalSignins = wec.Count() > 0 ? wec.Count() : 0, //this was orig. wsiQ, so a count is a count of wsi
-                              noWeekJobs = wec.Sum(nwj => nwj.waid), // should never be null, see above
-                              weekEstDailyHours = wec.Sum(wedh => wedh.wahours),
-                              weekEstPayment = wec.Sum(wep => wep.wahourlywage * wep.wahours),
-                              weekHourlyWage = wec.Sum(whwtwo => whwtwo.wahours) == 0 ? 0 : wec.Sum(whw => whw.wahourlywage * whw.wahours) / wec.Sum(whwtwo => whwtwo.wahours)
+                              date = wec.Key ?? DateTime.Now,
+                              totalSignins = wsiQ
+                                .Where(wsi => wsi.dateforsignin >= beginDate && wsi.dateforsignin <= endDate)
+                                .Count() > 0 ? 
+                                    wsiQ
+                                    .Where(wsi => wsi.dateforsignin >= beginDate && wsi.dateforsignin <= endDate)
+                                    .Count() : 0,
+                              noWeekJobs = wec.Count() > 0 ? wec.Count() : 0, // count of waQ
+                              weekEstDailyHours = wec.Sum(wo => wo.wa.hours),
+                              weekEstPayment = wec.Sum(wo => wo.wa.hourlyWage * wo.wa.hours),
+                              weekHourlyWage = wec.Sum(wo => wo.wa.hours) == 0 ? 0 : wec.Sum(wo => wo.wa.hourlyWage * wo.wa.hours) / wec.Sum(wo => wo.wa.hours)
                           }
                      );
 
