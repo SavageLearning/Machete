@@ -126,10 +126,10 @@
                     
                 </div>
                 <div class="tb-field">
-                    <input type="submit" value="@WorkerSignins.indexsubmit" id="lotterySubmit"/>
+                    <input type="submit" value="@WorkerSignins.indexsubmit" id="lotterySubmit" />
                 </div>
                 <div class="tb-field">
-                    <input type="submit" value="@WorkAssignments.wkListDupe" id="listDuplicate" />
+                    <input type="button" value="@WorkAssignments.wkListDupe" id="listDuplicate" />
                 </div>
                 </div>
             </div>
@@ -203,9 +203,11 @@
             var value = $(lotteryField).text();
             if (lotteryField.text()) {
                 lotteryField.append('  ');
-                lotteryField.append('<a class="confirm_clearLottery" href="/WorkerSignin/clearLottery/' + aData['recordid'] + '">@(Machete.Web.Resources.WorkAssignments.wkListClear)</a>');
+                lotteryField.append('<a class="confirm_clearLottery" title="Erase/Borrar" href="/WorkerSignin/clearLottery/' + aData['recordid'] + '">@(Machete.Web.Resources.WorkAssignments.wkListClear)</a>');
                 lotteryField.append('  ');
-                lotteryField.append('<a class="moveup_Lottery" href="/WorkerSignin/"  ');
+                lotteryField.append('<a class="moveup_Lottery" title="Move Down" href="/WorkerSignin/moveDown/' + aData['recordid'] + '">&#8744;</a>');
+                lotteryField.append('  ');
+                lotteryField.append('<a class="moveup_Lottery" title="Move Up" href="/WorkerSignin/moveUp/' + aData['recordid'] + '">&#8743;</a>');
                 }
             //$(nRow).attr('requestedID', aData['WSIID']);
             if (aData['WAID'] > 0) { // green -- WA record associated with WSI record
@@ -250,6 +252,16 @@
         $('#lotterycardnum').val(null);
         $('#lotteryTable').dataTable().fnDraw();
         e.preventDefault();
+    });
+    // my js/jq sucks, no idea if this is correct:
+    $('listDuplicate').on('click', function() {
+        $.post(
+            "/WorkAssignment/ListDuplicate",
+            { dateForDupe: $('#todaysdate').val() },
+            success(function () {
+                $('#lotteryTable').dataTable().fnDraw();
+            })
+        );
     });
     //
     //
@@ -501,7 +513,8 @@
             $("#signinTable").dataTable().fnDraw();
             $("#availAssignTable").dataTable().fnDraw();            
         });
-        $('.confirm_clearLottery').live('click', function (e) {
+        // .live() deprecated as of jQ 1.7
+        $('.confirm_clearLottery').on('click', function (e) {
             e.preventDefault;
             //TODO: event is posting and returning page, not JSON
             var action =  $(this).attr('href');
@@ -528,7 +541,7 @@
             dateFormat: 'DD, d MM yy',
             showOtherMonths: true,
 			selectOtherMonths: true
-//            buttonImage: '@Url.Content("~/Content/calendar.gif")',
+//            buttonImage: '@*Url.Content("~/Content/calendar.gif")*@',
 //            buttonImageOnly: true,
 //            showOn: "button"
         });
