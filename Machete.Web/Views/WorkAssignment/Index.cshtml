@@ -256,7 +256,7 @@
     // my js/jq sucks, no idea if this is correct:
     $('listDuplicate').on('click', function() {
         $.post(
-            "/WorkAssignment/ListDuplicate",
+            "/WorkerSignin/ListDuplicate",
             { dateForDupe: $('#todaysdate').val() },
             success(function () {
                 $('#lotteryTable').dataTable().fnDraw();
