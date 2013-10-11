@@ -256,15 +256,19 @@
         $('#lotteryTable').dataTable().fnDraw();
         e.preventDefault();
     });
+        //
+        //
     // my js/jq sucks, no idea if this is correct:
-    $('listDuplicate').on('click', function() {
-        $.post(
-            "/WorkerSignin/ListDuplicate",
-            { dateForDupe: $('#todaysdate').val() },
-            success(function () {
-                $('#lotteryTable').dataTable().fnDraw();
-            })
-        );
+    $('listDuplicate').live( "click", function (event) {
+        event.preventDefault();
+        var url = "/WorkerSignin/ListDuplicate";
+        $.post(url, { todaysdate: $('#todaysdate').val() }, function (data) {
+            $('#lotteryTable').dataTable().fnDraw();
+            $('#lotterycardnum').focus();
+            if (!data.jobSuccess) { alert(data.rtnMessage); }
+        });
+        $('#lotterycardnum').focus();
+        return false;
     });
     //
     //
@@ -291,8 +295,8 @@
             "fnServerData": function ( sSource, aoData, fnCallback ) {
 			    /* Add some extra data to the sender */
 			    aoData.push( { "name": "todaysdate", "value": $('#todaysdate').val() } );
-                aoData.push( { "name": "dwccardnum", "value": $('#dwccardnum').val()} );
-                aoData.push( { "name": "wa_grouping", "value": $('#wa_grouping').val()} );
+                aoData.push( { "name": "dwccardnum", "value": $('#dwccardnum').val() } );
+                aoData.push( { "name": "wa_grouping", "value": $('#wa_grouping').val() } );
                 aoData.push( { "name": "typeofwork_grouping", "value": $('#typeofwork_grouping').val()} );            
 			    $.getJSON( sSource, aoData, function (json) { 
 				    /* Do whatever additional processing you want on the callback, then tell DataTables */
@@ -541,8 +545,8 @@
             return false;
         });
 
-        $('.movedown_Lottery').live('click', function (e) {
-            e.preventDefault();
+        $('.movedown_Lottery').live('click', function (event) {
+            event.preventDefault();
             var action = $(this).attr('href');
             $.post(action, null, function (data) {
                 $('#lotteryTable').dataTable().fnDraw();
@@ -553,8 +557,8 @@
             return false;
         });
 
-        $('.moveup_Lottery').live('click', function (e) {
-            e.preventDefault();
+        $('.moveup_Lottery').live('click', function (event) {
+            event.preventDefault();
             var action = $(this).attr('href');
             $.post(action, null, function (data) {
                 $('#lotteryTable').dataTable().fnDraw();
