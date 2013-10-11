@@ -42,6 +42,7 @@ namespace Machete.Service
         bool moveDown(int id, string user);
         bool moveUp(int id, string user);
         bool sequenceLottery(DateTime date, string user);
+        bool listDuplicate(DateTime date, string user);
         dataTableResult<wsiView> GetIndexView(viewOptions o);
         void CreateSignin(WorkerSignin signin, string user);
     }
@@ -209,16 +210,58 @@ namespace Machete.Service
         /// </summary>
         /// <param name="date">The date for which the list should be duplicated.</param>
         /// <param name="user">The username of the user making the request.</param>
-        /// <returns></returns>
+        /// <returns>bool</returns>
         public bool listDuplicate(DateTime date, string user)
         {
-            IEnumerable<WorkerSignin> todaySignins;
-            IEnumerable<WorkerSignin> yesterdaySignins;
             int i = 0;
+            //get yesterday's lottery list members, 
+            //as long as they weren't dispatched
+            //and signed in today
+            IEnumerable<WorkerSignin> yesterdaySignins = repo.GetManyQ()
+                .Where(p => p.lottery_timestamp != null 
+                         && p.WorkAssignmentID == null
+                         && EntityFunctions.DiffDays(p.dateforsignin, date.AddDays(-1)) == 0 ? true : false)
+                .OrderBy(p => p.lottery_sequence)
+                .AsEnumerable();
 
-            //blah
+            if (repo.GetManyQ().FirstOrDefault().lottery_sequence > 0)
+                return false;
 
-            foreach (WorkerSignin wsi in yesterdaySignins)
+            IEnumerable<WorkerSignin> todaySignins = repo.GetManyQ()
+                .Join(yesterdaySignins,
+                    tod => tod.WorkerID,
+                    yest => yest.WorkerID,
+                    (tod, yest) => new
+                    {
+                        tod,
+                        yseq = yest.lottery_sequence
+                    })
+                .Where(p => p.tod.memberStatus == Worker.iActive
+                         && EntityFunctions.DiffDays(p.tod.dateforsignin, date) == 0 ? true : false)
+                .OrderBy(p => p.yseq)
+                .Select(g => new WorkerSignin
+                {
+                    Createdby = g.tod.Createdby,
+                    datecreated = g.tod.datecreated,
+                    dateforsignin = g.tod.dateforsignin,
+                    dateupdated = g.tod.datecreated,
+                    dwccardnum = g.tod.dwccardnum,
+                    ID = g.tod.ID,
+                    lottery_sequence = g.yseq,
+                    lottery_timestamp = DateTime.Now,
+                    memberStatus = g.tod.memberStatus,
+                    Updatedby = user,
+                    WorkAssignmentID = g.tod.WorkAssignmentID,
+                    worker = g.tod.worker,
+                    WorkerID = g.tod.WorkerID
+                });
+
+            foreach (WorkerSignin wsi in todaySignins)
+            {
+                i++;
+                wsi.lottery_sequence = i;
+            }
+
             uow.Commit();
             return true;
         }
