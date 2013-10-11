@@ -133,9 +133,9 @@ namespace Machete.Web.Controllers
 
         [UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, Check-in")]
-        public ActionResult ListDuplicate(DateTime todaysdate)
+        public ActionResult ListDuplicate(DateTime todaysdate, string userName)
         {
-            _serv.listDuplicate(todaysdate);
+            _serv.listDuplicate(todaysdate, userName);
             return Json(new
             {
                 jobSuccess = true,
