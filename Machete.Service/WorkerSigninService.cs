@@ -39,6 +39,8 @@ namespace Machete.Service
         WorkerSignin GetSignin(int dwccardnum, DateTime date);
         int GetNextLotterySequence(DateTime date);
         bool clearLottery(int id, string user);
+        bool moveDown(int id, string user);
+        bool moveUp(int id, string user);
         bool sequenceLottery(DateTime date, string user);
         dataTableResult<wsiView> GetIndexView(viewOptions o);
         void CreateSignin(WorkerSignin signin, string user);
@@ -46,7 +48,6 @@ namespace Machete.Service
 
     public class WorkerSigninService : SigninServiceBase<WorkerSignin>, IWorkerSigninService
     {
-        //
         //
         public WorkerSigninService(IWorkerSigninRepository repo, 
                                    IWorkerRepository wRepo,
@@ -69,22 +70,101 @@ namespace Machete.Service
                             EntityFunctions.DiffDays(r.dateforsignin, date) == 0 ? true : false);
         }
         /// <summary>
-        /// count lotteries for the day and increment
+        /// This method counts the current lottery (daily list) entries for the day and increments by one.
         /// </summary>
-        /// <param name="date"></param>
-        /// <returns></returns>
+        /// <param name="date">The date for sequencing.</param>
+        /// <returns>int</returns>
         public int GetNextLotterySequence(DateTime date)
         {
             return repo.GetAllQ().Where(p => p.lottery_timestamp != null && 
                                         EntityFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
                                  .Count() + 1;
         }
+
         /// <summary>
-        /// clear lottery timestamp and re-sequence
+        /// This method moves a worker down in numerical order in
+        /// the daily ('lottery') list, and moves
+        /// the proceeding (next) set member into their spot
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="user"></param>
-        /// <returns></returns>
+        /// <param name="id">The Worker ID of the entry to be moved.</param>
+        /// <param name="user">The username of the person making the request.</param>
+        /// <returns>bool</returns>
+        public bool moveDown(int id, string user)
+        {
+            WorkerSignin wsiDown = repo.GetById(id); // 4
+            DateTime date = wsiDown.dateforsignin;
+
+            int nextID = (wsiDown.lottery_sequence ?? 0) + 1; // 5
+
+            if (nextID == 1)
+                return false;
+            //this can't happen with current GUI settings (10/10/2013)
+
+            WorkerSignin wsiUp = repo.GetById(
+                                    repo.GetAllQ()
+                                        .Where(up => up.lottery_sequence == nextID
+                                                  && EntityFunctions.DiffDays(up.dateforsignin, date) == 0)
+                                        .Select(g => g.ID).FirstOrDefault()
+                                 ); //up.ID = 5
+
+            int? spotInQuestion = wsiDown.lottery_sequence; // 4
+            DateTime? timeInQuestion = wsiDown.lottery_timestamp;
+            wsiDown.lottery_sequence = wsiUp.lottery_sequence; // 5
+            wsiDown.lottery_timestamp = wsiUp.lottery_timestamp;
+            wsiUp.lottery_sequence = spotInQuestion; // 4
+            wsiUp.lottery_timestamp = timeInQuestion; 
+
+            Save(wsiUp, user);
+            Save(wsiDown, user);
+
+            return true;
+        }
+
+        /// <summary>
+        /// This method moves a worker up in numerical order in
+        /// the daily ('lottery') list, and moves
+        /// the preceding (prior) set member into their spot
+        /// </summary>
+        /// <param name="id">The Worker ID of the entry to be moved.</param>
+        /// <param name="user">The username of the person making the request.</param>
+        /// <returns>bool</returns>
+        public bool moveUp(int id, string user)
+        {
+            WorkerSignin wsiUp = repo.GetById(id); // 4
+            DateTime date = wsiUp.dateforsignin;
+
+            int prevID = (wsiUp.lottery_sequence ?? 0) - 1; // 3
+
+            if (prevID < 1)
+                return false;
+
+            WorkerSignin wsiDown = repo.GetById(
+                                    repo.GetAllQ()
+                                        .Where(up => up.lottery_sequence == prevID
+                                                  && EntityFunctions.DiffDays(up.dateforsignin, date) == 0)
+                                        .Select(g => g.ID).FirstOrDefault()
+                                 ); //down.lotSq = 3
+
+            int? spotInQuestion = wsiDown.lottery_sequence; // 3
+            DateTime? timeInQuestion = wsiDown.lottery_timestamp;
+            wsiDown.lottery_sequence = wsiUp.lottery_sequence; // 4
+            wsiDown.lottery_timestamp = wsiUp.lottery_timestamp;
+            wsiUp.lottery_sequence = spotInQuestion; // 3
+            wsiUp.lottery_timestamp = timeInQuestion; // down.lotSq = 4
+
+            Save(wsiUp, user);
+            Save(wsiDown, user);
+
+            return true;
+        }
+
+        /// <summary>
+        /// This method clears an entry from the daily ('lottery') list
+        /// along with the timestamp and then resequences the list.
+        /// </summary>
+        /// <param name="id">The worker ID of the worker to be cleared from the lottery.</param>
+        /// <param name="user">The usename of the user making the request.</param>
+        /// <returns>bool</returns>
         public bool clearLottery(int id, string user)
         {
             WorkerSignin wsi = repo.GetById(id);
@@ -97,11 +177,11 @@ namespace Machete.Service
             return true;
         }
         /// <summary>
-        /// reset the ordinal lottery numbers
+        /// A method that resequences the ordinal lottery numbers.
         /// </summary>
-        /// <param name="date">date to reset numbers</param>
-        /// <param name="user"></param>
-        /// <returns></returns>
+        /// <param name="date">Date to resequence numbers</param>
+        /// <param name="user">Username of the user making the request.</param>
+        /// <returns>bool</returns>
         public bool sequenceLottery(DateTime date, string user)
         {
             IEnumerable<WorkerSignin> signins;
@@ -117,15 +197,29 @@ namespace Machete.Service
                 i++;
                 wsi.lottery_sequence = i;                
             }
-            // no logging as of now
+            // no username logging as of now
             uow.Commit();
             return true;
         }
+
         /// <summary>
-        /// 
+        /// This method Duplicates the Daily ('lottery') list for the previous day, 
+        /// minus workers who did not sign in for the current day and 
+        /// workers who were assigned to a job for the previous day
         /// </summary>
-        /// <param name="o"></param>
+        /// <param name="date">The date for which the list should be duplicated.</param>
+        /// <param name="user">The username of the user making the request.</param>
         /// <returns></returns>
+        public bool ListDuplicate(DateTime date, string user)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// This method returns the view data for the Worker Signin class.
+        /// </summary>
+        /// <param name="o">View options from DataTables</param>
+        /// <returns>dataTableResult wsiView</returns>
         public dataTableResult<wsiView> GetIndexView(viewOptions o)
         {
             //
@@ -166,7 +260,7 @@ namespace Machete.Service
 
         }
         /// <summary>
-        /// 
+        /// This method creates a worker signin entry.
         /// </summary>
         /// <param name="signin"></param>
         /// <param name="user"></param>

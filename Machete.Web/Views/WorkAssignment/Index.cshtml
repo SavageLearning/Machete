@@ -205,9 +205,12 @@
                 lotteryField.append('  ');
                 lotteryField.append('<a class="confirm_clearLottery" title="Erase/Borrar" href="/WorkerSignin/clearLottery/' + aData['recordid'] + '">@(Machete.Web.Resources.WorkAssignments.wkListClear)</a>');
                 lotteryField.append('  ');
-                lotteryField.append('<a class="moveup_Lottery" title="Move Down" href="/WorkerSignin/moveDown/' + aData['recordid'] + '">&#8744;</a>');
+                lotteryField.append('<a class="movedown_Lottery" title="Move Down" href="/WorkerSignin/moveDown/' + aData['recordid'] + '">&#8744;</a>');
                 lotteryField.append('  ');
                 lotteryField.append('<a class="moveup_Lottery" title="Move Up" href="/WorkerSignin/moveUp/' + aData['recordid'] + '">&#8743;</a>');
+                //$('.confirm_clearLottery').button();
+                //$('.movedown_Lottery').button();
+                //$('.moveup_Lottery').button();
                 }
             //$(nRow).attr('requestedID', aData['WSIID']);
             if (aData['WAID'] > 0) { // green -- WA record associated with WSI record
@@ -513,9 +516,11 @@
             $("#signinTable").dataTable().fnDraw();
             $("#availAssignTable").dataTable().fnDraw();            
         });
+
         // .live() deprecated as of jQ 1.7
-        $('.confirm_clearLottery').on('click', function (e) {
-            e.preventDefault;
+        // tried to switch to 'on' but it cancels .preventDefault()
+        $('.confirm_clearLottery').live('click', function (e) {
+            e.preventDefault();
             //TODO: event is posting and returning page, not JSON
             var action =  $(this).attr('href');
             $.alerts.okButton = "@WorkerSignins.lotteryClearSubmit";
@@ -535,6 +540,31 @@
             $('#lotterycardnum').focus();                                                                     
             return false;
         });
+
+        $('.movedown_Lottery').live('click', function (e) {
+            e.preventDefault();
+            var action = $(this).attr('href');
+            $.post(action, null, function (data) {
+                $('#lotteryTable').dataTable().fnDraw();
+                $('#lotterycardnum').focus();
+                if (!data.jobSuccess) { alert(data.rtnMessage); }
+            });
+            $('#lotterycardnum').focus();
+            return false;
+        });
+
+        $('.moveup_Lottery').live('click', function (e) {
+            e.preventDefault();
+            var action = $(this).attr('href');
+            $.post(action, null, function (data) {
+                $('#lotteryTable').dataTable().fnDraw();
+                $('#lotterycardnum').focus();
+                if (!data.jobSuccess) { alert(data.rtnMessage); }
+            });
+            $('#lotterycardnum').focus();
+            return false;
+        });
+//
     });
     function DatePicker() {
         $('.ui-datepicker').datepicker({
