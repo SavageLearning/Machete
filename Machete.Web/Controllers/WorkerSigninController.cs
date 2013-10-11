@@ -130,7 +130,23 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
+
         [UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager, Check-in")]
+        public ActionResult ListDuplicate(DateTime todaysdate)
+        {
+            _serv.listDuplicate(todaysdate);
+            return Json(new
+            {
+                jobSuccess = true,
+                status = "OK",
+                date = todaysdate
+            },
+            JsonRequestBehavior.AllowGet);
+        }
+       
+       
+       [UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, Check-in")]
        //to do: rename this method to clearList
         public ActionResult clearLottery(int id, string userName)
@@ -191,7 +207,6 @@ namespace Machete.Web.Controllers
             JsonRequestBehavior.AllowGet);
         }
 
-        // Huh? \/
         // GET: /WorkerSignin/Delete/5
        /// <summary>
        /// This method deletes a signin from the master Worker Signins list for the day.

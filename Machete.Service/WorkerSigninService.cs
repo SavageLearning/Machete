@@ -210,8 +210,16 @@ namespace Machete.Service
         /// <param name="date">The date for which the list should be duplicated.</param>
         /// <param name="user">The username of the user making the request.</param>
         /// <returns></returns>
-        public bool ListDuplicate(DateTime date, string user)
+        public bool listDuplicate(DateTime date, string user)
         {
+            IEnumerable<WorkerSignin> todaySignins;
+            IEnumerable<WorkerSignin> yesterdaySignins;
+            int i = 0;
+
+            //blah
+
+            foreach (WorkerSignin wsi in yesterdaySignins)
+            uow.Commit();
             return true;
         }
 
