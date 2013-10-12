@@ -256,8 +256,7 @@ namespace Machete.Service
                 .AsEnumerable();
 
             dupes = todayDupeSignins
-                .Join(yesterdaySignins, to => to.WorkerID, ye => ye.WorkerID, (to, ye) => new { to, seq = ye.lottery_sequence, ts = ye.lottery_timestamp })
-                .OrderBy(o => o.seq)
+                .Join(yesterdaySignins, to => to.WorkerID, ye => ye.WorkerID, (to, ye) => new { to, seq = ye.lottery_sequence })
                 .Select(g => new WorkerSignin
                 {
                     Createdby = g.to.Createdby,
@@ -267,13 +266,14 @@ namespace Machete.Service
                     dwccardnum = g.to.dwccardnum,
                     ID = g.to.ID,
                     lottery_sequence = g.seq,
-                    lottery_timestamp = g.ts,
+                    lottery_timestamp = null,
                     memberStatus = g.to.memberStatus,
                     Updatedby = g.to.Updatedby,
                     WorkAssignmentID = g.to.WorkAssignmentID,
                     worker = g.to.worker,
                     WorkerID = g.to.WorkerID
-                });
+                })
+                .OrderBy(o => o.lottery_sequence);
 
             //good god I hope that works
             foreach (WorkerSignin wsi in dupes)
@@ -282,9 +282,10 @@ namespace Machete.Service
                 wsi.lottery_sequence = i;
                 wsi.lottery_timestamp = DateTime.Now;
                 wsi.Updatedby = user;
+                Save(wsi, user);
             }
-
-            uow.Commit();
+            
+            //uow.Commit();
             return true;
         }
 
