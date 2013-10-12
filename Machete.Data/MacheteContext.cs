@@ -98,14 +98,18 @@ namespace Machete.Data
 
         private static DbConnection CreateConnection(String nameOrConnectionString)
         {
-            var connectionString = "";
-            var providerName = "";
+            var connectionString = @"data source=.\SQLEXPRESS;Database=macheteDevTest;Trusted_Connection=true;MultipleActiveResultSets=true";
+            var providerName = "System.Data.SqlClient";
 
-            if (nameOrConnectionString == null)
-            {
-                nameOrConnectionString = defaultDbName;
-                providerName = "System.Data.SqlClient";
-            }
+            //if (nameOrConnectionString == null)
+            //{
+            //    nameOrConnectionString = defaultDbName;
+            //}
+            //else
+            //{
+            //    connectionString = nameOrConnectionString;
+            //    providerName = "System.Data.SqlClient";
+            //}
 
             return (CreateConnection(connectionString, providerName));
         }
