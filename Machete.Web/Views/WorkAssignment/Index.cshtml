@@ -258,18 +258,6 @@
     });
         //
         //
-    // my js/jq sucks, no idea if this is correct:
-    $('listDuplicate').live( "click", function (event) {
-        event.preventDefault();
-        var url = "/WorkerSignin/ListDuplicate";
-        $.post(url, { todaysdate: $('#todaysdate').val() }, function (data) {
-            $('#lotteryTable').dataTable().fnDraw();
-            $('#lotterycardnum').focus();
-            if (!data.jobSuccess) { alert(data.rtnMessage); }
-        });
-        $('#lotterycardnum').focus();
-        return false;
-    });
     //
     //
     //
@@ -545,10 +533,22 @@
             return false;
         });
 
+        $('#listDuplicate').live('click', function (event) {
+            event.preventDefault();
+            var url = "/WorkerSignin/ListDuplicate";
+            $.post(url, { todaysdate: $('#todaysdate').val() }, function (data) {
+                $('#lotteryTable').dataTable().fnDraw();
+                $('#lotterycardnum').focus();
+                if (!data.jobSuccess) { alert(data.rtnMessage); }
+            });
+            $('#lotterycardnum').focus();
+            return false;
+        });
+
         $('.movedown_Lottery').live('click', function (event) {
             event.preventDefault();
-            var action = $(this).attr('href');
-            $.post(action, null, function (data) {
+            var url = $(this).attr('href');
+            $.post(url, null, function (data) {
                 $('#lotteryTable').dataTable().fnDraw();
                 $('#lotterycardnum').focus();
                 if (!data.jobSuccess) { alert(data.rtnMessage); }
@@ -559,8 +559,8 @@
 
         $('.moveup_Lottery').live('click', function (event) {
             event.preventDefault();
-            var action = $(this).attr('href');
-            $.post(action, null, function (data) {
+            var url = $(this).attr('href');
+            $.post(url, null, function (data) {
                 $('#lotteryTable').dataTable().fnDraw();
                 $('#lotterycardnum').focus();
                 if (!data.jobSuccess) { alert(data.rtnMessage); }

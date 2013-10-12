@@ -214,52 +214,74 @@ namespace Machete.Service
         public bool listDuplicate(DateTime date, string user)
         {
             int i = 0;
-            //get yesterday's lottery list members, 
-            //as long as they weren't dispatched
-            //and signed in today
-            IEnumerable<WorkerSignin> yesterdaySignins = repo.GetManyQ()
-                .Where(p => p.lottery_timestamp != null 
-                         && p.WorkAssignmentID == null
-                         && EntityFunctions.DiffDays(p.dateforsignin, date.AddDays(-1)) == 0 ? true : false)
+            DateTime yesterday = new DateTime(date.Year, date.Month, (date.Day - 1), date.Hour, date.Minute, date.Second);
+            IEnumerable<WorkerSignin> todayListSignins;
+            IEnumerable<WorkerSignin> yesterdaySignins;
+            IEnumerable<WorkerSignin> todayDupeSignins;
+            IEnumerable<WorkerSignin> dupes;
+
+            // Get today's signins. Make sure that anyone who already has been assigned a lottery number
+            // gets a new one in the same order.
+            todayListSignins = repo.GetManyQ()
+                .Where(p => p.lottery_sequence != null
+                         && EntityFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
                 .OrderBy(p => p.lottery_sequence)
                 .AsEnumerable();
-
-            if (repo.GetManyQ().FirstOrDefault().lottery_sequence > 0)
-                return false;
-
-            IEnumerable<WorkerSignin> todaySignins = repo.GetManyQ()
-                .Join(yesterdaySignins,
-                    tod => tod.WorkerID,
-                    yest => yest.WorkerID,
-                    (tod, yest) => new
-                    {
-                        tod,
-                        yseq = yest.lottery_sequence
-                    })
-                .Where(p => p.tod.memberStatus == Worker.iActive
-                         && EntityFunctions.DiffDays(p.tod.dateforsignin, date) == 0 ? true : false)
-                .OrderBy(p => p.yseq)
-                .Select(g => new WorkerSignin
-                {
-                    Createdby = g.tod.Createdby,
-                    datecreated = g.tod.datecreated,
-                    dateforsignin = g.tod.dateforsignin,
-                    dateupdated = g.tod.datecreated,
-                    dwccardnum = g.tod.dwccardnum,
-                    ID = g.tod.ID,
-                    lottery_sequence = g.yseq,
-                    lottery_timestamp = DateTime.Now,
-                    memberStatus = g.tod.memberStatus,
-                    Updatedby = user,
-                    WorkAssignmentID = g.tod.WorkAssignmentID,
-                    worker = g.tod.worker,
-                    WorkerID = g.tod.WorkerID
-                });
-
-            foreach (WorkerSignin wsi in todaySignins)
+            // reset sequence number
+            foreach (WorkerSignin wsi in todayListSignins)
             {
                 i++;
                 wsi.lottery_sequence = i;
+                wsi.lottery_timestamp = DateTime.Now;
+                wsi.Updatedby = user;
+            }
+
+            //get yesterday's lottery/list members, 
+            //as long as they weren't dispatched
+            yesterdaySignins = repo.GetManyQ()
+                .Where(p => p.lottery_sequence != null 
+                         && p.WorkAssignmentID == null
+                         && EntityFunctions.DiffDays(p.dateforsignin, yesterday) == 0 ? true : false)
+                .OrderBy(p => p.lottery_sequence)
+                .AsEnumerable();
+
+            //gets any signin for today that "should" be on the duplicate lottery/list
+            //i.e., they are not currently on the list, were on the list yesterday,
+            //were not dispatched yesterday and have not been dispatched today
+            todayDupeSignins = repo.GetManyQ()
+                .Where(p => p.WorkAssignmentID == null
+                         && p.lottery_sequence == null
+                         && EntityFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
+                .OrderBy(o => o.dateforsignin)
+                .AsEnumerable();
+
+            dupes = todayDupeSignins
+                .Join(yesterdaySignins, to => to.WorkerID, ye => ye.WorkerID, (to, ye) => new { to, seq = ye.lottery_sequence, ts = ye.lottery_timestamp })
+                .OrderBy(o => o.seq)
+                .Select(g => new WorkerSignin
+                {
+                    Createdby = g.to.Createdby,
+                    datecreated = g.to.datecreated,
+                    dateforsignin = g.to.dateforsignin,
+                    dateupdated = g.to.dateupdated,
+                    dwccardnum = g.to.dwccardnum,
+                    ID = g.to.ID,
+                    lottery_sequence = g.seq,
+                    lottery_timestamp = g.ts,
+                    memberStatus = g.to.memberStatus,
+                    Updatedby = g.to.Updatedby,
+                    WorkAssignmentID = g.to.WorkAssignmentID,
+                    worker = g.to.worker,
+                    WorkerID = g.to.WorkerID
+                });
+
+            //good god I hope that works
+            foreach (WorkerSignin wsi in dupes)
+            {
+                i++;
+                wsi.lottery_sequence = i;
+                wsi.lottery_timestamp = DateTime.Now;
+                wsi.Updatedby = user;
             }
 
             uow.Commit();
