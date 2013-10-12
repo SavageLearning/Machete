@@ -222,7 +222,7 @@ namespace Machete.Service
 
             // Get today's signins. Make sure that anyone who already has been assigned a lottery number
             // gets a new one in the same order.
-            todayListSignins = repo.GetManyQ()
+            todayListSignins = repo.GetAllQ()
                 .Where(p => p.lottery_sequence != null
                          && EntityFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
                 .OrderBy(p => p.lottery_sequence)
@@ -238,7 +238,7 @@ namespace Machete.Service
 
             //get yesterday's lottery/list members, 
             //as long as they weren't dispatched
-            yesterdaySignins = repo.GetManyQ()
+            yesterdaySignins = repo.GetAllQ()
                 .Where(p => p.lottery_sequence != null 
                          && p.WorkAssignmentID == null
                          && EntityFunctions.DiffDays(p.dateforsignin, yesterday) == 0 ? true : false)
@@ -248,34 +248,20 @@ namespace Machete.Service
             //gets any signin for today that "should" be on the duplicate lottery/list
             //i.e., they are not currently on the list, were on the list yesterday,
             //were not dispatched yesterday and have not been dispatched today
-            todayDupeSignins = repo.GetManyQ()
+            todayDupeSignins = repo.GetManyQ() //with tracing
                 .Where(p => p.WorkAssignmentID == null
                          && p.lottery_sequence == null
                          && EntityFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
                 .OrderBy(o => o.dateforsignin)
                 .AsEnumerable();
 
+            //thank you Jimmy
             dupes = todayDupeSignins
                 .Join(yesterdaySignins, to => to.WorkerID, ye => ye.WorkerID, (to, ye) => new { to, seq = ye.lottery_sequence })
-                .Select(g => new WorkerSignin
-                {
-                    Createdby = g.to.Createdby,
-                    datecreated = g.to.datecreated,
-                    dateforsignin = g.to.dateforsignin,
-                    dateupdated = g.to.dateupdated,
-                    dwccardnum = g.to.dwccardnum,
-                    ID = g.to.ID,
-                    lottery_sequence = g.seq,
-                    lottery_timestamp = null,
-                    memberStatus = g.to.memberStatus,
-                    Updatedby = g.to.Updatedby,
-                    WorkAssignmentID = g.to.WorkAssignmentID,
-                    worker = g.to.worker,
-                    WorkerID = g.to.WorkerID
-                })
+                .Select(g => g.to )
                 .OrderBy(o => o.lottery_sequence);
 
-            //good god I hope that works
+            //good god that works
             foreach (WorkerSignin wsi in dupes)
             {
                 i++;
