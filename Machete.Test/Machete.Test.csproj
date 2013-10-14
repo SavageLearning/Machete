@@ -134,6 +134,7 @@
     <Compile Include="FluentRecordBase.cs" />
     <Compile Include="FluentRecordTests.cs" />
     <Compile Include="IntegrationTests\Services\ActivityServiceTests.cs" />
+    <Compile Include="IntegrationTests\Services\ReportServiceTest.cs" />
     <Compile Include="IntegrationTests\Services\IndexViewBaseServiceTest.cs" />
     <Compile Include="IntegrationTests\Services\WorkAssignmentServiceTest.cs" />
     <Compile Include="IntegrationTests\Services\WorkerSigninServiceTest.cs" />

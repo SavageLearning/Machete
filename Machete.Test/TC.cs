@@ -26,5 +26,6 @@ namespace Machete.Test
         public const string WAs = "Area-WorkAssignment";
         public const string Workers = "Area-Workers";
         public const string Images = "Area-Images";
+        public const string Reports = "Area-Reports";
     }
 }
