@@ -19,8 +19,11 @@ namespace Machete.Service
 
     public interface IReportService
     {
+        int CountDailySignins(DateTime beginDate);
+        int CountDailySignins(DateTime beginDate, DateTime endDate);
         IQueryable<DailyCasaLatinaReport> DailyCasaLatina(DateTime beginDate, DateTime endDate);
         IQueryable<WeeklyElCentroReport> WeeklyElCentro(DateTime beginDate, DateTime endDate);
+        IQueryable<WeeklyJobsBySector> WeeklyJobs(DateTime beginDate, DateTime endDate);
         IQueryable<MonthlyWithDetailReport> MonthlyWithDetail(DateTime beginDate, DateTime endDate);
         dataTableResult<dclData> dclView(DateTime dclDate);
         dataTableResult<wecData> wecView(DateTime wecDate);
@@ -54,6 +57,37 @@ namespace Machete.Service
         }
 
         /// <summary>
+        /// A simple count of worker signins for a single day.
+        /// </summary>
+        /// <param name="beginDate"></param>
+        /// <returns></returns>
+        public int CountDailySignins(DateTime beginDate)
+        {
+            int query = 0;
+            var wsiQ = wsiRepo.GetAllQ();
+
+            query = wsiQ.Where(whr => EntityFunctions.TruncateTime(whr.dateforsignin) == EntityFunctions.TruncateTime(beginDate)).Count();
+
+            return query;
+        }
+        /// <summary>
+        /// A simple count of worker signins for the given period.
+        /// </summary>
+        /// <param name="beginDate">DateTime, not null</param>
+        /// <param name="endDate">DateTime, null</param>
+        /// <returns>int</returns>
+        public int CountDailySignins(DateTime beginDate, DateTime endDate)
+        {
+            int query = 0;
+            var wsiQ = wsiRepo.GetAllQ();
+
+            query = wsiQ.Where(whr => whr.dateforsignin >= EntityFunctions.TruncateTime(beginDate)
+                                   && whr.dateforsignin <= new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59)).Count();
+
+            return query;
+        }
+
+        /// <summary>
         /// L2E query for daily Casa Latina Machete report
         /// Returns information about daily lists, future jobs
         /// </summary>
@@ -69,33 +103,35 @@ namespace Machete.Service
             var wQ = wRepo.GetAllQ();
             var woQ = woRepo.GetAllQ();
             var wrQ = wrRepo.GetAllQ();
-            //var lQ = lookRepo.GetAllQ();
-            //int dwc = 20;
-            //int hhh = 21;
-            //int cancelled = 45;
+            var wsiQ = wsiRepo.GetAllQ();
 
+            //we need a left join of the second table because not everyone is requested
+            //requests are "propio patron" orders whether or not Casa knows the employers' names.
             query = waQ
                 .GroupJoin(wrQ,
                     wa => new { waid = (int)wa.workOrderID, waw = (int?)wa.workerAssignedID },
                     wr => new { waid = (int)wr.WorkOrderID, waw = (int?)wr.WorkerID },
-                    (wa, wr) => new { wa, 
+                    (wa, wr) => new
+                    {
+                        wa,
                         reqOrderID = wr.FirstOrDefault().WorkOrderID,
                         reqWorkerID = wr.FirstOrDefault().WorkerID
                     })
-                .GroupJoin(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
+                .Join(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
                     (wr, wo) => new
                     {
                         wr,
-                        cancelledJobs = wo.FirstOrDefault().status == WorkOrder.iCancelled ? 1 : 0,
-                        timeOfWork = wo.FirstOrDefault().dateTimeofWork == null ? DateTime.Now : EntityFunctions.TruncateTime(wo.FirstOrDefault().dateTimeofWork)
+                        cancelledJobs = wo.status == WorkOrder.iCancelled ? 1 : 0,
+                        timeOfWork = wo.dateTimeofWork == null ? DateTime.Now : EntityFunctions.TruncateTime(wo.dateTimeofWork)
                     })
-                .GroupJoin(wQ, wo => wo.wr.wa.workerAssignedID, w => w.ID,
-                    (wo, w) => new {
+                .Join(wQ, wo => wo.wr.wa.workerAssignedID, w => w.ID,
+                    (wo, w) => new
+                    {
                         wo,
-                        dwcList = w.FirstOrDefault().typeOfWorkID == Worker.iDWC ? (wo.wr.reqWorkerID == w.FirstOrDefault().ID ? 0 : 1) : 0,
-                        hhhList = w.FirstOrDefault().typeOfWorkID == Worker.iHHH ? (wo.wr.reqWorkerID == w.FirstOrDefault().ID ? 0 : 1) : 0,
-                        dwcPatron = w.FirstOrDefault().typeOfWorkID == Worker.iDWC ? (wo.wr.reqWorkerID == w.FirstOrDefault().ID ? 1 : 0) : 0,
-                        hhhPatron = w.FirstOrDefault().typeOfWorkID == Worker.iHHH ? (wo.wr.reqWorkerID == w.FirstOrDefault().ID ? 1 : 0) : 0
+                        dwcList = w.typeOfWorkID == Worker.iDWC ? (wo.wr.reqWorkerID == w.ID ? 0 : 1) : 0,
+                        hhhList = w.typeOfWorkID == Worker.iHHH ? (wo.wr.reqWorkerID == w.ID ? 0 : 1) : 0,
+                        dwcPatron = w.typeOfWorkID == Worker.iDWC ? (wo.wr.reqWorkerID == w.ID ? 1 : 0) : 0,
+                        hhhPatron = w.typeOfWorkID == Worker.iHHH ? (wo.wr.reqWorkerID == w.ID ? 1 : 0) : 0
                     })
                 .Where(whr => whr.wo.timeOfWork >= beginDate
                            && whr.wo.timeOfWork <= endDate)
@@ -107,8 +143,8 @@ namespace Machete.Service
                         dwcPropio = group.Sum(a => a.dwcPatron == null ? 0 : a.dwcPatron),
                         hhhList = group.Sum(a => a.hhhList == null ? 0 : a.hhhList),
                         hhhPropio = group.Sum(a => a.hhhPatron == null ? 0 : a.hhhPatron),
-                        totalSignins = group.Sum(a => a.dwcList == null ? 0 : a.dwcList) + group.Sum(a => a.dwcPatron == null ? 0 : a.dwcPatron) + group.Sum(a => a.hhhList == null ? 0 : a.hhhList) + group.Sum(a => a.hhhPatron == null ? 0 : a.hhhPatron),
-                        totalAssignments = group.Count(),
+                        totalSignins = CountDailySignins(DateTime.Now),
+                        totalAssignments = group.Count(), // no right joins, so this is the total no. of rows in waQ
                         cancelledJobs = group.Sum(a => a.wo.cancelledJobs == null ? 0 : a.wo.cancelledJobs)
                     })
                 .OrderBy(fini => fini.date);
@@ -133,12 +169,12 @@ namespace Machete.Service
             var wsiQ = wsiRepo.GetAllQ();
 
             query = waQ
-                .GroupJoin(woQ,
+                .Join(woQ,
                     wa => wa.workOrderID,
                     wo => wo.ID,
                     (wa, wo) => new {
                         wa,
-                        woDate = wo.FirstOrDefault().dateTimeofWork == null ? DateTime.Now : EntityFunctions.TruncateTime(wo.FirstOrDefault().dateTimeofWork)
+                        woDate = wo.dateTimeofWork == null ? DateTime.Now : EntityFunctions.TruncateTime(wo.dateTimeofWork)
                     })
                 .Where(whr => whr.woDate >= beginDate
                            && whr.woDate <= endDate)

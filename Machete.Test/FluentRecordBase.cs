@@ -60,6 +60,7 @@ namespace Machete.Test
         private ActivitySigninService _servAS;
         private EmployerService _servE;
         private LookupService _servL;
+        private ReportService _servReport;
         private IUnitOfWork _uow;
         public MacheteContext DB { get; set; }
         private Employer _emp;
@@ -863,6 +864,22 @@ namespace Machete.Test
         }
 
         #endregion 
+
+        #region Reports
+        public ReportService ToReportServ()
+        {
+            if (_repoWO == null) AddRepoWorkOrder();
+            if (_repoWA == null) AddRepoWorkAssignment();
+            if (_repoW == null) AddRepoWorker();
+            if (_repoWSI == null) AddRepoWorkerSignin();
+            if (_repoWR == null) AddRepoWorkerRequest();
+            if (_repoL == null) AddRepoLookup();
+            //reports don't write anything (no UoW)
+
+            _servReport = new ReportService(_repoWO, _repoWA, _repoW, _repoWSI, _repoWR, _repoL);
+            return _servReport;
+        }
+        #endregion
 
         public FluentRecordBase AddUOW()
         {

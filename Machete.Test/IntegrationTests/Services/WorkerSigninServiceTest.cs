@@ -150,5 +150,18 @@ namespace Machete.Test
             Assert.AreEqual(61, tolist[0].skill1);
             Assert.AreEqual(1, result.query.Count());
         }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
+        public void Integration_WorkerSigninService_Intergation_Chaim1()
+        {
+            //
+            // Arrange
+            //
+            //Act
+            //var result = frb.ToServWorkerSignin().listDuplicate(DateTime.Parse("10/4/2013"), "Chaim");
+            //
+            //Assert
+            //Assert.IsNotNull(result);
+        }
     }
 }
