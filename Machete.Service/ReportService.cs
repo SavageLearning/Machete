@@ -188,8 +188,7 @@ namespace Machete.Service
             return query;
         }
         /// <summary>
-        /// L2E query for daily Casa Latina Machete report
-        /// Returns information about daily lists, future jobs
+        /// Counts by type of dispatch (DWC, HHH, Propio/ea.)
         /// </summary>
         /// <param name="dateRequested">A single DateTime parameter</param>
         /// <returns>IQueryable</returns>
@@ -307,15 +306,15 @@ namespace Machete.Service
                     (wa, wo) => new
                     {
                         wa,
-                        workDate = wo.dateTimeofWork
+                        workDate = EntityFunctions.TruncateTime(wo.dateTimeofWork)
                     })
-                .GroupJoin(lQ,
+                .Join(lQ,
                     wawo => wawo.wa.skillID,
                     l => l.ID,
                     (wawo, l) => new
                     {
                         wawo,
-                        enText = l.FirstOrDefault().text_EN
+                        enText = l.text_EN
                     })
                 .Where(whr => whr.wawo.workDate >= beginDate
                            && whr.wawo.workDate <= endDate)
@@ -398,7 +397,7 @@ namespace Machete.Service
                         noWeekJobs = weeklyAssignments.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
                         weekJobsSector = weeklyJobsBySector
                             .Where(whr => whr.date == g.date)
-                            .Aggregate("", (a, b) => a + b.count + " (" + b.count.ToString() + "), "),
+                            .Aggregate("", (a, b) => a + b.info + " (" + b.count.ToString() + "), "),
                         weekEstDailyHours = g.hours,
                         weekEstPayment = g.wages,
                         weekHourlyWage = g.avg
