@@ -105,25 +105,20 @@ namespace Machete.Web.Controllers
             else dclDate = DateTime.Now;
             // pass filter parameters to service level
             // Call view model from service layer:
-            dataTableResult<dclData> dcl = repServ.dclView(dclDate);
+            dataTableResult<dailyData> dcl = repServ.DailyView(dclDate);
             //
             //return what's left to datatables
             var result = from d in dcl.query
                          select new
                          {
-                            date = System.String.Format("{0:MM/dd/yyyy}", d.date) ?? System.String.Format("{0:MM/dd/yyyy}", DateTime.Now),
-                            dwcList = d.dwcList > 0 ? d.dwcList : 0,
-                            dwcPropio = d.dwcPropio > 0 ? d.dwcPropio : 0,
-                            hhhList = d.hhhList > 0 ? d.hhhList : 0,
-                            hhhPropio = d.hhhPropio > 0 ? d.hhhPropio : 0,
-                            totalSignins = d.totalSignins > 0 ? d.totalSignins : 0,
-                            totalAssignments = d.totalAssignments > 0 ? d.totalAssignments : 0,
-                            cancelledJobs = d.cancelledJobs > 0 ? d.cancelledJobs : 0
-                            //dwcFuture = d.futureDWC > 0 ? d.futureDWC : 0,
-                            //dwcPropioFuture = d.futureDWCpropio > 0 ? d.futureDWCpropio : 0,
-                            //hhhFuture = d.futureHHH > 0 ? d.futureHHH : 0,
-                            //hhhPropioFuture = d.futureHHHpropio > 0 ? d.futureHHHpropio : 0,
-                            //futuretotal = d.futureTotal > 0 ? d.futureTotal : 0
+                            date = System.String.Format("{0:MM/dd/yyyy}", d.date),
+                            dwcList = d.dwcList,
+                            dwcPropio = d.dwcPropio,
+                            hhhList = d.hhhList,
+                            hhhPropio = d.hhhPropio,
+                            totalSignins = d.totalSignins,
+                            totalAssignments = d.totalAssignments,
+                            cancelledJobs = d.cancelledJobs
                          };
 
             return Json(new
@@ -152,12 +147,13 @@ namespace Machete.Web.Controllers
             else wecDate = DateTime.Now;
             //pass filter parameters to service level
             // Call view model from service layer:
-            dataTableResult<wecData> wec = repServ.wecView(wecDate);
+            dataTableResult<weeklyData> wec = repServ.WeeklyView(wecDate);
             //
             //return what's left to datatables
             var result = from d in wec.query
                 select new
                 {
+                    weekday = d.dayofweek.ToString(),
                     date = System.String.Format("{0:MM/dd/yyyy}", d.date),
                     totalSignins = d.totalSignins > 0 ? d.totalSignins.ToString() : "0",
                     noWeekJobs = d.noWeekJobs > 0 ? d.noWeekJobs.ToString() : "0",
@@ -204,20 +200,20 @@ namespace Machete.Web.Controllers
             else mwdDate = DateTime.Now;
             //pass filter parameters to service level
             // Call view model from service layer:
-            dataTableResult<mwdData> mwd = repServ.mwdView(mwdDate);
+            dataTableResult<monthlyData> mwd = repServ.monthlyView(mwdDate);
             //
             //return what's left to datatables
             var result = from d in mwd.query
                          select new { 
                              date = System.String.Format("{0:MM/dd/yyyy}", d.date),
-                             totalSignins = d.totalSignins > 0 ? d.totalSignins.ToString() : "0",
-                             totalDWCSignins =  d.totalDWCSignins > 0 ? d.totalDWCSignins.ToString() : "0",
-                             totalHHHSignins =  d.totalHHHSignins > 0 ? d.totalHHHSignins.ToString() : "0",
-                             dispatchedDWCSignins = d.dispatchedDWCSignins > 0 ? d.dispatchedDWCSignins.ToString() : "0",
-                             dispatchedHHHSignins = d.dispatchedHHHSignins > 0 ? d.dispatchedHHHSignins.ToString() : "0",
-                             totalHours = d.totalHours > 0 ? d.totalHours.ToString() : "0",
-                             totalIncome = d.totalIncome > 0 ? d.totalIncome.ToString() : "0",
-                             avgIncomePerHour = d.avgIncomePerHour > 0 ? d.avgIncomePerHour.ToString() : "0"
+                             totalSignins = d.totalSignins.ToString(),
+                             totalDWCSignins =  d.totalDWCSignins.ToString(),
+                             totalHHHSignins =  d.totalHHHSignins.ToString(),
+                             dispatchedDWCSignins = d.dispatchedDWCSignins.ToString(),
+                             dispatchedHHHSignins = d.dispatchedHHHSignins.ToString(),
+                             totalHours = d.totalHours.ToString(),
+                             totalIncome = d.totalIncome.ToString(),
+                             avgIncomePerHour = d.avgIncomePerHour.ToString()
                          };
 
             return Json(new

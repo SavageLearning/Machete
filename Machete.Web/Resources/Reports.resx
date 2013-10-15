@@ -195,6 +195,9 @@
   <data name="totalSignins" xml:space="preserve">
     <value>Total Signins</value>
   </data>
+  <data name="weekday" xml:space="preserve">
+    <value>Weekday</value>
+  </data>
   <data name="weekEstDailyHours" xml:space="preserve">
     <value>Hours of work</value>
   </data>
