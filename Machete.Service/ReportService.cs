@@ -26,9 +26,8 @@ namespace Machete.Service
         int CountCancelled(DateTime beginDate);
         IQueryable<reportUnit> CountCancelled(DateTime beginDate, DateTime endDate);
         IQueryable<TypeOfDispatchReport> CountTypeofDispatch(DateTime beginDate, DateTime endDate);
-        IQueryable<WeeklyElCentroReport> HourlyWageAverage(DateTime beginDate, DateTime endDate);
-        IQueryable<WeeklyJobsBySector> ListJobs(DateTime beginDate, DateTime endDate);
-        IQueryable<MonthlyWithDetailReport> MonthlyWithDetail(DateTime beginDate, DateTime endDate);
+        IQueryable<AverageWages> HourlyWageAverage(DateTime beginDate, DateTime endDate);
+        IQueryable<reportUnit> ListJobs(DateTime beginDate, DateTime endDate);
         dataTableResult<dailyData> DailyView(DateTime dclDate);
         dataTableResult<weeklyData> WeeklyView(DateTime wecDate);
         dataTableResult<monthlyData> monthlyView(DateTime mwdDate);
@@ -360,8 +359,8 @@ namespace Machete.Service
                     hhhList = group.hhhList,
                     hhhPropio = group.hhhPropio,
                     totalSignins = dailySignins.Where(whr => whr.date == group.date).Select(g => g.count).FirstOrDefault(),
-                    totalAssignments = dailyAssignments.Where(whr => whr.date == group.date).Select(g => g.count).FirstOrDefault()
-                    cancelledJobs = dailyCancelled.Where(whr => whr.date == group.date).Select(g => g.count).FirstOrDefault()
+                    totalAssignments = dailyAssignments.Where(whr => whr.date == group.date).Select(g => g.count).FirstOrDefault(),
+                    cancelledJobs = dailyCancelled.Count() > 0 ? dailyCancelled.Where(whr => whr.date == group.date).Select(g => g.count).FirstOrDefault() : 0
                 });
 
             q = q.OrderBy(p => p.date);
@@ -395,8 +394,8 @@ namespace Machete.Service
                 .Select(g => new weeklyData {
                         dayofweek = g.date.DayOfWeek,
                         date = g.date,
-                        totalSignins = weeklySignins.Where(whr => whr.date == g.date).Select(g => g.count).FirstOrDefault(),
-                        noWeekJobs = weeklyAssignments.Where(whr => whr.date == g.date).Select(g => g.count).FirstOrDefault(),
+                        totalSignins = weeklySignins.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
+                        noWeekJobs = weeklyAssignments.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
                         weekJobsSector = weeklyJobsBySector
                             .Where(whr => whr.date == g.date)
                             .Aggregate("", (a, b) => a + b.count + " (" + b.count.ToString() + "), "),
@@ -509,6 +508,4 @@ namespace Machete.Service
         public double? totalIncome { get; set; }
         public double? avgIncomePerHour { get; set; }
     }
-}
-
 }
