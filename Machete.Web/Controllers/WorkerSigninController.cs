@@ -130,8 +130,25 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
+
         [UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, Check-in")]
+        public ActionResult ListDuplicate(DateTime todaysdate, string userName)
+        {
+            _serv.listDuplicate(todaysdate, userName);
+            return Json(new
+            {
+                jobSuccess = true,
+                status = "OK",
+                date = todaysdate
+            },
+            JsonRequestBehavior.AllowGet);
+        }
+       
+       
+       [UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager, Check-in")]
+       //to do: rename this method to clearList
         public ActionResult clearLottery(int id, string userName)
         {
             _serv.clearLottery(id, userName);
@@ -144,8 +161,59 @@ namespace Machete.Web.Controllers
             JsonRequestBehavior.AllowGet);
         }
 
-        //
+        /// <summary>
+        /// This method invokes IWorkerSigninService.moveDown,
+        /// which moves a worker down in numerical order in the daily 
+        /// ('lottery') list,
+        /// and moves the proceeding (next) set member into their spot.
+        /// </summary>
+        /// <param name="id">The Worker ID of the person to be moved down.</param>
+        /// <param name="userName">The username of the person making the request.</param>
+        /// <returns>Json (bool jobSuccess, string status)</returns>
+        [UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager, Check-in")]
+        public ActionResult moveDown(int id, string userName)
+        {
+            _serv.moveDown(id, userName);
+            return Json(new
+            {
+                jobSuccess = true,
+                status = "OK", 
+                workerID = id
+            },
+            JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// This method invokes IWorkerSigninService.moveUp,
+        /// which moves a worker up in numerical order in the 
+        /// daily ('lottery') list,
+        /// and moves the preceeding set member into their spot.
+        /// </summary>
+        /// <param name="id">The Worker ID of the person to be moved down.</param>
+        /// <param name="userName">The username of the person making the request.</param>
+        /// <returns>Json (bool jobSuccess, string status)</returns>
+        [UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager, Check-in")]
+        public ActionResult moveUp(int id, string userName)
+        {
+            _serv.moveUp(id, userName);
+            return Json(new
+            {
+                jobSuccess = true,
+                status = "OK",
+                workerID = id
+            },
+            JsonRequestBehavior.AllowGet);
+        }
+
         // GET: /WorkerSignin/Delete/5
+       /// <summary>
+       /// This method deletes a signin from the master Worker Signins list for the day.
+       /// </summary>
+       /// <param name="id">The Worker ID of the worker.</param>
+       /// <param name="userName">The user performing the action.</param>
+       /// <returns>Json (bool jobSuccess, string status, int deletedID)</returns>
         [UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, Check-in")]
         public ActionResult Delete(int id, string userName)
