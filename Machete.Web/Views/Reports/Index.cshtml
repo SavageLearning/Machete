@@ -47,11 +47,6 @@
                         <th>@Machete.Web.Resources.Reports.totalSignins</th>
                         <th>@Machete.Web.Resources.Reports.totalAssignments</th>
                         <th>@Machete.Web.Resources.Reports.cancelledJobs</th>
-@*                        <th>@Machete.Web.Resources.Reports.dwcFuture</th>
-                        <th>@Machete.Web.Resources.Reports.dwcPropioFuture</th>
-                        <th>@Machete.Web.Resources.Reports.hhhFuture</th>
-                        <th>@Machete.Web.Resources.Reports.hhhPropioFuture</th>
-                        <th>@Machete.Web.Resources.Reports.futureTotal</th>*@
                     </tr>
                 </thead>
             </table>
@@ -66,6 +61,7 @@
             <table id="wecSummaryTable" class="display">
                 <thead>
                     <tr>
+                        <th>@Machete.Web.Resources.Reports.weekday</th>
                         <th>@Machete.Web.Resources.Reports.date</th>
                         <th>@Machete.Web.Resources.Reports.totalSignins</th>
                         <th>@Machete.Web.Resources.Reports.noWeekJobs</th>
@@ -111,7 +107,6 @@
         $('#wecTable').hide(); // Weekly (El Centro) table
         $('#mwdTable').hide(); // Monthly With Detail
         // These  (above ) may be better hidden by using partial views. But so many files for the reports...
-        $('#summaryPopup').hide();
         $('#sorryNoPieCharts').hide();
         $('#sorryNoPrintView').hide();
         // The preceding pop up in the header area when various events occur...
@@ -125,13 +120,6 @@
         // the following code creates tabs from listed item tags 
         // in the HTML, by ID $("#id")
         $('#reportTabs').tabs();
-        $('#summaryHeader').hover(
-            function () {
-                $('#summaryPopup').show("fold", 1000);
-            },
-            function () {
-                $('#summaryHeader').off('hover')
-            });
         $('#summaryHide').click(
             function () {
                 $('#summaryPopup').hide();
@@ -223,12 +211,7 @@
                 { mDataProp: "hhhPropio" }, //these are similar to the other
                 { mDataProp: "totalSignins" }, //reports.
                 { mDataProp: "totalAssignments" },
-                { mDataProp: "cancelledJobs" } //,
-                //{ mDataProp: "dwcFuture" },
-                //{ mDataProp: "dwcPropioFuture" },
-                //{ mDataProp: "hhhFuture" },
-                //{ mDataProp: "hhhPropioFuture" },
-                //{ mDataProp: "futureTotal" },
+                { mDataProp: "cancelledJobs" }
             ], //these are the column names in the array; total # must match
             "fnServerData": function (sSource, aoData, fnCallback) {
                 aoData.push({ "name": "todaysdate", "value": $('#dclDate').val() });
@@ -251,6 +234,7 @@
             "bProcessing": false, //enable processing indicator
             "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName), //internationalisation
             "aoColumns": [
+                { mDataProp: "weekday" },
                 { mDataProp: "date" },
                 { mDataProp: "totalSignins" },
                 { mDataProp: "noWeekJobs" },

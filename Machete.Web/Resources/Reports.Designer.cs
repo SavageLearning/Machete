@@ -295,6 +295,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Weekday.
+        /// </summary>
+        public static string weekday {
+            get {
+                return ResourceManager.GetString("weekday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hours of work.
         /// </summary>
         public static string weekEstDailyHours {

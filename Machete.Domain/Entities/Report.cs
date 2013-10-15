@@ -5,34 +5,21 @@ using System.Text;
 
 namespace Machete.Domain.Entities
 {
-    public class DailyCasaLatinaReport
+    public class TypeOfDispatchReport
     {
         public DateTime date { get; set; }
         public int dwcList { get; set; }
         public int dwcPropio { get; set; }
         public int hhhList { get; set; }
         public int hhhPropio { get; set; }
-        public int totalSignins { get; set; }
-        public int totalAssignments { get; set; }
-        public int cancelledJobs { get; set; }
     }
 
-    public class WeeklyElCentroReport
+    public class AverageWages
     {
         public DateTime date { get; set; }
-        public int totalSignins { get; set; }
-        public int noWeekJobs { get; set; }
-//        public string weekJobsSector { get; set; }
-        public int weekEstDailyHours { get; set; }
-        public double weekEstPayment { get; set; }
-        public double weekHourlyWage { get; set; }
-    }
-
-    public class WeeklyJobsBySector
-    {
-        public DateTime jobsDate { get; set; }
-        public string jobsEngText { get; set; }
-        public int jobsCount { get; set; }
+        public int hours { get; set; }
+        public double wages { get; set; }
+        public double avg { get; set; }
     }
 
     public class MonthlyWithDetailReport
@@ -46,6 +33,14 @@ namespace Machete.Domain.Entities
         public int dispatchedHHHSignins { get; set; }
         public int totalHours { get; set; }
         public double totalIncome { get; set; }
-        // public double avgIncomePerHour { get; set; }
     }
+
+
+    public class reportUnit
+    {
+        public DateTime? date { get; set; }
+        public int? count { get; set; }
+        public string info { get; set; }
+    }
+
 }
