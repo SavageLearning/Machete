@@ -39,7 +39,7 @@ namespace Machete.Test.IntegrationTests.Services
         public void Integration_ReportService_CountDailySignins_First_Overload_Method()
         {
             DateTime beginDate = _dOptions.date ?? DateTime.Today;
-            var result = frb.ToReportServ().CountSignins(beginDate);
+            var result = frb.ToServReports().CountSignins(beginDate);
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
@@ -47,7 +47,7 @@ namespace Machete.Test.IntegrationTests.Services
         {
             DateTime beginDate = DateTime.Today.AddDays(-6);
             DateTime endDate = DateTime.Today;
-            var result = frb.ToReportServ().CountSignins(beginDate, endDate);
+            var result = frb.ToServReports().CountSignins(beginDate, endDate);
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
@@ -55,7 +55,31 @@ namespace Machete.Test.IntegrationTests.Services
         {
             DateTime beginDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 3, 0, 0, 0);
             DateTime endDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 3, 23, 59, 59);
-            var result = frb.ToReportServ().CountTypeofDispatch(beginDate, endDate);
+            var result = frb.ToServReports().CountTypeofDispatch(beginDate, endDate);
+        }
+
+        [TestMethod]//, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
+        public void Integration_Reports_Service_GetSummary()
+        {
+            ////
+            ////Arrange
+            //using (var ctx = MacheteContext
+            //    .CreateTracingContext("macheteDevTest", 
+            //                            x => {
+            //                                Console.WriteLine(x.ToFlattenedTraceString());
+            //                            }, 
+            //                            true, 
+            //                            @"c:\MyContext.output")
+            //)
+            //{
+            //    var result = frb.AddWorkOrder().ToServReports().wecView(DateTime.Now).totalCount;
+
+            //}
+            ////
+            ////Act
+            ////
+            ////Assert
+
         }
 
     }
