@@ -155,12 +155,12 @@ namespace Machete.Web.Controllers
                 {
                     weekday = d.dayofweek.ToString(),
                     date = System.String.Format("{0:MM/dd/yyyy}", d.date),
-                    totalSignins = d.totalSignins > 0 ? d.totalSignins.ToString() : "0",
-                    noWeekJobs = d.noWeekJobs > 0 ? d.noWeekJobs.ToString() : "0",
-                    weekJobsSector = d.weekJobsSector == null ? "None" : d.weekJobsSector,
-                    weekEstDailyHours = d.weekEstDailyHours > 0 ? d.weekEstDailyHours.ToString() : "0",
-                    weekEstPayment = d.weekEstPayment > 0 ? d.weekEstPayment.ToString() : "0",
-                    weekHourlyWage = d.weekHourlyWage > 0 ? d.weekHourlyWage.ToString() : "0"
+                    totalSignins = d.totalSignins,
+                    noWeekJobs = d.noWeekJobs,
+                    weekJobsSector = d.weekJobsSector,
+                    weekEstDailyHours = d.weekEstDailyHours,
+                    weekEstPayment = d.weekEstPayment,
+                    weekHourlyWage = System.String.Format("{0:C}", d.weekHourlyWage)
                 };
 
             return Json(new
