@@ -214,11 +214,47 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Top Jobs.
+        /// </summary>
+        public static string jzcJobs {
+            get {
+                return ResourceManager.GetString("jzcJobs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Top Zip Codes.
+        /// </summary>
+        public static string jzcZipCodes {
+            get {
+                return ResourceManager.GetString("jzcZipCodes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Number of jobs.
         /// </summary>
         public static string noWeekJobs {
             get {
                 return ResourceManager.GetString("noWeekJobs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Machete Work Order Reports.
+        /// </summary>
+        public static string ordersHeader {
+            get {
+                return ResourceManager.GetString("ordersHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open the menus below to select different types of reports about work orders. Use the buttons at the top of the reports to toggle the display..
+        /// </summary>
+        public static string ordersInstructions {
+            get {
+                return ResourceManager.GetString("ordersInstructions", resourceCulture);
             }
         }
         

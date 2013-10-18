@@ -82,5 +82,18 @@ namespace Machete.Test.IntegrationTests.Services
 
         }
 
+        [TestMethod]
+        public void Integration_Reports_Service_ListZipCodes()
+        {
+            //Arrange
+            //Act
+            DateTime beginDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 3, 0, 0, 0);
+            DateTime endDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 3, 23, 59, 59);
+            var result = frb.ToServReports().ListZipCodes(beginDate, endDate);
+            Console.WriteLine(result);
+            //Assert
+        }
+
+
     }
 }

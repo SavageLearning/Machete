@@ -213,4 +213,16 @@
   <data name="workersTab" xml:space="preserve">
     <value>Trabajadores</value>
   </data>
+  <data name="jzcJobs" xml:space="preserve">
+    <value>Trabajos Principales</value>
+  </data>
+  <data name="jzcZipCodes" xml:space="preserve">
+    <value>Códigos Postales Principales</value>
+  </data>
+  <data name="ordersHeader" xml:space="preserve">
+    <value>Informes sobre órdenes de trabajo</value>
+  </data>
+  <data name="ordersInstructions" xml:space="preserve">
+    <value>Utiliza los menús abajo para elegir los distintos tipos de reportajes sobre el estado de órdenes de trabajo. Puede utilizar los botones por encima del reporte para alternar la visualización.</value>
+  </data>
 </root>

@@ -1,8 +1,93 @@
-﻿        <p />
-        <a href="/ReportServer/Pages/ReportViewer.aspx?%2fWork+orders-Status+summary+by+day&rs:Command=Render" target="_blank">Daily work order statuses</a>
-        <p />
-        <a href="/ReportServer/Pages/ReportViewer.aspx?%2fWork+orders-Incomplete+orders&rs:Command=Render" target="_blank">Incomplete Work Orders (List)</a>
-        <p />
-        <a href="/ReportServer/Pages/ReportViewer.aspx?%2fWork+orders-Status+summary&rs:Command=Render" target="_blank">Monthly work order and assignment statuses (bar charts)</a>
-        <p />
-        <a href="/ReportServer/Pages/ReportViewer.aspx?%2fYearToYearComparisonReport&rs:Command=Render" target="_blank">Comparison of work orders from 2011 to 2012 by month.</a>
+﻿@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+}
+
+<div id="ordersHeader">
+    <h3 style="padding-left: .5em;">@Machete.Web.Resources.Reports.ordersHeader</h3>
+    <div id="ordersPopup">
+        <p style="padding-left: .5em;">
+        @Machete.Web.Resources.Reports.ordersInstructions
+        <input type="button" value="Hide" class="formButton" id="orderHide" />
+        </p>
+    </div>
+</div>
+
+<div id="ordersReports">
+    <h3><a href="#" id="jzcLink">Jobs and Zip Codes (Mountain View)</a></h3>
+    <div id="jzcTable">
+        <input type="button" value="Data Only" class="formButton" id="jzcDataOnlyBtn" />
+        <input type="button" value="Pie Chart" class="formButton" id="jzcPieChartBtn" />
+        <input type="button" value="Print Report" class="formButton" id="jzcPrintReport" />
+        <span style="display:block;">
+        @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-datepicker", @id = "jzcStartDate" })
+        </span>
+        <p id="jzcHelp" style="display:inline;"><em>Select a date and click "Submit" to see results.</em></p>
+        <table id="jzcDataTables" class="display">
+            <thead>
+                <tr>
+                    <th>@Machete.Web.Resources.Reports.jzcJobs</th>
+                    <th>@Machete.Web.Resources.Reports.jzcZipCodes</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //hide stuff
+        $('#jzcTable').hide();
+        $('#jzcHelp').hide();
+
+        //click to hide stuff
+        $('#orderHide').click(
+            function () {
+                $('#ordersPopup').hide();
+            });
+
+        //accordion stuff
+        $('#ordersReports').accordion({
+            collapsible: true,
+            active: false,
+            autoHeight: false
+        });
+
+        //make stuff pretty
+        $('#orderHide').button();
+        $('#jzcDataOnlyBtn').button();
+        $('#jzcPieChartBtn').button();
+        $('#jzcPrintReport').button();
+
+        //make stuff do stuff
+        //
+        //
+        //
+        // useful vars
+        var jzcTableDefaults = {
+            "bPaginate": false, // to enable pagination (this report has fixed size)
+            "bAutoWidth": false,
+            "bDestroy": false,
+            "bInfo": true, //shows information about data being displayed on the page
+            "bSort": false, //enable or disable sorting of columns
+            "bFilter": false, //enable or disable filtering of data
+            "bServerSide": true, //server side processing, req. source
+            "sAjaxSource": "/Reports/AjaxJobsZipCodes", //source for server side processing
+            "bProcessing": false, //enable processing indicator
+            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName), //internationalisation
+            "aoColumns": [
+                { mDataProp: "topJobs" }, 
+                { mDataProp: "topZipCodes" } 
+            ], //these are the column names in the array; total # must match
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                aoData.push({ "name": "date", "value": $('#jzcStartDate').val() });
+                $.getJSON(sSource, aoData, function (json) {
+                    /* Do whatever additional processing you want on the callback, then tell DataTables */
+                    fnCallback(json)
+                });
+            }
+        };
+
+
+
+    });
+</script>
