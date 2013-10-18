@@ -7,9 +7,13 @@
 }
 <div id="reportTabs">
     <ul>
-        <li><a href="#summaryReports" id="summaryTab" >@Machete.Web.Resources.Reports.summaryTab</a> </li>
+        <li><a href="#summaryWrapper" id="summaryTab" >@Machete.Web.Resources.Reports.summaryTab</a> </li>
+        <li><a href="/Reports/Orders" id="ordersTab">@Machete.Web.Resources.Reports.ordersTab</a></li>
         <!-- only doing summary reports for now -->
     </ul>
+
+    <div id="summaryWrapper">
+        @*The idea here is that this div could be its own partial view. It is the default view.*@
     <div id="summaryHeader">
         <h3 style="padding-left: .5em;">@Machete.Web.Resources.Reports.summaryHeader</h3>
         <div id="summaryPopup">
@@ -97,6 +101,7 @@
             </table>
         </div>
     </div>
+  </div>
 </div>
 
 <script type="text/javascript">
@@ -124,7 +129,6 @@
             function () {
                 $('#summaryPopup').hide();
             });
-        // Shows for ten seconds on hover, hides when button clicked.
 
         // The reports start in accordion format, closed.
         $('#summaryReports').accordion({
@@ -133,13 +137,6 @@
                 autoHeight: false
             });
 
-        // A click anywhere in the summary reports div keeps the header help
-        // from showing up again, unless page is reloaded. This helps eliminate
-        // clunkiness.
-        $('#summaryReports').click(
-            function () {
-                $('#summaryHeader').unbind('mouseenter mouseleave');
-            });
 
         ///////////////////////////// PIE CHARTS /////////////////////////|X|
         // Buttons for showing and hiding

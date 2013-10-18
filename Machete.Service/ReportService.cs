@@ -1,15 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
+
+using System.Data.Objects;
+using System.Data.Objects.SqlClient;
+
 using Machete.Domain;
 using Machete.Domain.Entities;
+
 using Machete.Data;
-using System.Data.Objects;
 using Machete.Data.Infrastructure;
-using System.Text.RegularExpressions;
-using System.Data.Objects.SqlClient;
-using System.Globalization;
+
+using Machete.Service.shared;
+
 using NLog;
 
 namespace Machete.Service
@@ -17,48 +23,16 @@ namespace Machete.Service
     // Other interfaces implement IService, which is a tool for writing a type of record.
     // No writing necessary here. Only reporting.
 
-    public interface IReportService
+    public interface IReportService : IReportBase
     {
-        int CountSignins(DateTime beginDate);
-        IQueryable<reportUnit> CountSignins(DateTime beginDate, DateTime endDate);
-        int CountAssignments(DateTime beginDate);
-        IQueryable<reportUnit> CountAssignments(DateTime beginDate, DateTime endDate);
-        int CountCancelled(DateTime beginDate);
-        IQueryable<reportUnit> CountCancelled(DateTime beginDate, DateTime endDate);
-        IQueryable<TypeOfDispatchReport> CountTypeofDispatch(DateTime beginDate, DateTime endDate);
-        IQueryable<AverageWages> HourlyWageAverage(DateTime beginDate, DateTime endDate);
-        IQueryable<reportUnit> ListJobs(DateTime beginDate, DateTime endDate);
         dataTableResult<dailyData> DailyView(DateTime dclDate);
         dataTableResult<weeklyData> WeeklyView(DateTime wecDate);
         dataTableResult<monthlyData> monthlyView(DateTime mwdDate);
+        dataTableResult<jzcData> jzcView(DateTime jzcDate);
     }
 
-    public class ReportService : IReportService
+    public class ReportService : ReportBase, IReportService
     {
-        // ReportService pulls from the following repositories:
-        private readonly IWorkOrderRepository woRepo;
-        private readonly IWorkAssignmentRepository waRepo;
-        private readonly IWorkerRepository wRepo;
-        private readonly IWorkerSigninRepository wsiRepo;
-        private readonly IWorkerRequestRepository wrRepo;
-        private readonly ILookupRepository lookRepo;
-
-        //Inject constructor with these values (see Global.asax.cs):
-        public ReportService(IWorkOrderRepository woRepo,
-                             IWorkAssignmentRepository waRepo,
-                             IWorkerRepository wRepo,
-                             IWorkerSigninRepository wsiRepo,
-                             IWorkerRequestRepository wrRepo,
-                             ILookupRepository lookRepo)
-        {
-            this.woRepo = woRepo;
-            this.waRepo = waRepo;
-            this.wRepo = wRepo;
-            this.wsiRepo = wsiRepo;
-            this.wrRepo = wrRepo;
-            this.lookRepo = lookRepo;
-        }
-
         /// <summary>
         /// A simple count of worker signins for a single day.
         /// </summary>
@@ -144,11 +118,12 @@ namespace Machete.Service
                 .Where(whr => whr.date >= beginDate
                            && whr.date <= endDate)
                 .GroupBy(gb => gb.date)
-                .Select(g => new reportUnit {
-                        date = g.Key,
-                        count = g.Count(),
-                        info = ""
-                    });
+                .Select(g => new reportUnit
+                {
+                    date = g.Key,
+                    count = g.Count(),
+                    info = ""
+                });
 
             return query;
         }
@@ -179,7 +154,8 @@ namespace Machete.Service
             query = woQ.Where(whr => EntityFunctions.TruncateTime(whr.dateTimeofWork) == beginDate
                                   && whr.status == WorkOrder.iCancelled)
                 .GroupBy(gb => EntityFunctions.TruncateTime(gb.dateTimeofWork))
-                .Select(g => new reportUnit {
+                .Select(g => new reportUnit
+                {
                     date = g.Key,
                     count = g.Count(),
                     info = ""
@@ -249,9 +225,7 @@ namespace Machete.Service
         }
 
         /// <summary>
-        /// L2E query for Weekly El Centro (wec) report for Machete
-        /// returns information about work orders and earnings at a
-        /// weekly interval.
+        /// Grabs a sum of hours and wages and averages them.
         /// </summary>
         /// <param name="beginDate">Start date for the query.</param>
         /// <param name="endDate">End date for the query.</param>
@@ -272,7 +246,8 @@ namespace Machete.Service
                 .Join(woQ,
                     wa => wa.workOrderID,
                     wo => wo.ID,
-                    (wa, wo) => new {
+                    (wa, wo) => new
+                    {
                         wa,
                         woDate = EntityFunctions.TruncateTime(wo.dateTimeofWork)
                     })
@@ -326,6 +301,34 @@ namespace Machete.Service
                     date = group.Key.workDate,
                     count = group.Count() > 0 ? group.Count() : 0,
                     info = group.Key.enText ?? "",
+                });
+
+            return query;
+        }
+
+        public IQueryable<reportUnit> ListZipCodes(DateTime beginDate, DateTime endDate)
+        {
+            IQueryable<reportUnit> query;
+
+            var waQ = waRepo.GetAllQ();
+            var woQ = woRepo.GetAllQ();
+            var lQ = lookRepo.GetAllQ();
+
+            query = woQ
+                .Where(whr => whr.dateTimeofWork >= beginDate
+                           && whr.dateTimeofWork <= endDate)
+                .GroupBy(gb => new
+                {
+                    dtow = EntityFunctions.TruncateTime(gb.dateTimeofWork),
+                    zip = gb.zipcode
+                })
+                .OrderByDescending(ob => ob.Key.dtow)
+                .ThenByDescending(ob => ob.Count())
+                .Select(group => new reportUnit
+                {
+                    date = group.Key.dtow,
+                    count = group.Count() > 0 ? group.Count() : 0,
+                    info = group.Key.zip ?? "",
                 });
 
             return query;
@@ -390,18 +393,19 @@ namespace Machete.Service
             weeklyJobsBySector = ListJobs(beginDate, endDate).ToList();
 
             q = weeklyWages
-                .Select(g => new weeklyData {
-                        dayofweek = g.date.DayOfWeek,
-                        date = g.date,
-                        totalSignins = weeklySignins.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
-                        noWeekJobs = weeklyAssignments.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
-                        weekJobsSector = weeklyJobsBySector
-                            .Where(whr => whr.date == g.date)
-                            .Aggregate("", (a, b) => a + b.info + " (" + b.count.ToString() + "), "),
-                        weekEstDailyHours = g.hours,
-                        weekEstPayment = g.wages,
-                        weekHourlyWage = g.avg
-                }) ;
+                .Select(g => new weeklyData
+                {
+                    dayofweek = g.date.DayOfWeek,
+                    date = g.date,
+                    totalSignins = weeklySignins.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
+                    noWeekJobs = weeklyAssignments.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
+                    weekJobsSector = weeklyJobsBySector
+                        .Where(whr => whr.date == g.date)
+                        .Aggregate("", (a, b) => a + b.info + " (" + b.count.ToString() + "), "),
+                    weekEstDailyHours = g.hours,
+                    weekEstPayment = g.wages,
+                    weekHourlyWage = g.avg
+                });
 
             q = q.OrderBy(p => p.date);
 
@@ -453,7 +457,7 @@ namespace Machete.Service
         }
     }
 
-    
+
     /// <summary>
     /// A class to contain the data for the Daily Report for Casa Latina
     /// int dwcList, int dwcPropio, int hhhList, int hhhPropio, int
@@ -496,7 +500,6 @@ namespace Machete.Service
     /// </summary>
     public class monthlyData
     {
-
         public DateTime? date { get; set; }
         public int? totalSignins { get; set; }
         public int? totalDWCSignins { get; set; }
@@ -507,4 +510,12 @@ namespace Machete.Service
         public double? totalIncome { get; set; }
         public double? avgIncomePerHour { get; set; }
     }
+
+    public class jzcData
+    {
+        public DateTime? date { get; set; }
+        public string jobs { get; set; }
+        public string zips { get; set; }
+    }
+
 }

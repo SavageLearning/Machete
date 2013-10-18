@@ -72,6 +72,11 @@ namespace Machete.Web.Controllers
             CI = (CultureInfo)Session["Culture"];
         }
 
+        public ActionResult Orders()
+        {
+            return PartialView();
+        }
+
         /// <summary>
         /// MVC Controller for Machete Reports
         /// </summary>
@@ -186,23 +191,13 @@ namespace Machete.Web.Controllers
         public ActionResult AjaxMwd(jQueryDataTableParam param)
         {
             DateTime mwdDate;
+            
             var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param); 
-            // jQuery passes in parameters that must be mapped to viewOptions
-            // following the format of the other files here;
-            // The only thing we're using it for here is the date, but this could
-            // be extended to other features.
-            // Set culture setting to whatever current session setting is
-            //vo.CI = (System.Globalization.CultureInfo)Session["Culture"]; 
-            // Commented out because this does not seem to be needed beyond
-            // the view layer.
-            // Take the date from the view and assign it to this.mwdDate
             if (vo.date != null) mwdDate = DateTime.Parse(vo.date.ToString());
             else mwdDate = DateTime.Now;
-            //pass filter parameters to service level
-            // Call view model from service layer:
+
             dataTableResult<monthlyData> mwd = repServ.monthlyView(mwdDate);
-            //
-            //return what's left to datatables
+
             var result = from d in mwd.query
                          select new { 
                              date = System.String.Format("{0:MM/dd/yyyy}", d.date),
@@ -221,6 +216,29 @@ namespace Machete.Web.Controllers
                 iTotalRecords = mwd.totalCount, //total records, before filtering
                 iTotalDisplayRecords = mwd.filteredCount, //total records, after filtering
                 sEcho = param.sEcho, //unaltered copy of sEcho sent from the client side
+                aaData = result
+            },
+            JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult AjaxJobsZipCodes(jQueryDataTableParam param)
+        {
+            DateTime jzcDate;
+
+            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
+            if (vo.date != null) jzcDate = DateTime.Parse(vo.date.ToString());
+            else jzcDate = DateTime.Now;
+
+            dataTableResult<monthlyData> jzc = repServ [...]  (jzcDate);
+
+            var result = from d in mwd.query;
+
+
+
+            return Json(new{
+                iTotalRecords = jobsZipCodes.totalCount,
+                iTotalDisplayRecords = jobsZipCodes.filteredCount,
+                sEcho = param.sEcho,
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);
