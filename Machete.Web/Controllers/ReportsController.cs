@@ -35,6 +35,7 @@ using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
 using Machete.Service;
+using Machete.Service.shared;
 using NLog;
 using Machete.Web.ViewModel;
 using Machete.Web.Models;
@@ -229,15 +230,19 @@ namespace Machete.Web.Controllers
             if (vo.date != null) jzcDate = DateTime.Parse(vo.date.ToString());
             else jzcDate = DateTime.Now;
 
-            dataTableResult<monthlyData> jzc = repServ [...]  (jzcDate);
+            dataTableResult<jzcData> jzc = repServ.jzcView(jzcDate);
 
-            var result = from d in mwd.query;
-
-
+            var result = from d in jzc.query
+                         select new
+                         {
+                             date = System.String.Format("{0:MM/dd/yyyy}", d.date),
+                             topZips = d.zips,
+                             topJobs = d.jobs
+                         };
 
             return Json(new{
-                iTotalRecords = jobsZipCodes.totalCount,
-                iTotalDisplayRecords = jobsZipCodes.filteredCount,
+                iTotalRecords = jzc.totalCount,
+                iTotalDisplayRecords = jzc.filteredCount,
                 sEcho = param.sEcho,
                 aaData = result
             },

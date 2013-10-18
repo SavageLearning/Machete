@@ -15,18 +15,17 @@
 <div id="ordersReports">
     <h3><a href="#" id="jzcLink">Jobs and Zip Codes (Mountain View)</a></h3>
     <div id="jzcTable">
-        <input type="button" value="Data Only" class="formButton" id="jzcDataOnlyBtn" />
+        <input type="button" value="Data Refresh" class="formButton" id="jzcDataRefreshBtn" />
         <input type="button" value="Pie Chart" class="formButton" id="jzcPieChartBtn" />
         <input type="button" value="Print Report" class="formButton" id="jzcPrintReport" />
-        <span style="display:block;">
-        @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-datepicker", @id = "jzcStartDate" })
-        </span>
+        @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-datepicker", @id = "jzcDate" })
         <p id="jzcHelp" style="display:inline;"><em>Select a date and click "Submit" to see results.</em></p>
-        <table id="jzcDataTables" class="display">
+        <table id="jzcDataTable" class="display">
             <thead>
                 <tr>
-                    <th>@Machete.Web.Resources.Reports.jzcJobs</th>
+                    <th>@Machete.Web.Resources.Reports.date</th>
                     <th>@Machete.Web.Resources.Reports.jzcZipCodes</th>
+                    <th style="width:50%;">@Machete.Web.Resources.Reports.jzcJobs</th>
                 </tr>
             </thead>
         </table>
@@ -54,7 +53,7 @@
 
         //make stuff pretty
         $('#orderHide').button();
-        $('#jzcDataOnlyBtn').button();
+        $('#jzcDataRefreshBtn').button();
         $('#jzcPieChartBtn').button();
         $('#jzcPrintReport').button();
 
@@ -75,11 +74,12 @@
             "bProcessing": false, //enable processing indicator
             "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName), //internationalisation
             "aoColumns": [
-                { mDataProp: "topJobs" }, 
-                { mDataProp: "topZipCodes" } 
+                { mDataProp: "date" },
+                { mDataProp: "topZips" },
+                { mDataProp: "topJobs" }
             ], //these are the column names in the array; total # must match
             "fnServerData": function (sSource, aoData, fnCallback) {
-                aoData.push({ "name": "date", "value": $('#jzcStartDate').val() });
+                aoData.push({ "name": "todaysdate", "value": $('#jzcDate').val() });
                 $.getJSON(sSource, aoData, function (json) {
                     /* Do whatever additional processing you want on the callback, then tell DataTables */
                     fnCallback(json)
@@ -87,7 +87,47 @@
             }
         };
 
+        var jzcNewTable = jQuery.extend(true, {}, jzcTableDefaults);
 
+        jzcNewTable["bDestroy"] = "true,";
+
+        $('#jzcLink').click(function () {
+            $('#jzcDataTable').dataTable(jzcNewTable);
+        });
+
+
+        $('.ui-datepicker').datepicker({
+            autoSize: true,
+            changeMonth: true,
+            changeYear: true,
+            constrainInput: true,
+            dateFormat: 'mm/dd/yy',
+            duration: "slow",
+            showButtonPanel: false,
+            showOn: "focus"
+        });
+
+        $('.ui-datepicker').hover(
+            function () {
+                $('#jzcHelp').show("fade", 1100);
+            },
+            function () {
+                $('#jzcHelp').hide("fade", 1100);
+            });
+
+        $('.ui-datepicker').change(
+        function (event) {
+            jzcNewTable["todaysdate"] = $('#jzcDate').val();
+            $('#jzcDataTable').dataTable(jzcNewTable).fnReloadAjax();
+        });
+
+        $('#jzcDataRefreshBtn').click(
+            function () {
+                jzcNewTable["todaysdate"] = $('#jzcDate').val();
+                $('#jzcDataTable').dataTable(jzcNewTable).fnReloadAjax();
+            });
 
     });
+
+
 </script>

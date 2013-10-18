@@ -512,6 +512,7 @@
     <Content Include="Scripts\jquery.form.js" />
     <Content Include="Scripts\jquery.ui.datepicker.js" />
     <Content Include="Scripts\macheteLayout.js" />
+    <Content Include="Scripts\raphael.js" />
     <Content Include="Scripts\ui.datetimepicker.js" />
     <Content Include="Scripts\validation_hack.js" />
     <Content Include="Content\Site.css">

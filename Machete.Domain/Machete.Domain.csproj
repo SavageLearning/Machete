@@ -72,7 +72,6 @@
   <ItemGroup>
     <Compile Include="Entities\Activity.cs" />
     <Compile Include="Entities\ActivitySchedule.cs" />
-    <Compile Include="Entities\Report.cs" />
     <Compile Include="Entities\Event.cs" />
     <Compile Include="Entities\Exceptions.cs" />
     <Compile Include="Entities\Image.cs" />

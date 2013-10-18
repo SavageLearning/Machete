@@ -33,6 +33,30 @@ namespace Machete.Service
 
     public class ReportService : ReportBase, IReportService
     {
+
+        // Repository declarations
+        private readonly IWorkOrderRepository woRepo;
+        private readonly IWorkAssignmentRepository waRepo;
+        private readonly IWorkerRepository wRepo;
+        private readonly IWorkerSigninRepository wsiRepo;
+        private readonly IWorkerRequestRepository wrRepo;
+        private readonly ILookupRepository lookRepo;
+
+        // IoC
+        public ReportService(IWorkOrderRepository woRepo,
+                             IWorkAssignmentRepository waRepo,
+                             IWorkerRepository wRepo,
+                             IWorkerSigninRepository wsiRepo,
+                             IWorkerRequestRepository wrRepo,
+                             ILookupRepository lookRepo)
+        {
+            this.woRepo = woRepo;
+            this.waRepo = waRepo;
+            this.wRepo = wRepo;
+            this.wsiRepo = wsiRepo;
+            this.wrRepo = wrRepo;
+            this.lookRepo = lookRepo;
+        }
         /// <summary>
         /// A simple count of worker signins for a single day.
         /// </summary>
@@ -77,6 +101,54 @@ namespace Machete.Service
 
             return query;
         }
+
+        /// <summary>
+        /// A simple count of unique worker signins for a single day.
+        /// </summary>
+        /// <param name="beginDate"></param>
+        /// <returns></returns>
+        public int CountUniqueSignins(DateTime beginDate)
+        {
+            //didn't actually do this part, set it up so compiler would hush
+            int query = 0;
+            var wsiQ = wsiRepo.GetAllQ();
+
+            query = wsiQ.Where(whr => EntityFunctions.TruncateTime(whr.dateforsignin) == EntityFunctions.TruncateTime(beginDate)).Count();
+
+            return query;
+        }
+        /// <summary>
+        /// A simple count of worker signins for the given period.
+        /// </summary>
+        /// <param name="beginDate">DateTime, not null</param>
+        /// <param name="endDate">DateTime, null</param>
+        /// <returns>int</returns>
+        public IQueryable<reportUnit> CountUniqueSignins(DateTime beginDate, DateTime endDate)
+        {
+            //didn't actually do this part, set it up so compiler would hush
+            IQueryable<reportUnit> query;
+            var wsiQ = wsiRepo.GetAllQ();
+
+            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
+            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
+
+            // this seems to work fine, though in other methods
+            // it's preferable to do truncation before
+            // the GroupBy clause.
+            query = wsiQ
+                .Where(whr => whr.dateforsignin >= beginDate
+                           && whr.dateforsignin <= endDate)
+                .GroupBy(gb => EntityFunctions.TruncateTime(gb.dateforsignin))
+                .Select(g => new reportUnit
+                {
+                    date = g.Key,
+                    count = g.Count(),
+                    info = ""
+                });
+
+            return query;
+        }
+
 
         public int CountAssignments(DateTime beginDate)
         {
@@ -300,7 +372,7 @@ namespace Machete.Service
                 {
                     date = group.Key.workDate,
                     count = group.Count() > 0 ? group.Count() : 0,
-                    info = group.Key.enText ?? "",
+                    info = group.Key.enText ?? ""
                 });
 
             return query;
@@ -315,8 +387,8 @@ namespace Machete.Service
             var lQ = lookRepo.GetAllQ();
 
             query = woQ
-                .Where(whr => whr.dateTimeofWork >= beginDate
-                           && whr.dateTimeofWork <= endDate)
+                .Where(whr => EntityFunctions.TruncateTime(whr.dateTimeofWork) >= beginDate
+                           && EntityFunctions.TruncateTime(whr.dateTimeofWork) <= endDate)
                 .GroupBy(gb => new
                 {
                     dtow = EntityFunctions.TruncateTime(gb.dateTimeofWork),
@@ -328,7 +400,7 @@ namespace Machete.Service
                 {
                     date = group.Key.dtow,
                     count = group.Count() > 0 ? group.Count() : 0,
-                    info = group.Key.zip ?? "",
+                    info = group.Key.zip ?? ""
                 });
 
             return query;
@@ -453,6 +525,44 @@ namespace Machete.Service
             // dataTables rows can be defined at view level
             result.query = q;
             result.totalCount = waRepo.GetAllQ().Count();
+            return result;
+        }
+
+        public dataTableResult<jzcData> jzcView(DateTime jzcDate)
+        {
+            DateTime beginDate;
+            DateTime endDate;
+            IEnumerable<reportUnit> assignments;
+            IEnumerable<reportUnit> topZips;
+            IEnumerable<reportUnit> topJobs;
+            IEnumerable<jzcData> q;
+            var result = new dataTableResult<jzcData>(); // note the type. define it well.
+
+            beginDate = new DateTime(jzcDate.Year, jzcDate.Month, jzcDate.Day, 0, 0, 0);
+            endDate = new DateTime(jzcDate.Year, jzcDate.Month, jzcDate.Day, 23, 59, 59);
+
+            assignments = CountAssignments(beginDate, endDate).ToList();
+            topZips = ListZipCodes(beginDate, endDate).ToList();
+            topJobs = ListJobs(beginDate, endDate).ToList();
+
+            q = assignments
+                .Select(g => new jzcData
+                {
+                    date = g.date,
+                    jobs = topJobs
+                        .Where(whr => whr.date == g.date)
+                        .Aggregate("", (a, b) => a + b.info + " (" + b.count.ToString() + "), "),
+                    zips = topZips
+                        .Where(whr => whr.date == g.date)
+                        .Aggregate("", (a, b) => a + b.info + " (" + b.count.ToString() + "), "),
+                });
+
+            q = q.OrderBy(ob => ob.date);
+
+            result.filteredCount = q.Count();
+            result.query = q;
+            result.totalCount = waRepo.GetAllQ().Count();
+
             return result;
         }
     }
