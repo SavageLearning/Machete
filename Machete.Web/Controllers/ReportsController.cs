@@ -51,13 +51,9 @@ namespace Machete.Web.Controllers
     [ElmahHandleError]
     public class ReportsController : MacheteController
     {
-        // Initialize the following:
-        // I am assuming for the moment that I'll only need what's in ReportService.cs
         private readonly IReportService repServ;
-        // Oh, there's also this, which is the culture info setting:
         CultureInfo CI;
 
-        // Right?
         public ReportsController(IReportService repServ)
         {
             this.repServ = repServ;
@@ -73,22 +69,56 @@ namespace Machete.Web.Controllers
             CI = (CultureInfo)Session["Culture"];
         }
 
-        public ActionResult Orders()
-        {
-            return PartialView();
-        }
-
         /// <summary>
         /// MVC Controller for Machete Reports
         /// </summary>
         /// <returns>View()</returns>
-        [Authorize(Roles = "Administrator, Manager")] 
-        #region Index 
+        [Authorize(Roles = "Administrator, Manager")]
+        #region Index
 
         // A simple MVC index view
         public ActionResult Index()
         {
             return View();
+        }
+        #endregion
+
+        #region PartialViews
+        public ActionResult Orders()
+        {
+            return PartialView();
+        }
+        #endregion
+
+        #region ExternalViews
+        [Authorize(Roles = "Administrator, Manager")]
+        public ActionResult GroupView(DateTime date, string typeOfReport)
+        {
+            if (typeOfReport == "monthly")
+            {
+                ReportPrintView<monthlyData> view = new ReportPrintView<monthlyData>();
+//                view.report = repServ.monthlyView(date);
+                return View(view);
+            }
+            else if (typeOfReport == "weekly")
+            {
+                ReportPrintView<weeklyData> view = new ReportPrintView<weeklyData>();
+                return View(view);
+            }
+            else if (typeOfReport == "daily")
+            {
+                ReportPrintView<dailyData> view = new ReportPrintView<dailyData>();
+                return View(view);
+            }
+            else if (typeOfReport == "jobsandzips")
+            {
+                ReportPrintView<jzcData> view = new ReportPrintView<jzcData>();
+                return View(view);
+            }
+            else
+            {
+                return View();
+            }
         }
         #endregion
 
