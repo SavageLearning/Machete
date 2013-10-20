@@ -33,35 +33,21 @@ namespace Machete.Service
 
     public class ReportService : ReportBase, IReportService
     {
-
-        // Repository declarations
-        private readonly IWorkOrderRepository woRepo;
-        private readonly IWorkAssignmentRepository waRepo;
-        private readonly IWorkerRepository wRepo;
-        private readonly IWorkerSigninRepository wsiRepo;
-        private readonly IWorkerRequestRepository wrRepo;
-        private readonly ILookupRepository lookRepo;
-
-        // IoC
         public ReportService(IWorkOrderRepository woRepo,
                              IWorkAssignmentRepository waRepo,
                              IWorkerRepository wRepo,
                              IWorkerSigninRepository wsiRepo,
                              IWorkerRequestRepository wrRepo,
-                             ILookupRepository lookRepo)
-        {
-            this.woRepo = woRepo;
-            this.waRepo = waRepo;
-            this.wRepo = wRepo;
-            this.wsiRepo = wsiRepo;
-            this.wrRepo = wrRepo;
-            this.lookRepo = lookRepo;
-        }
+                             ILookupRepository lookRepo) : base(woRepo, waRepo, wRepo, wsiRepo, wrRepo, lookRepo)
+        {}
+        
         /// <summary>
         /// A simple count of worker signins for a single day.
         /// </summary>
         /// <param name="beginDate"></param>
         /// <returns></returns>
+
+        #region BasicFunctions 
         public int CountSignins(DateTime beginDate)
         {
             int query = 0;
@@ -74,9 +60,9 @@ namespace Machete.Service
         /// <summary>
         /// A simple count of worker signins for the given period.
         /// </summary>
-        /// <param name="beginDate">DateTime, not null</param>
-        /// <param name="endDate">DateTime, null</param>
-        /// <returns>int</returns>
+        /// <param name="beginDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns>IQueryable of type ReportUnit </returns>
         public IQueryable<reportUnit> CountSignins(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
@@ -101,6 +87,12 @@ namespace Machete.Service
 
             return query;
         }
+
+
+        // Note: Please do NOT create a "count returning signins" class; returning signins are signins minus unique signins
+        // for any given date range. Keep it simple!
+
+        // TO DO: This is currently just a copy of the regular signins method. Need to modify it to get unique signins.
 
         /// <summary>
         /// A simple count of unique worker signins for a single day.
@@ -236,7 +228,8 @@ namespace Machete.Service
             return query;
         }
         /// <summary>
-        /// Counts by type of dispatch (DWC, HHH, Propio/ea.)
+        /// Counts by type of dispatch (DWC, HHH, Propio/ea.). Very Casa Latina specific, but these
+        /// numbers can also be used by other centers, especially where they have women's programs.
         /// </summary>
         /// <param name="dateRequested">A single DateTime parameter</param>
         /// <returns>IQueryable</returns>
@@ -406,19 +399,18 @@ namespace Machete.Service
             return query;
         }
 
-        public dataTableResult<dailyData> DailyView(DateTime date)
+        #endregion
+
+        #region ReportData
+
+        public IEnumerable<dailyData> DailyController(DateTime beginDate, DateTime endDate)
         {
             IEnumerable<TypeOfDispatchReport> dclCurrent;
             IEnumerable<reportUnit> dailySignins;
             IEnumerable<reportUnit> dailyAssignments;
             IEnumerable<reportUnit> dailyCancelled;
             IEnumerable<dailyData> q;
-            var result = new dataTableResult<dailyData>();
 
-            DateTime beginDate = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
-            DateTime endDate = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59).AddDays(DateTime.DaysInMonth(date.Year, date.Month + 1));
-
-            //call methods that return data for given date(s)
             dclCurrent = CountTypeofDispatch(beginDate, endDate).ToList();
             dailySignins = CountSignins(beginDate, endDate).ToList();
             dailyAssignments = CountAssignments(beginDate, endDate).ToList();
@@ -439,25 +431,16 @@ namespace Machete.Service
 
             q = q.OrderBy(p => p.date);
 
-            result.filteredCount = q.Count(); //should theoretically be "1",
-            result.query = q; //these need to stay set properly to be
-            result.totalCount = waRepo.GetAllQ().Count(); // returned
-            return result; // ...for DataTables.
+            return q;
         }
 
-        public dataTableResult<weeklyData> WeeklyView(DateTime weekDate)
+        public IEnumerable<weeklyData> WeeklyController(DateTime beginDate, DateTime endDate)
         {
-            DateTime beginDate;
-            DateTime endDate;
             IEnumerable<AverageWages> weeklyWages;
             IEnumerable<reportUnit> weeklySignins;
             IEnumerable<reportUnit> weeklyAssignments;
             IEnumerable<reportUnit> weeklyJobsBySector;
             IEnumerable<weeklyData> q;
-            var result = new dataTableResult<weeklyData>(); // note the type. define it well.
-
-            beginDate = new DateTime(weekDate.Year, weekDate.Month, weekDate.Day, 0, 0, 0).AddDays(-6);
-            endDate = new DateTime(weekDate.Year, weekDate.Month, weekDate.Day, 23, 59, 59);
 
             weeklyWages = HourlyWageAverage(beginDate, endDate).ToList();
             weeklySignins = CountSignins(beginDate, endDate).ToList();
@@ -481,24 +464,15 @@ namespace Machete.Service
 
             q = q.OrderBy(p => p.date);
 
-            result.filteredCount = q.Count();
-            result.query = q;
-            result.totalCount = waRepo.GetAllQ().Count();
-            return result;
+            return q;
         }
 
-        public dataTableResult<monthlyData> monthlyView(DateTime monthDate)
+        public IEnumerable<monthlyData> MonthlyController(DateTime beginDate, DateTime endDate)
         {
-            DateTime beginDate;
-            DateTime endDate;
             IEnumerable<reportUnit> signins;
             IEnumerable<TypeOfDispatchReport> dispatch;
             IEnumerable<AverageWages> average;
             IEnumerable<monthlyData> q; // query for monthlyWithDetail result
-            var result = new dataTableResult<monthlyData>(); // note the type. define it well.
-
-            beginDate = new DateTime(monthDate.Year, monthDate.Month, 1, 0, 0, 0);
-            endDate = new DateTime(monthDate.Year, monthDate.Month, System.DateTime.DaysInMonth(monthDate.Year, monthDate.Month));
 
             signins = CountSignins(beginDate, endDate).ToList();
             dispatch = CountTypeofDispatch(beginDate, endDate).ToList();
@@ -520,26 +494,15 @@ namespace Machete.Service
 
             q = q.OrderBy(p => p.date);
 
-            result.filteredCount = q.Count();
-            // data should include one month and already be organized as such
-            // dataTables rows can be defined at view level
-            result.query = q;
-            result.totalCount = waRepo.GetAllQ().Count();
-            return result;
+            return q;
         }
 
-        public dataTableResult<jzcData> jzcView(DateTime jzcDate)
+        public IEnumerable<jzcData> jzcController(DateTime beginDate, DateTime endDate)
         {
-            DateTime beginDate;
-            DateTime endDate;
             IEnumerable<reportUnit> assignments;
             IEnumerable<reportUnit> topZips;
             IEnumerable<reportUnit> topJobs;
             IEnumerable<jzcData> q;
-            var result = new dataTableResult<jzcData>(); // note the type. define it well.
-
-            beginDate = new DateTime(jzcDate.Year, jzcDate.Month, jzcDate.Day, 0, 0, 0);
-            endDate = new DateTime(jzcDate.Year, jzcDate.Month, jzcDate.Day, 23, 59, 59);
 
             assignments = CountAssignments(beginDate, endDate).ToList();
             topZips = ListZipCodes(beginDate, endDate).ToList();
@@ -559,14 +522,89 @@ namespace Machete.Service
 
             q = q.OrderBy(ob => ob.date);
 
-            result.filteredCount = q.Count();
-            result.query = q;
-            result.totalCount = waRepo.GetAllQ().Count();
+            return q;
+        }
+        #endregion
+
+        #region DataTablesStuff
+
+        public dataTableResult<dailyData> DailyView(DateTime date)
+        {
+            DateTime beginDate;
+            DateTime endDate;
+            IEnumerable<dailyData> query;
+            
+            beginDate = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
+            endDate = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59).AddDays(DateTime.DaysInMonth(date.Year, date.Month + 1));
+
+            query = DailyController(beginDate, endDate);
+
+            var result = GetDataTableResult<dailyData>(query);
+
+            return result; // ...for DataTables.
+        }
+
+        public dataTableResult<weeklyData> WeeklyView(DateTime weekDate)
+        {
+            DateTime beginDate;
+            DateTime endDate;
+            IEnumerable<weeklyData> query;
+
+            beginDate = new DateTime(weekDate.Year, weekDate.Month, weekDate.Day, 0, 0, 0).AddDays(-6);
+            endDate = new DateTime(weekDate.Year, weekDate.Month, weekDate.Day, 23, 59, 59);
+
+            query = WeeklyController(beginDate, endDate);
+
+            var result = GetDataTableResult<weeklyData>(query);
 
             return result;
         }
-    }
 
+        public dataTableResult<monthlyData> monthlyView(DateTime monthDate)
+        {
+            DateTime beginDate;
+            DateTime endDate;
+            IEnumerable<monthlyData> query;
+
+            beginDate = new DateTime(monthDate.Year, monthDate.Month, 1, 0, 0, 0);
+            endDate = new DateTime(monthDate.Year, monthDate.Month, System.DateTime.DaysInMonth(monthDate.Year, monthDate.Month));
+
+            query = MonthlyController(beginDate, endDate);
+
+            var result = GetDataTableResult<monthlyData>(query);
+
+            return result;
+        }
+
+        public dataTableResult<jzcData> jzcView(DateTime jzcDate)
+        {
+            DateTime beginDate;
+            DateTime endDate;
+            IEnumerable<jzcData> query;
+            
+            beginDate = new DateTime(jzcDate.Year, jzcDate.Month, jzcDate.Day, 0, 0, 0);
+            endDate = new DateTime(jzcDate.Year, jzcDate.Month, jzcDate.Day, 23, 59, 59);
+
+            query = jzcController(beginDate, endDate);
+
+
+            var result = GetDataTableResult<jzcData>(query);
+
+            return result;
+        }
+
+        public dataTableResult<T> GetDataTableResult<T>(IEnumerable<T> query)
+        {
+            var result = new dataTableResult<T>();
+
+            result.filteredCount = query.Count();
+            result.query = query;
+            result.totalCount = query.Count();
+            return result;
+        }
+
+        #endregion
+    }
 
     /// <summary>
     /// A class to contain the data for the Daily Report for Casa Latina
@@ -624,8 +662,8 @@ namespace Machete.Service
     public class jzcData
     {
         public DateTime? date { get; set; }
-        public string jobs { get; set; }
         public string zips { get; set; }
+        public string jobs { get; set; }
     }
-
+    
 }

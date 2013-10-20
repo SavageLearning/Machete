@@ -38,6 +38,7 @@
             <input type="button" value="Data Only" class="formButton" id="dclDataOnlyBtn" />
             <input type="button" value="Pie Chart" class="formButton" id="dclPieChartBtn" />
             <input type="button" value="Print Report" class="formButton" id="dclPrintReport" />
+            <input type="button" value="Export to Excel" class="formButton" id="dclExcelReport" />
             @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-dcl-datepicker", @id = "dclDate" })
             <p id="dclHelp" style="display:inline;"><em>Select a day to see results.</em></p>
             <table id="dclSummaryTable" class="display">
@@ -60,6 +61,7 @@
             <input type="button" value="Data Only" class="formButton" id="wecDataOnlyBtn" />
             <input type="button" value="Pie Chart" class="formButton" id="wecPieChartBtn" />
             <input type="button" value="Print Report" class="formButton" id="wecPrintReport" />
+            <input type="button" value="Export to Excel" class="formButton" id="wecExcelReport" />
             @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-wec-datepicker", @id = "wecDate" })
             <p id="wecHelp" style="display:inline;"><em>Select a day to see results for that week.</em></p>
             <table id="wecSummaryTable" class="display">
@@ -82,6 +84,7 @@
             <input type="button" value="Data Only" class="formButton" id="mwdDataOnlyBtn" />
             <input type="button" value="Pie Chart" class="formButton" id="mwdPieChartBtn" />
             <input type="button" value="Print Report" class="formButton" id="mwdPrintReport" />
+            <input type="button" value="Export to Excel" class="formButton" id="mwdExcelReport" />
             @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-mwd-datepicker", @id = "mwdDate" })
             <p id="mwdHelp" style="display:inline;"><em>Select any day in a month to see results.</em></p>
             <table id="mwdSummaryTable" class="display">
