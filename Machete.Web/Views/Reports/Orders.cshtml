@@ -67,7 +67,6 @@
         //
         //
         //
-        // useful vars
         /////////////////DATATABLES///////////////
         var jzcTableDefaults = {
             "bPaginate": false, // to enable pagination (this report has fixed size)
@@ -123,14 +122,16 @@
 
             for (var i = 0; i < array.length; i++) {
                 var line = '';
+
+                for (var index in array[i]) {
+                    line += array[i][index] + ',';
+                }
+
+                line = line.slice(0, -1);
+                str += line + '\r\n';
+
             }
 
-            for (var index in array[i]) {
-                line += array[i][index] + ',';
-            }
-
-            line = line.slice(0, -1);
-            str += line + '\r\n';
 
             return str;
         };
@@ -172,23 +173,14 @@
 
         $('#jzcSpreadsheet').click(
             function () {
-                $('#jzcHelp').show();
-                var json = $.parseJSON(
-                    function () {
-                        $.ajax({
-                            url: "/Reports/AjaxJobsZipCodes",
-                            context: document.body,
-                            success: function () {
-                                $(this).addClass("done");
-                            }
-                        });
-                    }).val();
-            var csv = JSON2CSV(json);
-            window.open("data:text/csv;charset=utf-8," + escape(csv))
-        });
-
-
+                var url = "/Reports/AjaxJobsZipCodes";
+                var date = $('#jzcDate').val();
+                var getit = $.getJSON(url,
+                    {
+                        todaysdate: date
+                    });
+                var csv = JSON2CSV(getit); //the offending line
+                window.open("data:text/csv;charset=utf-8," + escape(csv));    
+            });
     });
-
-
 </script>
