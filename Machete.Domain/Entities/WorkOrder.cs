@@ -145,9 +145,10 @@ namespace Machete.Domain
         [LocalizedDisplayName("timeFlexible", NameResourceType = typeof(Resources.WorkOrder))]
         public bool timeFlexible { get; set; }
 
-        //
-        //
-        //
+        /// <summary>
+        /// returns paperOrderNum if it exists, else internal WOID
+        /// </summary>
+        /// <returns></returns>
         public string getPseudoWOID()
         {
             return this.paperOrderNum.HasValue ? System.String.Format("{0,5:D5}", this.paperOrderNum) : System.String.Format("{0,5:D5}", this.ID);

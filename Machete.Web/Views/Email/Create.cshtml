@@ -10,7 +10,7 @@
     <div>
         <input type="submit" id="@(idPrefix)SaveBtn" class="formButton saveBtn" 
                value="@Emails.createsubmit"  tabindex="9"/>
-        <input type="button" id="@(Model.idPrefix)attachWO" class="formButton" value="$$$attach WO" />
+        <input type="button" id="@(Model.idPrefix)attachWO" class="formButton" value="@Emails.attachWO" />
 
     </div>
     @Html.ValidationSummary(true)
