@@ -9,7 +9,7 @@
 @using (Html.BeginForm("Duplicate", "Email", FormMethod.Post,
                         new { @class = "edittab-form DuplicatePost", @id = "DuplicateEmail-" + Model.ID }))
 {
-    <input type="button" value="$$$duplicate" class="formButton" id="duplicate-@(Model.ID)"/>
+    <input type="button" value="@Emails.duplicateWO" class="formButton" id="duplicate-@(Model.ID)"/>
     if (Html.IsInRole(Html.Role_AM()))
     {
         <input id="deleteEmailButton-@Model.ID" type="button" value="@Emails.deletesubmit" 

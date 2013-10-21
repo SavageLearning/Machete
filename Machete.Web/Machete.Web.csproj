@@ -352,7 +352,9 @@
     <Compile Include="ViewModel\WorkOrderGroupPrintView.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="combres.xml" />
+    <Content Include="combres.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Content\calendar.gif" />
     <Content Include="Content\casa_logo.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -7,10 +7,10 @@
 @Html.HiddenFor(model => model.woid, new { @class = "hiddenRecID", id = Model.idPrefix + "WOID" })
 
 <div >
-    <input type="button" id="@(Model.idPrefix)attachWO" class="formButton" value="$$$attach WO" />
-    <input type="button" id="@(Model.idPrefix)reattachWO" class="formButton" value="$$$re-attach WO" />
-    <input type="button" id="@(Model.idPrefix)clearWO" class="formButton" value="$$$clear WO" />
-    <input type="button" id="@(Model.idPrefix)viewWO" class="formButton" value="$$$view WO" />
+    <input type="button" id="@(Model.idPrefix)attachWO" class="formButton" value="@Emails.attachWO" />
+    <input type="button" id="@(Model.idPrefix)reattachWO" class="formButton" value="@Emails.reattachWO" />
+    <input type="button" id="@(Model.idPrefix)clearWO" class="formButton" value="@Emails.clearWO" />
+    <input type="button" id="@(Model.idPrefix)viewWO" class="formButton" value="@Emails.viewWO" />
 </div>
 <div class="tb-table" style="float: left; clear: left;">
     @*    <div class="tb-row">
@@ -19,7 +19,7 @@
     </div>*@
     <div class="tb-row">
         <div class="tb-label">
-            @Html.Label("$$$templateLabel")
+            @Html.Label(Emails.emailStatus)
         </div>
         @if (Html.IsInRole(Html.Role_AM()) && Model.editable)
         {
@@ -35,7 +35,7 @@
     </div>
     <div class="tb-row">
         <div class="tb-label">
-            @Html.Label("$$$templateLabel")
+            @Html.Label(Emails.templateChooser)
         </div>
         <div class="tb-field">
             <select name="templateChooser" id="@(Model.idPrefix + "templateChooser")"
@@ -51,7 +51,7 @@
     </div>
     <div class="tb-row">
         @*@Html.mUITableLabelAndTextBoxFor(model => model.attachment, new { @id = Model.idPrefix + "attachment" })*@
-        @Html.mUITableLabelAndTextBoxFor(m => m.attachment, new { @id = Model.idPrefix + "attachment" })
+        @Html.HiddenFor(m => m.attachment, new { @id = Model.idPrefix + "attachment" })
     </div>
     <div class="tb-row">
         @Html.mUITableLabelAndTextBoxFor(model => model.emailTo,

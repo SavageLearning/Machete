@@ -25,7 +25,7 @@
     <input type="submit" value="@WorkOrders.editsubmit" class="formButton saveBtn" id="@(idPrefix)SaveBtn"/>
     }
     <input type="button" id="@(idPrefix)printMap" class="formButton" value="@WorkOrders.mapbutton"/>
-    <input type="button" id="@(idPrefix)emailConfirm" class="formButton" value="$$$email" />
+    <input type="button" id="@(idPrefix)emailConfirm" class="formButton" value="@Emails.btnEmailWO" />
 
     if (Html.IsInRole(Html.Role_AM()))
     {

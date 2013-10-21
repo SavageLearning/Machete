@@ -13,6 +13,7 @@ using System.Web.Routing;
 using System.Globalization;
 using AutoMapper;
 using Machete.Web.ViewModel;
+using System.Configuration;
 
 namespace Machete.Web.Controllers
 {
@@ -243,7 +244,7 @@ namespace Machete.Web.Controllers
                 var wo = serv.GetAssociatedWorkOrderFor(woid);
                 emailview.woid = woid;
                 emailview.emailTo = wo.Employer.email;
-                emailview.subject = string.Format("$$$Casa Latina work order {0} confirmation", wo.paperOrderNum);
+                emailview.subject = string.Format(Resources.Emails.defaultSubject, ConfigurationManager.AppSettings["OrganizationName"],wo.paperOrderNum);
                 return PartialView("CreateDialog", emailview);
             }
             else
