@@ -39,6 +39,7 @@ using System.Text.RegularExpressions;
 using System.Data.Objects;
 using AutoMapper;
 using System.Globalization;
+using Machete.Web.Resources;
 
 namespace Machete.Web.Controllers
 {
@@ -179,7 +180,7 @@ namespace Machete.Web.Controllers
                 updatedby = p.Updatedby,
                 transportMethod = lcache.textByID(p.transportMethodID, CI.TwoLetterISOLanguageName),
                 displayState = _getDisplayState(p),
-                onlineSource = p.onlineSource,
+                onlineSource = p.onlineSource ? Shared.True : Shared.False,
                 emailSentCount = p.Emails.Where(e => e.statusID == Email.iSent || e.statusID == Email.iReadyToSend).Count(),
                 emailErrorCount = p.Emails.Where(e => e.statusID == Email.iTransmitError).Count(),
                 recordid = p.ID.ToString(),

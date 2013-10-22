@@ -89,7 +89,7 @@ namespace Machete.Web.Helpers
             yesnoES.Add(new SelectListItem() { Selected = false, Text = "Sí", Value = "true" });
         }
         //TODO: Lookups.yesno needs to use resource files, not hardcoded values
-        public static List<SelectListItem> yesno(CultureInfo CI)
+        public static List<SelectListItem> yesnoSelectList(CultureInfo CI)
         {
             if (CI.TwoLetterISOLanguageName == "es") return yesnoES;
             return yesnoEN;  //defaults to English

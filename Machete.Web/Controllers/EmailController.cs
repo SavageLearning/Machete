@@ -14,6 +14,7 @@ using System.Globalization;
 using AutoMapper;
 using Machete.Web.ViewModel;
 using System.Configuration;
+using Machete.Web.Resources;
 
 namespace Machete.Web.Controllers
 {
@@ -75,7 +76,7 @@ namespace Machete.Web.Controllers
                              lastAttempt = p.lastAttempt.ToString(),
                              dateupdated = Convert.ToString(p.dateupdated),
                              Updatedby = p.Updatedby,
-                             hasAttachment = string.IsNullOrEmpty(p.attachment) ? false : true
+                             hasAttachment = string.IsNullOrEmpty(p.attachment) ?  Shared.False : Shared.True
                          }
             },
             JsonRequestBehavior.AllowGet);
