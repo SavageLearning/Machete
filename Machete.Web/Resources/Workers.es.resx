@@ -165,6 +165,9 @@
   <data name="noimagelabel" xml:space="preserve">
     <value>No hay imágenes asociadas con el trabajador</value>
   </data>
+  <data name="onlineSource" xml:space="preserve">
+    <value>Fuente del internet</value>
+  </data>
   <data name="printlink" xml:space="preserve">
     <value>Imprimir trabajador</value>
   </data>

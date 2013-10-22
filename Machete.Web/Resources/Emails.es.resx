@@ -117,19 +117,124 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="attachWO" xml:space="preserve">
+    <value>Adjunte la orden de trabajo</value>
+  </data>
+  <data name="attempts" xml:space="preserve">
+    <value>Intentos de transmisión</value>
+  </data>
   <data name="body" xml:space="preserve">
+    <value>Mensaje de email</value>
+  </data>
+  <data name="boxlegend" xml:space="preserve">
     <value>Mensaje</value>
+  </data>
+  <data name="btnEmailWO" xml:space="preserve">
+    <value>Enviar Email</value>
+  </data>
+  <data name="clear" xml:space="preserve">
+    <value>Borrar </value>
+  </data>
+  <data name="clearWO" xml:space="preserve">
+    <value>Borrar work order</value>
+  </data>
+  <data name="count" xml:space="preserve">
+    <value>Asistencia</value>
+  </data>
+  <data name="createlink" xml:space="preserve">
+    <value>Crear nuevo Email</value>
+  </data>
+  <data name="createsubmit" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="createtitle" xml:space="preserve">
+    <value>email::crear</value>
+  </data>
+  <data name="defaultSubject" xml:space="preserve">
+    <value>{0} orden de trabajo {1} confirmación</value>
+  </data>
+  <data name="deleteconfirmation" xml:space="preserve">
+    <value>¿Seguro que quieres borrar este mensaje? Toda la información se eliminará, incluyendo los trabajadores signo-ins para el correo electrónico.</value>
+  </data>
+  <data name="deletelink" xml:space="preserve">
+    <value>Borrar</value>
+  </data>
+  <data name="deletesubmit" xml:space="preserve">
+    <value>Borrar</value>
+  </data>
+  <data name="deletetitle" xml:space="preserve">
+    <value>email::borrar</value>
+  </data>
+  <data name="duplicateWO" xml:space="preserve">
+    <value>Duplicar work order</value>
+  </data>
+  <data name="editemaillink" xml:space="preserve">
+    <value>Editar email</value>
+  </data>
+  <data name="editlink" xml:space="preserve">
+    <value>Editar</value>
+  </data>
+  <data name="editsubmit" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="edittitle" xml:space="preserve">
+    <value>email::editar</value>
+  </data>
+  <data name="emailAttachmentTitle" xml:space="preserve">
+    <value>Adjunto a la orden de trabajo  {0}</value>
   </data>
   <data name="emailFrom" xml:space="preserve">
     <value>De:</value>
   </data>
+  <data name="emailID" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="emailsSent" xml:space="preserve">
+    <value>Emails enviados</value>
+  </data>
+  <data name="emailStatus" xml:space="preserve">
+    <value>Estado</value>
+  </data>
   <data name="emailTo" xml:space="preserve">
     <value>Para:</value>
+  </data>
+  <data name="errorCount" xml:space="preserve">
+    <value>cuenta de errores</value>
+  </data>
+  <data name="hasAttachment" xml:space="preserve">
+    <value>tiene archivos adjuntos?</value>
+  </data>
+  <data name="indextitle" xml:space="preserve">
+    <value>email::índice</value>
+  </data>
+  <data name="lastAttempt" xml:space="preserve">
+    <value>última transmisión</value>
+  </data>
+  <data name="listlink" xml:space="preserve">
+    <value>Lista de emails</value>
+  </data>
+  <data name="reattachWO" xml:space="preserve">
+    <value>Revolver work order</value>
+  </data>
+  <data name="signinlistlink" xml:space="preserve">
+    <value>registros</value>
   </data>
   <data name="stringlength" xml:space="preserve">
     <value>Por favor, introduzca un máximo de {1} caracteres</value>
   </data>
   <data name="subject" xml:space="preserve">
     <value>Asunto:</value>
+  </data>
+  <data name="templateChooser" xml:space="preserve">
+    <value>Elija una plantilla de email</value>
+  </data>
+  <data name="viewlink" xml:space="preserve">
+    <value>Imprimir</value>
+  </data>
+  <data name="viewtitle" xml:space="preserve">
+    <value>email::imprimir</value>
+  </data>
+  <data name="viewWO" xml:space="preserve">
+    <value>Mirar work order</value>
   </data>
 </root>
