@@ -48,7 +48,7 @@ namespace Machete.Web.Helpers
         {            
             ModelMetadata metadata = ModelMetadata.FromLambdaExpression(expression, htmlHelper.ViewData);
             CultureInfo CI = (CultureInfo)htmlHelper.ViewContext.HttpContext.Session["culture"];
-            var yesNo = Lookups.yesno(CI);
+            var yesNo = Lookups.yesnoSelectList(CI);
             return MvcHtmlString.Create(
                 tbfield +
                 htmlHelper.DropDownListFor(
