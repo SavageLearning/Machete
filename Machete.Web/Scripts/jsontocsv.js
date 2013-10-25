@@ -31,12 +31,16 @@ function JSON2CSV(objArray) {
     return str;
 };
 
+//The square brackets may be annoying, however the JSON object sometimes
+//contains multiple results. Without more time to spend on this, this
+//gives folks a way to open up their data in Excel or Google Spreadsheets
+//and do what they want to with it.
 function json2spreadsheet(objArray) {
     var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
 
     var str = '';
     var line = '';
-    var head = array[0];
+    //var head = array[0];
 
     for (var index in array[0]) {
         line += index + ',';
@@ -50,13 +54,12 @@ function json2spreadsheet(objArray) {
 
         for (var index in array[i]) {
             line += array[i][index];
-            line = line.replace(/,/g, '] [') + ']comma [';
+            line = line.replace(/,/g, '') + 'comma';
         }
 
-        line = line.slice(0, -1);
+        //line = line.slice(0, -1);
         line = line.replace(/comma/g, ',');
         line = line.replace(/\r?\n|\r/g, '');
-        line = '[' + line;
         str += line + '\r\n';
     }
 

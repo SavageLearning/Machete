@@ -97,27 +97,30 @@ namespace Machete.Web.Controllers
             if (typeOfReport == "monthly")
             {
                 ReportPrintView<monthlyData> view = new ReportPrintView<monthlyData>();
-//                view.report = repServ.monthlyView(date);
+                view.report = repServ.monthlyView(date);
                 return View(view);
             }
             else if (typeOfReport == "weekly")
             {
                 ReportPrintView<weeklyData> view = new ReportPrintView<weeklyData>();
+                view.report = repServ.WeeklyView(date);
                 return View(view);
             }
             else if (typeOfReport == "daily")
             {
                 ReportPrintView<dailyData> view = new ReportPrintView<dailyData>();
+                view.report = repServ.DailyView(date);
                 return View(view);
             }
             else if (typeOfReport == "jobsandzips")
             {
                 ReportPrintView<jzcData> view = new ReportPrintView<jzcData>();
+                view.report = repServ.jzcView(date);
                 return View(view);
             }
             else
             {
-                return View();
+                throw new Exception("Error: Report type to be printed not found.");
             }
         }
         #endregion
@@ -194,6 +197,7 @@ namespace Machete.Web.Controllers
                     totalSignins = d.totalSignins,
                     noWeekJobs = d.noWeekJobs,
                     weekJobsSector = d.weekJobsSector,
+                    weekJobsSectorCt = d.weekJobsSectorCount,
                     weekEstDailyHours = d.weekEstDailyHours,
                     weekEstPayment = d.weekEstPayment,
                     weekHourlyWage = System.String.Format("{0:C}", d.weekHourlyWage)
@@ -239,7 +243,7 @@ namespace Machete.Web.Controllers
                              dispatchedHHHSignins = d.dispatchedHHHSignins.ToString(),
                              totalHours = d.totalHours.ToString(),
                              totalIncome = d.totalIncome.ToString(),
-                             avgIncomePerHour = d.avgIncomePerHour.ToString()
+                             avgIncomePerHour = System.String.Format("{0:C}", d.avgIncomePerHour)
                          };
 
             return Json(new

@@ -456,7 +456,10 @@ namespace Machete.Service
                     noWeekJobs = weeklyAssignments.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
                     weekJobsSector = weeklyJobsBySector
                         .Where(whr => whr.date == g.date)
-                        .Aggregate("", (a, b) => a + b.info + " (" + b.count.ToString() + "), "),
+                        .Aggregate("", (a, b) => b.info + ", " + a),
+                    weekJobsSectorCount = weeklyJobsBySector
+                        .Where(whr => whr.date == g.date)
+                        .Aggregate("", (a, b) => b.count + ", " + a),
                     weekEstDailyHours = g.hours,
                     weekEstPayment = g.wages,
                     weekHourlyWage = g.avg
@@ -527,7 +530,7 @@ namespace Machete.Service
                         .Aggregate("", (a, b) => b.info + ", " + a),
                     jobsCount = topJobs
                         .Where(whr => whr.date == g.date)
-                        .Aggregate("\r\n", (a, b) => b.count.ToString() + ", " + a)
+                        .Aggregate("", (a, b) => b.count.ToString() + ", " + a)
                 });
 
             q = q.OrderBy(ob => ob.date);
@@ -645,6 +648,7 @@ namespace Machete.Service
         public int? totalSignins { get; set; }
         public int? noWeekJobs { get; set; }
         public string weekJobsSector { get; set; }
+        public string weekJobsSectorCount { get; set; }
         public int? weekEstDailyHours { get; set; }
         public double? weekEstPayment { get; set; }
         public double? weekHourlyWage { get; set; }
