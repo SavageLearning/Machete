@@ -29,7 +29,7 @@
         <div id="dclTable">
             <input type="button" value="Refresh" class="formButton" id="dclDataOnlyBtn" />
             <input type="button" value="Print Report" class="formButton" id="dclPrintReport" />
-            <input type="button" value="Spreadsheet" class="formButton" id="dclExcelReport" />
+            <input type="button" value="Spreadsheet" class="formButton" id="dclSpreadsheet" />
             @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-dcl-datepicker", @id = "dclDate" })
             <p id="dclHelp" style="display:inline;"><em>Select a day to see results.</em></p>
             <table id="dclSummaryTable" class="display">
@@ -51,7 +51,7 @@
         <div id="wecTable">
             <input type="button" value="Refresh" class="formButton" id="wecDataOnlyBtn" />
             <input type="button" value="Print" class="formButton" id="wecPrintReport" />
-            <input type="button" value="Spreadsheet" class="formButton" id="wecExcelReport" />
+            <input type="button" value="Spreadsheet" class="formButton" id="wecSpreadsheet" />
             @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-wec-datepicker", @id = "wecDate" })
             <p id="wecHelp" style="display:inline;"><em>Select a day to see results for that week.</em></p>
             <table id="wecSummaryTable" class="display">
@@ -62,6 +62,7 @@
                         <th>@Machete.Web.Resources.Reports.totalSignins</th>
                         <th>@Machete.Web.Resources.Reports.noWeekJobs</th>
                         <th>@Machete.Web.Resources.Reports.weekJobsSect</th>
+                        <th>No.</th>
                         <th>@Machete.Web.Resources.Reports.weekEstDailyHours</th>
                         <th>@Machete.Web.Resources.Reports.weekEstPayment</th>
                         <th>@Machete.Web.Resources.Reports.weekHourlyWage</th>
@@ -73,7 +74,7 @@
         <div id="mwdTable">
             <input type="button" value="Refresh" class="formButton" id="mwdDataOnlyBtn" />
             <input type="button" value="Print" class="formButton" id="mwdPrintReport" />
-            <input type="button" value="Spreadsheet" class="formButton" id="mwdExcelReport" />
+            <input type="button" value="Spreadsheet" class="formButton" id="mwdSpreadsheet" />
             @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-mwd-datepicker", @id = "mwdDate" })
             <p id="mwdHelp" style="display:inline;"><em>Select any day in a month to see results.</em></p>
             <table id="mwdSummaryTable" class="display">
@@ -130,37 +131,6 @@
             });
 
 
-        ///////////////////////////// PIE CHARTS /////////////////////////|X|
-        // Buttons for showing and hiding
-        // the Pie Charts feature ...
-        // ... which doesn't exist yet!
-        //
-
-        $('#dclDataOnlyBtn').click(function () {
-            $('#sorryNoPieCharts').hide();
-        });
-
-        $('#dclPrintReport').click(function () {
-            $('#sorryNoPrintView').show();
-        });
-
-        $('#wecDataOnlyBtn').click(function () {
-            $('#sorryNoPieCharts').hide();
-        });
-
-
-        $('#wecPrintReport').click(function () {
-            $('#sorryNoPrintView').show();
-        });
-
-
-
-        $('#mwdPrintReport').click(function () {
-            $('#sorryNoPrintView').show();
-        });
-
-        //
-        //
 
         //////////////////////////////////////// DATATABLES //////////////////////////////////////|X|
         // Datatables uses something called Hungarian notation wherein they put the purpose
@@ -215,6 +185,7 @@
                 { mDataProp: "totalSignins" },
                 { mDataProp: "noWeekJobs" },
                 { mDataProp: "weekJobsSector" },
+                { mDataProp: "weekJobsSectorCt" },
                 { mDataProp: "weekEstDailyHours" },
                 { mDataProp: "weekEstPayment" },
                 { mDataProp: "weekHourlyWage" },
@@ -365,6 +336,73 @@
                 mwdNewTable["todaysdate"] = $('#mwdDate').val();
                 $('#mwdSummaryTable').dataTable(mwdNewTable).fnReloadAjax();
             });
+
+
+        ///////////////////////////// PIE CHARTS /////////////////////////|X|
+        // Buttons for showing and hiding
+        // the Pie Charts feature ...
+        // ... which doesn't exist yet!
+        //
+
+        $('#dclDataOnlyBtn').click(function () {
+            dclNewTable["todaysdate"] = $('#dclDate').val();
+            $('#dclSummaryTable').dataTable(dclNewTable).fnReloadAjax();
+        });
+
+        $('#wecDataOnlyBtn').click(function () {
+            wecNewTable["todaysdate"] = $('#wecDate').val();
+            $('#wecSummaryTable').dataTable(wecNewTable).fnReloadAjax();
+        });
+
+        $('#mwdDataOnlyBtn').click(function () {
+            mwdNewTable["todaysdate"] = $('#mwdDate').val();
+            $('#mwdSummaryTable').dataTable(mwdNewTable).fnReloadAjax();
+        });
+
+        $('#dclPrintReport').click(function () {
+            alert('sorryNoPrintView');
+        });
+
+         $('#wecPrintReport').click(function () {
+             alert('sorryNoPrintView');
+        });
+
+         $('#dclSpreadsheet').click(function () {
+             var url = "/Reports/AjaxDcl";
+             var data = { todaysdate: $('#dclDate').val() };
+             $.getJSON(url, data, function (ajax) {
+                 var jstring = JSON.stringify(ajax.aaData);
+                 var jcsv = json2spreadsheet(jstring);
+                 download(jcsv, "reports.csv", "text/csv");
+             });
+         });
+
+         $('#wecSpreadsheet').click(function () {
+             var url = "/Reports/AjaxWec";
+             var data = { todaysdate: $('#wecDate').val() };
+             $.getJSON(url, data, function (ajax) {
+                 var jstring = JSON.stringify(ajax.aaData);
+                 var jcsv = json2spreadsheet(jstring);
+                 download(jcsv, "reports.csv", "text/csv");
+             });
+         });
+
+         $('#mwdSpreadsheet').click(function () {
+             var url = "/Reports/AjaxMwd";
+             var data = { todaysdate: $('#mwdDate').val() };
+             $.getJSON(url, data, function (ajax) {
+                 var jstring = JSON.stringify(ajax.aaData);
+                 var jcsv = json2spreadsheet(jstring);
+                 download(jcsv, "reports.csv", "text/csv");
+             });
+         });
+
+         $('#mwdPrintReport').click(function () {
+             alert('sorryNoPrintView');
+        });
+
+        //
+        //
     });
     // end DOM ready check
 </script>

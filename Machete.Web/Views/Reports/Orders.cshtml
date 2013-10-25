@@ -40,10 +40,6 @@
     </div>
 </div>
 
-<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.jqplot.min.js")"></script>
-<script type="text/javascript" src="@Url.Content("~/Scripts/jqplot.pieRenderer.min.js")"></script>
-<script type="text/javascript" src="@Url.Content("~/Scripts/jsontocsv.js")"></script>
-<script type="text/javascript" src="@Url.Content("~/Scripts/drawpiechart.js")"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         //hide stuff
@@ -149,7 +145,6 @@
                 var jstring = JSON.stringify(ajax.aaData);
                 var jcsv = json2spreadsheet(jstring);
                 download(jcsv, "reports.csv", "text/csv");
-//                window.open('data:text/csv;charset=utf-8,' + escape(jcsv));
             });
         });
 
