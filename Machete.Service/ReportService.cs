@@ -514,10 +514,10 @@ namespace Machete.Service
                     date = g.date,
                     jobs = topJobs
                         .Where(whr => whr.date == g.date)
-                        .Aggregate("", (a, b) => a + b.info + " (" + b.count.ToString() + "), "),
+                        .Aggregate("", (a, b) => a + b.info + " (" + b.count.ToString() + ")\r\n"),
                     zips = topZips
                         .Where(whr => whr.date == g.date)
-                        .Aggregate("", (a, b) => a + b.info + " (" + b.count.ToString() + "), "),
+                        .Aggregate("", (a, b) => a + b.info + " (" + b.count.ToString() + ")\r\n"),
                 });
 
             q = q.OrderBy(ob => ob.date);

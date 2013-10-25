@@ -16,14 +16,13 @@
     <h3><a href="#" id="jzcLink">Jobs and Zip Codes (Mountain View)</a></h3>
     <div id="jzcTable">
         <span style="display:block;">
-        <input type="button" value="Data Refresh" class="formButton" id="jzcDataRefreshBtn" />
-        <input type="button" value="Pie Chart" class="formButton" id="jzcPieChartBtn" />
+        <input type="button" value="Refresh" class="formButton" id="jzcDataRefreshBtn" />
         <input type="button" value="Print Report" class="formButton" id="jzcPrintReport" />
-        <input type="button" value="Spreadsheet Export" class="formButton" id="jzcSpreadsheet" />
+        <input type="button" value="Spreadsheet" class="formButton" id="jzcSpreadsheet" />
         </span>
         <span style="display:block;">
             @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-datepicker", @id = "jzcDate" })
-        <p id="jzcHelp" style="display:inline;"><em>Select a date and click "Submit" to see results.</em></p>
+        <p id="jzcHelp" style="display:inline;"><em>Select a date to see results.</em></p>
         </span>
         <table id="jzcDataTable" class="display">
             <thead>
@@ -34,9 +33,15 @@
                 </tr>
             </thead>
         </table>
+        <div id="piechart1" style="float:left;height:auto;width:50%;"><p id="testp1">Pie chart one goats here.</p></div>
+        <div id="piechart2" style="float:left;height:auto;width:50%;"><p id="testp2">Pie chart two goats there.</p></div>
     </div>
 </div>
 
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.jqplot.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jqplot.pieRenderer.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jsontocsv.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/drawpiechart.js")"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         //hide stuff
@@ -57,11 +62,12 @@
         });
 
         //make stuff pretty
-        $('#orderHide').button();
-        $('#jzcDataRefreshBtn').button();
-        $('#jzcPieChartBtn').button();
-        $('#jzcPrintReport').button();
-        $('#jzcSpreadsheet').button();
+        $('.formButton').button();
+//        $('#orderHide').button();
+//        $('#jzcDataRefreshBtn').button();
+//        $('#jzcPieChartBtn').button();
+//        $('#jzcPrintReport').button();
+//        $('#jzcSpreadsheet').button();
 
         //make stuff do stuff
         //
@@ -71,6 +77,7 @@
         var jzcTableDefaults = {
             "bPaginate": false, // to enable pagination (this report has fixed size)
             "bAutoWidth": false,
+            "bScrollCollapse": true,
             "bDestroy": false,
             "bInfo": true, //shows information about data being displayed on the page
             "bSort": false, //enable or disable sorting of columns
@@ -101,43 +108,8 @@
         //GO
         $('#jzcLink').click(function () {
             $('#jzcDataTable').dataTable(jzcNewTable);
+
         });
-
-
-        //////////////JSONTOCSV//////////////
-        // Credit and thanks: http://stackoverflow.com/users/64741/zachary
-        function JSON2CSV(objArray) {
-            var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
-
-            var str = '';
-            var line = '';
-            var head = array[0];
-
-            for (var index in array[0]) {
-                line += index + ',';
-            }
-
-            line = line.slice(0, -1);
-            str += line + '\r\n';
-
-            for (var i = 0; i < array.length; i++) {
-                var line = '';
-
-                for (var index in array[i]) {
-                    line += array[i][index] + ',';
-                }
-
-                line = line.slice(0, -1);
-                str += line + '\r\n';
-
-            }
-
-
-            return str;
-        };
-    
-
-
 
         ////////////////////DATEPICKER/////////////////
         $('.ui-datepicker').datepicker({
@@ -171,16 +143,19 @@
                 $('#jzcDataTable').dataTable(jzcNewTable).fnReloadAjax();
             });
 
-        $('#jzcSpreadsheet').click(
-            function () {
-                var url = "/Reports/AjaxJobsZipCodes";
-                var date = $('#jzcDate').val();
-                var getit = $.getJSON(url,
-                    {
-                        todaysdate: date
-                    });
-                var csv = JSON2CSV(getit); //the offending line
-                window.open("data:text/csv;charset=utf-8," + escape(csv));    
+        $('#jzcSpreadsheet').click(function () {
+            var url = "/Reports/AjaxJobsZipCodes";
+            var data = { todaysdate: $('#jzcDate').val() };
+            $.getJSON(url, data, function (ajax) {
+                var jstring = JSON.stringify(ajax.aaData);
+                var jcsv = JSON2CSV(jstring);
+                //document.createElement('a'), file;
+                //a.attr('href', 'data:text/csv;charset=utf-8,' + escape(jcsv));
+                //a.attr('download', 'machetereport.csv');
+                //a.click();
+                window.open('data:text/csv;charset=utf-8,' + escape(jcsv));
             });
+        });
+
     });
 </script>

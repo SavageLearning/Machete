@@ -10,12 +10,12 @@
 <script src="@Url.Content("~/Scripts/jquery.alerts.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/jquery.lightbox-0.5.js")" type="text/javascript"></script>
 *@
-
 @{
     string controllerName = Request.RequestContext.RouteData.Values["controller"].ToString();
 }
 <head>
     <link href="@Url.Content("~/Content/jquery.lightbox-0.5.css")" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/jquery.jqplot.min.css")" />
     <title>@Machete.Web.Resources.Shared.title@ViewBag.title</title>
     <link rel="shortcut icon" href="/Content/favicon.ico" type="image/png"/>
     <link rel="icon" href="/Content/favicon.ico" type="image/png"/> 
@@ -23,7 +23,7 @@
 
 <body>
     <div class="page">
-        <div >
+        <div>
             <input type="button" value="@Machete.Web.Resources.Shared.bannerbtn" id="showbanner" class="formButton"/>
         </div>
         <div id="header">

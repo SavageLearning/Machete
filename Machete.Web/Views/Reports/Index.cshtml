@@ -36,9 +36,8 @@
         <h3><a href="#" id="dclLink">Daily</a></h3>
         <div id="dclTable">
             <input type="button" value="Data Only" class="formButton" id="dclDataOnlyBtn" />
-            <input type="button" value="Pie Chart" class="formButton" id="dclPieChartBtn" />
             <input type="button" value="Print Report" class="formButton" id="dclPrintReport" />
-            <input type="button" value="Export to Excel" class="formButton" id="dclExcelReport" />
+            <input type="button" value="Spreadsheet Export" class="formButton" id="dclExcelReport" />
             @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-dcl-datepicker", @id = "dclDate" })
             <p id="dclHelp" style="display:inline;"><em>Select a day to see results.</em></p>
             <table id="dclSummaryTable" class="display">
