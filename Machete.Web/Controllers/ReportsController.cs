@@ -267,7 +267,9 @@ namespace Machete.Web.Controllers
                          {
                              date = System.String.Format("{0:MM/dd/yyyy}", d.date),
                              topZips = d.zips,
-                             topJobs = d.jobs
+                             topZipsCount = d.zipsCount,
+                             topJobs = d.jobs,
+                             topJobsCount = d.jobsCount
                          };
 
             return Json(new{
