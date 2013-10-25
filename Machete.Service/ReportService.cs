@@ -508,16 +508,26 @@ namespace Machete.Service
             topZips = ListZipCodes(beginDate, endDate).ToList();
             topJobs = ListJobs(beginDate, endDate).ToList();
 
+            //Each one of these objects will be a row in a table
+            //that must be able to be exported. At the JSON level,
+            //each individual set (e.g., zips and zipsCount) can
+            //be accessed through its property name.
             q = assignments
                 .Select(g => new jzcData
                 {
                     date = g.date,
-                    jobs = topJobs
-                        .Where(whr => whr.date == g.date)
-                        .Aggregate("", (a, b) => a + b.info + " (" + b.count.ToString() + ")\r\n"),
                     zips = topZips
                         .Where(whr => whr.date == g.date)
-                        .Aggregate("", (a, b) => a + b.info + " (" + b.count.ToString() + ")\r\n"),
+                        .Aggregate("", (a, b) => b.info + ", " + a),
+                    zipsCount = topZips
+                        .Where(whr => whr.date == g.date)
+                        .Aggregate("", (a, b) => b.count.ToString() + ", " + a),
+                    jobs = topJobs
+                        .Where(whr => whr.date == g.date)
+                        .Aggregate("", (a, b) => b.info + ", " + a),
+                    jobsCount = topJobs
+                        .Where(whr => whr.date == g.date)
+                        .Aggregate("\r\n", (a, b) => b.count.ToString() + ", " + a)
                 });
 
             q = q.OrderBy(ob => ob.date);
@@ -586,7 +596,6 @@ namespace Machete.Service
             endDate = new DateTime(jzcDate.Year, jzcDate.Month, jzcDate.Day, 23, 59, 59);
 
             query = jzcController(beginDate, endDate);
-
 
             var result = GetDataTableResult<jzcData>(query);
 
@@ -663,7 +672,9 @@ namespace Machete.Service
     {
         public DateTime? date { get; set; }
         public string zips { get; set; }
+        public string zipsCount { get; set; }
         public string jobs { get; set; }
+        public string jobsCount { get; set; }
     }
     
 }
