@@ -9,11 +9,10 @@
     <ul>
         <li><a href="#summaryWrapper" id="summaryTab" >@Machete.Web.Resources.Reports.summaryTab</a> </li>
         <li><a href="/Reports/Orders" id="ordersTab">@Machete.Web.Resources.Reports.ordersTab</a></li>
-        <!-- only doing summary reports for now -->
     </ul>
 
     <div id="summaryWrapper">
-        @*The idea here is that this div could be its own partial view. It is the default view.*@
+        @*This is the default view.*@
     <div id="summaryHeader">
         <h3 style="padding-left: .5em;">@Machete.Web.Resources.Reports.summaryHeader</h3>
         <div id="summaryPopup">
@@ -359,13 +358,18 @@
             $('#mwdSummaryTable').dataTable(mwdNewTable).fnReloadAjax();
         });
 
-        $('#dclPrintReport').click(function () {
-            alert('sorryNoPrintView');
-        });
+         $('#dclPrintReport').click(function () {
+             alert('sorryNoPrintView');
+         });
 
          $('#wecPrintReport').click(function () {
              alert('sorryNoPrintView');
-        });
+         });
+
+         $('#mwdPrintReport').click(function () {
+             alert('sorryNoPrintView');
+         });
+
 
          $('#dclSpreadsheet').click(function () {
              var url = "/Reports/AjaxDcl";
@@ -396,11 +400,6 @@
                  download(jcsv, "reports.csv", "text/csv");
              });
          });
-
-         $('#mwdPrintReport').click(function () {
-             alert('sorryNoPrintView');
-        });
-
         //
         //
     });
