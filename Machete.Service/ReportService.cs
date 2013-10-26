@@ -618,6 +618,7 @@ namespace Machete.Service
         #endregion
     }
 
+    #region DataClasses
     /// <summary>
     /// A class to contain the data for the Daily Report for Casa Latina
     /// int dwcList, int dwcPropio, int hhhList, int hhhPropio, int
@@ -680,5 +681,5 @@ namespace Machete.Service
         public string jobs { get; set; }
         public string jobsCount { get; set; }
     }
-    
+    #endregion    
 }
