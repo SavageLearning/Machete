@@ -55,12 +55,12 @@
 }
 <script type="text/javascript">
     $(document).ready(function () {
-        var $waForm = $('#@(idPrefix)waForm');
+        var waForm = $('#@(idPrefix)waForm');
         //
         // Block phonedesk from editing old orders
         //
         if (@(editDisable)) { 
-            $waForm.find('input,select,textarea').attr('disabled', 'disabled');
+            waForm.find('input,select,textarea').attr('disabled', 'disabled');
         }
         $('#activateWorkOrderButton-@(Model.workOrderID)').hide();
         $('.formButton').button();
@@ -68,25 +68,25 @@
         $.validator.unobtrusive.parseDynamicContent('#@(idPrefix)waForm');
         //
         // wage calculations
-        $waForm.mUI('waFormConfiguration', {
-            days: $waForm.find('#@(idPrefix)days'),
-            hourlyWage: $waForm.find('#@(idPrefix)hourlyWage'),
-            hour: $waForm.find('#@(idPrefix)hours'),
-            range: $waForm.find('#@(idPrefix)hourRange'),
-            total: $waForm.find('#@(idPrefix)total'),
-            totalRange: $waForm.find('#@(idPrefix)totalRange'),
-            skillID: $waForm.find('#@(idPrefix)skillID'),
+        waForm.mUI('waFormConfiguration', {
+            days: waForm.find('#@(idPrefix)days'),
+            hourlyWage: waForm.find('#@(idPrefix)hourlyWage'),
+            hour: waForm.find('#@(idPrefix)hours'),
+            range: waForm.find('#@(idPrefix)hourRange'),
+            total: waForm.find('#@(idPrefix)total'),
+            totalRange: waForm.find('#@(idPrefix)totalRange'),
+            skillID: waForm.find('#@(idPrefix)skillID'),
             errCalcMsg: "@(Machete.Web.Resources.Shared.notcalculable)"
         });
         //
         //  Edit submit event
-        $waForm.mUI('tabFormSubmit', { 
+        waForm.mUI('tabFormSubmit', { 
             exclusiveTab: false,
             formLevel: 3,
             preProcess: function () {
-                $waForm.find('#@(idPrefix)hourlyWage').removeAttr('disabled', 'disabled');
-                $waForm.find('#@(idPrefix)hours').removeAttr('disabled', 'disabled');
-                $waForm.find('#@(idPrefix)hourRange').removeAttr('disabled', 'disabled');
+                waForm.find('#@(idPrefix)hourlyWage').removeAttr('disabled', 'disabled');
+                waForm.find('#@(idPrefix)hours').removeAttr('disabled', 'disabled');
+                waForm.find('#@(idPrefix)hourRange').removeAttr('disabled', 'disabled');
             }
         });
         //
@@ -99,7 +99,7 @@
         });
         //
         // machete UI detect changes on forms in tabs   
-        $waForm.mUI('formDetectChanges', { 
+        waForm.mUI('formDetectChanges', { 
             recType: "@(recType)",
             formLevel: 3,
             changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
@@ -109,7 +109,7 @@
         //
         // Duplicate submit event
         $("#duplicate-@(Model.ID)").mUI('formClickDuplicate', {
-            editForm: $waForm,
+            editForm: waForm,
             dupForm: $('#DuplicateWorkAssignment-@(Model.ID)')
         });
         //
