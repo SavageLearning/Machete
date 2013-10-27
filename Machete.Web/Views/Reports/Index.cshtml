@@ -31,7 +31,7 @@
             <input type="button" value="Spreadsheet" class="formButton" id="dclSpreadsheet" />
             @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-dcl-datepicker", @id = "dclDate" })
             <p id="dclHelp" style="display:inline;"><em>Select a day to see results.</em></p>
-            <table id="dclSummaryTable" class="display">
+            <table id="dclDataTable" class="display">
                 <thead>
                     <tr>
                         <th>@Machete.Web.Resources.Reports.date</th>
@@ -53,7 +53,7 @@
             <input type="button" value="Spreadsheet" class="formButton" id="wecSpreadsheet" />
             @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-wec-datepicker", @id = "wecDate" })
             <p id="wecHelp" style="display:inline;"><em>Select a day to see results for that week.</em></p>
-            <table id="wecSummaryTable" class="display">
+            <table id="wecDataTable" class="display">
                 <thead>
                     <tr>
                         <th>@Machete.Web.Resources.Reports.weekday</th>
@@ -76,7 +76,7 @@
             <input type="button" value="Spreadsheet" class="formButton" id="mwdSpreadsheet" />
             @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-mwd-datepicker", @id = "mwdDate" })
             <p id="mwdHelp" style="display:inline;"><em>Select any day in a month to see results.</em></p>
-            <table id="mwdSummaryTable" class="display">
+            <table id="mwdDataTable" class="display">
                 <thead>
                     <tr>
                         <th>@Machete.Web.Resources.Reports.date</th>
@@ -113,145 +113,36 @@
         // these three show up when someone is taking their time picking a date
         // to instruct them how to proceed.
 
-        //////// TABS and ACCORDIONS and TOOLTIPS //////// |X|
-        // the following code creates tabs from listed item tags 
-        // in the HTML, by ID $("#id")
+        //////////////////// | ACCORDIONS |
+        //
         $('#reportTabs').tabs();
         $('#summaryHide').click(
             function () {
                 $('#summaryPopup').hide();
             });
 
-        // The reports start in accordion format, closed.
         $('#summaryReports').accordion({
                 collapsible: true,
                 active: false,
                 autoHeight: false
             });
 
-
-
-        //////////////////////////////////////// DATATABLES //////////////////////////////////////|X|
-        // Datatables uses something called Hungarian notation wherein they put the purpose
-        // of a given variable to the left of the variable name. E.g., i is integer, o is
-        // object. More at datatables.net.
-        //
-
-        var dclTableDefaults = {
-            "bPaginate": false, // to enable pagination (this report has fixed size)
-            "bAutoWidth": false,
-            "bDestroy": false,
-            "bInfo": true, //shows information about data being displayed on the page
-            "bSort": false, //enable or disable sorting of columns
-            "bFilter": false, //enable or disable filtering of data
-            "bServerSide": true, //server side processing, req. source
-            "sAjaxSource": "/Reports/AjaxDcl", //source for server side processing
-            "bProcessing": false, //enable processing indicator
-            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName), //internationalisation
-            "aoColumns": [
-                { mDataProp: "date" }, //have to add this otherwise dt assumes
-                { mDataProp: "dwcList" }, //an entire month of data is coming.
-                { mDataProp: "dwcPropio" }, //why, I don't know. Also, it's
-                { mDataProp: "hhhList" }, //broken now and I don't know why.
-                { mDataProp: "hhhPropio" }, //these are similar to the other
-                { mDataProp: "totalSignins" }, //reports.
-                { mDataProp: "totalAssignments" },
-                { mDataProp: "cancelledJobs" }
-            ], //these are the column names in the array; total # must match
-            "fnServerData": function (sSource, aoData, fnCallback) {
-                aoData.push({ "name": "todaysdate", "value": $('#dclDate').val() });
-                $.getJSON(sSource, aoData, function (json) {
-                    /* Do whatever additional processing you want on the callback, then tell DataTables */
-                    fnCallback(json)
-                });
-            }
-        };
-
-        var wecTableDefaults = {
-            "bPaginate": false, // to enable pagination (this report has fixed size)
-            "bAutoWidth": false,
-            "bDestroy": false,
-            "bInfo": true, //shows information about data being displayed on the page
-            "bSort": false, //enable or disable sorting of columns
-            "bFilter": false, //enable or disable filtering of data
-            "bServerSide": true, //server side processing, req. source
-            "sAjaxSource": "/Reports/AjaxWec", //source for server side processing
-            "bProcessing": false, //enable processing indicator
-            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName), //internationalisation
-            "aoColumns": [
-                { mDataProp: "weekday" },
-                { mDataProp: "date" },
-                { mDataProp: "totalSignins" },
-                { mDataProp: "noWeekJobs" },
-                { mDataProp: "weekJobsSector" },
-                { mDataProp: "weekJobsSectorCt" },
-                { mDataProp: "weekEstDailyHours" },
-                { mDataProp: "weekEstPayment" },
-                { mDataProp: "weekHourlyWage" },
-            ], // column names must match # of cols. in table
-            "fnServerData": function (sSource, aoData, fnCallback) {
-                aoData.push({ "name": "todaysdate", "value": $('#wecDate').val() });
-                $.getJSON(sSource, aoData, function (json) {
-                    /* Do whatever additional processing you want on the callback, then tell DataTables */
-                    fnCallback(json)
-                });
-            }
-        };
-
-        var mwdTableDefaults = {
-            "bPaginate": false, // to enable pagination (this report has fixed size)
-            "bAutoWidth": false,
-            "bDestroy": false,
-            "bInfo": true, //shows information about data being displayed on the page
-            "bSort": false, //enable or disable sorting of columns
-            "bFilter": false, //enable or disable filtering of data
-            "bServerSide": true, //server side processing, req. source
-            "sAjaxSource": "/Reports/AjaxMwd", //source for server side processing
-            "bProcessing": false, //enable processing indicator
-            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName), //internationalisation
-            "aoColumns": [
-                { mDataProp: "date" },
-                { mDataProp: "totalSignins" },
-                { mDataProp: "totalDWCSignins" },
-                { mDataProp: "totalHHHSignins" },
-                { mDataProp: "dispatchedDWCSignins" },
-                { mDataProp: "dispatchedHHHSignins" },
-                { mDataProp: "totalHours" },
-                { mDataProp: "totalIncome" },
-                { mDataProp: "avgIncomePerHour" }
-            ], // column names; must match # of cols. in table
-            "fnServerData": function ( sSource, aoData, fnCallback ) {
-                aoData.push({ "name": "todaysdate", "value": $('#mwdDate').val() });
-                $.getJSON(sSource, aoData, function (json) {
-                    /* Do whatever additional processing you want on the callback, then tell DataTables */
-                    fnCallback(json)
-                });
-            }
-        };
-
-        var dclNewTable = jQuery.extend(true, {}, dclTableDefaults);
-        var wecNewTable = jQuery.extend(true, {}, wecTableDefaults);
-        var mwdNewTable = jQuery.extend(true, {}, mwdTableDefaults);
-
-        dclNewTable["bDestroy"] = "true,";
-        wecNewTable["bDestroy"] = "true,";
-        mwdNewTable["bDestroy"] = "true,";
-
         $('#dclLink').click(function () {
-            $('#dclSummaryTable').dataTable(dclNewTable);
+            dclNewTable();
         });
 
         $('#wecLink').click(function () {
-            $('#wecSummaryTable').dataTable(wecNewTable);
+            wecNewTable();
         });
 
         $('#mwdLink').click(function () {
-            $('#mwdSummaryTable').dataTable(mwdNewTable);
+            mwdNewTable();
         });
 
-        //////////////// the date-pickerers /////////////////|X|
+        ////////////////////// | the date-pickerers |
+
         //
-        // Daily, Casa Latina datepicker
+        // Daily datepickerer
         //
 
         $('.ui-dcl-datepicker').hover(
@@ -261,7 +152,7 @@
             function () {
                 $('#dclHelp').hide("fade", 2200);
             });
-        
+
         $('.ui-dcl-datepicker').datepicker({
             autoSize: true,
             changeMonth: true,
@@ -275,13 +166,13 @@
 
         $('.ui-dcl-datepicker').change(
             function (event) {
-                dclNewTable["todaysdate"] = $('#dclDate').val();
-                $('#dclSummaryTable').dataTable(dclNewTable).fnReloadAjax();
+                dclNewTable();
             });
 
         //
-        // Weekly, El Centro datepicker
+        // Weekly datepickerer
         //
+
         $('.ui-wec-datepicker').hover(
             function () {
                 $('#wecHelp').show("fade", 2200);
@@ -307,9 +198,12 @@
 
         $('.ui-wec-datepicker').change(
             function (event) {
-                wecNewTable["todaysdate"] = $('#wecDate').val();
-                $('#wecSummaryTable').dataTable(wecNewTable).fnReloadAjax();
+                wecNewTable();
             });
+
+        //
+        // Monthly datepickerer
+        //
 
         $('.ui-mwd-datepicker').hover(
             function () {
@@ -333,32 +227,50 @@
         $('.ui-mwd-datepicker').change(
             function (event) {
                 mwdNewTable["todaysdate"] = $('#mwdDate').val();
-                $('#mwdSummaryTable').dataTable(mwdNewTable).fnReloadAjax();
+                $('#mwdDataTable').dataTable(mwdNewTable).fnReloadAjax();
             });
 
 
-        ///////////////////////////// PIE CHARTS /////////////////////////|X|
-        // Buttons for showing and hiding
-        // the Pie Charts feature ...
-        // ... which doesn't exist yet!
+        //////////////////////////////////////////////////////////////////////// | DATATABLES |
         //
+        // Looking for the table properties? Try reports.js in ~/Web/Scripts
+        //
+        var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
 
+        function dclNewTable() {
+            var dclNewTable = $.extend(true, {}, dclTableDefaults(lang, $('#dclDate').val()));
+            dclNewTable["bDestroy"] = "true,";
+            $('#dclDataTable').dataTable(dclNewTable).fnReloadAjax();
+        };
+
+        function wecNewTable() {
+            var wecNewTable = $.extend(true, {}, wecTableDefaults(lang, $('#wecDate').val()));
+            wecNewTable["bDestroy"] = "true,";
+            $('#wecDataTable').dataTable(wecNewTable).fnReloadAjax();
+        };
+
+        function mwdNewTable() {
+            var mwdNewTable = $.extend(true, {}, mwdTableDefaults(lang, $('#mwdDate').val()));
+            mwdNewTable["bDestroy"] = "true,";
+            $('#mwdDataTable').dataTable(mwdNewTable).fnReloadAjax();
+        };
+
+        ///////////////////////////////////////////////////////////////////////////////// | BUTTONS |
+        //
+        //
         $('#dclDataOnlyBtn').click(
             function () {
-            dclNewTable["todaysdate"] = $('#dclDate').val();
-            $('#dclSummaryTable').dataTable(dclNewTable).fnReloadAjax();
+                dclNewTable();
         });
 
         $('#wecDataOnlyBtn').click(
             function () {
-            wecNewTable["todaysdate"] = $('#wecDate').val();
-            $('#wecSummaryTable').dataTable(wecNewTable).fnReloadAjax();
+                wecNewTable();
         });
 
         $('#mwdDataOnlyBtn').click(
             function () {
-            mwdNewTable["todaysdate"] = $('#mwdDate').val();
-            $('#mwdSummaryTable').dataTable(mwdNewTable).fnReloadAjax();
+                mwdNewTable();
         });
 
          $('#dclPrintReport').click(
