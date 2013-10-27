@@ -601,6 +601,17 @@
         },
         //
         //
+        btnSendEmail: function (opt) {
+            var btn = this;
+            var statusBox = opt.statusBox;
+            var emailForm = opt.emailForm;
+            var sendStatus = opt.sendStatus;
+            console.log("sending email...");
+            $(btn).click(function (e) {
+                $(statusBox).val(sendStatus);
+                $(emailForm).submit();
+            });
+        },
         formClickDelete: function (opt) {
             var btn = this;
             var ok = opt.ok || "OK?!";

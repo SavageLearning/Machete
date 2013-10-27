@@ -74,6 +74,7 @@ namespace Machete.Web.Helpers
             #endregion
             Mapper.CreateMap<Email, EmailView>()
                 .ForMember(ev => ev.status, opt => opt.MapFrom(e => Lookups.byID(e.statusID)))
+                .ForMember(ev => ev.statusID, opt => opt.MapFrom(e => e.statusID))
                 .ForMember(ev => ev.templates, opt => opt.UseValue(Lookups.getEmailTemplates()))
                 .IgnoreAllNonExisting();
             Mapper.CreateMap<EmailView, Email>()

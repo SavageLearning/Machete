@@ -38,7 +38,7 @@
         $('.formButton').button();
         $('#emailName').focus();
         // machete UI detect changes on forms in tabs   
-        $("#EmailTab-@(Model.ID)").mUI('formDetectChanges', {
+        $("#@(Model.idPrefix)editForm").mUI('formDetectChanges', {
             recType: "@(recType)",
             formLevel: 1,
             changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",

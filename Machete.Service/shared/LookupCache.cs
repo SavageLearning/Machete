@@ -128,6 +128,7 @@ namespace Machete.Service
         public string textByID(int ID, string locale)
         {
             Lookup record;
+            if (ID == 0) return null;
             try
             {
                 record = getCache().Single(s => s.ID == ID);
