@@ -15,15 +15,13 @@
 <div id="ordersReports">
     <h3><a href="#" id="jzcLink">Jobs and Zip Codes (Mountain View)</a></h3>
     <div id="jzcTable">
-        <span style="display:block;">
+        <div style="display:block;">
         <input type="button" value="Refresh" class="formButton" id="jzcDataRefreshBtn" />
-        <input type="button" value="Print Report" class="formButton" id="jzcPrintReport" />
+        <input type="button" value="Print" class="formButton" id="jzcPrint" />
         <input type="button" value="Spreadsheet" class="formButton" id="jzcSpreadsheet" />
-        </span>
-        <span style="display:block;">
-            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-datepicker", @id = "jzcDate" })
+        @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-datepicker", @id = "jzcDate" })
         <p id="jzcHelp" style="display:inline;"><em>Select a date to see results.</em></p>
-        </span>
+        </div>
         <table id="jzcDataTable" class="display">
             <thead>
                 <tr>
@@ -136,6 +134,11 @@
             function () {
                 jzcNewTable["todaysdate"] = $('#jzcDate').val();
                 $('#jzcDataTable').dataTable(jzcNewTable).fnReloadAjax();
+            });
+
+        $('#jzcPrint').click(
+            function () {
+                window.open('/Reports/PrintView?date='+$('#jzcDate').val()+'&typeOfReport=jobsandzips');
             });
 
         $('#jzcSpreadsheet').click(function () {
