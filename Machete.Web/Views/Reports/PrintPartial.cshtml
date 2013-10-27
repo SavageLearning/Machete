@@ -1,0 +1,126 @@
+﻿@model dynamic
+
+@if (Model.typeOfReport == "monthly")
+{
+    <div style="padding-top:6em;">
+        <div style="float:left;width:63.5%;padding-left:10%">
+            <h3>Monthly Report</h3>
+            <p>@Model.date</p>
+        </div>
+        <div style="float:left;">
+            <img src="../../Content/machete_1_close_crop.png" />
+        </div>
+        <div style="display:block;padding:0 10%;">
+            <table id="mwdDataTable" class="display">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.date</th>
+                        <th>@Machete.Web.Resources.Reports.totalSignins</th>
+                        <th>@Machete.Web.Resources.Reports.dwcSignins</th>
+                        <th>@Machete.Web.Resources.Reports.hhhSignins</th>
+                        <th>@Machete.Web.Resources.Reports.dwcDispatch</th>
+                        <th>@Machete.Web.Resources.Reports.hhhDispatch</th>
+                        <th>@Machete.Web.Resources.Reports.totalHours</th>
+                        <th>@Machete.Web.Resources.Reports.totalIncome</th>
+                        <th>@Machete.Web.Resources.Reports.avgIncome</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+}
+
+else if (Model.typeOfReport == "weekly")
+{
+    <div style="padding-top:6em;">
+        <div style="float:left;width:63.5%;padding-left:10%">
+            <h3>Weekly Report</h3>
+            <p>@Model.date</p>
+        </div>
+        <div style="float:left;">
+            <img src="../../Content/machete_1_close_crop.png" />
+        </div>
+        <div style="display:block;padding:0 10%;">
+            <table id="wecDataTable" class="display">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.weekday</th>
+                        <th>@Machete.Web.Resources.Reports.date</th>
+                        <th>@Machete.Web.Resources.Reports.totalSignins</th>
+                        <th>@Machete.Web.Resources.Reports.noWeekJobs</th>
+                        <th>@Machete.Web.Resources.Reports.weekJobsSect</th>
+                        <th>No.</th>
+                        <th>@Machete.Web.Resources.Reports.weekEstDailyHours</th>
+                        <th>@Machete.Web.Resources.Reports.weekEstPayment</th>
+                        <th>@Machete.Web.Resources.Reports.weekHourlyWage</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+}
+
+else if (Model.typeOfReport == "daily")
+{
+    <div style="padding-top:6em;">
+        <div style="float:left;width:63.5%;padding-left:10%">
+            <h3>Daily Report</h3>
+            <p>@Model.date</p>
+        </div>
+        <div style="float:left;">
+            <img src="../../Content/machete_1_close_crop.png" />
+        </div>
+        <div style="display:block;padding:0 10%;">
+            <table id="dclDataTable" class="display">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.date</th>
+                        <th>@Machete.Web.Resources.Reports.dwcList</th>
+                        <th>@Machete.Web.Resources.Reports.dwcPropio</th>
+                        <th>@Machete.Web.Resources.Reports.hhhList</th>
+                        <th>@Machete.Web.Resources.Reports.hhhPropio</th>
+                        <th>@Machete.Web.Resources.Reports.totalSignins</th>
+                        <th>@Machete.Web.Resources.Reports.totalAssignments</th>
+                        <th>@Machete.Web.Resources.Reports.cancelledJobs</th>
+                    </tr>
+                </thead>
+            </table>
+
+        </div>
+    </div>
+}
+
+else if (Model.typeOfReport == "jobsandzips")
+{
+    <div style="padding-top:6em;">
+        <div style="float:left;width:63.5%;padding-left:10%">
+            <h3>Top Jobs and Zip Codes Report</h3>
+            <p>@Model.date</p>
+        </div>
+        <div style="float:left;">
+            <img src="../../Content/machete_1_close_crop.png" />
+        </div>
+        <div style="display:block;padding:0 10%;">
+            <table id="jzcDataTable" class="display">
+            <thead>
+                <tr>
+                    <th style="width:15%;">@Machete.Web.Resources.Reports.date</th>
+                    <th style="width:15%;">@Machete.Web.Resources.Reports.jzcZipCodes</th>
+                    <th style="width:10%;">No.</th>
+                    <th style="width:50%;">@Machete.Web.Resources.Reports.jzcJobs</th>
+                    <th style="width:10%;">No.</th>
+                </tr>
+            </thead>
+        </table>
+
+        <input type="button" id="Hi" value="Hi" />
+        </div>
+    </div>
+}
+
+else
+{
+    <h3>Sorry. There appears to be some sort of problem here.</h3>
+    <p>That's all we know.</p>
+}
+
