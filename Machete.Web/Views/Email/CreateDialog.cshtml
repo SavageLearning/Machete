@@ -1,12 +1,17 @@
 ﻿@model Machete.Web.ViewModel.EmailView
 @using Machete.Web.Resources
+@using Machete.Domain
 
 @using (Html.BeginForm("Create", "Email", FormMethod.Post, 
-                        new { @id = Model.idPrefix + "emailCreateForm" }))
+                        new { @id = Model.idPrefix + "createForm" }))
 {
     <div>
         <input type="submit" id="@(Model.idPrefix)SaveBtn" class="formButton saveBtn" 
                value="@Emails.createsubmit"  tabindex="9"/>
+        @if (Machete.Domain.Email.iPending == Model.statusID)
+        { 
+        <input type="button" id="@(Model.idPrefix)SendBtn" class="formButton" value="$$$Send WO" />
+        }
     </div>
     @Html.ValidationSummary(true)
     @Html.EditorForModel(Model)
@@ -15,8 +20,9 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('.formButton').button();
-        var emailCreateForm = $("#@(Model.idPrefix)emailCreateForm")
-        $.validator.unobtrusive.parseDynamicContent('#@(Model.idPrefix)emailCreateForm');
+        var emailCreateForm = $("#@(Model.idPrefix)createForm");
+        var emailSendBtn = $("#@(Model.idPrefix)SendBtn");
+        $.validator.unobtrusive.parseDynamicContent('#@(Model.idPrefix)createForm');
         $('#emailName').focus();
         // Email Create submit event
 
@@ -31,8 +37,13 @@
                 field.val(encoded);
             },
             postProcess: function () {
-                $('#@(Model.idPrefix)emailCreateForm').closest('.ui-dialog').find('a.ui-dialog-titlebar-close').click();
+                $('#@(Model.idPrefix)createForm').closest('.ui-dialog').find('a.ui-dialog-titlebar-close').click();
             }
+        });
+        emailSendBtn.mUI('btnSendEmail', {
+            statusBox: $('#@(Model.idPrefix)status'),
+            emailForm: $("#@(Model.idPrefix)createForm"),
+            sendStatus: @(Email.iReadyToSend)
         });
         //
         // machete UI detect changes on forms in tabs   
