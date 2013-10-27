@@ -40,71 +40,39 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+
+        //
         //hide stuff
+
         $('#jzcTable').hide();
         $('#jzcHelp').hide();
 
-        //click to hide stuff
         $('#orderHide').click(
             function () {
                 $('#ordersPopup').hide();
             });
 
-        //accordion stuff
+        //
+        //make stuff pretty
+
+        $('.formButton').button();
+
         $('#ordersReports').accordion({
             collapsible: true,
             active: false,
             autoHeight: false
         });
 
-        //make stuff pretty
-        $('.formButton').button();
-
-        //make stuff do stuff
-        //
-        //
-        //
-        /////////////////DATATABLES///////////////
-        var jzcTableDefaults = {
-            "bPaginate": false, // to enable pagination (this report has fixed size)
-            "bAutoWidth": false,
-            "bScrollCollapse": true,
-            "bDestroy": false,
-            "bInfo": true, //shows information about data being displayed on the page
-            "bSort": false, //enable or disable sorting of columns
-            "bFilter": false, //enable or disable filtering of data
-            "bServerSide": true, //server side processing, req. source
-            "sAjaxSource": "/Reports/AjaxJobsZipCodes", //source for server side processing
-            "bProcessing": false, //enable processing indicator
-            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName), //internationalisation
-            "aoColumns": [
-                { mDataProp: "date" },
-                { mDataProp: "topZips" },
-                { mDataProp: "topZipsCount" },
-                { mDataProp: "topJobs" },
-                { mDataProp: "topJobsCount" }
-            ], //these are the column names in the array; total # must match
-            "fnServerData": function (sSource, aoData, fnCallback) {
-                aoData.push({ "name": "todaysdate", "value": $('#jzcDate').val() });
-                $.getJSON(sSource, aoData, function (json) {
-                    /* Do whatever additional processing you want on the callback, then tell DataTables */
-                    fnCallback(json)
-                });
-            }
-        };
-        //
-        var jzcNewTable = jQuery.extend(true, {}, jzcTableDefaults);
-        //
-        jzcNewTable["bDestroy"] = "true,";
-        //
-        //
-        //GO
         $('#jzcLink').click(function () {
-            $('#jzcDataTable').dataTable(jzcNewTable);
-
+            jzcNewTable();
         });
 
-        ////////////////////DATEPICKER/////////////////
+        //
+        //make stuff do stuff
+
+        //////////////////// | DATEPICKER |
+        //
+        //
         $('.ui-datepicker').datepicker({
             autoSize: true,
             changeMonth: true,
@@ -126,14 +94,27 @@
 
         $('.ui-datepicker').change(
         function (event) {
-            jzcNewTable["todaysdate"] = $('#jzcDate').val();
-            $('#jzcDataTable').dataTable(jzcNewTable).fnReloadAjax();
+            jzcNewTable();
         });
+
+        //////////////////////////////////////////////////////////////////////// | DATATABLES |
+        //
+        var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
+
+        function jzcNewTable() {
+            var jzcNewTable = jQuery.extend(true, {}, jzcTableDefaults(lang, $('#jzcDate').val()));
+            jzcNewTable["bDestroy"] = "true,";
+            $('#jzcDataTable').dataTable(jzcNewTable).fnReloadAjax();
+        };
+
+        //////////////////////////// | BUTTONS |
+        ///    
+        ///             
+
 
         $('#jzcDataRefreshBtn').click(
             function () {
-                jzcNewTable["todaysdate"] = $('#jzcDate').val();
-                $('#jzcDataTable').dataTable(jzcNewTable).fnReloadAjax();
+                jzcNewTable();
             });
 
         $('#jzcPrint').click(
