@@ -91,37 +91,55 @@ namespace Machete.Web.Controllers
         #endregion
 
         #region ExternalViews
+
         [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult GroupView(DateTime date, string typeOfReport)
+        public ActionResult PrintPartial(ReportPrintView model)
         {
-            if (typeOfReport == "monthly")
+            if (model.typeOfReport == "monthly")
             {
-                ReportPrintView<monthlyData> view = new ReportPrintView<monthlyData>();
-                view.report = repServ.monthlyView(date);
-                return View(view);
+                MonthlyReportPrintView view = new MonthlyReportPrintView();
+                view.report = repServ.monthlyView(model.date);
+                view.date = model.date;
+                view.typeOfReport = model.typeOfReport;
+                return PartialView(view);
             }
-            else if (typeOfReport == "weekly")
+            else if (model.typeOfReport == "weekly")
             {
-                ReportPrintView<weeklyData> view = new ReportPrintView<weeklyData>();
-                view.report = repServ.WeeklyView(date);
-                return View(view);
+                WeeklyReportPrintView view = new WeeklyReportPrintView();
+                view.report = repServ.WeeklyView(model.date);
+                view.date = model.date;
+                view.typeOfReport = model.typeOfReport;
+                return PartialView(view);
             }
-            else if (typeOfReport == "daily")
+            else if (model.typeOfReport == "daily")
             {
-                ReportPrintView<dailyData> view = new ReportPrintView<dailyData>();
-                view.report = repServ.DailyView(date);
-                return View(view);
+                DailyReportPrintView view = new DailyReportPrintView();
+                view.report = repServ.DailyView(model.date);
+                view.date = model.date;
+                view.typeOfReport = model.typeOfReport;
+                return PartialView(view);
             }
-            else if (typeOfReport == "jobsandzips")
+            else if (model.typeOfReport == "jobsandzips")
             {
-                ReportPrintView<jzcData> view = new ReportPrintView<jzcData>();
-                view.report = repServ.jzcView(date);
-                return View(view);
+                JzcReportPrintView view = new JzcReportPrintView();
+                view.report = repServ.jzcView(model.date);
+                view.date = model.date;
+                view.typeOfReport = model.typeOfReport;
+                return PartialView(view);
             }
             else
             {
                 throw new Exception("Error: Report type to be printed not found.");
             }
+        }
+
+        [Authorize(Roles = "Administrator, Manager")]
+        public ActionResult PrintView(DateTime date, string typeOfReport)
+        {
+            ReportPrintView view = new ReportPrintView();
+            view.date = date;
+            view.typeOfReport = typeOfReport;
+            return View(view);
         }
         #endregion
 
