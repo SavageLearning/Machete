@@ -195,6 +195,13 @@ fieldset {
     margin: 0 0 1.5em 0;
 }
 
+.emailField {
+    border: 1px solid #ccc;
+    background: #fcfcfc;
+    width: 400px;
+}
+
+
 legend {
     font-size: 1.2em;
     font-weight: bold;
@@ -204,6 +211,10 @@ textarea {
     min-height: 75px;
 }
 
+.emailField.bodyDisplay {
+        width: 400px;
+    height: 10em;
+}
 textarea.emailField {
     width: 400px;
     height: 10em;
@@ -348,6 +359,7 @@ div.recordButtons {
 .email-field {
     height: 30em !important;
     width: 40em;
+    border: 1px solid #CCC;
 }
 /* Used on workorder and workassignment;   */
 .money-field {
@@ -447,7 +459,7 @@ input[type="text"].ui-datepicker {
 }
 /* WorkOrder view  */
 .tb-bordered_field {
-    border: 1px solid black;
+    border: 1px solid #CCC;
     margin: 1em 0 0 0;
     padding: 5px;
     text-align: left;

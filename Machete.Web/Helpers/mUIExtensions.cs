@@ -170,12 +170,35 @@ namespace Machete.Web.Helpers
                 tbclose
                 );
         }
+
+        public static MvcHtmlString mUITableDisplayFor<TModel, TSelect>(this HtmlHelper<TModel> htmlHelper,
+    Expression<Func<TModel, TSelect>> expression,
+    object attribs)
+        {
+            var foo = htmlHelper.ValidationMessageFor(expression).ToString();
+            return MvcHtmlString.Create(
+                tbfield +
+                htmlHelper.DisplayFor(expression, attribs).ToString() +
+                htmlHelper.ValidationMessageFor(expression).ToString() +
+                tbclose
+                );
+        }
+
+
         public static MvcHtmlString mUITableLabelAndTextBoxFor<TModel, TSelect>(this HtmlHelper<TModel> htmlHelper,
             Expression<Func<TModel, TSelect>> expression,
             object attribs)
         {
             return MvcHtmlString.Create(mUITableLabelFor(htmlHelper, expression).ToHtmlString() + mUITableTextBoxFor(htmlHelper, expression, attribs).ToHtmlString());
         }
+
+        public static MvcHtmlString mUITableLabelAndDisplayFor<TModel, TSelect>(this HtmlHelper<TModel> htmlHelper,
+            Expression<Func<TModel, TSelect>> expression,
+            object attribs)
+        {
+            return MvcHtmlString.Create(mUITableLabelFor(htmlHelper, expression).ToHtmlString() + mUITableDisplayFor(htmlHelper, expression, attribs).ToHtmlString());
+        }
+
 
         public static MvcHtmlString mUITableDateTextBoxFor<TModel, TSelect>(this HtmlHelper<TModel> htmlHelper, 
             Expression<Func<TModel, TSelect>> expression,
