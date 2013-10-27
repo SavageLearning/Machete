@@ -1,0 +1,38 @@
+﻿@model Machete.Web.ViewModel.ReportPrintView
+@using Machete.Web.Helpers
+@using Machete.Domain.Resources
+@using Machete.Web.Resources
+@using Machete.Service
+
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+}
+
+<div>
+    @Html.Action("PrintPartial", Model)
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
+        var date = @Model.date;
+
+        var dclNewTable = $.extend(true, {}, dclTableDefaults(lang, date));
+        dclNewTable["bDestroy"] = "true,";
+        $('#dclDataTable').dataTable(dclNewTable).fnReloadAjax();
+
+        var wecNewTable = $.extend(true, {}, wecTableDefaults(lang, date));
+        wecNewTable["bDestroy"] = "true,";
+        $('#wecDataTable').dataTable(wecNewTable).fnReloadAjax();
+
+        var mwdNewTable = $.extend(true, {}, mwdTableDefaults(lang, date));
+        mwdNewTable["bDestroy"] = "true,";
+        $('#mwdDataTable').dataTable(mwdNewTable).fnReloadAjax();
+
+        var jzcNewTable = jQuery.extend(true, {}, jzcTableDefaults(lang, date));
+        jzcNewTable["bDestroy"] = "true,";
+        $('#jzcDataTable').dataTable(jzcNewTable).fnReloadAjax();
+
+        $('#Hi').button();
+    });
+</script>
