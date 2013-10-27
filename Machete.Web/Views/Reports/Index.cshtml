@@ -343,32 +343,38 @@
         // ... which doesn't exist yet!
         //
 
-        $('#dclDataOnlyBtn').click(function () {
+        $('#dclDataOnlyBtn').click(
+            function () {
             dclNewTable["todaysdate"] = $('#dclDate').val();
             $('#dclSummaryTable').dataTable(dclNewTable).fnReloadAjax();
         });
 
-        $('#wecDataOnlyBtn').click(function () {
+        $('#wecDataOnlyBtn').click(
+            function () {
             wecNewTable["todaysdate"] = $('#wecDate').val();
             $('#wecSummaryTable').dataTable(wecNewTable).fnReloadAjax();
         });
 
-        $('#mwdDataOnlyBtn').click(function () {
+        $('#mwdDataOnlyBtn').click(
+            function () {
             mwdNewTable["todaysdate"] = $('#mwdDate').val();
             $('#mwdSummaryTable').dataTable(mwdNewTable).fnReloadAjax();
         });
 
-         $('#dclPrintReport').click(function () {
-             alert('sorryNoPrintView');
-         });
+         $('#dclPrintReport').click(
+             function () {
+                 window.open('/Reports/PrintView?date='+$('#dclDate').val()+'&typeOfReport=daily');
+             });
 
-         $('#wecPrintReport').click(function () {
-             alert('sorryNoPrintView');
-         });
+         $('#wecPrintReport').click(
+             function () {
+                 window.open('/Reports/PrintView?date='+$('#wecDate').val()+'&typeOfReport=weekly');
+             });
 
-         $('#mwdPrintReport').click(function () {
-             alert('sorryNoPrintView');
-         });
+         $('#mwdPrintReport').click(
+             function () {
+                 window.open('/Reports/PrintView?date='+$('#mwdDate').val()+'&typeOfReport=monthly');
+             });
 
 
          $('#dclSpreadsheet').click(function () {

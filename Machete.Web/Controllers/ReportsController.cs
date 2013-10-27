@@ -92,6 +92,9 @@ namespace Machete.Web.Controllers
 
         #region ExternalViews
 
+        //This one seems to be a lot of effort for nothing. The model is passed
+        //into the partial view by the Razor call (@Html.Partial) -- nothing here
+        //currently happens.
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult PrintPartial(ReportPrintView model)
         {
