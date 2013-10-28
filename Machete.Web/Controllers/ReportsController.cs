@@ -176,6 +176,7 @@ namespace Machete.Web.Controllers
                             dwcPropio = d.dwcPropio,
                             hhhList = d.hhhList,
                             hhhPropio = d.hhhPropio,
+                            uniqueSignins = d.uniqueSignins,
                             totalSignins = d.totalSignins,
                             totalAssignments = d.totalAssignments,
                             cancelledJobs = d.cancelledJobs
@@ -258,6 +259,7 @@ namespace Machete.Web.Controllers
                          select new { 
                              date = System.String.Format("{0:MM/dd/yyyy}", d.date),
                              totalSignins = d.totalSignins.ToString(),
+                             uniqueSignins = d.uniqueSignins.ToString(),
                              totalDWCSignins =  d.totalDWCSignins.ToString(),
                              totalHHHSignins =  d.totalHHHSignins.ToString(),
                              dispatchedDWCSignins = d.dispatchedDWCSignins.ToString(),

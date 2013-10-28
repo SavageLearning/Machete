@@ -20,9 +20,7 @@ using NLog;
 
 namespace Machete.Service
 {
-    // Other interfaces implement IService, which is a tool for writing a type of record.
-    // No writing necessary here. Only reporting.
-
+    //No writing necessary. Only fetching data.
     public interface IReportService : IReportBase
     {
         dataTableResult<dailyData> DailyView(DateTime dclDate);
@@ -53,7 +51,9 @@ namespace Machete.Service
             int query = 0;
             var wsiQ = wsiRepo.GetAllQ();
 
-            query = wsiQ.Where(whr => EntityFunctions.TruncateTime(whr.dateforsignin) == EntityFunctions.TruncateTime(beginDate)).Count();
+            query = wsiQ
+                .Where(whr => EntityFunctions.TruncateTime(whr.dateforsignin) == EntityFunctions.TruncateTime(beginDate))
+                .Count();
 
             return query;
         }
@@ -88,27 +88,6 @@ namespace Machete.Service
             return query;
         }
 
-
-        // Note: Please do NOT create a "count returning signins" class; returning signins are signins minus unique signins
-        // for any given date range. Keep it simple!
-
-        // TO DO: This is currently just a copy of the regular signins method. Need to modify it to get unique signins.
-
-        /// <summary>
-        /// A simple count of unique worker signins for a single day.
-        /// </summary>
-        /// <param name="beginDate"></param>
-        /// <returns></returns>
-        public int CountUniqueSignins(DateTime beginDate)
-        {
-            //didn't actually do this part, set it up so compiler would hush
-            int query = 0;
-            var wsiQ = wsiRepo.GetAllQ();
-
-            query = wsiQ.Where(whr => EntityFunctions.TruncateTime(whr.dateforsignin) == EntityFunctions.TruncateTime(beginDate)).Count();
-
-            return query;
-        }
         /// <summary>
         /// A simple count of worker signins for the given period.
         /// </summary>
@@ -117,30 +96,40 @@ namespace Machete.Service
         /// <returns>int</returns>
         public IQueryable<reportUnit> CountUniqueSignins(DateTime beginDate, DateTime endDate)
         {
-            //didn't actually do this part, set it up so compiler would hush
             IQueryable<reportUnit> query;
             var wsiQ = wsiRepo.GetAllQ();
 
             beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
             endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
-            // this seems to work fine, though in other methods
-            // it's preferable to do truncation before
-            // the GroupBy clause.
+            //;WITH foo AS
+            //( FROM dbo.WorkerSignins
             query = wsiQ
-                .Where(whr => whr.dateforsignin >= beginDate
-                           && whr.dateforsignin <= endDate)
-                .GroupBy(gb => EntityFunctions.TruncateTime(gb.dateforsignin))
+            // WHERE dateforsignin <= endDate
+                .Where(whr => whr.dateforsignin <= endDate)
+            // GROUP BY dwccardnum
+                .GroupBy(gb => gb.dwccardnum)
+            // SELECT dwccardnum, MIN(dateforsignin) AS firstSignin
+                .Select(group => new {
+                    dwccardnum = group.Key,
+                    firstSignin = group.Min(m => m.dateforsignin)
+                })
+            //)
+            // FROM foo
+            // WHERE firstSignin >= beginDate
+                .Where(whr => whr.firstSignin >= beginDate)
+            // GROUP BY fistSignin
+                .GroupBy(gb => EntityFunctions.TruncateTime(gb.firstSignin))
+            // SELECT firstSignin as date, COUNT(dwccardnum) AS count;
                 .Select(g => new reportUnit
                 {
                     date = g.Key,
                     count = g.Count(),
                     info = ""
                 });
-
+            //GO
             return query;
         }
-
 
         public int CountAssignments(DateTime beginDate)
         {
@@ -161,7 +150,6 @@ namespace Machete.Service
 
             return query;
         }
-
 
         public IQueryable<reportUnit> CountAssignments(DateTime beginDate, DateTime endDate)
         {
@@ -191,7 +179,6 @@ namespace Machete.Service
 
             return query;
         }
-
 
         public int CountCancelled(DateTime beginDate)
         {
@@ -407,12 +394,14 @@ namespace Machete.Service
         {
             IEnumerable<TypeOfDispatchReport> dclCurrent;
             IEnumerable<reportUnit> dailySignins;
+            IEnumerable<reportUnit> dailyUnique;
             IEnumerable<reportUnit> dailyAssignments;
             IEnumerable<reportUnit> dailyCancelled;
             IEnumerable<dailyData> q;
 
             dclCurrent = CountTypeofDispatch(beginDate, endDate).ToList();
             dailySignins = CountSignins(beginDate, endDate).ToList();
+            dailyUnique = CountUniqueSignins(beginDate, endDate).ToList();
             dailyAssignments = CountAssignments(beginDate, endDate).ToList();
             dailyCancelled = CountCancelled(beginDate, endDate).ToList();
 
@@ -424,6 +413,7 @@ namespace Machete.Service
                     dwcPropio = group.dwcPropio,
                     hhhList = group.hhhList,
                     hhhPropio = group.hhhPropio,
+                    uniqueSignins = dailyUnique.Where(whr => whr.date == group.date).Select(g => g.count).FirstOrDefault(),
                     totalSignins = dailySignins.Where(whr => whr.date == group.date).Select(g => g.count).FirstOrDefault(),
                     totalAssignments = dailyAssignments.Where(whr => whr.date == group.date).Select(g => g.count).FirstOrDefault(),
                     cancelledJobs = dailyCancelled.Count() > 0 ? dailyCancelled.Where(whr => whr.date == group.date).Select(g => g.count).FirstOrDefault() : 0
@@ -473,11 +463,13 @@ namespace Machete.Service
         public IEnumerable<monthlyData> MonthlyController(DateTime beginDate, DateTime endDate)
         {
             IEnumerable<reportUnit> signins;
+            IEnumerable<reportUnit> unique;
             IEnumerable<TypeOfDispatchReport> dispatch;
             IEnumerable<AverageWages> average;
             IEnumerable<monthlyData> q; // query for monthlyWithDetail result
 
             signins = CountSignins(beginDate, endDate).ToList();
+            unique = CountUniqueSignins(beginDate, endDate).ToList();
             dispatch = CountTypeofDispatch(beginDate, endDate).ToList();
             average = HourlyWageAverage(beginDate, endDate).ToList();
 
@@ -486,6 +478,7 @@ namespace Machete.Service
                 {
                     date = g.date,
                     totalSignins = signins.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
+                    uniqueSignins = unique.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
                     totalDWCSignins = dispatch.Where(whr => whr.date == g.date).Select(h => h.dwcList).FirstOrDefault(),
                     totalHHHSignins = dispatch.Where(whr => whr.date == g.date).Select(h => h.hhhList).FirstOrDefault(),
                     dispatchedDWCSignins = dispatch.Where(whr => whr.date == g.date).Select(h => h.dwcPropio).FirstOrDefault(),
@@ -548,7 +541,7 @@ namespace Machete.Service
             IEnumerable<dailyData> query;
             
             beginDate = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
-            endDate = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59).AddDays(DateTime.DaysInMonth(date.Year, date.Month + 1));
+            endDate = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);//.AddDays(DateTime.DaysInMonth(date.Year, date.Month + 1));
 
             query = DailyController(beginDate, endDate);
 
@@ -634,6 +627,7 @@ namespace Machete.Service
         public int? hhhList { get; set; }
         public int? hhhPropio { get; set; }
         public int? totalSignins { get; set; }
+        public int? uniqueSignins { get; set; }
         public int? cancelledJobs { get; set; }
         public int? totalAssignments { get; set; }
     }
@@ -664,6 +658,7 @@ namespace Machete.Service
     {
         public DateTime? date { get; set; }
         public int? totalSignins { get; set; }
+        public int? uniqueSignins { get; set; }
         public int? totalDWCSignins { get; set; }
         public int? totalHHHSignins { get; set; }
         public int? dispatchedDWCSignins { get; set; }

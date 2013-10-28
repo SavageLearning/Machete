@@ -2,6 +2,8 @@
 //
 // JSON2CSV
 // Credit and thanks: http://stackoverflow.com/users/64741/zachary
+//
+
 function JSON2CSV(objArray) {
     var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
 
@@ -31,16 +33,14 @@ function JSON2CSV(objArray) {
     return str;
 };
 
-//The square brackets may be annoying, however the JSON object sometimes
-//contains multiple results. Without more time to spend on this, this
-//gives folks a way to open up their data in Excel or Google Spreadsheets
-//and do what they want to with it.
+//Removing the initial commas because the report data may contain commas
+//from the service level. This isn't ideal, but the idea is that they
+//get what they see as far as the reports are concerned.
 function json2spreadsheet(objArray) {
     var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
 
     var str = '';
     var line = '';
-    //var head = array[0];
 
     for (var index in array[0]) {
         line += index + ',';
@@ -57,7 +57,6 @@ function json2spreadsheet(objArray) {
             line = line.replace(/,/g, '') + 'comma';
         }
 
-        //line = line.slice(0, -1);
         line = line.replace(/comma/g, ',');
         line = line.replace(/\r?\n|\r/g, '');
         str += line + '\r\n';
@@ -133,10 +132,11 @@ function dclTableDefaults(lang, date)
             { mDataProp: "dwcList" }, 
             { mDataProp: "dwcPropio" }, 
             { mDataProp: "hhhList" }, 
-            { mDataProp: "hhhPropio" }, 
+            { mDataProp: "hhhPropio" },
+            { mDataProp: "uniqueSignins" },
             { mDataProp: "totalSignins" }, 
             { mDataProp: "totalAssignments" },
-            { mDataProp: "cancelledJobs" }
+            { mDataProp: "cancelledJobs" },
         ], //these are the column names in the array; total # must match
         "fnServerData": function (sSource, aoData, fnCallback) {
             aoData.push({ "name": "todaysdate", "value": date });
@@ -200,13 +200,14 @@ function mwdTableDefaults(lang, date)
         "aoColumns": [
             { mDataProp: "date" },
             { mDataProp: "totalSignins" },
+            { mDataProp: "uniqueSignins" },
             { mDataProp: "totalDWCSignins" },
             { mDataProp: "totalHHHSignins" },
             { mDataProp: "dispatchedDWCSignins" },
             { mDataProp: "dispatchedHHHSignins" },
             { mDataProp: "totalHours" },
             { mDataProp: "totalIncome" },
-            { mDataProp: "avgIncomePerHour" }
+            { mDataProp: "avgIncomePerHour" },
         ], // column names; must match # of cols. in table
         "fnServerData": function ( sSource, aoData, fnCallback ) {
             aoData.push({ "name": "todaysdate", "value": date });
@@ -231,8 +232,8 @@ function jzcTableDefaults(lang, date)
         "bFilter": false, //enable or disable filtering of data
         "bServerSide": true, //server side processing, req. source
         "sAjaxSource": "/Reports/AjaxJobsZipCodes", //source for server side processing
-        "bProcessing": false, //enable processing indicator
-        "oLanguage": lang, //internationalisation
+        "bProcessing": false,
+        "oLanguage": lang,
         "aoColumns": [
             { mDataProp: "date" },
             { mDataProp: "topZips" },
@@ -249,4 +250,49 @@ function jzcTableDefaults(lang, date)
         }
     };
     return jzcDefaults;
+};
+
+
+////////////////////////////////-/+/X/
+///                                ///
+/// Pass this thing a JSON object, ///
+/// and assuming the date column   ///
+/// is the first column, it will   ///
+/// slice it up into lines that    ///
+/// can be used by jqPlot as pies. ///
+///                                ///
+/// ////////////////////////////// ///
+
+function jqPieSlicer(objArray)
+{
+    var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+    var lines = new Array();
+    var dates = new Array();
+
+    for (var index in array[0]) {
+        //here, we are creating pies: ['Slice', int], ['Slice2', int]
+        var x = 1;
+        for (var n = 0; n < array.length; n++)
+        {
+            lines[n] += '[' + index + ', ' + array[x][index] + '], ';
+            x++;
+        }
+
+        //can't make a pie chart of the date column
+        if (index == 'date')
+        {
+            for (var i = 0; i < array.length; i++) {
+                line[i] = line[i].slice(0, -2);
+            }
+            var dates = lines;
+            var lines = new Array();
+        }
+    }
+
+    for (var i = 0; i < array.length; i++)
+    {
+        line[i] = line[i].slice(0, -2);
+    }
+
+    return [ dates, lines ];
 };

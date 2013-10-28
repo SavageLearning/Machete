@@ -791,7 +791,6 @@
     <Content Include="Views\Reports\Activities.cshtml" />
     <Content Include="Views\Reports\SSRS.cshtml" />
     <Content Include="Views\Reports\PrintView.cshtml" />
-    <Content Include="Views\Reports\PrintPartial.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

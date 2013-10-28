@@ -93,7 +93,17 @@ namespace Machete.Test.IntegrationTests.Services
             Console.WriteLine(result);
             //Assert
         }
-
+        [TestMethod]
+        public void Integration_Reports_Service_CountUniqueSignins()
+        {
+            //Arrange
+            //Act
+            DateTime beginDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 17, 0, 0, 0);
+            DateTime endDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 17, 23, 59, 59);
+            var result = frb.ToServReports().CountUniqueSignins(beginDate, endDate);
+            Console.WriteLine(result);
+            //Assert
+        }
 
     }
 }
