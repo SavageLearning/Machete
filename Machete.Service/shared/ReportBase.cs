@@ -23,7 +23,6 @@ namespace Machete.Service.shared
     {
         int CountSignins(DateTime beginDate);
         IQueryable<reportUnit> CountSignins(DateTime beginDate, DateTime endDate);
-        int CountUniqueSignins(DateTime beginDate);
         IQueryable<reportUnit> CountUniqueSignins(DateTime beginDate, DateTime endDate);
         int CountAssignments(DateTime beginDate);
         IQueryable<reportUnit> CountAssignments(DateTime beginDate, DateTime endDate);

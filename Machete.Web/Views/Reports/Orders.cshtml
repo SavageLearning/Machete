@@ -70,7 +70,7 @@
         //
         //make stuff do stuff
 
-        //////////////////// | DATEPICKER |
+        //////////////////////////// | DATEPICKER |
         //
         //
         $('.ui-datepicker').datepicker({
@@ -97,7 +97,8 @@
             jzcNewTable();
         });
 
-        //////////////////////////////////////////////////////////////////////// | DATATABLES |
+        ////////////////////////////////////////////////////////////////////////////// | DATATABLES |
+        //
         //
         var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
 
@@ -107,10 +108,9 @@
             $('#jzcDataTable').dataTable(jzcNewTable).fnReloadAjax();
         };
 
-        //////////////////////////// | BUTTONS |
-        ///    
-        ///             
-
+        //////////////////////////////////////////////////////////////////////////////////// | BUTTONS |
+        //    
+        //             
 
         $('#jzcDataRefreshBtn').click(
             function () {

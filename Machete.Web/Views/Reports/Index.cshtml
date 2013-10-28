@@ -39,6 +39,7 @@
                         <th>@Machete.Web.Resources.Reports.dwcPropio</th>
                         <th>@Machete.Web.Resources.Reports.hhhList</th>
                         <th>@Machete.Web.Resources.Reports.hhhPropio</th>
+                        <th>Unique</th>
                         <th>@Machete.Web.Resources.Reports.totalSignins</th>
                         <th>@Machete.Web.Resources.Reports.totalAssignments</th>
                         <th>@Machete.Web.Resources.Reports.cancelledJobs</th>
@@ -81,6 +82,7 @@
                     <tr>
                         <th>@Machete.Web.Resources.Reports.date</th>
                         <th>@Machete.Web.Resources.Reports.totalSignins</th>
+                        <th>Unique</th>
                         <th>@Machete.Web.Resources.Reports.dwcSignins</th>
                         <th>@Machete.Web.Resources.Reports.hhhSignins</th>
                         <th>@Machete.Web.Resources.Reports.dwcDispatch</th>
@@ -98,7 +100,9 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        // hide the following ///////////////////////|X|
+
+        //
+        // hide stuff 
         //  
         $('#dclTable').hide(); // Daily (Casa Latina) table
         $('#wecTable').hide(); // Weekly (El Centro) table
@@ -113,31 +117,7 @@
         // these three show up when someone is taking their time picking a date
         // to instruct them how to proceed.
 
-        //////////////////// | ACCORDIONS |
-        //
-        $('#reportTabs').tabs();
-        $('#summaryHide').click(
-            function () {
-                $('#summaryPopup').hide();
-            });
 
-        $('#summaryReports').accordion({
-                collapsible: true,
-                active: false,
-                autoHeight: false
-            });
-
-        $('#dclLink').click(function () {
-            dclNewTable();
-        });
-
-        $('#wecLink').click(function () {
-            wecNewTable();
-        });
-
-        $('#mwdLink').click(function () {
-            mwdNewTable();
-        });
 
         ////////////////////// | the date-pickerers |
 
@@ -226,9 +206,37 @@
 
         $('.ui-mwd-datepicker').change(
             function (event) {
-                mwdNewTable["todaysdate"] = $('#mwdDate').val();
-                $('#mwdDataTable').dataTable(mwdNewTable).fnReloadAjax();
+                mwdNewTable();
             });
+
+
+        //////////////////// | ACCORDIONS |
+        //
+        //
+        $('#reportTabs').tabs();
+        $('#summaryHide').click(
+            function () {
+                $('#summaryPopup').hide();
+            });
+
+        $('#summaryReports').accordion({
+            collapsible: true,
+            active: false,
+            autoHeight: false
+        });
+
+        $('#dclLink').click(function () {
+            dclNewTable();
+        });
+
+        $('#wecLink').click(function () {
+            wecNewTable();
+        });
+
+        $('#mwdLink').click(function () {
+            mwdNewTable();
+        });
+
 
 
         //////////////////////////////////////////////////////////////////////// | DATATABLES |
