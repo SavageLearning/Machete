@@ -60,12 +60,11 @@
                         <th>@Machete.Web.Resources.Reports.weekday</th>
                         <th>@Machete.Web.Resources.Reports.date</th>
                         <th>@Machete.Web.Resources.Reports.totalSignins</th>
-                        <th>@Machete.Web.Resources.Reports.noWeekJobs</th>
-                        <th>@Machete.Web.Resources.Reports.weekJobsSect</th>
-                        <th>No.</th>
+                        <th>@Machete.Web.Resources.Reports.totalAssignments</th>
                         <th>@Machete.Web.Resources.Reports.weekEstDailyHours</th>
                         <th>@Machete.Web.Resources.Reports.weekEstPayment</th>
                         <th>@Machete.Web.Resources.Reports.weekHourlyWage</th>
+                        <th></th>
                     </tr>
                 </thead>
             </table>
@@ -237,13 +236,12 @@
             mwdNewTable();
         });
 
-
-
         //////////////////////////////////////////////////////////////////////// | DATATABLES |
         //
         // Looking for the table properties? Try reports.js in ~/Web/Scripts
         //
         var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
+        var wecOpen = false;
 
         function dclNewTable() {
             var dclNewTable = $.extend(true, {}, dclTableDefaults(lang, $('#dclDate').val()));
@@ -252,10 +250,22 @@
         };
 
         function wecNewTable() {
-            var wecNewTable = $.extend(true, {}, wecTableDefaults(lang, $('#wecDate').val()));
-            wecNewTable["bDestroy"] = "true,";
-            $('#wecDataTable').dataTable(wecNewTable).fnReloadAjax();
+            var wecTable = $.extend(true, {}, wecTableDefaults(lang, $('#wecDate').val()));
+            wecTable["bDestroy"] = "true,";
+            $('#wecDataTable').dataTable(wecTable).fnReloadAjax();
         };
+
+        function wecTableOpenRow(nTr) {
+            var wecTable = $.extend(true, {}, wecTableDefaults(lang, $('#wecDate').val()));
+            wecTable["bDestroy"] = "true,";
+            wecTable.fnOpen(nTr, fnFormatDetails(), 'details');
+        }
+
+        function wecTableCloseRow(nTr) {
+            var wecTable = $.extend(true, {}, wecTableDefaults(lang, $('#wecDate').val()));
+            wecTable["bDestroy"] = "true,";
+            wecTable.fnClose(nTr);
+        }
 
         function mwdNewTable() {
             var mwdNewTable = $.extend(true, {}, mwdTableDefaults(lang, $('#mwdDate').val()));
@@ -263,9 +273,44 @@
             $('#mwdDataTable').dataTable(mwdNewTable).fnReloadAjax();
         };
 
+        function childNewTable(nTr) {
+            var childDate = nTr.td[2].val();
+            var childTable = $.extend(true, {}, wecChildDefaults(lang, childDate));
+            childTable["bDestroy"] = "true,";
+            $('#wecTableChild').dataTable(childTable).fnReloadAjax();
+        };
+
+        $('#wecDataTable tbody td img').live('click', function () {
+
+            var nTr = $(this).parents('tr')[0];
+            
+            if (wecOpen == true) {
+                wecTableCloseRow(nTr);
+            } else {
+                wecTableOpenRow(nTr);
+                childNewTable(nTr);
+                wecOpen = true;
+
+            }
+        });
+
+        function fnFormatDetails() {
+            var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;" id="wecTableChild">';
+            sOut += '<thead><tr><th>Date</th></tr>';
+            sOut += '<tr><th>Skill</th></tr>';
+            sOut += '<tr><th>Count</th></tr>';
+            sOut += '</thead>';
+            sOut += '</table>';
+            return sOut;
+        }
+
+
         ///////////////////////////////////////////////////////////////////////////////// | BUTTONS |
         //
         //
+
+        // | REFRESH |
+
         $('#dclDataOnlyBtn').click(
             function () {
                 dclNewTable();
@@ -279,7 +324,9 @@
         $('#mwdDataOnlyBtn').click(
             function () {
                 mwdNewTable();
-        });
+            });
+
+        // | PRINT VIEWS |
 
          $('#dclPrintReport').click(
              function () {
@@ -296,7 +343,7 @@
                  window.open('/Reports/PrintView?date='+$('#mwdDate').val()+'&typeOfReport=monthly');
              });
 
-
+        // | SPREADSHEETS |
          $('#dclSpreadsheet').click(function () {
              var url = "/Reports/AjaxDcl";
              var data = { todaysdate: $('#dclDate').val() };
@@ -326,6 +373,8 @@
                  download(jcsv, "reports.csv", "text/csv");
              });
          });
+
+
         //
         //
     });

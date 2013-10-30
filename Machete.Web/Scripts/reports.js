@@ -166,19 +166,52 @@ function wecTableDefaults(lang, date)
             { mDataProp: "weekday" },
             { mDataProp: "date" },
             { mDataProp: "totalSignins" },
-            { mDataProp: "noWeekJobs" },
-            { mDataProp: "weekJobsSector" },
-            { mDataProp: "weekJobsSectorCt" },
+            { mDataProp: "totalAssignments" },
             { mDataProp: "weekEstDailyHours" },
             { mDataProp: "weekEstPayment" },
             { mDataProp: "weekHourlyWage" },
-        ], 
+            {
+                mDataProp: null,
+                sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="childquery">'
+            },
+        ],
         "fnServerData": function (sSource, aoData, fnCallback) {
-            aoData.push({ "name": "todaysdate", "value": date });
+            aoData.push(
+                { "name": "todaysdate", "value": date });
             $.getJSON(sSource, aoData, function (json) {
                 /* Do whatever additional processing you want on the callback, then tell DataTables */
                 fnCallback(json)
-            });
+            })
+        }
+    };
+    return wecDefaults;
+};
+
+function wecChildDefaults(lang, date) {
+    var wecDefaults = {
+        "bPaginate": false, // (this report has fixed size)
+        "bAutoWidth": false,
+        "bDestroy": false,
+        "bInfo": true,
+        "bSort": false,
+        "bFilter": false,
+        "bServerSide": true,
+        "sAjaxSource": "/Reports/AjaxJobs",
+        "bProcessing": false,
+        "oLanguage": lang,
+        "aoColumns": [
+            { mDataProp: "date" },
+            { mDataProp: "skill" },
+            { mDataProp: "count" }
+        ],
+        "fnServerData": function (sSource, aoData, fnCallback) {
+            aoData.push(
+                //THIS HAS TO BE THE CHILD DATE NOT THE FORM DATE
+                { "name": "todaysdate", "value": date });
+            $.getJSON(sSource, aoData, function (json) {
+                /* Do whatever additional processing you want on the callback, then tell DataTables */
+                fnCallback(json)
+            })
         }
     };
     return wecDefaults;
@@ -253,46 +286,89 @@ function jzcTableDefaults(lang, date)
 };
 
 
-////////////////////////////////-/+/X/
-///                                ///
-/// Pass this thing a JSON object, ///
-/// and assuming the date column   ///
-/// is the first column, it will   ///
-/// slice it up into lines that    ///
-/// can be used by jqPlot as pies. ///
-///                                ///
-/// ////////////////////////////// ///
-
-function jqPieSlicer(objArray)
-{
+function signinPie(objArray) {
     var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
-    var lines = new Array();
-    var dates = new Array();
 
-    for (var index in array[0]) {
-        //here, we are creating pies: ['Slice', int], ['Slice2', int]
-        var x = 1;
-        for (var n = 0; n < array.length; n++)
-        {
-            lines[n] += '[' + index + ', ' + array[x][index] + '], ';
-            x++;
-        }
+    var dwc = 0;
+    var dwcPropio = 0;
+    var hhh = 0;
+    var hhhPropio = 0;
+    var unique = 0;
+    var total = 0;
+    var totalAssigned = 0;
 
-        //can't make a pie chart of the date column
-        if (index == 'date')
-        {
-            for (var i = 0; i < array.length; i++) {
-                line[i] = line[i].slice(0, -2);
-            }
-            var dates = lines;
-            var lines = new Array();
-        }
+    var pie = '';
+
+    for (var i = 0; i < array.aaData.length; i++) {
+        dwc += array.aaData[i].dwcList;
+        dwcPropio += array.aaData[i].dwcPropio;
+        hhh += array.aaData[i].hhhList;
+        hhhPropio += array.aaData[i].hhhPropio;
+        unique += array.aaData[i].uniqueSignins;
+        total += array.aaData[i].totalSignins;
+        totalAssigned += array.aaData[i].totalAssignments;
     }
 
-    for (var i = 0; i < array.length; i++)
-    {
-        line[i] = line[i].slice(0, -2);
+    pie += '[\'DWC List\', ' + dwc + '],[\'Propio (DWC)\', ' + dwcPropio + '],[\'HHH List\', ' + hhh + '],[\'Propio (HHH)\',' + hhhPropio + ']';
+
+    return pie;
+}
+
+function gotWorkPie(objArray) {
+    var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+
+    var dwc = 0;
+    var dwcPropio = 0;
+    var hhh = 0;
+    var hhhPropio = 0;
+    var unique = 0;
+    var total = 0;
+    var totalAssigned = 0;
+
+    var pie = '';
+
+    for (var i = 0; i < array.aaData.length; i++) {
+        dwc += array.aaData[i].dwcList;
+        dwcPropio += array.aaData[i].dwcPropio;
+        hhh += array.aaData[i].hhhList;
+        hhhPropio += array.aaData[i].hhhPropio;
+        unique += array.aaData[i].uniqueSignins;
+        total += array.aaData[i].totalSignins;
+        totalAssigned += array.aaData[i].totalAssignments;
     }
 
-    return [ dates, lines ];
-};
+    pie += '[\'Total Signed In\', ' + total + '],[\'Total Assigned\', ' + totalAssigned + ']';
+
+    return pie;
+}
+
+function newSigninPie(objArray) {
+    var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+
+    var dwc = 0;
+    var dwcPropio = 0;
+    var hhh = 0;
+    var hhhPropio = 0;
+    var unique = 0;
+    var total = 0;
+    var totalAssigned = 0;
+
+    var pie = '';
+
+    for (var i = 0; i < array.aaData.length; i++) {
+        dwc += array.aaData[i].dwcList;
+        dwcPropio += array.aaData[i].dwcPropio;
+        hhh += array.aaData[i].hhhList;
+        hhhPropio += array.aaData[i].hhhPropio;
+        unique += array.aaData[i].uniqueSignins;
+        total += array.aaData[i].totalSignins;
+        totalAssigned += array.aaData[i].totalAssignments;
+    }
+
+    total = total - unique;
+
+    pie += '[\'Total Signed In\', ' + total + '],[\'New Signins\', ' + unique + ']';
+
+    return pie;
+}
+

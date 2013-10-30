@@ -27,6 +27,7 @@ namespace Machete.Service
         dataTableResult<weeklyData> WeeklyView(DateTime wecDate);
         dataTableResult<monthlyData> monthlyView(DateTime mwdDate);
         dataTableResult<jzcData> jzcView(DateTime jzcDate);
+        dataTableResult<reportUnit> jobsView(DateTime jobsDate);
     }
 
     public class ReportService : ReportBase, IReportService
@@ -413,7 +414,7 @@ namespace Machete.Service
                     dwcPropio = group.dwcPropio,
                     hhhList = group.hhhList,
                     hhhPropio = group.hhhPropio,
-                    uniqueSignins = dailyUnique.Where(whr => whr.date == group.date).Select(g => g.count).FirstOrDefault(),
+                    uniqueSignins = dailyUnique.Where(whr => whr.date == group.date).Select(g => g.count).FirstOrDefault() ?? 0,
                     totalSignins = dailySignins.Where(whr => whr.date == group.date).Select(g => g.count).FirstOrDefault(),
                     totalAssignments = dailyAssignments.Where(whr => whr.date == group.date).Select(g => g.count).FirstOrDefault(),
                     cancelledJobs = dailyCancelled.Count() > 0 ? dailyCancelled.Where(whr => whr.date == group.date).Select(g => g.count).FirstOrDefault() : 0
@@ -444,12 +445,6 @@ namespace Machete.Service
                     date = g.date,
                     totalSignins = weeklySignins.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
                     noWeekJobs = weeklyAssignments.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
-                    weekJobsSector = weeklyJobsBySector
-                        .Where(whr => whr.date == g.date)
-                        .Aggregate("", (a, b) => b.info + ", " + a),
-                    weekJobsSectorCount = weeklyJobsBySector
-                        .Where(whr => whr.date == g.date)
-                        .Aggregate("", (a, b) => b.count + ", " + a),
                     weekEstDailyHours = g.hours,
                     weekEstPayment = g.wages,
                     weekHourlyWage = g.avg
@@ -598,6 +593,22 @@ namespace Machete.Service
             return result;
         }
 
+        public dataTableResult<reportUnit> jobsView(DateTime jobsDate)
+        {
+            DateTime beginDate;
+                DateTime endDate;
+            IEnumerable<reportUnit> query;
+
+            beginDate = new DateTime(jobsDate.Year, jobsDate.Month, jobsDate.Day, 0, 0, 0);
+            endDate = new DateTime(jobsDate.Year, jobsDate.Month, jobsDate.Day, 23, 59, 59);
+
+            query = ListJobs(beginDate, endDate);
+            
+            var result = GetDataTableResult<reportUnit>(query);
+
+            return result;
+        }
+
         public dataTableResult<T> GetDataTableResult<T>(IEnumerable<T> query)
         {
             var result = new dataTableResult<T>();
@@ -642,8 +653,6 @@ namespace Machete.Service
         public DateTime? date { get; set; }
         public int? totalSignins { get; set; }
         public int? noWeekJobs { get; set; }
-        public string weekJobsSector { get; set; }
-        public string weekJobsSectorCount { get; set; }
         public int? weekEstDailyHours { get; set; }
         public double? weekEstPayment { get; set; }
         public double? weekHourlyWage { get; set; }

@@ -92,50 +92,6 @@ namespace Machete.Web.Controllers
 
         #region ExternalViews
 
-        //This one seems to be a lot of effort for nothing. The model is passed
-        //into the partial view by the Razor call (@Html.Partial) -- nothing here
-        //currently happens.
-        [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult PrintPartial(ReportPrintView model)
-        {
-            if (model.typeOfReport == "monthly")
-            {
-                MonthlyReportPrintView view = new MonthlyReportPrintView();
-                view.report = repServ.monthlyView(model.date);
-                view.date = model.date;
-                view.typeOfReport = model.typeOfReport;
-                return PartialView(view);
-            }
-            else if (model.typeOfReport == "weekly")
-            {
-                WeeklyReportPrintView view = new WeeklyReportPrintView();
-                view.report = repServ.WeeklyView(model.date);
-                view.date = model.date;
-                view.typeOfReport = model.typeOfReport;
-                return PartialView(view);
-            }
-            else if (model.typeOfReport == "daily")
-            {
-                DailyReportPrintView view = new DailyReportPrintView();
-                view.report = repServ.DailyView(model.date);
-                view.date = model.date;
-                view.typeOfReport = model.typeOfReport;
-                return PartialView(view);
-            }
-            else if (model.typeOfReport == "jobsandzips")
-            {
-                JzcReportPrintView view = new JzcReportPrintView();
-                view.report = repServ.jzcView(model.date);
-                view.date = model.date;
-                view.typeOfReport = model.typeOfReport;
-                return PartialView(view);
-            }
-            else
-            {
-                throw new Exception("Error: Report type to be printed not found.");
-            }
-        }
-
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult PrintView(DateTime date, string typeOfReport)
         {
@@ -217,11 +173,9 @@ namespace Machete.Web.Controllers
                     weekday = d.dayofweek.ToString(),
                     date = System.String.Format("{0:MM/dd/yyyy}", d.date),
                     totalSignins = d.totalSignins,
-                    noWeekJobs = d.noWeekJobs,
-                    weekJobsSector = d.weekJobsSector,
-                    weekJobsSectorCt = d.weekJobsSectorCount,
+                    totalAssignments = d.noWeekJobs,
                     weekEstDailyHours = d.weekEstDailyHours,
-                    weekEstPayment = d.weekEstPayment,
+                    weekEstPayment = System.String.Format("{0:C}", d.weekEstPayment),
                     weekHourlyWage = System.String.Format("{0:C}", d.weekHourlyWage)
                 };
 
@@ -244,7 +198,6 @@ namespace Machete.Web.Controllers
         /// <param name="param">contains paramters for filtering</param>
         /// <returns>JsonResult for DataTables consumption</returns>
         [Authorize(Roles = "Administrator, Manager")]
-        //and then, all hell breaks loose
         public ActionResult AjaxMwd(jQueryDataTableParam param)
         {
             DateTime mwdDate;
@@ -307,6 +260,36 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult AjaxJobs(jQueryDataTableParam param)
+        {
+            DateTime jobsDate;
+
+            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
+            if (vo.date != null) jobsDate = DateTime.Parse(vo.date.ToString());
+            else jobsDate = DateTime.Now;
+
+            dataTableResult<reportUnit> jobs = repServ.jobsView(jobsDate);
+
+            var result = from d in jobs.query
+                         select new
+                         {
+                             date = System.String.Format("{0:MM/dd/yyyy}", d.date),
+                             count = d.count,
+                             info = d.info
+                         };
+
+            return Json(new
+            {
+                iTotalRecords = jobs.totalCount,
+                iTotalDisplayRecords = jobs.filteredCount,
+                sEcho = param.sEcho,
+                aaData = result
+            },
+JsonRequestBehavior.AllowGet);
+
+        }
+
         #endregion
 
     }
