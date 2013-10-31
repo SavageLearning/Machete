@@ -179,7 +179,7 @@ namespace Machete.Web.Controllers
                              topJobs = from j in d.topJobs
                                        select new
                                        {
-                                           date = j.date,
+                                           date = System.String.Format("{0:MM/dd/yyyy}", j.date),
                                            skill = j.info,
                                            count = j.count
                                        }

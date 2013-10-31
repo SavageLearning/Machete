@@ -261,7 +261,6 @@
                 {
                 "bPaginate": false, // (this report has fixed size)
                 "bAutoWidth": false,
-                "bDestroy": false,
                 "bInfo": true, 
                 "bSort": false, 
                 "bFilter": false, 
@@ -317,8 +316,8 @@
         function fnFormatDetails(oTable, nTr) {
             var aData = oTable.fnGetData(nTr);
             var jobList = aData['topJobs'];
-            var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;" id="wecTableChild">';
-            sOut += '<thead><tr><th>Date</th></tr>';
+            var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="margin-left: 13.5%;background: #90A2B6;border: solid 2px gray;border-collapse: separate;">';
+            sOut += '<thead><tr><th>Date</th>';
             sOut += '<th>Skill</th>';
             sOut += '<th>Count</th>';
             sOut += '</tr></thead><tbody>';
