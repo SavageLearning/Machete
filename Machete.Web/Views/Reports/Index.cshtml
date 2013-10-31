@@ -99,6 +99,41 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        //PESKY VARS
+        var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
+        var oWecTable = {
+            "bPaginate": false, // (this report has fixed size)
+            "bAutoWidth": false,
+            "bInfo": true, 
+            "bSort": false, 
+            "bFilter": false, 
+            "bServerSide": true, 
+            "sAjaxSource": "/Reports/AjaxWec", 
+            "bProcessing": false, 
+            "oLanguage": lang, 
+            "aoColumns": [
+                { mDataProp: "weekday" },
+                { mDataProp: "date" },
+                { mDataProp: "totalSignins" },
+                { mDataProp: "totalAssignments" },
+                { mDataProp: "weekEstDailyHours" },
+                { mDataProp: "weekEstPayment" },
+                { mDataProp: "weekHourlyWage" },
+                {
+                    mDataProp: null,
+                    sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="nestedDetailsButton">'
+                },
+            ],
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                aoData.push(
+                    { "name": "todaysdate", "value": $('#wecDate').val() });
+                $.getJSON(sSource, aoData, function (json) {
+                    /* Do whatever additional processing you want on the callback, then tell DataTables */
+                    fnCallback(json);
+                })
+            }
+        };
+        var wec = $('#wecDataTable').dataTable(oWecTable);
 
         //
         // hide stuff 
@@ -240,7 +275,6 @@
         //
         // Looking for the table properties? Try reports.js in ~/Web/Scripts
         //
-        var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
 
         function dclNewTable() {
             var dclNewTable = $.extend(true, {}, dclTableDefaults(lang, $('#dclDate').val()));
@@ -249,63 +283,9 @@
         };
 
         function wecNewTable() {
-            //var wecTable = $.extend(true, {}, wecTableDefaults(lang, $('#wecDate').val()));
-            //oWecTable["bDestroy"] = "true,";
+            oWecTable["bDestroy"] = "true,";
             $('#wecDataTable').dataTable(oWecTable).fnReloadAjax();
         };
-
-        var oWecTable = jqrfyTable({
-            table: $('#wecDataTable'),
-            tab: $('#summaryTable'),
-            options:
-                {
-                "bPaginate": false, // (this report has fixed size)
-                "bAutoWidth": false,
-                "bInfo": true, 
-                "bSort": false, 
-                "bFilter": false, 
-                "bServerSide": true, 
-                "sAjaxSource": "/Reports/AjaxWec", 
-                "bProcessing": false, 
-                "oLanguage": lang, 
-                "aoColumns": [
-                    { mDataProp: "weekday" },
-                    { mDataProp: "date" },
-                    { mDataProp: "totalSignins" },
-                    { mDataProp: "totalAssignments" },
-                    { mDataProp: "weekEstDailyHours" },
-                    { mDataProp: "weekEstPayment" },
-                    { mDataProp: "weekHourlyWage" },
-                    {
-                        mDataProp: null,
-                        sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="nestedDetailsButton">'
-                    },
-                ],
-                "fnServerData": function (sSource, aoData, fnCallback) {
-                    aoData.push(
-                        { "name": "todaysdate", "value": $('#wecDate').val() });
-                    $.getJSON(sSource, aoData, function (json) {
-                        /* Do whatever additional processing you want on the callback, then tell DataTables */
-                        fnCallback(json)
-                    })
-                }
-            },
-            dblClickEvent: null,
-            tabLabel: ""
-        });
-        $('#wecDataTable tbody td img').live('click', function () {
-            var nTr = $(this).parents('tr')[0];
-
-            if (oWecTable.fnIsOpen(nTr)) {
-                /* This row is already open - close it */
-                this.src = "/Content/dataTables/details_open.png";
-                oWecTable.fnClose(nTr);
-            } else {
-                /* Open this row */
-                this.src = "/Content/dataTables/details_close.png";
-                oWecTable.fnOpen(nTr, fnFormatDetails(oWecTable, nTr), 'nestedDetails');
-            }
-        });
 
         function mwdNewTable() {
             var mwdNewTable = $.extend(true, {}, mwdTableDefaults(lang, $('#mwdDate').val()));
@@ -400,8 +380,19 @@
              });
          });
 
+         $('#wecDataTable tbody td img').live('click', function () {
+             var nTr = $(this).parents('tr')[0];
 
-        //
+             if (wec.fnIsOpen(nTr)) {
+                 /* This row is already open - close it */
+                 this.src = "/Content/dataTables/details_open.png";
+                 wec.fnClose(nTr);
+             } else {
+                 /* Open this row */
+                 this.src = "/Content/dataTables/details_close.png";
+                 wec.fnOpen(nTr, fnFormatDetails(wec, nTr), 'nestedDetails');
+             }
+         });
         //
     });
     // end DOM ready check
