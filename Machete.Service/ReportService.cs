@@ -27,7 +27,6 @@ namespace Machete.Service
         dataTableResult<weeklyData> WeeklyView(DateTime wecDate);
         dataTableResult<monthlyData> monthlyView(DateTime mwdDate);
         dataTableResult<jzcData> jzcView(DateTime jzcDate);
-        dataTableResult<reportUnit> jobsView(DateTime jobsDate);
     }
 
     public class ReportService : ReportBase, IReportService
@@ -47,17 +46,6 @@ namespace Machete.Service
         /// <returns></returns>
 
         #region BasicFunctions 
-        public int CountSignins(DateTime beginDate)
-        {
-            int query = 0;
-            var wsiQ = wsiRepo.GetAllQ();
-
-            query = wsiQ
-                .Where(whr => EntityFunctions.TruncateTime(whr.dateforsignin) == EntityFunctions.TruncateTime(beginDate))
-                .Count();
-
-            return query;
-        }
         /// <summary>
         /// A simple count of worker signins for the given period.
         /// </summary>
@@ -88,7 +76,6 @@ namespace Machete.Service
 
             return query;
         }
-
         /// <summary>
         /// A simple count of worker signins for the given period.
         /// </summary>
@@ -131,27 +118,12 @@ namespace Machete.Service
             //GO
             return query;
         }
-
-        public int CountAssignments(DateTime beginDate)
-        {
-            int query = 0;
-            var waQ = waRepo.GetAllQ();
-            var woQ = woRepo.GetAllQ();
-
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-
-            query = waQ
-                .Join(woQ, wa => wa.workOrderID, wo => wo.ID, (wa, wo) => new
-                {
-                    wa,
-                    date = EntityFunctions.TruncateTime(wo.dateTimeofWork)
-                })
-                .Where(whr => whr.date == beginDate)
-                .Count();
-
-            return query;
-        }
-
+        /// <summary>
+        /// Counts work assignments for a given time period.
+        /// </summary>
+        /// <param name="beginDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
         public IQueryable<reportUnit> CountAssignments(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
@@ -180,20 +152,12 @@ namespace Machete.Service
 
             return query;
         }
-
-        public int CountCancelled(DateTime beginDate)
-        {
-            int query = 0;
-            var woQ = woRepo.GetAllQ();
-
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-
-            query = woQ.Where(whr => EntityFunctions.TruncateTime(whr.dateTimeofWork) == beginDate
-                                  && whr.status == WorkOrder.iCancelled)
-                                  .Count();
-            return query;
-        }
-
+        /// <summary>
+        /// Counts cancelled orders for a given time period.
+        /// </summary>
+        /// <param name="beginDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
         public IQueryable<reportUnit> CountCancelled(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
@@ -276,9 +240,8 @@ namespace Machete.Service
 
             return query;
         }
-
         /// <summary>
-        /// Grabs a sum of hours and wages and averages them.
+        /// Grabs a sum of hours and wages and averages them for a given time period.
         /// </summary>
         /// <param name="beginDate">Start date for the query.</param>
         /// <param name="endDate">End date for the query.</param>
@@ -318,7 +281,12 @@ namespace Machete.Service
 
             return query;
         }
-
+        /// <summary>
+        /// Lists jobs in order of occurrence for a given time period.
+        /// </summary>
+        /// <param name="beginDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
         public IQueryable<reportUnit> ListJobs(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
@@ -358,7 +326,12 @@ namespace Machete.Service
 
             return query;
         }
-
+        /// <summary>
+        /// Lists most popular zip codes for a given time period.
+        /// </summary>
+        /// <param name="beginDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
         public IQueryable<reportUnit> ListZipCodes(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
@@ -386,7 +359,6 @@ namespace Machete.Service
 
             return query;
         }
-
         #endregion
 
         #region ReportData
@@ -430,13 +402,13 @@ namespace Machete.Service
             IEnumerable<AverageWages> weeklyWages;
             IEnumerable<reportUnit> weeklySignins;
             IEnumerable<reportUnit> weeklyAssignments;
-            IEnumerable<reportUnit> weeklyJobsBySector;
+            IEnumerable<reportUnit> weeklyJobs;
             IEnumerable<weeklyData> q;
 
             weeklyWages = HourlyWageAverage(beginDate, endDate).ToList();
             weeklySignins = CountSignins(beginDate, endDate).ToList();
             weeklyAssignments = CountAssignments(beginDate, endDate).ToList();
-            weeklyJobsBySector = ListJobs(beginDate, endDate).ToList();
+            weeklyJobs = ListJobs(beginDate, endDate).ToList();
 
             q = weeklyWages
                 .Select(g => new weeklyData
@@ -447,7 +419,8 @@ namespace Machete.Service
                     noWeekJobs = weeklyAssignments.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
                     weekEstDailyHours = g.hours,
                     weekEstPayment = g.wages,
-                    weekHourlyWage = g.avg
+                    weekHourlyWage = g.avg,
+                    topJobs = weeklyJobs.Where(whr => whr.date == g.date)
                 });
 
             q = q.OrderBy(p => p.date);
@@ -593,22 +566,6 @@ namespace Machete.Service
             return result;
         }
 
-        public dataTableResult<reportUnit> jobsView(DateTime jobsDate)
-        {
-            DateTime beginDate;
-                DateTime endDate;
-            IEnumerable<reportUnit> query;
-
-            beginDate = new DateTime(jobsDate.Year, jobsDate.Month, jobsDate.Day, 0, 0, 0);
-            endDate = new DateTime(jobsDate.Year, jobsDate.Month, jobsDate.Day, 23, 59, 59);
-
-            query = ListJobs(beginDate, endDate);
-            
-            var result = GetDataTableResult<reportUnit>(query);
-
-            return result;
-        }
-
         public dataTableResult<T> GetDataTableResult<T>(IEnumerable<T> query)
         {
             var result = new dataTableResult<T>();
@@ -656,6 +613,7 @@ namespace Machete.Service
         public int? weekEstDailyHours { get; set; }
         public double? weekEstPayment { get; set; }
         public double? weekHourlyWage { get; set; }
+        public IEnumerable<reportUnit> topJobs { get; set; }
     }
 
     /// <summary>

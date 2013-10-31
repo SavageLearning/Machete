@@ -21,12 +21,9 @@ namespace Machete.Service.shared
 {
     public interface IReportBase
     {
-        int CountSignins(DateTime beginDate);
         IQueryable<reportUnit> CountSignins(DateTime beginDate, DateTime endDate);
         IQueryable<reportUnit> CountUniqueSignins(DateTime beginDate, DateTime endDate);
-        int CountAssignments(DateTime beginDate);
         IQueryable<reportUnit> CountAssignments(DateTime beginDate, DateTime endDate);
-        int CountCancelled(DateTime beginDate);
         IQueryable<reportUnit> CountCancelled(DateTime beginDate, DateTime endDate);
         IQueryable<TypeOfDispatchReport> CountTypeofDispatch(DateTime beginDate, DateTime endDate);
         IQueryable<AverageWages> HourlyWageAverage(DateTime beginDate, DateTime endDate);
