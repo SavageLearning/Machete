@@ -241,7 +241,6 @@
         // Looking for the table properties? Try reports.js in ~/Web/Scripts
         //
         var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
-        var wecOpen = false;
 
         function dclNewTable() {
             var dclNewTable = $.extend(true, {}, dclTableDefaults(lang, $('#dclDate').val()));
@@ -250,22 +249,64 @@
         };
 
         function wecNewTable() {
-            var wecTable = $.extend(true, {}, wecTableDefaults(lang, $('#wecDate').val()));
-            wecTable["bDestroy"] = "true,";
-            $('#wecDataTable').dataTable(wecTable).fnReloadAjax();
+            //var wecTable = $.extend(true, {}, wecTableDefaults(lang, $('#wecDate').val()));
+            //oWecTable["bDestroy"] = "true,";
+            $('#wecDataTable').dataTable(oWecTable).fnReloadAjax();
         };
 
-        function wecTableOpenRow(nTr) {
-            var wecTable = $.extend(true, {}, wecTableDefaults(lang, $('#wecDate').val()));
-            wecTable["bDestroy"] = "true,";
-            wecTable.fnOpen(nTr, fnFormatDetails(), 'details');
-        }
+        var oWecTable = jqrfyTable({
+            table: $('#wecDataTable'),
+            tab: $('#summaryTable'),
+            options:
+                {
+                "bPaginate": false, // (this report has fixed size)
+                "bAutoWidth": false,
+                "bDestroy": false,
+                "bInfo": true, 
+                "bSort": false, 
+                "bFilter": false, 
+                "bServerSide": true, 
+                "sAjaxSource": "/Reports/AjaxWec", 
+                "bProcessing": false, 
+                "oLanguage": lang, 
+                "aoColumns": [
+                    { mDataProp: "weekday" },
+                    { mDataProp: "date" },
+                    { mDataProp: "totalSignins" },
+                    { mDataProp: "totalAssignments" },
+                    { mDataProp: "weekEstDailyHours" },
+                    { mDataProp: "weekEstPayment" },
+                    { mDataProp: "weekHourlyWage" },
+                    {
+                        mDataProp: null,
+                        sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="nestedDetailsButton">'
+                    },
+                ],
+                "fnServerData": function (sSource, aoData, fnCallback) {
+                    aoData.push(
+                        { "name": "todaysdate", "value": $('#wecDate').val() });
+                    $.getJSON(sSource, aoData, function (json) {
+                        /* Do whatever additional processing you want on the callback, then tell DataTables */
+                        fnCallback(json)
+                    })
+                }
+            },
+            dblClickEvent: null,
+            tabLabel: ""
+        });
+        $('#wecDataTable tbody td img').live('click', function () {
+            var nTr = $(this).parents('tr')[0];
 
-        function wecTableCloseRow(nTr) {
-            var wecTable = $.extend(true, {}, wecTableDefaults(lang, $('#wecDate').val()));
-            wecTable["bDestroy"] = "true,";
-            wecTable.fnClose(nTr);
-        }
+            if (oWecTable.fnIsOpen(nTr)) {
+                /* This row is already open - close it */
+                this.src = "/Content/dataTables/details_open.png";
+                oWecTable.fnClose(nTr);
+            } else {
+                /* Open this row */
+                this.src = "/Content/dataTables/details_close.png";
+                oWecTable.fnOpen(nTr, fnFormatDetails(oWecTable, nTr), 'nestedDetails');
+            }
+        });
 
         function mwdNewTable() {
             var mwdNewTable = $.extend(true, {}, mwdTableDefaults(lang, $('#mwdDate').val()));
@@ -273,34 +314,20 @@
             $('#mwdDataTable').dataTable(mwdNewTable).fnReloadAjax();
         };
 
-        function childNewTable(nTr) {
-            var childDate = nTr.td[2].val();
-            var childTable = $.extend(true, {}, wecChildDefaults(lang, childDate));
-            childTable["bDestroy"] = "true,";
-            $('#wecTableChild').dataTable(childTable).fnReloadAjax();
-        };
-
-        $('#wecDataTable tbody td img').live('click', function () {
-
-            var nTr = $(this).parents('tr')[0];
-            
-            if (wecOpen == true) {
-                wecTableCloseRow(nTr);
-            } else {
-                wecTableOpenRow(nTr);
-                childNewTable(nTr);
-                wecOpen = true;
-
-            }
-        });
-
-        function fnFormatDetails() {
+        function fnFormatDetails(oTable, nTr) {
+            var aData = oTable.fnGetData(nTr);
+            var jobList = aData['topJobs'];
             var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;" id="wecTableChild">';
             sOut += '<thead><tr><th>Date</th></tr>';
-            sOut += '<tr><th>Skill</th></tr>';
-            sOut += '<tr><th>Count</th></tr>';
-            sOut += '</thead>';
-            sOut += '</table>';
+            sOut += '<th>Skill</th>';
+            sOut += '<th>Count</th>';
+            sOut += '</tr></thead><tbody>';
+            for (var i in jobList)
+            {
+                var job = jobList[i];
+                sOut += '<tr><td>'+job.date+'</td><td>'+job.skill+'</td><td>'+job.count+'</td></tr>';
+            }
+            sOut += '</tbody></table>';
             return sOut;
         }
 

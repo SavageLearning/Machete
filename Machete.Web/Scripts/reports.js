@@ -4,40 +4,11 @@
 // Credit and thanks: http://stackoverflow.com/users/64741/zachary
 //
 
-function JSON2CSV(objArray) {
-    var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
-
-    var str = '';
-    var line = '';
-    var head = array[0];
-
-    for (var index in array[0]) {
-        line += index + ',';
-    }
-
-    line = line.slice(0, -1);
-    str += line + '\r\n';
-
-    for (var i = 0; i < array.length; i++) {
-        var line = '';
-
-        for (var index in array[i]) {
-            line += array[i][index] + ',';
-        }
-
-        line = line.slice(0, -1);
-        str += line + '\r\n';
-
-    }
-
-    return str;
-};
-
 //Removing the initial commas because the report data may contain commas
 //from the service level. This isn't ideal, but the idea is that they
 //get what they see as far as the reports are concerned.
 function json2spreadsheet(objArray) {
-    var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+    var array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
 
     var str = '';
     var line = '';
@@ -50,10 +21,10 @@ function json2spreadsheet(objArray) {
     str += line + '\r\n';
 
     for (var i = 0; i < array.length; i++) {
-        var line = '';
+        //var line = '';
 
-        for (var index in array[i]) {
-            line += array[i][index];
+        for (var indices in array[i]) {
+            line += array[i][indices];
             line = line.replace(/,/g, '') + 'comma';
         }
 
@@ -63,7 +34,7 @@ function json2spreadsheet(objArray) {
     }
 
     return str;
-};
+}
 
 function download(strData, strFileName, strMimeType) {
     var D = document,
@@ -96,7 +67,7 @@ function download(strData, strFileName, strMimeType) {
             D.body.removeChild(a);
         }, 66);
         return true;
-    }; /* end if('download' in a) */
+    } /* end if('download' in a) */
 
 
 
@@ -128,13 +99,13 @@ function dclTableDefaults(lang, date)
         "bProcessing": false, //enable processing indicator
         "oLanguage": lang, //internationalisation
         "aoColumns": [
-            { mDataProp: "date" }, 
-            { mDataProp: "dwcList" }, 
-            { mDataProp: "dwcPropio" }, 
-            { mDataProp: "hhhList" }, 
+            { mDataProp: "date" },
+            { mDataProp: "dwcList" },
+            { mDataProp: "dwcPropio" },
+            { mDataProp: "hhhList" },
             { mDataProp: "hhhPropio" },
             { mDataProp: "uniqueSignins" },
-            { mDataProp: "totalSignins" }, 
+            { mDataProp: "totalSignins" },
             { mDataProp: "totalAssignments" },
             { mDataProp: "cancelledJobs" },
         ], //these are the column names in the array; total # must match
@@ -142,50 +113,12 @@ function dclTableDefaults(lang, date)
             aoData.push({ "name": "todaysdate", "value": date });
             $.getJSON(sSource, aoData, function (json) {
                 /* Do whatever additional processing you want on the callback, then tell DataTables */
-                fnCallback(json)
+                fnCallback(json);
             });
         }
-    }
-    return dclDefaults;
-};
-
-function wecTableDefaults(lang, date) 
-{
-    var wecDefaults = {
-        "bPaginate": false, // (this report has fixed size)
-        "bAutoWidth": false,
-        "bDestroy": false,
-        "bInfo": true, 
-        "bSort": false, 
-        "bFilter": false, 
-        "bServerSide": true, 
-        "sAjaxSource": "/Reports/AjaxWec", 
-        "bProcessing": false, 
-        "oLanguage": lang, 
-        "aoColumns": [
-            { mDataProp: "weekday" },
-            { mDataProp: "date" },
-            { mDataProp: "totalSignins" },
-            { mDataProp: "totalAssignments" },
-            { mDataProp: "weekEstDailyHours" },
-            { mDataProp: "weekEstPayment" },
-            { mDataProp: "weekHourlyWage" },
-            {
-                mDataProp: null,
-                sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="childquery">'
-            },
-        ],
-        "fnServerData": function (sSource, aoData, fnCallback) {
-            aoData.push(
-                { "name": "todaysdate", "value": date });
-            $.getJSON(sSource, aoData, function (json) {
-                /* Do whatever additional processing you want on the callback, then tell DataTables */
-                fnCallback(json)
-            })
-        }
     };
-    return wecDefaults;
-};
+    return dclDefaults;
+}
 
 function wecChildDefaults(lang, date) {
     var wecDefaults = {
@@ -210,12 +143,12 @@ function wecChildDefaults(lang, date) {
                 { "name": "todaysdate", "value": date });
             $.getJSON(sSource, aoData, function (json) {
                 /* Do whatever additional processing you want on the callback, then tell DataTables */
-                fnCallback(json)
-            })
+                fnCallback(json);
+            });
         }
     };
     return wecDefaults;
-};
+}
 
 function mwdTableDefaults(lang, date) 
 {
@@ -246,12 +179,12 @@ function mwdTableDefaults(lang, date)
             aoData.push({ "name": "todaysdate", "value": date });
             $.getJSON(sSource, aoData, function (json) {
                 /* Do whatever additional processing you want on the callback, then tell DataTables */
-                fnCallback(json)
+                fnCallback(json);
             });
         }
     };
     return mwdDefaults;
-};
+}
 
 function jzcTableDefaults(lang, date) 
     {
@@ -278,16 +211,16 @@ function jzcTableDefaults(lang, date)
             aoData.push({ "name": "todaysdate", "value": date });
             $.getJSON(sSource, aoData, function (json) {
                 /* Do whatever additional processing you want on the callback, then tell DataTables */
-                fnCallback(json)
+                fnCallback(json);
             });
         }
     };
     return jzcDefaults;
-};
+}
 
 
 function signinPie(objArray) {
-    var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+    var array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
 
     var dwc = 0;
     var dwcPropio = 0;
@@ -315,7 +248,7 @@ function signinPie(objArray) {
 }
 
 function gotWorkPie(objArray) {
-    var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+    var array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
 
     var dwc = 0;
     var dwcPropio = 0;
@@ -343,7 +276,7 @@ function gotWorkPie(objArray) {
 }
 
 function newSigninPie(objArray) {
-    var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+    var array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
 
     var dwc = 0;
     var dwcPropio = 0;

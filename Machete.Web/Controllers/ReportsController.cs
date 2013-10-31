@@ -162,22 +162,28 @@ namespace Machete.Web.Controllers
             // Take the date from the view and assign it to this.mwdDate
             if (vo.date != null) wecDate = DateTime.Parse(vo.date.ToString());
             else wecDate = DateTime.Now;
-            //pass filter parameters to service level
-            // Call view model from service layer:
+
             dataTableResult<weeklyData> wec = repServ.WeeklyView(wecDate);
             //
             //return what's left to datatables
             var result = from d in wec.query
-                select new
-                {
-                    weekday = d.dayofweek.ToString(),
-                    date = System.String.Format("{0:MM/dd/yyyy}", d.date),
-                    totalSignins = d.totalSignins,
-                    totalAssignments = d.noWeekJobs,
-                    weekEstDailyHours = d.weekEstDailyHours,
-                    weekEstPayment = System.String.Format("{0:C}", d.weekEstPayment),
-                    weekHourlyWage = System.String.Format("{0:C}", d.weekHourlyWage)
-                };
+                         select new
+                         {
+                             weekday = d.dayofweek.ToString(),
+                             date = System.String.Format("{0:MM/dd/yyyy}", d.date),
+                             totalSignins = d.totalSignins,
+                             totalAssignments = d.noWeekJobs,
+                             weekEstDailyHours = d.weekEstDailyHours,
+                             weekEstPayment = System.String.Format("{0:C}", d.weekEstPayment),
+                             weekHourlyWage = System.String.Format("{0:C}", d.weekHourlyWage),
+                             topJobs = from j in d.topJobs
+                                       select new
+                                       {
+                                           date = j.date,
+                                           skill = j.info,
+                                           count = j.count
+                                       }
+                         };
 
             return Json(new
             {
@@ -259,35 +265,6 @@ namespace Machete.Web.Controllers
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);
-        }
-
-        public ActionResult AjaxJobs(jQueryDataTableParam param)
-        {
-            DateTime jobsDate;
-
-            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
-            if (vo.date != null) jobsDate = DateTime.Parse(vo.date.ToString());
-            else jobsDate = DateTime.Now;
-
-            dataTableResult<reportUnit> jobs = repServ.jobsView(jobsDate);
-
-            var result = from d in jobs.query
-                         select new
-                         {
-                             date = System.String.Format("{0:MM/dd/yyyy}", d.date),
-                             count = d.count,
-                             info = d.info
-                         };
-
-            return Json(new
-            {
-                iTotalRecords = jobs.totalCount,
-                iTotalDisplayRecords = jobs.filteredCount,
-                sEcho = param.sEcho,
-                aaData = result
-            },
-JsonRequestBehavior.AllowGet);
-
         }
 
         #endregion
