@@ -46,6 +46,8 @@
                     </tr>
                 </thead>
             </table>
+            <div id="dailyPieChart1" style="height:auto;width:50%;float:left;"></div>
+            <div id="dailyPieChart2" style="height:auto;width:50%;float:left;"></div>
         </div>
         <h3><a href="#" id="wecLink">Weekly</a></h3>
         <div id="wecTable">
@@ -68,6 +70,7 @@
                     </tr>
                 </thead>
             </table>
+            <div id="weeklyPieChart" style="height:auto;width:50%;float:right;"></div>
         </div>
         <h3><a href="#" id="mwdLink">Monthly</a></h3>
         <div id="mwdTable">
@@ -92,6 +95,8 @@
                     </tr>
                 </thead>
             </table>
+            <div id="monthlyPieChart1" style="height:auto;width:50%;float:left;"></div>
+            <div id="monthlyPieChart2" style="height:auto;width:50%;float:left;"></div>
         </div>
     </div>
   </div>
@@ -100,39 +105,11 @@
 <script type="text/javascript">
     $(document).ready(function () {
         //PESKY VARS
+        // The reason oWecTable exists here is it was necessary to have JS parse var wec (below) to get the drill
+        // down menus to work. These are at the top of the anonymous functions section because that's what ECMA
+        // does with them anyway.
         var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
-        var oWecTable = {
-            "bPaginate": false, // (this report has fixed size)
-            "bAutoWidth": false,
-            "bInfo": true, 
-            "bSort": false, 
-            "bFilter": false, 
-            "bServerSide": true, 
-            "sAjaxSource": "/Reports/AjaxWec", 
-            "bProcessing": false, 
-            "oLanguage": lang, 
-            "aoColumns": [
-                { mDataProp: "weekday" },
-                { mDataProp: "date" },
-                { mDataProp: "totalSignins" },
-                { mDataProp: "totalAssignments" },
-                { mDataProp: "weekEstDailyHours" },
-                { mDataProp: "weekEstPayment" },
-                { mDataProp: "weekHourlyWage" },
-                {
-                    mDataProp: null,
-                    sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="nestedDetailsButton">'
-                },
-            ],
-            "fnServerData": function (sSource, aoData, fnCallback) {
-                aoData.push(
-                    { "name": "todaysdate", "value": $('#wecDate').val() });
-                $.getJSON(sSource, aoData, function (json) {
-                    /* Do whatever additional processing you want on the callback, then tell DataTables */
-                    fnCallback(json);
-                })
-            }
-        };
+        var oWecTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxWec", lang, $('#wecDate').val()));
         var wec = $('#wecDataTable').dataTable(oWecTable);
 
         //
@@ -280,8 +257,11 @@
             var dclNewTable = $.extend(true, {}, dclTableDefaults(lang, $('#dclDate').val()));
             dclNewTable["bDestroy"] = "true,";
             $('#dclDataTable').dataTable(dclNewTable).fnReloadAjax();
+            dailyPie();
         };
 
+        //wecNewTable() has a different format than the other functions listed here. See above
+        //for the explanation. (Under section "pesky vars").
         function wecNewTable() {
             oWecTable["bDestroy"] = "true,";
             $('#wecDataTable').dataTable(oWecTable).fnReloadAjax();
@@ -393,8 +373,17 @@
                  wec.fnOpen(nTr, fnFormatDetails(wec, nTr), 'nestedDetails');
              }
          });
-        //
+
+        // | PIE CHARTS |
+         function dailyPie() {
+             var pieUrl = "/Reports/AjaxDcl";
+             var ajaxData = { todaysdate: $('#dclDate').val() };
+             var pieFilling1 = pieFilling(pieUrl, ajaxData, 'dailySigninPie');
+             var pieFilling2 = pieFilling(pieUrl, ajaxData, 'gotJobsPie');
+             var pieOptions = getPieOptions(true);
+             var dayPie1 = $.jqplot($('#pieChart1'), pieFilling1, pieOptions);
+             var dayPie2 = $.jqplot($('#pieChart2'), pieFilling2, pieOptions);
+         }
     });
     // end DOM ready check
 </script>
-

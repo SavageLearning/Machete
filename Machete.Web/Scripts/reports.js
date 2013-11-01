@@ -84,6 +84,43 @@ function download(strData, strFileName, strMimeType) {
 
 
 //Global variables
+function reportTableDefaults(url, lang, date)
+{
+    var tableDefaults =
+        {
+            "bPaginate": false, // (reports have fixed size)
+            "bAutoWidth": false,
+            "bInfo": true,
+            "bSort": false,
+            "bFilter": false,
+            "bServerSide": true,
+            "sAjaxSource": url,
+            "bProcessing": false,
+            "oLanguage": lang,
+            "aoColumns": [
+                { mDataProp: "weekday" },
+                { mDataProp: "date" },
+                { mDataProp: "totalSignins" },
+                { mDataProp: "totalAssignments" },
+                { mDataProp: "weekEstDailyHours" },
+                { mDataProp: "weekEstPayment" },
+                { mDataProp: "weekHourlyWage" },
+                {
+                    mDataProp: null,
+                    sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="nestedDetailsButton">'
+                },
+            ],
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                aoData.push(
+                    { "name": "todaysdate", "value": date });
+                $.getJSON(sSource, aoData, function (json) {
+                    /* Do whatever additional processing you want on the callback, then tell DataTables */
+                    fnCallback(json);
+                })
+            }
+        };
+    return tableDefaults;
+}
 
 function dclTableDefaults(lang, date) 
 {
@@ -219,7 +256,7 @@ function jzcTableDefaults(lang, date)
 }
 
 
-function signinPie(objArray) {
+function dailySigninPie(objArray) {
     var array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
 
     var dwc = 0;
@@ -230,7 +267,7 @@ function signinPie(objArray) {
     var total = 0;
     var totalAssigned = 0;
 
-    var pie = '';
+    var pieData = '';
 
     for (var i = 0; i < array.aaData.length; i++) {
         dwc += array.aaData[i].dwcList;
@@ -242,9 +279,37 @@ function signinPie(objArray) {
         totalAssigned += array.aaData[i].totalAssignments;
     }
 
-    pie += '[\'DWC List\', ' + dwc + '],[\'Propio (DWC)\', ' + dwcPropio + '],[\'HHH List\', ' + hhh + '],[\'Propio (HHH)\',' + hhhPropio + ']';
+    pieData += '[\'DWC List\', ' + dwc + '],[\'Propio (DWC)\', ' + dwcPropio + '],[\'HHH List\', ' + hhh + '],[\'Propio (HHH)\',' + hhhPropio + ']';
 
-    return pie;
+    return pieData;
+}
+
+function monthlySigninPie(objArray) {
+    var array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
+
+    var dwc = 0;
+    var dwcPropio = 0;
+    var hhh = 0;
+    var hhhPropio = 0;
+    var unique = 0;
+    var total = 0;
+    var totalAssigned = 0;
+
+    var pieData = '';
+
+    for (var i = 0; i < array.aaData.length; i++) {
+        dwc += array.aaData[i].dwcList;
+        dwcPropio += array.aaData[i].dwcPropio;
+        hhh += array.aaData[i].hhhList;
+        hhhPropio += array.aaData[i].hhhPropio;
+        unique += array.aaData[i].uniqueSignins;
+        total += array.aaData[i].totalSignins;
+        totalAssigned += array.aaData[i].totalAssignments;
+    }
+
+    pieData += '[\'DWC List\', ' + dwc + '],[\'Propio (DWC)\', ' + dwcPropio + '],[\'HHH List\', ' + hhh + '],[\'Propio (HHH)\',' + hhhPropio + ']';
+
+    return pieData;
 }
 
 function gotWorkPie(objArray) {
@@ -258,7 +323,7 @@ function gotWorkPie(objArray) {
     var total = 0;
     var totalAssigned = 0;
 
-    var pie = '';
+    var pieData = '';
 
     for (var i = 0; i < array.aaData.length; i++) {
         dwc += array.aaData[i].dwcList;
@@ -270,38 +335,52 @@ function gotWorkPie(objArray) {
         totalAssigned += array.aaData[i].totalAssignments;
     }
 
-    pie += '[\'Total Signed In\', ' + total + '],[\'Total Assigned\', ' + totalAssigned + ']';
+    total = total - totalAssigned;
 
-    return pie;
+    pieData += '[\'Total Signed In\', ' + total + '],[\'Total Assigned\', ' + totalAssigned + ']';
+
+    return pieData;
 }
 
-function newSigninPie(objArray) {
-    var array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
+function getPieOptions(showLabels) {
+    var pieOptions = {
+        seriesDefaults: {
+            renderer: jQuery.jqplot.PieRenderer, //jerry-rig; this should be passed in as an arg
+            rendererOptions: {
+                showDataLabels: showLabels
+            }
+        },
+        legend: { show: true, location: 'e' }
+    };
 
-    var dwc = 0;
-    var dwcPropio = 0;
-    var hhh = 0;
-    var hhhPropio = 0;
-    var unique = 0;
-    var total = 0;
-    var totalAssigned = 0;
+    return pieOptions;
+}
 
-    var pie = '';
 
-    for (var i = 0; i < array.aaData.length; i++) {
-        dwc += array.aaData[i].dwcList;
-        dwcPropio += array.aaData[i].dwcPropio;
-        hhh += array.aaData[i].hhhList;
-        hhhPropio += array.aaData[i].hhhPropio;
-        unique += array.aaData[i].uniqueSignins;
-        total += array.aaData[i].totalSignins;
-        totalAssigned += array.aaData[i].totalAssignments;
+function pieFilling(ajaxUrl, data, pieType) {
+    var jstring = '';
+    var pieObject;
+    var json = $.getJSON(ajaxUrl, data, function (ajax) {
+        jstring = JSON.stringify(ajax.aaData);
+    });
+
+    if (pieType == 'dailySigninPie')
+    {
+        pieObject = dailySigninPie(jstring);
+        return pieObject;
     }
-
-    total = total - unique;
-
-    pie += '[\'Total Signed In\', ' + total + '],[\'New Signins\', ' + unique + ']';
-
-    return pie;
+    else if (pieType == 'gotWorkPie')
+    {
+        pieObject = gotWorkPie(jstring);
+        return pieObject;
+    }
+    else if (pieType == 'monthlySigninPie')
+    {
+        pieObject = monthlySigninPie(jstring);
+        return pieObject;
+    }
+    else
+    {
+        return pieObject;
+    }
 }
-
