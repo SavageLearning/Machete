@@ -84,7 +84,7 @@ function download(strData, strFileName, strMimeType) {
 
 
 //Global variables
-function reportTableDefaults(url, lang, date)
+function weeklyTableDefaults(url, lang, date)
 {
     var tableDefaults =
         {
@@ -122,7 +122,7 @@ function reportTableDefaults(url, lang, date)
     return tableDefaults;
 }
 
-function dclTableDefaults(lang, date) 
+function dailyTableDefaults(url, lang, date) 
 {
     var dclDefaults = {
         "bPaginate": false, // to enable pagination (this report has fixed size)
@@ -132,7 +132,7 @@ function dclTableDefaults(lang, date)
         "bSort": false, //enable or disable sorting of columns
         "bFilter": false, //enable or disable filtering of data
         "bServerSide": true, //server side processing, req. source
-        "sAjaxSource": "/Reports/AjaxDcl", //source for server side processing
+        "sAjaxSource": url, //source for server side processing
         "bProcessing": false, //enable processing indicator
         "oLanguage": lang, //internationalisation
         "aoColumns": [
@@ -157,37 +157,7 @@ function dclTableDefaults(lang, date)
     return dclDefaults;
 }
 
-function wecChildDefaults(lang, date) {
-    var wecDefaults = {
-        "bPaginate": false, // (this report has fixed size)
-        "bAutoWidth": false,
-        "bDestroy": false,
-        "bInfo": true,
-        "bSort": false,
-        "bFilter": false,
-        "bServerSide": true,
-        "sAjaxSource": "/Reports/AjaxJobs",
-        "bProcessing": false,
-        "oLanguage": lang,
-        "aoColumns": [
-            { mDataProp: "date" },
-            { mDataProp: "skill" },
-            { mDataProp: "count" }
-        ],
-        "fnServerData": function (sSource, aoData, fnCallback) {
-            aoData.push(
-                //THIS HAS TO BE THE CHILD DATE NOT THE FORM DATE
-                { "name": "todaysdate", "value": date });
-            $.getJSON(sSource, aoData, function (json) {
-                /* Do whatever additional processing you want on the callback, then tell DataTables */
-                fnCallback(json);
-            });
-        }
-    };
-    return wecDefaults;
-}
-
-function mwdTableDefaults(lang, date) 
+function monthlyTableDefaults(url, lang, date) 
 {
     var mwdDefaults = {
         "bPaginate": false, // this report has fixed size
@@ -197,7 +167,7 @@ function mwdTableDefaults(lang, date)
         "bSort": false, 
         "bFilter": false,
         "bServerSide": true, //server side processing
-        "sAjaxSource": "/Reports/AjaxMwd",
+        "sAjaxSource": url,
         "bProcessing": false, 
         "oLanguage": lang, 
         "aoColumns": [
@@ -255,7 +225,7 @@ function jzcTableDefaults(lang, date)
     return jzcDefaults;
 }
 
-
+//tested on jsFiddle, working ok
 function dailySigninPie(objArray) {
     var array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
 
@@ -279,7 +249,7 @@ function dailySigninPie(objArray) {
         totalAssigned += array.aaData[i].totalAssignments;
     }
 
-    pieData += '[\'DWC List\', ' + dwc + '],[\'Propio (DWC)\', ' + dwcPropio + '],[\'HHH List\', ' + hhh + '],[\'Propio (HHH)\',' + hhhPropio + ']';
+    pieData += '[[\'DWC List\', ' + dwc + '],[\'Propio (DWC)\', ' + dwcPropio + '],[\'HHH List\', ' + hhh + '],[\'Propio (HHH)\',' + hhhPropio + ']]';
 
     return pieData;
 }
@@ -307,7 +277,7 @@ function monthlySigninPie(objArray) {
         totalAssigned += array.aaData[i].totalAssignments;
     }
 
-    pieData += '[\'DWC List\', ' + dwc + '],[\'Propio (DWC)\', ' + dwcPropio + '],[\'HHH List\', ' + hhh + '],[\'Propio (HHH)\',' + hhhPropio + ']';
+    pieData += '[[\'DWC List\', ' + dwc + '],[\'Propio (DWC)\', ' + dwcPropio + '],[\'HHH List\', ' + hhh + '],[\'Propio (HHH)\',' + hhhPropio + ']]';
 
     return pieData;
 }
@@ -338,16 +308,17 @@ function gotWorkPie(objArray) {
     total = total - totalAssigned;
 
     pieData += '[\'Total Signed In\', ' + total + '],[\'Total Assigned\', ' + totalAssigned + ']';
-
-    return pieData;
+    var apples = JSON.parse("[" + pieData + "]");
+    return apples;
 }
 
+//tested on jsfiddle, working ok
 function getPieOptions(showLabels) {
     var pieOptions = {
         seriesDefaults: {
             renderer: jQuery.jqplot.PieRenderer, //jerry-rig; this should be passed in as an arg
             rendererOptions: {
-                showDataLabels: showLabels
+                showDataLabels: showLabels.toString()
             }
         },
         legend: { show: true, location: 'e' }
@@ -366,7 +337,7 @@ function pieFilling(ajaxUrl, data, pieType) {
 
     if (pieType == 'dailySigninPie')
     {
-        pieObject = dailySigninPie(jstring);
+        pieObject = dailySigninPie(json);
         return pieObject;
     }
     else if (pieType == 'gotWorkPie')

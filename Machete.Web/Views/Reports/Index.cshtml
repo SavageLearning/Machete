@@ -46,8 +46,8 @@
                     </tr>
                 </thead>
             </table>
-            <div id="dailyPieChart1" style="height:auto;width:50%;float:left;"></div>
-            <div id="dailyPieChart2" style="height:auto;width:50%;float:left;"></div>
+            <div id="dailyPieChart1" style="height:auto;width:100%;display:block;"></div>
+            <div id="dailyPieChart2" style="height:auto;width:100%;display:block;"></div>
         </div>
         <h3><a href="#" id="wecLink">Weekly</a></h3>
         <div id="wecTable">
@@ -109,8 +109,14 @@
         // down menus to work. These are at the top of the anonymous functions section because that's what ECMA
         // does with them anyway.
         var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
-        var oWecTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxWec", lang, $('#wecDate').val()));
+
+        var oDclTable = $.extend(true, {}, weeklyTableDefaults("/Reports/AjaxDcl", lang, $('#dclDate').val()));
+        var oWecTable = $.extend(true, {}, dailyTableDefaults("/Reports/AjaxWec", lang, $('#wecDate').val()));
+        var oMwdTable = $.extend(true, {}, monthlyTableDefaults("/Reports/AjaxMwd", lang, $('#dclDate').val()));
+
+        var dcl = $('#dclDataTable').dataTable(oDclTable);
         var wec = $('#wecDataTable').dataTable(oWecTable);
+        var mwd = $('#mwdDataTable').dataTable(oMwdTable);
 
         //
         // hide stuff 
@@ -254,28 +260,29 @@
         //
 
         function dclNewTable() {
-            var dclNewTable = $.extend(true, {}, dclTableDefaults(lang, $('#dclDate').val()));
-            dclNewTable["bDestroy"] = "true,";
-            $('#dclDataTable').dataTable(dclNewTable).fnReloadAjax();
+            dclOptions = $.extend(true, {}, dailyTableDefaults("/Reports/AjaxDcl", lang, $('#dclDate').val()));
+            dclOptions.bDestroy = "true,";
+            $('#dclDataTable').dataTable(dclOptions).fnReloadAjax();
             dailyPie();
-        };
+        }
 
         //wecNewTable() has a different format than the other functions listed here. See above
         //for the explanation. (Under section "pesky vars").
         function wecNewTable() {
-            oWecTable["bDestroy"] = "true,";
+            oWecTable = $.extend(true, {}, weeklyTableDefaults("/Reports/AjaxWec", lang, $('#wecDate').val()));
+            oWecTable.bDestroy = "true,";
             $('#wecDataTable').dataTable(oWecTable).fnReloadAjax();
-        };
+        }
 
         function mwdNewTable() {
-            var mwdNewTable = $.extend(true, {}, mwdTableDefaults(lang, $('#mwdDate').val()));
-            mwdNewTable["bDestroy"] = "true,";
-            $('#mwdDataTable').dataTable(mwdNewTable).fnReloadAjax();
-        };
+            mwdOptions = $.extend(true, {}, monthlyTableDefaults("/Reports/AjaxMwd", lang, $('#mwdDate').val()));
+            mwdOptions.bDestroy = "true,";
+            $('#mwdDataTable').dataTable(mwdOptions).fnReloadAjax();
+        }
 
         function fnFormatDetails(oTable, nTr) {
             var aData = oTable.fnGetData(nTr);
-            var jobList = aData['topJobs'];
+            var jobList = aData.topJobs;
             var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="margin-left: 13.5%;background: #90A2B6;border: solid 2px gray;border-collapse: separate;">';
             sOut += '<thead><tr><th>Date</th>';
             sOut += '<th>Skill</th>';
@@ -290,6 +297,19 @@
             return sOut;
         }
 
+        $('#wecDataTable tbody td img').live('click', function () {
+            var nTr = $(this).parents('tr')[0];
+
+            if (wec.fnIsOpen(nTr)) {
+                /* This row is already open - close it */
+                this.src = "/Content/dataTables/details_open.png";
+                wec.fnClose(nTr);
+            } else {
+                /* Open this row */
+                this.src = "/Content/dataTables/details_close.png";
+                wec.fnOpen(nTr, fnFormatDetails(wec, nTr), 'nestedDetails');
+            }
+        });
 
         ///////////////////////////////////////////////////////////////////////////////// | BUTTONS |
         //
@@ -360,30 +380,31 @@
              });
          });
 
-         $('#wecDataTable tbody td img').live('click', function () {
-             var nTr = $(this).parents('tr')[0];
 
-             if (wec.fnIsOpen(nTr)) {
-                 /* This row is already open - close it */
-                 this.src = "/Content/dataTables/details_open.png";
-                 wec.fnClose(nTr);
-             } else {
-                 /* Open this row */
-                 this.src = "/Content/dataTables/details_close.png";
-                 wec.fnOpen(nTr, fnFormatDetails(wec, nTr), 'nestedDetails');
-             }
-         });
 
         // | PIE CHARTS |
          function dailyPie() {
-             var pieUrl = "/Reports/AjaxDcl";
+             var pieFill1;
+             var ajaxUrl = "/Reports/AjaxDcl";
              var ajaxData = { todaysdate: $('#dclDate').val() };
-             var pieFilling1 = pieFilling(pieUrl, ajaxData, 'dailySigninPie');
-             var pieFilling2 = pieFilling(pieUrl, ajaxData, 'gotJobsPie');
-             var pieOptions = getPieOptions(true);
-             var dayPie1 = $.jqplot($('#pieChart1'), pieFilling1, pieOptions);
-             var dayPie2 = $.jqplot($('#pieChart2'), pieFilling2, pieOptions);
-         }
+             //var pieFill1 = pieFilling(ajaxUrl, ajaxData, 'dailySigninPie');
+             //var pieFill2 = pieFilling(pieUrl, ajaxData, 'gotJobsPie');
+             $.getJSON(ajaxUrl, ajaxData, function (ajax) {
+                 pieFill1 = dailySigninPie(ajax);//[['Heavy Industry',12],['Retail',9],['Light Industry',14],['Out of home',16],['Commuting',7],['Orientation',9]];//'[[\'Fuck\',1][\'You\',4]]';//
+                 var plot1 = $.jqplot('dailyPieChart1', [pieFill1],
+                       {
+                           seriesDefaults: {
+                               renderer: $.jqplot.PieRenderer,
+                               rendererOptions: {
+                                   showDataLabels: true
+                               }
+                           },
+                           legend: { show: true, location: 'e' }
+                       }
+                     );
+             });
+
+          }
     });
     // end DOM ready check
 </script>
