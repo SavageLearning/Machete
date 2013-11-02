@@ -447,10 +447,10 @@ namespace Machete.Service
                     date = g.date,
                     totalSignins = signins.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
                     uniqueSignins = unique.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
-                    totalDWCSignins = dispatch.Where(whr => whr.date == g.date).Select(h => h.dwcList).FirstOrDefault(),
-                    totalHHHSignins = dispatch.Where(whr => whr.date == g.date).Select(h => h.hhhList).FirstOrDefault(),
-                    dispatchedDWCSignins = dispatch.Where(whr => whr.date == g.date).Select(h => h.dwcPropio).FirstOrDefault(),
-                    dispatchedHHHSignins = dispatch.Where(whr => whr.date == g.date).Select(h => h.hhhPropio).FirstOrDefault(),
+                    dispatchedDWCList = dispatch.Where(whr => whr.date == g.date).Select(h => h.dwcList).FirstOrDefault(),
+                    dispatchedHHHList = dispatch.Where(whr => whr.date == g.date).Select(h => h.hhhList).FirstOrDefault(),
+                    dispatchedDWCPropio = dispatch.Where(whr => whr.date == g.date).Select(h => h.dwcPropio).FirstOrDefault(),
+                    dispatchedHHHPropio = dispatch.Where(whr => whr.date == g.date).Select(h => h.hhhPropio).FirstOrDefault(),
                     totalHours = g.hours,
                     totalIncome = g.wages,
                     avgIncomePerHour = g.avg
@@ -626,10 +626,10 @@ namespace Machete.Service
         public DateTime? date { get; set; }
         public int? totalSignins { get; set; }
         public int? uniqueSignins { get; set; }
-        public int? totalDWCSignins { get; set; }
-        public int? totalHHHSignins { get; set; }
-        public int? dispatchedDWCSignins { get; set; }
-        public int? dispatchedHHHSignins { get; set; }
+        public int? dispatchedDWCList { get; set; }
+        public int? dispatchedHHHList { get; set; }
+        public int? dispatchedDWCPropio { get; set; }
+        public int? dispatchedHHHPropio { get; set; }
         public int? totalHours { get; set; }
         public double? totalIncome { get; set; }
         public double? avgIncomePerHour { get; set; }

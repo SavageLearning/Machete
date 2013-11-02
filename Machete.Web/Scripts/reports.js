@@ -174,10 +174,10 @@ function monthlyTableDefaults(url, lang, date)
             { mDataProp: "date" },
             { mDataProp: "totalSignins" },
             { mDataProp: "uniqueSignins" },
-            { mDataProp: "totalDWCSignins" },
-            { mDataProp: "totalHHHSignins" },
-            { mDataProp: "dispatchedDWCSignins" },
-            { mDataProp: "dispatchedHHHSignins" },
+            { mDataProp: "dispatchedDWCList" },
+            { mDataProp: "dispatchedHHHList" },
+            { mDataProp: "dispatchedDWCPropio" },
+            { mDataProp: "dispatchedHHHPropio" },
             { mDataProp: "totalHours" },
             { mDataProp: "totalIncome" },
             { mDataProp: "avgIncomePerHour" },
@@ -237,7 +237,7 @@ function dailySigninPie(objArray) {
     var total = 0;
     var totalAssigned = 0;
 
-    var pieData = '';
+    var pieData = [];
 
     for (var i = 0; i < array.aaData.length; i++) {
         dwc += array.aaData[i].dwcList;
@@ -249,7 +249,12 @@ function dailySigninPie(objArray) {
         totalAssigned += array.aaData[i].totalAssignments;
     }
 
-    pieData += '[[\'DWC List\', ' + dwc + '],[\'Propio (DWC)\', ' + dwcPropio + '],[\'HHH List\', ' + hhh + '],[\'Propio (HHH)\',' + hhhPropio + ']]';
+    pieData = [
+        ['DWC List', dwc],
+        ['Propio (DWC)', dwcPropio],
+        ['HHH List', hhh],
+        ['Propio (HHH)', hhhPropio]
+    ];
 
     return pieData;
 }
@@ -257,27 +262,41 @@ function dailySigninPie(objArray) {
 function monthlySigninPie(objArray) {
     var array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
 
-    var dwc = 0;
-    var dwcPropio = 0;
-    var hhh = 0;
-    var hhhPropio = 0;
-    var unique = 0;
     var total = 0;
-    var totalAssigned = 0;
+    var unique = 0;
+    var dwcList = 0;
+    var hhhList = 0;
+    var dwcPropio = 0;
+    var hhhPropio = 0;
+    var totalHours = 0;
+    var totalIncome = 0;
+    var avgIncome = 0;
 
-    var pieData = '';
+    var notDispatched = 0;
+
+    var pieData = [];
 
     for (var i = 0; i < array.aaData.length; i++) {
-        dwc += array.aaData[i].dwcList;
-        dwcPropio += array.aaData[i].dwcPropio;
-        hhh += array.aaData[i].hhhList;
-        hhhPropio += array.aaData[i].hhhPropio;
-        unique += array.aaData[i].uniqueSignins;
-        total += array.aaData[i].totalSignins;
-        totalAssigned += array.aaData[i].totalAssignments;
+        total += parseInt(array.aaData[i].totalSignins) || 0;
+        unique += parseInt(array.aaData[i].uniqueSignins) || 0;
+        dwcList += parseInt(array.aaData[i].dispatchedDWCList) || 0;
+        hhhList += parseInt(array.aaData[i].dispatchedHHHList) || 0;
+        dwcPropio += parseInt(array.aaData[i].dispatchedDWCPropio) || 0;
+        hhhPropio += parseInt(array.aaData[i].dispatchedHHHPropio) || 0;
+        totalHours += parseInt(array.aaData[i].totalHours) || 0;
+        totalIncome += parseInt(array.aaData[i].totalIncome) || 0;
+        avgIncome += parseInt(array.aaData[i].avgIncomePerHour) || 0;
     }
 
-    pieData += '[[\'DWC List\', ' + dwc + '],[\'Propio (DWC)\', ' + dwcPropio + '],[\'HHH List\', ' + hhh + '],[\'Propio (HHH)\',' + hhhPropio + ']]';
+    notDispatched = total - (dwcList + hhhList + dwcPropio + hhhPropio);
+
+    pieData = [
+        ['DWC List', dwcList],
+        ['HHH List', hhhList],
+        ['DWC Propio Patron', dwcPropio],
+        ['HHH Propio Patron', hhhPropio],
+        ['Not Dispatched', notDispatched]
+    ];
 
     return pieData;
 }
@@ -293,7 +312,9 @@ function gotWorkPie(objArray) {
     var total = 0;
     var totalAssigned = 0;
 
-    var pieData = '';
+    var totalNot = 0;
+
+    var pieData = [];
 
     for (var i = 0; i < array.aaData.length; i++) {
         dwc += array.aaData[i].dwcList;
@@ -305,28 +326,15 @@ function gotWorkPie(objArray) {
         totalAssigned += array.aaData[i].totalAssignments;
     }
 
-    total = total - totalAssigned;
+    totalNot = total - totalAssigned;
 
-    pieData += '[\'Total Signed In\', ' + total + '],[\'Total Assigned\', ' + totalAssigned + ']';
-    var apples = JSON.parse("[" + pieData + "]");
-    return apples;
+    pieData = [
+        ['Total Not Assigned', totalNot],
+        ['Total Assigned', totalAssigned]
+        ];
+    
+    return pieData;
 }
-
-//tested on jsfiddle, working ok
-function getPieOptions(showLabels) {
-    var pieOptions = {
-        seriesDefaults: {
-            renderer: jQuery.jqplot.PieRenderer, //jerry-rig; this should be passed in as an arg
-            rendererOptions: {
-                showDataLabels: showLabels.toString()
-            }
-        },
-        legend: { show: true, location: 'e' }
-    };
-
-    return pieOptions;
-}
-
 
 function pieFilling(ajaxUrl, data, pieType) {
     var jstring = '';

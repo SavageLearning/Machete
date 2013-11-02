@@ -8,7 +8,7 @@
 <div id="reportTabs">
     <ul>
         <li><a href="#summaryWrapper" id="summaryTab" >@Machete.Web.Resources.Reports.summaryTab</a> </li>
-        <li><a href="/Reports/Orders" id="ordersTab">@Machete.Web.Resources.Reports.ordersTab</a></li>
+        @*<li><a href="/Reports/Orders" id="ordersTab">@Machete.Web.Resources.Reports.ordersTab</a></li>*@
     </ul>
 
     <div id="summaryWrapper">
@@ -46,8 +46,8 @@
                     </tr>
                 </thead>
             </table>
-            <div id="dailyPieChart1" style="height:auto;width:100%;display:block;"></div>
-            <div id="dailyPieChart2" style="height:auto;width:100%;display:block;"></div>
+            <div id="dailyPieChart1" style="height:auto;width:80%;display:block;"></div>
+            <div id="dailyPieChart2" style="height:auto;width:80%;display:block;"></div>
         </div>
         <h3><a href="#" id="wecLink">Weekly</a></h3>
         <div id="wecTable">
@@ -70,7 +70,6 @@
                     </tr>
                 </thead>
             </table>
-            <div id="weeklyPieChart" style="height:auto;width:50%;float:right;"></div>
         </div>
         <h3><a href="#" id="mwdLink">Monthly</a></h3>
         <div id="mwdTable">
@@ -85,18 +84,17 @@
                         <th>@Machete.Web.Resources.Reports.date</th>
                         <th>@Machete.Web.Resources.Reports.totalSignins</th>
                         <th>Unique</th>
-                        <th>@Machete.Web.Resources.Reports.dwcSignins</th>
-                        <th>@Machete.Web.Resources.Reports.hhhSignins</th>
-                        <th>@Machete.Web.Resources.Reports.dwcDispatch</th>
-                        <th>@Machete.Web.Resources.Reports.hhhDispatch</th>
+                        <th>@Machete.Web.Resources.Reports.dwcList</th>
+                        <th>@Machete.Web.Resources.Reports.hhhList</th>
+                        <th>@Machete.Web.Resources.Reports.dwcPropio</th>
+                        <th>@Machete.Web.Resources.Reports.hhhPropio</th>
                         <th>@Machete.Web.Resources.Reports.totalHours</th>
                         <th>@Machete.Web.Resources.Reports.totalIncome</th>
                         <th>@Machete.Web.Resources.Reports.avgIncome</th>
                     </tr>
                 </thead>
             </table>
-            <div id="monthlyPieChart1" style="height:auto;width:50%;float:left;"></div>
-            <div id="monthlyPieChart2" style="height:auto;width:50%;float:left;"></div>
+            <div id="monthlyPieChart1" style="height:auto;width:80%;margin-top:3em;"></div>
         </div>
     </div>
   </div>
@@ -278,6 +276,7 @@
             mwdOptions = $.extend(true, {}, monthlyTableDefaults("/Reports/AjaxMwd", lang, $('#mwdDate').val()));
             mwdOptions.bDestroy = "true,";
             $('#mwdDataTable').dataTable(mwdOptions).fnReloadAjax();
+            monthlyPie();
         }
 
         function fnFormatDetails(oTable, nTr) {
@@ -384,14 +383,48 @@
 
         // | PIE CHARTS |
          function dailyPie() {
+             $('#dailyPieChart1').empty();
+             $('#dailyPieChart2').empty();
              var pieFill1;
+             var pieFill2;
              var ajaxUrl = "/Reports/AjaxDcl";
              var ajaxData = { todaysdate: $('#dclDate').val() };
-             //var pieFill1 = pieFilling(ajaxUrl, ajaxData, 'dailySigninPie');
-             //var pieFill2 = pieFilling(pieUrl, ajaxData, 'gotJobsPie');
              $.getJSON(ajaxUrl, ajaxData, function (ajax) {
-                 pieFill1 = dailySigninPie(ajax);//[['Heavy Industry',12],['Retail',9],['Light Industry',14],['Out of home',16],['Commuting',7],['Orientation',9]];//'[[\'Fuck\',1][\'You\',4]]';//
+                 pieFill1 = dailySigninPie(ajax);
+                 pieFill2 = gotWorkPie(ajax);
                  var plot1 = $.jqplot('dailyPieChart1', [pieFill1],
+                       {
+                           seriesDefaults: {
+                               renderer: $.jqplot.PieRenderer,
+                               rendererOptions: {
+                                   showDataLabels: true
+                               }
+                           },
+                           legend: { show: true, location: 'e' }
+                       }
+                     );
+                 var plot2 = $.jqplot('dailyPieChart2', [pieFill2],
+                     {
+                         seriesDefaults: {
+                             renderer: $.jqplot.PieRenderer,
+                             rendererOptions: {
+                                 showDataLabels: true
+                             }
+                         },
+                         legend: { show: true, location: 'e' }
+                     }
+                     );
+             });
+         }
+
+         function monthlyPie() {
+             $('#monthlyPieChart1').empty();
+             var pieFill1;
+             var ajaxUrl = "/Reports/AjaxMwd";
+             var ajaxData = { todaysdate: $('#mwdDate').val() };
+             $.getJSON(ajaxUrl, ajaxData, function (ajax) {
+                 pieFill1 = monthlySigninPie(ajax);//[['Heavy Industry',12],['Retail',9],['Light Industry',14],['Out of home',16],['Commuting',7],['Orientation',9]];//'[[\'Fuck\',1][\'You\',4]]';//
+                 var plot1 = $.jqplot('monthlyPieChart1', [pieFill1],
                        {
                            seriesDefaults: {
                                renderer: $.jqplot.PieRenderer,
@@ -404,7 +437,7 @@
                      );
              });
 
-          }
+         }
     });
     // end DOM ready check
 </script>
