@@ -11,38 +11,58 @@
     @if (Model.typeOfReport == "monthly")
     {
         <div style="padding-top:6em;">
-            <div style="float:left;width:63.5%;padding-left:10%">
+            <div style="float:left;width:40%;padding-left:10%">
                 <h3>Monthly Report</h3>
                 <p>@Model.date</p>
             </div>
-            <div style="float:left;">
-                <img src="../../Content/machete_1_close_crop.png" />
+            <div style="float:left;width:40%;padding-right:10%;">
+                <img src="../../Content/machete_1_close_crop.png" style="float:right;" />
             </div>
             <div style="display:block;padding:0 10%;">
-                <table id="mwdDataTable" class="display">
-                    <thead>
-                        <tr>
-                            <th>@Machete.Web.Resources.Reports.date</th>
-                            <th>@Machete.Web.Resources.Reports.totalSignins</th>
-                            <th>@Machete.Web.Resources.Reports.dwcSignins</th>
-                            <th>@Machete.Web.Resources.Reports.hhhSignins</th>
-                            <th>@Machete.Web.Resources.Reports.dwcDispatch</th>
-                            <th>@Machete.Web.Resources.Reports.hhhDispatch</th>
-                            <th>@Machete.Web.Resources.Reports.totalHours</th>
-                            <th>@Machete.Web.Resources.Reports.totalIncome</th>
-                            <th>@Machete.Web.Resources.Reports.avgIncome</th>
-                        </tr>
-                    </thead>
-                </table>
+            <table id="mwdDataTable" class="display">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.date</th>
+                        <th>@Machete.Web.Resources.Reports.totalSignins</th>
+                        <th>Unique</th>
+                        <th>@Machete.Web.Resources.Reports.dwcList</th>
+                        <th>@Machete.Web.Resources.Reports.hhhList</th>
+                        <th>@Machete.Web.Resources.Reports.dwcPropio</th>
+                        <th>@Machete.Web.Resources.Reports.hhhPropio</th>
+                        <th>@Machete.Web.Resources.Reports.totalHours</th>
+                        <th>@Machete.Web.Resources.Reports.totalIncome</th>
+                        <th>@Machete.Web.Resources.Reports.avgIncome</th>
+                    </tr>
+                </thead>
+            </table>
+            <div id="monthlyPieChart1" style="height:auto;width:80%;margin-top:3em;"></div>
             </div>
         </div>
         <script type="text/javascript">
             $(document).ready(function () {
                 var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
                 var date = '@Model.date';
-                var mwdNewTable = $.extend(true, {}, mwdTableDefaults(lang, date));
-                mwdNewTable["bDestroy"] = "true,";
-                $('#mwdDataTable').dataTable(mwdNewTable).fnReloadAjax();
+                var oMwdTable = $.extend(true, {}, monthlyTableDefaults("/Reports/AjaxMwd", lang, date));
+                var dcl = $('#mwdDataTable').dataTable(oMwdTable);
+                var ajaxUrl = "/Reports/AjaxMwd";
+                var ajaxData = { todaysdate: '@Model.date' };
+
+                var pieFill1;
+
+                $.getJSON(ajaxUrl, ajaxData, function (ajax) {
+                    pieFill1 = monthlySigninPie(ajax);
+                    var plot1 = $.jqplot('monthlyPieChart1', [pieFill1],
+                      {
+                          seriesDefaults: {
+                              renderer: $.jqplot.PieRenderer,
+                              rendererOptions: {
+                                  showDataLabels: true
+                              }
+                          },
+                          legend: { show: true, location: 'e' }
+                      }
+                    );
+                });
             });
         </script>
     }
@@ -50,12 +70,12 @@
     else if (Model.typeOfReport == "weekly")
     {
         <div style="padding-top:6em;">
-            <div style="float:left;width:63.5%;padding-left:10%">
-                <h3>Weekly Report</h3>
+            <div style="float:left;width:40%;padding-left:10%">
+                <h3>Monthly Report</h3>
                 <p>@Model.date</p>
             </div>
-            <div style="float:left;">
-                <img src="../../Content/machete_1_close_crop.png" />
+            <div style="float:left;width:40%;padding-right:10%;">
+                <img src="../../Content/machete_1_close_crop.png" style="float:right;" />
             </div>
             <div style="display:block;padding:0 10%;">
                 <table id="wecDataTable" class="display">
@@ -88,15 +108,15 @@
 
     else if (Model.typeOfReport == "daily")
     {
-        <div style="padding-top:6em;">
-            <div style="float:left;width:63.5%;padding-left:10%">
-                <h3>Daily Report</h3>
+          <div style="padding-top:6em;">
+            <div style="float:left;width:40%;padding-left:10%">
+                <h3>Monthly Report</h3>
                 <p>@Model.date</p>
             </div>
-            <div style="float:left;">
-                <img src="../../Content/machete_1_close_crop.png" />
+            <div style="float:left;width:40%;padding-right:10%;">
+                <img src="../../Content/machete_1_close_crop.png" style="float:right;" />
             </div>
-            <div style="display:block;padding:0 10%;">
+          <div style="display:block;padding:0 10%;">
                 <table id="dclDataTable" class="display">
                     <thead>
                         <tr>
@@ -105,21 +125,56 @@
                             <th>@Machete.Web.Resources.Reports.dwcPropio</th>
                             <th>@Machete.Web.Resources.Reports.hhhList</th>
                             <th>@Machete.Web.Resources.Reports.hhhPropio</th>
+                            <th>Unique</th>
                             <th>@Machete.Web.Resources.Reports.totalSignins</th>
                             <th>@Machete.Web.Resources.Reports.totalAssignments</th>
                             <th>@Machete.Web.Resources.Reports.cancelledJobs</th>
                         </tr>
                     </thead>
                 </table>
+                <div id="dailyPieChart1" style="height:auto;width:80%;display:block;"></div>
+                <div id="dailyPieChart2" style="height:auto;width:80%;display:block;"></div>
               </div>
         </div>
         <script type="text/javascript">
-            $(document).ready(function () {
-                var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
-                var date = '@Model.date';
-                var dclNewTable = $.extend(true, {}, dclTableDefaults(lang, date));
-                dclNewTable["bDestroy"] = "true,";
-                $('#dclDataTable').dataTable(dclNewTable).fnReloadAjax();
+            var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
+            var date = '@Model.date';
+            var oDclTable = $.extend(true, {}, dailyTableDefaults("/Reports/AjaxDcl", lang, date));
+            var dcl = $('#dclDataTable').dataTable(oDclTable);
+            var ajaxUrl = "/Reports/AjaxDcl";
+            var ajaxData = { todaysdate: '@Model.date' };
+
+            var pieFill1;
+            var pieFill2;
+
+            $('#dailyPieChart1').empty();
+            $('#dailyPieChart2').empty();
+
+            $.getJSON(ajaxUrl, ajaxData, function (ajax) {
+                pieFill1 = dailySigninPie(ajax);
+                pieFill2 = gotWorkPie(ajax);
+                var plot1 = $.jqplot('dailyPieChart1', [pieFill1],
+                      {
+                          seriesDefaults: {
+                              renderer: $.jqplot.PieRenderer,
+                              rendererOptions: {
+                                  showDataLabels: true
+                              }
+                          },
+                          legend: { show: true, location: 'e' }
+                      }
+                    );
+                var plot2 = $.jqplot('dailyPieChart2', [pieFill2],
+                    {
+                        seriesDefaults: {
+                            renderer: $.jqplot.PieRenderer,
+                            rendererOptions: {
+                                showDataLabels: true
+                            }
+                        },
+                        legend: { show: true, location: 'e' }
+                    }
+                    );
             });
         </script>
     }
@@ -166,12 +221,6 @@
         <p>That's all we know.</p>
     }
 
-
-
-
-
 <script type="text/javascript">
-    $(document).ready(function () {
-        $('#Hi').button();
-    });
+    
 </script>
