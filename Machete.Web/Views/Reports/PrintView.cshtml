@@ -43,7 +43,7 @@
                 var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
                 var date = '@Model.date';
                 var oMwdTable = $.extend(true, {}, monthlyTableDefaults("/Reports/AjaxMwd", lang, date));
-                var dcl = $('#mwdDataTable').dataTable(oMwdTable);
+                var mwd = $('#mwdDataTable').dataTable(oMwdTable);
                 var ajaxUrl = "/Reports/AjaxMwd";
                 var ajaxData = { todaysdate: '@Model.date' };
 
@@ -98,6 +98,7 @@
             var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
             var date = '@Model.date';
             var oWecTable = $.extend(true, {}, weeklyTableDefaults("/Reports/AjaxWec", lang, date));
+            var wec = $('#wecDataTable').dataTable(oWecTable);
         </script>
     }
 
