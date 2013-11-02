@@ -71,38 +71,33 @@
     {
         <div style="padding-top:6em;">
             <div style="float:left;width:40%;padding-left:10%">
-                <h3>Monthly Report</h3>
+                <h3>Weekly Report</h3>
                 <p>@Model.date</p>
             </div>
             <div style="float:left;width:40%;padding-right:10%;">
                 <img src="../../Content/machete_1_close_crop.png" style="float:right;" />
             </div>
             <div style="display:block;padding:0 10%;">
-                <table id="wecDataTable" class="display">
-                    <thead>
-                        <tr>
-                            <th>@Machete.Web.Resources.Reports.weekday</th>
-                            <th>@Machete.Web.Resources.Reports.date</th>
-                            <th>@Machete.Web.Resources.Reports.totalSignins</th>
-                            <th>@Machete.Web.Resources.Reports.noWeekJobs</th>
-                            <th>@Machete.Web.Resources.Reports.weekJobsSect</th>
-                            <th>No.</th>
-                            <th>@Machete.Web.Resources.Reports.weekEstDailyHours</th>
-                            <th>@Machete.Web.Resources.Reports.weekEstPayment</th>
-                            <th>@Machete.Web.Resources.Reports.weekHourlyWage</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
+            <table id="wecDataTable" class="display">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.weekday</th>
+                        <th>@Machete.Web.Resources.Reports.date</th>
+                        <th>@Machete.Web.Resources.Reports.totalSignins</th>
+                        <th>@Machete.Web.Resources.Reports.totalAssignments</th>
+                        <th>@Machete.Web.Resources.Reports.weekEstDailyHours</th>
+                        <th>@Machete.Web.Resources.Reports.weekEstPayment</th>
+                        <th>@Machete.Web.Resources.Reports.weekHourlyWage</th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
         </div>
         <script type="text/javascript">
-            $(document).ready(function () {
-                var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
-                var date = '@Model.date';
-                var wecNewTable = $.extend(true, {}, wecTableDefaults(lang, date));
-                wecNewTable["bDestroy"] = "true,";
-                $('#wecDataTable').dataTable(wecNewTable).fnReloadAjax();
-            });
+            var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
+            var date = '@Model.date';
+            var oWecTable = $.extend(true, {}, weeklyTableDefaults("/Reports/AjaxWec", lang, date));
         </script>
     }
 
@@ -110,7 +105,7 @@
     {
           <div style="padding-top:6em;">
             <div style="float:left;width:40%;padding-left:10%">
-                <h3>Monthly Report</h3>
+                <h3>Daily Report</h3>
                 <p>@Model.date</p>
             </div>
             <div style="float:left;width:40%;padding-right:10%;">
