@@ -24,7 +24,8 @@
     </div>
 
     <div id="summaryReports">
-        <h3><a href="#" id="dclLink">Daily</a></h3>
+        <h3><a href="#" id="
+            Link">Daily</a></h3>
         <div id="dclTable">
             <input type="button" value="Refresh" class="formButton" id="dclDataOnlyBtn" />
             <input type="button" value="Print Report" class="formButton" id="dclPrintReport" />
@@ -108,8 +109,8 @@
         // does with them anyway.
         var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
 
-        var oDclTable = $.extend(true, {}, weeklyTableDefaults("/Reports/AjaxDcl", lang, $('#dclDate').val()));
-        var oWecTable = $.extend(true, {}, dailyTableDefaults("/Reports/AjaxWec", lang, $('#wecDate').val()));
+        var oDclTable = $.extend(true, {}, dailyTableDefaults("/Reports/AjaxDcl", lang, $('#dclDate').val()));
+        var oWecTable = $.extend(true, {}, weeklyTableDefaults("/Reports/AjaxWec", lang, $('#wecDate').val()));
         var oMwdTable = $.extend(true, {}, monthlyTableDefaults("/Reports/AjaxMwd", lang, $('#dclDate').val()));
 
         var dcl = $('#dclDataTable').dataTable(oDclTable);
