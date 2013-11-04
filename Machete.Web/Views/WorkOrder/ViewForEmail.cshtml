@@ -3,6 +3,7 @@
 @using Machete.Web.Resources
 @using Machete.Web.Helpers
 @using System.Globalization
+@using System.Configuration
 @{
     ViewBag.Title = WorkOrders.viewtitle;
     CultureInfo CI = (CultureInfo)Session["Culture"];
@@ -357,7 +358,7 @@ html[xmlns] .clearfix {
 </head>
 
 <body>
-<h1 class="emailview">Machete Work Order</h1>
+<h1 class="emailview">@ConfigurationManager.AppSettings["OrganizationName"]</h1>
 <div id="main">
 <div class="dateNeeded">
     <div class="neededText">@WorkOrders.dateneeded</div>

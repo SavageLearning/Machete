@@ -23,8 +23,17 @@
 
         //
         // edit form submit
-        $('#duplicate-@Model.ID').mUI('formClickDuplicate', {
-            dupForm: $('#DuplicateEmail-@(Model.ID)')
+        $('#duplicate-@Model.ID').click(function(e) {
+            //dupForm: $('#DuplicateEmail-@(Model.ID)')
+            return;
+            var form = $('#DuplicateEmail-@(Model.ID)');
+            $.post($(form).attr("action"), $(form).serialize(), function (data) {
+                if (data.jobSuccess == false) {
+                    alert(data.rtnMessage);
+                } else {
+
+                }
+            });
         });
     });
 </script>
