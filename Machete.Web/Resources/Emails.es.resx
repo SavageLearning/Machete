@@ -237,4 +237,7 @@
   <data name="viewWO" xml:space="preserve">
     <value>Mirar work order</value>
   </data>
+  <data name="sendEmail" xml:space="preserve">
+    <value>Guardar y enviar email</value>
+  </data>
 </root>

@@ -358,6 +358,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Save and send email.
+        /// </summary>
+        public static string sendEmail {
+            get {
+                return ResourceManager.GetString("sendEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Registrations.
         /// </summary>
         public static string signinlistlink {
