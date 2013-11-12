@@ -31,7 +31,7 @@ namespace Machete.Test
         [TestInitialize]
         public void SetupTest()
         {
-            base.Initialize(new MacheteInitializer(), "macheteWeb");
+            base.Initialize(new MacheteInitializer(), "macheteConnection");
             driver = new ChromeDriver(ConfigurationManager.AppSettings["CHROMEDRIVERPATH"]);
             baseURL = "http://localhost:4213/";
             ui = new sharedUI(driver, baseURL);

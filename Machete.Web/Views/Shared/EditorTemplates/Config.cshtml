@@ -27,8 +27,8 @@
         @Html.mUITableTextBoxFor(m => m.text_ES,
                                         new { @tabindex = "2", @class = "configEditor", id = idPrefix + "text_ES" })
     </div>
-    </div>
-    <div id="@(idPrefix)skillRows">
+</div>
+<div id="@(idPrefix)skillRows">
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.subcategory)
         @Html.mUITableTextBoxFor(model => model.subcategory,
@@ -55,7 +55,7 @@
     </div>
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.typeOfWorkID)
-        @Html.mUITableDropDownListFor(model => model.typeOfWorkID, Lookups.get(LType.worktype, lang),
+        @Html.mUITableDropDownListFor(model => model.typeOfWorkID, Lookups.getSelectList(Machete.Domain.LCategory.worktype),
                      new { @tabindex = "1", @class = "configEditor skillConfig", @id = idPrefix + "typeOfWorkID" })
         @Html.mUITableLabelFor(model => model.speciality)
         @Html.mUIDropDownYesNoFor(m => m.speciality,
@@ -66,6 +66,14 @@
         @Html.mUITableTextBoxFor(model => model.ltrCode,
                      new { @tabindex = "1", @class = "configEditor skillConfig", @id = idPrefix + "ltrCode" })
     </div>
+
+    </div>
+</div>
+<div id="@(idPrefix)emailTemplateRows">
+    <div class="tb-row">
+        @Html.mUITableLabelFor(model => model.emailTemplate)
+        @Html.TextAreaFor(model => model.emailTemplate, new { tabindex = "3", @class="email-field configEditor emailTemplateConfig" , id = idPrefix + "emailTemplate"})
+        @Html.ValidationMessageFor(model => model.emailTemplate)
     </div>
 </div>
 @Html.Partial("ManagerInfo")
@@ -73,14 +81,17 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#skillRows').hide();
         var selectDropDown = $('#@(idPrefix + "category")');
-        selectDropDown.mUI('configEnableOnSkill', {
-            enableVal: 'skill',
-            target: {
-                visible: $('#@(idPrefix)skillRows'),
-                validate: $('[id|=@(recTypeID)].skillConfig')
+        selectDropDown.mUI('configEnableOnValue', [
+            {
+                enableOnValue: '@(Machete.Domain.LCategory.skill)',
+                targets: $('#@(idPrefix)skillRows'),
+                validators: $('[id|=@(recTypeID)].skillConfig')
+            }, {
+                enableOnValue: '@(Machete.Domain.LCategory.emailTemplate)',
+                targets: $('#@(idPrefix)emailTemplateRows'),
+                                validators: $('[id|=@(recTypeID)].emailTemplateConfig')
             }
-        });
+        ]);
     });
 </script>

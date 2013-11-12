@@ -112,15 +112,12 @@
                                 {"mDataProp": "teacher" },
                                 {"mDataProp": "dateStart" },
                 ],
-                "fnServerData": function ( sSource, aoData, fnCallback ) {
-			        /* Add some extra data to the sender */			    
-                    aoData.push( { "name": "personID", "value": $('#personID').val() } );
-                    aoData.push( { "name": "attendedActivities", "value": false } );
-			        $.getJSON( sSource, aoData, function (json) { 
-				        /* Do whatever additional processing you want on the callback, then tell DataTables */
-				        fnCallback(json)
-			        } );
-		        }             
+                "fnServerDataExtra": function () {
+                    return [
+                    { "name": "personID", "value": $('#personID').val() },
+                    { "name": "attendedActivities", "value": false }
+                    ]
+                },
             }, 
             dblClickEvent: null,
             clickEvent: function (e) {
@@ -154,15 +151,12 @@
                                 {"mDataProp": "teacher" },
                                 {"mDataProp": "dateStart" },
                 ],
-                "fnServerData": function ( sSource, aoData, fnCallback ) {
-			        /* Add some extra data to the sender */			    
-                    aoData.push( { "name": "personID", "value": $('#personID').val() } );
-                    aoData.push( { "name": "attendedActivities", "value": true } );
-			        $.getJSON( sSource, aoData, function (json) { 
-				        /* Do whatever additional processing you want on the callback, then tell DataTables */
-				        fnCallback(json)
-			        } );
-		        }      
+                "fnServerDataExtra": function () {
+                    return [
+                    { "name": "personID", "value": $('#personID').val() },
+                    { "name": "attendedActivities", "value": true }
+                    ]
+                },
             }, 
             dblClickEvent: null,
             clickEvent: function (e) {

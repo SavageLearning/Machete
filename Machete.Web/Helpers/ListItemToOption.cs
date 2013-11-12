@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Text;
-using System.Web.Mvc.Resources;
+using System.Web.Mvc;
 
 namespace System.Web.Mvc.Html
 {
@@ -78,6 +78,15 @@ namespace System.Web.Mvc
             set;
         }
         public string fixedJob
+        {
+            get;
+            set;
+        }
+    }
+
+    public class SelectListItemEmail : SelectListItem
+    {
+        public string template
         {
             get;
             set;

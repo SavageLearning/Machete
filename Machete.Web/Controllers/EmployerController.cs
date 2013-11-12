@@ -35,6 +35,7 @@ using Machete.Web.ViewModel;
 using System.Web.Routing;
 using Machete.Web.Models;
 using AutoMapper;
+using Machete.Web.Resources;
 
 namespace Machete.Web.Controllers
 {
@@ -90,7 +91,7 @@ namespace Machete.Web.Controllers
                 phone =  p.phone, 
                 dateupdated = Convert.ToString(p.dateupdated),
                 Updatedby = p.Updatedby,
-                onlineSource = p.onlineSource
+                onlineSource = p.onlineSource ? Shared.True : Shared.False
             };
 
             return Json(new
@@ -124,7 +125,7 @@ namespace Machete.Web.Controllers
         //    _model.city = "Seattle"; // no null types allowed in var
         //    _model.state = "WA";     // no null types allowed in var
             _model.blogparticipate = false;
-            _model.referredby = Lookups.getDefaultID(LType.emplrreference);
+            _model.referredby = Lookups.getDefaultID(LCategory.emplrreference);
             return PartialView("Create", _model);
         }
         /// <summary>

@@ -54,12 +54,14 @@ namespace Machete.Service
         private readonly IWorkerSigninRepository wsiRepo;
         private readonly IUnitOfWork unitOfWork;
         private readonly ILookupRepository lRepo;
+        private readonly ILookupCache lcache;
         //
         //
         public WorkAssignmentService(IWorkAssignmentRepository waRepo, 
                                      IWorkerRepository wRepo, 
                                      ILookupRepository lRepo, 
                                      IWorkerSigninRepository wsiRepo,
+                                     ILookupCache lc,
                                      IUnitOfWork unitOfWork) : base(waRepo, unitOfWork)
         {
             this.waRepo = waRepo;
@@ -67,6 +69,7 @@ namespace Machete.Service
             this.wRepo = wRepo;
             this.lRepo = lRepo;
             this.wsiRepo = wsiRepo;
+            this.lcache = lc;
             this.logPrefix = "WorkAssignment";
         }
         /// <summary>
@@ -99,7 +102,7 @@ namespace Machete.Service
             //
             // filter on member ID, showing only assignments available to the member based on their skills
             if (o.dwccardnum > 0)
-                e = IndexViewBase.filterOnSkill(o, q);
+                e = IndexViewBase.filterOnSkill(o, q, lcache);
              else
                 e = q.AsEnumerable();
             //

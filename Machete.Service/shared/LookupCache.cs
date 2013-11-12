@@ -28,35 +28,44 @@ using System.Text;
 using Machete.Data;
 using Machete.Domain;
 using System.Runtime.Caching;
+using Machete.Data.Infrastructure;
 
 namespace Machete.Service
 {
-
-    public static class LookupCache
+    public interface ILookupCache
     {
-        private static MacheteContext DB { get; set; }
-        private static CacheItem DbCache { get; set; }
-        private static ObjectCache cache;
-
+        void Dispose();
+        IEnumerable<Lookup> getCache();
+        void Refresh();
+        bool isSpecialized(int skillid);
+        Lookup getByID(int id);
+        string textByID(int ID, string locale);
+        int getByKeys(string category, string key);
+        IEnumerable<int> getSkillsByWorkType(int worktypeID);
+    }
+    public class LookupCache : ILookupCache
+    {
+        private Func<IDatabaseFactory> DB { get; set; }
+        private CacheItem DbCache { get; set; }
+        private ObjectCache cache;
         //
         //
-        public static void Initialize(MacheteContext db)
+        public LookupCache(Func<IDatabaseFactory> db)
         {
             cache = MemoryCache.Default;
             DB = db;
             FillCache();
         }
-        public static void Dispose()
+        public void Dispose()
         {
             DB = null;
             DbCache = null;
             cache = null;
         }
         //
-        //
-        private static void FillCache()
+        private void FillCache()
         {
-            IEnumerable<Lookup> lookups = DB.Lookups.AsNoTracking().ToList();
+            IEnumerable<Lookup> lookups = DB().Get().Lookups.AsNoTracking().ToList();
             CacheItemPolicy policy = new CacheItemPolicy();
             //TODO: Put LookupCache expire time in config file
             policy.AbsoluteExpiration = new DateTimeOffset(DateTime.Now.AddHours(1));
@@ -64,35 +73,31 @@ namespace Machete.Service
             cache.Set(wCacheItem, policy);
             //
             #region WORKERS
-            Worker.iActive = getSingleEN("memberstatus", "Active");
-            Worker.iSanctioned = getSingleEN("memberstatus", "Sanctioned");
-            Worker.iExpelled = getSingleEN("memberstatus", "Expelled");
-            Worker.iExpired = getSingleEN("memberstatus", "Expired");
-            Worker.iInactive = getSingleEN("memberstatus", "Inactive");
+            Worker.iActive = getByKeys(LCategory.memberstatus, LMemberStatus.Active);
+            Worker.iSanctioned = getByKeys(LCategory.memberstatus, LMemberStatus.Sanctioned);
+            Worker.iExpelled = getByKeys(LCategory.memberstatus, LMemberStatus.Expelled);
+            Worker.iExpired = getByKeys(LCategory.memberstatus, LMemberStatus.Expired);
+            Worker.iInactive = getByKeys(LCategory.memberstatus, LMemberStatus.Inactive);
             //
-            Worker.iDWC = getSingleEN("worktype", "(DWC) Day Worker Center");//TODO: Remove Casa specific configuration. needs real abstraction on iDWC / iHHH.
-            Worker.iHHH = getSingleEN("worktype", "(HHH) Household Helpers");//TODO: Remove Casa specific configuration. needs real abstraction on iDWC / iHHH.
             #endregion  
-            //
             #region WORKORDERS
-            //
-            WorkOrder.iActive = getSingleEN("orderstatus", "Active");
-            WorkOrder.iPending = getSingleEN("orderstatus", "Pending");
-            WorkOrder.iCompleted = getSingleEN("orderstatus", "Completed");
-            WorkOrder.iCancelled = getSingleEN("orderstatus", "Cancelled");
-            WorkOrder.iExpired = getSingleEN("orderstatus", "Expired");
+            WorkOrder.iActive = getByKeys(LCategory.orderstatus, LOrderStatus.Active);
+            WorkOrder.iPending = getByKeys(LCategory.orderstatus, LOrderStatus.Pending);
+            WorkOrder.iCompleted = getByKeys(LCategory.orderstatus, LOrderStatus.Completed);
+            WorkOrder.iCancelled = getByKeys(LCategory.orderstatus, LOrderStatus.Cancelled);
+            WorkOrder.iExpired = getByKeys(LCategory.orderstatus, LOrderStatus.Expired);
+            #endregion
+            #region EMAILS
+            Email.iReadyToSend = getByKeys(LCategory.emailstatus, LEmailStatus.ReadyToSend);
+            Email.iSent = getByKeys(LCategory.emailstatus, LEmailStatus.Sent);
+            Email.iSending = getByKeys(LCategory.emailstatus, LEmailStatus.Sending);
+            Email.iPending = getByKeys(LCategory.emailstatus, LEmailStatus.Pending);
+            Email.iTransmitError = getByKeys(LCategory.emailstatus, LEmailStatus.TransmitError);
             #endregion
         }
         //
         //
-        private static void FillCache(MacheteContext db)
-        {
-            DB = db;
-            FillCache();
-        }
-        //
-        //
-        public static IEnumerable<Lookup> getCache()
+        public IEnumerable<Lookup> getCache()
         {
             CacheItem wCacheItem = cache.GetCacheItem("lookupCache");
             if (wCacheItem == null)
@@ -104,25 +109,26 @@ namespace Machete.Service
         }
         //
         //
-        public static void Refresh(MacheteContext db)
+        public void Refresh()
         {
-            FillCache(db);
+            FillCache();
         }
         //
         //
-        public static bool isSpecialized(int skillid)
+        public bool isSpecialized(int skillid)
         {
             return getCache().Single(s => s.ID == skillid).speciality;
         }
-        public static Lookup getByID(int id)
+        public Lookup getByID(int id)
         {
             return getCache().Single(s => s.ID == id);
         }
         //
         // Get the Id string for a given lookup number
-        public static string byID(int ID, string locale)
+        public string textByID(int ID, string locale)
         {
             Lookup record;
+            if (ID == 0) return null;
             try
             {
                 record = getCache().Single(s => s.ID == ID);
@@ -139,22 +145,22 @@ namespace Machete.Service
         }
         //
         // Get the ID number for a given lookup string
-        public static int getSingleEN(string category, string text)
+        public int getByKeys(string category, string key)
         {
             int rtnint = 0;
             try
             {
-                rtnint = getCache().Single(s => s.category == category && s.text_EN == text).ID;
+                rtnint = getCache().Single(s => s.category == category && s.key == key).ID;
             }
             catch
             {
-                throw new MacheteIntegrityException("Unable to Lookup Category: " + category + ", text: " + text);
+                throw new MacheteIntegrityException("Unable to Lookup Category: " + category + ", text: " + key);
             }
             return rtnint;
         }
         //
         //
-        public static IEnumerable<int> getSkillsByWorkType(int worktypeID)
+        public IEnumerable<int> getSkillsByWorkType(int worktypeID)
         {
             try
             {
@@ -163,7 +169,6 @@ namespace Machete.Service
             catch {
                 throw new MacheteIntegrityException("getSkillsByWorkType throws exception for worktype ID:" +worktypeID);
             }
-
         }
     }
 }

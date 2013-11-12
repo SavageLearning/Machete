@@ -39,10 +39,12 @@ namespace Machete.Web.Controllers
     public class ActivityController : MacheteController
     {
         private readonly IActivityService serv;
-        private System.Globalization.CultureInfo CI;
+        private readonly LookupCache lcache;
+        private CultureInfo CI;
 
-        public ActivityController(IActivityService aServ)
+        public ActivityController(IActivityService aServ, LookupCache lc)
         {
+            this.lcache = lc;
             this.serv = aServ;
         }
         protected override void Initialize(RequestContext requestContext)
@@ -64,6 +66,7 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
+        //[Authorize(Roles = "Administrator, Manager, Teacher")]
         public JsonResult AjaxHandler(jQueryDataTableParam param)
         {
             //Get all the records
@@ -81,14 +84,14 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
-        public object dtResponse(ref Activity p)
+        private object dtResponse(ref Activity p)
         {
             return new
             {
                 tabref = EditTabRef(p),
                 tablabel = EditTabLabel(p),
-                name = LookupCache.byID(p.name, CI.TwoLetterISOLanguageName),
-                type = LookupCache.byID(p.type, CI.TwoLetterISOLanguageName),
+                name = lcache.textByID(p.name, CI.TwoLetterISOLanguageName),
+                type = lcache.textByID(p.type, CI.TwoLetterISOLanguageName),
                 count = p.Signins.Count(),
                 teacher = p.teacher,
                 dateStart = p.dateStart.ToString(),
@@ -108,7 +111,7 @@ namespace Machete.Web.Controllers
         {
             if (emp == null) return null;
             return emp.dateStart.ToString() + " - " + 
-                    LookupCache.byID(emp.name, CI.TwoLetterISOLanguageName) + " - " +
+                    lcache.textByID(emp.name, CI.TwoLetterISOLanguageName) + " - " +
                     emp.teacher;
         }
         /// <summary>
@@ -183,7 +186,7 @@ namespace Machete.Web.Controllers
         /// 
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="UserName"></param>
+        /// <param name="UserName"></param>s
         /// <returns></returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, Teacher")]

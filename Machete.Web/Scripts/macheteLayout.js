@@ -92,6 +92,31 @@ function jqrfyTable(o) {
             return nRow;
         }
     }
+
+    myOptions.fnServerData = function (sSource, aoData, fnCallback) {
+        var aoDataConcatenated = aoData;
+        if (myOptions.fnServerDataExtra) {
+            aoDataConcatenated= aoData.concat(myOptions.fnServerDataExtra());
+        }
+        $.ajax({
+            "dataType": 'json',
+            "type": "GET",
+            "url": sSource,
+            "data": aoDataConcatenated,
+            "success": function (result) {
+                if (result.jobSuccess == false) {
+                    alert(result.rtnMessage);
+                }
+                else {
+                    fnCallback(result);
+                }
+            },
+            "failure": function (result) {
+                alert(result);
+            }
+        });
+    }
+
     //
     // create datatable
     oTable = $(myTable).dataTable(myOptions).fnSetFilteringDelay(400);

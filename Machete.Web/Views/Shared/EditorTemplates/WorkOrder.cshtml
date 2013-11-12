@@ -21,15 +21,14 @@
         @if (Html.IsInRole(Html.Role_AM()))
         {
             @Html.mUIDropDownListFor(model => model.status,
-                                         new SelectList(Lookups.get(LType.orderstatus, CI.TwoLetterISOLanguageName), "Value", "Text", Model.status),
+                                         new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.orderstatus), "Value", "Text", Model.status),
                                     new { @id = idPrefix + "status" })
                 
         }
         else
         {
             <div class="tb-header">
-
-            @Lookups.byID(Model.status, CI.TwoLetterISOLanguageName)
+            @Lookups.byID(Model.status)
             @Html.HiddenFor(model => model.status, new { @id = idPrefix + "status" })
             </div>
         }
@@ -66,7 +65,7 @@
         @Html.mUITableLabelAndTextBoxFor(model => model.state, new { tabindex = "1", id = idPrefix + "state" })
         @Html.mUITableLabelFor(model => model.transportMethodID)
         @Html.mUIDropDownListFor(model => model.transportMethodID,
-                     new SelectList(Lookups.get(LType.transportmethod, CI.TwoLetterISOLanguageName), "Value", "Text", Model.transportMethodID),
+                     new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.transportmethod), "Value", "Text", Model.transportMethodID),
                               new { tabindex = "2", id = idPrefix + "transportMethodID" })
     </div>
     <!--tb-row-->
@@ -78,7 +77,6 @@
     <div class="tb-row">
         @Html.mUITableLabelAndTextBoxFor(model => model.phone, new { tabindex = "1", id = idPrefix + "phone" })
         @Html.mUITableLabelAndTextBoxFor(model => model.transportFeeExtra, new { tabindex = "2", @class = "money-field", id = idPrefix + "transportFeeExtra" })
-    </div>
     </div>
     <!--tb-row-->
     <div class="tb-row">

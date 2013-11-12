@@ -39,6 +39,7 @@ using System.Text.RegularExpressions;
 using System.Data.Objects;
 using AutoMapper;
 using System.Globalization;
+using Machete.Web.Resources;
 
 namespace Machete.Web.Controllers
 {
@@ -50,19 +51,22 @@ namespace Machete.Web.Controllers
         private readonly IWorkerService wServ;
         private readonly IWorkerRequestService wrServ;
         private readonly IWorkAssignmentService waServ;
+        private readonly ILookupCache lcache;
         CultureInfo CI;
         
         public WorkOrderController(IWorkOrderService woServ, 
                                    IWorkAssignmentService workAssignmentService,
                                    IEmployerService employerService,
                                    IWorkerService workerService,
-                                   IWorkerRequestService requestService)
+                                   IWorkerRequestService requestService, 
+                                   ILookupCache lc)
         {
             this.woServ = woServ;
             this.eServ = employerService;
             this.wServ = workerService;
             this.waServ = workAssignmentService;
             this.wrServ = requestService;
+            this.lcache = lc;
         }
         protected override void Initialize(RequestContext requestContext)
                 {
@@ -168,15 +172,17 @@ namespace Machete.Web.Controllers
                 EID = Convert.ToString(p.EmployerID),
                 WOID = System.String.Format("{0,5:D5}", p.paperOrderNum),
                 dateTimeofWork = p.dateTimeofWork.ToString(),
-                status = LookupCache.byID(p.status, CI.TwoLetterISOLanguageName),
+                status = lcache.textByID(p.status, CI.TwoLetterISOLanguageName),
                 WAcount = p.workAssignments.Count(a => a.workOrderID == ID).ToString(),
                 contactName = p.contactName,
                 workSiteAddress1 = p.workSiteAddress1,
                 dateupdated = System.String.Format("{0:MM/dd/yyyy HH:mm:ss}", p.dateupdated),
                 updatedby = p.Updatedby,
-                transportMethod = LookupCache.byID(p.transportMethodID, CI.TwoLetterISOLanguageName),
+                transportMethod = lcache.textByID(p.transportMethodID, CI.TwoLetterISOLanguageName),
                 displayState = _getDisplayState(p),
-                onlineSource = p.onlineSource,
+                onlineSource = p.onlineSource ? Shared.True : Shared.False,
+                emailSentCount = p.Emails.Where(e => e.statusID == Email.iSent || e.statusID == Email.iReadyToSend).Count(),
+                emailErrorCount = p.Emails.Where(e => e.statusID == Email.iTransmitError).Count(),
                 recordid = p.ID.ToString(),
                 workers = showWorkers ?
                         from w in p.workAssignments
@@ -184,7 +190,7 @@ namespace Machete.Web.Controllers
                         {
                             WID = w.workerAssigned != null ? (int?)w.workerAssigned.dwccardnum : null,
                             name = w.workerAssigned != null ? w.workerAssigned.Person.fullName() : null,
-                            skill = LookupCache.byID(w.skillID, CI.TwoLetterISOLanguageName),
+                            skill = lcache.textByID(w.skillID, CI.TwoLetterISOLanguageName),
                             hours = w.hours,
                             wage = w.hourlyWage
                         } : null
@@ -199,7 +205,7 @@ namespace Machete.Web.Controllers
         /// <returns>status string</returns>
         private string _getDisplayState(WorkOrder wo)
         {
-            string status = LookupCache.byID(wo.status, "en");
+            string status = lcache.textByID(wo.status, "en");
             //TODO: Pull out WorkOrder status strings, use WorkOrder object reference
             if (status == "Completed")
             {
@@ -222,9 +228,9 @@ namespace Machete.Web.Controllers
             WorkOrder _wo = new WorkOrder();
             _wo.EmployerID = EmployerID;
             _wo.dateTimeofWork = DateTime.Today;
-            _wo.transportMethodID = Lookups.getDefaultID(LType.transportmethod);
-            _wo.typeOfWorkID = Lookups.getDefaultID(LType.worktype);
-            _wo.status = Lookups.getDefaultID(LType.orderstatus);
+            _wo.transportMethodID = Lookups.getDefaultID(LCategory.transportmethod);
+            _wo.typeOfWorkID = Lookups.getDefaultID(LCategory.worktype);
+            _wo.status = Lookups.getDefaultID(LCategory.orderstatus);
             _wo.timeFlexible = true;
             ViewBag.workerRequests = new List<SelectListItem> {};
             return PartialView("Create", _wo);
@@ -328,9 +334,20 @@ namespace Machete.Web.Controllers
             WorkOrder workOrder = woServ.Get(id);
             return View(workOrder);
         }
-        //
-        // GroupView -- Creates the view to print all orders for a given day
-        //              assignedOnly: only shows orders that are fully assigned
+
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        public ActionResult ViewForEmail(int id)
+        {
+            WorkOrder workOrder = woServ.Get(id);
+            return PartialView(workOrder);
+        }
+        /// <summary>
+        /// Creates the view to print all orders for a given day
+        /// assignedOnly: only shows orders that are fully assigned
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="assignedOnly"></param>
+        /// <returns></returns>
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult GroupView(DateTime date, bool? assignedOnly)
         {

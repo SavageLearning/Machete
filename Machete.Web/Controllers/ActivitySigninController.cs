@@ -42,13 +42,16 @@ namespace Machete.Web.Controllers
     {
         private readonly IActivitySigninService serv;
         private readonly IWorkerService wServ;
+        private readonly LookupCache lcache;
         private System.Globalization.CultureInfo CI;
 
         public ActivitySigninController(IActivitySigninService serv, 
-                                 IWorkerService wServ)
+                                 IWorkerService wServ,
+                                 LookupCache lc)
         {
             this.serv = serv;
             this.wServ = wServ;
+            this.lcache = lc;
         }
 
         protected override void Initialize(RequestContext requestContext)
@@ -147,18 +150,13 @@ namespace Machete.Web.Controllers
                              lastname2 = p.lastname2,
                              dateforsignin = p.dateforsignin,
                              dateforsigninstring = p.dateforsignin.ToShortDateString(),
-                             memberStatus = LookupCache.byID(p.memberStatus, CI.TwoLetterISOLanguageName),
+                             memberStatus = lcache.textByID(p.memberStatus, CI.TwoLetterISOLanguageName),
                              memberInactive = p.w.isInactive,
                              memberSanctioned = p.w.isSanctioned,
                              memberExpired = p.w.isExpired,
                              memberExpelled = p.w.isExpelled,
                              imageID = p.imageID,
                              expirationDate = p.expirationDate.ToShortDateString(),
-                             //type = LookupCache.byID(p.type, CI.TwoLetterISOLanguageName),
-                             //activityName = LookupCache.byID(p.name, CI.TwoLetterISOLanguageName),
-                             //teacher = p.teacher,
-                             //dateStart = p.dateStart.ToString(),
-                             //dateEnd = p.dateEnd.ToString()
                          };
             return Json(new
             {

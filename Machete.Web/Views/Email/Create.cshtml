@@ -1,0 +1,67 @@
+﻿@model Machete.Web.ViewModel.EmailView
+@using Machete.Web.Resources
+@using Machete.Domain
+@{  
+    string recType = "email";
+    string idPrefix = recType + Model.ID + "-";
+}
+@using (Html.BeginForm("Create", "Email", FormMethod.Post,
+                        new { @id = Model.idPrefix + "createForm" }))
+{
+    <div>
+        <input type="submit" id="@(idPrefix)SaveBtn" class="formButton saveBtn" 
+               value="@Emails.createsubmit"  tabindex="9"/>
+        @if (Machete.Domain.Email.iPending == Model.statusID)
+        { 
+        <input type="button" id="@(Model.idPrefix)SendBtn" class="formButton" value="$$$Send WO" />
+        }
+        <input type="button" id="@(Model.idPrefix)attachWO" class="formButton" value="@Emails.attachWO" />
+
+    </div>
+    @Html.ValidationSummary(true)
+    @Html.EditorForModel()
+
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.formButton').button();
+        var emailCreateForm = $("#@(Model.idPrefix)createForm")
+        var emailSendBtn = $("#@(Model.idPrefix)SendBtn");
+        $.validator.unobtrusive.parseDynamicContent('#@(Model.idPrefix)createForm');
+        $('#emailName').focus();
+        // Email Create submit event
+
+        emailCreateForm.mUI('tabFormSubmit', {
+            recType: "@(recType)", //for add_rectab
+            create: true,
+            formLevel: 1,
+            preProcess: function () {
+                var field = $('#@(Model.idPrefix)attachment');
+                var encoded = $('<div/>').text($(field).val()).html();
+                console.log(encoded);
+                field.val(encoded);
+            },
+            postProcess: function () {
+                $('#@(Model.idPrefix)createForm').closest('.ui-dialog').find('a.ui-dialog-titlebar-close').click();
+            }
+        });
+        //
+        // machete UI detect changes on forms in tabs   
+        emailCreateForm.mUI('formDetectChanges', {
+            recType: "@(recType)",
+            formLevel: 1,
+            changeConfirm: "@(Shared.changeConfirm)",
+            changeTitle: "@(Shared.changeTitle)"
+        });
+        $('#@(Model.idPrefix)attachWO').mUI('btnAttachWorkOrder', {
+            url: '/WorkOrder/View/@(Model.woid)',
+            field: $('#@(Model.idPrefix)attachment')
+        });
+
+        emailSendBtn.mUI('btnSendEmail', {
+            statusBox: $('#@(Model.idPrefix)status'),
+                    emailForm: $("#@(Model.idPrefix)createForm"),
+                    sendStatus: @(Email.iReadyToSend)
+        });
+    });
+</script>

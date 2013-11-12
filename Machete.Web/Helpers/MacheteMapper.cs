@@ -28,6 +28,8 @@ using Machete.Service;
 using System.Globalization;
 using Machete.Web.ViewModel;
 using Machete.Domain;
+using System.Web.Mvc;
+using System.Collections.Generic;
 
 
 namespace Machete.Web.Helpers
@@ -41,6 +43,7 @@ namespace Machete.Web.Helpers
                 .ForMember(vo => vo.CI, opt => opt.Ignore())
                 .ForMember(vo => vo.authenticated, opt => opt.Ignore())
                 .ForMember(vo => vo.personID, opt => opt.MapFrom(dt => dt.personID ?? 0))
+                .ForMember(vo => vo.emailID, opt => opt.MapFrom(dt => string.IsNullOrEmpty(dt.searchColName("emailID")) ? null : (int?)Convert.ToInt32(dt.searchColName("emailID"))))
                 .ForMember(vo => vo.onlineSource, opt => opt.MapFrom(dt => string.IsNullOrEmpty(dt.searchColName("onlineSource")) ? null : dt.searchColName("onlineSource")))
                 .ForMember(vo => vo.status, opt => opt.MapFrom(dt => string.IsNullOrEmpty(dt.searchColName("status")) ? null : (int?)Convert.ToInt32(dt.searchColName("status"))))
                 .ForMember(vo => vo.EmployerID, opt => opt.MapFrom(dt => string.IsNullOrEmpty(dt.searchColName("EID")) ? null : (int?)Convert.ToInt32(dt.searchColName("EID"))))
@@ -69,6 +72,18 @@ namespace Machete.Web.Helpers
                 .ForMember(wo => wo.wo_zipcode, opt => opt.MapFrom(c => c.zipcode))
                 .IgnoreAllNonExisting();
             #endregion
+            Mapper.CreateMap<Email, EmailView>()
+                .ForMember(ev => ev.status, opt => opt.MapFrom(e => Lookups.byID(e.statusID)))
+                .ForMember(ev => ev.statusID, opt => opt.MapFrom(e => e.statusID))
+                .ForMember(ev => ev.templates, opt => opt.UseValue(Lookups.getEmailTemplates()))
+                .IgnoreAllNonExisting();
+            Mapper.CreateMap<EmailView, Email>()
+                .ForMember(e => e.Updatedby, opt => opt.Ignore())
+                .ForMember(e => e.Createdby, opt => opt.Ignore())
+                .ForMember(e => e.datecreated, opt => opt.Ignore())
+                .ForMember(e => e.dateupdated, opt => opt.Ignore())
+                //.ForMember(e => e.attachment, opt => System.Web)
+                .IgnoreAllNonExisting();
         }
         // Thank you stackoverflow, allows IgnoreAllNonExisting!
         public static IMappingExpression<TSource, TDestination> IgnoreAllNonExisting<TSource, TDestination>(

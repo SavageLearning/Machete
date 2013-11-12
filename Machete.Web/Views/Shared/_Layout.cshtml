@@ -1,9 +1,8 @@
 ﻿@using Machete.Web.Helpers
-@using Combres.Mvc
 <!DOCTYPE html>
 <html>
-@Html.CombresLink("siteJs")
-@Html.CombresLink("siteCss")
+@Scripts.Render("~/bundles/jquery")
+
 @*
 <script src="@Url.Content("~/Scripts/macheteLayout.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/jquery.macheteUI-0.1.js")" type="text/javascript"></script>
@@ -16,6 +15,7 @@
 <head>
     <link href="@Url.Content("~/Content/jquery.lightbox-0.5.css")" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/jquery.jqplot.min.css")" />
+    @Styles.Render("~/Content/css")
     <title>@Machete.Web.Resources.Shared.title@ViewBag.title</title>
     <link rel="shortcut icon" href="/Content/favicon.ico" type="image/png"/>
     <link rel="icon" href="/Content/favicon.ico" type="image/png"/> 
@@ -29,7 +29,7 @@
         <div id="header">
             <div id="title" >
                 @*<img alt="@Machete.Web.Resources.Shared.title" src="/Content/casa_logo.png" title="CasaLogo" class="casaLogo"/>*@
-                <img class="print_off" alt="@Machete.Web.Resources.Shared.title" src="/Content/machete_1_close_crop.png" title="titleBanner"/>
+                <img class="print_off" alt="@Machete.Web.Resources.Shared.title" src="/Content/machete_1_close_crop.png" title="Click to hide"/>
             </div>
             <div id="logindisplay" class="print_off">
                 @Html.Partial("_LogOnPartial")
@@ -41,6 +41,8 @@
                     @if (Html.IsInRole(Html.Role_AM()))
                     {
                         <li>@Html.ActionLink(@Machete.Web.Resources.Shared.reportstab, "Index", "Reports", null, new { id = "menulinkreports" })</li>
+                        <li>@Html.ActionLink(@Machete.Web.Resources.Shared.emailstab, "Index", "Email", null, new { id = "menulinkemails" })</li>
+                        
                     }
                     @if (Html.IsInRole(Html.Role_AMP()))
                     {

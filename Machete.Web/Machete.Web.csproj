@@ -7,20 +7,15 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{FE22D839-09AA-4DE8-BAF7-E29C6EB2EECC}</ProjectGuid>
-    <ProjectTypeGuids>{E53F8FEA-EAE0-44A6-8774-FFD645390401};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <ProjectGuid>{D2C4C806-4D23-4E62-B96D-23BDAB953C73}</ProjectGuid>
+    <ProjectTypeGuids>{E3E379DF-F4C6-4180-9B81-6769533ABE47};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Machete.Web</RootNamespace>
     <AssemblyName>Machete.Web</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <MvcBuildViews>false</MvcBuildViews>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <MvcBuildViews>true</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <OldToolsVersion>4.0</OldToolsVersion>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -34,12 +29,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PublishDatabaseSettings>
-      <Objects>
-      </Objects>
-    </PublishDatabaseSettings>
-    <ExcludeApp_Data>true</ExcludeApp_Data>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -48,38 +37,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ExcludeGeneratedDebugSymbol>true</ExcludeGeneratedDebugSymbol>
-    <ExcludeApp_Data>true</ExcludeApp_Data>
-    <PublishDatabases>false</PublishDatabases>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'StageProd|AnyCPU'">
-    <OutputPath>bin\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'StageTest|AnyCPU'">
-    <OutputPath>bin\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <ExcludeApp_Data>true</ExcludeApp_Data>
-    <ExcludeGeneratedDebugSymbol>true</ExcludeGeneratedDebugSymbol>
-    <PublishDatabases>false</PublishDatabases>
-    <PackageAsSingleFile>false</PackageAsSingleFile>
-    <DeployIisAppPath>Default Web Site/Machete.Web_StageTest</DeployIisAppPath>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AjaxControlToolkit">
@@ -92,157 +49,173 @@
     <Reference Include="AutoMapper">
       <HintPath>..\packages\AutoMapper.2.1.267\lib\net40\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="Combres, Version=2.2.2.6, Culture=neutral, PublicKeyToken=1ca6b37997dd7536, processorArchitecture=MSIL">
-      <HintPath>..\packages\combres.2.2.2.6\lib\net40\Combres.dll</HintPath>
-    </Reference>
-    <Reference Include="Combres.Mvc, Version=2.2.2.6, Culture=neutral, PublicKeyToken=1ca6b37997dd7536, processorArchitecture=MSIL">
-      <HintPath>..\packages\combres.mvc.2.2.2.6\lib\net40\Combres.Mvc.dll</HintPath>
-    </Reference>
-    <Reference Include="dotless.Core, Version=1.3.0.2, Culture=neutral, PublicKeyToken=96b446c9e63eae34, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\dotless.1.3.0.2\lib\dotless.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="EcmaScript.NET.modified, Version=0.1.1.0, Culture=neutral, PublicKeyToken=7d53ba4f537753a5, processorArchitecture=MSIL">
-      <HintPath>..\packages\YUICompressor.NET.1.7.1.0\lib\net35\EcmaScript.NET.modified.dll</HintPath>
-    </Reference>
     <Reference Include="Elmah">
       <HintPath>..\packages\elmah.corelibrary.1.2\lib\Elmah.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EntityFramework.5.0.0\lib\net40\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="Fasterflect, Version=2.1.0.8328, Culture=neutral, PublicKeyToken=38d18473284c1ca7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\fasterflect.2.1.0\lib\net40\Fasterflect.dll</HintPath>
     </Reference>
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\Net40\HtmlAgilityPack.dll</HintPath>
     </Reference>
-    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Practices.Unity, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\log4net.1.2.11\lib\net40-full\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.CSharp">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Practices.ServiceLocation">
-      <HintPath>..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.Unity">
-      <HintPath>..\packages\Unity.2.1.505.0\lib\NET35\Microsoft.Practices.Unity.dll</HintPath>
+      <HintPath>..\packages\Unity.3.0.1304.0\lib\Net45\Microsoft.Practices.Unity.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.Unity.Configuration">
-      <HintPath>..\packages\Unity.2.1.505.0\lib\NET35\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+      <HintPath>..\packages\Unity.3.0.1304.0\lib\Net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.Unity.Interception">
-      <HintPath>..\packages\Unity.Interception.2.1.505.0\lib\NET35\Microsoft.Practices.Unity.Interception.dll</HintPath>
+    <Reference Include="NLog">
+      <HintPath>..\packages\NLog.2.0.1.2\lib\net45\NLog.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.Unity.Interception.Configuration">
-      <HintPath>..\packages\Unity.Interception.2.1.505.0\lib\NET35\Microsoft.Practices.Unity.Interception.Configuration.dll</HintPath>
+    <Reference Include="NLog.Extended, Version=2.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NLog.Extended.2.0.1.2\lib\net45-full\NLog.Extended.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.ReportViewer.WebForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
-    <Reference Include="NLog">
-      <HintPath>..\packages\NLog.2.0.0.2000\lib\net40\NLog.dll</HintPath>
-    </Reference>
-    <Reference Include="NLog.Extended">
-      <HintPath>..\packages\NLog.Extended.2.0.0.2000\lib\net40-full\NLog.Extended.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.Entity">
+    <Reference Include="Microsoft.Web.Mvc.FixedDisplayModes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.FixedDisplayModes.1.0.0\lib\net40\Microsoft.Web.Mvc.FixedDisplayModes.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data.Entity.Design" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Security" />
-    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.Helpers.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.4.0.20710.0\lib\net40\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.20710.0\lib\net40\System.Web.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL " />
-    <Reference Include="System.Web.Helpers">
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.0.0\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.20715.0\lib\net40\System.Web.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="System">
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data">
+    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
     </Reference>
-    <Reference Include="System.Drawing">
+    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.DynamicData">
+    <Reference Include="WebMatrix.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.Data.2.0.20710.0\lib\net40\WebMatrix.Data.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Entity">
+    <Reference Include="Microsoft.Web.WebPages.OAuth, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.OAuth.2.0.20710.0\lib\net40\Microsoft.Web.WebPages.OAuth.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.ApplicationServices">
+    <Reference Include="WebMatrix.WebData, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.WebData.2.0.20710.0\lib\net40\WebMatrix.WebData.dll</HintPath>
     </Reference>
-    <Reference Include="System.ComponentModel.DataAnnotations">
+    <Reference Include="DotNetOpenAuth.AspNet, Version=4.1.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\DotNetOpenAuth.AspNet.4.1.4.12333\lib\net45-full\DotNetOpenAuth.AspNet.dll</HintPath>
     </Reference>
-    <Reference Include="System.Core">
+    <Reference Include="DotNetOpenAuth.Core, Version=4.1.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\DotNetOpenAuth.Core.4.1.4.12333\lib\net45-full\DotNetOpenAuth.Core.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
+    <Reference Include="DotNetOpenAuth.OAuth.Consumer, Version=4.1.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\DotNetOpenAuth.OAuth.Consumer.4.1.4.12333\lib\net45-full\DotNetOpenAuth.OAuth.Consumer.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.WebPages.Deployment, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="DotNetOpenAuth.OAuth, Version=4.1.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\DotNetOpenAuth.OAuth.Core.4.1.4.12333\lib\net45-full\DotNetOpenAuth.OAuth.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.WebPages.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="DotNetOpenAuth.OpenId, Version=4.1.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\DotNetOpenAuth.OpenId.Core.4.1.4.12333\lib\net45-full\DotNetOpenAuth.OpenId.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml.Linq">
+    <Reference Include="DotNetOpenAuth.OpenId.RelyingParty, Version=4.1.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\DotNetOpenAuth.OpenId.RelyingParty.4.1.4.12333\lib\net45-full\DotNetOpenAuth.OpenId.RelyingParty.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web">
+    <Reference Include="System.Web.Http.OData, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.OData.4.0.0\lib\net40\System.Web.Http.OData.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Extensions">
+    <Reference Include="Microsoft.Data.Edm, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Data.Edm.5.2.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Abstractions">
+    <Reference Include="Microsoft.Data.OData, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Data.OData.5.2.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Routing">
+    <Reference Include="System.Spatial, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
+      <HintPath>..\packages\System.Spatial.5.2.0\lib\net40\System.Spatial.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml">
+    <Reference Include="WebGrease">
       <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.3.0\lib\WebGrease.dll</HintPath>
     </Reference>
-    <Reference Include="System.Configuration">
+    <Reference Include="Antlr3.Runtime">
       <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Web.Services">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.EnterpriseServices" />
-    <Reference Include="WebActivator">
-      <HintPath>..\packages\WebActivator.1.4.4\lib\net40\WebActivator.dll</HintPath>
-    </Reference>
-    <Reference Include="Yahoo.Yui.Compressor, Version=1.7.1.0, Culture=neutral, PublicKeyToken=f8b4b81ec75097e2, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\YUICompressor.NET.1.7.1.0\lib\net35\Yahoo.Yui.Compressor.dll</HintPath>
+      <HintPath>..\packages\WebGrease.1.3.0\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppStart_Combres.cs" />
-    <Compile Include="App_Start\Combres.cs" />
+    <Compile Include="App_Start\AuthConfig.cs" />
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\ActivityController.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Controllers\ActivityController.cs" />
     <Compile Include="Controllers\ActivitySigninController.cs" />
     <Compile Include="Controllers\ConfigController.cs" />
+    <Compile Include="Controllers\EmailController.cs" />
     <Compile Include="Controllers\EmployerController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\EventController.cs" />
@@ -254,88 +227,193 @@
     <Compile Include="Controllers\WorkerController.cs" />
     <Compile Include="Controllers\WorkerSigninController.cs" />
     <Compile Include="Controllers\WorkOrderController.cs" />
-    <Compile Include="Helpers\Attributes\AuthorizeExAttribute.cs" />
-    <Compile Include="Helpers\MacheteMapper.cs" />
-    <Compile Include="Helpers\mUIExtensions.cs" />
-    <Compile Include="Helpers\workerRequestBinder.cs" />
-    <Compile Include="Helpers\IsInRole.cs" />
-    <Compile Include="Helpers\ListItemToOption.cs" />
-    <Compile Include="Helpers\Lookups.cs" />
-    <Compile Include="Helpers\MacheteController.cs" />
-    <Compile Include="Helpers\Attributes\userNameFilterAttribute.cs" />
-    <Compile Include="IoC\CustomControllerActivator.cs" />
-    <Compile Include="IoC\UnityControllerFactory .cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\Attributes\AuthorizeExAttribute.cs" />
     <Compile Include="Helpers\Attributes\HandleErrorWithELMAHAttribute .cs" />
+    <Compile Include="Helpers\Attributes\userNameFilterAttribute.cs" />
+    <Compile Include="Helpers\IsInRole.cs" />
+    <Compile Include="Helpers\jQueryDataTableParam.cs" />
+    <Compile Include="Helpers\ListItemToOption.cs" />
+    <Compile Include="Helpers\Lookups.cs" />
+    <Compile Include="Helpers\MacheteController.cs" />
+    <Compile Include="Helpers\MacheteMapper.cs" />
+    <Compile Include="Helpers\mUIExtensions.cs" />
+    <Compile Include="Helpers\workerRequestBinder.cs" />
+    <Compile Include="IoC\CustomControllerActivator.cs" />
+    <Compile Include="IoC\UnityControllerFactory .cs" />
     <Compile Include="IoC\UnityDependencyResolver.cs" />
     <Compile Include="Models\AccountModels.cs" />
-    <Compile Include="Helpers\jQueryDataTableParam.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Activities.Designer.cs">
+      <DependentUpon>Activities.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Activities.resx</DependentUpon>
     </Compile>
     <Compile Include="Resources\Configs.Designer.cs">
+      <DependentUpon>Configs.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Configs.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Emails.Designer.cs">
+      <DependentUpon>Emails.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Resources\Employers.Designer.cs">
+      <DependentUpon>Employers.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Resources\Employers.es.Designer.cs">
+      <DependentUpon>Employers.es.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Employers.es.resx</DependentUpon>
     </Compile>
     <Compile Include="Resources\Events.Designer.cs">
+      <DependentUpon>Events.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Events.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Persons.Designer.cs">
+      <DependentUpon>Persons.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Resources\Persons.es.Designer.cs">
+      <DependentUpon>Persons.es.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Resources\Reports.Designer.cs">
+      <DependentUpon>Reports.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Reports.resx</DependentUpon>
     </Compile>
     <Compile Include="Resources\Reports.es.Designer.cs">
+      <DependentUpon>Reports.es.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Reports.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Shared.Designer.cs">
+      <DependentUpon>Shared.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Resources\Shared.es.Designer.cs">
+      <DependentUpon>Shared.es.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Resources\ValidationStrings.Designer.cs">
+      <DependentUpon>ValidationStrings.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Resources\ValidationStrings.es.Designer.cs">
+      <DependentUpon>ValidationStrings.es.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Resources\WorkAssignments.Designer.cs">
+      <DependentUpon>WorkAssignments.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>WorkAssignments.resx</DependentUpon>
     </Compile>
     <Compile Include="Resources\WorkAssignments.es.Designer.cs">
+      <DependentUpon>WorkAssignments.es.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>WorkAssignments.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Workers.Designer.cs">
+      <DependentUpon>Workers.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Resources\Workers.es.Designer.cs">
+      <DependentUpon>Workers.es.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Resources\WorkerSignins.Designer.cs">
+      <DependentUpon>WorkerSignins.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>WorkerSignins.resx</DependentUpon>
     </Compile>
     <Compile Include="Resources\WorkerSignins.es.Designer.cs">
+      <DependentUpon>WorkerSignins.es.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>WorkerSignins.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\WorkOrders.Designer.cs">
+      <DependentUpon>WorkOrders.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Resources\WorkOrders.es.Designer.cs">
+      <DependentUpon>WorkOrders.es.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>WorkOrders.es.resx</DependentUpon>
     </Compile>
+    <Compile Include="ViewModel\EmailView.cs" />
+    <Compile Include="ViewModel\EmployerWoCombined.cs" />
+    <Compile Include="ViewModel\ReportPrintView.cs" />
+
+    <Compile Include="ViewModel\WorkAssignmentIndex.cs" />
+    <Compile Include="ViewModel\WorkOrderGroupPrintView.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="combres.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\combres_full_with_annotation.xml" />
+    <Content Include="Content\calendar.gif" />
+    <Content Include="Content\casa_logo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\confirm\help.gif" />
+    <Content Include="Content\confirm\important.gif" />
+    <Content Include="Content\confirm\info.gif" />
+    <Content Include="Content\confirm\jquery.alerts.css" />
+    <Content Include="Content\confirm\title.gif" />
+    <Content Include="Content\SiteForEmail.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\dataTables\back_disabled.jpg" />
+    <Content Include="Content\dataTables\back_disabled.png" />
+    <Content Include="Content\dataTables\back_enabled.jpg" />
+    <Content Include="Content\dataTables\back_enabled.png" />
+    <Content Include="Content\dataTables\back_enabled_hover.png" />
+    <Content Include="Content\dataTables\demo_page.css" />
+    <Content Include="Content\dataTables\demo_table.css" />
+    <Content Include="Content\dataTables\demo_table_jui.css" />
     <Content Include="Content\dataTables\details_close.png" />
     <Content Include="Content\dataTables\details_open.png" />
+    <Content Include="Content\dataTables\forward_disabled.jpg" />
+    <Content Include="Content\dataTables\forward_disabled.png" />
+    <Content Include="Content\dataTables\forward_enabled.jpg" />
+    <Content Include="Content\dataTables\forward_enabled.png" />
+    <Content Include="Content\dataTables\forward_enabled_hover.png" />
+    <Content Include="Content\dataTables\sort_asc.png" />
+    <Content Include="Content\dataTables\sort_asc_disabled.png" />
+    <Content Include="Content\dataTables\sort_both.png" />
+    <Content Include="Content\dataTables\sort_desc.png" />
+    <Content Include="Content\dataTables\sort_desc_disabled.png" />
+    <Content Include="Content\dataTables\ui-bg_highlight-soft_75_cccccc_1x100.png" />
     <Content Include="Content\favicon.ico" />
+    <Content Include="Content\images\404error.jpg" />
+    <Content Include="Content\images\back_disabled.jpg" />
     <Content Include="Content\images\back_disabled.png" />
+    <Content Include="Content\images\back_enabled.jpg" />
     <Content Include="Content\images\back_enabled.png" />
     <Content Include="Content\images\back_enabled_hover.png" />
     <Content Include="Content\images\favicon.ico" />
     <Content Include="Content\images\Files-Download-File-icon.png" />
+    <Content Include="Content\images\forward_disabled.jpg" />
     <Content Include="Content\images\forward_disabled.png" />
+    <Content Include="Content\images\forward_enabled.jpg" />
     <Content Include="Content\images\forward_enabled.png" />
     <Content Include="Content\images\forward_enabled_hover.png" />
     <Content Include="Content\images\lightbox-blank.gif" />
@@ -345,73 +423,81 @@
     <Content Include="Content\images\lightbox-ico-loading.gif" />
     <Content Include="Content\images\NO-IMAGE-AVAILABLE.jpg" />
     <Content Include="Content\images\pdf.png" />
+    <Content Include="Content\images\sort_asc.png" />
+    <Content Include="Content\images\sort_asc_disabled.png" />
+    <Content Include="Content\images\sort_both.png" />
+    <Content Include="Content\images\sort_desc.png" />
+    <Content Include="Content\images\sort_desc_disabled.png" />
+    <Content Include="Content\images\ui-anim_basic_16x16.gif" />
+    <Content Include="Content\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
+    <Content Include="Content\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
+    <Content Include="Content\images\ui-bg_diamond_10_4f4221_10x8.png" />
+    <Content Include="Content\images\ui-bg_diamond_20_372806_10x8.png" />
+    <Content Include="Content\images\ui-bg_diamond_25_675423_10x8.png" />
+    <Content Include="Content\images\ui-bg_diamond_25_d5ac5d_10x8.png" />
+    <Content Include="Content\images\ui-bg_diamond_8_261803_10x8.png" />
+    <Content Include="Content\images\ui-bg_diamond_8_443113_10x8.png" />
+    <Content Include="Content\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\images\ui-bg_flat_10_000000_40x100.png" />
+    <Content Include="Content\images\ui-bg_flat_75_ddd4b0_40x100.png" />
+    <Content Include="Content\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\images\ui-bg_glass_100_f6f6f6_1x400.png" />
+    <Content Include="Content\images\ui-bg_glass_100_fdf5ce_1x400.png" />
+    <Content Include="Content\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\images\ui-bg_gloss-wave_35_f6a828_500x100.png" />
+    <Content Include="Content\images\ui-bg_highlight-hard_65_fee4bd_1x100.png" />
+    <Content Include="Content\images\ui-bg_highlight-soft_100_eeeeee_1x100.png" />
+    <Content Include="Content\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\images\ui-bg_highlight-soft_75_ffe45c_1x100.png" />
+    <Content Include="Content\images\ui-icons_070603_256x240.png" />
+    <Content Include="Content\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\images\ui-icons_228ef1_256x240.png" />
+    <Content Include="Content\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\images\ui-icons_e8e2b5_256x240.png" />
+    <Content Include="Content\images\ui-icons_e9cd86_256x240.png" />
+    <Content Include="Content\images\ui-icons_ef8c08_256x240.png" />
+    <Content Include="Content\images\ui-icons_efec9f_256x240.png" />
+    <Content Include="Content\images\ui-icons_f2ec64_256x240.png" />
+    <Content Include="Content\images\ui-icons_f9f2bd_256x240.png" />
+    <Content Include="Content\images\ui-icons_ff7519_256x240.png" />
+    <Content Include="Content\images\ui-icons_ffd27a_256x240.png" />
+    <Content Include="Content\images\ui-icons_ffffff_256x240.png" />
     <Content Include="Content\images\zip.png" />
-    <Content Include="Content\jquery.jqplot.css" />
-    <Content Include="Content\jquery.jqplot.min.css" />
-    <Content Include="Content\jquery.lightbox-0.5.css" />
+    <Content Include="Content\ui\images\ui-anim_basic_16x16.gif" />
+    <Content Include="Content\ui\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
+    <Content Include="Content\ui\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
     <Content Include="Content\ui\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\ui\images\ui-bg_flat_10_000000_40x100.png" />
     <Content Include="Content\ui\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\ui\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\ui\images\ui-bg_glass_65_ffffff_1x400.png" />
     <Content Include="Content\ui\images\ui-bg_glass_75_dadada_1x400.png" />
     <Content Include="Content\ui\images\ui-bg_glass_75_e6e6e6_1x400.png" />
     <Content Include="Content\ui\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\ui\images\ui-bg_glass_100_f6f6f6_1x400.png" />
+    <Content Include="Content\ui\images\ui-bg_glass_100_fdf5ce_1x400.png" />
+    <Content Include="Content\ui\images\ui-bg_gloss-wave_35_f6a828_500x100.png" />
     <Content Include="Content\ui\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\ui\images\ui-bg_highlight-soft_75_ffe45c_1x100.png" />
+    <Content Include="Content\ui\images\ui-bg_highlight-soft_100_eeeeee_1x100.png" />
+    <Content Include="Content\ui\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\ui\images\ui-icons_228ef1_256x240.png" />
     <Content Include="Content\ui\images\ui-icons_2e83ff_256x240.png" />
     <Content Include="Content\ui\images\ui-icons_454545_256x240.png" />
     <Content Include="Content\ui\images\ui-icons_888888_256x240.png" />
     <Content Include="Content\ui\images\ui-icons_cd0a0a_256x240.png" />
-    <Content Include="Content\ui\jquery-ui-1.9.2.custom.css" />
-    <Content Include="Scripts\drawpiechart.js" />
-    <Content Include="Scripts\jqplot.pieRenderer.js" />
-    <Content Include="Scripts\jqplot.pieRenderer.min.js" />
-    <Content Include="Scripts\jquery-1.7.1.js" />
-    <Content Include="Scripts\jquery-ui-1.8.11.js" />
-    <Content Include="Scripts\jquery.alerts.js" />
-    <Content Include="Scripts\jquery.confirm-1.3.js" />
-    <Content Include="Scripts\jquery.jqplot.js" />
-    <Content Include="Scripts\jquery.jqplot.min.js" />
-    <Content Include="Scripts\jquery.lightbox-0.5.js" />
-    <Content Include="Scripts\jquery.macheteUI-0.1.js" />
-    <Content Include="Scripts\jquery.mobile-1.1.1.js" />
-    <Content Include="Scripts\jquery.everytime-1.2.0.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\reports.js" />
-    <Content Include="Scripts\maskedinput-1.3.js" />
-    <Content Include="Scripts\jquery.dataTables-1.9.0.js" />
-    <Compile Include="ViewModel\ReportPrintView.cs" />
-    <Compile Include="ViewModel\EmployerWoCombined.cs" />
-    <Compile Include="ViewModel\WorkAssignmentIndex.cs" />
-    <Content Include="combres.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="App_Data\combres_full_with_annotation.xml" />
-    <Content Include="Content\casa_logo.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\machete_1_close_crop.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\print.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\ui\images\ui-anim_basic_16x16.gif" />
-    <Content Include="Content\ui\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
-    <Content Include="Content\ui\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
-    <Content Include="Content\ui\images\ui-bg_flat_10_000000_40x100.png" />
-    <Content Include="Content\ui\images\ui-bg_glass_100_f6f6f6_1x400.png" />
-    <Content Include="Content\ui\images\ui-bg_glass_100_fdf5ce_1x400.png" />
-    <Content Include="Content\ui\images\ui-bg_glass_65_ffffff_1x400.png" />
-    <Content Include="Content\ui\images\ui-bg_gloss-wave_35_f6a828_500x100.png" />
-    <Content Include="Content\ui\images\ui-bg_highlight-soft_100_eeeeee_1x100.png" />
-    <Content Include="Content\ui\images\ui-bg_highlight-soft_75_ffe45c_1x100.png" />
-    <Content Include="Content\ui\images\ui-icons_222222_256x240.png" />
-    <Content Include="Content\ui\images\ui-icons_228ef1_256x240.png" />
     <Content Include="Content\ui\images\ui-icons_ef8c08_256x240.png" />
     <Content Include="Content\ui\images\ui-icons_ffd27a_256x240.png" />
     <Content Include="Content\ui\images\ui-icons_ffffff_256x240.png" />
     <Content Include="Content\ui\jquery-ui-1.8.6.custom.css" />
+    <Content Include="Content\ui\jquery-ui-1.9.2.custom.css" />
     <Content Include="Content\ui\smoothness\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\ui\smoothness\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\ui\smoothness\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -426,137 +512,69 @@
     <Content Include="Content\ui\smoothness\images\ui-icons_888888_256x240.png" />
     <Content Include="Content\ui\smoothness\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="Content\ui\smoothness\jquery-ui-1.8.11.custom.css" />
-    <Content Include="notes.txt" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\Employers.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Employers.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\Workers.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Workers.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\Shared.Designer.cs">
-      <DependentUpon>Shared.resx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Resources\Persons.es.Designer.cs">
-      <DependentUpon>Persons.es.resx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Resources\ValidationStrings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ValidationStrings.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\ValidationStrings.es.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ValidationStrings.es.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\Persons.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Persons.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\Shared.es.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Shared.es.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\Workers.es.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Workers.es.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\WorkOrders.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>WorkOrders.resx</DependentUpon>
-    </Compile>
-    <Compile Include="ViewModel\WorkOrderGroupPrintView.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Content\calendar.gif" />
-    <Content Include="Content\confirm\help.gif" />
-    <Content Include="Content\confirm\important.gif" />
-    <Content Include="Content\confirm\info.gif" />
-    <Content Include="Content\confirm\jquery.alerts.css" />
-    <Content Include="Content\confirm\title.gif" />
-    <Content Include="Content\dataTables\demo_page.css" />
-    <Content Include="Content\dataTables\demo_table.css" />
-    <Content Include="Content\dataTables\demo_table_jui.css" />
-    <Content Include="Content\images\404error.jpg" />
-    <Content Include="Content\images\back_disabled.jpg" />
-    <Content Include="Content\images\back_enabled.jpg" />
-    <Content Include="Content\images\forward_disabled.jpg" />
-    <Content Include="Content\images\forward_enabled.jpg" />
-    <Content Include="Content\images\sort_asc.png" />
-    <Content Include="Content\images\sort_asc_disabled.png" />
-    <Content Include="Content\images\sort_both.png" />
-    <Content Include="Content\images\sort_desc.png" />
-    <Content Include="Content\images\sort_desc_disabled.png" />
-    <Content Include="Content\images\ui-bg_diamond_10_4f4221_10x8.png" />
-    <Content Include="Content\images\ui-bg_diamond_20_372806_10x8.png" />
-    <Content Include="Content\images\ui-bg_diamond_25_675423_10x8.png" />
-    <Content Include="Content\images\ui-bg_diamond_25_d5ac5d_10x8.png" />
-    <Content Include="Content\images\ui-bg_diamond_8_261803_10x8.png" />
-    <Content Include="Content\images\ui-bg_diamond_8_443113_10x8.png" />
-    <Content Include="Content\images\ui-bg_flat_75_ddd4b0_40x100.png" />
-    <Content Include="Content\images\ui-bg_highlight-hard_65_fee4bd_1x100.png" />
-    <Content Include="Content\images\ui-icons_070603_256x240.png" />
-    <Content Include="Content\images\ui-icons_e8e2b5_256x240.png" />
-    <Content Include="Content\images\ui-icons_e9cd86_256x240.png" />
-    <Content Include="Content\images\ui-icons_efec9f_256x240.png" />
-    <Content Include="Content\images\ui-icons_f2ec64_256x240.png" />
-    <Content Include="Content\images\ui-icons_f9f2bd_256x240.png" />
-    <Content Include="Content\images\ui-icons_ff7519_256x240.png" />
-    <Content Include="Global.asax" />
-    <Content Include="Scripts\console-log.js" />
-    <Content Include="Scripts\jquery.dataTables.plugins.js" />
-    <Content Include="Scripts\jquery.form.js" />
-    <Content Include="Scripts\jquery.ui.datepicker.js" />
-    <Content Include="Scripts\macheteLayout.js" />
-    <Content Include="Scripts\ui.datetimepicker.js" />
-    <Content Include="Scripts\validation_hack.js" />
+    <Content Include="Content\jquery.jqplot.css" />
+    <Content Include="Content\jquery.jqplot.min.css" />
+    <Content Include="Content\jquery.lightbox-0.5.css" />
+    <Content Include="Content\machete_1_close_crop.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\print.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Site.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Account\ChangePassword.cshtml" />
-    <Content Include="Views\Account\ChangePasswordSuccess.cshtml" />
-    <Content Include="Views\Account\LogOn.cshtml" />
-    <Content Include="Views\Account\Register.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Shared\Error.cshtml" />
-    <Content Include="Views\Shared\_LogOnPartial.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Content\jquery-ui-1.8.6.custom.css" />
+    <Content Include="favicon.ico" />
+    <Content Include="Global.asax" />
+    <Content Include="notes.txt" />
+    <Content Include="Scripts\console-log.js" />
+    <Content Include="Scripts\drawpiechart.js" />
+    <Content Include="Scripts\jqplot.pieRenderer.js" />
+    <Content Include="Scripts\jqplot.pieRenderer.min.js" />
+    <Content Include="Scripts\jquery-1.7.1.js" />
+    <Content Include="Scripts\jquery-ui-1.8.11.js" />
+    <Content Include="Scripts\jquery.alerts.js" />
+    <Content Include="Scripts\jquery.confirm-1.3.js" />
+    <Content Include="Scripts\jquery.dataTables-1.9.0.js" />
+    <Content Include="Scripts\jquery.dataTables.plugins.js" />
+    <Content Include="Scripts\jquery.everytime-1.2.0.js" />
+    <Content Include="Scripts\jquery.form.js" />
+    <Content Include="Scripts\jquery.jqplot.js" />
+    <Content Include="Scripts\jquery.jqplot.min.js" />
+    <Content Include="Scripts\jquery.lightbox-0.5.js" />
+    <Content Include="Scripts\jquery.macheteUI-0.1.js" />
+    <Content Include="Scripts\jquery.mobile-1.1.1.js" />
+    <Content Include="Scripts\jquery.ui.datepicker.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\macheteLayout.js" />
+    <Content Include="Scripts\maskedinput-1.3.js" />
+    <Content Include="Scripts\reports.js" />
+    <Content Include="Scripts\ui.datetimepicker.js" />
+    <Content Include="Scripts\validation_hack.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Machete.Data\Machete.Data.csproj">
-      <Project>{A9F879BC-CA11-4470-A655-8541B5DA41A1}</Project>
-      <Name>Machete.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Machete.Domain\Machete.Domain.csproj">
-      <Project>{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}</Project>
-      <Name>Machete.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Machete.Service\Machete.Service.csproj">
-      <Project>{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}</Project>
-      <Name>Machete.Service</Name>
-    </ProjectReference>
+    <Folder Include="App_Data\" />
+    <Folder Include="Views\ActivitySignin\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Person\Create.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Person.cshtml" />
-    <Content Include="Views\Person\Index.cshtml" />
-    <Content Include="Views\Person\Edit.cshtml" />
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\documentation\Machete_Manual-v1.2.pdf" />
+    <Content Include="Content\images\Sorting icons.psd" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Activities.es.resx">
@@ -571,6 +589,12 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Configs.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Emails.es.resx" />
+    <EmbeddedResource Include="Resources\Emails.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Emails.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Employers.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Employers.es.Designer.cs</LastGenOutput>
@@ -584,6 +608,14 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Events.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Persons.es.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Persons.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Persons.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Persons.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Reports.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Reports.es.Designer.cs</LastGenOutput>
@@ -591,6 +623,26 @@
     <EmbeddedResource Include="Resources\Reports.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Reports.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Shared.es.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Shared.es.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Shared.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Shared.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\ValidationStrings.es.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ValidationStrings.es.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\ValidationStrings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ValidationStrings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\WorkAssignments.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -609,34 +661,6 @@
     <EmbeddedResource Include="Resources\Workers.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Workers.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Shared.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Shared.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Persons.es.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Persons.es.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\ValidationStrings.es.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ValidationStrings.es.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\ValidationStrings.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ValidationStrings.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Persons.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Persons.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Shared.es.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Shared.es.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\WorkerSignins.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -658,139 +682,286 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Shared\_CultureChooser.cshtml" />
+    <Content Include="Views\Account\AdminChangePassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Worker\Index.cshtml" />
+    <Content Include="Views\Account\ChangePassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Worker\Create.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Account\Index.cshtml" />
+    <Content Include="Views\Account\ChangePasswordSuccess.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Account\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Account\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Role\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Role\Delete.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Shared\EditorTemplates\Worker.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Worker\Edit.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Account\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Views\ActivitySignin\" />
+    <Content Include="Views\Account\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Account\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Account\LogOn.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Account\Register.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Activity\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Config\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Config\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Config\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Email\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Email\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Email\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Email\View.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Employer\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Employer\CreateCombined.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Employer\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Employer\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Employer\View.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Error\Http404.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="NLog.config">
-      <SubType>Designer</SubType>
-    </Content>
+    <Content Include="Views\Event\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\WorkerSignin\Index.cshtml" />
+    <Content Include="Views\Event\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\About.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Docs.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Issues.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Wiki.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Image\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Shared\EditorTemplates\Image.cshtml" />
+    <Content Include="Views\Image\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Image\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Image\Edit.cshtml" />
+    <Content Include="Views\Person\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Content\documentation\Machete_Manual-v1.2.pdf" />
-    <None Include="Content\images\Sorting icons.psd" />
+    <Content Include="Views\Person\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Person\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Views\Person\View.cshtml" />
-    <Content Include="Views\Employer\Index.cshtml" />
-    <Content Include="Views\Employer\Create.cshtml" />
-    <Content Include="Views\Employer\Edit.cshtml" />
-    <Content Include="Views\Employer\View.cshtml" />
-    <Content Include="Views\WorkOrder\Index.cshtml" />
-    <Content Include="Views\WorkOrder\Create.cshtml" />
-    <Content Include="Views\WorkOrder\Edit.cshtml" />
-    <Content Include="Views\WorkOrder\View.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\WorkOrder.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Employer.cshtml" />
-    <Content Include="Views\Shared\ManagerInfo.cshtml" />
-    <Content Include="Views\WorkAssignment\Index.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\WorkOrderIndex.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\PersonIndex.cshtml" />
-    <Content Include="Views\Shared\WorkAssignmentIndex.cshtml" />
-    <Content Include="Views\WorkAssignment\Create.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\WorkAssignment.cshtml" />
-    <Content Include="Views\WorkAssignment\Edit.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\WorkAssignmentSurvey.cshtml" />
-    <Content Include="packages.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Web.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.StageProd.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.StageTest.config">
-      <DependentUpon>Web.config</DependentUpon>
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Views\Shared\WorkOrderIndex.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\WorkOrder.cshtml" />
-    <Content Include="Views\Account\AdminChangePassword.cshtml" />
-    <Content Include="Views\Shared\AdministratorInfo.cshtml" />
-    <Content Include="Views\Home\Wiki.cshtml" />
-    <Content Include="Views\Home\Issues.cshtml" />
-    <Content Include="Views\WorkOrder\GroupView.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Views\Reports\Index.cshtml" />
-    <Content Include="Views\Shared\WorkerIndex.cshtml" />
-    <Content Include="Views\Event\Create.cshtml" />
-    <Content Include="Views\Shared\EventIndex.cshtml" />
-    <Content Include="Views\Event\Edit.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Event.cshtml" />
-    <Content Include="Views\Activity\Index.cshtml" />
-    <Content Include="Views\Activity\Create.cshtml" />
-    <Content Include="Views\Activity\Edit.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Activity.cshtml" />
-    <Content Include="Views\Shared\ActivitySigninIndex.cshtml" />
-    <Content Include="Views\Shared\ActivityIndex.cshtml" />
-    <Content Include="Views\Shared\ActivityJoinIndex.cshtml" />
-    <Content Include="Views\Config\Index.cshtml" />
-    <Content Include="Views\Config\Create.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Config.cshtml" />
-    <Content Include="Views\Config\Edit.cshtml" />
-    <Content Include="Views\Home\Docs.cshtml" />
-    <Content Include="Views\Employer\CreateCombined.cshtml" />
-    <None Include="Properties\PublishProfiles\MacheteReports.pubxml" />
-    <None Include="Properties\PublishProfiles\Profile1.pubxml" />
-    <Content Include="Views\Reports\Workers.cshtml" />
-    <Content Include="Views\Reports\Orders.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Role\Delete.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Role\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_CultureChooser.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Reports\Activities.cshtml" />
-    <Content Include="Views\Reports\SSRS.cshtml" />
+    <Content Include="Views\Reports\Orders.cshtml" />
     <Content Include="Views\Reports\PrintView.cshtml" />
+    <Content Include="Views\Reports\SSRS.cshtml" />
+    <Content Include="Views\Reports\Workers.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_LogOnPartial.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\ActivityIndex.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\ActivityJoinIndex.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\ActivitySigninIndex.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\AdministratorInfo.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\DisplayTemplates\EmailView.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\DisplayTemplates\WorkOrder.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\EditorTemplates\Activity.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\EditorTemplates\Config.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\EditorTemplates\EmailView.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\EditorTemplates\Employer.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\EditorTemplates\Event.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\EditorTemplates\Image.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\EditorTemplates\Person.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\EditorTemplates\WorkAssignment.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\EditorTemplates\WorkAssignmentSurvey.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\EditorTemplates\Worker.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\EditorTemplates\WorkOrder.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\EmailIndex.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\Error.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\EventIndex.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\ManagerInfo.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\WorkAssignmentIndex.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\WorkerIndex.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\WorkOrderIndex.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\WorkAssignment\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\WorkAssignment\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\WorkAssignment\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Worker\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Worker\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Worker\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\WorkerSignin\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\WorkOrder\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\WorkOrder\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\WorkOrder\GroupView.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\WorkOrder\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\WorkOrder\View.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\_ViewStart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Machete.Data\Machete.Data.csproj">
+      <Project>{a9f879bc-ca11-4470-a655-8541b5da41a1}</Project>
+      <Name>Machete.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Machete.Domain\Machete.Domain.csproj">
+      <Project>{48f672e8-4513-4f7e-a296-c0ccc87f9aa1}</Project>
+      <Name>Machete.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Machete.Service\Machete.Service.csproj">
+      <Project>{ba69bb65-147a-42d8-a6f5-5d1e57e2d783}</Project>
+      <Name>Machete.Service</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Email\CreateDialog.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Email\EditDialog.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Email\ViewDialog.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\WorkOrder\ViewForEmail.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -799,12 +970,6 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target> -->
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
     <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
   </Target>
@@ -816,17 +981,20 @@
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>4213</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:4213/</IISUrl>
+          <IISUrl>http://localhost:50516/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>http://machete/</CustomServerUrl>
+          <CustomServerUrl>
+          </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
 </Project>

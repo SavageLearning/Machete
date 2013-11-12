@@ -10,8 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Machete.Util</RootNamespace>
     <AssemblyName>Machete.Util</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -23,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -32,8 +34,10 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="docs\machete cheetsheets.vsd" />
     <None Include="docs\Machete-Create user.doc" />
     <None Include="docs\Machete-Create user.pdf" />
@@ -57,7 +61,9 @@
     <None Include="SSRS\Work orders-Status summary by day.rdl" />
     <None Include="SSRS\Work orders-Status summary pie charts.rdl" />
     <None Include="SSRS\Work orders-Status summary.rdl" />
-    <None Include="SSRS\Workers-Monthly dispatch summary with detail.rdl" />
+    <None Include="SSRS\Workers-Monthly dispatch summary with detail.rdl">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="SSRS\Workers-signins past membership expiration.rdl" />
     <None Include="SSRS\Workers-Yearly Seattle HSD report.rdl" />
   </ItemGroup>

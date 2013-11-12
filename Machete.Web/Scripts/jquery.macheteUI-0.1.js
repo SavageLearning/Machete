@@ -44,6 +44,119 @@
         //
         //
         //
+        createTable: function(opt) {
+            var myTable = this,
+                myTab = opt.tab,
+                myOptions = opt.options,
+                clickEvent = opt.clickEvent,
+                dblclickevent = opt.dblClickEvent,
+                tabLabel = opt.tabLabel,
+                maxTabs = opt.maxTabs; // Default maxTabs is 2 (list=0,create=1...)
+            var oTable;
+            var origCallback;
+            var tableID = $(myTable).attr('ID');
+            //
+            // insert standard fnRowCallback for mUI row attributes. call original
+            //    handler at end
+            if ("fnRowCallback" in myOptions) {
+                origCallback = myOptions.fnRowCallback;
+            }
+            myOptions.fnRowCallback = function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                //
+                // custom attributes to create record tabs on doubleclick
+                $(nRow).attr('edittabref', aData['tabref']);
+                $(nRow).attr('edittablabel', aData['tablabel']);
+                $(nRow).attr('recordid', aData['recordid']);
+                if (jQuery.browser.mobile) {
+                    var $foo = $(nRow).find('td:nth-child(1)');
+                    var footext = $foo.text();
+                    var btnID = tabLabel + aData['recordid'] + '-Btn';
+                    $foo.prepend('<input type="button" class="rowButton" value="open" id="' + btnID + '"></input>');
+                }
+                // call original handler
+                if (origCallback != undefined) {
+                    return origCallback(nRow, aData, iDisplayIndex, iDisplayIndexFull);
+                } else {
+                    return nRow;
+                }
+            }
+
+            myOptions.fnServerData = function (sSource, aoData, fnCallback) {
+                var aoDataConcatenated = aoData;
+                if (myOptions.fnServerDataExtra) {
+                    aoDataConcatenated = aoData.concat(myOptions.fnServerDataExtra());
+                }
+                $.ajax({
+                    "dataType": 'json',
+                    "type": "GET",
+                    "url": sSource,
+                    "data": aoDataConcatenated,
+                    "success": function (result) {
+                        if (result.jobSuccess == false) {
+                            alert(result.rtnMessage);
+                        }
+                        else {
+                            fnCallback(result);
+                        }
+                    },
+                    "failure": function (result) {
+                        alert(result);
+                    }
+                });
+            }
+
+            //
+            // create datatable
+            oTable = $(myTable).dataTable(myOptions).fnSetFilteringDelay(400);
+            //
+            // Add unique ID for testing hook
+            $('#' + tableID + '_filter input').attr('ID', tableID + '_searchbox');
+            ////////////////////////////////////////////////////////////////
+            //
+            // table click event -- highlight row
+            //
+            if (!clickEvent) {
+                // remove row_selected from all; add to event.target (only 1 selected)
+                clickEvent = function (event) {
+                    $(oTable.fnSettings().aoData).each(function () {
+                        $(this.nTr).removeClass('row_selected');
+                    });
+                    $(event.target.parentNode).addClass('row_selected');
+                }
+            }
+            $(myTable).find('tbody').click(clickEvent);
+            ////////////////////////////////////////////////////////////////
+            //
+            // table doubleclick event 
+            //
+            if (!dblclickevent) {
+                dblclickevent = function (event) {
+                    console.log("default dblclick event");
+                    var exclusiveTab = $(event.target).closest('.ui-tabs').hasClass('ExclusiveTab');
+                    var myTr = $(event.target).closest('tr');
+                    //
+                    // add new tab
+                    add_rectab({
+                        tabref: $(myTr).attr('edittabref'),
+                        label: $(myTr).attr('edittablabel'),
+                        tab: myTab,
+                        exclusive: exclusiveTab,
+                        recordID: $(myTr).attr('recordid'),
+                        recType: tabLabel,
+                        maxTabs: maxTabs
+                    });
+                }
+            }
+            if (!jQuery.browser.mobile) {
+                $(myTable).find('tbody').dblclick(dblclickevent);
+            } else {
+                $('.rowButton').live('click', dblclickevent);
+            }
+
+        },
+        //
+        //
+        //
         createTabs: function (opt) {
             var tabdiv = this,
                 changeConfirm = opt.changeConfirm,
@@ -218,15 +331,15 @@
         },
         //
         //
-        formSubmit: function (opt) {
+        tabFormSubmit: function (opt) {
             var form = this;
             var parentTab = $(form).closest('.ui-tabs');
             var SelTab = opt.selectTab || 0;
             var create = opt.create || null;
             var recType = opt.recType || null;
             var exclusiveTab = opt.exclusiveTab || true;
-            var preProcess = opt.preProcess || null;
             var closeTab = opt.closTab || undefined;
+            var preProcess = opt.preProcess || null;
             var postProcess = opt.postProcess || null;
             var callback = opt.callback || null;
             var maxTabs = opt.maxTabs || 2;
@@ -330,23 +443,56 @@
         },
         //
         //
+        formSubmit: function (opt) {
+            var form = this;
+            var preProcess = opt.preProcess || null; //always happens before submit
+            var postProcess = opt.postProcess || null; // always happens after submit
+            var callback = opt.callback || null; // happens after submit if submit successful
+  
+            form.submit(function (e) {
+                e.preventDefault();
+                //
+                if (preProcess) { preProcess(); }
+
+                if ($(form).valid()) {
+                    //
+                    $(form).ajaxSubmit({
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.jobSuccess == false) {
+                                alert(data.rtnMessage);
+                            } else {
+                                if (callback) {
+                                    callback();
+                                }
+                            }
+                        }
+
+                    });
+                    //
+                    if (postProcess) {
+                        postProcess();
+                    }
+                }
+            });
+        },
+        //
+        //
         formClickDuplicate: function (opt) {
             var btn, editForm, dupForm;
             btn = this;
-            if (opt.editForm) {
-                editForm = opt.editForm;
-            } else {
-                throw new Error("No edit form to submit");
-            }
+            editForm = opt.editForm;
             if (opt.dupForm) {
                 dupForm = opt.dupForm;
             } else {
                 throw new Error("No duplicate form to submit");
             }
             btn.click(function () {
-                editForm.data("SelTab", -1);
-                editForm.data("create", null);
-                editForm.submit();
+                if (editForm) {
+                    editForm.data("SelTab", -1);
+                    editForm.data("create", null);
+                    editForm.submit();
+                }
                 // duplicate the current edit
                 dupForm.data("SelTab", -1);
                 dupForm.data("exclusiveTab", false);
@@ -379,7 +525,93 @@
 
         },
         //
-        //        
+        // Attaches a workorder to an email   
+        btnAttachWorkOrder: function (opt) {
+            var btn = this;
+            var url = opt.url;
+            var field = opt.field;
+            var reattachBtn = opt.reattach;
+            var clearBtn = opt.clear;
+            var viewBtn = opt.view;
+            var woid = opt.woid;
+            if (!url) throw new Error("url is a required property");
+            if (!field) throw new Error("field is a required property");
+
+            var attachFunc = function (e) {
+                e.preventDefault();
+                console.log('attachWO called ' + url);
+                //$.get(url, function (data) {
+                //    //var encoded = $('<div/>').text(data).html();
+                //    console.log(data);
+                //    field.val(data);
+                //});
+                $.ajax({
+                    "dataType": 'html',
+                    "type": "GET",
+                    "url": url,
+                    "success": function (result) {
+                        if (result.jobSuccess == false) {
+                            alert(result.rtnMessage);
+                        }
+                        else {
+                            field.val(result);
+                            _applyAttachmentBtnMask(attachElems);
+
+                        }
+                    },
+                    "failure": function (result) {
+                        alert(result);
+                    }
+                });
+                _applyAttachmentBtnMask(attachElems);
+
+            };
+            attachElems = {
+                attach: btn,
+                reattach: reattachBtn,
+                view: viewBtn,
+                clear: clearBtn,
+                field: field,
+                woid: woid
+            };
+            //attach buttons
+            btn.click(attachFunc);
+            //reattach button
+            if (reattachBtn) {
+                reattachBtn.click(attachFunc);
+            }
+            // show the existing attachment
+            if (viewBtn) {
+                viewBtn.click(function (e) {
+                    myWindow = window.open('', '');
+                    myWindow.document.write(field.val());
+                    myWindow.focus();
+                    _applyAttachmentBtnMask(attachElems);
+
+                });
+            }
+            // clear the attachment
+            if (clearBtn) {
+                clearBtn.click(function (e) {
+                    field.val('');
+                    _applyAttachmentBtnMask(attachElems);
+                });
+            }
+            _applyAttachmentBtnMask(attachElems);
+        },
+        //
+        //
+        btnSendEmail: function (opt) {
+            var btn = this;
+            var statusBox = opt.statusBox;
+            var emailForm = opt.emailForm;
+            var sendStatus = opt.sendStatus;
+            console.log("sending email...");
+            $(btn).click(function (e) {
+                $(statusBox).val(sendStatus);
+                $(emailForm).submit();
+            });
+        },
         formClickDelete: function (opt) {
             var btn = this;
             var ok = opt.ok || "OK?!";
@@ -390,9 +622,11 @@
             var postDelete = opt.postDelete;
             //
             if (!form) throw new Error("No employer Delete Form defined");
+            
+            // default assumes that formClickDelete called on a MacheteTab object
             _submitAndCloseTab({
                 form: form,
-                altClose: altClose,
+                altClose: altClose, // whats called on form.submit below
                 postDelete: postDelete
             }); //setup ajax submit action
             btn.click(function () {
@@ -510,16 +744,31 @@
                 EnableOnValue(select, enableVal, target);
             });
             EnableOnValue(select, enableVal, target);
-            //opt.action = EnableOnValue;
-            //_selectActionOnValue(opt);
         },
         //
-        configEnableOnSkill: function (opt) {
-            opt.object = this;
-            opt.action = _validateOnValue;
-            opt.event = 'change';
-            _selectActionOnValue(opt);
+        // Used in config.cshtml. Shows/hides based on class and skill
+        // selected in dropdown
+        configEnableOnValue: function (opt) {
+            var object = this;
+            var event = 'change';
+            var cfgArray = opt;
+            $(object).bind(event, function () {
+                _validateOnValue(object, cfgArray);
+            });
+            _validateOnValue(object, cfgArray);
         },
+        //
+        //
+        selectDDPopulatesField: function (opt) {
+            var object = this;
+            var event = 'change';
+            var cfg = opt;
+            $(object).bind(event, function () {
+                _insertTemplate(object, cfg);
+            });
+            //_insertTemplate(object, cfg);
+        },
+        //
         //
         tabTimer: function (opt) {
             var tab = this;
@@ -587,59 +836,35 @@
     }
     //
     //
-    function _validateOnValue(object, val, target) {
-        //Object is the dropdown that is triggering the different validation states
-        var visBlock = target.visible;
-        var valBlock = target.validate;
-        if (!visBlock) {
-            throw new Error("_selectActionOnValue requires a visible object to execute");
-        }
-        if (!valBlock) {
-            throw new Error("_selectActionOnValue requires a validation object to execute");
-        }
-        console.log('_validateOnValue called');
-        if ($(object).val() == val) {
-            $(visBlock).show();
-            $(valBlock).attr("data-val", true);
-        } else {
-            $(visBlock).hide();
-            $(valBlock).attr("data-val", false);
-        }
-        var myForm = $(object).closest('form');
-        $(myForm).removeData('unobtrusiveValidation');
-        $(myForm).removeData('validator');
-        $.validator.unobtrusive.parse(myForm);
-    }
-    //
-    //
-    function _selectActionOnValue(opt) {
-        var object = opt.object; ;
-        var val = opt.enableVal;
-        var target = opt.target;
-        var action = opt.action;
-        var event = opt.event;
-        if (!object) {
-            throw new Error("_selectActionOnValue requires an object property");
-        }
-        if (!val) {
-            throw new Error("_selectActionOnValue requires an enableVal property");
-        }
-        if (!target) {
-            throw new Error("_selectActionOnValue requires a target to enable");
-        }
-        if (!action) {
-            throw new Error("_selectActionOnValue requires an action to execute");
-        }
-        if (!event) {
-            throw new Error("_selectActionOnValue requires an event to execute");
-        }
-        $(object).bind(event, function () {
-            action(object, val, target);
-        });
-        action(object, val, target);
+    function _insertTemplate(object, cfg) {
+        var foo = $(object).find('option:selected').attr(cfg.attrName);
+        cfg.target.val(foo);
     }
 
     //
+    //
+    function _validateOnValue(object, cfgArray) {
+        //Object is the dropdown that is triggering the different validation states
+        var myArray = cfgArray;
+        if (!myArray) {
+            throw new Error("_validateOnValue configuration array empty or null");
+        }
+        for (var i = 0; i < myArray.length; i++) {
+            var entry = myArray[i];
+            console.log('_validateOnValue called for value: ' + entry.enableOnValue);
+            if ($(object).val() == entry.enableOnValue) {
+                $(entry.targets).show();
+                $(entry.validators).attr("data-val", true);
+            } else {
+                $(entry.targets).hide();
+                $(entry.validators).attr("data-val", false);
+            }
+            var myForm = $(object).closest('form');
+            $(myForm).removeData('unobtrusiveValidation');
+            $(myForm).removeData('validator');
+            $.validator.unobtrusive.parse(myForm);
+        }
+    }
     //  Internal function to record what's changed:
     //       level: refers to the hierarchy level of a given form 
     //              ([1]employer/[2]order/[3]assignment)
@@ -808,5 +1033,35 @@
         }
         console.log(caller + ": formLevel: " + level);
         return level;
+    }
+
+    function _applyAttachmentBtnMask(opt) {
+        var btn = opt.attach;
+        var reattachBtn = opt.reattach;
+        var clearBtn = opt.clear;
+        var viewBtn = opt.view;
+        var field = opt.field;
+        var woid = opt.woid;
+        if (field.val())
+        {
+            $(btn).hide();
+            if (woid) {
+                $(reattachBtn).show();
+            } else {
+                $(reattachBtn).hide();
+            }
+            $(viewBtn).show();
+            $(clearBtn).show();
+        } else
+        {
+            if (woid) {
+                $(btn).show();
+            } else {
+                $(btn).hide();
+            }
+            $(reattachBtn).hide();
+            $(viewBtn).hide();
+            $(clearBtn).hide();
+        }
     }
 })(jQuery, window, document);

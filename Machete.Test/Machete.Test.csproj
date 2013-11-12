@@ -11,9 +11,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Machete.Test</RootNamespace>
     <AssemblyName>Machete.Test</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -23,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'StageProd|AnyCPU'">
     <OutputPath>bin\StageProd\</OutputPath>
@@ -40,6 +43,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'StageTest|AnyCPU'">
     <OutputPath>bin\StageTest\</OutputPath>
@@ -48,6 +52,7 @@
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoMapper">
@@ -68,9 +73,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\CommunityEFProviderWrappers.EFTracingProvider.1.0.0\lib\net40-Client\EFTracingProvider.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+    <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EntityFramework.5.0.0\lib\net40\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <SpecificVersion>False</SpecificVersion>
@@ -78,14 +83,13 @@
       <HintPath>..\packages\microsoft\envdte.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Practices.ServiceLocation">
-      <HintPath>..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    <Reference Include="Microsoft.Practices.Unity, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Unity.3.0.1304.0\lib\Net45\Microsoft.Practices.Unity.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.Unity">
-      <HintPath>..\packages\Unity.2.1.505.0\lib\NET35\Microsoft.Practices.Unity.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.Unity.Configuration">
-      <HintPath>..\packages\Unity.2.1.505.0\lib\NET35\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+    <Reference Include="Microsoft.Practices.Unity.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Unity.3.0.1304.0\lib\Net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.Unity.Interception">
       <HintPath>..\packages\Unity.Interception.2.1.505.0\lib\NET35\Microsoft.Practices.Unity.Interception.dll</HintPath>
@@ -102,7 +106,10 @@
       <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
     <Reference Include="NLog">
-      <HintPath>..\packages\NLog.2.0.0.2000\lib\net40\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.2.0.1.2\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog.Extended">
+      <HintPath>..\packages\NLog.Extended.2.0.1.2\lib\net45-full\NLog.Extended.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -117,20 +124,20 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.ApplicationServices" />
-    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="WebActivator">
       <HintPath>..\packages\WebActivator.1.4.4\lib\net40\WebActivator.dll</HintPath>
     </Reference>
-    <Reference Include="WebDriver, Version=2.31.1.0, Culture=neutral, PublicKeyToken=1c2bd1631853048f, processorArchitecture=MSIL">
+    <Reference Include="WebDriver, Version=2.35.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Selenium.WebDriver.2.31.1\lib\net40\WebDriver.dll</HintPath>
+      <HintPath>..\packages\Selenium.WebDriver.2.35.0\lib\net40\WebDriver.dll</HintPath>
     </Reference>
-    <Reference Include="WebDriver.Support, Version=2.31.1.0, Culture=neutral, PublicKeyToken=1c2bd1631853048f, processorArchitecture=MSIL">
+    <Reference Include="WebDriver.Support, Version=2.35.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Selenium.Support.2.31.1\lib\net40\WebDriver.Support.dll</HintPath>
+      <HintPath>..\packages\Selenium.Support.2.35.0\lib\net40\WebDriver.Support.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -144,6 +151,8 @@
     <Compile Include="IntegrationTests\Services\ActivityServiceTests.cs" />
     <Compile Include="IntegrationTests\Services\ReportServiceTest.cs" />
     <Compile Include="IntegrationTests\Services\IndexViewBaseServiceTest.cs" />
+    <Compile Include="IntegrationTests\Services\EmailServiceTests.cs" />
+    <Compile Include="IntegrationTests\Services\EventServiceTests.cs" />
     <Compile Include="IntegrationTests\Services\WorkAssignmentServiceTest.cs" />
     <Compile Include="IntegrationTests\Services\WorkerSigninServiceTest.cs" />
     <Compile Include="IntegrationTests\Services\WorkOrderServiceTest.cs" />
@@ -200,7 +209,7 @@
       <Name>Machete.Service</Name>
     </ProjectReference>
     <ProjectReference Include="..\Machete.Web\Machete.Web.csproj">
-      <Project>{FE22D839-09AA-4DE8-BAF7-E29C6EB2EECC}</Project>
+      <Project>{d2c4c806-4d23-4e62-b96d-23bdab953c73}</Project>
       <Name>Machete.Web</Name>
     </ProjectReference>
   </ItemGroup>

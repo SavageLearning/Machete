@@ -1,0 +1,54 @@
+﻿@model Machete.Web.ViewModel.EmailView
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+
+@Html.HiddenFor(model => model.ID)
+
+<div class="tb-table" style="float: left; clear: left;">
+    <div class="tb-row">
+        <div class="tb-label">
+            @Html.LabelFor(m => m.emailFrom)
+        </div>
+        <div class="tb-field emailField" id="@(Model.idPrefix + "emailFrom")">
+            @Html.DisplayFor(m => m.emailFrom)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label">
+            @Html.Label(Emails.emailStatus)
+        </div>
+        <div class="tb-field emailField" id="@(Model.idPrefix + "status")">
+            @Html.DisplayFor(m => m.status)
+        </div>
+    </div>
+    <div class="tb-row">
+        @Html.HiddenFor(m => m.attachment, new { @id = Model.idPrefix + "attachment" })
+    </div>
+    <div class="tb-row">
+        <div class="tb-label">
+            @Html.LabelFor(m => m.emailTo)
+        </div>
+        <div class="tb-field emailField" id="@(Model.idPrefix + "emailTo")">
+        @Html.DisplayFor(model => model.emailTo)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label">
+            @Html.LabelFor(m => m.subject)
+        </div>
+        <div class="tb-field emailField" id="@(Model.idPrefix + "subject")">
+            @Html.DisplayFor(m => m.subject)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label desc-label">
+            @Html.LabelFor(m => m.body)
+        </div>
+        <div class="tb-field emailField bodyDisplay" id="@(Model.idPrefix + "body")">
+            @Html.DisplayFor(m => m.body)
+        </div>
+    </div>
+</div>
+<div style="clear: left;"></div>
+@Html.Partial("ManagerInfo", Model)
+@Html.Partial("AdministratorInfo", Model)

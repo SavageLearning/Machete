@@ -43,6 +43,7 @@ namespace Machete.Test.UnitTests.Controllers
     {
         Mock<IEmployerService> serv;
         Mock<IWorkOrderService> woServ;
+        Mock<ILookupCache> lcache;
         EmployerController ctrlr;
         FormCollection form;
         const int Testid = 4242;
@@ -53,6 +54,8 @@ namespace Machete.Test.UnitTests.Controllers
             WorkOrder.iPending = 123;
             serv = new Mock<IEmployerService>();
             woServ = new Mock<IWorkOrderService>();
+            lcache = new Mock<ILookupCache>();
+
             ctrlr = new EmployerController(serv.Object, woServ.Object);
             ctrlr.SetFakeControllerContext();
             form = new FormCollection
@@ -65,10 +68,8 @@ namespace Machete.Test.UnitTests.Controllers
                            {"phone", "123-456-7890"},
                            {"zipcode", "1234567890"}
                        };
+            Lookups.Initialize(lcache.Object);
             MacheteMapper.Initialize();
-            // TODO: Include Lookups in Dependency Injection, remove initialize statements
-            LookupCache.Initialize(new MacheteContext());
-            Lookups.Initialize();
         }
         //
         //   Testing /Index functionality
