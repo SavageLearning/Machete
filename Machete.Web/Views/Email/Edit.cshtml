@@ -1,0 +1,90 @@
+﻿@model Machete.Web.ViewModel.EmailView
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using Machete.Domain
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "email";
+
+}
+@if (Html.IsInRole(Html.Role_AMPCU()) || Html.IsInRole(Html.Role_T()))
+{
+    using (Html.BeginForm("Edit", "Email", FormMethod.Post,
+                            new { @class = "edittab-form EditPost", @id = Model.idPrefix + "editForm" }))
+    {
+        <input type="submit" value="@Emails.editsubmit" class="formButton saveBtn"/>
+            if (Machete.Domain.Email.iPending == Model.statusID)
+            { 
+        <input type="button" id="@(Model.idPrefix)SendBtn" class="formButton" value="$$$Send WO" />
+            }
+            if (Html.IsInRole(Html.Role_AM()))
+            {
+            <input id="deleteEmailButton-@Model.ID" type="button" value="@Emails.deletesubmit" 
+                    class="formButton deleteButton" />
+            }
+        <br />    
+        @Html.ValidationSummary(true)
+        @Html.EditorForModel()
+
+    }
+    if (Html.IsInRole(Html.Role_AM()))
+    {
+        //
+        // Only Managers can delete email records.
+        // The phonedesk can edit and save.
+        //
+        using (Html.BeginForm("Delete", "Email", FormMethod.Post,
+                                new { @class = "edittab-form DeletePost", @id = "DeleteEmail-" + Model.ID }))
+        {
+            @Html.HiddenFor(model => model.ID);
+        }
+    }
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.formButton').button();
+        $('#emailName').focus();
+        var emailSendBtn = $("#@(Model.idPrefix)SendBtn");
+        // machete UI detect changes on forms in tabs   
+        $("#@(Model.idPrefix)editForm").mUI('formDetectChanges', {
+            recType: "@(recType)",
+            formLevel: 1,
+            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+        });
+        //
+        // validation for elements added after page load
+        $.validator.unobtrusive.parseDynamicContent($('#@(Model.idPrefix)editForm'));
+        //
+        // delete button confirmation
+        $("#deleteEmailButton-@Model.ID").mUI('formClickDelete', {
+            ok: "@(Emails.deletesubmit)",
+            confirm: '@(Emails.deleteconfirmation)',
+            title: '@(Emails.deletetitle)',
+            form: $('#DeleteEmail-@Model.ID')
+        });
+        //
+        // edit form submit
+        $('#@(Model.idPrefix)editForm').mUI('tabFormSubmit', {
+            create: false,
+            selectTab: 0,
+            formLevel: 1,
+            preProcess: function () {
+                var field = $('#@(Model.idPrefix)attachment');
+                var encoded = $('<div/>').text($(field).val()).html();
+                console.log(encoded);
+                field.val(encoded);
+            },
+            postProcess: function () {
+                $('#@(Model.idPrefix)editForm').closest('.ui-dialog').find('a.ui-dialog-titlebar-close').click();
+            }
+        });
+
+        emailSendBtn.mUI('btnSendEmail', {
+            statusBox: $('#@(Model.idPrefix)status'),
+            emailForm: $("#@(Model.idPrefix)editForm"),
+            sendStatus: @(Email.iReadyToSend)
+        });
+
+    });
+</script>

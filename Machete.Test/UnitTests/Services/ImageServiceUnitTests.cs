@@ -122,7 +122,7 @@ namespace Machete.Test.UnitTests.Services
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Images)]
-        public void ImageService_CreateImage_returns_person()
+        public void ImageService_CreateImage_returns_image()
         {
             //
             //Arrange

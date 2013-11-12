@@ -43,13 +43,15 @@ namespace Machete.Web.Controllers
     {
         private readonly IEventService _serv;
         private readonly IImageService iServ;
+        private readonly LookupCache lcache;
         System.Globalization.CultureInfo CI;
         //
         //
-        public EventController(IEventService eventService, IImageService imageServ)
+        public EventController(IEventService eventService, IImageService imageServ, LookupCache lc)
         {
             this._serv = eventService;
             this.iServ = imageServ;
+            this.lcache = lc;
         }
         protected override void Initialize(RequestContext requestContext)
         {
@@ -74,7 +76,7 @@ namespace Machete.Web.Controllers
                 datefrom = p.dateFrom.ToShortDateString(),
                 dateto = p.dateTo == null ? "" : ((DateTime)p.dateTo).ToShortDateString(),
                 fileCount = p.JoinEventImages.Count(),
-                type = LookupCache.byID(p.eventType, CI.TwoLetterISOLanguageName),
+                type = lcache.textByID(p.eventType, CI.TwoLetterISOLanguageName),
                 dateupdated = Convert.ToString(p.dateupdated),
                 Updatedby = p.Updatedby
             };
@@ -97,7 +99,7 @@ namespace Machete.Web.Controllers
         //
         private string _getTabLabel(Event evnt, string locale)
         {
-            return evnt.dateFrom.ToShortDateString() + " " + LookupCache.byID(evnt.eventType, locale);
+            return evnt.dateFrom.ToShortDateString() + " " + lcache.textByID(evnt.eventType, locale);
         }
         //
         // GET: /Event/Create
@@ -158,8 +160,9 @@ namespace Machete.Web.Controllers
         {
             if (imagefile == null) throw new MacheteNullObjectException("AddImage called with null imagefile");
             JoinEventImage joiner = new JoinEventImage();
-            Image image = new Image();
             Event evnt = _serv.Get(id);
+            // TODO:The following code should be in the Service layer
+            Image image = new Image();
             image.ImageMimeType = imagefile.ContentType;
             image.parenttable = "Events";
             image.filename = imagefile.FileName;
@@ -175,10 +178,11 @@ namespace Machete.Web.Controllers
             joiner.dateupdated = DateTime.Now;
             joiner.Updatedby = user;
             joiner.Createdby = user;
+            // TODO: This tightly couples the MVC straight down to EF. 
+            // breaks layering. Should be abstracted.
             evnt.JoinEventImages.Add(joiner);
             _serv.Save(evnt, user);
             var foo = iServ.Get(newImage.ID).ImageData;
-            //_serv.GetEvent(evnt.ID);
             
             return Json(new
             {

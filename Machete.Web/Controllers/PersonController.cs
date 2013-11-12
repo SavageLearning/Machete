@@ -38,6 +38,7 @@ using System.Web.Routing;
 using System.Data.Entity.Infrastructure;
 using AutoMapper;
 using System.Globalization;
+using Machete.Web.Resources;
 
 namespace Machete.Web.Controllers
 {
@@ -76,7 +77,7 @@ namespace Machete.Web.Controllers
             {
                 tabref = "/Person/Edit/" + Convert.ToString(p.ID),
                 tablabel = p.firstname1 + ' ' + p.lastname1,
-                active = Convert.ToString(p.active),
+                active = p.active ? Shared.True : Shared.False,
                 firstname1 = p.firstname1,
                 firstname2 = p.firstname2,
                 lastname1 = p.lastname1,
@@ -103,7 +104,7 @@ namespace Machete.Web.Controllers
         public ActionResult Create()
         {
             var _model = new Person();
-            _model.gender = Lookups.getDefaultID(LType.gender);
+            _model.gender = Lookups.getDefaultID(LCategory.gender);
             _model.active = true;
             return PartialView(_model);
         }

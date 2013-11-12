@@ -65,8 +65,8 @@ namespace Machete.Data.Infrastructure
         // private -- [ method-modifier ]
         //             decorates a method, specifies its accessibility
         //             Access limited to this class
-        private MacheteContext dataContext;
-        private readonly IDbSet<T> dbset;
+        protected MacheteContext dataContext;
+        protected readonly IDbSet<T> dbset;
         // protected -- [ method-modifier ]
         //                  Access limited to this class or classes derived from this class
         protected RepositoryBase(IDatabaseFactory databaseFactory)

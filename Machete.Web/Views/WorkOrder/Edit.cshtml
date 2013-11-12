@@ -19,24 +19,21 @@
 {
     <input type="button" value="@WorkOrders.printlink" class="formButton" id="viewWorkOrder-@(Model.ID)" />
     //
-    // Phonedesk can save changes if work order is today or in
-    // the future
-    //
+    // Phonedesk can save changes if work order is today or in the future
     if ((Html.IsInRole(Html.Role_AMP()) && Model.dateTimeofWork >= DateTime.Today) || Html.IsInRole(Html.Role_AM()))
     {
     <input type="submit" value="@WorkOrders.editsubmit" class="formButton saveBtn" id="@(idPrefix)SaveBtn"/>
     }
+    <input type="button" id="@(idPrefix)printMap" class="formButton" value="@WorkOrders.mapbutton"/>
+    <input type="button" id="@(idPrefix)emailConfirm" class="formButton" value="@Emails.btnEmailWO" />
 
-    <input type="button" id="printMap" class="formButton" value="@WorkOrders.mapbutton"/>
-    
     if (Html.IsInRole(Html.Role_AM()))
     {
-        //
-        // Only managers and administrators can delete work orders
-        // Only AM can change employer
         <input type="button" id="@(idPrefix)changeEmployerBtn" value="@WorkOrders.changeemployer" class="formButton"/>
-        <input id="deleteWorkOrderButton-@(Model.ID)" type="button" value="@WorkOrders.deletesubmit" 
-                class="formButton deleteButton" />
+    }
+    if (Html.IsInRole(Html.Role_AM()))
+    {
+        <input id="deleteWorkOrderButton-@(Model.ID)" type="button" value="@WorkOrders.deletesubmit" class="formButton deleteButton" />
     }
     <br />  
     @Html.ValidationSummary(true)
@@ -66,9 +63,11 @@
     </div>
 } 
 @Html.Partial("WorkAssignmentIndex", Model)
+<div id="@(idPrefix)emailPopup" />
+
 <script type="text/javascript">
     $(document).ready(function () {
-        if (@(editDisable)) { 
+        if ( @(editDisable) ) { 
             $('#WorkOrderTab-@(Model.ID)').find('input,select,textarea').attr('disabled', 'disabled');
         }
         $('#activateWorkOrder-@(Model.ID)').hide();
@@ -111,7 +110,7 @@
         });
         //
         // submit edit
-        $("#WorkOrderTab-@(Model.ID)").mUI('formSubmit', {
+        $("#WorkOrderTab-@(Model.ID)").mUI('tabFormSubmit', {
             exclusiveTab: false,
             selectTab: 0,
             preProcess: function () {
@@ -121,15 +120,33 @@
         });
         //
         // submit activate
-        $("#ActivateWorkOrder-@(Model.ID)").mUI('formSubmit', {
+        $("#ActivateWorkOrder-@(Model.ID)").mUI('tabFormSubmit', {
             clickButton: $("#activateWorkOrderButton-@(Model.ID)"),
             selectTab: 0,
             closeTab: true,
             formLevel: 2
         });
-        $('#printMap').click(function () { 
+        $('#@(idPrefix)printMap').click(function () { 
             openGoogleMap("@Html.Encode(Model.workSiteAddress1 + ' ' + Model.city + ' ' + Model.state)", 
                 null) 
+        });
+        //
+        // emailConfirm
+        $('#@(idPrefix)emailConfirm').click(function () {
+            $('#@(idPrefix)emailPopup').html('');
+            $('#@(idPrefix)emailPopup').dialog({
+                height: 600,
+                width: 550,
+                modal: true
+            });
+            $.ajax({
+                url: "/Email/ConfirmDialog",
+                data: {woid: "@(Model.ID)"},
+                success: function(data) {
+                    $('#@(idPrefix)emailPopup').html(data);
+                },
+                dataType: "html"
+            });
         });
         //
         // change employer

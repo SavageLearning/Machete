@@ -219,4 +219,16 @@
   <data name="docs" xml:space="preserve">
     <value>Documentación</value>
   </data>
+  <data name="All" xml:space="preserve">
+    <value>Todo</value>
+  </data>
+  <data name="emailstab" xml:space="preserve">
+    <value>Correos</value>
+  </data>
+  <data name="False" xml:space="preserve">
+    <value>Falso</value>
+  </data>
+  <data name="True" xml:space="preserve">
+    <value>Verdad</value>
+  </data>
 </root>

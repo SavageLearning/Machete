@@ -228,8 +228,7 @@ namespace Machete.Test
         public void Integration_WA_Service_GetIndexView_check_searchdwccardnum()
         {
             //arrange
-            //var skill = LookupCache.getSingleEN("skill","painter (rollerbrush)");
-            var skill = 61;
+            var skill = frb.ToLookupCache().getByKeys(LCategory.skill,LKey.Default);
             var w = frb.AddWorker(skill1: skill).ToWorker();
             dOptions.dwccardnum = w.dwccardnum;
             dOptions.orderDescending = true;

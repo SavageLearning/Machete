@@ -123,6 +123,9 @@
   <data name="categoryRequired" xml:space="preserve">
     <value>A category is required</value>
   </data>
+  <data name="emailTemplate" xml:space="preserve">
+    <value>Email template</value>
+  </data>
   <data name="fixedJob" xml:space="preserve">
     <value>Fixed job?</value>
   </data>

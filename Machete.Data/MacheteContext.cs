@@ -37,7 +37,7 @@ using EFTracingProvider;
 using System.Data.Entity.Infrastructure;
 namespace Machete.Data
 {
-    public class MacheteContext : DbContext
+    public class MacheteContext : DbContext, IDisposable
     {
         static string defaultDbName = "macheteConnection";
         public MacheteContext()
@@ -57,12 +57,13 @@ namespace Machete.Data
         public DbSet<WorkerSignin> WorkerSignins { get; set; }
         public DbSet<Image> Images { get; set; }
         public DbSet<Employer> Employers { get; set; }
+        public DbSet<Email> Emails { get; set; }
         public DbSet<WorkOrder> WorkOrders { get; set; }
         public DbSet<WorkerRequest> WorkerRequests { get; set; }
         public DbSet<Event> Events {get; set;}
         public DbSet<Activity> Activities { get; set; }
-        public DbSet<ActivitySignin> ActivitySignins { get; set; }
-        
+        public DbSet<ActivitySignin> ActivitySignins { get; set; }              
+
         public virtual void Commit()
         {
             try
@@ -78,6 +79,7 @@ namespace Machete.Data
                         Trace.TraceInformation("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage);
                     }
                 }
+                throw new Exception("Entity Valdiation errors: See debug log");
             }
         }
 
@@ -89,8 +91,10 @@ namespace Machete.Data
             modelBuilder.Configurations.Add(new WorkerSigninBuilder());
             modelBuilder.Configurations.Add(new EventBuilder());
             modelBuilder.Configurations.Add(new JoinEventImageBuilder());
+            //modelBuilder.Configurations.Add(new JoinWorkorderEmailBuilder());
             modelBuilder.Configurations.Add(new ActivitySigninBuilder());
             modelBuilder.Configurations.Add(new ActivityBuilder());
+            modelBuilder.Configurations.Add(new EmailBuilder());
             modelBuilder.Entity<Employer>().ToTable("Employers");
             modelBuilder.Entity<WorkOrder>().ToTable("WorkOrders");
             modelBuilder.Entity<WorkAssignment>().ToTable("WorkAssignments");
@@ -132,6 +136,7 @@ namespace Machete.Data
             return (ctx);
         }
     }
+
     public class PersonBuilder : EntityTypeConfiguration<Person>
     {
         public PersonBuilder()
@@ -141,6 +146,7 @@ namespace Machete.Data
             HasOptional(p => p.Worker).WithRequired(p => p.Person).WillCascadeOnDelete();
         }
     }
+
     public class WorkerBuilder : EntityTypeConfiguration<Worker>
     {
         public WorkerBuilder() 
@@ -154,6 +160,7 @@ namespace Machete.Data
                 .HasForeignKey(a => a.workerAssignedID);
         }
     }
+
     public class WorkerSigninBuilder : EntityTypeConfiguration<WorkerSignin>
     {
         public WorkerSigninBuilder()
@@ -181,6 +188,14 @@ namespace Machete.Data
         }
     }
 
+    public class EmailBuilder : EntityTypeConfiguration<Email>
+    {
+        public EmailBuilder()
+        {
+            HasKey(e => e.ID);
+        }
+    }
+
     public class WorkOrderBuilder : EntityTypeConfiguration<WorkOrder>
     {
         public WorkOrderBuilder()
@@ -191,6 +206,7 @@ namespace Machete.Data
             .HasForeignKey(e => e.EmployerID);
         }
     }
+
     public class WorkAssignmentBuilder : EntityTypeConfiguration<WorkAssignment>
     {
         public WorkAssignmentBuilder()

@@ -45,7 +45,7 @@ namespace Machete.Web.Helpers
             return false;
         }
     }
-    // TODO: RoleGroupHelper relies on magic strings
+    // TODO: RoleGroupHelper relies on magic strings; replace magic strings
     public static class RoleGroupHelper
     {
         public static string[] Role_AMPCU(this HtmlHelper html) { return new[]{"Administrator", "Manager", "PhoneDesk", "Check-in", "User"}; }

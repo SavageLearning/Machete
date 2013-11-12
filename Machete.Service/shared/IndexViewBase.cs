@@ -112,9 +112,9 @@ namespace Machete.Service
                 case "dateupdated": e = descending ? e.OrderByDescending(p => p.dateupdated) : e.OrderBy(p => p.dateupdated); break;
                 case "dateforsigninstring": e = descending ? e.OrderByDescending(p => p.dateforsignin) : e.OrderBy(p => p.dateforsignin); break;
                 case "expirationDate": e = descending ? e.OrderByDescending(p => p.expirationDate) : e.OrderBy(p => p.expirationDate); break;
-                case "lotterySequence": 
-                    e = descending ? e.OrderByDescending(p => p.lotterySequence != null).ThenByDescending(p => p.lotterySequence) : 
-                    e.OrderBy(p => p.lotterySequence == null).ThenBy(p => p.lotterySequence); 
+                case "lotterySequence":
+                    e = descending ? e.OrderByDescending(p => p.lotterySequence != null).ThenByDescending(p => p.lotterySequence) :
+                    e.OrderBy(p => p.lotterySequence == null).ThenBy(p => p.lotterySequence);
                     break;
                 default: e = descending ? e.OrderByDescending(p => p.dateforsignin) : e.OrderBy(p => p.dateforsignin); break;
             }
@@ -159,7 +159,7 @@ namespace Machete.Service
         }
         public static void waGrouping(viewOptions o, ref IQueryable<WorkAssignment> q, ILookupRepository lRepo)
         {
-            var completedID = LookupCache.getSingleEN("orderstatus", "Completed");
+            //var completedID = LookupCache.getByKeys(LCategory.orderstatus, LOrderStatus.Completed);
             switch (o.wa_grouping)
             {
                 case "open": q = q.Where(p => p.workerAssignedID == null); break;
@@ -176,7 +176,7 @@ namespace Machete.Service
                              .Select(jj => jj.wa);
                     break;
                 case "completed":
-                    q = q.Where(wa => wa.workOrder.status == completedID);
+                    q = q.Where(wa => wa.workOrder.status == WorkOrder.iCompleted);
                     break;
             }
         }
@@ -195,7 +195,7 @@ namespace Machete.Service
             if (isTimeSpecific.IsMatch(search)) //Regex for day/month/year time
                 query = query.Where(p => EntityFunctions.DiffHours(p.workOrder.dateTimeofWork, parsedTime) == 0 ? true : false);
             //throw new ArgumentException("Date string not valid for Month,Day, or Hour pattern");
- 
+
         }
         /// <summary>
         /// Filter WA queryable on a partial date string
@@ -205,15 +205,15 @@ namespace Machete.Service
         public static void filterOnDatePart(string search, ref IQueryable<WorkAssignment> query)
         {
             DateTime parsedTime;
-            if (DateTime.TryParse(search,out parsedTime))
-                filterOnDatePart(search, parsedTime, ref query);           
+            if (DateTime.TryParse(search, out parsedTime))
+                filterOnDatePart(search, parsedTime, ref query);
         }
         public static void search(viewOptions o, ref IQueryable<WorkAssignment> q, ILookupRepository lRepo)
         {
             bool isDateTime = false;
             DateTime parsedTime;
             if (isDateTime = DateTime.TryParse(o.sSearch, out parsedTime))
-                filterOnDatePart(o.sSearch, parsedTime, ref q);            
+                filterOnDatePart(o.sSearch, parsedTime, ref q);
             else
             {
                 q = q
@@ -225,8 +225,8 @@ namespace Machete.Service
                         //p.dateupdated.ToString().ContainsOIC(param.sSearch) ||
                         p.wa.Updatedby.Contains(o.sSearch)).Select(p => p.wa);
             }
-        }      
-        public static IEnumerable<WorkAssignment> filterOnSkill(viewOptions o, IQueryable<WorkAssignment> q)
+        }
+        public static IEnumerable<WorkAssignment> filterOnSkill(viewOptions o, IQueryable<WorkAssignment> q, ILookupCache lc)
         {
             //  "Machete --A series of good intentions, marinated in panic."
             //
@@ -254,8 +254,8 @@ namespace Machete.Service
                 foreach (var skillid in primeskills)
                 {
                     skills.Push(skillid);
-                    Lookup skill = LookupCache.getByID(skillid);
-                    foreach (var subskill in LookupCache.getCache()
+                    Lookup skill = lc.getByID(skillid);
+                    foreach (var subskill in lc.getCache()
                         .Where(a => a.category == skill.category &&
                                     a.subcategory == skill.subcategory &&
                                     a.level < skill.level))
@@ -269,7 +269,7 @@ namespace Machete.Service
                 if (skills.Count() != 0) skill4 = skills.Pop();
                 if (skills.Count() != 0) skill5 = skills.Pop();
                 if (skills.Count() != 0) skill6 = skills.Pop();
-                filteredWA = filteredWA.Join(LookupCache.getCache(), //LINQ
+                filteredWA = filteredWA.Join(lc.getCache(), //LINQ
                                                    wa => wa.skillID,
                                                    sk => sk.ID,
                                                    (wa, sk) => new { wa, sk }
@@ -287,7 +287,7 @@ namespace Machete.Service
                                         .Select(jj => jj.wa).AsEnumerable();
             }
 
-            return filteredWA;            
+            return filteredWA;
         }
         public static void sortOnColName(string name, bool descending, ref IEnumerable<WorkAssignment> q)
         {
@@ -379,6 +379,8 @@ namespace Machete.Service
                 case "workSiteAddress1": q = descending ? q.OrderByDescending(p => p.workSiteAddress1) : q.OrderBy(p => p.workSiteAddress1); break;
                 case "updatedby": q = descending ? q.OrderByDescending(p => p.Updatedby) : q.OrderBy(p => p.Updatedby); break;
                 case "onlineSource": q = descending ? q.OrderByDescending(p => p.onlineSource) : q.OrderBy(p => p.onlineSource); break;
+                case "emailSentCount": q = descending ? q.OrderByDescending(p => p.Emails.Count()) : q.OrderBy(p => p.Emails.Count()); break;
+                case "emailErrorCount": q = descending ? q.OrderByDescending(p => p.Emails.Count()) : q.OrderBy(p => p.Emails.Count()); break;
                 case "WOID": q = descending ? q.OrderByDescending(p => p.paperOrderNum) : q.OrderBy(p => p.paperOrderNum); break;
                 case "dateupdated": q = descending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated); break;
                 default: q = descending ? q.OrderByDescending(p => p.dateTimeofWork) : q.OrderBy(p => p.dateTimeofWork); break;
@@ -446,7 +448,7 @@ namespace Machete.Service
                             p.Person.firstname2.Contains(o.sSearch) ||
                             p.Person.lastname1.Contains(o.sSearch) ||
                             p.Person.lastname2.Contains(o.sSearch) //||
-                            //EntityFunctions.p.memberexpirationdate.ToString().Contains(o.sSearch)
+                //EntityFunctions.p.memberexpirationdate.ToString().Contains(o.sSearch)
                             );
         }
         public static void sortOnColName(string name, bool descending, ref IQueryable<Worker> q)
@@ -477,13 +479,13 @@ namespace Machete.Service
         /// <param name="o"></param>
         /// <param name="q"></param>
         /// <param name="lRepo"></param>
-        public static void search(viewOptions o, ref IEnumerable<Activity> q)
+        public static void search(viewOptions o, ref IEnumerable<Activity> q, LookupCache lcache)
         {
             q = q //LookupCache will be slow and needs to be converted to IQueryable
-                .Where(p => LookupCache.byID(p.name, o.CI.TwoLetterISOLanguageName).ContainsOIC(o.sSearch) ||
+                .Where(p => lcache.textByID(p.name, o.CI.TwoLetterISOLanguageName).ContainsOIC(o.sSearch) ||
                             p.notes.ContainsOIC(o.sSearch) ||
                             p.teacher.ContainsOIC(o.sSearch) ||
-                            LookupCache.byID(p.type, o.CI.TwoLetterISOLanguageName).ContainsOIC(o.sSearch) ||
+                            lcache.textByID(p.type, o.CI.TwoLetterISOLanguageName).ContainsOIC(o.sSearch) ||
                             p.dateStart.ToString().ContainsOIC(o.sSearch) ||
                             p.dateEnd.ToString().ContainsOIC(o.sSearch));
         }
@@ -494,19 +496,19 @@ namespace Machete.Service
         /// <param name="descending"></param>
         /// <param name="isoLandCode"></param>
         /// <param name="q"></param>
-        public static void sortOnColName(string name, bool descending, string isoLandCode, ref IEnumerable<Activity> q)
+        public static void sortOnColName(string name, bool descending, string isoLandCode, ref IEnumerable<Activity> q, LookupCache lc)
         {
             switch (name)
             {
                 case "name":
                     q = descending ?
-                        q.OrderByDescending(p => LookupCache.byID(p.name, isoLandCode)) :
-                        q.OrderBy(p => LookupCache.byID(p.name, isoLandCode));
+                        q.OrderByDescending(p => lc.textByID(p.name, isoLandCode)) :
+                        q.OrderBy(p => lc.textByID(p.name, isoLandCode));
                     break;
                 case "type":
                     q = descending ?
-                        q.OrderByDescending(p => LookupCache.byID(p.type, isoLandCode)) :
-                        q.OrderBy(p => LookupCache.byID(p.type, isoLandCode));
+                        q.OrderByDescending(p => lc.textByID(p.type, isoLandCode)) :
+                        q.OrderBy(p => lc.textByID(p.type, isoLandCode));
                     break;
                 case "count":
                     q = descending ?
@@ -577,7 +579,7 @@ namespace Machete.Service
                      from az2 in grouped.DefaultIfEmpty()
                      where az2.personID == personID
                      select a)
-                 on b.ID equals aa.ID into h                
+                 on b.ID equals aa.ID into h
                 from i in h.DefaultIfEmpty()
                 where i == null
                 select b;
@@ -628,11 +630,55 @@ namespace Machete.Service
                 case "text_ES": q = descending ? q.OrderByDescending(p => p.text_ES) : q.OrderBy(p => p.text_ES); break;
                 case "selected": q = descending ? q.OrderByDescending(p => p.selected) : q.OrderBy(p => p.selected); break;
                 case "subcategory": q = descending ? q.OrderByDescending(p => p.subcategory) : q.OrderBy(p => p.subcategory); break;
-                //case "phone": q = descending ? q.OrderByDescending(p => p.phone) : q.OrderBy(p => p.phone); break;
-                //case "dateupdated": q = descending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated); break;
                 default: q = descending ? q.OrderByDescending(p => p.text_EN) : q.OrderBy(p => p.text_EN); break;
             }
         }
         #endregion
+
+        #region EMAILS
+        public static void filterOnWorkorder(viewOptions o, ref IQueryable<Email> q)
+        {
+            if (o.woid == 0) return;
+            q = q.SelectMany(email => email.WorkOrders.Where(w => w.ID == o.woid), (email, wo) => email);
+        }
+
+        public static void filterOnEmployer(viewOptions o, ref IQueryable<Email> q)
+        {
+            if (o.EmployerID == null) return;
+            q = q.Where(ee => ee.ID == (int)o.EmployerID)
+                 .SelectMany(e => e.WorkOrders, (e, wo) => wo)
+                 .SelectMany(wwo => wwo.Emails, (wwo, email) => email);
+        }
+
+        public static void search(viewOptions o, ref IQueryable<Email> q)
+        {
+            q = q.Where(p => //p.active.ToString().Contains(o.sSearch) ||
+                            p.subject.Contains(o.sSearch) ||
+                            p.emailTo.Contains(o.sSearch) ||
+                            p.Updatedby.Contains(o.sSearch));
+        }
+
+        public static void filterOnID(viewOptions o, ref IQueryable<Email> q)
+        {
+            q = q.Where(e => e.ID == o.emailID);
+        }
+
+        public static void sortOnColName(string name, bool descending, ref IEnumerable<Email> e)
+        {
+            switch (name)
+            {
+                case "recordid": e = descending ? e.OrderByDescending(p => p.ID) : e.OrderBy(p => p.ID);break;
+                case "emailTo": e = descending ? e.OrderByDescending(p => p.emailTo) : e.OrderBy(p => p.emailTo); break;
+                case "subject": e = descending ? e.OrderByDescending(p => p.subject) : e.OrderBy(p => p.subject); break;
+                case "status": e = descending ? e.OrderByDescending(p => p.statusID) : e.OrderBy(p => p.statusID); break;
+                case "transmitAttempts": e = descending ? e.OrderByDescending(p => p.transmitAttempts) : e.OrderBy(p => p.transmitAttempts); break;
+                case "lastAttempt": e = descending ? e.OrderByDescending(p => p.lastAttempt) : e.OrderBy(p => p.lastAttempt); break;
+                case "dateupdated": e = descending ? e.OrderByDescending(p => p.dateupdated) : e.OrderBy(p => p.dateupdated); break;
+                //case "": q = descending ? q.OrderByDescending(p => p) : q.OrderBy(p => p);break;
+                default: e = descending ? e.OrderByDescending(p => p.dateupdated) : e.OrderBy(p => p.dateupdated); break;
+            }
+        }
+        #endregion
+
     }
 }

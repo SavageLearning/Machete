@@ -33,31 +33,12 @@ using System.Data.Entity;
 using System.Text.RegularExpressions;
 using System.Web.Security;
 using System.Globalization;
+using System.Threading;
 
 namespace Machete.Web.Helpers
 {
 
-    public enum LType
-    {
-        maritalstatus,
-        race,
-        language,
-        neighborhood,
-        gender,
-        transportmethod,
-        countryoforigin,
-        activityName,
-        activityType,
-        eventtype,
-        emplrreference,
-        memberstatus,
-        skill,
-        income,
-        orderstatus,
-        worktype
-    }
-
-    public class Lookups
+    public static class Lookups
     {
         public static int hoursDefault { get { return 5; } }
         public static int daysDefault { get { return 1;  } }
@@ -73,12 +54,14 @@ namespace Machete.Web.Helpers
         private static SelectList skillLevelNum { get; set; }
         private static List<SelectListItem> yesnoEN { get; set; }
         private static List<SelectListItem> yesnoES { get; set; }
+        private static ILookupCache lcache;
         //
         // Initialize once to prevent re-querying DB
         //
         //public static void Initialize(IEnumerable<Lookup> cache)
-        public static void Initialize()
+        public static void Initialize(ILookupCache lc)
         {
+            lcache = lc;
             hoursNum = new SelectList(new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16" }
                 .Select(x => new LookupNumber { Value = x, Text = x }),
                 "Value", "Text", "7"
@@ -90,11 +73,13 @@ namespace Machete.Web.Helpers
             skillLevelNum = new SelectList(new[] { "0", "1", "2", "3" }
                 .Select(x => new SelectListItem { Value = x, Text = x }),
                 "Value", "Text", "0");
-            categories = new SelectList(new[] {"maritalstatus","race","neighborhood","gender",
-                "transportmethod","countryoforigin","activityName","activityType","eventtype",
-                "orderstatus","emplrreference","worktype","memberStatus","skill"}
+            categories = new SelectList(new[] {
+                LCategory.maritalstatus, LCategory.race, LCategory.neighborhood, LCategory.gender,
+                LCategory.transportmethod, LCategory.countryoforigin, LCategory.activityName, 
+                LCategory.activityType, LCategory.eventtype, LCategory.orderstatus, LCategory.emplrreference, 
+                LCategory.worktype, LCategory.memberstatus,LCategory.skill,LCategory.emailstatus, LCategory.emailTemplate}
                 .Select(x => new SelectListItem { Value = x, Text = x}),
-                "Value", "Text", "activityName");
+                "Value", "Text", LCategory.activityName);
 
             yesnoEN = new List<SelectListItem>();
             yesnoEN.Add(new SelectListItem() { Selected = false, Text = "No", Value = "false" });
@@ -104,7 +89,7 @@ namespace Machete.Web.Helpers
             yesnoES.Add(new SelectListItem() { Selected = false, Text = "Sí", Value = "true" });
         }
         //TODO: Lookups.yesno needs to use resource files, not hardcoded values
-        public static List<SelectListItem> yesno(CultureInfo CI)
+        public static List<SelectListItem> yesnoSelectList(CultureInfo CI)
         {
             if (CI.TwoLetterISOLanguageName == "es") return yesnoES;
             return yesnoEN;  //defaults to English
@@ -116,19 +101,19 @@ namespace Machete.Web.Helpers
         }
         //
         // Get the Id string for a given lookup number
-        public static string byID(int ID, string locale)
+        public static string byID(int ID)
         {
-            return LookupCache.byID(ID, locale);
+            return lcache.textByID(ID, Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant());
         }
-        public static string byID(int? ID, string locale)
+        public static string byID(int? ID)
         {
-            return ID == null ? null : byID(ID, locale);
+            return ID == null ? null : byID((int)ID);
         }
         //
         // create multi-lingual yes/no strings
-        public static string getBool(bool val, string locale)
+        public static string getBool(bool val)
         {
-            if (locale == "es")
+            if (Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant() == "es")
             {
                 if (val) return "sí"; 
                 else return "no";
@@ -136,27 +121,29 @@ namespace Machete.Web.Helpers
             if (val) return "yes";
             else return "no";
         }
-        public static string getBool(bool? val, string locale)
+        public static string getBool(bool? val)
         {            
-            if (val == null) val = false;
-            return getBool((bool)val, locale);
+            return getBool(val ?? false);
         }
 
         /// <summary>
         /// Gets the default ID for the group
         /// </summary>
         /// <returns></returns>
-        public static int getDefaultID(LType type)
+        public static int getDefaultID(string type)
         {
             int count;
-            count = LookupCache.getCache()
+            count = lcache.getCache()
                 .Where(s => s.selected == true &&
-                            s.category == type.ToString())
+                            s.category == type)
                 .Count();
-            if (count > 0) return LookupCache.getCache()
-                                             .Where(s => s.selected == true &&
-                                                         s.category == type.ToString())
-                                             .SingleOrDefault().ID;
+            if (count > 0)
+            {
+                return lcache.getCache()
+                            .Where(s => s.selected == true &&
+                                        s.category == type)
+                            .SingleOrDefault().ID;
+            }
             return count;
         }
         /// <summary>
@@ -164,31 +151,47 @@ namespace Machete.Web.Helpers
         /// </summary>
         /// <param name="locale"></param>
         /// <returns></returns>
-        public static SelectList get(LType type, string locale)
+        public static SelectList getSelectList(string type)
         {
+            var locale = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant();
             string field;
             SelectList list;
-            if (locale == "es") field = "text_ES";
+            if (locale == "ES") field = "text_ES";
             else field = "text_EN";
-            //if (LookupCol == null) LookupCol = LookupCache.getCache();
-
-            list = new SelectList(LookupCache.getCache().Where(s => s.category == type.ToString()),
+            list = new SelectList(lcache.getCache().Where(s => s.category == type),
                                     "ID",
                                     field,
                                     getDefaultID(type));
             if (list == null) throw new ArgumentNullException("Get returned no lookups");
             return list;
         }
+
+        public static List<SelectListItemEmail> getEmailTemplates()
+        {
+            var locale = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant();
+            IEnumerable<Lookup> prelist = lcache.getCache()
+                                         .Where(s => s.category == LCategory.emailTemplate);
+            return new List<SelectListItemEmail>(prelist
+                .Select(x => new SelectListItemEmail
+                {
+                    Selected = x.selected,
+                    Value = Convert.ToString(x.ID),
+                    Text = locale == "es" ? x.text_ES : x.text_EN,
+                    template = x.emailTemplate
+                }));
+        }
+
         /// <summary>
-        /// get the List of skills
+        /// get the List of skills. used in Worker.cshtml & WorkAssignment.cshtml
         /// </summary>
         /// <param name="locale"></param>
         /// <param name="specializedOnly">only return specialized entries</param>
         /// <returns></returns>
-        public static List<SelectListItemEx> getSkill(string locale, bool specializedOnly)
+        public static List<SelectListItemEx> getSkill(bool specializedOnly)
         {
-            IEnumerable<Lookup> prelist = LookupCache.getCache()
-                                                     .Where(s => s.category == LType.skill.ToString());
+            var locale = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant();
+            IEnumerable<Lookup> prelist = lcache.getCache()
+                                                     .Where(s => s.category == LCategory.skill);
             Func<Lookup, string> textFunc; //anon function
             if (prelist == null) throw new ArgumentNullException("No skills returned");
             if (specializedOnly)

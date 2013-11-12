@@ -44,6 +44,7 @@ using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration;
 using Machete.Web.Helpers;
 using AutoMapper;
+using System.Web.Optimization;
 
 namespace Machete.Web
 {
@@ -104,16 +105,22 @@ namespace Machete.Web
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
+            // from MVC 4 template
+            //WebApiConfig.Register(GlobalConfiguration.Configuration);
+            //FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            //RouteConfig.RegisterRoutes(RouteTable.Routes);
+            BundleConfig.RegisterBundles(BundleTable.Bundles);
+            //AuthConfig.RegisterAuth();
+
             ModelBinders.Binders.Add(typeof(List<WorkerRequest>), new workerRequestBinder());
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
-            MacheteMapper.Initialize();
+            Database.SetInitializer<MacheteContext>(new MacheteInitializer());
             IUnityContainer container = GetUnityContainer();
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
-            Database.SetInitializer<MacheteContext>(new MacheteInitializer());
-            LookupCache.Initialize(new MacheteContext());
-            WorkerCache.Initialize(new MacheteContext());
-            Lookups.Initialize();
+            WorkerCache.Initialize(new MacheteContext()); //TODO: migrate to Unity DI container
+            Lookups.Initialize(container.Resolve<LookupCache>()); // Static object; used in cshtml files; used instead of proper view models
+            MacheteMapper.Initialize(); // AutoMapper
         }
 
         private IUnityContainer GetUnityContainer()
@@ -133,13 +140,13 @@ namespace Machete.Web
             .RegisterType<IWorkerRequestRepository, WorkerRequestRepository>(new HttpContextLifetimeManager<IWorkerRequestRepository>())
             .RegisterType<IImageRepository, ImageRepository>(new HttpContextLifetimeManager<IImageRepository>())
             .RegisterType<IEmployerRepository, EmployerRepository>(new HttpContextLifetimeManager<IEmployerRepository>())
+            .RegisterType<IEmailRepository, EmailRepository>(new HttpContextLifetimeManager<IEmailRepository>())
             .RegisterType<IWorkOrderRepository, WorkOrderRepository>(new HttpContextLifetimeManager<IWorkOrderRepository>())
             .RegisterType<IWorkAssignmentRepository, WorkAssignmentRepository>(new HttpContextLifetimeManager<IWorkAssignmentRepository>())
             .RegisterType<ILookupRepository, LookupRepository>(new HttpContextLifetimeManager<ILookupRepository>())
             .RegisterType<IEventRepository, EventRepository>(new HttpContextLifetimeManager<IEventRepository>())
             .RegisterType<IActivityRepository, ActivityRepository>(new HttpContextLifetimeManager<IActivityRepository>())
             .RegisterType<IActivitySigninRepository, ActivitySigninRepository>(new HttpContextLifetimeManager<IActivitySigninRepository>())
-            
             // 
             .RegisterType<ILookupService, LookupService>(new HttpContextLifetimeManager<ILookupService>())
             .RegisterType<IActivitySigninService, ActivitySigninService>(new HttpContextLifetimeManager<IActivitySigninService>())
@@ -150,10 +157,13 @@ namespace Machete.Web
             .RegisterType<IWorkerService, WorkerService>(new HttpContextLifetimeManager<IWorkerService>())
             .RegisterType<IWorkerRequestService, WorkerRequestService>(new HttpContextLifetimeManager<IWorkerRequestService>())
             .RegisterType<IEmployerService, EmployerService>(new HttpContextLifetimeManager<IEmployerService>())
+            .RegisterType<IEmailService, EmailService>(new HttpContextLifetimeManager<IEmailService>())
             .RegisterType<IWorkOrderService, WorkOrderService>(new HttpContextLifetimeManager<IWorkOrderService>())
             .RegisterType<IWorkAssignmentService, WorkAssignmentService>(new HttpContextLifetimeManager<IWorkAssignmentService>())
             .RegisterType<IImageService, ImageService>(new HttpContextLifetimeManager<IImageService>())
             .RegisterType<IReportService, ReportService>(new HttpContextLifetimeManager<IReportService>());
+            // 
+            container.RegisterInstance<ILookupCache>(new LookupCache(container.Resolve<Func<IDatabaseFactory>>()));
             return container;
         }
     }

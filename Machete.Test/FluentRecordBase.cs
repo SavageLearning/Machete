@@ -48,7 +48,10 @@ namespace Machete.Test
         private LookupRepository _repoL;
         private ImageRepository _repoI;
         private EmployerRepository _repoE;
+        private EmailRepository _repoEM;
+        private EventRepository _repoEV;
         private DatabaseFactory _dbFactory;
+        private LookupCache _lcache;
         private WorkerSigninService _servWSI;
         private WorkerService _servW;
         private PersonService _servP;
@@ -60,10 +63,14 @@ namespace Machete.Test
         private ActivitySigninService _servAS;
         private ReportService _servR;
         private EmployerService _servE;
+        private EmailService _servEM;
+        private EventService _servEV;
         private LookupService _servL;
         private IUnitOfWork _uow;
         public MacheteContext DB { get; set; }
         private Employer _emp;
+        private Email _email;
+        private Event _event;
         private WorkOrder _wo;
         private WorkAssignment _wa;
         private Person _p;
@@ -89,20 +96,23 @@ namespace Machete.Test
 
         public FluentRecordBase Initialize(IDatabaseInitializer<MacheteContext> initializer, string connection)
         {
-            Database.SetInitializer<MacheteContext>(initializer);
             DB = new MacheteContext(connection);
+            return Initialize(initializer, DB);
+        }
+
+        public FluentRecordBase Initialize(IDatabaseInitializer<MacheteContext> initializer, MacheteContext DB)
+        {
+            Database.SetInitializer<MacheteContext>(initializer);
             WorkerCache.Initialize(DB);
-            LookupCache.Initialize(DB);
-            //Lookups.Initialize();
             _dbFactory = new DatabaseFactory();
             _dbFactory.Set(DB);
+            ILookupCache lcache = new LookupCache(() => _dbFactory);
             return this;
         }
 
         public void Dispose()
         {
             WorkerCache.Dispose();
-            LookupCache.Dispose();
             DB.Dispose();
         }
 
@@ -110,13 +120,27 @@ namespace Machete.Test
         {
             Initialize(new MacheteInitializer(), "macheteConnection");
             _uow = new UnitOfWork(_dbFactory);
+            AddLookupCache();
             return this;
         }
 
-        public MacheteContext ToContext()
+        public DatabaseFactory ToFactory()
         {
             if (_dbFactory == null) AddDBFactory();
-            return _dbFactory.Get();
+            return _dbFactory;
+        }
+
+        public FluentRecordBase AddLookupCache()
+        {
+            if (_dbFactory == null) AddDBFactory();
+            _lcache = new LookupCache(() => _dbFactory); // it wants Func<IDatabaseFactory>, it gets it
+            return this;
+        }
+
+        public LookupCache ToLookupCache()
+        {
+            if (_lcache == null) AddLookupCache();
+            return _lcache;
         }
 
         #region Employers
@@ -180,7 +204,7 @@ namespace Machete.Test
         {
             var e = (Employer)Records.employer.Clone();
             e.name = RandomString(10);
-            e.email = e.name + "@random.com";
+            e.email = "changeme@gmail.com";
             return e;
         }
 
@@ -290,8 +314,9 @@ namespace Machete.Test
             if (_repoW == null) AddRepoWorker();
             if (_repoL == null) AddRepoLookup();
             if (_repoWSI == null) AddRepoWorkerSignin();
+            if (_lcache == null) AddLookupCache();
             if (_uow == null) AddUOW();
-            _servWA = new WorkAssignmentService(_repoWA, _repoW, _repoL, _repoWSI, _uow);
+            _servWA = new WorkAssignmentService(_repoWA, _repoW, _repoL, _repoWSI, _lcache, _uow);
             return this;
         }
 
@@ -760,8 +785,9 @@ namespace Machete.Test
             // DEPENDENCIES
             if (_repoA == null) AddRepoActivity();
             if (_servAS == null) AddServActivitySignin();
+            if (_lcache == null) AddLookupCache();
             if (_uow == null) AddUOW();
-            _servA = new ActivityService(_repoA, _servAS, _uow);
+            _servA = new ActivityService(_repoA, _servAS, _lcache, _uow);
             return this;
         }
 
@@ -871,6 +897,7 @@ namespace Machete.Test
 
         #endregion 
 
+<<<<<<< HEAD
         #region Reports
 
         public FluentRecordBase AddServReports()
@@ -894,11 +921,154 @@ namespace Machete.Test
         }
 
         #endregion
+=======
+        #region Emails
+
+        public FluentRecordBase AddRepoEmail()
+        {
+            if (_dbFactory == null) AddDBFactory();
+
+            _repoEM = new EmailRepository(_dbFactory);
+            return this;
+        }
+
+        public EmailRepository ToRepoEmail()
+        {
+            if (_repoEM == null) AddRepoEmail();
+            return _repoEM;
+        }
+
+        public FluentRecordBase AddServEmail()
+        {
+            //
+            // DEPENDENCIES
+            if (_repoEM == null) AddRepoEmail();
+            if (_servWO == null) AddServWorkOrder();
+            if (_uow == null) AddUOW();
+            _servEM = new EmailService(_repoEM, _servWO, _uow);
+            return this;
+        }
+
+        public EmailService ToServEmail()
+        {
+            if (_servEM == null) AddServEmail();
+            return _servEM;
+        }
+
+        public FluentRecordBase AddEmail(
+            int? status = null,
+            DateTime? datecreated = null,
+            DateTime? dateupdated = null
+        )
+        {
+            //
+            // DEPENDENCIES
+            if (_servEM == null) AddServEmail();
+            //
+            // ARRANGE
+            _email = (Email)Records.email.Clone();
+            if (datecreated != null) _email.datecreated = (DateTime)datecreated;
+            if (dateupdated != null) _email.dateupdated = (DateTime)dateupdated;
+            if (status != null) _email.statusID = (int)status;
+            //
+            // ACT
+            _servEM.Create(_email, _user);
+            return this;
+        }
+
+        public Email ToEmail()
+        {
+            if (_email == null) AddEmail();
+            return _email;
+        }
+
+        public Email CloneEmail()
+        {
+            var p = (Email)Records.email.Clone();
+            p.emailFrom = "joe@foo.com";
+            p.emailTo = "foo@joe.com";
+            p.subject = RandomString(5);
+            p.body = RandomString(8);
+            return p;
+        }
+
+        #endregion 
+
+        #region Events
+
+        public FluentRecordBase AddRepoEvent()
+        {
+            if (_dbFactory == null) AddDBFactory();
+
+            _repoEV = new EventRepository(_dbFactory);
+            return this;
+        }
+
+        public EventRepository ToRepoEvent()
+        {
+            if (_repoEV == null) AddRepoEvent();
+            return _repoEV;
+        }
+
+        public FluentRecordBase AddServEvent()
+        {
+            //
+            // DEPENDENCIES
+            if (_repoEV == null) AddRepoEvent();
+            if (_uow == null) AddUOW();
+            _servEV = new EventService(_repoEV, _uow);
+            return this;
+        }
+
+        public EventService ToServEvent()
+        {
+            if (_servEV == null) AddServEvent();
+            return _servEV;
+        }
+
+        public FluentRecordBase AddEvent(
+            DateTime? datecreated = null,
+            DateTime? dateupdated = null
+        )
+        {
+            //
+            // DEPENDENCIES
+            if (_servEV == null) AddServEvent();
+            if (_p == null) AddPerson();
+            //
+            // ARRANGE
+            _event = (Event)Records.event1.Clone();
+            _event.PersonID = _p.ID;
+            if (datecreated != null) _event.datecreated = (DateTime)datecreated;
+            if (dateupdated != null) _event.dateupdated = (DateTime)dateupdated;
+            _event.Updatedby = _user;
+            _event.Createdby = _user;
+            //
+            // ACT
+            _servEV.Create(_event, _user);
+            return this;
+        }
+
+        public Event ToEvent()
+        {
+            if (_event == null) AddEvent();
+            return _event;
+        }
+        #endregion 
+
+>>>>>>> upstream/master
 
         public FluentRecordBase AddUOW()
         {
             _uow = new UnitOfWork(_dbFactory);
             return this;
+        }
+
+        public IUnitOfWork ToUOW()
+        {
+            if (_uow == null) AddUOW();
+
+            return _uow;
         }
 
         public string RandomString(int size)

@@ -35,8 +35,7 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        jqrfyTable({
-        table: $('#configTable'), 
+        $('#configTable').mUI('createTable', {
         tab: $('#configTabs'),
         options: {
             "bPaginate": true,
@@ -61,14 +60,11 @@
                 {"mDataProp": "level" },
                 {"mDataProp": "ltrCode" }
             ],
-            "fnServerData": function ( sSource, aoData, fnCallback ) {
-			        /* Add some extra data to the sender */
-			        aoData.push( { "name": "category", "value": $('#category').val() } );
-			        $.getJSON( sSource, aoData, function (json) { 
-				        /* Do whatever additional processing you want on the callback, then tell DataTables */
-				        fnCallback(json)
-			        } );
-		        },         
+            "fnServerDataExtra": function () {
+                return [
+                    { "name": "category", "value": $('#category').val() }
+                ]
+            },
         }, 
         dblClickEvent: null, 
         tabLabel: "@(recType)"

@@ -179,8 +179,9 @@ namespace Machete.Test
         {
             WaitThenClickElement(By.Id("workerCreateTab"));
             WaitForElement(By.Id(_wkr.idPrefix + "memberStatus"));
+            WaitThenClickElement(By.Id(_wkr.idPrefix + "memberStatus"));
             SelectOption(By.Id(_wkr.idPrefix + "memberStatus"), "Sanctioned");
-            _d.FindElement(By.Id(_wkr.idPrefix+"SaveButton")).Click();
+            WaitThenClickElement(By.Id(_wkr.idPrefix + "SaveButton"));
             _d.FindElement(By.Id("workerCreateTab")).Click();  
             return true;
         }
@@ -609,7 +610,7 @@ namespace Machete.Test
             Assert.AreEqual("$" + (hourlyWage * hourRange * daysWork).ToString("F"), WaitForElement(By.Id(prefix + "totalRange")).GetAttribute("value"), "Max Total pay doesn't match hourRange, wage and day calculation");
 
             //select fixed job and verify hourly pay is fixed
-            String skillValue = MacheteLookup.cache.First(x => x.category == "skill" && x.text_EN == "DWC Chambita 1hr").ID.ToString();
+            String skillValue = MacheteLookup.cache.First(x => x.category == LCategory.skill && x.text_EN == "DWC Chambita 1hr").ID.ToString();
             SelectOptionByValue(By.Id(prefix + "skillID"), skillValue);
             Thread.Sleep(1000); // to avoid race condition
             Assert.AreEqual("true", WaitForElement(By.Id(prefix + "hourlyWage")).GetAttribute("disabled"), "Hourly Wage should be fixed (disabled) in response to skill selection");
