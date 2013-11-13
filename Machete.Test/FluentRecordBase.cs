@@ -897,7 +897,6 @@ namespace Machete.Test
 
         #endregion 
 
-<<<<<<< HEAD
         #region Reports
 
         public FluentRecordBase AddServReports()
@@ -921,7 +920,6 @@ namespace Machete.Test
         }
 
         #endregion
-=======
         #region Emails
 
         public FluentRecordBase AddRepoEmail()
@@ -1055,8 +1053,6 @@ namespace Machete.Test
             return _event;
         }
         #endregion 
-
->>>>>>> upstream/master
 
         public FluentRecordBase AddUOW()
         {
