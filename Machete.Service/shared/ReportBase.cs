@@ -41,13 +41,15 @@ namespace Machete.Service.shared
         protected readonly IWorkerSigninRepository wsiRepo;
         protected readonly IWorkerRequestRepository wrRepo;
         protected readonly ILookupRepository lookRepo;
+        protected readonly ILookupCache lookCache;
 
         protected ReportBase(IWorkOrderRepository woRepo,
                              IWorkAssignmentRepository waRepo,
                              IWorkerRepository wRepo,
                              IWorkerSigninRepository wsiRepo,
                              IWorkerRequestRepository wrRepo,
-                             ILookupRepository lookRepo)
+                             ILookupRepository lookRepo,
+                             ILookupCache lookCache)
         {
             this.woRepo = woRepo;
             this.waRepo = waRepo;
@@ -55,6 +57,7 @@ namespace Machete.Service.shared
             this.wsiRepo = wsiRepo;
             this.wrRepo = wrRepo;
             this.lookRepo = lookRepo;
+            this.lookCache = lookCache;
         }
 
         // Anything else?
