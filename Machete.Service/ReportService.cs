@@ -36,7 +36,8 @@ namespace Machete.Service
                              IWorkerRepository wRepo,
                              IWorkerSigninRepository wsiRepo,
                              IWorkerRequestRepository wrRepo,
-                             ILookupRepository lookRepo) : base(woRepo, waRepo, wRepo, wsiRepo, wrRepo, lookRepo)
+                             ILookupRepository lookRepo,
+                             ILookupCache lookCache) : base(woRepo, waRepo, wRepo, wsiRepo, wrRepo, lookRepo, lookCache)
         {}
         
         /// <summary>
@@ -193,6 +194,8 @@ namespace Machete.Service
             var wQ = wRepo.GetAllQ();
             var woQ = woRepo.GetAllQ();
             var wrQ = wrRepo.GetAllQ();
+            var loD = lookCache.getByKeys("worktype", "DWC");
+            var loH = lookCache.getByKeys("worktype", "HHH");
 
             //ensure we are getting all relevant times (no assumptions)
             beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
@@ -220,10 +223,10 @@ namespace Machete.Service
                     (wo, w) => new
                     {
                         wo,
-                        dwcList = w.typeOfWorkID == Worker.iDWC ? (wo.wr.reqWorkerID == w.ID ? 0 : 1) : 0,
-                        hhhList = w.typeOfWorkID == Worker.iHHH ? (wo.wr.reqWorkerID == w.ID ? 0 : 1) : 0,
-                        dwcPatron = w.typeOfWorkID == Worker.iDWC ? (wo.wr.reqWorkerID == w.ID ? 1 : 0) : 0,
-                        hhhPatron = w.typeOfWorkID == Worker.iHHH ? (wo.wr.reqWorkerID == w.ID ? 1 : 0) : 0
+                        dwcList = w.typeOfWorkID == loD ? (wo.wr.reqWorkerID == w.ID ? 0 : 1) : 0,
+                        hhhList = w.typeOfWorkID == loH ? (wo.wr.reqWorkerID == w.ID ? 0 : 1) : 0,
+                        dwcPatron = w.typeOfWorkID == loD ? (wo.wr.reqWorkerID == w.ID ? 1 : 0) : 0,
+                        hhhPatron = w.typeOfWorkID == loH ? (wo.wr.reqWorkerID == w.ID ? 1 : 0) : 0
                     })
                 .Where(whr => whr.wo.timeOfWork >= beginDate
                            && whr.wo.timeOfWork <= endDate)
