@@ -275,6 +275,50 @@ namespace Machete.Service
             return true;
         }
 
+
+        /// <summary>
+        /// This method Duplicates the Daily ('lottery') list for the previous day, 
+        /// minus workers who did not sign in for the current day and 
+        /// workers who were assigned to a job for the previous day
+        /// </summary>
+        /// <param name="date">The date for which the list should be duplicated.</param>
+        /// <param name="user">The username of the user making the request.</param>
+        /// <returns>bool</returns>
+        public bool signinDuplicate(DateTime date, string user)
+        {
+            DateTime yesterday = date.AddDays(-1);
+            IEnumerable<WorkerSignin> todayListSignins;
+            IEnumerable<WorkerSignin> yesterdaySignins;
+            IEnumerable<WorkerSignin> squish;
+
+            // Get today's signins. If anyone has already been signed in, this feature will hold those records.
+            todayListSignins = repo.GetAllQ()
+                .Where(p => EntityFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
+                .OrderBy(p => p.dateforsignin)
+                .AsEnumerable();
+
+            //get yesterday's signins, 
+            //as long as they weren't dispatched
+            yesterdaySignins = repo.GetAllQ()
+                .Where(p => p.WorkAssignmentID == null
+                         && EntityFunctions.DiffDays(p.dateforsignin, yesterday) == 0 ? true : false)
+                .OrderBy(p => p.dateforsignin)
+                .AsEnumerable();
+
+            squish = todayListSignins
+                .Join(yesterdaySignins, to => to.WorkerID, ye => ye.WorkerID, (to, ye) => new { to, orderOfSignin = ye.dateforsignin })
+                .Select(g => g.to)
+                .OrderBy(o => o.dateforsignin);
+
+            foreach (WorkerSignin wsi in squish)
+            {
+                CreateSignin(wsi, user); //includes save and commit
+            }
+
+            return true;
+        }
+
+
         /// <summary>
         /// This method returns the view data for the Worker Signin class.
         /// </summary>
