@@ -148,6 +148,20 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
+
+        [UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager, Check-in")]
+        public ActionResult SigninDuplicate(DateTime todaysdate, string userName)
+        {
+            _serv.signinDuplicate(todaysdate, userName);
+            return Json(new
+            {
+                jobSuccess = true,
+                status = "OK",
+                date = todaysdate
+            },
+            JsonRequestBehavior.AllowGet);
+        }
        
        
        [UserNameFilter]
