@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MacheteWindowsServiceConfiguration.cs" />
     <Compile Include="EmailConfig.cs" />
     <Compile Include="EmailManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
