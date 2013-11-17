@@ -47,6 +47,7 @@
       <HintPath>..\packages\Unity.3.0.1304.0\lib\Net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data" />
     <Reference Include="System.ServiceProcess" />
@@ -67,6 +68,7 @@
   <ItemGroup>
     <Compile Include="Integration Tests\Core\EmailManagerTests.cs" />
     <Compile Include="Integration Tests\Service\IOCTests.cs" />
+    <Compile Include="Integration Tests\Service\AppSetttingsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
