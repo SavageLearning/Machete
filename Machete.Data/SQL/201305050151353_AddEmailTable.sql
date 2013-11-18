@@ -44,9 +44,9 @@ update lookups set [key] = 'Inactive' where category = 'memberstatus' and text_E
 update lookups set [key] = 'Sanctioned' where category = 'memberstatus' and text_EN = 'Sanctioned'
 update lookups set [key] = 'Expired' where category = 'memberstatus' and text_EN = 'Expired'
 update lookups set [key] = 'Expelled' where category = 'memberstatus' and text_EN = 'Expelled'
-update lookups set ltrcode = 'DWC' where category = 'worktype' and text_EN = '(DWC) Day Worker Center'
-update lookups set ltrcode = 'HHH' where category = 'worktype' and text_EN = '(HHH) Household Helpers'
-update lookups set ltrcode = 'EVT' where category = 'worktype' and text_EN = 'Special event'
+update lookups set [key] = 'DWC', ltrcode = 'DWC' where category = 'worktype' and text_EN = '(DWC) Day Worker Center'
+update lookups set [key] = 'HHH', ltrcode = 'HHH' where category = 'worktype' and text_EN = '(HHH) Household Helpers'
+update lookups set [key] = 'EVT', ltrcode = 'EVT' where category = 'worktype' and text_EN = 'Special event'
 
 insert into lookups (category, text_EN, text_ES, selected, sortorder, typeofworkid, speciality, [key]) 
 values ('emailstatus', 'Ready to send', 'Listo para enviar', 0,0,0,0, 'readytosend')

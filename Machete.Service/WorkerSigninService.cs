@@ -43,6 +43,7 @@ namespace Machete.Service
         bool moveUp(int id, string user);
         bool sequenceLottery(DateTime date, string user);
         bool listDuplicate(DateTime date, string user);
+        bool signinDuplicate(DateTime date, string user);
         dataTableResult<wsiView> GetIndexView(viewOptions o);
         void CreateSignin(WorkerSignin signin, string user);
     }
