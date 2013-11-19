@@ -3,12 +3,15 @@
 <html>
 @Scripts.Render("~/bundles/jquery")
 
+<script src=@Url.Content("~/Scripts/reports.js")></script>
+
 @*
 <script src="@Url.Content("~/Scripts/macheteLayout.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/jquery.macheteUI-0.1.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/jquery.alerts.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/jquery.lightbox-0.5.js")" type="text/javascript"></script>
 *@
+
 @{
     string controllerName = Request.RequestContext.RouteData.Values["controller"].ToString();
 }
