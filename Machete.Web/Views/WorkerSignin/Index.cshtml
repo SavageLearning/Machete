@@ -211,7 +211,7 @@
         $('#listDuplicate').live('click', function (event) {
             event.preventDefault();
             var url = "/WorkerSignin/SigninDuplicate";
-            $.post(url, { todaysdate: $('#todaysdate').val() }, function (data) {
+            $.post(url, { todaysdate: $('#dateforsignin').val() }, function (data) {
                 $('#wsiTable').dataTable().fnDraw();
                 $('#dwccardnum').focus();
                 if (!data.jobSuccess) { alert(data.rtnMessage); }

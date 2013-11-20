@@ -65,7 +65,7 @@ namespace Machete.Service
         /// </summary>
         /// <param name="dwccardnum"></param>
         /// <param name="date"></param>
-        /// <returns></returns>
+        /// <returns>WorkerSignin</returns>
         public WorkerSignin GetSignin(int dwccardnum, DateTime date)
         {
             return repo.GetManyQ().FirstOrDefault(r => r.dwccardnum == dwccardnum &&
@@ -290,7 +290,6 @@ namespace Machete.Service
             DateTime yesterday = date.AddDays(-1);
             IEnumerable<WorkerSignin> todayListSignins;
             IEnumerable<WorkerSignin> yesterdaySignins;
-            IEnumerable<WorkerSignin> squish;
 
             // Get today's signins. If anyone has already been signed in, this feature will hold those records.
             todayListSignins = repo.GetAllQ()
@@ -300,20 +299,27 @@ namespace Machete.Service
 
             //get yesterday's signins, 
             //as long as they weren't dispatched
-            yesterdaySignins = repo.GetAllQ()
+            //and haven't already been signed in
+            yesterdaySignins = repo.GetManyQ()
                 .Where(p => p.WorkAssignmentID == null
-                         && EntityFunctions.DiffDays(p.dateforsignin, yesterday) == 0 ? true : false)
+                         && EntityFunctions.DiffDays(p.dateforsignin, yesterday) == 0 ? true : false
+                         && !todayListSignins.Select(t => t.WorkerID).Contains(p.WorkerID))
                 .OrderBy(p => p.dateforsignin)
-                .AsEnumerable();
+                .AsEnumerable()
+                .ToList();
 
-            squish = todayListSignins
-                .Join(yesterdaySignins, to => to.WorkerID, ye => ye.WorkerID, (to, ye) => new { to, orderOfSignin = ye.dateforsignin })
-                .Select(g => g.to)
-                .OrderBy(o => o.dateforsignin);
-
-            foreach (WorkerSignin wsi in squish)
+            //then, create signins for all of them.
+            foreach (WorkerSignin wsi in yesterdaySignins)
             {
-                CreateSignin(wsi, user); //includes save and commit
+                //we're going to need some objects
+                Worker oompaLoompa = wRepo.GetAllQ().FirstOrDefault(s => s.dwccardnum == wsi.dwccardnum);
+                WorkerSignin dupadedoo = new WorkerSignin();
+                // The card don't need no swipe
+                dupadedoo.dwccardnum = wsi.dwccardnum;
+                dupadedoo.dateforsignin = date;
+                dupadedoo.memberStatus = oompaLoompa.memberStatus;
+                // Let CreateSignin do the rest
+                CreateSignin(dupadedoo, user);
             }
 
             return true;
