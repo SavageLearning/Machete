@@ -176,6 +176,7 @@
     <Compile Include="UnitTests\Controllers\HelperTests.cs" />
     <Compile Include="UnitTests\Controllers\WorkAssignmentControllerTests.cs" />
     <Compile Include="UnitTests\Controllers\WorkOrderControllerTests.cs" />
+    <Compile Include="UnitTests\Services\ReportServiceUnitTest.cs" />
     <Compile Include="UnitTests\Services\EmployerServiceUnitTests.cs" />
     <Compile Include="UnitTests\Services\WorkAassignmentServiceUnitTests.cs" />
     <Compile Include="UnitTests\Services\WorkerServiceUnitTests.cs" />
