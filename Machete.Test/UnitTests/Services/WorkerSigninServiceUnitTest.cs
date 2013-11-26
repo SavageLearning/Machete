@@ -32,10 +32,8 @@ using Machete.Data.Infrastructure;
 using Machete.Service;
 using Machete.Domain;
 
-namespace Machete.Test.IntegrationTests.Services
+namespace Machete.Test.UnitTests.Services
 {
-
-
     /// <summary>
     /// Summary description for WorkerSigninServiceUnitTest
     /// </summary>
