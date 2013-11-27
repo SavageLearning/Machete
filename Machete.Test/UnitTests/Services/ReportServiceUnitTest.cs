@@ -15,34 +15,34 @@ using Machete.Test;
 
 namespace Machete.Test.UnitTests.Services
 {
-    class ReportServiceUnitTest
+    public class ReportServiceUnitTest
     {
-        Mock<IUnitOfWork> _uow;
         Mock<IWorkOrderRepository> _woRepo;
         Mock<IWorkAssignmentRepository> _waRepo;
         Mock<IWorkerRepository> _wRepo;
         Mock<IWorkerSigninRepository> _wsiRepo;
         Mock<IWorkerRequestRepository> _wrRepo;
-        Mock<ILookupRepository> _lookRepo;
-        Mock<ILookupCache> _lookCache;
-
-        List<WorkerSignin> _signins;
-        List<Worker> _workers;
-        List<WorkOrder> _orders;
-        List<WorkerRequest> _requests;
+        Mock<ILookupRepository> _lRepo;
+        Mock<ILookupCache> _lCache;
 
         ReportService _serv;
         
-        WorkerSigninService _wsiServ;
-        WorkAssignmentService _waServ;
-        WorkOrderService _woServ;
-
+        /// <summary>
+        /// An empty constructor...
+        /// </summary>
         public ReportServiceUnitTest()
         {
         }
 
+        /// <summary>
+        /// Some test context magic
+        /// </summary>
         private TestContext testContextInstance;
 
+        /// <summary>
+        ///Gets or sets the test context which provides
+        ///information about and functionality for the current test run.
+        ///</summary>
         public TestContext TestContext
         {
             get
@@ -80,66 +80,33 @@ namespace Machete.Test.UnitTests.Services
         [TestInitialize]
         public void TestInitialize()
         {
-            _uow = new Mock<IUnitOfWork>();
-
-            _signins = new List<WorkerSignin>();
-            _signins.Add(new WorkerSignin() { ID = 111, dwccardnum = 12345, dateforsignin = DateTime.Now });
-            _signins.Add(new WorkerSignin() { ID = 112, dwccardnum = 24680, dateforsignin = DateTime.Now });
-
-            _workers = new List<Worker>();
-            _workers.Add(new Worker() { ID = 1, dwccardnum = 12345 });
-            _workers.Add(new Worker() { ID = 2, dwccardnum = 24680 });
-            _workers.Add(new Worker() { ID = 3, dwccardnum = 36925 });
-            _workers.Add(new Worker() { ID = 4, dwccardnum = 48260 });
-
-            _orders = new List<WorkOrder>();
-            _requests = new List<WorkerRequest>();
-
-            _wsiRepo = new Mock<IWorkerSigninRepository>();
-            _wsiRepo.Setup(s => s.GetAll()).Returns(_signins);
-
-            _wRepo = new Mock<IWorkerRepository>();
-            _wRepo.Setup(s => s.GetAll()).Returns(_workers);
-
             _woRepo = new Mock<IWorkOrderRepository>();
-            _woRepo.Setup(s => s.GetAll()).Returns(_orders);
-
-            _wrRepo = new Mock<IWorkerRequestRepository>();
-            _wrRepo.Setup(s => s.GetAll()).Returns(_requests);
-
             _waRepo = new Mock<IWorkAssignmentRepository>();
-            _lookRepo = new Mock<ILookupRepository>();
-            _lookCache = new Mock<ILookupCache>();
-
-            _waServ = new WorkAssignmentService(_waRepo.Object, _wRepo.Object, _lookRepo.Object, _wsiRepo.Object, _lookCache.Object, _uow.Object);
-            _woServ = new WorkOrderService(_woRepo.Object, _waServ, _uow.Object);
+            _wRepo = new Mock<IWorkerRepository>();
+            _wsiRepo = new Mock<IWorkerSigninRepository>();
+            _wrRepo = new Mock<IWorkerRequestRepository>();
+            _lRepo = new Mock<ILookupRepository>();
+            _lCache = new Mock<ILookupCache>();
+            //Because the preceding are Mock objects, you have to call the Object feature on the object's method.
+            _serv = new ReportService(_woRepo.Object,_waRepo.Object,_wRepo.Object,_wsiRepo.Object,_wrRepo.Object,_lRepo.Object,_lCache.Object);
         }
+
         [TestMethod]
         public void CountSignins_Returns_signins_for_day()
         {
-            DateTime date = DateTime.Now;
+            //Arrange
+            DateTime beginDate = DateTime.MinValue;
+            DateTime endDate = DateTime.MinValue;
 
-            //Note the <int, int> -- with Moq you have to specify return types in this fashion
-            int currentSignins =
-                _wsiRepo.Setup<int, int>(s => s
-                    .GetAllQ()
-                    .Where(p => EntityFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
-                    .AsEnumerable()
-                    .Count());
+            int myInt = 3;
 
-            _signins.Add(new WorkerSignin() { ID = 113, dwccardnum = 36925, dateforsignin = DateTime.Now });
-            _signins.Add(new WorkerSignin() { ID = 114, dwccardnum = 48620, dateforsignin = DateTime.Now });
+            _wsiRepo.Setup(fn => fn.GetAllQ().Count()).Returns(myInt);
+            
+            //Act
+            var myAction = _serv.CountSignins(beginDate, endDate);
 
-            int newSignins =
-                _wsiRepo.Setup<int, int>(s => s
-                    .GetAllQ()
-                    .Where(p => EntityFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
-                    .AsEnumerable()
-                    .Count());
-
-            int signinDiff = newSignins - currentSignins;
-
-            Assert.IsTrue(signinDiff == 2);
+            //Assert
+            Assert.AreEqual(myInt, myAction.FirstOrDefault().count);
         }
     }
 }
