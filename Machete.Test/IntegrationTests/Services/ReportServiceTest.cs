@@ -36,18 +36,12 @@ namespace Machete.Test.IntegrationTests.Services
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
-        public void Integration_ReportService_CountDailySignins_First_Overload_Method()
-        {
-            DateTime beginDate = _dOptions.date ?? DateTime.Today;
-            //var result = frb.ToServReports().CountSignins(beginDate);
-        }
-
-        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
-        public void Integration_ReportService_CountDailySignins_Second_Overload_Method()
+        public void Integration_ReportService_CountSignins()
         {
             DateTime beginDate = DateTime.Today.AddDays(-6);
             DateTime endDate = DateTime.Today;
             var result = frb.ToServReports().CountSignins(beginDate, endDate);
+
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
