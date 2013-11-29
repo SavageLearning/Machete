@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MWS.Core
 {
-    public class EmailConfig
+    public class fooEmailConfig
     {
         public string host { get; set; }
         public int port { get; set; }
@@ -15,7 +15,7 @@ namespace MWS.Core
         public string password { get; set; }
         public bool enableSSL { get; set; }
 
-        public EmailConfig()
+        public fooEmailConfig()
         {
             port = 0;
             enableSSL = false;

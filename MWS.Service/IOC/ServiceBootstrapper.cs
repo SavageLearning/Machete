@@ -24,7 +24,7 @@ namespace MWS.Service
 
         public IUnityContainer Build()
         {
-            container.RegisterType<IEmailManager, EmailManager>();
+            container.RegisterType<IEmailManager, EmailQueueManager>();
             container.RegisterInstance<MacheteWindowsService>(new MacheteWindowsService(container));
             container.RegisterType<IEmailRepository, EmailRepository>();
             container.RegisterType<IEmailService, EmailService>();

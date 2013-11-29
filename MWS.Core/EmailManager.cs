@@ -20,19 +20,19 @@ namespace MWS.Core
 {
     public interface IEmailManager
     {
-        void ProcessQueue();
-        bool SendEmail(Email email, EmailConfig cfg);
-        EmailConfig LoadEmailConfig();
+        void ProcessQueue(EmailServerConfig cfg);
+        bool SendEmail(Email email, EmailServerConfig cfg);
+        EmailServerConfig LoadEmailConfig();
     }
 
-    public class EmailManager : IEmailManager
+    public class EmailQueueManager : IEmailManager
     {
         IEmailService serv;
         IUnitOfWork db;
         public Stack<Exception> exceptionStack { get; set; }
         public Stack<Email> sentStack { get; set; }
 
-        public EmailManager(IEmailService eServ, IUnitOfWork uow)
+        public EmailQueueManager(IEmailService eServ, IUnitOfWork uow)
         {
             serv = eServ;
             db =uow;
@@ -45,12 +45,11 @@ namespace MWS.Core
             return sb.ToString();
         }
 
-        public void ProcessQueue()
+        public void ProcessQueue(EmailServerConfig cfg)
         {
             exceptionStack = new Stack<Exception>();
             sentStack = new Stack<Email>();
             //
-            EmailConfig cfg = LoadEmailConfig();
             var emaillist = serv.GetEmailsToSend();
             foreach (var e in emaillist)
             {
@@ -96,15 +95,15 @@ namespace MWS.Core
             return sb.ToString();
         }
 
-        public bool SendEmail(Email e, EmailConfig cfg)
+        public bool SendEmail(Email e, EmailServerConfig cfg)
         {
             try
             {
-                e.emailFrom = cfg.userName;
-                var client = new SmtpClient(cfg.host, cfg.port)
+                e.emailFrom = cfg.OutgoingAccount;
+                var client = new SmtpClient(cfg.HostName, cfg.Port)
                 {
-                    Credentials = new NetworkCredential(cfg.userName, cfg.password),
-                    EnableSsl = cfg.enableSSL
+                    Credentials = new NetworkCredential(cfg.OutgoingAccount, cfg.OutgoingPassword),
+                    EnableSsl = cfg.EnableSSL
                 };
                 var msg = new MailMessage(e.emailFrom, e.emailTo);
                 var a = Attachment.CreateAttachmentFromString(e.attachment, e.attachmentContentType);
@@ -138,9 +137,9 @@ namespace MWS.Core
             return true;
         }
 
-        public EmailConfig LoadEmailConfig()
+        public EmailServerConfig LoadEmailConfig()
         {
-            var cfg = new EmailConfig();
+            var cfg = new EmailServerConfig();
             if (!cfg.IsComplete) throw new Exception("EmailConfig incomplete. Needs host, port, userName, & password");
             return cfg;
         }

@@ -111,9 +111,9 @@ namespace MWS.Core
             set { base[rx.TransmitAttempts] = value; }
         }
         [ConfigurationProperty(rx.EmailServer, IsRequired = true, IsKey = false)]
-        public EmailServer EmailServer
+        public EmailServerConfig EmailServer
         {
-            get { return ((EmailServer)(base[rx.EmailServer])); }
+            get { return ((EmailServerConfig)(base[rx.EmailServer])); }
             set { base[rx.EmailServer] = value; }
         }
 
@@ -123,7 +123,7 @@ namespace MWS.Core
         }
     }
 
-    public class EmailServer : ConfigurationElement
+    public class EmailServerConfig : ConfigurationElement
     {
         [ConfigurationProperty(rx.Name, IsRequired = true)]
         public string Name
@@ -165,6 +165,17 @@ namespace MWS.Core
         public override bool IsReadOnly()
         {
             return false;
+        }
+        public bool IsComplete
+        {
+            get
+            {
+                if (HostName == null) return false;
+                if (Port == 0) return false;
+                if (OutgoingAccount == null) return false;
+                if (OutgoingPassword == null) return false;
+                return true;
+            }
         }
     }
     /// <summary>

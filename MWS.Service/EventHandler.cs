@@ -25,17 +25,17 @@ namespace MWS.Service
             // 
             // MWSEventLog
             // 
-            this.MWSEventLog.Log = EVcfg.log;
-            this.MWSEventLog.Source = EVcfg.source;
+            this.MWSEventLog.Log = EventViewerConfig.log;
+            this.MWSEventLog.Source = EventViewerConfig.source;
             // 
             // ServiceHost
             // 
             ((System.ComponentModel.ISupportInitialize)(this.MWSEventLog)).EndInit();
 
-            if (!System.Diagnostics.EventLog.SourceExists(EVcfg.source))
+            if (!System.Diagnostics.EventLog.SourceExists(EventViewerConfig.source))
             {
                 System.Diagnostics.EventLog.CreateEventSource(
-                    EVcfg.source, EVcfg.log);
+                    EventViewerConfig.source, EventViewerConfig.log);
             }
         }
 
