@@ -38,7 +38,7 @@ namespace MWS.Test.Integration_Tests.Service
         {
             var instances = config.Instances.Cast<Instance>().AsEnumerable();
             var result = instances.First().EmailQueue.EmailServer;
-            Assert.IsInstanceOfType(result, typeof(EmailServer));
+            Assert.IsInstanceOfType(result, typeof(EmailServerConfig));
         }
         [TestMethod]
         public void AppSettings_MacheteWindowsServiceConfiguration_basic_load_returns_outgoing_account()

@@ -26,14 +26,19 @@ namespace MWS.Service
         internal IUnityContainer container;
         private bool running { get; set; }
         private int interval = 5000; // 5 seconds
-
+        /// <summary>
+        /// Service process called by the Program.Main
+        /// </summary>
+        /// <param name="unity"></param>
         public MacheteWindowsService(IUnityContainer unity)
         {
             running = false;
             if (unity == null) throw new Exception("Unity container is null");
             container = unity;
-            this.ServiceName = EVcfg.source;
+            this.ServiceName = EventViewerConfig.source;
             this.MWSEventLog = container.Resolve<IEventHandler>().MWSEventLog;
+            //
+            //
             if (ConfigurationManager.AppSettings["TimerInterval"] != null)
             {
                 interval = Convert.ToInt32(ConfigurationManager.AppSettings["TimerInterval"]) * 1000;
@@ -75,11 +80,12 @@ namespace MWS.Service
              if (running == true) return;  // return if prior event is still running
 
             var sb = new StringBuilder();
+            var cfg = new EmailServerConfig();
             sb.AppendLine(string.Format("EmailManager.ProcessQueue executed at {0}", e.SignalTime));
             running = true;
             try
             {
-                sb.Append(ProcessEmailQueue());
+                sb.Append(ProcessEmailQueue(cfg));
             }
             catch (Exception ex)
             {
@@ -92,7 +98,7 @@ namespace MWS.Service
         /// 
         /// </summary>
         /// <returns></returns>
-        public string ProcessEmailQueue()
+        public string ProcessEmailQueue(EmailServerConfig cfg)
         {
             var sb = new StringBuilder();
             var options = new TransactionOptions
@@ -109,11 +115,11 @@ namespace MWS.Service
                     IDatabaseFactory factory = container.Resolve<IDatabaseFactory>();
                     factory.Set(context);
 
-                    var em = container.Resolve<EmailManager>();
+                    var em = container.Resolve<EmailQueueManager>();
                     sb.AppendLine(em.getDiagnostics());
                     sb.AppendLine("AppSettings.config location:");
                     sb.AppendLine(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile);
-                    em.ProcessQueue();
+                    em.ProcessQueue(cfg);
                     if (em.sentStack.Count() > 0)
                     {
                         sb.AppendLine(string.Format("{0}", em.getSent()));
@@ -133,7 +139,7 @@ namespace MWS.Service
     /// <summary>
     /// configuration strings for MWS's event log
     /// </summary>
-    public struct EVcfg
+    public struct EventViewerConfig
     {
         public const string source = "MacheteWindowsService";
         public const string log = "MWSLog";

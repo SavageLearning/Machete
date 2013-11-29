@@ -38,13 +38,14 @@ namespace MWS.Test
         public void Integration_Email_MWS_ProcessQueue_send_one_email()
         {
             // Arrange
+            var cfg = new EmailServerConfig();
             var eServ = frb.ToServEmail();
-            var em = new EmailManager(eServ, frb.ToUOW());
-            em.ProcessQueue(); // clear queue
+            var em = new EmailQueueManager(eServ, frb.ToUOW());
+            em.ProcessQueue(cfg); // clear queue
             frb.AddEmail(status: Email.iReadyToSend);
-            var mgr = new EmailManager(eServ, frb.ToUOW());
+            var mgr = new EmailQueueManager(eServ, frb.ToUOW());
             // Act
-            mgr.ProcessQueue();
+            mgr.ProcessQueue(cfg);
             // Assert
             Assert.AreEqual(1, mgr.sentStack.Count);
             Assert.AreEqual(0, mgr.exceptionStack.Count);
@@ -82,15 +83,15 @@ namespace MWS.Test
         {
             // ARRANGE
             var eServ = frb.AddEmail(status: Email.iReadyToSend).ToServEmail();
-            var mgr = new EmailManager(eServ, frb.ToUOW());
+            var mgr = new EmailQueueManager(eServ, frb.ToUOW());
             // ACT
             var cfg = mgr.LoadEmailConfig();
             // ASSERT
             Assert.IsNotNull(cfg);
-            Assert.IsNotNull(cfg.host);
-            Assert.IsTrue(cfg.port > 0);
-            Assert.IsNotNull(cfg.userName);
-            Assert.IsNotNull(cfg.password);
+            Assert.IsNotNull(cfg.HostName);
+            Assert.IsTrue(cfg.Port > 0);
+            Assert.IsNotNull(cfg.OutgoingAccount);
+            Assert.IsNotNull(cfg.OutgoingPassword);
         }
     }
 }
