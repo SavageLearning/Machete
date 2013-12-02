@@ -125,9 +125,11 @@ namespace Machete.Web.Controllers
             Email newEmail;
             UpdateModel(emailview);
             var email = Mapper.Map<EmailView, Email>(emailview);
-
-            email.attachment = Server.HtmlDecode(emailview.attachment);
-            email.attachmentContentType = System.Net.Mime.MediaTypeNames.Text.Html;
+            if (emailview.attachment != null)
+            {
+                email.attachment = Server.HtmlDecode(emailview.attachment);
+                email.attachmentContentType = System.Net.Mime.MediaTypeNames.Text.Html;
+            }
             if (emailview.woid.HasValue)
             {
                 newEmail = serv.CreateWithWorkorder(email, (int)emailview.woid, userName);
@@ -205,7 +207,11 @@ namespace Machete.Web.Controllers
             //UpdateModel(emailview);
             var email = serv.Get(emailview.ID);
             var newemail = Mapper.Map<EmailView, Email>(emailview, email);
-            newemail.attachment = Server.HtmlDecode(emailview.attachment);
+            if (emailview.attachment != null)
+            {
+                newemail.attachment = Server.HtmlDecode(emailview.attachment);
+                newemail.attachmentContentType = System.Net.Mime.MediaTypeNames.Text.Html;
+            }
             serv.Save(newemail, userName);
             return Json(new
             {
