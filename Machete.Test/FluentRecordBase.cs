@@ -932,7 +932,9 @@ namespace Machete.Test
         public FluentRecordBase AddEmail(
             int? status = null,
             DateTime? datecreated = null,
-            DateTime? dateupdated = null
+            DateTime? dateupdated = null,
+            string attachment = null,
+            string attachmentType = null
         )
         {
             //
@@ -944,6 +946,8 @@ namespace Machete.Test
             if (datecreated != null) _email.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _email.dateupdated = (DateTime)dateupdated;
             if (status != null) _email.statusID = (int)status;
+            if (attachment != null) _email.attachment = attachment;
+            if (attachmentType != null) _email.attachment = attachmentType;
             //
             // ACT
             _servEM.Create(_email, _user);
@@ -1055,6 +1059,23 @@ namespace Machete.Test
             }
 
             return builder.ToString();
+        }
+
+        public string ValidAttachment
+        {
+            get
+            {
+                return @"<!DOCTYPE html>
+<html>
+<body>
+
+<h1>My First Heading</h1>
+
+<p>My first paragraph.</p>
+
+</body>
+</html>";
+            }
         }
     }
 }
