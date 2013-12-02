@@ -3,6 +3,7 @@ using Machete.Service;
 using Machete.Test;
 using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MWS.Core;
 using MWS.Service;
 using System;
 using System.Collections.Generic;
@@ -49,15 +50,12 @@ namespace MWS.Test.Integration_Tests.Service
             frb = null;
         }
 
-        //[Ignore]
-        //[TestMethod, TestCategory(TC.IT), TestCategory(TC.MWS), TestCategory(TC.Emails)]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.MWS), TestCategory(TC.Emails)]
         public void Integration_ProjectInstaller_MWS_Program_Main_gets_to_service()
         {
-            var bootstrapper = new ServiceBootstrapper();
-            IUnityContainer container = bootstrapper.Build();
-            var mws = new MacheteWindowsService(container);
-            var result = mws.ProcessEmailQueue();
-            Assert.IsFalse(string.IsNullOrEmpty(result));
+            var mws = new MacheteWindowsService();
+            var result = mws.instances;
+            Assert.AreEqual(2,result.Count());
         }
     }
 }

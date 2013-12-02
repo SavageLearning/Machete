@@ -18,14 +18,14 @@ using System.IO;
 
 namespace MWS.Core
 {
-    public interface IEmailManager
+    public interface IEmailQueueManager
     {
         void ProcessQueue(EmailServerConfig cfg);
         bool SendEmail(Email email, EmailServerConfig cfg);
-        EmailServerConfig LoadEmailConfig();
+        //EmailServerConfig LoadEmailConfig();
     }
 
-    public class EmailQueueManager : IEmailManager
+    public class EmailQueueManager : IEmailQueueManager
     {
         IEmailService serv;
         IUnitOfWork db;
@@ -110,12 +110,9 @@ namespace MWS.Core
                 a.Name = "Order.html";
                 msg.Subject = e.subject;
                 msg.Body = e.body;
-                msg.Attachments.Add(a
-                    //Attachment.CreateAttachmentFromString(e.attachment, e.attachmentContentType)
-                );
+                msg.Attachments.Add(a);
                 client.Send(msg);
 
-                //client.Send(e.emailFrom, e.emailTo, e.subject, e.body);
                 e.statusID = Email.iSent; // record sent
                 sentStack.Push(e);
             }
@@ -137,20 +134,20 @@ namespace MWS.Core
             return true;
         }
 
-        public EmailServerConfig LoadEmailConfig()
-        {
-            var cfg = new EmailServerConfig();
-            if (!cfg.IsComplete) throw new Exception("EmailConfig incomplete. Needs host, port, userName, & password");
-            return cfg;
-        }
-        public static Stream GenerateStreamFromString(string s)
-        {
-            MemoryStream stream = new MemoryStream();
-            StreamWriter writer = new StreamWriter(stream);
-            writer.Write(s);
-            writer.Flush();
-            stream.Position = 0;
-            return stream;
-        }
+        //public EmailServerConfig LoadEmailConfig()
+        //{
+        //    var cfg = new EmailServerConfig();
+        //    if (!cfg.IsComplete) throw new Exception("EmailConfig incomplete. Needs host, port, userName, & password");
+        //    return cfg;
+        //}
+        //public static Stream GenerateStreamFromString(string s)
+        //{
+        //    MemoryStream stream = new MemoryStream();
+        //    StreamWriter writer = new StreamWriter(stream);
+        //    writer.Write(s);
+        //    writer.Flush();
+        //    stream.Position = 0;
+        //    return stream;
+        //}
     }
 }

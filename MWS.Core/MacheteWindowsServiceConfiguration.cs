@@ -32,7 +32,7 @@ namespace MWS.Core
     }
 
     [ConfigurationCollection(typeof(Instance), AddItemName = rx.Instance, CollectionType = ConfigurationElementCollectionType.BasicMap)]
-    public class InstanceCollection : ConfigurationElementCollection
+    public class InstanceCollection : ConfigurationElementCollection, IEnumerable<Instance>
     {
         private const string ItemName = rx.Instance;
 
@@ -60,10 +60,30 @@ namespace MWS.Core
         {
             return new Instance();
         }
-
-        new public Instance this[string productName]
+        //
+        // http://blog.davidtruxall.com/2010/06/02/using-linq-against-a-custom-configurationelementcollection/
+        new public Instance this[int index]
         {
-            get { return (Instance)base.BaseGet(productName); }
+            //get { return (Instance)base.BaseGet(productName); }
+            get { return base.BaseGet(index) as Instance; }
+            set
+            {
+                if (base.BaseGet(index) != null)
+                {
+                    base.BaseRemoveAt(index);
+                    this.BaseAdd(index, value);
+                }
+            }
+        }
+        //
+        //
+        public new IEnumerator<Instance> GetEnumerator()
+        {
+            int count = base.Count;
+            for (int i = 0; i < count; i++)
+            {
+                yield return base.BaseGet(i) as Instance;
+            }
         }
 
         public override bool IsReadOnly()
@@ -73,7 +93,13 @@ namespace MWS.Core
 
     }
 
-    public class Instance : ConfigurationElement
+    public interface IInstance
+    {
+        public string Name { get; set; }
+        public EmailQueue EmailQueue { get; set; }
+    }
+
+    public class Instance : ConfigurationElement, IInstance
     {
         [ConfigurationProperty(rx.Name, IsRequired = true, IsKey = true)]
         public string Name
@@ -98,14 +124,14 @@ namespace MWS.Core
     public class EmailQueue : ConfigurationElement
     {
         [ConfigurationProperty(rx.TimerIntervalSeconds, IsRequired = true)]
-        public string ServiceName
+        public int TimerIntervalSeconds
         {
-            get { return (string)base[rx.TimerIntervalSeconds]; }
+            get { return (int)base[rx.TimerIntervalSeconds]; }
             set { base[rx.TimerIntervalSeconds] = value; }
         }
 
         [ConfigurationProperty(rx.TransmitAttempts, IsRequired = true)]
-        public string Uri
+        public string TransmitAttempts
         {
             get { return (string)base[rx.TransmitAttempts]; }
             set { base[rx.TransmitAttempts] = value; }

@@ -3,6 +3,7 @@ using Machete.Data.Infrastructure;
 using Machete.Service;
 using Microsoft.Practices.Unity;
 using MWS.Core;
+using MWS.Core.Providers;
 using System;
 using System.Collections.Generic;
 using System.Configuration.Install;
@@ -24,8 +25,9 @@ namespace MWS.Service
 
         public IUnityContainer Build()
         {
-            container.RegisterType<IEmailManager, EmailQueueManager>();
-            container.RegisterInstance<MacheteWindowsService>(new MacheteWindowsService(container));
+            container.RegisterInstance<IEventHandler>(new EventHandler());
+            container.RegisterType<IEmailServiceProvider, EmailServiceProvider>();
+            container.RegisterType<IEmailQueueManager, EmailQueueManager>();
             container.RegisterType<IEmailRepository, EmailRepository>();
             container.RegisterType<IEmailService, EmailService>();
             container.RegisterType<IWorkOrderRepository, WorkOrderRepository>();
