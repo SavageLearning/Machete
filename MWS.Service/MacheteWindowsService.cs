@@ -3,6 +3,7 @@ using Machete.Data.Infrastructure;
 using Machete.Domain;
 using Microsoft.Practices.Unity;
 using MWS.Core;
+using MWS.Core.Providers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,33 +21,39 @@ namespace MWS.Service
 {
     public class MacheteWindowsService : ServiceBase
     {
-        private static System.Timers.Timer aTimer;
         public System.Diagnostics.EventLog MWSEventLog;
         private System.ComponentModel.IContainer components = null;
         internal IUnityContainer container;
-        private bool running { get; set; }
-        private int interval = 5000; // 5 seconds
+        public List<MacheteInstance> instances = new List<MacheteInstance>();
+
         /// <summary>
         /// Service process called by the Program.Main
         /// </summary>
         /// <param name="unity"></param>
-        public MacheteWindowsService(IUnityContainer unity)
+        public MacheteWindowsService()
         {
-            running = false;
-            if (unity == null) throw new Exception("Unity container is null");
-            container = unity;
             this.ServiceName = EventViewerConfig.source;
+            var bootstrapper = new ServiceBootstrapper();
+
+            try
+            {
+                container = bootstrapper.Build();
+            }
+            catch (Exception e)
+            {
+                var eventhandler = new EventHandler();
+                eventhandler.MWSEventLog.WriteEntry(e.ToString());
+                return;
+            }
+
             this.MWSEventLog = container.Resolve<IEventHandler>().MWSEventLog;
             //
             //
-            if (ConfigurationManager.AppSettings["TimerInterval"] != null)
+            var cfg = new MacheteWindowsServiceConfiguration();
+            foreach (Instance instanceCfg in cfg.Instances)
             {
-                interval = Convert.ToInt32(ConfigurationManager.AppSettings["TimerInterval"]) * 1000;
+                instances.Add(new MacheteInstance(container.Resolve<IEmailServiceProvider>(), instanceCfg));
             }
-            Email.iTransmitAttempts = Convert.ToInt32(ConfigurationManager.AppSettings["TransmitAttempts"]);
-
-            aTimer = new System.Timers.Timer(interval);
-            aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             
         }
 
@@ -62,12 +69,19 @@ namespace MWS.Service
         protected override void OnStart(string[] args)
         {
             MWSEventLog.WriteEntry("MWS starting");
-            aTimer.Enabled = true;
+            foreach (var instance in instances)
+            {
+                instance.StartAll();
+            }
         }
 
         protected override void OnStop()
         {
             MWSEventLog.WriteEntry("MWS stopping");
+            foreach (var instance in instances)
+            {
+                instance.StopAll();
+            }
         }
 
         protected override void OnContinue()
@@ -75,65 +89,8 @@ namespace MWS.Service
             MWSEventLog.WriteEntry("MWS continue event");
         }
 
-        private void OnTimedEvent(object source, ElapsedEventArgs e)
-        {
-             if (running == true) return;  // return if prior event is still running
 
-            var sb = new StringBuilder();
-            var cfg = new EmailServerConfig();
-            sb.AppendLine(string.Format("EmailManager.ProcessQueue executed at {0}", e.SignalTime));
-            running = true;
-            try
-            {
-                sb.Append(ProcessEmailQueue(cfg));
-            }
-            catch (Exception ex)
-            {
-                sb.AppendLine(string.Format("Exception caught: {0}", ex.Message));
-            }
-            running = false;
-            MWSEventLog.WriteEntry(sb.ToString());
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public string ProcessEmailQueue(EmailServerConfig cfg)
-        {
-            var sb = new StringBuilder();
-            var options = new TransactionOptions
-            {
-                IsolationLevel = IsolationLevel.Serializable,
-                Timeout = new TimeSpan(0, 0, 0, 10)
-            };
-            if (container == null) throw new Exception("Unity container is null");
 
-            using (var scope = new TransactionScope(TransactionScopeOption.RequiresNew, options))
-            {
-                using (var context = new MacheteContext())
-                {
-                    IDatabaseFactory factory = container.Resolve<IDatabaseFactory>();
-                    factory.Set(context);
-
-                    var em = container.Resolve<EmailQueueManager>();
-                    sb.AppendLine(em.getDiagnostics());
-                    sb.AppendLine("AppSettings.config location:");
-                    sb.AppendLine(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile);
-                    em.ProcessQueue(cfg);
-                    if (em.sentStack.Count() > 0)
-                    {
-                        sb.AppendLine(string.Format("{0}", em.getSent()));
-                    }
-                    if (em.exceptionStack.Count() > 0)
-                    {
-                        sb.AppendLine(string.Format("SendEmail exceptions: {0}", em.getExceptions()));
-                    }
-                }
-                scope.Complete();
-            }
-
-            return sb.ToString();
-        }
 
     }
     /// <summary>

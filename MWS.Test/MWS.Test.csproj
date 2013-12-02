@@ -67,6 +67,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Integration Tests\Core\EmailManagerTests.cs" />
+    <Compile Include="Integration Tests\Core\ConfigurationTests.cs" />
     <Compile Include="Integration Tests\Service\IOCTests.cs" />
     <Compile Include="Integration Tests\Service\AppSetttingsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -100,7 +101,9 @@
   <ItemGroup>
     <None Include="App.config">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="NLog.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Choose>
