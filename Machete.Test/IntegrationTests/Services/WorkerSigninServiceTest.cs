@@ -63,7 +63,7 @@ namespace Machete.Test
             };
         }
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
-        public void Integration_WorkerSigin_LotterySignin()
+        public void Integration_WorkerSignin_LotterySignin()
         {
             // Arrange
             frb.AddWorker().AddWorkerSignin();
