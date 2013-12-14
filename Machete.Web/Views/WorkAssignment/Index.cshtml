@@ -37,10 +37,7 @@
 
 }        
 <div id="buttonDivider">
-@*    <div id="radioWorkers" class="radio">
-		<input type="radio" disabled="true" id="rW1_lottery" name="radio" checked="checked" /><label for="rW1_lottery">Lottery<br />list</label>
-		<input type="radio" disabled="true" id="rW1_signin" name="radio"  /><label for="rW1_signin">Sign-in<br />list</label>
-	</div>*@
+
     <div class="radio">
     <input type="button" id="bOpenLottery" class="formButton dispatchButton" value="@(WorkAssignments.lottery)" />
     </div>
@@ -57,11 +54,6 @@
         <input type="radio" id="rA1_completed" name="radioOpenFilled"  /><label for="rA1_completed" class="dispatchButton">@(WorkAssignments.btnAll)<br />@(WorkAssignments.btnSubCompleted)</label>
         <input type="radio" id="rA1_All" name="radioOpenFilled" checked="checked" /><label for="rA1_All">@(WorkAssignments.btnAll)</label>
 	</div>
-@*    <div id="radioProgram" class="radio">
-	    <input type="radio" id="rA2_DWC" name="radioProgram"  /><label for="rA2_DWC">@(WorkAssignments.btnDWC)</label>
-	    <input type="radio" id="rA2_HHH" name="radioProgram"  /><label for="rA2_HHH">@(WorkAssignments.btnHHH)</label>
-        <input type="radio" id="rA2_All" name="radioProgram" checked="checked" /><label for="rA2_All">@(WorkAssignments.btnAll)</label>
-    </div>*@
                 
 </div>
 
@@ -151,6 +143,7 @@
 </div>
 @Html.Partial("WorkerIndex")
 <script type="text/javascript">
+    //@@ sourceURL=WorkAssignment_inline.js
     $(document).ready(function () {
     assignTableCount = 0;
     DatePicker();
@@ -191,13 +184,17 @@
             {"mDataProp": "lotterySequence"},
             {"mDataProp": "fullname"}
         ],
-        "fnServerDataExtra": function () {
-            return [
-            { "name": "todaysdate", "value": $('#todaysdate').val() },
-            { "name": "dwccardnum", "value": $('#dwccardnum').val() },
-            { "name": "wa_grouping", "value": $('#wa_grouping').val() },
-            { "name": "typeofwork_grouping", "value": $('#typeofwork_grouping').val() }
-            ]
+        // lottery is straight dataTable, so using standard method for data callback
+        "fnServerData": function (sSource, aoData, fnCallback) {
+            /* Add some extra data to the sender */
+            aoData.push({ "name": "todaysdate", "value": $('#todaysdate').val() });
+            aoData.push({ "name": "dwccardnum", "value": $('#dwccardnum').val() });
+            aoData.push({ "name": "wa_grouping", "value": $('#wa_grouping').val() });
+            aoData.push({ "name": "typeofwork_grouping", "value": $('#typeofwork_grouping').val() });
+            $.getJSON(sSource, aoData, function (json) {
+                /* Do whatever additional processing you want on the callback, then tell DataTables */
+                fnCallback(json)
+            });
         },
         "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
             $(nRow).attr('ID', "wsiRec" +aData['recordid']);
@@ -470,16 +467,7 @@
             $('#typeofwork_grouping').val($('#TypeOfWorkList').val());
             $("#updateBtn").click();                 
         });
-        //$('#rA2_HHH').click(function (e) {
-        //    e.preventDefault();
-        //    $('#typeofwork_grouping').val(2);
-        //    $("#updateBtn").click();                 
-        //});
-        //$('#rA2_All').click(function (e) {
-        //    e.preventDefault();
-        //    $('#typeofwork_grouping').val(null);
-        //    $("#updateBtn").click();                 
-        //});
+
           
         $("#updateBtn").click(function (e) {
             e.preventDefault();

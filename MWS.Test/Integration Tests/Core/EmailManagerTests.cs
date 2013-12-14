@@ -51,6 +51,24 @@ namespace MWS.Test
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.MWS), TestCategory(TC.Emails)]
+        public void Integration_Email_MWS_ProcessQueue_send_one_email_with_attachent()
+        {
+            // Arrange
+            var eServ = frb.ToServEmail();
+            var em = new EmailManager(eServ, frb.ToUOW());
+            em.ProcessQueue(); // clear queue
+            frb.AddEmail(status: Email.iReadyToSend, 
+                attachment: frb.ValidAttachment,
+                attachmentType: System.Net.Mime.MediaTypeNames.Text.Html);
+            var mgr = new EmailManager(eServ, frb.ToUOW());
+            // Act
+            mgr.ProcessQueue();
+            // Assert
+            Assert.AreEqual(1, mgr.sentStack.Count);
+            Assert.AreEqual(0, mgr.exceptionStack.Count);
+        }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.MWS), TestCategory(TC.Emails)]
         [ExpectedException(typeof(DbUpdateConcurrencyException))]
         public void Integration_Email_EF_Test_concurrency_exception()
         {

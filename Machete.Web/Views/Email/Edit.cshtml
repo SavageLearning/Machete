@@ -15,7 +15,7 @@
         <input type="submit" value="@Emails.editsubmit" class="formButton saveBtn"/>
             if (Machete.Domain.Email.iPending == Model.statusID)
             { 
-        <input type="button" id="@(Model.idPrefix)SendBtn" class="formButton" value="$$$Send WO" />
+        <input type="button" id="@(Model.idPrefix)SendBtn" class="formButton" value="@Emails.sendEmail" />
             }
             if (Html.IsInRole(Html.Role_AM()))
             {
