@@ -140,18 +140,18 @@ namespace Machete.Test
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime
             Createdby = "TestInitializer",
-            Updatedby = "TestInitializer",
-            attachment = @"<!DOCTYPE html>
-<html>
-<body>
-
-<h1>My First Heading</h1>
-
-<p>My first paragraph.</p>
-
-</body>
-</html>",
-            attachmentContentType = System.Net.Mime.MediaTypeNames.Text.Html
+            Updatedby = "TestInitializer"//,
+//            attachment = @"<!DOCTYPE html>
+//<html>
+//<body>
+//
+//<h1>My First Heading</h1>
+//
+//<p>My first paragraph.</p>
+//
+//</body>
+//</html>",
+//            attachmentContentType = System.Net.Mime.MediaTypeNames.Text.Html
         };
         public static Employer employer = new Employer
         {

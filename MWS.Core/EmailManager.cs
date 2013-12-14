@@ -107,16 +107,16 @@ namespace MWS.Core
                     EnableSsl = cfg.enableSSL
                 };
                 var msg = new MailMessage(e.emailFrom, e.emailTo);
-                var a = Attachment.CreateAttachmentFromString(e.attachment, e.attachmentContentType);
-                a.Name = "Order.html";
+                if (e.attachment != null)
+                {
+                    var a = Attachment.CreateAttachmentFromString(e.attachment, e.attachmentContentType);
+                    a.Name = "Order.html";
+                    msg.Attachments.Add(a);
+                }
                 msg.Subject = e.subject;
                 msg.Body = e.body;
-                msg.Attachments.Add(a
-                    //Attachment.CreateAttachmentFromString(e.attachment, e.attachmentContentType)
-                );
                 client.Send(msg);
 
-                //client.Send(e.emailFrom, e.emailTo, e.subject, e.body);
                 e.statusID = Email.iSent; // record sent
                 sentStack.Push(e);
             }

@@ -13,7 +13,7 @@
                value="@Emails.createsubmit"  tabindex="9"/>
         @if (Machete.Domain.Email.iPending == Model.statusID)
         { 
-        <input type="button" id="@(Model.idPrefix)SendBtn" class="formButton" value="$$$Send WO" />
+        <input type="button" id="@(Model.idPrefix)SendBtn" class="formButton" value="@Emails.sendEmail" />
         }
         <input type="button" id="@(Model.idPrefix)attachWO" class="formButton" value="@Emails.attachWO" />
 

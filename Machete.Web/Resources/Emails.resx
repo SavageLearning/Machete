@@ -237,4 +237,7 @@
   <data name="viewWO" xml:space="preserve">
     <value>View work order</value>
   </data>
+  <data name="sendEmail" xml:space="preserve">
+    <value>Save and send email</value>
+  </data>
 </root>
