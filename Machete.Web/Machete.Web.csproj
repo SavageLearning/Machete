@@ -359,7 +359,6 @@
     <Compile Include="ViewModel\EmailView.cs" />
     <Compile Include="ViewModel\EmployerWoCombined.cs" />
     <Compile Include="ViewModel\ReportPrintView.cs" />
-
     <Compile Include="ViewModel\WorkAssignmentIndex.cs" />
     <Compile Include="ViewModel\WorkOrderGroupPrintView.cs" />
   </ItemGroup>
@@ -957,6 +956,9 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\PublishProfiles\publish_to_azure_test.pubxml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
