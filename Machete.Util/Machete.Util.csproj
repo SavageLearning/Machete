@@ -82,6 +82,7 @@
     <Content Include="sql\employers_EN.sql" />
     <Content Include="sql\status_summary_workAssignments_EN.sql" />
     <Content Include="sql\2011_united_way_demographics.sql" />
+    <Content Include="sql\restore_from_disaster.sql" />
     <Content Include="sql\united_way_demographics.sql" />
     <Content Include="sql\workers_EN.sql" />
     <Content Include="sql\workOrders_EN.sql" />
