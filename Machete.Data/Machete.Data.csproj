@@ -134,7 +134,7 @@
     <Content Include="SQL\201305050151353_AddEmailTable.sql" />
     <Content Include="SQL\create_migration_table.sql" />
     <Content Include="SQL\null_in_lookups.sql" />
-    <Content Include="SQL\monster_refactor.sql" />
+    <Content Include="SQL\apply_EmployerEmail_schema_changes_to_multiple_macheteDBs.sql" />
     <Content Include="SQL\update_Casa_Prod_to_v1.5-RC1.sql" />
   </ItemGroup>
   <ItemGroup>
