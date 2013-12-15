@@ -77,10 +77,9 @@ values (''emailTemplate'', ''default template (English)'', ''plantilla predeterm
 declare @machetedb varchar(128)
 declare @loop int
 
-set @loop = 2 --SKIPPING MACHETE-WJP BECAUSE IT WAS THE TEST CASE
+set @loop = 1
 
-while @loop < 12 --13
-
+while @loop < 12 --13 --casa isn't up there yet
 begin
 
 set @machetedb = case 
