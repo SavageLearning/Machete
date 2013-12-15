@@ -1,34 +1,5 @@
-﻿--declare @machetedb varchar(128)
---declare @loop int
-
---set @loop = 1
-
---while @loop < 12 --13
-
---begin
-
---set @machetedb = case 
---					when @loop = 1 then '[machete-wjp]'
---					when @loop = 2 then '[machete-voz]'
---					when @loop = 3 then '[machete-test]'
---					when @loop = 4 then '[machete-sf]'
---					when @loop = 5 then '[machete-santacruz]'
---					when @loop = 6 then '[machete-pas]'
---					when @loop = 7 then '[machete-mtnview]'
---					when @loop = 8 then '[machete-hayward]'
---					when @loop = 9 then '[machete-graton]'
---					when @loop = 10 then '[machete-elcentro]'
---					when @loop = 11 then '[machete-concord]'
---					when @loop = 12 then '[machete-casa]'
---				else '' end
-
---EXEC ('use ' + @machetedb)
-
-use [machete-wjp]
-
---drop table [dbo].[Emails]
---drop TABLE [dbo].[EmailWorkOrders]
-
+﻿--use [machete-wjp]
+--use SQLCMD -D instead
 CREATE TABLE [dbo].[Emails] (
     [ID] [int] NOT NULL IDENTITY,
     [emailFrom] [nvarchar](50),
@@ -99,7 +70,3 @@ insert into lookups (category, text_EN, text_ES, selected, sortorder, typeofwork
 values ('emailstatus', 'Pending', 'Pendiente', 0,0,0,0, 'pending', '1900-01-01T00:00:00.000', '1900-01-01T00:00:00.000')
 insert into lookups (category, text_EN, text_ES, selected, sortorder, typeofworkid, speciality, [key], emailTemplate, datecreated, dateupdated) 
 values ('emailTemplate', 'default template (English)', 'plantilla predeterminada (Ingles)', 1,0,0,0, 'default', 'Thanks for using Machete! You can change this in the Config section.', '1900-01-01T00:00:00.000', '1900-01-01T00:00:00.000')
-
---set @loop = @loop + 1
-
---END
