@@ -28,9 +28,9 @@ using System.Text;
 using Machete.Domain;
 using Machete.Data;
 using Machete.Data.Infrastructure;
-using System.Data.Objects.SqlClient;
 using System.Globalization;
-using System.Data.Objects;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity;
 
 namespace Machete.Service
 {
@@ -66,7 +66,7 @@ namespace Machete.Service
         public WorkerSignin GetSignin(int dwccardnum, DateTime date)
         {
             return repo.GetManyQ().FirstOrDefault(r => r.dwccardnum == dwccardnum &&
-                            EntityFunctions.DiffDays(r.dateforsignin, date) == 0 ? true : false);
+                            DbFunctions.DiffDays(r.dateforsignin, date) == 0 ? true : false);
         }
         /// <summary>
         /// count lotteries for the day and increment
@@ -76,7 +76,7 @@ namespace Machete.Service
         public int GetNextLotterySequence(DateTime date)
         {
             return repo.GetAllQ().Where(p => p.lottery_timestamp != null && 
-                                        EntityFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
+                                        DbFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
                                  .Count() + 1;
         }
         /// <summary>
@@ -108,7 +108,7 @@ namespace Machete.Service
             int i = 0;
             // select and sort by timestamp
             signins = repo.GetManyQ().Where(p => p.lottery_timestamp != null &&
-                                           EntityFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
+                                           DbFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
                                     .OrderBy(p => p.lottery_timestamp)
                                     .AsEnumerable();
             // reset sequence number

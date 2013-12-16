@@ -30,10 +30,10 @@ using Machete.Data;
 using Machete.Data.Infrastructure;
 using NLog;
 using System.Globalization;
-using System.Data.Objects;
-using System.Data.Objects.SqlClient;
 using System.Text.RegularExpressions;
 using System.Linq.Expressions;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity;
 
 namespace Machete.Service
 {
@@ -147,7 +147,7 @@ namespace Machete.Service
             var sum_query = from wa in query //LINQ
                             group wa by new
                             {
-                                dateSoW = EntityFunctions
+                                dateSoW = DbFunctions
                                 .TruncateTime(wa.workOrder.dateTimeofWork),                               
                                 wa.workOrder.status
                             } into dayGroup

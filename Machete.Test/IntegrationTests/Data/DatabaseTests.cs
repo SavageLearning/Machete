@@ -29,7 +29,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Machete.Data;
 using System.Data.Entity;
 using Machete.Domain;
-using System.Data.Objects;
+using System.Data.Entity.Core.Objects;
 
 namespace Machete.Test.Data
 {
@@ -76,7 +76,7 @@ namespace Machete.Test.Data
             // Act
             var q = frb.ToRepoWorkerSignin().GetAllQ();
             q = q.Where(r => r.dwccardnum == signin.dwccardnum
-                          && EntityFunctions.DiffDays(r.dateforsignin, signin.dateforsignin) == 0 ? true : false);           
+                          && DbFunctions.DiffDays(r.dateforsignin, signin.dateforsignin) == 0 ? true : false);           
             WorkerSignin result = q.FirstOrDefault();
             // Assert
             Assert.IsNotNull(result.ID);
