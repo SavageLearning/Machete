@@ -48,12 +48,14 @@ namespace Machete.Service
     {
         //
         //
-        public WorkerSigninService(IWorkerSigninRepository repo, 
-                                   IWorkerRepository wRepo,
-                                   IImageRepository iRepo,
-                                   IWorkerRequestRepository wrRepo,
-                                   IUnitOfWork uow)
-            : base(repo, wRepo, iRepo, wrRepo, uow)
+        public WorkerSigninService(
+            IWorkerSigninRepository repo, 
+            IWorkerRepository wRepo,
+            IImageRepository iRepo,
+            IWorkerRequestRepository wrRepo,
+            IWorkerCache wc, 
+            IUnitOfWork uow)
+            : base(repo, wRepo, iRepo, wrRepo, wc, uow)
         {
             this.logPrefix = "WorkerSignin";
         }
@@ -146,9 +148,9 @@ namespace Machete.Service
             if (o.dwccardnum > 0) IndexViewBase.dwccardnum(o, ref q);
             e = q.ToList();
             if (!string.IsNullOrEmpty(o.sSearch))
-                IndexViewBase.search(o, ref e);
-
-            eSIV = e.Join(WorkerCache.getCache(), 
+                IndexViewBase.search(o, ref e, wcache.GetCache());
+            var cache = wcache.GetCache();
+            eSIV = e.Join(cache, 
                             s => s.dwccardnum, 
                             w => w.dwccardnum, 
                             (s, w) => new { s, w }

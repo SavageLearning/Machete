@@ -43,6 +43,7 @@ namespace Machete.Test.UnitTests.Services
     {
         Mock<IWorkerRepository> _repo;
         Mock<IUnitOfWork> _uow;
+        Mock<IWorkerCache> _wcache;
         WorkerService _serv;
         public WorkerServiceUnitTests()
         {
@@ -92,7 +93,8 @@ namespace Machete.Test.UnitTests.Services
         {
             _repo = new Mock<IWorkerRepository>();
             _uow = new Mock<IUnitOfWork>();
-            _serv = new WorkerService(_repo.Object, _uow.Object);
+            _wcache = new Mock<IWorkerCache>();
+            _serv = new WorkerService(_repo.Object, _wcache.Object, _uow.Object);
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Workers)]
         public void WorkerService_GetWorkers_returns_Enumerable()
@@ -154,12 +156,13 @@ namespace Machete.Test.UnitTests.Services
             //Arrange
             _repo = new Mock<IWorkerRepository>();
             _uow = new Mock<IUnitOfWork>();
+            _wcache = new Mock<IWorkerCache>();
             string user = "UnitTest";
             int id = 1;
             Worker dp = new Worker();
             _repo.Setup(r => r.Delete(It.IsAny<Worker>())).Callback((Worker p) => { dp = p; });
             _repo.Setup(r => r.GetById(id)).Returns(Records.worker);
-            var _serv = new WorkerService(_repo.Object, _uow.Object);
+            var _serv = new WorkerService(_repo.Object, _wcache.Object, _uow.Object);
             //
             //Act
             _serv.Delete(id, user);
@@ -174,11 +177,12 @@ namespace Machete.Test.UnitTests.Services
             //
             //Arrange
             _repo = new Mock<IWorkerRepository>();
+            _wcache = new Mock<IWorkerCache>();
             _uow = new Mock<IUnitOfWork>();
             string user = "UnitTest";
             Records.worker.datecreated = DateTime.MinValue;
             Records.worker.dateupdated = DateTime.MinValue;
-            var _serv = new WorkerService(_repo.Object, _uow.Object);
+            var _serv = new WorkerService(_repo.Object, _wcache.Object, _uow.Object);
             //
             //Act
             _serv.Save(Records.worker, user);

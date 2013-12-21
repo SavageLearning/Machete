@@ -15,9 +15,9 @@ namespace MWS.Core
 {
     public interface IMacheteInstance
     {
-        public void StartAll();
-        public void StopAll();
-        public IInstance InstanceConfig { get; set; }
+        void StartAll();
+        void StopAll();
+        IInstance InstanceConfig { get; set; }
     }
 
     public class MacheteInstance : IMacheteInstance
@@ -37,7 +37,7 @@ namespace MWS.Core
             running = false;
             //
             //
-            if (InstanceConfig.EmailQueue.TimerIntervalSeconds != null)
+            if (InstanceConfig.EmailQueue.TimerIntervalSeconds > 0)
             {
                 interval = InstanceConfig.EmailQueue.TimerIntervalSeconds * 1000;
             }
@@ -47,7 +47,7 @@ namespace MWS.Core
             //
             //
             emailTimer = new Timer(interval);
-            emailTimer.Elapsed += new ElapsedEventHandler(ProcessEmailQueue);
+            emailTimer.Elapsed += new ElapsedEventHandler(ProcessEvent_EmailQueue);
         }
 
         public void StartAll()
@@ -92,39 +92,40 @@ namespace MWS.Core
         /// 
         /// </summary>
         /// <returns></returns>
-        public void ProcessEmailQueue(object source, ElapsedEventArgs e)
+        public void ProcessEvent_EmailQueue(object source, ElapsedEventArgs e)
         {
-            //var sb = new StringBuilder();
-            //var options = new TransactionOptions
-            //{
-            //    IsolationLevel = IsolationLevel.Serializable,
-            //    Timeout = new TimeSpan(0, 0, 0, 10)
-            //};
+            if (running) return;
+            running = true;
+            var sb = new StringBuilder();
+            var options = new TransactionOptions
+            {
+                IsolationLevel = IsolationLevel.Serializable,
+                Timeout = new TimeSpan(0, 0, 0, 10)
+            };
 
-            //using (var scope = new TransactionScope(TransactionScopeOption.RequiresNew, options))
-            //{
-            //    using (var context = new MacheteContext())
-            //    {
-                    IDatabaseFactory factory = container.Resolve<IDatabaseFactory>();
-                    factory.Set(context);
+            using (var scope = new TransactionScope(TransactionScopeOption.RequiresNew, options))
+            {
+                using (var context = Provider.GetFactory().Get())
+                {
+                    var em = Provider.GetQueueProvider();
 
-                    var em = container.Resolve<EmailQueueManager>();
-                    //sb.AppendLine(em.getDiagnostics());
-                    //sb.AppendLine("AppSettings.config location:");
-                    //sb.AppendLine(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile);
+                    sb.AppendLine(em.getDiagnostics());
+                    sb.AppendLine("AppSettings.config location:");
+                    sb.AppendLine(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile);
                     em.ProcessQueue(InstanceConfig.EmailQueue.EmailServer);
-                    //if (em.sentStack.Count() > 0)
-                    //{
-                    //    sb.AppendLine(string.Format("{0}", em.getSent()));
-                    //}
-                    //if (em.exceptionStack.Count() > 0)
-                    //{
-                    //    sb.AppendLine(string.Format("SendEmail exceptions: {0}", em.getExceptions()));
-                    //}
-            //    }
-            //    scope.Complete();
-            //}
 
+                    if (em.sentStack.Count() > 0)
+                    {
+                        sb.AppendLine(string.Format("{0}", em.getSent()));
+                    }
+                    if (em.exceptionStack.Count() > 0)
+                    {
+                        sb.AppendLine(string.Format("SendEmail exceptions: {0}", em.getExceptions()));
+                    }
+                }
+                scope.Complete();
+            }
+            running = false;
             //return sb.ToString();
         }
     }

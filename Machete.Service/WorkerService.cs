@@ -35,13 +35,14 @@ namespace Machete.Service
     public interface IWorkerService : IService<Worker>
     {
         Worker GetWorkerByNum(int dwccardnum);
-        void RefreshCache();
         dataTableResult<Worker> GetIndexView(viewOptions o);
     }
     public class WorkerService : ServiceBase<Worker>, IWorkerService
     {
-        public WorkerService(IWorkerRepository wRepo, IUnitOfWork uow) : base(wRepo, uow)
+        private IWorkerCache wcache;
+        public WorkerService(IWorkerRepository wRepo, IWorkerCache wc, IUnitOfWork uow) : base(wRepo, uow)
         {
+            this.wcache = wc;
             this.logPrefix = "Worker";
         }
         public Worker GetWorkerByNum(int dwccardnum)
@@ -53,15 +54,21 @@ namespace Machete.Service
         public override Worker Create(Worker record, string user)
         {
             var result = base.Create(record, user);
-            RefreshCache();
+            wcache.Refresh();
             return result;
         }
 
-        public void RefreshCache()
+        public override void Save(Worker record, string user)
         {
-            ((IWorkerRepository)repo).RefreshCache();
+            base.Save(record, user);
+            wcache.Refresh();
         }
 
+        public override void Delete(int id, string user)
+        {
+            base.Delete(id, user);
+            wcache.Refresh();
+        }
         public dataTableResult<Worker> GetIndexView(viewOptions o)
         {
             var result = new dataTableResult<Worker>();

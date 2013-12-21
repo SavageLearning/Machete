@@ -47,6 +47,7 @@ namespace Machete.Test.Controllers
         Mock<IPersonService> _pserv;
         Mock<ILookupCache> lcache;
         Mock<IImageService> _iserv;
+        Mock<IWorkerCache> _wcache;
         WorkerController _ctrlr;
         FormCollection fakeform;
         [TestInitialize]
@@ -55,8 +56,9 @@ namespace Machete.Test.Controllers
             _wserv = new Mock<IWorkerService>();
             _pserv = new Mock<IPersonService>();
             _iserv = new Mock<IImageService>();
+            _wcache = new Mock<IWorkerCache>();
             lcache = new Mock<ILookupCache>();
-            _ctrlr = new WorkerController(_wserv.Object, _pserv.Object, _iserv.Object);
+            _ctrlr = new WorkerController(_wserv.Object, _pserv.Object, _iserv.Object, _wcache.Object);
             _ctrlr.SetFakeControllerContext();
             fakeform = new FormCollection();
             fakeform.Add("ID", "12345");

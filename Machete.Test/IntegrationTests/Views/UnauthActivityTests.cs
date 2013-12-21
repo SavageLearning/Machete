@@ -24,6 +24,7 @@ namespace Machete.Test
         private StringBuilder verificationErrors;
         private string baseURL;
         private sharedUI ui;
+        FluentRecordBase frb;
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext) { }
@@ -31,7 +32,7 @@ namespace Machete.Test
         [TestInitialize]
         public void SetupTest()
         {
-            base.Initialize(new MacheteInitializer(), "macheteConnection");
+            frb = new FluentRecordBase();
             driver = new ChromeDriver(ConfigurationManager.AppSettings["CHROMEDRIVERPATH"]);
             baseURL = "http://localhost:4213/";
             ui = new sharedUI(driver, baseURL);
@@ -178,10 +179,10 @@ namespace Machete.Test
 
             Random rand = new Random();
             int rowcount = 1;
-            var workers = DB.Workers;
+            var workers = frb.ToFactory().Get().Workers;
             Activity _act = (Activity)Records.activity.Clone();
             ActivitySignin _asi = (ActivitySignin)Records.activitysignin.Clone();
-            IEnumerable<int> cardlist = DB.Workers.Select(q => q.dwccardnum).Distinct();
+            IEnumerable<int> cardlist = frb.ToFactory().Get().Workers.Select(q => q.dwccardnum).Distinct();
             int firstCardNum = workers.First().dwccardnum;
 
             // Act
