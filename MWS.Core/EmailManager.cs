@@ -22,6 +22,11 @@ namespace MWS.Core
     {
         void ProcessQueue(EmailServerConfig cfg);
         bool SendEmail(Email email, EmailServerConfig cfg);
+        string getDiagnostics();
+        string getExceptions();
+        string getSent();
+        Stack<Exception> exceptionStack { get; set; }
+        Stack<Email> sentStack { get; set; }
         //EmailServerConfig LoadEmailConfig();
     }
 
@@ -35,7 +40,9 @@ namespace MWS.Core
         public EmailQueueManager(IEmailService eServ, IUnitOfWork uow)
         {
             serv = eServ;
-            db =uow;
+            db = uow;
+            exceptionStack = new Stack<Exception>();
+            sentStack = new Stack<Email>();
         }
 
         public string getDiagnostics()

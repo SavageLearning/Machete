@@ -55,14 +55,17 @@ namespace Machete.Service
         private readonly IUnitOfWork unitOfWork;
         private readonly ILookupRepository lRepo;
         private readonly ILookupCache lcache;
+        private readonly IWorkerCache wcache;
         //
         //
-        public WorkAssignmentService(IWorkAssignmentRepository waRepo, 
-                                     IWorkerRepository wRepo, 
-                                     ILookupRepository lRepo, 
-                                     IWorkerSigninRepository wsiRepo,
-                                     ILookupCache lc,
-                                     IUnitOfWork unitOfWork) : base(waRepo, unitOfWork)
+        public WorkAssignmentService(
+            IWorkAssignmentRepository waRepo, 
+            IWorkerRepository wRepo, 
+            ILookupRepository lRepo, 
+            IWorkerSigninRepository wsiRepo,
+            IWorkerCache wc,
+            ILookupCache lc,
+            IUnitOfWork unitOfWork) : base(waRepo, unitOfWork)
         {
             this.waRepo = waRepo;
             this.unitOfWork = unitOfWork;
@@ -70,6 +73,7 @@ namespace Machete.Service
             this.lRepo = lRepo;
             this.wsiRepo = wsiRepo;
             this.lcache = lc;
+            this.wcache = wc;
             this.logPrefix = "WorkAssignment";
         }
         /// <summary>
@@ -102,12 +106,12 @@ namespace Machete.Service
             //
             // filter on member ID, showing only assignments available to the member based on their skills
             if (o.dwccardnum > 0)
-                e = IndexViewBase.filterOnSkill(o, q, lcache);
+                e = IndexViewBase.filterOnSkill(o, q, lcache, wcache.GetCache());
              else
                 e = q.AsEnumerable();
             //
             // getting worker info from cache, joining to Work Assignments
-            e = e.GroupJoin(WorkerCache.getCache(),  //LINQ
+            e = e.GroupJoin(wcache.GetCache(),  //LINQ
                                 wa => wa.workerAssignedID, 
                                 wc => wc.ID, 
                                 (wa, wc) => new { wa, wc }

@@ -34,25 +34,26 @@ namespace MWS.Service
         {
             this.ServiceName = EventViewerConfig.source;
             var bootstrapper = new ServiceBootstrapper();
+            var cfg = ConfigurationManager.GetSection(AppConfig.sourceNode) as MacheteWindowsServiceConfiguration;
 
             try
             {
-                container = bootstrapper.Build();
+                container = bootstrapper.Build(cfg.Instances);
             }
             catch (Exception e)
             {
                 var eventhandler = new EventHandler();
                 eventhandler.MWSEventLog.WriteEntry(e.ToString());
-                return;
+                throw e;
             }
 
             this.MWSEventLog = container.Resolve<IEventHandler>().MWSEventLog;
             //
             //
-            var cfg = new MacheteWindowsServiceConfiguration();
+            // TODO some notice if the config file is empty
             foreach (Instance instanceCfg in cfg.Instances)
             {
-                instances.Add(new MacheteInstance(container.Resolve<IEmailServiceProvider>(), instanceCfg));
+                instances.Add(new MacheteInstance(container.Resolve<IEmailServiceProvider>(instanceCfg.Name), instanceCfg));
             }
             
         }
@@ -100,5 +101,9 @@ namespace MWS.Service
     {
         public const string source = "MacheteWindowsService";
         public const string log = "MWSLog";
+    }
+    public struct AppConfig
+    {
+        public const string sourceNode = "MacheteWindowsService";
     }
 }

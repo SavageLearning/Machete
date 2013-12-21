@@ -40,7 +40,6 @@ namespace Machete.Test
         public void SetupTest()
         {
             frb = new FluentRecordBase();
-            frb.Initialize(new MacheteInitializer(), "macheteConnection");
             driver = new ChromeDriver(ConfigurationManager.AppSettings["CHROMEDRIVERPATH"]);
             baseURL = "http://localhost:4213/";
             ui = new sharedUI(driver, baseURL);
@@ -120,7 +119,7 @@ namespace Machete.Test
             Person _per = (Person)Records.person.Clone();
             Worker _wkr = (Worker)Records.worker.Clone();
             _wkr.memberexpirationdate = DateTime.Now.AddYears(1);
-            _wkr.dwccardnum = sharedUI.nextAvailableDwccardnum(frb.DB);
+            _wkr.dwccardnum = sharedUI.nextAvailableDwccardnum(frb.ToFactory().Get());
             Event _san = (Event)Records.event1.Clone();
             _san.Person = _per;
             _san.eventType = MacheteLookup.cache.First(x => x.category == "eventtype" && x.text_EN == "Sanction").ID;

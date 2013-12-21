@@ -62,7 +62,7 @@ namespace MWS.Core
         }
         //
         // http://blog.davidtruxall.com/2010/06/02/using-linq-against-a-custom-configurationelementcollection/
-        new public Instance this[int index]
+        public Instance this[int index]
         {
             //get { return (Instance)base.BaseGet(productName); }
             get { return base.BaseGet(index) as Instance; }
@@ -95,8 +95,8 @@ namespace MWS.Core
 
     public interface IInstance
     {
-        public string Name { get; set; }
-        public EmailQueue EmailQueue { get; set; }
+        string Name { get; set; }
+        EmailQueue EmailQueue { get; set; }
     }
 
     public class Instance : ConfigurationElement, IInstance
@@ -106,6 +106,13 @@ namespace MWS.Core
         {
             get { return (string)base[rx.Name]; }
             set { base[rx.Name] = value; }
+        }
+
+        [ConfigurationProperty(rx.connStringName, IsRequired = true, IsKey = true)]
+        public string ConnStringName
+        {
+            get { return (string)base[rx.connStringName]; }
+            set { base[rx.connStringName] = value; }
         }
 
         [ConfigurationProperty(rx.EmailQueue, IsRequired = false, IsKey = false)]
@@ -212,6 +219,7 @@ namespace MWS.Core
         public const string Instance = "Instance";
         public const string Instances = "Instances";
         public const string Name = "Name";
+        public const string connStringName = "ConnectionStringName";
         public const string EmailQueue = "EmailQueue";
         public const string TimerIntervalSeconds = "TimerIntervalSeconds";
         public const string TransmitAttempts = "TransmitAttempts";

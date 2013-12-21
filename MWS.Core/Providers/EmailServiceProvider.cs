@@ -1,4 +1,5 @@
-﻿using Machete.Service;
+﻿using Machete.Data.Infrastructure;
+using Machete.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,19 +10,29 @@ namespace MWS.Core.Providers
 {
     public interface IEmailServiceProvider
     {
-        public IEmailQueueManager GetQueueProvider();
+        IEmailQueueManager GetQueueProvider();
+        IDatabaseFactory GetFactory();
     }
 
     public class EmailServiceProvider : IEmailServiceProvider
     {
         private Func<IEmailQueueManager> _func;
+        private Func<IDatabaseFactory> _dbf;
 
-        public EmailServiceProvider(Func<IEmailQueueManager> f)
-        { }
+        public EmailServiceProvider(Func<IEmailQueueManager> f, Func<IDatabaseFactory> dbf)
+        {
+            _func = f;
+            _dbf = dbf;
+        }
 
         public IEmailQueueManager GetQueueProvider()
         {
             return _func();
+        }
+
+        public IDatabaseFactory GetFactory()
+        {
+            return _dbf();
         }
     }
 }

@@ -37,6 +37,7 @@ using NLog;
 using Machete.Web.Helpers;
 using System.Web.Routing;
 using AutoMapper;
+using Machete.Data;
 
 namespace Machete.Web.Controllers
 {
@@ -45,12 +46,15 @@ namespace Machete.Web.Controllers
     {
         private readonly IWorkerService serv;
         private readonly IImageService imageServ;
+        private readonly IWorkerCache wcache;
         System.Globalization.CultureInfo CI;
 
         public WorkerController(IWorkerService workerService, 
                                 IPersonService personService,
-                                IImageService  imageServ)
+                                IImageService  imageServ,
+                                IWorkerCache wc)
         {
+            this.wcache = wc;
             this.serv = workerService;
             this.imageServ = imageServ;
         }
@@ -219,7 +223,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult RefreshCache()
         {
-            serv.RefreshCache();
+            wcache.Refresh();
             return Json(new
             {
                 status = "OK"
