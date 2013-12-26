@@ -37,7 +37,8 @@ namespace Machete.Service
                              IWorkerSigninRepository wsiRepo,
                              IWorkerRequestRepository wrRepo,
                              ILookupRepository lookRepo,
-                             ILookupCache lookCache) : base(woRepo, waRepo, wRepo, wsiRepo, wrRepo, lookRepo, lookCache)
+                             ILookupCache lookCache,
+                             IActivitySigninRepository asRepo) : base(woRepo, waRepo, wRepo, wsiRepo, wrRepo, lookRepo, lookCache, asRepo)
         {}
         
         /// <summary>
@@ -362,6 +363,32 @@ namespace Machete.Service
 
             return query;
         }
+
+        public IQueryable<reportUnit> WorkersGivenSafetyTraining(DateTime beginDate, DateTime endDate)
+        {
+            IQueryable<reportUnit> query;
+
+            //ensure we are getting all relevant times (no assumptions)
+            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
+            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
+
+            var asQ = asRepo.GetAllQ();
+
+            query = asQ
+                .Where(whr => whr.Activity.type == 104)
+                .GroupBy(gb => new
+                {
+                    dtow = EntityFunctions.TruncateTime(gb.datecreated),
+                    worker = gb.personID
+                })
+                .Select(group => new reportUnit
+                {
+                    count = group.Count() > 0 ? group.Count() : 0
+                });
+
+            return query;
+        }
+
         #endregion
 
         #region ReportData
