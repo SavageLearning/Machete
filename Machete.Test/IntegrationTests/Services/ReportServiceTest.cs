@@ -196,6 +196,36 @@ namespace Machete.Test.IntegrationTests.Services
             Assert.AreEqual(zip, result.Select(q => q.info.FirstOrDefault()));
         }
 
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
+        public void Integration_ReportService_NewlyEnrolled()
+        {
+            //Arrange
+            DateTime beforeDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 4, 23, 59, 59);
+            DateTime beginDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 3, 0, 0, 0);
+            DateTime middleDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 3, 12, 0, 0);
+            DateTime endDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 3, 23, 59, 59);
+            DateTime afterDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 2, 0, 0, 0);
+
+            frb.AddWorker(null, null, null, null,
+                beforeDate,
+                endDate, endDate, null);
+            frb.AddWorker(null, null, null, null,
+                afterDate,
+                endDate, endDate, null);
+            frb.AddWorker(null, null, null, null,
+                middleDate,
+                endDate, endDate, null);
+            frb.AddWorker(null, null, null, null,
+                middleDate,
+                endDate, endDate, null);
+
+            //Act
+            var result = frb.ToServReports().NewlyEnrolled(beginDate, endDate);
+
+            //Assert
+            Assert.AreEqual(4, result.Select(q => q.count));
+        }
+
         //ALL logic for the views contained at the service layer (i.e.,
         //DailyController etc. etc.) uses the above report units. Skipping
         //writing further integration tests for now to save time.

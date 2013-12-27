@@ -364,6 +364,7 @@ namespace Machete.Service
             return query;
         }
 
+        #region United Way Report
         public IQueryable<reportUnit> WorkersGivenSafetyTraining(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
@@ -372,10 +373,17 @@ namespace Machete.Service
             beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
             endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
+            IQueryable<int> trainingIDQuery;
+
+            var lQ = lookRepo.GetAllQ();
+            trainingIDQuery = lQ
+                .Where(whr => whr.text_EN == "Health & Safety")
+                .Select(thing => thing.ID);
+
             var asQ = asRepo.GetAllQ();
 
             query = asQ
-                .Where(whr => whr.Activity.type == 104 && EntityFunctions.TruncateTime(whr.Activity.dateStart) >= beginDate
+                .Where(whr => whr.Activity.type == trainingIDQuery.First() && EntityFunctions.TruncateTime(whr.Activity.dateStart) >= beginDate
                            && EntityFunctions.TruncateTime(whr.Activity.dateStart) <= endDate)
                 .GroupBy(gb => new
                 {
@@ -416,6 +424,130 @@ namespace Machete.Service
 
             return query;
         }
+
+        public IQueryable<reportUnit> AdultsEnrolledAndAssessed(DateTime beginDate, DateTime endDate)
+        {
+            IQueryable<reportUnit> query;
+
+            //ensure we are getting all relevant times (no assumptions)
+            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
+            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
+
+            var wQ = wRepo.GetAllQ();
+            var asQ = asRepo.GetAllQ();
+
+            query = wQ
+                .Select(w => asQ
+                            .Where(aS => aS.personID == w.Person.ID &&
+                                EntityFunctions.TruncateTime(aS.dateforsignin) >= beginDate &&
+                                EntityFunctions.TruncateTime(aS.dateforsignin) <= endDate)
+                    //Assuming that english classes don't go past midnight
+                            .Sum(signin => signin.Activity.dateEnd.Hour - signin.Activity.dateStart.Hour))
+                .Where(sum => sum > 12)
+                .GroupBy(gb => gb)
+                .Select(group => new reportUnit
+                {
+                    count = group.Count() > 0 ? group.Count() : 0
+                });
+
+            return query;
+        }
+
+
+
+        #endregion
+
+        #region Monthly Status Report
+        public IQueryable<reportUnit> NewlyEnrolled(DateTime beginDate, DateTime endDate)
+        {
+            IQueryable<reportUnit> query;
+
+            var wQ = wRepo.GetAllQ();
+
+            query = wQ
+                .Where(whr => EntityFunctions.TruncateTime(whr.dateOfMembership) >= beginDate
+                           && EntityFunctions.TruncateTime(whr.dateOfMembership) <= endDate)
+                .GroupBy(gb => new
+                {
+                    dom = EntityFunctions.TruncateTime(gb.dateOfMembership)
+                })
+                .Select(group => new reportUnit
+                {
+                    count = group.Count()
+                });
+
+            return query;
+        }
+
+        public IQueryable<reportUnit> NewlyExpired(DateTime beginDate, DateTime endDate)
+        {
+            IQueryable<reportUnit> query;
+
+            var wQ = wRepo.GetAllQ();
+
+            query = wQ
+                .Where(whr => EntityFunctions.TruncateTime(whr.memberexpirationdate) >= beginDate
+                           && EntityFunctions.TruncateTime(whr.memberexpirationdate) <= endDate)
+                .GroupBy(gb => new
+                {
+                    dom = EntityFunctions.TruncateTime(gb.memberexpirationdate)
+                })
+                .Select(group => new reportUnit
+                {
+                    count = group.Count()
+                });
+
+            return query;
+        }
+
+        public IQueryable<reportUnit> StillEnrolled(DateTime beginDate, DateTime endDate)
+        {
+            IQueryable<reportUnit> query;
+
+            var wQ = wRepo.GetAllQ();
+
+            query = wQ
+                .Where(whr => EntityFunctions.TruncateTime(whr.dateOfMembership) < beginDate)
+                .GroupBy(gb => new
+                {
+                    dom = EntityFunctions.TruncateTime(gb.dateOfMembership)
+                })
+                .Select(group => new reportUnit
+                {
+                    count = group.Count()
+                });
+
+            return query;
+        }
+
+        public IQueryable<reportUnit> WorkersInPermanentJobs(DateTime beginDate, DateTime endDate)
+        {
+            IQueryable<reportUnit> query;
+
+            //ensure we are getting all relevant times (no assumptions)
+            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
+            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
+
+            var waQ = waRepo.GetAllQ();
+
+            query = waQ
+                .Where(whr => whr.workOrder.permanentPlacement &&
+                    EntityFunctions.TruncateTime(whr.workOrder.dateTimeofWork) >= beginDate &&
+                    EntityFunctions.TruncateTime(whr.workOrder.dateTimeofWork) <= endDate)
+                .GroupBy(gb => new
+                {
+                    dtow = EntityFunctions.TruncateTime(gb.workOrder.dateTimeofWork),
+                    worker = gb.workerAssignedID
+                })
+                .Select(group => new reportUnit
+                {
+                    count = group.Count() > 0 ? group.Count() : 0
+                });
+
+            return query;
+        }
+
+        #endregion
 
         #endregion
 
