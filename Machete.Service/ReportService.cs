@@ -847,7 +847,17 @@ namespace Machete.Service
         public int? totalHours { get; set; }
         public double? totalIncome { get; set; }
         public double? avgIncomePerHour { get; set; }
+        // the following were added just prior to Jan 2014 for Casa Latina
+        public int? newlyEnrolled { get; set; }
+        public int? peopleWhoLeft { get; set; }
+        public int? peopleWhoStayed { get; set; }
+        public int? financialLiterates { get; set; }
+        public int? jobSkillsTrainees { get; set; }
+        public int? gradFromESL { get; set; }
+        public int? unduplicatedDispatched { get; set; }
+        public int? permanentPlacements { get; set; }
     }
+
 
     public class jzcData
     {
