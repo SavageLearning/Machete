@@ -383,7 +383,8 @@ namespace Machete.Service
             var asQ = asRepo.GetAllQ();
 
             query = asQ
-                .Where(whr => whr.Activity.type == trainingIDQuery.First() && EntityFunctions.TruncateTime(whr.Activity.dateStart) >= beginDate
+                .Where(whr => whr.Activity.type == trainingIDQuery.First() 
+                           && EntityFunctions.TruncateTime(whr.Activity.dateStart) >= beginDate
                            && EntityFunctions.TruncateTime(whr.Activity.dateStart) <= endDate)
                 .GroupBy(gb => new
                 {
@@ -392,6 +393,7 @@ namespace Machete.Service
                 })
                 .Select(group => new reportUnit
                 {
+                    date = group.Key.dtow,
                     count = group.Count() > 0 ? group.Count() : 0
                 });
 
@@ -419,6 +421,7 @@ namespace Machete.Service
                 })
                 .Select(group => new reportUnit
                 {
+                    date = group.Key.dtow,
                     count = group.Count() > 0 ? group.Count() : 0
                 });
 
@@ -481,6 +484,7 @@ namespace Machete.Service
                 })
                 .Select(group => new reportUnit
                 {
+                    date = group.Key.dom,
                     count = group.Count()
                 });
 
@@ -502,6 +506,7 @@ namespace Machete.Service
                 })
                 .Select(group => new reportUnit
                 {
+                    date = group.Key.dom,
                     count = group.Count()
                 });
 
@@ -522,6 +527,7 @@ namespace Machete.Service
                 })
                 .Select(group => new reportUnit
                 {
+                    date = group.Key.dom,
                     count = group.Count()
                 });
 
@@ -549,11 +555,14 @@ namespace Machete.Service
                 })
                 .Select(group => new reportUnit
                 {
+                    date = group.Key.dtow,
                     count = group.Count() > 0 ? group.Count() : 0
                 });
 
             return query;
         }
+
+
 
         #endregion
 
