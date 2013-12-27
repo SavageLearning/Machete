@@ -563,7 +563,7 @@ namespace Machete.Service
             IQueryable<reportUnit> query;
 
             var wQ = wRepo.GetAllQ();
-            int numWorkers = wQ.Count();
+            int numWorkers = wQ.Where(whr => whr.dateOfMembership != null).Count();
 
             query = wQ
                 .GroupBy(gb => new
