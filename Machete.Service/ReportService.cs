@@ -453,6 +453,8 @@ namespace Machete.Service
             return query;
         }
 
+
+
         #endregion
 
         #region Monthly Status Report
@@ -498,6 +500,25 @@ namespace Machete.Service
             return query;
         }
 
+        public IQueryable<reportUnit> StillEnrolled(DateTime beginDate, DateTime endDate)
+        {
+            IQueryable<reportUnit> query;
+
+            var wQ = wRepo.GetAllQ();
+
+            query = wQ
+                .Where(whr => EntityFunctions.TruncateTime(whr.dateOfMembership) < beginDate)
+                .GroupBy(gb => new
+                {
+                    dom = EntityFunctions.TruncateTime(gb.dateOfMembership)
+                })
+                .Select(group => new reportUnit
+                {
+                    count = group.Count()
+                });
+
+            return query;
+        }
 
         #endregion
 
