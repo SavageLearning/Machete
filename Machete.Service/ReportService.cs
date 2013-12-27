@@ -442,6 +442,28 @@ namespace Machete.Service
             return query;
         }
 
+        public IQueryable<reportUnit> NewlyExpired(DateTime beginDate, DateTime endDate)
+        {
+            IQueryable<reportUnit> query;
+
+            var wQ = wRepo.GetAllQ();
+
+            query = wQ
+                .Where(whr => EntityFunctions.TruncateTime(whr.memberexpirationdate) >= beginDate
+                           && EntityFunctions.TruncateTime(whr.memberexpirationdate) <= endDate)
+                .GroupBy(gb => new
+                {
+                    dom = EntityFunctions.TruncateTime(gb.memberexpirationdate)
+                })
+                .Select(group => new reportUnit
+                {
+                    count = group.Count()
+                });
+
+            return query;
+        }
+
+
         #endregion
 
         #endregion
