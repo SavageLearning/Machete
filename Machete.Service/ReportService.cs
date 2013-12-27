@@ -549,6 +549,30 @@ namespace Machete.Service
 
         #endregion
 
+        #region HMIS
+        public IQueryable<reportUnit> PersonZipCodePercentages()
+        {
+            IQueryable<reportUnit> query;
+
+            var wQ = wRepo.GetAllQ();
+            int numWorkers = wQ.Count();
+
+            query = wQ
+                .GroupBy(gb => new
+                {
+                    zip = gb.Person.zipcode
+                })
+                .OrderByDescending(ob => ob.Count())
+                .Select(group => new reportUnit
+                {
+                    count = ((group.Count() >= 0 ? group.Count() : 0) * 100) / numWorkers,
+                    info = group.Key.zip ?? ""
+                });
+
+            return query;
+        }
+        #endregion
+
         #endregion
 
         #region ReportData
