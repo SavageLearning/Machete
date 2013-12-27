@@ -383,7 +383,8 @@ namespace Machete.Service
             var asQ = asRepo.GetAllQ();
 
             query = asQ
-                .Where(whr => whr.Activity.type == trainingIDQuery.First() && EntityFunctions.TruncateTime(whr.Activity.dateStart) >= beginDate
+                .Where(whr => whr.Activity.type == trainingIDQuery.First() 
+                           && EntityFunctions.TruncateTime(whr.Activity.dateStart) >= beginDate
                            && EntityFunctions.TruncateTime(whr.Activity.dateStart) <= endDate)
                 .GroupBy(gb => new
                 {
@@ -392,6 +393,7 @@ namespace Machete.Service
                 })
                 .Select(group => new reportUnit
                 {
+                    date = group.Key.dtow,
                     count = group.Count() > 0 ? group.Count() : 0
                 });
 
@@ -419,6 +421,7 @@ namespace Machete.Service
                 })
                 .Select(group => new reportUnit
                 {
+                    date = group.Key.dtow,
                     count = group.Count() > 0 ? group.Count() : 0
                 });
 
@@ -481,6 +484,7 @@ namespace Machete.Service
                 })
                 .Select(group => new reportUnit
                 {
+                    date = group.Key.dom,
                     count = group.Count()
                 });
 
@@ -502,6 +506,7 @@ namespace Machete.Service
                 })
                 .Select(group => new reportUnit
                 {
+                    date = group.Key.dom,
                     count = group.Count()
                 });
 
@@ -522,6 +527,7 @@ namespace Machete.Service
                 })
                 .Select(group => new reportUnit
                 {
+                    date = group.Key.dom,
                     count = group.Count()
                 });
 
@@ -549,6 +555,38 @@ namespace Machete.Service
                 })
                 .Select(group => new reportUnit
                 {
+                    date = group.Key.dtow,
+                    count = group.Count() > 0 ? group.Count() : 0
+                });
+
+            return query;
+        }
+
+        public IQueryable<reportUnit> UnduplicatedWorkersWhoRecievedTempJobs(DateTime beginDate, DateTime endDate)
+        {
+            IQueryable<reportUnit> query;
+
+            //ensure we are getting all relevant times (no assumptions)
+            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
+            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
+
+            var wQ = wRepo.GetAllQ();
+            var waQ = waRepo.GetAllQ();
+
+            query = wQ
+                .Join(waQ,
+                w => w.ID,
+                wa => wa.workerAssignedID,
+                (w, wa) => new { w, wa })
+                .Where(whr => whr.wa != null)
+                .GroupBy(gb => new
+                {
+                    worker = gb.w,
+                    assignment = gb.wa
+                })
+                .Select(group => new reportUnit
+                {
+                    date = group.Key.assignment.workOrder.dateTimeofWork,
                     count = group.Count() > 0 ? group.Count() : 0
                 });
 
