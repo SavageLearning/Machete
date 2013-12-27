@@ -373,10 +373,17 @@ namespace Machete.Service
             beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
             endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
+            IQueryable<int> trainingIDQuery;
+
+            var lQ = lookRepo.GetAllQ();
+            trainingIDQuery = lQ
+                .Where(whr => whr.text_EN == "Health & Safety")
+                .Select(thing => thing.ID);
+
             var asQ = asRepo.GetAllQ();
 
             query = asQ
-                .Where(whr => whr.Activity.type == 104 && EntityFunctions.TruncateTime(whr.Activity.dateStart) >= beginDate
+                .Where(whr => whr.Activity.type == trainingIDQuery.First() && EntityFunctions.TruncateTime(whr.Activity.dateStart) >= beginDate
                            && EntityFunctions.TruncateTime(whr.Activity.dateStart) <= endDate)
                 .GroupBy(gb => new
                 {
