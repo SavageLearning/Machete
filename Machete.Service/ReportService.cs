@@ -364,6 +364,7 @@ namespace Machete.Service
             return query;
         }
 
+        #region United Way Report
         public IQueryable<reportUnit> WorkersGivenSafetyTraining(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
@@ -416,6 +417,32 @@ namespace Machete.Service
 
             return query;
         }
+
+        #endregion
+
+        #region Monthly Status Report
+        public IQueryable<reportUnit> NewlyEnrolled(DateTime beginDate, DateTime endDate)
+        {
+            IQueryable<reportUnit> query;
+
+            var wQ = wRepo.GetAllQ();
+
+            query = wQ
+                .Where(whr => EntityFunctions.TruncateTime(whr.dateOfMembership) >= beginDate
+                           && EntityFunctions.TruncateTime(whr.dateOfMembership) <= endDate)
+                .GroupBy(gb => new
+                {
+                    dom = EntityFunctions.TruncateTime(gb.dateOfMembership)
+                })
+                .Select(group => new reportUnit
+                {
+                    count = group.Count()
+                });
+
+            return query;
+        }
+
+        #endregion
 
         #endregion
 
