@@ -520,6 +520,33 @@ namespace Machete.Service
             return query;
         }
 
+        public IQueryable<reportUnit> WorkersInPermanentJobs(DateTime beginDate, DateTime endDate)
+        {
+            IQueryable<reportUnit> query;
+
+            //ensure we are getting all relevant times (no assumptions)
+            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
+            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
+
+            var waQ = waRepo.GetAllQ();
+
+            query = waQ
+                .Where(whr => whr.workOrder.permanentPlacement &&
+                    EntityFunctions.TruncateTime(whr.workOrder.dateTimeofWork) >= beginDate &&
+                    EntityFunctions.TruncateTime(whr.workOrder.dateTimeofWork) <= endDate)
+                .GroupBy(gb => new
+                {
+                    dtow = EntityFunctions.TruncateTime(gb.workOrder.dateTimeofWork),
+                    worker = gb.workerAssignedID
+                })
+                .Select(group => new reportUnit
+                {
+                    count = group.Count() > 0 ? group.Count() : 0
+                });
+
+            return query;
+        }
+
         #endregion
 
         #endregion
