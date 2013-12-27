@@ -425,6 +425,34 @@ namespace Machete.Service
             return query;
         }
 
+        public IQueryable<reportUnit> AdultsEnrolledAndAssessed(DateTime beginDate, DateTime endDate)
+        {
+            IQueryable<reportUnit> query;
+
+            //ensure we are getting all relevant times (no assumptions)
+            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
+            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
+
+            var wQ = wRepo.GetAllQ();
+            var asQ = asRepo.GetAllQ();
+
+            query = wQ
+                .Select(w => asQ
+                            .Where(aS => aS.personID == w.Person.ID &&
+                                EntityFunctions.TruncateTime(aS.dateforsignin) >= beginDate &&
+                                EntityFunctions.TruncateTime(aS.dateforsignin) <= endDate)
+                    //Assuming that english classes don't go past midnight
+                            .Sum(signin => signin.Activity.dateEnd.Hour - signin.Activity.dateStart.Hour))
+                .Where(sum => sum > 12)
+                .GroupBy(gb => gb)
+                .Select(group => new reportUnit
+                {
+                    count = group.Count() > 0 ? group.Count() : 0
+                });
+
+            return query;
+        }
+
         #endregion
 
         #region Monthly Status Report
