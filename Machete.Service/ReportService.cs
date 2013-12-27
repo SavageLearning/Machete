@@ -707,12 +707,30 @@ namespace Machete.Service
             IEnumerable<reportUnit> unique;
             IEnumerable<TypeOfDispatchReport> dispatch;
             IEnumerable<AverageWages> average;
-            IEnumerable<monthlyData> q; // query for monthlyWithDetail result
+
+            IEnumerable<reportUnit> newPpl;
+            IEnumerable<reportUnit> pplLeft;
+            IEnumerable<reportUnit> pplStay;
+            //IEnumerable<reportUnit> finLit;
+            //IEnumerable<reportUnit> jobSkills;
+            IEnumerable<reportUnit> eslGrads;
+            IEnumerable<reportUnit> undupDispatch;
+            IEnumerable<reportUnit> permPlaced;
+            
+            IEnumerable<monthlyData> q; 
 
             signins = CountSignins(beginDate, endDate).ToList();
             unique = CountUniqueSignins(beginDate, endDate).ToList();
             dispatch = CountTypeofDispatch(beginDate, endDate).ToList();
             average = HourlyWageAverage(beginDate, endDate).ToList();
+            newPpl = NewlyEnrolled(beginDate, endDate).ToList();
+            pplLeft = NewlyExpired(beginDate, endDate).ToList();
+            pplStay = StillEnrolled(beginDate, endDate).ToList();
+            //finLit = null;
+            //jobSkills = null;
+            eslGrads = AdultsEnrolledAndAssessed(beginDate, endDate).ToList();
+            undupDispatch = WorkersInTempJobs(beginDate, endDate).ToList();
+            permPlaced = WorkersInPermanentJobs(beginDate, endDate).ToList();
 
             q = average
                 .Select(g => new monthlyData
@@ -726,7 +744,15 @@ namespace Machete.Service
                     dispatchedHHHPropio = dispatch.Where(whr => whr.date == g.date).Select(h => h.hhhPropio).FirstOrDefault(),
                     totalHours = g.hours,
                     totalIncome = g.wages,
-                    avgIncomePerHour = g.avg
+                    avgIncomePerHour = g.avg,
+                    newlyEnrolled = newPpl.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
+                    peopleWhoLeft = pplLeft.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
+                    peopleWhoStayed = pplStay.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
+                    //financialLiterates = ,
+                    //jobSkillsTrainees = ,
+                    gradFromESL = eslGrads.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
+                    unduplicatedDispatched = undupDispatch.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
+                    permanentPlacements = permPlaced.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
                 });
 
             q = q.OrderBy(p => p.date);
@@ -774,6 +800,7 @@ namespace Machete.Service
         #endregion
 
         #region DataTablesStuff
+        // The following methods organize the above service-layer views for return to Ajax/DataTables and the GUI.
 
         public dataTableResult<dailyData> DailyView(DateTime date)
         {
