@@ -208,22 +208,107 @@ namespace Machete.Test.IntegrationTests.Services
 
             frb.AddWorker(null, null, null, null,
                 beforeDate,
-                endDate, endDate, null);
+                endDate, afterDate, null);
             frb.AddWorker(null, null, null, null,
                 afterDate,
-                endDate, endDate, null);
+                endDate, afterDate, null);
             frb.AddWorker(null, null, null, null,
                 middleDate,
-                endDate, endDate, null);
+                endDate, afterDate, null);
             frb.AddWorker(null, null, null, null,
                 middleDate,
-                endDate, endDate, null);
+                endDate, afterDate, null);
 
             //Act
             var result = frb.ToServReports().NewlyEnrolled(beginDate, endDate);
 
             //Assert
-            Assert.AreEqual(4, result.Select(q => q.count));
+            Assert.AreEqual(2, result.Select(q => q.count));
+        }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
+        public void Integration_ReportService_NewlyExpired()
+        {
+            //Arrange
+            DateTime beforeDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 4, 23, 59, 59);
+            DateTime beginDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 3, 0, 0, 0);
+            DateTime middleDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 3, 12, 0, 0);
+            DateTime endDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 3, 23, 59, 59);
+            DateTime afterDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 2, 0, 0, 0);
+
+            frb.AddWorker(null, null, null, null,
+                beforeDate,
+                endDate, beforeDate, null);
+            frb.AddWorker(null, null, null, null,
+                beforeDate,
+                endDate, afterDate, null);
+            frb.AddWorker(null, null, null, null,
+                beforeDate,
+                endDate, middleDate, null);
+            frb.AddWorker(null, null, null, null,
+                beforeDate,
+                endDate, middleDate, null);
+
+            //Act
+            var result = frb.ToServReports().NewlyExpired(beginDate, endDate);
+
+            //Assert
+            Assert.AreEqual(2, result.Select(q => q.count));
+        }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
+        public void Integration_ReportService_StillEnrolled()
+        {
+            //Arrange
+            DateTime beforeDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 4, 23, 59, 59);
+            DateTime beginDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 3, 0, 0, 0);
+            DateTime middleDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 3, 12, 0, 0);
+            DateTime endDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 3, 23, 59, 59);
+            DateTime afterDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 2, 0, 0, 0);
+
+            frb.AddWorker(null, null, null, null,
+                beforeDate,
+                endDate, afterDate, null);
+            frb.AddWorker(null, null, null, null,
+                afterDate,
+                endDate, afterDate, null);
+            frb.AddWorker(null, null, null, null,
+                beforeDate,
+                endDate, afterDate, null);
+            frb.AddWorker(null, null, null, null,
+                middleDate,
+                endDate, afterDate, null);
+
+
+            //Act
+            var result = frb.ToServReports().StillEnrolled(beginDate, endDate);
+
+            //Assert
+            Assert.AreEqual(2, result.Select(q => q.count));
+        }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
+        public void Integration_ReportService_WorkersGivenSafetyTraining()
+        {
+            //Arrange
+            DateTime beginDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 3, 0, 0, 0);
+            DateTime middleDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 3, 12, 0, 0);
+            DateTime endDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 3, 23, 59, 59);
+            frb.AddWorker(null, null, null, null,
+                beginDate,
+                endDate, endDate, null);
+            frb.AddWorker(null, null, null, null,
+                beginDate,
+                endDate, endDate, null);
+            frb.AddWorker(null, null, null, null,
+                beginDate,
+                endDate, endDate, null);
+            frb.AddWorker(null, null, null, null,
+                beginDate,
+                endDate, endDate, null);
+
+            frb.AddActivity(beginDate, beginDate, middleDate, endDate);
+            
         }
 
         //ALL logic for the views contained at the service layer (i.e.,
