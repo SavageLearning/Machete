@@ -51,7 +51,10 @@ namespace MWS.Core
             sb.AppendFormat("Total emails in database: {0}", serv.TotalCount().ToString());
             return sb.ToString();
         }
-
+        /// <summary>
+        /// Get emails from EmailService and calle SendMail to send emails
+        /// </summary>
+        /// <param name="cfg"></param>
         public void ProcessQueue(EmailServerConfig cfg)
         {
             exceptionStack = new Stack<Exception>();
@@ -101,7 +104,12 @@ namespace MWS.Core
             }
             return sb.ToString();
         }
-
+        /// <summary>
+        /// create SmtpClient, create mail message, and send message. Catches exceptions and puts them in QueueManager.ExceptionStack.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="cfg"></param>
+        /// <returns></returns>
         public bool SendEmail(Email e, EmailServerConfig cfg)
         {
             try
