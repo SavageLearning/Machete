@@ -61,7 +61,9 @@ namespace MWS.Service
                     i.Name,
                     new PerResolveLifetimeManager(),
                     new InjectionConstructor(
-                        new ResolvedParameter<IDatabaseFactory>(i.Name)));
+                        new ResolvedParameter<IDatabaseFactory>(i.Name)
+                        )
+                    );
 
                 container.RegisterType<IWorkerSigninRepository, WorkerSigninRepository>(
                     i.Name,

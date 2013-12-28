@@ -36,6 +36,8 @@ namespace MWS.Service
             var bootstrapper = new ServiceBootstrapper();
             var cfg = ConfigurationManager.GetSection(AppConfig.sourceNode) as MacheteWindowsServiceConfiguration;
 
+            // Report # of configs read
+            // detect change and re-read?
             try
             {
                 container = bootstrapper.Build(cfg.Instances);

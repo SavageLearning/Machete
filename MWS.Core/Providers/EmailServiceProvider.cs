@@ -16,18 +16,18 @@ namespace MWS.Core.Providers
 
     public class EmailServiceProvider : IEmailServiceProvider
     {
-        private Func<IEmailQueueManager> _func;
+        private Func<IEmailQueueManager> _eqm;
         private Func<IDatabaseFactory> _dbf;
 
         public EmailServiceProvider(Func<IEmailQueueManager> f, Func<IDatabaseFactory> dbf)
         {
-            _func = f;
+            _eqm = f;
             _dbf = dbf;
         }
 
         public IEmailQueueManager GetQueueProvider()
         {
-            return _func();
+            return _eqm();
         }
 
         public IDatabaseFactory GetFactory()
