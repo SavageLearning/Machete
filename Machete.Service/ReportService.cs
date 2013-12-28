@@ -889,6 +889,8 @@ namespace Machete.Service
 
             return q;
         }
+
+
         #endregion
 
         #region DataTablesStuff
@@ -971,7 +973,7 @@ namespace Machete.Service
         #endregion
     }
 
-    #region DataClasses
+    #region Classes for Summary Reports
     /// <summary>
     /// A class to contain the data for the Daily Report for Casa Latina
     /// int dwcList, int dwcPropio, int hhhList, int hhhPropio, int
@@ -1045,5 +1047,29 @@ namespace Machete.Service
         public string jobs { get; set; }
         public string jobsCount { get; set; }
     }
-    #endregion    
+
+    public class yearSumData
+    {
+        public DateTime? date { get; set; }
+        public int? temporaryPlacements { get; set; }
+        public int? safetyTrainees { get; set; }
+        public int? skillsTrainees { get; set; }
+        public int? eslAssessed { get; set; }
+        public int? gardenTrainees { get; set; }
+        public int? finTrainees { get; set; }
+        public int? oshaTrainees { get; set; }
+        public int? chemTrainees { get; set; }
+        public int? movingTrainees { get; set; }
+        public int? outreachTrainees { get; set; }
+        public int? careTrainees { get; set; }
+        public int? heatTrainees { get; set; }
+        public int? asbestosTrainees { get; set; }
+        public int? computerTrainees { get; set; }
+        public int? greenTrainees { get; set; }
+        public int? msfCount { get; set; } //no idea what this refers to
+        public int? assemblyCount { get; set; }
+        public int? finEdTrainees { get; set; }
+        public int? clTrainees { get; set; } //no idea what this refers to
+    }
+    #endregion
 }
