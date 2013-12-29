@@ -225,4 +225,7 @@
   <data name="ordersInstructions" xml:space="preserve">
     <value>Utiliza los menús abajo para elegir los distintos tipos de reportajes sobre el estado de órdenes de trabajo. Puede utilizar los botones por encima del reporte para alternar la visualización.</value>
   </data>
+  <data name="ssrsTab" xml:space="preserve">
+    <value>SSRS</value>
+  </data>
 </root>

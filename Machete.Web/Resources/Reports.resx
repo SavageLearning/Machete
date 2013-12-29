@@ -225,4 +225,7 @@
   <data name="ordersInstructions" xml:space="preserve">
     <value>Open the menus below to select different types of reports about work orders. Use the buttons at the top of the reports to toggle the display.</value>
   </data>
+  <data name="ssrsTab" xml:space="preserve">
+    <value>SSRS</value>
+  </data>
 </root>

@@ -1,1 +1,17 @@
-﻿@* This is the file where links to the "legacy" reports will be placed, such as the SSRS reports for Casa Latina *@
+﻿@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+}
+<div id="ssrs">
+    <h3>Microsoft Report Server</h3>
+    Reports are generated using the Microsoft SQL Server Reporting Service (SSRS). It is a separate application from Machete.<p />
+    The report server provides a very basic page to access all reports available on it.<p />
+    <a id="ssrsReports" href="/ReportServer/" target="_blank">SSRS - Report Server</a>
+</div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //hide stuff
+            //make stuff pretty
+            $('#ssrsReports').button();
+            //do stuff
+        });
+    </script>
