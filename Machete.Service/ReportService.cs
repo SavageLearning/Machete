@@ -26,6 +26,7 @@ namespace Machete.Service
         dataTableResult<dailyData> DailyView(DateTime dclDate);
         dataTableResult<weeklyData> WeeklyView(DateTime wecDate);
         dataTableResult<monthlyData> monthlyView(DateTime mwdDate);
+        dataTableResult<yearSumData> yearlyView(DateTime yDate);
         dataTableResult<jzcData> jzcView(DateTime jzcDate);
     }
 
@@ -365,41 +366,6 @@ namespace Machete.Service
         }
 
         #region United Way Report
-        public IQueryable<reportUnit> WorkersGivenSafetyTraining(DateTime beginDate, DateTime endDate)
-        {
-            IQueryable<reportUnit> query;
-
-            //ensure we are getting all relevant times (no assumptions)
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
-
-            IQueryable<int> trainingIDQuery;
-
-            var lQ = lookRepo.GetAllQ();
-            trainingIDQuery = lQ
-                .Where(whr => whr.text_EN == "Health & Safety")
-                .Select(thing => thing.ID);
-
-            var asQ = asRepo.GetAllQ();
-
-            query = asQ
-                .Where(whr => whr.Activity.type == trainingIDQuery.First() 
-                           && EntityFunctions.TruncateTime(whr.Activity.dateStart) >= beginDate
-                           && EntityFunctions.TruncateTime(whr.Activity.dateStart) <= endDate)
-                .GroupBy(gb => new
-                {
-                    dtow = EntityFunctions.TruncateTime(gb.datecreated),
-                    worker = gb.personID
-                })
-                .Select(group => new reportUnit
-                {
-                    date = group.Key.dtow,
-                    count = group.Count() > 0 ? group.Count() : 0
-                });
-
-            return query;
-        }
-
         public IQueryable<reportUnit> WorkersInTempJobs(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
@@ -427,7 +393,79 @@ namespace Machete.Service
 
             return query;
         }
+        public IQueryable<reportUnit> WorkersGivenSafetyTraining(DateTime beginDate, DateTime endDate)
+        {
+            IQueryable<reportUnit> query;
 
+            //ensure we are getting all relevant times (no assumptions)
+            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
+            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
+
+            IQueryable<int> trainingIDQuery;
+
+            var lQ = lookRepo.GetAllQ();
+            trainingIDQuery = lQ
+                .Where(whr => whr.text_EN == "Health & Safety" && whr.category == LCategory.activityType)
+                .Select(thing => thing.ID);
+
+            var asQ = asRepo.GetAllQ();
+
+            query = asQ
+                .Where(whr => whr.Activity.type == trainingIDQuery.First() 
+                           && EntityFunctions.TruncateTime(whr.Activity.dateStart) >= beginDate
+                           && EntityFunctions.TruncateTime(whr.Activity.dateStart) <= endDate)
+                .GroupBy(gb => new
+                {
+                    dtow = EntityFunctions.TruncateTime(gb.datecreated),
+                    worker = gb.personID
+                })
+                .Select(group => new reportUnit
+                {
+                    date = group.Key.dtow,
+                    count = group.Count() > 0 ? group.Count() : 0
+                });
+
+            return query;
+        }
+        public IQueryable<reportUnit> WorkersGivenJobSkillsTraining(DateTime beginDate, DateTime endDate)
+        {
+            IQueryable<reportUnit> query;
+            //ensure we are getting all relevant times (no assumptions)
+            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
+            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
+
+            var lQ = lookRepo.GetAllQ();
+            var asQ = asRepo.GetAllQ();
+
+            query = asQ
+                .Join(lQ,
+                    act => act.Activity.type,
+                    l => l.ID,
+                    (act, l) => new
+                    {
+                        act,
+                        enText = l.text_EN,
+                        cat = l.category,
+                        id = l.ID
+                    })
+                .Where(whr => whr.cat == LCategory.activityType 
+                           && whr.enText == "Skills Training"
+                           && whr.act.Activity.type == whr.id 
+                           && EntityFunctions.TruncateTime(whr.act.Activity.dateStart) >= beginDate
+                           && EntityFunctions.TruncateTime(whr.act.Activity.dateStart) <= endDate)
+                .GroupBy(gb => new
+                {
+                    dtow = EntityFunctions.TruncateTime(gb.act.Activity.dateStart),
+                    worker = gb.act.personID
+                })
+                .Select(group => new reportUnit
+                {
+                    date = group.Key.dtow,
+                    count = group.Count() > 0 ? group.Count() : 0
+                });
+
+            return query;
+        }
         public IQueryable<reportUnit> AdultsEnrolledAndAssessedInESL(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
@@ -439,32 +477,48 @@ namespace Machete.Service
 
             var wQ = wRepo.GetAllQ();
             var asQ = asRepo.GetAllQ();
-
             var lQ = lookRepo.GetAllQ();
-            englishClassQuery = lQ
-                .Where(whr => whr.text_EN == "English Class 1" || whr.text_EN == "English Class 2")
-                .Select(thing => thing.ID);
 
             query = wQ
-                .Select(w => asQ
-                            .Where(aS => aS.Activity.name == englishClassQuery.ElementAt(0)
-                                || aS.Activity.name == englishClassQuery.ElementAt(1))
-                            .Where(aS => aS.personID == w.Person.ID &&
-                                EntityFunctions.TruncateTime(aS.dateforsignin) >= beginDate &&
-                                EntityFunctions.TruncateTime(aS.dateforsignin) <= endDate)
-                    //Assuming that english classes don't go past midnight
-                            .Sum(signin => signin.Activity.dateEnd.Hour - signin.Activity.dateStart.Hour))
-                .Where(sum => sum > 12)
-                .GroupBy(gb => gb)
-                .Select(group => new reportUnit
+                .Join(asQ,
+                    wqJoinOn => wqJoinOn.Person.ID,
+                    asqJoinOn => asqJoinOn.personID,
+                    (wqJoinOn, asqJoinOn) => new
+                        {
+                            wqJoinOn,
+                            pid = asqJoinOn.personID,
+                            aid = asqJoinOn.Activity.type,
+                            name = asqJoinOn.Activity.name,
+                            dfsi = asqJoinOn.dateforsignin,
+                            hours = asqJoinOn.Activity.dateEnd.Subtract(asqJoinOn.Activity.dateStart).Hours
+                        })
+                .Join(lQ,
+                    wqasq => wqasq.aid,
+                    look => look.ID,
+                    (wqasq, look) => new
+                        {
+                            wqasq,
+                            tEN = look.text_EN
+                        })
+                .Where(whr => whr.tEN == "English Class 1" || whr.tEN == "English Class 2" &&
+                                EntityFunctions.TruncateTime(whr.wqasq.dfsi) >= beginDate &&
+                                EntityFunctions.TruncateTime(whr.wqasq.dfsi) <= endDate)
+                .GroupBy(gb => new 
+                    {
+                        personID = gb.wqasq.pid
+                    })
+                .Select(sel => new reportUnit
                 {
-                    count = group.Count() > 0 ? group.Count() : 0
+                    date = endDate,
+                    count = sel.Sum(s => s.wqasq.hours),
+                    info = sel.Key.personID.ToString()
                 });
+
 
             return query;
         }
 
-
+        public IQueryable<reportUnit> 
 
         #endregion
 
@@ -918,8 +972,8 @@ namespace Machete.Service
             return q;
         }
 
+        #region Work Order Reports
         /// <summary>
-        /// Work Orders report --
         /// Jobs and Zip Codes controller. The jobs and zip codes report was
         /// initially requested by Mountain View and is just a good idea so
         /// that centers can see what their orders are and where they're coming
@@ -961,7 +1015,7 @@ namespace Machete.Service
 
             return q;
         }
-
+        #endregion
 
         #endregion
 
@@ -1016,9 +1070,20 @@ namespace Machete.Service
             return result;
         }
 
-        public dataTableResult<yearSumData> yearlyView(DateTime yearDate)
+        public dataTableResult<yearSumData> yearlyView(DateTime yDate)
         {
-            return null;
+            DateTime beginDate;
+            DateTime endDate;
+            IEnumerable<yearSumData> query;
+
+            beginDate = new DateTime(yDate.Year, yDate.Month, 1, 0, 0, 0);
+            endDate = new DateTime(yDate.Year, yDate.Month, System.DateTime.DaysInMonth(yDate.Year, yDate.Month), 23, 59, 59).AddMonths(12);
+
+            query = YearlyController(beginDate, endDate);
+
+            var result = GetDataTableResult<yearSumData>(query);
+
+            return result;
         }
 
         public dataTableResult<jzcData> jzcView(DateTime jzcDate)
