@@ -265,6 +265,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ActivityController.cs" />
@@ -412,6 +413,7 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Startup.cs" />
     <Compile Include="ViewModel\EmailView.cs" />
     <Compile Include="ViewModel\EmployerWoCombined.cs" />
     <Compile Include="ViewModel\ReportPrintView.cs" />
