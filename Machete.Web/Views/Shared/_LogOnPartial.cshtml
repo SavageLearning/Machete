@@ -1,8 +1,16 @@
-﻿@if(Request.IsAuthenticated) {
-    <text>@Machete.Web.Resources.ValidationStrings.Welcome <b>@Context.User.Identity.Name</b>!
+﻿@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+        <text>@Machete.Web.Resources.ValidationStrings.Welcome <b>@Context.User.Identity.Name</b>!
     [ @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.Settings, "Index", "Account") 
-      @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.LogOff, "LogOff", "Account") ]</text>
+    <a href="javascript:document.getElementById('logoutForm').submit()">@Machete.Web.Resources.ValidationStrings.LogOff</a>
+       ]</text>
+    }
 }
-else {
+else
+{
     @:[ @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.LogOn, "Login", "Account") ]
 }
