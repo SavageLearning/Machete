@@ -307,7 +307,7 @@ namespace Machete.Web.Controllers
 
         //
         // POST: /Account/LogOff
-        //[HttpPost]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
