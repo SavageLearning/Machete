@@ -428,7 +428,7 @@ namespace Machete.Service
             return query;
         }
 
-        public IQueryable<reportUnit> AdultsEnrolledAndAssessed(DateTime beginDate, DateTime endDate)
+        public IQueryable<reportUnit> AdultsEnrolledAndAssessedInESL(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
             IQueryable<int> englishClassQuery;
@@ -728,6 +728,12 @@ namespace Machete.Service
 
         #region ReportData
 
+        /// <summary>
+        /// Controller for daily summary report.
+        /// </summary>
+        /// <param name="beginDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
         public IEnumerable<dailyData> DailyController(DateTime beginDate, DateTime endDate)
         {
             IEnumerable<TypeOfDispatchReport> dclCurrent;
@@ -762,6 +768,12 @@ namespace Machete.Service
             return q;
         }
 
+        /// <summary>
+        /// Controller for weekly summary report.
+        /// </summary>
+        /// <param name="beginDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
         public IEnumerable<weeklyData> WeeklyController(DateTime beginDate, DateTime endDate)
         {
             IEnumerable<AverageWages> weeklyWages;
@@ -793,6 +805,7 @@ namespace Machete.Service
             return q;
         }
 
+        //it's just a space that changed at the bottom
         public IEnumerable<monthlyData> MonthlyController(DateTime beginDate, DateTime endDate)
         {
             IEnumerable<reportUnit> signins;
@@ -852,6 +865,69 @@ namespace Machete.Service
             return q;
         }
 
+        public IEnumerable<yearSumData> YearlyController(DateTime beginDate, DateTime endDate)
+        {
+            #region variables
+            IEnumerable<reportUnit> temporaryPlacements;
+            IEnumerable<reportUnit> safetyTrainees;
+            IEnumerable<reportUnit> skillsTrainees;
+            IEnumerable<reportUnit> eslAssessed;
+            IEnumerable<reportUnit> gardenTrainees; 
+            IEnumerable<reportUnit> finTrainees;
+            IEnumerable<reportUnit> oshaTrainees;
+            IEnumerable<reportUnit> chemTrainees;
+            IEnumerable<reportUnit> movingTrainees; 
+            IEnumerable<reportUnit> outreachTrainees; 
+            IEnumerable<reportUnit> careTrainees;
+            IEnumerable<reportUnit> heatTrainees;
+            IEnumerable<reportUnit> asbestosTrainees;
+            IEnumerable<reportUnit> computerTrainees;
+            IEnumerable<reportUnit> greenTrainees;
+            IEnumerable<reportUnit> msfCount;//no idea what this refers to
+            IEnumerable<reportUnit> assemblyCount; 
+            IEnumerable<reportUnit> finEdTrainees;
+            IEnumerable<reportUnit> clTrainees;
+
+            IEnumerable<yearSumData> q;
+            #endregion
+
+            #region assignments
+            temporaryPlacements = WorkersInTempJobs(beginDate, endDate).ToList();
+            safetyTrainees = WorkersGivenSafetyTraining(beginDate, endDate).ToList();
+            //skillsTrainees = .ToList();
+            eslAssessed = AdultsEnrolledAndAssessedInESL(beginDate, endDate).ToList();
+            //gardenTrainees = .ToList();
+            //finTrainees = .ToList();
+            //oshaTrainees = .ToList();
+            //chemTrainees = .ToList();
+            //movingTrainees = .ToList();
+            //outreachTrainees = .ToList();
+            //careTrainees = .ToList();
+            //heatTrainees = .ToList();
+            //asbestosTrainees = .ToList();
+            //computerTrainees = .ToList();
+            //greenTrainees = .ToList();
+            //msfCount = .ToList();
+            //assemblyCount= .ToList();
+            //finEdTrainees = .ToList();
+            //clTrainees = .ToList();
+            #endregion
+
+            q = null;
+
+            return q;
+        }
+
+        /// <summary>
+        /// Work Orders report --
+        /// Jobs and Zip Codes controller. The jobs and zip codes report was
+        /// initially requested by Mountain View and is just a good idea so
+        /// that centers can see what their orders are and where they're coming
+        /// from.
+        /// </summary>
+        /// <param name="beginDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
         public IEnumerable<jzcData> jzcController(DateTime beginDate, DateTime endDate)
         {
             IEnumerable<reportUnit> assignments;
@@ -863,10 +939,6 @@ namespace Machete.Service
             topZips = ListZipCodes(beginDate, endDate).ToList();
             topJobs = ListJobs(beginDate, endDate).ToList();
 
-            //Each one of these objects will be a row in a table
-            //that must be able to be exported. At the JSON level,
-            //each individual set (e.g., zips and zipsCount) can
-            //be accessed through its property name.
             q = assignments
                 .Select(g => new jzcData
                 {
@@ -942,6 +1014,11 @@ namespace Machete.Service
             var result = GetDataTableResult<monthlyData>(query);
 
             return result;
+        }
+
+        public dataTableResult<yearSumData> yearlyView(DateTime yearDate)
+        {
+            return null;
         }
 
         public dataTableResult<jzcData> jzcView(DateTime jzcDate)
