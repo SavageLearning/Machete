@@ -33,7 +33,6 @@ using System.Data.Entity.Validation;
 using System.Diagnostics;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Common;
-using EFTracingProvider;
 using System.Data.Entity.Infrastructure;
 namespace Machete.Data
 {
@@ -100,11 +99,11 @@ namespace Machete.Data
             modelBuilder.Entity<WorkAssignment>().ToTable("WorkAssignments");
         }
 
-        private static DbConnection CreateConnection(String nameOrConnectionString)
-        {
-            var connectionString = @"data source=.\SQLEXPRESS;Database=macheteDevTest;Trusted_Connection=true;MultipleActiveResultSets=true";
-            var providerName = "System.Data.SqlClient";
-
+        //private static DbConnection CreateConnection(String nameOrConnectionString)
+        //{
+        //    var connectionString = @"data source=.\SQLEXPRESS;Database=macheteDevTest;Trusted_Connection=true;MultipleActiveResultSets=true";
+        //    var providerName = "System.Data.SqlClient";
+        //
             //if (nameOrConnectionString == null)
             //{
             //    nameOrConnectionString = defaultDbName;
@@ -114,27 +113,27 @@ namespace Machete.Data
             //    connectionString = nameOrConnectionString;
             //    providerName = "System.Data.SqlClient";
             //}
+        //
+        //    return (CreateConnection(connectionString, providerName));
+        //}
 
-            return (CreateConnection(connectionString, providerName));
-        }
+        //private static DbConnection CreateConnection(String connectionString, String providerInvariantName)
+        //{
+        //    var wrapperConnectionString = String.Format(@"wrappedProvider={0};{1}", providerInvariantName, connectionString);
+        //    var connection = new EFTracingConnection { ConnectionString = wrapperConnectionString };
+        //    return (connection);
+        //}
 
-        private static DbConnection CreateConnection(String connectionString, String providerInvariantName)
-        {
-            var wrapperConnectionString = String.Format(@"wrappedProvider={0};{1}", providerInvariantName, connectionString);
-            var connection = new EFTracingConnection { ConnectionString = wrapperConnectionString };
-            return (connection);
-        }
+        //public static MacheteContext CreateTracingContext(String nameOrConnectionString, Action<CommandExecutionEventArgs> logAction, Boolean logToConsole = true, String logToFile = null)
+        //{
+        //    EFTracingProviderConfiguration.LogToFile = logToFile;
+        //    EFTracingProviderConfiguration.LogToConsole = logToConsole;
+        //    EFTracingProviderConfiguration.LogAction = logAction;
 
-        public static MacheteContext CreateTracingContext(String nameOrConnectionString, Action<CommandExecutionEventArgs> logAction, Boolean logToConsole = true, String logToFile = null)
-        {
-            EFTracingProviderConfiguration.LogToFile = logToFile;
-            EFTracingProviderConfiguration.LogToConsole = logToConsole;
-            EFTracingProviderConfiguration.LogAction = logAction;
-
-            var ctx = new MacheteContext(CreateConnection(nameOrConnectionString));
-            (ctx as IObjectContextAdapter).ObjectContext.EnableTracing();
-            return (ctx);
-        }
+        //    var ctx = new MacheteContext(CreateConnection(nameOrConnectionString));
+        //    (ctx as IObjectContextAdapter).ObjectContext.EnableTracing();
+        //    return (ctx);
+        //}
     }
 
     public class PersonBuilder : EntityTypeConfiguration<Person>

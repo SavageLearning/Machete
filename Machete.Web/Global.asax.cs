@@ -128,8 +128,8 @@ namespace Machete.Web
             //Create UnityContainer          
             IUnityContainer container = new UnityContainer()
             .RegisterType<IControllerActivator, CustomControllerActivator>()
-            .RegisterType<IFormsAuthenticationService, FormsAuthenticationService>()
-            .RegisterType<IMembershipService, AccountMembershipService>()
+            //.RegisterType<IFormsAuthenticationService, FormsAuthenticationService>()
+            //.RegisterType<IMembershipService, AccountMembershipService>()
             .RegisterInstance<MembershipProvider>(Membership.Provider)
             .RegisterType<IDatabaseFactory, DatabaseFactory>(new HttpContextLifetimeManager<IDatabaseFactory>())
             .RegisterType<IUnitOfWork, UnitOfWork>(new HttpContextLifetimeManager<IUnitOfWork>())
