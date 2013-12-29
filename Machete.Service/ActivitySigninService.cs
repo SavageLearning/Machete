@@ -28,7 +28,6 @@ using System.Text;
 using Machete.Domain;
 using Machete.Data;
 using Machete.Data.Infrastructure;
-using System.Data.Objects;
 using System.ComponentModel;
 
 namespace Machete.Service

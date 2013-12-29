@@ -28,9 +28,7 @@ using System.Text;
 using Machete.Domain;
 using Machete.Data;
 using Machete.Data.Infrastructure;
-using System.Data.Objects.SqlClient;
 using System.Globalization;
-using System.Data.Objects;
 
 namespace Machete.Service
 {
