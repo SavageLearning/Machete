@@ -247,7 +247,8 @@
     <Compile Include="IoC\CustomControllerActivator.cs" />
     <Compile Include="IoC\UnityControllerFactory .cs" />
     <Compile Include="IoC\UnityDependencyResolver.cs" />
-    <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Activities.Designer.cs">
       <DependentUpon>Activities.resx</DependentUpon>

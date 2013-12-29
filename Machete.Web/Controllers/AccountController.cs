@@ -1,372 +1,430 @@
-﻿#region COPYRIGHT
-// File:     AccountController.cs
-// Author:   Savage Learning, LLC.
-// Created:  2012/06/17 
-// License:  GPL v3
-// Project:  Machete.Web
-// Contact:  savagelearning
-// 
-// Copyright 2011 Savage Learning, LLC., all rights reserved.
-// 
-// This source file is free software, under either the GPL v3 license or a
-// BSD style license, as supplied with this software.
-// 
-// This source file is distributed in the hope that it will be useful, but 
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
-// or FITNESS FOR A PARTICULAR PURPOSE. See the license files for details.
-//  
-// For details please refer to: 
-// http://www.savagelearning.com/ 
-//    or
-// http://www.github.com/jcii/machete/
-// 
-#endregion
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Security.Principal;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Routing;
-using System.Web.Security;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.Owin.Security;
 using Machete.Web.Models;
-using System.Globalization;
-using Machete.Domain;
-using Machete.Service;
-using Machete.Web.Helpers;
-using NLog;
+using System.Data.SqlClient;
+using System.Configuration;
 
 namespace Machete.Web.Controllers
 {
-    [ElmahHandleError]
+    [Authorize]
     public class AccountController : Controller
     {
+        public AccountController()
+            : this(new MyUserManager())
+        {
+        }
 
-        public IFormsAuthenticationService FormsService { get; set; }
-        public IMembershipService MembershipService { get; set; }
-        Logger log = LogManager.GetCurrentClassLogger();
-        LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "AccountController", "");
-        
-        protected override void Initialize(RequestContext requestContext)
+        public AccountController(MyUserManager userManager)
         {
-            if (FormsService == null) { FormsService = new FormsAuthenticationService(); }
-            if (MembershipService == null) { MembershipService = new AccountMembershipService(); }
-            
-            base.Initialize(requestContext);
+            UserManager = userManager;
         }
-        #region User/Member management
-        // **************************************
-        // URL: /Account/Index
-        // **************************************
-        [Authorize(Roles = "Manager, Administrator")]
-        public ActionResult Index()
-        {
-            int records = 0;
-            MembershipUserCollection members = Membership.GetAllUsers(0, Int32.MaxValue, out records);
-            return View(members);
-        }
+
+        public MyUserManager UserManager { get; private set; }
+
         //
-        // GET: /Account/Create
-        [Authorize(Roles = "Administrator")]
-        public ActionResult Create()
+        // GET: /Account/Login
+        [AllowAnonymous]
+        public ActionResult Login(string returnUrl)
         {
-            return View();
-        }
-        //
-        // POST: /Account/Create
-        //
-        [HttpPost]
-        [Authorize(Roles = "Administrator")]
-        public ActionResult Create(MembersModel member)
-        {
-            if (ModelState.IsValid)
-            {
-                // Attempt to register the user
-                // TODO: Error handling
-                member.UserName = member.FirstName + "." + member.LastName;
-                MembershipCreateStatus createStatus = MembershipService.CreateUser(member.UserName, member.Password, member.Email, member.question, member.answer);
-
-                if (createStatus == MembershipCreateStatus.Success)
-                {
-                    levent.Level = LogLevel.Info; levent.Message = "Successfully created user: " + member.UserName;
-                    levent.Properties["username"] = this.User.Identity.Name; log.Log(levent);
-                }
-                else
-                {
-                    ModelState.AddModelError("", AccountValidation.ErrorCodeToString(createStatus));
-                }
-                
-            }
-
-            // If we got this far, something failed, redisplay form
-            ViewBag.PasswordLength = MembershipService.MinPasswordLength;
-            levent.Level = LogLevel.Info; levent.Message = "Create failed for user: " + member.UserName;
-            levent.Properties["username"] = this.User.Identity.Name; log.Log(levent);
-            return RedirectToAction("Index");
-        }
-        // **************************************
-        // URL: /Account/Edit
-        // **************************************
-        [Authorize(Roles = "Administrator")]
-        public ActionResult Edit(Guid id)
-        {
-
-            MembershipUser member = Membership.GetUser(id, false);
-            //MembersModel model = new MembersModel(member);
-            ViewBag.PasswordLength = MembershipService.MinPasswordLength;
-            return View(member);
-        }
-
-        [Authorize(Roles = "Administrator")]
-        [HttpPost]
-        public ActionResult Edit(Guid id, FormCollection collection, bool IsApproved, bool IsLockedOut)
-        {
-            // TODO:!!!! Add admin password change/reset/something
-            MembershipUser member = Membership.GetUser(id, false);
-            member.IsApproved = IsApproved;
-            if (IsLockedOut == false)
-            {
-                member.UnlockUser();
-            }
-            if (TryUpdateModel(member))
-            {   
-                foreach (string role in Roles.GetAllRoles())
-                {
-                    if (collection[role].Contains("true"))
-                    {
-                        if (!Roles.IsUserInRole(member.UserName, role)) Roles.AddUserToRole(member.UserName, role);
-                        levent.Level = LogLevel.Info; levent.Message = "Added " + role + " to user: " + member.UserName;
-                        levent.Properties["username"] = this.User.Identity.Name; log.Log(levent);
-                    }
-                    else
-                    {
-                        if (Roles.IsUserInRole(member.UserName, role)) Roles.RemoveUserFromRole(member.UserName, role);
-                        levent.Level = LogLevel.Info; levent.Message = "Removed " + role + " from user: " + member.UserName;
-                        levent.Properties["username"] = this.User.Identity.Name; log.Log(levent);
-                    }
-                }
-                Membership.UpdateUser(member);
-                levent.Level = LogLevel.Info; levent.Message = "Edited user: " + member.UserName;
-                levent.Properties["username"] = this.User.Identity.Name; log.Log(levent);
-                return RedirectToAction("Index");
-            }
-            //TODO: ERror handling
-            return View(member);
-        }
-        // **************************************
-        // 
-        // **************************************
-        [Authorize(Roles = "Administrator")]
-        public ActionResult Delete(Guid id)
-        {
-            MembershipUser member = Membership.GetUser(id, false);
-            ViewBag.PasswordLength = MembershipService.MinPasswordLength;
-            return View(member);
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "Administrator")]
-        public ActionResult Delete(Guid id, FormCollection collection)
-        {
-            MembershipUser member = Membership.GetUser(id, false);
-            bool success = Membership.DeleteUser(member.UserName);
-            if (success)
-            {
-                levent.Level = LogLevel.Info; levent.Message = "Deleted user: " + member.UserName;
-                levent.Properties["username"] = this.User.Identity.Name; log.Log(levent);
-            }
-            else
-            {
-                levent.Level = LogLevel.Info; levent.Message = "Failed to delete user: " + member.UserName;
-                levent.Properties["username"] = this.User.Identity.Name; log.Log(levent);
-            }
-            return RedirectToAction("Index");
-        }
-        #endregion 
-
-        // **************************************
-        // URL: /Account/LogOn
-        // **************************************
-
-        public ActionResult LogOn()
-        {
+            ViewBag.ReturnUrl = returnUrl;
             return View();
         }
 
+        //
+        // POST: /Account/Login
         [HttpPost]
-        public ActionResult LogOn(LogOnModel model, string returnUrl)
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
             if (ModelState.IsValid)
             {
-                if (MembershipService.ValidateUser(model.UserName, model.Password))
+                var user = await UserManager.FindAsync(model.UserName, model.Password);
+                if (user != null)
                 {
-                    FormsService.SignIn(model.UserName, model.RememberMe);
-                    levent.Level = LogLevel.Info; levent.Message = "Logon successful";
-                    levent.Properties["username"] = model.UserName; log.Log(levent);
-                    if (Url.IsLocalUrl(returnUrl))
-                    {
-                        return Redirect(returnUrl);
-                    }
-                    else
-                    {
-                        return RedirectToAction("Index", "Home");
-                    }
+                    await SignInAsync(user, model.RememberMe);
+                    return RedirectToLocal(returnUrl);
                 }
                 else
                 {
-                    ModelState.AddModelError("", "The user name or password provided is incorrect.");
+                    ModelState.AddModelError("", "Invalid username or password.");
                 }
             }
 
             // If we got this far, something failed, redisplay form
-            levent.Level = LogLevel.Info; levent.Message = "Logon failed for " + model.UserName;
-            log.Log(levent);
             return View(model);
         }
 
-        // **************************************
-        // URL: /Account/LogOff
-        // **************************************
-
-        public ActionResult LogOff()
-        {
-            FormsService.SignOut();
-            levent.Level = LogLevel.Info; levent.Message = "Logoff for " + this.User.Identity.Name;
-            log.Log(levent);
-            return RedirectToAction("Index", "Home");
-        }
-
-        // **************************************
-        // URL: /Account/Register
-        // **************************************
-
+        //
+        // GET: /Account/Register
+        [AllowAnonymous]
         public ActionResult Register()
         {
-            ViewBag.PasswordLength = MembershipService.MinPasswordLength;
             return View();
         }
 
+        //
+        // POST: /Account/Register
         [HttpPost]
-        public ActionResult Register(RegisterModel model)
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                model.UserName = model.FirstName + "." + model.LastName;
-                // Attempt to register the user
-                MembershipCreateStatus createStatus = MembershipService.CreateUser(model.UserName, model.Password, model.Email, model.question, model.answer);
-
-                if (createStatus == MembershipCreateStatus.Success)
+                var currentApplicationId = GetApplicationID();
+                var user = new ApplicationUser() { UserName = model.UserName, LoweredUserName = model.UserName.ToLower(), ApplicationId=currentApplicationId };
+                var result = await UserManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
                 {
-                    FormsService.SignIn(model.UserName, false /* createPersistentCookie */);
-                    levent.Level = LogLevel.Info; levent.Message = "Registered new user: " + model.UserName;
-                    log.Log(levent);
+                    await SignInAsync(user, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 }
                 else
                 {
-                    ModelState.AddModelError("", AccountValidation.ErrorCodeToString(createStatus));
+                    AddErrors(result);
                 }
             }
 
             // If we got this far, something failed, redisplay form
-            ViewBag.PasswordLength = MembershipService.MinPasswordLength;
-            levent.Level = LogLevel.Info; levent.Message = "Registration failed for " + model.UserName;
-            log.Log(levent);
             return View(model);
         }
 
-        // **************************************
-        // URL: /Account/ChangePassword
-        // **************************************
-
-        [Authorize]
-        public ActionResult ChangePassword()
+        private Guid GetApplicationID()
         {
-            ViewBag.PasswordLength = MembershipService.MinPasswordLength;
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["ApplicationServices"].ConnectionString))
+            {
+                string queryString = "SELECT ApplicationId from aspnet_Applications WHERE ApplicationName = '/'"; //Set application name as in database
+
+                SqlCommand command = new SqlCommand(queryString, connection);
+                command.Connection.Open();
+
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    return reader.GetGuid(0);
+                }
+
+                return Guid.NewGuid();
+            }
+        }
+
+        //
+        // POST: /Account/Disassociate
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Disassociate(string loginProvider, string providerKey)
+        {
+            ManageMessageId? message = null;
+            IdentityResult result = await UserManager.RemoveLoginAsync(User.Identity.GetUserId(), new UserLoginInfo(loginProvider, providerKey));
+            if (result.Succeeded)
+            {
+                message = ManageMessageId.RemoveLoginSuccess;
+            }
+            else
+            {
+                message = ManageMessageId.Error;
+            }
+            return RedirectToAction("Manage", new { Message = message });
+        }
+
+        //
+        // GET: /Account/Manage
+        public ActionResult Manage(ManageMessageId? message)
+        {
+            ViewBag.StatusMessage =
+                message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
+                : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
+                : message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
+                : message == ManageMessageId.Error ? "An error has occurred."
+                : "";
+            ViewBag.HasLocalPassword = HasPassword();
+            ViewBag.ReturnUrl = Url.Action("Manage");
             return View();
         }
 
-        [Authorize]
+        //
+        // POST: /Account/Manage
         [HttpPost]
-        public ActionResult ChangePassword(ChangePasswordModel model)
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Manage(ManageUserViewModel model)
         {
-            if (ModelState.IsValid)
+            bool hasPassword = HasPassword();
+            ViewBag.HasLocalPassword = hasPassword;
+            ViewBag.ReturnUrl = Url.Action("Manage");
+            if (hasPassword)
             {
-                if (MembershipService.ChangePassword(User.Identity.Name, model.OldPassword, model.NewPassword))
+                if (ModelState.IsValid)
                 {
-                    levent.Level = LogLevel.Info; levent.Message = "Password changed for " + User.Identity.Name;
-                    log.Log(levent);
-                    return RedirectToAction("ChangePasswordSuccess");
+                    IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
+                    }
+                    else
+                    {
+                        AddErrors(result);
+                    }
                 }
-                else
+            }
+            else
+            {
+                // User does not have a password so remove any validation errors caused by a missing OldPassword field
+                ModelState state = ModelState["OldPassword"];
+                if (state != null)
                 {
-                    ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
+                    state.Errors.Clear();
+                }
+
+                if (ModelState.IsValid)
+                {
+                    IdentityResult result = await UserManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("Manage", new { Message = ManageMessageId.SetPasswordSuccess });
+                    }
+                    else
+                    {
+                        AddErrors(result);
+                    }
                 }
             }
 
             // If we got this far, something failed, redisplay form
-            levent.Level = LogLevel.Info; levent.Message = "Password change failed for " + User.Identity.Name;
-            log.Log(levent);
-            ViewBag.PasswordLength = MembershipService.MinPasswordLength;
-            return View(model);
-        }
-        //[Authorize]
-        public ActionResult AdminChangePassword(Guid id)
-        {
-            MembershipUser member = Membership.GetUser(id, false);
-            AdminChangePasswordModel model = new AdminChangePasswordModel();
-            model.UserName = member.UserName;
-            ViewBag.PasswordLength = MembershipService.MinPasswordLength;
             return View(model);
         }
 
-        [Authorize]
+        //
+        // POST: /Account/ExternalLogin
         [HttpPost]
-        public ActionResult AdminChangePassword(AdminChangePasswordModel model)
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult ExternalLogin(string provider, string returnUrl)
         {
-            if (ModelState.IsValid)
+            // Request a redirect to the external login provider
+            return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
+        }
+
+        //
+        // GET: /Account/ExternalLoginCallback
+        [AllowAnonymous]
+        public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
+        {
+            var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
+            if (loginInfo == null)
             {
-                MembershipUser member = Membership.GetUser(model.id, false);
-                if (member.ChangePassword(member.ResetPassword(), model.NewPassword))
-                //if (MembershipService.ChangePassword(User.Identity.Name, model.OldPassword, model.NewPassword))
-                {
-                    levent.Level = LogLevel.Info; levent.Message = "Admin changed password for " + model.UserName;
-                    log.Log(levent);
-                    return RedirectToAction("ChangePasswordSuccess");
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Model validation error for Admin change password.");
-                }
+                return RedirectToAction("Login");
             }
 
-            // If we got this far, something failed, redisplay form
-            levent.Level = LogLevel.Info; levent.Message = "Password change failed for " + model.UserName;
-            log.Log(levent);
-            ViewBag.PasswordLength = MembershipService.MinPasswordLength;
+            // Sign in the user with this external login provider if the user already has a login
+            var user = await UserManager.FindAsync(loginInfo.Login);
+            if (user != null)
+            {
+                await SignInAsync(user, isPersistent: false);
+                return RedirectToLocal(returnUrl);
+            }
+            else
+            {
+                // If the user does not have an account, then prompt the user to create an account
+                ViewBag.ReturnUrl = returnUrl;
+                ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
+                return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { UserName = loginInfo.DefaultUserName });
+            }
+        }
+
+        //
+        // POST: /Account/LinkLogin
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult LinkLogin(string provider)
+        {
+            // Request a redirect to the external login provider to link a login for the current user
+            return new ChallengeResult(provider, Url.Action("LinkLoginCallback", "Account"), User.Identity.GetUserId());
+        }
+
+        //
+        // GET: /Account/LinkLoginCallback
+        public async Task<ActionResult> LinkLoginCallback()
+        {
+            var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync(XsrfKey, User.Identity.GetUserId());
+            if (loginInfo == null)
+            {
+                return RedirectToAction("Manage", new { Message = ManageMessageId.Error });
+            }
+            var result = await UserManager.AddLoginAsync(User.Identity.GetUserId(), loginInfo.Login);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Manage");
+            }
+            return RedirectToAction("Manage", new { Message = ManageMessageId.Error });
+        }
+
+        //
+        // POST: /Account/ExternalLoginConfirmation
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Manage");
+            }
+
+            if (ModelState.IsValid)
+            {
+                // Get the information about the user from the external login provider
+                var info = await AuthenticationManager.GetExternalLoginInfoAsync();
+                if (info == null)
+                {
+                    return View("ExternalLoginFailure");
+                }
+                var user = new ApplicationUser() { UserName = model.UserName };
+                var result = await UserManager.CreateAsync(user);
+                if (result.Succeeded)
+                {
+                    result = await UserManager.AddLoginAsync(user.Id, info.Login);
+                    if (result.Succeeded)
+                    {
+                        await SignInAsync(user, isPersistent: false);
+                        return RedirectToLocal(returnUrl);
+                    }
+                }
+                AddErrors(result);
+            }
+
+            ViewBag.ReturnUrl = returnUrl;
             return View(model);
         }
 
-        // **************************************
-        // URL: /Account/ChangePasswordSuccess
-        // **************************************
-
-        public ActionResult ChangePasswordSuccess()
+        //
+        // POST: /Account/LogOff
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult LogOff()
         {
-            // TODO: Acknowledge the successful change
+            AuthenticationManager.SignOut();
+            return RedirectToAction("Index", "Home");
+        }
+
+        //
+        // GET: /Account/ExternalLoginFailure
+        [AllowAnonymous]
+        public ActionResult ExternalLoginFailure()
+        {
             return View();
         }
 
-        // **************************************
-        // Change Culture
-        // **************************************
-        public ActionResult ChangeCulture(string lang, string returnUrl)
+        [ChildActionOnly]
+        public ActionResult RemoveAccountList()
         {
-            Session["Culture"] = new CultureInfo(lang);
-            return Redirect(returnUrl);
-            // TODO: add user input validation to prevent setting unsupported language
-            // TODO: preserve field text when language changes
+            var linkedAccounts = UserManager.GetLogins(User.Identity.GetUserId());
+            ViewBag.ShowRemoveButton = HasPassword() || linkedAccounts.Count > 1;
+            return (ActionResult)PartialView("_RemoveAccountPartial", linkedAccounts);
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && UserManager != null)
+            {
+                UserManager.Dispose();
+                UserManager = null;
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Helpers
+        // Used for XSRF protection when adding external logins
+        private const string XsrfKey = "XsrfId";
+
+        private IAuthenticationManager AuthenticationManager
+        {
+            get
+            {
+                return HttpContext.GetOwinContext().Authentication;
+            }
+        }
+
+        private async Task SignInAsync(ApplicationUser user, bool isPersistent)
+        {
+            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
+            var identity = await UserManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
+            AuthenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = isPersistent }, identity);
+        }
+
+        private void AddErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error);
+            }
+        }
+
+        private bool HasPassword()
+        {
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            if (user != null)
+            {
+                return user.PasswordHash != null;
+            }
+            return false;
+        }
+
+        public enum ManageMessageId
+        {
+            ChangePasswordSuccess,
+            SetPasswordSuccess,
+            RemoveLoginSuccess,
+            Error
+        }
+
+        private ActionResult RedirectToLocal(string returnUrl)
+        {
+            if (Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        private class ChallengeResult : HttpUnauthorizedResult
+        {
+            public ChallengeResult(string provider, string redirectUri) : this(provider, redirectUri, null)
+            {
+            }
+
+            public ChallengeResult(string provider, string redirectUri, string userId)
+            {
+                LoginProvider = provider;
+                RedirectUri = redirectUri;
+                UserId = userId;
+            }
+
+            public string LoginProvider { get; set; }
+            public string RedirectUri { get; set; }
+            public string UserId { get; set; }
+
+            public override void ExecuteResult(ControllerContext context)
+            {
+                var properties = new AuthenticationProperties() { RedirectUri = RedirectUri };
+                if (UserId != null)
+                {
+                    properties.Dictionary[XsrfKey] = UserId;
+                }
+                context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
+            }
+        }
+        #endregion
     }
 }
