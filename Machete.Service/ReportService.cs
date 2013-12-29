@@ -5,8 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-using System.Data.Objects;
-using System.Data.Objects.SqlClient;
+using System.Data;
+using System.Data.Entity.Core.Objects;
+using System.Data.SqlClient;
 
 using Machete.Domain;
 using Machete.Domain.Entities;
