@@ -15,7 +15,7 @@
 @Html.ValidationSummary(true, @Machete.Web.Resources.ValidationStrings.LogOnUnsuccessful )
 
 @using (Html.BeginForm()) {
-    
+    @Html.AntiForgeryToken()
     <fieldset>
         <legend>@Machete.Web.Resources.ValidationStrings.LogOnLegend</legend>
         <div class="tb-table">
