@@ -11,12 +11,19 @@ using Microsoft.Owin.Security;
 using Machete.Web.Models;
 using System.Data.SqlClient;
 using System.Configuration;
+using Machete.Web.Helpers;
+using NLog;
 
 namespace Machete.Web.Controllers
 {
     [Authorize]
+    [ElmahHandleError]
     public class AccountController : Controller
     {
+        Logger log = LogManager.GetCurrentClassLogger();
+        LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "AccountController", "");
+        public MyUserManager UserManager { get; private set; }
+
         public AccountController()
             : this(new MyUserManager())
         {
@@ -26,8 +33,16 @@ namespace Machete.Web.Controllers
         {
             UserManager = userManager;
         }
-
-        public MyUserManager UserManager { get; private set; }
+        // **************************************
+        // URL: /Account/Index
+        // **************************************
+        [Authorize(Roles = "Manager, Administrator")]
+        public ActionResult Index()
+        {
+            int records = 0;
+            //MembershipUserCollection members = Membership.GetAllUsers(0, Int32.MaxValue, out records);
+            return View();//members);
+        }
 
         //
         // GET: /Account/Login
@@ -50,6 +65,8 @@ namespace Machete.Web.Controllers
                 var user = await UserManager.FindAsync(model.UserName, model.Password);
                 if (user != null)
                 {
+                    levent.Level = LogLevel.Info; levent.Message = "Logon successful";
+                    levent.Properties["username"] = model.UserName; log.Log(levent);
                     await SignInAsync(user, model.RememberMe);
                     return RedirectToLocal(returnUrl);
                 }
@@ -60,6 +77,8 @@ namespace Machete.Web.Controllers
             }
 
             // If we got this far, something failed, redisplay form
+            levent.Level = LogLevel.Info; levent.Message = "Logon failed for " + model.UserName;
+            log.Log(levent);
             return View(model);
         }
 
