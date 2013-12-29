@@ -82,7 +82,7 @@ namespace Machete.Data
                 new Lookup { ID=29, category = LCategory.transportmethod,   text_EN = "Worker buses",       text_ES = "Trabajador en bus",    sortorder=2,  selected=true},
                 new Lookup { ID=30, category = LCategory.transportmethod,   text_EN = "Worker drives",      text_ES = "Trabajador en carro",  sortorder=5,  selected=false},
                 new Lookup { ID=31, category = LCategory.transportmethod,   text_EN = "Employer Picks up",  text_ES = "Patron lleva",         sortorder=5,  selected=false},
-                new Lookup { ID=32, category = LCategory.transportmethod,   text_EN = "Casa Latina van",    text_ES = "Van de Casa Latina",   sortorder=1,  selected=false},
+                new Lookup { ID=32, category = LCategory.transportmethod,   text_EN = "Van service",    text_ES = "Servicio de van",   sortorder=1,  selected=false},
                 new Lookup { ID=86, category = LCategory.transportmethod,   text_EN = "Worker walks",       text_ES = "Trabajador camina",    sortorder=5,  selected=false},
                 new Lookup { ID=33, category = LCategory.maritalstatus,     text_EN = "Single", text_ES = "Individual", selected=true},
                 new Lookup { ID=34, category = LCategory.maritalstatus,     text_EN = "Married", text_ES = "Casado", selected=false},
@@ -157,8 +157,12 @@ namespace Machete.Data
                 new Lookup { ID=107,category = LCategory.emailstatus, key= LEmailStatus.TransmitError, text_EN="Transmit error",         text_ES="Error en la transmisión",          selected = false },
                 new Lookup { ID=107,category = LCategory.emailstatus, key= LEmailStatus.Sending, text_EN="Sending",         text_ES="Envío",          selected = false },
                 new Lookup { ID=107,category = LCategory.emailstatus, key= LEmailStatus.Pending, text_EN="Pending",         text_ES="Pendiente",          selected = false },
-                new Lookup { ID=108,category = LCategory.emailTemplate, key= LKey.Default, text_EN="default template (English)", text_ES="plantilla predeterminada (Ingles)", selected=true, emailTemplate="Thanks for using Machete! You can change this in the Config section."}
-
+                new Lookup { ID=108,category = LCategory.emailTemplate, key= LKey.Default, text_EN="default template (English)", text_ES="plantilla predeterminada (Ingles)", selected=true, emailTemplate="Thanks for using Machete! You can change this in the Config section."},
+                new Lookup { ID=109,category = LCategory.activityType, text_EN="Skills Training", text_ES="Capacitacion", selected = false},
+                new Lookup { ID=110,category = LCategory.activityType, text_EN="Leadership Development", text_ES="Liderazgo", selected = false},
+                new Lookup { ID=111,category = LCategory.activityName, text_EN="Basic Gardening", text_ES="Jardineria Basica", selected = false},
+                new Lookup { ID=112,category = LCategory.activityName, text_EN="Advanced Gardening", text_ES="Jardineria Avanzada", selected = false},
+                new Lookup { ID=113,category = LCategory.activityName, text_EN="Financial Education", text_ES="Educacion Fiscal", selected = false},
             };
         //
         //
