@@ -453,7 +453,8 @@ namespace Machete.Service
             var asQ = asRepo.GetAllQ();
             var lQ = lookRepo.GetAllQ();
 
-            query = wQ.Join(asQ,
+            query = wQ
+                .Join(asQ,
                 wqJoinOn => wqJoinOn.Person.ID,
                 asqJoinOn => asqJoinOn.personID,
                 (wqJoinOn, asqJoinOn) => new
@@ -465,37 +466,34 @@ namespace Machete.Service
                     dfsi = asqJoinOn.dateforsignin,
                     time = asqJoinOn.Activity.dateEnd - asqJoinOn.Activity.dateStart
                 })
-            .Join(lQ,
-                wqasq => wqasq.name,
-                look => look.ID,
-                (wqasq, look) => new
+                .Join(lQ,
+                    wqasq => wqasq.name,
+                    look => look.ID,
+                    (wqasq, look) => new
+                    {
+                        wqasq,
+                        tEN = look.text_EN
+                    })
+                .Join(lQ,
+                    wqasq => wqasq.wqasq.aid,
+                    look => look.ID,
+                    (wqasq, look) => new
+                    {
+                        inner = wqasq.wqasq,
+                        typeEN = look.text_EN,
+                        nameEN = wqasq.tEN
+                    })
+                .Where(whr => whr.nameEN == "English Class 1" || whr.nameEN == "English Class 2")
+                .GroupBy(gb => new
                 {
-                    wqasq,
-                    tEN = look.text_EN
+                    person = gb.inner.pid,
                 })
-            .Join(lQ,
-                wqasq => wqasq.wqasq.aid,
-                look => look.ID,
-                (wqasq, look) => new
+                .Select(sel => new ESLAssessed
                 {
-                    inner = wqasq.wqasq,
-                    typeEN = look.text_EN,
-                    nameEN = wqasq.tEN
-                })
-            .GroupBy(gb => new
-            {
-                activity = gb.nameEN,
-                person = gb.inner.pid,
-                activityType = gb.typeEN
-            })
-            .Select(sel => new ESLAssessed
-            {
-                date = sel.First().inner.dfsi,
-                personID = (int)sel.Key.person,
-                minutesInClass = sel.Sum(s => s.inner.time.Minutes + (s.inner.time.Hours * 60)),
-                activityName = sel.Key.activity,
-                activityType = sel.Key.activityType
-            });
+                    date = sel.First().inner.dfsi,
+                    personID = (int)sel.Key.person,
+                    minutesInClass = sel.Sum(s => s.inner.time.Minutes + (s.inner.time.Hours * 60))
+                });
             return query;
         }
 
