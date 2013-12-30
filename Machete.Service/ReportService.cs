@@ -427,7 +427,7 @@ namespace Machete.Service
 
             return query;
         }
-        public IQueryable<reportUnit> WorkersGivenJobSkillsTraining(DateTime beginDate, DateTime endDate)
+        public IQueryable<reportUnit> WorkersGivenJobSkillsOrLeadershipTraining(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
             //ensure we are getting all relevant times (no assumptions)
@@ -449,7 +449,7 @@ namespace Machete.Service
                         id = l.ID
                     })
                 .Where(whr => whr.cat == LCategory.activityType 
-                           && whr.enText == "Skills Training"
+                           && whr.enText == "Skills Training" || whr.enText == "Leadership Development"
                            && whr.act.Activity.type == whr.id 
                            && EntityFunctions.TruncateTime(whr.act.Activity.dateStart) >= beginDate
                            && EntityFunctions.TruncateTime(whr.act.Activity.dateStart) <= endDate)
@@ -518,7 +518,90 @@ namespace Machete.Service
             return query;
         }
 
-        public IQueryable<reportUnit> 
+        public IQueryable<reportUnit> WorkersTrainedInBasicGardening(DateTime beginDate, DateTime endDate)
+        {
+            return null;
+        }
+
+        public IQueryable<reportUnit> WorkersTrainedInAdvancedGardening(DateTime beginDate, DateTime endDate)
+        {
+            return null;
+        }
+
+        public IQueryable<reportUnit> WorkersGivenFinancialEducation(DateTime beginDate, DateTime endDate)
+        {
+            return null;
+        }
+
+        #region Safety Training
+        public IQueryable<reportUnit> WorkersTrainedInOSHA(DateTime beginDate, DateTime endDate)
+        {
+            return null;
+        }
+
+        public IQueryable<reportUnit> WorkersTrainedInChem(DateTime beginDate, DateTime endDate)
+        {
+            return null;
+        }
+
+        public IQueryable<reportUnit> WorkersTrainedInMoving(DateTime beginDate, DateTime endDate)
+        {
+            return null;
+        }
+        #endregion
+
+        #region Job Skills Training and Leadership Development Opportunities
+
+        public IQueryable<reportUnit> WorkersTrainedInCaregiving(DateTime beginDate, DateTime endDate)
+        {
+            return null;
+        }
+
+        public IQueryable<reportUnit> WorkersTrainedInHeat(DateTime beginDate, DateTime endDate)
+        {
+            return null;
+        }
+
+        public IQueryable<reportUnit> WorkersTrainedInAsbestos(DateTime beginDate, DateTime endDate)
+        {
+            return null;
+        }
+
+        public IQueryable<reportUnit> WorkersTrainedInComputers(DateTime beginDate, DateTime endDate)
+        {
+            return null;
+        }
+
+        public IQueryable<reportUnit> WorkersTrainedInGreenClean(DateTime beginDate, DateTime endDate)
+        {
+            return null;
+        }
+
+        public IQueryable<reportUnit> WorkersAttendingMSF(DateTime beginDate, DateTime endDate)
+        {
+            return null;
+        }
+
+        public IQueryable<reportUnit> WorkersAttendingAssemblies(DateTime beginDate, DateTime endDate)
+        {
+            return null;
+        }
+
+        #endregion
+
+        #region Financial Education
+        
+        public IQueryable<reportUnit> WorkersReceivingIntroToLoans(DateTime beginDate, DateTime endDate)
+        {
+            return null;
+        }
+
+        public IQueryable<reportUnit> CLTraining(DateTime beginDate, DateTime endDate)
+        {
+            return null;
+        }
+
+        #endregion
 
         #endregion
 
@@ -922,22 +1005,25 @@ namespace Machete.Service
         public IEnumerable<yearSumData> YearlyController(DateTime beginDate, DateTime endDate)
         {
             #region variables
+
+            //Doing all of these as separate queries is resource heavy.
+            //Where possible we should be combining certain queries.
             IEnumerable<reportUnit> temporaryPlacements;
             IEnumerable<reportUnit> safetyTrainees;
             IEnumerable<reportUnit> skillsTrainees;
             IEnumerable<reportUnit> eslAssessed;
-            IEnumerable<reportUnit> gardenTrainees; 
+            IEnumerable<reportUnit> basicGardenTrainees;
+            IEnumerable<reportUnit> advGardenTrainees;
             IEnumerable<reportUnit> finTrainees;
             IEnumerable<reportUnit> oshaTrainees;
             IEnumerable<reportUnit> chemTrainees;
             IEnumerable<reportUnit> movingTrainees; 
-            IEnumerable<reportUnit> outreachTrainees; 
             IEnumerable<reportUnit> careTrainees;
             IEnumerable<reportUnit> heatTrainees;
             IEnumerable<reportUnit> asbestosTrainees;
             IEnumerable<reportUnit> computerTrainees;
             IEnumerable<reportUnit> greenTrainees;
-            IEnumerable<reportUnit> msfCount;//no idea what this refers to
+            IEnumerable<reportUnit> msfCount;
             IEnumerable<reportUnit> assemblyCount; 
             IEnumerable<reportUnit> finEdTrainees;
             IEnumerable<reportUnit> clTrainees;
@@ -948,23 +1034,23 @@ namespace Machete.Service
             #region assignments
             temporaryPlacements = WorkersInTempJobs(beginDate, endDate).ToList();
             safetyTrainees = WorkersGivenSafetyTraining(beginDate, endDate).ToList();
-            //skillsTrainees = .ToList();
+            skillsTrainees = WorkersGivenJobSkillsOrLeadershipTraining(beginDate, endDate).ToList();
             eslAssessed = AdultsEnrolledAndAssessedInESL(beginDate, endDate).ToList();
-            //gardenTrainees = .ToList();
-            //finTrainees = .ToList();
-            //oshaTrainees = .ToList();
-            //chemTrainees = .ToList();
-            //movingTrainees = .ToList();
-            //outreachTrainees = .ToList();
-            //careTrainees = .ToList();
-            //heatTrainees = .ToList();
-            //asbestosTrainees = .ToList();
-            //computerTrainees = .ToList();
-            //greenTrainees = .ToList();
-            //msfCount = .ToList();
-            //assemblyCount= .ToList();
-            //finEdTrainees = .ToList();
-            //clTrainees = .ToList();
+            basicGardenTrainees = WorkersTrainedInBasicGardening(beginDate, endDate).ToList();
+            advGardenTrainees = WorkersTrainedInAdvancedGardening(beginDate, endDate).ToList();
+            finTrainees = WorkersGivenFinancialEducation(beginDate, endDate).ToList();
+            oshaTrainees = WorkersTrainedInOSHA(beginDate, endDate).ToList();
+            chemTrainees = WorkersTrainedInChem(beginDate, endDate).ToList();
+            movingTrainees = WorkersTrainedInMoving(beginDate, endDate).ToList();
+            careTrainees = WorkersTrainedInCaregiving(beginDate, endDate).ToList();
+            heatTrainees = WorkersTrainedInHeat(beginDate, endDate).ToList();
+            asbestosTrainees = WorkersTrainedInAsbestos(beginDate, endDate).ToList();
+            computerTrainees = WorkersTrainedInComputers(beginDate, endDate).ToList();
+            greenTrainees = WorkersTrainedInGreenClean(beginDate, endDate).ToList();
+            msfCount = WorkersAttendingMSF(beginDate, endDate).ToList();
+            assemblyCount= WorkersAttendingAssemblies(beginDate, endDate).ToList();
+            finEdTrainees = WorkersGivenFinancialEducation(beginDate, endDate).ToList();
+            clTrainees = CLTraining(beginDate, endDate).ToList();
             #endregion
 
             q = null;
@@ -1202,7 +1288,6 @@ namespace Machete.Service
         public int? oshaTrainees { get; set; }
         public int? chemTrainees { get; set; }
         public int? movingTrainees { get; set; }
-        public int? outreachTrainees { get; set; }
         public int? careTrainees { get; set; }
         public int? heatTrainees { get; set; }
         public int? asbestosTrainees { get; set; }
