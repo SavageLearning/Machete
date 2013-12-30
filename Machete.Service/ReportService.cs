@@ -396,78 +396,11 @@ namespace Machete.Service
 
             return query;
         }
-        public IQueryable<reportUnit> WorkersGivenSafetyTraining(DateTime beginDate, DateTime endDate)
+
+        public IQueryable<activityUnit> GetAllActivitySignins(DateTime beginDate, DateTime endDate)
         {
-            IQueryable<reportUnit> query;
-
-            //ensure we are getting all relevant times (no assumptions)
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
-
-            IQueryable<int> trainingIDQuery;
-
-            var lQ = lookRepo.GetAllQ();
-            trainingIDQuery = lQ
-                .Where(whr => whr.text_EN == "Health & Safety" && whr.category == LCategory.activityType)
-                .Select(thing => thing.ID);
-
-            var asQ = asRepo.GetAllQ();
-
-            query = asQ
-                .Where(whr => whr.Activity.type == trainingIDQuery.First() 
-                           && EntityFunctions.TruncateTime(whr.Activity.dateStart) >= beginDate
-                           && EntityFunctions.TruncateTime(whr.Activity.dateStart) <= endDate)
-                .GroupBy(gb => new
-                {
-                    dtow = EntityFunctions.TruncateTime(gb.datecreated),
-                    worker = gb.personID
-                })
-                .Select(group => new reportUnit
-                {
-                    date = group.Key.dtow,
-                    count = group.Count() > 0 ? group.Count() : 0
-                });
-
-            return query;
-        }
-        public IQueryable<reportUnit> WorkersGivenJobSkillsOrLeadershipTraining(DateTime beginDate, DateTime endDate)
-        {
-            IQueryable<reportUnit> query;
-            //ensure we are getting all relevant times (no assumptions)
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
-
-            var lQ = lookRepo.GetAllQ();
-            var asQ = asRepo.GetAllQ();
-
-            query = asQ
-                .Join(lQ,
-                    act => act.Activity.type,
-                    l => l.ID,
-                    (act, l) => new
-                    {
-                        act,
-                        enText = l.text_EN,
-                        cat = l.category,
-                        id = l.ID
-                    })
-                .Where(whr => whr.cat == LCategory.activityType 
-                           && whr.enText == "Skills Training" || whr.enText == "Leadership Development"
-                           && whr.act.Activity.type == whr.id 
-                           && EntityFunctions.TruncateTime(whr.act.Activity.dateStart) >= beginDate
-                           && EntityFunctions.TruncateTime(whr.act.Activity.dateStart) <= endDate)
-                .GroupBy(gb => new
-                {
-                    dtow = EntityFunctions.TruncateTime(gb.act.Activity.dateStart),
-                    worker = gb.act.personID
-                })
-                .Select(group => new reportUnit
-                {
-                    date = group.Key.dtow,
-                    count = group.Count() > 0 ? group.Count() : 0
-                });
-
-            return query;
+            // Code goes here
+            return null;
         }
         public IQueryable<reportUnit> AdultsEnrolledAndAssessedInESL(DateTime beginDate, DateTime endDate)
         {
@@ -521,74 +454,6 @@ namespace Machete.Service
             return query;
         }
 
-        public IQueryable<reportUnit> WorkersTrainedInBasicGardening(DateTime beginDate, DateTime endDate)
-        {
-            return null;
-        }
-
-        public IQueryable<reportUnit> WorkersTrainedInAdvancedGardening(DateTime beginDate, DateTime endDate)
-        {
-            return null;
-        }
-
-        public IQueryable<reportUnit> WorkersGivenFinancialEducation(DateTime beginDate, DateTime endDate)
-        {
-            return null;
-        }
-
-        #region Safety Training
-        public IQueryable<reportUnit> WorkersTrainedInOSHA(DateTime beginDate, DateTime endDate)
-        {
-            return null;
-        }
-
-        public IQueryable<reportUnit> WorkersTrainedInChem(DateTime beginDate, DateTime endDate)
-        {
-            return null;
-        }
-
-        public IQueryable<reportUnit> WorkersTrainedInMoving(DateTime beginDate, DateTime endDate)
-        {
-            return null;
-        }
-        #endregion
-
-        #region Job Skills Training and Leadership Development Opportunities
-
-        public IQueryable<reportUnit> WorkersTrainedInCaregiving(DateTime beginDate, DateTime endDate)
-        {
-            return null;
-        }
-
-        public IQueryable<reportUnit> WorkersTrainedInHeat(DateTime beginDate, DateTime endDate)
-        {
-            return null;
-        }
-
-        public IQueryable<reportUnit> WorkersTrainedInAsbestos(DateTime beginDate, DateTime endDate)
-        {
-            return null;
-        }
-
-        public IQueryable<reportUnit> WorkersTrainedInComputers(DateTime beginDate, DateTime endDate)
-        {
-            return null;
-        }
-
-        public IQueryable<reportUnit> WorkersTrainedInGreenClean(DateTime beginDate, DateTime endDate)
-        {
-            return null;
-        }
-
-        public IQueryable<reportUnit> WorkersAttendingMSF(DateTime beginDate, DateTime endDate)
-        {
-            return null;
-        }
-
-        public IQueryable<reportUnit> WorkersAttendingAssemblies(DateTime beginDate, DateTime endDate)
-        {
-            return null;
-        }
 
         #endregion
 
@@ -707,7 +572,7 @@ namespace Machete.Service
             return query;
         }
 
-        public IQueryable<reportUnit> WorkersInPermanentJobs(DateTime beginDate, DateTime endDate)
+        public IQueryable<reportUnit> WorkersPlacedInPermanentJobs(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
 
@@ -868,8 +733,6 @@ namespace Machete.Service
         //Demographic Standards go here -- need objects besides reportUnit so that we can group and do drilldowns
         #endregion
 
-        #endregion
-
         #region ReportData
 
         /// <summary>
@@ -1012,55 +875,56 @@ namespace Machete.Service
         public IEnumerable<yearSumData> YearlyController(DateTime beginDate, DateTime endDate)
         {
             #region variables
-
-            //Doing all of these as separate queries is resource heavy.
-            //Where possible we should be combining certain queries.
             IEnumerable<reportUnit> temporaryPlacements;
-            IEnumerable<reportUnit> safetyTrainees;
-            IEnumerable<reportUnit> skillsTrainees;
+            IEnumerable<activityUnit> safetyTrainees;
+            IEnumerable<activityUnit> skillsTrainees;
             IEnumerable<reportUnit> eslAssessed;
             IEnumerable<reportUnit> basicGardenTrainees;
             IEnumerable<reportUnit> advGardenTrainees;
             IEnumerable<reportUnit> finTrainees;
-            IEnumerable<reportUnit> oshaTrainees;
-            IEnumerable<reportUnit> chemTrainees;
-            IEnumerable<reportUnit> movingTrainees; 
-            IEnumerable<reportUnit> careTrainees;
-            IEnumerable<reportUnit> heatTrainees;
-            IEnumerable<reportUnit> asbestosTrainees;
-            IEnumerable<reportUnit> computerTrainees;
-            IEnumerable<reportUnit> greenTrainees;
-            IEnumerable<reportUnit> msfCount;
-            IEnumerable<reportUnit> assemblyCount; 
-            IEnumerable<reportUnit> finEdTrainees;
-            IEnumerable<reportUnit> clTrainees;
+
+            //For safety:
+            //IEnumerable<activityUnit> oshaTrainees;
+            //IEnumerable<activityUnit> chemTrainees;
+            //IEnumerable<activityUnit> movingTrainees; 
+            
+            //For skills (includes leadership)
+            //IEnumerable<activityUnit> careTrainees;
+            //IEnumerable<activityUnit> heatTrainees;
+            //IEnumerable<activityUnit> asbestosTrainees;
+            //IEnumerable<activityUnit> computerTrainees;
+            //IEnumerable<activityUnit> greenTrainees;
+            //IEnumerable<activityUnit> msfCount;
+            //IEnumerable<activityUnit> assemblyCount; 
+
+            //Can replace the above:
+            IEnumerable<activityUnit> getAllClassAttendance;
 
             IEnumerable<yearSumData> q;
-            #endregion
 
-            #region assignments
             temporaryPlacements = WorkersInTempJobs(beginDate, endDate).ToList();
-            safetyTrainees = WorkersGivenSafetyTraining(beginDate, endDate).ToList();
-            skillsTrainees = WorkersGivenJobSkillsOrLeadershipTraining(beginDate, endDate).ToList();
+            getAllClassAttendance = GetAllActivitySignins(beginDate, endDate).ToList();
+            safetyTrainees = getAllClassAttendance.Where(safety => safety.activityType == "Health & Safety");
+            skillsTrainees = getAllClassAttendance.Where(skills => skills.activityType == "Skills Training" || skills.activityType == "Leadership Development");
             eslAssessed = AdultsEnrolledAndAssessedInESL(beginDate, endDate).ToList();
-            basicGardenTrainees = WorkersTrainedInBasicGardening(beginDate, endDate).ToList();
-            advGardenTrainees = WorkersTrainedInAdvancedGardening(beginDate, endDate).ToList();
-            finTrainees = WorkersGivenFinancialEducation(beginDate, endDate).ToList();
-            oshaTrainees = WorkersTrainedInOSHA(beginDate, endDate).ToList();
-            chemTrainees = WorkersTrainedInChem(beginDate, endDate).ToList();
-            movingTrainees = WorkersTrainedInMoving(beginDate, endDate).ToList();
-            careTrainees = WorkersTrainedInCaregiving(beginDate, endDate).ToList();
-            heatTrainees = WorkersTrainedInHeat(beginDate, endDate).ToList();
-            asbestosTrainees = WorkersTrainedInAsbestos(beginDate, endDate).ToList();
-            computerTrainees = WorkersTrainedInComputers(beginDate, endDate).ToList();
-            greenTrainees = WorkersTrainedInGreenClean(beginDate, endDate).ToList();
-            msfCount = WorkersAttendingMSF(beginDate, endDate).ToList();
-            assemblyCount= WorkersAttendingAssemblies(beginDate, endDate).ToList();
-            finEdTrainees = WorkersGivenFinancialEducation(beginDate, endDate).ToList();
-            clTrainees = CLTraining(beginDate, endDate).ToList();
+            basicGardenTrainees = getAllClassAttendance.Where(basic => basic.info == "Basic Gardening");
+            advGardenTrainees = getAllClassAttendance.Where(adv => adv.info == "Advanced Gardening");
+            finTrainees = getAllClassAttendance.Where(fin => fin.info == "Financial Education");
+
             #endregion
 
-            q = null;
+            q = getAllClassAttendance
+                .Select(g => new yearSumData
+                {
+                    date = g.date,
+                    temporaryPlacements = temporaryPlacements.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
+                    safetyTrainees = safetyTrainees.Where(whr => whr.date == g.date),
+                    skillsTrainees = skillsTrainees.Where(whr => whr.date == g.date),
+                    eslAssessed = eslAssessed.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
+                    basicGardenTrainees = basicGardenTrainees.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
+                    advGardenTrainees = advGardenTrainees.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
+                    finTrainees = finTrainees.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault()
+                });
 
             return q;
         }
@@ -1287,23 +1151,12 @@ namespace Machete.Service
     {
         public DateTime? date { get; set; }
         public int? temporaryPlacements { get; set; }
-        public int? safetyTrainees { get; set; }
-        public int? skillsTrainees { get; set; }
+        public IEnumerable<reportUnit> safetyTrainees { get; set; }
+        public IEnumerable<reportUnit> skillsTrainees { get; set; }
         public int? eslAssessed { get; set; }
-        public int? gardenTrainees { get; set; }
+        public int? basicGardenTrainees { get; set; }
+        public int? advGardenTrainees { get; set; }
         public int? finTrainees { get; set; }
-        public int? oshaTrainees { get; set; }
-        public int? chemTrainees { get; set; }
-        public int? movingTrainees { get; set; }
-        public int? careTrainees { get; set; }
-        public int? heatTrainees { get; set; }
-        public int? asbestosTrainees { get; set; }
-        public int? computerTrainees { get; set; }
-        public int? greenTrainees { get; set; }
-        public int? msfCount { get; set; } //no idea what this refers to
-        public int? assemblyCount { get; set; }
-        public int? finEdTrainees { get; set; }
-        public int? clTrainees { get; set; } //no idea what this refers to
     }
     #endregion
 }
