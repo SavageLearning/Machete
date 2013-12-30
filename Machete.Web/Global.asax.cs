@@ -45,6 +45,8 @@ using System.Data.Entity.ModelConfiguration;
 using Machete.Web.Helpers;
 using AutoMapper;
 using System.Web.Optimization;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Machete.Web
 {
@@ -130,7 +132,10 @@ namespace Machete.Web
             .RegisterType<IControllerActivator, CustomControllerActivator>()
             //.RegisterType<IFormsAuthenticationService, FormsAuthenticationService>()
             //.RegisterType<IMembershipService, AccountMembershipService>()
-            .RegisterInstance<MembershipProvider>(Membership.Provider)
+            //.RegisterInstance<MembershipProvider>(Membership.Provider)
+            .RegisterType<IUserStore<ApplicationUser>, UserStore<ApplicationUser>>(new HttpContextLifetimeManager<IUserStore<ApplicationUser>>())
+            .RegisterType<IMyUserManager<ApplicationUser>, MyUserManager>(new HttpContextLifetimeManager<IMyUserManager<ApplicationUser>>())
+
             .RegisterType<IDatabaseFactory, DatabaseFactory>(new HttpContextLifetimeManager<IDatabaseFactory>())
             .RegisterType<IUnitOfWork, UnitOfWork>(new HttpContextLifetimeManager<IUnitOfWork>())
             // 

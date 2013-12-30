@@ -3,61 +3,35 @@ using System.Text;
 using System.Security.Cryptography;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Machete.Data;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Security.Claims;
+using Machete.Data.Infrastructure;
 
 namespace Machete.Web.Models
 {
-    // This is the original ApplicationUser class extended
-    // using the properties defined at the following page:
-    // http://www.asp.net/identity/overview/migrations/migrating-an-existing-website-from-sql-membership-to-aspnet-identity
-    public class ApplicationUser : IdentityUser
+    public interface IMyUserManager<TUser>
     {
-        public ApplicationUser()
-        {
-            CreateDate = DateTime.Now;
-            IsApproved = false;
-            LastLoginDate = DateTime.Now;
-            LastActivityDate = DateTime.Now;
-            LastPasswordChangedDate = DateTime.Now;
-            LastLockoutDate = DateTime.Parse("1/1/1754");
-            FailedPasswordAnswerAttemptWindowStart = DateTime.Parse("1/1/1754");
-            FailedPasswordAttemptWindowStart = DateTime.Parse("1/1/1754");
-        }
-
-        public System.Guid ApplicationId { get; set; }
-        public string MobileAlias { get; set; }
-        public bool IsAnonymous { get; set; }
-        public System.DateTime LastActivityDate { get; set; }
-        public string MobilePIN { get; set; }
-        public string Email { get; set; }
-        public string LoweredEmail { get; set; }
-        public string LoweredUserName { get; set; }
-        public string PasswordQuestion { get; set; }
-        public string PasswordAnswer { get; set; }
-        public bool IsApproved { get; set; }
-        public bool IsLockedOut { get; set; }
-        public System.DateTime CreateDate { get; set; }
-        public System.DateTime LastLoginDate { get; set; }
-        public System.DateTime LastPasswordChangedDate { get; set; }
-        public System.DateTime LastLockoutDate { get; set; }
-        public int FailedPasswordAttemptCount { get; set; }
-        public System.DateTime FailedPasswordAttemptWindowStart { get; set; }
-        public int FailedPasswordAnswerAttemptCount { get; set; }
-        public System.DateTime FailedPasswordAnswerAttemptWindowStart { get; set; }
-        public string Comment { get; set; }
+        Task<TUser> FindAsync(string userName, string password);
+        Task<IdentityResult> CreateAsync(TUser user, string password);
+        Task<IdentityResult> RemoveLoginAsync(string userId, UserLoginInfo login);
+        Task<IdentityResult> ChangePasswordAsync(string userId, string currentPassword, string newPassword);
+        Task<IdentityResult> AddPasswordAsync(string userId, string password);
+        Task<TUser> FindAsync(UserLoginInfo login);
+        Task<IdentityResult> AddLoginAsync(string userId, UserLoginInfo login);
+        Task<IdentityResult> CreateAsync(TUser user);
+        Task<System.Collections.Generic.IList<UserLoginInfo>> GetLoginsAsync(string userId);
+        IList<UserLoginInfo> GetLogins(string userId);
+        Task<ClaimsIdentity> CreateIdentityAsync(TUser user, string authenticationType);
+        TUser FindById(string userId);
+        void Dispose();
     }
 
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class MyUserManager : UserManager<ApplicationUser>, IMyUserManager<ApplicationUser>
     {
-        public ApplicationDbContext()
-            : base("ApplicationServices")
-        {
-        }
-    }
-
-    public class MyUserManager : UserManager<ApplicationUser>
-    {
-        public MyUserManager()
-            : base(new UserStore<ApplicationUser>(new ApplicationDbContext()))
+        public MyUserManager(IDatabaseFactory factory)
+            : base(new UserStore<ApplicationUser>(factory.Get()))
         {
             this.UserValidator = new UserValidator<ApplicationUser>(this) 
             { 
@@ -145,6 +119,16 @@ namespace Machete.Web.Models
 
                 return Convert.ToBase64String(bRet);
             }
+        }
+
+        public ApplicationUser FindById(string userId)
+        {
+            return this.FindById(userId);
+        }
+
+        public IList<UserLoginInfo> GetLogins(string userId)
+        {
+            return this.GetLogins(userId);
         }
     }
 }
