@@ -1,4 +1,4 @@
-﻿@model Machete.Web.Models.RegisterModel
+﻿@model Machete.Web.Models.RegisterViewModel
 @{
     ViewBag.Title = @Machete.Web.Resources.ValidationStrings.RegisterTitle;
 }
@@ -12,6 +12,7 @@
 </p>
 @using (Html.BeginForm())
 {
+    @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, @Machete.Web.Resources.ValidationStrings.RegisterValSummary)
     <div>
         <fieldset>

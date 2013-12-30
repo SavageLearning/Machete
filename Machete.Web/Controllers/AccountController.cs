@@ -101,6 +101,7 @@ namespace Machete.Web.Controllers
             if (ModelState.IsValid)
             {
                 var currentApplicationId = GetApplicationID();
+                model.UserName = model.FirstName.Trim() + "." + model.LastName.Trim();
                 var user = new ApplicationUser() { UserName = model.UserName, LoweredUserName = model.UserName.ToLower(), ApplicationId=currentApplicationId };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
