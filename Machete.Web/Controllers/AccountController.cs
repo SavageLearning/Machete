@@ -13,6 +13,7 @@ using System.Data.SqlClient;
 using System.Configuration;
 using Machete.Web.Helpers;
 using NLog;
+using System.Globalization;
 
 namespace Machete.Web.Controllers
 {
@@ -445,5 +446,16 @@ namespace Machete.Web.Controllers
             }
         }
         #endregion
+
+        // **************************************
+        // Change Culture
+        // **************************************
+        public ActionResult ChangeCulture(string lang, string returnUrl)
+        {
+            Session["Culture"] = new CultureInfo(lang);
+            return Redirect(returnUrl);
+            // TODO: add user input validation to prevent setting unsupported language
+            // TODO: preserve field text when language changes
+        }
     }
 }
