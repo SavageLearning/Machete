@@ -365,7 +365,10 @@ namespace Machete.Service
             return query;
         }
 
-        #region United Way Report
+        #region United Way (Yearly Summary) Report
+
+        //This way of organizing the data is becoming nightmarish. We need some new objects and drilldowns. See
+        //weekly report for an example.
         public IQueryable<reportUnit> WorkersInTempJobs(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
@@ -605,7 +608,7 @@ namespace Machete.Service
 
         #endregion
 
-        #region Monthly Status Report
+        #region Monthly Status Report (New)
         public IQueryable<reportUnit> NewlyEnrolled(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
@@ -671,33 +674,7 @@ namespace Machete.Service
             return query;
         }
 
-        public IQueryable<reportUnit> WorkersInPermanentJobs(DateTime beginDate, DateTime endDate)
-        {
-            IQueryable<reportUnit> query;
-
-            //ensure we are getting all relevant times (no assumptions)
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
-
-            var waQ = waRepo.GetAllQ();
-
-            query = waQ
-                .Where(whr => whr.workOrder.permanentPlacement &&
-                    EntityFunctions.TruncateTime(whr.workOrder.dateTimeofWork) >= beginDate &&
-                    EntityFunctions.TruncateTime(whr.workOrder.dateTimeofWork) <= endDate)
-                .GroupBy(gb => new
-                {
-                    dtow = EntityFunctions.TruncateTime(gb.workOrder.dateTimeofWork),
-                    worker = gb.workerAssignedID
-                })
-                .Select(group => new reportUnit
-                {
-                    date = group.Key.dtow,
-                    count = group.Count() > 0 ? group.Count() : 0
-                });
-
-            return query;
-        }
+        // Financial Literacy, Job Skills Training and ESL graduates already covered in yearly summary report f(x)s
 
         public IQueryable<reportUnit> UnduplicatedWorkersWhoRecievedTempJobs(DateTime beginDate, DateTime endDate)
         {
@@ -730,9 +707,38 @@ namespace Machete.Service
             return query;
         }
 
+        public IQueryable<reportUnit> WorkersInPermanentJobs(DateTime beginDate, DateTime endDate)
+        {
+            IQueryable<reportUnit> query;
+
+            //ensure we are getting all relevant times (no assumptions)
+            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
+            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
+
+            var waQ = waRepo.GetAllQ();
+
+            query = waQ
+                .Where(whr => whr.workOrder.permanentPlacement &&
+                    EntityFunctions.TruncateTime(whr.workOrder.dateTimeofWork) >= beginDate &&
+                    EntityFunctions.TruncateTime(whr.workOrder.dateTimeofWork) <= endDate)
+                .GroupBy(gb => new
+                {
+                    dtow = EntityFunctions.TruncateTime(gb.workOrder.dateTimeofWork),
+                    worker = gb.workerAssignedID
+                })
+                .Select(group => new reportUnit
+                {
+                    date = group.Key.dtow,
+                    count = group.Count() > 0 ? group.Count() : 0
+                });
+
+            return query;
+        }
+
+
         #endregion
 
-        #region HMIS
+        #region HMIS (Worker Demographics Report--Quarterly)
         public IQueryable<reportUnit> PersonZipCodePercentages()
         {
             IQueryable<reportUnit> query;
@@ -754,7 +760,6 @@ namespace Machete.Service
 
             return query;
         }
-
         public IQueryable<reportUnit> SingleAdults()
         {
             IQueryable<reportUnit> query;
@@ -859,6 +864,8 @@ namespace Machete.Service
 
             return query;
         }
+
+        //Demographic Standards go here -- need objects besides reportUnit so that we can group and do drilldowns
         #endregion
 
         #endregion
