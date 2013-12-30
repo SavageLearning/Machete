@@ -4,7 +4,7 @@
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
         @Html.AntiForgeryToken()
-        <text>@Machete.Web.Resources.ValidationStrings.Welcome <b>@Context.User.Identity.Name</b>!
+        <text>@Machete.Web.Resources.ValidationStrings.Welcome <b>@User.Identity.GetUserName()</b>!
     [ @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.Settings, "Index", "Account") 
     <a href="javascript:document.getElementById('logoutForm').submit()">@Machete.Web.Resources.ValidationStrings.LogOff</a>
        ]</text>

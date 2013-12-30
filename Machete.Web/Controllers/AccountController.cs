@@ -14,6 +14,7 @@ using System.Configuration;
 using Machete.Web.Helpers;
 using NLog;
 using System.Globalization;
+using System.Web.Security;
 
 namespace Machete.Web.Controllers
 {
@@ -41,8 +42,8 @@ namespace Machete.Web.Controllers
         public ActionResult Index()
         {
             int records = 0;
-            //MembershipUserCollection members = Membership.GetAllUsers(0, Int32.MaxValue, out records);
-            return View();//members);
+            MembershipUserCollection members = Membership.GetAllUsers(0, Int32.MaxValue, out records);
+            return View(members);
         }
 
         //
