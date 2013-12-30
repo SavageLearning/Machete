@@ -15,6 +15,7 @@ using Machete.Web.Helpers;
 using NLog;
 using System.Globalization;
 using System.Web.Security;
+using Machete.Data;
 
 namespace Machete.Web.Controllers
 {
@@ -24,14 +25,9 @@ namespace Machete.Web.Controllers
     {
         Logger log = LogManager.GetCurrentClassLogger();
         LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "AccountController", "");
-        public MyUserManager UserManager { get; private set; }
+        public IMyUserManager<ApplicationUser> UserManager { get; private set; }
 
-        public AccountController()
-            : this(new MyUserManager())
-        {
-        }
-
-        public AccountController(MyUserManager userManager)
+        public AccountController(IMyUserManager<ApplicationUser> userManager)
         {
             UserManager = userManager;
         }

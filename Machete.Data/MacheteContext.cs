@@ -34,20 +34,18 @@ using System.Diagnostics;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Common;
 using System.Data.Entity.Infrastructure;
+using Microsoft.AspNet.Identity.EntityFramework;
 namespace Machete.Data
 {
-    public class MacheteContext : DbContext, IDisposable
+    public class MacheteContext : IdentityDbContext<ApplicationUser>, IDisposable
     {
-        static string defaultDbName = "macheteConnection";
-        public MacheteContext()
-            : base(defaultDbName) 
+        public MacheteContext() : base("macheteConnection") 
         {
             //this.Configuration.LazyLoadingEnabled = false;
             //Database.SetInitializer<MacheteContext>(
             //  new MigrateDatabaseToLatestVersion<MacheteContext, CustomMigrationsConfiguration>());            
         }
         public MacheteContext(string connectionString) : base(connectionString) { }
-        protected MacheteContext(DbConnection existingConnection) : base(existingConnection, true) { }
         //Machete here defines the database to use, by convention.
         public DbSet<Person> Persons { get; set; }
         public DbSet<Worker> Workers { get; set; }
@@ -61,7 +59,8 @@ namespace Machete.Data
         public DbSet<WorkerRequest> WorkerRequests { get; set; }
         public DbSet<Event> Events {get; set;}
         public DbSet<Activity> Activities { get; set; }
-        public DbSet<ActivitySignin> ActivitySignins { get; set; }              
+        public DbSet<ActivitySignin> ActivitySignins { get; set; }
+        //public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         public virtual void Commit()
         {
@@ -98,42 +97,6 @@ namespace Machete.Data
             modelBuilder.Entity<WorkOrder>().ToTable("WorkOrders");
             modelBuilder.Entity<WorkAssignment>().ToTable("WorkAssignments");
         }
-
-        //private static DbConnection CreateConnection(String nameOrConnectionString)
-        //{
-        //    var connectionString = @"data source=.\SQLEXPRESS;Database=macheteDevTest;Trusted_Connection=true;MultipleActiveResultSets=true";
-        //    var providerName = "System.Data.SqlClient";
-        //
-            //if (nameOrConnectionString == null)
-            //{
-            //    nameOrConnectionString = defaultDbName;
-            //}
-            //else
-            //{
-            //    connectionString = nameOrConnectionString;
-            //    providerName = "System.Data.SqlClient";
-            //}
-        //
-        //    return (CreateConnection(connectionString, providerName));
-        //}
-
-        //private static DbConnection CreateConnection(String connectionString, String providerInvariantName)
-        //{
-        //    var wrapperConnectionString = String.Format(@"wrappedProvider={0};{1}", providerInvariantName, connectionString);
-        //    var connection = new EFTracingConnection { ConnectionString = wrapperConnectionString };
-        //    return (connection);
-        //}
-
-        //public static MacheteContext CreateTracingContext(String nameOrConnectionString, Action<CommandExecutionEventArgs> logAction, Boolean logToConsole = true, String logToFile = null)
-        //{
-        //    EFTracingProviderConfiguration.LogToFile = logToFile;
-        //    EFTracingProviderConfiguration.LogToConsole = logToConsole;
-        //    EFTracingProviderConfiguration.LogAction = logAction;
-
-        //    var ctx = new MacheteContext(CreateConnection(nameOrConnectionString));
-        //    (ctx as IObjectContextAdapter).ObjectContext.EnableTracing();
-        //    return (ctx);
-        //}
     }
 
     public class PersonBuilder : EntityTypeConfiguration<Person>
