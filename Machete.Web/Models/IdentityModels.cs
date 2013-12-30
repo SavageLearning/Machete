@@ -59,6 +59,10 @@ namespace Machete.Web.Models
         public MyUserManager()
             : base(new UserStore<ApplicationUser>(new ApplicationDbContext()))
         {
+            this.UserValidator = new UserValidator<ApplicationUser>(this) 
+            { 
+                AllowOnlyAlphanumericUserNames = false 
+            };
             this.PasswordHasher = new SQLPasswordHasher();
         }
         public class SQLPasswordHasher : PasswordHasher
