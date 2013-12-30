@@ -84,6 +84,11 @@ namespace Machete.Service.shared
         public double avg { get; set; }
     }
 
+    public class activityUnit : reportUnit
+    {
+        public string activityType { get; set; }
+    }
+
     public class reportUnit
     {
         public DateTime? date { get; set; }

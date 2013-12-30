@@ -385,6 +385,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Machete Worker Reports.
+        /// </summary>
+        public static string workersHeader {
+            get {
+                return ResourceManager.GetString("workersHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Workers.
         /// </summary>
         public static string workersTab {
