@@ -404,7 +404,60 @@ namespace Machete.Service
         }
         public IQueryable<ESLAssessed> AdultsEnrolledAndAssessedInESL(DateTime beginDate, DateTime endDate)
         {
-            return null;
+            IQueryable<ESLAssessed> query;
+
+            //ensure we are getting all relevant times (no assumptions)
+            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
+            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
+
+            var wQ = wRepo.GetAllQ();
+            var asQ = asRepo.GetAllQ();
+            var lQ = lookRepo.GetAllQ();
+
+            query = wQ.Join(asQ,
+                wqJoinOn => wqJoinOn.Person.ID,
+                asqJoinOn => asqJoinOn.personID,
+                (wqJoinOn, asqJoinOn) => new
+                {
+                    wqJoinOn,
+                    pid = asqJoinOn.personID,
+                    aid = asqJoinOn.Activity.type,
+                    name = asqJoinOn.Activity.name,
+                    dfsi = asqJoinOn.dateforsignin,
+                    time = asqJoinOn.Activity.dateEnd - asqJoinOn.Activity.dateStart
+                })
+            .Join(lQ,
+                wqasq => wqasq.name,
+                look => look.ID,
+                (wqasq, look) => new
+                {
+                    wqasq,
+                    tEN = look.text_EN
+                })
+            .Join(lQ,
+                wqasq => wqasq.wqasq.aid,
+                look => look.ID,
+                (wqasq, look) => new
+                {
+                    inner = wqasq.wqasq,
+                    typeEN = look.text_EN,
+                    nameEN = wqasq.tEN
+                })
+            .GroupBy(gb => new
+            {
+                activity = gb.nameEN,
+                person = gb.inner.pid,
+                activityType = gb.typeEN
+            })
+            .Select(sel => new ESLAssessed
+            {
+                date = sel.First().inner.dfsi,
+                personID = (int)sel.Key.person,
+                minutesInClass = sel.Sum(s => s.inner.time.Minutes + (s.inner.time.Hours * 60)),
+                activityName = sel.Key.activity,
+                activityType = sel.Key.activityType
+            });
+            return query;
         }
 
 
