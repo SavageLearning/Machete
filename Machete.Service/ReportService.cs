@@ -402,56 +402,9 @@ namespace Machete.Service
             // Code goes here
             return null;
         }
-        public IQueryable<reportUnit> AdultsEnrolledAndAssessedInESL(DateTime beginDate, DateTime endDate)
+        public IQueryable<ESLAssessed> AdultsEnrolledAndAssessedInESL(DateTime beginDate, DateTime endDate)
         {
-            IQueryable<reportUnit> query;
-            IQueryable<int> englishClassQuery;
-
-            //ensure we are getting all relevant times (no assumptions)
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
-
-            var wQ = wRepo.GetAllQ();
-            var asQ = asRepo.GetAllQ();
-            var lQ = lookRepo.GetAllQ();
-
-            query = wQ
-                .Join(asQ,
-                    wqJoinOn => wqJoinOn.Person.ID,
-                    asqJoinOn => asqJoinOn.personID,
-                    (wqJoinOn, asqJoinOn) => new
-                        {
-                            wqJoinOn,
-                            pid = asqJoinOn.personID,
-                            aid = asqJoinOn.Activity.type,
-                            name = asqJoinOn.Activity.name,
-                            dfsi = asqJoinOn.dateforsignin,
-                            hours = asqJoinOn.Activity.dateEnd.Subtract(asqJoinOn.Activity.dateStart).Hours
-                        })
-                .Join(lQ,
-                    wqasq => wqasq.aid,
-                    look => look.ID,
-                    (wqasq, look) => new
-                        {
-                            wqasq,
-                            tEN = look.text_EN
-                        })
-                .Where(whr => whr.tEN == "English Class 1" || whr.tEN == "English Class 2" &&
-                                EntityFunctions.TruncateTime(whr.wqasq.dfsi) >= beginDate &&
-                                EntityFunctions.TruncateTime(whr.wqasq.dfsi) <= endDate)
-                .GroupBy(gb => new 
-                    {
-                        personID = gb.wqasq.pid
-                    })
-                .Select(sel => new reportUnit
-                {
-                    date = endDate,
-                    count = sel.Sum(s => s.wqasq.hours),
-                    info = sel.Key.personID.ToString()
-                });
-
-
-            return query;
+            return null;
         }
 
 
@@ -899,7 +852,7 @@ namespace Machete.Service
 
             //Can replace the above:
             IEnumerable<activityUnit> getAllClassAttendance;
-
+            IEnumerable<DateTime> getAllDates;
             IEnumerable<yearSumData> q;
 
             temporaryPlacements = WorkersInTempJobs(beginDate, endDate).ToList();
@@ -911,6 +864,7 @@ namespace Machete.Service
             advGardenTrainees = getAllClassAttendance.Where(adv => adv.info == "Advanced Gardening");
             finTrainees = getAllClassAttendance.Where(fin => fin.info == "Financial Education");
 
+            getAllDates
             #endregion
 
             q = getAllClassAttendance
