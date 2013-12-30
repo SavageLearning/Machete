@@ -399,8 +399,47 @@ namespace Machete.Service
 
         public IQueryable<activityUnit> GetAllActivitySignins(DateTime beginDate, DateTime endDate)
         {
-            // Code goes here
-            return null;
+            IQueryable<activityUnit> query;
+
+            //ensure we are getting all relevant times (no assumptions)
+            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
+            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
+
+            var asQ = asRepo.GetAllQ();
+            var lQ = lookRepo.GetAllQ();
+
+            query = asQ.Join(lQ,
+                    aj => aj.Activity.name,
+                    lj => lj.ID,
+                    (aj, lj) => new
+                    {
+                        name = lj.text_EN,
+                        type = aj.Activity.type,
+                        person = aj.person,
+                        date = EntityFunctions.TruncateTime(aj.dateforsignin)
+                    })
+                .Join(lQ,
+                    aj => aj.type,
+                    lj => lj.ID,
+                    (aj, lj) => new
+                    {
+                        name = aj.name,
+                        type = lj.text_EN,
+                        person = aj.person,
+                        date = aj.date
+                    })
+                .Where(signin => signin.person != null &&
+                    EntityFunctions.TruncateTime(signin.date) <= endDate &&
+                    EntityFunctions.TruncateTime(signin.date) >= beginDate)
+                .GroupBy(gb => new { gb.date, gb.name, gb.type })
+                .Select(grouping => new activityUnit
+                {
+                    info = grouping.Key.name,
+                    activityType = grouping.Key.type,
+                    date = grouping.Key.date,
+                    count = grouping.Count()
+                });
+            return query;
         }
         public IQueryable<ESLAssessed> AdultsEnrolledAndAssessedInESL(DateTime beginDate, DateTime endDate)
         {
