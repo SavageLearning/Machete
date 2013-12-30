@@ -228,4 +228,7 @@
   <data name="ssrsTab" xml:space="preserve">
     <value>SSRS</value>
   </data>
+  <data name="workersHeader" xml:space="preserve">
+    <value>Machete Worker Reports</value>
+  </data>
 </root>
