@@ -89,8 +89,6 @@ namespace Machete.Service.shared
         public DateTime date { get; set; }
         public int personID { get; set; }
         public int minutesInClass { get; set; }
-        public string activityName { get; set; }
-        public string activityType { get; set; }
     }
 
     public class activityUnit : reportUnit
