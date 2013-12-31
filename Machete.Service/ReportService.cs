@@ -1026,6 +1026,31 @@ namespace Machete.Service
         
         #endregion
 
+        #region Section IX
+
+        public IQueryable<reportUnit> RefugeeImmigrant(DateTime beginDate, DateTime endDate)
+        {
+            IQueryable<reportUnit> query;
+
+            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
+            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
+
+            var wQ = wRepo.GetAllQ();
+            var lQ = lookRepo.GetAllQ();
+
+            query = wQ
+                .Where(whr => whr.memberexpirationdate > beginDate && whr.dateOfMembership < endDate)
+                .GroupBy(worker => worker.immigrantrefugee)
+                .Select(group => new reportUnit
+                {
+                    info = group.Key ? "Yes" : "No",
+                    count = group.Count()
+                });
+
+            return query;
+        }
+        #endregion
+
         #endregion
 
         #region ReportData
