@@ -790,9 +790,86 @@ namespace Machete.Service
         #region Section I
         public IQueryable<reportUnit> ZipCode(DateTime beginDate, DateTime endDate)
         {
+            IQueryable<reportUnit> query;
+
+            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
+            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
+
+            var wQ = wRepo.GetAllQ();
+
+            query = wQ
+                .Where(whr => whr.Person != null && whr.Person.zipcode != null)
+                .Where(whr => whr.memberexpirationdate > beginDate && whr.dateOfMembership < endDate)
+                .GroupBy(grp => grp.Person.zipcode)
+                .Select(group => new reportUnit
+                {
+                    count = group.Count(),
+                    info = group.Key
+                });
+
+            return query;
 
         }
+
+        public IQueryable<reportUnit> Homeless(DateTime beginDate, DateTime endDate)
+        {
+            IQueryable<reportUnit> query;
+
+            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
+            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
+
+            var wQ = wRepo.GetAllQ();
+
+            query = wQ
+                .Where(whr => whr.memberexpirationdate > beginDate && whr.dateOfMembership < endDate)
+                .GroupBy(grp => grp.homeless)
+                .Select(group => new reportUnit
+                {
+                    info = group.Key == null ? "Unknown" : group.Key.ToString(),
+                    count = group.Count()
+                });
+
+            return query;
+        }
         #endregion
+
+        #region Section II
+        public IQueryable<reportUnit> HouseholdComposition(DateTime beginDate, DateTime endDate)
+        {
+            IQueryable<reportUnit> query;
+
+            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
+            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
+
+            var wQ = wRepo.GetAllQ();
+            var lQ = lookRepo.GetAllQ();
+
+            query = wQ
+                .Where(whr => whr.memberexpirationdate > beginDate && whr.dateOfMembership < endDate)
+                .GroupBy(grp => new
+                {
+                    maritalStatus = grp.maritalstatus,
+                    withChildren = grp.livewithchildren
+                })
+                .Join(lQ,
+                    gJoin => gJoin.Key.maritalStatus,
+                    lJoin => lJoin.ID,
+                    (gJoin, lJoin) => new
+                    {
+                        maritalStatus = lJoin.text_EN,
+                        withChildren = gJoin.Key.withChildren ? "With Children" : "Without Children",
+                        count = gJoin.Count()
+                    })
+                .Select(glJoin => new reportUnit
+                {
+                    info = glJoin.maritalStatus + ", " + glJoin.withChildren,
+                    count = glJoin.count
+                });
+
+            return query;
+        }
+        #endregion
+
 
         #endregion
 
