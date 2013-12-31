@@ -1051,7 +1051,7 @@ namespace Machete.Service
         #endregion
 
         #region Section X
-        public IQueryable<reportUnit> RefugeeImmigrant(DateTime beginDate, DateTime endDate)
+        public IQueryable<reportUnit> EnglishLevel(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
 
