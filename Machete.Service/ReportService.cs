@@ -870,6 +870,39 @@ namespace Machete.Service
         }
         #endregion
 
+        #region Section III
+        public IQueryable<reportUnit> Income(DateTime beginDate, DateTime endDate)
+        {
+            IQueryable<reportUnit> query;
+
+            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
+            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
+
+            var wQ = wRepo.GetAllQ();
+            var lQ = lookRepo.GetAllQ();
+
+            query = wQ
+                .Join(lQ,
+                    wJoin => wJoin.incomeID,
+                    lJoin => lJoin.ID,
+                    (gJoin, lJoin) => new
+                    {
+                        incomeLevel = lJoin.text_EN == "Less than $15,000" ? "Very low (< 30% median)" :
+                                        lJoin.text_EN == "Between $15,000 and $25,000" ? "Moderate (> 50% median)" :
+                                        lJoin.text_EN != "unknown" ? "Above moderate (> 80% median)" :
+                                        "Unknown"
+                    })
+                .GroupBy(grp => grp.incomeLevel)
+                .Select(group => new reportUnit
+                {
+                    info = group.Key,
+                    count = group.Count()
+                })
+                .OrderBy(ob => ob.count);
+
+            return query;
+        }
+        #endregion
 
         #endregion
 
