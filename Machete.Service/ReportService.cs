@@ -399,8 +399,47 @@ namespace Machete.Service
 
         public IQueryable<activityUnit> GetAllActivitySignins(DateTime beginDate, DateTime endDate)
         {
-            // Code goes here
-            return null;
+            IQueryable<activityUnit> query;
+
+            //ensure we are getting all relevant times (no assumptions)
+            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
+            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
+
+            var asQ = asRepo.GetAllQ();
+            var lQ = lookRepo.GetAllQ();
+
+            query = asQ.Join(lQ,
+                    aj => aj.Activity.name,
+                    lj => lj.ID,
+                    (aj, lj) => new
+                    {
+                        name = lj.text_EN,
+                        type = aj.Activity.type,
+                        person = aj.person,
+                        date = EntityFunctions.TruncateTime(aj.dateforsignin)
+                    })
+                .Join(lQ,
+                    aj => aj.type,
+                    lj => lj.ID,
+                    (aj, lj) => new
+                    {
+                        name = aj.name,
+                        type = lj.text_EN,
+                        person = aj.person,
+                        date = aj.date
+                    })
+                .Where(signin => signin.person != null &&
+                    EntityFunctions.TruncateTime(signin.date) <= endDate &&
+                    EntityFunctions.TruncateTime(signin.date) >= beginDate)
+                .GroupBy(gb => new { gb.date, gb.name, gb.type })
+                .Select(grouping => new activityUnit
+                {
+                    info = grouping.Key.name,
+                    activityType = grouping.Key.type,
+                    date = grouping.Key.date,
+                    count = grouping.Count()
+                });
+            return query;
         }
         public IQueryable<ESLAssessed> AdultsEnrolledAndAssessedInESL(DateTime beginDate, DateTime endDate)
         {
@@ -414,7 +453,8 @@ namespace Machete.Service
             var asQ = asRepo.GetAllQ();
             var lQ = lookRepo.GetAllQ();
 
-            query = wQ.Join(asQ,
+            query = wQ
+                .Join(asQ,
                 wqJoinOn => wqJoinOn.Person.ID,
                 asqJoinOn => asqJoinOn.personID,
                 (wqJoinOn, asqJoinOn) => new
@@ -426,37 +466,34 @@ namespace Machete.Service
                     dfsi = asqJoinOn.dateforsignin,
                     time = asqJoinOn.Activity.dateEnd - asqJoinOn.Activity.dateStart
                 })
-            .Join(lQ,
-                wqasq => wqasq.name,
-                look => look.ID,
-                (wqasq, look) => new
+                .Join(lQ,
+                    wqasq => wqasq.name,
+                    look => look.ID,
+                    (wqasq, look) => new
+                    {
+                        wqasq,
+                        tEN = look.text_EN
+                    })
+                .Join(lQ,
+                    wqasq => wqasq.wqasq.aid,
+                    look => look.ID,
+                    (wqasq, look) => new
+                    {
+                        inner = wqasq.wqasq,
+                        typeEN = look.text_EN,
+                        nameEN = wqasq.tEN
+                    })
+                .Where(whr => whr.nameEN == "English Class 1" || whr.nameEN == "English Class 2")
+                .GroupBy(gb => new
                 {
-                    wqasq,
-                    tEN = look.text_EN
+                    person = gb.inner.pid,
                 })
-            .Join(lQ,
-                wqasq => wqasq.wqasq.aid,
-                look => look.ID,
-                (wqasq, look) => new
+                .Select(sel => new ESLAssessed
                 {
-                    inner = wqasq.wqasq,
-                    typeEN = look.text_EN,
-                    nameEN = wqasq.tEN
-                })
-            .GroupBy(gb => new
-            {
-                activity = gb.nameEN,
-                person = gb.inner.pid,
-                activityType = gb.typeEN
-            })
-            .Select(sel => new ESLAssessed
-            {
-                date = sel.First().inner.dfsi,
-                personID = (int)sel.Key.person,
-                minutesInClass = sel.Sum(s => s.inner.time.Minutes + (s.inner.time.Hours * 60)),
-                activityName = sel.Key.activity,
-                activityType = sel.Key.activityType
-            });
+                    date = sel.First().inner.dfsi,
+                    personID = (int)sel.Key.person,
+                    minutesInClass = sel.Sum(s => s.inner.time.Minutes + (s.inner.time.Hours * 60))
+                });
             return query;
         }
 
@@ -555,25 +592,25 @@ namespace Machete.Service
             beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
             endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
-            var wQ = wRepo.GetAllQ();
             var waQ = waRepo.GetAllQ();
 
-            query = wQ
-                .Join(waQ,
-                w => w.ID,
-                wa => wa.workerAssignedID,
-                (w, wa) => new { w, wa })
-                .Where(whr => whr.wa != null)
-                .GroupBy(gb => new
+            query = waQ
+                .Where(whr => !whr.workOrder.permanentPlacement && 
+                    EntityFunctions.TruncateTime(whr.workOrder.dateTimeofWork) <= endDate &&
+                    EntityFunctions.TruncateTime(whr.workOrder.dateTimeofWork) >= beginDate)
+                .GroupBy(gb => gb.workerAssignedID)
+                .Select(group => new
                 {
-                    worker = gb.w,
-                    assignment = gb.wa
+                    worker = group.Key,
+                    firstTempAssignment = EntityFunctions.TruncateTime(group.Min(m => m.workOrder.dateTimeofWork))
                 })
+                .GroupBy(gb => gb.firstTempAssignment)
                 .Select(group => new reportUnit
                 {
-                    date = group.Key.assignment.workOrder.dateTimeofWork,
-                    count = group.Count() > 0 ? group.Count() : 0
-                });
+                    count = group.Count(),
+                    date = group.Key
+                })
+                .OrderBy(ob => ob.date);
 
             return query;
         }
