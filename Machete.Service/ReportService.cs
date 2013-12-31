@@ -669,106 +669,46 @@ namespace Machete.Service
 
             return query;
         }
-        public IQueryable<reportUnit> SingleAdults()
+        public IQueryable<reportUnit> MaritalStatus()
         {
             IQueryable<reportUnit> query;
-            IQueryable<int> marriedIDQuery;
 
             var lQ = lookRepo.GetAllQ();
-            marriedIDQuery = lQ
-                .Where(whr => whr.text_EN == "Married")
-                .Select(thing => thing.ID);
-
             var wQ = wRepo.GetAllQ();
 
             query = wQ
-                .Where(whr => whr.maritalstatus != marriedIDQuery.First())
-                .GroupBy(gb => new
-                {
-                    maritalStatus = gb.maritalstatus
-                })
+                .Join(lQ,
+                    worker => worker.maritalstatus,
+                    lookup => lookup.ID,
+                    (w, l) => l.text_EN)
+                .GroupBy(gb => gb)
                 .Select(group => new reportUnit
                 {
-                    count = group.Count() >= 0 ? group.Count() : 0
+                    count = group.Count() >= 0 ? group.Count() : 0,
+                    info = group.Key
                 });
 
             return query;
         }
-        public IQueryable<reportUnit> NewlyEnrolledSingleAdults(DateTime beginDate, DateTime endDate)
+        public IQueryable<reportUnit> NewlyEnrolledMaritalStatus(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
-            IQueryable<int> marriedIDQuery;
 
             var lQ = lookRepo.GetAllQ();
-            marriedIDQuery = lQ
-                .Where(whr => whr.text_EN == "Married")
-                .Select(thing => thing.ID);
-
             var wQ = wRepo.GetAllQ();
 
             query = wQ
-                .Where(whr => whr.maritalstatus != marriedIDQuery.First())
                 .Where(whr => EntityFunctions.TruncateTime(whr.dateOfMembership) <= endDate &&
                               EntityFunctions.TruncateTime(whr.dateOfMembership) >= beginDate)
-                .GroupBy(gb => new
-                {
-                    maritalStatus = gb.maritalstatus
-                })
+                .Join(lQ,
+                    worker => worker.maritalstatus,
+                    lookup => lookup.ID,
+                    (w, l) => l.text_EN)
+                .GroupBy(gb => gb)
                 .Select(group => new reportUnit
                 {
-                    count = group.Count() >= 0 ? group.Count() : 0
-                });
-
-            return query;
-        }
-        public IQueryable<reportUnit> FamilyHouseholds()
-        {
-            IQueryable<reportUnit> query;
-            IQueryable<int> marriedIDQuery;
-
-            var lQ = lookRepo.GetAllQ();
-            marriedIDQuery = lQ
-                .Where(whr => whr.text_EN == "Married")
-                .Select(thing => thing.ID);
-
-            var wQ = wRepo.GetAllQ();
-
-            query = wQ
-                .Where(whr => whr.maritalstatus == marriedIDQuery.First())
-                .GroupBy(gb => new
-                {
-                    maritalStatus = gb.maritalstatus
-                })
-                .Select(group => new reportUnit
-                {
-                    count = group.Count() >= 0 ? group.Count() : 0
-                });
-
-            return query;
-        }
-        public IQueryable<reportUnit> NewlyEnrolledFamilyHouseholds(DateTime beginDate, DateTime endDate)
-        {
-            IQueryable<reportUnit> query;
-            IQueryable<int> marriedIDQuery;
-
-            var lQ = lookRepo.GetAllQ();
-            marriedIDQuery = lQ
-                .Where(whr => whr.text_EN == "Married")
-                .Select(thing => thing.ID);
-
-            var wQ = wRepo.GetAllQ();
-
-            query = wQ
-                .Where(whr => whr.maritalstatus == marriedIDQuery.First())
-                .Where(whr => EntityFunctions.TruncateTime(whr.dateOfMembership) <= endDate &&
-                              EntityFunctions.TruncateTime(whr.dateOfMembership) >= beginDate)
-                .GroupBy(gb => new
-                {
-                    maritalStatus = gb.maritalstatus
-                })
-                .Select(group => new reportUnit
-                {
-                    count = group.Count() >= 0 ? group.Count() : 0
+                    count = group.Count() >= 0 ? group.Count() : 0,
+                    info = group.Key
                 });
 
             return query;
@@ -1019,7 +959,6 @@ namespace Machete.Service
         #endregion
 
         #region Section IX
-
         public IQueryable<reportUnit> RefugeeImmigrant(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
@@ -1038,6 +977,30 @@ namespace Machete.Service
                     info = group.Key ? "Yes" : "No",
                     count = group.Count()
                 });
+
+            return query;
+        }
+        #endregion
+
+        #region Section X
+        public IQueryable<reportUnit> EnglishLevel(DateTime beginDate, DateTime endDate)
+        {
+            IQueryable<reportUnit> query;
+
+            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
+            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
+
+            var wQ = wRepo.GetAllQ();
+
+            query = wQ
+                .Where(whr => whr.memberexpirationdate > beginDate && whr.dateOfMembership < endDate)
+                .GroupBy(worker => worker.englishlevelID)
+                .Select(group => new reportUnit
+                {
+                    info = "English " + group.Key,
+                    count = group.Count()
+                })
+                .OrderBy(ob => ob.info);
 
             return query;
         }
