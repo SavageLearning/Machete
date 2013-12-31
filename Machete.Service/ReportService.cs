@@ -592,25 +592,25 @@ namespace Machete.Service
             beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
             endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
-            var wQ = wRepo.GetAllQ();
             var waQ = waRepo.GetAllQ();
 
-            query = wQ
-                .Join(waQ,
-                w => w.ID,
-                wa => wa.workerAssignedID,
-                (w, wa) => new { w, wa })
-                .Where(whr => whr.wa != null)
-                .GroupBy(gb => new
+            query = waQ
+                .Where(whr => !whr.workOrder.permanentPlacement && 
+                    EntityFunctions.TruncateTime(whr.workOrder.dateTimeofWork) <= endDate &&
+                    EntityFunctions.TruncateTime(whr.workOrder.dateTimeofWork) >= beginDate)
+                .GroupBy(gb => gb.workerAssignedID)
+                .Select(group => new
                 {
-                    worker = gb.w,
-                    assignment = gb.wa
+                    worker = group.Key,
+                    firstTempAssignment = EntityFunctions.TruncateTime(group.Min(m => m.workOrder.dateTimeofWork))
                 })
+                .GroupBy(gb => gb.firstTempAssignment)
                 .Select(group => new reportUnit
                 {
-                    date = group.Key.assignment.workOrder.dateTimeofWork,
-                    count = group.Count() > 0 ? group.Count() : 0
-                });
+                    count = group.Count(),
+                    date = group.Key
+                })
+                .OrderBy(ob => ob.date);
 
             return query;
         }
