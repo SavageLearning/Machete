@@ -16,8 +16,9 @@
     <div id="summaryWrapper">
         @*This is the default view.*@
     <div id="summaryHeader">
-        <h3 style="padding-left: .5em;">@Machete.Web.Resources.Reports.summaryHeader</h3>
         <div id="summaryPopup">
+            <h3 style="padding-left: .5em;">@Machete.Web.Resources.Reports.summaryHeader</h3>
+
                 <p id="summaryInstructions" style="padding-left:.5em">
                     @Machete.Web.Resources.Reports.summaryInstructions
                     <input type="button" value="Hide" class="formButton" id="summaryHide" />
@@ -86,7 +87,7 @@
                     <tr>
                         <th>@Machete.Web.Resources.Reports.date</th>
                         <th>@Machete.Web.Resources.Reports.totalSignins</th>
-                        <th>Unique</th>
+                        <th>@Machete.Web.Resources.Reports.uniqueSignins</th>
                         <th>@Machete.Web.Resources.Reports.dwcList</th>
                         <th>@Machete.Web.Resources.Reports.hhhList</th>
                         <th>@Machete.Web.Resources.Reports.dwcPropio</th>
@@ -99,41 +100,94 @@
             </table>
             <div id="monthlyPieChart1" style="height:auto;width:80%;margin-top:3em;"></div>
         </div>
+        <div id="quarterlyTable">
+            <input type="button" value="Refresh" class="formButton" id="qtrRefreshBtn" />
+            <input type="button" value="Print" class="formButton" id="qtrPrintReport" />
+            <input type="button" value="Spreadsheet" class="formButton" id="qtrSpreadsheet" />
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-mwd-datepicker", @id = "mwdDate" })
+            <p id="qtrHelp" style="display:inline;"><em>Select the day that the quarter should end.</em></p>
+            <table id="qtrDataTable" class="display">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.date</th>
+                        <th>@Machete.Web.Resources.Reports.tempJobs</th>
+                        <th>@Machete.Web.Resources.Reports.safetyTraining</th>
+                        <th>@Machete.Web.Resources.Reports.skillsTraining</th>
+                        <th>@Machete.Web.Resources.Reports.eslAssessed</th>
+                        <th>@Machete.Web.Resources.Reports.basicGarden</th>
+                        <th>@Machete.Web.Resources.Reports.advGarden</th>
+                        <th>@Machete.Web.Resources.Reports.finEd</th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+            <div id="qtrChart1" style="height:auto;width:80%;margin-top:3em;"></div>
+        </div>
+        <div id="yearlyTable">
+            <input type="button" value="Refresh" class="formButton" id="yearRefreshBtn" />
+            <input type="button" value="Print" class="formButton" id="yearPrintReport" />
+            <input type="button" value="Spreadsheet" class="formButton" id="yearSpreadsheet" />
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-mwd-datepicker", @id = "mwdDate" })
+            <p id="mwdHelp" style="display:inline;"><em>Select the date that the report should end.</em></p>
+            <table id="yearDataTable" class="display">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.date</th>
+                        <th>@Machete.Web.Resources.Reports.tempJobs</th>
+                        <th>@Machete.Web.Resources.Reports.safetyTraining</th>
+                        <th>@Machete.Web.Resources.Reports.skillsTraining</th>
+                        <th>@Machete.Web.Resources.Reports.eslAssessed</th>
+                        <th>@Machete.Web.Resources.Reports.basicGarden</th>
+                        <th>@Machete.Web.Resources.Reports.advGarden</th>
+                        <th>@Machete.Web.Resources.Reports.finEd</th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+            <div id="yearlyChart1" style="height:auto;width:80%;margin-top:3em;"></div>
+        </div>
     </div>
   </div>
 </div>
 
 <script type="text/javascript">
     $(document).ready(function () {
+        //Note that the yearly and quarterly functions are the same. This is by design.
+
         //PESKY VARS
         // The reason oWecTable exists here is it was necessary to have JS parse var wec (below) to get the drill
         // down menus to work. These are at the top of the anonymous functions section because that's what ECMA
         // does with them anyway.
+        // Following suit with the quarterly and yearly drilldowns.
         var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
 
         var oDclTable = $.extend(true, {}, dailyTableDefaults("/Reports/AjaxDcl", lang, $('#dclDate').val()));
         var oWecTable = $.extend(true, {}, weeklyTableDefaults("/Reports/AjaxWec", lang, $('#wecDate').val()));
         var oMwdTable = $.extend(true, {}, monthlyTableDefaults("/Reports/AjaxMwd", lang, $('#dclDate').val()));
+        var oQtrTable = $.extend(true, {}, yearlyTableDefaults("/Reports/AjaxQtr", lang, $('#qtrDate').val()));
+        var oYearTable = $.extend(true, {}, yearlyTableDefaults("/Reports/AjaxYear", lang, $('#yearDate').val()));
 
         var dcl = $('#dclDataTable').dataTable(oDclTable);
         var wec = $('#wecDataTable').dataTable(oWecTable);
         var mwd = $('#mwdDataTable').dataTable(oMwdTable);
+        var qtr = $('#qtrDataTable').dataTable(oQtrTable);
+        var year = $('#yearDataTable').dataTable(oYearTable);
 
         //
         // hide stuff 
         //  
-        $('#dclTable').hide(); // Daily (Casa Latina) table
-        $('#wecTable').hide(); // Weekly (El Centro) table
-        $('#mwdTable').hide(); // Monthly With Detail
-        // These  (above ) may be better hidden by using partial views. But so many files for the reports...
-        $('#sorryNoPieCharts').hide();
-        $('#sorryNoPrintView').hide();
-        // The preceding pop up in the header area when various events occur...
+        $('#dclTable').hide(); 
+        $('#wecTable').hide(); 
+        $('#mwdTable').hide(); 
+        $('#qtrTable').hide();
+        $('#yearTable').hide();
+
         $('#dclHelp').hide();
         $('#wecHelp').hide();
         $('#mwdHelp').hide();
-        // these three show up when someone is taking their time picking a date
-        // to instruct them how to proceed.
+        $('#qtrHelp').hide();
+        $('#yearHelp').hide();
+
 
 
 
@@ -227,6 +281,61 @@
                 mwdNewTable();
             });
 
+        //
+        // Querterly datepickerer
+        //
+
+        $('.ui-qtr-datepicker').hover(
+            function () {
+                $('#qtrHelp').show("fade", 2200);
+            },
+            function () {
+                $('#qtrHelp').hide("fade", 2200);
+            });
+
+        $('.ui-qtr-datepicker').datepicker({
+            autoSize: true,
+            changeMonth: true,
+            changeYear: true,
+            constrainInput: true,
+            dateFormat: 'mm/dd/yy',
+            duration: "slow",
+            showButtonPanel: false,
+            showOn: "focus"
+        });
+
+        $('.ui-qtr-datepicker').change(
+            function (event) {
+                qtrNewTable();
+            });
+
+        //
+        // Yearly datepickerer
+        //
+
+        $('.ui-year-datepicker').hover(
+            function () {
+                $('#yearHelp').show("fade", 2200);
+            },
+            function () {
+                $('#yearHelp').hide("fade", 2200);
+            });
+
+        $('.ui-year-datepicker').datepicker({
+            autoSize: true,
+            changeMonth: true,
+            changeYear: true,
+            constrainInput: true,
+            dateFormat: 'mm/dd/yy',
+            duration: "slow",
+            showButtonPanel: false,
+            showOn: "focus"
+        });
+
+        $('.ui-year-datepicker').change(
+            function (event) {
+                yearNewTable();
+            });
 
         //////////////////// | ACCORDIONS |
         //
@@ -255,6 +364,14 @@
             mwdNewTable();
         });
 
+        $('#qtrLink').click(function () {
+            qtrNewTable();
+        });
+
+        $('#yearLink').click(function () {
+            yearNewTable();
+        });
+
         //////////////////////////////////////////////////////////////////////// | DATATABLES |
         //
         // Looking for the table properties? Try reports.js in ~/Web/Scripts
@@ -281,6 +398,29 @@
             $('#mwdDataTable').dataTable(mwdOptions).fnReloadAjax();
             monthlyPie();
         }
+
+        function qtrNewTable() {
+            // by design, not a mistake ... *
+            mwdOptions = $.extend(true, {}, yearlyTableDefaults("/Reports/AjaxQtr", lang, $('#qtrDate').val()));
+            mwdOptions.bDestroy = "true,";
+            $('#mwdDataTable').dataTable(qtrOptions).fnReloadAjax();
+            monthlyPie();
+        }
+
+        function yearNewTable() {
+            mwdOptions = $.extend(true, {}, yearlyTableDefaults("/Reports/AjaxYear", lang, $('#yearDate').val()));
+            mwdOptions.bDestroy = "true,";
+            $('#mwdDataTable').dataTable(yearOptions).fnReloadAjax();
+            monthlyPie();
+        }
+
+        ////////////////////////////////////////////////////////////// | DRILLDOWNS |
+        //
+        //
+
+        //
+        // WEEKLY
+        //
 
         function fnFormatDetails(oTable, nTr) {
             var aData = oTable.fnGetData(nTr);
@@ -313,6 +453,66 @@
             }
         });
 
+        //
+        // QUARTERLY
+        //
+
+        function fnFormatYearDetails(oTable, nTr) {
+            var aData = oTable.fnGetData(nTr);
+            var drillList = aData.drilldown;
+            var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="margin-left: 13.5%;background: #90A2B6;border: solid 2px gray;border-collapse: separate;">';
+            sOut += '<thead><tr><th>Date</th>';
+            sOut += '<th>OSHA</th>';
+            sOut += '<th>Chemicals</th>';
+            sOut += '<th>Moving</th>';
+            sOut += '<th>Caregiving</th>';
+            sOut += '<th>Heat</th>';
+            sOut += '<th>Asbestos</th>';
+            sOut += '<th>Computers</th>';
+            sOut += '<th>Green Clean</th>';
+            sOut += '<th>MSF</th>';
+            sOut += '<th>Assembly</th>';
+            sOut += '</tr></thead><tbody>';
+            for (var i in drillList) {
+                var job = drillList[i];
+                sOut += '<tr><td>' + job.date + '</td><td>' + job.osha + '</td><td>' + job.chem + '</td><td>' + job.moving + '</td><td>' + job.care + '</td><td>' + job.heat + '</td><td>' + job.asbestos + '</td><td>' + job.computers + '</td><td>' + job.greenclean + '</td><td>' + job.msf + '</td><td>' + job.assembly + '</td></tr>';
+            }
+            sOut += '</tbody></table>';
+            return sOut;
+        }
+
+        $('#qtrDataTable tbody td img').live('click', function () {
+            var nTr = $(this).parents('tr')[0];
+
+            if (qtr.fnIsOpen(nTr)) {
+                /* This row is already open - close it */
+                this.src = "/Content/dataTables/details_open.png";
+                qtr.fnClose(nTr);
+            } else {
+                /* Open this row */
+                this.src = "/Content/dataTables/details_close.png";
+                qtr.fnOpen(nTr, fnFormatYearDetails(qtr, nTr), 'nestedDetails');
+            }
+        });
+
+        //
+        // YEARLY
+        //
+
+        $('#yearDataTable tbody td img').live('click', function () {
+            var nTr = $(this).parents('tr')[0];
+
+            if (year.fnIsOpen(nTr)) {
+                /* This row is already open - close it */
+                this.src = "/Content/dataTables/details_open.png";
+                year.fnClose(nTr);
+            } else {
+                /* Open this row */
+                this.src = "/Content/dataTables/details_close.png";
+                year.fnOpen(nTr, fnFormatYearDetails(year, nTr), 'nestedDetails');
+            }
+        });
+
         ///////////////////////////////////////////////////////////////////////////////// | BUTTONS |
         //
         //
@@ -332,6 +532,16 @@
         $('#mwdDataOnlyBtn').click(
             function () {
                 mwdNewTable();
+        });
+
+        $('#qtrRefreshBtn').click(
+            function () {
+                qtrNewTable();
+            });
+
+        $('#yearRefreshBtn').click(
+            function () {
+                yearNewTable();
             });
 
         // | PRINT VIEWS |
@@ -351,7 +561,20 @@
                  window.open('/Reports/PrintView?date='+$('#mwdDate').val()+'&typeOfReport=monthly');
              });
 
+         $('#qtrPrintReport').click(
+             function () {
+                window.open('/Reports/PrintView?date=' + $('#qtrDate').val() + '&typeOfReport=quarterly');
+         });
+
+         $('#yearPrintReport').click(
+            function () {
+                window.open('/Reports/PrintView?date=' + $('#yearDate').val() + '&typeOfReport=yearly');
+         });
+
+
+
         // | SPREADSHEETS |
+
          $('#dclSpreadsheet').click(function () {
              var url = "/Reports/AjaxDcl";
              var data = { todaysdate: $('#dclDate').val() };
@@ -382,6 +605,25 @@
              });
          });
 
+         $('#mwdSpreadsheet').click(function () {
+             var url = "/Reports/AjaxQtr";
+             var data = { todaysdate: $('#qtrDate').val() };
+             $.getJSON(url, data, function (ajax) {
+                 var jstring = JSON.stringify(ajax.aaData);
+                 var jcsv = json2spreadsheet(jstring);
+                 download(jcsv, "reports.csv", "text/csv");
+             });
+         });
+
+         $('#mwdSpreadsheet').click(function () {
+             var url = "/Reports/AjaxYear";
+             var data = { todaysdate: $('#yearDate').val() };
+             $.getJSON(url, data, function (ajax) {
+                 var jstring = JSON.stringify(ajax.aaData);
+                 var jcsv = json2spreadsheet(jstring);
+                 download(jcsv, "reports.csv", "text/csv");
+             });
+         });
 
 
         // | PIE CHARTS |
@@ -439,8 +681,10 @@
                        }
                      );
              });
-
          }
+
+        //Not sure yet if quarterly and yearly will have a pie chart or some other graphic.
+
     });
     // end DOM ready check
 </script>

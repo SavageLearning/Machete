@@ -70,11 +70,29 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Gardening 2.
+        /// </summary>
+        public static string advGarden {
+            get {
+                return ResourceManager.GetString("advGarden", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Average.
         /// </summary>
         public static string avgIncome {
             get {
                 return ResourceManager.GetString("avgIncome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gardening 1.
+        /// </summary>
+        public static string basicGarden {
+            get {
+                return ResourceManager.GetString("basicGarden", resourceCulture);
             }
         }
         
@@ -147,6 +165,24 @@ namespace Machete.Web.Resources {
         public static string dwcSignins {
             get {
                 return ResourceManager.GetString("dwcSignins", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ESL(&gt; 12 h.).
+        /// </summary>
+        public static string eslAssessed {
+            get {
+                return ResourceManager.GetString("eslAssessed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Financial Ed..
+        /// </summary>
+        public static string finEd {
+            get {
+                return ResourceManager.GetString("finEd", resourceCulture);
             }
         }
         
@@ -268,6 +304,24 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Safety.
+        /// </summary>
+        public static string safetyTraining {
+            get {
+                return ResourceManager.GetString("safetyTraining", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skills.
+        /// </summary>
+        public static string skillsTraining {
+            get {
+                return ResourceManager.GetString("skillsTraining", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SSRS.
         /// </summary>
         public static string ssrsTab {
@@ -304,6 +358,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Temporary.
+        /// </summary>
+        public static string tempJobs {
+            get {
+                return ResourceManager.GetString("tempJobs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Total Assignments.
         /// </summary>
         public static string totalAssignments {
@@ -336,6 +399,15 @@ namespace Machete.Web.Resources {
         public static string totalSignins {
             get {
                 return ResourceManager.GetString("totalSignins", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unique.
+        /// </summary>
+        public static string uniqueSignins {
+            get {
+                return ResourceManager.GetString("uniqueSignins", resourceCulture);
             }
         }
         
