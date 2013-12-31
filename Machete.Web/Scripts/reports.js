@@ -7,6 +7,7 @@
 //Removing the initial commas because the report data may contain commas
 //from the service level. This isn't ideal, but the idea is that they
 //get what they see as far as the reports are concerned.
+
 function json2spreadsheet(objArray) {
     var array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
 
@@ -191,6 +192,44 @@ function monthlyTableDefaults(url, lang, date)
         }
     };
     return mwdDefaults;
+}
+
+function yearlyTableDefaults(url, lang, date)
+{
+    var yearDefaults = {
+        "bPaginate": false, // this report has fixed size
+        "bAutoWidth": false,
+        "bDestroy": false,
+        "bInfo": true,
+        "bSort": false,
+        "bFilter": false,
+        "bServerSide": true, //server side processing
+        "sAjaxSource": url,
+        "bProcessing": false,
+        "oLanguage": lang,
+        "aoColumns": [
+                { mDataProp: "date" },
+                { mDataProp: "tempJobs" },
+                { mDataProp: "safetyTraining" },
+                { mDataProp: "skillsTraining" },
+                { mDataProp: "eslAssessed" },
+                { mDataProp: "basicGarden" },
+                { mDataProp: "advGarden" },
+                { mDataProp: "finEd" },
+                {
+                    mDataProp: null,
+                    sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="nestedDetailsButton">'
+                },
+        ], // column names; must match # of cols. in table
+        "fnServerData": function (sSource, aoData, fnCallback) {
+            aoData.push({ "name": "todaysdate", "value": date });
+            $.getJSON(sSource, aoData, function (json) {
+                /* Do whatever additional processing you want on the callback, then tell DataTables */
+                fnCallback(json);
+            });
+        }
+    };
+    return yearDefaults;
 }
 
 function jzcTableDefaults(lang, date) 

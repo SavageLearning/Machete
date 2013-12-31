@@ -231,4 +231,28 @@
   <data name="workersHeader" xml:space="preserve">
     <value>Machete Worker Reports</value>
   </data>
+  <data name="advGarden" xml:space="preserve">
+    <value>Jardinería 2</value>
+  </data>
+  <data name="basicGarden" xml:space="preserve">
+    <value>Jardinería 1</value>
+  </data>
+  <data name="eslAssessed" xml:space="preserve">
+    <value>Inglés (&gt; 12 h.)</value>
+  </data>
+  <data name="finEd" xml:space="preserve">
+    <value>Educación Fiscal</value>
+  </data>
+  <data name="safetyTraining" xml:space="preserve">
+    <value>Seguridad</value>
+  </data>
+  <data name="skillsTraining" xml:space="preserve">
+    <value>Capacitación</value>
+  </data>
+  <data name="tempJobs" xml:space="preserve">
+    <value>Temporal</value>
+  </data>
+  <data name="uniqueSignins" xml:space="preserve">
+    <value>Únicos</value>
+  </data>
 </root>
