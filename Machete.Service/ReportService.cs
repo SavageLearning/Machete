@@ -471,29 +471,21 @@ namespace Machete.Service
                     look => look.ID,
                     (wqasq, look) => new
                     {
-                        wqasq,
-                        tEN = look.text_EN
+                        inner = wqasq,
+                        nameEN = look.text_EN
                     })
-                .Join(lQ,
-                    wqasq => wqasq.wqasq.aid,
-                    look => look.ID,
-                    (wqasq, look) => new
-                    {
-                        inner = wqasq.wqasq,
-                        typeEN = look.text_EN,
-                        nameEN = wqasq.tEN
-                    })
-                .Where(whr => whr.nameEN == "English Class 1" || whr.nameEN == "English Class 2")
+                .Where(whr => whr.nameEN.Contains("English Class"))
                 .GroupBy(gb => new
                 {
                     person = gb.inner.pid,
                 })
                 .Select(sel => new ESLAssessed
                 {
-                    date = sel.First().inner.dfsi,
+                    date = sel.OrderByDescending(ai => ai.inner.dfsi).First().inner.dfsi,
                     personID = (int)sel.Key.person,
                     minutesInClass = sel.Sum(s => s.inner.time.Minutes + (s.inner.time.Hours * 60))
-                });
+                })
+                .Where(sec => sec.minutesInClass >= 720);
             return query;
         }
 
