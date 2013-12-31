@@ -521,6 +521,9 @@ namespace Machete.Service
         {
             IQueryable<reportUnit> query;
 
+            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
+            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
+
             var wQ = wRepo.GetAllQ();
 
             query = wQ
@@ -543,6 +546,9 @@ namespace Machete.Service
         {
             IQueryable<reportUnit> query;
 
+            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
+            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
+
             var wQ = wRepo.GetAllQ();
 
             query = wQ
@@ -564,6 +570,9 @@ namespace Machete.Service
         public IQueryable<reportUnit> StillEnrolled(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
+
+            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
+            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
             var wQ = wRepo.GetAllQ();
 
@@ -774,6 +783,17 @@ namespace Machete.Service
         }
 
         //Demographic Standards go here -- need objects besides reportUnit so that we can group and do drilldowns
+        #endregion
+
+        #region Client Profile Report
+
+        #region Section I
+        public IQueryable<reportUnit> ZipCode(DateTime beginDate, DateTime endDate)
+        {
+
+        }
+        #endregion
+
         #endregion
 
         #region ReportData
