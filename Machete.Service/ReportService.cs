@@ -1190,29 +1190,18 @@ namespace Machete.Service
             IEnumerable<reportUnit> temporaryPlacements;
             IEnumerable<activityUnit> safetyTrainees;
             IEnumerable<activityUnit> skillsTrainees;
-            IEnumerable<reportUnit> eslAssessed;
+            IEnumerable<ESLAssessed> eslAssessed;
             IEnumerable<reportUnit> basicGardenTrainees;
             IEnumerable<reportUnit> advGardenTrainees;
             IEnumerable<reportUnit> finTrainees;
 
-            //For safety:
-            //IEnumerable<activityUnit> oshaTrainees;
-            //IEnumerable<activityUnit> chemTrainees;
-            //IEnumerable<activityUnit> movingTrainees; 
-            
-            //For skills (includes leadership)
-            //IEnumerable<activityUnit> careTrainees;
-            //IEnumerable<activityUnit> heatTrainees;
-            //IEnumerable<activityUnit> asbestosTrainees;
-            //IEnumerable<activityUnit> computerTrainees;
-            //IEnumerable<activityUnit> greenTrainees;
-            //IEnumerable<activityUnit> msfCount;
-            //IEnumerable<activityUnit> assemblyCount; 
-
-            //Can replace the above:
             IEnumerable<activityUnit> getAllClassAttendance;
-            IEnumerable<DateTime> getAllDates;
+            
             IEnumerable<yearSumData> q;
+
+            IEnumerable<DateTime> getAllDates = Enumerable.Range(0, 1 + endDate.Subtract(beginDate).Days)
+                    .Select(offset => beginDate.AddDays(offset))
+                    .ToArray(); 
 
             temporaryPlacements = WorkersInTempJobs(beginDate, endDate).ToList();
             getAllClassAttendance = GetAllActivitySignins(beginDate, endDate).ToList();
@@ -1222,21 +1211,19 @@ namespace Machete.Service
             basicGardenTrainees = getAllClassAttendance.Where(basic => basic.info == "Basic Gardening");
             advGardenTrainees = getAllClassAttendance.Where(adv => adv.info == "Advanced Gardening");
             finTrainees = getAllClassAttendance.Where(fin => fin.info == "Financial Education");
-
-            getAllDates
             #endregion
 
-            q = getAllClassAttendance
+            q = getAllDates
                 .Select(g => new yearSumData
                 {
-                    date = g.date,
-                    temporaryPlacements = temporaryPlacements.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
-                    safetyTrainees = safetyTrainees.Where(whr => whr.date == g.date),
-                    skillsTrainees = skillsTrainees.Where(whr => whr.date == g.date),
-                    eslAssessed = eslAssessed.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
-                    basicGardenTrainees = basicGardenTrainees.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
-                    advGardenTrainees = advGardenTrainees.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
-                    finTrainees = finTrainees.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault()
+                    date = EntityFunctions.TruncateTime(g),
+                    temporaryPlacements = temporaryPlacements.Where(whr => whr.date == EntityFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault(),
+                    safetyTrainees = safetyTrainees.Where(whr => whr.date == EntityFunctions.TruncateTime(g)),
+                    skillsTrainees = skillsTrainees.Where(whr => whr.date == EntityFunctions.TruncateTime(g)),
+                    eslAssessed = eslAssessed.Where(whr => whr.date == EntityFunctions.TruncateTime(g)).Count(),
+                    basicGardenTrainees = basicGardenTrainees.Where(whr => whr.date == EntityFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault(),
+                    advGardenTrainees = advGardenTrainees.Where(whr => whr.date == EntityFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault(),
+                    finTrainees = finTrainees.Where(whr => whr.date == EntityFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault()
                 });
 
             return q;
@@ -1464,8 +1451,8 @@ namespace Machete.Service
     {
         public DateTime? date { get; set; }
         public int? temporaryPlacements { get; set; }
-        public IEnumerable<reportUnit> safetyTrainees { get; set; }
-        public IEnumerable<reportUnit> skillsTrainees { get; set; }
+        public IEnumerable<activityUnit> safetyTrainees { get; set; }
+        public IEnumerable<activityUnit> skillsTrainees { get; set; }
         public int? eslAssessed { get; set; }
         public int? basicGardenTrainees { get; set; }
         public int? advGardenTrainees { get; set; }
