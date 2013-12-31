@@ -882,6 +882,7 @@ namespace Machete.Service
             var lQ = lookRepo.GetAllQ();
 
             query = wQ
+                .Where(whr => whr.memberexpirationdate > beginDate && whr.dateOfMembership < endDate)
                 .Join(lQ,
                     wJoin => wJoin.incomeID,
                     lJoin => lJoin.ID,
@@ -902,6 +903,127 @@ namespace Machete.Service
 
             return query;
         }
+        #endregion
+
+        #region Section IV
+        public IQueryable<reportUnit> Age(DateTime beginDate, DateTime endDate)
+        {
+            IQueryable<reportUnit> query;
+
+            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
+            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
+
+            var wQ = wRepo.GetAllQ();
+
+            query = wQ
+                .Where(whr => whr.memberexpirationdate > beginDate && whr.dateOfMembership < endDate)
+                .Select(worker => new
+                {
+                    age = (new DateTime(1753, 1, 1) + (DateTime.Now - worker.dateOfBirth)).Year - 1753,
+                    dob = worker.dateOfBirth
+                })
+                .Select(ageO => ageO.dob == new DateTime(1900, 1, 1) ? "Unknown" :
+                                ageO.age <= 5 ? "0 to 5 years" :
+                                ageO.age <= 12 ? "6 to 12 years" :
+                                ageO.age <= 18 ? "13 to 18 years" :
+                                ageO.age <= 29 ? "19 to 29 years" :
+                                ageO.age <= 45 ? "30 to 45 years" :
+                                ageO.age <= 64 ? "46 to 64 years" :
+                                ageO.age <= 84 ? "65 to 84 years" :
+                                "85+ years")
+                .GroupBy(ageCategory => ageCategory)
+                .Select(group => new reportUnit
+                {
+                    info = group.Key,
+                    count = group.Count()
+                });
+
+            return query;
+			
+        }
+        #endregion
+
+        #region Section V
+        public IQueryable<reportUnit> Gender(DateTime beginDate, DateTime endDate)
+        {
+            IQueryable<reportUnit> query;
+
+            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
+            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
+
+            var wQ = wRepo.GetAllQ();
+            var lQ = lookRepo.GetAllQ();
+
+            query = wQ
+                .Where(whr => whr.memberexpirationdate > beginDate && whr.dateOfMembership < endDate)
+                .GroupBy(worker => worker.Person.gender)
+                .Join(lQ,
+                    group => group.Key,
+                    look => look.ID,
+                    (group, look) => new reportUnit
+                    {
+                        count = group.Count(),
+                        info = look.text_EN
+                    });
+
+            return query;
+        }
+        #endregion
+
+        #region Section VII
+        public IQueryable<reportUnit> HasDisability(DateTime beginDate, DateTime endDate)
+        {
+            IQueryable<reportUnit> query;
+
+            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
+            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
+
+            var wQ = wRepo.GetAllQ();
+
+            query = wQ
+                .Where(whr => whr.memberexpirationdate > beginDate && whr.dateOfMembership < endDate)
+                .GroupBy(worker => worker.disabled)
+                .Select(group => new reportUnit
+                {
+                    info = group.Key ? "Yes" : "No",
+                    count = group.Count()
+                });
+
+            return query;
+        }
+        #endregion
+
+        #region Section VIII
+        public IQueryable<reportUnit> RaceEthnicity(DateTime beginDate, DateTime endDate)
+        {
+            IQueryable<reportUnit> query;
+
+            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
+            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
+
+            var wQ = wRepo.GetAllQ();
+            var lQ = lookRepo.GetAllQ();
+
+            query = wQ
+                .Where(whr => whr.memberexpirationdate > beginDate && whr.dateOfMembership < endDate)
+                .GroupBy(worker => worker.RaceID)
+                .Join(lQ,
+                    gJoin => gJoin.Key,
+                    lJoin => lJoin.ID,
+                    (gJoin, lJoin) => new
+                    {
+                        race = lJoin.text_EN,
+                        count = gJoin.Count()
+                    })
+                .Select(glJoin => new reportUnit
+                {
+                    info = glJoin.race,
+                    count = glJoin.count
+                });
+
+            return query;
+        }
+        
         #endregion
 
         #endregion
