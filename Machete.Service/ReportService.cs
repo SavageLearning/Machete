@@ -1274,6 +1274,35 @@ namespace Machete.Service
             return q;
         }
 
+        public IEnumerable<reportUnit> ClientProfileReportController(DateTime beginDate, DateTime endDate)
+        {
+            IEnumerable<reportUnit> zipcodes;
+            IEnumerable<reportUnit> homeless;
+            IEnumerable<reportUnit> householdComposition;
+            IEnumerable<reportUnit> income;
+            IEnumerable<reportUnit> age;
+            IEnumerable<reportUnit> gender;
+            IEnumerable<reportUnit> disabilities;
+            IEnumerable<reportUnit> race;
+            IEnumerable<reportUnit> refugeeImmigrant;
+            IEnumerable<reportUnit> englishLevel;
+            IEnumerable<reportUnit> q;
+
+            zipcodes = ZipCode(beginDate, endDate).ToList();
+            homeless = Homeless(beginDate, endDate).ToList();
+            householdComposition = HouseholdComposition(beginDate, endDate).ToList();
+            income = Income(beginDate, endDate).ToList();
+            age = Age(beginDate, endDate).ToList();
+            gender = Gender(beginDate, endDate).ToList();
+            disabilities = HasDisability(beginDate, endDate).ToList();
+            race = RaceEthnicity(beginDate, endDate).ToList();
+            refugeeImmigrant = RefugeeImmigrant(beginDate, endDate).ToList();
+            englishLevel = EnglishLevel(beginDate, endDate).ToList();
+
+            q = zipcodes.Concat(homeless.Concat(householdComposition.Concat(income.Concat(age.Concat(gender.Concat(disabilities.Concat(race.Concat(refugeeImmigrant.Concat(englishLevel)))))))));
+            return q;
+        }
+
         #region Work Order Reports
         /// <summary>
         /// Jobs and Zip Codes controller. The jobs and zip codes report was
@@ -1513,9 +1542,5 @@ namespace Machete.Service
         public IEnumerable<reportUnit> zipsCodes { get; set; }
     }
 
-    public class clientProfileData
-    {
-
-    }
     #endregion
 }
