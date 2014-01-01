@@ -1147,13 +1147,19 @@ namespace Machete.Service
             IEnumerable<reportUnit> newPpl;
             IEnumerable<reportUnit> pplLeft;
             IEnumerable<reportUnit> pplStay;
-            //IEnumerable<reportUnit> finLit;
-            //IEnumerable<reportUnit> jobSkills;
-            IEnumerable<reportUnit> eslGrads;
+            IEnumerable<reportUnit> finLit;
+            IEnumerable<reportUnit> jobSkills;
+            IEnumerable<ESLAssessed> eslGrads;
             IEnumerable<reportUnit> undupDispatch;
             IEnumerable<reportUnit> permPlaced;
-            
+
+            IEnumerable<activityUnit> getAllClassAttendance;
+
             IEnumerable<monthlyData> q; 
+
+            IEnumerable<DateTime> getAllDates = Enumerable.Range(0, 1 + endDate.Subtract(beginDate).Days)
+                    .Select(offset => beginDate.AddDays(offset))
+                    .ToArray(); 
 
             signins = CountSignins(beginDate, endDate).ToList();
             unique = CountUniqueSignins(beginDate, endDate).ToList();
@@ -1162,33 +1168,35 @@ namespace Machete.Service
             newPpl = NewlyEnrolled(beginDate, endDate).ToList();
             pplLeft = NewlyExpired(beginDate, endDate).ToList();
             pplStay = StillEnrolled(beginDate, endDate).ToList();
-            //finLit = null;
-            //jobSkills = null;
-            eslGrads = AdultsEnrolledAndAssessed(beginDate, endDate).ToList();
-            undupDispatch = WorkersInTempJobs(beginDate, endDate).ToList();
-            permPlaced = WorkersInPermanentJobs(beginDate, endDate).ToList();
 
-            q = average
+            getAllClassAttendance = GetAllActivitySignins(beginDate, endDate).ToList();
+            jobSkills = getAllClassAttendance.Where(skills => skills.activityType == "Skills Training");
+            finLit = getAllClassAttendance.Where(fin => fin.info == "Financial Education");
+            eslGrads = AdultsEnrolledAndAssessedInESL(beginDate, endDate).ToList();
+            undupDispatch = WorkersInTempJobs(beginDate, endDate).ToList();
+            permPlaced = WorkersPlacedInPermanentJobs(beginDate, endDate).ToList();
+
+            q = getAllDates
                 .Select(g => new monthlyData
                 {
-                    date = g.date,
-                    totalSignins = signins.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
-                    uniqueSignins = unique.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
-                    dispatchedDWCList = dispatch.Where(whr => whr.date == g.date).Select(h => h.dwcList).FirstOrDefault(),
-                    dispatchedHHHList = dispatch.Where(whr => whr.date == g.date).Select(h => h.hhhList).FirstOrDefault(),
-                    dispatchedDWCPropio = dispatch.Where(whr => whr.date == g.date).Select(h => h.dwcPropio).FirstOrDefault(),
-                    dispatchedHHHPropio = dispatch.Where(whr => whr.date == g.date).Select(h => h.hhhPropio).FirstOrDefault(),
-                    totalHours = g.hours,
-                    totalIncome = g.wages,
-                    avgIncomePerHour = g.avg,
-                    newlyEnrolled = newPpl.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
-                    peopleWhoLeft = pplLeft.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
-                    peopleWhoStayed = pplStay.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
-                    //financialLiterates = ,
-                    //jobSkillsTrainees = ,
-                    gradFromESL = eslGrads.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
-                    unduplicatedDispatched = undupDispatch.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
-                    permanentPlacements = permPlaced.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
+                    date = EntityFunctions.TruncateTime(g),
+                    totalSignins = signins.Where(whr => whr.date == EntityFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault(),
+                    uniqueSignins = unique.Where(whr => whr.date == EntityFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault(),
+                    dispatchedDWCList = dispatch.Where(whr => whr.date == EntityFunctions.TruncateTime(g)).Select(h => h.dwcList).FirstOrDefault(),
+                    dispatchedHHHList = dispatch.Where(whr => whr.date == EntityFunctions.TruncateTime(g)).Select(h => h.hhhList).FirstOrDefault(),
+                    dispatchedDWCPropio = dispatch.Where(whr => whr.date == EntityFunctions.TruncateTime(g)).Select(h => h.dwcPropio).FirstOrDefault(),
+                    dispatchedHHHPropio = dispatch.Where(whr => whr.date == EntityFunctions.TruncateTime(g)).Select(h => h.hhhPropio).FirstOrDefault(),
+                    totalHours = average.Where(whr => whr.date == EntityFunctions.TruncateTime(g)).Select(h => h.hours).FirstOrDefault(),
+                    totalIncome = average.Where(whr => whr.date == EntityFunctions.TruncateTime(g)).Select(h => h.wages).FirstOrDefault(),
+                    avgIncomePerHour = average.Where(whr => whr.date == EntityFunctions.TruncateTime(g)).Select(h => h.avg).FirstOrDefault(),
+                    newlyEnrolled = newPpl.Where(whr => whr.date == EntityFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault(),
+                    peopleWhoLeft = pplLeft.Where(whr => whr.date == EntityFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault(),
+                    peopleWhoStayed = pplStay.Where(whr => whr.date == EntityFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault(),
+                    financialLiterates = finLit.Where(whr => whr.date == EntityFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault(),
+                    jobSkillsTrainees = jobSkills.Where(whr => whr.date == EntityFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault(),
+                    gradFromESL = eslGrads.Where(whr => whr.date == EntityFunctions.TruncateTime(g)).Count(),
+                    unduplicatedDispatched = undupDispatch.Where(whr => whr.date == EntityFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault(),
+                    permanentPlacements = permPlaced.Where(whr => whr.date == EntityFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault(),
                 });
 
             q = q.OrderBy(p => p.date);
@@ -1198,33 +1206,21 @@ namespace Machete.Service
 
         public IEnumerable<yearSumData> YearlyController(DateTime beginDate, DateTime endDate)
         {
-            #region variables
             IEnumerable<reportUnit> temporaryPlacements;
             IEnumerable<activityUnit> safetyTrainees;
             IEnumerable<activityUnit> skillsTrainees;
-            IEnumerable<reportUnit> eslAssessed;
+            IEnumerable<ESLAssessed> eslAssessed;
             IEnumerable<reportUnit> basicGardenTrainees;
             IEnumerable<reportUnit> advGardenTrainees;
             IEnumerable<reportUnit> finTrainees;
 
-            //For safety:
-            //IEnumerable<activityUnit> oshaTrainees;
-            //IEnumerable<activityUnit> chemTrainees;
-            //IEnumerable<activityUnit> movingTrainees; 
-            
-            //For skills (includes leadership)
-            //IEnumerable<activityUnit> careTrainees;
-            //IEnumerable<activityUnit> heatTrainees;
-            //IEnumerable<activityUnit> asbestosTrainees;
-            //IEnumerable<activityUnit> computerTrainees;
-            //IEnumerable<activityUnit> greenTrainees;
-            //IEnumerable<activityUnit> msfCount;
-            //IEnumerable<activityUnit> assemblyCount; 
-
-            //Can replace the above:
             IEnumerable<activityUnit> getAllClassAttendance;
-            IEnumerable<DateTime> getAllDates;
+            
             IEnumerable<yearSumData> q;
+
+            IEnumerable<DateTime> getAllDates = Enumerable.Range(0, 1 + endDate.Subtract(beginDate).Days)
+                    .Select(offset => beginDate.AddDays(offset))
+                    .ToArray(); 
 
             temporaryPlacements = WorkersInTempJobs(beginDate, endDate).ToList();
             getAllClassAttendance = GetAllActivitySignins(beginDate, endDate).ToList();
@@ -1235,20 +1231,17 @@ namespace Machete.Service
             advGardenTrainees = getAllClassAttendance.Where(adv => adv.info == "Advanced Gardening");
             finTrainees = getAllClassAttendance.Where(fin => fin.info == "Financial Education");
 
-            getAllDates
-            #endregion
-
-            q = getAllClassAttendance
+            q = getAllDates
                 .Select(g => new yearSumData
                 {
-                    date = g.date,
-                    temporaryPlacements = temporaryPlacements.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
-                    safetyTrainees = safetyTrainees.Where(whr => whr.date == g.date),
-                    skillsTrainees = skillsTrainees.Where(whr => whr.date == g.date),
-                    eslAssessed = eslAssessed.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
-                    basicGardenTrainees = basicGardenTrainees.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
-                    advGardenTrainees = advGardenTrainees.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault(),
-                    finTrainees = finTrainees.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault()
+                    date = EntityFunctions.TruncateTime(g),
+                    temporaryPlacements = temporaryPlacements.Where(whr => whr.date == EntityFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault(),
+                    safetyTrainees = safetyTrainees.Where(whr => whr.date == EntityFunctions.TruncateTime(g)),
+                    skillsTrainees = skillsTrainees.Where(whr => whr.date == EntityFunctions.TruncateTime(g)),
+                    eslAssessed = eslAssessed.Where(whr => whr.date == EntityFunctions.TruncateTime(g)).Count(),
+                    basicGardenTrainees = basicGardenTrainees.Where(whr => whr.date == EntityFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault(),
+                    advGardenTrainees = advGardenTrainees.Where(whr => whr.date == EntityFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault(),
+                    finTrainees = finTrainees.Where(whr => whr.date == EntityFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault()
                 });
 
             return q;
@@ -1358,8 +1351,8 @@ namespace Machete.Service
             DateTime endDate;
             IEnumerable<yearSumData> query;
 
-            beginDate = new DateTime(yDate.Year, yDate.Month, 1, 0, 0, 0);
-            endDate = new DateTime(yDate.Year, yDate.Month, System.DateTime.DaysInMonth(yDate.Year, yDate.Month), 23, 59, 59).AddMonths(12);
+            beginDate = new DateTime(yDate.Year, yDate.Month, 1, 0, 0, 0).AddMonths(-12);
+            endDate = new DateTime(yDate.Year, yDate.Month, System.DateTime.DaysInMonth(yDate.Year, yDate.Month), 23, 59, 59);
 
             query = YearlyController(beginDate, endDate);
 
@@ -1476,8 +1469,8 @@ namespace Machete.Service
     {
         public DateTime? date { get; set; }
         public int? temporaryPlacements { get; set; }
-        public IEnumerable<reportUnit> safetyTrainees { get; set; }
-        public IEnumerable<reportUnit> skillsTrainees { get; set; }
+        public IEnumerable<activityUnit> safetyTrainees { get; set; }
+        public IEnumerable<activityUnit> skillsTrainees { get; set; }
         public int? eslAssessed { get; set; }
         public int? basicGardenTrainees { get; set; }
         public int? advGardenTrainees { get; set; }
