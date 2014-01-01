@@ -1258,11 +1258,11 @@ namespace Machete.Service
 
             hmisData q;
 
-            singleAdultsTotal = SingleAdults(beginDate);
-            familyHouseholdsTotal = FamilyHouseholds(beginDate);
-            singleAdultsNewlyEnrolled = NewlyEnrolledSingleAdults(beginDate, endDate);
-            familyHouseholdsNewlyEnrolled = NewlyEnrolledFamilyHouseholds(beginDate, endDate);
-            zipCodes = PersonZipCodePercentages();
+            singleAdultsTotal = SingleAdults(beginDate).ToList();
+            familyHouseholdsTotal = FamilyHouseholds(beginDate).ToList();
+            singleAdultsNewlyEnrolled = NewlyEnrolledSingleAdults(beginDate, endDate).ToList();
+            familyHouseholdsNewlyEnrolled = NewlyEnrolledFamilyHouseholds(beginDate, endDate).ToList();
+            zipCodes = PersonZipCodePercentages().ToList();
 
             q = new hmisData();
             q.newlyEnrolledFamilyHouseholds = familyHouseholdsNewlyEnrolled.First().count;
@@ -1511,6 +1511,11 @@ namespace Machete.Service
         public int? totalSingleAdults { get; set; }
         public int? totalFamilyHouseholds { get; set; }
         public IEnumerable<reportUnit> zipsCodes { get; set; }
+    }
+
+    public class clientProfileData
+    {
+
     }
     #endregion
 }
