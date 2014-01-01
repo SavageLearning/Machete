@@ -255,4 +255,16 @@
   <data name="uniqueSignins" xml:space="preserve">
     <value>Unique</value>
   </data>
+  <data name="familyHouseholds" xml:space="preserve">
+    <value>With Family (total)</value>
+  </data>
+  <data name="newFamilyHousholds" xml:space="preserve">
+    <value>With Family (new)</value>
+  </data>
+  <data name="newSingleAdults" xml:space="preserve">
+    <value>Singles (new)</value>
+  </data>
+  <data name="singleAdults" xml:space="preserve">
+    <value>Singles (total)</value>
+  </data>
 </root>

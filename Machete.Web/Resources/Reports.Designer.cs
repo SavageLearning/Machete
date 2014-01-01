@@ -178,6 +178,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to With Family (total).
+        /// </summary>
+        public static string familyHouseholds {
+            get {
+                return ResourceManager.GetString("familyHouseholds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Financial Ed..
         /// </summary>
         public static string finEd {
@@ -268,6 +277,24 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to With Family (new).
+        /// </summary>
+        public static string newFamilyHousholds {
+            get {
+                return ResourceManager.GetString("newFamilyHousholds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Singles (new).
+        /// </summary>
+        public static string newSingleAdults {
+            get {
+                return ResourceManager.GetString("newSingleAdults", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Number of jobs.
         /// </summary>
         public static string noWeekJobs {
@@ -309,6 +336,15 @@ namespace Machete.Web.Resources {
         public static string safetyTraining {
             get {
                 return ResourceManager.GetString("safetyTraining", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Singles (total).
+        /// </summary>
+        public static string singleAdults {
+            get {
+                return ResourceManager.GetString("singleAdults", resourceCulture);
             }
         }
         
