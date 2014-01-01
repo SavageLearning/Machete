@@ -264,6 +264,37 @@ function jzcTableDefaults(lang, date)
     return jzcDefaults;
 }
 
+function newTableDefaults(lang, date) {
+    var newDefaults = {
+        "bPaginate": false, // to enable pagination (this report has fixed size)
+        "bAutoWidth": false,
+        "bScrollCollapse": true,
+        "bDestroy": false,
+        "bInfo": true, //shows information about data being displayed on the page
+        "bSort": false, //enable or disable sorting of columns
+        "bFilter": false, //enable or disable filtering of data
+        "bServerSide": true, //server side processing, req. source
+        "sAjaxSource": "/Reports/AjaxNewWorkers", //source for server side processing
+        "bProcessing": false,
+        "oLanguage": lang,
+        "aoColumns": [
+            { mDataProp: "date" },
+            { mDataProp: "singles" },
+            { mDataProp: "families" },
+            { mDataProp: "newSingles" },
+            { mDataProp: "newFamilies" }
+        ], //these are the column names in the array; total # must match
+        "fnServerData": function (sSource, aoData, fnCallback) {
+            aoData.push({ "name": "todaysdate", "value": date });
+            $.getJSON(sSource, aoData, function (json) {
+                /* Do whatever additional processing you want on the callback, then tell DataTables */
+                fnCallback(json);
+            });
+        }
+    };
+    return jzcDefaults;
+}
+
 //tested on jsFiddle, working ok
 function dailySigninPie(objArray) {
     var array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
