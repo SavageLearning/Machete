@@ -672,7 +672,8 @@ namespace Machete.Service
                 });
 
             return query;
-        }public IQueryable<reportUnit> SingleAdults(DateTime beginDate)
+        }
+        public IQueryable<reportUnit> SingleAdults(DateTime beginDate)
         {
             IQueryable<reportUnit> query;
 
@@ -1247,6 +1248,32 @@ namespace Machete.Service
             return q;
         }
 
+        public hmisData HMISController(DateTime beginDate, DateTime endDate)
+        {
+            IEnumerable<reportUnit> singleAdultsTotal;
+            IEnumerable<reportUnit> familyHouseholdsTotal;
+            IEnumerable<reportUnit> singleAdultsNewlyEnrolled;
+            IEnumerable<reportUnit> familyHouseholdsNewlyEnrolled;
+            IEnumerable<reportUnit> zipCodes;
+
+            hmisData q;
+
+            singleAdultsTotal = SingleAdults(beginDate);
+            familyHouseholdsTotal = FamilyHouseholds(beginDate);
+            singleAdultsNewlyEnrolled = NewlyEnrolledSingleAdults(beginDate, endDate);
+            familyHouseholdsNewlyEnrolled = NewlyEnrolledFamilyHouseholds(beginDate, endDate);
+            zipCodes = PersonZipCodePercentages();
+
+            q = new hmisData();
+            q.newlyEnrolledFamilyHouseholds = familyHouseholdsNewlyEnrolled.First().count;
+            q.newlyEnrolledSingleAdults = singleAdultsNewlyEnrolled.First().count;
+            q.totalFamilyHouseholds = familyHouseholdsTotal.First().count;
+            q.totalSingleAdults = singleAdultsTotal.First().count;
+            q.zipsCodes = zipCodes;
+
+            return q;
+        }
+
         #region Work Order Reports
         /// <summary>
         /// Jobs and Zip Codes controller. The jobs and zip codes report was
@@ -1483,6 +1510,7 @@ namespace Machete.Service
         public int? newlyEnrolledFamilyHouseholds { get; set; }
         public int? totalSingleAdults { get; set; }
         public int? totalFamilyHouseholds { get; set; }
+        public IEnumerable<reportUnit> zipsCodes { get; set; }
     }
     #endregion
 }
