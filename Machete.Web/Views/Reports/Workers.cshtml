@@ -36,6 +36,29 @@
         <div id="piechart1" style="float:left;height:auto;width:50%;"><p id="testp1">Pie chart one goats here.</p></div>
         <div id="piechart2" style="float:left;height:auto;width:50%;"><p id="testp2">Pie chart two goats there.</p></div>
     </div>
+    <h3><a href="#" id="newLink">New Workers</a></h3>
+    <div id="newTable">
+        <div style="display:block;">
+            <input type="button" value="Refresh" class="formButton" id="newDataRefreshBtn" />
+            <input type="button" value="Print" class="formButton" id="newPrint" />
+            <input type="button" value="Spreadsheet" class="formButton" id="newSpreadsheet" />
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-datepicker", @id = "jzcDate" })
+            <p id="newHelp" style="display:inline;"><em>Select a date to see results.</em></p>
+        </div>
+        <table id="newDataTable" class="display">
+            <thead>
+                <tr>
+                    <th style="width:15%;">@Machete.Web.Resources.Reports.date</th>
+                    <th style="width:15%;">@Machete.Web.Resources.Reports.singleAdults</th>
+                    <th style="width:10%;">@Machete.Web.Resources.Reports.familyHouseholds</th>
+                    <th style="width:15%;">@Machete.Web.Resources.Reports.newSingleAdults</th>
+                    <th style="width:10%;">@Machete.Web.Resources.Reports.newFamilyHousholds</th>
+                </tr>
+            </thead>
+        </table>
+        <div id="newpiechart1" style="float:left;height:auto;width:50%;"><p id="testp1">Pie chart one goats here.</p></div>
+    </div>
+
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -47,6 +70,9 @@
 
         $('#jzcTable').hide();
         $('#jzcHelp').hide();
+        $('#newTable').hide();
+        $('#newHelp').hide();
+
 
         $('#workerHide').click(
             function () {
@@ -65,6 +91,9 @@
         });
 
         $('#jzcLink').click(function () {
+            jzcNewTable();
+        });
+        $('#newLink').click(function () {
             jzcNewTable();
         });
 
@@ -98,6 +127,31 @@
             jzcNewTable();
         });
 
+        $('.ui-new-datepicker').datepicker({
+            autoSize: true,
+            changeMonth: true,
+            changeYear: true,
+            constrainInput: true,
+            dateFormat: 'mm/dd/yy',
+            duration: "slow",
+            showButtonPanel: false,
+            showOn: "focus"
+        });
+
+        $('.ui-new-datepicker').hover(
+            function () {
+                $('#jzcHelp').show("fade", 1100);
+            },
+            function () {
+                $('#jzcHelp').hide("fade", 1100);
+            });
+
+        $('.ui-new-datepicker').change(
+        function (event) {
+            newNewTable();
+        });
+
+
         ////////////////////////////////////////////////////////////////////////////// | DATATABLES |
         //
         //
@@ -107,6 +161,12 @@
             var jzcNewTable = jQuery.extend(true, {}, jzcTableDefaults(lang, $('#jzcDate').val()));
             jzcNewTable["bDestroy"] = "true,";
             $('#jzcDataTable').dataTable(jzcNewTable).fnReloadAjax();
+        };
+
+        function newNewTable() {
+            var newNewTable = jQuery.extend(true, {}, newcTableDefaults(lang, $('#newDate').val()));
+            newNewTable["bDestroy"] = "true,";
+            $('#newDataTable').dataTable(newNewTable).fnReloadAjax();
         };
 
         //////////////////////////////////////////////////////////////////////////////////// | BUTTONS |
@@ -126,6 +186,26 @@
         $('#jzcSpreadsheet').click(function () {
             var url = "/Reports/AjaxJobsZipCodes";
             var data = { todaysdate: $('#jzcDate').val() };
+            $.getJSON(url, data, function (ajax) {
+                var jstring = JSON.stringify(ajax.aaData);
+                var jcsv = json2spreadsheet(jstring);
+                download(jcsv, "reports.csv", "text/csv");
+            });
+        });
+
+        $('#newDataRefreshBtn').click(
+        function () {
+            newNewTable();
+        });
+
+        $('#newPrint').click(
+            function () {
+                window.open('/Reports/PrintView?date=' + $('#newDate').val() + '&typeOfReport=newworkers');
+            });
+
+        $('#newSpreadsheet').click(function () {
+            var url = "/Reports/AjaxNewWorkers";
+            var data = { todaysdate: $('#newDate').val() };
             $.getJSON(url, data, function (ajax) {
                 var jstring = JSON.stringify(ajax.aaData);
                 var jcsv = json2spreadsheet(jstring);
