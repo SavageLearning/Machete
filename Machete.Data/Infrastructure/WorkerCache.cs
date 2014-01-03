@@ -30,34 +30,47 @@ using Machete.Domain;
 using System.Data.Entity;
 using System.Runtime.Caching;
 using System.Data.Entity.Validation;
+using Machete.Data.Infrastructure;
 
 namespace Machete.Data
 {
-    public static class WorkerCache
+    public interface IWorkerCache
     {
-        private static MacheteContext DB { get; set; }
-        private static CacheItem DbCache { get; set; }        
-        private static ObjectCache cache;
+        void Refresh();
+        IEnumerable<Worker> GetCache();
+    }
+
+    public class WorkerCache : IWorkerCache
+    {
+        private Func<IDatabaseFactory> _factory { get; set; }
+        private CacheItem DbCache { get; set; }        
+        private ObjectCache cache;
         //
         //
-        public static void Initialize(MacheteContext db)
+        public WorkerCache(Func<IDatabaseFactory> factory)
         {
             cache = MemoryCache.Default;
-            DB = db;
+            _factory = factory;
             FillCache();            
         }
 
-        public static void Dispose()
+        public void Dispose()
         {
-            DB = null;
+            _factory = null;
             DbCache = null;
             cache = null;
         }
         //
         //
-        private static void FillCache()
+        private MacheteContext GetDB()
         {
-            IQueryable<Worker> workersRaw = DB.Workers;
+            return _factory().Get();
+        }
+        //
+        //
+        private void FillCache()
+        {
+            IQueryable<Worker> workersRaw = GetDB().Workers;
             IQueryable<Worker> workersNoTracking = workersRaw.AsNoTracking();
             IQueryable<Worker> workersIncluded = workersNoTracking.Include(p => p.Person);
             IEnumerable<Worker> workers = workersIncluded.ToList();
@@ -65,20 +78,12 @@ namespace Machete.Data
             policy.AbsoluteExpiration = new DateTimeOffset(DateTime.Now.AddMinutes(5));
             CacheItem wCacheItem = new CacheItem("workerCache", workers);
             cache.Set(wCacheItem, policy);
-            //DB.Dispose();
-            ReactivateMembers(DB);
-            ExpireMembers(DB);            
+            ReactivateMembers();
+            ExpireMembers();            
         }
         //
         //
-        private static void FillCache(MacheteContext db)
-        {
-            DB = db;
-            FillCache();
-        }
-        //
-        //
-        public static IEnumerable<Worker> getCache()
+        public IEnumerable<Worker> GetCache()
         {
             CacheItem wCacheItem = cache.GetCacheItem("workerCache");
             if (wCacheItem == null) 
@@ -90,19 +95,19 @@ namespace Machete.Data
         }
         //
         //
-        public static void Refresh(MacheteContext db)
+        public void Refresh()
         {
-            FillCache(db);            
+            FillCache();            
         }
         /// <summary>
         /// Expires active workers based on expiration date
         /// </summary>
         /// <param name="db"></param>
         /// <returns>true if at least one record expired</returns>
-        public static bool ExpireMembers(MacheteContext db)
+        public bool ExpireMembers()
         {
             bool rtn = false;
-            IQueryable<Worker> list = db.Workers
+            IQueryable<Worker> list = GetDB().Workers
                 .Where(w => w.memberexpirationdate < DateTime.Now && 
                     w.memberStatus == Worker.iActive);
             //
@@ -112,7 +117,7 @@ namespace Machete.Data
             {
                 wkr.memberStatus = Worker.iExpired;                
             }
-            db.SaveChanges();
+            GetDB().SaveChanges();
             return rtn;
         }
         /// <summary>
@@ -120,10 +125,10 @@ namespace Machete.Data
         /// </summary>
         /// <param name="db"></param>
         /// <returns>true if at least one record reactivated</returns>
-        public static bool ReactivateMembers(MacheteContext db) 
+        public bool ReactivateMembers() 
         {
             bool rtn = false;
-            IQueryable<Worker> list = db.Workers
+            IQueryable<Worker> list = GetDB().Workers
                 .Where(w => w.memberReactivateDate != null &&
                     w.memberReactivateDate < DateTime.Now &&
                     w.memberStatus == Worker.iSanctioned);
@@ -136,7 +141,7 @@ namespace Machete.Data
             }
             try
             {
-                db.SaveChanges();
+                GetDB().SaveChanges();
             }
             catch (DbEntityValidationException e)
             {

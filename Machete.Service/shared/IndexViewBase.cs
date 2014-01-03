@@ -49,9 +49,9 @@ namespace Machete.Service
         {
             q = q.Where(p => DbFunctions.DiffDays(p.dateforsignin, o.date) == 0 ? true : false);
         }
-        public static void search<T>(viewOptions o, ref IEnumerable<T> e) where T : Signin
+        public static void search<T>(viewOptions o, ref IEnumerable<T> e, IEnumerable<Worker> wcache) where T : Signin
         {
-            e = e.Join(WorkerCache.getCache(), s => s.dwccardnum, w => w.dwccardnum, (s, w) => new { s, w })
+            e = e.Join(wcache, s => s.dwccardnum, w => w.dwccardnum, (s, w) => new { s, w })
                 .Where(p => p.w.dwccardnum.ToString().ContainsOIC(o.sSearch) ||
                             p.w.Person.firstname1.ContainsOIC(o.sSearch) ||
                             p.w.Person.firstname2.ContainsOIC(o.sSearch) ||
@@ -227,7 +227,10 @@ namespace Machete.Service
                         p.wa.Updatedby.Contains(o.sSearch)).Select(p => p.wa);
             }
         }
-        public static IEnumerable<WorkAssignment> filterOnSkill(viewOptions o, IQueryable<WorkAssignment> q, ILookupCache lc)
+        public static IEnumerable<WorkAssignment> filterOnSkill(
+            viewOptions o, 
+            IQueryable<WorkAssignment> q,
+            ILookupCache lc, IEnumerable<Worker> wcache)
         {
             //  "Machete --A series of good intentions, marinated in panic."
             //
@@ -245,7 +248,7 @@ namespace Machete.Service
             IEnumerable<WorkAssignment> filteredWA = q.AsEnumerable();
             Stack<int> primeskills = new Stack<int>();
             Stack<int> skills = new Stack<int>();
-            Worker worker = WorkerCache.getCache().FirstOrDefault(w => w.dwccardnum == o.dwccardnum);
+            Worker worker = wcache.FirstOrDefault(w => w.dwccardnum == o.dwccardnum);
             if (worker != null)
             {
                 if (worker.skill1 != null) primeskills.Push((int)worker.skill1);

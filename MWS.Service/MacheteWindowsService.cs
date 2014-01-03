@@ -3,6 +3,7 @@ using Machete.Data.Infrastructure;
 using Machete.Domain;
 using Microsoft.Practices.Unity;
 using MWS.Core;
+using MWS.Core.Providers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,28 +21,42 @@ namespace MWS.Service
 {
     public class MacheteWindowsService : ServiceBase
     {
-        private static System.Timers.Timer aTimer;
         public System.Diagnostics.EventLog MWSEventLog;
         private System.ComponentModel.IContainer components = null;
         internal IUnityContainer container;
-        private bool running { get; set; }
-        private int interval = 5000; // 5 seconds
+        public List<MacheteInstance> instances = new List<MacheteInstance>();
 
-        public MacheteWindowsService(IUnityContainer unity)
+        /// <summary>
+        /// Service process called by the Program.Main
+        /// </summary>
+        /// <param name="unity"></param>
+        public MacheteWindowsService()
         {
-            running = false;
-            if (unity == null) throw new Exception("Unity container is null");
-            container = unity;
-            this.ServiceName = EVcfg.source;
-            this.MWSEventLog = container.Resolve<IEventHandler>().MWSEventLog;
-            if (ConfigurationManager.AppSettings["TimerInterval"] != null)
-            {
-                interval = Convert.ToInt32(ConfigurationManager.AppSettings["TimerInterval"]) * 1000;
-            }
-            Email.iTransmitAttempts = Convert.ToInt32(ConfigurationManager.AppSettings["TransmitAttempts"]);
+            this.ServiceName = EventViewerConfig.source;
+            var bootstrapper = new ServiceBootstrapper();
+            var cfg = ConfigurationManager.GetSection(AppConfig.sourceNode) as MacheteWindowsServiceConfiguration;
 
-            aTimer = new System.Timers.Timer(interval);
-            aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+            // Report # of configs read
+            // detect change and re-read?
+            try
+            {
+                container = bootstrapper.Build(cfg.Instances);
+            }
+            catch (Exception e)
+            {
+                var eventhandler = new EventHandler();
+                eventhandler.MWSEventLog.WriteEntry(e.ToString());
+                throw e;
+            }
+
+            this.MWSEventLog = container.Resolve<IEventHandler>().MWSEventLog;
+            //
+            //
+            // TODO some notice if the config file is empty
+            foreach (Instance instanceCfg in cfg.Instances)
+            {
+                instances.Add(new MacheteInstance(container.Resolve<IEmailServiceProvider>(instanceCfg.Name), instanceCfg));
+            }
             
         }
 
@@ -57,12 +72,19 @@ namespace MWS.Service
         protected override void OnStart(string[] args)
         {
             MWSEventLog.WriteEntry("MWS starting");
-            aTimer.Enabled = true;
+            foreach (var instance in instances)
+            {
+                instance.StartAll();
+            }
         }
 
         protected override void OnStop()
         {
             MWSEventLog.WriteEntry("MWS stopping");
+            foreach (var instance in instances)
+            {
+                instance.StopAll();
+            }
         }
 
         protected override void OnContinue()
@@ -70,72 +92,20 @@ namespace MWS.Service
             MWSEventLog.WriteEntry("MWS continue event");
         }
 
-        private void OnTimedEvent(object source, ElapsedEventArgs e)
-        {
-             if (running == true) return;  // return if prior event is still running
 
-            var sb = new StringBuilder();
-            sb.AppendLine(string.Format("EmailManager.ProcessQueue executed at {0}", e.SignalTime));
-            running = true;
-            try
-            {
-                sb.Append(ProcessEmailQueue());
-            }
-            catch (Exception ex)
-            {
-                sb.AppendLine(string.Format("Exception caught: {0}", ex.Message));
-            }
-            running = false;
-            MWSEventLog.WriteEntry(sb.ToString());
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public string ProcessEmailQueue()
-        {
-            var sb = new StringBuilder();
-            var options = new TransactionOptions
-            {
-                IsolationLevel = IsolationLevel.Serializable,
-                Timeout = new TimeSpan(0, 0, 0, 10)
-            };
-            if (container == null) throw new Exception("Unity container is null");
 
-            using (var scope = new TransactionScope(TransactionScopeOption.RequiresNew, options))
-            {
-                using (var context = new MacheteContext())
-                {
-                    IDatabaseFactory factory = container.Resolve<IDatabaseFactory>();
-                    factory.Set(context);
-
-                    var em = container.Resolve<EmailManager>();
-                    sb.AppendLine(em.getDiagnostics());
-                    sb.AppendLine("AppSettings.config location:");
-                    sb.AppendLine(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile);
-                    em.ProcessQueue();
-                    if (em.sentStack.Count() > 0)
-                    {
-                        sb.AppendLine(string.Format("{0}", em.getSent()));
-                    }
-                    if (em.exceptionStack.Count() > 0)
-                    {
-                        sb.AppendLine(string.Format("SendEmail exceptions: {0}", em.getExceptions()));
-                    }
-                }
-                scope.Complete();
-            }
-
-            return sb.ToString();
-        }
 
     }
     /// <summary>
     /// configuration strings for MWS's event log
     /// </summary>
-    public struct EVcfg
+    public struct EventViewerConfig
     {
         public const string source = "MacheteWindowsService";
         public const string log = "MWSLog";
+    }
+    public struct AppConfig
+    {
+        public const string sourceNode = "MacheteWindowsService";
     }
 }
