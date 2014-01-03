@@ -16,6 +16,7 @@ using NLog;
 using System.Globalization;
 using System.Web.Security;
 using Machete.Data;
+using Machete.Data.Infrastructure;
 
 namespace Machete.Web.Controllers
 {
@@ -26,11 +27,14 @@ namespace Machete.Web.Controllers
         Logger log = LogManager.GetCurrentClassLogger();
         LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "AccountController", "");
         public IMyUserManager<ApplicationUser> UserManager { get; private set; }
+        private readonly IDatabaseFactory DatabaseFactory;
 
-        public AccountController(IMyUserManager<ApplicationUser> userManager)
+        public AccountController(IMyUserManager<ApplicationUser> userManager, IDatabaseFactory databaseFactory)
         {
             UserManager = userManager;
+            DatabaseFactory = databaseFactory;
         }
+
         // **************************************
         // URL: /Account/Index
         // **************************************
@@ -118,20 +122,12 @@ namespace Machete.Web.Controllers
 
         private Guid GetApplicationID()
         {
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["ApplicationServices"].ConnectionString))
+            using (var foo = DatabaseFactory.Get())
             {
-                string queryString = "SELECT ApplicationId from aspnet_Applications WHERE ApplicationName = '/'"; //Set application name as in database
-
-                SqlCommand command = new SqlCommand(queryString, connection);
-                command.Connection.Open();
-
-                var reader = command.ExecuteReader();
-                while (reader.Read())
-                {
-                    return reader.GetGuid(0);
-                }
-
-                return Guid.NewGuid();
+                var blarg = foo.Users
+                    .Select(p => p.ApplicationId)
+                    .First();
+                return blarg;
             }
         }
 
