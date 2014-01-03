@@ -54,15 +54,16 @@ namespace MWS.Test
         public void Integration_Email_MWS_ProcessQueue_send_one_email_with_attachent()
         {
             // Arrange
+            var cfg = ConfigurationManager.GetSection("MacheteWindowsService") as MacheteWindowsServiceConfiguration;
             var eServ = frb.ToServEmail();
-            var em = new EmailManager(eServ, frb.ToUOW());
-            em.ProcessQueue(); // clear queue
+            var em = new EmailQueueManager(eServ, frb.ToUOW());
+            em.ProcessQueue(cfg.Instances[0].EmailQueue.EmailServer); // clear queue
             frb.AddEmail(status: Email.iReadyToSend, 
                 attachment: frb.ValidAttachment,
                 attachmentType: System.Net.Mime.MediaTypeNames.Text.Html);
-            var mgr = new EmailManager(eServ, frb.ToUOW());
+            var mgr = new EmailQueueManager(eServ, frb.ToUOW());
             // Act
-            mgr.ProcessQueue();
+            mgr.ProcessQueue(cfg.Instances[0].EmailQueue.EmailServer);
             // Assert
             Assert.AreEqual(1, mgr.sentStack.Count);
             Assert.AreEqual(0, mgr.exceptionStack.Count);
