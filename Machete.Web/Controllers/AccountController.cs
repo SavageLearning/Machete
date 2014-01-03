@@ -122,13 +122,10 @@ namespace Machete.Web.Controllers
 
         private Guid GetApplicationID()
         {
-            using (var foo = DatabaseFactory.Get())
-            {
-                var blarg = foo.Users
+                var blarg = DatabaseFactory.Get().Users
                     .Select(p => p.ApplicationId)
                     .First();
                 return blarg;
-            }
         }
 
         //
