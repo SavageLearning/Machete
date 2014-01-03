@@ -51,15 +51,6 @@ namespace Machete.Service
     public class WorkerSigninService : SigninServiceBase<WorkerSignin>, IWorkerSigninService
     {
         //
-<<<<<<< HEAD
-        public WorkerSigninService(IWorkerSigninRepository repo, 
-                                   IWorkerRepository wRepo,
-                                   IImageRepository iRepo,
-                                   IWorkerRequestRepository wrRepo,
-                                   IUnitOfWork uow)
-            : base(repo, wRepo, iRepo, wrRepo, uow)
-=======
-        //
         public WorkerSigninService(
             IWorkerSigninRepository repo, 
             IWorkerRepository wRepo,
@@ -68,7 +59,6 @@ namespace Machete.Service
             IWorkerCache wc, 
             IUnitOfWork uow)
             : base(repo, wRepo, iRepo, wrRepo, wc, uow)
->>>>>>> upstream/MWS-multisite-support
         {
             this.logPrefix = "WorkerSignin";
         }
@@ -117,7 +107,7 @@ namespace Machete.Service
             WorkerSignin wsiUp = repo.GetById(
                                     repo.GetAllQ()
                                         .Where(up => up.lottery_sequence == nextID
-                                                  && EntityFunctions.DiffDays(up.dateforsignin, date) == 0)
+                                                  && DbFunctions.DiffDays(up.dateforsignin, date) == 0)
                                         .Select(g => g.ID).FirstOrDefault()
                                  ); //up.ID = 5
 
@@ -155,7 +145,7 @@ namespace Machete.Service
             WorkerSignin wsiDown = repo.GetById(
                                     repo.GetAllQ()
                                         .Where(up => up.lottery_sequence == prevID
-                                                  && EntityFunctions.DiffDays(up.dateforsignin, date) == 0)
+                                                  && DbFunctions.DiffDays(up.dateforsignin, date) == 0)
                                         .Select(g => g.ID).FirstOrDefault()
                                  ); //down.lotSq = 3
 
@@ -237,7 +227,7 @@ namespace Machete.Service
             // gets a new one in the same order.
             todayListSignins = repo.GetAllQ()
                 .Where(p => p.lottery_sequence != null
-                         && EntityFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
+                         && DbFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
                 .OrderBy(p => p.lottery_sequence)
                 .AsEnumerable();
             // reset sequence number
@@ -254,7 +244,7 @@ namespace Machete.Service
             yesterdaySignins = repo.GetAllQ()
                 .Where(p => p.lottery_sequence != null 
                          && p.WorkAssignmentID == null
-                         && EntityFunctions.DiffDays(p.dateforsignin, yesterday) == 0 ? true : false)
+                         && DbFunctions.DiffDays(p.dateforsignin, yesterday) == 0 ? true : false)
                 .OrderBy(p => p.lottery_sequence)
                 .AsEnumerable();
 
@@ -264,7 +254,7 @@ namespace Machete.Service
             todayDupeSignins = repo.GetManyQ() //with tracing
                 .Where(p => p.WorkAssignmentID == null
                          && p.lottery_sequence == null
-                         && EntityFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
+                         && DbFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
                 .OrderBy(o => o.dateforsignin)
                 .AsEnumerable();
 
@@ -305,7 +295,7 @@ namespace Machete.Service
 
             // Get today's signins. If anyone has already been signed in, this feature will hold those records.
             todayListSignins = repo.GetAllQ()
-                .Where(p => EntityFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
+                .Where(p => DbFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
                 .OrderBy(p => p.dateforsignin)
                 .AsEnumerable();
 
@@ -314,7 +304,7 @@ namespace Machete.Service
             //and haven't already been signed in
             yesterdaySignins = repo.GetManyQ()
                 .Where(p => p.WorkAssignmentID == null
-                         && EntityFunctions.DiffDays(p.dateforsignin, yesterday) == 0 ? true : false
+                         && DbFunctions.DiffDays(p.dateforsignin, yesterday) == 0 ? true : false
                          && !todayListSignins.Select(t => t.WorkerID).Contains(p.WorkerID))
                 .OrderBy(p => p.dateforsignin)
                 .AsEnumerable()

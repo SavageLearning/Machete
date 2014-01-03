@@ -132,8 +132,8 @@ namespace Machete.Web
             //.RegisterType<IFormsAuthenticationService, FormsAuthenticationService>()
             //.RegisterType<IMembershipService, AccountMembershipService>()
             //.RegisterInstance<MembershipProvider>(Membership.Provider)
-            .RegisterType<IUserStore<ApplicationUser>, UserStore<ApplicationUser>>(new HttpContextLifetimeManager<IUserStore<ApplicationUser>>())
-            .RegisterType<IMyUserManager<ApplicationUser>, MyUserManager>(new HttpContextLifetimeManager<IMyUserManager<ApplicationUser>>())
+            .RegisterType<IUserStore<ApplicationUser>, UserStore<ApplicationUser>>(new PerRequestLifetimeManager())//HttpContextLifetimeManager<IUserStore<ApplicationUser>>())
+            .RegisterType<IMyUserManager<ApplicationUser>, MyUserManager>(new PerRequestLifetimeManager())//HttpContextLifetimeManager<IMyUserManager<ApplicationUser>>())
             //.RegisterInstance<IDatabaseFactory>(new DatabaseFactory())
             //.RegisterType<IDatabaseFactory, DatabaseFactory>(new ContainerControlledLifetimeManager(), new InjectionConstructor("macheteConnection"))
             .RegisterType<IDatabaseFactory, DatabaseFactory>(new PerRequestLifetimeManager(), new InjectionConstructor("macheteConnection"))
@@ -166,7 +166,7 @@ namespace Machete.Web
             .RegisterType<IWorkOrderService, WorkOrderService>(new PerRequestLifetimeManager())
             .RegisterType<IWorkAssignmentService, WorkAssignmentService>(new PerRequestLifetimeManager())
             .RegisterType<IImageService, ImageService>(new PerRequestLifetimeManager())
-            .RegisterType<IReportService, ReportService>(new PerRequestLifetimeManager());
+            .RegisterType<IReportService, ReportService>(new PerRequestLifetimeManager())
             // 
             .RegisterType<IWorkerCache, WorkerCache>(new ContainerControlledLifetimeManager())
             .RegisterType<ILookupCache, LookupCache>(new ContainerControlledLifetimeManager());
