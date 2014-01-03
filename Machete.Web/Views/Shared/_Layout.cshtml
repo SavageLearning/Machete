@@ -3,8 +3,6 @@
 <html>
 @Scripts.Render("~/bundles/jquery")
 
-<script src=@Url.Content("~/Scripts/reports.js")></script>
-
 @*
 <script src="@Url.Content("~/Scripts/macheteLayout.js")" type="text/javascript"></script>
 <script src="@Url.Content("~/Scripts/jquery.macheteUI-0.1.js")" type="text/javascript"></script>
@@ -17,8 +15,8 @@
 }
 <head>
     <link href="@Url.Content("~/Content/jquery.lightbox-0.5.css")" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/jquery.jqplot.min.css")" />
     @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/reportcss")
     <title>@Machete.Web.Resources.Shared.title@ViewBag.title</title>
     <link rel="shortcut icon" href="/Content/favicon.ico" type="image/png"/>
     <link rel="icon" href="/Content/favicon.ico" type="image/png"/> 
