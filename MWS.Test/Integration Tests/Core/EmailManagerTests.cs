@@ -8,6 +8,7 @@ using MWS.Core;
 using Machete.Domain;
 using Microsoft.Practices.Unity;
 using System.Data.Entity.Infrastructure;
+using System.Configuration;
 
 namespace MWS.Test
 {
@@ -21,16 +22,14 @@ namespace MWS.Test
         public void TestInitialize()
         {
             frb = new FluentRecordBase();
-            frb.Initialize(new MacheteInitializer(), "macheteConnection");
             // populates domain constants
-            cache = new LookupCache(() => frb.ToFactory()); //Func<> to DB Factory
+            cache = new LookupCache(frb.ToFactory()); //Func<> to DB Factory
 
         }
 
         [TestCleanup]
         public void TestCleanup()
         {
-            frb.Dispose();
             frb = null;
         }
 
@@ -38,13 +37,14 @@ namespace MWS.Test
         public void Integration_Email_MWS_ProcessQueue_send_one_email()
         {
             // Arrange
+            var cfg = ConfigurationManager.GetSection("MacheteWindowsService") as MacheteWindowsServiceConfiguration;
             var eServ = frb.ToServEmail();
-            var em = new EmailManager(eServ, frb.ToUOW());
-            em.ProcessQueue(); // clear queue
+            var em = new EmailQueueManager(eServ, frb.ToUOW());
+            em.ProcessQueue(cfg.Instances[0].EmailQueue.EmailServer); // clear queue
             frb.AddEmail(status: Email.iReadyToSend);
-            var mgr = new EmailManager(eServ, frb.ToUOW());
+            var mgr = new EmailQueueManager(eServ, frb.ToUOW());
             // Act
-            mgr.ProcessQueue();
+            mgr.ProcessQueue(cfg.Instances[0].EmailQueue.EmailServer);
             // Assert
             Assert.AreEqual(1, mgr.sentStack.Count);
             Assert.AreEqual(0, mgr.exceptionStack.Count);
@@ -94,21 +94,21 @@ namespace MWS.Test
             // Act
             db1.SaveChanges(); // context 1 tries to save again, throws exception
         }
-
+        [Ignore]
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.MWS), TestCategory(TC.Emails)]
         public void Integration_Email_MWS_Load_EmailConfig()
         {
-            // ARRANGE
-            var eServ = frb.AddEmail(status: Email.iReadyToSend).ToServEmail();
-            var mgr = new EmailManager(eServ, frb.ToUOW());
-            // ACT
-            var cfg = mgr.LoadEmailConfig();
-            // ASSERT
-            Assert.IsNotNull(cfg);
-            Assert.IsNotNull(cfg.host);
-            Assert.IsTrue(cfg.port > 0);
-            Assert.IsNotNull(cfg.userName);
-            Assert.IsNotNull(cfg.password);
+            //// ARRANGE
+            //var eServ = frb.AddEmail(status: Email.iReadyToSend).ToServEmail();
+            //var mgr = new EmailQueueManager(eServ, frb.ToUOW());
+            //// ACT
+            //var cfg = mgr.LoadEmailConfig();
+            //// ASSERT
+            //Assert.IsNotNull(cfg);
+            //Assert.IsNotNull(cfg.HostName);
+            //Assert.IsTrue(cfg.Port > 0);
+            //Assert.IsNotNull(cfg.OutgoingAccount);
+            //Assert.IsNotNull(cfg.OutgoingPassword);
         }
     }
 }

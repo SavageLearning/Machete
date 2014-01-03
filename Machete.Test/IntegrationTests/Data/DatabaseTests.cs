@@ -43,7 +43,7 @@ namespace Machete.Test.Data
         public void Initialize()
         {
             frb = new FluentRecordBase();
-            frb.Initialize(new TestInitializer(), "macheteDevTest");
+            frb.AddDBFactory(connStringName: "macheteDevTest");
         }
         /// <summary>
         /// Tests permissions to drop and re-create database
@@ -52,11 +52,11 @@ namespace Machete.Test.Data
         public void Integration_Initializer_create_machete()
         {
             //Arrange
-            frb.DB.Database.Delete();
+            frb.ToFactory().Get().Database.Delete();
             //Act
             try
             {
-                frb.DB.Database.Initialize(true); // should be performed by TestInitializer
+                frb.ToFactory().Get().Database.Initialize(true); // should be performed by TestInitializer
             }
             catch (Exception e)
             {

@@ -60,6 +60,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data" />
     <Reference Include="System.ServiceProcess" />
@@ -79,7 +80,9 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Integration Tests\Core\EmailManagerTests.cs" />
+    <Compile Include="Integration Tests\Core\ConfigurationTests.cs" />
     <Compile Include="Integration Tests\Service\IOCTests.cs" />
+    <Compile Include="Integration Tests\Service\AppSetttingsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -111,7 +114,9 @@
   <ItemGroup>
     <None Include="App.config">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="NLog.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Choose>

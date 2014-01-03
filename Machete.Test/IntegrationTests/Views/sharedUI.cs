@@ -163,7 +163,7 @@ namespace Machete.Test
             _d.FindElement(By.Id(prefix + "dwccardnum")).SendKeys(_wkr.dwccardnum.ToString());
 
             SelectOption(By.Id(prefix + "memberStatus"), "Active");
-            SelectOption(By.Id(prefix + "neighborhoodID"), "Kent");
+            SelectOption(By.Id(prefix + "neighborhoodID"), "Seattle");
             SelectOption(By.Id(prefix + "typeOfWorkID"), @"(DWC) Day Worker Center");
             SelectOption(By.Id(prefix + "englishlevelID"), "2");
             SelectOption(By.Id(prefix + "incomeID"), @"Less than $15,000");
@@ -201,7 +201,7 @@ namespace Machete.Test
             Assert.AreEqual(_wkr.weight, WaitForElement(By.Id(prefix + "weight")).GetAttribute("value"));
             Assert.AreEqual(_wkr.dwccardnum.ToString(), WaitForElement(By.Id(prefix + "dwccardnum")).GetAttribute("value"));
             Assert.AreEqual("Active", GetOptionText(By.Id(prefix + "memberStatus")));
-            Assert.AreEqual("Kent", GetOptionText(By.Id(prefix + "neighborhoodID")));
+            Assert.AreEqual("Seattle", GetOptionText(By.Id(prefix + "neighborhoodID")));
             Assert.AreEqual(@"(DWC) Day Worker Center", GetOptionText(By.Id(prefix + "typeOfWorkID")));
             Assert.AreEqual("2", GetOptionText(By.Id(prefix + "englishlevelID")));
             Assert.AreEqual(@"Less than $15,000", GetOptionText(By.Id(prefix + "incomeID")));

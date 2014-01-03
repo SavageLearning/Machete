@@ -46,7 +46,6 @@ namespace Machete.Test
         public void TestInitialize()
         {
             frb = new FluentRecordBase();
-            frb.Initialize(new MacheteInitializer(), "macheteConnection");
             dOptions = new viewOptions
             {
                 CI = new CultureInfo("en-US", false),
