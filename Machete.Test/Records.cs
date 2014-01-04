@@ -38,6 +38,7 @@ namespace Machete.Test
         {
             var next = 10001;
             var last = db.OrderByDescending(x => x.dwccardnum).FirstOrDefault();
+            if (last.dwccardnum == 99999) --last.dwccardnum;
             if (last == null) return next;
             if (last.dwccardnum < 10000) return next;
             else return last.dwccardnum + 1;
