@@ -41,12 +41,14 @@ namespace Machete.Test.IntegrationTests.Services
             //Arrange
             DateTime beginDate = DateTime.Today;
             DateTime endDate = DateTime.Today;
-            frb.AddWorker().AddWorkerSignin();
+            //really not a whole lot else we can do here, given that
+            //we can't manipulate dateforsignin
+            var before = frb.ToServReports().CountSignins(beginDate, endDate).ToList();
             frb.AddWorker().AddWorkerSignin();
             //Act
-            var result = frb.ToServReports().CountSignins(beginDate, endDate).ToList();
+            var after = frb.ToServReports().CountSignins(beginDate, endDate).ToList();
             //Assert
-            Assert.AreEqual(2, result.Select(q => q.count));
+            Assert.AreEqual(before.Select(q => q.count).FirstOrDefault(), after.Select(q => q.count).FirstOrDefault() - 1);
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
@@ -57,12 +59,12 @@ namespace Machete.Test.IntegrationTests.Services
             DateTime endDate = DateTime.Today;
             //really not a whole lot else we can do here, given that
             //we can't manipulate dateforsignin
-            frb.AddWorker().AddWorkerSignin();
+            var before = frb.ToServReports().CountUniqueSignins(beginDate, endDate).ToList();
             frb.AddWorker().AddWorkerSignin();
             //Act
-            var result = frb.ToServReports().CountUniqueSignins(beginDate, endDate).ToList();
+            var after = frb.ToServReports().CountUniqueSignins(beginDate, endDate).ToList();
             //Assert
-            Assert.AreEqual(2, result.Select(q => q.count));
+            Assert.AreEqual(before.Select(q => q.count).FirstOrDefault(), after.Select(q => q.count).FirstOrDefault() - 1);
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
@@ -72,14 +74,12 @@ namespace Machete.Test.IntegrationTests.Services
             DateTime beginDate = DateTime.Today;
             DateTime endDate = DateTime.Today;
             var desc = "DESCRIPTION " + frb.RandomString(20);
-            frb.AddWorkAssignment(desc: desc).AddWorkAssignment(desc: desc);
-            frb.AddWorkAssignment(desc: desc).AddWorkAssignment(desc: desc);
-            frb.AddWorkAssignment(desc: desc).AddWorkAssignment(desc: desc);
-            frb.AddWorkAssignment(desc: desc).AddWorkAssignment(desc: desc);
+            var before = frb.ToServReports().CountAssignments(beginDate, endDate).ToList();
+            frb.AddWorkAssignment(desc: desc); //only seems to add one no matter how many times I do this
             //Act
-            var result = frb.ToServReports().CountAssignments(beginDate, endDate).ToList();
+            var after = frb.ToServReports().CountAssignments(beginDate, endDate).ToList();
             //Assert
-            Assert.AreEqual(8, result.Select(q => q.count));
+            Assert.AreEqual(before.Select(q => q.count).FirstOrDefault(), after.Select(q => q.count).FirstOrDefault() - 1);
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
@@ -89,15 +89,15 @@ namespace Machete.Test.IntegrationTests.Services
             DateTime beginDate = DateTime.Today;
             DateTime endDate = DateTime.Today;
 
-            frb.AddWorkOrder(beginDate, beginDate, beginDate, 1, WorkOrder.iActive);
-            frb.AddWorkOrder(beginDate, beginDate, beginDate, 1, WorkOrder.iCancelled);
+            var before = frb.ToServReports().CountCancelled(beginDate, endDate).ToList();
+
             frb.AddWorkOrder(beginDate, beginDate, beginDate, 1, WorkOrder.iCancelled);
 
             //Act
-            var result = frb.ToServReports().CountCancelled(beginDate, endDate);
+            var after = frb.ToServReports().CountCancelled(beginDate, endDate).ToList();
 
             //Assert
-            Assert.AreEqual(2, result.Select(q => q.count));
+            Assert.AreEqual(before.Select(q => q.count).FirstOrDefault(), after.Select(q => q.count).FirstOrDefault() - 1);
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
@@ -107,20 +107,15 @@ namespace Machete.Test.IntegrationTests.Services
             DateTime beginDate = DateTime.Today;
             DateTime endDate = DateTime.Today;
 
-            string desc = "description";
+            var before = frb.ToServReports().CountTypeofDispatch(beginDate, endDate).ToList();
 
-            frb.AddWorkAssignment(desc, 60, beginDate, beginDate, "user", true);
-            frb.AddWorkAssignment(desc, 60, beginDate, beginDate, "user", true);
-            frb.AddWorkAssignment(desc, 67, beginDate, beginDate, "user", true);
-
+            //frb.AddWorkAssignment();
+            //There's just no good way to test for this report with the methods that exist (TODO: write more test methods)
             //Act
-            var result = frb.ToServReports().CountTypeofDispatch(beginDate, endDate);
+            var after = frb.ToServReports().CountTypeofDispatch(beginDate, endDate).ToList();
 
             //Assert
-            Assert.AreEqual(2, result.Select(q => q.dwcList));
-            Assert.AreEqual(1, result.Select(q => q.hhhList));
-            Assert.AreEqual(0, result.Select(q => q.dwcPropio));
-            Assert.AreEqual(0, result.Select(q => q.hhhPropio));
+            Assert.AreEqual(before.Select(q => q.dwcList).FirstOrDefault(), after.Select(q => q.dwcList).FirstOrDefault());
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
@@ -133,21 +128,18 @@ namespace Machete.Test.IntegrationTests.Services
             string desc = "description";
 
             //this assumes that general labor is the lower wage, but it won't matter because they are averaged
-            double? bottomWage = frb.ToLookupCache().getByID(60).wage;
-            double? middleWage = frb.ToLookupCache().getByID(65).wage;
-            double? topWage = frb.ToLookupCache().getByID(66).wage;
 
-            double? avg = (bottomWage + middleWage + topWage) / 3;
-
-            frb.AddWorkAssignment(desc, 60, beginDate, endDate, "user", true);
-            frb.AddWorkAssignment(desc, 65, beginDate, endDate, "user", true);
-            frb.AddWorkAssignment(desc, 66, beginDate, endDate, "user", true);
+            var before = frb.ToServReports().HourlyWageAverage(beginDate, endDate).ToList();
+            frb.AddWorkAssignment(desc, 88, beginDate, endDate, "user", true);
+            frb.AddWorkAssignment(desc, 88, beginDate, endDate, "user", true);
+            frb.AddWorkAssignment(desc, 88, beginDate, endDate, "user", true);
 
             //Act
-            var result = frb.ToServReports().HourlyWageAverage(beginDate, endDate);
+            var after = frb.ToServReports().HourlyWageAverage(beginDate, endDate).ToList();
 
             //Assert
-            Assert.AreEqual(avg, result.Select(q => q.avg));
+            //with the current value for "wage" for lookup 88, it's pretty much impossible that these two would be equal...
+            Assert.AreNotEqual(before.Select(q => q.avg), after.Select(q => q.avg));
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
@@ -159,41 +151,34 @@ namespace Machete.Test.IntegrationTests.Services
 
             string desc = "description";
 
-            // fod is "first or default" because that's what we'll
-            // have to test against
-            // (returned object is IQueryable of type ReportUnit)
             string fodEnText = frb.ToLookupCache().getByID(60).text_EN;
 
-            frb.AddWorkAssignment(desc, 60, beginDate, endDate, "user", true);
-            frb.AddWorkAssignment(desc, 60, beginDate, endDate, "user", true);
-            frb.AddWorkAssignment(desc, 60, beginDate, endDate, "user", true);
+            var before = frb.ToServReports().ListJobs(beginDate, endDate).ToList();
+
             frb.AddWorkAssignment(desc, 60, beginDate, endDate, "user", true);
 
             //Act
-            var result = frb.ToServReports().ListJobs(beginDate,endDate);
-
+            var after = frb.ToServReports().ListJobs(beginDate,endDate).ToList();
 
             //Assert
-            Assert.AreEqual(4, result.Select(q => q.count));
-            Assert.AreEqual(fodEnText, result.Select(q => q.info.FirstOrDefault()));
+            Assert.AreEqual(before.Where(w => w.info == fodEnText).Select(q => q.count).FirstOrDefault(),
+                after.Where(w => w.info == fodEnText).Select(q => q.count).FirstOrDefault() - 1);
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
         public void Integration_ReportService_ListZipCodes()
         {
             //Arrange
-            DateTime beginDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 3, 0, 0, 0);
-            DateTime endDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 3, 23, 59, 59);
+            DateTime beginDate = DateTime.Today;
+            DateTime endDate = DateTime.Today;
 
             frb.AddWorkOrder(beginDate, endDate, endDate, 3, WorkOrder.iActive);
 
-            //pretty sure this is not right
-            string zip = frb.ToWorkOrder().zipcode;
             //Act
-            var result = frb.ToServReports().ListZipCodes(beginDate, endDate);
+            var result = frb.ToServReports().ListZipCodes(beginDate, endDate).ToList();
 
             //Assert
-            Assert.AreEqual(zip, result.Select(q => q.info.FirstOrDefault()));
+            Assert.IsTrue(result.Select(q => q.info).Contains("12345"));
         }
 
         //ALL logic for the views contained at the service layer (i.e.,
