@@ -90,6 +90,7 @@ namespace Machete.Test.IntegrationTests.Services
             DateTime endDate = DateTime.Today;
 
             var before = frb.ToServReports().CountCancelled(beginDate, endDate).ToList();
+            int beforeInt = before.Select(q => q.count).FirstOrDefault() ?? 0;
 
             frb.AddWorkOrder(beginDate, beginDate, beginDate, 1, WorkOrder.iCancelled);
 
@@ -97,7 +98,7 @@ namespace Machete.Test.IntegrationTests.Services
             var after = frb.ToServReports().CountCancelled(beginDate, endDate).ToList();
 
             //Assert
-            Assert.AreEqual(before.Select(q => q.count).FirstOrDefault(), after.Select(q => q.count).FirstOrDefault() - 1);
+            Assert.AreEqual(beforeInt, after.Select(q => q.count).FirstOrDefault() - 1);
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
@@ -153,7 +154,7 @@ namespace Machete.Test.IntegrationTests.Services
 
             string fodEnText = frb.ToLookupCache().getByID(60).text_EN;
 
-            var before = frb.ToServReports().ListJobs(beginDate, endDate).ToList();
+            //var before = frb.ToServReports().ListJobs(beginDate, endDate).ToList();
 
             frb.AddWorkAssignment(desc, 60, beginDate, endDate, "user", true);
 
@@ -161,8 +162,7 @@ namespace Machete.Test.IntegrationTests.Services
             var after = frb.ToServReports().ListJobs(beginDate,endDate).ToList();
 
             //Assert
-            Assert.AreEqual(before.Where(w => w.info == fodEnText).Select(q => q.count).FirstOrDefault(),
-                after.Where(w => w.info == fodEnText).Select(q => q.count).FirstOrDefault() - 1);
+            Assert.IsTrue(after.Select(a => a.info).Contains(fodEnText));
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
