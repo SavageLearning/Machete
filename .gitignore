@@ -67,3 +67,10 @@ packages/
 Machete.sln*
 /Machete1.vsmdi
 /Machete.WebOld
+
+#sensitive secure data
+*/connections.config
+
+#annoying binary files somehow still being created
+/Machete.Web/App_Data/ASPNETDB.MDF
+/Machete.Web/App_Data/aspnetdb_log.ldf
