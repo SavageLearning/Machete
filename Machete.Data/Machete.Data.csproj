@@ -90,6 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationUser.cs" />
+    <Compile Include="AzureConfiguration.cs" />
     <Compile Include="Infrastructure\DatabaseFactory.cs" />
     <Compile Include="Infrastructure\Disposable.cs" />
     <Compile Include="Infrastructure\WorkerCache.cs" />
@@ -97,6 +98,10 @@
     <Compile Include="Infrastructure\RepositoryBase.cs" />
     <Compile Include="Infrastructure\UnitOfWork.cs" />
     <Compile Include="Initialize\MacheteLookups.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\MacheteIntercepterTransientErrors.cs" />
+    <Compile Include="Logging\MacheteInterceptorLogging.cs" />
+    <Compile Include="Logging\Logger.cs" />
     <Compile Include="MacheteContext.cs" />
     <Compile Include="Migrations\201211112012339_InitialMigrations.cs" />
     <Compile Include="Migrations\201211112012339_InitialMigrations.Designer.cs">
