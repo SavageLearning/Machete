@@ -13,7 +13,7 @@ namespace Machete.Data
         {
             SetExecutionStrategy(
                 "System.Data.SqlClient", 
-                () => new SqlAzureExecutionStrategy(1, TimeSpan.FromSeconds(30)));
+                () => new SqlAzureExecutionStrategy());
             DbInterception.Add(new MacheteInterceptorLogging());
         }
     }
