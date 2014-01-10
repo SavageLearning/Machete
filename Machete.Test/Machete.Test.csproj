@@ -166,7 +166,7 @@
   <ItemGroup>
     <Compile Include="FluentRecordBase.cs" />
     <Compile Include="FluentRecordTests.cs" />
-    <Compile Include="IntegrationTests\Controllers\UnitTest1.cs" />
+    <Compile Include="IntegrationTests\Controllers\LoginIntegrationTest.cs" />
     <Compile Include="IntegrationTests\Services\ActivityServiceTests.cs" />
     <Compile Include="IntegrationTests\Services\ReportServiceTest.cs" />
     <Compile Include="IntegrationTests\Services\IndexViewBaseServiceTest.cs" />
