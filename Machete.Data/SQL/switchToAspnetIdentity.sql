@@ -2,7 +2,7 @@
 --the ASP.NET Identity tables. For creating new database objects, see the other
 --script at Machete.Data/SQL/201312300649350_MergeMacheteContextAndIdentityDbContext.sql
 
-use [machete-casa];
+use [machete-somedbname];
 go
 
 IF OBJECT_ID('AspNetUserRoles', 'U') IS NOT NULL
@@ -59,7 +59,7 @@ CREATE TABLE [dbo].[AspNetUsers] (
     [FailedPasswordAnswerAttemptWindowStart] DATETIME2         NOT NULL,
     [Comment]                                NTEXT            NULL,
     CONSTRAINT [PK_dbo.AspNetUsers] PRIMARY KEY CLUSTERED ([Id] ASC),
-    --FOREIGN KEY ([ApplicationId]) REFERENCES [aspnetdb-elcentro].[dbo].[aspnet_Applications] ([ApplicationId]),
+    --FOREIGN KEY ([ApplicationId]) REFERENCES [aspnetdb-somedbname].[dbo].[aspnet_Applications] ([ApplicationId]),
 );
 
 INSERT INTO AspNetUsers(Id,UserName,PasswordHash,Discriminator,SecurityStamp,
@@ -67,15 +67,15 @@ ApplicationId,LoweredUserName,MobileAlias,IsAnonymous,LastActivityDate,LegacyPas
 MobilePIN,Email,LoweredEmail,PasswordQuestion,PasswordAnswer,IsApproved,IsLockedOut,CreateDate,
 LastLoginDate,LastPasswordChangedDate,LastLockoutDate,FailedPasswordAttemptCount,
 FailedPasswordAnswerAttemptWindowStart,FailedPasswordAnswerAttemptCount,FailedPasswordAttemptWindowStart,Comment)
-SELECT aspnet_Users.UserId,aspnet_Users.UserName,(aspnet_Membership.Password+'|'+CAST(aspnet_Membership.PasswordFormat as varchar)+'|'+aspnet_Membership.PasswordSalt),'User',NewID(),aspnet_Users.ApplicationId,aspnet_Users.LoweredUserName,
+SELECT aspnet_Users.UserId,aspnet_Users.UserName,(aspnet_Membership.Password+'|'+CAST(aspnet_Membership.PasswordFormat as varchar)+'|'+aspnet_Membership.PasswordSalt),'ApplicationUser',NewID(),aspnet_Users.ApplicationId,aspnet_Users.LoweredUserName,
 aspnet_Users.MobileAlias,aspnet_Users.IsAnonymous,aspnet_Users.LastActivityDate,aspnet_Membership.Password,
 aspnet_Membership.MobilePIN,aspnet_Membership.Email,aspnet_Membership.LoweredEmail,aspnet_Membership.PasswordQuestion,aspnet_Membership.PasswordAnswer,
 aspnet_Membership.IsApproved,aspnet_Membership.IsLockedOut,aspnet_Membership.CreateDate,aspnet_Membership.LastLoginDate,aspnet_Membership.LastPasswordChangedDate,
 aspnet_Membership.LastLockoutDate,aspnet_Membership.FailedPasswordAttemptCount, aspnet_Membership.FailedPasswordAnswerAttemptWindowStart,
 aspnet_Membership.FailedPasswordAnswerAttemptCount,aspnet_Membership.FailedPasswordAttemptWindowStart,aspnet_Membership.Comment
-FROM  [aspnetdb-elcentro].[dbo].aspnet_Users
-LEFT OUTER JOIN [aspnetdb-elcentro].[dbo].aspnet_Membership ON [aspnetdb-elcentro].[dbo].aspnet_Membership.ApplicationId = [aspnetdb-elcentro].[dbo].aspnet_Users.ApplicationId 
-AND aspnet_Users.UserId = [aspnetdb-elcentro].[dbo].aspnet_Membership.UserId;
+FROM  [aspnetdb-somedbname].[dbo].aspnet_Users
+LEFT OUTER JOIN [aspnetdb-somedbname].[dbo].aspnet_Membership ON [aspnetdb-somedbname].[dbo].aspnet_Membership.ApplicationId = [aspnetdb-somedbname].[dbo].aspnet_Users.ApplicationId 
+AND aspnet_Users.UserId = [aspnetdb-somedbname].[dbo].aspnet_Membership.UserId;
 
 CREATE TABLE [dbo].[AspNetRoles] (
     [Id]   NVARCHAR (128) NOT NULL,
@@ -85,7 +85,7 @@ CREATE TABLE [dbo].[AspNetRoles] (
 
 INSERT INTO AspNetRoles(Id,Name)
 SELECT RoleId,RoleName
-FROM [aspnetdb-elcentro].[dbo].aspnet_Roles;
+FROM [aspnetdb-somedbname].[dbo].aspnet_Roles;
 
 CREATE TABLE [dbo].[AspNetUserRoles] (
     [UserId] NVARCHAR (128) NOT NULL,
@@ -97,7 +97,7 @@ CREATE TABLE [dbo].[AspNetUserRoles] (
 
 INSERT INTO AspNetUserRoles(UserId,RoleId)
 SELECT UserId,RoleId
-FROM [aspnetdb-elcentro].[dbo].aspnet_UsersInRoles;
+FROM [aspnetdb-somedbname].[dbo].aspnet_UsersInRoles;
 
 CREATE TABLE [dbo].[AspNetUserClaims] (
     [Id]         INT            IDENTITY (1, 1) NOT NULL,

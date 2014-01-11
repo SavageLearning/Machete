@@ -148,6 +148,7 @@
     <Content Include="SQL\201304160508212_AddSurchargeField.sql" />
     <Content Include="SQL\201305050151353_AddEmailTable.sql" />
     <Content Include="SQL\201312300649350_MergeMacheteContextAndIdentityDbContext.sql" />
+    <Content Include="SQL\anUpdateThatWorks.sql" />
     <Content Include="SQL\create_migration_table.sql" />
     <Content Include="SQL\null_in_lookups.sql" />
     <Content Include="SQL\apply_EmployerEmail_schema_changes_to_multiple_macheteDBs.sql" />
