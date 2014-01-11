@@ -1,12 +1,17 @@
-﻿@model System.Web.Security.MembershipUser          
+﻿@model Machete.Web.Models.EditUserViewModel        
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Edit User";
 }
-<h2>Edit</h2>
-@Html.ValidationSummary(true)
+
+<h2>@ViewBag.Title</h2>
+
+<p style="color:red;">
+    <strong>@ViewBag.Message</strong>     
+</p>
+
 @using (Html.BeginForm())
 {
-
+    @Html.AntiForgeryToken();
     <div class="tb-table" style="float: left;">
     <fieldset>
     <legend>MembersModel</legend>
@@ -54,20 +59,17 @@
 
 
     <div class="tb-table" style="float: left;">
-    <fieldset>
-    <legend>Roles</legend>    
-        @foreach (String role in Roles.GetAllRoles())
-        {   
+    <h3>Password Recovery</h3>
         <div class="tb-row">
             <div class="tb-label">
-                <label for="@role">@role:</label>
-            </div>   
-            <div class="tb-label">               
-                @Html.CheckBox(role, Roles.IsUserInRole(Model.UserName, role))
+                @Html.LabelFor(model => model.NewPassword)
             </div>
-        </div>                        
-        }
-        </fieldset>
+            <div class="tb-field">
+                @Html.EditorFor(model => model.NewPassword)
+                @Html.ValidationMessageFor(model => model.NewPassword)
+            </div>
+        </div>
+    <p>(Leave this blank unless you want to change the user's password.)</p>
     </div>
 
 }
