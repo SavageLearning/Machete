@@ -1,4 +1,6 @@
-﻿@model System.Web.Security.MembershipUserCollection
+﻿@using Machete.Web.Models
+
+@model IEnumerable<UserSettingsViewModel>
 
 @{
     ViewBag.Title = "Index";
@@ -36,7 +38,7 @@
         </th>
     </tr>
 
-@foreach (MembershipUser item in Model)
+@foreach (UserSettingsViewModel item in Model)
 {
     <tr>
         <td>

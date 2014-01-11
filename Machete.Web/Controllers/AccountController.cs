@@ -49,9 +49,24 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Manager, Administrator")]
         public ActionResult Index()
         {
-            int records = 0;
-            MembershipUserCollection members = Membership.GetAllUsers(0, Int32.MaxValue, out records);
-            return View(members);
+            IEnumerable<UserSettingsViewModel> model;
+            
+            var users = DatabaseFactory.Get().Users.ToList();
+            
+            model = users
+                    .Select(list => new UserSettingsViewModel
+                        {                            
+                            ProviderUserKey = "Account",
+                            UserName = list.UserName,
+                            Email = list.Email, 
+                            IsApproved = list.IsApproved ? "Yes" : "No",
+                            IsLockedOut = list.IsLockedOut ? "Yes" : "No",
+                            IsOnline = (list.LastLoginDate > DateTime.Now.AddHours(-1)) ? "Yes" : "No",
+                            CreationDate = list.CreateDate,
+                            LastLoginDate = list.LastLoginDate
+                        }
+                        );
+            return View(model);
         }
 
         //
