@@ -1,9 +1,22 @@
 ﻿using Machete.Domain;
 using Machete.Web.Resources;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Machete.Web.Models
 {
+    public class UserSettingsViewModel
+    {
+        public string ProviderUserKey { get; set; }
+        public string UserName { get; set; }
+        public string Email { get; set; }
+        public string IsApproved { get; set; }
+        public string IsLockedOut { get; set; }
+        public string IsOnline { get; set; }
+        public DateTime CreationDate { get; set; }
+        public DateTime LastLoginDate { get; set; }
+    }
+
     public class ExternalLoginConfirmationViewModel
     {
         [Required]
