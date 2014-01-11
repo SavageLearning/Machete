@@ -17,6 +17,7 @@ using System.Globalization;
 using System.Web.Security;
 using Machete.Data;
 using Machete.Data.Infrastructure;
+using System.Web.Routing;
 
 namespace Machete.Web.Controllers
 {
@@ -28,11 +29,18 @@ namespace Machete.Web.Controllers
         LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "AccountController", "");
         public IMyUserManager<ApplicationUser> UserManager { get; private set; }
         private readonly IDatabaseFactory DatabaseFactory;
+        private CultureInfo CI;
 
         public AccountController(IMyUserManager<ApplicationUser> userManager, IDatabaseFactory databaseFactory)
         {
             UserManager = userManager;
             DatabaseFactory = databaseFactory;
+        }
+
+        protected override void Initialize(RequestContext requestContext)
+        {
+            base.Initialize(requestContext);
+            CI = (CultureInfo)Session["Culture"];
         }
 
         // **************************************
