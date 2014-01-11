@@ -6,12 +6,14 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
-<p>
-    @Html.ActionLink("Create New User Account", "Register")
-    <br />
-    @Html.ActionLink("Configure Lookups", "Index", "Config")
+<h2>Machete Configuration Page</h2>
+<p style="color:red;">
+    <strong>@ViewBag.Message</strong>
 </p>
+<p>
+    @Html.ActionLink("Manage Current User", "Manage") | @Html.ActionLink("Create New User", "Register") | @Html.ActionLink("Configure Lookups", "Index", "Config")
+</p>
+<h3>Users Table</h3>
 <table>
     <tr>
         <th></th>
@@ -42,9 +44,9 @@
 {
     <tr>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.ProviderUserKey }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.ProviderUserKey }) |
-            @Html.ActionLink("Set Password", "AdminChangePassword", new { id = item.ProviderUserKey })
+            @Html.ActionLink("Edit", "Edit", "Account", new { id = item.ProviderUserKey }, null) 
+            @Html.ActionLink("Delete", "Delete", "Account", new { id = item.ProviderUserKey }, null) 
+            @Html.ActionLink("Roles", "UserRoles", "Account", new { id = item.ProviderUserKey }, null) 
         </td>
         <td>
             @item.UserName

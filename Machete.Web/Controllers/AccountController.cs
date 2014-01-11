@@ -56,7 +56,7 @@ namespace Machete.Web.Controllers
             model = users
                     .Select(list => new UserSettingsViewModel
                         {                            
-                            ProviderUserKey = "Account",
+                            ProviderUserKey = list.Id,
                             UserName = list.UserName,
                             Email = list.Email, 
                             IsApproved = list.IsApproved ? "Yes" : "No",
@@ -125,8 +125,8 @@ namespace Machete.Web.Controllers
             if (ModelState.IsValid)
             {
                 var currentApplicationId = GetApplicationID();
-                model.UserName = model.FirstName.Trim() + "." + model.LastName.Trim();
-                var user = new ApplicationUser() { UserName = model.UserName, LoweredUserName = model.UserName.ToLower(), ApplicationId=currentApplicationId };
+                string newUserName = model.FirstName.Trim() + "." + model.LastName.Trim();
+                var user = new ApplicationUser() { UserName = newUserName, LoweredUserName = newUserName.ToLower(), ApplicationId=currentApplicationId };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -155,6 +155,7 @@ namespace Machete.Web.Controllers
         // POST: /Account/Disassociate
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, Manager")]
         public async Task<ActionResult> Disassociate(string loginProvider, string providerKey)
         {
             ManageMessageId? message = null;
@@ -172,6 +173,7 @@ namespace Machete.Web.Controllers
 
         //
         // GET: /Account/Manage
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, User")]
         public ActionResult Manage(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
@@ -180,7 +182,6 @@ namespace Machete.Web.Controllers
                 : message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
                 : message == ManageMessageId.Error ? "An error has occurred."
                 : "";
-            ViewBag.HasLocalPassword = HasPassword();
             ViewBag.ReturnUrl = Url.Action("Manage");
             return View();
         }
@@ -189,16 +190,18 @@ namespace Machete.Web.Controllers
         // POST: /Account/Manage
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, User")]
         public async Task<ActionResult> Manage(ManageUserViewModel model)
         {
-            bool hasPassword = HasPassword();
+            var user = User.Identity.GetUserId();
+            bool hasPassword = HasPassword(user);
             ViewBag.HasLocalPassword = hasPassword;
             ViewBag.ReturnUrl = Url.Action("Manage");
             if (hasPassword)
             {
                 if (ModelState.IsValid)
                 {
-                    IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
+                    IdentityResult result = await UserManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
                     if (result.Succeeded)
                     {
                         return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
@@ -236,6 +239,130 @@ namespace Machete.Web.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Administrator")]
+        public ActionResult Edit(string id, ManageMessageId? Message = null)
+        {
+            ViewBag.StatusMessage =
+                Message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
+                 : Message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
+                 : Message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
+                 : Message == ManageMessageId.Error ? "Sorry, you don't seem to have a password on this system. Try taking this up with your account service provider."
+                 : "";
+            var Db = DatabaseFactory.Get();
+            var user = Db.Users.First(u => u.Id == id);
+            var model = new EditUserViewModel(user);
+            model.Id = user.Id;
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator")]
+        public async Task<ActionResult> Edit(EditUserViewModel model)
+        {
+            var Db = DatabaseFactory.Get();
+
+            if (ModelState.IsValid)
+            {
+                var user = Db.Users.First(u => u.Id == model.Id);
+                // Update the user data:
+                //user.FirstName = model.FirstName; //We can't have FirstName and
+                //user.LastName = model.LastName;   //LastName without refactor
+                user.Email = model.Email;
+                user.IsApproved = model.IsApproved;
+                user.IsLockedOut = model.IsLockedOut;
+                ModelState state = ModelState["NewPassword"];
+                bool changePassword = state == null ? false : true;
+                bool hasPassword = HasPassword(user);
+                if (changePassword && hasPassword)
+                {
+                    IdentityResult result = await UserManager.AddPasswordAsync(user.Id, model.NewPassword);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("Index", "Action", new { Message = ManageMessageId.ChangePasswordSuccess });
+                    }
+                    else
+                    {
+                        AddErrors(result);
+                    }
+                }
+                else
+                {
+                    if(!hasPassword)
+                    {
+                        return RedirectToAction("Edit", "Action", new { Message = ManageMessageId.Error });
+                    }
+                }
+                Db.Entry(user).State = System.Data.Entity.EntityState.Modified;
+                await Db.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        [Authorize(Roles = "Administrator")]
+        public ActionResult Delete(string id = null)
+        {
+            var Db = DatabaseFactory.Get();
+            var user = Db.Users.First(u => u.Id == id);
+            var model = new EditUserViewModel(user);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            return View(model);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator")]
+        public ActionResult DeleteConfirmed(string id)
+        {
+            var Db = DatabaseFactory.Get();
+            var user = Db.Users.First(u => u.Id == id);
+            Db.Users.Remove(user);
+            Db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        [Authorize(Roles = "Administrator, Manager")]
+        public ActionResult UserRoles(string id)
+        {
+            var Db = DatabaseFactory.Get();
+            var user = Db.Users.First(u => u.Id == id);
+            var model = new SelectUserRolesViewModel(user, DatabaseFactory);
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Administrator, Manager")]
+        [ValidateAntiForgeryToken]
+        public ActionResult UserRoles(SelectUserRolesViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var Db = DatabaseFactory.Get();
+                var idManager = new IdentityManager(DatabaseFactory);
+                var user = Db.Users.First(u => u.UserName == model.UserName);
+                idManager.ClearUserRoles(user.Id);
+                foreach (var role in model.Roles)
+                {
+                    if (role.Selected)
+                    {
+                        idManager.AddUserToRole(user.Id, role.RoleName);
+                    }
+                }
+                return RedirectToAction("index");
+            }
+            return View();
+        }        
+        
         //
         // POST: /Account/ExternalLogin
         [HttpPost]
@@ -340,9 +467,8 @@ namespace Machete.Web.Controllers
         }
 
         //
-        // POST: /Account/LogOff
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        // GET: /Account/LogOff
+        [AllowAnonymous]
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut();
@@ -360,8 +486,9 @@ namespace Machete.Web.Controllers
         [ChildActionOnly]
         public ActionResult RemoveAccountList()
         {
-            var linkedAccounts = UserManager.GetLogins(User.Identity.GetUserId());
-            ViewBag.ShowRemoveButton = HasPassword() || linkedAccounts.Count > 1;
+            var userid = User.Identity.GetUserId();
+            var linkedAccounts = UserManager.GetLogins(userid);
+            ViewBag.ShowRemoveButton = HasPassword(userid) || linkedAccounts.Count > 1;
             return (ActionResult)PartialView("_RemoveAccountPartial", linkedAccounts);
         }
 
@@ -402,12 +529,21 @@ namespace Machete.Web.Controllers
             }
         }
 
-        private bool HasPassword()
+        private bool HasPassword(string userId)
         {
-            var user = UserManager.FindById(User.Identity.GetUserId());
+            var user = UserManager.FindById(userId);
             if (user != null)
             {
                 return user.PasswordHash != null;
+            }
+            return false;
+        }
+
+        private bool HasPassword(ApplicationUser user)
+        {
+            if (user.PasswordHash != null)
+            {
+                return true;
             }
             return false;
         }

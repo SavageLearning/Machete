@@ -1,12 +1,14 @@
 ﻿@using Microsoft.AspNet.Identity
+@using Machete.Web.Helpers
 @if (Request.IsAuthenticated)
 {
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
         @Html.AntiForgeryToken()
         <text>@Machete.Web.Resources.ValidationStrings.Welcome <b>@User.Identity.GetUserName()</b>!
-    [ @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.Settings, "Index", "Account") 
-    <a href="javascript:document.getElementById('logoutForm').submit()">@Machete.Web.Resources.ValidationStrings.LogOff</a>
+    [ @if(Html.IsInRole(Html.Role_AM())) { @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.Settings, "Index", "Account") }
+      else { @Html.ActionLink("Manage", "Manage", "Account") }      
+      @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.LogOff, "LogOff", "Account")
        ]</text>
     }
 }
