@@ -18,6 +18,8 @@ using System.Web.Security;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using System.Web.Routing;
+using Machete.Service;
+using System.Collections.ObjectModel;
 
 namespace Machete.Web.Controllers
 {
@@ -75,7 +77,10 @@ namespace Machete.Web.Controllers
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+            LoginViewModel model = new LoginViewModel();
+            model.Action = "ExternalLogin";
+            model.ReturnUrl = returnUrl;
+            return View(model);
         }
 
         //
@@ -176,13 +181,21 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, User")]
         public ActionResult Manage(ManageMessageId? message)
         {
+            var Db = DatabaseFactory.Get();
             ViewBag.StatusMessage =
                 message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
                 : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
                 : message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
                 : message == ManageMessageId.Error ? "An error has occurred."
                 : "";
+            var id = User.Identity.GetUserId();
+            var user = Db.Users.First(x => x.Id == id);
+            ViewBag.HasLocalPassword = HasPassword(user);
             ViewBag.ReturnUrl = Url.Action("Manage");
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
             return View();
         }
 
@@ -193,7 +206,9 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, User")]
         public async Task<ActionResult> Manage(ManageUserViewModel model)
         {
-            var user = User.Identity.GetUserId();
+            var Db = DatabaseFactory.Get();
+            var id = User.Identity.GetUserId();
+            var user = Db.Users.First(x => x.Id == id);
             bool hasPassword = HasPassword(user);
             ViewBag.HasLocalPassword = hasPassword;
             ViewBag.ReturnUrl = Url.Action("Manage");
@@ -201,7 +216,7 @@ namespace Machete.Web.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    IdentityResult result = await UserManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+                    IdentityResult result = await UserManager.ChangePasswordAsync(user.Id, model.OldPassword, model.NewPassword);
                     if (result.Succeeded)
                     {
                         return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
@@ -242,12 +257,6 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator")]
         public ActionResult Edit(string id, ManageMessageId? Message = null)
         {
-            ViewBag.StatusMessage =
-                Message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
-                 : Message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
-                 : Message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
-                 : Message == ManageMessageId.Error ? "Sorry, you don't seem to have a password on this system. Try taking this up with your account service provider."
-                 : "";
             var Db = DatabaseFactory.Get();
             var user = Db.Users.First(u => u.Id == id);
             var model = new EditUserViewModel(user);
@@ -269,10 +278,14 @@ namespace Machete.Web.Controllers
             if (ModelState.IsValid)
             {
                 var user = Db.Users.First(u => u.Id == model.Id);
+                string name = model.FirstName.Trim() +"." + model.LastName.Trim();
                 // Update the user data:
                 //user.FirstName = model.FirstName; //We can't have FirstName and
                 //user.LastName = model.LastName;   //LastName without refactor
+                user.UserName = name;
+                user.LoweredUserName = name.ToLower();
                 user.Email = model.Email;
+                user.LoweredEmail = model.Email.ToLower();
                 user.IsApproved = model.IsApproved;
                 user.IsLockedOut = model.IsLockedOut;
                 ModelState state = ModelState["NewPassword"];
@@ -280,22 +293,34 @@ namespace Machete.Web.Controllers
                 bool hasPassword = HasPassword(user);
                 if (changePassword && hasPassword)
                 {
-                    IdentityResult result = await UserManager.AddPasswordAsync(user.Id, model.NewPassword);
-                    if (result.Succeeded)
+                    IdentityResult remove = await UserManager.RemovePasswordAsync(user.Id);
+                    if (remove.Succeeded)
                     {
-                        return RedirectToAction("Index", "Action", new { Message = ManageMessageId.ChangePasswordSuccess });
+                        IdentityResult result = await UserManager.AddPasswordAsync(user.Id, model.NewPassword);
+                        if (result.Succeeded)
+                        {
+                            ViewBag.Message = "Password successfully updated.";
+                            //return RedirectToAction("Index");
+                        }
+                        else
+                        {
+                            throw new MacheteIntegrityException("HELL to the no. You have to ADD a password if you remove one.");
+                        }
                     }
                     else
                     {
-                        AddErrors(result);
+                        model.ErrorMessage = "Something went wrong with your password request. We should really learn to test our software. Sorry!";
+                        model.NewPassword = "";
+                        model.ConfirmPassword = "";
+                        return View(model);
                     }
                 }
-                else
+                else if (!hasPassword)
                 {
-                    if(!hasPassword)
-                    {
-                        return RedirectToAction("Edit", "Action", new { Message = ManageMessageId.Error });
-                    }
+                    model.ErrorMessage = "This user's password is managed by another service.";
+                    model.NewPassword = "";
+                    model.ConfirmPassword = "";
+                    return View(model);
                 }
                 Db.Entry(user).State = System.Data.Entity.EntityState.Modified;
                 await Db.SaveChangesAsync();
@@ -303,6 +328,9 @@ namespace Machete.Web.Controllers
             }
 
             // If we got this far, something failed, redisplay form
+            model.ErrorMessage = "Passwords must match.";
+            model.NewPassword = "";
+            model.ConfirmPassword = "";
             return View(model);
         }
 
@@ -397,7 +425,8 @@ namespace Machete.Web.Controllers
                 // If the user does not have an account, then prompt the user to create an account
                 ViewBag.ReturnUrl = returnUrl;
                 ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
-                return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { UserName = loginInfo.DefaultUserName });
+
+                return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { FirstName = "", LastName = "" });
             }
         }
 
@@ -448,7 +477,7 @@ namespace Machete.Web.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser() { UserName = model.UserName };
+                var user = new ApplicationUser() { UserName = model.FirstName + "." + model.LastName };
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
@@ -486,9 +515,20 @@ namespace Machete.Web.Controllers
         [ChildActionOnly]
         public ActionResult RemoveAccountList()
         {
-            var userid = User.Identity.GetUserId();
-            var linkedAccounts = UserManager.GetLogins(userid);
-            ViewBag.ShowRemoveButton = HasPassword(userid) || linkedAccounts.Count > 1;
+            var Db = DatabaseFactory.Get();
+            var id = User.Identity.GetUserId();
+            var user = Db.Users.First(x => x.Id == id);
+            ICollection<UserLoginInfo> linkedAccounts = new Collection<UserLoginInfo>
+                (
+                    user.Logins
+                        .Select(x => new UserLoginInfo(x.LoginProvider, x.ProviderKey)
+                            {
+                                LoginProvider = x.LoginProvider,
+                                ProviderKey = x.ProviderKey
+                            })
+                        .ToList()
+                );
+            ViewBag.ShowRemoveButton = HasPassword(user) || linkedAccounts.Count > 1;
             return (ActionResult)PartialView("_RemoveAccountPartial", linkedAccounts);
         }
 

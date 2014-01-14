@@ -11,19 +11,26 @@
     <h4>@Html.DisplayFor(model => model.UserName)</h4>
     <hr />
     <dl class="dl-horizontal">
-
+        <dt>
+            <strong>@Html.DisplayNameFor(model => model.FirstName)</strong>
+        </dt>
         <dd>
-            <strong>@Html.DisplayNameFor(model => model.FirstName)</strong>            @Html.DisplayFor(model => model.FirstName)
+            @Html.DisplayFor(model => model.FirstName)
         </dd>
 
+        <dt>
+            <strong>@Html.DisplayNameFor(model => model.LastName)</strong>
+        </dt>
         <dd>
-            <strong>@Html.DisplayNameFor(model => model.LastName)</strong>             @Html.DisplayFor(model => model.LastName)
+             @Html.DisplayFor(model => model.LastName)
         </dd>
 
+        <dt>
+            <strong>@Html.DisplayNameFor(model => model.Email)</strong>
+        </dt>
         <dd>
             @Html.DisplayFor(model => model.Email)
         </dd>
-
     </dl>
 
     @using (Html.BeginForm()) {
@@ -31,7 +38,7 @@
 
         <div class="form-actions no-color">
             <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+            @Html.ActionLink("Back to List", "Index", "Account")
         </div>
     }
 </div>
