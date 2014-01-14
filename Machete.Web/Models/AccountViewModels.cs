@@ -116,8 +116,16 @@ namespace Machete.Web.Models
         {
             this.UserName = user.UserName;
             string[] firstLast = user.UserName.Split('.');
-            this.FirstName = firstLast[0];
-            this.LastName = firstLast[1];
+            if (firstLast.Length == 2)
+            {
+                this.FirstName = firstLast[0];
+                this.LastName = firstLast[1];
+            }
+            else
+            {
+                this.FirstName = user.UserName;
+                this.LastName = "";
+            }
             this.Email = user.Email;
         }
 

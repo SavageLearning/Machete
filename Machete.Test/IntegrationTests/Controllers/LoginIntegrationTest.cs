@@ -7,6 +7,7 @@ using System.Web.Security;
 using Machete.Data.Infrastructure;
 using Machete.Data;
 using Microsoft.AspNet.Identity;
+using System.Threading.Tasks;
 
 namespace Machete.Test.IntegrationTests.Controllers
 {
@@ -33,20 +34,11 @@ namespace Machete.Test.IntegrationTests.Controllers
 
         // This test inexplicably returns null.
         [TestMethod]
-        public void NewMethod()
+        public async Task FindIdentitySignin()
         {
-            var task = userManager.FindAsync("", "");
-            var user = task.Wait(20000);
-            Assert.IsNotNull(task.Result);
-        }
-
-        // This test can't find its SQL Membership stored procedure.
-        [TestMethod]
-        public void OldMethod()
-        {
-            var provider = Membership.Provider;
-            var result = provider.ValidateUser("", "");
-            Assert.IsNotNull(result);
+            var task = await userManager.FindAsync("", "");
+            //var user = task.Wait(20000);
+            Assert.IsNotNull(task);
         }
     }
 }
