@@ -7,11 +7,12 @@
 }
 
 <h2>Machete Configuration Page</h2>
+
 <p style="color:red;">
-    <strong>@ViewBag.Message</strong>
+    <strong>@Html.Raw(ViewBag.StatusMessage)</strong>
 </p>
 <p>
-    @Html.ActionLink("Manage Current User", "Manage") | @Html.ActionLink("Create New User", "Register") | @Html.ActionLink("Configure Lookups", "Index", "Config")
+    @Html.ActionLink("Manage Current User", "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Manage" }) | @Html.ActionLink("Create New User", "Register") | @Html.ActionLink("Configure Lookups", "Index", "Config")
 </p>
 <h3>Users Table</h3>
 <table>

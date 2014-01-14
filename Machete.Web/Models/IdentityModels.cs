@@ -18,6 +18,7 @@ namespace Machete.Web.Models
         Task<IdentityResult> RemoveLoginAsync(string userId, UserLoginInfo login);
         Task<IdentityResult> ChangePasswordAsync(string userId, string currentPassword, string newPassword);
         Task<IdentityResult> AddPasswordAsync(string userId, string password);
+        Task<IdentityResult> RemovePasswordAsync(string userId);
         Task<TUser> FindAsync(UserLoginInfo login);
         Task<IdentityResult> AddLoginAsync(string userId, UserLoginInfo login);
         Task<IdentityResult> CreateAsync(TUser user);

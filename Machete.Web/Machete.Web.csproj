@@ -514,7 +514,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\ActivitySignin\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -629,17 +628,11 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Views\Account\AdminChangePassword.cshtml" />
     <Content Include="Views\Account\Delete.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Views\Account\ChangePassword.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Views\Account\ChangePasswordSuccess.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Views\Account\Create.cshtml" />
+    <Content Include="Views\Account\_SetPasswordPartial.cshtml" />
+    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
+    <Content Include="Views\Account\_RemoveAccountPartial.cshtml" />
+    <Content Include="Views\Account\_ChangePasswordPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Account\Edit.cshtml" />
@@ -916,6 +909,8 @@
     <Content Include="Views\Account\Manage.cshtml" />
     <Content Include="Views\Account\UserRoles.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SelectRoleEditorViewModel.cshtml" />
+    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
+    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

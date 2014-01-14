@@ -24,8 +24,11 @@ namespace Machete.Web.Models
     public class ExternalLoginConfirmationViewModel
     {
         [Required]
-        [Display(Name = "User name")]
-        public string UserName { get; set; }
+        [Display(Name = "First name")]
+        public string FirstName { get; set; }
+        [Required]
+        [Display(Name = "Last name")]
+        public string LastName { get; set; }
     }
 
     public class ManageUserViewModel
@@ -63,6 +66,8 @@ namespace Machete.Web.Models
 
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
+        public string Action { get; set; }
+        public string ReturnUrl { get; set; }
     }
 
 
@@ -133,11 +138,11 @@ namespace Machete.Web.Models
         [Display(Name = "User Name")]
         public string UserName { get; set; }
 
-        //[Required]
+        [Required]
         [Display(Name = "First Name")]
         public string FirstName { get; set; }
 
-        //[Required]
+        [Required]
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
@@ -148,9 +153,19 @@ namespace Machete.Web.Models
 
         public bool IsLockedOut { get; set; }
 
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "New password")]
         public string NewPassword { get; set; }
 
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm new password")]
+        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        public string ConfirmPassword { get; set; }
+
         public string Id { get; set; }
+
+        public string ErrorMessage { get; set; }
     }
 
 
