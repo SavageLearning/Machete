@@ -120,7 +120,7 @@ namespace Machete.Web
             Database.SetInitializer<MacheteContext>(new MacheteInitializer());
             IUnityContainer container = GetUnityContainer();
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
-            Lookups.Initialize(container.Resolve<ILookupCache>()); // Static object; used in cshtml files; used instead of proper view models
+            Lookups.Initialize(container.Resolve<ILookupCache>(), container.Resolve<IDatabaseFactory>()); // Static object; used in cshtml files; used instead of proper view models
             MacheteMapper.Initialize(); // AutoMapper
         }
 

@@ -34,6 +34,8 @@ using System.Text.RegularExpressions;
 using System.Web.Security;
 using System.Globalization;
 using System.Threading;
+using Machete.Data.Infrastructure;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Machete.Web.Helpers
 {
@@ -55,13 +57,15 @@ namespace Machete.Web.Helpers
         private static List<SelectListItem> yesnoEN { get; set; }
         private static List<SelectListItem> yesnoES { get; set; }
         private static ILookupCache lcache;
+        private static IDatabaseFactory Db;
         //
         // Initialize once to prevent re-querying DB
         //
         //public static void Initialize(IEnumerable<Lookup> cache)
-        public static void Initialize(ILookupCache lc)
+        public static void Initialize(ILookupCache lc, IDatabaseFactory plop)
         {
             lcache = lc;
+            Db = plop;
             hoursNum = new SelectList(new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16" }
                 .Select(x => new LookupNumber { Value = x, Text = x }),
                 "Value", "Text", "7"
@@ -97,7 +101,8 @@ namespace Machete.Web.Helpers
 
         public static IEnumerable<string> getTeachers()
         {
-            return Roles.GetUsersInRole("Teacher").AsEnumerable();
+            var teacherEnumerable = new TeacherEnumerator(Db).Teachers.AsEnumerable();
+            return teacherEnumerable;
         }
         //
         // Get the Id string for a given lookup number
@@ -223,5 +228,28 @@ namespace Machete.Web.Helpers
     {
         public string Value { get; set; }
         public string Text { get; set; }
+    }
+
+    public class TeacherEnumerator
+    {
+        IDatabaseFactory Db;
+        public TeacherEnumerator()
+        {
+            this.Teachers = new List<string>();
+        }
+
+        public TeacherEnumerator(IDatabaseFactory plop) : this()
+        {
+            Db = plop;
+            var users = Db.Get().Users;
+            //var teachers = users.SelectMany(x => x.Roles).Where(y => y.Role.Name == "Teacher");
+            var usernames = users.Where(y => y.Roles.Any(role => role.Role.Name == "Teacher")).Select(x => x.UserName);
+            foreach (var bliftasplik in usernames)
+            {
+                this.Teachers.Add(bliftasplik);
+            }
+        }
+
+        public List<string> Teachers { get; set; }
     }
 }
