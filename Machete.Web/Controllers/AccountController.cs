@@ -196,7 +196,14 @@ namespace Machete.Web.Controllers
             {
                 return HttpNotFound();
             }
-            return View();
+            ManageUserViewModel model = new ManageUserViewModel();
+            model.Action = "LinkLogin";
+            model.ReturnUrl = "Manage";
+            ModelState old = ModelState["OldPassword"];
+            if (old != null) old.Errors.Clear();
+            ModelState blah = ModelState["NewPassword"];
+            if (blah != null) blah.Errors.Clear();
+            return View(model);
         }
 
         //

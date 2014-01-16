@@ -50,6 +50,10 @@ namespace Machete.Web.Models
         [Compare("NewPassword", ErrorMessage =
             "The new password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        public string Action { get; set; }
+
+        public string ReturnUrl { get; set; }
     }
 
 
@@ -66,6 +70,7 @@ namespace Machete.Web.Models
 
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
+
         public string Action { get; set; }
         public string ReturnUrl { get; set; }
     }
