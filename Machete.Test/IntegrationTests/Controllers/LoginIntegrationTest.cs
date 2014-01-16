@@ -36,6 +36,7 @@ namespace Machete.Test.IntegrationTests.Controllers
         [TestMethod]
         public async Task FindIdentitySignin()
         {
+            //passes with default values 1/15/2014 5:52 pm
             var task = await userManager.FindAsync("", "");
             //var user = task.Wait(20000);
             Assert.IsNotNull(task);
