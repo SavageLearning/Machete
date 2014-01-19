@@ -29,7 +29,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Machete.Data;
 using System.Data.Entity;
 using Machete.Domain;
-using System.Data.Objects;
+using System.Data.Entity.Core.Objects;
 
 namespace Machete.Test.Data
 {
@@ -43,26 +43,29 @@ namespace Machete.Test.Data
         public void Initialize()
         {
             frb = new FluentRecordBase();
-            frb.Initialize(new TestInitializer(), "macheteDevTest");
+            frb.AddDBFactory(connStringName: "macheteDevTest");
         }
+
+        // This freaking thing dropped my Azure database! Please fix it!
+
         /// <summary>
         /// Tests permissions to drop and re-create database
         /// </summary>
         [TestMethod]
         public void Integration_Initializer_create_machete()
         {
-            //Arrange
-            frb.DB.Database.Delete();
-            //Act
-            try
-            {
-                frb.DB.Database.Initialize(true); // should be performed by TestInitializer
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(string.Format("Unexpected exception of type {0} caught: {1}", e.GetType(), e.Message));
-            }
-            
+        //    //Arrange
+        //    frb.ToFactory().Get().Database.Delete();
+        //    //Act
+        //    try
+        //    {
+        //        frb.ToFactory().Get().Database.Initialize(true); // should be performed by TestInitializer
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Assert.Fail(string.Format("Unexpected exception of type {0} caught: {1}", e.GetType(), e.Message));
+        //    }
+
         }
         /// <summary>
         /// Used with SQL Profiler to see what SQL is produced
@@ -76,7 +79,7 @@ namespace Machete.Test.Data
             // Act
             var q = frb.ToRepoWorkerSignin().GetAllQ();
             q = q.Where(r => r.dwccardnum == signin.dwccardnum
-                          && EntityFunctions.DiffDays(r.dateforsignin, signin.dateforsignin) == 0 ? true : false);           
+                          && DbFunctions.DiffDays(r.dateforsignin, signin.dateforsignin) == 0 ? true : false);           
             WorkerSignin result = q.FirstOrDefault();
             // Assert
             Assert.IsNotNull(result.ID);

@@ -28,9 +28,9 @@ using System.Text;
 using Machete.Domain;
 using Machete.Data;
 using Machete.Data.Infrastructure;
-using System.Data.Objects.SqlClient;
 using System.Globalization;
-using System.Data.Objects;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity;
 
 namespace Machete.Service
 {
@@ -51,12 +51,14 @@ namespace Machete.Service
     public class WorkerSigninService : SigninServiceBase<WorkerSignin>, IWorkerSigninService
     {
         //
-        public WorkerSigninService(IWorkerSigninRepository repo, 
-                                   IWorkerRepository wRepo,
-                                   IImageRepository iRepo,
-                                   IWorkerRequestRepository wrRepo,
-                                   IUnitOfWork uow)
-            : base(repo, wRepo, iRepo, wrRepo, uow)
+        public WorkerSigninService(
+            IWorkerSigninRepository repo, 
+            IWorkerRepository wRepo,
+            IImageRepository iRepo,
+            IWorkerRequestRepository wrRepo,
+            IWorkerCache wc, 
+            IUnitOfWork uow)
+            : base(repo, wRepo, iRepo, wrRepo, wc, uow)
         {
             this.logPrefix = "WorkerSignin";
         }
@@ -69,7 +71,7 @@ namespace Machete.Service
         public WorkerSignin GetSignin(int dwccardnum, DateTime date)
         {
             return repo.GetManyQ().FirstOrDefault(r => r.dwccardnum == dwccardnum &&
-                            EntityFunctions.DiffDays(r.dateforsignin, date) == 0 ? true : false);
+                            DbFunctions.DiffDays(r.dateforsignin, date) == 0 ? true : false);
         }
         /// <summary>
         /// This method counts the current lottery (daily list) entries for the day and increments by one.
@@ -79,7 +81,7 @@ namespace Machete.Service
         public int GetNextLotterySequence(DateTime date)
         {
             return repo.GetAllQ().Where(p => p.lottery_timestamp != null && 
-                                        EntityFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
+                                        DbFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
                                  .Count() + 1;
         }
 
@@ -105,7 +107,7 @@ namespace Machete.Service
             WorkerSignin wsiUp = repo.GetById(
                                     repo.GetAllQ()
                                         .Where(up => up.lottery_sequence == nextID
-                                                  && EntityFunctions.DiffDays(up.dateforsignin, date) == 0)
+                                                  && DbFunctions.DiffDays(up.dateforsignin, date) == 0)
                                         .Select(g => g.ID).FirstOrDefault()
                                  ); //up.ID = 5
 
@@ -143,7 +145,7 @@ namespace Machete.Service
             WorkerSignin wsiDown = repo.GetById(
                                     repo.GetAllQ()
                                         .Where(up => up.lottery_sequence == prevID
-                                                  && EntityFunctions.DiffDays(up.dateforsignin, date) == 0)
+                                                  && DbFunctions.DiffDays(up.dateforsignin, date) == 0)
                                         .Select(g => g.ID).FirstOrDefault()
                                  ); //down.lotSq = 3
 
@@ -190,7 +192,7 @@ namespace Machete.Service
             int i = 0;
             // select and sort by timestamp
             signins = repo.GetManyQ().Where(p => p.lottery_timestamp != null &&
-                                           EntityFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
+                                           DbFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
                                     .OrderBy(p => p.lottery_timestamp)
                                     .AsEnumerable();
             // reset sequence number
@@ -225,7 +227,7 @@ namespace Machete.Service
             // gets a new one in the same order.
             todayListSignins = repo.GetAllQ()
                 .Where(p => p.lottery_sequence != null
-                         && EntityFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
+                         && DbFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
                 .OrderBy(p => p.lottery_sequence)
                 .AsEnumerable();
             // reset sequence number
@@ -242,7 +244,7 @@ namespace Machete.Service
             yesterdaySignins = repo.GetAllQ()
                 .Where(p => p.lottery_sequence != null 
                          && p.WorkAssignmentID == null
-                         && EntityFunctions.DiffDays(p.dateforsignin, yesterday) == 0 ? true : false)
+                         && DbFunctions.DiffDays(p.dateforsignin, yesterday) == 0 ? true : false)
                 .OrderBy(p => p.lottery_sequence)
                 .AsEnumerable();
 
@@ -252,7 +254,7 @@ namespace Machete.Service
             todayDupeSignins = repo.GetManyQ() //with tracing
                 .Where(p => p.WorkAssignmentID == null
                          && p.lottery_sequence == null
-                         && EntityFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
+                         && DbFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
                 .OrderBy(o => o.dateforsignin)
                 .AsEnumerable();
 
@@ -293,7 +295,7 @@ namespace Machete.Service
 
             // Get today's signins. If anyone has already been signed in, this feature will hold those records.
             todayListSignins = repo.GetAllQ()
-                .Where(p => EntityFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
+                .Where(p => DbFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
                 .OrderBy(p => p.dateforsignin)
                 .AsEnumerable();
 
@@ -302,7 +304,7 @@ namespace Machete.Service
             //and haven't already been signed in
             yesterdaySignins = repo.GetManyQ()
                 .Where(p => p.WorkAssignmentID == null
-                         && EntityFunctions.DiffDays(p.dateforsignin, yesterday) == 0 ? true : false
+                         && DbFunctions.DiffDays(p.dateforsignin, yesterday) == 0 ? true : false
                          && !todayListSignins.Select(t => t.WorkerID).Contains(p.WorkerID))
                 .OrderBy(p => p.dateforsignin)
                 .AsEnumerable()
@@ -351,9 +353,9 @@ namespace Machete.Service
             if (o.dwccardnum > 0) IndexViewBase.dwccardnum(o, ref q);
             e = q.ToList();
             if (!string.IsNullOrEmpty(o.sSearch))
-                IndexViewBase.search(o, ref e);
-
-            eSIV = e.Join(WorkerCache.getCache(), 
+                IndexViewBase.search(o, ref e, wcache.GetCache());
+            var cache = wcache.GetCache();
+            eSIV = e.Join(cache, 
                             s => s.dwccardnum, 
                             w => w.dwccardnum, 
                             (s, w) => new { s, w }

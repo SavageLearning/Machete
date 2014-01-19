@@ -1,12 +1,14 @@
-﻿@model System.Web.Security.MembershipUser          
+﻿@model Machete.Web.Models.EditUserViewModel        
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Edit User";
 }
-<h2>Edit</h2>
-@Html.ValidationSummary(true)
-@using (Html.BeginForm())
-{
 
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm("Edit", "Account", FormMethod.Post))
+{
+    @Html.AntiForgeryToken();
+    <p style="color:red;"><strong>@Html.ValidationSummary()</strong></p>
     <div class="tb-table" style="float: left;">
     <fieldset>
     <legend>MembersModel</legend>
@@ -16,7 +18,22 @@
             </div>
             <div class="tb-field">
                 @Html.DisplayTextFor(model => model.UserName)
-                @Html.ValidationMessageFor(model => model.UserName)
+            </div>
+        </div>
+        <div class="tb-row">
+            <div class="tb-label">
+                @Html.LabelFor(model => model.FirstName)
+            </div>
+            <div class="tb-field">
+                @Html.EditorFor(model => model.FirstName)
+            </div>
+        </div>
+        <div class="tb-row">
+            <div class="tb-label">
+                @Html.LabelFor(model => model.LastName)
+            </div>
+            <div class="tb-field">
+                @Html.EditorFor(model => model.LastName)
             </div>
         </div>
         <div class="tb-row">
@@ -25,7 +42,6 @@
             </div>
             <div class="tb-field">
                 @Html.EditorFor(model => model.Email)
-                @Html.ValidationMessageFor(model => model.Email)
             </div>
         </div>
         <div class="tb-row">
@@ -34,7 +50,6 @@
             </div>
             <div class="tb-field">
                 @Html.EditorFor(model => model.IsApproved)
-                @Html.ValidationMessageFor(model => model.IsApproved)
             </div>
         </div>
         <div class="tb-row">
@@ -43,7 +58,6 @@
             </div>
             <div class="tb-field">
                 @Html.EditorFor(model => model.IsLockedOut)
-                @Html.ValidationMessageFor(model => model.IsLockedOut)
             </div>
         </div>
         <p>
@@ -54,20 +68,24 @@
 
 
     <div class="tb-table" style="float: left;">
-    <fieldset>
-    <legend>Roles</legend>    
-        @foreach (String role in Roles.GetAllRoles())
-        {   
+    <h3>Password Recovery</h3>
         <div class="tb-row">
             <div class="tb-label">
-                <label for="@role">@role:</label>
-            </div>   
-            <div class="tb-label">               
-                @Html.CheckBox(role, Roles.IsUserInRole(Model.UserName, role))
+                @Html.LabelFor(model => model.NewPassword)
             </div>
-        </div>                        
-        }
-        </fieldset>
+            <div class="tb-field">
+                @Html.PasswordFor(model => model.NewPassword)
+            </div>
+        </div>
+        <div class="tb-row">
+            <div class="tb-label">
+                @Html.LabelFor(model => model.ConfirmPassword)
+            </div>
+            <div class="tb-field">
+                @Html.PasswordFor(model => model.ConfirmPassword)
+            </div>
+        </div>
+    <p>(Leave this blank unless you want to change the user's password.)</p>
     </div>
 
 }

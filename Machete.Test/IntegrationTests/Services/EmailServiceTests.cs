@@ -44,7 +44,6 @@ namespace Machete.Test.IntegrationTests.Services
         public void TestInitialize()
         {
             frb = new FluentRecordBase();
-            frb.Initialize(new MacheteInitializer(), "macheteConnection");
             dOptions = new viewOptions
             {
                 CI = new CultureInfo("en-US", false),
@@ -62,7 +61,6 @@ namespace Machete.Test.IntegrationTests.Services
         [TestCleanup]
         public void TestCleanup()
         {
-            frb.Dispose();
             frb = null;
         }
 

@@ -45,12 +45,12 @@ namespace Machete.Service
     }
     public class LookupCache : ILookupCache
     {
-        private Func<IDatabaseFactory> DB { get; set; }
+        private IDatabaseFactory DB { get; set; }
         private CacheItem DbCache { get; set; }
         private ObjectCache cache;
         //
         //
-        public LookupCache(Func<IDatabaseFactory> db)
+        public LookupCache(IDatabaseFactory db)
         {
             cache = MemoryCache.Default;
             DB = db;
@@ -65,7 +65,7 @@ namespace Machete.Service
         //
         private void FillCache()
         {
-            IEnumerable<Lookup> lookups = DB().Get().Lookups.AsNoTracking().ToList();
+            IEnumerable<Lookup> lookups = DB.Get().Lookups.AsNoTracking().ToList();
             CacheItemPolicy policy = new CacheItemPolicy();
             //TODO: Put LookupCache expire time in config file
             policy.AbsoluteExpiration = new DateTimeOffset(DateTime.Now.AddHours(1));

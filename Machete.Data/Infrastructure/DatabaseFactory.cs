@@ -21,9 +21,13 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+using NLog;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace Machete.Data.Infrastructure
@@ -33,25 +37,63 @@ namespace Machete.Data.Infrastructure
     public interface IDatabaseFactory : IDisposable
     {
         MacheteContext Get();
-        void Set(MacheteContext context);
+        //void Set(MacheteContext context);
     }
     //
     //
     public class DatabaseFactory : Disposable, IDatabaseFactory
     {
+        string connString;
         private MacheteContext dataContext;
+        private BindingFlags bindFlags = BindingFlags.Instance |
+             BindingFlags.Public |
+             BindingFlags.NonPublic |
+             BindingFlags.Static;
+        private FieldInfo field;
+        public DatabaseFactory() 
+        {
+            field = typeof(SqlConnection).GetField("ObjectID", bindFlags);
+        }
+
+        public DatabaseFactory(string connString)
+        {
+            field = typeof(SqlConnection).GetField("ObjectID", bindFlags);
+            this.connString = connString;
+        }
+
         public MacheteContext Get()
         {
-            return dataContext ?? (dataContext = new MacheteContext());
+            var sb = new StringBuilder();
+            if (dataContext == null) 
+            {
+                if (connString == null)
+                {
+                    dataContext = new MacheteContext();
+                }
+                else
+                {
+                    dataContext = new MacheteContext(connString);
+                }
+            }
+            var conn1 = (dataContext as System.Data.Entity.DbContext).Database.Connection;
+            var objid1 = field.GetValue(conn1);
+            sb.AppendFormat("DatabaseFactory SqlConnection # [{0}], Conn: {1}", 
+                objid1.ToString(),
+                connString);
+            Debug.WriteLine(sb.ToString());
+            return dataContext;
         }
-        public void Set(MacheteContext context)
-        {
-            dataContext = context;
-        }
+        //public void Set(MacheteContext context)
+        //{
+        //    dataContext = context;
+        //}
         protected override void DisposeCore()
         {
             if (dataContext != null)
+            {
                 dataContext.Dispose();
+                dataContext = null;
+            }
         }
     }
 }

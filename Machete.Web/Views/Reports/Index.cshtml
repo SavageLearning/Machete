@@ -2,6 +2,8 @@
 @using Machete.Domain.Resources
 @using Machete.Web.Resources
 @using Machete.Service
+@Scripts.Render("~/bundles/reports")
+
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
 }
@@ -149,6 +151,9 @@
     </div>
   </div>
 </div>
+
+@*<script type="text/javascript" src="~/Scripts/jquery.jqplot.min.js"></script>*@
+@*<script type="text/javascript" src="~/Scripts/jqplot.pieRenderer.min.js"></script>*@
 
 <script type="text/javascript">
     $(document).ready(function () {

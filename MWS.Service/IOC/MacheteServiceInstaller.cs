@@ -11,7 +11,7 @@ namespace MWS.Service
     {
         public MacheteServiceInstaller() : base()
         {
-            ServiceName = EVcfg.source; //TODO: separate from eventcfg constants
+            ServiceName = EventViewerConfig.source; //TODO: separate from eventcfg constants
             DisplayName = "Machete Windows Service";
             Description = "Processes Machete email queue";
             StartType = System.ServiceProcess.ServiceStartMode.Automatic;

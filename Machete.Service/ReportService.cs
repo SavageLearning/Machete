@@ -5,8 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-using System.Data.Objects;
-using System.Data.Objects.SqlClient;
+using System.Data;
+using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
+using System.Data.SqlClient;
 
 using Machete.Domain;
 using Machete.Domain.Entities;
@@ -69,7 +71,7 @@ namespace Machete.Service
             query = wsiQ
                 .Where(whr => whr.dateforsignin >= beginDate
                            && whr.dateforsignin <= endDate)
-                .GroupBy(gb => EntityFunctions.TruncateTime(gb.dateforsignin))
+                .GroupBy(gb => DbFunctions.TruncateTime(gb.dateforsignin))
                 .Select(g => new reportUnit
                 {
                     date = g.Key,
@@ -110,7 +112,7 @@ namespace Machete.Service
             // WHERE firstSignin >= beginDate
                 .Where(whr => whr.firstSignin >= beginDate)
             // GROUP BY fistSignin
-                .GroupBy(gb => EntityFunctions.TruncateTime(gb.firstSignin))
+                .GroupBy(gb => DbFunctions.TruncateTime(gb.firstSignin))
             // SELECT firstSignin as date, COUNT(dwccardnum) AS count;
                 .Select(g => new reportUnit
                 {
@@ -141,7 +143,7 @@ namespace Machete.Service
                 .Join(woQ, wa => wa.workOrderID, wo => wo.ID, (wa, wo) => new
                 {
                     wa,
-                    date = EntityFunctions.TruncateTime(wo.dateTimeofWork)
+                    date = DbFunctions.TruncateTime(wo.dateTimeofWork)
                 })
                 .Where(whr => whr.date >= beginDate
                            && whr.date <= endDate)
@@ -170,9 +172,9 @@ namespace Machete.Service
             beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
             endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
-            query = woQ.Where(whr => EntityFunctions.TruncateTime(whr.dateTimeofWork) == beginDate
+            query = woQ.Where(whr => DbFunctions.TruncateTime(whr.dateTimeofWork) == beginDate
                                   && whr.status == WorkOrder.iCancelled)
-                .GroupBy(gb => EntityFunctions.TruncateTime(gb.dateTimeofWork))
+                .GroupBy(gb => DbFunctions.TruncateTime(gb.dateTimeofWork))
                 .Select(g => new reportUnit
                 {
                     date = g.Key,
@@ -219,7 +221,7 @@ namespace Machete.Service
                     (wr, wo) => new
                     {
                         wr,
-                        timeOfWork = EntityFunctions.TruncateTime(wo.dateTimeofWork)
+                        timeOfWork = DbFunctions.TruncateTime(wo.dateTimeofWork)
                     })
                 .Join(wQ, wo => wo.wr.wa.workerAssignedID, w => w.ID,
                     (wo, w) => new
@@ -270,7 +272,7 @@ namespace Machete.Service
                     (wa, wo) => new
                     {
                         wa,
-                        woDate = EntityFunctions.TruncateTime(wo.dateTimeofWork)
+                        woDate = DbFunctions.TruncateTime(wo.dateTimeofWork)
                     })
                 .Where(whr => whr.woDate >= beginDate
                            && whr.woDate <= endDate)
@@ -307,7 +309,7 @@ namespace Machete.Service
                     (wa, wo) => new
                     {
                         wa,
-                        workDate = EntityFunctions.TruncateTime(wo.dateTimeofWork)
+                        workDate = DbFunctions.TruncateTime(wo.dateTimeofWork)
                     })
                 .Join(lQ,
                     wawo => wawo.wa.skillID,
@@ -346,11 +348,11 @@ namespace Machete.Service
             var lQ = lookRepo.GetAllQ();
 
             query = woQ
-                .Where(whr => EntityFunctions.TruncateTime(whr.dateTimeofWork) >= beginDate
-                           && EntityFunctions.TruncateTime(whr.dateTimeofWork) <= endDate)
+                .Where(whr => DbFunctions.TruncateTime(whr.dateTimeofWork) >= beginDate
+                           && DbFunctions.TruncateTime(whr.dateTimeofWork) <= endDate)
                 .GroupBy(gb => new
                 {
-                    dtow = EntityFunctions.TruncateTime(gb.dateTimeofWork),
+                    dtow = DbFunctions.TruncateTime(gb.dateTimeofWork),
                     zip = gb.zipcode
                 })
                 .OrderByDescending(ob => ob.Key.dtow)

@@ -36,8 +36,6 @@ using NLog;
 using Machete.Web.ViewModel;
 using System.Web.Routing;
 using Machete.Web.Models;
-using System.Data.Objects;
-using System.Data.Objects.SqlClient;
 using AutoMapper;
 
 namespace Machete.Web.Controllers

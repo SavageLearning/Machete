@@ -1,0 +1,60 @@
+﻿@model Machete.Web.Models.LoginViewModel
+
+@{
+    ViewBag.Title = @Machete.Web.Resources.ValidationStrings.LogOnTitle;
+}
+
+<h2>@Machete.Web.Resources.ValidationStrings.LogOnTitle</h2>
+<p>
+    @Machete.Web.Resources.ValidationStrings.LogOnRegisterString1 @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.Register, "Register") @Machete.Web.Resources.ValidationStrings.LogOnRegisterString2
+</p>
+
+@Html.ValidationSummary(true, @Machete.Web.Resources.ValidationStrings.LogOnUnsuccessful)
+
+<div class="row">
+    <div class="col-md-8">
+        <section id="loginForm">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                <fieldset>
+                    <legend>@Machete.Web.Resources.ValidationStrings.LogOnLegend</legend>
+                    <div class="tb-table">
+                        <div class="tb-row">
+                            <div class="tb-label">
+                                @Html.LabelFor(m => m.UserName)
+                            </div>
+                            <div class="tb-field">
+                                @Html.TextBoxFor(m => m.UserName)
+                                @Html.ValidationMessageFor(m => m.UserName)
+                            </div>
+                        </div>
+                        <div class="tb-row">
+                            <div class="tb-label">
+                                @Html.LabelFor(m => m.Password)
+                            </div>
+                            <div class="tb-field">
+                                @Html.PasswordFor(m => m.Password)
+                                @Html.ValidationMessageFor(m => m.Password)
+                            </div>
+                        </div>
+                        <div class="tb-row">
+                            <div class="tb-label">
+                                @Html.LabelFor(m => m.RememberMe)
+                            </div>
+                            <div class="tb-field">
+                                @Html.CheckBoxFor(m => m.RememberMe)
+                                <input name="logonB" type="submit" value="@Machete.Web.Resources.ValidationStrings.LogOn" />
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            }
+        </section>
+    </div>
+    <div class="col-md-4">
+        <section id="socialLoginForm">
+            @Html.Partial("_ExternalLoginsListPartial")
+        </section>
+    </div>
+</div>

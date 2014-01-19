@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using System.Data.Objects;
-using System.Data.Objects.SqlClient;
+using System.Data;
+using System.Data.SqlClient;
 
 using Machete.Data;
 using Machete.Data.Infrastructure;
