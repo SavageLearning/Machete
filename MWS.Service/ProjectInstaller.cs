@@ -26,7 +26,7 @@ namespace MWS.Service
             EventLogInstaller installer = FindInstaller(this.Installers);
             if (installer != null)
             {
-                installer.Log = EVcfg.log; // enter your event log name here
+                installer.Log = EventViewerConfig.log; // enter your event log name here
             }
         }
 

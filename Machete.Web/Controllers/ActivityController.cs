@@ -23,14 +23,19 @@
 #endregion
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Machete.Data;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Helpers;
-using System.Globalization;
+using Machete.Web.Models;
+using Machete.Web.ViewModel;
 using AutoMapper;
+using NLog;
 
 namespace Machete.Web.Controllers
 {
@@ -56,7 +61,7 @@ namespace Machete.Web.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        //[Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator, Manager, Teacher")]
         public ActionResult Index()
         {
             return View();
@@ -102,17 +107,17 @@ namespace Machete.Web.Controllers
                 Updatedby = p.Updatedby
             };
         }
-        private string EditTabRef(Activity emp)
+        private string EditTabRef(Activity act)
         {
-            if (emp == null) return null;
-            return "/Activity/Edit/" + Convert.ToString(emp.ID);
+            if (act == null) return null;
+            return "/Activity/Edit/" + Convert.ToString(act.ID);
         }
-        private string EditTabLabel(Activity emp)
+        private string EditTabLabel(Activity act)
         {
-            if (emp == null) return null;
-            return emp.dateStart.ToString() + " - " + 
-                    lcache.textByID(emp.name, CI.TwoLetterISOLanguageName) + " - " +
-                    emp.teacher;
+            if (act == null) return null;
+            return act.dateStart.ToString() + " - " + 
+                    lcache.textByID(act.name, CI.TwoLetterISOLanguageName) + " - " +
+                    act.teacher;
         }
         /// <summary>
         /// GET: /Activity/Create
@@ -133,7 +138,7 @@ namespace Machete.Web.Controllers
         /// <summary>
         /// POST: /Activity/Create
         /// </summary>
-        /// <param name="employer"></param>
+        /// <param name="activity"></param>
         /// <param name="userName"></param>
         /// <returns></returns>
         [HttpPost, UserNameFilter]
@@ -157,11 +162,11 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        //[Authorize(Roles = "Administrator, Manager, Teacher")]
+        [Authorize(Roles = "Administrator, Manager, Teacher")]
         public ActionResult Edit(int id)
         {
-            Activity employer = serv.Get(id);
-            return PartialView("Edit", employer);
+            Activity activity = serv.Get(id);
+            return PartialView("Edit", activity);
         }
         /// <summary>
         /// POST: /Activity/Edit/5
@@ -174,9 +179,9 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Teacher")]
         public JsonResult Edit(int id, FormCollection collection, string userName)
         {
-            Activity employer = serv.Get(id);
-            UpdateModel(employer);
-            serv.Save(employer, userName);
+            Activity activity = serv.Get(id);
+            UpdateModel(activity);
+            serv.Save(activity, userName);
             return Json(new
             {
                 jobSuccess = true
@@ -205,7 +210,7 @@ namespace Machete.Web.Controllers
         //
         //
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager,Teacher")]
+        [Authorize(Roles = "Administrator, Manager, Teacher")]
         public JsonResult Assign(int personID, List<int> actList, string userName)
         {
             if (actList == null) throw new Exception("Activity List is null");
@@ -222,7 +227,7 @@ namespace Machete.Web.Controllers
         //
         //
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager,Teacher")]
+        [Authorize(Roles = "Administrator, Manager, Teacher")]
         public JsonResult Unassign(int personID, List<int> actList, string userName)
         {
             if (actList == null) throw new Exception("Activity List is null");

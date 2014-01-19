@@ -56,34 +56,41 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EFProviderWrapperToolkit">
-      <HintPath>..\packages\CommunityEFProviderWrappers.EFProviderWrapperToolkit.1.0.0\lib\net40-Client\EFProviderWrapperToolkit.dll</HintPath>
-    </Reference>
-    <Reference Include="EFTracingProvider">
-      <HintPath>..\packages\CommunityEFProviderWrappers.EFTracingProvider.1.0.0\lib\net40-Client\EFTracingProvider.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\log4net.1.2.11\lib\net40-full\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.1.0.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.1.0.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
+    <Reference Include="NLog">
+      <HintPath>..\packages\NLog.2.1.0\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationUser.cs" />
+    <Compile Include="AzureConfiguration.cs" />
     <Compile Include="Infrastructure\DatabaseFactory.cs" />
     <Compile Include="Infrastructure\Disposable.cs" />
     <Compile Include="Infrastructure\WorkerCache.cs" />
@@ -91,6 +98,10 @@
     <Compile Include="Infrastructure\RepositoryBase.cs" />
     <Compile Include="Infrastructure\UnitOfWork.cs" />
     <Compile Include="Initialize\MacheteLookups.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\MacheteIntercepterTransientErrors.cs" />
+    <Compile Include="Logging\MacheteInterceptorLogging.cs" />
+    <Compile Include="Logging\Logger.cs" />
     <Compile Include="MacheteContext.cs" />
     <Compile Include="Migrations\201211112012339_InitialMigrations.cs" />
     <Compile Include="Migrations\201211112012339_InitialMigrations.Designer.cs">
@@ -107,6 +118,10 @@
     <Compile Include="Migrations\201305050151353_AddEmailTable.cs" />
     <Compile Include="Migrations\201305050151353_AddEmailTable.Designer.cs">
       <DependentUpon>201305050151353_AddEmailTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201312300649350_MergeMacheteContextAndIdentityDbContext.cs" />
+    <Compile Include="Migrations\201312300649350_MergeMacheteContextAndIdentityDbContext.Designer.cs">
+      <DependentUpon>201312300649350_MergeMacheteContextAndIdentityDbContext.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -132,9 +147,12 @@
     <Content Include="SQL\20121225_date_reset_cleanup.sql" />
     <Content Include="SQL\201304160508212_AddSurchargeField.sql" />
     <Content Include="SQL\201305050151353_AddEmailTable.sql" />
+    <Content Include="SQL\201312300649350_MergeMacheteContextAndIdentityDbContext.sql" />
+    <Content Include="SQL\anUpdateThatWorks.sql" />
     <Content Include="SQL\create_migration_table.sql" />
     <Content Include="SQL\null_in_lookups.sql" />
     <Content Include="SQL\apply_EmployerEmail_schema_changes_to_multiple_macheteDBs.sql" />
+    <Content Include="SQL\switchToAspnetIdentity.sql" />
     <Content Include="SQL\update_Casa_Prod_to_v1.5-RC1.sql" />
   </ItemGroup>
   <ItemGroup>
@@ -146,6 +164,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201305050151353_AddEmailTable.resx">
       <DependentUpon>201305050151353_AddEmailTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201312300649350_MergeMacheteContextAndIdentityDbContext.resx">
+      <DependentUpon>201312300649350_MergeMacheteContextAndIdentityDbContext.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

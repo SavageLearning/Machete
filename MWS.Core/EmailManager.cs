@@ -18,24 +18,31 @@ using System.IO;
 
 namespace MWS.Core
 {
-    public interface IEmailManager
+    public interface IEmailQueueManager
     {
-        void ProcessQueue();
-        bool SendEmail(Email email, EmailConfig cfg);
-        EmailConfig LoadEmailConfig();
+        void ProcessQueue(EmailServerConfig cfg);
+        bool SendEmail(Email email, EmailServerConfig cfg);
+        string getDiagnostics();
+        string getExceptions();
+        string getSent();
+        Stack<Exception> exceptionStack { get; set; }
+        Stack<Email> sentStack { get; set; }
+        //EmailServerConfig LoadEmailConfig();
     }
 
-    public class EmailManager : IEmailManager
+    public class EmailQueueManager : IEmailQueueManager
     {
         IEmailService serv;
         IUnitOfWork db;
         public Stack<Exception> exceptionStack { get; set; }
         public Stack<Email> sentStack { get; set; }
 
-        public EmailManager(IEmailService eServ, IUnitOfWork uow)
+        public EmailQueueManager(IEmailService eServ, IUnitOfWork uow)
         {
             serv = eServ;
-            db =uow;
+            db = uow;
+            exceptionStack = new Stack<Exception>();
+            sentStack = new Stack<Email>();
         }
 
         public string getDiagnostics()
@@ -44,13 +51,15 @@ namespace MWS.Core
             sb.AppendFormat("Total emails in database: {0}", serv.TotalCount().ToString());
             return sb.ToString();
         }
-
-        public void ProcessQueue()
+        /// <summary>
+        /// Get emails from EmailService and calle SendMail to send emails
+        /// </summary>
+        /// <param name="cfg"></param>
+        public void ProcessQueue(EmailServerConfig cfg)
         {
             exceptionStack = new Stack<Exception>();
             sentStack = new Stack<Email>();
             //
-            EmailConfig cfg = LoadEmailConfig();
             var emaillist = serv.GetEmailsToSend();
             foreach (var e in emaillist)
             {
@@ -95,16 +104,21 @@ namespace MWS.Core
             }
             return sb.ToString();
         }
-
-        public bool SendEmail(Email e, EmailConfig cfg)
+        /// <summary>
+        /// create SmtpClient, create mail message, and send message. Catches exceptions and puts them in QueueManager.ExceptionStack.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="cfg"></param>
+        /// <returns></returns>
+        public bool SendEmail(Email e, EmailServerConfig cfg)
         {
             try
             {
-                e.emailFrom = cfg.userName;
-                var client = new SmtpClient(cfg.host, cfg.port)
+                e.emailFrom = cfg.OutgoingAccount;
+                var client = new SmtpClient(cfg.HostName, cfg.Port)
                 {
-                    Credentials = new NetworkCredential(cfg.userName, cfg.password),
-                    EnableSsl = cfg.enableSSL
+                    Credentials = new NetworkCredential(cfg.OutgoingAccount, cfg.OutgoingPassword),
+                    EnableSsl = cfg.EnableSSL
                 };
                 var msg = new MailMessage(e.emailFrom, e.emailTo);
                 if (e.attachment != null)
@@ -138,20 +152,20 @@ namespace MWS.Core
             return true;
         }
 
-        public EmailConfig LoadEmailConfig()
-        {
-            var cfg = new EmailConfig();
-            if (!cfg.IsComplete) throw new Exception("EmailConfig incomplete. Needs host, port, userName, & password");
-            return cfg;
-        }
-        public static Stream GenerateStreamFromString(string s)
-        {
-            MemoryStream stream = new MemoryStream();
-            StreamWriter writer = new StreamWriter(stream);
-            writer.Write(s);
-            writer.Flush();
-            stream.Position = 0;
-            return stream;
-        }
+        //public EmailServerConfig LoadEmailConfig()
+        //{
+        //    var cfg = new EmailServerConfig();
+        //    if (!cfg.IsComplete) throw new Exception("EmailConfig incomplete. Needs host, port, userName, & password");
+        //    return cfg;
+        //}
+        //public static Stream GenerateStreamFromString(string s)
+        //{
+        //    MemoryStream stream = new MemoryStream();
+        //    StreamWriter writer = new StreamWriter(stream);
+        //    writer.Write(s);
+        //    writer.Flush();
+        //    stream.Position = 0;
+        //    return stream;
+        //}
     }
 }

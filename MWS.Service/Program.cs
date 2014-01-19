@@ -18,29 +18,10 @@ namespace MWS.Service
         /// </summary>
         public static void Main()
         {
-            var bootstrapper = new ServiceBootstrapper();
-            var eventhandler = new EventHandler();
-            eventhandler.Initialize();
-            bootstrapper.container.RegisterInstance<IEventHandler>(eventhandler);
-
-            var runme = false;
-            try
-            {
-                bootstrapper.Build();
-                runme = true;
-            }
-            catch (Exception e)
-            {
-                eventhandler.MWSEventLog.WriteEntry(e.ToString());
-            }
-            finally
-            {
-                
-            }
-            if (!runme) return;
             ServiceBase[] services = new ServiceBase[]
             {
-                bootstrapper.container.Resolve<MacheteWindowsService>()
+                //bootstrapper.container.Resolve<MacheteWindowsService>()
+                new  MacheteWindowsService()
             };
             //ServiceBase.Run(services);
             if (Environment.UserInteractive)

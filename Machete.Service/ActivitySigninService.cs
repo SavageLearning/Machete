@@ -28,7 +28,6 @@ using System.Text;
 using Machete.Domain;
 using Machete.Data;
 using Machete.Data.Infrastructure;
-using System.Data.Objects;
 using System.ComponentModel;
 
 namespace Machete.Service
@@ -58,13 +57,15 @@ namespace Machete.Service
         /// <param name="wrRepo"></param>
         /// <param name="uow"></param>
         private readonly IPersonRepository pRepo;
-        public ActivitySigninService(IActivitySigninRepository repo,
-                                   IWorkerRepository wRepo,
-                                   IPersonRepository pRepo,
-                                   IImageRepository iRepo,
-                                   IWorkerRequestRepository wrRepo,
-                                   IUnitOfWork uow)
-            : base(repo, wRepo, iRepo, wrRepo, uow)
+        public ActivitySigninService(
+            IActivitySigninRepository repo,
+            IWorkerRepository wRepo,
+            IPersonRepository pRepo,
+            IImageRepository iRepo,
+            IWorkerRequestRepository wrRepo,
+            IWorkerCache wc, 
+            IUnitOfWork uow)
+            : base(repo, wRepo, iRepo, wrRepo, wc, uow)
         {
             this.logPrefix = "ActivitySignin";
             this.pRepo = pRepo;
@@ -90,9 +91,9 @@ namespace Machete.Service
             //            
             e = q.ToList();
             if (!string.IsNullOrEmpty(o.sSearch))
-                IndexViewBase.search(o, ref e);
+                IndexViewBase.search(o, ref e, wcache.GetCache());
 
-            eSIV = e.Join(WorkerCache.getCache(),
+            eSIV = e.Join(wcache.GetCache(),
                             s => s.dwccardnum,
                             w => w.dwccardnum,
                             (s, w) => new { s, w }

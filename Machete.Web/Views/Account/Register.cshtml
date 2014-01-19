@@ -1,4 +1,4 @@
-﻿@model Machete.Web.Models.RegisterModel
+﻿@model Machete.Web.Models.RegisterViewModel
 @{
     ViewBag.Title = @Machete.Web.Resources.ValidationStrings.RegisterTitle;
 }
@@ -7,11 +7,12 @@
     @Machete.Web.Resources.ValidationStrings.RegisterInstructions
 </p>
 <p>
-    @Machete.Web.Resources.ValidationStrings.RegisterPassLength1 @ViewBag.PasswordLength
+    @Machete.Web.Resources.ValidationStrings.RegisterPassLength1 @ViewBag.MinimumLength
     @Machete.Web.Resources.ValidationStrings.RegisterPassLength2
 </p>
 @using (Html.BeginForm())
 {
+    @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, @Machete.Web.Resources.ValidationStrings.RegisterValSummary)
     <div>
         <fieldset>
@@ -56,24 +57,6 @@
                     <div class="tb-field">
                         @Html.PasswordFor(m => m.ConfirmPassword)
                         @Html.ValidationMessageFor(m => m.ConfirmPassword)
-                    </div>
-                </div>
-                <div class="tb-row">
-                    <div class="tb-label">
-                        @Html.LabelFor(m => m.question)
-                    </div>
-                    <div class="tb-field">
-                        @Html.TextBoxFor(m => m.question)
-                        @Html.ValidationMessageFor(m => m.question)
-                    </div>
-                </div>
-                <div class="tb-row">
-                    <div class="tb-label">
-                        @Html.LabelFor(m => m.answer)
-                    </div>
-                    <div class="tb-field">
-                        @Html.TextBoxFor(m => m.answer)
-                        @Html.ValidationMessageFor(m => m.answer)
                     </div>
                 </div>
             </div>
