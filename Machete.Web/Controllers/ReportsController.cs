@@ -289,10 +289,10 @@ namespace Machete.Web.Controllers
                          select new
                          {
                              date = System.String.Format("{0:MM/dd/yyyy}", d.date),
-                             topZips = d.zips,
-                             topZipsCount = d.zipsCount,
-                             topJobs = d.jobs,
-                             topJobsCount = d.jobsCount
+                             topZips = d.zips.ToString(),
+                             topZipsCount = d.zipsCount.ToString(),
+                             topJobs = d.jobs.ToString(),
+                             topJobsCount = d.jobsCount.ToString()
                          };
 
             return Json(new{
@@ -315,17 +315,11 @@ namespace Machete.Web.Controllers
                          select new
                          {
                              date = System.String.Format("{0:MM/dd/yyyy}", d.date),
-                             singleAdults = d.singleAdults,
-                             familyHouseholds = d.familyHouseholds,
-                             newSingleAdults = d.newSingleAdults,
-                             newFamilyHouseholds = d.newFamilyHouseholds,
-                             zipCodes = from j in d.zipCodes
-                                        select new
-                                        {
-                                            date = System.String.Format("{0:MM/dd/yyyy}", j.date),
-                                            skill = j.info,
-                                            count = j.count
-                                        }
+                             singleAdults = d.singleAdults.ToString(),
+                             familyHouseholds = d.familyHouseholds.ToString(),
+                             newSingleAdults = d.newSingleAdults.ToString(),
+                             newFamilyHouseholds = d.newFamilyHouseholds.ToString(),
+                             zipCodeCompleteness = d.zipCodeCompleteness.ToString()
                          };
 
             return Json(new{

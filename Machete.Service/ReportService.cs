@@ -20,6 +20,7 @@ using NLog;
 
 namespace Machete.Service
 {
+    #region public class ReportService (Interface and Constructor)
     public interface IReportService
     {
         IEnumerable<dailyData> DailyController(DateTime beginDate, DateTime endDate);
@@ -61,7 +62,9 @@ namespace Machete.Service
             this.asRepo = asRepo;
         }
 
-        #region BasicFunctions 
+    #endregion
+
+        #region BasicFunctions
         /// <summary>
         /// A simple count of worker signins for the given period.
         /// </summary>
@@ -340,7 +343,7 @@ namespace Machete.Service
         /// <param name="beginDate"></param>
         /// <param name="endDate"></param>
         /// <returns></returns>
-        public IQueryable<reportUnit> ListZipCodes(DateTime beginDate, DateTime endDate)
+        public IQueryable<reportUnit> ListOrderZipCodes(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
 
@@ -368,6 +371,12 @@ namespace Machete.Service
             return query;
         }
 
+        /// <summary>
+        /// Returns the number of workers who received temporary work, excluding permanent placements, for a given time period.
+        /// </summary>
+        /// <param name="beginDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
         public IQueryable<reportUnit> WorkersInTempJobs(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
@@ -396,11 +405,16 @@ namespace Machete.Service
             return query;
         }
 
+        /// <summary>
+        /// Returns all activity signins for a given time period grouped by date, activityType and activityName.
+        /// </summary>
+        /// <param name="beginDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns>date, count, info (activityName), activityType</returns>
         public IQueryable<activityUnit> GetAllActivitySignins(DateTime beginDate, DateTime endDate)
         {
             IQueryable<activityUnit> query;
 
-            //ensure we are getting all relevant times (no assumptions)
             beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
             endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
@@ -440,6 +454,13 @@ namespace Machete.Service
                 });
             return query;
         }
+        
+        /// <summary>
+        /// Returns dates of completion, minutes completed, and the dwccardnum for all adults attending >12hrs. ESL.
+        /// </summary>
+        /// <param name="beginDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns>date, dwccardnum, minutesInClass</returns>
         public IQueryable<ESLAssessed> AdultsEnrolledAndAssessedInESL(DateTime beginDate, DateTime endDate)
         {
             IQueryable<ESLAssessed> query;
@@ -458,7 +479,7 @@ namespace Machete.Service
                 (wqJoinOn, asqJoinOn) => new
                 {
                     wqJoinOn,
-                    pid = asqJoinOn.personID,
+                    dwc = wqJoinOn.dwccardnum,
                     aid = asqJoinOn.Activity.type,
                     name = asqJoinOn.Activity.name,
                     dfsi = asqJoinOn.dateforsignin,
@@ -475,18 +496,25 @@ namespace Machete.Service
                 .Where(whr => whr.nameEN.Contains("English Class"))
                 .GroupBy(gb => new
                 {
-                    person = gb.inner.pid,
+                    cardnum = gb.inner.dwc,
                 })
                 .Select(sel => new ESLAssessed
                 {
                     date = sel.OrderByDescending(ai => ai.inner.dfsi).First().inner.dfsi,
-                    personID = (int)sel.Key.person,
+                    dwccardnum = (int)sel.Key.cardnum,
                     minutesInClass = sel.Sum(s => s.inner.time.Minutes + (s.inner.time.Hours * 60))
                 })
                 .Where(sec => sec.minutesInClass >= 720);
+
             return query;
         }
 
+        /// <summary>
+        /// Returns a count of new members by date of membership.
+        /// </summary>
+        /// <param name="beginDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns>date, count</returns>
         public IQueryable<reportUnit> NewlyEnrolled(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
@@ -516,6 +544,12 @@ namespace Machete.Service
             return query;
         }
 
+        /// <summary>
+        /// Returns a count of expired members by expiration date.
+        /// </summary>
+        /// <param name="beginDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns>date, count</returns>
         public IQueryable<reportUnit> NewlyExpired(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
@@ -541,6 +575,12 @@ namespace Machete.Service
             return query;
         }
 
+        /// <summary>
+        /// Returns a count of continuing members, not including new members.
+        /// </summary>
+        /// <param name="beginDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns>info, count</returns>
         public IQueryable<reportUnit> StillEnrolled(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
@@ -551,20 +591,26 @@ namespace Machete.Service
             var wQ = wRepo.GetAllQ();
 
             query = wQ
-                .Where(whr => DbFunctions.TruncateTime(whr.dateOfMembership) < beginDate)
-                .GroupBy(gb => new
-                {
-                    dom = DbFunctions.TruncateTime(gb.dateOfMembership)
-                })
+                .Where(whr => DbFunctions.TruncateTime(whr.dateOfMembership) < beginDate
+                    && DbFunctions.TruncateTime(whr.memberexpirationdate) >= endDate
+                    && !whr.isExpelled
+                    && !whr.isSanctioned)
+                .GroupBy(gb => gb.dwccardnum)
                 .Select(group => new reportUnit
                 {
-                    date = group.Key.dom,
-                    count = group.Count()
+                    info = group.Key.ToString(),
+                    count = 1
                 });
 
             return query;
         }
 
+        /// <summary>
+        /// Returns a count of unduplicated (first) signins for days in the given date range.
+        /// </summary>
+        /// <param name="beginDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns>date, count</returns>
         public IQueryable<reportUnit> UnduplicatedWorkersWhoRecievedTempJobs(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
@@ -576,25 +622,31 @@ namespace Machete.Service
 
             query = waQ
                 .Where(whr => !whr.workOrder.permanentPlacement && 
-                    DbFunctions.TruncateTime(whr.workOrder.dateTimeofWork) <= endDate &&
-                    DbFunctions.TruncateTime(whr.workOrder.dateTimeofWork) >= beginDate)
-                .GroupBy(gb => gb.workerAssignedID)
+                    DbFunctions.TruncateTime(whr.workOrder.dateTimeofWork) <= endDate)
+                .GroupBy(gb => gb.workerAssigned.dwccardnum)
                 .Select(group => new
                 {
-                    worker = group.Key,
+                    dwccardnum = group.Key,
                     firstTempAssignment = DbFunctions.TruncateTime(group.Min(m => m.workOrder.dateTimeofWork))
                 })
+                .Where(whr => whr.firstTempAssignment >= beginDate)
                 .GroupBy(gb => gb.firstTempAssignment)
                 .Select(group => new reportUnit
                 {
-                    count = group.Count(),
-                    date = group.Key
+                    date = group.Key,
+                    count = group.Count()
                 })
                 .OrderBy(ob => ob.date);
 
             return query;
         }
 
+        /// <summary>
+        /// Returns workers placed in permanent jobs during the given time period.
+        /// </summary>
+        /// <param name="beginDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns>date, count</returns>
         public IQueryable<reportUnit> WorkersPlacedInPermanentJobs(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
@@ -622,27 +674,23 @@ namespace Machete.Service
             return query;
         }
 
-        public IQueryable<reportUnit> PersonZipCodePercentages()
+        /// <summary>
+        /// This currently returns a percentage of how many people have zip codes in their profiles.
+        /// </summary>
+        /// <param name="beginDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
+        public double PersonZipCodeCompleteness(DateTime beginDate, DateTime endDate)
         {
-            IQueryable<reportUnit> query;
+            double query;
 
-            var wQ = wRepo.GetAllQ();
-            int numWorkers = wQ.Where(whr => whr.dateOfMembership != null).Count();
+            var wQ = wRepo.GetAllQ().Where(whr => whr.memberexpirationdate >= beginDate && whr.dateOfMembership <= endDate);
 
-            query = wQ
-                .GroupBy(gb => new
-                {
-                    zip = gb.Person.zipcode
-                })
-                .OrderByDescending(ob => ob.Count())
-                .Select(group => new reportUnit
-                {
-                    count = ((group.Count() >= 0 ? group.Count() : 0) * 100) / numWorkers,
-                    info = group.Key.zip ?? ""
-                });
+            query = Math.Round((((double)wQ.Count() / (double)wQ.Where(zip => zip.Person.zipcode != null).Count()) * 100), 2, MidpointRounding.AwayFromZero);
 
             return query;
         }
+
         public IQueryable<reportUnit> SingleAdults(DateTime beginDate)
         {
             IQueryable<reportUnit> query;
@@ -738,14 +786,19 @@ namespace Machete.Service
             return query;
         }
 
-        #region Aggregate Methods
+        /// <summary>
+        /// newWorkerData is 
+        /// </summary>
+        /// <param name="beginDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns>date, singleAdults, familyHouseholds, newSingleAdults, newFamilyHouseholds, zipCodeCompleteness</returns>
         public newWorkerData NewWorkers(DateTime beginDate, DateTime endDate)
         {
             IEnumerable<reportUnit> singleAdultsTotal;
             IEnumerable<reportUnit> familyHouseholdsTotal;
             IEnumerable<reportUnit> singleAdultsNewlyEnrolled;
             IEnumerable<reportUnit> familyHouseholdsNewlyEnrolled;
-            IEnumerable<reportUnit> zipCodes;
+            double zipCodes;
 
             newWorkerData q;
 
@@ -753,7 +806,7 @@ namespace Machete.Service
             familyHouseholdsTotal = FamilyHouseholds(beginDate).ToList();
             singleAdultsNewlyEnrolled = NewlyEnrolledSingleAdults(beginDate, endDate).ToList();
             familyHouseholdsNewlyEnrolled = NewlyEnrolledFamilyHouseholds(beginDate, endDate).ToList();
-            zipCodes = PersonZipCodePercentages().ToList();
+            zipCodes = PersonZipCodeCompleteness(beginDate, endDate);
 
             q = new newWorkerData();
             q.date = endDate;
@@ -761,12 +814,12 @@ namespace Machete.Service
             q.familyHouseholds = singleAdultsNewlyEnrolled.First().count ?? 0;
             q.newSingleAdults = familyHouseholdsTotal.First().count ?? 0;
             q.newFamilyHouseholds = singleAdultsTotal.First().count ?? 0;
-            q.zipCodes = zipCodes;
+            q.zipCodeCompleteness = zipCodes;
 
             return q;
         }
 
-        public IQueryable<reportUnit> ZipCode(DateTime beginDate, DateTime endDate)
+        public IQueryable<reportUnit> ClientProfileZipCode(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
 
@@ -789,7 +842,7 @@ namespace Machete.Service
 
         }
 
-        public IQueryable<reportUnit> Homeless(DateTime beginDate, DateTime endDate)
+        public IQueryable<reportUnit> ClientProfileHomeless(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
 
@@ -810,7 +863,7 @@ namespace Machete.Service
             return query;
         }
 
-        public IQueryable<reportUnit> HouseholdComposition(DateTime beginDate, DateTime endDate)
+        public IQueryable<reportUnit> ClientProfileHouseholdComposition(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
 
@@ -845,7 +898,7 @@ namespace Machete.Service
             return query;
         }
 
-        public IQueryable<reportUnit> Income(DateTime beginDate, DateTime endDate)
+        public IQueryable<reportUnit> ClientProfileIncome(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
 
@@ -878,7 +931,7 @@ namespace Machete.Service
             return query;
         }
 
-        public IQueryable<reportUnit> WorkerAge(DateTime beginDate, DateTime endDate)
+        public IQueryable<reportUnit> ClientProfileWorkerAge(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
 
@@ -914,7 +967,7 @@ namespace Machete.Service
 			
         }
 
-        public IQueryable<reportUnit> Gender(DateTime beginDate, DateTime endDate)
+        public IQueryable<reportUnit> ClientProfileGender(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
 
@@ -939,7 +992,7 @@ namespace Machete.Service
             return query;
         }
 
-        public IQueryable<reportUnit> HasDisability(DateTime beginDate, DateTime endDate)
+        public IQueryable<reportUnit> ClientProfileHasDisability(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
 
@@ -960,7 +1013,7 @@ namespace Machete.Service
             return query;
         }
 
-        public IQueryable<reportUnit> RaceEthnicity(DateTime beginDate, DateTime endDate)
+        public IQueryable<reportUnit> ClientProfileRaceEthnicity(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
 
@@ -990,7 +1043,7 @@ namespace Machete.Service
             return query;
         }
 
-        public IQueryable<reportUnit> RefugeeImmigrant(DateTime beginDate, DateTime endDate)
+        public IQueryable<reportUnit> ClientProfileRefugeeImmigrant(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
 
@@ -1012,7 +1065,7 @@ namespace Machete.Service
             return query;
         }
 
-        public IQueryable<reportUnit> EnglishLevel(DateTime beginDate, DateTime endDate)
+        public IQueryable<reportUnit> ClientProfileEnglishLevel(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
 
@@ -1162,7 +1215,7 @@ namespace Machete.Service
                     avgIncomePerHour = average.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.avg).First(),
                     newlyEnrolled = newPpl.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
                     peopleWhoLeft = pplLeft.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
-                    peopleWhoStayed = pplStay.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
+                    peopleWhoStayed = pplStay,
                     peopleWhoWentToClass = getAllClassAttendance.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
                     permanentPlacements = permPlaced.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
                 });
@@ -1293,16 +1346,16 @@ namespace Machete.Service
             IEnumerable<reportUnit> englishLevel;
             IEnumerable<reportUnit> q;
 
-            zipcodes = ZipCode(beginDate, endDate).ToList();
-            homeless = Homeless(beginDate, endDate).ToList();
-            householdComposition = HouseholdComposition(beginDate, endDate).ToList();
-            income = Income(beginDate, endDate).ToList();
-            age = WorkerAge(beginDate, endDate).ToList();
-            gender = Gender(beginDate, endDate).ToList();
-            disabilities = HasDisability(beginDate, endDate).ToList();
-            race = RaceEthnicity(beginDate, endDate).ToList();
-            refugeeImmigrant = RefugeeImmigrant(beginDate, endDate).ToList();
-            englishLevel = EnglishLevel(beginDate, endDate).ToList();
+            zipcodes = ClientProfileZipCode(beginDate, endDate).ToList();
+            homeless = ClientProfileHomeless(beginDate, endDate).ToList();
+            householdComposition = ClientProfileHouseholdComposition(beginDate, endDate).ToList();
+            income = ClientProfileIncome(beginDate, endDate).ToList();
+            age = ClientProfileWorkerAge(beginDate, endDate).ToList();
+            gender = ClientProfileGender(beginDate, endDate).ToList();
+            disabilities = ClientProfileHasDisability(beginDate, endDate).ToList();
+            race = ClientProfileRaceEthnicity(beginDate, endDate).ToList();
+            refugeeImmigrant = ClientProfileRefugeeImmigrant(beginDate, endDate).ToList();
+            englishLevel = ClientProfileEnglishLevel(beginDate, endDate).ToList();
 
             q = zipcodes.Concat(homeless.Concat(householdComposition.Concat(income.Concat(age.Concat(gender.Concat(disabilities.Concat(race.Concat(refugeeImmigrant.Concat(englishLevel)))))))));
             return q;
@@ -1324,7 +1377,7 @@ namespace Machete.Service
             IEnumerable<jzcData> q;
 
             assignments = CountAssignments(beginDate, endDate).ToList();
-            topZips = ListZipCodes(beginDate, endDate).ToList();
+            topZips = ListOrderZipCodes(beginDate, endDate).ToList();
             topJobs = ListJobs(beginDate, endDate).ToList();
 
             q = assignments
@@ -1375,7 +1428,7 @@ namespace Machete.Service
     public class ESLAssessed
     {
         public DateTime date { get; set; }
-        public int personID { get; set; }
+        public int dwccardnum { get; set; }
         public int minutesInClass { get; set; }
     }
 
@@ -1436,7 +1489,7 @@ namespace Machete.Service
         public double avgIncomePerHour { get; set; }
         public int newlyEnrolled { get; set; }
         public int peopleWhoLeft { get; set; }
-        public int peopleWhoStayed { get; set; }
+        public IEnumerable<reportUnit> peopleWhoStayed { get; set; }
         public int peopleWhoWentToClass { get; set; }
         public int unduplicatedDispatched { get; set; }
         public int permanentPlacements { get; set; }
@@ -1465,7 +1518,7 @@ namespace Machete.Service
         public int familyHouseholds { get; set; }
         public int newSingleAdults { get; set; }
         public int newFamilyHouseholds { get; set; }
-        public IEnumerable<reportUnit> zipCodes { get; set; }
+        public double zipCodeCompleteness { get; set; }
     }
 
     public class yearSumData
@@ -1479,8 +1532,6 @@ namespace Machete.Service
         public int advGardenTrainees { get; set; }
         public int finTrainees { get; set; }
     }
-
-    #endregion
 
     #endregion
 }
