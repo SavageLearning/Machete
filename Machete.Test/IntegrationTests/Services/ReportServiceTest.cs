@@ -175,7 +175,7 @@ namespace Machete.Test.IntegrationTests.Services
             frb.AddWorkOrder(beginDate, endDate, endDate, 3, WorkOrder.iActive);
 
             //Act
-            var result = frb.ToServReports().ListZipCodes(beginDate, endDate).ToList();
+            var result = frb.ToServReports().ListOrderZipCodes(beginDate, endDate).ToList();
 
             //Assert
             Assert.IsTrue(result.Select(q => q.info).Contains("12345"));
