@@ -85,214 +85,30 @@ function download(strData, strFileName, strMimeType) {
 
 
 //Global variables
-function weeklyTableDefaults(url, lang, date)
+function reportTableDefaults(url, lang, date)
 {
     var tableDefaults =
-        {
-            "bPaginate": false, // (reports have fixed size)
-            "bAutoWidth": false,
-            "bInfo": true,
-            "bSort": false,
-            "bFilter": false,
-            "bServerSide": true,
-            "sAjaxSource": url,
-            "bProcessing": false,
-            "oLanguage": lang,
-            "aoColumns": [
-                { mDataProp: "weekday" },
-                { mDataProp: "date" },
-                { mDataProp: "totalSignins" },
-                { mDataProp: "totalAssignments" },
-                { mDataProp: "weekEstDailyHours" },
-                { mDataProp: "weekEstPayment" },
-                { mDataProp: "weekHourlyWage" },
-                {
-                    mDataProp: null,
-                    sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="nestedDetailsButton">'
-                },
-            ],
-            "fnServerData": function (sSource, aoData, fnCallback) {
-                aoData.push(
-                    { "name": "todaysdate", "value": date });
-                $.getJSON(sSource, aoData, function (json) {
-                    /* Do whatever additional processing you want on the callback, then tell DataTables */
-                    fnCallback(json);
-                })
-            }
-        };
-    return tableDefaults;
-}
-
-function dailyTableDefaults(url, lang, date) 
-{
-    var dclDefaults = {
-        "bPaginate": false, // to enable pagination (this report has fixed size)
+    {
+        "bPaginate": false, // (reports have fixed size)
         "bAutoWidth": false,
-        "bDestroy": false,
-        "bInfo": true, //shows information about data being displayed on the page
-        "bSort": false, //enable or disable sorting of columns
-        "bFilter": false, //enable or disable filtering of data
-        "bServerSide": true, //server side processing, req. source
-        "sAjaxSource": url, //source for server side processing
-        "bProcessing": false, //enable processing indicator
-        "oLanguage": lang, //internationalisation
-        "aoColumns": [
-            { mDataProp: "date" },
-            { mDataProp: "dwcList" },
-            { mDataProp: "dwcPropio" },
-            { mDataProp: "hhhList" },
-            { mDataProp: "hhhPropio" },
-            { mDataProp: "uniqueSignins" },
-            { mDataProp: "totalSignins" },
-            { mDataProp: "totalAssignments" },
-            { mDataProp: "cancelledJobs" },
-        ], //these are the column names in the array; total # must match
-        "fnServerData": function (sSource, aoData, fnCallback) {
-            aoData.push({ "name": "todaysdate", "value": date });
-            $.getJSON(sSource, aoData, function (json) {
-                /* Do whatever additional processing you want on the callback, then tell DataTables */
-                fnCallback(json);
-            });
-        }
-    };
-    return dclDefaults;
-}
-
-function monthlyTableDefaults(url, lang, date) 
-{
-    var mwdDefaults = {
-        "bPaginate": false, // this report has fixed size
-        "bAutoWidth": false,
-        "bDestroy": false,
-        "bInfo": true,
-        "bSort": false, 
-        "bFilter": false,
-        "bServerSide": true, //server side processing
-        "sAjaxSource": url,
-        "bProcessing": false, 
-        "oLanguage": lang, 
-        "aoColumns": [
-            { mDataProp: "date" },
-            { mDataProp: "totalSignins" },
-            { mDataProp: "uniqueSignins" },
-            { mDataProp: "dispatchedDWCList" },
-            { mDataProp: "dispatchedHHHList" },
-            { mDataProp: "dispatchedDWCPropio" },
-            { mDataProp: "dispatchedHHHPropio" },
-            { mDataProp: "totalHours" },
-            { mDataProp: "totalIncome" },
-            { mDataProp: "avgIncomePerHour" },
-        ], // column names; must match # of cols. in table
-        "fnServerData": function ( sSource, aoData, fnCallback ) {
-            aoData.push({ "name": "todaysdate", "value": date });
-            $.getJSON(sSource, aoData, function (json) {
-                /* Do whatever additional processing you want on the callback, then tell DataTables */
-                fnCallback(json);
-            });
-        }
-    };
-    return mwdDefaults;
-}
-
-function yearlyTableDefaults(url, lang, date)
-{
-    var yearDefaults = {
-        "bPaginate": false, // this report has fixed size
-        "bAutoWidth": false,
-        "bDestroy": false,
         "bInfo": true,
         "bSort": false,
         "bFilter": false,
-        "bServerSide": true, //server side processing
+        "bServerSide": true,
         "sAjaxSource": url,
         "bProcessing": false,
         "oLanguage": lang,
-        "aoColumns": [
-                { mDataProp: "date" },
-                { mDataProp: "tempJobs" },
-                { mDataProp: "safetyTraining" },
-                { mDataProp: "skillsTraining" },
-                { mDataProp: "eslAssessed" },
-                { mDataProp: "basicGarden" },
-                { mDataProp: "advGarden" },
-                { mDataProp: "finEd" },
-                {
-                    mDataProp: null,
-                    sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="nestedDetailsButton">'
-                },
-        ], // column names; must match # of cols. in table
+        "aoColumns": null,
         "fnServerData": function (sSource, aoData, fnCallback) {
-            aoData.push({ "name": "todaysdate", "value": date });
+            aoData.push(
+                { "name": "todaysdate", "value": date });
             $.getJSON(sSource, aoData, function (json) {
                 /* Do whatever additional processing you want on the callback, then tell DataTables */
                 fnCallback(json);
-            });
+            })
         }
     };
-    return yearDefaults;
-}
-
-function jzcTableDefaults(lang, date) 
-    {
-        var jzcDefaults = {
-        "bPaginate": false, // to enable pagination (this report has fixed size)
-        "bAutoWidth": false,
-        "bScrollCollapse": true,
-        "bDestroy": false,
-        "bInfo": true, //shows information about data being displayed on the page
-        "bSort": false, //enable or disable sorting of columns
-        "bFilter": false, //enable or disable filtering of data
-        "bServerSide": true, //server side processing, req. source
-        "sAjaxSource": "/Reports/AjaxJobsZipCodes", //source for server side processing
-        "bProcessing": false,
-        "oLanguage": lang,
-        "aoColumns": [
-            { mDataProp: "date" },
-            { mDataProp: "topZips" },
-            { mDataProp: "topZipsCount" },
-            { mDataProp: "topJobs" },
-            { mDataProp: "topJobsCount" }
-        ], //these are the column names in the array; total # must match
-        "fnServerData": function (sSource, aoData, fnCallback) {
-            aoData.push({ "name": "todaysdate", "value": date });
-            $.getJSON(sSource, aoData, function (json) {
-                /* Do whatever additional processing you want on the callback, then tell DataTables */
-                fnCallback(json);
-            });
-        }
-    };
-    return jzcDefaults;
-}
-
-function newTableDefaults(lang, date) {
-    var newDefaults = {
-        "bPaginate": false, // to enable pagination (this report has fixed size)
-        "bAutoWidth": false,
-        "bScrollCollapse": true,
-        "bDestroy": false,
-        "bInfo": true, //shows information about data being displayed on the page
-        "bSort": false, //enable or disable sorting of columns
-        "bFilter": false, //enable or disable filtering of data
-        "bServerSide": true, //server side processing, req. source
-        "sAjaxSource": "/Reports/AjaxNewWorkers", //source for server side processing
-        "bProcessing": false,
-        "oLanguage": lang,
-        "aoColumns": [
-            { mDataProp: "date" },
-            { mDataProp: "singles" },
-            { mDataProp: "families" },
-            { mDataProp: "newSingles" },
-            { mDataProp: "newFamilies" }
-        ], //these are the column names in the array; total # must match
-        "fnServerData": function (sSource, aoData, fnCallback) {
-            aoData.push({ "name": "todaysdate", "value": date });
-            $.getJSON(sSource, aoData, function (json) {
-                /* Do whatever additional processing you want on the callback, then tell DataTables */
-                fnCallback(json);
-            });
-        }
-    };
-    return jzcDefaults;
+    return tableDefaults;
 }
 
 //tested on jsFiddle, working ok
