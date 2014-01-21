@@ -35,7 +35,6 @@ using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
 using Machete.Service;
-using Machete.Service.shared;
 using NLog;
 using Machete.Web.ViewModel;
 using Machete.Web.Models;
@@ -128,15 +127,10 @@ namespace Machete.Web.Controllers
         {
             DateTime dclDate;
 
-            // jQuery passes in parameters that must be mapped to viewOptions
-            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
-
-            // Take the date from the view and assign it to this.mwdDate
-            if (vo.date != null) dclDate = DateTime.Parse(vo.date.ToString());
-            else dclDate = DateTime.Now;
+            dclDate = voDate(param);
             // pass filter parameters to service level
             // Call view model from service layer:
-            dataTableResult<dailyData> dcl = repServ.DailyView(dclDate);
+            dataTableResult<dailyData> dcl = DailyView(dclDate);
             //
             //return what's left to datatables
             var result = from d in dcl.query
@@ -173,12 +167,9 @@ namespace Machete.Web.Controllers
         {
             DateTime wecDate;
             // jQuery passes in parameters that must be mapped to viewOptions
-            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
-            // Take the date from the view and assign it to this.mwdDate
-            if (vo.date != null) wecDate = DateTime.Parse(vo.date.ToString());
-            else wecDate = DateTime.Now;
+            wecDate = voDate(param);
 
-            dataTableResult<weeklyData> wec = repServ.WeeklyView(wecDate);
+            dataTableResult<weeklyData> wec = WeeklyView(wecDate);
             //
             //return what's left to datatables
             var result = from d in wec.query
@@ -222,25 +213,27 @@ namespace Machete.Web.Controllers
         public ActionResult AjaxMwd(jQueryDataTableParam param)
         {
             DateTime mwdDate;
-            
-            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param); 
-            if (vo.date != null) mwdDate = DateTime.Parse(vo.date.ToString());
-            else mwdDate = DateTime.Now;
+            dataTableResult<monthlyData> mwd;
 
-            dataTableResult<monthlyData> mwd = repServ.monthlyView(mwdDate);
+            mwdDate = voDate(param);
+            mwd = monthlyView(mwdDate);
 
             var result = from d in mwd.query
-                         select new { 
+                         select new 
+                         { 
                              date = System.String.Format("{0:MM/dd/yyyy}", d.date),
                              totalSignins = d.totalSignins.ToString(),
                              uniqueSignins = d.uniqueSignins.ToString(),
-                             dispatchedDWCList =  d.dispatchedDWCList.ToString(),
-                             dispatchedHHHList =  d.dispatchedHHHList.ToString(),
-                             dispatchedDWCPropio = d.dispatchedDWCPropio.ToString(),
-                             dispatchedHHHPropio = d.dispatchedHHHPropio.ToString(),
+                             dispatched = d.dispatched.ToString(),
+                             unduplicatedDispatched = d.unduplicatedDispatched.ToString(),
+                             permanentPlacements = d.permanentPlacements.ToString(),
                              totalHours = d.totalHours.ToString(),
                              totalIncome = d.totalIncome.ToString(),
-                             avgIncomePerHour = System.String.Format("{0:C}", d.avgIncomePerHour)
+                             avgIncomePerHour = System.String.Format("{0:C}", d.avgIncomePerHour),
+                             newlyEnrolled = d.newlyEnrolled.ToString(),
+                             peopleWhoLeft = d.peopleWhoLeft.ToString(),
+                             peopleWhoStayed = d.peopleWhoStayed.ToString(),
+                             peopleWhoWentToClass = d.peopleWhoWentToClass.ToString(),
                          };
 
             return Json(new
@@ -253,15 +246,44 @@ namespace Machete.Web.Controllers
             JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult AjaxJobsZipCodes(jQueryDataTableParam param)
+        public ActionResult AjaxYear(jQueryDataTableParam param)
+        {
+            DateTime yearDate;
+            dataTableResult<yearSumData> year;
+
+            yearDate = voDate(param);
+            year = yearlyView(yearDate);
+
+            var result = from d in year.query
+                         select new
+                         {
+                             date = System.String.Format("{0:MM/dd/yyyy}", d.date),
+                             temporaryPlacements = d.temporaryPlacements.ToString(),
+                             safetyTrainees = d.safetyTrainees.ToString(),
+                             skillsTrainees = d.skillsTrainees.ToString(),
+                             eslAssessed = d.eslAssessed.ToString(),
+                             basicGardenTrainees = d.basicGardenTrainees.ToString(),
+                             advGardenTrainees = d.advGardenTrainees.ToString(),
+                             finTrainees = d.finTrainees.ToString(),
+                         };
+
+            return Json(new
+            {
+                iTotalRecords = year.totalCount, //total records, before filtering
+                iTotalDisplayRecords = year.filteredCount, //total records, after filtering
+                sEcho = param.sEcho, //unaltered copy of sEcho sent from the client side
+                aaData = result
+            },
+            JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult AjaxJzc(jQueryDataTableParam param)
         {
             DateTime jzcDate;
 
-            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
-            if (vo.date != null) jzcDate = DateTime.Parse(vo.date.ToString());
-            else jzcDate = DateTime.Now;
+            jzcDate = voDate(param);
 
-            dataTableResult<jzcData> jzc = repServ.jzcView(jzcDate);
+            dataTableResult<jzcData> jzc = jzcView(jzcDate);
 
             var result = from d in jzc.query
                          select new
@@ -281,6 +303,156 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
+        public ActionResult AjaxNewWkr(jQueryDataTableParam param)
+        {
+            DateTime newDate;
+
+            newDate = voDate(param);
+
+            dataTableResult<newWorkerData> newWkr = newWorkerView(newDate);
+
+            var result = from d in newWkr.query
+                         select new
+                         {
+                             date = System.String.Format("{0:MM/dd/yyyy}", d.date),
+                             singleAdults = d.singleAdults,
+                             familyHouseholds = d.familyHouseholds,
+                             newSingleAdults = d.newSingleAdults,
+                             newFamilyHouseholds = d.newFamilyHouseholds,
+                             zipCodes = from j in d.zipCodes
+                                        select new
+                                        {
+                                            date = System.String.Format("{0:MM/dd/yyyy}", j.date),
+                                            skill = j.info,
+                                            count = j.count
+                                        }
+                         };
+
+            return Json(new{
+                iTotalRecords = newWkr.totalCount,
+                iTotalDisplayRecords = newWkr.filteredCount,
+                sEcho = param.sEcho,
+                aaData = result
+            },
+            JsonRequestBehavior.AllowGet);
+        }
+
+        public DateTime voDate(jQueryDataTableParam param)
+        {
+            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
+            if (vo.date != null) return DateTime.Parse(vo.date.ToString());
+            else return DateTime.Now;
+        }
+        #endregion
+
+        #region DataTablesStuff
+        // The following methods organize the above service-layer views for return to Ajax/DataTables and the GUI.
+        // TODO: These are views, should contain no operating logic, and ideally would not be at the MVC layer....
+        public dataTableResult<dailyData> DailyView(DateTime date)
+        {
+            DateTime beginDate;
+            DateTime endDate;
+            IEnumerable<dailyData> query;
+
+            beginDate = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
+            endDate = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);//.AddDays(DateTime.DaysInMonth(date.Year, date.Month + 1));
+
+            query = repServ.DailyController(beginDate, endDate);
+
+            var result = GetDataTableResult<dailyData>(query);
+
+            return result; // ...for DataTables.
+        }
+
+        public dataTableResult<weeklyData> WeeklyView(DateTime weekDate)
+        {
+            DateTime beginDate;
+            DateTime endDate;
+            IEnumerable<weeklyData> query;
+
+            beginDate = new DateTime(weekDate.Year, weekDate.Month, weekDate.Day, 0, 0, 0).AddDays(-6);
+            endDate = new DateTime(weekDate.Year, weekDate.Month, weekDate.Day, 23, 59, 59);
+
+            query = repServ.WeeklyController(beginDate, endDate);
+
+            var result = GetDataTableResult<weeklyData>(query);
+
+            return result;
+        }
+
+        public dataTableResult<monthlyData> monthlyView(DateTime monthDate)
+        {
+            DateTime beginDate;
+            DateTime endDate;
+            IEnumerable<monthlyData> query;
+
+            beginDate = new DateTime(monthDate.Year, monthDate.Month, 1, 0, 0, 0);
+            endDate = new DateTime(monthDate.Year, monthDate.Month, System.DateTime.DaysInMonth(monthDate.Year, monthDate.Month));
+
+            query = repServ.MonthlySummaryController(beginDate, endDate);
+
+            var result = GetDataTableResult<monthlyData>(query);
+
+            return result;
+        }
+
+        public dataTableResult<yearSumData> yearlyView(DateTime yDate)
+        {
+            DateTime beginDate;
+            DateTime endDate;
+            IEnumerable<yearSumData> query;
+
+            beginDate = new DateTime(yDate.Year, yDate.Month, 1, 0, 0, 0).AddMonths(-12);
+            endDate = new DateTime(yDate.Year, yDate.Month, System.DateTime.DaysInMonth(yDate.Year, yDate.Month), 23, 59, 59);
+
+            query = repServ.YearlyController(beginDate, endDate);
+
+            var result = GetDataTableResult<yearSumData>(query);
+
+            return result;
+        }
+
+        public dataTableResult<jzcData> jzcView(DateTime jzcDate)
+        {
+            DateTime beginDate;
+            DateTime endDate;
+            IEnumerable<jzcData> query;
+
+            beginDate = new DateTime(jzcDate.Year, jzcDate.Month, jzcDate.Day, 0, 0, 0);
+            endDate = new DateTime(jzcDate.Year, jzcDate.Month, jzcDate.Day, 23, 59, 59);
+
+            query = repServ.jzcController(beginDate, endDate);
+
+            var result = GetDataTableResult<jzcData>(query);
+
+            return result;
+        }
+
+        public dataTableResult<newWorkerData> newWorkerView(DateTime newDate)
+        {
+            DateTime beginDate;
+            DateTime endDate;
+            IEnumerable<newWorkerData> query;
+
+            beginDate = new DateTime(newDate.Year, newDate.Month, newDate.Day, 0, 0, 0);
+            endDate = new DateTime(newDate.Year, newDate.Month, newDate.Day, 23, 59, 59);
+            query = repServ.NewWorkerController(beginDate, endDate);
+
+            var result = GetDataTableResult<newWorkerData>(query);
+
+            return result;
+        }
+
+        public dataTableResult<T> GetDataTableResult<T>(IEnumerable<T> query)
+        {
+            var result = new dataTableResult<T>();
+
+            result.filteredCount = query.Count();
+            result.query = query;
+            result.totalCount = query.Count();
+            return result;
+        }
+
         #endregion
     }
 }
