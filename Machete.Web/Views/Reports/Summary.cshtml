@@ -85,37 +85,13 @@
             </table>
             <div id="monthlyPieChart1" style="height:auto;width:80%;margin-top:3em;"></div>
         </div>
-        <h3 class="reportSubtitle"><a href="#" id="qtrLink">Quarterly</a></h3>
-        <div id="qtrTable" class="reportWrapper">
+        <h3 class="reportSubtitle"><a href="#" id="yearLink">Yearly</a></h3>
+        <div id="yearTable" class="reportWrapper">
             <input type="button" value="Refresh" class="formButton" id="qtrRefreshBtn" />
             <input type="button" value="Print" class="formButton" id="qtrPrintReport" />
             <input type="button" value="Spreadsheet" class="formButton" id="qtrSpreadsheet" />
-            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-mwd-datepicker", @id = "mwdDate" })
-            <p id="qtrHelp" style="display:inline;"><em>Select the day that the quarter should end.</em></p>
-            <table id="qtrDataTable" class="display">
-                <thead>
-                    <tr>
-                        <th>@Machete.Web.Resources.Reports.date</th>
-                        <th>@Machete.Web.Resources.Reports.tempJobs</th>
-                        <th>@Machete.Web.Resources.Reports.safetyTraining</th>
-                        <th>@Machete.Web.Resources.Reports.skillsTraining</th>
-                        <th>@Machete.Web.Resources.Reports.eslAssessed</th>
-                        <th>@Machete.Web.Resources.Reports.basicGarden</th>
-                        <th>@Machete.Web.Resources.Reports.advGarden</th>
-                        <th>@Machete.Web.Resources.Reports.finEd</th>
-                        <th></th>
-                    </tr>
-                </thead>
-            </table>
-            <div id="qtrChart1" style="height:auto;width:80%;margin-top:3em;"></div>
-        </div>
-        <h3 class="reportSubtitle"><a href="#" id="yearLink">Yearly</a></h3>
-        <div id="yearTable" class="reportWrapper">
-            <input type="button" value="Refresh" class="formButton" id="yearRefreshBtn" />
-            <input type="button" value="Print" class="formButton" id="yearPrintReport" />
-            <input type="button" value="Spreadsheet" class="formButton" id="yearSpreadsheet" />
-            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-mwd-datepicker", @id = "mwdDate" })
-            <p id="mwdHelp" style="display:inline;"><em>Select the date that the report should end.</em></p>
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-year-datepicker", @id = "yearDate" })
+            <p id="yearHelp" style="display:inline;"><em>Select the day that the yearly report should <strong>end</strong>.</em></p>
             <table id="yearDataTable" class="display">
                 <thead>
                     <tr>
@@ -131,7 +107,6 @@
                     </tr>
                 </thead>
             </table>
-            <div id="yearlyChart1" style="height:auto;width:80%;margin-top:3em;"></div>
         </div>
     </div>
 </div>

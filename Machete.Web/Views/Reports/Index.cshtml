@@ -34,10 +34,9 @@
         var oDclTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxDcl", lang, $('#dclDate').val()));
         var oWecTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxWec", lang, $('#wecDate').val()));
         var oMwdTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxMwd", lang, $('#dclDate').val()));
-        var oQtrTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxQtr", lang, $('#qtrDate').val()));
         var oYearTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxYear", lang, $('#yearDate').val()));
         var oJzcTable = $.extend(true, {}, reportTableDefaults("/Reports/AjazJzc", lang, $('#jzcDate').val()));
-        var oNewTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxNew", lang, $('#newDate').val()));
+        var oNewTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxNewWkr", lang, $('#newDate').val()));
 
         oDclTable.aoColumns = [
             { mDataProp: "date" },
@@ -78,21 +77,6 @@
             { mDataProp: "avgIncomePerHour" },
         ];
 
-        oQtrTable.aoColumns = [
-                { mDataProp: "date" },
-                { mDataProp: "tempJobs" },
-                { mDataProp: "safetyTraining" },
-                { mDataProp: "skillsTraining" },
-                { mDataProp: "eslAssessed" },
-                { mDataProp: "basicGarden" },
-                { mDataProp: "advGarden" },
-                { mDataProp: "finEd" },
-                {
-                    mDataProp: null,
-                    sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="nestedDetailsButton">'
-                },
-        ];
-
         oYearTable.aoColumns = [
                 { mDataProp: "date" },
                 { mDataProp: "tempJobs" },
@@ -127,7 +111,6 @@
         var dcl = $('#dclDataTable').dataTable(oDclTable);
         var wec = $('#wecDataTable').dataTable(oWecTable);
         var mwd = $('#mwdDataTable').dataTable(oMwdTable);
-        var qtr = $('#qtrDataTable').dataTable(oQtrTable);
         var year = $('#yearDataTable').dataTable(oYearTable);
         var jzc = $('#jzcDataTable').dataTable(oJzcTable);
         var newT = $('#newDataTable').dataTable(oNewTable);
@@ -156,7 +139,6 @@
         $('#dclHelp').hide();
         $('#wecHelp').hide();
         $('#mwdHelp').hide();
-        $('#qtrHelp').hide();
         $('#yearHelp').hide();
         $('#jzcHelp').hide();
 
@@ -165,7 +147,6 @@
         $('#dclTable').hide();
         $('#wecTable').hide();
         $('#mwdTable').hide();
-        $('#qtrTable').hide();
         $('#yearTable').hide();
         $('#jzcTable').hide();
 
@@ -291,34 +272,6 @@
             });
 
         //
-        // Querterly datepickerer
-        //
-
-        $('.ui-qtr-datepicker').hover(
-            function () {
-                $('#qtrHelp').show("fade", 2200);
-            },
-            function () {
-                $('#qtrHelp').hide("fade", 2200);
-            });
-
-        $('.ui-qtr-datepicker').datepicker({
-            autoSize: true,
-            changeMonth: true,
-            changeYear: true,
-            constrainInput: true,
-            dateFormat: 'mm/dd/yy',
-            duration: "slow",
-            showButtonPanel: false,
-            showOn: "focus"
-        });
-
-        $('.ui-qtr-datepicker').change(
-            function (event) {
-                qtrNewTable();
-            });
-
-        //
         // Yearly datepickerer
         //
 
@@ -419,10 +372,6 @@
             mwdNewTable();
         });
 
-        $('#qtrLink').click(function () {
-            qtrNewTable();
-        });
-
         $('#yearLink').click(function () {
             yearNewTable();
         });
@@ -491,26 +440,6 @@
             monthlyPie();
         }
 
-        function qtrNewTable() {
-            oQtrTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxQtr", lang, $('#qtrDate').val()));
-            oQtrTable.aoColumns = [
-                    { mDataProp: "date" },
-                    { mDataProp: "tempJobs" },
-                    { mDataProp: "safetyTraining" },
-                    { mDataProp: "skillsTraining" },
-                    { mDataProp: "eslAssessed" },
-                    { mDataProp: "basicGarden" },
-                    { mDataProp: "advGarden" },
-                    { mDataProp: "finEd" },
-                    {
-                        mDataProp: null,
-                        sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="nestedDetailsButton">'
-                    },
-            ];
-            oQtrTable.bDestroy = true;
-            $('#qtrDataTable').dataTable(qtrOptions).fnReloadAjax();
-        }
-
         function yearNewTable() {
             oYearTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxYear", lang, $('#yearDate').val()));
             oYearTable.aoColumns = [
@@ -558,14 +487,13 @@
         };
 
         ////////////////////////////////////////////////////////////// | DRILLDOWNS |
-        //
-        //
+        ////////////////////////////////////////////////////////////// | [+] [-]... |
 
         //
         // WEEKLY
         //
 
-        function fnFormatDetails(oTable, nTr) {
+        function fnFormatWeekDetails(oTable, nTr) {
             var aData = oTable.fnGetData(nTr);
             var jobList = aData.topJobs;
             var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="margin-left: 13.5%;background: #90A2B6;border: solid 2px gray;border-collapse: separate;">';
@@ -591,12 +519,12 @@
             } else {
                 /* Open this row */
                 this.src = "/Content/dataTables/details_close.png";
-                wec.fnOpen(nTr, fnFormatDetails(wec, nTr), 'nestedDetails');
+                wec.fnOpen(nTr, fnFormatWeekDetails(wec, nTr), 'nestedDetails');
             }
         });
 
         //
-        // QUARTERLY
+        // YEARLY
         //
 
         function fnFormatYearDetails(oTable, nTr) {
@@ -622,24 +550,6 @@
             sOut += '</tbody></table>';
             return sOut;
         }
-
-        $('#qtrDataTable tbody td img').live('click', function () {
-            var nTr = $(this).parents('tr')[0];
-
-            if (qtr.fnIsOpen(nTr)) {
-                /* This row is already open - close it */
-                this.src = "/Content/dataTables/details_open.png";
-                qtr.fnClose(nTr);
-            } else {
-                /* Open this row */
-                this.src = "/Content/dataTables/details_close.png";
-                qtr.fnOpen(nTr, fnFormatYearDetails(qtr, nTr), 'nestedDetails');
-            }
-        });
-
-        //
-        // YEARLY
-        //
 
         $('#yearDataTable tbody td img').live('click', function () {
             var nTr = $(this).parents('tr')[0];
@@ -676,11 +586,6 @@
                 mwdNewTable();
             });
 
-        $('#qtrRefreshBtn').click(
-            function () {
-                qtrNewTable();
-            });
-
         $('#yearRefreshBtn').click(
             function () {
                 yearNewTable();
@@ -714,11 +619,6 @@
         $('#mwdPrintReport').click(
             function () {
                 window.open('/Reports/PrintView?date=' + $('#mwdDate').val() + '&typeOfReport=monthly');
-            });
-
-        $('#qtrPrintReport').click(
-            function () {
-                window.open('/Reports/PrintView?date=' + $('#qtrDate').val() + '&typeOfReport=quarterly');
             });
 
         $('#yearPrintReport').click(
@@ -769,17 +669,7 @@
             });
         });
 
-        $('#mwdSpreadsheet').click(function () {
-            var url = "/Reports/AjaxQtr";
-            var data = { todaysdate: $('#qtrDate').val() };
-            $.getJSON(url, data, function (ajax) {
-                var jstring = JSON.stringify(ajax.aaData);
-                var jcsv = json2spreadsheet(jstring);
-                download(jcsv, "reports.csv", "text/csv");
-            });
-        });
-
-        $('#mwdSpreadsheet').click(function () {
+        $('#yearSpreadsheet').click(function () {
             var url = "/Reports/AjaxYear";
             var data = { todaysdate: $('#yearDate').val() };
             $.getJSON(url, data, function (ajax) {
@@ -800,7 +690,7 @@
         });
 
         $('#newSpreadsheet').click(function () {
-            var url = "/Reports/AjaxNewWorkers";
+            var url = "/Reports/AjaxNewWkrWorkers";
             var data = { todaysdate: $('#newDate').val() };
             $.getJSON(url, data, function (ajax) {
                 var jstring = JSON.stringify(ajax.aaData);
