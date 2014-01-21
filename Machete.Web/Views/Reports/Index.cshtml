@@ -10,191 +10,195 @@
 <div id="reportTabs">
     <ul>
         <li><a href="#summaryWrapper" id="summaryTab" >@Machete.Web.Resources.Reports.summaryTab</a> </li>
-        <li><a href="/Reports/Orders" id="ordersTab">@Machete.Web.Resources.Reports.ordersTab</a></li>
-        <li><a href="/Reports/Workers" id="workersTab">@Machete.Web.Resources.Reports.workersTab</a></li>
-        <li><a href="/Reports/SSRS" id="ssrsTab">@Machete.Web.Resources.Reports.ssrsTab</a> </li>
+        <li><a href="#ordersWrapper" id="ordersTab">@Machete.Web.Resources.Reports.ordersTab</a></li>
+        <li><a href="#workersWrapper" id="workersTab">@Machete.Web.Resources.Reports.workersTab</a></li>
+        <li><a href="#ssrsWrapper" id="ssrsTab">@Machete.Web.Resources.Reports.ssrsTab</a> </li>
     </ul>
 
-    <div id="summaryWrapper">
-        @*This is the default view.*@
-    <div id="summaryHeader">
-        <div id="summaryPopup">
-            <h3 style="padding-left: .5em;">@Machete.Web.Resources.Reports.summaryHeader</h3>
-
-                <p id="summaryInstructions" style="padding-left:.5em">
-                    @Machete.Web.Resources.Reports.summaryInstructions
-                    <input type="button" value="Hide" class="formButton" id="summaryHide" />
-                </p>
-        </div>
-    </div>
-
-    <div id="summaryReports">
-        <h3><a href="#" id="
-            Link">Daily</a></h3>
-        <div id="dclTable">
-            <input type="button" value="Refresh" class="formButton" id="dclDataOnlyBtn" />
-            <input type="button" value="Print Report" class="formButton" id="dclPrintReport" />
-            <input type="button" value="Spreadsheet" class="formButton" id="dclSpreadsheet" />
-            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-dcl-datepicker", @id = "dclDate" })
-            <p id="dclHelp" style="display:inline;"><em>Select a day to see results.</em></p>
-            <table id="dclDataTable" class="display">
-                <thead>
-                    <tr>
-                        <th>@Machete.Web.Resources.Reports.date</th>
-                        <th>@Machete.Web.Resources.Reports.dwcList</th>
-                        <th>@Machete.Web.Resources.Reports.dwcPropio</th>
-                        <th>@Machete.Web.Resources.Reports.hhhList</th>
-                        <th>@Machete.Web.Resources.Reports.hhhPropio</th>
-                        <th>Unique</th>
-                        <th>@Machete.Web.Resources.Reports.totalSignins</th>
-                        <th>@Machete.Web.Resources.Reports.totalAssignments</th>
-                        <th>@Machete.Web.Resources.Reports.cancelledJobs</th>
-                    </tr>
-                </thead>
-            </table>
-            <div id="dailyPieChart1" style="height:auto;width:80%;display:block;"></div>
-            <div id="dailyPieChart2" style="height:auto;width:80%;display:block;"></div>
-        </div>
-        <h3><a href="#" id="wecLink">Weekly</a></h3>
-        <div id="wecTable">
-            <input type="button" value="Refresh" class="formButton" id="wecDataOnlyBtn" />
-            <input type="button" value="Print" class="formButton" id="wecPrintReport" />
-            <input type="button" value="Spreadsheet" class="formButton" id="wecSpreadsheet" />
-            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-wec-datepicker", @id = "wecDate" })
-            <p id="wecHelp" style="display:inline;"><em>Select a day to see results for that week.</em></p>
-            <table id="wecDataTable" class="display">
-                <thead>
-                    <tr>
-                        <th>@Machete.Web.Resources.Reports.weekday</th>
-                        <th>@Machete.Web.Resources.Reports.date</th>
-                        <th>@Machete.Web.Resources.Reports.totalSignins</th>
-                        <th>@Machete.Web.Resources.Reports.totalAssignments</th>
-                        <th>@Machete.Web.Resources.Reports.weekEstDailyHours</th>
-                        <th>@Machete.Web.Resources.Reports.weekEstPayment</th>
-                        <th>@Machete.Web.Resources.Reports.weekHourlyWage</th>
-                        <th></th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-        <h3><a href="#" id="mwdLink">Monthly</a></h3>
-        <div id="mwdTable">
-            <input type="button" value="Refresh" class="formButton" id="mwdDataOnlyBtn" />
-            <input type="button" value="Print" class="formButton" id="mwdPrintReport" />
-            <input type="button" value="Spreadsheet" class="formButton" id="mwdSpreadsheet" />
-            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-mwd-datepicker", @id = "mwdDate" })
-            <p id="mwdHelp" style="display:inline;"><em>Select any day in a month to see results.</em></p>
-            <table id="mwdDataTable" class="display">
-                <thead>
-                    <tr>
-                        <th>@Machete.Web.Resources.Reports.date</th>
-                        <th>@Machete.Web.Resources.Reports.totalSignins</th>
-                        <th>@Machete.Web.Resources.Reports.uniqueSignins</th>
-                        <th>@Machete.Web.Resources.Reports.dwcList</th>
-                        <th>@Machete.Web.Resources.Reports.hhhList</th>
-                        <th>@Machete.Web.Resources.Reports.dwcPropio</th>
-                        <th>@Machete.Web.Resources.Reports.hhhPropio</th>
-                        <th>@Machete.Web.Resources.Reports.totalHours</th>
-                        <th>@Machete.Web.Resources.Reports.totalIncome</th>
-                        <th>@Machete.Web.Resources.Reports.avgIncome</th>
-                    </tr>
-                </thead>
-            </table>
-            <div id="monthlyPieChart1" style="height:auto;width:80%;margin-top:3em;"></div>
-        </div>
-        <div id="quarterlyTable">
-            <input type="button" value="Refresh" class="formButton" id="qtrRefreshBtn" />
-            <input type="button" value="Print" class="formButton" id="qtrPrintReport" />
-            <input type="button" value="Spreadsheet" class="formButton" id="qtrSpreadsheet" />
-            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-mwd-datepicker", @id = "mwdDate" })
-            <p id="qtrHelp" style="display:inline;"><em>Select the day that the quarter should end.</em></p>
-            <table id="qtrDataTable" class="display">
-                <thead>
-                    <tr>
-                        <th>@Machete.Web.Resources.Reports.date</th>
-                        <th>@Machete.Web.Resources.Reports.tempJobs</th>
-                        <th>@Machete.Web.Resources.Reports.safetyTraining</th>
-                        <th>@Machete.Web.Resources.Reports.skillsTraining</th>
-                        <th>@Machete.Web.Resources.Reports.eslAssessed</th>
-                        <th>@Machete.Web.Resources.Reports.basicGarden</th>
-                        <th>@Machete.Web.Resources.Reports.advGarden</th>
-                        <th>@Machete.Web.Resources.Reports.finEd</th>
-                        <th></th>
-                    </tr>
-                </thead>
-            </table>
-            <div id="qtrChart1" style="height:auto;width:80%;margin-top:3em;"></div>
-        </div>
-        <div id="yearlyTable">
-            <input type="button" value="Refresh" class="formButton" id="yearRefreshBtn" />
-            <input type="button" value="Print" class="formButton" id="yearPrintReport" />
-            <input type="button" value="Spreadsheet" class="formButton" id="yearSpreadsheet" />
-            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-mwd-datepicker", @id = "mwdDate" })
-            <p id="mwdHelp" style="display:inline;"><em>Select the date that the report should end.</em></p>
-            <table id="yearDataTable" class="display">
-                <thead>
-                    <tr>
-                        <th>@Machete.Web.Resources.Reports.date</th>
-                        <th>@Machete.Web.Resources.Reports.tempJobs</th>
-                        <th>@Machete.Web.Resources.Reports.safetyTraining</th>
-                        <th>@Machete.Web.Resources.Reports.skillsTraining</th>
-                        <th>@Machete.Web.Resources.Reports.eslAssessed</th>
-                        <th>@Machete.Web.Resources.Reports.basicGarden</th>
-                        <th>@Machete.Web.Resources.Reports.advGarden</th>
-                        <th>@Machete.Web.Resources.Reports.finEd</th>
-                        <th></th>
-                    </tr>
-                </thead>
-            </table>
-            <div id="yearlyChart1" style="height:auto;width:80%;margin-top:3em;"></div>
-        </div>
-    </div>
-  </div>
+    @Html.Partial("Summary")
+    @Html.Partial("Orders")
+    @Html.Partial("Workers")
+    @Html.Partial("SSRS")
 </div>
-
-@*<script type="text/javascript" src="~/Scripts/jquery.jqplot.min.js"></script>*@
-@*<script type="text/javascript" src="~/Scripts/jqplot.pieRenderer.min.js"></script>*@
 
 <script type="text/javascript">
     $(document).ready(function () {
         //Note that the yearly and quarterly functions are the same. This is by design.
 
-        //PESKY VARS
-        // The reason oWecTable exists here is it was necessary to have JS parse var wec (below) to get the drill
-        // down menus to work. These are at the top of the anonymous functions section because that's what ECMA
+        //VARS
+        // These are at the top of the anonymous functions
+        // section because that's what ECMA
         // does with them anyway.
-        // Following suit with the quarterly and yearly drilldowns.
         var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
 
-        var oDclTable = $.extend(true, {}, dailyTableDefaults("/Reports/AjaxDcl", lang, $('#dclDate').val()));
-        var oWecTable = $.extend(true, {}, weeklyTableDefaults("/Reports/AjaxWec", lang, $('#wecDate').val()));
-        var oMwdTable = $.extend(true, {}, monthlyTableDefaults("/Reports/AjaxMwd", lang, $('#dclDate').val()));
-        var oQtrTable = $.extend(true, {}, yearlyTableDefaults("/Reports/AjaxQtr", lang, $('#qtrDate').val()));
-        var oYearTable = $.extend(true, {}, yearlyTableDefaults("/Reports/AjaxYear", lang, $('#yearDate').val()));
+        var oDclTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxDcl", lang, $('#dclDate').val()));
+        var oWecTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxWec", lang, $('#wecDate').val()));
+        var oMwdTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxMwd", lang, $('#dclDate').val()));
+        var oQtrTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxQtr", lang, $('#qtrDate').val()));
+        var oYearTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxYear", lang, $('#yearDate').val()));
+        var oJzcTable = $.extend(true, {}, reportTableDefaults("/Reports/AjazJzc", lang, $('#jzcDate').val()));
+        var oNewTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxNew", lang, $('#newDate').val()));
+
+        oDclTable.aoColumns = [
+            { mDataProp: "date" },
+            { mDataProp: "dwcList" },
+            { mDataProp: "dwcPropio" },
+            { mDataProp: "hhhList" },
+            { mDataProp: "hhhPropio" },
+            { mDataProp: "uniqueSignins" },
+            { mDataProp: "totalSignins" },
+            { mDataProp: "totalAssignments" },
+            { mDataProp: "cancelledJobs" },
+        ];
+
+        oWecTable.aoColumns = [
+                { mDataProp: "weekday" },
+                { mDataProp: "date" },
+                { mDataProp: "totalSignins" },
+                { mDataProp: "totalAssignments" },
+                { mDataProp: "weekEstDailyHours" },
+                { mDataProp: "weekEstPayment" },
+                { mDataProp: "weekHourlyWage" },
+                {
+                    mDataProp: null,
+                    sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="nestedDetailsButton">'
+                },
+        ];
+
+        oMwdTable.aoColumns = [
+            { mDataProp: "date" },
+            { mDataProp: "totalSignins" },
+            { mDataProp: "uniqueSignins" },
+            { mDataProp: "dispatchedDWCList" },
+            { mDataProp: "dispatchedHHHList" },
+            { mDataProp: "dispatchedDWCPropio" },
+            { mDataProp: "dispatchedHHHPropio" },
+            { mDataProp: "totalHours" },
+            { mDataProp: "totalIncome" },
+            { mDataProp: "avgIncomePerHour" },
+        ];
+
+        oQtrTable.aoColumns = [
+                { mDataProp: "date" },
+                { mDataProp: "tempJobs" },
+                { mDataProp: "safetyTraining" },
+                { mDataProp: "skillsTraining" },
+                { mDataProp: "eslAssessed" },
+                { mDataProp: "basicGarden" },
+                { mDataProp: "advGarden" },
+                { mDataProp: "finEd" },
+                {
+                    mDataProp: null,
+                    sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="nestedDetailsButton">'
+                },
+        ];
+
+        oYearTable.aoColumns = [
+                { mDataProp: "date" },
+                { mDataProp: "tempJobs" },
+                { mDataProp: "safetyTraining" },
+                { mDataProp: "skillsTraining" },
+                { mDataProp: "eslAssessed" },
+                { mDataProp: "basicGarden" },
+                { mDataProp: "advGarden" },
+                { mDataProp: "finEd" },
+                {
+                    mDataProp: null,
+                    sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="nestedDetailsButton">'
+                },
+        ];
+
+        oJzcTable.aoColumns = [
+            { mDataProp: "date" },
+            { mDataProp: "topZips" },
+            { mDataProp: "topZipsCount" },
+            { mDataProp: "topJobs" },
+            { mDataProp: "topJobsCount" }
+        ];
+
+        oNewTable.aoColumns = [
+            { mDataProp: "date" },
+            { mDataProp: "singles" },
+            { mDataProp: "families" },
+            { mDataProp: "newSingles" },
+            { mDataProp: "newFamilies" }
+        ];
 
         var dcl = $('#dclDataTable').dataTable(oDclTable);
         var wec = $('#wecDataTable').dataTable(oWecTable);
         var mwd = $('#mwdDataTable').dataTable(oMwdTable);
         var qtr = $('#qtrDataTable').dataTable(oQtrTable);
         var year = $('#yearDataTable').dataTable(oYearTable);
+        var jzc = $('#jzcDataTable').dataTable(oJzcTable);
+        var newT = $('#newDataTable').dataTable(oNewTable);
 
         //
         // hide stuff 
         //  
-        $('#dclTable').hide(); 
-        $('#wecTable').hide(); 
-        $('#mwdTable').hide(); 
-        $('#qtrTable').hide();
-        $('#yearTable').hide();
+        $('#summaryHide').click(
+            function () {
+                $('#summaryPopup').hide();
+            });
+        $('#orderHide').click(
+
+            function () {
+                $('#ordersPopup').hide();
+            }
+
+        );
+
+        $('#workerHide').click(
+            function () {
+                $('#workersPopup').hide();
+            }
+        );
 
         $('#dclHelp').hide();
         $('#wecHelp').hide();
         $('#mwdHelp').hide();
         $('#qtrHelp').hide();
         $('#yearHelp').hide();
+        $('#jzcHelp').hide();
+
+        $('#newHelp').hide();
+
+        $('#dclTable').hide();
+        $('#wecTable').hide();
+        $('#mwdTable').hide();
+        $('#qtrTable').hide();
+        $('#yearTable').hide();
+        $('#jzcTable').hide();
+
+        $('#newTable').hide();
 
 
+        //
+        // make stuff pretty
+        //
+        $('#reportTabs').tabs();
 
+        $('#ssrsReports').button();
+
+        $('.formButton').button();
+
+        // ACCORDIONS        
+        $('#summaryReports').accordion({
+            collapsible: true,
+            active: false,
+            autoHeight: false
+        });
+
+        $('#ordersReports').accordion({
+            collapsible: true,
+            active: false,
+            autoHeight: false
+        });
+
+        $('#workersReports').accordion({
+            collapsible: true,
+            active: false,
+            autoHeight: false
+        });
 
         ////////////////////// | the date-pickerers |
 
@@ -342,20 +346,66 @@
                 yearNewTable();
             });
 
-        //////////////////// | ACCORDIONS |
         //
+        // Jobs and Zip Codes datepickerer
         //
-        $('#reportTabs').tabs();
-        $('#summaryHide').click(
+
+        $('.ui-jzc-datepicker').datepicker({
+            autoSize: true,
+            changeMonth: true,
+            changeYear: true,
+            constrainInput: true,
+            dateFormat: 'mm/dd/yy',
+            duration: "slow",
+            showButtonPanel: false,
+            showOn: "focus"
+        });
+
+        $('.ui-jzc-datepicker').hover(
             function () {
-                $('#summaryPopup').hide();
+                $('#jzcHelp').show("fade", 1100);
+            },
+            function () {
+                $('#jzcHelp').hide("fade", 1100);
             });
 
-        $('#summaryReports').accordion({
-            collapsible: true,
-            active: false,
-            autoHeight: false
+        $('.ui-jzc-datepicker').change(
+        function (event) {
+            jzcNewTable();
         });
+
+        //
+        // New Workers datepickerer
+        //
+
+        $('.ui-new-datepicker').datepicker({
+            autoSize: true,
+            changeMonth: true,
+            changeYear: true,
+            constrainInput: true,
+            dateFormat: 'mm/dd/yy',
+            duration: "slow",
+            showButtonPanel: false,
+            showOn: "focus"
+        });
+
+        $('.ui-new-datepicker').hover(
+            function () {
+                $('#jzcHelp').show("fade", 1100);
+            },
+            function () {
+                $('#jzcHelp').hide("fade", 1100);
+            });
+
+        $('.ui-new-datepicker').change(
+        function (event) {
+            newNewTable();
+        });
+
+        //////////////////////////////////////////////////////////////////////// | DATATABLES |
+        //
+        // Looking for the table properties? Try reports.js in ~/Web/Scripts
+        //
 
         $('#dclLink').click(function () {
             dclNewTable();
@@ -377,47 +427,135 @@
             yearNewTable();
         });
 
-        //////////////////////////////////////////////////////////////////////// | DATATABLES |
-        //
-        // Looking for the table properties? Try reports.js in ~/Web/Scripts
-        //
+        $('#jzcLink').click(function () {
+            jzcNewTable();
+        });
+
+        $('#newLink').click(function () {
+            newNewTable();
+        });
 
         function dclNewTable() {
-            dclOptions = $.extend(true, {}, dailyTableDefaults("/Reports/AjaxDcl", lang, $('#dclDate').val()));
-            dclOptions.bDestroy = "true,";
+            oDclTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxDcl", lang, $('#dclDate').val()));
+            oDclTable.aoColumns = [
+                { mDataProp: "date" },
+                { mDataProp: "dwcList" },
+                { mDataProp: "dwcPropio" },
+                { mDataProp: "hhhList" },
+                { mDataProp: "hhhPropio" },
+                { mDataProp: "uniqueSignins" },
+                { mDataProp: "totalSignins" },
+                { mDataProp: "totalAssignments" },
+                { mDataProp: "cancelledJobs" },
+            ];
+            oDclTable.bDestroy = "true,";
             $('#dclDataTable').dataTable(dclOptions).fnReloadAjax();
             dailyPie();
         }
 
-        //wecNewTable() has a different format than the other functions listed here. See above
-        //for the explanation. (Under section "pesky vars").
         function wecNewTable() {
-            oWecTable = $.extend(true, {}, weeklyTableDefaults("/Reports/AjaxWec", lang, $('#wecDate').val()));
+            oWecTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxWec", lang, $('#wecDate').val()));
+            oWecTable.aoColumns = [
+                { mDataProp: "weekday" },
+                { mDataProp: "date" },
+                { mDataProp: "totalSignins" },
+                { mDataProp: "totalAssignments" },
+                { mDataProp: "weekEstDailyHours" },
+                { mDataProp: "weekEstPayment" },
+                { mDataProp: "weekHourlyWage" },
+                {
+                    mDataProp: null,
+                    sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="nestedDetailsButton">'
+                },
+            ];
             oWecTable.bDestroy = "true,";
             $('#wecDataTable').dataTable(oWecTable).fnReloadAjax();
         }
 
         function mwdNewTable() {
-            mwdOptions = $.extend(true, {}, monthlyTableDefaults("/Reports/AjaxMwd", lang, $('#mwdDate').val()));
-            mwdOptions.bDestroy = "true,";
+            oMwdTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxMwd", lang, $('#mwdDate').val()));
+            oMwdTable.aoColumns = [
+                { mDataProp: "date" },
+                { mDataProp: "totalSignins" },
+                { mDataProp: "uniqueSignins" },
+                { mDataProp: "dispatchedDWCList" },
+                { mDataProp: "dispatchedHHHList" },
+                { mDataProp: "dispatchedDWCPropio" },
+                { mDataProp: "dispatchedHHHPropio" },
+                { mDataProp: "totalHours" },
+                { mDataProp: "totalIncome" },
+                { mDataProp: "avgIncomePerHour" },
+            ];
+            oMwdTable.bDestroy = true;
             $('#mwdDataTable').dataTable(mwdOptions).fnReloadAjax();
             monthlyPie();
         }
 
         function qtrNewTable() {
-            // by design, not a mistake ... *
-            mwdOptions = $.extend(true, {}, yearlyTableDefaults("/Reports/AjaxQtr", lang, $('#qtrDate').val()));
-            mwdOptions.bDestroy = "true,";
-            $('#mwdDataTable').dataTable(qtrOptions).fnReloadAjax();
-            monthlyPie();
+            oQtrTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxQtr", lang, $('#qtrDate').val()));
+            oQtrTable.aoColumns = [
+                    { mDataProp: "date" },
+                    { mDataProp: "tempJobs" },
+                    { mDataProp: "safetyTraining" },
+                    { mDataProp: "skillsTraining" },
+                    { mDataProp: "eslAssessed" },
+                    { mDataProp: "basicGarden" },
+                    { mDataProp: "advGarden" },
+                    { mDataProp: "finEd" },
+                    {
+                        mDataProp: null,
+                        sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="nestedDetailsButton">'
+                    },
+            ];
+            oQtrTable.bDestroy = true;
+            $('#qtrDataTable').dataTable(qtrOptions).fnReloadAjax();
         }
 
         function yearNewTable() {
-            mwdOptions = $.extend(true, {}, yearlyTableDefaults("/Reports/AjaxYear", lang, $('#yearDate').val()));
-            mwdOptions.bDestroy = "true,";
-            $('#mwdDataTable').dataTable(yearOptions).fnReloadAjax();
-            monthlyPie();
+            oYearTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxYear", lang, $('#yearDate').val()));
+            oYearTable.aoColumns = [
+                    { mDataProp: "date" },
+                    { mDataProp: "tempJobs" },
+                    { mDataProp: "safetyTraining" },
+                    { mDataProp: "skillsTraining" },
+                    { mDataProp: "eslAssessed" },
+                    { mDataProp: "basicGarden" },
+                    { mDataProp: "advGarden" },
+                    { mDataProp: "finEd" },
+                    {
+                        mDataProp: null,
+                        sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="nestedDetailsButton">'
+                    },
+            ];
+            oYearTable.bDestroy = true;
+            $('#yearDataTable').dataTable(yearOptions).fnReloadAjax();
         }
+
+        function jzcNewTable() {
+            oJzcTable = $.extend(true, {}, reportTableDefaults(lang, $('#jzcDate').val()));
+            oJzcTable.aoColumns = [
+                { mDataProp: "date" },
+                { mDataProp: "topZips" },
+                { mDataProp: "topZipsCount" },
+                { mDataProp: "topJobs" },
+                { mDataProp: "topJobsCount" }
+            ];
+            oJzcTable.bDestroy = true;
+            $('#jzcDataTable').dataTable(jzcNewTable).fnReloadAjax();
+        };
+
+        function newNewTable() {
+            oNewTable = $.extend(true, {}, reportTableDefaults(lang, $('#newDate').val()));
+            oNewTable.aoColumns = [
+                { mDataProp: "date" },
+                { mDataProp: "singles" },
+                { mDataProp: "families" },
+                { mDataProp: "newSingles" },
+                { mDataProp: "newFamilies" }
+            ];
+            oNewTable.bDestroy = true;
+            $('#newDataTable').dataTable(newNewTable).fnReloadAjax();
+        };
 
         ////////////////////////////////////////////////////////////// | DRILLDOWNS |
         //
@@ -435,10 +573,9 @@
             sOut += '<th>Skill</th>';
             sOut += '<th>Count</th>';
             sOut += '</tr></thead><tbody>';
-            for (var i in jobList)
-            {
+            for (var i in jobList) {
                 var job = jobList[i];
-                sOut += '<tr><td>'+job.date+'</td><td>'+job.skill+'</td><td>'+job.count+'</td></tr>';
+                sOut += '<tr><td>' + job.date + '</td><td>' + job.skill + '</td><td>' + job.count + '</td></tr>';
             }
             sOut += '</tbody></table>';
             return sOut;
@@ -527,17 +664,17 @@
         $('#dclDataOnlyBtn').click(
             function () {
                 dclNewTable();
-        });
+            });
 
         $('#wecDataOnlyBtn').click(
             function () {
                 wecNewTable();
-        });
+            });
 
         $('#mwdDataOnlyBtn').click(
             function () {
                 mwdNewTable();
-        });
+            });
 
         $('#qtrRefreshBtn').click(
             function () {
@@ -549,147 +686,188 @@
                 yearNewTable();
             });
 
+        $('#jzcDataRefreshBtn').click(
+            function () {
+                jzcNewTable();
+            }
+        );
+
+        $('#newDataRefreshBtn').click(
+            function () {
+                newNewTable();
+            }
+        );
+
+
         // | PRINT VIEWS |
 
-         $('#dclPrintReport').click(
-             function () {
-                 window.open('/Reports/PrintView?date='+$('#dclDate').val()+'&typeOfReport=daily');
-             });
-
-         $('#wecPrintReport').click(
-             function () {
-                 window.open('/Reports/PrintView?date='+$('#wecDate').val()+'&typeOfReport=weekly');
-             });
-
-         $('#mwdPrintReport').click(
-             function () {
-                 window.open('/Reports/PrintView?date='+$('#mwdDate').val()+'&typeOfReport=monthly');
-             });
-
-         $('#qtrPrintReport').click(
-             function () {
-                window.open('/Reports/PrintView?date=' + $('#qtrDate').val() + '&typeOfReport=quarterly');
-         });
-
-         $('#yearPrintReport').click(
+        $('#dclPrintReport').click(
             function () {
-                window.open('/Reports/PrintView?date=' + $('#yearDate').val() + '&typeOfReport=yearly');
-         });
+                window.open('/Reports/PrintView?date=' + $('#dclDate').val() + '&typeOfReport=daily');
+            });
 
+        $('#wecPrintReport').click(
+            function () {
+                window.open('/Reports/PrintView?date=' + $('#wecDate').val() + '&typeOfReport=weekly');
+            });
 
+        $('#mwdPrintReport').click(
+            function () {
+                window.open('/Reports/PrintView?date=' + $('#mwdDate').val() + '&typeOfReport=monthly');
+            });
+
+        $('#qtrPrintReport').click(
+            function () {
+                window.open('/Reports/PrintView?date=' + $('#qtrDate').val() + '&typeOfReport=quarterly');
+            });
+
+        $('#yearPrintReport').click(
+           function () {
+               window.open('/Reports/PrintView?date=' + $('#yearDate').val() + '&typeOfReport=yearly');
+           });
+
+        $('#jzcPrint').click(
+            function () {
+                window.open('/Reports/PrintView?date=' + $('#jzcDate').val() + '&typeOfReport=jobsandzips');
+            });
+
+        $('#newPrint').click(
+           function () {
+               window.open('/Reports/PrintView?date=' + $('#newDate').val() + '&typeOfReport=newworkers');
+           }
+        );
 
         // | SPREADSHEETS |
 
-         $('#dclSpreadsheet').click(function () {
-             var url = "/Reports/AjaxDcl";
-             var data = { todaysdate: $('#dclDate').val() };
-             $.getJSON(url, data, function (ajax) {
-                 var jstring = JSON.stringify(ajax.aaData);
-                 var jcsv = json2spreadsheet(jstring);
-                 download(jcsv, "reports.csv", "text/csv");
-             });
-         });
+        $('#dclSpreadsheet').click(function () {
+            var url = "/Reports/AjaxDcl";
+            var data = { todaysdate: $('#dclDate').val() };
+            $.getJSON(url, data, function (ajax) {
+                var jstring = JSON.stringify(ajax.aaData);
+                var jcsv = json2spreadsheet(jstring);
+                download(jcsv, "reports.csv", "text/csv");
+            });
+        });
 
-         $('#wecSpreadsheet').click(function () {
-             var url = "/Reports/AjaxWec";
-             var data = { todaysdate: $('#wecDate').val() };
-             $.getJSON(url, data, function (ajax) {
-                 var jstring = JSON.stringify(ajax.aaData);
-                 var jcsv = json2spreadsheet(jstring);
-                 download(jcsv, "reports.csv", "text/csv");
-             });
-         });
+        $('#wecSpreadsheet').click(function () {
+            var url = "/Reports/AjaxWec";
+            var data = { todaysdate: $('#wecDate').val() };
+            $.getJSON(url, data, function (ajax) {
+                var jstring = JSON.stringify(ajax.aaData);
+                var jcsv = json2spreadsheet(jstring);
+                download(jcsv, "reports.csv", "text/csv");
+            });
+        });
 
-         $('#mwdSpreadsheet').click(function () {
-             var url = "/Reports/AjaxMwd";
-             var data = { todaysdate: $('#mwdDate').val() };
-             $.getJSON(url, data, function (ajax) {
-                 var jstring = JSON.stringify(ajax.aaData);
-                 var jcsv = json2spreadsheet(jstring);
-                 download(jcsv, "reports.csv", "text/csv");
-             });
-         });
+        $('#mwdSpreadsheet').click(function () {
+            var url = "/Reports/AjaxMwd";
+            var data = { todaysdate: $('#mwdDate').val() };
+            $.getJSON(url, data, function (ajax) {
+                var jstring = JSON.stringify(ajax.aaData);
+                var jcsv = json2spreadsheet(jstring);
+                download(jcsv, "reports.csv", "text/csv");
+            });
+        });
 
-         $('#mwdSpreadsheet').click(function () {
-             var url = "/Reports/AjaxQtr";
-             var data = { todaysdate: $('#qtrDate').val() };
-             $.getJSON(url, data, function (ajax) {
-                 var jstring = JSON.stringify(ajax.aaData);
-                 var jcsv = json2spreadsheet(jstring);
-                 download(jcsv, "reports.csv", "text/csv");
-             });
-         });
+        $('#mwdSpreadsheet').click(function () {
+            var url = "/Reports/AjaxQtr";
+            var data = { todaysdate: $('#qtrDate').val() };
+            $.getJSON(url, data, function (ajax) {
+                var jstring = JSON.stringify(ajax.aaData);
+                var jcsv = json2spreadsheet(jstring);
+                download(jcsv, "reports.csv", "text/csv");
+            });
+        });
 
-         $('#mwdSpreadsheet').click(function () {
-             var url = "/Reports/AjaxYear";
-             var data = { todaysdate: $('#yearDate').val() };
-             $.getJSON(url, data, function (ajax) {
-                 var jstring = JSON.stringify(ajax.aaData);
-                 var jcsv = json2spreadsheet(jstring);
-                 download(jcsv, "reports.csv", "text/csv");
-             });
-         });
+        $('#mwdSpreadsheet').click(function () {
+            var url = "/Reports/AjaxYear";
+            var data = { todaysdate: $('#yearDate').val() };
+            $.getJSON(url, data, function (ajax) {
+                var jstring = JSON.stringify(ajax.aaData);
+                var jcsv = json2spreadsheet(jstring);
+                download(jcsv, "reports.csv", "text/csv");
+            });
+        });
 
+        $('#jzcSpreadsheet').click(function () {
+            var url = "/Reports/AjaxJobsZipCodes";
+            var data = { todaysdate: $('#jzcDate').val() };
+            $.getJSON(url, data, function (ajax) {
+                var jstring = JSON.stringify(ajax.aaData);
+                var jcsv = json2spreadsheet(jstring);
+                download(jcsv, "reports.csv", "text/csv");
+            });
+        });
 
-        // | PIE CHARTS |
-         function dailyPie() {
-             $('#dailyPieChart1').empty();
-             $('#dailyPieChart2').empty();
-             var pieFill1;
-             var pieFill2;
-             var ajaxUrl = "/Reports/AjaxDcl";
-             var ajaxData = { todaysdate: $('#dclDate').val() };
-             $.getJSON(ajaxUrl, ajaxData, function (ajax) {
-                 pieFill1 = dailySigninPie(ajax);
-                 pieFill2 = gotWorkPie(ajax);
-                 var plot1 = $.jqplot('dailyPieChart1', [pieFill1],
-                       {
-                           seriesDefaults: {
-                               renderer: $.jqplot.PieRenderer,
-                               rendererOptions: {
-                                   showDataLabels: true
-                               }
-                           },
-                           legend: { show: true, location: 'e' }
-                       }
-                     );
-                 var plot2 = $.jqplot('dailyPieChart2', [pieFill2],
-                     {
-                         seriesDefaults: {
-                             renderer: $.jqplot.PieRenderer,
-                             rendererOptions: {
-                                 showDataLabels: true
-                             }
-                         },
-                         legend: { show: true, location: 'e' }
-                     }
-                     );
-             });
-         }
+        $('#newSpreadsheet').click(function () {
+            var url = "/Reports/AjaxNewWorkers";
+            var data = { todaysdate: $('#newDate').val() };
+            $.getJSON(url, data, function (ajax) {
+                var jstring = JSON.stringify(ajax.aaData);
+                var jcsv = json2spreadsheet(jstring);
+                download(jcsv, "reports.csv", "text/csv");
+            });
+        });
 
-         function monthlyPie() {
-             $('#monthlyPieChart1').empty();
-             var pieFill1;
-             var ajaxUrl = "/Reports/AjaxMwd";
-             var ajaxData = { todaysdate: $('#mwdDate').val() };
-             $.getJSON(ajaxUrl, ajaxData, function (ajax) {
-                 pieFill1 = monthlySigninPie(ajax);//[['Heavy Industry',12],['Retail',9],['Light Industry',14],['Out of home',16],['Commuting',7],['Orientation',9]];//'[[\'Fuck\',1][\'You\',4]]';//
-                 var plot1 = $.jqplot('monthlyPieChart1', [pieFill1],
-                       {
-                           seriesDefaults: {
-                               renderer: $.jqplot.PieRenderer,
-                               rendererOptions: {
-                                   showDataLabels: true
-                               }
-                           },
-                           legend: { show: true, location: 'e' }
-                       }
-                     );
-             });
-         }
+        //
+        // ||| PIE CHARTS |||
+        //
+        function dailyPie() {
+            $('#dailyPieChart1').empty();
+            $('#dailyPieChart2').empty();
+            var pieFill1;
+            var pieFill2;
+            var ajaxUrl = "/Reports/AjaxDcl";
+            var ajaxData = { todaysdate: $('#dclDate').val() };
+            $.getJSON(ajaxUrl, ajaxData, function (ajax) {
+                pieFill1 = dailySigninPie(ajax);
+                pieFill2 = gotWorkPie(ajax);
+                var plot1 = $.jqplot('dailyPieChart1', [pieFill1],
+                      {
+                          seriesDefaults: {
+                              renderer: $.jqplot.PieRenderer,
+                              rendererOptions: {
+                                  showDataLabels: true
+                              }
+                          },
+                          legend: { show: true, location: 'e' }
+                      }
+                    );
+                var plot2 = $.jqplot('dailyPieChart2', [pieFill2],
+                    {
+                        seriesDefaults: {
+                            renderer: $.jqplot.PieRenderer,
+                            rendererOptions: {
+                                showDataLabels: true
+                            }
+                        },
+                        legend: { show: true, location: 'e' }
+                    }
+                    );
+            });
+        }
+
+        function monthlyPie() {
+            $('#monthlyPieChart1').empty();
+            var pieFill1;
+            var ajaxUrl = "/Reports/AjaxMwd";
+            var ajaxData = { todaysdate: $('#mwdDate').val() };
+            $.getJSON(ajaxUrl, ajaxData, function (ajax) {
+                pieFill1 = monthlySigninPie(ajax);//[['Heavy Industry',12],['Retail',9],['Light Industry',14],['Out of home',16],['Commuting',7],['Orientation',9]];//'[[\'Fuck\',1][\'You\',4]]';//
+                var plot1 = $.jqplot('monthlyPieChart1', [pieFill1],
+                      {
+                          seriesDefaults: {
+                              renderer: $.jqplot.PieRenderer,
+                              rendererOptions: {
+                                  showDataLabels: true
+                              }
+                          },
+                          legend: { show: true, location: 'e' }
+                      }
+                    );
+            });
+        }
 
         //Not sure yet if quarterly and yearly will have a pie chart or some other graphic.
-
     });
-    // end DOM ready check
 </script>

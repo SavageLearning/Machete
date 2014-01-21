@@ -1,0 +1,137 @@
+﻿<div id="summaryWrapper" class="reportWrapper">
+    <div id="summaryHeader">
+        <div id="summaryPopup">
+            <h3 style="padding-left: .5em;">@Machete.Web.Resources.Reports.summaryHeader</h3>
+
+            <p id="summaryInstructions" style="padding-left:.5em">
+                @Machete.Web.Resources.Reports.summaryInstructions
+                <input type="button" value="Hide" class="formButton" id="summaryHide" />
+            </p>
+        </div>
+    </div>
+
+    <div id="summaryReports">
+        <h3 class="reportSubtitle">
+            <a href="#" id="dclLink">Daily</a>
+        </h3>
+        <div id="dclTable" class="reportWrapper">
+            <input type="button" value="Refresh" class="formButton" id="dclDataOnlyBtn" />
+            <input type="button" value="Print Report" class="formButton" id="dclPrintReport" />
+            <input type="button" value="Spreadsheet" class="formButton" id="dclSpreadsheet" />
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-dcl-datepicker", @id = "dclDate" })
+            <p id="dclHelp" style="display:inline;"><em>Select a day to see results.</em></p>
+            <table id="dclDataTable" class="display">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.date</th>
+                        <th>@Machete.Web.Resources.Reports.dwcList</th>
+                        <th>@Machete.Web.Resources.Reports.dwcPropio</th>
+                        <th>@Machete.Web.Resources.Reports.hhhList</th>
+                        <th>@Machete.Web.Resources.Reports.hhhPropio</th>
+                        <th>Unique</th>
+                        <th>@Machete.Web.Resources.Reports.totalSignins</th>
+                        <th>@Machete.Web.Resources.Reports.totalAssignments</th>
+                        <th>@Machete.Web.Resources.Reports.cancelledJobs</th>
+                    </tr>
+                </thead>
+            </table>
+            <div id="dailyPieChart1" style="height:auto;width:80%;display:block;"></div>
+            <div id="dailyPieChart2" style="height:auto;width:80%;display:block;"></div>
+        </div>
+        <h3 class="reportSubtitle"><a href="#" id="wecLink" class="reportWrapper">Weekly</a></h3>
+        <div id="wecTable">
+            <input type="button" value="Refresh" class="formButton" id="wecDataOnlyBtn" />
+            <input type="button" value="Print" class="formButton" id="wecPrintReport" />
+            <input type="button" value="Spreadsheet" class="formButton" id="wecSpreadsheet" />
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-wec-datepicker", @id = "wecDate" })
+            <p id="wecHelp" style="display:inline;"><em>Select a day to see results for that week.</em></p>
+            <table id="wecDataTable" class="display">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.weekday</th>
+                        <th>@Machete.Web.Resources.Reports.date</th>
+                        <th>@Machete.Web.Resources.Reports.totalSignins</th>
+                        <th>@Machete.Web.Resources.Reports.totalAssignments</th>
+                        <th>@Machete.Web.Resources.Reports.weekEstDailyHours</th>
+                        <th>@Machete.Web.Resources.Reports.weekEstPayment</th>
+                        <th>@Machete.Web.Resources.Reports.weekHourlyWage</th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <h3 class="reportSubtitle"><a href="#" id="mwdLink">Monthly</a></h3>
+        <div id="mwdTable" class="reportWrapper">
+            <input type="button" value="Refresh" class="formButton" id="mwdDataOnlyBtn" />
+            <input type="button" value="Print" class="formButton" id="mwdPrintReport" />
+            <input type="button" value="Spreadsheet" class="formButton" id="mwdSpreadsheet" />
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-mwd-datepicker", @id = "mwdDate" })
+            <p id="mwdHelp" style="display:inline;"><em>Select any day in a month to see results.</em></p>
+            <table id="mwdDataTable" class="display">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.date</th>
+                        <th>@Machete.Web.Resources.Reports.totalSignins</th>
+                        <th>@Machete.Web.Resources.Reports.uniqueSignins</th>
+                        <th>@Machete.Web.Resources.Reports.dwcList</th>
+                        <th>@Machete.Web.Resources.Reports.hhhList</th>
+                        <th>@Machete.Web.Resources.Reports.dwcPropio</th>
+                        <th>@Machete.Web.Resources.Reports.hhhPropio</th>
+                        <th>@Machete.Web.Resources.Reports.totalHours</th>
+                        <th>@Machete.Web.Resources.Reports.totalIncome</th>
+                        <th>@Machete.Web.Resources.Reports.avgIncome</th>
+                    </tr>
+                </thead>
+            </table>
+            <div id="monthlyPieChart1" style="height:auto;width:80%;margin-top:3em;"></div>
+        </div>
+        <h3 class="reportSubtitle"><a href="#" id="qtrLink">Quarterly</a></h3>
+        <div id="qtrTable" class="reportWrapper">
+            <input type="button" value="Refresh" class="formButton" id="qtrRefreshBtn" />
+            <input type="button" value="Print" class="formButton" id="qtrPrintReport" />
+            <input type="button" value="Spreadsheet" class="formButton" id="qtrSpreadsheet" />
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-mwd-datepicker", @id = "mwdDate" })
+            <p id="qtrHelp" style="display:inline;"><em>Select the day that the quarter should end.</em></p>
+            <table id="qtrDataTable" class="display">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.date</th>
+                        <th>@Machete.Web.Resources.Reports.tempJobs</th>
+                        <th>@Machete.Web.Resources.Reports.safetyTraining</th>
+                        <th>@Machete.Web.Resources.Reports.skillsTraining</th>
+                        <th>@Machete.Web.Resources.Reports.eslAssessed</th>
+                        <th>@Machete.Web.Resources.Reports.basicGarden</th>
+                        <th>@Machete.Web.Resources.Reports.advGarden</th>
+                        <th>@Machete.Web.Resources.Reports.finEd</th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+            <div id="qtrChart1" style="height:auto;width:80%;margin-top:3em;"></div>
+        </div>
+        <h3 class="reportSubtitle"><a href="#" id="yearLink">Yearly</a></h3>
+        <div id="yearTable" class="reportWrapper">
+            <input type="button" value="Refresh" class="formButton" id="yearRefreshBtn" />
+            <input type="button" value="Print" class="formButton" id="yearPrintReport" />
+            <input type="button" value="Spreadsheet" class="formButton" id="yearSpreadsheet" />
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-mwd-datepicker", @id = "mwdDate" })
+            <p id="mwdHelp" style="display:inline;"><em>Select the date that the report should end.</em></p>
+            <table id="yearDataTable" class="display">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.date</th>
+                        <th>@Machete.Web.Resources.Reports.tempJobs</th>
+                        <th>@Machete.Web.Resources.Reports.safetyTraining</th>
+                        <th>@Machete.Web.Resources.Reports.skillsTraining</th>
+                        <th>@Machete.Web.Resources.Reports.eslAssessed</th>
+                        <th>@Machete.Web.Resources.Reports.basicGarden</th>
+                        <th>@Machete.Web.Resources.Reports.advGarden</th>
+                        <th>@Machete.Web.Resources.Reports.finEd</th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+            <div id="yearlyChart1" style="height:auto;width:80%;margin-top:3em;"></div>
+        </div>
+    </div>
+</div>

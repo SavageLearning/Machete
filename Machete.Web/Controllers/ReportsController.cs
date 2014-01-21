@@ -84,10 +84,25 @@ namespace Machete.Web.Controllers
         #endregion
 
         #region PartialViews
+        public ActionResult Summary()
+        {
+            return PartialView();
+        }
+        
         public ActionResult Orders()
         {
             return PartialView();
         }
+        
+        public ActionResult Workers()
+        {
+            return PartialView();
+        }
+        public ActionResult SSRS()
+        {
+            return PartialView();
+        }
+       
         #endregion
 
         #region ExternalViews
@@ -266,8 +281,6 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
-
         #endregion
-
     }
 }

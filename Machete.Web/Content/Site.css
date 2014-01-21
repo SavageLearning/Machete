@@ -698,3 +698,14 @@ html[xmlns] .clearfix {
 * html .clearfix {
     height: 1%;
 }
+
+/**/
+/**/ /*Reports*/
+/**/
+.reportWrapper {
+    clear: both;
+}
+
+.reportSubtitle {
+    clear: both;
+}

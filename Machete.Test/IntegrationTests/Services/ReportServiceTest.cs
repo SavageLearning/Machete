@@ -159,7 +159,7 @@ namespace Machete.Test.IntegrationTests.Services
             frb.AddWorkAssignment(desc, 60, beginDate, endDate, "user", true);
 
             //Act
-            var after = frb.ToServReports().ListJobs(beginDate,endDate).ToList();
+            var after = frb.ToServReports().ListJobs(beginDate, endDate).ToList();
 
             //Assert
             Assert.IsTrue(after.Select(a => a.info).Contains(fodEnText));
@@ -172,115 +172,6 @@ namespace Machete.Test.IntegrationTests.Services
             DateTime beginDate = DateTime.Today;
             DateTime endDate = DateTime.Today;
 
-            frb.AddWorkOrder(beginDate, endDate, endDate, 3, WorkOrder.iActive);
-
-            //Act
-            var result = frb.ToServReports().ListZipCodes(beginDate, endDate).ToList();
-
-            //Assert
-<<<<<<< HEAD
-            Assert.AreEqual(zip, result.Select(q => q.info.FirstOrDefault()));
-        }
-
-        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
-        public void Integration_ReportService_NewlyEnrolled()
-        {
-            //Arrange
-            DateTime beforeDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 4, 23, 59, 59);
-            DateTime beginDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 3, 0, 0, 0);
-            DateTime middleDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 3, 12, 0, 0);
-            DateTime endDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 3, 23, 59, 59);
-            DateTime afterDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 2, 0, 0, 0);
-
-            frb.AddWorker(null, null, null, null,
-                beforeDate,
-                endDate, afterDate, null);
-            frb.AddWorker(null, null, null, null,
-                afterDate,
-                endDate, afterDate, null);
-            frb.AddWorker(null, null, null, null,
-                middleDate,
-                endDate, afterDate, null);
-            frb.AddWorker(null, null, null, null,
-                middleDate,
-                endDate, afterDate, null);
-
-            //Act
-            var result = frb.ToServReports().NewlyEnrolled(beginDate, endDate);
-
-            //Assert
-            Assert.AreEqual(2, result.Select(q => q.count));
-        }
-
-        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
-        public void Integration_ReportService_NewlyExpired()
-        {
-            //Arrange
-            DateTime beforeDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 4, 23, 59, 59);
-            DateTime beginDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 3, 0, 0, 0);
-            DateTime middleDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 3, 12, 0, 0);
-            DateTime endDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 3, 23, 59, 59);
-            DateTime afterDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 2, 0, 0, 0);
-
-            frb.AddWorker(null, null, null, null,
-                beforeDate,
-                endDate, beforeDate, null);
-            frb.AddWorker(null, null, null, null,
-                beforeDate,
-                endDate, afterDate, null);
-            frb.AddWorker(null, null, null, null,
-                beforeDate,
-                endDate, middleDate, null);
-            frb.AddWorker(null, null, null, null,
-                beforeDate,
-                endDate, middleDate, null);
-
-            //Act
-            var result = frb.ToServReports().NewlyExpired(beginDate, endDate);
-
-            //Assert
-            Assert.AreEqual(2, result.Select(q => q.count));
-        }
-
-        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
-        public void Integration_ReportService_StillEnrolled()
-        {
-            //Arrange
-            DateTime beforeDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 4, 23, 59, 59);
-            DateTime beginDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 3, 0, 0, 0);
-            DateTime middleDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 3, 12, 0, 0);
-            DateTime endDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 3, 23, 59, 59);
-            DateTime afterDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day - 2, 0, 0, 0);
-
-            frb.AddWorker(null, null, null, null,
-                beforeDate,
-                endDate, afterDate, null);
-            frb.AddWorker(null, null, null, null,
-                afterDate,
-                endDate, afterDate, null);
-            frb.AddWorker(null, null, null, null,
-                beforeDate,
-                endDate, afterDate, null);
-            frb.AddWorker(null, null, null, null,
-                middleDate,
-                endDate, afterDate, null);
-
-
-            //Act
-            var result = frb.ToServReports().StillEnrolled(beginDate, endDate);
-
-            //Assert
-            Assert.AreEqual(2, result.Select(q => q.count));
-        }
-
-        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
-        public void Integration_ReportService_ListZipCodes()
-        {
-            //Arrange
-            DateTime beginDate = DateTime.Today;
-            DateTime endDate = DateTime.Today;
-
-            // Creates a Work Order with a zip code of "12345"
             frb.AddWorkOrder(beginDate, endDate, endDate, 3, WorkOrder.iActive);
 
             //Act
