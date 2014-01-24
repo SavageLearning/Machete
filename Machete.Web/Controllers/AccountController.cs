@@ -296,7 +296,7 @@ namespace Machete.Web.Controllers
                 user.IsApproved = model.IsApproved;
                 user.IsLockedOut = model.IsLockedOut;
                 ModelState state = ModelState["NewPassword"];
-                bool changePassword = state == null ? false : true;
+                bool changePassword = state.Value.AttemptedValue == "" ? false : true;
                 bool hasPassword = HasPassword(user);
                 if (changePassword && hasPassword)
                 {
@@ -322,7 +322,7 @@ namespace Machete.Web.Controllers
                         return View(model);
                     }
                 }
-                else if (!hasPassword)
+                else if (changePassword && !hasPassword)
                 {
                     model.ErrorMessage = "This user's password is managed by another service.";
                     model.NewPassword = "";
@@ -372,25 +372,28 @@ namespace Machete.Web.Controllers
             var Db = DatabaseFactory.Get();
             var user = Db.Users.First(u => u.Id == id);
             var model = new SelectUserRolesViewModel(user, DatabaseFactory);
+            model.UserId = id;
             return View(model);
         }
 
         [HttpPost]
         [Authorize(Roles = "Administrator, Manager")]
         [ValidateAntiForgeryToken]
-        public ActionResult UserRoles(SelectUserRolesViewModel model)
+        public async Task<ActionResult> UserRoles(SelectUserRolesViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var Db = DatabaseFactory.Get();
-                var idManager = new IdentityManager(DatabaseFactory);
-                var user = Db.Users.First(u => u.UserName == model.UserName);
-                idManager.ClearUserRoles(user.Id);
+                var user = await UserManager.FindByIdAsync(model.UserId);
                 foreach (var role in model.Roles)
                 {
-                    if (role.Selected)
+                    var iEdit = await UserManager.IsInRoleAsync(user.Id, role.RoleName);
+                    if (!role.Selected)
                     {
-                        idManager.AddUserToRole(user.Id, role.RoleName);
+                        if (iEdit) await UserManager.RemoveFromRoleAsync(user.Id, role.RoleName);
+                    }
+                    else
+                    {
+                        if (!iEdit) await UserManager.AddToRoleAsync(user.Id, role.RoleName);
                     }
                 }
                 return RedirectToAction("index");
@@ -576,9 +579,9 @@ namespace Machete.Web.Controllers
             }
         }
 
-        private bool HasPassword(string userId)
+        private async Task<bool> HasPassword(string userId)
         {
-            var user = UserManager.FindById(userId);
+            var user = await UserManager.FindByIdAsync(userId);
             if (user != null)
             {
                 return user.PasswordHash != null;

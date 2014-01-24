@@ -16,16 +16,19 @@ namespace Machete.Web.Models
         Task<TUser> FindAsync(string userName, string password);
         Task<IdentityResult> CreateAsync(TUser user, string password);
         Task<IdentityResult> RemoveLoginAsync(string userId, UserLoginInfo login);
-        Task<IdentityResult> ChangePasswordAsync(string userId, string currentPassword, string newPassword);
-        Task<IdentityResult> AddPasswordAsync(string userId, string password);
-        Task<IdentityResult> RemovePasswordAsync(string userId);
-        Task<TUser> FindAsync(UserLoginInfo login);
         Task<IdentityResult> AddLoginAsync(string userId, UserLoginInfo login);
         Task<IdentityResult> CreateAsync(TUser user);
         Task<System.Collections.Generic.IList<UserLoginInfo>> GetLoginsAsync(string userId);
         IList<UserLoginInfo> GetLogins(string userId);
         Task<ClaimsIdentity> CreateIdentityAsync(TUser user, string authenticationType);
-        TUser FindById(string userId);
+        Task<IdentityResult> ChangePasswordAsync(string userId, string currentPassword, string newPassword);
+        Task<IdentityResult> AddPasswordAsync(string userId, string password);
+        Task<IdentityResult> RemovePasswordAsync(string userId);
+        Task<bool> IsInRoleAsync(string userId, string role); 
+        Task<IdentityResult> AddToRoleAsync(string userId, string role); 
+        Task<IdentityResult> RemoveFromRoleAsync(string userId, string role);
+        Task<TUser> FindAsync(UserLoginInfo login);
+        Task<TUser> FindByIdAsync(string userId);
         void Dispose();
     }
 
@@ -120,11 +123,6 @@ namespace Machete.Web.Models
 
                 return Convert.ToBase64String(bRet);
             }
-        }
-
-        public ApplicationUser FindById(string userId)
-        {
-            return this.FindById(userId);
         }
 
         public IList<UserLoginInfo> GetLogins(string userId)
