@@ -9,9 +9,10 @@
 {
     @Html.AntiForgeryToken();
     <p style="color:red;"><strong>@Html.ValidationSummary()</strong></p>
+    <p style="color:red;"><strong>@Model.ErrorMessage</strong></p>
     <div class="tb-table" style="float: left;">
     <fieldset>
-    <legend>MembersModel</legend>
+    <legend>Basic User Info</legend>
         <div class="tb-row">
             <div class="tb-label">
                 @Html.LabelFor(model => model.UserName)
@@ -25,7 +26,8 @@
                 @Html.LabelFor(model => model.FirstName)
             </div>
             <div class="tb-field">
-                @Html.EditorFor(model => model.FirstName)
+                @Html.TextBoxFor(model => model.FirstName)
+                @Html.ValidationMessageFor(model => model.FirstName)
             </div>
         </div>
         <div class="tb-row">
@@ -33,7 +35,8 @@
                 @Html.LabelFor(model => model.LastName)
             </div>
             <div class="tb-field">
-                @Html.EditorFor(model => model.LastName)
+                @Html.TextBoxFor(model => model.LastName)
+                @Html.ValidationMessageFor(model => model.LastName)
             </div>
         </div>
         <div class="tb-row">
@@ -41,7 +44,8 @@
                 @Html.LabelFor(model => model.Email)
             </div>
             <div class="tb-field">
-                @Html.EditorFor(model => model.Email)
+                @Html.TextBoxFor(model => model.Email)
+                @Html.ValidationMessageFor(model => model.Email)
             </div>
         </div>
         <div class="tb-row">
@@ -49,7 +53,7 @@
                 @Html.LabelFor(model => model.IsApproved)
             </div>
             <div class="tb-field">
-                @Html.EditorFor(model => model.IsApproved)
+                @Html.CheckBoxFor(model => model.IsApproved)
             </div>
         </div>
         <div class="tb-row">
@@ -57,7 +61,7 @@
                 @Html.LabelFor(model => model.IsLockedOut)
             </div>
             <div class="tb-field">
-                @Html.EditorFor(model => model.IsLockedOut)
+                @Html.CheckBoxFor(model => model.IsLockedOut)
             </div>
         </div>
         <p>
@@ -67,7 +71,7 @@
     </div>
 
 
-    <div class="tb-table" style="float: left;">
+    <div class="tb-table" style="float: left; margin-left: 3em;">
     <h3>Password Recovery</h3>
         <div class="tb-row">
             <div class="tb-label">

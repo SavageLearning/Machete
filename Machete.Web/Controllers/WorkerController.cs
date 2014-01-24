@@ -67,7 +67,7 @@ namespace Machete.Web.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        [Authorize(Roles = "Manager, Administrator, PhoneDesk")]
+        [Authorize(Roles = "Manager, Administrator, Teacher, PhoneDesk")]
         public ActionResult Index()
         {
             return View();
@@ -77,7 +77,7 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator, Manager, Teacher, PhoneDesk")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
@@ -132,7 +132,7 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="ID"></param>
         /// <returns></returns>
-        [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
+        [Authorize(Roles = "PhoneDesk, Manager, Teacher, Administrator")] 
         public ActionResult Create(int ID)
         {
             var _model = new Worker();
@@ -152,7 +152,7 @@ namespace Machete.Web.Controllers
         /// <param name="imagefile"></param>
         /// <returns></returns>
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "PhoneDesk, Manager, Administrator")]
+        [Authorize(Roles = "PhoneDesk, Manager, Teacher, Administrator")]
         public ActionResult Create(Worker worker, string userName, HttpPostedFileBase imagefile)
         {
             UpdateModel(worker);
@@ -172,7 +172,7 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
+        [Authorize(Roles = "PhoneDesk, Manager, Teacher, Administrator")] 
         public ActionResult Edit(int id)
         {
             Worker _worker = serv.Get(id);
@@ -187,7 +187,7 @@ namespace Machete.Web.Controllers
         /// <param name="imagefile"></param>
         /// <returns></returns>
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "PhoneDesk, Manager, Administrator")]
+        [Authorize(Roles = "PhoneDesk, Manager, Teacher, Administrator")]
         public ActionResult Edit(int id, Worker _model, string userName, HttpPostedFileBase imagefile)
         {
             Worker worker = serv.Get(id);
@@ -228,7 +228,7 @@ namespace Machete.Web.Controllers
             {
                 status = "OK"
             },
-JsonRequestBehavior.AllowGet);
+            JsonRequestBehavior.AllowGet);
         }
         /// <summary>
         /// 

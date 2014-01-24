@@ -64,8 +64,14 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Teacher")]
         public ActionResult Index()
         {
-            return View();
+            var model = new ActivityViewModel();
+            if (User.IsInRole("Administrator") || User.IsInRole("Manager"))
+                model.authenticated = 1;
+            else model.authenticated = 0;
+            model.CI = (System.Globalization.CultureInfo)Session["Culture"];
+            return View(model);
         }
+
         /// <summary>
         /// GET: /Activity/AjaxHandler
         /// </summary>
@@ -115,8 +121,7 @@ namespace Machete.Web.Controllers
         private string EditTabLabel(Activity act)
         {
             if (act == null) return null;
-            return act.dateStart.ToString() + " - " + 
-                    lcache.textByID(act.name, CI.TwoLetterISOLanguageName) + " - " +
+            return lcache.textByID(act.name, CI.TwoLetterISOLanguageName) + " with " +
                     act.teacher;
         }
         /// <summary>
@@ -129,10 +134,6 @@ namespace Machete.Web.Controllers
             var _model = new Activity();
             _model.dateStart = DateTime.Today;
             _model.dateEnd = DateTime.Today;
-            //_model.city = "Seattle";
-            //_model.state = "WA";
-            //_model.blogparticipate = false;
-            //_model.referredby = Lookups.emplrreferenceDefault;
             return PartialView("Create", _model);
         }
         /// <summary>
