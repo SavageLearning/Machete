@@ -138,6 +138,8 @@ namespace Machete.Web.Models
                 this.LastName = "";
             }
             this.Email = user.Email;
+            this.IsApproved = user.IsApproved;
+            this.IsLockedOut = user.IsLockedOut;
         }
 
         //[Required]
@@ -216,6 +218,7 @@ namespace Machete.Web.Models
         public string UserName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string UserId { get; set; }
         public List<SelectRoleEditorViewModel> Roles { get; set; }
     }
 

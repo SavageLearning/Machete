@@ -60,12 +60,12 @@ namespace Machete.Web.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator, Manager, Teacher, PhoneDesk")]
         public ActionResult Index()
         {
             return View();
         }
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator, Manager, Teacher, PhoneDesk")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             //Get all the records            
@@ -100,7 +100,7 @@ namespace Machete.Web.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")] 
+        [Authorize(Roles = "Administrator, Manager, Teacher, PhoneDesk")] 
         public ActionResult Create()
         {
             var _model = new Person();
@@ -115,7 +115,7 @@ namespace Machete.Web.Controllers
         /// <param name="userName"></param>
         /// <returns></returns>
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator, Manager, Teacher, PhoneDesk")]
         public ActionResult Create(Person person, string userName)
         {
             Person newperson = null;
@@ -145,7 +145,7 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")] 
+        [Authorize(Roles = "Administrator, Manager, Teacher, PhoneDesk")] 
         public ActionResult Edit(int id)
         {
             Person person = personService.Get(id);
@@ -158,7 +158,7 @@ namespace Machete.Web.Controllers
         /// <param name="userName"></param>
         /// <returns></returns>
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")] 
+        [Authorize(Roles = "Administrator, Manager, Teacher, PhoneDesk")] 
         public ActionResult Edit(int id, string userName)
         {
             Person person = personService.Get(id);          
@@ -175,7 +175,7 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator, Manager, Teacher, PhoneDesk")]
         public ActionResult View(int id)
         {
             Person person = personService.Get(id);
