@@ -4,7 +4,7 @@
     ViewBag.Title = "UserRoles";
 }
 
-<h2>Roles for user @Html.DisplayFor(model => model.UserName)</h2>
+<h2>Roles for @Html.DisplayFor(model => model.FirstName) @Html.DisplayFor(model => model.LastName)</h2>
 <hr />
 
 @using (Html.BeginForm("UserRoles", "Account", FormMethod.Post, new { encType = "multipart/form-data", name = "myform" }))
@@ -16,6 +16,7 @@
         <div class="form-group">
             <div class="col-md-10">
                 @Html.HiddenFor(model => model.UserName)
+                @Html.HiddenFor(model => model.UserId)
             </div>
         </div>
 

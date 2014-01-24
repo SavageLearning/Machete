@@ -1,20 +1,7 @@
 ﻿@using Machete.Web.Helpers
 @using Machete.Web.Resources
 @using Machete.Domain.Resources
-@{
-    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
-    string recType = "activity";
-    //string idPrefix = recType + Model.ID + "-";
-    int maxTabs = User.Identity.IsAuthenticated == true ? 2 : 1; //If auth, 2 tab limit
 
-    //To hide JS features for unauthorized
-    int authenticated = 0;
-    if (User.Identity.IsAuthenticated)
-    {
-        authenticated = 1;
-    }
-    
-}
 <div id="activityList"> @* This div is the ui.panel  *@
     <table id="activityTable" class="display">
         <thead>
@@ -33,56 +20,4 @@
         </thead>
     </table>
 </div>
-<script type="text/javascript">
-    var authenticated = @(authenticated);
-    $(document).ready(function () {        
-        //
-        // Create Activity table
-        jqrfyTable({
-            table: $('#activityTable'), 
-            tab: $('#activityTabs'),
-            options: {
-                "bPaginate": true,
-                "bLengthChange": true,
-                "aaSorting": [[6, 'desc']],
-                "bFilter": true,
-                "bSort": true,
-                "bInfo": true,
-                "bAutoWidth": false,
-                "bServerSide": true,
-                "sAjaxSource": "/Activity/AjaxHandler",
-                "bProcessing": true,
-                "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
-                "aoColumns": [                           //dataTable column definition
-                                {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
-                                {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
-                                {"mDataProp": "name" },
-                                {"mDataProp": "type" },
-                                {"mDataProp": "teacher" },
-                                {"mDataProp": "count" },
-                                {"mDataProp": "dateStart" },
-                                {"mDataProp": "dateEnd" },
-                                {"mDataProp": "dateupdated", "bVisible": authenticated },
-                                { "mDataProp": "Updatedby", "bSortable": false, "bVisible": authenticated }
-                            ]             
-            }, 
-            dblClickEvent: null, 
-            tabLabel: "@(recType)",
-            maxTabs: @(maxTabs)
-            });
-
-            //pagetimer for unauthorized view
-            if (@(authenticated) == 0) {
-                // Reloads Activities list after 10 minutes if Activity List tab is NOT selected and interaction is idle               
-                //When a tab is selected, set/clear time and bind/unbind idle handler
-                $('#activityTabs').mUI('tabTimer', {});
-                
-                //reload ActivityTable data every 10 minutes
-                $('#activityTable').everyTime(30*1000, function() {
-                    $(this).dataTable().fnDraw();
-                });   
-            }
-
-    });
-</script>
 

@@ -9,7 +9,7 @@
 <h2>Machete Configuration Page</h2>
 
 <p style="color:red;">
-    <strong>@Html.Raw(ViewBag.StatusMessage)</strong>
+    <strong>@Html.ValidationSummary()</strong>
 </p>
 <p>
     @Html.ActionLink("Manage Current User", "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Manage" }) | @Html.ActionLink("Create New User", "Register") | @Html.ActionLink("Configure Lookups", "Index", "Config")
