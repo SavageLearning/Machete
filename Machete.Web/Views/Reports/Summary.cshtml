@@ -38,8 +38,8 @@
             <div id="dailyPieChart1" style="height:auto;width:80%;display:block;"></div>
             <div id="dailyPieChart2" style="height:auto;width:80%;display:block;"></div>
         </div>
-        <h3 class="reportSubtitle"><a href="#" id="wecLink" class="reportWrapper">Weekly</a></h3>
-        <div id="wecTable">
+        <h3 class="reportSubtitle"><a href="#" id="wecLink">Weekly</a></h3>
+        <div id="wecTable" class="reportWrapper">
             <input type="button" value="Refresh" class="formButton" id="wecDataOnlyBtn" />
             <input type="button" value="Print" class="formButton" id="wecPrintReport" />
             <input type="button" value="Spreadsheet" class="formButton" id="wecSpreadsheet" />
@@ -71,42 +71,18 @@
                 <thead>
                     <tr>
                         <th>@Machete.Web.Resources.Reports.date</th>
+                        <th>@Machete.Web.Resources.Reports.activeMembers</th>
                         <th>@Machete.Web.Resources.Reports.totalSignins</th>
-                        <th>@Machete.Web.Resources.Reports.uniqueSignins</th>
-                        <th>@Machete.Web.Resources.Reports.dwcList</th>
-                        <th>@Machete.Web.Resources.Reports.hhhList</th>
-                        <th>@Machete.Web.Resources.Reports.dwcPropio</th>
-                        <th>@Machete.Web.Resources.Reports.hhhPropio</th>
+                        <th>@Machete.Web.Resources.Reports.wentToClass</th>
+                        <th>@Machete.Web.Resources.Reports.dispatched</th>
                         <th>@Machete.Web.Resources.Reports.totalHours</th>
                         <th>@Machete.Web.Resources.Reports.totalIncome</th>
                         <th>@Machete.Web.Resources.Reports.avgIncome</th>
-                    </tr>
-                </thead>
-            </table>
-            <div id="monthlyPieChart1" style="height:auto;width:80%;margin-top:3em;"></div>
-        </div>
-        <h3 class="reportSubtitle"><a href="#" id="yearLink">Yearly</a></h3>
-        <div id="yearTable" class="reportWrapper">
-            <input type="button" value="Refresh" class="formButton" id="qtrRefreshBtn" />
-            <input type="button" value="Print" class="formButton" id="qtrPrintReport" />
-            <input type="button" value="Spreadsheet" class="formButton" id="qtrSpreadsheet" />
-            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-year-datepicker", @id = "yearDate" })
-            <p id="yearHelp" style="display:inline;"><em>Select the day that the yearly report should <strong>end</strong>.</em></p>
-            <table id="yearDataTable" class="display">
-                <thead>
-                    <tr>
-                        <th>@Machete.Web.Resources.Reports.date</th>
-                        <th>@Machete.Web.Resources.Reports.tempJobs</th>
-                        <th>@Machete.Web.Resources.Reports.safetyTraining</th>
-                        <th>@Machete.Web.Resources.Reports.skillsTraining</th>
-                        <th>@Machete.Web.Resources.Reports.eslAssessed</th>
-                        <th>@Machete.Web.Resources.Reports.basicGarden</th>
-                        <th>@Machete.Web.Resources.Reports.advGarden</th>
-                        <th>@Machete.Web.Resources.Reports.finEd</th>
                         <th></th>
                     </tr>
                 </thead>
             </table>
+@*            <div id="monthlyPieChart1" style="height:auto;width:80%;margin-top:3em;"></div> *@
         </div>
     </div>
 </div>

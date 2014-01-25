@@ -219,22 +219,25 @@ namespace Machete.Web.Controllers
             mwd = monthlyView(mwdDate);
 
             var result = from d in mwd.query
-                         select new 
-                         { 
+                         select new
+                         {
                              date = System.String.Format("{0:MM/dd/yyyy}", d.date),
+                             stillHere = d.stillHere.ToString(),
                              totalSignins = d.totalSignins.ToString(),
-                             uniqueSignins = d.uniqueSignins.ToString(),
                              dispatched = d.dispatched.ToString(),
-                             unduplicatedDispatched = d.undupDispatched.ToString(),
-                             tempDispatched = d.tempDispatched.ToString(),
-                             permanentPlacements = d.permanentPlacements.ToString(),
+                             peopleWhoWentToClass = d.peopleWhoWentToClass.ToString(),
                              totalHours = d.totalHours.ToString(),
                              totalIncome = d.totalIncome.ToString(),
                              avgIncomePerHour = System.String.Format("{0:C}", d.avgIncomePerHour),
-                             newlyEnrolled = d.newlyEnrolled.ToString(),
-                             peopleWhoLeft = d.peopleWhoLeft.ToString(),
-                             peopleWhoStayed = d.peopleWhoStayed,
-                             peopleWhoWentToClass = d.peopleWhoWentToClass.ToString(),
+                             drilldown = new
+                                         {
+                                             newlyEnrolled = d.newlyEnrolled.ToString(), //dd
+                                             peopleWhoLeft = d.peopleWhoLeft.ToString(), //dd
+                                             uniqueSignins = d.uniqueSignins.ToString(), //dd
+                                             tempDispatched = d.tempDispatched.ToString(), //dd
+                                             permanentPlacements = d.permanentPlacements.ToString(), //dd
+                                             undupDispatched = d.undupDispatched.ToString(), //dd
+                                         }
                          };
 
             return Json(new

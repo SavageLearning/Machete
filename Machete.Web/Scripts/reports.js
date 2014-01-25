@@ -105,7 +105,7 @@ function reportTableDefaults(url, lang, date)
             $.getJSON(sSource, aoData, function (json) {
                 /* Do whatever additional processing you want on the callback, then tell DataTables */
                 fnCallback(json);
-            })
+            });
         }
     };
     return tableDefaults;
