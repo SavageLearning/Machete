@@ -371,36 +371,57 @@ namespace Machete.Service
             return query;
         }
 
-        /// <summary>
-        /// Returns the number of workers who received temporary work, excluding permanent placements, for a given time period.
-        /// </summary>
-        /// <param name="beginDate"></param>
-        /// <param name="endDate"></param>
-        /// <returns></returns>
-        public IQueryable<reportUnit> WorkersInTempJobs(DateTime beginDate, DateTime endDate)
+        public IQueryable<placementUnit> WorkersInJobs(DateTime beginDate, DateTime endDate)
         {
-            IQueryable<reportUnit> query;
+            IQueryable<placementUnit> query;
 
             beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
             endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
             var waQ = waRepo.GetAllQ();
 
+            var undup = waQ
+                .Where(whr => whr.workOrder.dateTimeofWork >= beginDate
+                    && whr.workOrder.dateTimeofWork <= endDate)
+	            .GroupBy(g => g.workerAssigned.dwccardnum)
+	            .Select(a => new {
+		            date = a.Min(x => DbFunctions.TruncateTime(x.workOrder.dateTimeofWork)),
+		            undup = true
+	            })
+	            .GroupBy(gb => gb.date)
+	            .Select(b => new {
+		            dtow = b.Key,
+		            undupCount = b.Count(up => up.undup)
+	            });
+
             query = waQ
-                .Where(whr => !whr.workOrder.permanentPlacement && 
-                    DbFunctions.TruncateTime(whr.workOrder.dateTimeofWork) >= beginDate &&
-                    DbFunctions.TruncateTime(whr.workOrder.dateTimeofWork) <= endDate)
-                //This is no good. We don't want one count for each date, we want one count for each worker.
-                .GroupBy(gb => new
-                {
-                    dtow = DbFunctions.TruncateTime(gb.workOrder.dateTimeofWork),
-                    worker = gb.workerAssignedID
-                })
-                .Select(group => new reportUnit
-                {
-                    date = group.Key.dtow,
-                    count = group.Count() > 0 ? group.Count() : 0
-                });
+                .Where(whr => whr.workOrder.dateTimeofWork >= beginDate
+                    && whr.workOrder.dateTimeofWork <= endDate)
+                .GroupBy(g => new
+                    {
+                        dtow = DbFunctions.TruncateTime(g.workOrder.dateTimeofWork),
+                    })
+                .Select(c => new
+                    {
+                        dtow = c.Key.dtow,
+                        permCount = c.Count(pp => pp.workOrder.permanentPlacement),
+                        tempCount = c.Count(tp => tp.workOrder.permanentPlacement)
+                    })
+                .Join(undup, x => x.dtow, y => y.dtow, (x, y) => new
+                    {
+                        dtow = x.dtow,
+                        undup = y.undupCount,
+                        perm = x.permCount,
+                        temp = x.tempCount
+                    })
+                .Select(d => new placementUnit
+                    {
+                        date = d.dtow,
+                        count = d.perm + d.temp,
+                        undupCount = d.undup,
+                        permCount = d.perm,
+                        tempCount = d.temp
+                    });
 
             return query;
         }
@@ -600,75 +621,6 @@ namespace Machete.Service
                 {
                     info = group.Key.ToString(),
                     count = 1
-                });
-
-            return query;
-        }
-
-        /// <summary>
-        /// Returns a count of unduplicated (first) signins for days in the given date range.
-        /// </summary>
-        /// <param name="beginDate"></param>
-        /// <param name="endDate"></param>
-        /// <returns>date, count</returns>
-        public IQueryable<reportUnit> UnduplicatedWorkersWhoRecievedTempJobs(DateTime beginDate, DateTime endDate)
-        {
-            IQueryable<reportUnit> query;
-
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
-
-            var waQ = waRepo.GetAllQ();
-
-            query = waQ
-                .Where(whr => !whr.workOrder.permanentPlacement && 
-                    DbFunctions.TruncateTime(whr.workOrder.dateTimeofWork) <= endDate)
-                .GroupBy(gb => gb.workerAssigned.dwccardnum)
-                .Select(group => new
-                {
-                    dwccardnum = group.Key,
-                    firstTempAssignment = DbFunctions.TruncateTime(group.Min(m => m.workOrder.dateTimeofWork))
-                })
-                .Where(whr => whr.firstTempAssignment >= beginDate)
-                .GroupBy(gb => gb.firstTempAssignment)
-                .Select(group => new reportUnit
-                {
-                    date = group.Key,
-                    count = group.Count()
-                })
-                .OrderBy(ob => ob.date);
-
-            return query;
-        }
-
-        /// <summary>
-        /// Returns workers placed in permanent jobs during the given time period.
-        /// </summary>
-        /// <param name="beginDate"></param>
-        /// <param name="endDate"></param>
-        /// <returns>date, count</returns>
-        public IQueryable<reportUnit> WorkersPlacedInPermanentJobs(DateTime beginDate, DateTime endDate)
-        {
-            IQueryable<reportUnit> query;
-
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
-
-            var waQ = waRepo.GetAllQ();
-
-            query = waQ
-                .Where(whr => whr.workOrder.permanentPlacement &&
-                    DbFunctions.TruncateTime(whr.workOrder.dateTimeofWork) >= beginDate &&
-                    DbFunctions.TruncateTime(whr.workOrder.dateTimeofWork) <= endDate)
-                .GroupBy(gb => new
-                {
-                    dtow = DbFunctions.TruncateTime(gb.workOrder.dateTimeofWork),
-                    worker = gb.workerAssignedID
-                })
-                .Select(group => new reportUnit
-                {
-                    date = group.Key.dtow,
-                    count = group.Count() > 0 ? group.Count() : 0
                 });
 
             return query;
@@ -1173,14 +1125,12 @@ namespace Machete.Service
         {
             IEnumerable<reportUnit> signins;
             IEnumerable<reportUnit> unique;
-            IEnumerable<reportUnit> dispatch;
             IEnumerable<AverageWages> average;
 
             IEnumerable<reportUnit> newPpl;
             IEnumerable<reportUnit> pplLeft;
             IEnumerable<reportUnit> pplStay;
-            IEnumerable<reportUnit> undupDispatch;
-            IEnumerable<reportUnit> permPlaced;
+            IEnumerable<placementUnit> workers;
 
             IEnumerable<activityUnit> getAllClassAttendance;
 
@@ -1188,19 +1138,17 @@ namespace Machete.Service
 
             IEnumerable<DateTime> getAllDates = Enumerable.Range(0, 1 + endDate.Subtract(beginDate).Days)
                     .Select(offset => beginDate.AddDays(offset))
-                    .ToArray(); 
+                    .ToArray();
 
             getAllClassAttendance = GetAllActivitySignins(beginDate, endDate).ToList();
             signins = CountSignins(beginDate, endDate).ToList();
             unique = CountUniqueSignins(beginDate, endDate).ToList();
-            dispatch = CountAssignments(beginDate, endDate).ToList();
+            workers = WorkersInJobs(beginDate, endDate).ToList();
             average = HourlyWageAverage(beginDate, endDate).ToList();
             newPpl = NewlyEnrolled(beginDate, endDate).ToList();
             pplLeft = NewlyExpired(beginDate, endDate).ToList();
 
-            undupDispatch = WorkersInTempJobs(beginDate, endDate).ToList();
             pplStay = StillEnrolled(beginDate, endDate).ToList();
-            permPlaced = WorkersPlacedInPermanentJobs(beginDate, endDate).ToList();
 
             q = getAllDates
                 .Select(g => new monthlyData
@@ -1208,16 +1156,17 @@ namespace Machete.Service
                     date = DbFunctions.TruncateTime(g) ?? endDate,
                     totalSignins = signins.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
                     uniqueSignins = unique.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
-                    dispatched = dispatch.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
-                    unduplicatedDispatched = undupDispatch.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
+                    dispatched = workers.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
+                    tempDispatched = workers.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.tempCount).First() ?? 0,
+                    undupDispatched = workers.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.undupCount).First() ?? 0,
+                    permanentPlacements = workers.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.permCount).First() ?? 0,
                     totalHours = average.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.hours).First(),
                     totalIncome = average.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.wages).First(),
                     avgIncomePerHour = average.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.avg).First(),
                     newlyEnrolled = newPpl.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
                     peopleWhoLeft = pplLeft.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
-                    peopleWhoStayed = pplStay,
                     peopleWhoWentToClass = getAllClassAttendance.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
-                    permanentPlacements = permPlaced.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
+                    peopleWhoStayed = pplStay,
                 });
 
             q = q.OrderBy(p => p.date);
@@ -1273,7 +1222,7 @@ namespace Machete.Service
 
         public IEnumerable<yearSumData> YearlyController(DateTime beginDate, DateTime endDate)
         {
-            IEnumerable<reportUnit> temporaryPlacements;
+            IEnumerable<placementUnit> temporaryPlacements;
             IEnumerable<activityUnit> safetyTrainees;
             IEnumerable<activityUnit> skillsTrainees;
             IEnumerable<ESLAssessed> eslAssessed;
@@ -1289,7 +1238,7 @@ namespace Machete.Service
                     .Select(offset => beginDate.AddDays(offset))
                     .ToArray(); 
 
-            temporaryPlacements = WorkersInTempJobs(beginDate, endDate).ToList();
+            temporaryPlacements = WorkersInJobs(beginDate, endDate).ToList();
             getAllClassAttendance = GetAllActivitySignins(beginDate, endDate).ToList();
             safetyTrainees = getAllClassAttendance.Where(safety => safety.activityType == "Health & Safety");
             skillsTrainees = getAllClassAttendance.Where(skills => skills.activityType == "Skills Training" || skills.activityType == "Leadership Development");
@@ -1302,7 +1251,7 @@ namespace Machete.Service
                 .Select(g => new yearSumData
                 {
                     date = DbFunctions.TruncateTime(g),
-                    temporaryPlacements = temporaryPlacements.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
+                    temporaryPlacements = temporaryPlacements.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.tempCount).First() ?? 0,
                     safetyTrainees = safetyTrainees.Where(whr => whr.date == DbFunctions.TruncateTime(g)),
                     skillsTrainees = skillsTrainees.Where(whr => whr.date == DbFunctions.TruncateTime(g)),
                     eslAssessed = eslAssessed.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Count(),
@@ -1330,7 +1279,6 @@ namespace Machete.Service
 
             return query.AsEnumerable();
         }
-
 
         public IEnumerable<reportUnit> ClientProfileReportController(DateTime beginDate, DateTime endDate)
         {
@@ -1408,9 +1356,8 @@ namespace Machete.Service
 
     #region Report Models
 
-    public class TypeOfDispatchReport
+    public class TypeOfDispatchReport : reportUnit
     {
-        public DateTime date { get; set; }
         public int dwcList { get; set; }
         public int dwcPropio { get; set; }
         public int hhhList { get; set; }
@@ -1432,6 +1379,13 @@ namespace Machete.Service
         public int minutesInClass { get; set; }
     }
 
+    public class placementUnit : reportUnit
+    {
+        public int? undupCount { get; set; }
+        public int? permCount { get; set; }
+        public int? tempCount { get; set; }
+    }
+
     public class activityUnit : reportUnit
     {
         public string activityType { get; set; }
@@ -1444,13 +1398,8 @@ namespace Machete.Service
         public string info { get; set; }
     }
 
-    public class dailyData
+    public class dailyData : TypeOfDispatchReport
     {
-        public DateTime date { get; set; }
-        public int dwcList { get; set; }
-        public int dwcPropio { get; set; }
-        public int hhhList { get; set; }
-        public int hhhPropio { get; set; }
         public int totalSignins { get; set; }
         public int uniqueSignins { get; set; }
         public int cancelledJobs { get; set; }
@@ -1480,10 +1429,13 @@ namespace Machete.Service
     /// </summary>
     public class monthlyData
     {
-        public DateTime date { get; set; }
+        public DateTime? date { get; set; }
         public int totalSignins { get; set; }
         public int uniqueSignins { get; set; }
         public int dispatched { get; set; }
+        public int undupDispatched { get; set; }
+        public int tempDispatched { get; set; }
+        public int permanentPlacements { get; set; }
         public int totalHours { get; set; }
         public double totalIncome { get; set; }
         public double avgIncomePerHour { get; set; }
@@ -1491,8 +1443,6 @@ namespace Machete.Service
         public int peopleWhoLeft { get; set; }
         public IEnumerable<reportUnit> peopleWhoStayed { get; set; }
         public int peopleWhoWentToClass { get; set; }
-        public int unduplicatedDispatched { get; set; }
-        public int permanentPlacements { get; set; }
     }
 
     public class monthlyActivityData
