@@ -225,14 +225,15 @@ namespace Machete.Web.Controllers
                              totalSignins = d.totalSignins.ToString(),
                              uniqueSignins = d.uniqueSignins.ToString(),
                              dispatched = d.dispatched.ToString(),
-                             unduplicatedDispatched = d.unduplicatedDispatched.ToString(),
+                             unduplicatedDispatched = d.undupDispatched.ToString(),
+                             tempDispatched = d.tempDispatched.ToString(),
                              permanentPlacements = d.permanentPlacements.ToString(),
                              totalHours = d.totalHours.ToString(),
                              totalIncome = d.totalIncome.ToString(),
                              avgIncomePerHour = System.String.Format("{0:C}", d.avgIncomePerHour),
                              newlyEnrolled = d.newlyEnrolled.ToString(),
                              peopleWhoLeft = d.peopleWhoLeft.ToString(),
-                             peopleWhoStayed = d.peopleWhoStayed.ToString(),
+                             peopleWhoStayed = d.peopleWhoStayed,
                              peopleWhoWentToClass = d.peopleWhoWentToClass.ToString(),
                          };
 
