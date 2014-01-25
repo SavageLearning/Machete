@@ -267,4 +267,13 @@
   <data name="singleAdults" xml:space="preserve">
     <value>Solteros (total)</value>
   </data>
+  <data name="activeMembers" xml:space="preserve">
+    <value>Activos</value>
+  </data>
+  <data name="dispatched" xml:space="preserve">
+    <value>Despachados</value>
+  </data>
+  <data name="wentToClass" xml:space="preserve">
+    <value>Asistieron Clase</value>
+  </data>
 </root>

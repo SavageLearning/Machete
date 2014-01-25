@@ -138,7 +138,6 @@ namespace Machete.Service
             var waQ = waRepo.GetAllQ();
             var woQ = woRepo.GetAllQ();
 
-            //ensure we are getting all relevant times (no assumptions)
             beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
             endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
@@ -238,7 +237,8 @@ namespace Machete.Service
                 .GroupBy(gb => gb.wo.timeOfWork)
                 .Select(group => new TypeOfDispatchReport
                     {
-                        date = group.Key ?? DateTime.Now, //this is annoying
+                        date = group.Key,
+                        count = group.Count(),
                         dwcList = group.Sum(a => a.dwcList == null ? 0 : a.dwcList),
                         dwcPropio = group.Sum(a => a.dwcPatron == null ? 0 : a.dwcPatron),
                         hhhList = group.Sum(a => a.hhhList == null ? 0 : a.hhhList),
@@ -531,97 +531,36 @@ namespace Machete.Service
         }
 
         /// <summary>
-        /// Returns a count of new members by date of membership.
+        /// Returns a count of new, expired, and still active members by enumerated dates within the given period.
         /// </summary>
         /// <param name="beginDate"></param>
         /// <param name="endDate"></param>
-        /// <returns>date, count</returns>
-        public IQueryable<reportUnit> NewlyEnrolled(DateTime beginDate, DateTime endDate)
+        /// <returns>date, enrolledOnDate, expiredOnDate, count</returns>
+        public IQueryable<statusUnit> MemberStatusByDate(DateTime beginDate, DateTime endDate)
         {
-            IQueryable<reportUnit> query;
+            IQueryable<statusUnit> query;
 
             beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
             endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
-            var dates = new List<DateTime>();
-            for(var dt = beginDate; dt <= endDate; dt.AddDays(1))
-                dates.Add(dt);
+            IEnumerable<DateTime> dates = Enumerable.Range(0, 1 + endDate.Subtract(beginDate).Days)
+                .Select(offset => beginDate.AddDays(offset))
+                .ToArray();
 
             var wQ = wRepo.GetAllQ();
 
-            query = wQ
-                .Where(whr => DbFunctions.TruncateTime(whr.dateOfMembership) >= beginDate
-                           && DbFunctions.TruncateTime(whr.dateOfMembership) <= endDate)
-                .GroupBy(gb => new
-                {
-                    dom = DbFunctions.TruncateTime(gb.dateOfMembership)
-                })
-                .Select(group => new reportUnit
-                {
-                    date = group.Key.dom,
-                    count = group.Count()
-                });
-
-            return query;
-        }
-
-        /// <summary>
-        /// Returns a count of expired members by expiration date.
-        /// </summary>
-        /// <param name="beginDate"></param>
-        /// <param name="endDate"></param>
-        /// <returns>date, count</returns>
-        public IQueryable<reportUnit> NewlyExpired(DateTime beginDate, DateTime endDate)
-        {
-            IQueryable<reportUnit> query;
-
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
-
-            var wQ = wRepo.GetAllQ();
-
-            query = wQ
-                .Where(whr => DbFunctions.TruncateTime(whr.memberexpirationdate) >= beginDate
-                           && DbFunctions.TruncateTime(whr.memberexpirationdate) <= endDate)
-                .GroupBy(gb => new
-                {
-                    dom = DbFunctions.TruncateTime(gb.memberexpirationdate)
-                })
-                .Select(group => new reportUnit
-                {
-                    date = group.Key.dom,
-                    count = group.Count()
-                });
-
-            return query;
-        }
-
-        /// <summary>
-        /// Returns a count of continuing members, not including new members.
-        /// </summary>
-        /// <param name="beginDate"></param>
-        /// <param name="endDate"></param>
-        /// <returns>info, count</returns>
-        public IQueryable<reportUnit> StillEnrolled(DateTime beginDate, DateTime endDate)
-        {
-            IQueryable<reportUnit> query;
-
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
-
-            var wQ = wRepo.GetAllQ();
-
-            query = wQ
-                .Where(whr => DbFunctions.TruncateTime(whr.dateOfMembership) < beginDate
-                    && DbFunctions.TruncateTime(whr.memberexpirationdate) >= endDate
-                    && !whr.isExpelled
-                    && !whr.isSanctioned)
-                .GroupBy(gb => gb.dwccardnum)
-                .Select(group => new reportUnit
-                {
-                    info = group.Key.ToString(),
-                    count = 1
-                });
+            query = dates
+                .Select(x => new statusUnit
+                    {
+                        date = DbFunctions.TruncateTime(x),
+                        enrolledOnDate = wQ.Where(whr => DbFunctions.TruncateTime(whr.dateOfMembership) == DbFunctions.TruncateTime(x)).Count(),
+                        expiredOnDate = wQ.Where(whr => DbFunctions.TruncateTime(whr.memberexpirationdate) == DbFunctions.TruncateTime(x)).Count(),
+                        count = wQ.Where(whr => DbFunctions.TruncateTime(whr.dateOfMembership) < DbFunctions.TruncateTime(x)
+                                && DbFunctions.TruncateTime(whr.memberexpirationdate) > DbFunctions.TruncateTime(x)
+                                && whr.isActive)
+                                .Count()
+                    })
+                .AsQueryable();
 
             return query;
         }
@@ -1120,16 +1059,12 @@ namespace Machete.Service
             return q;
         }
 
-        //it's just a space that changed at the bottom
         public IEnumerable<monthlyData> MonthlySummaryController(DateTime beginDate, DateTime endDate)
         {
             IEnumerable<reportUnit> signins;
             IEnumerable<reportUnit> unique;
             IEnumerable<AverageWages> average;
-
-            IEnumerable<reportUnit> newPpl;
-            IEnumerable<reportUnit> pplLeft;
-            IEnumerable<reportUnit> pplStay;
+            IEnumerable<statusUnit> status;
             IEnumerable<placementUnit> workers;
 
             IEnumerable<activityUnit> getAllClassAttendance;
@@ -1145,28 +1080,25 @@ namespace Machete.Service
             unique = CountUniqueSignins(beginDate, endDate).ToList();
             workers = WorkersInJobs(beginDate, endDate).ToList();
             average = HourlyWageAverage(beginDate, endDate).ToList();
-            newPpl = NewlyEnrolled(beginDate, endDate).ToList();
-            pplLeft = NewlyExpired(beginDate, endDate).ToList();
-
-            pplStay = StillEnrolled(beginDate, endDate).ToList();
+            status = MemberStatusByDate(beginDate, endDate).ToList();
 
             q = getAllDates
                 .Select(g => new monthlyData
                 {
-                    date = DbFunctions.TruncateTime(g) ?? endDate,
+                    date = g.Date,
                     totalSignins = signins.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
-                    uniqueSignins = unique.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
+                    uniqueSignins = unique.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0, //dd
                     dispatched = workers.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
-                    tempDispatched = workers.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.tempCount).First() ?? 0,
-                    undupDispatched = workers.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.undupCount).First() ?? 0,
-                    permanentPlacements = workers.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.permCount).First() ?? 0,
+                    tempDispatched = workers.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.tempCount).First() ?? 0, //dd
+                    permanentPlacements = workers.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.permCount).First() ?? 0, //dd
+                    undupDispatched = workers.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.undupCount).First() ?? 0, //dd
                     totalHours = average.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.hours).First(),
                     totalIncome = average.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.wages).First(),
                     avgIncomePerHour = average.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.avg).First(),
-                    newlyEnrolled = newPpl.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
-                    peopleWhoLeft = pplLeft.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
+                    stillHere = status.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
+                    newlyEnrolled = status.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0, //dd
+                    peopleWhoLeft = status.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0, //dd
                     peopleWhoWentToClass = getAllClassAttendance.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
-                    peopleWhoStayed = pplStay,
                 });
 
             q = q.OrderBy(p => p.date);
@@ -1183,6 +1115,7 @@ namespace Machete.Service
             var result = dispatch.Select(g => new TypeOfDispatchReport
                 {
                     date = g.date,
+                    count = g.count,
                     dwcList = dispatch.Where(whr => whr.date == DbFunctions.TruncateTime(g.date)).Select(h => h.dwcList).First(),
                     hhhList = dispatch.Where(whr => whr.date == DbFunctions.TruncateTime(g.date)).Select(h => h.hhhList).First(),
                     dwcPropio = dispatch.Where(whr => whr.date == DbFunctions.TruncateTime(g.date)).Select(h => h.dwcPropio).First(),
@@ -1379,6 +1312,12 @@ namespace Machete.Service
         public int minutesInClass { get; set; }
     }
 
+    public class statusUnit : reportUnit
+    {
+        public int? expiredOnDate { get; set; }
+        public int? enrolledOnDate { get; set; }
+    }
+
     public class placementUnit : reportUnit
     {
         public int? undupCount { get; set; }
@@ -1429,19 +1368,19 @@ namespace Machete.Service
     /// </summary>
     public class monthlyData
     {
-        public DateTime? date { get; set; }
+        public DateTime date { get; set; }
         public int totalSignins { get; set; }
         public int uniqueSignins { get; set; }
         public int dispatched { get; set; }
-        public int undupDispatched { get; set; }
         public int tempDispatched { get; set; }
         public int permanentPlacements { get; set; }
+        public int undupDispatched { get; set; }
         public int totalHours { get; set; }
         public double totalIncome { get; set; }
         public double avgIncomePerHour { get; set; }
+        public int stillHere { get; set; }
         public int newlyEnrolled { get; set; }
         public int peopleWhoLeft { get; set; }
-        public IEnumerable<reportUnit> peopleWhoStayed { get; set; }
         public int peopleWhoWentToClass { get; set; }
     }
 

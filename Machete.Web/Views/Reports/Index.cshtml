@@ -10,14 +10,10 @@
 <div id="reportTabs">
     <ul>
         <li><a href="#summaryWrapper" id="summaryTab" >@Machete.Web.Resources.Reports.summaryTab</a> </li>
-        <li><a href="#ordersWrapper" id="ordersTab">@Machete.Web.Resources.Reports.ordersTab</a></li>
-        <li><a href="#workersWrapper" id="workersTab">@Machete.Web.Resources.Reports.workersTab</a></li>
         <li><a href="#ssrsWrapper" id="ssrsTab">@Machete.Web.Resources.Reports.ssrsTab</a> </li>
     </ul>
 
     @Html.Partial("Summary")
-    @Html.Partial("Orders")
-    @Html.Partial("Workers")
     @Html.Partial("SSRS")
 </div>
 
@@ -34,9 +30,6 @@
         var oDclTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxDcl", lang, $('#dclDate').val()));
         var oWecTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxWec", lang, $('#wecDate').val()));
         var oMwdTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxMwd", lang, $('#dclDate').val()));
-        var oYearTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxYear", lang, $('#yearDate').val()));
-        var oJzcTable = $.extend(true, {}, reportTableDefaults("/Reports/AjazJzc", lang, $('#jzcDate').val()));
-        var oNewTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxNewWkr", lang, $('#newDate').val()));
 
         oDclTable.aoColumns = [
             { mDataProp: "date" },
@@ -66,54 +59,22 @@
 
         oMwdTable.aoColumns = [
             { mDataProp: "date" },
+            { mDataProp: "activeMembers" },
             { mDataProp: "totalSignins" },
-            { mDataProp: "uniqueSignins" },
-            { mDataProp: "dispatchedDWCList" },
-            { mDataProp: "dispatchedHHHList" },
-            { mDataProp: "dispatchedDWCPropio" },
-            { mDataProp: "dispatchedHHHPropio" },
+            { mDataProp: "wentToClass" },
+            { mDataProp: "dispatched" },
             { mDataProp: "totalHours" },
             { mDataProp: "totalIncome" },
             { mDataProp: "avgIncomePerHour" },
-        ];
-
-        oYearTable.aoColumns = [
-                { mDataProp: "date" },
-                { mDataProp: "tempJobs" },
-                { mDataProp: "safetyTraining" },
-                { mDataProp: "skillsTraining" },
-                { mDataProp: "eslAssessed" },
-                { mDataProp: "basicGarden" },
-                { mDataProp: "advGarden" },
-                { mDataProp: "finEd" },
-                {
-                    mDataProp: null,
-                    sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="nestedDetailsButton">'
-                },
-        ];
-
-        oJzcTable.aoColumns = [
-            { mDataProp: "date" },
-            { mDataProp: "topZips" },
-            { mDataProp: "topZipsCount" },
-            { mDataProp: "topJobs" },
-            { mDataProp: "topJobsCount" }
-        ];
-
-        oNewTable.aoColumns = [
-            { mDataProp: "date" },
-            { mDataProp: "singles" },
-            { mDataProp: "families" },
-            { mDataProp: "newSingles" },
-            { mDataProp: "newFamilies" }
+            {
+                mDataProp: null,
+                sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="nestedDetailsButton">'
+            }
         ];
 
         var dcl = $('#dclDataTable').dataTable(oDclTable);
         var wec = $('#wecDataTable').dataTable(oWecTable);
         var mwd = $('#mwdDataTable').dataTable(oMwdTable);
-        var year = $('#yearDataTable').dataTable(oYearTable);
-        var jzc = $('#jzcDataTable').dataTable(oJzcTable);
-        var newT = $('#newDataTable').dataTable(oNewTable);
 
         //
         // hide stuff 
@@ -122,33 +83,14 @@
             function () {
                 $('#summaryPopup').hide();
             });
-        $('#orderHide').click(
-
-            function () {
-                $('#ordersPopup').hide();
-            }
-
-        );
-
-        $('#workerHide').click(
-            function () {
-                $('#workersPopup').hide();
-            }
-        );
 
         $('#dclHelp').hide();
         $('#wecHelp').hide();
         $('#mwdHelp').hide();
-        $('#yearHelp').hide();
-        $('#jzcHelp').hide();
-        $('#newHelp').hide();
 
         $('#dclTable').hide();
         $('#wecTable').hide();
         $('#mwdTable').hide();
-        $('#yearTable').hide();
-        $('#jzcTable').hide();
-        $('#newTable').hide();
 
 
         //
@@ -156,7 +98,7 @@
         //
         $('#reportTabs').tabs();
 
-        $('#ssrsReports').button();
+        //$('#ssrsReports').button();
 
         $('.formButton').button();
 
@@ -166,19 +108,7 @@
             active: false,
             autoHeight: false
         });
-
-        $('#ordersReports').accordion({
-            collapsible: true,
-            active: false,
-            autoHeight: false
-        });
-
-        $('#workersReports').accordion({
-            collapsible: true,
-            active: false,
-            autoHeight: false
-        });
-
+        
         ////////////////////// | the date-pickerers |
 
         //
@@ -269,118 +199,10 @@
                 mwdNewTable();
             });
 
-        //
-        // Yearly datepickerer
-        //
-
-        $('.ui-year-datepicker').hover(
-            function () {
-                $('#yearHelp').show("fade", 2200);
-            },
-            function () {
-                $('#yearHelp').hide("fade", 2200);
-            });
-
-        $('.ui-year-datepicker').datepicker({
-            autoSize: true,
-            changeMonth: true,
-            changeYear: true,
-            constrainInput: true,
-            dateFormat: 'mm/dd/yy',
-            duration: "slow",
-            showButtonPanel: false,
-            showOn: "focus"
-        });
-
-        $('.ui-year-datepicker').change(
-            function (event) {
-                yearNewTable();
-            });
-
-        //
-        // Jobs and Zip Codes datepickerer
-        //
-
-        $('.ui-jzc-datepicker').datepicker({
-            autoSize: true,
-            changeMonth: true,
-            changeYear: true,
-            constrainInput: true,
-            dateFormat: 'mm/dd/yy',
-            duration: "slow",
-            showButtonPanel: false,
-            showOn: "focus"
-        });
-
-        $('.ui-jzc-datepicker').hover(
-            function () {
-                $('#jzcHelp').show("fade", 1100);
-            },
-            function () {
-                $('#jzcHelp').hide("fade", 1100);
-            });
-
-        $('.ui-jzc-datepicker').change(
-        function (event) {
-            jzcNewTable();
-        });
-
-        //
-        // New Workers datepickerer
-        //
-
-        $('.ui-new-datepicker').datepicker({
-            autoSize: true,
-            changeMonth: true,
-            changeYear: true,
-            constrainInput: true,
-            dateFormat: 'mm/dd/yy',
-            duration: "slow",
-            showButtonPanel: false,
-            showOn: "focus"
-        });
-
-        $('.ui-new-datepicker').hover(
-            function () {
-                $('#jzcHelp').show("fade", 1100);
-            },
-            function () {
-                $('#jzcHelp').hide("fade", 1100);
-            });
-
-        $('.ui-new-datepicker').change(
-        function (event) {
-            newNewTable();
-        });
-
         //////////////////////////////////////////////////////////////////////// | DATATABLES |
         //
         // Looking for the table properties? Try reports.js in ~/Web/Scripts
         //
-
-        $('#dclLink').click(function () {
-            dclNewTable();
-        });
-
-        $('#wecLink').click(function () {
-            wecNewTable();
-        });
-
-        $('#mwdLink').click(function () {
-            mwdNewTable();
-        });
-
-        $('#yearLink').click(function () {
-            yearNewTable();
-        });
-
-        $('#jzcLink').click(function () {
-            jzcNewTable();
-        });
-
-        $('#newLink').click(function () {
-            newNewTable();
-        });
 
         function dclNewTable() {
             oDclTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxDcl", lang, $('#dclDate').val()));
@@ -396,8 +218,8 @@
                 { mDataProp: "cancelledJobs" },
             ];
             oDclTable.bDestroy = "true,";
-            $('#dclDataTable').dataTable(dclOptions).fnReloadAjax();
-            dailyPie();
+            $('#dclDataTable').dataTable(oDclTable).fnReloadAjax();
+            //dailyPie();
         }
 
         function wecNewTable() {
@@ -423,66 +245,22 @@
             oMwdTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxMwd", lang, $('#mwdDate').val()));
             oMwdTable.aoColumns = [
                 { mDataProp: "date" },
+                { mDataProp: "activeMembers"},
                 { mDataProp: "totalSignins" },
-                { mDataProp: "uniqueSignins" },
-                { mDataProp: "dispatchedDWCList" },
-                { mDataProp: "dispatchedHHHList" },
-                { mDataProp: "dispatchedDWCPropio" },
-                { mDataProp: "dispatchedHHHPropio" },
+                { mDataProp: "wentToClass"},
+                { mDataProp: "dispatched"},
                 { mDataProp: "totalHours" },
                 { mDataProp: "totalIncome" },
                 { mDataProp: "avgIncomePerHour" },
+                { 
+                    mDataProp: null,
+                    sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="nestedDetailsButton">'
+                }
             ];
             oMwdTable.bDestroy = true;
-            $('#mwdDataTable').dataTable(mwdOptions).fnReloadAjax();
-            monthlyPie();
+            $('#mwdDataTable').dataTable(oMwdTable).fnReloadAjax();
+            @*monthlyPie();*@
         }
-
-        function yearNewTable() {
-            oYearTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxYear", lang, $('#yearDate').val()));
-            oYearTable.aoColumns = [
-                    { mDataProp: "date" },
-                    { mDataProp: "tempJobs" },
-                    { mDataProp: "safetyTraining" },
-                    { mDataProp: "skillsTraining" },
-                    { mDataProp: "eslAssessed" },
-                    { mDataProp: "basicGarden" },
-                    { mDataProp: "advGarden" },
-                    { mDataProp: "finEd" },
-                    {
-                        mDataProp: null,
-                        sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="nestedDetailsButton">'
-                    },
-            ];
-            oYearTable.bDestroy = true;
-            $('#yearDataTable').dataTable(yearOptions).fnReloadAjax();
-        }
-
-        function jzcNewTable() {
-            oJzcTable = $.extend(true, {}, reportTableDefaults(lang, $('#jzcDate').val()));
-            oJzcTable.aoColumns = [
-                { mDataProp: "date" },
-                { mDataProp: "topZips" },
-                { mDataProp: "topZipsCount" },
-                { mDataProp: "topJobs" },
-                { mDataProp: "topJobsCount" }
-            ];
-            oJzcTable.bDestroy = true;
-            $('#jzcDataTable').dataTable(jzcNewTable).fnReloadAjax();
-        };
-
-        function newNewTable() {
-            oNewTable = $.extend(true, {}, reportTableDefaults(lang, $('#newDate').val()));
-            oNewTable.aoColumns = [
-                { mDataProp: "date" },
-                { mDataProp: "singles" },
-                { mDataProp: "families" },
-                { mDataProp: "newSingles" },
-                { mDataProp: "newFamilies" }
-            ];
-            oNewTable.bDestroy = true;
-            $('#newDataTable').dataTable(newNewTable).fnReloadAjax();
-        };
 
         ////////////////////////////////////////////////////////////// | DRILLDOWNS |
         ////////////////////////////////////////////////////////////// | [+] [-]... |
@@ -522,44 +300,44 @@
         });
 
         //
-        // YEARLY
+        // MONTHLY
         //
 
-        function fnFormatYearDetails(oTable, nTr) {
+        function fnFormatMonthDetails(oTable, nTr) {
             var aData = oTable.fnGetData(nTr);
             var drillList = aData.drilldown;
             var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="margin-left: 13.5%;background: #90A2B6;border: solid 2px gray;border-collapse: separate;">';
-            sOut += '<thead><tr><th>Date</th>';
-            sOut += '<th>OSHA</th>';
-            sOut += '<th>Chemicals</th>';
-            sOut += '<th>Moving</th>';
-            sOut += '<th>Caregiving</th>';
-            sOut += '<th>Heat</th>';
-            sOut += '<th>Asbestos</th>';
-            sOut += '<th>Computers</th>';
-            sOut += '<th>Green Clean</th>';
-            sOut += '<th>MSF</th>';
-            sOut += '<th>Assembly</th>';
+            sOut += '<thead><tr><th>Enrolled</th>';
+            sOut += '<th>Exited</th>';
+            sOut += '<th>Unique Signin</th>';
+            sOut += '<th>Temporary</th>';
+            sOut += '<th>Permanent</th>';
+            sOut += '<th>Unique Dispatch</th>';
             sOut += '</tr></thead><tbody>';
             for (var i in drillList) {
-                var job = drillList[i];
-                sOut += '<tr><td>' + job.date + '</td><td>' + job.osha + '</td><td>' + job.chem + '</td><td>' + job.moving + '</td><td>' + job.care + '</td><td>' + job.heat + '</td><td>' + job.asbestos + '</td><td>' + job.computers + '</td><td>' + job.greenclean + '</td><td>' + job.msf + '</td><td>' + job.assembly + '</td></tr>';
+                var item = drillList[i];
+                sOut += '<tr><td>' + item.newlyEnrolled + '</td><td>'
+                    + item.peopleWhoLeft + '</td><td>'
+                    + item.uniqueSignins + '</td></tr>'
+                    + item.tempDispatched + '</td></tr>'
+                    + item.permanentPlacements + '</td></tr>'
+                    + item.undupDispatched + '</td></tr>';
             }
             sOut += '</tbody></table>';
             return sOut;
         }
 
-        $('#yearDataTable tbody td img').live('click', function () {
+        $('#mwdDataTable tbody td img').live('click', function () {
             var nTr = $(this).parents('tr')[0];
 
-            if (year.fnIsOpen(nTr)) {
+            if (mwd.fnIsOpen(nTr)) {
                 /* This row is already open - close it */
                 this.src = "/Content/dataTables/details_open.png";
-                year.fnClose(nTr);
+                mwd.fnClose(nTr);
             } else {
                 /* Open this row */
                 this.src = "/Content/dataTables/details_close.png";
-                year.fnOpen(nTr, fnFormatYearDetails(year, nTr), 'nestedDetails');
+                mwd.fnOpen(nTr, fnFormatMonthDetails(mwd, nTr), 'nestedDetails');
             }
         });
 
@@ -584,178 +362,15 @@
                 mwdNewTable();
             });
 
-        $('#yearRefreshBtn').click(
-            function () {
-                yearNewTable();
-            });
-
-        $('#jzcDataRefreshBtn').click(
-            function () {
-                jzcNewTable();
-            }
-        );
-
-        $('#newDataRefreshBtn').click(
-            function () {
-                newNewTable();
-            }
-        );
-
-
         // | PRINT VIEWS |
 
-        $('#dclPrintReport').click(
-            function () {
-                window.open('/Reports/PrintView?date=' + $('#dclDate').val() + '&typeOfReport=daily');
-            });
 
-        $('#wecPrintReport').click(
-            function () {
-                window.open('/Reports/PrintView?date=' + $('#wecDate').val() + '&typeOfReport=weekly');
-            });
-
-        $('#mwdPrintReport').click(
-            function () {
-                window.open('/Reports/PrintView?date=' + $('#mwdDate').val() + '&typeOfReport=monthly');
-            });
-
-        $('#yearPrintReport').click(
-           function () {
-               window.open('/Reports/PrintView?date=' + $('#yearDate').val() + '&typeOfReport=yearly');
-           });
-
-        $('#jzcPrint').click(
-            function () {
-                window.open('/Reports/PrintView?date=' + $('#jzcDate').val() + '&typeOfReport=jobsandzips');
-            });
-
-        $('#newPrint').click(
-           function () {
-               window.open('/Reports/PrintView?date=' + $('#newDate').val() + '&typeOfReport=newworkers');
-           }
-        );
 
         // | SPREADSHEETS |
-
-        $('#dclSpreadsheet').click(function () {
-            var url = "/Reports/AjaxDcl";
-            var data = { todaysdate: $('#dclDate').val() };
-            $.getJSON(url, data, function (ajax) {
-                var jstring = JSON.stringify(ajax.aaData);
-                var jcsv = json2spreadsheet(jstring);
-                download(jcsv, "reports.csv", "text/csv");
-            });
-        });
-
-        $('#wecSpreadsheet').click(function () {
-            var url = "/Reports/AjaxWec";
-            var data = { todaysdate: $('#wecDate').val() };
-            $.getJSON(url, data, function (ajax) {
-                var jstring = JSON.stringify(ajax.aaData);
-                var jcsv = json2spreadsheet(jstring);
-                download(jcsv, "reports.csv", "text/csv");
-            });
-        });
-
-        $('#mwdSpreadsheet').click(function () {
-            var url = "/Reports/AjaxMwd";
-            var data = { todaysdate: $('#mwdDate').val() };
-            $.getJSON(url, data, function (ajax) {
-                var jstring = JSON.stringify(ajax.aaData);
-                var jcsv = json2spreadsheet(jstring);
-                download(jcsv, "reports.csv", "text/csv");
-            });
-        });
-
-        $('#yearSpreadsheet').click(function () {
-            var url = "/Reports/AjaxYear";
-            var data = { todaysdate: $('#yearDate').val() };
-            $.getJSON(url, data, function (ajax) {
-                var jstring = JSON.stringify(ajax.aaData);
-                var jcsv = json2spreadsheet(jstring);
-                download(jcsv, "reports.csv", "text/csv");
-            });
-        });
-
-        $('#jzcSpreadsheet').click(function () {
-            var url = "/Reports/AjaxJobsZipCodes";
-            var data = { todaysdate: $('#jzcDate').val() };
-            $.getJSON(url, data, function (ajax) {
-                var jstring = JSON.stringify(ajax.aaData);
-                var jcsv = json2spreadsheet(jstring);
-                download(jcsv, "reports.csv", "text/csv");
-            });
-        });
-
-        $('#newSpreadsheet').click(function () {
-            var url = "/Reports/AjaxNewWkrWorkers";
-            var data = { todaysdate: $('#newDate').val() };
-            $.getJSON(url, data, function (ajax) {
-                var jstring = JSON.stringify(ajax.aaData);
-                var jcsv = json2spreadsheet(jstring);
-                download(jcsv, "reports.csv", "text/csv");
-            });
-        });
 
         //
         // ||| PIE CHARTS |||
         //
-        function dailyPie() {
-            $('#dailyPieChart1').empty();
-            $('#dailyPieChart2').empty();
-            var pieFill1;
-            var pieFill2;
-            var ajaxUrl = "/Reports/AjaxDcl";
-            var ajaxData = { todaysdate: $('#dclDate').val() };
-            $.getJSON(ajaxUrl, ajaxData, function (ajax) {
-                pieFill1 = dailySigninPie(ajax);
-                pieFill2 = gotWorkPie(ajax);
-                var plot1 = $.jqplot('dailyPieChart1', [pieFill1],
-                      {
-                          seriesDefaults: {
-                              renderer: $.jqplot.PieRenderer,
-                              rendererOptions: {
-                                  showDataLabels: true
-                              }
-                          },
-                          legend: { show: true, location: 'e' }
-                      }
-                    );
-                var plot2 = $.jqplot('dailyPieChart2', [pieFill2],
-                    {
-                        seriesDefaults: {
-                            renderer: $.jqplot.PieRenderer,
-                            rendererOptions: {
-                                showDataLabels: true
-                            }
-                        },
-                        legend: { show: true, location: 'e' }
-                    }
-                    );
-            });
-        }
 
-        function monthlyPie() {
-            $('#monthlyPieChart1').empty();
-            var pieFill1;
-            var ajaxUrl = "/Reports/AjaxMwd";
-            var ajaxData = { todaysdate: $('#mwdDate').val() };
-            $.getJSON(ajaxUrl, ajaxData, function (ajax) {
-                pieFill1 = monthlySigninPie(ajax);//[['Heavy Industry',12],['Retail',9],['Light Industry',14],['Out of home',16],['Commuting',7],['Orientation',9]];//'[[\'Fuck\',1][\'You\',4]]';//
-                var plot1 = $.jqplot('monthlyPieChart1', [pieFill1],
-                      {
-                          seriesDefaults: {
-                              renderer: $.jqplot.PieRenderer,
-                              rendererOptions: {
-                                  showDataLabels: true
-                              }
-                          },
-                          legend: { show: true, location: 'e' }
-                      }
-                    );
-            });
-        }
-
-        //Not sure yet if quarterly and yearly will have a pie chart or some other graphic.
     });
 </script>
