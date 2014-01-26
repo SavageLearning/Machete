@@ -133,7 +133,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DWC Dispatched.
+        ///   Looks up a localized string similar to Labor Dispatch.
         /// </summary>
         public static string dwcDispatch {
             get {
@@ -142,7 +142,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DWC Future.
+        ///   Looks up a localized string similar to Labor Pending.
         /// </summary>
         public static string dwcFuture {
             get {
@@ -151,7 +151,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DWC List.
+        ///   Looks up a localized string similar to Labor (List).
         /// </summary>
         public static string dwcList {
             get {
@@ -160,7 +160,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DWC Requested.
+        ///   Looks up a localized string similar to Labor (Personal Req.).
         /// </summary>
         public static string dwcPropio {
             get {
@@ -169,7 +169,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DWC Req. (Fut.).
+        ///   Looks up a localized string similar to Labor Req. Fut..
         /// </summary>
         public static string dwcPropioFuture {
             get {
@@ -178,7 +178,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DWC Signins.
+        ///   Looks up a localized string similar to Labor Signins.
         /// </summary>
         public static string dwcSignins {
             get {
@@ -223,7 +223,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to HHH Dispatched.
+        ///   Looks up a localized string similar to Domestic Dispatched.
         /// </summary>
         public static string hhhDispatch {
             get {
@@ -232,7 +232,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to HHH Future.
+        ///   Looks up a localized string similar to Domestic Future.
         /// </summary>
         public static string hhhFuture {
             get {
@@ -241,7 +241,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to HHH List.
+        ///   Looks up a localized string similar to Domestic (List).
         /// </summary>
         public static string hhhList {
             get {
@@ -250,7 +250,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to HHH Requested.
+        ///   Looks up a localized string similar to Domestic (Req.).
         /// </summary>
         public static string hhhPropio {
             get {
@@ -259,7 +259,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to HHH Req. (Fut.).
+        ///   Looks up a localized string similar to Domestic Req. Future.
         /// </summary>
         public static string hhhPropioFuture {
             get {
@@ -268,7 +268,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to HHH Signins.
+        ///   Looks up a localized string similar to Domestic Signins.
         /// </summary>
         public static string hhhSignins {
             get {
@@ -453,6 +453,15 @@ namespace Machete.Web.Resources {
         public static string totalSignins {
             get {
                 return ResourceManager.GetString("totalSignins", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unique.
+        /// </summary>
+        public static string unique {
+            get {
+                return ResourceManager.GetString("unique", resourceCulture);
             }
         }
         
