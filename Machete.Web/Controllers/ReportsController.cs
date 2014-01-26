@@ -348,14 +348,9 @@ namespace Machete.Web.Controllers
         // TODO: These are views, should contain no operating logic, and ideally would not be at the MVC layer....
         public dataTableResult<dailyData> DailyView(DateTime date)
         {
-            DateTime beginDate;
-            DateTime endDate;
             IEnumerable<dailyData> query;
 
-            beginDate = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
-            endDate = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);//.AddDays(DateTime.DaysInMonth(date.Year, date.Month + 1));
-
-            query = repServ.DailyController(beginDate, endDate);
+            query = repServ.DailyController(date);
 
             var result = GetDataTableResult<dailyData>(query);
 

@@ -23,7 +23,7 @@ namespace Machete.Service
     #region public class ReportService (Interface and Constructor)
     public interface IReportService
     {
-        IEnumerable<dailyData> DailyController(DateTime beginDate, DateTime endDate);
+        IEnumerable<dailyData> DailyController(DateTime date);
         IEnumerable<weeklyData> WeeklyController(DateTime beginDate, DateTime endDate);
         IEnumerable<monthlyData> MonthlySummaryController(DateTime beginDate, DateTime endDate);
         IEnumerable<TypeOfDispatchReport> MonthlyOrderController(DateTime beginDate, DateTime endDate);
@@ -76,9 +76,6 @@ namespace Machete.Service
             IQueryable<reportUnit> query;
             var wsiQ = wsiRepo.GetAllQ();
 
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
-
             query = wsiQ
                 .Where(whr => whr.dateforsignin >= beginDate
                            && whr.dateforsignin <= endDate)
@@ -105,9 +102,6 @@ namespace Machete.Service
         {
             IQueryable<reportUnit> query;
             var wsiQ = wsiRepo.GetAllQ();
-
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
             query = wsiQ
                 .Where(whr => whr.dateforsignin <= endDate)
@@ -139,8 +133,6 @@ namespace Machete.Service
             IQueryable<reportUnit> query;
             var waQ = waRepo.GetAllQ();
 
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
             query = waQ
                 .Where(whr => DbFunctions.TruncateTime(whr.workOrder.dateTimeofWork) >= beginDate
@@ -167,8 +159,6 @@ namespace Machete.Service
             IQueryable<reportUnit> query;
             var woQ = woRepo.GetAllQ();
 
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
             query = woQ.Where(whr => DbFunctions.TruncateTime(whr.dateTimeofWork) == beginDate
                                   && whr.status == WorkOrder.iCancelled)
@@ -198,8 +188,6 @@ namespace Machete.Service
             var loD = lookCache.getByKeys("worktype", "DWC");
             var loH = lookCache.getByKeys("worktype", "HHH");
 
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
             query = waQ
                 .GroupJoin(wrQ,
@@ -246,8 +234,6 @@ namespace Machete.Service
             var wsiQ = wsiRepo.GetAllQ();
 
             //ensure we are getting all relevant times (no assumptions)
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
             query = waQ
                 .Join(woQ,
@@ -357,8 +343,6 @@ namespace Machete.Service
         {
             IQueryable<placementUnit> query;
 
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
             var waQ = waRepo.GetAllQ();
 
@@ -418,8 +402,6 @@ namespace Machete.Service
         {
             IQueryable<activityUnit> query;
 
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
             var asQ = asRepo.GetAllQ();
             var lQ = lookRepo.GetAllQ();
@@ -468,8 +450,6 @@ namespace Machete.Service
         {
             IQueryable<ESLAssessed> query;
 
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
             var wQ = wRepo.GetAllQ();
             var asQ = asRepo.GetAllQ();
@@ -522,31 +502,21 @@ namespace Machete.Service
         {
             IQueryable<statusUnit> query;
 
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
-
-            //IEnumerable<DateTime> dates = Enumerable.Range(0, 1 + endDate.Subtract(beginDate).Days)
-            //    .Select(offset => beginDate.AddDays(offset))
-            //    .ToArray();
-
-            var dates = new List<DateTime>();
-            for (var dt = beginDate; dt <= endDate; dt.AddDays(1))
-                dates.Add(dt);
-
             var wQ = wRepo.GetAllQ();
 
+            var dates = Enumerable
+                .Range(0, 1 + endDate.Subtract(beginDate).Days)
+                .Select(n => beginDate.AddDays(n));
+
             query = dates
-                .Select(x => new statusUnit
-                    {
-                        date = DbFunctions.TruncateTime(x),
-                        enrolledOnDate = wQ.Where(whr => DbFunctions.TruncateTime(whr.dateOfMembership) == DbFunctions.TruncateTime(x)).Count(),
-                        expiredOnDate = wQ.Where(whr => DbFunctions.TruncateTime(whr.memberexpirationdate) == DbFunctions.TruncateTime(x)).Count(),
-                        count = wQ.Where(whr => DbFunctions.TruncateTime(whr.dateOfMembership) < DbFunctions.TruncateTime(x)
-                                && DbFunctions.TruncateTime(whr.memberexpirationdate) > DbFunctions.TruncateTime(x)
-                                && whr.isActive)
-                                .Count()
-                    })
-                .AsQueryable();
+                        .Select(x => new statusUnit
+                            {
+                                date = x,
+                                count = wQ.Where(y => y.dateOfMembership < x && y.memberexpirationdate > x).Count(),
+                                enrolledOnDate = wQ.Where(y => y.dateOfMembership == x).Count(),
+                                expiredOnDate = wQ.Where(y => y.memberexpirationdate == x).Count()
+                            })
+                        .AsQueryable();
 
             return query;
         }
@@ -595,8 +565,6 @@ namespace Machete.Service
         {
             IQueryable<reportUnit> query;
 
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
             var lQ = lookRepo.GetAllQ();
             var wQ = wRepo.GetAllQ();
@@ -641,9 +609,6 @@ namespace Machete.Service
         public IQueryable<reportUnit> NewlyEnrolledFamilyHouseholds(DateTime beginDate, DateTime endDate)
         {
             IQueryable<reportUnit> query;
-
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
             var lQ = lookRepo.GetAllQ();
             var wQ = wRepo.GetAllQ();
@@ -700,8 +665,6 @@ namespace Machete.Service
         {
             IQueryable<reportUnit> query;
 
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
             var wQ = wRepo.GetAllQ();
 
@@ -723,8 +686,6 @@ namespace Machete.Service
         {
             IQueryable<reportUnit> query;
 
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
             var wQ = wRepo.GetAllQ();
 
@@ -744,8 +705,6 @@ namespace Machete.Service
         {
             IQueryable<reportUnit> query;
 
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
             var wQ = wRepo.GetAllQ();
             var lQ = lookRepo.GetAllQ();
@@ -779,8 +738,6 @@ namespace Machete.Service
         {
             IQueryable<reportUnit> query;
 
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
             var wQ = wRepo.GetAllQ();
             var lQ = lookRepo.GetAllQ();
@@ -812,8 +769,6 @@ namespace Machete.Service
         {
             IQueryable<reportUnit> query;
 
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
             var wQ = wRepo.GetAllQ();
 
@@ -848,8 +803,6 @@ namespace Machete.Service
         {
             IQueryable<reportUnit> query;
 
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
             var wQ = wRepo.GetAllQ();
             var lQ = lookRepo.GetAllQ();
@@ -873,8 +826,6 @@ namespace Machete.Service
         {
             IQueryable<reportUnit> query;
 
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
             var wQ = wRepo.GetAllQ();
 
@@ -894,8 +845,6 @@ namespace Machete.Service
         {
             IQueryable<reportUnit> query;
 
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
             var wQ = wRepo.GetAllQ();
             var lQ = lookRepo.GetAllQ();
@@ -924,8 +873,6 @@ namespace Machete.Service
         {
             IQueryable<reportUnit> query;
 
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
             var wQ = wRepo.GetAllQ();
             var lQ = lookRepo.GetAllQ();
@@ -946,8 +893,6 @@ namespace Machete.Service
         {
             IQueryable<reportUnit> query;
 
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-            endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
             var wQ = wRepo.GetAllQ();
 
@@ -974,7 +919,7 @@ namespace Machete.Service
         /// <param name="beginDate"></param>
         /// <param name="endDate"></param>
         /// <returns></returns>
-        public IEnumerable<dailyData> DailyController(DateTime beginDate, DateTime endDate)
+        public IEnumerable<dailyData> DailyController(DateTime date)
         {
             IEnumerable<TypeOfDispatchReport> dclCurrent;
             IEnumerable<reportUnit> dailySignins;
@@ -982,6 +927,9 @@ namespace Machete.Service
             IEnumerable<reportUnit> dailyAssignments;
             IEnumerable<reportUnit> dailyCancelled;
             IEnumerable<dailyData> q;
+
+            DateTime beginDate = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
+            DateTime endDate = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
 
             dclCurrent = CountTypeofDispatch(beginDate, endDate).ToList();
             dailySignins = CountSignins(beginDate, endDate).ToList();
@@ -1049,11 +997,10 @@ namespace Machete.Service
         {
             IEnumerable<reportUnit> signins;
             IEnumerable<reportUnit> unique;
+            IEnumerable<activityUnit> classes;
+            IEnumerable<placementUnit> workers;
             IEnumerable<AverageWages> average;
             IEnumerable<statusUnit> status;
-            IEnumerable<placementUnit> workers;
-
-            IEnumerable<activityUnit> getAllClassAttendance;
 
             IEnumerable<monthlyData> q; 
 
@@ -1061,9 +1008,9 @@ namespace Machete.Service
                     .Select(offset => beginDate.AddDays(offset))
                     .ToArray();
 
-            getAllClassAttendance = GetAllActivitySignins(beginDate, endDate).ToList();
             signins = CountSignins(beginDate, endDate).ToList();
             unique = CountUniqueSignins(beginDate, endDate).ToList();
+            classes = GetAllActivitySignins(beginDate, endDate).ToList();
             workers = WorkersInJobs(beginDate, endDate).ToList();
             average = HourlyWageAverage(beginDate, endDate).ToList();
             status = MemberStatusByDate(beginDate, endDate).ToList();
@@ -1071,20 +1018,20 @@ namespace Machete.Service
             q = getAllDates
                 .Select(g => new monthlyData
                 {
-                    date = g.Date,
-                    totalSignins = signins.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault() ?? 0,
-                    uniqueSignins = unique.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault() ?? 0, //dd
-                    dispatched = workers.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault() ?? 0,
-                    tempDispatched = workers.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.tempCount).FirstOrDefault() ?? 0, //dd
-                    permanentPlacements = workers.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.permCount).FirstOrDefault() ?? 0, //dd
-                    undupDispatched = workers.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.undupCount).FirstOrDefault() ?? 0, //dd
-                    totalHours = average.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.hours).FirstOrDefault(),
-                    totalIncome = average.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.wages).FirstOrDefault(),
-                    avgIncomePerHour = average.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.avg).FirstOrDefault(),
-                    stillHere = status.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault() ?? 0,
-                    newlyEnrolled = status.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault() ?? 0, //dd
-                    peopleWhoLeft = status.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault() ?? 0, //dd
-                    peopleWhoWentToClass = getAllClassAttendance.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault() ?? 0,
+                    date = g,
+                    totalSignins = signins.Where(whr => whr.date == g).Select(h => h.count).FirstOrDefault() ?? 0,
+                    uniqueSignins = unique.Where(whr => whr.date == g).Select(h => h.count).FirstOrDefault() ?? 0, //dd
+                    peopleWhoWentToClass = classes.Where(whr => whr.date == g).Select(h => h.count).FirstOrDefault() ?? 0,
+                    dispatched = workers.Where(whr => whr.date == g).Select(h => h.count).FirstOrDefault() ?? 0,
+                    tempDispatched = workers.Where(whr => whr.date == g).Select(h => h.tempCount).FirstOrDefault() ?? 0, //dd
+                    permanentPlacements = workers.Where(whr => whr.date == g).Select(h => h.permCount).FirstOrDefault() ?? 0, //dd
+                    undupDispatched = workers.Where(whr => whr.date == g).Select(h => h.undupCount).FirstOrDefault() ?? 0, //dd
+                    totalHours = average.Where(whr => whr.date == g).Select(h => h.hours).FirstOrDefault(),
+                    totalIncome = average.Where(whr => whr.date == g).Select(h => h.wages).FirstOrDefault(),
+                    avgIncomePerHour = average.Where(whr => whr.date == g).Select(h => h.avg).FirstOrDefault(),
+                    stillHere = status.Where(whr => whr.date == g).Select(h => h.count).FirstOrDefault() ?? 0,
+                    newlyEnrolled = status.Where(whr => whr.date == g).Select(h => h.enrolledOnDate).FirstOrDefault() ?? 0, //dd
+                    peopleWhoLeft = status.Where(whr => whr.date == g).Select(h => h.expiredOnDate).FirstOrDefault() ?? 0 //dd
                 });
 
             q = q.OrderBy(p => p.date);
@@ -1102,10 +1049,10 @@ namespace Machete.Service
                 {
                     date = g.date,
                     count = g.count,
-                    dwcList = dispatch.Where(whr => whr.date == DbFunctions.TruncateTime(g.date)).Select(h => h.dwcList).First(),
-                    hhhList = dispatch.Where(whr => whr.date == DbFunctions.TruncateTime(g.date)).Select(h => h.hhhList).First(),
-                    dwcPropio = dispatch.Where(whr => whr.date == DbFunctions.TruncateTime(g.date)).Select(h => h.dwcPropio).First(),
-                    hhhPropio = dispatch.Where(whr => whr.date == DbFunctions.TruncateTime(g.date)).Select(h => h.hhhPropio).First(),
+                    dwcList = dispatch.Where(whr => whr.date == g.date).Select(h => h.dwcList).FirstOrDefault(),
+                    hhhList = dispatch.Where(whr => whr.date == g.date).Select(h => h.hhhList).FirstOrDefault(),
+                    dwcPropio = dispatch.Where(whr => whr.date == g.date).Select(h => h.dwcPropio).FirstOrDefault(),
+                    hhhPropio = dispatch.Where(whr => whr.date == g.date).Select(h => h.hhhPropio).FirstOrDefault(),
                 });
 
             return result;
@@ -1130,8 +1077,8 @@ namespace Machete.Service
             var result = getAllDates
                 .Select(g => new monthlyActivityData
                     {
-                        financialLiterates = finLit.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
-                        jobSkillsTrainees = jobSkills.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
+                        financialLiterates = finLit.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault() ?? 0,
+                        jobSkillsTrainees = jobSkills.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault() ?? 0,
                         gradFromESL = eslGrads.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Count()
                     }
                 );
@@ -1169,14 +1116,14 @@ namespace Machete.Service
             q = getAllDates
                 .Select(g => new yearSumData
                 {
-                    date = DbFunctions.TruncateTime(g),
-                    temporaryPlacements = temporaryPlacements.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.tempCount).First() ?? 0,
-                    safetyTrainees = safetyTrainees.Where(whr => whr.date == DbFunctions.TruncateTime(g)),
-                    skillsTrainees = skillsTrainees.Where(whr => whr.date == DbFunctions.TruncateTime(g)),
-                    eslAssessed = eslAssessed.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Count(),
-                    basicGardenTrainees = basicGardenTrainees.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
-                    advGardenTrainees = advGardenTrainees.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
-                    finTrainees = finTrainees.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0
+                    date = g,
+                    temporaryPlacements = temporaryPlacements.Where(whr => whr.date == g).Select(h => h.tempCount).FirstOrDefault() ?? 0,
+                    safetyTrainees = safetyTrainees.Where(whr => whr.date == g),
+                    skillsTrainees = skillsTrainees.Where(whr => whr.date == g),
+                    eslAssessed = eslAssessed.Where(whr => whr.date == g).Count(),
+                    basicGardenTrainees = basicGardenTrainees.Where(whr => whr.date == g).Select(h => h.count).FirstOrDefault() ?? 0,
+                    advGardenTrainees = advGardenTrainees.Where(whr => whr.date == g).Select(h => h.count).FirstOrDefault() ?? 0,
+                    finTrainees = finTrainees.Where(whr => whr.date == g).Select(h => h.count).FirstOrDefault() ?? 0
                 });
 
             return q;
