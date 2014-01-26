@@ -130,43 +130,43 @@
     <value>Date</value>
   </data>
   <data name="dwcDispatch" xml:space="preserve">
-    <value>DWC Dispatched</value>
+    <value>Labor Dispatch</value>
   </data>
   <data name="dwcFuture" xml:space="preserve">
-    <value>DWC Future</value>
+    <value>Labor Pending</value>
   </data>
   <data name="dwcList" xml:space="preserve">
-    <value>DWC List</value>
+    <value>Labor (List)</value>
   </data>
   <data name="dwcPropio" xml:space="preserve">
-    <value>DWC Requested</value>
+    <value>Labor (Personal Req.)</value>
   </data>
   <data name="dwcPropioFuture" xml:space="preserve">
-    <value>DWC Req. (Fut.)</value>
+    <value>Labor Req. Fut.</value>
   </data>
   <data name="dwcSignins" xml:space="preserve">
-    <value>DWC Signins</value>
+    <value>Labor Signins</value>
   </data>
   <data name="futureTotal" xml:space="preserve">
     <value>Total Future</value>
   </data>
   <data name="hhhDispatch" xml:space="preserve">
-    <value>HHH Dispatched</value>
+    <value>Domestic Dispatched</value>
   </data>
   <data name="hhhFuture" xml:space="preserve">
-    <value>HHH Future</value>
+    <value>Domestic Future</value>
   </data>
   <data name="hhhList" xml:space="preserve">
-    <value>HHH List</value>
+    <value>Domestic (List)</value>
   </data>
   <data name="hhhPropio" xml:space="preserve">
-    <value>HHH Requested</value>
+    <value>Domestic (Req.)</value>
   </data>
   <data name="hhhPropioFuture" xml:space="preserve">
-    <value>HHH Req. (Fut.)</value>
+    <value>Domestic Req. Future</value>
   </data>
   <data name="hhhSignins" xml:space="preserve">
-    <value>HHH Signins</value>
+    <value>Domestic Signins</value>
   </data>
   <data name="noWeekJobs" xml:space="preserve">
     <value>Number of jobs</value>
@@ -275,5 +275,8 @@
   </data>
   <data name="wentToClass" xml:space="preserve">
     <value>Went To Class</value>
+  </data>
+  <data name="unique" xml:space="preserve">
+    <value>Unique</value>
   </data>
 </root>

@@ -95,6 +95,8 @@ namespace Machete.Service
 
         /// <summary>
         /// A simple count of unduplicated worker signins for the given period.
+        /// Note: Casa's policy is that these should reset on beginDate, but that
+        /// isn't truly "unduplicated" within the program.
         /// </summary>
         /// <param name="beginDate">DateTime, not null</param>
         /// <param name="endDate">DateTime, null</param>
@@ -122,7 +124,7 @@ namespace Machete.Service
                     count = g.Count(),
                     info = ""
                 });
-            //GO
+            
             return query;
         }
 
@@ -136,20 +138,14 @@ namespace Machete.Service
         {
             IQueryable<reportUnit> query;
             var waQ = waRepo.GetAllQ();
-            var woQ = woRepo.GetAllQ();
 
             beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
             endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
             query = waQ
-                .Join(woQ, wa => wa.workOrderID, wo => wo.ID, (wa, wo) => new
-                {
-                    wa,
-                    date = DbFunctions.TruncateTime(wo.dateTimeofWork)
-                })
-                .Where(whr => whr.date >= beginDate
-                           && whr.date <= endDate)
-                .GroupBy(gb => gb.date)
+                .Where(whr => DbFunctions.TruncateTime(whr.workOrder.dateTimeofWork) >= beginDate
+                           && DbFunctions.TruncateTime(whr.workOrder.dateTimeofWork) <= endDate)
+                .GroupBy(gb => DbFunctions.TruncateTime(gb.workOrder.dateTimeofWork))
                 .Select(g => new reportUnit
                 {
                     date = g.Key,
@@ -198,8 +194,6 @@ namespace Machete.Service
             IQueryable<TypeOfDispatchReport> query;
 
             var waQ = waRepo.GetAllQ();
-            var wQ = wRepo.GetAllQ();
-            var woQ = woRepo.GetAllQ();
             var wrQ = wrRepo.GetAllQ();
             var loD = lookCache.getByKeys("worktype", "DWC");
             var loH = lookCache.getByKeys("worktype", "HHH");
@@ -213,28 +207,16 @@ namespace Machete.Service
                     wr => new { waid = (int)wr.WorkOrderID, waw = (int?)wr.WorkerID },
                     (wa, wr) => new
                     {
-                        wa,
-                        reqOrderID = wr.FirstOrDefault().WorkOrderID,
-                        reqWorkerID = wr.FirstOrDefault().WorkerID
+                        dtow = DbFunctions.TruncateTime(wa.workOrder.dateTimeofWork),
+                        workerAssignedID = wa.workerAssignedID,
+                        dwcList = wa.workerAssigned.typeOfWorkID == loD ? (wr.FirstOrDefault().WorkerID == wa.workerAssigned.ID ? 0 : 1) : 0,
+                        hhhList = wa.workerAssigned.typeOfWorkID == loH ? (wr.FirstOrDefault().WorkerID == wa.workerAssigned.ID ? 0 : 1) : 0,
+                        dwcPatron = wa.workerAssigned.typeOfWorkID == loD ? (wr.FirstOrDefault().WorkerID == wa.workerAssigned.ID ? 1 : 0) : 0,
+                        hhhPatron = wa.workerAssigned.typeOfWorkID == loH ? (wr.FirstOrDefault().WorkerID == wa.workerAssigned.ID ? 1 : 0) : 0
                     })
-                .Join(woQ, wr => wr.wa.workOrderID, wo => wo.ID,
-                    (wr, wo) => new
-                    {
-                        wr,
-                        timeOfWork = DbFunctions.TruncateTime(wo.dateTimeofWork)
-                    })
-                .Join(wQ, wo => wo.wr.wa.workerAssignedID, w => w.ID,
-                    (wo, w) => new
-                    {
-                        wo,
-                        dwcList = w.typeOfWorkID == loD ? (wo.wr.reqWorkerID == w.ID ? 0 : 1) : 0,
-                        hhhList = w.typeOfWorkID == loH ? (wo.wr.reqWorkerID == w.ID ? 0 : 1) : 0,
-                        dwcPatron = w.typeOfWorkID == loD ? (wo.wr.reqWorkerID == w.ID ? 1 : 0) : 0,
-                        hhhPatron = w.typeOfWorkID == loH ? (wo.wr.reqWorkerID == w.ID ? 1 : 0) : 0
-                    })
-                .Where(whr => whr.wo.timeOfWork >= beginDate
-                           && whr.wo.timeOfWork <= endDate)
-                .GroupBy(gb => gb.wo.timeOfWork)
+                .Where(whr => whr.dtow >= beginDate
+                           && whr.dtow <= endDate)
+                .GroupBy(gb => gb.dtow)
                 .Select(group => new TypeOfDispatchReport
                     {
                         date = group.Key,
@@ -543,9 +525,13 @@ namespace Machete.Service
             beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
             endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, 23, 59, 59);
 
-            IEnumerable<DateTime> dates = Enumerable.Range(0, 1 + endDate.Subtract(beginDate).Days)
-                .Select(offset => beginDate.AddDays(offset))
-                .ToArray();
+            //IEnumerable<DateTime> dates = Enumerable.Range(0, 1 + endDate.Subtract(beginDate).Days)
+            //    .Select(offset => beginDate.AddDays(offset))
+            //    .ToArray();
+
+            var dates = new List<DateTime>();
+            for (var dt = beginDate; dt <= endDate; dt.AddDays(1))
+                dates.Add(dt);
 
             var wQ = wRepo.GetAllQ();
 
@@ -1011,10 +997,10 @@ namespace Machete.Service
                     dwcPropio = group.dwcPropio,
                     hhhList = group.hhhList,
                     hhhPropio = group.hhhPropio,
-                    uniqueSignins = dailyUnique.Where(whr => whr.date == group.date).Select(g => g.count).First() ?? 0,
-                    totalSignins = dailySignins.Where(whr => whr.date == group.date).Select(g => g.count).First() ?? 0,
-                    totalAssignments = dailyAssignments.Where(whr => whr.date == group.date).Select(g => g.count).First() ?? 0,
-                    cancelledJobs = dailyCancelled.Where(whr => whr.date == group.date).Select(g => g.count).First() ?? 0
+                    uniqueSignins = dailyUnique.Where(whr => whr.date == group.date).Select(g => g.count).FirstOrDefault() ?? 0,
+                    totalSignins = dailySignins.Where(whr => whr.date == group.date).Select(g => g.count).FirstOrDefault() ?? 0,
+                    totalAssignments = dailyAssignments.Where(whr => whr.date == group.date).Select(g => g.count).FirstOrDefault() ?? 0, // should be same as group.count...mayhap could avoid this join
+                    cancelledJobs = dailyCancelled.Where(whr => whr.date == group.date).Select(g => g.count).FirstOrDefault() ?? 0
                 });
 
             q = q.OrderBy(p => p.date);
@@ -1046,8 +1032,8 @@ namespace Machete.Service
                 {
                     dayofweek = g.date.DayOfWeek,
                     date = g.date,
-                    totalSignins = weeklySignins.Where(whr => whr.date == g.date).Select(h => h.count).First() ?? 0,
-                    noWeekJobs = weeklyAssignments.Where(whr => whr.date == g.date).Select(h => h.count).First() ?? 0,
+                    totalSignins = weeklySignins.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault() ?? 0,
+                    noWeekJobs = weeklyAssignments.Where(whr => whr.date == g.date).Select(h => h.count).FirstOrDefault() ?? 0,
                     weekEstDailyHours = g.hours,
                     weekEstPayment = g.wages,
                     weekHourlyWage = g.avg,
@@ -1086,19 +1072,19 @@ namespace Machete.Service
                 .Select(g => new monthlyData
                 {
                     date = g.Date,
-                    totalSignins = signins.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
-                    uniqueSignins = unique.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0, //dd
-                    dispatched = workers.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
-                    tempDispatched = workers.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.tempCount).First() ?? 0, //dd
-                    permanentPlacements = workers.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.permCount).First() ?? 0, //dd
-                    undupDispatched = workers.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.undupCount).First() ?? 0, //dd
-                    totalHours = average.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.hours).First(),
-                    totalIncome = average.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.wages).First(),
-                    avgIncomePerHour = average.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.avg).First(),
-                    stillHere = status.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
-                    newlyEnrolled = status.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0, //dd
-                    peopleWhoLeft = status.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0, //dd
-                    peopleWhoWentToClass = getAllClassAttendance.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).First() ?? 0,
+                    totalSignins = signins.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault() ?? 0,
+                    uniqueSignins = unique.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault() ?? 0, //dd
+                    dispatched = workers.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault() ?? 0,
+                    tempDispatched = workers.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.tempCount).FirstOrDefault() ?? 0, //dd
+                    permanentPlacements = workers.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.permCount).FirstOrDefault() ?? 0, //dd
+                    undupDispatched = workers.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.undupCount).FirstOrDefault() ?? 0, //dd
+                    totalHours = average.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.hours).FirstOrDefault(),
+                    totalIncome = average.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.wages).FirstOrDefault(),
+                    avgIncomePerHour = average.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.avg).FirstOrDefault(),
+                    stillHere = status.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault() ?? 0,
+                    newlyEnrolled = status.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault() ?? 0, //dd
+                    peopleWhoLeft = status.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault() ?? 0, //dd
+                    peopleWhoWentToClass = getAllClassAttendance.Where(whr => whr.date == DbFunctions.TruncateTime(g)).Select(h => h.count).FirstOrDefault() ?? 0,
                 });
 
             q = q.OrderBy(p => p.date);

@@ -130,43 +130,43 @@
     <value>Fecha</value>
   </data>
   <data name="dwcDispatch" xml:space="preserve">
-    <value>Despachados (DWC)</value>
+    <value>Despachos Laborales</value>
   </data>
   <data name="dwcFuture" xml:space="preserve">
-    <value>Futuro DWC</value>
+    <value>Futuro Laboral</value>
   </data>
   <data name="dwcList" xml:space="preserve">
-    <value>Lista DWC</value>
+    <value>Lista Laboral</value>
   </data>
   <data name="dwcPropio" xml:space="preserve">
-    <value>DWC Prop Pat</value>
+    <value>Propio Patrón Laboral</value>
   </data>
   <data name="dwcPropioFuture" xml:space="preserve">
-    <value>Futuro DWC (PP)</value>
+    <value>Futuro Labor (PP)</value>
   </data>
   <data name="dwcSignins" xml:space="preserve">
-    <value>Entradas (DWC)</value>
+    <value>Entradas Laborales</value>
   </data>
   <data name="futureTotal" xml:space="preserve">
     <value>Futuro (total)</value>
   </data>
   <data name="hhhDispatch" xml:space="preserve">
-    <value>Despachad@s (HHH)</value>
+    <value>Despacho Doméstico</value>
   </data>
   <data name="hhhFuture" xml:space="preserve">
-    <value>Futuro HHH</value>
+    <value>Fut. Doméstico</value>
   </data>
   <data name="hhhList" xml:space="preserve">
-    <value>Lista HHH</value>
+    <value>Lista Doméstica</value>
   </data>
   <data name="hhhPropio" xml:space="preserve">
     <value>HHH Prop Pat</value>
   </data>
   <data name="hhhPropioFuture" xml:space="preserve">
-    <value>Futuro HHH (PP)</value>
+    <value>Fut.Doméstico (PP)</value>
   </data>
   <data name="hhhSignins" xml:space="preserve">
-    <value>Entradas (HHH)</value>
+    <value>Entradas Domésticas</value>
   </data>
   <data name="noWeekJobs" xml:space="preserve">
     <value>Trabajos diarios</value>
@@ -275,5 +275,8 @@
   </data>
   <data name="wentToClass" xml:space="preserve">
     <value>Asistieron Clase</value>
+  </data>
+  <data name="unique" xml:space="preserve">
+    <value>Únicos</value>
   </data>
 </root>
