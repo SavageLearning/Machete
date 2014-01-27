@@ -132,8 +132,8 @@ namespace Machete.Web.Controllers
         public ActionResult Create()
         {
             var _model = new Activity();
-            _model.dateStart = DateTime.Today;
-            _model.dateEnd = DateTime.Today;
+            _model.dateStart = DateTime.Now;
+            _model.dateEnd = DateTime.Now.AddHours(1);
             return PartialView("Create", _model);
         }
         /// <summary>
@@ -147,7 +147,80 @@ namespace Machete.Web.Controllers
         public JsonResult Create(Activity activ, string userName)
         {
             UpdateModel(activ);
-            Activity newActivity = serv.Create(activ, userName);
+
+            if (activ.recurring == true)
+            {
+                return Json(new { 
+                    isRedirect = true,
+                    redirectUrl = Url.Action("CreateMany", "Activity", activ)
+                });
+            }
+            else { 
+                Activity newActivity = serv.Create(activ, userName);
+
+                return Json(new
+                {
+                    sNewRef = EditTabRef(newActivity),
+                    sNewLabel = EditTabLabel(newActivity),
+                    iNewID = newActivity.ID,
+                    jobSuccess = true
+                },
+                JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [Authorize(Roles = "Administrator, Manager")]
+        public ActionResult CreateMany(Activity act)
+        {
+            var _model = new ActivitySchedule(act);
+            return PartialView("CreateMany", _model);
+        }
+
+        [HttpPost, UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager")]
+        public JsonResult CreateMany(ActivitySchedule actSched, string userName)
+        {
+            UpdateModel(actSched); // copy values from form to object. why this is necessary if the object is being passed as arg, I don't know.
+            Activity newActivity = new Activity();
+            var instances = actSched.stopDate.Subtract(actSched.dateStart).Days;
+            var length = actSched.dateEnd.Subtract(actSched.dateStart).TotalMinutes;
+
+            for (var i = 0; i <= instances; i++)
+            {
+                var date = actSched.dateStart.AddDays(i);
+                var day = (int)date.DayOfWeek;
+                bool first = false;
+
+                if (day == 0 && !actSched.sunday) ;
+                else if (day == 1 && !actSched.monday) ;
+                else if (day == 2 && !actSched.tuesday) ;
+                else if (day == 3 && !actSched.wednesday) ;
+                else if (day == 4 && !actSched.thursday) ;
+                else if (day == 5 && !actSched.friday) ;
+                else if (day == 6 && !actSched.saturday) ;
+                else
+                {
+                    var activ = new Activity();
+                    activ.name = actSched.name;
+                    activ.type = actSched.type;
+                    activ.dateStart = date;
+                    activ.dateEnd = date.AddMinutes(length);
+                    activ.teacher = actSched.teacher;
+                    activ.notes = actSched.notes;
+
+                    Activity act = serv.Create(activ, userName);
+                    if (first == false)
+                    {
+                        newActivity = act;
+                        first = true;
+                    }
+                }
+            }
+
+            if (newActivity == null)
+            {
+                throw new MacheteIntegrityException("Sorry, something went wrong there. We're working hard to fix it. That's all we know.");
+            }
 
             return Json(new
             {
@@ -158,6 +231,7 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
+
         /// <summary>
         /// GET: /Activity/Edit/5
         /// </summary>
@@ -220,8 +294,7 @@ namespace Machete.Web.Controllers
             return Json(new
             {
                 status = "OK",
-                jobSuccess = true//,
-                //deletedID = id
+                jobSuccess = true
             },
             JsonRequestBehavior.AllowGet);
         }
@@ -237,8 +310,7 @@ namespace Machete.Web.Controllers
             return Json(new
             {
                 status = "OK",
-                jobSuccess = true//,
-                //deletedID = id
+                jobSuccess = true
             },
             JsonRequestBehavior.AllowGet);
         }
