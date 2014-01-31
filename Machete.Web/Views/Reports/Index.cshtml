@@ -59,7 +59,7 @@
 
         oMwdTable.aoColumns = [
             { mDataProp: "date" },
-            { mDataProp: "activeMembers" },
+            { mDataProp: "stillHere" },
             { mDataProp: "totalSignins" },
             { mDataProp: "wentToClass" },
             { mDataProp: "dispatched" },
@@ -71,6 +71,26 @@
                 sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="nestedDetailsButton">'
             }
         ];
+
+        oMwdTable.fnFooterCallback = function (nRow, aaData, iStart, iEnd, aiDisplay) {
+            /*
+             * Calculate the total for all numbers this table 
+             */
+            var nCells = nRow.getElementsByTagName('th');
+
+            // (#colToStart; #col; increment)
+            for (var j = 2; j < (nCells.length - 1); j++) {
+
+                var iTotal;
+
+                for (var i = 0; i < aaData.length ; i++) {
+                    iTotal += parseInt(aaData[i][j]);
+                }
+
+                /* Modify the footer row to match what we want */
+                nCells[j].innerHTML = parseInt(iTotal);
+            }
+        }
 
         var dcl = $('#dclDataTable').dataTable(oDclTable);
         var wec = $('#wecDataTable').dataTable(oWecTable);
@@ -245,7 +265,7 @@
             oMwdTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxMwd", lang, $('#mwdDate').val()));
             oMwdTable.aoColumns = [
                 { mDataProp: "date" },
-                { mDataProp: "activeMembers"},
+                { mDataProp: "stillHere"},
                 { mDataProp: "totalSignins" },
                 { mDataProp: "wentToClass"},
                 { mDataProp: "dispatched"},
@@ -255,8 +275,28 @@
                 { 
                     mDataProp: null,
                     sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="nestedDetailsButton">'
-                }
+                },
             ];
+            oMwdTable.fnFooterCallback = function (nRow, aaData, iStart, iEnd, aiDisplay) {
+                /*
+                 * Calculate the total for all numbers this table 
+                 */
+                var nCells = nRow.getElementsByTagName('th');
+
+                // (#colToStart; #col; increment)
+                for (var j = 2; j < (nCells.length - 1) ; j++) {
+
+                    var iTotal;
+
+                    for (var i = 0; i < aaData.length ; i++) {
+                        iTotal += parseInt(aaData[i][j]);
+                    }
+
+                    /* Modify the footer row to match what we want */
+                    nCells[j].innerHTML = parseInt(iTotal);
+                }
+            }
+
             oMwdTable.bDestroy = true;
             $('#mwdDataTable').dataTable(oMwdTable).fnReloadAjax();
             @*monthlyPie();*@
@@ -314,15 +354,7 @@
             sOut += '<th>Permanent</th>';
             sOut += '<th>Unique Dispatch</th>';
             sOut += '</tr></thead><tbody>';
-            for (var i in drillList) {
-                var item = drillList[i];
-                sOut += '<tr><td>' + item.newlyEnrolled + '</td><td>'
-                    + item.peopleWhoLeft + '</td><td>'
-                    + item.uniqueSignins + '</td></tr>'
-                    + item.tempDispatched + '</td></tr>'
-                    + item.permanentPlacements + '</td></tr>'
-                    + item.undupDispatched + '</td></tr>';
-            }
+            sOut += '<tr><td>' + drillList.newlyEnrolled + '</td><td>' + drillList.peopleWhoLeft + '</td><td>' + drillList.uniqueSignins + '</td><td>' + drillList.tempDispatched + '</td><td>' + drillList.permanentPlacements + '</td><td>' + drillList.undupDispatched + '</td></tr>';
             sOut += '</tbody></table>';
             return sOut;
         }

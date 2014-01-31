@@ -47,6 +47,7 @@ using System.Globalization;
 
 namespace Machete.Web.Controllers
 {
+    #region public class ReportsController...
     [ElmahHandleError]
     public class ReportsController : MacheteController
     {
@@ -68,14 +69,10 @@ namespace Machete.Web.Controllers
             CI = (CultureInfo)Session["Culture"];
         }
 
-        /// <summary>
-        /// MVC Controller for Machete Reports
-        /// </summary>
-        /// <returns>View()</returns>
-        [Authorize(Roles = "Administrator, Manager")]
+    #endregion
         #region Index
 
-        // A simple MVC index view
+        [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Index()
         {
             return View();
@@ -83,20 +80,25 @@ namespace Machete.Web.Controllers
         #endregion
 
         #region PartialViews
+        [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Summary()
         {
             return PartialView();
         }
-        
+
+        [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Orders()
         {
             return PartialView();
         }
-        
+
+        [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Workers()
         {
             return PartialView();
         }
+
+        [Authorize(Roles = "Administrator, Manager")]
         public ActionResult SSRS()
         {
             return PartialView();
@@ -224,10 +226,10 @@ namespace Machete.Web.Controllers
                              date = System.String.Format("{0:MM/dd/yyyy}", d.date),
                              stillHere = d.stillHere.ToString(),
                              totalSignins = d.totalSignins.ToString(),
+                             wentToClass = d.peopleWhoWentToClass.ToString(),
                              dispatched = d.dispatched.ToString(),
-                             peopleWhoWentToClass = d.peopleWhoWentToClass.ToString(),
                              totalHours = d.totalHours.ToString(),
-                             totalIncome = d.totalIncome.ToString(),
+                             totalIncome = System.String.Format("{0:C}", d.totalIncome),
                              avgIncomePerHour = System.String.Format("{0:C}", d.avgIncomePerHour),
                              drilldown = new
                                          {
