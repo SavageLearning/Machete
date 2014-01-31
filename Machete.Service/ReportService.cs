@@ -371,7 +371,7 @@ namespace Machete.Service
                     {
                         dtow = c.Key.dtow,
                         permCount = c.Count(pp => pp.workOrder.permanentPlacement),
-                        tempCount = c.Count(tp => tp.workOrder.permanentPlacement)
+                        tempCount = c.Count(tp => !tp.workOrder.permanentPlacement)
                     })
                 .Join(undup, x => x.dtow, y => y.dtow, (x, y) => new
                     {
@@ -1278,7 +1278,7 @@ namespace Machete.Service
         public int totalAssignments { get; set; }
     }
     /// <summary>
-    /// A class to contain the data for the Weekly Report for El Centro
+    /// A class to contain the data for the Weekly Report
     /// int totalSignins, int noWeekJobs, int weekJobsSector, int
     /// weekEstDailyHours, double weekEstPayment, double weekHourlyWage
     /// </summary>

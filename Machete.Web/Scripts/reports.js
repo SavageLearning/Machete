@@ -106,7 +106,8 @@ function reportTableDefaults(url, lang, date)
                 /* Do whatever additional processing you want on the callback, then tell DataTables */
                 fnCallback(json);
             });
-        }
+        },
+        "fnFooterCallback": null
     };
     return tableDefaults;
 }
