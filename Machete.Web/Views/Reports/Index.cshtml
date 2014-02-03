@@ -77,19 +77,33 @@
              * Calculate the total for all numbers this table 
              */
             var nCells = nRow.getElementsByTagName('th');
+            var iTotal = 0;
+            var iWent = 0;
+            var iDispatch = 0;
+            var iHours = 0;
+            var iIncome = 0;
+            var iAverage = 0;
+            var iDontCount = 0;
 
-            // (#colToStart; #col; increment)
-            for (var j = 2; j < (nCells.length - 1); j++) {
+            //console.log(aaData); aaData is an array of objects, each containing properties and values for each column
 
-                var iTotal;
-
-                for (var i = 0; i < aaData.length ; i++) {
-                    iTotal += parseInt(aaData[i][j]);
-                }
-
-                /* Modify the footer row to match what we want */
-                nCells[j].innerHTML = parseInt(iTotal);
+            for (var i = 0; i < aaData.length ; i++) {
+                //console.log(aaData[i]);
+                iTotal += parseInt(aaData[i].totalSignins);
+                iWent += parseInt(aaData[i].wentToClass);
+                iDispatch += parseInt(aaData[i].dispatched);
+                iHours += parseInt(aaData[i].totalHours);
+                iIncome += parseFloat(aaData[i].totalIncome.replace('$', '').replace(',', ''));
+                iAverage += parseFloat(aaData[i].avgIncomePerHour.replace('$', ''));
+                iDontCount += parseFloat(aaData[i].avgIncomePerHour.replace('$', '')) > 0 ? 0 : 1;
             }
+
+            nCells[2].innerHTML = iTotal;
+            nCells[3].innerHTML = iWent;
+            nCells[4].innerHTML = iDispatch;
+            nCells[5].innerHTML = iHours;
+            nCells[6].innerHTML = '$' + iIncome.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            nCells[7].innerHTML = '$' + (iAverage / (aaData.length - iDontCount)).toFixed(2);
         }
 
         var dcl = $('#dclDataTable').dataTable(oDclTable);
@@ -282,19 +296,33 @@
                  * Calculate the total for all numbers this table 
                  */
                 var nCells = nRow.getElementsByTagName('th');
+                var iTotal = 0;
+                var iWent = 0;
+                var iDispatch = 0;
+                var iHours = 0;
+                var iIncome = 0;
+                var iAverage = 0;
+                var iDontCount = 0;
 
-                // (#colToStart; #col; increment)
-                for (var j = 2; j < (nCells.length - 1) ; j++) {
+                //console.log(aaData); aaData is an array of objects, each containing properties and values for each column
 
-                    var iTotal;
-
-                    for (var i = 0; i < aaData.length ; i++) {
-                        iTotal += parseInt(aaData[i][j]);
-                    }
-
-                    /* Modify the footer row to match what we want */
-                    nCells[j].innerHTML = parseInt(iTotal);
+                for (var i = 0; i < aaData.length ; i++) {
+                    //console.log(aaData[i]);
+                    iTotal += parseInt(aaData[i].totalSignins);
+                    iWent += parseInt(aaData[i].wentToClass);
+                    iDispatch += parseInt(aaData[i].dispatched);
+                    iHours += parseInt(aaData[i].totalHours);
+                    iIncome += parseFloat(aaData[i].totalIncome.replace('$','').replace(',',''));
+                    iAverage += parseFloat(aaData[i].avgIncomePerHour.replace('$', ''));
+                    iDontCount += parseFloat(aaData[i].avgIncomePerHour.replace('$', '')) > 0 ? 0 : 1;
                 }
+
+                nCells[2].innerHTML = iTotal;
+                nCells[3].innerHTML = iWent;
+                nCells[4].innerHTML = iDispatch;
+                nCells[5].innerHTML = iHours;
+                nCells[6].innerHTML = '$' + iIncome.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                nCells[7].innerHTML = '$' + (iAverage / (aaData.length - iDontCount)).toFixed(2);
             }
 
             oMwdTable.bDestroy = true;
