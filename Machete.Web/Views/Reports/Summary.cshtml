@@ -9,17 +9,16 @@
             </p>
         </div>
     </div>
-
     <div id="summaryReports">
         <h3 class="reportSubtitle">
             <a href="#" id="dclLink">Daily</a>
         </h3>
         <div id="dclTable" class="reportWrapper">
-            <input type="button" value="Refresh" class="formButton" id="dclDataOnlyBtn" />
-            <input type="button" value="Print Report" class="formButton" id="dclPrintReport" />
-            <input type="button" value="Spreadsheet" class="formButton" id="dclSpreadsheet" />
-            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-dcl-datepicker", @id = "dclDate" })
-            <p id="dclHelp" style="display:inline;"><em>Select a day to see results.</em></p>
+            <input type="button" value="Refresh" class="formButton report-top" id="dclDataOnlyBtn" />
+            <input type="button" value="Print Report" class="formButton report-top" id="dclPrintReport" />
+            <input type="button" value="Spreadsheet" class="formButton report-top" id="dclSpreadsheet" />
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker report-top", @id = "dclDate" })
+            <p id="dclHelp" class="report-inline report-top"><em>Select a day to see results.</em></p>
             <table id="dclDataTable" class="display">
                 <thead>
                     <tr>
@@ -40,11 +39,11 @@
         </div>
         <h3 class="reportSubtitle"><a href="#" id="wecLink">Weekly</a></h3>
         <div id="wecTable" class="reportWrapper">
-            <input type="button" value="Refresh" class="formButton" id="wecDataOnlyBtn" />
-            <input type="button" value="Print" class="formButton" id="wecPrintReport" />
-            <input type="button" value="Spreadsheet" class="formButton" id="wecSpreadsheet" />
-            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-wec-datepicker", @id = "wecDate" })
-            <p id="wecHelp" style="display:inline;"><em>Select a day to see results for that week.</em></p>
+            <input type="button" value="Refresh" class="formButton report-top" id="wecDataOnlyBtn" />
+            <input type="button" value="Print" class="formButton report-top" id="wecPrintReport" />
+            <input type="button" value="Spreadsheet" class="formButton report-top" id="wecSpreadsheet" />
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker report-top", @id = "wecDate" })
+            <p id="wecHelp" class="report-inline report-top"><em>Select a day to see results for that week.</em></p>
             <table id="wecDataTable" class="display">
                 <thead>
                     <tr>
@@ -62,11 +61,11 @@
         </div>
         <h3 class="reportSubtitle"><a href="#" id="mwdLink">Monthly</a></h3>
         <div id="mwdTable" class="reportWrapper">
-            <input type="button" value="Refresh" class="formButton" id="mwdDataOnlyBtn" />
-            <input type="button" value="Print" class="formButton" id="mwdPrintReport" />
-            <input type="button" value="Spreadsheet" class="formButton" id="mwdSpreadsheet" />
-            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @style = "height: 2em;width: 6em;border-radius:.5em;text-align:center;font-weight:bold;", @class = "ui-mwd-datepicker", @id = "mwdDate" })
-            <p id="mwdHelp" style="display:inline;"><em>Select any day in a month to see results.</em></p>
+            <input type="button" value="Refresh" class="formButton report-top" id="mwdDataOnlyBtn" />
+            <input type="button" value="Print" class="formButton report-top" id="mwdPrintReport" />
+            <input type="button" value="Spreadsheet" class="formButton report-top" id="mwdSpreadsheet" />
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker report-top", @id = "mwdDate" })
+            <p id="mwdHelp" class="report-inline report-top"><em>Select any day in a month to see results.</em></p>
             <table id="mwdDataTable" class="display">
                 <thead>
                     <tr>
@@ -82,9 +81,9 @@
                     </tr>
                 </thead>
                 <tfoot>
-                    <tr style="font-weight: bolder;">
+                    <tr>
                         <th></th>
-                        <th>Totals:</th>
+                        <th><strong>Totals</strong></th>
                         <th></th>
                         <th></th>
                         <th></th>
@@ -93,9 +92,17 @@
                         <th></th>
                         <th></th>
                     </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td colspan="4"></td>
+                        <td></td>
+                    </tr>
                 </tfoot>
             </table>
-@*            <div id="monthlyPieChart1" style="height:auto;width:80%;margin-top:3em;"></div> *@
+            @*            <div id="monthlyPieChart1" style="height:auto;width:80%;margin-top:3em;"></div> *@
         </div>
     </div>
 </div>

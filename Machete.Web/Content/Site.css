@@ -709,3 +709,31 @@ html[xmlns] .clearfix {
 .reportSubtitle {
     clear: both;
 }
+
+.report-em {
+    font-weight: 700;
+}
+
+.report-datepicker {
+    height: 2em;
+    width: 6em;
+    padding: 0;
+    border-radius: .5em;
+    text-align: center;
+    font-weight: bold;
+}
+
+.report-inline {
+    display: inline;
+}
+
+.report-top {
+    margin-bottom:.5em;
+}
+
+.report-drill {
+    margin-left: 13.5%;
+    background: #90A2B6;
+    border: solid 2px gray;
+    border-collapse: separate;
+}
