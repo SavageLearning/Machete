@@ -91,6 +91,7 @@ function reportTableDefaults(url, lang, date)
     {
         "bPaginate": false, // (reports have fixed size)
         "bAutoWidth": false,
+        "bDestroy": true,
         "bInfo": true,
         "bSort": false,
         "bFilter": false,

@@ -12,105 +12,17 @@
         <li><a href="#summaryWrapper" id="summaryTab" >@Machete.Web.Resources.Reports.summaryTab</a> </li>
         <li><a href="#ssrsWrapper" id="ssrsTab">@Machete.Web.Resources.Reports.ssrsTab</a> </li>
     </ul>
-
-    @Html.Partial("Summary")
-    @Html.Partial("SSRS")
+        @Html.Partial("Summary")
+        @Html.Partial("SSRS")
 </div>
-
 <script type="text/javascript">
     $(document).ready(function () {
-        //Note that the yearly and quarterly functions are the same. This is by design.
-
         //VARS
-        // These are at the top of the anonymous functions
-        // section because that's what ECMA
-        // does with them anyway.
+        var dcl = $('#dclDataTable');
+        var wec = $('#wecDataTable');
+        var mwd = $('#mwdDataTable');
         var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
 
-        var oDclTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxDcl", lang, $('#dclDate').val()));
-        var oWecTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxWec", lang, $('#wecDate').val()));
-        var oMwdTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxMwd", lang, $('#dclDate').val()));
-
-        oDclTable.aoColumns = [
-            { mDataProp: "date" },
-            { mDataProp: "dwcList" },
-            { mDataProp: "dwcPropio" },
-            { mDataProp: "hhhList" },
-            { mDataProp: "hhhPropio" },
-            { mDataProp: "uniqueSignins" },
-            { mDataProp: "totalSignins" },
-            { mDataProp: "totalAssignments" },
-            { mDataProp: "cancelledJobs" },
-        ];
-
-        oWecTable.aoColumns = [
-                { mDataProp: "weekday" },
-                { mDataProp: "date" },
-                { mDataProp: "totalSignins" },
-                { mDataProp: "totalAssignments" },
-                { mDataProp: "weekEstDailyHours" },
-                { mDataProp: "weekEstPayment" },
-                { mDataProp: "weekHourlyWage" },
-                {
-                    mDataProp: null,
-                    sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="nestedDetailsButton">'
-                },
-        ];
-
-        oMwdTable.aoColumns = [
-            { mDataProp: "date" },
-            { mDataProp: "stillHere" },
-            { mDataProp: "totalSignins" },
-            { mDataProp: "wentToClass" },
-            { mDataProp: "dispatched" },
-            { mDataProp: "totalHours" },
-            { mDataProp: "totalIncome" },
-            { mDataProp: "avgIncomePerHour" },
-            {
-                mDataProp: null,
-                sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="nestedDetailsButton">'
-            }
-        ];
-
-        oMwdTable.fnFooterCallback = function (nRow, aaData, iStart, iEnd, aiDisplay) {
-            /*
-             * Calculate the total for all numbers this table 
-             */
-            var nCells = nRow.getElementsByTagName('th');
-            var iTotal = 0;
-            var iWent = 0;
-            var iDispatch = 0;
-            var iHours = 0;
-            var iIncome = 0;
-            var iAverage = 0;
-            var iDontCount = 0;
-
-            //console.log(aaData); aaData is an array of objects, each containing properties and values for each column
-
-            for (var i = 0; i < aaData.length ; i++) {
-                //console.log(aaData[i]);
-                iTotal += parseInt(aaData[i].totalSignins);
-                iWent += parseInt(aaData[i].wentToClass);
-                iDispatch += parseInt(aaData[i].dispatched);
-                iHours += parseInt(aaData[i].totalHours);
-                iIncome += parseFloat(aaData[i].totalIncome.replace('$', '').replace(',', ''));
-                iAverage += parseFloat(aaData[i].avgIncomePerHour.replace('$', ''));
-                iDontCount += parseFloat(aaData[i].avgIncomePerHour.replace('$', '')) > 0 ? 0 : 1;
-            }
-
-            nCells[2].innerHTML = iTotal;
-            nCells[3].innerHTML = iWent;
-            nCells[4].innerHTML = iDispatch;
-            nCells[5].innerHTML = iHours;
-            nCells[6].innerHTML = '$' + iIncome.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            nCells[7].innerHTML = '$' + (iAverage / (aaData.length - iDontCount)).toFixed(2);
-        }
-
-        var dcl = $('#dclDataTable').dataTable(oDclTable);
-        var wec = $('#wecDataTable').dataTable(oWecTable);
-        var mwd = $('#mwdDataTable').dataTable(oMwdTable);
-
-        //
         // hide stuff 
         //  
         $('#summaryHide').click(
@@ -118,25 +30,15 @@
                 $('#summaryPopup').hide();
             });
 
-        $('#dclHelp').hide();
-        $('#wecHelp').hide();
-        $('#mwdHelp').hide();
-
         $('#dclTable').hide();
         $('#wecTable').hide();
         $('#mwdTable').hide();
+        //$('.report-progress').hide();
 
-
-        //
         // make stuff pretty
         //
         $('#reportTabs').tabs();
-
-        //$('#ssrsReports').button();
-
         $('.formButton').button();
-
-        // ACCORDIONS        
         $('#summaryReports').accordion({
             collapsible: true,
             active: false,
@@ -145,19 +47,15 @@
         
         ////////////////////// | the date-pickerers |
 
-        //
         // Daily datepickerer
         //
 
-        $('.ui-dcl-datepicker').hover(
+        $('#dclDate').hover(
             function () {
-                $('#dclHelp').show("fade", 2200);
-            },
-            function () {
-                $('#dclHelp').hide("fade", 2200);
+                $('#dclHelp').hide("fade", 4000);
             });
 
-        $('.ui-dcl-datepicker').datepicker({
+        $('#dclDate').datepicker({
             autoSize: true,
             changeMonth: true,
             changeYear: true,
@@ -168,24 +66,20 @@
             showOn: "focus"
         });
 
-        $('.ui-dcl-datepicker').change(
+        $('#dclDate').change(
             function (event) {
                 dclNewTable();
             });
 
-        //
         // Weekly datepickerer
         //
 
-        $('.ui-wec-datepicker').hover(
+        $('#wecDate').hover(
             function () {
-                $('#wecHelp').show("fade", 2200);
-            },
-            function () {
-                $('#wecHelp').hide("fade", 2200);
+                $('#wecHelp').hide("fade", 4000);
             });
 
-        $('.ui-wec-datepicker').datepicker({
+        $('#wecDate').datepicker({
             autoSize: true,
             changeMonth: true,
             changeYear: true,
@@ -200,24 +94,20 @@
             }
         });
 
-        $('.ui-wec-datepicker').change(
+        $('#wecDate').change(
             function (event) {
                 wecNewTable();
             });
 
-        //
         // Monthly datepickerer
         //
 
-        $('.ui-mwd-datepicker').hover(
+        $('#mwdDate').hover(
             function () {
-                $('#mwdHelp').show("fade", 2200);
-            },
-            function () {
-                $('#mwdHelp').hide("fade", 2200);
+                $('#mwdHelp').hide("fade", 4000);
             });
 
-        $('.ui-mwd-datepicker').datepicker({
+        $('#mwdDate').datepicker({
             autoSize: true,
             changeMonth: true,
             changeYear: true,
@@ -228,7 +118,7 @@
             showOn: "focus"
         });
 
-        $('.ui-mwd-datepicker').change(
+        $('#mwdDate').change(
             function (event) {
                 mwdNewTable();
             });
@@ -252,8 +142,7 @@
                 { mDataProp: "cancelledJobs" },
             ];
             oDclTable.bDestroy = "true,";
-            $('#dclDataTable').dataTable(oDclTable).fnReloadAjax();
-            //dailyPie();
+            dcl = $('#dclDataTable').dataTable(oDclTable);
         }
 
         function wecNewTable() {
@@ -271,8 +160,7 @@
                     sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="nestedDetailsButton">'
                 },
             ];
-            oWecTable.bDestroy = "true,";
-            $('#wecDataTable').dataTable(oWecTable).fnReloadAjax();
+            wec = $('#wecDataTable').dataTable(oWecTable);
         }
 
         function mwdNewTable() {
@@ -296,13 +184,23 @@
                  * Calculate the total for all numbers this table 
                  */
                 var nCells = nRow.getElementsByTagName('th');
+                var nTr = nRow.parentElement.getElementsByTagName('tr')[1];
+                var tCells = nTr.getElementsByTagName('td');
+
                 var iTotal = 0;
                 var iWent = 0;
                 var iDispatch = 0;
                 var iHours = 0;
                 var iIncome = 0;
-                var iAverage = 0;
-                var iDontCount = 0;
+                var iAverage = 0.0;
+                var iDontCount = 0.0;
+
+                var iEnrolled = 0;
+                var iQuit = 0;
+                var myFirstSignin = 0;
+                var jornalero = 0;
+                var conseguiChamba = 0;
+                var myFirstJob = 0;
 
                 //console.log(aaData); aaData is an array of objects, each containing properties and values for each column
 
@@ -315,18 +213,30 @@
                     iIncome += parseFloat(aaData[i].totalIncome.replace('$','').replace(',',''));
                     iAverage += parseFloat(aaData[i].avgIncomePerHour.replace('$', ''));
                     iDontCount += parseFloat(aaData[i].avgIncomePerHour.replace('$', '')) > 0 ? 0 : 1;
+                    iEnrolled += parseInt(aaData[i].drilldown.newlyEnrolled);
+                    iQuit += parseInt(aaData[i].drilldown.peopleWhoLeft);
+                    myFirstSignin += parseInt(aaData[i].drilldown.uniqueSignins);
+                    jornalero += parseInt(aaData[i].drilldown.tempDispatched);
+                    conseguiChamba += parseInt(aaData[i].drilldown.permanentPlacements);
+                    myFirstJob += parseInt(aaData[i].drilldown.undupDispatched);
                 }
 
-                nCells[2].innerHTML = iTotal;
-                nCells[3].innerHTML = iWent;
-                nCells[4].innerHTML = iDispatch;
-                nCells[5].innerHTML = iHours;
-                nCells[6].innerHTML = '$' + iIncome.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                nCells[7].innerHTML = '$' + (iAverage / (aaData.length - iDontCount)).toFixed(2);
+                nCells[2].innerHTML = iTotal + ' signins';
+                nCells[3].innerHTML = iWent + ' students';
+                nCells[4].innerHTML = iDispatch + ' dispatched';
+                nCells[5].innerHTML = iHours + ' hours';
+                nCells[6].innerHTML = '$' + iIncome.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' earned';
+                nCells[7].innerHTML = '$' + (iAverage / (aaData.length - iDontCount)).toFixed(2) + '/hr. avg.';
+
+                tCells[0].innerHTML = iEnrolled + ' signed up, ' + iQuit + ' left';
+
+                tCells[2].innerHTML = '(' + myFirstSignin + ' unique)';
+
+                tCells[4].innerHTML = '(' + myFirstJob + ' unique, ' + jornalero + ' temporary, and ' + conseguiChamba + ' permanent jobs)';
             }
 
             oMwdTable.bDestroy = true;
-            $('#mwdDataTable').dataTable(oMwdTable).fnReloadAjax();
+            return $('#mwdDataTable').dataTable(oMwdTable);
             @*monthlyPie();*@
         }
 
@@ -340,7 +250,7 @@
         function fnFormatWeekDetails(oTable, nTr) {
             var aData = oTable.fnGetData(nTr);
             var jobList = aData.topJobs;
-            var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="margin-left: 13.5%;background: #90A2B6;border: solid 2px gray;border-collapse: separate;">';
+            var sOut = '<table cellpadding="5" cellspacing="0" border="0" class="report-drill">';
             sOut += '<thead><tr><th>Date</th>';
             sOut += '<th>Skill</th>';
             sOut += '<th>Count</th>';
