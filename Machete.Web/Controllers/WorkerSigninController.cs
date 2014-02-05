@@ -234,16 +234,29 @@ namespace Machete.Web.Controllers
        /// <returns>Json (bool jobSuccess, string status, int deletedID)</returns>
         [UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, Check-in")]
-        public ActionResult Delete(int id, string userName)
+        public JsonResult Delete(int id, string userName)
         {
-            _serv.Delete(id, userName);            
-            return Json(new
+            var record = _serv.Get(id);
+            if (record.lottery_sequence != null)
             {
-                jobSuccess = true,
-                status = "OK",
-                deletedID = id
-            },
-            JsonRequestBehavior.AllowGet);
+                return Json(new
+                    {
+                        jobSuccess = false,
+                        rtnMessage = "You cannot delete a signin that has already been added to the daily list. Remove the signin from the daily list and try again."
+                    },
+                    JsonRequestBehavior.AllowGet);
+            }
+            else
+            { 
+                _serv.Delete(id, userName);            
+                return Json(new
+                {
+                    jobSuccess = true,
+                    status = "OK",
+                    deletedID = id
+                },
+                JsonRequestBehavior.AllowGet);
+            }
         }
 
 
