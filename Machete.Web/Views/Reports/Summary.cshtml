@@ -9,17 +9,17 @@
             </p>
         </div>
     </div>
-    <div id="summaryReports">
+    <div id="summaryReports" class="report-accordion">
         <h3 class="reportSubtitle">
             <a href="#" id="dclLink">Daily</a>
         </h3>
-        <div id="dclTable" class="reportWrapper">
+        <div id="dclTable" class="report-container">
             <input type="button" value="Refresh" class="formButton report-top" id="dclDataOnlyBtn" />
             <input type="button" value="Print Report" class="formButton report-top" id="dclPrintReport" />
             <input type="button" value="Spreadsheet" class="formButton report-top" id="dclSpreadsheet" />
             @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker report-top", @id = "dclDate" })
             <p id="dclHelp" class="report-inline report-top"><em>Select a day to see results.</em></p>
-            <table id="dclDataTable" class="display">
+            <table id="dclDataTable" class="display report-datatable">
                 <thead>
                     <tr>
                         <th>@Machete.Web.Resources.Reports.date</th>
@@ -38,13 +38,13 @@
             <div id="dailyPieChart2" style="height:auto;width:80%;display:block;"></div>
         </div>
         <h3 class="reportSubtitle"><a href="#" id="wecLink">Weekly</a></h3>
-        <div id="wecTable" class="reportWrapper">
+        <div id="wecTable" class="report-container">
             <input type="button" value="Refresh" class="formButton report-top" id="wecDataOnlyBtn" />
             <input type="button" value="Print" class="formButton report-top" id="wecPrintReport" />
             <input type="button" value="Spreadsheet" class="formButton report-top" id="wecSpreadsheet" />
-            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker report-top", @id = "wecDate" })
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker-weekly report-top", @id = "wecDate" })
             <p id="wecHelp" class="report-inline report-top"><em>Select a day to see results for that week.</em></p>
-            <table id="wecDataTable" class="display">
+            <table id="wecDataTable" class="display report-datatable">
                 <thead>
                     <tr>
                         <th>@Machete.Web.Resources.Reports.weekday</th>
@@ -60,13 +60,13 @@
             </table>
         </div>
         <h3 class="reportSubtitle"><a href="#" id="mwdLink">Monthly</a></h3>
-        <div id="mwdTable" class="reportWrapper">
+        <div id="mwdTable" class="report-container">
             <input type="button" value="Refresh" class="formButton report-top" id="mwdDataOnlyBtn" />
             <input type="button" value="Print" class="formButton report-top" id="mwdPrintReport" />
             <input type="button" value="Spreadsheet" class="formButton report-top" id="mwdSpreadsheet" />
             @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker report-top", @id = "mwdDate" })
             <p id="mwdHelp" class="report-inline report-top"><em>Select any day in a month to see results.</em></p>
-            <table id="mwdDataTable" class="display">
+            <table id="mwdDataTable" class="display report-datatable">
                 <thead>
                     <tr>
                         <th>@Machete.Web.Resources.Reports.date</th>
@@ -103,6 +103,51 @@
                 </tfoot>
             </table>
             @*            <div id="monthlyPieChart1" style="height:auto;width:80%;margin-top:3em;"></div> *@
+        </div>
+        <h3 class="reportSubtitle"><a href="#" id="ywdLink">Yearly</a></h3>
+        <div id="ywdTable" class="report-container">
+            <input type="button" value="Refresh" class="formButton report-top" id="ywdDataOnlyBtn" />
+            <input type="button" value="Print" class="formButton report-top" id="ywdPrintReport" />
+            <input type="button" value="Spreadsheet" class="formButton report-top" id="ywdSpreadsheet" />
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker report-top", @id = "ywdDate" })
+            <p id="ywdHelp" class="report-inline report-top"><em>Select any day in a month to see results.</em></p>
+            <table id="ywdDataTable" class="display report-datatable">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.date</th>
+                        <th>@Machete.Web.Resources.Reports.activeMembers</th>
+                        <th>@Machete.Web.Resources.Reports.totalSignins</th>
+                        <th>@Machete.Web.Resources.Reports.wentToClass</th>
+                        <th>@Machete.Web.Resources.Reports.dispatched</th>
+                        <th>@Machete.Web.Resources.Reports.totalHours</th>
+                        <th>@Machete.Web.Resources.Reports.totalIncome</th>
+                        <th>@Machete.Web.Resources.Reports.avgIncome</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th></th>
+                        <th><strong>Totals</strong></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td colspan="4"></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+            @*            <div id="yearlyPieChart1" style="height:auto;width:80%;margin-top:3em;"></div> *@
         </div>
     </div>
 </div>

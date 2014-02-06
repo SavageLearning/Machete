@@ -714,9 +714,9 @@ html[xmlns] .clearfix {
     font-weight: 700;
 }
 
-.report-datepicker {
+.report-datepicker, .report-datepicker-weekly {
     height: 2em;
-    width: 6em;
+    width: 6em !important;
     padding: 0;
     border-radius: .5em;
     text-align: center;

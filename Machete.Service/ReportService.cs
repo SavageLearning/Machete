@@ -23,13 +23,13 @@ namespace Machete.Service
     #region public class ReportService (Interface and Constructor)
     public interface IReportService
     {
-        IEnumerable<dailyData> DailyController(DateTime date);
-        IEnumerable<weeklyData> WeeklyController(DateTime beginDate, DateTime endDate);
-        IEnumerable<monthlyData> MonthlySummaryController(DateTime beginDate, DateTime endDate);
-        IEnumerable<TypeOfDispatchReport> MonthlyOrderController(DateTime beginDate, DateTime endDate);
-        IEnumerable<yearSumData> YearlyController(DateTime beginDate, DateTime endDate);
-        IEnumerable<jzcData> jzcController(DateTime beginDate, DateTime endDate);
-        IEnumerable<newWorkerData> NewWorkerController(DateTime beginDate, DateTime endDate);
+        IEnumerable<dailyData> DailySumController(DateTime date);
+        IEnumerable<weeklyData> WeeklySumController(DateTime beginDate, DateTime endDate);
+        IEnumerable<monthlyData> MonthlySumController(DateTime beginDate, DateTime endDate);
+        IEnumerable<yearSumData> YearlySumController(DateTime beginDate, DateTime endDate);
+        IEnumerable<yearActData> YearlyActController(DateTime beginDate, DateTime endDate);
+        //IEnumerable<jzcData> jzcController(DateTime beginDate, DateTime endDate);
+        //IEnumerable<newWorkerData> NewWorkerController(DateTime beginDate, DateTime endDate);
     }
 
     public class ReportService : IReportService
@@ -427,8 +427,8 @@ namespace Machete.Service
                         date = aj.date
                     })
                 .Where(signin => signin.person != null &&
-                    DbFunctions.TruncateTime(signin.date) <= endDate &&
-                    DbFunctions.TruncateTime(signin.date) >= beginDate)
+                    signin.date <= endDate &&
+                    signin.date >= beginDate)
                 .GroupBy(gb => new { gb.date, gb.name, gb.type })
                 .Select(grouping => new activityUnit
                 {
@@ -465,7 +465,7 @@ namespace Machete.Service
                     dwc = wqJoinOn.dwccardnum,
                     aid = asqJoinOn.Activity.type,
                     name = asqJoinOn.Activity.name,
-                    dfsi = asqJoinOn.dateforsignin,
+                    dfsi = DbFunctions.TruncateTime(asqJoinOn.dateforsignin),
                     time = asqJoinOn.Activity.dateEnd - asqJoinOn.Activity.dateStart
                 })
                 .Join(lQ,
@@ -476,14 +476,14 @@ namespace Machete.Service
                         inner = wqasq,
                         nameEN = look.text_EN
                     })
-                .Where(whr => whr.nameEN.Contains("English Class"))
+                .Where(whr => whr.nameEN.Contains("English"))
                 .GroupBy(gb => new
                 {
                     cardnum = gb.inner.dwc,
                 })
                 .Select(sel => new ESLAssessed
                 {
-                    date = sel.OrderByDescending(ai => ai.inner.dfsi).First().inner.dfsi,
+                    date = sel.OrderByDescending(ai => ai.inner.dfsi).FirstOrDefault().inner.dfsi ?? endDate,
                     dwccardnum = (int)sel.Key.cardnum,
                     minutesInClass = sel.Sum(s => s.inner.time.Minutes + (s.inner.time.Hours * 60))
                 })
@@ -494,31 +494,57 @@ namespace Machete.Service
 
         /// <summary>
         /// Returns a count of new, expired, and still active members by enumerated dates within the given period.
+        /// This is a resource intensive query, because it targets specific data with daily granularity; this usage 
+        /// can be offset by reducing the interval and increasing the unit of measure.
         /// </summary>
         /// <param name="beginDate"></param>
         /// <param name="endDate"></param>
+        /// <param name="unitOfMeasure">The unit of time to measure; "days" or "months".</param>
+        /// <param name="interval">The interval of time (7 days, 3 months) as int</param>
         /// <returns>date, enrolledOnDate, expiredOnDate, count</returns>
-        public IQueryable<statusUnit> MemberStatusByDate(DateTime beginDate, DateTime endDate)
+        public IQueryable<statusUnit> MemberStatusByDate(DateTime beginDate, DateTime endDate, string unitOfMeasure, int interval)
         {
+            // TODO: Add years as an option for the year-to-year comparison.
             IQueryable<statusUnit> query;
 
             var wQ = wRepo.GetAllQ();
 
-            var dates = Enumerable
-                .Range(0, 1 + endDate.Subtract(beginDate).Days)
-                .Select(n => beginDate.AddDays(n));
+            if (unitOfMeasure == "months" && interval > 0)
+            {
+                int months = ((endDate.Year - beginDate.Year) * 12) + endDate.Month - beginDate.Month;
+                query = Enumerable
+                  .Range(0, months / interval)
+                  .Select(w => endDate.AddMonths(w * -interval))
+                  .Select(x => new statusUnit
+                      {
+                          date = x,
+                          count = wQ.Where(y => y.dateOfMembership < x && y.memberexpirationdate > x).Count(),
+                          enrolledOnDate = wQ.Where(y => y.dateOfMembership >= DbFunctions.AddMonths(x, -interval) && y.dateOfMembership <= x).Count(),
+                          expiredOnDate = wQ.Where(y => y.memberexpirationdate >= DbFunctions.AddMonths(x, -interval) && y.memberexpirationdate <= x).Count()
+                      })
+                  .AsQueryable();
+                return query;
+            }
+            else if (unitOfMeasure == "days" && interval > 0)
+            {
+                int n = 1;
+                if (interval == 1)
+                    n = 0;
+                query = Enumerable
+                    .Range(0, n + (endDate.Subtract(beginDate).Days / interval))
+                    .Select(w => endDate.AddDays(w * -interval))
+                    .Select(x => new statusUnit
+                        {
+                            date = x,
+                            count = wQ.Where(y => y.dateOfMembership < x && y.memberexpirationdate > x).Count(),
+                            enrolledOnDate = wQ.Where(y => y.dateOfMembership == x).Count(),
+                            expiredOnDate = wQ.Where(y => y.memberexpirationdate == x).Count()
+                        })
+                    .AsQueryable();
 
-            query = dates
-                        .Select(x => new statusUnit
-                            {
-                                date = x,
-                                count = wQ.Where(y => y.dateOfMembership < x && y.memberexpirationdate > x).Count(),
-                                enrolledOnDate = wQ.Where(y => y.dateOfMembership == x).Count(),
-                                expiredOnDate = wQ.Where(y => y.memberexpirationdate == x).Count()
-                            })
-                        .AsQueryable();
-
-            return query;
+                return query;
+            }
+            else throw new Exception("unitOfMeasure must be \"months\" or \"days\" and interval must be a positive integer > 0.");
         }
 
         /// <summary>
@@ -919,7 +945,7 @@ namespace Machete.Service
         /// <param name="beginDate"></param>
         /// <param name="endDate"></param>
         /// <returns></returns>
-        public IEnumerable<dailyData> DailyController(DateTime date)
+        public IEnumerable<dailyData> DailySumController(DateTime date)
         {
             IEnumerable<TypeOfDispatchReport> dclCurrent;
             IEnumerable<reportUnit> dailySignins;
@@ -962,7 +988,7 @@ namespace Machete.Service
         /// <param name="beginDate"></param>
         /// <param name="endDate"></param>
         /// <returns></returns>
-        public IEnumerable<weeklyData> WeeklyController(DateTime beginDate, DateTime endDate)
+        public IEnumerable<weeklyData> WeeklySumController(DateTime beginDate, DateTime endDate)
         {
             IEnumerable<AverageWages> weeklyWages;
             IEnumerable<reportUnit> weeklySignins;
@@ -993,7 +1019,7 @@ namespace Machete.Service
             return q;
         }
 
-        public IEnumerable<monthlyData> MonthlySummaryController(DateTime beginDate, DateTime endDate)
+        public IEnumerable<monthlyData> MonthlySumController(DateTime beginDate, DateTime endDate)
         {
             IEnumerable<reportUnit> signins;
             IEnumerable<reportUnit> unique;
@@ -1013,7 +1039,7 @@ namespace Machete.Service
             classes = GetAllActivitySignins(beginDate, endDate).ToList();
             workers = WorkersInJobs(beginDate, endDate).ToList();
             average = HourlyWageAverage(beginDate, endDate).ToList();
-            status = MemberStatusByDate(beginDate, endDate).ToList();
+            status = MemberStatusByDate(beginDate, endDate, "days", 1).ToList();
 
             q = getAllDates
                 .Select(g => new monthlyData
@@ -1086,65 +1112,102 @@ namespace Machete.Service
             return result;
         }
 
-        public IEnumerable<yearSumData> YearlyController(DateTime beginDate, DateTime endDate)
+        public IEnumerable<yearSumData> YearlySumController(DateTime beginDate, DateTime endDate)
         {
-            IEnumerable<placementUnit> temporaryPlacements;
-            IEnumerable<activityUnit> safetyTrainees;
-            IEnumerable<activityUnit> skillsTrainees;
-            IEnumerable<ESLAssessed> eslAssessed;
-            IEnumerable<reportUnit> basicGardenTrainees;
-            IEnumerable<reportUnit> advGardenTrainees;
-            IEnumerable<reportUnit> finTrainees;
+            IEnumerable<reportUnit> signins;
+            IEnumerable<reportUnit> unique;
+            IEnumerable<activityUnit> classes;
+            IEnumerable<placementUnit> workers;
+            IEnumerable<AverageWages> average;
+            IEnumerable<statusUnit> status;
 
-            IEnumerable<activityUnit> getAllClassAttendance;
-            
             IEnumerable<yearSumData> q;
 
-            IEnumerable<DateTime> getAllDates = Enumerable.Range(0, 1 + endDate.Subtract(beginDate).Days)
-                    .Select(offset => beginDate.AddDays(offset))
-                    .ToArray(); 
+            IEnumerable<DateTime> getDates = Enumerable.Range(1, 4)
+                    .Select(offset => endDate.AddMonths(-offset * 3))
+                    .ToArray();
 
-            temporaryPlacements = WorkersInJobs(beginDate, endDate).ToList();
-            getAllClassAttendance = GetAllActivitySignins(beginDate, endDate).ToList();
-            safetyTrainees = getAllClassAttendance.Where(safety => safety.activityType == "Health & Safety");
-            skillsTrainees = getAllClassAttendance.Where(skills => skills.activityType == "Skills Training" || skills.activityType == "Leadership Development");
-            eslAssessed = AdultsEnrolledAndAssessedInESL(beginDate, endDate).ToList();
-            basicGardenTrainees = getAllClassAttendance.Where(basic => basic.info == "Basic Gardening");
-            advGardenTrainees = getAllClassAttendance.Where(adv => adv.info == "Advanced Gardening");
-            finTrainees = getAllClassAttendance.Where(fin => fin.info == "Financial Education");
+            signins = CountSignins(beginDate, endDate).ToList();
+            unique = CountUniqueSignins(beginDate, endDate).ToList();
+            classes = GetAllActivitySignins(beginDate, endDate).ToList();
+            workers = WorkersInJobs(beginDate, endDate).ToList();
+            average = HourlyWageAverage(beginDate, endDate).ToList();
+            status = MemberStatusByDate(beginDate, endDate, "months", 3).ToList();
 
-            q = getAllDates
+            q = getDates
                 .Select(g => new yearSumData
                 {
                     date = g,
-                    temporaryPlacements = temporaryPlacements.Where(whr => whr.date == g).Select(h => h.tempCount).FirstOrDefault() ?? 0,
-                    safetyTrainees = safetyTrainees.Where(whr => whr.date == g),
-                    skillsTrainees = skillsTrainees.Where(whr => whr.date == g),
-                    eslAssessed = eslAssessed.Where(whr => whr.date == g).Count(),
-                    basicGardenTrainees = basicGardenTrainees.Where(whr => whr.date == g).Select(h => h.count).FirstOrDefault() ?? 0,
-                    advGardenTrainees = advGardenTrainees.Where(whr => whr.date == g).Select(h => h.count).FirstOrDefault() ?? 0,
-                    finTrainees = finTrainees.Where(whr => whr.date == g).Select(h => h.count).FirstOrDefault() ?? 0
+                    totalSignins = signins.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Select(h => h.count).Sum() ?? 0,
+                    uniqueSignins = unique.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Select(h => h.count).Sum() ?? 0, //dd
+                    peopleWhoWentToClass = classes.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Select(h => h.count).Sum() ?? 0,
+                    dispatched = workers.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Select(h => h.count).Sum() ?? 0,
+                    tempDispatched = workers.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Select(h => h.tempCount).Sum() ?? 0, //dd
+                    permanentPlacements = workers.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Select(h => h.permCount).Sum() ?? 0, //dd
+                    undupDispatched = workers.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Select(h => h.undupCount).Sum() ?? 0, //dd
+                    totalHours = average.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Select(h => h.hours).Sum(),
+                    totalIncome = average.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Select(h => h.wages).Sum(),
+                    avgIncomePerHour = average.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Select(h => h.avg).Sum(),
+                    stillHere = status.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Select(h => h.count).Sum() ?? 0,
+                    newlyEnrolled = status.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Select(h => h.enrolledOnDate).Sum() ?? 0, //dd
+                    peopleWhoLeft = status.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Select(h => h.expiredOnDate).Sum() ?? 0 //dd
+                });
+
+            q = q.OrderBy(p => p.date);
+
+            return q;
+        }
+
+        public IEnumerable<yearActData> YearlyActController(DateTime beginDate, DateTime endDate)
+        {
+            IEnumerable<ESLAssessed> eslAssessed;
+
+            IEnumerable<activityUnit> getAllClassAttendance;
+            
+            IEnumerable<yearActData> q;
+
+            IEnumerable<DateTime> getDates = Enumerable.Range(1, 4)
+                .Select(offset => endDate.AddMonths(-offset * 3))
+                .ToArray();
+
+            getAllClassAttendance = GetAllActivitySignins(beginDate, endDate).ToList();
+            eslAssessed = AdultsEnrolledAndAssessedInESL(beginDate, endDate).ToList();
+            // do this kind of stuff at controller level
+            //basicGardenTrainees = getAllClassAttendance.Where(basic => basic.info == "Basic Gardening");
+            //advGardenTrainees = getAllClassAttendance.Where(adv => adv.info == "Advanced Gardening");
+            //finTrainees = getAllClassAttendance.Where(fin => fin.info == "Financial Education");
+
+            q = getDates
+                .Select(g => new yearActData
+                {
+                    date = g,
+                    eslAssessed = eslAssessed.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))),
+                    safetyTrainees = getAllClassAttendance
+                        .Where(whr => whr.activityType == "Health & Safety" && whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))),
+                    skillsTrainees = getAllClassAttendance
+                        .Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g)))
+                        .Where(whr => whr.activityType == "Skills Training" || whr.activityType == "Leadership Development")
                 });
 
             return q;
         }
 
-        public IEnumerable<newWorkerData> NewWorkerController(DateTime beginDate, DateTime endDate)
-        {
-            List<newWorkerData> query;
+        //public IEnumerable<newWorkerData> NewWorkerController(DateTime beginDate, DateTime endDate)
+        //{
+        //    List<newWorkerData> query;
 
-            query = new List<newWorkerData>();
+        //    query = new List<newWorkerData>();
 
-            for (var i = 0; i <= 4; ++i)
-            {
-                beginDate = beginDate.AddMonths(-3);
-                var cont = NewWorkers(beginDate, endDate);
-                query.Add(cont);
-                endDate = endDate.AddMonths(-3);
-            }
+        //    for (var i = 0; i <= 4; ++i)
+        //    {
+        //        beginDate = beginDate.AddMonths(-3);
+        //        var cont = NewWorkers(beginDate, endDate);
+        //        query.Add(cont);
+        //        endDate = endDate.AddMonths(-3);
+        //    }
 
-            return query.AsEnumerable();
-        }
+        //    return query.AsEnumerable();
+        //}
 
         public IEnumerable<reportUnit> ClientProfileReportController(DateTime beginDate, DateTime endDate)
         {
@@ -1317,6 +1380,24 @@ namespace Machete.Service
         public int peopleWhoWentToClass { get; set; }
     }
 
+    public class yearSumData
+    {
+        public DateTime date { get; set; }
+        public int totalSignins { get; set; }
+        public int uniqueSignins { get; set; }
+        public int dispatched { get; set; }
+        public int tempDispatched { get; set; }
+        public int permanentPlacements { get; set; }
+        public int undupDispatched { get; set; }
+        public int totalHours { get; set; }
+        public double totalIncome { get; set; }
+        public double avgIncomePerHour { get; set; }
+        public int stillHere { get; set; }
+        public int newlyEnrolled { get; set; }
+        public int peopleWhoLeft { get; set; }
+        public int peopleWhoWentToClass { get; set; }
+    }
+
     public class monthlyActivityData
     {
         public int financialLiterates { get; set; }
@@ -1343,16 +1424,12 @@ namespace Machete.Service
         public double zipCodeCompleteness { get; set; }
     }
 
-    public class yearSumData
+    public class yearActData
     {
         public DateTime? date { get; set; }
-        public int temporaryPlacements { get; set; }
+        public IEnumerable<ESLAssessed> eslAssessed { get; set; }
         public IEnumerable<activityUnit> safetyTrainees { get; set; }
         public IEnumerable<activityUnit> skillsTrainees { get; set; }
-        public int eslAssessed { get; set; }
-        public int basicGardenTrainees { get; set; }
-        public int advGardenTrainees { get; set; }
-        public int finTrainees { get; set; }
     }
 
     #endregion
