@@ -702,11 +702,11 @@ html[xmlns] .clearfix {
 /**/
 /**/ /*Reports*/
 /**/
-.reportWrapper {
+.report-wrapper {
     clear: both;
 }
 
-.reportSubtitle {
+.report-subtitle {
     clear: both;
 }
 
@@ -736,4 +736,8 @@ html[xmlns] .clearfix {
     background: #90A2B6;
     border: solid 2px gray;
     border-collapse: separate;
+}
+
+.report-instructions {
+    padding-left: .5em
 }

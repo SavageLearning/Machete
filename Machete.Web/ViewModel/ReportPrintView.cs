@@ -15,17 +15,17 @@ namespace Machete.Web.ViewModel
 
     public class DailyReportPrintView : ReportPrintView
     {
-        public dataTableResult<dailyData> report { get; set; }
+        public dataTableResult<DailySumData> report { get; set; }
     }
 
     public class WeeklyReportPrintView : ReportPrintView
     {
-        public dataTableResult<weeklyData> report { get; set; }
+        public dataTableResult<WeeklySumData> report { get; set; }
     }
 
     public class MonthlyReportPrintView : ReportPrintView
     {
-        public dataTableResult<monthlyData> report { get; set; }
+        public dataTableResult<MonthlySumData> report { get; set; }
     }
 
     public class JzcReportPrintView : ReportPrintView

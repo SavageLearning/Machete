@@ -279,4 +279,22 @@
   <data name="unique" xml:space="preserve">
     <value>Únicos</value>
   </data>
+  <data name="osha" xml:space="preserve">
+    <value>OSHA</value>
+  </data>
+  <data name="activityInstructions" xml:space="preserve">
+    <value>Utiliza los menús abajo para elegir los distintos tipos de reportes de actividades. Puede utilizar los botones por encima del reporte para alternar la visualización.</value>
+  </data>
+  <data name="dayInstructions" xml:space="preserve">
+    <value>Elija un día del agenda para ver los resultados.</value>
+  </data>
+  <data name="monthInstructions" xml:space="preserve">
+    <value>Elija cualquier día en un mes para ver los resultados de ese mes.</value>
+  </data>
+  <data name="weekInstructions" xml:space="preserve">
+    <value>Elija un día para ver los resultados de esa semana.</value>
+  </data>
+  <data name="yearInstructions" xml:space="preserve">
+    <value>Elija cualquier día del año para ver los resultados del año fiscal que termina en esa fecha.</value>
+  </data>
 </root>

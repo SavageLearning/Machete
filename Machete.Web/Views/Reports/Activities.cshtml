@@ -1,4 +1,128 @@
-﻿        <p />
-        <a href="/ReportServer/Pages/ReportViewer.aspx?%2fActivities-Class+hours+split+by+test+date&rs:Command=Render" target="_blank">Activities-Class hours split by test date</a>
-        <p />
-        <a href="/ReportServer/Pages/ReportViewer.aspx?%2fActivities-Worker+class+hours+by+month+and+year&rs:Command=Render" target="_blank">Activities-Worker class hours by month and year</a>
+﻿<div id="activityWrapper" class="report-wrapper">
+    <div id="activityHeader">
+        <div id="activityPopup">
+            <h3 style="padding-left: .5em;">@Machete.Web.Resources.Reports.activitiesHeader</h3>
+
+            <p id="activityInstructions" class="report-instructions">
+                @Machete.Web.Resources.Reports.activityInstructions
+                <input type="button" value="Hide" class="formButton" id="summaryHide" />
+            </p>
+        </div>
+    </div>
+    <div id="summaryReports" class="report-accordion">
+        @*NO daily activities view. They can get daily information about activities on the Activities page. The same could be said for all areas except "Summary".*@
+        <h3 class="report-subtitle"><a href="#" id="wecLink">Weekly</a></h3>
+        <div id="wecTable" class="report-container">
+            <input type="button" value="Refresh" class="formButton report-top" id="wecDataOnlyBtn" />
+            <input type="button" value="Print" class="formButton report-top" id="wecPrintReport" />
+            <input type="button" value="Spreadsheet" class="formButton report-top" id="wecSpreadsheet" />
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker-weekly report-top", @id = "weekActDate" })
+            <p id="wecHelp" class="report-inline report-top"><em>@Machete.Web.Resources.Reports.weekInstructions</em></p>
+            <table id="weekActDataTable" class="display report-datatable">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.date</th>
+                        <th>@Machete.Web.Resources.Reports.safetyTraining</th>
+                        <th>@Machete.Web.Resources.Reports.skillsTraining</th>
+                        <th>@Machete.Web.Resources.Reports.eslAssessed</th>
+                        <th>@Machete.Web.Resources.Reports.basicGarden</th>
+                        <th>@Machete.Web.Resources.Reports.advGarden</th>
+                        <th>@Machete.Web.Resources.Reports.finEd</th>
+                        <th>@Machete.Web.Resources.Reports.osha</th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <h3 class="report-subtitle"><a href="#" id="mwdLink">Monthly</a></h3>
+        <div id="mwdTable" class="report-container">
+            <input type="button" value="Refresh" class="formButton report-top" id="mwdDataOnlyBtn" />
+            <input type="button" value="Print" class="formButton report-top" id="mwdPrintReport" />
+            <input type="button" value="Spreadsheet" class="formButton report-top" id="mwdSpreadsheet" />
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker report-top", @id = "monthActDate" })
+            <p id="mwdHelp" class="report-inline report-top"><em>@Machete.Web.Resources.Reports.monthInstructions</em></p>
+            <table id="monthActDataTable" class="display report-datatable">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.date</th>
+                        <th>@Machete.Web.Resources.Reports.safetyTraining</th>
+                        <th>@Machete.Web.Resources.Reports.skillsTraining</th>
+                        <th>@Machete.Web.Resources.Reports.eslAssessed</th>
+                        <th>@Machete.Web.Resources.Reports.basicGarden</th>
+                        <th>@Machete.Web.Resources.Reports.advGarden</th>
+                        <th>@Machete.Web.Resources.Reports.finEd</th>
+                        <th>@Machete.Web.Resources.Reports.osha</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th></th>
+                        <th><strong>Totals</strong></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td colspan="4"></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+            @*            <div id="monthlyPieChart1" style="height:auto;width:80%;margin-top:3em;"></div> *@
+        </div>
+        <h3 class="report-subtitle"><a href="#" id="ywdLink">Yearly</a></h3>
+        <div id="ywdTable" class="report-container">
+            <input type="button" value="Refresh" class="formButton report-top" id="ywdDataOnlyBtn" />
+            <input type="button" value="Print" class="formButton report-top" id="ywdPrintReport" />
+            <input type="button" value="Spreadsheet" class="formButton report-top" id="ywdSpreadsheet" />
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker report-top", @id = "yearActDate" })
+            <p id="ywdHelp" class="report-inline report-top"><em>@Machete.Web.Resources.Reports.yearInstructions</em></p>
+            <table id="yearActDataTable" class="display report-datatable">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.date</th>
+                        <th>@Machete.Web.Resources.Reports.safetyTraining</th>
+                        <th>@Machete.Web.Resources.Reports.skillsTraining</th>
+                        <th>@Machete.Web.Resources.Reports.eslAssessed</th>
+                        <th>@Machete.Web.Resources.Reports.basicGarden</th>
+                        <th>@Machete.Web.Resources.Reports.advGarden</th>
+                        <th>@Machete.Web.Resources.Reports.finEd</th>
+                        <th>@Machete.Web.Resources.Reports.osha</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th></th>
+                        <th><strong>Totals</strong></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td colspan="4"></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+            @*            <div id="yearlyPieChart1" style="height:auto;width:80%;margin-top:3em;"></div> *@
+        </div>
+    </div>
+</div>

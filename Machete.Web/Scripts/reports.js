@@ -113,6 +113,151 @@ function reportTableDefaults(url, lang, date)
     return tableDefaults;
 }
 
+function summaryTableDefaults(url, lang, date)
+{
+    var tableDefaults = reportTableDefaults(url, lang, date);
+    tableDefaults.aoColumns = [
+    { mDataProp: "date" },
+    { mDataProp: "stillHere" },
+    { mDataProp: "totalSignins" },
+    { mDataProp: "wentToClass" },
+    { mDataProp: "dispatched" },
+    { mDataProp: "totalHours" },
+    { mDataProp: "totalIncome" },
+    { mDataProp: "avgIncomePerHour" },
+    {
+        mDataProp: null,
+        sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="nestedDetailsButton">'
+    },
+    ];
+    tableDefaults.fnFooterCallback = function (nRow, aaData, iStart, iEnd, aiDisplay) {
+        /*
+         * Calculate the total for all numbers this table 
+         */
+        var nCells = nRow.getElementsByTagName('th');
+        var nTr = nRow.parentElement.getElementsByTagName('tr')[1];
+        var tCells = nTr.getElementsByTagName('td');
+
+        var iTotal = 0;
+        var iWent = 0;
+        var iDispatch = 0;
+        var iHours = 0;
+        var iIncome = 0;
+        var iAverage = 0.0;
+        var iDontCount = 0.0;
+
+        var iEnrolled = 0;
+        var iQuit = 0;
+        var myFirstSignin = 0;
+        var jornalero = 0;
+        var conseguiChamba = 0;
+        var myFirstJob = 0;
+
+        //console.log(aaData); aaData is an array of objects, each containing properties and values for each column
+
+        for (var i = 0; i < aaData.length ; i++) {
+            //console.log(aaData[i]);
+            iTotal += parseInt(aaData[i].totalSignins);
+            iWent += parseInt(aaData[i].wentToClass);
+            iDispatch += parseInt(aaData[i].dispatched);
+            iHours += parseInt(aaData[i].totalHours);
+            iIncome += parseFloat(aaData[i].totalIncome.replace('$', '').replace(',', ''));
+            iAverage += parseFloat(aaData[i].avgIncomePerHour.replace('$', ''));
+            iDontCount += parseFloat(aaData[i].avgIncomePerHour.replace('$', '')) > 0 ? 0 : 1;
+            iEnrolled += parseInt(aaData[i].drilldown.newlyEnrolled);
+            iQuit += parseInt(aaData[i].drilldown.peopleWhoLeft);
+            myFirstSignin += parseInt(aaData[i].drilldown.uniqueSignins);
+            jornalero += parseInt(aaData[i].drilldown.tempDispatched);
+            conseguiChamba += parseInt(aaData[i].drilldown.permanentPlacements);
+            myFirstJob += parseInt(aaData[i].drilldown.undupDispatched);
+        }
+
+        nCells[2].innerHTML = iTotal + ' signins';
+        nCells[3].innerHTML = iWent + ' students';
+        nCells[4].innerHTML = iDispatch + ' dispatched';
+        nCells[5].innerHTML = iHours + ' hours';
+        nCells[6].innerHTML = '$' + iIncome.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' earned';
+        nCells[7].innerHTML = '$' + (iAverage / (aaData.length - iDontCount)).toFixed(2) + '/hr. avg.';
+
+        tCells[0].innerHTML = iEnrolled + ' signed up, ' + iQuit + ' left';
+
+        tCells[2].innerHTML = '(' + myFirstSignin + ' unique)';
+
+        tCells[4].innerHTML = '(' + myFirstJob + ' unique, ' + jornalero + ' temporary, and ' + conseguiChamba + ' permanent jobs)';
+    }
+
+    return tableDefaults;
+}
+
+function activityTableDefaults(url, lang, date)
+{
+    var tableDefaults = reportTableDefaults(url, lang, date);
+    tableDefaults.aoColumns = [
+    { mDataProp: "date" },
+    { mDataProp: "safety" },
+    { mDataProp: "skills" },
+    { mDataProp: "esl" },
+    { mDataProp: "basGarden" },
+    { mDataProp: "advGarden" },
+    { mDataProp: "finEd" },
+    { mDataProp: "osha" },
+    {
+        mDataProp: null,
+        sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="nestedDetailsButton">'
+    },
+    ];
+
+    return tableDefaults;
+}
+
+function fnFormatWeekDetails(oTable, nTr) {
+    var aData = oTable.fnGetData(nTr);
+    var jobList = aData.topJobs;
+    var sOut = '<table cellpadding="5" cellspacing="0" border="0" class="report-drill">';
+    sOut += '<thead><tr><th>Date</th>'; //don't really need date; they already select date for drilldown
+    sOut += '<th>Skill</th>';
+    sOut += '<th>Count</th>';
+    sOut += '</tr></thead><tbody>';
+    for (var i in jobList) {
+        var job = jobList[i];
+        sOut += '<tr><td>' + job.date + '</td><td>' + job.skill + '</td><td>' + job.count + '</td></tr>';
+    }
+    sOut += '</tbody></table>';
+    return sOut;
+}
+
+function fnFormatSummaryDetails(oTable, nTr) {
+    var aData = oTable.fnGetData(nTr);
+    var drillList = aData.drilldown;
+    var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="margin-left: 13.5%;background: #90A2B6;border: solid 2px gray;border-collapse: separate;">';
+    sOut += '<thead><tr><th>Enrolled</th>';
+    sOut += '<th>Exited</th>';
+    sOut += '<th>Unique Signin</th>';
+    sOut += '<th>Temporary</th>';
+    sOut += '<th>Permanent</th>';
+    sOut += '<th>Unique Dispatch</th>';
+    sOut += '</tr></thead><tbody>';
+    sOut += '<tr><td>' + drillList.newlyEnrolled + '</td><td>' + drillList.peopleWhoLeft + '</td><td>' + drillList.uniqueSignins + '</td><td>' + drillList.tempDispatched + '</td><td>' + drillList.permanentPlacements + '</td><td>' + drillList.undupDispatched + '</td></tr>';
+    sOut += '</tbody></table>';
+    return sOut;
+}
+
+function fnFormatActivityDetails(oTable, nTr) {
+    var aData = oTable.fnGetData(nTr);
+    var activityList = aData.drilldown;
+    var sOut = '<table cellpadding="5" cellspacing="0" border="0" class="report-drill">';
+    sOut += '<thead><tr><th>Class</th>';
+    sOut += '<th>Type</th>';
+    sOut += '<th>Count</th>';
+    sOut += '</tr></thead><tbody>';
+    for (var i in activityList) {
+        var act = activityList[i];
+        sOut += '<tr><td>' + act.name + '</td><td>' + act.type + '</td><td>' + act.count + '</td></tr>';
+    }
+    sOut += '</tbody></table>';
+    return sOut;
+}
+
 //tested on jsFiddle, working ok
 function dailySigninPie(objArray) {
     var array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
