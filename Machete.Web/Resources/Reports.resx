@@ -175,7 +175,7 @@
     <value>Work Orders</value>
   </data>
   <data name="summaryHeader" xml:space="preserve">
-    <value>Machete Summary Reports</value>
+    <value>Work Order Summary Reports</value>
   </data>
   <data name="summaryInstructions" xml:space="preserve">
     <value>Open the menus below to select different types of summary reports. Use the buttons at the top of the report to toggle the display.</value>
@@ -229,7 +229,7 @@
     <value>SSRS</value>
   </data>
   <data name="workersHeader" xml:space="preserve">
-    <value>Machete Worker Reports</value>
+    <value>Worker Detail Reports</value>
   </data>
   <data name="advGarden" xml:space="preserve">
     <value>Gardening 2</value>
@@ -278,5 +278,26 @@
   </data>
   <data name="unique" xml:space="preserve">
     <value>Unique</value>
+  </data>
+  <data name="osha" xml:space="preserve">
+    <value>OSHA</value>
+  </data>
+  <data name="activitiesHeader" xml:space="preserve">
+    <value>Activities Reports</value>
+  </data>
+  <data name="activityInstructions" xml:space="preserve">
+    <value>Open the menu items below to select different types of activity reports. Use the buttons at the top of the report to toggle the display.</value>
+  </data>
+  <data name="dayInstructions" xml:space="preserve">
+    <value>Select a day to see results.</value>
+  </data>
+  <data name="monthInstructions" xml:space="preserve">
+    <value>Select any day in a month to see results for that month.</value>
+  </data>
+  <data name="weekInstructions" xml:space="preserve">
+    <value>Select a day to see results for that week.</value>
+  </data>
+  <data name="yearInstructions" xml:space="preserve">
+    <value>Select any day in a year to see the results of a fiscal year ending on that day.</value>
   </data>
 </root>

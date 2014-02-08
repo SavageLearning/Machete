@@ -70,11 +70,29 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Activities Reports.
+        /// </summary>
+        public static string activitiesHeader {
+            get {
+                return ResourceManager.GetString("activitiesHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Activities.
         /// </summary>
         public static string activitiesTab {
             get {
                 return ResourceManager.GetString("activitiesTab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open the menu items below to select different types of activity reports. Use the buttons at the top of the report to toggle the display..
+        /// </summary>
+        public static string activityInstructions {
+            get {
+                return ResourceManager.GetString("activityInstructions", resourceCulture);
             }
         }
         
@@ -120,6 +138,15 @@ namespace Machete.Web.Resources {
         public static string date {
             get {
                 return ResourceManager.GetString("date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select a day to see results..
+        /// </summary>
+        public static string dayInstructions {
+            get {
+                return ResourceManager.GetString("dayInstructions", resourceCulture);
             }
         }
         
@@ -295,6 +322,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select any day in a month to see results for that month..
+        /// </summary>
+        public static string monthInstructions {
+            get {
+                return ResourceManager.GetString("monthInstructions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to With Family (new).
         /// </summary>
         public static string newFamilyHousholds {
@@ -349,6 +385,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to OSHA.
+        /// </summary>
+        public static string osha {
+            get {
+                return ResourceManager.GetString("osha", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Safety.
         /// </summary>
         public static string safetyTraining {
@@ -385,7 +430,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Machete Summary Reports.
+        ///   Looks up a localized string similar to Work Order Summary Reports.
         /// </summary>
         public static string summaryHeader {
             get {
@@ -511,6 +556,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select a day to see results for that week..
+        /// </summary>
+        public static string weekInstructions {
+            get {
+                return ResourceManager.GetString("weekInstructions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Top req. skills.
         /// </summary>
         public static string weekJobsSect {
@@ -529,7 +583,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Machete Worker Reports.
+        ///   Looks up a localized string similar to Worker Detail Reports.
         /// </summary>
         public static string workersHeader {
             get {
@@ -543,6 +597,15 @@ namespace Machete.Web.Resources {
         public static string workersTab {
             get {
                 return ResourceManager.GetString("workersTab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select any day in a year to see the results of a fiscal year ending on that day..
+        /// </summary>
+        public static string yearInstructions {
+            get {
+                return ResourceManager.GetString("yearInstructions", resourceCulture);
             }
         }
     }

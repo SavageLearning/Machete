@@ -125,6 +125,7 @@ namespace Machete.Web.Controllers
         #endregion
 
         #region AjaxHandlers
+        #region Summary (Orders) Reports
         /// <summary>
         /// Daily, Casa Latina == dcl. This is a daily report for Machete, different than the Work Order
         /// Status summary, and part of the summary reports.
@@ -138,7 +139,7 @@ namespace Machete.Web.Controllers
             dclDate = voDate(param);
             // pass filter parameters to service level
             // Call view model from service layer:
-            dataTableResult<dailyData> dcl = DaySumView(dclDate);
+            dataTableResult<DailySumData> dcl = DaySumView(dclDate);
             //
             //return what's left to datatables
             var result = from d in dcl.query
@@ -173,13 +174,19 @@ namespace Machete.Web.Controllers
         /// <returns>json object for use with datatables, etc.</returns>
         public JsonResult AjaxWec(jQueryDataTableParam param)
         {
-            DateTime wecDate;
-            // jQuery passes in parameters that must be mapped to viewOptions
-            wecDate = voDate(param);
+            DateTime weekDate;
+            DateTime beginDate;
+            DateTime endDate;
+            dataTableResult<WeeklySumData> wec;
 
-            dataTableResult<weeklyData> wec = WeekSumView(wecDate);
-            //
-            //return what's left to datatables
+            // jQuery passes in parameters that must be mapped to viewOptions
+            weekDate = voDate(param);
+
+            beginDate = weekDate.AddDays(-6).Date;
+            endDate = new DateTime(weekDate.Year, weekDate.Month, weekDate.Day, 23, 59, 59);
+
+            wec = WeekSumView(beginDate, endDate);
+
             var result = from d in wec.query
                          select new
                          {
@@ -210,21 +217,23 @@ namespace Machete.Web.Controllers
         }
 
         /// <summary>
-        /// Provides json grid of first report 
-        /// This is temporary -- we will need
-        /// multiple Ajax handlers for  the
-        /// other reports
+        /// Provides json grid of monthly summary report
         /// </summary>
         /// <param name="param">contains paramters for filtering</param>
         /// <returns>JsonResult for DataTables consumption</returns>
         [Authorize(Roles = "Administrator, Manager")]
         public JsonResult AjaxMwd(jQueryDataTableParam param)
         {
-            DateTime mwdDate;
-            dataTableResult<monthlyData> mwd;
+            DateTime monthDate;
+            DateTime beginDate;
+            DateTime endDate;
+            dataTableResult<MonthlySumData> mwd;
 
-            mwdDate = voDate(param);
-            mwd = monthSumView(mwdDate);
+            monthDate = voDate(param);
+            beginDate = new DateTime(monthDate.Year, monthDate.Month, 1, 0, 0, 0);
+            endDate = new DateTime(monthDate.Year, monthDate.Month, System.DateTime.DaysInMonth(monthDate.Year, monthDate.Month));
+
+            mwd = monthSumView(beginDate, endDate);
 
             var result = from d in mwd.query
                          select new
@@ -259,21 +268,24 @@ namespace Machete.Web.Controllers
         }
 
         /// <summary>
-        /// Provides json grid of first report 
-        /// This is temporary -- we will need
-        /// multiple Ajax handlers for  the
-        /// other reports
+        /// Provides json grid of yearly report 
         /// </summary>
         /// <param name="param">contains paramters for filtering</param>
         /// <returns>JsonResult for DataTables consumption</returns>
         [Authorize(Roles = "Administrator, Manager")]
         public JsonResult AjaxYwd(jQueryDataTableParam param)
         {
-            DateTime ywdDate;
-            dataTableResult<yearSumData> ywd;
+            DateTime yDate;
+            DateTime beginDate;
+            DateTime endDate;
+            dataTableResult<YearSumData> ywd;
 
-            ywdDate = voDate(param);
-            ywd = yearSumView(ywdDate);
+            yDate = voDate(param);
+
+            beginDate = yDate.AddMonths(-12).Date;
+            endDate = new DateTime(yDate.Year, yDate.Month, yDate.Day, 23, 59, 59);
+
+            ywd = yearSumView(beginDate, endDate);
 
             var result = from d in ywd.query
                          select new
@@ -306,35 +318,43 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
+        #endregion
 
-        public JsonResult AjaxYearAct(jQueryDataTableParam param)
+        #region Activities Reports
+        public JsonResult AjaxWeekAct(jQueryDataTableParam param)
         {
-            DateTime yearDate;
-            dataTableResult<yearActData> year;
+            DateTime weekDate;
+            DateTime beginDate;
+            DateTime endDate;
 
-            yearDate = voDate(param);
-            year = yearActView(yearDate);
+            dataTableResult<ActivityData> year;
+
+            weekDate = voDate(param);
+
+            beginDate = weekDate.AddDays(-6).Date;
+            endDate = new DateTime(weekDate.Year, weekDate.Month, weekDate.Day, 23, 59, 59);
+
+            year = ActivityView(beginDate, endDate, "monthly");
 
             var result = from d in year.query
                          select new
                          {
-                             date = System.String.Format("{0:MM/dd/yyyy}", d.date),
-                             eslAssessed = d.eslAssessed.Count().ToString(),
-                             eslHours = (((int)d.eslAssessed.Sum(z => z.minutesInClass) / 60)).ToString(), //dd?
-                             safetyTrainees = d.safetyTrainees.Sum(z => z.count).ToString(),
-                             skillsTrainees = d.skillsTrainees.Sum(z => z.count).ToString(),
-                             drilldownData1 = from x in d.safetyTrainees
-                                              group x by x.info into y
-                                                select new {
-                                                    safetyName = y.Key,
-                                                    safetyCount = y.Sum(z => z.count).ToString()
-                                                },
-                             drilldownData2 = from x in d.skillsTrainees
-                                              group x by x.info into y
-                                                select new {
-                                                    skillsName = y.Key,
-                                                    skillsCount = y.Sum(z => z.count).ToString()
-                                                }, //assumption is this will include information about gardening and financial...
+                             date = System.String.Format("{0:MMMM d, yyyy}", d.dateStart),
+                             safety = d.safety.ToString(),
+                             skills = d.skills.ToString(),
+                             esl = d.esl.ToString(),
+                             basGarden = d.basGarden.ToString(),
+                             advGarden = d.advGarden.ToString(),
+                             finEd = d.finEd.ToString(),
+                             osha = d.osha.ToString(),
+                             drilldown = from g in d.drilldown
+                                         group g by new { g.info, g.activityType } into x
+                                         select new
+                                         {
+                                             name = x.Key.info,
+                                             type = x.Key.activityType,
+                                             count = x.Sum(y => y.count)
+                                         }
                          };
 
             return Json(new
@@ -347,6 +367,100 @@ namespace Machete.Web.Controllers
             JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult AjaxMonthAct(jQueryDataTableParam param)
+        {
+            DateTime monthDate;
+            DateTime beginDate;
+            DateTime endDate;
+
+            dataTableResult<ActivityData> year;
+
+            monthDate = voDate(param);
+
+            beginDate = new DateTime(monthDate.Year, monthDate.Month, 1, 0, 0, 0);
+            endDate = new DateTime(monthDate.Year, monthDate.Month, DateTime.DaysInMonth(monthDate.Year, monthDate.Month), 23, 59, 59);
+
+            year = ActivityView(beginDate, endDate, "monthly");
+
+            var result = from d in year.query
+                         select new
+                         {
+                             date = System.String.Format("{0:MMMM d, yyyy}", d.dateStart),
+                             safety = d.safety.ToString(),
+                             skills = d.skills.ToString(),
+                             esl = d.esl.ToString(),
+                             basGarden = d.basGarden.ToString(),
+                             advGarden = d.advGarden.ToString(),
+                             finEd = d.finEd.ToString(),
+                             osha = d.osha.ToString(),
+                             drilldown = from g in d.drilldown
+                                         group g by new { g.info, g.activityType } into x
+                                         select new
+                                         {
+                                             name = x.Key.info,
+                                             type = x.Key.activityType,
+                                             count = x.Sum(y => y.count)
+                                         }
+                         };
+
+            return Json(new
+            {
+                iTotalRecords = year.totalCount, //total records, before filtering
+                iTotalDisplayRecords = year.filteredCount, //total records, after filtering
+                sEcho = param.sEcho, //unaltered copy of sEcho sent from the client side
+                aaData = result
+            },
+            JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult AjaxYearAct(jQueryDataTableParam param)
+        {
+            DateTime yearDate;
+            DateTime beginDate;
+            DateTime endDate;
+
+            dataTableResult<ActivityData> year;
+
+            yearDate = voDate(param);
+
+            //From www.investopedia.com, Fiscal Year-End: The completion of a one-year, or 12-month, accounting period.
+            //A firm's fiscal year-end does not necessarily need to fall on December 31, and can actually fall on any day throughout the year.
+            beginDate = yearDate.AddMonths(-12).Date;
+            endDate = new DateTime(yearDate.Year, yearDate.Month, yearDate.Day, 23, 59, 59);
+
+            year = yearActView(beginDate, endDate);
+
+            var result = from d in year.query
+                         select new
+                         {
+                             date = "Quarter beginning " + System.String.Format("{0:MMMM d, yyyy}", d.dateStart) + " and ending " + System.String.Format("{0:MMMM d, yyyy}", d.dateEnd),
+                             safety = d.safety.ToString(),
+                             skills = d.skills.ToString(),
+                             esl = d.esl.ToString(),
+                             basGarden = d.basGarden.ToString(),
+                             advGarden = d.advGarden.ToString(),
+                             finEd = d.finEd.ToString(),
+                             osha = d.osha.ToString(),
+                             drilldown = from g in d.drilldown
+                                         group g by new { g.info, g.activityType } into x
+                                         select new
+                                         {
+                                             name = x.Key.info,
+                                             type = x.Key.activityType,
+                                             count = x.Sum(y => y.count)
+                                         }
+                         };
+
+            return Json(new
+            {
+                iTotalRecords = year.totalCount, //total records, before filtering
+                iTotalDisplayRecords = year.filteredCount, //total records, after filtering
+                sEcho = param.sEcho, //unaltered copy of sEcho sent from the client side
+                aaData = result
+            },
+            JsonRequestBehavior.AllowGet);
+        }
+        #endregion
         //public ActionResult AjaxNewWkr(jQueryDataTableParam param)
         //{
         //    DateTime newDate;
@@ -385,82 +499,52 @@ namespace Machete.Web.Controllers
 
         #region DataTablesStuff
         // The following methods organize the above service-layer views for return to Ajax/DataTables and the GUI.
-        // TODO: These are views, should contain no operating logic, and ideally would not be at the MVC layer....
-        public dataTableResult<dailyData> DaySumView(DateTime date)
+        public dataTableResult<DailySumData> DaySumView(DateTime date)
         {
-            IEnumerable<dailyData> query;
-
+            IEnumerable<DailySumData> query;
             query = repServ.DailySumController(date);
-
-            var result = GetDataTableResult<dailyData>(query);
-
+            var result = GetDataTableResult<DailySumData>(query);
             return result; // ...for DataTables.
         }
 
-        public dataTableResult<weeklyData> WeekSumView(DateTime weekDate)
+        public dataTableResult<WeeklySumData> WeekSumView(DateTime beginDate, DateTime endDate)
         {
-            DateTime beginDate;
-            DateTime endDate;
-            IEnumerable<weeklyData> query;
-
-            beginDate = new DateTime(weekDate.Year, weekDate.Month, weekDate.Day, 0, 0, 0).AddDays(-6);
-            endDate = new DateTime(weekDate.Year, weekDate.Month, weekDate.Day, 23, 59, 59);
-
+            IEnumerable<WeeklySumData> query;
             query = repServ.WeeklySumController(beginDate, endDate);
-
-            var result = GetDataTableResult<weeklyData>(query);
-
+            var result = GetDataTableResult<WeeklySumData>(query);
             return result;
         }
 
-        public dataTableResult<monthlyData> monthSumView(DateTime monthDate)
+        public dataTableResult<MonthlySumData> monthSumView(DateTime beginDate, DateTime endDate)
         {
-            DateTime beginDate;
-            DateTime endDate;
-            IEnumerable<monthlyData> query;
-
-            beginDate = new DateTime(monthDate.Year, monthDate.Month, 1, 0, 0, 0);
-            endDate = new DateTime(monthDate.Year, monthDate.Month, System.DateTime.DaysInMonth(monthDate.Year, monthDate.Month));
-
+            IEnumerable<MonthlySumData> query;
             query = repServ.MonthlySumController(beginDate, endDate);
-
-            var result = GetDataTableResult<monthlyData>(query);
-
+            var result = GetDataTableResult<MonthlySumData>(query);
             return result;
         }
 
-        public dataTableResult<yearSumData> yearSumView(DateTime yDate)
+        public dataTableResult<YearSumData> yearSumView(DateTime beginDate, DateTime endDate)
         {
-            DateTime beginDate;
-            DateTime endDate;
-            IEnumerable<yearSumData> query;
-
-            beginDate = new DateTime(yDate.Year, yDate.Month, 1, 0, 0, 0).AddMonths(-12);
-            endDate = new DateTime(yDate.Year, yDate.Month, System.DateTime.DaysInMonth(yDate.Year, yDate.Month), 23, 59, 59);
-
+            IEnumerable<YearSumData> query;
             query = repServ.YearlySumController(beginDate, endDate);
-
-            var result = GetDataTableResult<yearSumData>(query);
-
+            var result = GetDataTableResult<YearSumData>(query);
             return result;
         }
-
-        private dataTableResult<yearActData> yearActView(DateTime yearDate)
+        private dataTableResult<ActivityData> ActivityView(DateTime beginDate, DateTime endDate, string reportType)
         {
-            DateTime beginDate;
-            DateTime endDate;
-            IEnumerable<yearActData> query;
-
-            beginDate = new DateTime(yearDate.Year, yearDate.Month, 1, 0, 0, 0).AddMonths(-12);
-            endDate = new DateTime(yearDate.Year, yearDate.Month, System.DateTime.DaysInMonth(yearDate.Year, yearDate.Month), 23, 59, 59);
-
-            query = repServ.YearlyActController(beginDate, endDate);
-
-            var result = GetDataTableResult<yearActData>(query);
-
+            IEnumerable<ActivityData> query;
+            query = repServ.ActivityReportController(beginDate, endDate, reportType);
+            var result = GetDataTableResult<ActivityData>(query);
             return result;
         }
 
+        private dataTableResult<ActivityData> yearActView(DateTime beginDate, DateTime endDate)
+        {
+            IEnumerable<ActivityData> query;
+            query = repServ.YearlyActController(beginDate, endDate);
+            var result = GetDataTableResult<ActivityData>(query);
+            return result;
+        }
 
         public dataTableResult<T> GetDataTableResult<T>(IEnumerable<T> query)
         {
