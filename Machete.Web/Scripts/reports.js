@@ -210,6 +210,46 @@ function activityTableDefaults(url, lang, date)
     return tableDefaults;
 }
 
+function workerTableDefaults(url, lang, date) {
+    var tableDefaults = reportTableDefaults(url, lang, date);
+    tableDefaults.aoColumns = [
+        { mDataProp: "date" },
+        { mDataProp: "singleAdults" },
+        { mDataProp: "familyHouseholds" },
+        { mDataProp: "newSingleAdults" },
+        { mDataProp: "newFamilyHouseholds" }
+    ];
+    tableDefaults.fnFooterCallback = function (nRow, aaData, iStart, iEnd, aiDisplay) {
+        /*
+         * Calculate the total for all numbers this table 
+         */
+        var nCells = nRow.getElementsByTagName('th');
+
+        var iComplete = 0.0;
+        var iSingle = 0;
+        var iFamily = 0;
+        var iNewSingle = 0;
+        var iNewFamily = 0;
+
+        for (var i = 0; i < aaData.length ; i++) {
+            iComplete += parseFloat(aaData[i].zipCompleteness);
+            iSingle += parseInt(aaData[i].singleAdults);
+            iFamily += parseInt(aaData[i].familyHouseholds);
+            iNewSingle += parseInt(aaData[i].newSingleAdults);
+            iNewFamily += parseInt(aaData[i].newFamilyHouseholds);
+        }
+
+        iComplete = Math.round((iComplete / (iSingle + iFamily)) * 10000)/100;
+
+        nCells[0].innerHTML = "Zip Codes: " + iComplete + "%";
+        nCells[2].innerHTML = iNewSingle;
+        nCells[3].innerHTML = iNewFamily;
+    }
+
+    return tableDefaults;
+}
+
+
 function fnFormatWeekDetails(oTable, nTr) {
     var aData = oTable.fnGetData(nTr);
     var jobList = aData.topJobs;

@@ -158,11 +158,11 @@ namespace Machete.Data
                 new Lookup { ID=107,category = LCategory.emailstatus, key= LEmailStatus.Sending, text_EN="Sending",         text_ES="Envío",          selected = false },
                 new Lookup { ID=107,category = LCategory.emailstatus, key= LEmailStatus.Pending, text_EN="Pending",         text_ES="Pendiente",          selected = false },
                 new Lookup { ID=108,category = LCategory.emailTemplate, key= LKey.Default, text_EN="default template (English)", text_ES="plantilla predeterminada (Ingles)", selected=true, emailTemplate="Thanks for using Machete! You can change this in the Config section."},
-                new Lookup { ID=109,category = LCategory.activityType, text_EN="Skills Training", text_ES="Capacitacion", selected = false},
+                new Lookup { ID=109,category = LCategory.activityType, text_EN="Skills Training", text_ES="Capacitación", selected = false},
                 new Lookup { ID=110,category = LCategory.activityType, text_EN="Leadership Development", text_ES="Liderazgo", selected = false},
-                new Lookup { ID=111,category = LCategory.activityName, text_EN="Basic Gardening", text_ES="Jardineria Basica", selected = false},
-                new Lookup { ID=112,category = LCategory.activityName, text_EN="Advanced Gardening", text_ES="Jardineria Avanzada", selected = false},
-                new Lookup { ID=113,category = LCategory.activityName, text_EN="Financial Education", text_ES="Educacion Fiscal", selected = false},
+                new Lookup { ID=111,category = LCategory.activityName, text_EN="Basic Gardening", text_ES="Jardinería Básica", selected = false},
+                new Lookup { ID=112,category = LCategory.activityName, text_EN="Advanced Gardening", text_ES="Jardinería Avanzada", selected = false},
+                new Lookup { ID=113,category = LCategory.activityName, text_EN="Financial Education", text_ES="Educación Fiscal", selected = false},
             };
         //
         //

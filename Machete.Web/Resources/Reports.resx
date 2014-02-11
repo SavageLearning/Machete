@@ -256,7 +256,7 @@
     <value>Unique</value>
   </data>
   <data name="familyHouseholds" xml:space="preserve">
-    <value>With Family (total)</value>
+    <value>With Family (running total)</value>
   </data>
   <data name="newFamilyHousholds" xml:space="preserve">
     <value>With Family (new)</value>
@@ -265,7 +265,7 @@
     <value>Singles (new)</value>
   </data>
   <data name="singleAdults" xml:space="preserve">
-    <value>Singles (total)</value>
+    <value>Singles (running total)</value>
   </data>
   <data name="activeMembers" xml:space="preserve">
     <value>Active</value>
@@ -286,7 +286,7 @@
     <value>Activities Reports</value>
   </data>
   <data name="activityInstructions" xml:space="preserve">
-    <value>Open the menu items below to select different types of activity reports. Use the buttons at the top of the report to toggle the display.</value>
+    <value>Open the menu items below to select different types of activity reports. Use the buttons at the top of the report to toggle the display. For daily Activities information, see the summary on the Activity tab.</value>
   </data>
   <data name="dayInstructions" xml:space="preserve">
     <value>Select a day to see results.</value>
@@ -299,5 +299,14 @@
   </data>
   <data name="yearInstructions" xml:space="preserve">
     <value>Select any day in a year to see the results of a fiscal year ending on that day.</value>
+  </data>
+  <data name="name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="zip" xml:space="preserve">
+    <value>Zip</value>
+  </data>
+  <data name="zipplusfour" xml:space="preserve">
+    <value>+4</value>
   </data>
 </root>

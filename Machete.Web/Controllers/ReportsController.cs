@@ -428,7 +428,7 @@ namespace Machete.Web.Controllers
             beginDate = yearDate.AddMonths(-12).Date;
             endDate = new DateTime(yearDate.Year, yearDate.Month, yearDate.Day, 23, 59, 59);
 
-            year = yearActView(beginDate, endDate);
+            year = YearActView(beginDate, endDate);
 
             var result = from d in year.query
                          select new
@@ -461,33 +461,106 @@ namespace Machete.Web.Controllers
             JsonRequestBehavior.AllowGet);
         }
         #endregion
-        //public ActionResult AjaxNewWkr(jQueryDataTableParam param)
-        //{
-        //    DateTime newDate;
 
-        //    newDate = voDate(param);
+        #region Worker Reports
+        public ActionResult AjaxWeekWkr(jQueryDataTableParam param)
+        {
+            DateTime wDate;
+            DateTime beginDate;
+            DateTime endDate;
 
-        //    dataTableResult<newWorkerData> newWkr = newWorkerView(newDate);
+            wDate = voDate(param);
+            beginDate = wDate.AddDays(-6).Date;
+            endDate = new DateTime(wDate.Year, wDate.Month, wDate.Day, 23, 59, 59);
 
-        //    var result = from d in newWkr.query
-        //                 select new
-        //                 {
-        //                     date = System.String.Format("{0:MM/dd/yyyy}", d.date),
-        //                     singleAdults = d.singleAdults.ToString(),
-        //                     familyHouseholds = d.familyHouseholds.ToString(),
-        //                     newSingleAdults = d.newSingleAdults.ToString(),
-        //                     newFamilyHouseholds = d.newFamilyHouseholds.ToString(),
-        //                     zipCodeCompleteness = d.zipCodeCompleteness.ToString()
-        //                 };
+            dataTableResult<NewWorkerData> newWkr = NewWorkerView(beginDate, endDate, "weekly");
 
-        //    return Json(new{
-        //        iTotalRecords = newWkr.totalCount,
-        //        iTotalDisplayRecords = newWkr.filteredCount,
-        //        sEcho = param.sEcho,
-        //        aaData = result
-        //    },
-        //    JsonRequestBehavior.AllowGet);
-        //}
+            var result = from d in newWkr.query
+                         orderby d.dateStart ascending
+                         select new
+                         {
+                             date = System.String.Format("{0:dddd}", d.dateStart),
+                             singleAdults = d.singleAdults.ToString(),
+                             familyHouseholds = d.familyHouseholds.ToString(),
+                             newSingleAdults = d.newSingleAdults.ToString(),
+                             newFamilyHouseholds = d.newFamilyHouseholds.ToString(),
+                             zipCompleteness = d.zipCompleteness
+                         };
+
+            return Json(new
+            {
+                iTotalRecords = newWkr.totalCount,
+                iTotalDisplayRecords = newWkr.filteredCount,
+                sEcho = param.sEcho,
+                aaData = result
+            },
+            JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult AjaxMonthWkr(jQueryDataTableParam param)
+        {
+            DateTime mDate;
+            DateTime beginDate;
+            DateTime endDate;
+
+            mDate = voDate(param);
+            beginDate = new DateTime(mDate.Year, mDate.Month, 1, 0, 0, 0);
+            endDate = new DateTime(mDate.Year, mDate.Month, System.DateTime.DaysInMonth(mDate.Year, mDate.Month));
+
+            dataTableResult<NewWorkerData> newWkr = NewWorkerView(beginDate, endDate, "monthly");
+
+            var result = from d in newWkr.query
+                         select new
+                         {
+                             date = System.String.Format("{0:MMMM d}", d.dateStart),
+                             singleAdults = d.singleAdults.ToString(),
+                             familyHouseholds = d.familyHouseholds.ToString(),
+                             newSingleAdults = d.newSingleAdults.ToString(),
+                             newFamilyHouseholds = d.newFamilyHouseholds.ToString(),
+                             zipCompleteness = d.zipCompleteness
+                         };
+
+            return Json(new
+            {
+                iTotalRecords = newWkr.totalCount,
+                iTotalDisplayRecords = newWkr.filteredCount,
+                sEcho = param.sEcho,
+                aaData = result
+            },
+            JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult AjaxYearWkr(jQueryDataTableParam param)
+        {
+            DateTime yDate;
+            DateTime beginDate;
+            DateTime endDate;
+
+            yDate = voDate(param);
+            beginDate = yDate.AddMonths(-12).Date;
+            endDate = new DateTime(yDate.Year, yDate.Month, yDate.Day, 23, 59, 59);
+
+            dataTableResult<NewWorkerData> newWkr = NewWorkerView(beginDate, endDate, "yearly");
+
+            var result = from d in newWkr.query
+                         select new
+                         {
+                             date = System.String.Format("{0:MM/d/yyyy}", d.dateStart) + " to " + System.String.Format("{0:MM/d/yyyy}", d.dateEnd),
+                             singleAdults = d.singleAdults.ToString(),
+                             familyHouseholds = d.familyHouseholds.ToString(),
+                             newSingleAdults = d.newSingleAdults.ToString(),
+                             newFamilyHouseholds = d.newFamilyHouseholds.ToString(),
+                             zipCompleteness = d.zipCompleteness
+                         };
+
+            return Json(new
+            {
+                iTotalRecords = newWkr.totalCount,
+                iTotalDisplayRecords = newWkr.filteredCount,
+                sEcho = param.sEcho,
+                aaData = result
+            },
+            JsonRequestBehavior.AllowGet);
+        }
+        #endregion
 
         public DateTime voDate(jQueryDataTableParam param)
         {
@@ -499,6 +572,7 @@ namespace Machete.Web.Controllers
 
         #region DataTablesStuff
         // The following methods organize the above service-layer views for return to Ajax/DataTables and the GUI.
+        #region For Summary Reports
         public dataTableResult<DailySumData> DaySumView(DateTime date)
         {
             IEnumerable<DailySumData> query;
@@ -530,6 +604,8 @@ namespace Machete.Web.Controllers
             var result = GetDataTableResult<YearSumData>(query);
             return result;
         }
+        #endregion
+        #region For Activity Reports
         private dataTableResult<ActivityData> ActivityView(DateTime beginDate, DateTime endDate, string reportType)
         {
             IEnumerable<ActivityData> query;
@@ -538,14 +614,21 @@ namespace Machete.Web.Controllers
             return result;
         }
 
-        private dataTableResult<ActivityData> yearActView(DateTime beginDate, DateTime endDate)
+        private dataTableResult<ActivityData> YearActView(DateTime beginDate, DateTime endDate)
         {
             IEnumerable<ActivityData> query;
             query = repServ.YearlyActController(beginDate, endDate);
             var result = GetDataTableResult<ActivityData>(query);
             return result;
         }
-
+        #endregion
+        public dataTableResult<NewWorkerData> NewWorkerView(DateTime beginDate, DateTime endDate, string reportType)
+        {
+            IEnumerable<NewWorkerData> query;
+            query = repServ.NewWorkerController(beginDate, endDate, reportType);
+            var result = GetDataTableResult<NewWorkerData>(query);
+            return result;
+        }
         public dataTableResult<T> GetDataTableResult<T>(IEnumerable<T> query)
         {
             var result = new dataTableResult<T>();

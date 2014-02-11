@@ -1,16 +1,18 @@
 ﻿<div id="activityWrapper" class="report-wrapper">
     <div id="activityHeader">
         <div id="activityPopup">
-            <h3 style="padding-left: .5em;">@Machete.Web.Resources.Reports.activitiesHeader</h3>
+            <h3 class="report-padding-left-half">                
+                @Machete.Web.Resources.Reports.activitiesHeader
+                <input type="button" value="?" class="formButton report-top report-align-right report-instructions-show" />
+            </h3>
 
             <p id="activityInstructions" class="report-instructions">
                 @Machete.Web.Resources.Reports.activityInstructions
-                <input type="button" value="Hide" class="formButton" id="summaryHide" />
+                <input type="button" value="Hide Help" class="formButton report-top report-align-right report-instructions-hide" />
             </p>
         </div>
     </div>
     <div id="summaryReports" class="report-accordion">
-        @*NO daily activities view. They can get daily information about activities on the Activities page. The same could be said for all areas except "Summary".*@
         <h3 class="report-subtitle"><a href="#" id="wecLink">Weekly</a></h3>
         <div id="wecTable" class="report-container">
             <input type="button" value="Refresh" class="formButton report-top" id="wecDataOnlyBtn" />

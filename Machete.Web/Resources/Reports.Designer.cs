@@ -88,7 +88,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Open the menu items below to select different types of activity reports. Use the buttons at the top of the report to toggle the display..
+        ///   Looks up a localized string similar to Open the menu items below to select different types of activity reports. Use the buttons at the top of the report to toggle the display. For daily Activities information, see the summary on the Activity tab..
         /// </summary>
         public static string activityInstructions {
             get {
@@ -223,7 +223,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to With Family (total).
+        ///   Looks up a localized string similar to With Family (running total).
         /// </summary>
         public static string familyHouseholds {
             get {
@@ -331,6 +331,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string name {
+            get {
+                return ResourceManager.GetString("name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to With Family (new).
         /// </summary>
         public static string newFamilyHousholds {
@@ -403,7 +412,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Singles (total).
+        ///   Looks up a localized string similar to Singles (running total).
         /// </summary>
         public static string singleAdults {
             get {
@@ -606,6 +615,24 @@ namespace Machete.Web.Resources {
         public static string yearInstructions {
             get {
                 return ResourceManager.GetString("yearInstructions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zip.
+        /// </summary>
+        public static string zip {
+            get {
+                return ResourceManager.GetString("zip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to +4.
+        /// </summary>
+        public static string zipplusfour {
+            get {
+                return ResourceManager.GetString("zipplusfour", resourceCulture);
             }
         }
     }

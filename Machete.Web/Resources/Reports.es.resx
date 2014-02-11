@@ -283,7 +283,7 @@
     <value>OSHA</value>
   </data>
   <data name="activityInstructions" xml:space="preserve">
-    <value>Utiliza los menús abajo para elegir los distintos tipos de reportes de actividades. Puede utilizar los botones por encima del reporte para alternar la visualización.</value>
+    <value>Utiliza los menús abajo para elegir los distintos tipos de reportes de actividades. Puede utilizar los botones por encima del reporte para alternar la visualización. Para información diaria sobre las actividades, véase el resumen de la pesteña Actividades.</value>
   </data>
   <data name="dayInstructions" xml:space="preserve">
     <value>Elija un día del agenda para ver los resultados.</value>
@@ -296,5 +296,15 @@
   </data>
   <data name="yearInstructions" xml:space="preserve">
     <value>Elija cualquier día del año para ver los resultados del año fiscal que termina en esa fecha.</value>
+  </data>
+  <data name="name" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="zip" xml:space="preserve">
+    <value>Código Postal
+</value>
+  </data>
+  <data name="zipplusfour" xml:space="preserve">
+    <value>+4</value>
   </data>
 </root>
