@@ -9,11 +9,13 @@
 }
 <div id="reportTabs">
     <ul>
-        <li><a href="#summaryWrapper" id="summaryTab" >@Machete.Web.Resources.Reports.summaryTab</a> </li>
+        <li><a href="#summaryWrapper" id="summaryTab">@Machete.Web.Resources.Reports.summaryTab</a> </li>
+        <li><a href="#workersWrapper" id="workersTab">@Machete.Web.Resources.Reports.workersTab</a> </li>
         <li><a href="#activityWrapper" id="activityTab">@Machete.Web.Resources.Reports.activitiesTab</a> </li>
         <li><a href="#ssrsWrapper" id="ssrsTab">@Machete.Web.Resources.Reports.ssrsTab</a> </li>
     </ul>
         @Html.Partial("Summary")
+        @Html.Partial("Workers")
         @Html.Partial("Activities")
         @Html.Partial("SSRS")
 </div>
@@ -29,13 +31,24 @@
         var monthAct = $('#monthActDataTable');
         var yearAct = $('#yearActDataTable');
 
+        var weekWkr = $('#weekWkrDataTable');
+        var monthWkr = $('#monthWkrDataTable');
+        var yearWkr = $('#yearWkrDataTable');
+
         var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
 
         // hide stuff 
-        //  
-        $('#summaryHide').click(
+        // 
+        $('.report-instructions-show').hide();
+        $('.report-instructions-show').click(
             function () {
-                $('#summaryPopup').hide();
+                $('.report-instructions-show').hide();
+                $('.report-instructions').show();
+            });
+        $('.report-instructions-hide').click(
+            function () {
+                $('.report-instructions').hide();
+                $('.report-instructions-show').show();
             });
 
         //$('#dclTable').hide();
@@ -83,16 +96,19 @@
         //
         $('#wecDate').change(function (event) { wecNewTable(); });
         $('#weekActDate').change(function (event) { weekActNewTable(); });
+        $('#weekWkrDate').change(function (event) { weekWkrNewTable(); });
 
         // Monthly datepickerers
         //
         $('#mwdDate').change(function (event) { mwdNewTable(); });
         $('#monthActDate').change(function (event) { monthActNewTable(); });
+        $('#monthWkrDate').change(function (event) { monthWkrNewTable(); });
 
         // Yearly datepickerer
         //
         $('#ywdDate').change(function (event) { ywdNewTable(); });
         $('#yearActDate').change(function (event) { yearActNewTable(); })
+        $('#yearWkrDate').change(function (event) { yearWkrNewTable(); });
 
         //////////////////////////////////////////////////////////////////////// | DATATABLES |
         //
@@ -154,12 +170,29 @@
 
         function monthActNewTable() {
             oMonthActTable = $.extend(true, {}, activityTableDefaults("/Reports/AjaxMonthAct", lang, $('#weekActDate').val()));
-            monthAct= $('#monthActDataTable').dataTable(oMonthActTable);
+            monthAct = $('#monthActDataTable').dataTable(oMonthActTable);
         }
 
         function yearActNewTable() {
             oYearActTable = $.extend(true, {}, activityTableDefaults("/Reports/AjaxYearAct", lang, $('#weekActDate').val()));
             yearAct = $('#yearActDataTable').dataTable(oYearActTable);
+        }
+        //
+        // WORKERS
+        //
+        function weekWkrNewTable() {
+            oWeekWkrTable = $.extend(true, {}, workerTableDefaults("/Reports/AjaxWeekWkr", lang, $('#weekWkrDate').val()));
+            weekWkr = $('#weekWkrDataTable').dataTable(oWeekWkrTable);
+        }
+
+        function monthWkrNewTable() {
+            oMonthWkrTable = $.extend(true, {}, workerTableDefaults("/Reports/AjaxMonthWkr", lang, $('#monthWkrDate').val()));
+            monthWkr = $('#monthWkrDataTable').dataTable(oMonthWkrTable);
+        }
+
+        function yearWkrNewTable() {
+            oYearWkrTable = $.extend(true, {}, workerTableDefaults("/Reports/AjaxYearWkr", lang, $('#yearWkrDate').val()));
+            yearWkr = $('#yearWkrDataTable').dataTable(oYearWkrTable);
         }
 
         ////////////////////////////////////////////////////////////// | DRILLDOWNS |

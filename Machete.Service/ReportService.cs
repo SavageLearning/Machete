@@ -30,7 +30,7 @@ namespace Machete.Service
         IEnumerable<ActivityData> ActivityReportController(DateTime beginDate, DateTime endDate, string reportType);
         IEnumerable<ActivityData> YearlyActController(DateTime beginDate, DateTime endDate);
         //IEnumerable<jzcData> jzcController(DateTime beginDate, DateTime endDate);
-        //IEnumerable<newWorkerData> NewWorkerController(DateTime beginDate, DateTime endDate);
+        IEnumerable<NewWorkerData> NewWorkerController(DateTime beginDate, DateTime endDate, string reportType);
     }
 
     public class ReportService : IReportService
@@ -547,136 +547,120 @@ namespace Machete.Service
         /// <param name="beginDate"></param>
         /// <param name="endDate"></param>
         /// <returns></returns>
-        public double PersonZipCodeCompleteness(DateTime beginDate, DateTime endDate)
+
+        public IQueryable<MemberDateUnit> SingleAdults()
         {
-            double query;
-
-            var wQ = wRepo.GetAllQ().Where(whr => whr.memberexpirationdate >= beginDate && whr.dateOfMembership <= endDate);
-
-            query = Math.Round((((double)wQ.Count() / (double)wQ.Where(zip => zip.Person.zipcode != null).Count()) * 100), 2, MidpointRounding.AwayFromZero);
-
-            return query;
-        }
-
-        public IQueryable<ReportUnit> SingleAdults(DateTime beginDate)
-        {
-            IQueryable<ReportUnit> query;
-
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
+            IQueryable<MemberDateUnit> query;
 
             var lQ = lookRepo.GetAllQ();
             var wQ = wRepo.GetAllQ();
 
             query = wQ
-                .Where(worker => worker.memberexpirationdate >= beginDate
-                    && !worker.livewithchildren)
-                .Join(lQ, worker => worker.maritalstatus, lookup => lookup.ID, (worker, lookup) => lookup.text_EN)
-                .Where(mStatus => mStatus != "Married")
-                .GroupBy(gb => gb)
-                .Select(group => new ReportUnit
+                .Join(lQ, worker => worker.maritalstatus, lookup => lookup.ID, (worker, lookup) => new
                 {
-                    count = group.Count() >= 0 ? group.Count() : 0
+                    card = worker.dwccardnum,
+                    zip = worker.Person.zipcode,
+                    memDate = worker.dateOfMembership,
+                    expDate = worker.memberexpirationdate,
+                    kids = worker.livewithchildren,
+                    mStatus = lookup.text_EN
+                })
+                .Where(worker => !worker.kids && worker.mStatus != "Married")
+                .Select(x => new MemberDateUnit
+                {
+                    dwcnum = x.card,
+                    zip = x.zip,
+                    memDate = x.memDate,
+                    expDate = x.expDate
                 });
 
             return query;
         }
 
-        public IQueryable<ReportUnit> NewlyEnrolledSingleAdults(DateTime beginDate, DateTime endDate)
+        public IQueryable<MemberDateUnit> FamilyHouseholds()
         {
-            IQueryable<ReportUnit> query;
-
+            IQueryable<MemberDateUnit> query;
 
             var lQ = lookRepo.GetAllQ();
             var wQ = wRepo.GetAllQ();
 
             query = wQ
-                .Where(worker => DbFunctions.TruncateTime(worker.dateOfMembership) >= beginDate 
-                                && DbFunctions.TruncateTime(worker.dateOfMembership) <= endDate 
-                                && !worker.livewithchildren)
-                .Join(lQ, worker => worker.maritalstatus, lookup => lookup.ID, (worker, lookup) => lookup.text_EN)
-                .Where(mStatus => mStatus != "Married")
-                .GroupBy(gb => gb)
-                .Select(group => new ReportUnit
+                .Join(lQ, worker => worker.maritalstatus, lookup => lookup.ID, (worker, lookup) => new
                 {
-                    count = group.Count() >= 0 ? group.Count() : 0
-                });
-
-            return query;
-        }
-
-        public IQueryable<ReportUnit> FamilyHouseholds(DateTime beginDate)
-        {
-            IQueryable<ReportUnit> query;
-
-            beginDate = new DateTime(beginDate.Year, beginDate.Month, beginDate.Day, 0, 0, 0);
-
-            var lQ = lookRepo.GetAllQ();
-            var wQ = wRepo.GetAllQ();
-
-            query = wQ
-                .Where(worker => worker.memberexpirationdate >= beginDate)
-                .Join(lQ, worker => worker.maritalstatus, lookup => lookup.ID, (worker, lookup) => new { status = lookup.text_EN, children = worker.livewithchildren })
-                .Where(worker => worker.status == "Married" || worker.children)
-                .GroupBy(gb => gb)
-                .Select(group => new ReportUnit
+                    card = worker.dwccardnum,
+                    zip = worker.Person.zipcode,
+                    memDate = worker.dateOfMembership,
+                    expDate = worker.memberexpirationdate,
+                    kids = worker.livewithchildren,
+                    mStatus = lookup.text_EN
+                })
+                .Where(worker => worker.kids && worker.mStatus == "Married")
+                .Select(x => new MemberDateUnit
                 {
-                    count = group.Count() >= 0 ? group.Count() : 0
-                });
-
-            return query;
-        }
-
-        public IQueryable<ReportUnit> NewlyEnrolledFamilyHouseholds(DateTime beginDate, DateTime endDate)
-        {
-            IQueryable<ReportUnit> query;
-
-            var lQ = lookRepo.GetAllQ();
-            var wQ = wRepo.GetAllQ();
-
-            query = wQ
-                .Where(worker => worker.memberexpirationdate > beginDate)
-                .Where(whr => DbFunctions.TruncateTime(whr.dateOfMembership) <= endDate &&
-                              DbFunctions.TruncateTime(whr.dateOfMembership) >= beginDate)
-                .Join(lQ, worker => worker.maritalstatus, lookup => lookup.ID, (worker, lookup) => new { status = lookup.text_EN, children = worker.livewithchildren })
-                .Where(worker => worker.status == "Married" || worker.children)
-                .GroupBy(gb => gb)
-                .Select(group => new ReportUnit
-                {
-                    count = group.Count() >= 0 ? group.Count() : 0
+                    dwcnum = x.card,
+                    zip = x.zip,
+                    memDate = x.memDate,
+                    expDate = x.expDate
                 });
 
             return query;
         }
 
         /// <summary>
-        /// newWorkerData is 
+        /// NewWorkerController returns an IEnumerable containing the counts of single members, new single members, family
+        /// members, and new family members. It does not include zip code completeness, which must be called separately.
         /// </summary>
         /// <param name="beginDate"></param>
         /// <param name="endDate"></param>
         /// <returns>date, singleAdults, familyHouseholds, newSingleAdults, newFamilyHouseholds, zipCodeCompleteness</returns>
-        public newWorkerData NewWorkers(DateTime beginDate, DateTime endDate)
+        public IEnumerable<NewWorkerData> NewWorkerController(DateTime beginDate, DateTime endDate, string reportType)
         {
-            IEnumerable<ReportUnit> singleAdultsTotal;
-            IEnumerable<ReportUnit> familyHouseholdsTotal;
-            IEnumerable<ReportUnit> singleAdultsNewlyEnrolled;
-            IEnumerable<ReportUnit> familyHouseholdsNewlyEnrolled;
-            double zipCodes;
+            IEnumerable<NewWorkerData> q;
+            IEnumerable<MemberDateUnit> singleAdults;
+            IEnumerable<MemberDateUnit> familyHouseholds;
+            IEnumerable<DateTime> getDates;
+            double zipCompleteness;
 
-            newWorkerData q;
+            singleAdults = SingleAdults().ToList();
+            familyHouseholds = FamilyHouseholds().ToList();
 
-            singleAdultsTotal = SingleAdults(beginDate).ToList();
-            familyHouseholdsTotal = FamilyHouseholds(beginDate).ToList();
-            singleAdultsNewlyEnrolled = NewlyEnrolledSingleAdults(beginDate, endDate).ToList();
-            familyHouseholdsNewlyEnrolled = NewlyEnrolledFamilyHouseholds(beginDate, endDate).ToList();
-            zipCodes = PersonZipCodeCompleteness(beginDate, endDate);
+            if (reportType == "weekly" || reportType == "monthly")
+            {
+                getDates = Enumerable.Range(0, 1 + endDate.Subtract(beginDate).Days)
+                   .Select(offset => endDate.AddDays(-offset))
+                   .ToArray();
 
-            q = new newWorkerData();
-            q.date = endDate;
-            q.singleAdults = familyHouseholdsNewlyEnrolled.First().count ?? 0;
-            q.familyHouseholds = singleAdultsNewlyEnrolled.First().count ?? 0;
-            q.newSingleAdults = familyHouseholdsTotal.First().count ?? 0;
-            q.newFamilyHouseholds = singleAdultsTotal.First().count ?? 0;
-            q.zipCodeCompleteness = zipCodes;
+                q = getDates
+                    .Select(x => new NewWorkerData {
+                        dateStart = x,
+                        dateEnd = x.AddDays(1),
+                        singleAdults = singleAdults.Where(y => y.expDate >= x && y.memDate < x.AddDays(1)).Count(),
+                        familyHouseholds = familyHouseholds.Where(y => y.expDate >= x && y.memDate < x.AddDays(1)).Count(),
+                        newSingleAdults = singleAdults.Where(y => y.memDate >= x && y.memDate < x.AddDays(1)).Count(),
+                        newFamilyHouseholds = familyHouseholds.Where(y => y.memDate >= x && y.memDate < x.AddDays(1)).Count(),
+                        zipCompleteness = singleAdults.Where(y => y.zip != null && y.expDate >= x && y.memDate < x.AddDays(1)).Count()
+                                        + familyHouseholds.Where(y => y.zip != null && y.expDate >= x && y.memDate < x.AddDays(1)).Count()
+                    });
+            }
+            else if (reportType == "yearly")
+            {
+                getDates = Enumerable.Range(1, 4)
+                    .Select(offset => endDate.AddMonths(-offset * 3))
+                    .ToArray();
+
+                q = getDates
+                    .Select(x => new NewWorkerData {
+				  		dateStart = x.AddDays(1),
+						dateEnd = x.AddMonths(3).AddDays(1),
+                        singleAdults = singleAdults.Where(y => y.expDate >= x && y.memDate < x.AddMonths(3).AddDays(1)).Count(),
+                        familyHouseholds = familyHouseholds.Where(y => y.expDate >= x && y.memDate < x.AddMonths(3).AddDays(1)).Count(),
+                        newSingleAdults = singleAdults.Where(y => y.memDate >= x && y.memDate < x.AddMonths(3).AddDays(1)).Count(),
+                        newFamilyHouseholds = familyHouseholds.Where(y => y.memDate >= x && y.memDate < x.AddMonths(3).AddDays(1)).Count(),
+                        zipCompleteness = singleAdults.Where(y => y.zip != null && y.expDate >= x && y.memDate < x.AddMonths(3).AddDays(1)).Count()
+                                        + familyHouseholds.Where(y => y.zip != null && y.expDate >= x && y.memDate < x.AddMonths(3).AddDays(1)).Count()
+				   });
+            }
+            else throw new Exception("Report type must be \"weekly\", \"monthly\" or \"yearly\".");
 
             return q;
         }
@@ -1207,23 +1191,6 @@ namespace Machete.Service
             return q;
         }
 
-        //public IEnumerable<newWorkerData> NewWorkerController(DateTime beginDate, DateTime endDate)
-        //{
-        //    List<newWorkerData> query;
-
-        //    query = new List<newWorkerData>();
-
-        //    for (var i = 0; i <= 4; ++i)
-        //    {
-        //        beginDate = beginDate.AddMonths(-3);
-        //        var cont = NewWorkers(beginDate, endDate);
-        //        query.Add(cont);
-        //        endDate = endDate.AddMonths(-3);
-        //    }
-
-        //    return query.AsEnumerable();
-        //}
-
         public IEnumerable<ReportUnit> ClientProfileReportController(DateTime beginDate, DateTime endDate)
         {
             IEnumerable<ReportUnit> zipcodes;
@@ -1329,6 +1296,14 @@ namespace Machete.Service
         public int? tempCount { get; set; }
     }
 
+    public class MemberDateUnit
+    {
+        public int dwcnum { get; set; }
+        public string zip { get; set; }
+        public DateTime memDate { get; set; }
+        public DateTime expDate { get; set; }
+    }
+
     public class ActivityUnit : ReportUnit
     {
         public string activityType { get; set; }
@@ -1415,14 +1390,15 @@ namespace Machete.Service
         public string jobsCount { get; set; }
     }
 
-    public class newWorkerData
+    public class NewWorkerData
     {
-        public DateTime? date { get; set; }
+        public DateTime? dateStart { get; set; }
+        public DateTime? dateEnd { get; set; }
         public int singleAdults { get; set; }
         public int familyHouseholds { get; set; }
         public int newSingleAdults { get; set; }
         public int newFamilyHouseholds { get; set; }
-        public double zipCodeCompleteness { get; set; }
+        public int zipCompleteness { get; set; }
     }
     
     public class ActivityData

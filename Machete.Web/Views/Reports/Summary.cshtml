@@ -1,11 +1,13 @@
 ﻿<div id="summaryWrapper" class="report-wrapper">
     <div id="summaryHeader">
         <div id="summaryPopup">
-            <h3 style="padding-left: .5em;">@Machete.Web.Resources.Reports.summaryHeader</h3>
-
+            <h3 class="report-padding-left-half">
+                @Machete.Web.Resources.Reports.summaryHeader
+                <input type="button" value="?" class="formButton report-top report-align-right report-instructions-show" />
+            </h3>
             <p id="summaryInstructions" class="report-instructions">
                 @Machete.Web.Resources.Reports.summaryInstructions
-                <input type="button" value="Hide" class="formButton" id="summaryHide" />
+                <input type="button" value="Hide Help" class="formButton report-top report-align-right report-instructions-hide" />
             </p>
         </div>
     </div>

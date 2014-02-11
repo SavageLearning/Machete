@@ -738,6 +738,12 @@ html[xmlns] .clearfix {
     border-collapse: separate;
 }
 
-.report-instructions {
+.report-instructions,
+.report-padding-left-half {
     padding-left: .5em
+}
+
+.report-align-right {
+    text-align: right;
+    float: right;
 }
