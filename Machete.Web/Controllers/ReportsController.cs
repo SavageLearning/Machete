@@ -132,6 +132,7 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="param">jQueryDataTableParam</param>
         /// <returns>json object for use with datatables, etc.</returns>
+        [Authorize(Roles = "Administrator, Manager")]
         public JsonResult AjaxDcl(jQueryDataTableParam param)
         {
             DateTime dclDate;
@@ -172,6 +173,7 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="param">jQueryDataTableParam</param>
         /// <returns>json object for use with datatables, etc.</returns>
+        [Authorize(Roles = "Administrator, Manager")]
         public JsonResult AjaxWec(jQueryDataTableParam param)
         {
             DateTime weekDate;
@@ -197,10 +199,10 @@ namespace Machete.Web.Controllers
                              weekEstDailyHours = d.weekEstDailyHours,
                              weekEstPayment = System.String.Format("{0:C}", d.weekEstPayment),
                              weekHourlyWage = System.String.Format("{0:C}", d.weekHourlyWage),
-                             topJobs = from j in d.topJobs
+                             drilldown = from j in d.topJobs
                                        select new
                                        {
-                                           date = System.String.Format("{0:MM/dd/yyyy}", j.date),
+//                                           date = System.String.Format("{0:MM/dd/yyyy}", j.date),
                                            skill = j.info,
                                            count = j.count
                                        }
@@ -321,6 +323,7 @@ namespace Machete.Web.Controllers
         #endregion
 
         #region Activities Reports
+        [Authorize(Roles = "Administrator, Manager")]
         public JsonResult AjaxWeekAct(jQueryDataTableParam param)
         {
             DateTime weekDate;
@@ -367,6 +370,7 @@ namespace Machete.Web.Controllers
             JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = "Administrator, Manager")]
         public JsonResult AjaxMonthAct(jQueryDataTableParam param)
         {
             DateTime monthDate;
@@ -413,6 +417,7 @@ namespace Machete.Web.Controllers
             JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = "Administrator, Manager")]
         public JsonResult AjaxYearAct(jQueryDataTableParam param)
         {
             DateTime yearDate;
@@ -463,7 +468,8 @@ namespace Machete.Web.Controllers
         #endregion
 
         #region Worker Reports
-        public ActionResult AjaxWeekWkr(jQueryDataTableParam param)
+        [Authorize(Roles = "Administrator, Manager")]
+        public JsonResult AjaxWeekWkr(jQueryDataTableParam param)
         {
             DateTime wDate;
             DateTime beginDate;
@@ -496,7 +502,8 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
-        public ActionResult AjaxMonthWkr(jQueryDataTableParam param)
+        [Authorize(Roles = "Administrator, Manager")]
+        public JsonResult AjaxMonthWkr(jQueryDataTableParam param)
         {
             DateTime mDate;
             DateTime beginDate;
@@ -528,7 +535,8 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
-        public ActionResult AjaxYearWkr(jQueryDataTableParam param)
+        [Authorize(Roles = "Administrator, Manager")]
+        public JsonResult AjaxYearWkr(jQueryDataTableParam param)
         {
             DateTime yDate;
             DateTime beginDate;
@@ -562,7 +570,120 @@ namespace Machete.Web.Controllers
         }
         #endregion
 
-        public DateTime voDate(jQueryDataTableParam param)
+        #region Employer Reports
+        [Authorize(Roles = "Administrator, Manager")]
+        public JsonResult AjaxWeekEmp(jQueryDataTableParam param)
+        {
+            DateTime wDate;
+            DateTime beginDate;
+            DateTime endDate;
+
+            wDate = voDate(param);
+            beginDate = wDate.AddDays(-6).Date;
+            endDate = new DateTime(wDate.Year, wDate.Month, wDate.Day, 23, 59, 59);
+
+            dataTableResult<ZipModel> newEmp = EmployerReportView(beginDate, endDate);
+
+            var result = from d in newEmp.query
+                         select new
+                         {
+                             zips = d.zips.ToString(),
+                             jobs = d.jobs.ToString(),
+                             emps = d.emps.ToString(),
+                             drilldown = from j in d.skills
+                                         select new
+                                         {
+                                             skill = j.info,
+                                             count = j.count
+                                         }
+                         };
+
+            return Json(new
+            {
+                iTotalRecords = newEmp.totalCount,
+                iTotalDisplayRecords = newEmp.filteredCount,
+                sEcho = param.sEcho,
+                aaData = result
+            },
+            JsonRequestBehavior.AllowGet);
+        }
+
+        [Authorize(Roles = "Administrator, Manager")]
+        public JsonResult AjaxMonthEmp(jQueryDataTableParam param)
+        {
+            DateTime mDate;
+            DateTime beginDate;
+            DateTime endDate;
+
+            mDate = voDate(param);
+            beginDate = new DateTime(mDate.Year, mDate.Month, 1, 0, 0, 0);
+            endDate = new DateTime(mDate.Year, mDate.Month, System.DateTime.DaysInMonth(mDate.Year, mDate.Month));
+
+            dataTableResult<ZipModel> newEmp = EmployerReportView(beginDate, endDate);
+
+            var result = from d in newEmp.query
+                         select new
+                         {
+                             zips = d.zips.ToString(),
+                             jobs = d.jobs.ToString(),
+                             emps = d.emps.ToString(),
+                             drilldown = from j in d.skills
+                                         select new
+                                         {
+                                             skill = j.info,
+                                             count = j.count
+                                         }
+                         };
+
+            return Json(new
+            {
+                iTotalRecords = newEmp.totalCount,
+                iTotalDisplayRecords = newEmp.filteredCount,
+                sEcho = param.sEcho,
+                aaData = result
+            },
+            JsonRequestBehavior.AllowGet);
+        }
+
+        [Authorize(Roles = "Administrator, Manager")]
+        public ActionResult AjaxYearEmp(jQueryDataTableParam param)
+        {
+            DateTime yDate;
+            DateTime beginDate;
+            DateTime endDate;
+
+            yDate = voDate(param);
+            beginDate = yDate.AddMonths(-12).Date;
+            endDate = new DateTime(yDate.Year, yDate.Month, yDate.Day, 23, 59, 59);
+
+            dataTableResult<ZipModel> newEmp = EmployerReportView(beginDate, endDate);
+
+            var result = from d in newEmp.query
+                         select new
+                         {
+                             zips = d.zips.ToString(),
+                             jobs = d.jobs.ToString(),
+                             emps = d.emps.ToString(),
+                             drilldown = from j in d.skills
+                                         select new
+                                         {
+                                             skill = j.info,
+                                             count = j.count
+                                         }
+                         };
+
+            return Json(new
+            {
+                iTotalRecords = newEmp.totalCount,
+                iTotalDisplayRecords = newEmp.filteredCount,
+                sEcho = param.sEcho,
+                aaData = result
+            },
+            JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+
+        private DateTime voDate(jQueryDataTableParam param)
         {
             var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
             if (vo.date != null) return DateTime.Parse(vo.date.ToString());
@@ -573,7 +694,7 @@ namespace Machete.Web.Controllers
         #region DataTablesStuff
         // The following methods organize the above service-layer views for return to Ajax/DataTables and the GUI.
         #region For Summary Reports
-        public dataTableResult<DailySumData> DaySumView(DateTime date)
+        private dataTableResult<DailySumData> DaySumView(DateTime date)
         {
             IEnumerable<DailySumData> query;
             query = repServ.DailySumController(date);
@@ -581,7 +702,7 @@ namespace Machete.Web.Controllers
             return result; // ...for DataTables.
         }
 
-        public dataTableResult<WeeklySumData> WeekSumView(DateTime beginDate, DateTime endDate)
+        private dataTableResult<WeeklySumData> WeekSumView(DateTime beginDate, DateTime endDate)
         {
             IEnumerable<WeeklySumData> query;
             query = repServ.WeeklySumController(beginDate, endDate);
@@ -589,7 +710,7 @@ namespace Machete.Web.Controllers
             return result;
         }
 
-        public dataTableResult<MonthlySumData> monthSumView(DateTime beginDate, DateTime endDate)
+        private dataTableResult<MonthlySumData> monthSumView(DateTime beginDate, DateTime endDate)
         {
             IEnumerable<MonthlySumData> query;
             query = repServ.MonthlySumController(beginDate, endDate);
@@ -597,7 +718,7 @@ namespace Machete.Web.Controllers
             return result;
         }
 
-        public dataTableResult<YearSumData> yearSumView(DateTime beginDate, DateTime endDate)
+        private dataTableResult<YearSumData> yearSumView(DateTime beginDate, DateTime endDate)
         {
             IEnumerable<YearSumData> query;
             query = repServ.YearlySumController(beginDate, endDate);
@@ -622,14 +743,22 @@ namespace Machete.Web.Controllers
             return result;
         }
         #endregion
-        public dataTableResult<NewWorkerData> NewWorkerView(DateTime beginDate, DateTime endDate, string reportType)
+        private dataTableResult<NewWorkerData> NewWorkerView(DateTime beginDate, DateTime endDate, string reportType)
         {
             IEnumerable<NewWorkerData> query;
             query = repServ.NewWorkerController(beginDate, endDate, reportType);
             var result = GetDataTableResult<NewWorkerData>(query);
             return result;
         }
-        public dataTableResult<T> GetDataTableResult<T>(IEnumerable<T> query)
+
+        private dataTableResult<ZipModel> EmployerReportView(DateTime beginDate, DateTime endDate)
+        {
+            IEnumerable<ZipModel> query;
+            query = repServ.EmployerReportController(beginDate, endDate);
+            var result = GetDataTableResult<ZipModel>(query);
+            return result;
+        }
+        private dataTableResult<T> GetDataTableResult<T>(IEnumerable<T> query)
         {
             var result = new dataTableResult<T>();
 

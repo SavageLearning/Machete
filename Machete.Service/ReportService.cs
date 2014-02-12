@@ -29,7 +29,7 @@ namespace Machete.Service
         IEnumerable<YearSumData> YearlySumController(DateTime beginDate, DateTime endDate);
         IEnumerable<ActivityData> ActivityReportController(DateTime beginDate, DateTime endDate, string reportType);
         IEnumerable<ActivityData> YearlyActController(DateTime beginDate, DateTime endDate);
-        //IEnumerable<jzcData> jzcController(DateTime beginDate, DateTime endDate);
+        IEnumerable<ZipModel> EmployerReportController(DateTime beginDate, DateTime endDate);
         IEnumerable<NewWorkerData> NewWorkerController(DateTime beginDate, DateTime endDate, string reportType);
     }
 
@@ -42,6 +42,7 @@ namespace Machete.Service
         protected readonly IWorkerRequestRepository wrRepo;
         protected readonly ILookupRepository lookRepo;
         protected readonly ILookupCache lookCache;
+        protected readonly IEmployerRepository eRepo;
         protected readonly IActivitySigninRepository asRepo;
 
         public ReportService(IWorkOrderRepository woRepo,
@@ -51,6 +52,7 @@ namespace Machete.Service
                              IWorkerRequestRepository wrRepo,
                              ILookupRepository lookRepo,
                              ILookupCache lookCache,
+                             IEmployerRepository eRepo,
                              IActivitySigninRepository asRepo)
         {
             this.woRepo = woRepo;
@@ -60,6 +62,7 @@ namespace Machete.Service
             this.wrRepo = wrRepo;
             this.lookRepo = lookRepo;
             this.lookCache = lookCache;
+            this.eRepo = eRepo;
             this.asRepo = asRepo;
         }
 
@@ -180,9 +183,9 @@ namespace Machete.Service
         /// </summary>
         /// <param name="dateRequested">A single DateTime parameter</param>
         /// <returns>IQueryable</returns>
-        public IQueryable<TypeOfDispatchReport> CountTypeofDispatch(DateTime beginDate, DateTime endDate)
+        public IQueryable<TypeOfDispatchModel> CountTypeofDispatch(DateTime beginDate, DateTime endDate)
         {
-            IQueryable<TypeOfDispatchReport> query;
+            IQueryable<TypeOfDispatchModel> query;
 
             var waQ = waRepo.GetAllQ();
             var wrQ = wrRepo.GetAllQ();
@@ -206,7 +209,7 @@ namespace Machete.Service
                 .Where(whr => whr.dtow >= beginDate
                            && whr.dtow <= endDate)
                 .GroupBy(gb => gb.dtow)
-                .Select(group => new TypeOfDispatchReport
+                .Select(group => new TypeOfDispatchModel
                     {
                         date = group.Key,
                         count = group.Count(),
@@ -226,9 +229,9 @@ namespace Machete.Service
         /// <param name="beginDate">Start date for the query.</param>
         /// <param name="endDate">End date for the query.</param>
         /// <returns></returns>
-        public IQueryable<AverageWages> HourlyWageAverage(DateTime beginDate, DateTime endDate)
+        public IQueryable<AverageWageModel> HourlyWageAverage(DateTime beginDate, DateTime endDate)
         {
-            IQueryable<AverageWages> query;
+            IQueryable<AverageWageModel> query;
 
             var waQ = waRepo.GetAllQ();
             var woQ = woRepo.GetAllQ();
@@ -248,7 +251,7 @@ namespace Machete.Service
                 .Where(whr => whr.woDate >= beginDate
                            && whr.woDate <= endDate)
                 .GroupBy(gb => gb.woDate)
-                .Select(wec => new AverageWages
+                .Select(wec => new AverageWageModel
                           {
                               date = wec.Key ?? DateTime.Now,
                               hours = wec.Sum(wo => wo.wa.hours),
@@ -306,35 +309,64 @@ namespace Machete.Service
             return query;
         }
 
+        public IQueryable<ZipUnit> ListJobsByZip(DateTime beginDate, DateTime endDate)
+        {
+            IQueryable<ZipUnit> query;
+
+            var waQ = waRepo.GetAllQ();
+            var lQ = lookRepo.GetAllQ();
+
+            query = waQ
+                .Join(lQ,
+                    wa => wa.skillID,
+                    l => l.ID,
+                    (wa, l) => new
+                    {
+                        dtow = DbFunctions.TruncateTime(wa.workOrder.dateTimeofWork),
+                        zip = wa.workOrder.zipcode,
+                        enText = l.text_EN
+                    })
+                .Where(whr => whr.dtow >= beginDate
+                           && whr.dtow <= endDate)
+                .GroupBy(gb => new { zips = gb.zip, jobs = gb.enText })
+                .OrderByDescending(ob => ob.Count())
+                .Select(x => new ZipUnit
+                {
+                    zip = x.Key.zips,
+                    count = x.Count() > 0 ? x.Count() : 0,
+                    info = x.Key.jobs
+                });
+
+            return query;
+        }
+
         /// <summary>
         /// Lists most popular zip codes for a given time period.
         /// </summary>
         /// <param name="beginDate"></param>
         /// <param name="endDate"></param>
         /// <returns></returns>
-        public IQueryable<ReportUnit> ListOrderZipCodes(DateTime beginDate, DateTime endDate)
+        public IQueryable<ZipModel> ListOrdersByZipCode(DateTime beginDate, DateTime endDate)
         {
-            IQueryable<ReportUnit> query;
+            IQueryable<ZipModel> query;
 
             var waQ = waRepo.GetAllQ();
-            var woQ = woRepo.GetAllQ();
-            var lQ = lookRepo.GetAllQ();
+            var eQ = eRepo.GetAllQ();
+            var skillsQ = ListJobsByZip(beginDate, endDate);
 
-            query = woQ
-                .Where(whr => DbFunctions.TruncateTime(whr.dateTimeofWork) >= beginDate
-                           && DbFunctions.TruncateTime(whr.dateTimeofWork) <= endDate)
-                .GroupBy(gb => new
+            query = waQ
+                .Where(w => w.workOrder.dateTimeofWork >= beginDate 
+                         && w.workOrder.dateTimeofWork <= endDate)
+                .GroupBy(a => new { zip = a.workOrder.zipcode })
+                .Select(x => new ZipModel
                 {
-                    dtow = DbFunctions.TruncateTime(gb.dateTimeofWork),
-                    zip = gb.zipcode
-                })
-                .OrderByDescending(ob => ob.Key.dtow)
-                .ThenByDescending(ob => ob.Count())
-                .Select(group => new ReportUnit
-                {
-                    date = group.Key.dtow,
-                    count = group.Count() > 0 ? group.Count() : 0,
-                    info = group.Key.zip ?? ""
+                    zips = x.Key.zip,
+                    jobs = x.Count(),
+                    emps = eQ
+                            .Where(w => w.zipcode == x.Key.zip
+                                     && w.active == true)
+                            .Count(),
+                    skills = skillsQ.Where(w => w.zip == x.Key.zip),
                 });
 
             return query;
@@ -402,7 +434,6 @@ namespace Machete.Service
         public IQueryable<ActivityUnit> GetAllActivitySignins(DateTime beginDate, DateTime endDate)
         {
             IQueryable<ActivityUnit> query;
-
 
             var asQ = asRepo.GetAllQ();
             var lQ = lookRepo.GetAllQ();
@@ -541,16 +572,9 @@ namespace Machete.Service
             else throw new Exception("unitOfMeasure must be \"months\" or \"days\" and interval must be a positive integer > 0.");
         }
 
-        /// <summary>
-        /// This currently returns a percentage of how many people have zip codes in their profiles.
-        /// </summary>
-        /// <param name="beginDate"></param>
-        /// <param name="endDate"></param>
-        /// <returns></returns>
-
-        public IQueryable<MemberDateUnit> SingleAdults()
+        public IQueryable<MemberDateModel> SingleAdults()
         {
-            IQueryable<MemberDateUnit> query;
+            IQueryable<MemberDateModel> query;
 
             var lQ = lookRepo.GetAllQ();
             var wQ = wRepo.GetAllQ();
@@ -566,7 +590,7 @@ namespace Machete.Service
                     mStatus = lookup.text_EN
                 })
                 .Where(worker => !worker.kids && worker.mStatus != "Married")
-                .Select(x => new MemberDateUnit
+                .Select(x => new MemberDateModel
                 {
                     dwcnum = x.card,
                     zip = x.zip,
@@ -577,9 +601,9 @@ namespace Machete.Service
             return query;
         }
 
-        public IQueryable<MemberDateUnit> FamilyHouseholds()
+        public IQueryable<MemberDateModel> FamilyHouseholds()
         {
-            IQueryable<MemberDateUnit> query;
+            IQueryable<MemberDateModel> query;
 
             var lQ = lookRepo.GetAllQ();
             var wQ = wRepo.GetAllQ();
@@ -595,7 +619,7 @@ namespace Machete.Service
                     mStatus = lookup.text_EN
                 })
                 .Where(worker => worker.kids && worker.mStatus == "Married")
-                .Select(x => new MemberDateUnit
+                .Select(x => new MemberDateModel
                 {
                     dwcnum = x.card,
                     zip = x.zip,
@@ -604,86 +628,6 @@ namespace Machete.Service
                 });
 
             return query;
-        }
-
-        /// <summary>
-        /// NewWorkerController returns an IEnumerable containing the counts of single members, new single members, family
-        /// members, and new family members. It does not include zip code completeness, which must be called separately.
-        /// </summary>
-        /// <param name="beginDate"></param>
-        /// <param name="endDate"></param>
-        /// <returns>date, singleAdults, familyHouseholds, newSingleAdults, newFamilyHouseholds, zipCodeCompleteness</returns>
-        public IEnumerable<NewWorkerData> NewWorkerController(DateTime beginDate, DateTime endDate, string reportType)
-        {
-            IEnumerable<NewWorkerData> q;
-            IEnumerable<MemberDateUnit> singleAdults;
-            IEnumerable<MemberDateUnit> familyHouseholds;
-            IEnumerable<DateTime> getDates;
-            double zipCompleteness;
-
-            singleAdults = SingleAdults().ToList();
-            familyHouseholds = FamilyHouseholds().ToList();
-
-            if (reportType == "weekly" || reportType == "monthly")
-            {
-                getDates = Enumerable.Range(0, 1 + endDate.Subtract(beginDate).Days)
-                   .Select(offset => endDate.AddDays(-offset))
-                   .ToArray();
-
-                q = getDates
-                    .Select(x => new NewWorkerData {
-                        dateStart = x,
-                        dateEnd = x.AddDays(1),
-                        singleAdults = singleAdults.Where(y => y.expDate >= x && y.memDate < x.AddDays(1)).Count(),
-                        familyHouseholds = familyHouseholds.Where(y => y.expDate >= x && y.memDate < x.AddDays(1)).Count(),
-                        newSingleAdults = singleAdults.Where(y => y.memDate >= x && y.memDate < x.AddDays(1)).Count(),
-                        newFamilyHouseholds = familyHouseholds.Where(y => y.memDate >= x && y.memDate < x.AddDays(1)).Count(),
-                        zipCompleteness = singleAdults.Where(y => y.zip != null && y.expDate >= x && y.memDate < x.AddDays(1)).Count()
-                                        + familyHouseholds.Where(y => y.zip != null && y.expDate >= x && y.memDate < x.AddDays(1)).Count()
-                    });
-            }
-            else if (reportType == "yearly")
-            {
-                getDates = Enumerable.Range(1, 4)
-                    .Select(offset => endDate.AddMonths(-offset * 3))
-                    .ToArray();
-
-                q = getDates
-                    .Select(x => new NewWorkerData {
-				  		dateStart = x.AddDays(1),
-						dateEnd = x.AddMonths(3).AddDays(1),
-                        singleAdults = singleAdults.Where(y => y.expDate >= x && y.memDate < x.AddMonths(3).AddDays(1)).Count(),
-                        familyHouseholds = familyHouseholds.Where(y => y.expDate >= x && y.memDate < x.AddMonths(3).AddDays(1)).Count(),
-                        newSingleAdults = singleAdults.Where(y => y.memDate >= x && y.memDate < x.AddMonths(3).AddDays(1)).Count(),
-                        newFamilyHouseholds = familyHouseholds.Where(y => y.memDate >= x && y.memDate < x.AddMonths(3).AddDays(1)).Count(),
-                        zipCompleteness = singleAdults.Where(y => y.zip != null && y.expDate >= x && y.memDate < x.AddMonths(3).AddDays(1)).Count()
-                                        + familyHouseholds.Where(y => y.zip != null && y.expDate >= x && y.memDate < x.AddMonths(3).AddDays(1)).Count()
-				   });
-            }
-            else throw new Exception("Report type must be \"weekly\", \"monthly\" or \"yearly\".");
-
-            return q;
-        }
-
-        public IQueryable<ReportUnit> ClientProfileZipCode(DateTime beginDate, DateTime endDate)
-        {
-            IQueryable<ReportUnit> query;
-
-
-            var wQ = wRepo.GetAllQ();
-
-            query = wQ
-                .Where(whr => whr.Person != null && whr.Person.zipcode != null)
-                .Where(whr => whr.memberexpirationdate > beginDate && whr.dateOfMembership < endDate)
-                .GroupBy(grp => grp.Person.zipcode)
-                .Select(group => new ReportUnit
-                {
-                    count = group.Count(),
-                    info = group.Key
-                });
-
-            return query;
-
         }
 
         public IQueryable<ReportUnit> ClientProfileHomeless(DateTime beginDate, DateTime endDate)
@@ -925,7 +869,7 @@ namespace Machete.Service
         /// <returns></returns>
         public IEnumerable<DailySumData> DailySumController(DateTime date)
         {
-            IEnumerable<TypeOfDispatchReport> dclCurrent;
+            IEnumerable<TypeOfDispatchModel> dclCurrent;
             IEnumerable<ReportUnit> dailySignins;
             IEnumerable<ReportUnit> dailyUnique;
             IEnumerable<ReportUnit> dailyAssignments;
@@ -968,7 +912,7 @@ namespace Machete.Service
         /// <returns></returns>
         public IEnumerable<WeeklySumData> WeeklySumController(DateTime beginDate, DateTime endDate)
         {
-            IEnumerable<AverageWages> weeklyWages;
+            IEnumerable<AverageWageModel> weeklyWages;
             IEnumerable<ReportUnit> weeklySignins;
             IEnumerable<ReportUnit> weeklyAssignments;
             IEnumerable<ReportUnit> weeklyJobs;
@@ -1003,7 +947,7 @@ namespace Machete.Service
             IEnumerable<ReportUnit> unique;
             IEnumerable<ActivityUnit> classes;
             IEnumerable<PlacementUnit> workers;
-            IEnumerable<AverageWages> average;
+            IEnumerable<AverageWageModel> average;
             IEnumerable<StatusUnit> status;
 
             IEnumerable<MonthlySumData> q; 
@@ -1041,25 +985,6 @@ namespace Machete.Service
             q = q.OrderBy(p => p.date);
 
             return q;
-        }
-
-        public IEnumerable<TypeOfDispatchReport> MonthlyOrderController(DateTime beginDate, DateTime endDate)
-        {            
-            IEnumerable<TypeOfDispatchReport> dispatch;
-
-            dispatch = CountTypeofDispatch(beginDate, endDate).ToList();
-
-            var result = dispatch.Select(g => new TypeOfDispatchReport
-                {
-                    date = g.date,
-                    count = g.count,
-                    dwcList = dispatch.Where(whr => whr.date == g.date).Select(h => h.dwcList).FirstOrDefault(),
-                    hhhList = dispatch.Where(whr => whr.date == g.date).Select(h => h.hhhList).FirstOrDefault(),
-                    dwcPropio = dispatch.Where(whr => whr.date == g.date).Select(h => h.dwcPropio).FirstOrDefault(),
-                    hhhPropio = dispatch.Where(whr => whr.date == g.date).Select(h => h.hhhPropio).FirstOrDefault(),
-                });
-
-            return result;
         }
 
         public IEnumerable<ActivityData> ActivityReportController(DateTime beginDate, DateTime endDate, string reportType)
@@ -1111,7 +1036,7 @@ namespace Machete.Service
             IEnumerable<ReportUnit> unique;
             IEnumerable<ActivityUnit> classes;
             IEnumerable<PlacementUnit> workers;
-            IEnumerable<AverageWages> average;
+            IEnumerable<AverageWageModel> average;
             IEnumerable<StatusUnit> status;
 
             IEnumerable<YearSumData> q;
@@ -1191,32 +1116,63 @@ namespace Machete.Service
             return q;
         }
 
-        public IEnumerable<ReportUnit> ClientProfileReportController(DateTime beginDate, DateTime endDate)
+        /// <summary>
+        /// NewWorkerController returns an IEnumerable containing the counts of single members, new single members, family
+        /// members, and new family members. It does not include zip code completeness, which must be called separately.
+        /// </summary>
+        /// <param name="beginDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns>date, singleAdults, familyHouseholds, newSingleAdults, newFamilyHouseholds, zipCodeCompleteness</returns>
+        public IEnumerable<NewWorkerData> NewWorkerController(DateTime beginDate, DateTime endDate, string reportType)
         {
-            IEnumerable<ReportUnit> zipcodes;
-            IEnumerable<ReportUnit> homeless;
-            IEnumerable<ReportUnit> householdComposition;
-            IEnumerable<ReportUnit> income;
-            IEnumerable<ReportUnit> age;
-            IEnumerable<ReportUnit> gender;
-            IEnumerable<ReportUnit> disabilities;
-            IEnumerable<ReportUnit> race;
-            IEnumerable<ReportUnit> refugeeImmigrant;
-            IEnumerable<ReportUnit> englishLevel;
-            IEnumerable<ReportUnit> q;
+            IEnumerable<NewWorkerData> q;
+            IEnumerable<MemberDateModel> singleAdults;
+            IEnumerable<MemberDateModel> familyHouseholds;
+            IEnumerable<DateTime> getDates;
 
-            zipcodes = ClientProfileZipCode(beginDate, endDate).ToList();
-            homeless = ClientProfileHomeless(beginDate, endDate).ToList();
-            householdComposition = ClientProfileHouseholdComposition(beginDate, endDate).ToList();
-            income = ClientProfileIncome(beginDate, endDate).ToList();
-            age = ClientProfileWorkerAge(beginDate, endDate).ToList();
-            gender = ClientProfileGender(beginDate, endDate).ToList();
-            disabilities = ClientProfileHasDisability(beginDate, endDate).ToList();
-            race = ClientProfileRaceEthnicity(beginDate, endDate).ToList();
-            refugeeImmigrant = ClientProfileRefugeeImmigrant(beginDate, endDate).ToList();
-            englishLevel = ClientProfileEnglishLevel(beginDate, endDate).ToList();
+            singleAdults = SingleAdults().ToList();
+            familyHouseholds = FamilyHouseholds().ToList();
 
-            q = zipcodes.Concat(homeless.Concat(householdComposition.Concat(income.Concat(age.Concat(gender.Concat(disabilities.Concat(race.Concat(refugeeImmigrant.Concat(englishLevel)))))))));
+            if (reportType == "weekly" || reportType == "monthly")
+            {
+                getDates = Enumerable.Range(0, 1 + endDate.Subtract(beginDate).Days)
+                   .Select(offset => endDate.AddDays(-offset))
+                   .ToArray();
+
+                q = getDates
+                    .Select(x => new NewWorkerData
+                    {
+                        dateStart = x,
+                        dateEnd = x.AddDays(1),
+                        singleAdults = singleAdults.Where(y => y.expDate >= x && y.memDate < x.AddDays(1)).Count(),
+                        familyHouseholds = familyHouseholds.Where(y => y.expDate >= x && y.memDate < x.AddDays(1)).Count(),
+                        newSingleAdults = singleAdults.Where(y => y.memDate >= x && y.memDate < x.AddDays(1)).Count(),
+                        newFamilyHouseholds = familyHouseholds.Where(y => y.memDate >= x && y.memDate < x.AddDays(1)).Count(),
+                        zipCompleteness = singleAdults.Where(y => y.zip != null && y.expDate >= x && y.memDate < x.AddDays(1)).Count()
+                                        + familyHouseholds.Where(y => y.zip != null && y.expDate >= x && y.memDate < x.AddDays(1)).Count()
+                    });
+            }
+            else if (reportType == "yearly")
+            {
+                getDates = Enumerable.Range(1, 4)
+                    .Select(offset => endDate.AddMonths(-offset * 3))
+                    .ToArray();
+
+                q = getDates
+                    .Select(x => new NewWorkerData
+                    {
+                        dateStart = x.AddDays(1),
+                        dateEnd = x.AddMonths(3).AddDays(1),
+                        singleAdults = singleAdults.Where(y => y.expDate >= x && y.memDate < x.AddMonths(3).AddDays(1)).Count(),
+                        familyHouseholds = familyHouseholds.Where(y => y.expDate >= x && y.memDate < x.AddMonths(3).AddDays(1)).Count(),
+                        newSingleAdults = singleAdults.Where(y => y.memDate >= x && y.memDate < x.AddMonths(3).AddDays(1)).Count(),
+                        newFamilyHouseholds = familyHouseholds.Where(y => y.memDate >= x && y.memDate < x.AddMonths(3).AddDays(1)).Count(),
+                        zipCompleteness = singleAdults.Where(y => y.zip != null && y.expDate >= x && y.memDate < x.AddMonths(3).AddDays(1)).Count()
+                                        + familyHouseholds.Where(y => y.zip != null && y.expDate >= x && y.memDate < x.AddMonths(3).AddDays(1)).Count()
+                    });
+            }
+            else throw new Exception("Report type must be \"weekly\", \"monthly\" or \"yearly\".");
+
             return q;
         }
 
@@ -1228,59 +1184,44 @@ namespace Machete.Service
         /// <param name="beginDate"></param>
         /// <param name="endDate"></param>
         /// <returns></returns>
-        public IEnumerable<jzcData> jzcController(DateTime beginDate, DateTime endDate)
+        public IEnumerable<ZipModel> EmployerReportController(DateTime beginDate, DateTime endDate)
         {
-            IEnumerable<ReportUnit> assignments;
-            IEnumerable<ReportUnit> topZips;
-            IEnumerable<ReportUnit> topJobs;
-            IEnumerable<jzcData> q;
-
-            assignments = CountAssignments(beginDate, endDate).ToList();
-            topZips = ListOrderZipCodes(beginDate, endDate).ToList();
-            topJobs = ListJobs(beginDate, endDate).ToList();
-
-            q = assignments
-                .Select(g => new jzcData
-                {
-                    date = g.date ?? endDate,
-                    zips = topZips
-                        .Where(whr => whr.date == g.date)
-                        .Aggregate("", (a, b) => b.info + ", " + a),
-                    zipsCount = topZips
-                        .Where(whr => whr.date == g.date)
-                        .Aggregate("", (a, b) => b.count.ToString() + ", " + a),
-                    jobs = topJobs
-                        .Where(whr => whr.date == g.date)
-                        .Aggregate("", (a, b) => b.info + ", " + a),
-                    jobsCount = topJobs
-                        .Where(whr => whr.date == g.date)
-                        .Aggregate("", (a, b) => b.count.ToString() + ", " + a)
-                });
-
-            q = q.OrderBy(ob => ob.date);
-
-            return q;
+            IEnumerable<ZipModel> topZips;
+            topZips = ListOrdersByZipCode(beginDate, endDate).ToList();
+            return topZips;
         }
 
     }
     #endregion
 
     #region Report Models
+    // The standalone models in this section are mostly at the bottom. Models that serve
+    // as units of larger reports are at the top. Most of the models extend from a class
+    // called "ReportUnit" and the class and its derivatives are in the middle of this
+    // section.
 
-    public class TypeOfDispatchReport : ReportUnit
-    {
-        public int dwcList { get; set; }
-        public int dwcPropio { get; set; }
-        public int hhhList { get; set; }
-        public int hhhPropio { get; set; }
-    }
-
-    public class AverageWages
+    public class AverageWageModel
     {
         public DateTime date { get; set; }
         public int hours { get; set; }
         public double wages { get; set; }
         public double avg { get; set; }
+    }
+
+    public class MemberDateModel
+    {
+        public int dwcnum { get; set; }
+        public string zip { get; set; }
+        public DateTime memDate { get; set; }
+        public DateTime expDate { get; set; }
+    }
+
+    public class TypeOfDispatchModel : ReportUnit
+    {
+        public int dwcList { get; set; }
+        public int dwcPropio { get; set; }
+        public int hhhList { get; set; }
+        public int hhhPropio { get; set; }
     }
 
     public class StatusUnit : ReportUnit
@@ -1296,12 +1237,15 @@ namespace Machete.Service
         public int? tempCount { get; set; }
     }
 
-    public class MemberDateUnit
+    /// <summary>
+    /// This gets a little confusing because of all the
+    /// different "Zip" models. ZipUnit is a direct
+    /// extension of ReportUnit and includes a space
+    /// for a zip code string.
+    /// </summary>
+    public class ZipUnit : ReportUnit
     {
-        public int dwcnum { get; set; }
         public string zip { get; set; }
-        public DateTime memDate { get; set; }
-        public DateTime expDate { get; set; }
     }
 
     public class ActivityUnit : ReportUnit
@@ -1309,6 +1253,11 @@ namespace Machete.Service
         public string activityType { get; set; }
     }
 
+    /// <summary>
+    /// This is the basic unit of the Report service layer.
+    /// All of the values are nullable to make the unit as
+    /// extensible as possible.
+    /// </summary>
     public class ReportUnit
     {
         public DateTime? date { get; set; }
@@ -1316,7 +1265,7 @@ namespace Machete.Service
         public string info { get; set; }
     }
 
-    public class DailySumData : TypeOfDispatchReport
+    public class DailySumData : TypeOfDispatchModel
     {
         public int totalSignins { get; set; }
         public int uniqueSignins { get; set; }
@@ -1381,13 +1330,12 @@ namespace Machete.Service
         public int peopleWhoWentToClass { get; set; }
     }
 
-    public class jzcData
+    public class ZipModel
     {
-        public DateTime date { get; set; }
         public string zips { get; set; }
-        public string zipsCount { get; set; }
-        public string jobs { get; set; }
-        public string jobsCount { get; set; }
+        public int jobs { get; set; }
+        public int emps { get; set; }
+        public IEnumerable<ReportUnit> skills { get; set; }
     }
 
     public class NewWorkerData
@@ -1412,19 +1360,6 @@ namespace Machete.Service
         public int advGarden { get; set; }
         public int finEd { get; set; }
         public int osha { get; set; }
-
-        // The problem with including the following is that most are very casa-specific and won't be found at other centers.
-        //public int chem { get; set; }
-        //public int moving { get; set; }
-        //public int caregivers { get; set; }
-        //public int heat { get; set; }
-        //public int asbestos { get; set; }
-        //public int comp { get; set; }
-        //public int greenClean { get; set; }
-        //public int msf { get; set; }
-        //public int assembly { get; set; }
-        //public int loan { get; set; }
-        // The solution:
         public IEnumerable<ActivityUnit> drilldown { get; set; }
     }
 
