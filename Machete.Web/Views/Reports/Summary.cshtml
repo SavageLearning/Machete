@@ -8,7 +8,7 @@
             </h3>
             <p id="summaryInstructions" class="report-instructions">
                 @Reports.summaryInstructions
-                <input type="button" value="Hide Help" class="formButton report-top report-align-right report-instructions-hide" />
+                <input type="button" value="@Reports.hideHelp" class="formButton report-top report-align-right report-instructions-hide" />
             </p>
         </div>
     </div>
@@ -42,11 +42,15 @@
         </div>
         <h3 class="report-subtitle"><a href="#" id="wecLink">Weekly</a></h3>
         <div id="wecTable" class="report-container">
-            <input type="button" value="Refresh" class="formButton report-top" id="wecDataOnlyBtn" />
-            <input type="button" value="Print" class="formButton report-top" id="wecPrintReport" />
-            <input type="button" value="Spreadsheet" class="formButton report-top" id="wecSpreadsheet" />
-            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker-weekly report-top", @id = "wecDate" })
-            <p id="wecHelp" class="report-inline report-top"><em>@Reports.weekInstructions</em></p>
+            <div class="report-top-div-left">
+                <input type="button" value="Refresh" class="formButton report-top" id="wecDataOnlyBtn" />
+                <input type="button" value="Print" class="formButton report-top" id="wecPrintReport" />
+                <input type="button" value="Spreadsheet" class="formButton report-top" id="wecSpreadsheet" />
+                @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker-weekly report-top", @id = "wecDate" })
+            </div>
+            <div class="report-top-div-right">
+                <p id="wecHelp" class="report-tip report-top report-instructions"><em>@Reports.weekInstructions</em></p>
+            </div>
             <table id="wecDataTable" class="display report-datatable">
                 <thead>
                     <tr>
@@ -64,11 +68,15 @@
         </div>
         <h3 class="report-subtitle"><a href="#" id="mwdLink">Monthly</a></h3>
         <div id="mwdTable" class="report-container">
-            <input type="button" value="Refresh" class="formButton report-top" id="mwdDataOnlyBtn" />
-            <input type="button" value="Print" class="formButton report-top" id="mwdPrintReport" />
-            <input type="button" value="Spreadsheet" class="formButton report-top" id="mwdSpreadsheet" />
-            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker report-top", @id = "mwdDate" })
-            <p id="mwdHelp" class="report-inline report-top"><em>@Reports.monthInstructions</em></p>
+            <div class="report-top-div-left">
+                <input type="button" value="Refresh" class="formButton report-top" id="mwdDataOnlyBtn" />
+                <input type="button" value="Print" class="formButton report-top" id="mwdPrintReport" />
+                <input type="button" value="Spreadsheet" class="formButton report-top" id="mwdSpreadsheet" />
+                @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker report-top", @id = "mwdDate" })
+            </div>
+            <div class="report-top-div-right">
+                <p id="mwdHelp" class="report-tip report-instructions report-top"><em>@Reports.monthInstructions</em></p>
+            </div>
             <table id="mwdDataTable" class="display report-datatable">
                 <thead>
                     <tr>
@@ -109,11 +117,15 @@
         </div>
         <h3 class="report-subtitle"><a href="#" id="ywdLink">Yearly</a></h3>
         <div id="ywdTable" class="report-container">
-            <input type="button" value="Refresh" class="formButton report-top" id="ywdDataOnlyBtn" />
-            <input type="button" value="Print" class="formButton report-top" id="ywdPrintReport" />
-            <input type="button" value="Spreadsheet" class="formButton report-top" id="ywdSpreadsheet" />
-            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker report-top", @id = "ywdDate" })
-            <p id="ywdHelp" class="report-inline report-top"><em>@Reports.yearInstructions</em></p>
+            <div class="report-top-div-left">
+                <input type="button" value="Refresh" class="formButton report-top" id="ywdDataOnlyBtn" />
+                <input type="button" value="Print" class="formButton report-top" id="ywdPrintReport" />
+                <input type="button" value="Spreadsheet" class="formButton report-top" id="ywdSpreadsheet" />
+                @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker report-top", @id = "ywdDate" })
+            </div>
+            <div class="report-top-div-right">
+                <p id="ywdHelp" class="report-tip report-top report-instructions"><em>@Reports.yearInstructions</em></p>
+            </div>
             <table id="ywdDataTable" class="display report-datatable">
                 <thead>
                     <tr>

@@ -178,7 +178,7 @@ namespace Machete.Test.IntegrationTests.Services
             var result = frb.ToServReports().ListOrdersByZipCode(beginDate, endDate).ToList();
 
             //Assert
-            Assert.IsTrue(result.Select(q => q.info).Contains("12345"));
+            Assert.IsTrue(result.Select(q => q.zips).Contains("12345"));
         }
 
         //ALL logic for the views contained at the service layer (i.e.,

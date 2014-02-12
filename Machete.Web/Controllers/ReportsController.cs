@@ -292,7 +292,7 @@ namespace Machete.Web.Controllers
             var result = from d in ywd.query
                          select new
                          {
-                             date = System.String.Format("{0:MM/dd/yyyy}", d.date),
+                             date = "Quarter beginning " + System.String.Format("{0:MM/dd/yyyy}", d.dateStart) + " and ending " + System.String.Format("{0:MM/dd/yyyy}", d.dateEnd),
                              stillHere = d.stillHere.ToString(),
                              totalSignins = d.totalSignins.ToString(),
                              wentToClass = d.peopleWhoWentToClass.ToString(),

@@ -1053,25 +1053,26 @@ namespace Machete.Service
             status = MemberStatusByDate(beginDate, endDate, "months", 3).ToList();
 
             q = getDates
-                .Select(g => new YearSumData
+                .Select(x => new YearSumData
                 {
-                    date = g,
-                    totalSignins = signins.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Select(h => h.count).Sum() ?? 0,
-                    uniqueSignins = unique.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Select(h => h.count).Sum() ?? 0, //dd
-                    peopleWhoWentToClass = classes.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Select(h => h.count).Sum() ?? 0,
-                    dispatched = workers.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Select(h => h.count).Sum() ?? 0,
-                    tempDispatched = workers.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Select(h => h.tempCount).Sum() ?? 0, //dd
-                    permanentPlacements = workers.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Select(h => h.permCount).Sum() ?? 0, //dd
-                    undupDispatched = workers.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Select(h => h.undupCount).Sum() ?? 0, //dd
-                    totalHours = average.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Select(h => h.hours).Sum(),
-                    totalIncome = average.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Select(h => h.wages).Sum(),
-                    avgIncomePerHour = average.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Select(h => h.avg).Sum(),
-                    stillHere = status.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Select(h => h.count).Sum() ?? 0,
-                    newlyEnrolled = status.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Select(h => h.enrolledOnDate).Sum() ?? 0, //dd
-                    peopleWhoLeft = status.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Select(h => h.expiredOnDate).Sum() ?? 0 //dd
+                    dateStart = x,
+                    dateEnd = x.AddMonths(3),
+                    totalSignins = signins.Where(y => y.date >= x && y.date < x.AddMonths(3)).Select(h => h.count).Sum() ?? 0,
+                    uniqueSignins = unique.Where(y => y.date >= x && y.date < x.AddMonths(3)).Select(h => h.count).Sum() ?? 0, //dd
+                    peopleWhoWentToClass = classes.Where(y => y.date >= x && y.date < x.AddMonths(3)).Select(h => h.count).Sum() ?? 0,
+                    dispatched = workers.Where(y => y.date >= x && y.date < x.AddMonths(3)).Select(h => h.count).Sum() ?? 0,
+                    tempDispatched = workers.Where(y => y.date >= x && y.date < x.AddMonths(3)).Select(h => h.tempCount).Sum() ?? 0, //dd
+                    permanentPlacements = workers.Where(y => y.date >= x && y.date < x.AddMonths(3)).Select(h => h.permCount).Sum() ?? 0, //dd
+                    undupDispatched = workers.Where(y => y.date >= x && y.date < x.AddMonths(3)).Select(h => h.undupCount).Sum() ?? 0, //dd
+                    totalHours = average.Where(y => y.date >= x && y.date < x.AddMonths(3)).Select(h => h.hours).Sum(),
+                    totalIncome = average.Where(y => y.date >= x && y.date < x.AddMonths(3)).Select(h => h.wages).Sum(),
+                    avgIncomePerHour = average.Where(y => y.date >= x && y.date < x.AddMonths(3)).Select(h => h.hours).Sum() == 0 ? 0
+                                     : average.Where(y => y.date >= x && y.date < x.AddMonths(3)).Select(h => h.avg * h.hours).Sum()
+                                     / average.Where(y => y.date >= x && y.date < x.AddMonths(3)).Select(h => h.hours).Sum(),
+                    stillHere = status.Where(y => y.date >= x && y.date < x.AddMonths(3)).Select(h => h.count).Sum() ?? 0,
+                    newlyEnrolled = status.Where(y => y.date >= x && y.date < x.AddMonths(3)).Select(h => h.enrolledOnDate).Sum() ?? 0, //dd
+                    peopleWhoLeft = status.Where(y => y.date >= x && y.date < x.AddMonths(3)).Select(h => h.expiredOnDate).Sum() ?? 0 //dd
                 });
-
-            q = q.OrderBy(p => p.date);
 
             return q;
         }
@@ -1099,18 +1100,18 @@ namespace Machete.Service
             var oshaTrainees = getAllClassAttendance.Where(osha => osha.info.Contains("OSHA"));
 
             q = getDates
-                .Select(g => new ActivityData
+                .Select(x => new ActivityData
                 {
-                    dateStart = g,
-                    dateEnd = g.Add(endDate.Subtract(g)),
-                    safety = safetyTrainees.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Count(),
-                    skills = skillsTrainees.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Count(),
-                    esl = eslAssessed.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Count(),
-                    basGarden = basGardenTrainees.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Count(),
-                    advGarden = advGardenTrainees.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Count(),
-                    finEd = finTrainees.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Count(),
-                    osha = oshaTrainees.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g))).Count(),
-                    drilldown = getAllClassAttendance.Where(whr => whr.date >= g && whr.date <= g.Add(endDate.Subtract(g)))
+                    dateStart = x,
+                    dateEnd = x.AddMonths(3).AddDays(1),
+                    safety = safetyTrainees.Where(y => y.date >= x && y.date < x.AddMonths(3).AddDays(1)).Count(),
+                    skills = skillsTrainees.Where(y => y.date >= x && y.date < x.AddMonths(3).AddDays(1)).Count(),
+                    esl = eslAssessed.Where(y => y.date >= x && y.date < x.AddMonths(3).AddDays(1)).Count(),
+                    basGarden = basGardenTrainees.Where(y => y.date >= x && y.date < x.AddMonths(3).AddDays(1)).Count(),
+                    advGarden = advGardenTrainees.Where(y => y.date >= x && y.date < x.AddMonths(3).AddDays(1)).Count(),
+                    finEd = finTrainees.Where(y => y.date >= x && y.date < x.AddMonths(3).AddDays(1)).Count(),
+                    osha = oshaTrainees.Where(y => y.date >= x && y.date < x.AddMonths(3).AddDays(1)).Count(),
+                    drilldown = getAllClassAttendance.Where(y => y.date >= x && y.date < x.AddMonths(3).AddDays(1))
                 });
 
             return q;
@@ -1314,7 +1315,8 @@ namespace Machete.Service
 
     public class YearSumData
     {
-        public DateTime date { get; set; }
+        public DateTime dateStart { get; set; }
+        public DateTime dateEnd { get; set; }
         public int totalSignins { get; set; }
         public int uniqueSignins { get; set; }
         public int dispatched { get; set; }
