@@ -728,11 +728,22 @@ html[xmlns] .clearfix {
 }
 
 .report-top {
-    margin-bottom:.5em;
+    margin-bottom: 1em;
+}
+
+.report-top-div-left {
+    float:left; 
+    width:60%;
+}
+
+.report-top-div-right {
+    float:left; 
+    width:40%;
 }
 
 .report-drill {
-    margin-left: 13.5%;
+    margin-left: auto;
+    margin-right: 0;
     background: #90A2B6;
     border: solid 2px gray;
     border-collapse: separate;
@@ -746,4 +757,14 @@ html[xmlns] .clearfix {
 .report-align-right {
     text-align: right;
     float: right;
+}
+
+.report-tip {
+    background: #90A2B6;
+    border-radius: .5em;
+    clear: both;
+    font-weight: bold;
+    text-align: center;
+    margin: 0 .5em;
+    padding: 0 .5em;
 }

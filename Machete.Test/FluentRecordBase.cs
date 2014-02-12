@@ -910,7 +910,7 @@ namespace Machete.Test
             if (_repoL == null) AddRepoLookup();
             if (_lcache == null) AddRepoLookup();
             if (_repoAS == null) AddRepoActivitySignin();
-            _servR = new ReportService(_repoWO, _repoWA, _repoW, _repoWSI, _repoWR, _repoL, _lcache, _repoAS);
+            _servR = new ReportService(_repoWO, _repoWA, _repoW, _repoWSI, _repoWR, _repoL, _lcache, _repoE, _repoAS);
             return this;
         }
 

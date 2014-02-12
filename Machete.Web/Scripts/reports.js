@@ -269,9 +269,9 @@ function employerTableDefaults(url, lang, date) {
             iEmps += parseInt(aaData[i].emps);
         }
 
-        nCells[1].innerHTML = iZips;
-        nCells[2].innerHTML = iOrders;
-        nCells[3].innerHTML = iEmps;
+        nCells[0].innerHTML = iZips;
+        nCells[1].innerHTML = iOrders;
+        nCells[2].innerHTML = iEmps;
     }
 
     return tableDefaults;
@@ -296,7 +296,7 @@ function fnFormatEmployerDetails(oTable, nTr) {
 function fnFormatSummaryDetails(oTable, nTr) {
     var aData = oTable.fnGetData(nTr);
     var drillList = aData.drilldown;
-    var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="margin-left: 13.5%;background: #90A2B6;border: solid 2px gray;border-collapse: separate;">';
+    var sOut = '<table cellpadding="5" cellspacing="0" border="0" class="report-drill">';
     sOut += '<thead><tr><th>Enrolled</th>';
     sOut += '<th>Exited</th>';
     sOut += '<th>Unique Signin</th>';
