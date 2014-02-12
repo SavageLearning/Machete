@@ -220,9 +220,6 @@ function workerTableDefaults(url, lang, date) {
         { mDataProp: "newFamilyHouseholds" }
     ];
     tableDefaults.fnFooterCallback = function (nRow, aaData, iStart, iEnd, aiDisplay) {
-        /*
-         * Calculate the total for all numbers this table 
-         */
         var nCells = nRow.getElementsByTagName('th');
 
         var iComplete = 0.0;
@@ -249,18 +246,48 @@ function workerTableDefaults(url, lang, date) {
     return tableDefaults;
 }
 
+function employerTableDefaults(url, lang, date) {
+    var tableDefaults = reportTableDefaults(url, lang, date);
+    tableDefaults.aoColumns = [
+        { mDataProp: "zips" },
+        { mDataProp: "jobs" },
+        { mDataProp: "emps" },
+        {
+            mDataProp: null, sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="nestedDetailsButton">'
+        }
+    ];
+    tableDefaults.fnFooterCallback = function (nRow, aaData, iStart, iEnd, aiDisplay) {
+        var nCells = nRow.getElementsByTagName('th');
 
-function fnFormatWeekDetails(oTable, nTr) {
+        var iZips = 0;
+        var iOrders = 0;
+        var iEmps = 0;
+
+        for (var i = 0; i < aaData.length ; i++) {
+            iZips += 1;
+            iOrders += parseInt(aaData[i].jobs);
+            iEmps += parseInt(aaData[i].emps);
+        }
+
+        nCells[1].innerHTML = iZips;
+        nCells[2].innerHTML = iOrders;
+        nCells[3].innerHTML = iEmps;
+    }
+
+    return tableDefaults;
+}
+
+function fnFormatEmployerDetails(oTable, nTr) {
     var aData = oTable.fnGetData(nTr);
-    var jobList = aData.topJobs;
+    var jobList = aData.drilldown;
     var sOut = '<table cellpadding="5" cellspacing="0" border="0" class="report-drill">';
-    sOut += '<thead><tr><th>Date</th>'; //don't really need date; they already select date for drilldown
+    sOut += '<thead><tr>';
     sOut += '<th>Skill</th>';
     sOut += '<th>Count</th>';
     sOut += '</tr></thead><tbody>';
     for (var i in jobList) {
         var job = jobList[i];
-        sOut += '<tr><td>' + job.date + '</td><td>' + job.skill + '</td><td>' + job.count + '</td></tr>';
+        sOut += '<tr><td>' + job.skill + '</td><td>' + job.count + '</td></tr>';
     }
     sOut += '</tbody></table>';
     return sOut;

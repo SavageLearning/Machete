@@ -1,12 +1,13 @@
-﻿<div id="summaryWrapper" class="report-wrapper">
+﻿@using Machete.Web.Resources
+<div id="summaryWrapper" class="report-wrapper">
     <div id="summaryHeader">
         <div id="summaryPopup">
             <h3 class="report-padding-left-half">
-                @Machete.Web.Resources.Reports.summaryHeader
+                @Reports.summaryHeader
                 <input type="button" value="?" class="formButton report-top report-align-right report-instructions-show" />
             </h3>
             <p id="summaryInstructions" class="report-instructions">
-                @Machete.Web.Resources.Reports.summaryInstructions
+                @Reports.summaryInstructions
                 <input type="button" value="Hide Help" class="formButton report-top report-align-right report-instructions-hide" />
             </p>
         </div>
@@ -20,19 +21,19 @@
             <input type="button" value="Print Report" class="formButton report-top" id="dclPrintReport" />
             <input type="button" value="Spreadsheet" class="formButton report-top" id="dclSpreadsheet" />
             @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker report-top", @id = "dclDate" })
-            <p id="dclHelp" class="report-inline report-top"><em>@Machete.Web.Resources.Reports.dayInstructions</em></p>
+            <p id="dclHelp" class="report-inline report-top"><em>@Reports.dayInstructions</em></p>
             <table id="dclDataTable" class="display report-datatable">
                 <thead>
                     <tr>
-                        <th>@Machete.Web.Resources.Reports.date</th>
-                        <th>@Machete.Web.Resources.Reports.dwcList</th>
-                        <th>@Machete.Web.Resources.Reports.dwcPropio</th>
-                        <th>@Machete.Web.Resources.Reports.hhhList</th>
-                        <th>@Machete.Web.Resources.Reports.hhhPropio</th>
+                        <th>@Reports.date</th>
+                        <th>@Reports.dwcList</th>
+                        <th>@Reports.dwcPropio</th>
+                        <th>@Reports.hhhList</th>
+                        <th>@Reports.hhhPropio</th>
                         <th>Unique</th>
-                        <th>@Machete.Web.Resources.Reports.totalSignins</th>
-                        <th>@Machete.Web.Resources.Reports.totalAssignments</th>
-                        <th>@Machete.Web.Resources.Reports.cancelledJobs</th>
+                        <th>@Reports.totalSignins</th>
+                        <th>@Reports.totalAssignments</th>
+                        <th>@Reports.cancelledJobs</th>
                     </tr>
                 </thead>
             </table>
@@ -45,17 +46,17 @@
             <input type="button" value="Print" class="formButton report-top" id="wecPrintReport" />
             <input type="button" value="Spreadsheet" class="formButton report-top" id="wecSpreadsheet" />
             @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker-weekly report-top", @id = "wecDate" })
-            <p id="wecHelp" class="report-inline report-top"><em>@Machete.Web.Resources.Reports.weekInstructions</em></p>
+            <p id="wecHelp" class="report-inline report-top"><em>@Reports.weekInstructions</em></p>
             <table id="wecDataTable" class="display report-datatable">
                 <thead>
                     <tr>
-                        <th>@Machete.Web.Resources.Reports.weekday</th>
-                        <th>@Machete.Web.Resources.Reports.date</th>
-                        <th>@Machete.Web.Resources.Reports.totalSignins</th>
-                        <th>@Machete.Web.Resources.Reports.totalAssignments</th>
-                        <th>@Machete.Web.Resources.Reports.weekEstDailyHours</th>
-                        <th>@Machete.Web.Resources.Reports.weekEstPayment</th>
-                        <th>@Machete.Web.Resources.Reports.weekHourlyWage</th>
+                        <th>@Reports.weekday</th>
+                        <th>@Reports.date</th>
+                        <th>@Reports.totalSignins</th>
+                        <th>@Reports.totalAssignments</th>
+                        <th>@Reports.weekEstDailyHours</th>
+                        <th>@Reports.weekEstPayment</th>
+                        <th>@Reports.weekHourlyWage</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -67,18 +68,18 @@
             <input type="button" value="Print" class="formButton report-top" id="mwdPrintReport" />
             <input type="button" value="Spreadsheet" class="formButton report-top" id="mwdSpreadsheet" />
             @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker report-top", @id = "mwdDate" })
-            <p id="mwdHelp" class="report-inline report-top"><em>@Machete.Web.Resources.Reports.monthInstructions</em></p>
+            <p id="mwdHelp" class="report-inline report-top"><em>@Reports.monthInstructions</em></p>
             <table id="mwdDataTable" class="display report-datatable">
                 <thead>
                     <tr>
-                        <th>@Machete.Web.Resources.Reports.date</th>
-                        <th>@Machete.Web.Resources.Reports.activeMembers</th>
-                        <th>@Machete.Web.Resources.Reports.totalSignins</th>
-                        <th>@Machete.Web.Resources.Reports.wentToClass</th>
-                        <th>@Machete.Web.Resources.Reports.dispatched</th>
-                        <th>@Machete.Web.Resources.Reports.totalHours</th>
-                        <th>@Machete.Web.Resources.Reports.totalIncome</th>
-                        <th>@Machete.Web.Resources.Reports.avgIncome</th>
+                        <th>@Reports.date</th>
+                        <th>@Reports.activeMembers</th>
+                        <th>@Reports.totalSignins</th>
+                        <th>@Reports.wentToClass</th>
+                        <th>@Reports.dispatched</th>
+                        <th>@Reports.totalHours</th>
+                        <th>@Reports.totalIncome</th>
+                        <th>@Reports.avgIncome</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -112,18 +113,18 @@
             <input type="button" value="Print" class="formButton report-top" id="ywdPrintReport" />
             <input type="button" value="Spreadsheet" class="formButton report-top" id="ywdSpreadsheet" />
             @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker report-top", @id = "ywdDate" })
-            <p id="ywdHelp" class="report-inline report-top"><em>@Machete.Web.Resources.Reports.yearInstructions</em></p>
+            <p id="ywdHelp" class="report-inline report-top"><em>@Reports.yearInstructions</em></p>
             <table id="ywdDataTable" class="display report-datatable">
                 <thead>
                     <tr>
-                        <th>@Machete.Web.Resources.Reports.date</th>
-                        <th>@Machete.Web.Resources.Reports.activeMembers</th>
-                        <th>@Machete.Web.Resources.Reports.totalSignins</th>
-                        <th>@Machete.Web.Resources.Reports.wentToClass</th>
-                        <th>@Machete.Web.Resources.Reports.dispatched</th>
-                        <th>@Machete.Web.Resources.Reports.totalHours</th>
-                        <th>@Machete.Web.Resources.Reports.totalIncome</th>
-                        <th>@Machete.Web.Resources.Reports.avgIncome</th>
+                        <th>@Reports.date</th>
+                        <th>@Reports.activeMembers</th>
+                        <th>@Reports.totalSignins</th>
+                        <th>@Reports.wentToClass</th>
+                        <th>@Reports.dispatched</th>
+                        <th>@Reports.totalHours</th>
+                        <th>@Reports.totalIncome</th>
+                        <th>@Reports.avgIncome</th>
                         <th></th>
                     </tr>
                 </thead>

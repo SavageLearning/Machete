@@ -175,13 +175,13 @@
     <value>Órdenes</value>
   </data>
   <data name="summaryHeader" xml:space="preserve">
-    <value>Informes periódicos</value>
+    <value>Reportes de Órdenes (Resúmenes)</value>
   </data>
   <data name="summaryInstructions" xml:space="preserve">
     <value>Utiliza los menús abajo para elegir los distintos tipos de reportajes periódicos. Puede utilizar los botones por encima del reporte para alternar la visualización.</value>
   </data>
   <data name="summaryTab" xml:space="preserve">
-    <value>Resúmenes</value>
+    <value>Resúmenes de Órdenes</value>
   </data>
   <data name="totalAssignments" xml:space="preserve">
     <value>Asignaciones Totales</value>
@@ -213,10 +213,10 @@
   <data name="workersTab" xml:space="preserve">
     <value>Trabajadores</value>
   </data>
-  <data name="jzcJobs" xml:space="preserve">
+  <data name="empJobs" xml:space="preserve">
     <value>Trabajos Principales</value>
   </data>
-  <data name="jzcZipCodes" xml:space="preserve">
+  <data name="empZipCodes" xml:space="preserve">
     <value>Códigos Postales Principales</value>
   </data>
   <data name="ordersHeader" xml:space="preserve">
@@ -229,7 +229,7 @@
     <value>SSRS</value>
   </data>
   <data name="workersHeader" xml:space="preserve">
-    <value>Machete Worker Reports</value>
+    <value>Reportes de Trabajadores</value>
   </data>
   <data name="advGarden" xml:space="preserve">
     <value>Jardinería 2</value>
@@ -306,5 +306,20 @@
   </data>
   <data name="zipplusfour" xml:space="preserve">
     <value>+4</value>
+  </data>
+  <data name="employersHeader" xml:space="preserve">
+    <value>Reportes de Patrones</value>
+  </data>
+  <data name="employersInstructions" xml:space="preserve">
+    <value>Utilice los menús abajo para elegir distintos tipos de reportes sobre empleadores. Puede utilizar los botones por encima del reporte para elegir distintas visualizaciones.</value>
+  </data>
+  <data name="employersTab" xml:space="preserve">
+    <value>Patrones</value>
+  </data>
+  <data name="hideHelp" xml:space="preserve">
+    <value>Ya entendí</value>
+  </data>
+  <data name="workersInstructions" xml:space="preserve">
+    <value>Utilice los menús abajo para elegir distintos tipos de reportes sobre trabajadores. Puede utilizar los botones por encima del reporte para elegir distintas visualizaciones.</value>
   </data>
 </root>

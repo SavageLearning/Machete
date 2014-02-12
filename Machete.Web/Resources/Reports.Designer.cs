@@ -214,6 +214,51 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Top Jobs.
+        /// </summary>
+        public static string empJobs {
+            get {
+                return ResourceManager.GetString("empJobs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Employer Reports.
+        /// </summary>
+        public static string employersHeader {
+            get {
+                return ResourceManager.GetString("employersHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open the menus below to select different types of employer reports. Use the buttons at the top of the reports to toggle the display..
+        /// </summary>
+        public static string employersInstructions {
+            get {
+                return ResourceManager.GetString("employersInstructions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Employers.
+        /// </summary>
+        public static string employersTab {
+            get {
+                return ResourceManager.GetString("employersTab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Top Zip Codes.
+        /// </summary>
+        public static string empZipCodes {
+            get {
+                return ResourceManager.GetString("empZipCodes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ESL(&gt; 12 h.).
         /// </summary>
         public static string eslAssessed {
@@ -304,20 +349,11 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Top Jobs.
+        ///   Looks up a localized string similar to Okay, Got It.
         /// </summary>
-        public static string jzcJobs {
+        public static string hideHelp {
             get {
-                return ResourceManager.GetString("jzcJobs", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Top Zip Codes.
-        /// </summary>
-        public static string jzcZipCodes {
-            get {
-                return ResourceManager.GetString("jzcZipCodes", resourceCulture);
+                return ResourceManager.GetString("hideHelp", resourceCulture);
             }
         }
         
@@ -457,7 +493,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Summaries.
+        ///   Looks up a localized string similar to Order Summaries.
         /// </summary>
         public static string summaryTab {
             get {
@@ -592,11 +628,20 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Worker Detail Reports.
+        ///   Looks up a localized string similar to Worker Reports.
         /// </summary>
         public static string workersHeader {
             get {
                 return ResourceManager.GetString("workersHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open the menus below to select different types of reports about workers. Use the buttons at the top of the reports to toggle the display..
+        /// </summary>
+        public static string workersInstructions {
+            get {
+                return ResourceManager.GetString("workersInstructions", resourceCulture);
             }
         }
         

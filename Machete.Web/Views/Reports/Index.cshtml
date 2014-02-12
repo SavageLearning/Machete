@@ -1,5 +1,5 @@
 ﻿@using Machete.Web.Helpers
-@using Machete.Domain.Resources
+@using Machete.Domain.Resources @*For what??*@
 @using Machete.Web.Resources
 @using Machete.Service
 @Scripts.Render("~/bundles/reports")
@@ -9,16 +9,19 @@
 }
 <div id="reportTabs">
     <ul>
-        <li><a href="#summaryWrapper" id="summaryTab">@Machete.Web.Resources.Reports.summaryTab</a> </li>
-        <li><a href="#workersWrapper" id="workersTab">@Machete.Web.Resources.Reports.workersTab</a> </li>
-        <li><a href="#activityWrapper" id="activityTab">@Machete.Web.Resources.Reports.activitiesTab</a> </li>
-        <li><a href="#ssrsWrapper" id="ssrsTab">@Machete.Web.Resources.Reports.ssrsTab</a> </li>
+        <li><a href="#summaryWrapper" id="summaryTab">@Reports.summaryTab</a> </li>
+        <li><a href="#employersWrapper" id="employersTab">@Reports.employersTab</a></li>
+        <li><a href="#workersWrapper" id="workersTab">@Reports.workersTab</a> </li>
+        <li><a href="#activityWrapper" id="activityTab">@Reports.activitiesTab</a> </li>
+        <li><a href="#ssrsWrapper" id="ssrsTab">@Reports.ssrsTab</a> </li>
     </ul>
         @Html.Partial("Summary")
+        @Html.Partial("Employers")
         @Html.Partial("Workers")
         @Html.Partial("Activities")
         @Html.Partial("SSRS")
 </div>
+@Html.AntiForgeryToken()
 <script type="text/javascript">
     $(document).ready(function () {
         //VARS
@@ -34,6 +37,10 @@
         var weekWkr = $('#weekWkrDataTable');
         var monthWkr = $('#monthWkrDataTable');
         var yearWkr = $('#yearWkrDataTable');
+
+        var weekEmp = $('weekEmpDataTable');
+        var monthEmp = $('monthEmpDataTable');
+        var yearEmp = $('yearEmpDataTable');
 
         var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
 
@@ -97,18 +104,21 @@
         $('#wecDate').change(function (event) { wecNewTable(); });
         $('#weekActDate').change(function (event) { weekActNewTable(); });
         $('#weekWkrDate').change(function (event) { weekWkrNewTable(); });
+        $('#weekEmpDate').change(function (event) { weekEmpNewTable(); });
 
         // Monthly datepickerers
         //
         $('#mwdDate').change(function (event) { mwdNewTable(); });
         $('#monthActDate').change(function (event) { monthActNewTable(); });
         $('#monthWkrDate').change(function (event) { monthWkrNewTable(); });
+        $('#monthEmpDate').change(function (event) { monthEmpNewTable(); });
 
         // Yearly datepickerer
         //
         $('#ywdDate').change(function (event) { ywdNewTable(); });
         $('#yearActDate').change(function (event) { yearActNewTable(); })
         $('#yearWkrDate').change(function (event) { yearWkrNewTable(); });
+        $('#yearEmpDate').change(function (event) { yearEmpNewTable(); });
 
         //////////////////////////////////////////////////////////////////////// | DATATABLES |
         //
@@ -195,6 +205,24 @@
             yearWkr = $('#yearWkrDataTable').dataTable(oYearWkrTable);
         }
 
+        //
+        // EMPLOYERS
+        //
+        function weekEmpNewTable() {
+            oWeekEmpTable = $.extend(true, {}, employerTableDefaults("/Reports/AjaxWeekEmp", lang, $('#weekEmpDate').val()));
+            weekEmp = $('#weekEmpDataTable').dataTable(oWeekEmpTable);
+        }
+
+        function monthEmpNewTable() {
+            oMonthEmpTable = $.extend(true, {}, employerTableDefaults("/Reports/AjaxMonthEmp", lang, $('#monthEmpDate').val()));
+            monthEmp = $('#monthEmpDataTable').dataTable(oMonthEmpTable);
+        }
+
+        function yearEmpNewTable() {
+            oYearEmpTable = $.extend(true, {}, employerTableDefaults("/Reports/AjaxYearEmp", lang, $('#yearEmpDate').val()));
+            yearEmp = $('#yearEmpDataTable').dataTable(oYearEmpTable);
+        }
+
         ////////////////////////////////////////////////////////////// | DRILLDOWNS |
         ////////////////////////////////////////////////////////////// | [+] [-]... |
 
@@ -210,7 +238,7 @@
             } else {
                 /* Open this row */
                 this.src = "/Content/dataTables/details_close.png";
-                wec.fnOpen(nTr, fnFormatWeekDetails(wec, nTr), 'nestedDetails');
+                wec.fnOpen(nTr, fnFormatEmployerDetails(wec, nTr), 'nestedDetails');
             }
         });
 
@@ -269,7 +297,7 @@
             } else {
                 /* Open this row */
                 this.src = "/Content/dataTables/details_close.png";
-                monthAct.fnOpen(nTr, fnFormatActivityDetails(mwd, nTr), 'nestedDetails');
+                monthAct.fnOpen(nTr, fnFormatActivityDetails(monthAct, nTr), 'nestedDetails');
             }
         });
 
@@ -283,7 +311,52 @@
             } else {
                 /* Open this row */
                 this.src = "/Content/dataTables/details_close.png";
-                yearAct.fnOpen(nTr, fnFormatActivityDetails(ywd, nTr), 'nestedDetails');
+                yearAct.fnOpen(nTr, fnFormatActivityDetails(yearAct, nTr), 'nestedDetails');
+            }
+        });
+
+        // EMPLOYERS
+        //
+
+        $('#weekEmpDataTable tbody td img').live('click', function () {
+            var nTr = $(this).parents('tr')[0];
+
+            if (weekEmp.fnIsOpen(nTr)) {
+                /* This row is already open - close it */
+                this.src = "/Content/dataTables/details_open.png";
+                weekEmp.fnClose(nTr);
+            } else {
+                /* Open this row */
+                this.src = "/Content/dataTables/details_close.png";
+                weekEmp.fnOpen(nTr, fnFormatEmployerDetails(weekEmp, nTr), 'nestedDetails');
+            }
+        });
+
+        $('#monthEmpDataTable tbody td img').live('click', function () {
+            var nTr = $(this).parents('tr')[0];
+
+            if (monthEmp.fnIsOpen(nTr)) {
+                /* This row is already open - close it */
+                this.src = "/Content/dataTables/details_open.png";
+                monthEmp.fnClose(nTr);
+            } else {
+                /* Open this row */
+                this.src = "/Content/dataTables/details_close.png";
+                monthEmp.fnOpen(nTr, fnFormatEmployerDetails(monthEmp, nTr), 'nestedDetails');
+            }
+        });
+
+        $('#yearEmpDataTable tbody td img').live('click', function () {
+            var nTr = $(this).parents('tr')[0];
+
+            if (yearEmp.fnIsOpen(nTr)) {
+                /* This row is already open - close it */
+                this.src = "/Content/dataTables/details_open.png";
+                yearEmp.fnClose(nTr);
+            } else {
+                /* Open this row */
+                this.src = "/Content/dataTables/details_close.png";
+                yearEmp.fnOpen(nTr, fnFormatEmployerDetails(yearEmp, nTr), 'nestedDetails');
             }
         });
 

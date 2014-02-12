@@ -181,7 +181,7 @@
     <value>Open the menus below to select different types of summary reports. Use the buttons at the top of the report to toggle the display.</value>
   </data>
   <data name="summaryTab" xml:space="preserve">
-    <value>Summaries</value>
+    <value>Order Summaries</value>
   </data>
   <data name="totalAssignments" xml:space="preserve">
     <value>Total Assignments</value>
@@ -213,10 +213,10 @@
   <data name="workersTab" xml:space="preserve">
     <value>Workers</value>
   </data>
-  <data name="jzcJobs" xml:space="preserve">
+  <data name="empJobs" xml:space="preserve">
     <value>Top Jobs</value>
   </data>
-  <data name="jzcZipCodes" xml:space="preserve">
+  <data name="empZipCodes" xml:space="preserve">
     <value>Top Zip Codes</value>
   </data>
   <data name="ordersHeader" xml:space="preserve">
@@ -229,7 +229,7 @@
     <value>SSRS</value>
   </data>
   <data name="workersHeader" xml:space="preserve">
-    <value>Worker Detail Reports</value>
+    <value>Worker Reports</value>
   </data>
   <data name="advGarden" xml:space="preserve">
     <value>Gardening 2</value>
@@ -308,5 +308,20 @@
   </data>
   <data name="zipplusfour" xml:space="preserve">
     <value>+4</value>
+  </data>
+  <data name="employersHeader" xml:space="preserve">
+    <value>Employer Reports</value>
+  </data>
+  <data name="employersInstructions" xml:space="preserve">
+    <value>Open the menus below to select different types of employer reports. Use the buttons at the top of the reports to toggle the display.</value>
+  </data>
+  <data name="employersTab" xml:space="preserve">
+    <value>Employers</value>
+  </data>
+  <data name="hideHelp" xml:space="preserve">
+    <value>Okay, Got It</value>
+  </data>
+  <data name="workersInstructions" xml:space="preserve">
+    <value>Open the menus below to select different types of reports about workers. Use the buttons at the top of the reports to toggle the display.</value>
   </data>
 </root>
