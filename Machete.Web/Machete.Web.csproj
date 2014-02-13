@@ -365,6 +365,12 @@
     <Content Include="Content\confirm\info.gif" />
     <Content Include="Content\confirm\jquery.alerts.css" />
     <Content Include="Content\confirm\title.gif" />
+    <Content Include="Content\images\application-exit-2.png" />
+    <Content Include="Content\images\application-exit-4.png" />
+    <Content Include="Content\images\arrow-down-2.png" />
+    <Content Include="Content\images\arrow-down-4.png" />
+    <Content Include="Content\images\arrow-up-2.png" />
+    <Content Include="Content\images\arrow-up-4.png" />
     <Content Include="Content\SiteForEmail.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

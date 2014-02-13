@@ -76,8 +76,7 @@ namespace Machete.Web.Controllers
         {
             WorkAssignmentIndex _model = new WorkAssignmentIndex();
             //_model.todaysdate = DateTime.Today.ToShortDateString();
-            _model.todaysdate = System.String.Format("{0:dddd, d MMMM yyyy}", DateTime.Today);
-
+            _model.todaysdate = System.String.Format("{0:MM/dd/yyyy}", DateTime.Today);
             return View(_model);
         }
 
