@@ -25,20 +25,21 @@
 <body>
     <div class="page">
         <div>
-            <input type="button" value="@Machete.Web.Resources.Shared.bannerbtn" id="showbanner" class="formButton"/>
+            @*<input type="button" value="@Machete.Web.Resources.Shared.bannerbtn" id="showbanner" class="formButton"/>*@
         </div>
         <div id="header">
-            <div id="title" >
+            <div id="title" class="print-off">
                 @*<img alt="@Machete.Web.Resources.Shared.title" src="/Content/casa_logo.png" title="CasaLogo" class="casaLogo"/>*@
-                <img class="print_off" alt="@Machete.Web.Resources.Shared.title" src="/Content/machete_1_close_crop.png" title="Click to hide"/>
+                @*<img class="print_off" alt="@Machete.Web.Resources.Shared.title" src="/Content/machete_1_close_crop.png" title="Click to hide"/>*@
+                @Html.ActionLink(@Machete.Web.Resources.Shared.hometab, "Index", "Home", null, new { id = "menulinkhome" })
             </div>
-            <div id="logindisplay" class="print_off">
+            <div id="logindisplay" class="print-off">
                 @Html.Partial("_LogOnPartial")
                 @Html.Partial("_CultureChooser")
             </div>
-            <div id="menucontainer" class="print_off">
+            <div id="menucontainer" class="print-off">
                 <ul id="menu">
-                    <li>@Html.ActionLink(@Machete.Web.Resources.Shared.hometab, "Index", "Home", null, new { id = "menulinkhome" })</li>
+                    <li></li>
                     @if (Html.IsInRole(Html.Role_AM()))
                     {
                         <li>@Html.ActionLink(@Machete.Web.Resources.Shared.reportstab, "Index", "Reports", null, new { id = "menulinkreports" })</li>
@@ -73,10 +74,9 @@
 
         <div id="main">
             @RenderBody()
-            <div id="footer" class="print_off" style="Clear:Both">
-            
-            <p>
-                Web solution by Savage Learning, LLC. Copyright 2011.
+            <div id="footer" class="print-off">
+            <p class="print-off">
+                Web solution by Savage Learning, LLC. Copyright 2011-2013. Licensed under GNU GPL v3.0.
             </p>
             </div><!--footer-->        
         </div><!--main-->
@@ -85,17 +85,9 @@
 </html>
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#showbanner').hide();
         $('.formButton').button();
         $("a[href='/@(controllerName)']").addClass('menulinkactive');
-        $('#showbanner').click(function (e) {
-            $('#showbanner').hide();
-            $("#header").show("drop", {});
-        });
-        $('#title').click(function (e) {
-            $('#header').hide("drop", {});
-            $('#showbanner').fadeIn();
-        });
+
         function callback() {
             setTimeout(function () {
 
