@@ -105,6 +105,7 @@ namespace Machete.Web.Controllers
                             days = Convert.ToString(p.days),
                             description = p.description,
                             WOdescription = p.workOrder.description, // add the work order description to list of things sent
+                            datecreated = Convert.ToString(p.datecreated),
                             dateupdated = Convert.ToString(p.dateupdated), 
                             updatedby = p.Updatedby,
                             dateTimeofWork = p.workOrder.dateTimeofWork.ToString(),

@@ -14,10 +14,12 @@
             <table id="signinTable" style="width: 100%">
                 <thead>
                     <tr>
+                        <th>dwccardnum</th>
                         <th>@Machete.Web.Resources.WorkAssignments.fullname</th>
                         <th>@Machete.Web.Resources.WorkAssignments.skills</th>
                         <th>@Machete.Web.Resources.WorkAssignments.lotteryShort</th>
                         <th>@Machete.Web.Resources.WorkAssignments.programShort</th>
+                        <th>dfsi</th>
                     </tr>
                 </thead>
                 <tfoot>
@@ -230,7 +232,7 @@
         $('#lotteryTable').show();
         $('#lotteryList').show();
         $('.ui-dialog-titlebar-close').one('click', function() {
-            $('#signinTable').dataTable().fnSort( [ [2,'asc']] );
+            $('#signinTable').dataTable().fnSort( [ [3,'asc']] );
         });
     });
     //
@@ -248,7 +250,7 @@
     //
     //
     $("#signinTable").mUI('createTable', {
-        tab: null, 
+        tab: $('#signinTab'), 
         options: {
             "sScrollY": "400px",
             "bPaginate": false,
@@ -259,11 +261,14 @@
             "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
             "bProcessing": true,
             "aoColumns": [
-                { "mDataProp": "fullname" },
+                { "mDataProp": "dwccardnum", "bVisible": false, "bSortable": false },
+                { "mDataProp": "fullname"},
                 { "mDataProp": "skills" },
                 { "mDataProp": "lotterySequence" },
-                { "mDataProp": "program" }
+                { "mDataProp": "program" },
+                { "mDataProp": "dateforsigninstring", "bVisible": false, "bSortable": true}
             ],
+            "aaSorting": [[4, 'desc']],
             "fnServerDataExtra": function () {
                 return [
                 { "name": "todaysdate", "value": $('#todaysdate').val() },
@@ -288,7 +293,7 @@
     $("#availAssignTable").mUI('createTable', { 
         tab: $("#assignmentTab"),
         options: {
-            "sScrollY": "345px",
+            "sScrollY": "320px",
             "bPaginate": false,
             "bLengthChange": true,
             "aaSorting": [[4, 'desc']],
