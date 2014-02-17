@@ -20,7 +20,7 @@ namespace Machete.Web
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             // Uncomment the following lines to enable logging in with third party login providers
-
+            // Microsoft...
 
             //app.UseTwitterAuthentication(
             //   consumerKey: "",

@@ -205,6 +205,7 @@ namespace Machete.Web.Controllers
                     activ.type = actSched.type;
                     activ.dateStart = date;
                     activ.dateEnd = date.AddMinutes(length);
+                    activ.recurring = true;
                     activ.teacher = actSched.teacher;
                     activ.notes = actSched.notes;
 
