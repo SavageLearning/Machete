@@ -31,6 +31,7 @@ namespace Machete.Domain
 {
     public class ActivitySchedule : Record
     {
+        public ActivitySchedule() { }
         public ActivitySchedule(Activity firstAct)
         {
             idString = "activity";
@@ -75,9 +76,6 @@ namespace Machete.Domain
         [StringLength(4000, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.ActivitySchedule))]
         public string notes { get; set; }
 
-        [LocalizedDisplayName("daily", NameResourceType = typeof(Resources.ActivitySchedule))]
-        public bool daily { get; set; }
-
         [LocalizedDisplayName("sunday", NameResourceType = typeof(Resources.ActivitySchedule))]
         public bool sunday { get; set; }
         
@@ -96,10 +94,10 @@ namespace Machete.Domain
         [LocalizedDisplayName("friday", NameResourceType = typeof(Resources.ActivitySchedule))]
         public bool friday { get; set; }
 
-        [LocalizedDisplayName("notes", NameResourceType = typeof(Resources.ActivitySchedule))]
+        [LocalizedDisplayName("saturday", NameResourceType = typeof(Resources.ActivitySchedule))]
         public bool saturday { get; set; }
 
-        [LocalizedDisplayName("endOn", NameResourceType = typeof(Resources.ActivitySchedule))]
+        [LocalizedDisplayName("stopDate", NameResourceType = typeof(Resources.ActivitySchedule))]
         [Required(ErrorMessageResourceName = "dateEndrequired", ErrorMessageResourceType = typeof(Resources.ActivitySchedule))]
         public DateTime stopDate { get; set; }
     }

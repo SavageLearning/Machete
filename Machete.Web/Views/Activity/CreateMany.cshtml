@@ -1,11 +1,19 @@
 ﻿@model Machete.Domain.ActivitySchedule
 
 @using Machete.Web.Resources
+@using Machete.Web.Helpers
 
 @{  
     string recType = "activity";
     string idPrefix = recType + Model.ID + "-";
 }
+
+@{
+    ViewBag.Title = "CreateMany";
+}
+
+<script src="@Url.Content("~/Scripts/jquery.validate.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")" type="text/javascript"></script>
 
 @using (Html.BeginForm("CreateMany", "Activity", FormMethod.Post, 
                         new { @id = "activityCreateForm" }))
@@ -15,7 +23,7 @@
                value="@Activities.createsubmit" />
     </div>
     @Html.ValidationSummary(true)
-    @Html.EditorForModel("ActivitySchedule")
+    @Html.EditorFor(model => model, "ActivityCreateMany")
 }
 
 <script type="text/javascript">
