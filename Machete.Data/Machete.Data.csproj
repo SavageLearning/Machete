@@ -123,6 +123,10 @@
     <Compile Include="Migrations\201312300649350_MergeMacheteContextAndIdentityDbContext.Designer.cs">
       <DependentUpon>201312300649350_MergeMacheteContextAndIdentityDbContext.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201402170041226_AddRecurringBool.cs" />
+    <Compile Include="Migrations\201402170041226_AddRecurringBool.Designer.cs">
+      <DependentUpon>201402170041226_AddRecurringBool.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AllRepositories.cs" />
@@ -148,6 +152,7 @@
     <Content Include="SQL\201304160508212_AddSurchargeField.sql" />
     <Content Include="SQL\201305050151353_AddEmailTable.sql" />
     <Content Include="SQL\201312300649350_MergeMacheteContextAndIdentityDbContext.sql" />
+    <Content Include="SQL\201402170001333_AddRecurringBool.sql" />
     <Content Include="SQL\anUpdateThatWorks.sql" />
     <Content Include="SQL\create_migration_table.sql" />
     <Content Include="SQL\null_in_lookups.sql" />
@@ -167,6 +172,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201312300649350_MergeMacheteContextAndIdentityDbContext.resx">
       <DependentUpon>201312300649350_MergeMacheteContextAndIdentityDbContext.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201402170041226_AddRecurringBool.resx">
+      <DependentUpon>201402170041226_AddRecurringBool.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

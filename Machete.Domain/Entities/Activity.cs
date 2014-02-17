@@ -60,6 +60,9 @@ namespace Machete.Domain
         [LocalizedDisplayName("dateEnd", NameResourceType = typeof(Resources.Activity))]
         [Required(ErrorMessageResourceName = "dateEndrequired", ErrorMessageResourceType = typeof(Resources.Activity))]
         public DateTime dateEnd { get; set; }
+
+        [LocalizedDisplayName("recurring", NameResourceType = typeof(Resources.Activity))]
+        public bool recurring { get; set; }
         //
         [LocalizedDisplayName("teacher", NameResourceType = typeof(Resources.Activity))]
         [Required(ErrorMessageResourceName = "teacherrequired", ErrorMessageResourceType = typeof(Resources.Activity))]
@@ -68,9 +71,6 @@ namespace Machete.Domain
         [LocalizedDisplayName("notes", NameResourceType = typeof(Resources.Activity))]
         [StringLength(4000, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Activity))]
         public string notes { get; set; }
-        
-        [LocalizedDisplayName("recurring", NameResourceType = typeof(Resources.Activity))]
-        public bool recurring { get; set; }
     }
 
     public class ActivitySignin: Signin

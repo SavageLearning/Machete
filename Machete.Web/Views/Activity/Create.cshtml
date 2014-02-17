@@ -17,7 +17,7 @@
     </div>
     @Html.ValidationSummary(true)
 
-@if (Html.IsInRole(Html.Role_T()))
+if (Html.IsInRole(Html.Role_T()) && !Html.IsInRole(Html.Role_AM()))
 {     
     @Html.EditorFor(model => model.name)
     @Html.EditorFor(model => model.type)
@@ -30,6 +30,7 @@
 else
 { 
     @Html.EditorForModel("Activity")
+}
 }
 
 <script type="text/javascript">
