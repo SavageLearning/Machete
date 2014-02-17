@@ -100,7 +100,7 @@ namespace Machete.Domain
         public bool saturday { get; set; }
 
         [LocalizedDisplayName("endOn", NameResourceType = typeof(Resources.ActivitySchedule))]
-        [Required(ErrorMessageResourceName = "dateEndRequired", ErrorMessageResourceType = typeof(Resources.ActivitySchedule))]
+        [Required(ErrorMessageResourceName = "dateEndrequired", ErrorMessageResourceType = typeof(Resources.ActivitySchedule))]
         public DateTime stopDate { get; set; }
     }
 
