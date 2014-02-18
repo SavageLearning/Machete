@@ -124,6 +124,18 @@ namespace Machete.Web.Controllers
             return lcache.textByID(act.name, CI.TwoLetterISOLanguageName) + " with " +
                     act.teacher;
         }
+
+        private string CreateManyTabRef(Activity act)
+        {
+            if (act == null) return null;
+            return "/Activity/CreateMany/" + Convert.ToString(act.ID);
+        }
+        private string CreateManyTabLabel(Activity act)
+        {
+            if (act == null) return null;
+            return "Recurring Event with " + act.teacher;
+        }
+
         /// <summary>
         /// GET: /Activity/Create
         /// </summary>
@@ -147,12 +159,18 @@ namespace Machete.Web.Controllers
         public JsonResult Create(Activity activ, string userName)
         {
             UpdateModel(activ);
+            activ.firstID = activ.ID;
 
             if (activ.recurring == true)
             {
-                return Json(new { 
-                    isRedirect = true,
-                    redirectUrl = Url.Action("CreateMany", "Activity", activ)
+                Activity firstAct = serv.Create(activ, userName);
+
+                return Json(new
+                {
+                    sNewRef = CreateManyTabRef(firstAct),
+                    sNewLabel = CreateManyTabLabel(firstAct),
+                    iNewID = activ.ID,
+                    jobSuccess = true
                 });
             }
             else { 
@@ -170,9 +188,10 @@ namespace Machete.Web.Controllers
         }
 
         [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult CreateMany(Activity act)
+        public ActionResult CreateMany(int id)
         {
-            var _model = new ActivitySchedule(act);
+            Activity firstAct = serv.Get(id);
+            var _model = new ActivitySchedule(firstAct);
             return PartialView("CreateMany", _model);
         }
 
@@ -181,15 +200,14 @@ namespace Machete.Web.Controllers
         public JsonResult CreateMany(ActivitySchedule actSched, string userName)
         {
             UpdateModel(actSched); // copy values from form to object. why this is necessary if the object is being passed as arg, I don't know.
-            Activity newActivity = new Activity();
+            Activity firstActivity = serv.Get(actSched.firstID);
             var instances = actSched.stopDate.Subtract(actSched.dateStart).Days;
             var length = actSched.dateEnd.Subtract(actSched.dateStart).TotalMinutes;
 
-            for (var i = 0; i <= instances; i++)
+            for (var i = 0; i <= instances; ++i) // This should skip right over firstAct.
             {
                 var date = actSched.dateStart.AddDays(i);
                 var day = (int)date.DayOfWeek;
-                bool first = false;
 
                 if (day == 0 && !actSched.sunday) ;
                 else if (day == 1 && !actSched.monday) ;
@@ -206,28 +224,19 @@ namespace Machete.Web.Controllers
                     activ.dateStart = date;
                     activ.dateEnd = date.AddMinutes(length);
                     activ.recurring = true;
+                    activ.firstID = firstActivity.ID;
                     activ.teacher = actSched.teacher;
                     activ.notes = actSched.notes;
 
                     Activity act = serv.Create(activ, userName);
-                    if (first == false)
-                    {
-                        newActivity = act;
-                        first = true;
-                    }
                 }
             }
-
-            if (newActivity == null)
-            {
-                throw new MacheteIntegrityException("Sorry, something went wrong there. We're working hard to fix it. That's all we know.");
-            }
-
+            
             return Json(new
             {
-                sNewRef = EditTabRef(newActivity),
-                sNewLabel = EditTabLabel(newActivity),
-                iNewID = newActivity.ID,
+                sNewRef = EditTabRef(firstActivity),
+                sNewLabel = EditTabLabel(firstActivity),
+                iNewID = firstActivity.ID,
                 jobSuccess = true
             },
             JsonRequestBehavior.AllowGet);
@@ -274,6 +283,28 @@ namespace Machete.Web.Controllers
         public JsonResult Delete(int id, string userName)
         {
             serv.Delete(id, userName);
+
+            return Json(new
+            {
+                status = "OK",
+                jobSuccess = true,
+                deletedID = id
+            },
+            JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost, UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager")]
+        public JsonResult DeleteMany(int id, string userName)
+        {
+            Activity firstToDelete = serv.Get(id);
+            IEnumerable<Activity> allToDelete = serv.GetAll()
+                .Where(w => w.firstID == firstToDelete.firstID && w.dateStart >= firstToDelete.dateStart);
+
+            foreach (Activity toDelete in allToDelete)
+            {
+                serv.Delete(toDelete.ID, userName);
+            }
 
             return Json(new
             {

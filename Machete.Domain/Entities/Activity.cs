@@ -63,6 +63,7 @@ namespace Machete.Domain
 
         [LocalizedDisplayName("recurring", NameResourceType = typeof(Resources.Activity))]
         public bool recurring { get; set; }
+        public int firstID { get; set; }
         //
         [LocalizedDisplayName("teacher", NameResourceType = typeof(Resources.Activity))]
         [Required(ErrorMessageResourceName = "teacherrequired", ErrorMessageResourceType = typeof(Resources.Activity))]

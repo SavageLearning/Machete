@@ -8,6 +8,7 @@
     string idPrefix = recType + Model.ID + "-";
 }
 @Html.HiddenFor(model => model.ID, new { @class="hiddenRecID", id=idPrefix + "ID"})
+@Html.HiddenFor(model => model.firstID, new { @class="hiddenRecID", id=Model.firstID.ToString() + "isFirstID" })
 <div class="tb-table" style="float: left;">
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.name)

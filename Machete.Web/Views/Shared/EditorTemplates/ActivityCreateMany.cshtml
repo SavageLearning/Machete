@@ -7,7 +7,7 @@
     string recType = "activity";
     string idPrefix = recType + Model.ID + "-";
 }
-@Html.HiddenFor(model => model.ID, new { @class="hiddenRecID", id=idPrefix + "ID"})
+@Html.HiddenFor(model => model.firstID, new { @class="hiddenRecID", id=idPrefix + "isFirstID"})
 <div class="tb-table" style="float: left;">
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.name)
@@ -137,9 +137,6 @@
     </div>
 </div>
 <div style="clear: left;"></div>
-@Html.Partial("ManagerInfo", Model)
-@Html.Partial("AdministratorInfo", Model)
-
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -147,13 +144,23 @@
             stepMinute: 15,
             ampm: true,
             hourMin: 7,
-            hourMax: 18,
+            hourMax: 23,
             minuteMin: 0,
             minuteMax: 45,
             minuteGrid: 15,
             hourGrid: 4
         });
         $("#@(idPrefix)dateEnd").datetimepicker({
+            stepMinute: 15,
+            ampm: true,
+            hourMin: 7,
+            hourMax: 23,
+            minuteMin: 0,
+            minuteMax: 45,
+            minuteGrid: 15,
+            hourGrid: 4
+        });
+        $("#@(idPrefix)stopDate").datetimepicker({
             stepMinute: 15,
             ampm: true,
             hourMin: 7,

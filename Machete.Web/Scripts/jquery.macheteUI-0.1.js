@@ -339,11 +339,13 @@
             var recType = opt.recType || null;//activity
             var exclusiveTab = opt.exclusiveTab || true;
             var closeTab = opt.closeTab || undefined;
+            var closeTabBeforeLoad = opt.closeTabBeforeLoad || undefined;
             var preProcess = opt.preProcess || null;
             var postProcess = opt.postProcess || null;
             var callback = opt.callback || null;
             var maxTabs = opt.maxTabs || 2;
             var level = _checkFormLevel(opt.formLevel, "formSubmit"); //1 //Error if form level not set correctly
+            var pleaseDontFindMe = opt.pleaseDontFindMe || false;
             //
             //setup button.click to secondary submit
             //  workorder/edit/activate.btn
@@ -382,7 +384,8 @@
                                     exclusive: exclusiveTab,
                                     recordID: data.iNewID,  //JsonResult
                                     recType: recType,
-                                    maxTabs: maxTabs
+                                    maxTabs: maxTabs,
+                                    pleaseDontFindMe: pleaseDontFindMe
                                 });
                                 if (callback) { callback(); }
                             }
@@ -616,7 +619,7 @@
             var altClose = opt.altClose;
             var postDelete = opt.postDelete;
             //
-            if (!form) throw new Error("No employer Delete Form defined");
+            if (!form) throw new Error("No Delete Form defined");
             
             // default assumes that formClickDelete called on a MacheteTab object
             _submitAndCloseTab({

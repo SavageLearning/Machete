@@ -7,10 +7,17 @@
     string recType = "activity";
 
     //To hide JS features for unauthorized
-    int hideme = 0;
+    int donthideme = 0;
+    int donthidemeT = 0;
+
+    if (Html.IsInRole(Html.Role_T()))
+    {
+        donthidemeT = 1;
+    }
+    
     if (Html.IsInRole(Html.Role_AM()))
     {
-        hideme = 1;
+        donthideme = 1;
     }
 }
 @if (Html.IsInRole(Html.Role_AMPCU()) || Html.IsInRole(Html.Role_T()))
@@ -20,9 +27,14 @@
     {
         @*<input type="button" value="@Activities.viewlink" class="formButton" id="viewActivity-@Model.ID" />*@
         <input type="submit" value="@Activities.editsubmit" class="formButton saveBtn"/>
-        if (Html.IsInRole(Html.Role_AM()))
+        if (Html.IsInRole(Html.Role_AM()) || Html.IsInRole(Html.Role_T()))
         {
             <input id="deleteActivityButton-@Model.ID" type="button" value="@Activities.deletesubmit" 
+                    class="formButton deleteButton" />
+        }
+        if (Html.IsInRole(Html.Role_AM()) && Model.recurring)
+        {
+            <input id="deleteAllActivityButton-@Model.firstID" type="button" value="@Activities.deleteallsubmit" 
                     class="formButton deleteButton" />
         }
         <br />    
@@ -30,14 +42,18 @@
         @Html.EditorForModel()
 
     }
-    if (Html.IsInRole(Html.Role_AM()))
+    if (Html.IsInRole(Html.Role_AM()) || Html.IsInRole(Html.Role_T()))
     {
-        //
-        // Only Managers can delete activity records.
-        // The phonedesk can edit and save.
-        //
         using (Html.BeginForm("Delete", "Activity", FormMethod.Post,
                                 new { @class = "edittab-form DeletePost", @id = "DeleteActivity-" + Model.ID }))
+        {
+            @Html.HiddenFor(model => model.ID);
+        }
+    }
+    if (Html.IsInRole(Html.Role_AM()))
+    {
+        using (Html.BeginForm("DeleteMany", "Activity", FormMethod.Post,
+                                new { @class = "edittab-form DeletePost", @id = "DeleteManyActivity-" + Model.ID }))
         {
             @Html.HiddenFor(model => model.ID);
         }
@@ -46,6 +62,9 @@
 @Html.Partial("ActivitySigninIndex", new ActivitySignin() { activityID = Model.ID})
 <script type="text/javascript">
     $(document).ready(function () {
+        var donthide = @(donthideme) == 0 ? false : true;
+        var donthideT = @(donthidemeT) == 0 ? false : true;
+
         $('#viewActivity-@Model.ID').click(function () {
             printwindow = window.open('/Activity/View/@Model.ID');
         });
@@ -53,7 +72,7 @@
         $('#activityName').focus();
 
         //Checks Html.Role_AM() == true
-        if (@(hideme)) {
+        if (donthide || donthideT) {
 
             //
             // machete UI detect changes on forms in tabs   
@@ -74,6 +93,7 @@
                 title: '@(Activities.deletetitle)',
                 form: $('#DeleteActivity-@Model.ID')
             });
+        
             //
             // edit form submit
             $('#ActivityTab-@Model.ID').mUI('tabFormSubmit', {
@@ -81,6 +101,16 @@
                 selectTab: 0,
                 formLevel: 1
             });
+        }
+        
+        if (donthide) {
+            $("#deleteAllActivityButton-@Model.firstID").mUI('formClickDelete', {
+                ok: "@(Activities.deleteallsubmit)",
+                confirm: '@(Activities.deleteallconfirmation)',
+                title: '@(Activities.deletetitle)',
+                form: $('#DeleteManyActivity-@Model.ID')
+            });
+        
         }
     });
 </script>
