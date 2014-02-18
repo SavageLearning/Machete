@@ -1,47 +1,39 @@
 ﻿@model Machete.Domain.ActivitySchedule
 
-@using Machete.Web.Resources
-@using Machete.Web.Helpers
-
-@{  
-    string recType = "activity";
-    string idPrefix = recType + Model.ID + "-";
-}
-
 @{
     ViewBag.Title = "CreateMany";
+    string recType = "activity";
+    string idPrefix = recType + Model.firstID + " - ";
 }
-
-<script src="@Url.Content("~/Scripts/jquery.validate.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")" type="text/javascript"></script>
-
-@using (Html.BeginForm("CreateMany", "Activity", FormMethod.Post, 
-                        new { @id = "activityCreateForm" }))
+    
+@using (Html.BeginForm("CreateMany", "Activity", FormMethod.Post,
+                        new { @id = "activityCreateManyForm" }))
 {
     <div>
-        <input type="submit" id="@(idPrefix)SaveBtn" class="formButton saveBtn" 
-               value="@Activities.createsubmit" />
+        <input type="submit" id="@(idPrefix)SaveBtn" class="formButton saveBtn"
+               value="@Activities.createsubmit" tabindex="9" />
     </div>
-    @Html.ValidationSummary(true)
-    @Html.EditorFor(model => model, "ActivityCreateMany")
+    @Html.ValidationSummary(true);
+
+    @Html.EditorFor(model => model, "ActivityCreateMany");
 }
 
 <script type="text/javascript">
     $(document).ready(function () {
         $('.formButton').button();
-        var activityCreateForm = $("#activityCreateForm");
-        $.validator.unobtrusive.parseDynamicContent('#activityCreateForm');
-        $('#activityName').focus();
+        var activityCreateManyForm = $("#activityCreateManyForm");
+        $.validator.unobtrusive.parseDynamicContent('#activityCreateManyForm');
         // Activity Create submit event
 
-        activityCreateForm.mUI('tabFormSubmit', {
+        activityCreateManyForm.mUI('tabFormSubmit', {
             recType: "@(recType)", //for add_rectab
             create: true,
+            pleaseDontFindMe: true, //HELLO!?!?
             formLevel: 1
         });
         //
-        // machete UI detect changes on forms in tabs   
-        activityCreateForm.mUI('formDetectChanges', {
+        // machete UI detect changes on forms in tabs
+        activityCreateManyForm.mUI('formDetectChanges', {
             recType: "@(recType)",
             formLevel: 1,
             changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",

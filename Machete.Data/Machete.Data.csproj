@@ -123,9 +123,9 @@
     <Compile Include="Migrations\201312300649350_MergeMacheteContextAndIdentityDbContext.Designer.cs">
       <DependentUpon>201312300649350_MergeMacheteContextAndIdentityDbContext.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201402170041226_AddRecurringBool.cs" />
-    <Compile Include="Migrations\201402170041226_AddRecurringBool.Designer.cs">
-      <DependentUpon>201402170041226_AddRecurringBool.cs</DependentUpon>
+    <Compile Include="Migrations\201402172207482_AddRecurringBool.cs" />
+    <Compile Include="Migrations\201402172207482_AddRecurringBool.Designer.cs">
+      <DependentUpon>201402172207482_AddRecurringBool.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -173,8 +173,8 @@
     <EmbeddedResource Include="Migrations\201312300649350_MergeMacheteContextAndIdentityDbContext.resx">
       <DependentUpon>201312300649350_MergeMacheteContextAndIdentityDbContext.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201402170041226_AddRecurringBool.resx">
-      <DependentUpon>201402170041226_AddRecurringBool.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201402172207482_AddRecurringBool.resx">
+      <DependentUpon>201402172207482_AddRecurringBool.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

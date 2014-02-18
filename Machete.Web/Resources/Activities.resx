@@ -138,6 +138,15 @@
   <data name="createtitle" xml:space="preserve">
     <value>activity::create</value>
   </data>
+  <data name="deleteallconfirmation" xml:space="preserve">
+    <value>Are you sure you want to delete THIS AND ALL RELATED FUTURE ACTIVITIES? All information will be deleted FOR ALL ACTIVITIES IN THIS SEQUENCE ON OR AFTER THIS DATE, including member sign-ins for those activities.</value>
+  </data>
+  <data name="deletealllink" xml:space="preserve">
+    <value>DeleteMany</value>
+  </data>
+  <data name="deleteallsubmit" xml:space="preserve">
+    <value>Delete All Future Events</value>
+  </data>
   <data name="deleteconfirmation" xml:space="preserve">
     <value>Are you sure you want to delete this activity? All information will be deleted, including worker sign-ins for the activity.</value>
   </data>
@@ -145,7 +154,7 @@
     <value>Delete</value>
   </data>
   <data name="deletesubmit" xml:space="preserve">
-    <value>Delete</value>
+    <value>Delete This Event</value>
   </data>
   <data name="deletetitle" xml:space="preserve">
     <value>activity::delete</value>

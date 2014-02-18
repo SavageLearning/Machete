@@ -18,11 +18,12 @@ function add_rectab(opt) {
     var recID = opt.recordID;
     var recType = opt.recType;
     var maxTabs = opt.maxTabs;
+    var pleaseDontFindMe = opt.pleaseDontFindMe;
     //
-    //search for tab label--if it's already open, select instead of adding duplcate (datatables error)    
+    //search for tab label--if it's already open, select instead of adding duplicate (datatables error)    
     var foundtab = $(tabObj).children('.ui-tabs-nav').find('li').find('a[recordID=' + recID + ']');
     var tabsize = foundtab.size();
-    if (tabsize > 0) {
+    if (tabsize > 0 && !pleaseDontFindMe) {
         var index1 = $("li", tabObj).index($(foundtab).parent());
         tabObj.tabs("select", index1);
         $(foundtab).val(label);

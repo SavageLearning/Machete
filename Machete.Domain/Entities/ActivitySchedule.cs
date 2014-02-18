@@ -35,6 +35,7 @@ namespace Machete.Domain
         public ActivitySchedule(Activity firstAct)
         {
             idString = "activity";
+            this.firstID = firstAct.ID;
             this.name = firstAct.name;
             this.type = firstAct.type;
             this.dateStart = firstAct.dateStart;
@@ -50,9 +51,9 @@ namespace Machete.Domain
                 return "asi" + this.ID + "-";
             }
         }
-        
-        public virtual ICollection<ActivityScheduleSignin> Signins { get; set; }
-        
+
+        public int firstID { get; set; }
+                
         [LocalizedDisplayName("name", NameResourceType = typeof(Resources.ActivitySchedule))]
         [Required(ErrorMessageResourceName = "namerequired", ErrorMessageResourceType = typeof(Resources.ActivitySchedule))]
         public int name { get; set; } // lookup

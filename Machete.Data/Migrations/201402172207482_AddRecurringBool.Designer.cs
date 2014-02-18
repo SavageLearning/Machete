@@ -13,7 +13,7 @@ namespace Machete.Data.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201402170041226_AddRecurringBool"; }
+            get { return "201402172207482_AddRecurringBool"; }
         }
         
         string IMigrationMetadata.Source
