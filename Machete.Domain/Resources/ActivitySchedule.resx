@@ -138,14 +138,11 @@
   <data name="dwccardnum" xml:space="preserve">
     <value>Membership #:</value>
   </data>
-  <data name="endOn" xml:space="preserve">
-    <value>This event stops recurring on</value>
-  </data>
   <data name="friday" xml:space="preserve">
-    <value>This event occurs on (day)</value>
+    <value>Friday</value>
   </data>
   <data name="monday" xml:space="preserve">
-    <value>This event occurs on (day)</value>
+    <value>Monday</value>
   </data>
   <data name="name" xml:space="preserve">
     <value>Activity name</value>
@@ -157,13 +154,16 @@
     <value>Notes</value>
   </data>
   <data name="saturday" xml:space="preserve">
-    <value>This event occurs on (day)</value>
+    <value>Saturday</value>
+  </data>
+  <data name="stopDate" xml:space="preserve">
+    <value>This event stops recurring on</value>
   </data>
   <data name="stringlength" xml:space="preserve">
     <value>Please enter no more than {1} characters</value>
   </data>
   <data name="sunday" xml:space="preserve">
-    <value>This event occurs on (day)</value>
+    <value>Sunday</value>
   </data>
   <data name="teacher" xml:space="preserve">
     <value>Teacher</value>
@@ -172,10 +172,10 @@
     <value>A teacher is required</value>
   </data>
   <data name="thursday" xml:space="preserve">
-    <value>This event occurs on (day)</value>
+    <value>Thursday</value>
   </data>
   <data name="tuesday" xml:space="preserve">
-    <value>This event occurs on (day)</value>
+    <value>Tuesday</value>
   </data>
   <data name="type" xml:space="preserve">
     <value>Activity type</value>
@@ -184,7 +184,7 @@
     <value>A type is required</value>
   </data>
   <data name="wednesday" xml:space="preserve">
-    <value>This event occurs on (day)</value>
+    <value>Wednesday</value>
   </data>
   <data name="weekly" xml:space="preserve">
     <value>This event occurs weekly</value>

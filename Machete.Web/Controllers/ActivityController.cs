@@ -124,6 +124,18 @@ namespace Machete.Web.Controllers
             return lcache.textByID(act.name, CI.TwoLetterISOLanguageName) + " with " +
                     act.teacher;
         }
+
+        private string CreateManyTabRef(Activity act)
+        {
+            if (act == null) return null;
+            return "/Activity/CreateMany/" + Convert.ToString(act.ID);
+        }
+        private string CreateManyTabLabel(Activity act)
+        {
+            if (act == null) return null;
+            return "Recurring Event with " + act.teacher;
+        }
+
         /// <summary>
         /// GET: /Activity/Create
         /// </summary>
@@ -132,8 +144,8 @@ namespace Machete.Web.Controllers
         public ActionResult Create()
         {
             var _model = new Activity();
-            _model.dateStart = DateTime.Today;
-            _model.dateEnd = DateTime.Today;
+            _model.dateStart = DateTime.Now;
+            _model.dateEnd = DateTime.Now.AddHours(1);
             return PartialView("Create", _model);
         }
         /// <summary>
@@ -147,17 +159,89 @@ namespace Machete.Web.Controllers
         public JsonResult Create(Activity activ, string userName)
         {
             UpdateModel(activ);
-            Activity newActivity = serv.Create(activ, userName);
+            activ.firstID = activ.ID;
 
+            if (activ.recurring == true)
+            {
+                Activity firstAct = serv.Create(activ, userName);
+
+                return Json(new
+                {
+                    sNewRef = CreateManyTabRef(firstAct),
+                    sNewLabel = CreateManyTabLabel(firstAct),
+                    iNewID = activ.ID,
+                    jobSuccess = true
+                });
+            }
+            else { 
+                Activity newActivity = serv.Create(activ, userName);
+
+                return Json(new
+                {
+                    sNewRef = EditTabRef(newActivity),
+                    sNewLabel = EditTabLabel(newActivity),
+                    iNewID = newActivity.ID,
+                    jobSuccess = true
+                },
+                JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [Authorize(Roles = "Administrator, Manager")]
+        public ActionResult CreateMany(int id)
+        {
+            Activity firstAct = serv.Get(id);
+            var _model = new ActivitySchedule(firstAct);
+            return PartialView("CreateMany", _model);
+        }
+
+        [HttpPost, UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager")]
+        public JsonResult CreateMany(ActivitySchedule actSched, string userName)
+        {
+            UpdateModel(actSched); // copy values from form to object. why this is necessary if the object is being passed as arg, I don't know.
+            Activity firstActivity = serv.Get(actSched.firstID);
+            var instances = actSched.stopDate.Subtract(actSched.dateStart).Days;
+            var length = actSched.dateEnd.Subtract(actSched.dateStart).TotalMinutes;
+
+            for (var i = 0; i <= instances; ++i) // This should skip right over firstAct.
+            {
+                var date = actSched.dateStart.AddDays(i);
+                var day = (int)date.DayOfWeek;
+
+                if (day == 0 && !actSched.sunday) ;
+                else if (day == 1 && !actSched.monday) ;
+                else if (day == 2 && !actSched.tuesday) ;
+                else if (day == 3 && !actSched.wednesday) ;
+                else if (day == 4 && !actSched.thursday) ;
+                else if (day == 5 && !actSched.friday) ;
+                else if (day == 6 && !actSched.saturday) ;
+                else
+                {
+                    var activ = new Activity();
+                    activ.name = actSched.name;
+                    activ.type = actSched.type;
+                    activ.dateStart = date;
+                    activ.dateEnd = date.AddMinutes(length);
+                    activ.recurring = true;
+                    activ.firstID = firstActivity.ID;
+                    activ.teacher = actSched.teacher;
+                    activ.notes = actSched.notes;
+
+                    Activity act = serv.Create(activ, userName);
+                }
+            }
+            
             return Json(new
             {
-                sNewRef = EditTabRef(newActivity),
-                sNewLabel = EditTabLabel(newActivity),
-                iNewID = newActivity.ID,
+                sNewRef = EditTabRef(firstActivity),
+                sNewLabel = EditTabLabel(firstActivity),
+                iNewID = firstActivity.ID,
                 jobSuccess = true
             },
             JsonRequestBehavior.AllowGet);
         }
+
         /// <summary>
         /// GET: /Activity/Edit/5
         /// </summary>
@@ -208,6 +292,28 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
+
+        [HttpPost, UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager")]
+        public JsonResult DeleteMany(int id, string userName)
+        {
+            Activity firstToDelete = serv.Get(id);
+            IEnumerable<Activity> allToDelete = serv.GetAll()
+                .Where(w => w.firstID == firstToDelete.firstID && w.dateStart >= firstToDelete.dateStart);
+
+            foreach (Activity toDelete in allToDelete)
+            {
+                serv.Delete(toDelete.ID, userName);
+            }
+
+            return Json(new
+            {
+                status = "OK",
+                jobSuccess = true,
+                deletedID = id
+            },
+            JsonRequestBehavior.AllowGet);
+        }
         //
         //
         [HttpPost, UserNameFilter]
@@ -220,8 +326,7 @@ namespace Machete.Web.Controllers
             return Json(new
             {
                 status = "OK",
-                jobSuccess = true//,
-                //deletedID = id
+                jobSuccess = true
             },
             JsonRequestBehavior.AllowGet);
         }
@@ -237,8 +342,7 @@ namespace Machete.Web.Controllers
             return Json(new
             {
                 status = "OK",
-                jobSuccess = true//,
-                //deletedID = id
+                jobSuccess = true
             },
             JsonRequestBehavior.AllowGet);
         }

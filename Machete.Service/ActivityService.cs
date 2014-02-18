@@ -54,6 +54,7 @@ namespace Machete.Service
             this.lcache = lc;
             this.asServ = asServ;
         }
+
         public dataTableResult<Activity> GetIndexView(viewOptions o)
         {
             var result = new dataTableResult<Activity>();
