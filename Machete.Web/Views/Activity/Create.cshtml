@@ -1,19 +1,38 @@
 ﻿@model Machete.Domain.Activity
+
 @using Machete.Web.Resources
+@using Machete.Web.Helpers
+
 @{  
     string recType = "activity";
     string idPrefix = recType + Model.ID + "-";
 }
+
 @using (Html.BeginForm("Create", "Activity", FormMethod.Post, 
                         new { @id = "activityCreateForm" }))
 {
     <div>
         <input type="submit" id="@(idPrefix)SaveBtn" class="formButton saveBtn" 
-               value="@Activities.createsubmit"  tabindex="9"/>
+               value="@Activities.createsubmit" tabindex="9" />
     </div>
     @Html.ValidationSummary(true)
+
+if (Html.IsInRole(Html.Role_T()) && !Html.IsInRole(Html.Role_AM()))
+{     
+    @Html.EditorFor(model => model.name)
+    @Html.EditorFor(model => model.type)
+    @Html.EditorFor(model => model.dateStart)
+    @Html.EditorFor(model => model.dateEnd)
+    @Html.EditorFor(model => model.teacher)
+    @Html.EditorFor(model => model.notes)
+    Model.recurring = false;
+}
+else
+{ 
     @Html.EditorForModel("Activity")
 }
+}
+
 <script type="text/javascript">
     $(document).ready(function () {
         $('.formButton').button();
