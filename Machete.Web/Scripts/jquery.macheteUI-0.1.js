@@ -335,15 +335,17 @@
             var form = this;
             var parentTab = $(form).closest('.ui-tabs');
             var SelTab = opt.selectTab || 0;
-            var create = opt.create || null;
-            var recType = opt.recType || null;
+            var create = opt.create || null;//true
+            var recType = opt.recType || null;//activity
             var exclusiveTab = opt.exclusiveTab || true;
-            var closeTab = opt.closTab || undefined;
+            var closeTab = opt.closeTab || undefined;
+            var closeTabBeforeLoad = opt.closeTabBeforeLoad || undefined;
             var preProcess = opt.preProcess || null;
             var postProcess = opt.postProcess || null;
             var callback = opt.callback || null;
             var maxTabs = opt.maxTabs || 2;
-            var level = _checkFormLevel(opt.formLevel, "formSubmit"); // Error if form level not set correctly
+            var level = _checkFormLevel(opt.formLevel, "formSubmit"); //1 //Error if form level not set correctly
+            var pleaseDontFindMe = opt.pleaseDontFindMe || false;
             //
             //setup button.click to secondary submit
             //  workorder/edit/activate.btn
@@ -366,18 +368,15 @@
                 //
                 //
                 if ($(form).valid()) {
-                    //
-                    // post create form, open tab for new records
+            // post create form, open tab for new records
                     if (create) {
-                        //
-                        // post create form, open tab for new records
+            // $(form).ajaxSubmit() breaks exception handling, so 
                         $.post($(form).attr("action"), $(form).serialize(),
-                        //$(form).ajaxSubmit({ // data returned to success() differently. breaks exception handling.
-                        //success: function (data) {
+            // success:
                         function (data) {
-                            if (data.jobSuccess == false) {
-                                alert(data.rtnMessage);
-                            } else {
+                            if (data.isRedirect) { window.location.href = data.redirectUrl; }
+                            else if (data.jobSuccess == false) { alert(data.rtnMessage); }
+                            else {
                                 add_rectab({
                                     tabref: data.sNewRef, //come from JsonResult
                                     label: data.sNewLabel, // JsonResult
@@ -385,13 +384,12 @@
                                     exclusive: exclusiveTab,
                                     recordID: data.iNewID,  //JsonResult
                                     recType: recType,
-                                    maxTabs: maxTabs
+                                    maxTabs: maxTabs,
+                                    pleaseDontFindMe: pleaseDontFindMe
                                 });
-                                if (callback) {
-                                    callback();
-                                }
+                                if (callback) { callback(); }
                             }
-                        });
+                        }, "json");
                     } else {
                         //$.post($(form).attr("action"), $(form).serialize());
                         $(form).ajaxSubmit({
@@ -621,7 +619,7 @@
             var altClose = opt.altClose;
             var postDelete = opt.postDelete;
             //
-            if (!form) throw new Error("No employer Delete Form defined");
+            if (!form) throw new Error("No Delete Form defined");
             
             // default assumes that formClickDelete called on a MacheteTab object
             _submitAndCloseTab({
