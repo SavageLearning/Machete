@@ -919,6 +919,8 @@
     <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
     <Content Include="Views\Reports\Summary.cshtml" />
     <Content Include="Views\Reports\Employers.cshtml" />
+    <Content Include="Views\Activity\CreateMany.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ActivityCreateMany.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -141,6 +141,9 @@
   <data name="notes" xml:space="preserve">
     <value>Notas</value>
   </data>
+  <data name="recurring" xml:space="preserve">
+    <value>Recurrente</value>
+  </data>
   <data name="stringlength" xml:space="preserve">
     <value>Por favor, introduzca un máximo de {1} caracteres</value>
   </data>
