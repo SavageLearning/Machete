@@ -299,9 +299,11 @@ table {
 }
 
 div#title {
+    background-image: url(/Content/machete_1_close_crop.png);
     display: block;
     float: left;
     text-align: left;
+    text-decoration: none;
     padding: 0 0 0 0;
     margin-left: .5em;
 }
