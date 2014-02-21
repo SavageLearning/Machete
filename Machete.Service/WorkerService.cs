@@ -35,6 +35,7 @@ namespace Machete.Service
     public interface IWorkerService : IService<Worker>
     {
         Worker GetWorkerByNum(int dwccardnum);
+        int GetNextWorkerNum();
         dataTableResult<Worker> GetIndexView(viewOptions o);
     }
     public class WorkerService : ServiceBase<Worker>, IWorkerService
@@ -49,6 +50,29 @@ namespace Machete.Service
         {
             Worker worker = repo.Get(w => w.dwccardnum == dwccardnum);
             return worker;
+        }
+
+        public int GetNextWorkerNum()
+        {
+            var all = repo.GetAllQ().Select(x => x.dwccardnum);
+            var asc = all.OrderBy(x => x).FirstOrDefault();
+            if (asc == 0)
+            {
+                return 10000;
+            }
+            var desc = all.OrderByDescending(x => x).FirstOrDefault();
+            if (desc < 99999)
+            {
+                return desc + 1;
+            }
+            else if (desc == 99999 && asc > 10000)
+            {
+                return asc - 1;
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException("The minimum and maximum card numbers are already taken. Reorganize your members' card numbers to automatically generate new numbers.");
+            }
         }
 
         public override Worker Create(Worker record, string user)
