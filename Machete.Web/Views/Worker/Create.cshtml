@@ -9,6 +9,7 @@
 {
     <div class="mui-button-row">
         <input type="submit" id="createWorkerBtn"  class="formButton saveBtn" value="@Workers.createsubmit" tabindex="9"/>
+        <p class="validation-summary-errors">@ViewBag.OrganizeMe</p>
     </div>
     @Html.ValidationSummary(true)
     @Html.EditorForModel()
