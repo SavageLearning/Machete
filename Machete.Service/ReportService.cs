@@ -552,11 +552,8 @@ namespace Machete.Service
             }
             else if (unitOfMeasure == "days" && interval > 0)
             {
-                int n = 1;
-                if (interval == 1)
-                    n = 0;
                 query = Enumerable
-                    .Range(0, n + (endDate.Subtract(beginDate).Days / interval))
+                    .Range(0, 1 + (endDate.Subtract(beginDate).Days / interval))
                     .Select(w => endDate.AddDays(w * -interval))
                     .Select(x => new StatusUnit
                         {
@@ -966,23 +963,22 @@ namespace Machete.Service
             q = getAllDates
                 .Select(g => new MonthlySumData
                 {
-                    date = g,
-                    totalSignins = signins.Where(whr => whr.date == g).Select(h => h.count).FirstOrDefault() ?? 0,
-                    uniqueSignins = unique.Where(whr => whr.date == g).Select(h => h.count).FirstOrDefault() ?? 0, //dd
-                    peopleWhoWentToClass = classes.Where(whr => whr.date == g).Select(h => h.count).FirstOrDefault() ?? 0,
-                    dispatched = workers.Where(whr => whr.date == g).Select(h => h.count).FirstOrDefault() ?? 0,
-                    tempDispatched = workers.Where(whr => whr.date == g).Select(h => h.tempCount).FirstOrDefault() ?? 0, //dd
-                    permanentPlacements = workers.Where(whr => whr.date == g).Select(h => h.permCount).FirstOrDefault() ?? 0, //dd
-                    undupDispatched = workers.Where(whr => whr.date == g).Select(h => h.undupCount).FirstOrDefault() ?? 0, //dd
-                    totalHours = average.Where(whr => whr.date == g).Select(h => h.hours).FirstOrDefault(),
-                    totalIncome = average.Where(whr => whr.date == g).Select(h => h.wages).FirstOrDefault(),
-                    avgIncomePerHour = average.Where(whr => whr.date == g).Select(h => h.avg).FirstOrDefault(),
-                    stillHere = status.Where(whr => whr.date == g).Select(h => h.count).FirstOrDefault() ?? 0,
-                    newlyEnrolled = status.Where(whr => whr.date == g).Select(h => h.enrolledOnDate).FirstOrDefault() ?? 0, //dd
-                    peopleWhoLeft = status.Where(whr => whr.date == g).Select(h => h.expiredOnDate).FirstOrDefault() ?? 0 //dd
+                    dateStart = g,
+                    dateEnd = g.AddDays(1),
+                    totalSignins = signins.Where(w => w.date >= g && w.date < g.AddDays(1)).Select(h => h.count).FirstOrDefault() ?? 0,
+                    uniqueSignins = unique.Where(w => w.date >= g && w.date < g.AddDays(1)).Select(h => h.count).FirstOrDefault() ?? 0, //dd
+                    peopleWhoWentToClass = classes.Where(w => w.date >= g && w.date < g.AddDays(1)).Select(h => h.count).FirstOrDefault() ?? 0,
+                    dispatched = workers.Where(w => w.date >= g && w.date < g.AddDays(1)).Select(h => h.count).FirstOrDefault() ?? 0,
+                    tempDispatched = workers.Where(w => w.date >= g && w.date < g.AddDays(1)).Select(h => h.tempCount).FirstOrDefault() ?? 0, //dd
+                    permanentPlacements = workers.Where(w => w.date >= g && w.date < g.AddDays(1)).Select(h => h.permCount).FirstOrDefault() ?? 0, //dd
+                    undupDispatched = workers.Where(w => w.date >= g && w.date < g.AddDays(1)).Select(h => h.undupCount).FirstOrDefault() ?? 0, //dd
+                    totalHours = average.Where(w => w.date >= g && w.date < g.AddDays(1)).Select(h => h.hours).FirstOrDefault(),
+                    totalIncome = average.Where(w => w.date >= g && w.date < g.AddDays(1)).Select(h => h.wages).FirstOrDefault(),
+                    avgIncomePerHour = average.Where(w => w.date >= g && w.date < g.AddDays(1)).Select(h => h.avg).FirstOrDefault(),
+                    stillHere = status.Where(w => w.date >= g && w.date < g.AddDays(1)).Select(h => h.count).FirstOrDefault() ?? 0,
+                    newlyEnrolled = status.Where(w => w.date >= g && w.date < g.AddDays(1)).Select(h => h.enrolledOnDate).FirstOrDefault() ?? 0, //dd
+                    peopleWhoLeft = status.Where(w => w.date >= g && w.date < g.AddDays(1)).Select(h => h.expiredOnDate).FirstOrDefault() ?? 0 //dd
                 });
-
-            q = q.OrderBy(p => p.date);
 
             return q;
         }
@@ -1297,7 +1293,8 @@ namespace Machete.Service
     /// </summary>
     public class MonthlySumData
     {
-        public DateTime date { get; set; }
+        public DateTime dateStart { get; set; }
+        public DateTime dateEnd { get; set; }
         public int totalSignins { get; set; }
         public int uniqueSignins { get; set; }
         public int dispatched { get; set; }
