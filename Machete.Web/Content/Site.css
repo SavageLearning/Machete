@@ -122,6 +122,7 @@ page width. Or, you can specify an exact pixel width. */
 #main {
     padding: 20px 10px 10px 10px;
     background-color: #fff;
+    border-radius: .5em;
     margin-bottom: 30px;
     _height: 1px; /* only IE6 applies CSS properties starting with an underscore */
 }
@@ -159,12 +160,14 @@ ul#menu {
         }
 
         ul#menu li a {
+            border-radius: 1em;
             padding: 10px 10px;
             font-weight: bold;
             text-decoration: none;
             line-height: 2.8em;
             background-color: #e8eef4;
-            color: #034af3;
+            background: linear-gradient(#e8eef4, #4f4f5b);
+            color: #30303A;
         }
 
             ul#menu li a.menulinkactive {

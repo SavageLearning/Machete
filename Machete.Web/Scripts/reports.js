@@ -337,6 +337,8 @@ function dailySigninPie(objArray) {
     var total = 0;
     var totalAssigned = 0;
 
+    var totalNot = 0;
+
     var pieData = [];
 
     for (var i = 0; i < array.aaData.length; i++) {
@@ -349,12 +351,21 @@ function dailySigninPie(objArray) {
         totalAssigned += array.aaData[i].totalAssignments;
     }
 
-    pieData = [
-        ['DWC List', dwc],
-        ['Propio (DWC)', dwcPropio],
-        ['HHH List', hhh],
-        ['Propio (HHH)', hhhPropio]
-    ];
+
+    totalNot = total - totalAssigned;
+
+    pieData = {
+        'firstPie': [[
+            ['DWC List', dwc],
+            ['Propio (DWC)', dwcPropio],
+            ['HHH List', hhh],
+            ['Propio (HHH)', hhhPropio]
+        ]],
+        'secondPie': [[
+            ['Total Not Assigned', totalNot],
+            ['Total Assigned', totalAssigned]
+        ]]
+    };
 
     return pieData;
 }
@@ -398,41 +409,6 @@ function monthlySigninPie(objArray) {
         ['Not Dispatched', notDispatched]
     ];
 
-    return pieData;
-}
-
-function gotWorkPie(objArray) {
-    var array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
-
-    var dwc = 0;
-    var dwcPropio = 0;
-    var hhh = 0;
-    var hhhPropio = 0;
-    var unique = 0;
-    var total = 0;
-    var totalAssigned = 0;
-
-    var totalNot = 0;
-
-    var pieData = [];
-
-    for (var i = 0; i < array.aaData.length; i++) {
-        dwc += array.aaData[i].dwcList;
-        dwcPropio += array.aaData[i].dwcPropio;
-        hhh += array.aaData[i].hhhList;
-        hhhPropio += array.aaData[i].hhhPropio;
-        unique += array.aaData[i].uniqueSignins;
-        total += array.aaData[i].totalSignins;
-        totalAssigned += array.aaData[i].totalAssignments;
-    }
-
-    totalNot = total - totalAssigned;
-
-    pieData = [
-        ['Total Not Assigned', totalNot],
-        ['Total Assigned', totalAssigned]
-        ];
-    
     return pieData;
 }
 
