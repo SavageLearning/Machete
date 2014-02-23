@@ -397,3 +397,11 @@ function weeklySigninPie(objArray) {
 
     return weekPieData;
 }
+
+function summaryChart(objArray) {
+    var array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
+    var jobsDispatched = 0;
+    var avgWages = 0;
+    var activeWorkers = 0;
+    var wentToClass = 0;
+}
