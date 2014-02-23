@@ -240,7 +240,7 @@ namespace Machete.Web.Controllers
             var result = from d in mwd.query
                          select new
                          {
-                             date = System.String.Format("{0:MM/dd/yyyy}", d.date),
+                             date = System.String.Format("{0:MMMM d}", d.dateStart),
                              stillHere = d.stillHere.ToString(),
                              totalSignins = d.totalSignins.ToString(),
                              wentToClass = d.peopleWhoWentToClass.ToString(),

@@ -13,13 +13,13 @@
         <li><a href="#employersWrapper" id="employersTab">@Reports.employersTab</a></li>
         <li><a href="#workersWrapper" id="workersTab">@Reports.workersTab</a> </li>
         <li><a href="#activityWrapper" id="activityTab">@Reports.activitiesTab</a> </li>
-        <li><a href="#ssrsWrapper" id="ssrsTab">@Reports.ssrsTab</a> </li>
+        @*<li><a href="#ssrsWrapper" id="ssrsTab">@Reports.ssrsTab</a> </li>*@
     </ul>
         @Html.Partial("Summary")
         @Html.Partial("Employers")
         @Html.Partial("Workers")
         @Html.Partial("Activities")
-        @Html.Partial("SSRS")
+        @*Html.Partial("SSRS")*@
 </div>
 @Html.AntiForgeryToken()
 <script type="text/javascript">
@@ -179,12 +179,12 @@
         }
 
         function monthActNewTable() {
-            oMonthActTable = $.extend(true, {}, activityTableDefaults("/Reports/AjaxMonthAct", lang, $('#weekActDate').val()));
+            oMonthActTable = $.extend(true, {}, activityTableDefaults("/Reports/AjaxMonthAct", lang, $('#monthActDate').val()));
             monthAct = $('#monthActDataTable').dataTable(oMonthActTable);
         }
 
         function yearActNewTable() {
-            oYearActTable = $.extend(true, {}, activityTableDefaults("/Reports/AjaxYearAct", lang, $('#weekActDate').val()));
+            oYearActTable = $.extend(true, {}, activityTableDefaults("/Reports/AjaxYearAct", lang, $('#yearActDate').val()));
             yearAct = $('#yearActDataTable').dataTable(oYearActTable);
         }
         //

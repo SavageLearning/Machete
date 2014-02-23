@@ -386,14 +386,15 @@ namespace Machete.Web.Controllers
                 var user = await UserManager.FindByIdAsync(model.UserId);
                 foreach (var role in model.Roles)
                 {
-                    var iEdit = await UserManager.IsInRoleAsync(user.Id, role.RoleName);
-                    if (!role.Selected)
+                    bool iNoEdit = User.IsInRole("Manager") && role.RoleName == "Administrator" ? true : false;
+                    bool iEdit = await UserManager.IsInRoleAsync(user.Id, role.RoleName);
+                    if (!role.Selected && !iNoEdit)
                     {
                         if (iEdit) await UserManager.RemoveFromRoleAsync(user.Id, role.RoleName);
                     }
                     else
                     {
-                        if (!iEdit) await UserManager.AddToRoleAsync(user.Id, role.RoleName);
+                        if (!iEdit && !iNoEdit) await UserManager.AddToRoleAsync(user.Id, role.RoleName);
                     }
                 }
                 return RedirectToAction("index");
