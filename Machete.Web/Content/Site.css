@@ -871,3 +871,65 @@ html[xmlns] .clearfix {
     border-radius: .5em;
     font-size: 1.2em;
 }
+
+.home-container
+{
+    padding: 0 0 0 1.5em !important;
+    font-size: 1.2em;
+}
+
+.home-title-main
+{
+
+}
+
+.home-text-main
+{
+    display: inline-block;
+    max-width: 360px;
+    min-width: 260px;
+}
+
+.home-image-main
+{
+    display: inline-block;
+    max-width: 50%;
+    margin-left: 3em;
+    vertical-align: top;
+}
+
+.home-version
+{
+    font-size: .8em;
+}
+
+.wsi-content
+{
+    background-color: #eeeeee;
+    min-height: 420px;
+    border-radius: .5em;
+}
+
+.wsi-dwccardnum, .wsi-datepicker
+{
+    height: 2em;
+    width: 6em !important;
+    padding: 0;
+    border-radius: .5em;
+    text-align: center;
+    font-weight: bold;
+}
+
+.wsi-image
+{
+    max-width: 200px;
+    vertical-align: top;
+    margin-left: 2em;
+}
+
+.wa-content
+{
+    background-color: #eeeeee;
+    min-height: 420px;
+    border-radius: .5em;
+}

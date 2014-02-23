@@ -27,8 +27,8 @@
         //VARS
         var dcl = $('#dclDataTable'); var dayPie1 = $('#dailyPieChart1'); var dayPie2 = $('#dailyPieChart2');
         var wec = $('#wecDataTable'); var weekPie = $('#weeklyPieChart');
-        var mwd = $('#mwdDataTable'); var monthPie = $('#monthlyPieChart1');
-        var ywd = $('#ywdDataTable');
+        var mwd = $('#mwdDataTable'); var monthChart = $('#monthlyChart');
+        var ywd = $('#ywdDataTable'); var yearChart = $('#yearlyChart');
 
         var weekAct = $('#weekActDataTable');
         var monthAct = $('#monthActDataTable');
@@ -163,13 +163,17 @@
         }
         
         function mwdNewTable() {
+            monthChart.empty();
             oMwdTable = $.extend(true, {}, summaryTableDefaults("/Reports/AjaxMwd", lang, $('#mwdDate').val()));
             mwd = $('#mwdDataTable').dataTable(oMwdTable);
+            makeChart('summary', 'month');
             }
         
         function ywdNewTable() {
+            yearChart.empty();
             oYwdTable = $.extend(true, {}, summaryTableDefaults("/Reports/AjaxYwd", lang, $('#ywdDate').val()));
             ywd = $('#ywdDataTable').dataTable(oYwdTable);
+            makeChart('summary', 'year');
         }
         //
         // ACTIVITIES
@@ -484,5 +488,58 @@
                 });
             }
         }
+
+        function makeChart(report, frequency) {
+            var url;
+            var data;
+            if (report == 'summary' && frequency == 'month') {
+                url = "/Reports/AjaxMwd";
+                data = { todaysdate: $('#mwdDate').val() };
+                $.getJSON(url, data, function (ajax) {
+                    dayPieArray = summaryChart(ajax);
+                    var plot1 = $.jqplot('dailyPieChart1', dayPieArray.firstPie,
+                        {
+                            seriesDefaults: {
+                                renderer: $.jqplot.PieRenderer,
+                                rendererOptions: {
+                                    showDataLabels: true
+                                }
+                            },
+                            legend: { show: true, location: 'e' }
+                        }
+                    );
+                    var plot2 = $.jqplot('dailyPieChart2', dayPieArray.secondPie,
+                        {
+                            seriesDefaults: {
+                                renderer: $.jqplot.PieRenderer,
+                                rendererOptions: {
+                                    showDataLabels: true
+                                }
+                            },
+                            legend: { show: true, location: 'e' }
+                        }
+                    );
+                });
+            }
+            else if (crust == 'summary' && filling == 'week') {
+                url = "/Reports/AjaxWec";
+                data = { todaysdate: $('#wecDate').val() };
+                $.getJSON(url, data, function (ajax) {
+                    weekPieArray = weeklySigninPie(ajax);
+                    var weekPlot = $.jqplot('weeklyPieChart', weekPieArray.weekPie,
+                        {
+                            seriesDefaults: {
+                                renderer: $.jqplot.PieRenderer,
+                                rendererOptions: {
+                                    showDataLabels: true
+                                }
+                            },
+                            legend: { show: true, location: 'e' }
+                        }
+                    );
+                });
+            }
+        }
+
     });
 </script>
