@@ -705,17 +705,47 @@ html[xmlns] .clearfix {
 /**/
 /**/ /*Reports*/
 /**/
-.report-wrapper {
-    clear: both;
+
+.report-button {
+    background: linear-gradient(#e8eef4, #9f9fae) !important;
+    color: #303030 !important;
 }
 
-.report-subtitle {
+.report-chart {
     clear: both;
+    margin: 0;
+    border: 0;
+    padding: 0;
+}
+
+.report-chart-inner {
+    display: inline-block;
+}
+
+.report-data {
+    clear: both;
+    margin: 0;
+    border: 0;
+    padding: 0;
 }
 
 .report-em {
     font-weight: 700;
 }
+
+
+.report-subtitle {
+    clear: both;
+}
+
+.report-table-header {
+    background: linear-gradient(#efefff, #cfcfdf) !important;
+}
+
+.report-wrapper {
+    clear: both;
+}
+
 
 .report-datepicker, .report-datepicker-weekly {
     height: 2em;
@@ -728,6 +758,34 @@ html[xmlns] .clearfix {
 
 .report-inline {
     display: inline;
+}
+
+.report-drill {
+    margin-left: auto;
+    margin-right: 0;
+    background: #90A2B6;
+    border: solid 2px gray;
+    border-collapse: separate;
+}
+
+.report-align-right {
+    text-align: right;
+    float: right;
+}
+
+.report-instructions,
+.report-padding-left-half {
+    padding-left: .5em
+}
+
+.report-tip {
+    background: #A2B3C6;
+    border-radius: .5em;
+    clear: both;
+    font-weight: bold;
+    text-align: center;
+    margin: 0 .5em;
+    padding: .2em .5em .2em;
 }
 
 .report-top {
@@ -744,30 +802,7 @@ html[xmlns] .clearfix {
     width:40%;
 }
 
-.report-drill {
-    margin-left: auto;
-    margin-right: 0;
-    background: #90A2B6;
-    border: solid 2px gray;
-    border-collapse: separate;
-}
-
-.report-instructions,
-.report-padding-left-half {
-    padding-left: .5em
-}
-
-.report-align-right {
-    text-align: right;
-    float: right;
-}
-
-.report-tip {
-    background: #90A2B6;
-    border-radius: .5em;
-    clear: both;
+.report-top-text {
+    font-style: italic;
     font-weight: bold;
-    text-align: center;
-    margin: 0 .5em;
-    padding: 0 .5em;
 }
