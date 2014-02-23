@@ -7,7 +7,7 @@
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
 }
 
-<div id="container">
+<div id="container" class="wsi-content">
     <div id="signinData" class="signinColumn" style="float: left;">
         <div class="print_off">
         @using (Html.BeginForm("Index", "WorkerSignin", FormMethod.Post, new { @id = "signinForm" }))
@@ -19,43 +19,43 @@
                         @Html.LabelFor(model => model.dwccardnum)
                     </div>
                     <div class="tb-field">
-                        @Html.TextBox("dwccardnum", "", new { style = "width: 100px;" })
+                        @Html.TextBox("dwccardnum", "", new { style = "width: 100px;", @class="wsi-dwccardnum" })
                         @Html.ValidationMessageFor(model => model.dwccardnum)
                     </div>
                     <div class="tb-field">
                         @Html.TextBox("dateforsignin",
                             Html.Encode(String.Format("{0:mm/dd/yy}", DateTime.Today.ToShortDateString())),
-                            new { @class = "ui-datepicker", style = "width: 100px;" })
+                            new { @class = "ui-datepicker wsi-datepicker", style = "width: 100px;" })
                         @Html.ValidationMessageFor(model => model.dateforsignin)
                     </div>
                     <div class="tb-field">            
-                        <input type="submit" value="@WorkerSignins.indexsubmit" />
+                        <input type="submit" value="@WorkerSignins.indexsubmit" class="formButton report-button" />
                     </div>
                     <div class="tb-field">
-                    <input type="button" value="@WorkAssignments.wkListDupe" id="listDuplicate" />
+                        <input type="button" value="@WorkAssignments.wkListDupe" id="listDuplicate" class="formButton report-button" />
                     </div>
                 </div>
             </div>
         }
         </div>
         <div id="signinTable">
-        <table id="wsiTable" class="display">
-            <thead>
-                <tr>
-                    <th class="print_off"></th>
-                    <th>@Worker.dwccardnum</th>
-                    <th class="print_off">@WorkerSignins.memberexpiration</th>
-                    <th class="print_off">@WorkerSignins.status</th>
-                    <th>@Person.firstname1</th>
-                    <th>@Person.lastname1</th>
-                    <th class="print_off">@WorkerSignins.datesignin</th>
-                </tr>
-            </thead>
-        </table>
+            <table id="wsiTable" class="display">
+                <thead>
+                    <tr>
+                        <th class="print_off"></th>
+                        <th>@Worker.dwccardnum</th>
+                        <th class="print_off">@WorkerSignins.memberexpiration</th>
+                        <th class="print_off">@WorkerSignins.status</th>
+                        <th>@WorkerSignins.firstname</th>
+                        <th>@WorkerSignins.lastname</th>
+                        <th class="print_off">@WorkerSignins.datesignin</th>
+                    </tr>
+                </thead>
+            </table>
         </div>
     </div>
-    <div id="signinImage" class="mui-signin-imagebox print_off">       
-        <img id="wsiImage" src="/Content/images/NO-IMAGE-AVAILABLE.jpg" alt="" style="width: 200px"/>            
+    <div id="signinImage" class="mui-signin-imagebox print_off">
+        <img id="wsiImage" src="/Content/images/NO-IMAGE-AVAILABLE.jpg" alt="" />
     </div>
 </div>
 <div id="signin-red-dialog">
@@ -108,7 +108,7 @@
         //
         //
         $('#wsiTable').dataTable({
-            "bPaginate": true,
+            "bPaginate": false,
             "bLengthChange": true,
             "bAutoWidth": false,
             "bServerSide": true,

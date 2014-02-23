@@ -43,6 +43,10 @@ namespace Machete.Web.Controllers
 
         }
 
+        public ActionResult Changes()
+        {
+            return PartialView();
+        }
         public ActionResult About()
         {
             return PartialView();

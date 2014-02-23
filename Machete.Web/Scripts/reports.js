@@ -337,81 +337,6 @@ function dailySigninPie(objArray) {
     var total = 0;
     var totalAssigned = 0;
 
-    var pieData = [];
-
-    for (var i = 0; i < array.aaData.length; i++) {
-        dwc += array.aaData[i].dwcList;
-        dwcPropio += array.aaData[i].dwcPropio;
-        hhh += array.aaData[i].hhhList;
-        hhhPropio += array.aaData[i].hhhPropio;
-        unique += array.aaData[i].uniqueSignins;
-        total += array.aaData[i].totalSignins;
-        totalAssigned += array.aaData[i].totalAssignments;
-    }
-
-    pieData = [
-        ['DWC List', dwc],
-        ['Propio (DWC)', dwcPropio],
-        ['HHH List', hhh],
-        ['Propio (HHH)', hhhPropio]
-    ];
-
-    return pieData;
-}
-
-function monthlySigninPie(objArray) {
-    var array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
-
-    var total = 0;
-    var unique = 0;
-    var dwcList = 0;
-    var hhhList = 0;
-    var dwcPropio = 0;
-    var hhhPropio = 0;
-    var totalHours = 0;
-    var totalIncome = 0;
-    var avgIncome = 0;
-
-    var notDispatched = 0;
-
-    var pieData = [];
-
-    for (var i = 0; i < array.aaData.length; i++) {
-        total += parseInt(array.aaData[i].totalSignins) || 0;
-        unique += parseInt(array.aaData[i].uniqueSignins) || 0;
-        dwcList += parseInt(array.aaData[i].dispatchedDWCList) || 0;
-        hhhList += parseInt(array.aaData[i].dispatchedHHHList) || 0;
-        dwcPropio += parseInt(array.aaData[i].dispatchedDWCPropio) || 0;
-        hhhPropio += parseInt(array.aaData[i].dispatchedHHHPropio) || 0;
-        totalHours += parseInt(array.aaData[i].totalHours) || 0;
-        totalIncome += parseInt(array.aaData[i].totalIncome) || 0;
-        avgIncome += parseInt(array.aaData[i].avgIncomePerHour) || 0;
-    }
-
-    notDispatched = total - (dwcList + hhhList + dwcPropio + hhhPropio);
-
-    pieData = [
-        ['DWC List', dwcList],
-        ['HHH List', hhhList],
-        ['DWC Propio Patron', dwcPropio],
-        ['HHH Propio Patron', hhhPropio],
-        ['Not Dispatched', notDispatched]
-    ];
-
-    return pieData;
-}
-
-function gotWorkPie(objArray) {
-    var array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
-
-    var dwc = 0;
-    var dwcPropio = 0;
-    var hhh = 0;
-    var hhhPropio = 0;
-    var unique = 0;
-    var total = 0;
-    var totalAssigned = 0;
-
     var totalNot = 0;
 
     var pieData = [];
@@ -426,40 +351,49 @@ function gotWorkPie(objArray) {
         totalAssigned += array.aaData[i].totalAssignments;
     }
 
+
     totalNot = total - totalAssigned;
 
-    pieData = [
-        ['Total Not Assigned', totalNot],
-        ['Total Assigned', totalAssigned]
-        ];
-    
+    pieData = {
+        'firstPie': [[
+            ['DWC List', dwc],
+            ['Propio (DWC)', dwcPropio],
+            ['HHH List', hhh],
+            ['Propio (HHH)', hhhPropio]
+        ]],
+        'secondPie': [[
+            ['Total Not Assigned', totalNot],
+            ['Total Assigned', totalAssigned]
+        ]]
+    };
+
     return pieData;
 }
 
-function pieFilling(ajaxUrl, data, pieType) {
-    var jstring = '';
-    var pieObject;
-    var json = $.getJSON(ajaxUrl, data, function (ajax) {
-        jstring = JSON.stringify(ajax.aaData);
-    });
+function weeklySigninPie(objArray) {
+    var array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
 
-    if (pieType == 'dailySigninPie')
-    {
-        pieObject = dailySigninPie(json);
-        return pieObject;
+    var signins = 0;
+    var assignments = 0;
+    var notDispatched = 0;
+
+    var weekPieData = [];
+
+    for (var i = 0; i < array.aaData.length; i++) {
+        signins += parseInt(array.aaData[i].totalSignins) || 0;
+        assignments += parseInt(array.aaData[i].totalAssignments) || 0;
     }
-    else if (pieType == 'gotWorkPie')
-    {
-        pieObject = gotWorkPie(jstring);
-        return pieObject;
-    }
-    else if (pieType == 'monthlySigninPie')
-    {
-        pieObject = monthlySigninPie(jstring);
-        return pieObject;
-    }
-    else
-    {
-        return pieObject;
-    }
+
+    notDispatched = signins - assignments;
+
+    weekPieData = {
+        'weekPie': [
+            [
+                ['Dispatched', assignments],
+                ['Not Dispatched', notDispatched]
+            ]
+        ]
+    };
+
+    return weekPieData;
 }

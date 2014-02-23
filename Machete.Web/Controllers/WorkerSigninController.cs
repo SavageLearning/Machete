@@ -77,7 +77,7 @@ namespace Machete.Web.Controllers
             var _signin = new WorkerSignin();
             // The card just swiped
             _signin.dwccardnum = dwccardnum;
-            _signin.dateforsignin = dateforsignin;
+            _signin.dateforsignin = DateTime.Now.Date >= dateforsignin ? DateTime.Now : dateforsignin;
             _signin.memberStatus = worker.memberStatus;
             //
             //
@@ -278,7 +278,7 @@ namespace Machete.Web.Controllers
                 lastname1 = p.lastname1,
                 lastname2 = p.lastname2, 
                 dateforsignin = p.dateforsignin,
-                dateforsigninstring = p.dateforsignin.ToShortDateString(),
+                dateforsigninstring = p.dateforsignin.ToShortTimeString(),
                 WAID = p.waid ?? 0,
                 memberStatus = lcache.textByID(p.memberStatus, CI.TwoLetterISOLanguageName),
                 memberInactive = p.w.isInactive,
