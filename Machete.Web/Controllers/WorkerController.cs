@@ -137,6 +137,14 @@ namespace Machete.Web.Controllers
         {
             var _model = new Worker();
             _model.ID = ID;
+            try
+            {
+                _model.dwccardnum = serv.GetNextWorkerNum();
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                ViewBag.OrganizeMe = ex.Message;
+            }
             _model.RaceID = Lookups.getDefaultID(LCategory.race);
             _model.countryoforiginID = Lookups.getDefaultID(LCategory.countryoforigin);
             _model.englishlevelID = 0;
