@@ -370,72 +370,30 @@ function dailySigninPie(objArray) {
     return pieData;
 }
 
-function monthlySigninPie(objArray) {
+function weeklySigninPie(objArray) {
     var array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
 
-    var total = 0;
-    var unique = 0;
-    var dwcList = 0;
-    var hhhList = 0;
-    var dwcPropio = 0;
-    var hhhPropio = 0;
-    var totalHours = 0;
-    var totalIncome = 0;
-    var avgIncome = 0;
-
+    var signins = 0;
+    var assignments = 0;
     var notDispatched = 0;
 
-    var pieData = [];
+    var weekPieData = [];
 
     for (var i = 0; i < array.aaData.length; i++) {
-        total += parseInt(array.aaData[i].totalSignins) || 0;
-        unique += parseInt(array.aaData[i].uniqueSignins) || 0;
-        dwcList += parseInt(array.aaData[i].dispatchedDWCList) || 0;
-        hhhList += parseInt(array.aaData[i].dispatchedHHHList) || 0;
-        dwcPropio += parseInt(array.aaData[i].dispatchedDWCPropio) || 0;
-        hhhPropio += parseInt(array.aaData[i].dispatchedHHHPropio) || 0;
-        totalHours += parseInt(array.aaData[i].totalHours) || 0;
-        totalIncome += parseInt(array.aaData[i].totalIncome) || 0;
-        avgIncome += parseInt(array.aaData[i].avgIncomePerHour) || 0;
+        signins += parseInt(array.aaData[i].totalSignins) || 0;
+        assignments += parseInt(array.aaData[i].totalAssignments) || 0;
     }
 
-    notDispatched = total - (dwcList + hhhList + dwcPropio + hhhPropio);
+    notDispatched = signins - assignments;
 
-    pieData = [
-        ['DWC List', dwcList],
-        ['HHH List', hhhList],
-        ['DWC Propio Patron', dwcPropio],
-        ['HHH Propio Patron', hhhPropio],
-        ['Not Dispatched', notDispatched]
-    ];
+    weekPieData = {
+        'weekPie': [
+            [
+                ['Dispatched', assignments],
+                ['Not Dispatched', notDispatched]
+            ]
+        ]
+    };
 
-    return pieData;
-}
-
-function pieFilling(ajaxUrl, data, pieType) {
-    var jstring = '';
-    var pieObject;
-    var json = $.getJSON(ajaxUrl, data, function (ajax) {
-        jstring = JSON.stringify(ajax.aaData);
-    });
-
-    if (pieType == 'dailySigninPie')
-    {
-        pieObject = dailySigninPie(json);
-        return pieObject;
-    }
-    else if (pieType == 'gotWorkPie')
-    {
-        pieObject = gotWorkPie(jstring);
-        return pieObject;
-    }
-    else if (pieType == 'monthlySigninPie')
-    {
-        pieObject = monthlySigninPie(jstring);
-        return pieObject;
-    }
-    else
-    {
-        return pieObject;
-    }
+    return weekPieData;
 }

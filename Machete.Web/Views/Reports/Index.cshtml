@@ -26,7 +26,7 @@
     $(document).ready(function () {
         //VARS
         var dcl = $('#dclDataTable'); var dayPie1 = $('#dailyPieChart1'); var dayPie2 = $('#dailyPieChart2');
-        var wec = $('#wecDataTable'); 
+        var wec = $('#wecDataTable'); var weekPie = $('#weeklyPieChart');
         var mwd = $('#mwdDataTable'); var monthPie = $('#monthlyPieChart1');
         var ywd = $('#ywdDataTable');
 
@@ -46,7 +46,7 @@
 
         // hide stuff 
         // 
-        $('.report-instructions-show').hide();
+        $('.report-instructions').hide();
         $('.report-instructions-show').click(
             function () {
                 $('.report-instructions-show').hide();
@@ -130,7 +130,6 @@
             dayPie2.empty();
             oDclTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxDcl", lang, $('#dclDate').val()));
             oDclTable.aoColumns = [
-                { mDataProp: "date" },
                 { mDataProp: "dwcList" },
                 { mDataProp: "dwcPropio" },
                 { mDataProp: "hhhList" },
@@ -145,10 +144,10 @@
         }
 
         function wecNewTable() {
+            weekPie.empty();
             oWecTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxWec", lang, $('#wecDate').val()));
             oWecTable.aoColumns = [
                 { mDataProp: "weekday" },
-                { mDataProp: "date" },
                 { mDataProp: "totalSignins" },
                 { mDataProp: "totalAssignments" },
                 { mDataProp: "weekEstDailyHours" },
@@ -160,13 +159,12 @@
                 },
             ];
             wec = $('#wecDataTable').dataTable(oWecTable);
+            makePie('summary','week');
         }
         
         function mwdNewTable() {
-            monthPie.empty();
             oMwdTable = $.extend(true, {}, summaryTableDefaults("/Reports/AjaxMwd", lang, $('#mwdDate').val()));
             mwd = $('#mwdDataTable').dataTable(oMwdTable);
-            makePie('summary', 'month');
             }
         
         function ywdNewTable() {
@@ -407,34 +405,31 @@
             });
 
         // | SPREADSHEETS |
-        $('#dclSpreadsheet').click(function () {
-            var url = "/Reports/AjaxDcl";
-            var data = { todaysdate: $('#dclDate').val() };
+        function makeSpreadsheet(url, data) {
+            var filename = prompt("Please enter a name for the file:", "macheteReports.csv");
             $.getJSON(url, data, function (ajax) {
                 var jstring = JSON.stringify(ajax.aaData);
                 var jcsv = json2spreadsheet(jstring);
-                download(jcsv, "reports.csv", "text/csv");
+                download(jcsv, filename, "text/csv");
             });
+        }
+
+        $('#dclSpreadsheet').click(function () {
+            var url = "/Reports/AjaxDcl";
+            var data = { todaysdate: $('#dclDate').val() };
+            makeSpreadsheet(url, data);
         });
 
         $('#wecSpreadsheet').click(function () {
             var url = "/Reports/AjaxWec";
             var data = { todaysdate: $('#wecDate').val() };
-            $.getJSON(url, data, function (ajax) {
-                var jstring = JSON.stringify(ajax.aaData);
-                var jcsv = json2spreadsheet(jstring);
-                download(jcsv, "reports.csv", "text/csv");
-            });
+            makeSpreadsheet(url, data);
         });
 
         $('#mwdSpreadsheet').click(function () {
             var url = "/Reports/AjaxMwd";
             var data = { todaysdate: $('#mwdDate').val() };
-            $.getJSON(url, data, function (ajax) {
-                var jstring = JSON.stringify(ajax.aaData);
-                var jcsv = json2spreadsheet(jstring);
-                download(jcsv, "reports.csv", "text/csv");
-            });
+            makeSpreadsheet(url, data);
         });
 
         // | PIE CHARTS |
@@ -471,26 +466,22 @@
                 });
             }
             else if (crust == 'summary' && filling == 'week') {
-            }
-            else if (crust == 'summary' && filling == 'month') {
-                url = "/Reports/AjaxMwd";
-                data = { todaysdate: $('#mwdDate').val() };
-                fx = function (ajax) {
-                    pieFill1 = monthlySigninPie(ajax);
-                    var plot1 = $.jqplot(monthPie, [pieFill1],
-                          {
-                              seriesDefaults: {
-                                  renderer: $.jqplot.PieRenderer,
-                                  rendererOptions: {
-                                      showDataLabels: true
-                                  }
-                              },
-                              legend: { show: true, location: 'e' }
-                          }
-                        );
-                };
-            }
-            else if (crust == 'summary' && filling == 'year') {
+                url = "/Reports/AjaxWec";
+                data = { todaysdate: $('#wecDate').val() };
+                $.getJSON(url, data, function (ajax) {
+                    weekPieArray = weeklySigninPie(ajax);
+                    var weekPlot = $.jqplot('weeklyPieChart', weekPieArray.weekPie,
+                        {
+                            seriesDefaults: {
+                                renderer: $.jqplot.PieRenderer,
+                                rendererOptions: {
+                                    showDataLabels: true
+                                }
+                            },
+                            legend: { show: true, location: 'e' }
+                        }
+                    );
+                });
             }
         }
     });
