@@ -124,7 +124,7 @@
     <value>Ingresos Promedios</value>
   </data>
   <data name="cancelledJobs" xml:space="preserve">
-    <value>Órdenes canceladas</value>
+    <value>Cancelados</value>
   </data>
   <data name="date" xml:space="preserve">
     <value>Fecha</value>
@@ -136,10 +136,10 @@
     <value>Futuro Laboral</value>
   </data>
   <data name="dwcList" xml:space="preserve">
-    <value>Lista Laboral</value>
+    <value>Labor</value>
   </data>
   <data name="dwcPropio" xml:space="preserve">
-    <value>Propio Patrón Laboral</value>
+    <value>(Propio)</value>
   </data>
   <data name="dwcPropioFuture" xml:space="preserve">
     <value>Futuro Labor (PP)</value>
@@ -157,10 +157,10 @@
     <value>Fut. Doméstico</value>
   </data>
   <data name="hhhList" xml:space="preserve">
-    <value>Lista Doméstica</value>
+    <value>Doméstico</value>
   </data>
   <data name="hhhPropio" xml:space="preserve">
-    <value>HHH Prop Pat</value>
+    <value>(Propio)</value>
   </data>
   <data name="hhhPropioFuture" xml:space="preserve">
     <value>Fut.Doméstico (PP)</value>
@@ -184,16 +184,16 @@
     <value>Resúmenes de Órdenes</value>
   </data>
   <data name="totalAssignments" xml:space="preserve">
-    <value>Asignaciones Totales</value>
+    <value>Despachados</value>
   </data>
   <data name="totalHours" xml:space="preserve">
-    <value>Horas Trabajadas</value>
+    <value>Horas</value>
   </data>
   <data name="totalIncome" xml:space="preserve">
-    <value>Ingresos Totales</value>
+    <value>Ingresos</value>
   </data>
   <data name="totalSignins" xml:space="preserve">
-    <value>Entradas (Total)</value>
+    <value>Entradas</value>
   </data>
   <data name="weekday" xml:space="preserve">
     <value>Día</value>
