@@ -113,11 +113,12 @@ function reportTableDefaults(url, lang, date)
     return tableDefaults;
 }
 
-function summaryTableDefaults(url, lang, date)
+function summaryTableDefaults(url, lang, date, chartname)
 {
     var tableDefaults = reportTableDefaults(url, lang, date);
     tableDefaults.aoColumns = [
-    { mDataProp: "date" },
+    { mDataProp: "date", bVisible: false },
+    { mDataProp: "datestring" },
     { mDataProp: "stillHere" },
     { mDataProp: "totalSignins" },
     { mDataProp: "wentToClass" },
@@ -153,10 +154,19 @@ function summaryTableDefaults(url, lang, date)
         var conseguiChamba = 0;
         var myFirstJob = 0;
 
+        var activeWorkers = [];
+        var jobsDispatched = [];
+        var avgWages = [];
+        var wentToClass = [];
         //console.log(aaData); aaData is an array of objects, each containing properties and values for each column
-
+        // Two sets of data being collected here, one for the totals (footer), one for the graph (the data pushes)
         for (var i = 0; i < aaData.length ; i++) {
             //console.log(aaData[i]);
+            activeWorkers.push([aaData[i].date, aaData[i].stillHere]);
+            wentToClass.push([aaData[i].date, aaData[i].wentToClass]);
+            jobsDispatched.push([aaData[i].date, aaData[i].dispatched]);
+            avgWages.push([aaData[i].date, aaData[i].avgIncomePerHour.replace('$', '')]);
+
             iTotal += parseInt(aaData[i].totalSignins);
             iWent += parseInt(aaData[i].wentToClass);
             iDispatch += parseInt(aaData[i].dispatched);
@@ -184,8 +194,69 @@ function summaryTableDefaults(url, lang, date)
         tCells[2].innerHTML = '(' + myFirstSignin + ' unique)';
 
         tCells[4].innerHTML = '(' + myFirstJob + ' unique, ' + jornalero + ' temporary, and ' + conseguiChamba + ' permanent jobs)';
-    }
 
+        if (chartname == 'yearlyChart')
+        {
+            activeWorkers.reverse();
+            wentToClass.reverse();
+            jobsDispatched.reverse();
+            avgWages.reverse();
+        }
+
+        var summaryPlot = $.jqplot(chartname, [activeWorkers, jobsDispatched, wentToClass, avgWages], {
+            title: 'Summary',
+            axes: {
+                xaxis: {
+                    renderer: $.jqplot.DateAxisRenderer,
+                    tickOptions:{
+                        formatString:'%m-%d'
+                    }, 
+                    label: 'Date',
+                    pad: 0
+                },
+                yaxis: {
+                    label: 'Value',
+                    pad: 0
+                }
+            },
+            cursor: {
+                show: true,
+                tooltipLocation: 'ne'
+            },
+            highlighter: {
+                show: false
+            },
+            legend: {
+                show: true,
+                location: 'nw'
+            },
+            series: [{
+                label: 'Active Workers',
+                lineWidth: 2,
+                color: 'brown',
+                showMarker: false
+            },
+            {
+                label: 'Jobs Dispatched',
+                lineWidth: 2,
+                color: 'black',
+                showMarker: false
+            },
+            {
+                label: 'Attended Class',
+                lineWidth: 2,
+                color: 'blue',
+                showMarker: false
+            },
+            {
+                label: 'Average Wage',
+                color: 'green',
+                showLine: false,
+                showMarker: true,
+                markerOptions: { style: 'filledSquare', size: 10 }
+            }]
+        });
+    }
     return tableDefaults;
 }
 
@@ -396,12 +467,4 @@ function weeklySigninPie(objArray) {
     };
 
     return weekPieData;
-}
-
-function summaryChart(objArray) {
-    var array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
-    var jobsDispatched = 0;
-    var avgWages = 0;
-    var activeWorkers = 0;
-    var wentToClass = 0;
 }

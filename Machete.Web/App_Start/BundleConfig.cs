@@ -30,7 +30,10 @@ namespace Machete.Web
 
             bundles.Add(new ScriptBundle("~/bundles/reports").Include(
                     "~/Scripts/jquery.jqplot.js",
-                    "~/Scripts/jqplot.pieRenderer.min.js",
+                    "~/Scripts/jqplot.cursor.js",
+                    "~/Scripts/jqplot.dateAxisRenderer.js",
+                    "~/Scripts/jqplot.highligher.js",
+                    "~/Scripts/jqplot.pieRenderer.js",
                     "~/Scripts/reports.js"
                 ));
 

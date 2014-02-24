@@ -78,6 +78,7 @@
                 <table id="mwdDataTable" class="display report-datatable">
                     <thead>
                         <tr>
+                            <th></th>
                             <th class="report-table-header">@Reports.date</th>
                             <th class="report-table-header">@Reports.activeMembers</th>
                             <th class="report-table-header">@Reports.totalSignins</th>
@@ -91,6 +92,7 @@
                     </thead>
                     <tfoot>
                         <tr>
+                            <th></th>
                             <th></th>
                             <th><strong>Totals</strong></th>
                             <th></th>
@@ -106,6 +108,7 @@
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td></td>
                             <td colspan="4"></td>
                             <td></td>
                         </tr>
@@ -113,7 +116,7 @@
                 </table>
             </div>
         <div class="report-chart">
-            <div id="monthlyChart" class="report-chart-inner"></div>
+            <div id="monthlyChart" class="report-chart-inner-only"></div>
         </div>
         </div>
     <h3 class="report-subtitle"><a href="#" id="ywdLink">Yearly</a></h3>
@@ -127,6 +130,7 @@
                 <table id="ywdDataTable" class="display report-datatable">
                     <thead>
                         <tr>
+                            <th></th> @*Hidden date*@
                             <th class="report-table-header">@Reports.date</th>
                             <th class="report-table-header">@Reports.activeMembers</th>
                             <th class="report-table-header">@Reports.totalSignins</th>
@@ -140,6 +144,7 @@
                     </thead>
                     <tfoot>
                         <tr>
+                            <th></th>
                             <th></th>
                             <th><strong>Totals</strong></th>
                             <th></th>
@@ -155,6 +160,7 @@
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td></td>
                             <td colspan="4"></td>
                             <td></td>
                         </tr>
@@ -162,7 +168,7 @@
                 </table>
             </div>
             <div class="report-chart">
-                <div id="yearlyChart" class="report-chart-inner"></div>
+                <div id="yearlyChart" class="report-chart-inner-only"></div>
             </div>
         </div>
     </div>
