@@ -240,7 +240,8 @@ namespace Machete.Web.Controllers
             var result = from d in mwd.query
                          select new
                          {
-                             date = System.String.Format("{0:MMMM d}", d.dateStart),
+                             date = System.String.Format("{0:MM/dd/yyyy}", d.dateStart),
+                             datestring = System.String.Format("{0:MMMM d}", d.dateStart),
                              stillHere = d.stillHere.ToString(),
                              totalSignins = d.totalSignins.ToString(),
                              wentToClass = d.peopleWhoWentToClass.ToString(),
@@ -292,7 +293,8 @@ namespace Machete.Web.Controllers
             var result = from d in ywd.query
                          select new
                          {
-                             date = "Quarter beginning " + System.String.Format("{0:MM/dd/yyyy}", d.dateStart) + " and ending " + System.String.Format("{0:MM/dd/yyyy}", d.dateEnd),
+                             date = System.String.Format("{0:MM/dd/yyyy}", d.dateEnd),
+                             datestring = "Quarter beginning " + System.String.Format("{0:MM/dd/yyyy}", d.dateStart) + " and ending " + System.String.Format("{0:MM/dd/yyyy}", d.dateEnd),
                              stillHere = d.stillHere.ToString(),
                              totalSignins = d.totalSignins.ToString(),
                              wentToClass = d.peopleWhoWentToClass.ToString(),

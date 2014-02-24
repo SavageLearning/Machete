@@ -173,7 +173,7 @@ ul#menu {
         }
 
         ul#menu li a {
-            border-radius: 1em;
+            border-radius: .7em;
             padding: 10px 10px;
             font-weight: bold;
             text-decoration: none;
@@ -773,6 +773,10 @@ html[xmlns] .clearfix {
     display: inline-block;
 }
 
+.report-chart-inner-only {
+    display: block;
+}
+
 .report-data {
     clear: both;
     margin: 0;
@@ -832,6 +836,7 @@ html[xmlns] .clearfix {
     background: #A2B3C6;
     border-radius: .5em;
     clear: both;
+    display: inline-block;
     font-weight: bold;
     text-align: center;
     margin: 0 .5em;
@@ -908,6 +913,7 @@ html[xmlns] .clearfix {
     background-color: #eeeeee;
     min-height: 420px;
     border-radius: .5em;
+    padding-top: 1em;
 }
 
 .wsi-dwccardnum, .wsi-datepicker
@@ -931,5 +937,12 @@ html[xmlns] .clearfix {
 {
     background-color: #eeeeee;
     min-height: 420px;
+    border-radius: .5em;
+}
+
+.account-background
+{
+    background-color: #efeeee;
+    padding: 2em;
     border-radius: .5em;
 }

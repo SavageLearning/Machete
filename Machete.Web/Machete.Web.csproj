@@ -481,6 +481,9 @@
     <Content Include="notes.txt" />
     <Content Include="Scripts\console-log.js" />
     <Content Include="Scripts\drawpiechart.js" />
+    <Content Include="Scripts\jqplot.cursor.js" />
+    <Content Include="Scripts\jqplot.dateAxisRenderer.js" />
+    <Content Include="Scripts\jqplot.highlighter.js" />
     <Content Include="Scripts\jqplot.pieRenderer.js" />
     <Content Include="Scripts\jqplot.pieRenderer.min.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
@@ -637,10 +640,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Account\Delete.cshtml" />
-    <Content Include="Views\Account\_SetPasswordPartial.cshtml" />
-    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
-    <Content Include="Views\Account\_RemoveAccountPartial.cshtml" />
-    <Content Include="Views\Account\_ChangePasswordPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Account\Edit.cshtml" />
@@ -923,6 +922,10 @@
     <Content Include="Views\Activity\CreateMany.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ActivityCreateMany.cshtml" />
     <Content Include="Views\Home\Changes.cshtml" />
+    <Content Include="Views\Account\_ChangePasswordPartial.cshtml" />
+    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
+    <Content Include="Views\Account\_RemoveAccountPartial.cshtml" />
+    <Content Include="Views\Account\_SetPasswordPartial.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
