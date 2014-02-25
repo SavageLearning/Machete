@@ -8,7 +8,72 @@
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
 }
 
-    @if (Model.typeOfReport == "monthly")
+    @if (Model.typeOfReport == "yearly")
+    {
+        <div style="padding-top:6em;">
+            <div style="float:left;width:40%;padding-left:10%">
+                <h3>Yearly Report</h3>
+                <p>@Model.date</p>
+            </div>
+            <div style="float:left;width:40%;padding-right:10%;">
+                <img src="../../Content/machete_1_close_crop.png" style="float:right;" />
+            </div>
+            <div style="display:block;padding:0 10%;">
+                <table id="ywdDataTable" class="display report-datatable">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th class="report-table-header">@Reports.date</th>
+                            <th class="report-table-header">@Reports.activeMembers</th>
+                            <th class="report-table-header">@Reports.totalSignins</th>
+                            <th class="report-table-header">@Reports.wentToClass</th>
+                            <th class="report-table-header">@Reports.dispatched</th>
+                            <th class="report-table-header">@Reports.totalHours</th>
+                            <th class="report-table-header">@Reports.totalIncome</th>
+                            <th class="report-table-header">@Reports.avgIncome</th>
+                            <th class="report-table-header"></th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th><strong>Totals</strong></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td colspan="4"></td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="report-chart">
+                <div id="monthlyChart" class="report-chart-inner-only"></div>
+            </div>
+        </div>
+        <script type="text/javascript">
+                $(document).ready(function () {
+                    var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
+                    var date = '@Model.date';
+                    var oMwdTable = $.extend(true, {}, summaryTableDefaults("/Reports/AjaxYwd", lang, date, 'yearlyChart'));
+                    var mwd = $('#ywdDataTable').dataTable(oMwdTable);
+                });
+        </script>
+    }
+
+    else if (Model.typeOfReport == "monthly")
     {
         <div style="padding-top:6em;">
             <div style="float:left;width:40%;padding-left:10%">
@@ -19,50 +84,55 @@
                 <img src="../../Content/machete_1_close_crop.png" style="float:right;" />
             </div>
             <div style="display:block;padding:0 10%;">
-            <table id="mwdDataTable" class="display">
-                <thead>
-                    <tr>
-                        <th>@Machete.Web.Resources.Reports.date</th>
-                        <th>@Machete.Web.Resources.Reports.totalSignins</th>
-                        <th>Unique</th>
-                        <th>@Machete.Web.Resources.Reports.dwcList</th>
-                        <th>@Machete.Web.Resources.Reports.hhhList</th>
-                        <th>@Machete.Web.Resources.Reports.dwcPropio</th>
-                        <th>@Machete.Web.Resources.Reports.hhhPropio</th>
-                        <th>@Machete.Web.Resources.Reports.totalHours</th>
-                        <th>@Machete.Web.Resources.Reports.totalIncome</th>
-                        <th>@Machete.Web.Resources.Reports.avgIncome</th>
-                    </tr>
-                </thead>
-            </table>
-            <div id="monthlyPieChart1" style="height:auto;width:80%;margin-top:3em;"></div>
+                <table id="mwdDataTable" class="display report-datatable">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th class="report-table-header">@Reports.date</th>
+                            <th class="report-table-header">@Reports.activeMembers</th>
+                            <th class="report-table-header">@Reports.totalSignins</th>
+                            <th class="report-table-header">@Reports.wentToClass</th>
+                            <th class="report-table-header">@Reports.dispatched</th>
+                            <th class="report-table-header">@Reports.totalHours</th>
+                            <th class="report-table-header">@Reports.totalIncome</th>
+                            <th class="report-table-header">@Reports.avgIncome</th>
+                            <th class="report-table-header"></th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th><strong>Totals</strong></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td colspan="4"></td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
-        </div>
+            <div class="report-chart">
+                <div id="monthlyChart" class="report-chart-inner-only"></div>
+            </div>        </div>
         <script type="text/javascript">
             $(document).ready(function () {
                 var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
                 var date = '@Model.date';
-                var oMwdTable = $.extend(true, {}, monthlyTableDefaults("/Reports/AjaxMwd", lang, date));
+                var oMwdTable = $.extend(true, {}, summaryTableDefaults("/Reports/AjaxMwd", lang, date, 'monthlyChart'));
                 var mwd = $('#mwdDataTable').dataTable(oMwdTable);
-                var ajaxUrl = "/Reports/AjaxMwd";
-                var ajaxData = { todaysdate: '@Model.date' };
-
-                var pieFill1;
-
-                $.getJSON(ajaxUrl, ajaxData, function (ajax) {
-                    pieFill1 = monthlySigninPie(ajax);
-                    var plot1 = $.jqplot('monthlyPieChart1', [pieFill1],
-                      {
-                          seriesDefaults: {
-                              renderer: $.jqplot.PieRenderer,
-                              rendererOptions: {
-                                  showDataLabels: true
-                              }
-                          },
-                          legend: { show: true, location: 'e' }
-                      }
-                    );
-                });
             });
         </script>
     }
@@ -78,27 +148,58 @@
                 <img src="../../Content/machete_1_close_crop.png" style="float:right;" />
             </div>
             <div style="display:block;padding:0 10%;">
-            <table id="wecDataTable" class="display">
-                <thead>
-                    <tr>
-                        <th>@Machete.Web.Resources.Reports.weekday</th>
-                        <th>@Machete.Web.Resources.Reports.date</th>
-                        <th>@Machete.Web.Resources.Reports.totalSignins</th>
-                        <th>@Machete.Web.Resources.Reports.totalAssignments</th>
-                        <th>@Machete.Web.Resources.Reports.weekEstDailyHours</th>
-                        <th>@Machete.Web.Resources.Reports.weekEstPayment</th>
-                        <th>@Machete.Web.Resources.Reports.weekHourlyWage</th>
-                        <th></th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
+                <table id="wecDataTable" class="display report-datatable">
+                    <thead>
+                        <tr>
+                            <th class="report-table-header">@Reports.weekday</th>
+                            <th class="report-table-header">@Reports.totalSignins</th>
+                            <th class="report-table-header">@Reports.totalAssignments</th>
+                            <th class="report-table-header">@Reports.weekEstDailyHours</th>
+                            <th class="report-table-header">@Reports.weekEstPayment</th>
+                            <th class="report-table-header">@Reports.weekHourlyWage</th>
+                            <th class="report-table-header"></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
         </div>
         <script type="text/javascript">
-            var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
-            var date = '@Model.date';
-            var oWecTable = $.extend(true, {}, weeklyTableDefaults("/Reports/AjaxWec", lang, date));
-            var wec = $('#wecDataTable').dataTable(oWecTable);
+            $(document).ready(function () {
+                var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
+                var date = '@Model.date';
+                var oWecTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxWec", lang, $('#wecDate').val()));
+                oWecTable.aoColumns = [
+                    { mDataProp: "weekday" },
+                    { mDataProp: "totalSignins" },
+                    { mDataProp: "totalAssignments" },
+                    { mDataProp: "weekEstDailyHours" },
+                    { mDataProp: "weekEstPayment" },
+                    { mDataProp: "weekHourlyWage" },
+                    {
+                        mDataProp: null,
+                        sDefaultContent: '<img src="/Content/dataTables/details_open.png" class="nestedDetailsButton">'
+                    },
+                ];
+                var wec = $('#wecDataTable').dataTable(oWecTable);
+                $.getJSON("/Reports/AjaxWec",
+                            { todaysdate: $('#wecDate').val() },
+                            function (ajax) {
+                                weekPieArray = weeklySigninPie(ajax);
+                                var weekPlot = $.jqplot('weeklyPieChart',
+                                    weekPieArray.weekPie,
+                                    {
+                                        seriesDefaults: {
+                                            renderer: $.jqplot.PieRenderer,
+                                            rendererOptions: {
+                                                showDataLabels: true
+                                            }
+                                        },
+                                        legend: { show: true, location: 'e' }
+                                    }   
+                                );
+                            }
+                        );
+            });
         </script>
     }
 
@@ -113,100 +214,67 @@
                 <img src="../../Content/machete_1_close_crop.png" style="float:right;" />
             </div>
           <div style="display:block;padding:0 10%;">
-                <table id="dclDataTable" class="display">
-                    <thead>
-                        <tr>
-                            <th>@Machete.Web.Resources.Reports.date</th>
-                            <th>@Machete.Web.Resources.Reports.dwcList</th>
-                            <th>@Machete.Web.Resources.Reports.dwcPropio</th>
-                            <th>@Machete.Web.Resources.Reports.hhhList</th>
-                            <th>@Machete.Web.Resources.Reports.hhhPropio</th>
-                            <th>Unique</th>
-                            <th>@Machete.Web.Resources.Reports.totalSignins</th>
-                            <th>@Machete.Web.Resources.Reports.totalAssignments</th>
-                            <th>@Machete.Web.Resources.Reports.cancelledJobs</th>
-                        </tr>
-                    </thead>
-                </table>
-                <div id="dailyPieChart1" style="height:auto;width:80%;display:block;"></div>
-                <div id="dailyPieChart2" style="height:auto;width:80%;display:block;"></div>
-              </div>
-        </div>
-        <script type="text/javascript">
-            var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
-            var date = '@Model.date';
-            var oDclTable = $.extend(true, {}, dailyTableDefaults("/Reports/AjaxDcl", lang, date));
-            var dcl = $('#dclDataTable').dataTable(oDclTable);
-            var ajaxUrl = "/Reports/AjaxDcl";
-            var ajaxData = { todaysdate: '@Model.date' };
-
-            var pieFill1;
-            var pieFill2;
-
-            $('#dailyPieChart1').empty();
-            $('#dailyPieChart2').empty();
-
-            $.getJSON(ajaxUrl, ajaxData, function (ajax) {
-                pieFill1 = dailySigninPie(ajax);
-                pieFill2 = gotWorkPie(ajax);
-                var plot1 = $.jqplot('dailyPieChart1', [pieFill1],
-                      {
-                          seriesDefaults: {
-                              renderer: $.jqplot.PieRenderer,
-                              rendererOptions: {
-                                  showDataLabels: true
-                              }
-                          },
-                          legend: { show: true, location: 'e' }
-                      }
-                    );
-                var plot2 = $.jqplot('dailyPieChart2', [pieFill2],
-                    {
-                        seriesDefaults: {
-                            renderer: $.jqplot.PieRenderer,
-                            rendererOptions: {
-                                showDataLabels: true
-                            }
-                        },
-                        legend: { show: true, location: 'e' }
-                    }
-                    );
-            });
-        </script>
-    }
-    else if (Model.typeOfReport == "jobsandzips")
-    {
-        <div style="padding-top:6em;">
-            <div style="float:left;width:63.5%;padding-left:10%">
-                <h3>Top Jobs and Zip Codes Report</h3>
-                <p>@Model.date</p>
+              <table id="dclDataTable" class="display report-datatable">
+                  <thead>
+                      <tr>
+                          <th class="report-table-header">@Reports.dwcList</th>
+                          <th class="report-table-header">@Reports.dwcPropio</th>
+                          <th class="report-table-header">@Reports.hhhList</th>
+                          <th class="report-table-header">@Reports.hhhPropio</th>
+                          <th class="report-table-header">Unique</th>
+                          <th class="report-table-header">@Reports.totalSignins</th>
+                          <th class="report-table-header">@Reports.totalAssignments</th>
+                          <th class="report-table-header">@Reports.cancelledJobs</th>
+                      </tr>
+                  </thead>
+              </table>
             </div>
-            <div style="float:left;">
-                <img src="../../Content/machete_1_close_crop.png" />
-            </div>
-            <div style="display:block;padding:0 10%;">
-                <table id="jzcDataTable" class="display">
-                <thead>
-                    <tr>
-                        <th style="width:15%;">@Machete.Web.Resources.Reports.date</th>
-                        <th style="width:15%;">@Machete.Web.Resources.Reports.jzcZipCodes</th>
-                        <th style="width:10%;">No.</th>
-                        <th style="width:50%;">@Machete.Web.Resources.Reports.jzcJobs</th>
-                        <th style="width:10%;">No.</th>
-                    </tr>
-                </thead>
-            </table>
-
-            <input type="button" id="Hi" value="Hi" />
+            <div class="report-chart">
+                  <div id="dailyPieChart1" class="report-chart-inner"></div>
+                  <div id="dailyPieChart2" class="report-chart-inner"></div>
             </div>
         </div>
         <script type="text/javascript">
             $(document).ready(function () {
                 var lang = datatable_lang_@(CI.TwoLetterISOLanguageName);
                 var date = '@Model.date';
-                var jzcNewTable = jQuery.extend(true, {}, jzcTableDefaults(lang, date));
-                jzcNewTable["bDestroy"] = "true,";
-                $('#jzcDataTable').dataTable(jzcNewTable).fnReloadAjax();
+                var oDclTable = $.extend(true, {}, reportTableDefaults("/Reports/AjaxDcl", lang, $('#dclDate').val()));
+                oDclTable.aoColumns = [
+                    { mDataProp: "dwcList" },
+                    { mDataProp: "dwcPropio" },
+                    { mDataProp: "hhhList" },
+                    { mDataProp: "hhhPropio" },
+                    { mDataProp: "uniqueSignins" },
+                    { mDataProp: "totalSignins" },
+                    { mDataProp: "totalAssignments" },
+                    { mDataProp: "cancelledJobs" },
+                ];
+                var dcl = $('#dclDataTable').dataTable(oDclTable);
+                $.getJSON("/Reports/AjaxDcl", { todaysdate: $('#dclDate').val() }, function (ajax) {
+                    dayPieArray = dailySigninPie(ajax);
+                    var plot1 = $.jqplot('dailyPieChart1', dayPieArray.firstPie,
+                        {
+                            seriesDefaults: {
+                                renderer: $.jqplot.PieRenderer,
+                                rendererOptions: {
+                                    showDataLabels: true
+                                }
+                            },
+                            legend: { show: true, location: 'e' }
+                        }
+                    );
+                    var plot2 = $.jqplot('dailyPieChart2', dayPieArray.secondPie,
+                        {
+                            seriesDefaults: {
+                                renderer: $.jqplot.PieRenderer,
+                                rendererOptions: {
+                                    showDataLabels: true
+                                }
+                            },
+                            legend: { show: true, location: 'e' }
+                        }
+                    );
+                });
             });
         </script>
     }
@@ -218,6 +286,6 @@
     }
 
 <script type="text/javascript">
-    $('#header').hide();
+    $('.print-off').hide();
     window.print();
 </script>
