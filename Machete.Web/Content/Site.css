@@ -946,3 +946,17 @@ html[xmlns] .clearfix {
     padding: 2em;
     border-radius: .5em;
 }
+
+.dt-smallcol {
+    max-width: 15px;
+}
+
+.wa-table-image-left {
+    margin-left: 2em;
+    margin-right: .5em;
+}
+
+.wa-table-image-right {
+    margin-left: .5em;
+    margin-right: 0;
+}
