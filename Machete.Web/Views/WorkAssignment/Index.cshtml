@@ -108,7 +108,7 @@
         </div>
     </div>
 
-    <div id="lotteryList" class="dialogPopup">
+    <div id="lotteryList" class="dialogPopup font-larger">
         @using (Html.BeginForm("lotterySignin", "WorkerSignin", FormMethod.Post,
                             new { @class = "edittab-form", @id = "lotterySigninForm" }))
         {
@@ -135,9 +135,9 @@
         <table id="lotteryTable" class="display">
             <thead>
                 <tr>
-                    <th>@Machete.Web.Resources.WorkAssignments.memberID</th>
-                    <th>@Machete.Web.Resources.WorkAssignments.lottery</th>
+                    <th class="dt-smallcol">@Machete.Web.Resources.WorkAssignments.lottery</th>
                     <th>@Machete.Web.Resources.WorkAssignments.fullname</th>
+                    <th>@Machete.Web.Resources.WorkAssignments.memberID</th>
                 </tr>
             </thead>
         </table>
@@ -170,10 +170,10 @@
         });
 
     var lotteryDTOptions = {
-        //"sScrollY": "300px",
+        "sScrollY": "300px",
         "bFilter": false,
-        "bPaginate": true,
-        "bLengthChange": false,
+        "bPaginate": false,
+        "bLengthChange": true,
         "iDisplayLength": 15,
         "bAutoWidth": true,
         "bServerSide": true,
@@ -182,10 +182,10 @@
         "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
         "bProcessing": true,
         "aoColumns": [
-            {"mDataProp": "dwccardnum"},
-            {"mDataProp": "lotterySequence"},
-            {"mDataProp": "fullname"}
-        ],
+            { "mDataProp": "lotterySequence"},
+            { "mDataProp": "fullname"},
+            { "mDataProp": "dwccardnum" },
+    ],
         // lottery is straight dataTable, so using standard method for data callback
         "fnServerData": function (sSource, aoData, fnCallback) {
             /* Add some extra data to the sender */
@@ -200,20 +200,16 @@
         },
         "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
             $(nRow).attr('ID', "wsiRec" +aData['recordid']);
-            var lotteryField = $(nRow).find('td:nth-child(2)');
+            var lotteryField = $(nRow).find('td:nth-child(3)');
             var value = $(lotteryField).text();
             if (lotteryField.text()) {
-                lotteryField.append('  ');
-                lotteryField.append('<a class="confirm_clearLottery" title="Erase/Borrar" href="/WorkerSignin/clearLottery/' + aData['recordid'] + '">@(Machete.Web.Resources.WorkAssignments.wkListClear)</a>');
-                lotteryField.append('  ');
-                lotteryField.append('<a class="movedown_Lottery" title="Move Down" href="/WorkerSignin/moveDown/' + aData['recordid'] + '">&#8744;</a>');
-                lotteryField.append('  ');
-                lotteryField.append('<a class="moveup_Lottery" title="Move Up" href="/WorkerSignin/moveUp/' + aData['recordid'] + '">&#8743;</a>');
-                //$('.confirm_clearLottery').button();
-                //$('.movedown_Lottery').button();
-                //$('.moveup_Lottery').button();
-                }
-            //$(nRow).attr('requestedID', aData['WSIID']);
+                lotteryField.append('<a class="movedown_Lottery wa-table-image-left" title="Move Down" href="/WorkerSignin/moveDown/'
+                    + aData['recordid'] + '"><img src="/Content/images/arrow-down-2.png" /></a>');
+                lotteryField.append('<a class="moveup_Lottery" title="Move Up" href="/WorkerSignin/moveUp/'
+                    + aData['recordid'] + '"><img src="/Content/images/arrow-up-2.png" /></a>');
+                lotteryField.append('<a class="confirm_clearLottery wa-table-image-right" title="Erase/Borrar" href="/WorkerSignin/clearLottery/'
+                    + aData['recordid'] + '"><img src="/Content/images/application-exit-2.png" /></a>');
+            }
             if (aData['WAID'] > 0) { // green -- WA record associated with WSI record
                 $(nRow).addClass('statusGreen');
             }
