@@ -64,6 +64,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.Linq" />
@@ -77,6 +78,7 @@
   <ItemGroup>
     <Compile Include="ActivityService.cs" />
     <Compile Include="ActivitySigninService.cs" />
+    <Compile Include="EmailConfig.cs" />
     <Compile Include="EmailService.cs" />
     <Compile Include="EmployerService.cs" />
     <Compile Include="EventService.cs" />

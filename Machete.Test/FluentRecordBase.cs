@@ -66,6 +66,7 @@ namespace Machete.Test
         private EventService _servEV;
         private LookupService _servL;
         private IUnitOfWork _uow;
+        private IEmailConfig _emCfg;
         public MacheteContext DB { get; set; }
         private Employer _emp;
         private Email _email;
@@ -919,7 +920,8 @@ namespace Machete.Test
             if (_repoEM == null) AddRepoEmail();
             if (_servWO == null) AddServWorkOrder();
             if (_uow == null) AddUOW();
-            _servEM = new EmailService(_repoEM, _servWO, _uow);
+            if (_emCfg == null) AddEmailConfig();
+            _servEM = new EmailService(_repoEM, _servWO, _uow, _emCfg);
             return this;
         }
 
@@ -1046,6 +1048,18 @@ namespace Machete.Test
             if (_uow == null) AddUOW();
 
             return _uow;
+        }
+
+        public FluentRecordBase AddEmailConfig()
+        {
+            _emCfg = new EmailConfig();
+            return this;
+        }
+
+        public IEmailConfig ToEmailConfig()
+        {
+            if (_emCfg == null) AddEmailConfig();
+            return _emCfg;
         }
 
         public string RandomString(int size)
