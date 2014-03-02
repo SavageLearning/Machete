@@ -132,7 +132,7 @@ namespace Machete.Web.Controllers
             }
             if (emailview.woid.HasValue)
             {
-                newEmail = serv.CreateWithWorkorder(email, (int)emailview.woid, userName);
+                newEmail = serv.Create(email, userName, emailview.woid);
             }
             else
             {
