@@ -16,6 +16,7 @@ namespace Machete.Service
         Email GetLatestConfirmEmailBy(int woid);
         Email GetExclusive(int eid, string user);
         Email Create(Email email, string userName, int? woid = null);
+        Email Duplicate(int id, int? woid, string userName);
         WorkOrder GetAssociatedWorkOrderFor(Email email);
         WorkOrder GetAssociatedWorkOrderFor(int woid);
         IEnumerable<Email> GetMany(Func<Email, bool> predicate);
@@ -34,7 +35,7 @@ namespace Machete.Service
             _emCfg = emCfg;
         }
 
-        public Email Create(Email email, string userName)
+        public override Email Create(Email email, string userName)
         {
             return Create(email, userName, null);
         }
@@ -56,6 +57,18 @@ namespace Machete.Service
             }
             uow.Commit();
             return newEmail;
+        }
+
+        public Email Duplicate(int id, int? woid, string userName)
+        {
+            Email e = Get(id);
+            Email duplicate = e;
+            duplicate.statusID = Email.iPending;
+            duplicate.lastAttempt = null;
+            duplicate.transmitAttempts = 0;
+
+            return Create(duplicate, userName, woid);
+
         }
 
         public void Save(Email email, string userName)

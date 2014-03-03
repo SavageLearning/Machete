@@ -26,10 +26,7 @@
         $('#emailName').focus();
         // Email Create submit event
 
-        emailCreateForm.mUI('tabFormSubmit', {
-            recType: "@(Model.idString)", //for add_rectab
-            create: true,
-            formLevel: 1,
+        emailCreateForm.mUI('formSubmit', {
             preProcess: function () {
                 var field = $('#@(Model.idPrefix)attachment');
                 var encoded = $('<div/>').text($(field).val()).html();
