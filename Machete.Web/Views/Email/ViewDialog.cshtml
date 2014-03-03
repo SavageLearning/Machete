@@ -7,9 +7,9 @@
 }
 
 @using (Html.BeginForm("Duplicate", "Email", FormMethod.Post,
-                        new { @class = "edittab-form DuplicatePost", @id = "DuplicateEmail-" + Model.ID }))
+                        new { @class = "edittab-form DuplicatePost", @id = Model.idPrefix + "dupForm" }))
 {
-    <input type="button" value="@Emails.duplicateWO" class="formButton" id="duplicate-@(Model.ID)"/>
+    <input type="submit" value="@Emails.duplicateWO" class="formButton" id="duplicate-@(Model.ID)"/>
     
     <br />    
     @Html.ValidationSummary(true)
@@ -23,10 +23,9 @@
 
         //
         // edit form submit
-        $('#duplicate-@Model.ID').click(function(e) {
-            //dupForm: $('#DuplicateEmail-@(Model.ID)')
+@*        $('#d@(Model.idPrefix)dupForm').click(function (e) {
             return;
-            var form = $('#DuplicateEmail-@(Model.ID)');
+            var form = $('#@(Model.idPrefix)dupForm');
             $.post($(form).attr("action"), $(form).serialize(), function (data) {
                 if (data.jobSuccess == false) {
                     alert(data.rtnMessage);
@@ -34,6 +33,24 @@
 
                 }
             });
+        });*@
+
+        $('#@(Model.idPrefix)dupForm').mUI('formSubmit', {
+            preProcess: function () {
+                // encode any attachment HTML            
+@*                var field = $('#@(Model.idPrefix)attachment');
+                var encoded = $('<div/>').text($(field).val()).html();
+                field.val(encoded);*@
+            },
+            // callback for 
+            callback: function () {
+                $('#@(Model.idPrefix)dupForm').closest('.ui-dialog').find('a.ui-dialog-titlebar-close').click();
+                //alert("foo");
+                $('#WO@(Model.woid)-emailConfirm').click();
+            }
         });
+
+
+
     });
 </script>
