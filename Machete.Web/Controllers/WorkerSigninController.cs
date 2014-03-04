@@ -77,7 +77,7 @@ namespace Machete.Web.Controllers
             var _signin = new WorkerSignin();
             // The card just swiped
             _signin.dwccardnum = dwccardnum;
-            _signin.dateforsignin = DateTime.Now.Date >= dateforsignin ? DateTime.Now : dateforsignin;
+            _signin.dateforsignin = new DateTime(dateforsignin.Year, dateforsignin.Month, dateforsignin.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
             _signin.memberStatus = worker.memberStatus;
             //
             //
