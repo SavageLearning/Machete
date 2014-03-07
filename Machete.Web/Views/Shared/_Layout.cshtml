@@ -43,7 +43,7 @@
                     @if (Html.IsInRole(Html.Role_AM()))
                     {
                         <li>@Html.ActionLink(@Machete.Web.Resources.Shared.reportstab, "Index", "Reports", null, new { id = "menulinkreports" })</li>
-                        @*<li>@Html.ActionLink(@Machete.Web.Resources.Shared.emailstab, "Index", "Email", null, new { id = "menulinkemails" })</li>*@
+                        <li>@Html.ActionLink(@Machete.Web.Resources.Shared.emailstab, "Index", "Email", null, new { id = "menulinkemails" })</li>
 
                     }
                     @if (Html.IsInRole(Html.Role_AMP()))

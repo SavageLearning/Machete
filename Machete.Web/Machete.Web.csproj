@@ -911,7 +911,7 @@
     <Content Include="connections.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Properties\PublishProfiles\publish_to_azure_test.pubxml" />
+    <None Include="Properties\PublishProfiles\Test.pubxml" />
     <Content Include="Views\Account\Manage.cshtml" />
     <Content Include="Views\Account\UserRoles.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SelectRoleEditorViewModel.cshtml" />

@@ -74,3 +74,5 @@ Machete.sln*
 #annoying binary files somehow still being created
 */ASPNETDB.MDF
 */aspnetdb_log.ldf
+
+/Machete.Web/Properties/PublishProfiles/*.pubxml
