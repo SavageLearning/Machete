@@ -38,7 +38,7 @@
             preProcess: function () {
                 var field = $('#@(Model.idPrefix)attachment');
                 var encoded = $('<div/>').text($(field).val()).html();
-                console.log(encoded);
+                //console.log(encoded);
                 field.val(encoded);
             },
             postProcess: function () {

@@ -132,7 +132,7 @@ namespace Machete.Web.Controllers
             }
             if (emailview.woid.HasValue)
             {
-                newEmail = serv.CreateWithWorkorder(email, (int)emailview.woid, userName);
+                newEmail = serv.Create(email, userName, emailview.woid);
             }
             else
             {
@@ -151,15 +151,9 @@ namespace Machete.Web.Controllers
 
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public ActionResult Duplicate(int id, string userName)
+        public ActionResult Duplicate(int id, int? woid, string userName)
         {
-            Email e = serv.Get(id);
-            Email duplicate = e;
-            duplicate.statusID = Email.iPending;
-            duplicate.lastAttempt = null;
-            duplicate.transmitAttempts = 0;
-
-            serv.Create(duplicate, userName);
+            Email duplicate = serv.Duplicate(id, woid, userName);
             return Json(new
             {
                 sNewRef = _getTabRef(duplicate),
@@ -167,7 +161,6 @@ namespace Machete.Web.Controllers
                 iNewID = duplicate.ID
             },
             JsonRequestBehavior.AllowGet);
-
         }
 
 

@@ -1,25 +1,25 @@
 ﻿#region COPYRIGHT
 // File:     IntegrationServiceHelpers.cs
 // Author:   Savage Learning, LLC.
-// Created:  2012/06/17 
+// Created:  2012/06/17
 // License:  GPL v3
 // Project:  Machete.Test
 // Contact:  savagelearning
-// 
+//
 // Copyright 2011 Savage Learning, LLC., all rights reserved.
-// 
+//
 // This source file is free software, under either the GPL v3 license or a
 // BSD style license, as supplied with this software.
-// 
-// This source file is distributed in the hope that it will be useful, but 
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+//
+// This source file is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
 // or FITNESS FOR A PARTICULAR PURPOSE. See the license files for details.
-//  
-// For details please refer to: 
-// http://www.savagelearning.com/ 
+//
+// For details please refer to:
+// http://www.savagelearning.com/
 //    or
 // http://www.github.com/jcii/machete/
-// 
+//
 #endregion
 using System;
 using System.Collections.Generic;
@@ -38,7 +38,7 @@ namespace Machete.Test
     {
         #region internal fields
         private ActivityRepository _repoA;
-        private ActivitySigninRepository _repoAS; 
+        private ActivitySigninRepository _repoAS;
         private WorkerSigninRepository _repoWSI;
         private WorkerRepository _repoW;
         private PersonRepository _repoP;
@@ -68,8 +68,7 @@ namespace Machete.Test
         private EventService _servEV;
         private LookupService _servL;
         private IUnitOfWork _uow;
-        //public MacheteContext DB { get; set; }
-        private Employer _emp;
+        private IEmailConfig _emCfg;        private Employer _emp;
         private Email _email;
         private Event _event;
         private WorkOrder _wo;
@@ -114,7 +113,7 @@ namespace Machete.Test
         public FluentRecordBase AddLookupCache()
         {
             if (_dbFactory == null) AddDBFactory();
-            _lcache = new LookupCache(_dbFactory); 
+            _lcache = new LookupCache(_dbFactory);
             return this;
         }
 
@@ -202,7 +201,7 @@ namespace Machete.Test
             return e;
         }
 
-        #endregion  
+        #endregion
 
         #region WorkOrders
 
@@ -240,7 +239,7 @@ namespace Machete.Test
         public FluentRecordBase AddWorkOrder(
             DateTime? datecreated = null,
             DateTime? dateupdated = null,
-            DateTime? dateTimeOfWork = null, 
+            DateTime? dateTimeOfWork = null,
             int? paperordernum = null,
             int? status = null
         )
@@ -282,7 +281,7 @@ namespace Machete.Test
              _dbFactory.Get().Entry<T>(entity).Reload();
         }
 
-        #endregion 
+        #endregion
 
         #region WorkAssignments
 
@@ -363,7 +362,7 @@ namespace Machete.Test
             return wa;
         }
 
-        #endregion 
+        #endregion
 
         #region WorkerSignins
 
@@ -428,7 +427,7 @@ namespace Machete.Test
             return _wsi;
         }
 
-        #endregion 
+        #endregion
 
         #region Persons
 
@@ -495,7 +494,7 @@ namespace Machete.Test
             return p;
         }
 
-        #endregion 
+        #endregion
 
         #region Workers
 
@@ -578,7 +577,7 @@ namespace Machete.Test
             return _w;
         }
 
-        #endregion 
+        #endregion
 
         #region WorkerRequests
 
@@ -641,7 +640,7 @@ namespace Machete.Test
             return _wr;
         }
 
-        #endregion 
+        #endregion
 
         #region Images
 
@@ -700,7 +699,7 @@ namespace Machete.Test
             return _i;
         }
 
-        #endregion 
+        #endregion
 
         #region Lookups
 
@@ -759,7 +758,7 @@ namespace Machete.Test
             return _l;
         }
 
-        #endregion 
+        #endregion
 
         #region Activitys
 
@@ -824,7 +823,7 @@ namespace Machete.Test
             return _a;
         }
 
-        #endregion 
+        #endregion
 
         #region ActivitySignins
 
@@ -894,7 +893,7 @@ namespace Machete.Test
             return _as;
         }
 
-        #endregion 
+        #endregion
 
         #region Reports
 
@@ -944,7 +943,8 @@ namespace Machete.Test
             if (_repoEM == null) AddRepoEmail();
             if (_servWO == null) AddServWorkOrder();
             if (_uow == null) AddUOW();
-            _servEM = new EmailService(_repoEM, _servWO, _uow);
+            if (_emCfg == null) AddEmailConfig();
+            _servEM = new EmailService(_repoEM, _servWO, _uow, _emCfg);
             return this;
         }
 
@@ -995,7 +995,7 @@ namespace Machete.Test
             return p;
         }
 
-        #endregion 
+        #endregion
 
         #region Events
 
@@ -1057,7 +1057,7 @@ namespace Machete.Test
             if (_event == null) AddEvent();
             return _event;
         }
-        #endregion 
+        #endregion
 
         public FluentRecordBase AddUOW()
         {
@@ -1070,6 +1070,18 @@ namespace Machete.Test
             if (_uow == null) AddUOW();
 
             return _uow;
+        }
+
+        public FluentRecordBase AddEmailConfig()
+        {
+            _emCfg = new EmailConfig();
+            return this;
+        }
+
+        public IEmailConfig ToEmailConfig()
+        {
+            if (_emCfg == null) AddEmailConfig();
+            return _emCfg;
         }
 
         public string RandomString(int size)

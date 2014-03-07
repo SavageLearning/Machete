@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Text;
 
 namespace Machete.Service
@@ -13,7 +15,8 @@ namespace Machete.Service
     {
         Email GetLatestConfirmEmailBy(int woid);
         Email GetExclusive(int eid, string user);
-        Email CreateWithWorkorder(Email email, int woid, string userName);
+        Email Create(Email email, string userName, int? woid = null);
+        Email Duplicate(int id, int? woid, string userName);
         WorkOrder GetAssociatedWorkOrderFor(Email email);
         WorkOrder GetAssociatedWorkOrderFor(int woid);
         IEnumerable<Email> GetMany(Func<Email, bool> predicate);
@@ -24,22 +27,58 @@ namespace Machete.Service
     public class EmailService : ServiceBase<Email>, IEmailService
     {
         IWorkOrderService _woServ;
-        public EmailService(IEmailRepository emRepo, IWorkOrderService woServ, IUnitOfWork uow) : base(emRepo, uow)
+        IEmailConfig _emCfg;
+        public EmailService(IEmailRepository emRepo, IWorkOrderService woServ, IUnitOfWork uow, IEmailConfig emCfg) : base(emRepo, uow)
         {
             this.logPrefix = "Email";
             _woServ = woServ;
+            _emCfg = emCfg;
         }
 
-        public Email CreateWithWorkorder(Email email, int woid, string userName)
+        public override Email Create(Email email, string userName)
         {
-            WorkOrder wo = _woServ.Get(woid);
+            return Create(email, userName, null);
+        }
+
+        public Email Create(Email email, string userName, int? woid = null)
+        {
+            if (email.statusID == Email.iReadyToSend)
+            {
+                SendSmtpSimple(email);
+            }
             Email newEmail;
-            newEmail = Create(email, userName);
-            newEmail = Get(newEmail.ID);
-            newEmail.WorkOrders = new Collection<WorkOrder>();
-            newEmail.WorkOrders.Add(wo);
+            newEmail = base.Create(email, userName);
+            //newEmail = Get(newEmail.ID);
+            if (woid != null)
+            {
+                WorkOrder wo = _woServ.Get((int)woid);
+                newEmail.WorkOrders = new Collection<WorkOrder>();
+                newEmail.WorkOrders.Add(wo);
+            }
             uow.Commit();
             return newEmail;
+        }
+
+        public Email Duplicate(int id, int? woid, string userName)
+        {
+            Email e = Get(id);
+            Email duplicate = e;
+            duplicate.statusID = Email.iPending;
+            duplicate.lastAttempt = null;
+            duplicate.transmitAttempts = 0;
+
+            return Create(duplicate, userName, woid);
+
+        }
+
+        public void Save(Email email, string userName)
+        {
+            if (email.statusID == Email.iSent) { return; } 
+            if (email.statusID == Email.iReadyToSend)
+            {
+                SendSmtpSimple(email);
+            }
+            base.Save(email, userName);
         }
 
         public Email GetLatestConfirmEmailBy(int woid)
@@ -119,6 +158,32 @@ namespace Machete.Service
             result.totalCount = repo.GetAllQ().Count();
             result.query = e.Skip(o.displayStart).Take(o.displayLength);
             return result;
+        }
+
+        public void SendSmtpSimple(Email email)
+        {
+            SmtpClient smtpClient = new SmtpClient();
+            NetworkCredential basicCredential =
+                //new NetworkCredential("machete-dcd9269ea5afcbe7", "e16356c22f5a4c13");
+                new NetworkCredential(_emCfg.userName, _emCfg.password);
+            MailMessage message = new MailMessage();
+            MailAddress fromAddress = new MailAddress(_emCfg.fromAddress);
+
+            smtpClient.Host = _emCfg.host;
+            smtpClient.Port = _emCfg.port;
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.Credentials = basicCredential;
+            smtpClient.EnableSsl = _emCfg.enableSSL;
+
+            message.From = fromAddress;
+            message.Subject = email.subject;
+            message.IsBodyHtml = true;
+            message.Body = email.body;
+            message.To.Add(email.emailTo);
+
+            smtpClient.Send(message);
+            email.statusID = Email.iSent;
+            email.emailFrom = fromAddress.Address;
         }
     }
 }

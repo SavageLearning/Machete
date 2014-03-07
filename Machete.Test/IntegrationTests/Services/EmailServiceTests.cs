@@ -81,7 +81,7 @@ namespace Machete.Test.IntegrationTests.Services
             var email = frb.ToEmail();
             var serv = frb.ToServEmail();
             //ACT
-            var result = serv.CreateWithWorkorder(email, wo.ID, "interation test");
+            var result = serv.Create(email, "interation test", wo.ID);
             // ASSERT
             Assert.IsNotNull(result.ID, "Email.ID is null");
             Assert.IsNotNull(result.WorkOrders);
@@ -107,12 +107,25 @@ namespace Machete.Test.IntegrationTests.Services
             var wo = frb.ToWorkOrder();
             var email = frb.ToEmail();
             var serv = frb.ToServEmail();
-            var joinedEmail = serv.CreateWithWorkorder(email, wo.ID, "interation test");
+            var joinedEmail = serv.Create(email, "interation test", wo.ID);
             dOptions.woid = wo.ID;
             // ACT
             var result = serv.GetIndexView(dOptions);
             // ASSERT
             Assert.AreEqual(1, result.filteredCount);
+        }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Emails)]
+        public void Integration_Email_Service_SendEmailSimple()
+        {
+            var email = frb.ToEmail();
+            var cfg = frb.ToEmailConfig();
+            email.emailFrom = cfg.fromAddress;
+            email.emailTo = cfg.fromAddress;
+            var serv = frb.ToServEmail();
+            email.statusID = Email.iReadyToSend;
+            var emailsent = serv.Create(email, "interation test");
+            Assert.AreEqual(Email.iSent, emailsent.statusID);
         }
     }
 }

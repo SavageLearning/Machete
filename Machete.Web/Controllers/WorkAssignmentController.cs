@@ -208,6 +208,8 @@ namespace Machete.Web.Controllers
         #region Duplicate
         public ActionResult Duplicate(int id, string userName)
         {
+            //
+            // TODO: Move duplication functionality to the service layer
             WorkAssignment _assignment = waServ.Get(id);
             WorkAssignment duplicate = _assignment;
             duplicate.incrPseudoID();
