@@ -1087,13 +1087,13 @@ namespace Machete.Service
             getAllClassAttendance = GetAllActivitySignins(beginDate, endDate).ToList();
             eslAssessed = AdultsEnrolledAndAssessedInESL().ToList();
             var safetyTrainees = getAllClassAttendance
-                        .Where(whr => whr.activityType == "Health & Safety" );
+                        .Where(whr => whr.info == "Chemical Safety" );
             var skillsTrainees = getAllClassAttendance
-                        .Where(whr => whr.activityType == "Skills Training" || whr.activityType == "Leadership Development");
+                        .Where(whr => whr.activityType == "Class" || whr.activityType == "Workshops" || whr.info == "Mujeres sin Fronteras");
             var basGardenTrainees = getAllClassAttendance.Where(basic => basic.info == "Basic Gardening");
             var advGardenTrainees = getAllClassAttendance.Where(adv => adv.info == "Advanced Gardening");
             var finTrainees = getAllClassAttendance.Where(fin => fin.info == "Financial Education");
-            var oshaTrainees = getAllClassAttendance.Where(osha => osha.info.Contains("OSHA"));
+            var oshaTrainees = getAllClassAttendance.Where(osha => osha.info.Contains("Health & Safety"));
 
             q = getDates
                 .Select(x => new ActivityData
