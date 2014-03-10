@@ -105,7 +105,7 @@
         //
         //
         $('#wsiTable').dataTable({
-            "sScrolly": "360px",
+            "sScrollY": "315px",
             "bPaginate": false,
             "bLengthChange": true,
             "bAutoWidth": false,
@@ -175,6 +175,7 @@
                         $('#dwccardnum').val(null); // clear cardnum field
                         $('#wsiImage').attr('src', data.imageRef); //reload image
                         $('#wsiTable').dataTable().fnDraw(); //reload datatable
+                        alert(data.message);
                         if (data.memberSanctioned || data.memberExpelled) {
                             $("#wsiRedImage").attr('src', data.imageRef);
                             $('#signin-red-dialog').dialog({ 
@@ -212,6 +213,7 @@
             $.post(url, { todaysdate: $('#dateforsignin').val() }, function (data) {
                 $('#wsiTable').dataTable().fnDraw();
                 $('#dwccardnum').focus();
+                alert(data.message);
                 if (!data.jobSuccess) { alert(data.rtnMessage); }
             });
             $('#dwccardnum').focus();

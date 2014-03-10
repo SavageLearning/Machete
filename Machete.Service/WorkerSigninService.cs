@@ -43,7 +43,7 @@ namespace Machete.Service
         bool moveUp(int id, string user);
         bool sequenceLottery(DateTime date, string user);
         bool listDuplicate(DateTime date, string user);
-        bool signinDuplicate(DateTime date, string user);
+        string signinDuplicate(DateTime date, string user);
         dataTableResult<wsiView> GetIndexView(viewOptions o);
         void CreateSignin(WorkerSignin signin, string user);
     }
@@ -286,12 +286,13 @@ namespace Machete.Service
         /// </summary>
         /// <param name="date">The date for which the list should be duplicated.</param>
         /// <param name="user">The username of the user making the request.</param>
-        /// <returns>bool</returns>
-        public bool signinDuplicate(DateTime date, string user)
+        /// <returns>string</returns>
+        public string signinDuplicate(DateTime date, string user)
         {
             DateTime yesterday = date.AddDays(-1);
             IEnumerable<WorkerSignin> todayListSignins;
             IEnumerable<WorkerSignin> yesterdaySignins;
+            StringBuilder iWasNotSignedIn = new StringBuilder();
 
             // Get today's signins. If anyone has already been signed in, this feature will hold those records.
             todayListSignins = repo.GetAllQ()
@@ -310,7 +311,7 @@ namespace Machete.Service
                 .AsEnumerable()
                 .ToList();
 
-            //then, create signins for all of them.
+                //then, create signins for all of them.
             foreach (WorkerSignin wsi in yesterdaySignins)
             {
                 //we're going to need some objects
@@ -318,13 +319,21 @@ namespace Machete.Service
                 WorkerSignin dupadedoo = new WorkerSignin();
                 // The card don't need no swipe
                 dupadedoo.dwccardnum = wsi.dwccardnum;
-                dupadedoo.dateforsignin = date;
+                dupadedoo.dateforsignin = new DateTime(date.Year, date.Month, date.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
                 dupadedoo.memberStatus = oompaLoompa.memberStatus;
-                // Let CreateSignin do the rest
-                CreateSignin(dupadedoo, user);
+                try
+                {
+                    // Let CreateSignin do the rest
+                    CreateSignin(dupadedoo, user);
+                }
+                catch (InvalidOperationException eek)
+                {
+                    string addMeToTheList = oompaLoompa.dwccardnum.ToString() + " " + eek.Message + "\n";
+                    iWasNotSignedIn.Append(addMeToTheList);
+                }
             }
-
-            return true;
+            if (iWasNotSignedIn.Length > 0) return iWasNotSignedIn.ToString();
+            else return "Success!";
         }
 
 
@@ -373,7 +382,7 @@ namespace Machete.Service
 
         }
         /// <summary>
-        /// This method creates a worker signin entry.
+        /// This method creates a worker signin entry. Must be implemented with try/catch.
         /// </summary>
         /// <param name="signin"></param>
         /// <param name="user"></param>
@@ -387,10 +396,15 @@ namespace Machete.Service
                 signin.WorkerID = wfound.ID;
             }
             //Search for duplicate signin for the same day
-            int sfound = 0; ;
-            sfound = repo.GetAllQ().Count(s => s.dateforsignin == signin.dateforsignin &&
-                                                     s.dwccardnum == signin.dwccardnum);
+            int sfound = 0;
+            sfound = repo
+                .GetAllQ()
+                .Select(s => new { s.dwccardnum, s.dateforsignin })
+                .Where(t => DbFunctions.TruncateTime(t.dateforsignin) == signin.dateforsignin.Date
+                    && t.dwccardnum == signin.dwccardnum)
+                .Count();
             if (sfound == 0) Create(signin, user);
+            else throw new InvalidOperationException("has already been signed in!");
         }
     }
 }
