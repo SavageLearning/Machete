@@ -73,15 +73,24 @@ namespace Machete.Web.Controllers
         public ActionResult Index(int dwccardnum, DateTime dateforsignin)
         {
             Worker worker = _wServ.GetWorkerByNum(dwccardnum);
-            if (worker == null) throw new NullReferenceException("card ID doesn't match a worker");
+            if (worker == null) throw new NullReferenceException("Card ID doesn't match a worker!");
             var _signin = new WorkerSignin();
+            string result = "";
             // The card just swiped
             _signin.dwccardnum = dwccardnum;
             _signin.dateforsignin = new DateTime(dateforsignin.Year, dateforsignin.Month, dateforsignin.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
             _signin.memberStatus = worker.memberStatus;
             //
             //
-            _serv.CreateSignin(_signin, this.User.Identity.Name);
+            try
+            {
+                _serv.CreateSignin(_signin, this.User.Identity.Name);
+            }
+            catch(InvalidOperationException eek)
+            {
+                result = dwccardnum.ToString() + " " + eek.Message;
+            }
+
             //Get picture from checkin, show with next view
             Image checkin_image = _serv.getImage(dwccardnum);           
             string imageRef = "/Content/images/NO-IMAGE-AVAILABLE.jpg";
@@ -90,12 +99,16 @@ namespace Machete.Web.Controllers
                 imageRef = "/Image/GetImage/" + checkin_image.ID;
             }
 
+            if (result.Length == 0)
+                result = "Success!";
+
             return Json(new
             {
                 memberExpired = worker.isExpired,
                 memberInactive = worker.isInactive,
                 memberSanctioned = worker.isSanctioned,
                 memberExpelled = worker.isExpelled,
+                message = result,
                 imageRef = imageRef,
                 expirationDate = worker.memberexpirationdate
             },
@@ -153,11 +166,12 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Check-in")]
         public ActionResult SigninDuplicate(DateTime todaysdate, string userName)
         {
-            _serv.signinDuplicate(todaysdate, userName);
+            string result = _serv.signinDuplicate(todaysdate, userName);
             return Json(new
             {
                 jobSuccess = true,
                 status = "OK",
+                message = result,
                 date = todaysdate
             },
             JsonRequestBehavior.AllowGet);
