@@ -209,9 +209,9 @@
                     }
                     //                    
                     //if ListTab selected, redraw dataTable
-                    if ($(ui.tab).hasClass('ListTab')) {
-                        $(ui.panel).find('.display').dataTable().fnDraw();
-                    }
+                    //if ($(ui.tab).hasClass('ListTab')) {
+                    //    $(ui.panel).find('.display').dataTable().fnDraw();
+                    //}
                 },
                 //
                 // jquery.tabs() load event (This event doesn't happen for the list tab)

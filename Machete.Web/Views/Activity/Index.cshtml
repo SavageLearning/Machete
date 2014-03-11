@@ -24,22 +24,29 @@
             maxTabs: 1
         });
 
+        //$('#activityTable').dataTable().fnDestroy();
+
         //
         // Create Activity table
         jqrfyTable({
             table: $('#activityTable'), 
             tab: $('#activityTabs'),
             options: {
-                "bPaginate": true,
-                "bLengthChange": true,
-                "aaSorting": [[6, 'desc']],
+        //$('#activityTable').dataTable({
+                //"iDisplayLength": 15,
+                //"aLengthMenu": [[-1],["All"]],
+                "bDestroy": true,
+                "sScrollY": "315px",
+                "bPaginate": false,
+                "bLengthChange": false,
+                "bAutoWidth": false,
                 "bFilter": true,
                 "bSort": true,
                 "bInfo": true,
-                "bAutoWidth": false,
                 "bServerSide": true,
                 "sAjaxSource": "/Activity/AjaxHandler",
                 "bProcessing": true,
+                "aaSorting": [[6, 'desc']],
                 "oLanguage": datatable_lang_@(Model.CI.TwoLetterISOLanguageName),
                 "aoColumns": [                           //dataTable column definition
                                 {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
@@ -50,15 +57,24 @@
                                 {"mDataProp": "count" },
                                 {"mDataProp": "dateStart" },
                                 {"mDataProp": "dateEnd" }
-                ]             
-            }, 
+                ],
+                "fnServerData": function (sSource, aoData, fnCallback) {
+                    //aoData.push(
+                    //    { "name": "todaysdate", "value": $('#actDate').val() });
+                    $.getJSON(sSource, aoData, function (json) {
+                        /* Do whatever additional processing you want on the callback, then tell DataTables */
+                        fnCallback(json);
+                    });
+                },
+                "fnFooterCallback": null
+                }, 
             dblClickEvent: null, 
             tabLabel: "activity",
             maxTabs: 2
         });
 
         //pagetimer for unauthorized view
-        if (@Model.authenticated === 0) {
+        @*if (@Model.authenticated === 0) {
             // Reloads Activities list after 10 minutes if Activity List tab is NOT selected and interaction is idle               
             // When a tab is selected, set/clear time and bind/unbind idle handler
             $('#activityTabs').mUI('tabTimer', {});
@@ -67,7 +83,7 @@
             $('#activityTable').everyTime(30*1000, function() {
                 $(this).dataTable().fnDraw();
             });   
-        }
+        }*@
 
     });
 </script>

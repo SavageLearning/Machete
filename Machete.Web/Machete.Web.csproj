@@ -530,7 +530,6 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\documentation\Machete_Manual-v1.2.pdf" />
     <Content Include="Content\images\Sorting icons.psd" />
   </ItemGroup>
   <ItemGroup>
@@ -911,6 +910,8 @@
     <Content Include="connections.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\documentation\MacheteUserManual-Current.pdf" />
+    <Content Include="Content\documentation\MacheteUserManual-html-Current.zip" />
     <None Include="Properties\PublishProfiles\CasaLatina.pubxml" />
     <None Include="Properties\PublishProfiles\Test.pubxml" />
     <Content Include="Views\Account\Manage.cshtml" />
