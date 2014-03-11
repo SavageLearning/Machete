@@ -175,7 +175,10 @@
                         $('#dwccardnum').val(null); // clear cardnum field
                         $('#wsiImage').attr('src', data.imageRef); //reload image
                         $('#wsiTable').dataTable().fnDraw(); //reload datatable
-                        alert(data.message);
+
+                        if (data.message != "Success!") {
+                            alert(data.message);
+                        }
                         if (data.memberSanctioned || data.memberExpelled) {
                             $("#wsiRedImage").attr('src', data.imageRef);
                             $('#signin-red-dialog').dialog({ 

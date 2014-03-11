@@ -85,7 +85,7 @@ namespace Machete.Service
             //if (o.displayLength >= 0)
             result.filteredCount = e.Count();
             result.totalCount = repo.GetAllQ().Count();
-            result.query = e.Skip(o.displayStart).Take(o.displayLength);
+            result.query = e;//.Skip(o.displayStart).Take(o.displayLength);
             return result;
         }
 

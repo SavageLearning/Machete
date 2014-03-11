@@ -516,6 +516,10 @@ input[type="text"].ui-datepicker {
     width: 100%;
 }
 
+.print-text {
+    color: #000 !important;
+}
+
 input.ui-button.dispatchButton {
     float: left;
 }

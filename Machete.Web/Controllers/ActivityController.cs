@@ -161,7 +161,9 @@ namespace Machete.Web.Controllers
             UpdateModel(activ);
             activ.firstID = activ.ID;
 
-            if (activ.recurring == true)
+            if (activ.dateEnd < activ.dateStart)
+                return Json(new { jobSuccess = false, rtnMessage = "End date must be greater than start date." });
+            else if (activ.recurring == true)
             {
                 Activity firstAct = serv.Create(activ, userName);
 

@@ -3,7 +3,7 @@
 @using Machete.Web.Resources
 @using Machete.Web.Helpers
 @using System.Globalization
-<div class="print-on">
+<div class="print-on print-text">
     @*<link href="@Url.Content("~/Content/print.css")" rel="stylesheet" type="text/css" media="print" />*@
     @{
         ViewBag.Title = WorkOrders.viewtitle;
@@ -34,7 +34,7 @@
     <h3>@Employers.boxlegend: @Model.Employer.name</h3>
     <div class="recordButtons print-off">
         @*<input type="button" id="printOrder" class="formButton" value="@WorkOrders.printWorkOrder" />
-        <input type="button" id="printMap" class="formButton" value="@Shared.printGoogleMap" />*@
+            <input type="button" id="printMap" class="formButton" value="@Shared.printGoogleMap" />*@
     </div>
     @Html.DisplayForModel()
     <div class="tb-label">
