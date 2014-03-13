@@ -239,9 +239,9 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="connections.config">
+    <Content Include="connections.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
