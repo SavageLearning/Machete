@@ -1,4 +1,4 @@
-// File:     juqery.macheteUI
+// File:     jquery.macheteUI
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
 // License:  GPL v3
