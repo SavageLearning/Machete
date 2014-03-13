@@ -234,4 +234,16 @@
   <data name="um02" xml:space="preserve">
     <value>User Manual Section 2</value>
   </data>
+  <data name="backup" xml:space="preserve">
+    <value>Backups</value>
+  </data>
+  <data name="dailylist" xml:space="preserve">
+    <value>Daily List Feature</value>
+  </data>
+  <data name="introduction" xml:space="preserve">
+    <value>Machete Wiki Home</value>
+  </data>
+  <data name="useracctmgmt" xml:space="preserve">
+    <value>User Account Management</value>
+  </data>
 </root>
