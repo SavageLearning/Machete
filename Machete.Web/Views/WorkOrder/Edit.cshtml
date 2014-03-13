@@ -121,6 +121,7 @@
         });
         //
         // submit activate
+        // this is actually happening before the button appears, right after clicking "Save" on the form
         $("#ActivateWorkOrder-@(Model.ID)").mUI('tabFormSubmit', {
             clickButton: $("#activateWorkOrderButton-@(Model.ID)"),
             selectTab: 0,
