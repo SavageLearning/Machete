@@ -231,4 +231,7 @@
   <data name="True" xml:space="preserve">
     <value>True</value>
   </data>
+  <data name="um02" xml:space="preserve">
+    <value>User Manual Section 2</value>
+  </data>
 </root>

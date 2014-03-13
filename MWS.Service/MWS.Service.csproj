@@ -52,10 +52,11 @@
     <StartupObject>MWS.Service.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>D9612DAC8257B5CBB7E66BB920CDAD325A4B4F68</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>84BF875AC553E4075CBBB45188A0554EDFC9A593</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>MWS.Service_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>
+    </ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -123,9 +124,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
-    <None Include="connections.config">
+    <Content Include="connections.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
+    <None Include="MWS.Service_1_TemporaryKey.pfx" />
     <None Include="MWS.Service_TemporaryKey.pfx" />
     <None Include="packages.config" />
   </ItemGroup>
