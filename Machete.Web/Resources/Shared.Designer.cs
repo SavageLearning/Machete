@@ -97,6 +97,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Backups.
+        /// </summary>
+        public static string backup {
+            get {
+                return ResourceManager.GetString("backup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to show banner.
         /// </summary>
         public static string bannerbtn {
@@ -129,6 +138,15 @@ namespace Machete.Web.Resources {
         public static string choose {
             get {
                 return ResourceManager.GetString("choose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Daily List Feature.
+        /// </summary>
+        public static string dailylist {
+            get {
+                return ResourceManager.GetString("dailylist", resourceCulture);
             }
         }
         
@@ -250,6 +268,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Machete Wiki Home.
+        /// </summary>
+        public static string introduction {
+            get {
+                return ResourceManager.GetString("introduction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Issue Tracker.
         /// </summary>
         public static string issuetracker {
@@ -354,6 +381,15 @@ namespace Machete.Web.Resources {
         public static string um02 {
             get {
                 return ResourceManager.GetString("um02", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User Account Management.
+        /// </summary>
+        public static string useracctmgmt {
+            get {
+                return ResourceManager.GetString("useracctmgmt", resourceCulture);
             }
         }
         
