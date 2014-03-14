@@ -1,4 +1,4 @@
-// File:     juqery.macheteUI
+// File:     jquery.macheteUI
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
 // License:  GPL v3
@@ -163,7 +163,8 @@
                 changeTitle = opt.changeTitle,
                 confirmed = false, // create jQuery tabs with mUI handlers
                 maxTabs = opt.maxTabs || 2,
-                level = _checkFormLevel(opt.formLevel, "createTabs"); // Error if form level not set correctly
+                level = _checkFormLevel(opt.formLevel, "createTabs"), // Error if form level not set correctly
+                updateDatatable = opt.updateDatatable || false;
             if (!changeConfirm) throw new Error("mUI.createTabs requires a changeConfirm option");
             if (!changeTitle) throw new Error("mUI.createTabs requires a changeTitle option");
 
@@ -209,9 +210,9 @@
                     }
                     //                    
                     //if ListTab selected, redraw dataTable
-                    //if ($(ui.tab).hasClass('ListTab')) {
-                    //    $(ui.panel).find('.display').dataTable().fnDraw();
-                    //}
+                    if ($(ui.tab).hasClass('ListTab') && updateDatatable) {
+                        $(ui.panel).find('.display').dataTable().fnDraw();
+                    }
                 },
                 //
                 // jquery.tabs() load event (This event doesn't happen for the list tab)
@@ -334,7 +335,7 @@
         tabFormSubmit: function (opt) {
             var form = this;
             var parentTab = $(form).closest('.ui-tabs');
-            var SelTab = opt.selectTab || 0;
+            var SelTab = opt.selectTab || 0; // Selects tab "0" if no option selected
             var create = opt.create || null;//true
             var recType = opt.recType || null;//activity
             var exclusiveTab = opt.exclusiveTab || true;
