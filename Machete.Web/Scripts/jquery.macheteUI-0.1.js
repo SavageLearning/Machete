@@ -335,7 +335,7 @@
         tabFormSubmit: function (opt) {
             var form = this;
             var parentTab = $(form).closest('.ui-tabs');
-            var SelTab = opt.selectTab || 0;
+            var SelTab = opt.selectTab || 0; // Selects tab "0" if no option selected
             var create = opt.create || null;//true
             var recType = opt.recType || null;//activity
             var exclusiveTab = opt.exclusiveTab || true;
