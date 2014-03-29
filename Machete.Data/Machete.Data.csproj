@@ -133,11 +133,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+
     <Content Include="SQL\CreateElmahTable.sql" />
     <Content Include="SQL\CreateNLogTable.sql" />
     <Content Include="SQL\Legacy\201211112024571_AddOnlineSourceBit.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="SQL\Legacy\20121225_date_reset_cleanup.sql" />
     <Content Include="SQL\Legacy\201304160508212_AddSurchargeField.sql" />
     <Content Include="SQL\Legacy\201305050151353_AddEmailTable.sql" />
