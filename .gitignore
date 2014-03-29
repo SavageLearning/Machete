@@ -77,3 +77,6 @@ Machete.sln*
 
 /Machete.Web/Properties/PublishProfiles/*.pubxml
 MWS.Service_1_TemporaryKey.pfx
+Web.CasaLatina.config
+*.MDF
+*.ldf
