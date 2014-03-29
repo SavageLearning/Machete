@@ -115,6 +115,7 @@ namespace Machete.Web.Controllers
         /// <param name="userName"></param>
         /// <returns></returns>
         [HttpPost, UserNameFilter]
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Manager, Teacher, PhoneDesk")]
         public ActionResult Create(Person person, string userName)
         {
