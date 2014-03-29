@@ -55,6 +55,15 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CasaLatina|AnyCPU'">
+    <OutputPath>bin\CasaLatina\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -103,29 +112,9 @@
     <Compile Include="Logging\MacheteInterceptorLogging.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="MacheteContext.cs" />
-    <Compile Include="Migrations\201211112012339_InitialMigrations.cs" />
-    <Compile Include="Migrations\201211112012339_InitialMigrations.Designer.cs">
-      <DependentUpon>201211112012339_InitialMigrations.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201211112024571_AddOnlineSourceBit.cs" />
-    <Compile Include="Migrations\201211112024571_AddOnlineSourceBit.Designer.cs">
-      <DependentUpon>201211112024571_AddOnlineSourceBit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201304160508212_AddSurchargeField.cs" />
-    <Compile Include="Migrations\201304160508212_AddSurchargeField.Designer.cs">
-      <DependentUpon>201304160508212_AddSurchargeField.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201305050151353_AddEmailTable.cs" />
-    <Compile Include="Migrations\201305050151353_AddEmailTable.Designer.cs">
-      <DependentUpon>201305050151353_AddEmailTable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201312300649350_MergeMacheteContextAndIdentityDbContext.cs" />
-    <Compile Include="Migrations\201312300649350_MergeMacheteContextAndIdentityDbContext.Designer.cs">
-      <DependentUpon>201312300649350_MergeMacheteContextAndIdentityDbContext.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201402172207482_AddRecurringBool.cs" />
-    <Compile Include="Migrations\201402172207482_AddRecurringBool.Designer.cs">
-      <DependentUpon>201402172207482_AddRecurringBool.cs</DependentUpon>
+    <Compile Include="Migrations\201403282351317_InitialMigration.cs" />
+    <Compile Include="Migrations\201403282351317_InitialMigration.Designer.cs">
+      <DependentUpon>201403282351317_InitialMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -144,37 +133,26 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Migrations\migration_commands.txt" />
-    <Content Include="SQL\201211112024571_AddOnlineSourceBit.sql">
+    <Content Include="SQL\CreateElmahTable.sql" />
+    <Content Include="SQL\CreateNLogTable.sql" />
+    <Content Include="SQL\Legacy\201211112024571_AddOnlineSourceBit.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="SQL\20121225_date_reset_cleanup.sql" />
-    <Content Include="SQL\201304160508212_AddSurchargeField.sql" />
-    <Content Include="SQL\201305050151353_AddEmailTable.sql" />
-    <Content Include="SQL\201312300649350_MergeMacheteContextAndIdentityDbContext.sql" />
-    <Content Include="SQL\201402170001333_AddRecurringBool.sql" />
-    <Content Include="SQL\anUpdateThatWorks.sql" />
-    <Content Include="SQL\create_migration_table.sql" />
-    <Content Include="SQL\null_in_lookups.sql" />
-    <Content Include="SQL\apply_EmployerEmail_schema_changes_to_multiple_macheteDBs.sql" />
-    <Content Include="SQL\switchToAspnetIdentity.sql" />
-    <Content Include="SQL\update_Casa_Prod_to_v1.5-RC1.sql" />
+    <Content Include="SQL\Legacy\20121225_date_reset_cleanup.sql" />
+    <Content Include="SQL\Legacy\201304160508212_AddSurchargeField.sql" />
+    <Content Include="SQL\Legacy\201305050151353_AddEmailTable.sql" />
+    <Content Include="SQL\Legacy\201312300649350_MergeMacheteContextAndIdentityDbContext.sql" />
+    <Content Include="SQL\Legacy\201402170001333_AddRecurringBool.sql" />
+    <Content Include="SQL\Legacy\anUpdateThatWorks.sql" />
+    <Content Include="SQL\Legacy\create_migration_table.sql" />
+    <Content Include="SQL\Legacy\null_in_lookups.sql" />
+    <Content Include="SQL\Legacy\apply_EmployerEmail_schema_changes_to_multiple_macheteDBs.sql" />
+    <Content Include="SQL\Legacy\switchToAspnetIdentity.sql" />
+    <Content Include="SQL\Legacy\update_Casa_Prod_to_v1.5-RC1.sql" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201211112012339_InitialMigrations.resx">
-      <DependentUpon>201211112012339_InitialMigrations.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201211112024571_AddOnlineSourceBit.resx">
-      <DependentUpon>201211112024571_AddOnlineSourceBit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201305050151353_AddEmailTable.resx">
-      <DependentUpon>201305050151353_AddEmailTable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201312300649350_MergeMacheteContextAndIdentityDbContext.resx">
-      <DependentUpon>201312300649350_MergeMacheteContextAndIdentityDbContext.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201402172207482_AddRecurringBool.resx">
-      <DependentUpon>201402172207482_AddRecurringBool.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201403282351317_InitialMigration.resx">
+      <DependentUpon>201403282351317_InitialMigration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

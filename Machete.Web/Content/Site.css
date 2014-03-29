@@ -895,15 +895,17 @@ html[xmlns] .clearfix {
 .home-text-main
 {
     display: inline-block;
-    max-width: 360px;
+    max-width: 480px;
     min-width: 260px;
 }
 
 .home-image-main
 {
     display: inline-block;
-    max-width: 50%;
-    margin-left: 8em;
+    min-width: 30%;
+    max-width: 45%;
+    margin-left: 5em;
+    margin-right: 3em;
     vertical-align: top;
 }
 

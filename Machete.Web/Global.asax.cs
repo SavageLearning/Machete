@@ -74,6 +74,7 @@ namespace Machete.Web
             routes.MapRoute("Error", "{*url}", new { controller = "Error", action = "Http404" });
 
         }
+
         protected void Application_AcquireRequestState(object sender, EventArgs e)
         {
             //It's important to check whether session object is ready
