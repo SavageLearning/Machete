@@ -54,6 +54,10 @@ namespace Machete.Domain
         //
         [LocalizedDisplayName("isbusiness", NameResourceType = typeof(Resources.Employer))]
         public bool business { get; set; }
+
+        [LocalizedDisplayName("businessname", NameResourceType = typeof(Resources.Employer))]
+        public string businessname { get; set;}
+
         [LocalizedDisplayName("name", NameResourceType = typeof(Resources.Employer))]
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Employer))]
         [Required(ErrorMessageResourceName = "namerequired", ErrorMessageResourceType = typeof(Resources.Employer))]
