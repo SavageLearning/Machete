@@ -22,12 +22,12 @@ namespace Machete.Data.Migrations
             //uncomment the following lines to create new role types for users
             var rm = new RoleManager<IdentityRole>
                (new RoleStore<IdentityRole>(context));
-            ir = rm.Create(new IdentityRole("Administrator"));
-            ir = rm.Create(new IdentityRole("Manager"));
-            ir = rm.Create(new IdentityRole("Check-in"));
-            ir = rm.Create(new IdentityRole("PhoneDesk"));
-            ir = rm.Create(new IdentityRole("Teacher"));
-            ir = rm.Create(new IdentityRole("User"));
+            //ir = rm.Create(new IdentityRole("Administrator"));
+            //ir = rm.Create(new IdentityRole("Manager"));
+            //ir = rm.Create(new IdentityRole("Check-in"));
+            //ir = rm.Create(new IdentityRole("PhoneDesk"));
+            //ir = rm.Create(new IdentityRole("Teacher"));
+            //ir = rm.Create(new IdentityRole("User"));
             var um = new UserManager<ApplicationUser>(
                 new UserStore<ApplicationUser>(context));
             var user = new ApplicationUser()
