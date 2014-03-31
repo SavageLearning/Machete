@@ -37,6 +37,10 @@ namespace Machete.Web.ViewModel
     {
         [LocalizedDisplayName("isbusiness", NameResourceType = typeof(Domain.Resources.Employer))]
         public bool business { get; set; }
+
+        [LocalizedDisplayName("businessname", NameResourceType = typeof(Domain.Resources.Employer))]
+        public string businessname { get; set; }
+        
         [LocalizedDisplayName("name", NameResourceType = typeof(Domain.Resources.Employer))]
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Domain.Resources.Employer))]
         [Required(ErrorMessageResourceName = "namerequired", ErrorMessageResourceType = typeof(Domain.Resources.Employer))]
