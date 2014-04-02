@@ -400,7 +400,7 @@ namespace Machete.Service
             sfound = repo
                 .GetAllQ()
                 .Select(s => new { s.dwccardnum, s.dateforsignin })
-                .Where(t => DbFunctions.TruncateTime(t.dateforsignin) == signin.dateforsignin.Date
+                .Where(t => t.dateforsignin.Date == signin.dateforsignin.Date
                     && t.dwccardnum == signin.dwccardnum)
                 .Count();
             if (sfound == 0) Create(signin, user);

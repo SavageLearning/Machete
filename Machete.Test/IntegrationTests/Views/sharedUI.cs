@@ -52,7 +52,7 @@ namespace Machete.Test
             _d.FindElement(By.Id("UserName")).Clear();
             _d.FindElement(By.Id("UserName")).SendKeys("jadmin");
             _d.FindElement(By.Id("Password")).Clear();
-            _d.FindElement(By.Id("Password")).SendKeys("machete");
+            _d.FindElement(By.Id("Password")).SendKeys("");
             _d.FindElement(By.Name("logonB")).Click();
             WaitForText("Welcome", maxwait);
             return true;

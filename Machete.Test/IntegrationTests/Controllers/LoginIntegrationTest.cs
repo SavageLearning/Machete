@@ -21,7 +21,7 @@ namespace Machete.Test.IntegrationTests.Controllers
         [TestInitialize]
         public void Initialize()
         {
-            conString = "macheteDevTest";
+            conString = "MacheteConnection";
             idb = new DatabaseFactory(conString);
             userManager = new MyUserManager(idb);
         }
@@ -37,7 +37,7 @@ namespace Machete.Test.IntegrationTests.Controllers
         public async Task FindIdentitySignin()
         {
             //passes with default values 1/15/2014 5:52 pm
-            var task = await userManager.FindAsync("", "");
+            var task = await userManager.FindAsync("jadmin", "");
             //var user = task.Wait(20000);
             Assert.IsNotNull(task);
         }

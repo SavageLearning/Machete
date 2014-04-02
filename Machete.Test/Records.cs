@@ -38,11 +38,11 @@ namespace Machete.Test
         {
             //debug
             //return 10000;
-            var next = 10000;
-            var last = (int?)db.OrderByDescending(x => x.dwccardnum).Select(x => x.dwccardnum).FirstOrDefault() ?? next;
-            if (last == next) return last + 1;
-            else if (last == 99999) throw new ArgumentOutOfRangeException("Sorry, I'm having trouble finding a card number.");
-            else return last + 1;
+            var first = 10000;
+            var last = db.OrderByDescending(x => x.dwccardnum).Select(x => x.dwccardnum).FirstOrDefault();
+            var next = last == 0 ? first + 1 : last + 1;
+            if (first > next || last == 99999) throw new ArgumentOutOfRangeException("Sorry, I'm having trouble finding a card number.");
+            else return next;
         }
 
         public static Image image = new Image
