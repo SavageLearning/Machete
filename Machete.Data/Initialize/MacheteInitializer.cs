@@ -32,39 +32,32 @@ using System.Data.Entity.Migrations;
 namespace Machete.Data
 {
     //public class MacheteInitializer : DropCreateDatabaseIfModelChanges<MacheteContext>
-    public class MacheteInitializer : CreateDatabaseIfNotExists<MacheteContext>
+    public class MacheteInitializer : MigrateDatabaseToLatestVersion<MacheteContext, MacheteConfiguration>
     {
-        
+
+    }
+    public class TestInitializer : MigrateDatabaseToLatestVersion<MacheteContext, MacheteConfiguration>
+    {
+
+    }
+
+    public class MacheteConfiguration : DbMigrationsConfiguration<MacheteContext>
+    {
+        public MacheteConfiguration()
+            : base()
+        {
+            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationDataLossAllowed = true;
+        }
+
         protected override void Seed(MacheteContext DB)
         {
             //Initialize Lookups
-            MacheteLookup.Initialize(DB);
-            DB.SaveChanges();
-            DB.Database.ExecuteSqlCommand("CREATE NONCLUSTERED INDEX [dateTimeofWork] ON [dbo].[WorkOrders] ([dateTimeofWork] ASC) WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]");
+            if (!DB.Lookups.Any())
+            {
+                MacheteLookup.Initialize(DB);
+                DB.SaveChanges();
+            }
         }
     }
-    public class TestInitializer : DropCreateDatabaseAlways<MacheteContext>
-    {
-        protected override void Seed(MacheteContext DB)
-        {
-            //Initialize Lookup tables with static data
-            MacheteLookup.Initialize(DB); //Adds the Lookups table records
-            DB.SaveChanges();
-            DB.Database.ExecuteSqlCommand("CREATE NONCLUSTERED INDEX [dateTimeofWork] ON [dbo].[WorkOrders] ([dateTimeofWork] ASC) WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]");
-        }
-    }
-
-    //public class CustomMigrationsConfiguration : DbMigrationsConfiguration<MacheteContext>
-    //{
-    //    public CustomMigrationsConfiguration()
-    //        : base()
-    //    {
-    //        AutomaticMigrationsEnabled = true;
-    //        AutomaticMigrationDataLossAllowed = true;
-    //    }
-
-    //    //protected override void Seed(MacheteContext context)
-    //    //{
-    //    //}
-    //}
 }

@@ -103,31 +103,10 @@
     <Compile Include="Logging\MacheteInterceptorLogging.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="MacheteContext.cs" />
-    <Compile Include="Migrations\201211112012339_InitialMigrations.cs" />
-    <Compile Include="Migrations\201211112012339_InitialMigrations.Designer.cs">
-      <DependentUpon>201211112012339_InitialMigrations.cs</DependentUpon>
+    <Compile Include="Migrations\201404020109307_InitialMigration.cs" />
+    <Compile Include="Migrations\201404020109307_InitialMigration.Designer.cs">
+      <DependentUpon>201404020109307_InitialMigration.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201211112024571_AddOnlineSourceBit.cs" />
-    <Compile Include="Migrations\201211112024571_AddOnlineSourceBit.Designer.cs">
-      <DependentUpon>201211112024571_AddOnlineSourceBit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201304160508212_AddSurchargeField.cs" />
-    <Compile Include="Migrations\201304160508212_AddSurchargeField.Designer.cs">
-      <DependentUpon>201304160508212_AddSurchargeField.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201305050151353_AddEmailTable.cs" />
-    <Compile Include="Migrations\201305050151353_AddEmailTable.Designer.cs">
-      <DependentUpon>201305050151353_AddEmailTable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201312300649350_MergeMacheteContextAndIdentityDbContext.cs" />
-    <Compile Include="Migrations\201312300649350_MergeMacheteContextAndIdentityDbContext.Designer.cs">
-      <DependentUpon>201312300649350_MergeMacheteContextAndIdentityDbContext.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201402172207482_AddRecurringBool.cs" />
-    <Compile Include="Migrations\201402172207482_AddRecurringBool.Designer.cs">
-      <DependentUpon>201402172207482_AddRecurringBool.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AllRepositories.cs" />
   </ItemGroup>
@@ -144,7 +123,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Migrations\migration_commands.txt" />
     <Content Include="SQL\201211112024571_AddOnlineSourceBit.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -161,20 +139,8 @@
     <Content Include="SQL\update_Casa_Prod_to_v1.5-RC1.sql" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201211112012339_InitialMigrations.resx">
-      <DependentUpon>201211112012339_InitialMigrations.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201211112024571_AddOnlineSourceBit.resx">
-      <DependentUpon>201211112024571_AddOnlineSourceBit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201305050151353_AddEmailTable.resx">
-      <DependentUpon>201305050151353_AddEmailTable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201312300649350_MergeMacheteContextAndIdentityDbContext.resx">
-      <DependentUpon>201312300649350_MergeMacheteContextAndIdentityDbContext.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201402172207482_AddRecurringBool.resx">
-      <DependentUpon>201402172207482_AddRecurringBool.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201404020109307_InitialMigration.resx">
+      <DependentUpon>201404020109307_InitialMigration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
