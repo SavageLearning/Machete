@@ -168,7 +168,14 @@ namespace Machete.Test.UnitTests.Services
             _wsiRepo.Setup(s => s.GetAllQ()).Returns(wsiList);
             //
             //Act
-            _serv.CreateSignin(_signin, "UnitTest");
+            try
+            {
+                _serv.CreateSignin(_signin, "UnitTest");
+            }
+            catch(InvalidOperationException ex)
+            {
+                Console.WriteLine(fakeid.ToString() + ex.Message);
+            }
             //
             //Assert
             Assert.IsNull(_cbsignin);

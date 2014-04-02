@@ -65,5 +65,10 @@ namespace Machete.Domain
     {
         public const string Default = "default";
     }
-
+    public struct LWorkType
+    {
+        public const string DWC = "DWC";
+        public const string HHH = "HHH";
+        public const string EVT = "EVT";
+    }
 }
