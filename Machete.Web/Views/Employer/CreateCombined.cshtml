@@ -12,15 +12,7 @@
 @using (Html.BeginForm()) {
     @Html.ValidationSummary(true)
     <fieldset>
-        <legend>EmployerWoConbined</legend>
-
-        <div class="editor-label">
-            @Html.LabelFor(model => model.business)
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.business)
-            @Html.ValidationMessageFor(model => model.business)
-        </div>
+        <legend>EmployerWoCombined</legend>
 
         <div class="editor-label">
             @Html.LabelFor(model => model.name)
@@ -84,6 +76,22 @@
         <div class="editor-field">
             @Html.EditorFor(model => model.zipcode)
             @Html.ValidationMessageFor(model => model.zipcode)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.business)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.business)
+            @Html.ValidationMessageFor(model => model.business)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.businessname)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.businessname)
+            @Html.ValidationMessageFor(model => model.businessname)
         </div>
 
         <div class="editor-label">

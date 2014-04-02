@@ -7,6 +7,7 @@
 @using (Html.BeginForm("Create", "Person", FormMethod.Post, 
     new { @id = "personCreateForm" }))
 {
+    @Html.AntiForgeryToken()
     <input type="submit" id="@(idPrefix)SaveBtn" class="formButton saveBtn" 
             value="@Persons.createsubmit" tabindex="9"/>
     @Html.ValidationSummary(true)

@@ -132,6 +132,9 @@
   <data name="blogparticipate" xml:space="preserve">
     <value>¿Participar en el blog?</value>
   </data>
+  <data name="businessname" xml:space="preserve">
+    <value>Nombre de empresa</value>
+  </data>
   <data name="cellphone" xml:space="preserve">
     <value>Teléfono celular</value>
   </data>

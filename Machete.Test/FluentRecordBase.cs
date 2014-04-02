@@ -95,7 +95,7 @@ namespace Machete.Test
         }
 
 
-        public FluentRecordBase AddDBFactory(string connStringName = "macheteConnection")
+        public FluentRecordBase AddDBFactory(string connStringName = "MacheteConnection")
         {
             Database.SetInitializer<MacheteContext>(new MacheteInitializer());
             _dbFactory = new DatabaseFactory(connStringName);

@@ -1,9 +1,12 @@
 ﻿@model Machete.Domain.Employer
+
 @using Machete.Web.Resources
+
 @{  
     string recType = "employer";
     string idPrefix = recType + Model.ID + "-";
 }
+
 @using (Html.BeginForm("Create", "Employer", FormMethod.Post, 
                         new { @id = "employerCreateForm" }))
 {
@@ -14,6 +17,7 @@
     @Html.ValidationSummary(true)
     @Html.EditorForModel()
 }
+
 <script type="text/javascript">
     $(document).ready(function () {
         $('.formButton').button();

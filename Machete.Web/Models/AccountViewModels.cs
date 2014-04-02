@@ -192,7 +192,14 @@ namespace Machete.Web.Models
             this.UserName = user.UserName;
             string[] firstLast = user.UserName.Split('.');
             this.FirstName = firstLast[0];
-            this.LastName = firstLast[1];
+            if (firstLast.Length > 1)
+            {
+                this.LastName = firstLast[1];
+            }
+            else
+            {
+                this.LastName = "";
+            }
 
             Db = plop;
 
