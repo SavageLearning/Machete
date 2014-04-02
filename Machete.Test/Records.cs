@@ -32,22 +32,21 @@ using System.Data.Entity;
 
 namespace Machete.Test 
 {
-    public class Records
+    public static class Records
     {
         public static int GetNextMemberID(DbSet<Worker> db)
         {
-            var next = 10001;
-            var last = db.OrderByDescending(x => x.dwccardnum).FirstOrDefault();
-            if (last.dwccardnum == 99999) --last.dwccardnum;
-            if (last == null) return next;
-            if (last.dwccardnum < 10000) return next;
-            else return last.dwccardnum + 1;
-
+            //debug
+            //return 10000;
+            var next = 10000;
+            var last = (int?)db.OrderByDescending(x => x.dwccardnum).Select(x => x.dwccardnum).FirstOrDefault() ?? next;
+            if (last == next) return last + 1;
+            else if (last == 99999) throw new ArgumentOutOfRangeException("Sorry, I'm having trouble finding a card number.");
+            else return last + 1;
         }
 
         public static Image image = new Image
         {
-            
             Createdby = "initialization script",
             Updatedby = "initialization script"
         };
@@ -62,7 +61,7 @@ namespace Machete.Test
         };
 
         public static Worker worker = new Worker
-        {   
+        {
             typeOfWorkID = 20,
             RaceID = MacheteLookup.cache.First(x => x.category == "race" && x.text_EN =="Latino").ID,                     //byte
             raceother = "Records._worker1", //string
@@ -77,15 +76,15 @@ namespace Machete.Test
             maritalstatus = MacheteLookup.cache.First(x => x.category == "maritalstatus" && x.text_EN == "Single").ID,            //string
             livewithchildren = true,        //bool
             numofchildren = 0,              //byte
-            incomeID = MacheteLookup.cache.First(x => x.category == "income" && x.text_EN == @"Less than $15,000").ID,                   //byte
+            incomeID = MacheteLookup.cache.First(x => x.category == "income" && x.text_EN == "Poor (Less than $15,000)").ID,                   //byte
             livealone = true,               //bool
             emcontUSAname = "Bill Clinton", //string
             emcontUSAphone = "1234567890",  //string
             emcontUSArelation = "idol",     //string
             dwccardnum = 0,             //int
-            neighborhoodID = MacheteLookup.cache.First(x => x.category == "neighborhood" && x.text_EN == "Seattle").ID,             //byte
+            neighborhoodID = MacheteLookup.cache.First(x => x.category == "neighborhood" && x.text_EN == "Primary City").ID,             //byte
             immigrantrefugee = true,        //bool
-            countryoforiginID = MacheteLookup.cache.First(x => x.category == "countryoforigin" && x.text_EN == "USA").ID,        //string
+            countryoforiginID = MacheteLookup.cache.First(x => x.category == "countryoforigin" && x.text_EN == "Mexico").ID,        //string
             emcontoriginname = "Barak Obama",   //string
             emcontoriginphone = "1234567890",   //string
             emcontoriginrelation = "friend",    //string
@@ -102,6 +101,7 @@ namespace Machete.Test
             dateOfMembership = DateTime.Now,
             memberStatus = MacheteLookup.cache.First(x => x.category == "memberstatus" && x.text_EN == "Active").ID
         };
+
         public static Person person = new Person
         {
             firstname1 = "barack",
@@ -152,8 +152,9 @@ namespace Machete.Test
 //
 //</body>
 //</html>",
-//            attachmentContentType = System.Net.Mime.MediaTypeNames.Text.Html
+////            attachmentContentType = System.Net.Mime.MediaTypeNames.Text.Html
         };
+//
         public static Employer employer = new Employer
         {
             name = "Willy Wonka",
@@ -245,7 +246,7 @@ namespace Machete.Test
         public static ActivitySignin activitysignin = new ActivitySignin
         {
             dwccardnum = 12345,
-            dateforsignin = DateTime.Now,            
+            dateforsignin = DateTime.Now,
             datecreated = DateTime.Now,
             dateupdated = DateTime.Now,
             Createdby = "TestInitializer",
@@ -261,6 +262,7 @@ namespace Machete.Test
             Createdby = "TestInitializer",
             Updatedby = "TestInitializer"
         };
+
         public static WorkerRequest request = new WorkerRequest
         {
             datecreated = DateTime.Now,             //datetime
@@ -268,6 +270,5 @@ namespace Machete.Test
             Createdby = "TestInitializer",
             Updatedby = "TestInitializer"
         };
-
     }
 }

@@ -41,7 +41,11 @@ namespace Machete.Data
         /// functionality because the customer may change teh values to suit their purposes.
         /// 
         /// For actual Machete functionality, The Service Layer's LookupCache object should be used.
-        /// It gets values from the database, which may be different from these static values. 
+        /// It gets values from the database, which may be different from these static values.
+        /// 
+        /// Also, please note that if you edit this list for any reason (such as to increase flexibility
+        /// for center implementations, or to make corrections) make sure those changes are reflected in
+        /// Records.cs, otherwise you will break the tests. (Updated 4/1/14 Chaim)
         /// </summary>
         public static List<Lookup> cache {get {return _cache;} }
         private static List<Lookup> _cache = new List<Lookup>

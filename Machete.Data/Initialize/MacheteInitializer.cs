@@ -28,6 +28,8 @@ using System.Text;
 using System.Data.Entity;
 using Machete.Domain;
 using System.Data.Entity.Migrations;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Machete.Data
 {
@@ -58,6 +60,41 @@ namespace Machete.Data
                 MacheteLookup.Initialize(DB);
                 DB.SaveChanges();
             }
+
+            if (!DB.Users.Any())
+            {
+                AddUserAndRole(DB);
+            }
+        }
+
+
+        bool AddUserAndRole(MacheteContext context)
+        {
+            IdentityResult ir;
+
+            var rm = new RoleManager<IdentityRole>
+               (new RoleStore<IdentityRole>(context));
+            ir = rm.Create(new IdentityRole("Administrator"));
+            ir = rm.Create(new IdentityRole("Manager"));
+            ir = rm.Create(new IdentityRole("Check-in"));
+            ir = rm.Create(new IdentityRole("PhoneDesk"));
+            ir = rm.Create(new IdentityRole("Teacher"));
+            ir = rm.Create(new IdentityRole("User"));
+
+            var um = new UserManager<ApplicationUser>(
+                new UserStore<ApplicationUser>(context));
+            var user = new ApplicationUser()
+            {
+                UserName = "",
+                IsApproved = true,
+                Email = "here@there.org"
+            };
+            
+            ir = um.Create(user, "");
+            if (ir.Succeeded == false)
+                return ir.Succeeded;
+            ir = um.AddToRole(user.Id, "Administrator"); //Default Administrator, edit to change
+            return ir.Succeeded;
         }
     }
 }
