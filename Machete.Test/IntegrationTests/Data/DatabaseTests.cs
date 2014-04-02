@@ -43,7 +43,7 @@ namespace Machete.Test.Data
         public void Initialize()
         {
             frb = new FluentRecordBase();
-            frb.AddDBFactory(connStringName: "macheteDevTest");
+            frb.AddDBFactory(connStringName: "MacheteConnection");
         }
 
         // This freaking thing dropped my Azure database! Please fix it!
