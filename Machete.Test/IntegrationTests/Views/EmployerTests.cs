@@ -85,7 +85,7 @@ namespace Machete.Test
             //Arrange
             Employer _emp = frb.CloneEmployer();
             WorkOrder _wo = frb.CloneWorkOrder();
-            _wo.status = 43; // start work order off as pending
+            _wo.status = frb.ToLookupCache().getByKeys(LCategory.orderstatus, LOrderStatus.Pending); // start work order off as pending
             //Act
             ui.employerCreate(_emp);
             ui.workOrderCreate(_emp, _wo);
@@ -117,7 +117,7 @@ namespace Machete.Test
             _wo.zipcode = _emp.zipcode;
             _wo.phone = _emp.phone;
             _wo.description = "";
-            _wo.status = 43;
+            _wo.status = frb.ToLookupCache().getByKeys(LCategory.orderstatus, LOrderStatus.Pending);
 
             //Assert
             ui.workOrderValidate(_wo);
@@ -130,7 +130,7 @@ namespace Machete.Test
             WorkOrder _wo = frb.CloneWorkOrder();
             WorkAssignment _wa1 = frb.CloneWorkAssignment();
             _wo.contactName = ui.RandomString(10);
-            _wo.status = 43; // status = pending
+            _wo.status = frb.ToLookupCache().getByKeys(LCategory.orderstatus, LOrderStatus.Pending); // status = pending
             //
             // Create employer
             ui.employerCreate(_employer1);
