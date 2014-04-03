@@ -397,12 +397,27 @@ namespace Machete.Service
             }
             //Search for duplicate signin for the same day
             int sfound = 0;
-            sfound = repo
-                .GetAllQ()
+            var srepo = repo.GetAllQ();
+            
+            try 
+            { 
+            sfound = srepo
                 .Select(s => new { s.dwccardnum, s.dateforsignin })
-                .Where(t => t.dateforsignin.Date == signin.dateforsignin.Date
+                .Where(t => DbFunctions.TruncateTime(t.dateforsignin) == signin.dateforsignin.Date
                     && t.dwccardnum == signin.dwccardnum)
                 .Count();
+            }
+            catch(NotSupportedException _nse)
+            {
+                Console.WriteLine(_nse.Message);
+                // Must use the following in a Mocking environment:
+                sfound = srepo
+                    .Select(s => new { s.dwccardnum, s.dateforsignin })
+                    .Where(t => t.dateforsignin.Date == signin.dateforsignin.Date
+                        && t.dwccardnum == signin.dwccardnum)
+                    .Count();
+            }
+
             if (sfound == 0) Create(signin, user);
             else throw new InvalidOperationException("has already been signed in!");
         }

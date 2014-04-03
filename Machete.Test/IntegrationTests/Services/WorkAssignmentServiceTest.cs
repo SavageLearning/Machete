@@ -187,7 +187,7 @@ namespace Machete.Test
         {
             // arrange
             frb.AddWorkAssignment(skill: 70);
-            dOptions.sSearch = "Digging";
+            dOptions.sSearch = "masonry";
             dOptions.orderDescending = true;
             dOptions.woid = frb.ToWorkOrder().ID;
             // Act

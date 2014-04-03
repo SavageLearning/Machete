@@ -11,6 +11,7 @@ using OpenQA.Selenium.Support.UI;
 using Machete.Data;
 using System.Data.Entity;
 using Machete.Test.Rx;
+using System.Reflection;
 
 
 namespace Machete.Test
@@ -21,10 +22,18 @@ namespace Machete.Test
         string _url;
         public int maxwait = 4; // seconds
         int sleepFor = 1000; //milliseconds
+        
+        // Tried to update WebServer.cs 4/2/2014...unsuccessful. Why won't IIS Express start from code?
+        //public WebServer iisX;
+
         public sharedUI(IWebDriver driver, string url)
         {
             _d = driver;
             _url = url;
+            //string[] _spl = url.Split(':');
+            //string _path = _spl[0] + ":" + _spl[1];
+            //int _port = Convert.ToInt32(_spl[2].TrimEnd('/'));
+            //iisX = new WebServer(_path, _port); 
         }
 
         public bool refreshCache()
@@ -163,10 +172,10 @@ namespace Machete.Test
             _d.FindElement(By.Id(prefix + "dwccardnum")).SendKeys(_wkr.dwccardnum.ToString());
 
             SelectOption(By.Id(prefix + "memberStatus"), "Active");
-            SelectOption(By.Id(prefix + "neighborhoodID"), "Seattle");
-            SelectOption(By.Id(prefix + "typeOfWorkID"), @"(DWC) Day Worker Center");
+            SelectOption(By.Id(prefix + "neighborhoodID"), "Primary City");
+            SelectOption(By.Id(prefix + "typeOfWorkID"), @"Day Worker Center");
             SelectOption(By.Id(prefix + "englishlevelID"), "2");
-            SelectOption(By.Id(prefix + "incomeID"), @"Less than $15,000");
+            SelectOption(By.Id(prefix + "incomeID"), @"Poor (Less than $15,000)");
             _d.FindElement(By.Id(prefix + "imagefile")).SendKeys(imagepath);
             _d.FindElement(By.Id("createWorkerBtn")).Click();
             //
@@ -201,10 +210,10 @@ namespace Machete.Test
             Assert.AreEqual(_wkr.weight, WaitForElement(By.Id(prefix + "weight")).GetAttribute("value"));
             Assert.AreEqual(_wkr.dwccardnum.ToString(), WaitForElement(By.Id(prefix + "dwccardnum")).GetAttribute("value"));
             Assert.AreEqual("Active", GetOptionText(By.Id(prefix + "memberStatus")));
-            Assert.AreEqual("Seattle", GetOptionText(By.Id(prefix + "neighborhoodID")));
-            Assert.AreEqual(@"(DWC) Day Worker Center", GetOptionText(By.Id(prefix + "typeOfWorkID")));
+            Assert.AreEqual("Primary City", GetOptionText(By.Id(prefix + "neighborhoodID")));
+            Assert.AreEqual(@"Day Worker Center", GetOptionText(By.Id(prefix + "typeOfWorkID")));
             Assert.AreEqual("2", GetOptionText(By.Id(prefix + "englishlevelID")));
-            Assert.AreEqual(@"Less than $15,000", GetOptionText(By.Id(prefix + "incomeID")));
+            Assert.AreEqual(@"Poor (Less than $15,000)", GetOptionText(By.Id(prefix + "incomeID")));
             return true;
         }
 
@@ -282,6 +291,7 @@ namespace Machete.Test
             ReplaceElementText(By.Id(prefix + "address1"), _emp.address1);
             ReplaceElementText(By.Id(prefix + "address2"), _emp.address2);
             ReplaceElementText(By.Id(prefix + "city"), _emp.city);
+            ReplaceElementText(By.Id(prefix + "state"), _emp.state);
             ReplaceElementText(By.Id(prefix + "zipcode"), _emp.zipcode);
             ReplaceElementText(By.Id(prefix + "phone"), _emp.phone);
             ReplaceElementText(By.Id(prefix + "cellphone"), _emp.cellphone);
@@ -671,9 +681,10 @@ namespace Machete.Test
         public bool activitySignIn(string idPrefix, int dwccardnum)
         {
             var textboxID = idPrefix + "dwccardnum";
+            var submitID = idPrefix + "submit";
             WaitForElement(By.Id(textboxID));
             ReplaceElementText(By.Id(textboxID), dwccardnum.ToString());
-            WaitForElement(By.Id(textboxID)).Submit();
+            WaitThenClickElement(By.Id(submitID));
 
             return true;
         }
@@ -955,13 +966,13 @@ namespace Machete.Test
         }
         public static string SolutionDirectory()
         {
-            string solutionDirectory = ((EnvDTE.DTE)System.Runtime
-                              .InteropServices
-                              .Marshal
-                              .GetActiveObject("VisualStudio.DTE.11.0"))
-                   .Solution
-                   .FullName;
-            return System.IO.Path.GetDirectoryName(solutionDirectory);
+            //string solutionDirectory = ((EnvDTE.DTE)System.Runtime
+            //                  .InteropServices
+            //                  .Marshal
+            //                  .GetActiveObject("VisualStudio.DTE.11.0"))
+            //       .Solution
+            //       .FullName;
+            return System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         }
         public static int nextAvailableDwccardnum(MacheteContext DB)
         {

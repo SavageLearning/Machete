@@ -94,6 +94,7 @@ namespace Machete.Data
             if (ir.Succeeded == false)
                 return ir.Succeeded;
             ir = um.AddToRole(user.Id, "Administrator"); //Default Administrator, edit to change
+            ir = um.AddToRole(user.Id, "Teacher"); //Required to make tests work
             return ir.Succeeded;
         }
     }

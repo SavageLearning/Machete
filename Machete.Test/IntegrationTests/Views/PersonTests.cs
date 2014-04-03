@@ -32,8 +32,8 @@ namespace Machete.Test
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext) {
             string solutionDirectory = sharedUI.SolutionDirectory();
-            testdir = solutionDirectory + "\\Machete.test\\";
-            testimagefile = testdir + "jimmy_machete.jpg";
+            //testdir = solutionDirectory + "\\Machete.test\\";
+            testimagefile = solutionDirectory + "\\jimmy_machete.jpg";
         }
 
         [TestInitialize]
