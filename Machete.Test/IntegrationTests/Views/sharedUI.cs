@@ -528,12 +528,13 @@ namespace Machete.Test
             // Look for WA datatable to have a first row (at least one record)
             By walt = By.XPath("//table[@id='workAssignTable-wo-" + _wo.ID + "']/tbody/tr/td[1]");
             // The #####-## order number from the first column
-            var waltText =WaitForElement(walt).Text;
+            var waltText = WaitForElement(walt).Text;
             WaitForElementValue(walt, _wa.getFullPseudoID());
             Assert.AreEqual(_wa.getFullPseudoID(), waltText, "Unexpected PseudoID in assignment's list");
             Thread.Sleep(1000);
             WaitThenClickElement(By.Id("activateWorkOrderButton-" + _wo.ID));
-            _wo.status = 42; // changing test object to reflect activate status from previous action
+            // todo: find a way to change this hard-coded value assignment
+            _wo.status = 40; // changing test object to reflect activate status from previous action
             return true;
         }
 
@@ -620,10 +621,14 @@ namespace Machete.Test
             Assert.AreEqual("$" + (hourlyWage * hourRange * daysWork).ToString("F"), WaitForElement(By.Id(prefix + "totalRange")).GetAttribute("value"), "Max Total pay doesn't match hourRange, wage and day calculation");
 
             //select fixed job and verify hourly pay is fixed
-            String skillValue = MacheteLookup.cache.First(x => x.category == LCategory.skill && x.text_EN == "DWC Chambita 1hr").ID.ToString();
-            SelectOptionByValue(By.Id(prefix + "skillID"), skillValue);
-            Thread.Sleep(1000); // to avoid race condition
-            Assert.AreEqual("true", WaitForElement(By.Id(prefix + "hourlyWage")).GetAttribute("disabled"), "Hourly Wage should be fixed (disabled) in response to skill selection");
+            // TODO: Find another way of testing this. I took fixed categories out of the Lookups.
+            // Centers should be aware that they *can* fix pay in the config, but Casa Latina is the
+            // only center that's had that as a requirement for certain types of jobs.
+
+            //String skillValue = MacheteLookup.cache.First(x => x.category == LCategory.skill && x.text_EN == "DWC Chambita 1hr").ID.ToString();
+            //SelectOptionByValue(By.Id(prefix + "skillID"), skillValue);
+            //Thread.Sleep(1000); // to avoid race condition
+            //Assert.AreEqual("true", WaitForElement(By.Id(prefix + "hourlyWage")).GetAttribute("disabled"), "Hourly Wage should be fixed (disabled) in response to skill selection");
 
             return true;
         }
