@@ -96,7 +96,7 @@
                                 <th>@WorkAssignment.skillID</th>
                                 <th>@WorkAssignment.hourlyWage</th>
                                 <th>@WorkAssignment.hours</th>
-                                <th>@WorkAssignment.hourRange</th>
+                                <th>@Employer.name</th>
                                 <th>@WorkAssignment.days</th>
                                 <th>@WorkAssignments.earnings</th>
                                 <th>@WorkAssignment.description</th>
@@ -146,7 +146,15 @@
 </div>
 <script type="text/javascript">
     //@@ sourceURL=WorkAssignment_inline.js
-    $(document).ready(function () {
+$(document).ready(function () {
+    $('#listDuplicate').hide();
+    var True = true;
+
+    if (@Boolean.Parse(System.Web.Configuration.WebConfigurationManager.AppSettings["CenterUsesDuplicateDailyList"]))
+    {
+        $('#listDuplicate').show();
+    }
+
     assignTableCount = 0;
     DatePicker();
     $( ".radio" ).buttonset();
@@ -262,8 +270,8 @@
     $("#signinTable").mUI('createTable', {
         tab: null,
         options: {
-            //"sScrollY": "300px",
-            "bPaginate": true,
+            "sScrollY": "300px",
+            "bPaginate": false,
             "bLengthChange": true,
             "bAutoWidth": false,
             "bServerSide": true,
@@ -300,10 +308,10 @@
     $("#availAssignTable").mUI('createTable', {
         tab: $("#assignmentTab"),
         options: {
-            //"sScrollY": "300px",
-            "bPaginate": true,
+            "sScrollY": "300px",
+            "bPaginate": false,
             "bLengthChange": true,
-            "aaSorting": [[4, 'desc']],
+            "aaSorting": [[3, 'asc']],
             "bFilter": true,
             //"bSort": true,
             "bAutoWidth": false,
@@ -315,16 +323,16 @@
             "aoColumns": [
                             { "mDataProp": "assignedWorker", "bVisible": false, "bSortable": true},
                             { "mDataProp": "requestedList", "bVisible": false, "bSortable": false},
-                            { "mDataProp": "pWAID" },
-                            { "mDataProp": "dateTimeofWork"},
+                            { "mDataProp": "pWAID", "bVisible": false, "bSortable": true },
+                            { "mDataProp": "timeofwork"},
                             { "mDataProp": "englishlevel"},
                             { "mDataProp": "skill"},
                             { "mDataProp": "hourlywage"},
                             { "mDataProp": "hours"},
-                            { "mDataProp": "hourRange"},
+                            { "mDataProp": "employername"},
                             { "mDataProp": "days"},
                             { "mDataProp": "earnings"},
-                            { "mDataProp": "WOdescription"},
+                            { "mDataProp": "description"},
                         ],
             "aoSearchCols" : [null, null, null, null, null, null, null, null, null, null, null],
             "fnServerDataExtra": function () {
@@ -455,7 +463,7 @@
             e.preventDefault();
             $('#wa_grouping').val(false);
             $('#signin_visible').val(true);
-            $('#assignedWorker_visible').val(true);
+            $('#assignedWorker_visible').val(false);
             $('#requestedWorkers_visible').val(false);
             $('#status').val(false);
             $('#dwccardnum').val('');
