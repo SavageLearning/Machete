@@ -104,6 +104,14 @@ namespace Machete.Domain
         //[RegularExpression(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$")]
         public string email { get; set; }
         //
+        [LocalizedDisplayName("licenseplate", NameResourceType = typeof(Resources.Employer))]
+        [StringLength(10, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Employer))]
+        public string licenseplate { get; set; }
+        //
+        [LocalizedDisplayName("driverslicense", NameResourceType = typeof(Resources.Employer))]
+        [StringLength(30, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Employer))]
+        public string driverslicense { get; set; }
+        //
         [LocalizedDisplayName("referredby", NameResourceType = typeof(Resources.Employer))]
         public int? referredby { get; set; }
         //
