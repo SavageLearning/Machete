@@ -75,7 +75,7 @@ namespace Machete.Test
             //save from /Create opens /Employer/Edit
             ui.employerValidate(_emp);
             ui.employerDelete(_emp);
-
+            // TODO: Validate emp1 and verify business name exists (good intentions marinated in panic)
         }
         /// <summary>
         /// 
