@@ -115,6 +115,12 @@ namespace Machete.Web.Helpers
             return ID == null ? null : byID((int)ID);
         }
         //
+        // Get the ID number for a given lookup string
+        public static int byKeys(string category, string key)
+        {
+            return lcache.getByKeys(category, key);
+        }
+        //
         // create multi-lingual yes/no strings
         public static string getBool(bool val)
         {

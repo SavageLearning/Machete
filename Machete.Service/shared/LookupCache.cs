@@ -68,7 +68,7 @@ namespace Machete.Service
             IEnumerable<Lookup> lookups = DB.Get().Lookups.AsNoTracking().ToList();
             CacheItemPolicy policy = new CacheItemPolicy();
             //TODO: Put LookupCache expire time in config file
-            policy.AbsoluteExpiration = new DateTimeOffset(DateTime.Now.AddHours(1));
+            policy.AbsoluteExpiration = new DateTimeOffset(DateTime.Now.AddMinutes(20));
             CacheItem wCacheItem = new CacheItem("lookupCache", lookups);
             cache.Set(wCacheItem, policy);
             //

@@ -71,4 +71,10 @@ namespace Machete.Domain
         public const string HHH = "HHH";
         public const string EVT = "EVT";
     }
+    public struct LActType
+    {
+        public const string Class = "Class";
+        public const string Assembly = "Assembly";
+        public const string OrgMtg = "Organizing Meeting";
+    }
 }
