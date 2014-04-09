@@ -1,4 +1,5 @@
-﻿@model Machete.Domain.ActivitySchedule
+﻿@model ActivitySchedule
+@using Machete.Domain
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
 
@@ -10,19 +11,19 @@
 @Html.HiddenFor(model => model.firstID, new { @class="hiddenRecID", id=idPrefix + "isFirstID"})
 <div class="tb-table" style="float: left;">
     <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.name)
-        @Html.mUIDropDownListFor(model => model.name, 
-                new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.activityName),
-                                            "Value", "Text", Model.name),
-                new { tabindex = "1", id = idPrefix + "name" })
-     </div>
-     <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.type)
-        @Html.mUIDropDownListFor(model => model.type, 
-                new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.activityType),
-                                                    "Value", "Text", Model.type),
-                new { tabindex = "1", id = idPrefix + "type" })
-     </div>
+        @Html.mUITableLabelFor(model => model.type): @(Lookups.byID(Model.type))
+    </div>
+    @if(Model.type == Lookups.byKeys(LCategory.activityType, LActType.Assembly) ||
+        Model.type == Lookups.byKeys(LCategory.activityType, LActType.OrgMtg))
+    {
+        @Html.HiddenFor(model => model.name)
+    }
+    else
+    {
+    <div class="tb-row">
+        @Html.mUITableLabelFor(model => model.name): @(Lookups.byID(Model.name))
+    </div>
+    }
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.dateStart)
         <div class="tb-field">

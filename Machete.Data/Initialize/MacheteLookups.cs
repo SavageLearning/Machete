@@ -138,9 +138,9 @@ namespace Machete.Data
                 new Lookup { ID=85, category = LCategory.memberstatus, key = LMemberStatus.Expired, text_EN=LMemberStatus.Expired,       text_ES="Expirado",         selected = false },
                 new Lookup { ID=86, category = LCategory.memberstatus, key = LMemberStatus.Expelled, text_EN=LMemberStatus.Expelled,      text_ES="Expulsado",       selected = false },
                 //TODO: Disable Activity Types. They're never used and they're confusing to users.
-                new Lookup { ID=87,category = LCategory.activityType, text_EN="Class",         text_ES="Clase",          selected = true },
-                new Lookup { ID=88,category = LCategory.activityType, text_EN="Assembly",         text_ES="Asamblea",          selected = false },
-                new Lookup { ID=89, category = LCategory.activityType, text_EN="Organizing Meeting", text_ES="Reunión de Organizadores", selected = false },
+                new Lookup { ID=87,category = LCategory.activityType,  key = LActType.Class,    text_EN=LActType.Class,     text_ES="Clase",          selected = true },
+                new Lookup { ID=88,category = LCategory.activityType,  key = LActType.Assembly, text_EN=LActType.Assembly,  text_ES="Asamblea",          selected = false },
+                new Lookup { ID=89, category = LCategory.activityType, key = LActType.OrgMtg,   text_EN=LActType.OrgMtg,    text_ES="Reunión de Organizadores", selected = false },
                 new Lookup { ID=90, category = LCategory.activityName, text_EN="Basic English",      text_ES="Inglés basico",       selected = true },
                 new Lookup { ID=91, category = LCategory.activityName, text_EN="Intermediate English",      text_ES="Inglés intermedio",       selected = false },
                 new Lookup { ID=92,category = LCategory.activityName, text_EN="Volunteering",         text_ES="Voluntariado",          selected = false },
