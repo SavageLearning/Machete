@@ -70,9 +70,10 @@
     $().ready(function () {
         var blankImage = "/Content/images/NO-IMAGE-AVAILABLE.jpg";
         var currentUrl = window.location.href;
+        var True = true;
         //
         $('#listDuplicate').hide();
-        if (currentUrl == "https://mountainview.machetessl.org/WorkerSignin" || currentUrl == "https://sf.machetessl.org/WorkerSignin")
+        if (@Boolean.Parse(System.Web.Configuration.WebConfigurationManager.AppSettings["CenterUsesDuplicateSigninList"]))
         {
             $('#listDuplicate').show();
         }

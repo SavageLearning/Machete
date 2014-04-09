@@ -96,7 +96,7 @@ namespace Machete.Test.Controllers
             var lc = new List<Lookup>();
             lcache.Setup(p => p.getCache()).Returns(() => lc);
             //Act
-            var result = (PartialViewResult)_ctrlr.Create(0);
+            var result = (PartialViewResult)_ctrlr.Create(0, "Unit WA Cntroller desc");
             //Assert
             Assert.IsInstanceOfType(result.ViewData.Model, typeof(WorkAssignment));
         }

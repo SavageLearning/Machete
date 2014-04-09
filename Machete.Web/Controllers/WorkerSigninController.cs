@@ -34,6 +34,7 @@ using Machete.Data;
 using Machete.Web.Models;
 using System.Web.Routing;
 using AutoMapper;
+using System.Web.Configuration;
 
 namespace Machete.Web.Controllers
 {
@@ -291,8 +292,8 @@ namespace Machete.Web.Controllers
                 firstname2 = p.firstname2,
                 lastname1 = p.lastname1,
                 lastname2 = p.lastname2, 
-                dateforsignin = p.dateforsignin,
-                dateforsigninstring = p.dateforsignin.ToShortTimeString(),
+                dateforsignin = p.dateforsignin.AddHours(Convert.ToDouble(WebConfigurationManager.AppSettings["TimeZoneDifferenceFromPacific"])).ToString(),
+                dateforsigninstring = p.dateforsignin.AddHours(Convert.ToDouble(WebConfigurationManager.AppSettings["TimeZoneDifferenceFromPacific"])).ToShortTimeString(),
                 WAID = p.waid ?? 0,
                 memberStatus = lcache.textByID(p.memberStatus, CI.TwoLetterISOLanguageName),
                 memberInactive = p.w.isInactive,
