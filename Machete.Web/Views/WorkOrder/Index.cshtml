@@ -56,10 +56,11 @@
                     <th>@WorkOrders.assigncount</th>
                     <th>@WorkOrder.contactName</th>
                     <th>@WorkOrder.workSiteAddress1</th>
+                    <th>@WorkOrder.zipcode</th>
                     <th>@WorkOrders.onlineSource</th>                  
                     <th>@Emails.emailsSent</th>                  
                     <th>@Emails.errorCount</th>  
-                    <th>@Record.dateupdated</th>
+                    @*<th>@Record.dateupdated</th>*@
                     <th>@Record.updatedby</th>                
                 </tr>
             </thead>
@@ -92,10 +93,11 @@
                             { "mDataProp": "WAcount" },
                             { "mDataProp": "contactName" },
                             { "mDataProp": "workSiteAddress1" },
+                            { "mDataProp": "zipcode" },
                             { "mDataProp": "onlineSource", "bSearchable": false, "bSortable": true, "bVisible": true },
                             { "mDataProp": "emailSentCount", "bSearchable": false, "bSortable": true, "bVisible": true },
                             { "mDataProp": "emailErrorCount", "bSearchable": false, "bSortable": true, "bVisible": true },
-                            { "mDataProp": "dateupdated" },
+                            @*{ "mDataProp": "dateupdated" },*@
                             { "mDataProp": "updatedby" }
                         ],
             "aoSearchCols" :  [null, null, null, null, null, null, null, null, null, null, null, null],
@@ -213,7 +215,7 @@
         });
         $('#onlineOrdersBtn').click(function() {
             oTable.dataTable().fnResetAllFilters(false);
-            oTable.dataTable().fnFilter(true, 12); //sync with DT array above
+            oTable.dataTable().fnFilter(true, 11); //sync with DT array above
         });
         ////////////////////////////////////////////////////////////////
         //
