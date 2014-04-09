@@ -161,6 +161,16 @@ namespace Machete.Web.Controllers
             UpdateModel(activ);
             activ.firstID = activ.ID;
 
+            if (activ.name == 0)
+            {
+                if (activ.type == lcache.getByKeys(LCategory.activityType, LActType.Assembly))
+                    activ.name = lcache.getByKeys(LCategory.activityName, LActName.Assembly);
+                else if (activ.type == lcache.getByKeys(LCategory.activityType, LActType.OrgMtg))
+                    activ.name = lcache.getByKeys(LCategory.activityName, LActName.OrgMtg);
+                else
+                    throw new MacheteIntegrityException("Something went wrong with Activity Types.");
+            }
+
             if (activ.dateEnd < activ.dateStart)
                 return Json(new { jobSuccess = false, rtnMessage = "End date must be greater than start date." });
             else if (activ.recurring == true)

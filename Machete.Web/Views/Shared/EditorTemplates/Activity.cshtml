@@ -1,4 +1,5 @@
 ﻿@model Machete.Domain.Activity
+@using Machete.Domain
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
 
@@ -11,18 +12,18 @@
 @Html.HiddenFor(model => model.firstID, new { @class="hiddenRecID", id=Model.firstID.ToString() + "isFirstID" })
 <div class="tb-table" style="float: left;">
     <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.name)
-        @Html.mUIDropDownListFor(model => model.name, 
-                new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.activityName),
-                                            "Value", "Text", Model.name),
-                new { tabindex = "1", id = idPrefix + "name" })
-     </div>
-     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.type)
-        @Html.mUIDropDownListFor(model => model.type, 
-                new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.activityType),
+        @Html.mUIDropDownListFor(model => model.type,
+                new SelectList(Lookups.getSelectList(LCategory.activityType),
                                                     "Value", "Text", Model.type),
                 new { tabindex = "1", id = idPrefix + "type" })
+    </div>
+    <div class="tb-row" id="className">
+        @Html.mUITableLabelFor(model => model.name)
+        @Html.mUIDropDownListFor(model => model.name, 
+                new SelectList(Lookups.getSelectList(LCategory.activityName),
+                                            "Value", "Text", Model.name),
+                new { tabindex = "1", id = idPrefix + "name" })
      </div>
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.dateStart)
@@ -42,12 +43,19 @@
             @Html.ValidationMessageFor(model => model.dateEnd)
         </div>
     </div>
+    @if (Html.IsInRole(Html.Role_T()) && !Html.IsInRole(Html.Role_AM()))
+    {
+        Model.recurring = false;
+    }
+    else
+    {
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.recurring)
         <div class="tb-field">
             @Html.CheckBox("recurring")
         </div>
     </div>
+    }
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.teacher)
         <div class="tb-field">
@@ -56,10 +64,6 @@
                     @Machete.Web.Resources.Shared.choose,
                     new { tabindex = "1", id = idPrefix + "teacher" })
         </div>
-@*        <div class="tb-label">
-        </div>
-        <div class="tb-field">
-        </div>*@
     </div>
 </div>
 <div class="tb-table" style="float: left;">
@@ -78,11 +82,27 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        $('#@(idPrefix)name').attr('disabled', 'disabled');
+        $('#className').hide();
+
+        $('#@(idPrefix)type').change(function () {
+            if($('#@(idPrefix)type option:selected').val() == "@Lookups.byKeys(LCategory.activityType, LActType.Class)")
+            {
+                $('#className').show();
+                $('#@(idPrefix)name').removeAttr('disabled');
+            }
+            else
+            {
+                $('#@(idPrefix)name').attr('disabled', 'disabled');
+                $('#className').hide();
+            }
+        });
+
         $("#@(idPrefix)dateStart").datetimepicker({
             stepMinute: 15,
             ampm: true,
-            hourMin: 7,
-            hourMax: 18,
+            hourMin: 6,
+            hourMax: 21,
             minuteMin: 0,
             minuteMax: 45,
             minuteGrid: 15,
@@ -91,8 +111,8 @@
         $("#@(idPrefix)dateEnd").datetimepicker({
             stepMinute: 15,
             ampm: true,
-            hourMin: 7,
-            hourMax: 18,
+            hourMin: 8,
+            hourMax: 23,
             minuteMin: 0,
             minuteMax: 45,
             minuteGrid: 15,
