@@ -25,7 +25,7 @@ namespace Machete.Test
         private StringBuilder verificationErrors;
         private string baseURL;
         private sharedUI ui;
-        private static string testdir;
+        //private static string testdir;
         private static string testimagefile;
         FluentRecordBase frb;
 

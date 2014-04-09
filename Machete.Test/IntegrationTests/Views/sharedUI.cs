@@ -652,10 +652,11 @@ namespace Machete.Test
             //Go to create an activity tab
             WaitThenClickElement(By.Id("activityCreateTab"));
             //Wait for page to load
-            WaitForElement(By.Id(prefix + "name"));
+            WaitForElement(By.Id(prefix + "type"));
             //Enter information
-            SelectOptionByIndex(By.Id(prefix + "name"), _act.name - 97);
-            SelectOptionByIndex(By.Id(prefix + "type"), _act.type - 100);
+            SelectOptionByValue(By.Id(prefix + "type"), _act.type.ToString());
+            WaitForElement(By.Id(prefix + "name"));
+            SelectOptionByValue(By.Id(prefix + "name"), _act.name.ToString());
             SelectOption(By.Id(prefix + "teacher"), _act.teacher);
             ReplaceElementText(By.Id(prefix + "notes"), _act.notes);
             //Hit the save button
@@ -677,8 +678,8 @@ namespace Machete.Test
             //Wait for the page to load
             WaitForElement(By.Id(prefix + "name"));
 
-            Assert.AreEqual(_act.name - 97, GetOptionIndex(By.Id(prefix + "name")));
-            Assert.AreEqual(_act.type - 100, GetOptionIndex(By.Id(prefix + "type")));
+            Assert.AreEqual(1, GetOptionIndex(By.Id(prefix + "name")));
+            Assert.AreEqual(1, GetOptionIndex(By.Id(prefix + "type")));
             Assert.AreEqual(_act.teacher, GetOptionText(By.Id(prefix + "teacher")));
             Assert.AreEqual(_act.notes, WaitForElement(By.Id(prefix + "notes")).GetAttribute("value"));
             return true;

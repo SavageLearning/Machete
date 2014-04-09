@@ -231,8 +231,8 @@ namespace Machete.Test
 
         public static Activity activity = new Activity
         {
-            name = 98,
-            type = 101,
+            type = MacheteLookup.cache.First(x => x.category == LCategory.activityType && x.text_EN == LActType.Class).ID,
+            name = MacheteLookup.cache.First(x => x.category == LCategory.activityName && x.text_EN == "Basic English").ID,
             teacher = "jadmin",
             notes = "foo too",
             dateStart = DateTime.Now,
