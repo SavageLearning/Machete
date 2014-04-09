@@ -17,20 +17,7 @@
     </div>
     @Html.ValidationSummary(true)
 
-if (Html.IsInRole(Html.Role_T()) && !Html.IsInRole(Html.Role_AM()))
-{     
-    @Html.EditorFor(model => model.name)
-    @Html.EditorFor(model => model.type)
-    @Html.EditorFor(model => model.dateStart)
-    @Html.EditorFor(model => model.dateEnd)
-    @Html.EditorFor(model => model.teacher)
-    @Html.EditorFor(model => model.notes)
-    Model.recurring = false;
-}
-else
-{ 
     @Html.EditorForModel("Activity")
-}
 }
 
 <script type="text/javascript">

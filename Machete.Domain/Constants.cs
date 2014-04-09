@@ -77,4 +77,9 @@ namespace Machete.Domain
         public const string Assembly = "Assembly";
         public const string OrgMtg = "Organizing Meeting";
     }
+    public struct LActName
+    {
+        public const string Assembly = "Assembly";
+        public const string OrgMtg = "Organizing Meeting";
+    }
 }
