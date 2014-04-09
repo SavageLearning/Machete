@@ -38,6 +38,7 @@ namespace MWS.Test.Integration_Tests.Service
             //frb = null;
         }
 
+        [Ignore] //MWS deprecated
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.MWS), TestCategory(TC.Emails)]
         public void Integration_ProjectInstaller_MWS_Build_returns_container()
         {
@@ -52,6 +53,7 @@ namespace MWS.Test.Integration_Tests.Service
             Assert.AreEqual(2, result.ToArray().Count(), "InstallBootstrapper for service does not return expected number of objects");
         }
 
+        [Ignore] //MWS deprecated
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.MWS), TestCategory(TC.Emails)]
         public void Integration_ProjectInstaller_MWS_Program_Main_gets_to_service()
         {
@@ -60,6 +62,7 @@ namespace MWS.Test.Integration_Tests.Service
             Assert.AreEqual(2,result.Count());
         }
 
+        [Ignore] //MWS deprecated
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.MWS), TestCategory(TC.Emails)]
         public void Integration_ServiceBootStrapper_getMultipleDatabaseFactories()
         {
@@ -75,6 +78,7 @@ namespace MWS.Test.Integration_Tests.Service
 
         }
 
+        [Ignore] //MWS deprecated
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.MWS), TestCategory(TC.Emails)]
         public void Integration_ServiceBootStrapper_proveUnityContainerFunctionality()
         {
@@ -92,6 +96,7 @@ namespace MWS.Test.Integration_Tests.Service
             Assert.AreNotEqual(foo, bar);
         }
 
+        [Ignore] //MWS deprecated
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.MWS), TestCategory(TC.Emails)]
         public void Integration_ServiceBootStrapper_getMultipleUOWs()
         {
@@ -109,6 +114,7 @@ namespace MWS.Test.Integration_Tests.Service
 
         }
 
+        [Ignore] //MWS deprecated
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.MWS), TestCategory(TC.Emails)]
         public void Integration_ServiceBootStrapper_getMultipleEmailServices()
         {
@@ -126,7 +132,7 @@ namespace MWS.Test.Integration_Tests.Service
 
         }
 
-
+        [Ignore] //MWS deprecated
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.MWS), TestCategory(TC.Emails)]
         public void Integration_ServiceBootStrapper_dbDisposeThenFactoryGet()
         {
@@ -151,6 +157,7 @@ namespace MWS.Test.Integration_Tests.Service
             emailQueue2.ProcessQueue(cfg.Instances[1].EmailQueue.EmailServer);
         }
 
+        [Ignore] //MWS deprecated
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.MWS), TestCategory(TC.Emails)]
         public void Integration_ServiceBootStrapper_testContextIDChange()
         {

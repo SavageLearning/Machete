@@ -24,6 +24,7 @@ namespace MWS.Test.Integration_Tests.Core
         [TestCleanup]
         public void TestCleanup() { }
 
+        [Ignore] //MWS deprecated
         [TestMethod]
         public void Integration_MWSConfiguration_check_instances()
         {
@@ -31,6 +32,7 @@ namespace MWS.Test.Integration_Tests.Core
             Assert.AreEqual(2, instances.Count);
         }
 
+        [Ignore] //MWS deprecated
         [TestMethod]
         public void Integration_MWSConfiguration_check_instance_name()
         {
@@ -39,6 +41,7 @@ namespace MWS.Test.Integration_Tests.Core
             Assert.AreEqual("CasaLatinaSeattle", instance.Name);
         }
 
+        [Ignore] //MWS deprecated
         [TestMethod]
         public void Integration_MWSConfiguration_check_EmailQueue()
         {
@@ -46,6 +49,7 @@ namespace MWS.Test.Integration_Tests.Core
             Assert.AreEqual(10, queue.TimerIntervalSeconds);
         }
 
+        [Ignore] //MWS deprecated
         [TestMethod]
         public void Integration_MWSConfiguration_check_EmailServer()
         {

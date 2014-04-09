@@ -73,6 +73,7 @@
             maxTabs: 2
         });
 
+        $('#activityListTab').click(function () { $('#activityTable').dataTable().fnDraw(); });
         //pagetimer for unauthorized view
         @*if (@Model.authenticated === 0) {
             // Reloads Activities list after 10 minutes if Activity List tab is NOT selected and interaction is idle               

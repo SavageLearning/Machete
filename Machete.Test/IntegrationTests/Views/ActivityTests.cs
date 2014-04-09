@@ -209,6 +209,7 @@ namespace Machete.Test
             Assert.IsTrue(ui.activitySignInIsSanctioned(), "Sanctioned worker box is not visible like it should be.");
         }
 
+        [Ignore] // Pagination disabled on Activities page
         [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Activities)]
         public void SeActivity_test_pagination()
         {
@@ -259,6 +260,7 @@ namespace Machete.Test
             Assert.IsTrue(result, "Activities search not returning proper results");
         }
 
+        [Ignore] // Pagination has been disabled
         [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Activities)]
         public void SeActivity_test_record_limit()
         {

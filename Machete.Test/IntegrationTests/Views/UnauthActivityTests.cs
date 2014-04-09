@@ -37,7 +37,7 @@ namespace Machete.Test
             baseURL = "http://localhost:4213/";
             ui = new sharedUI(driver, baseURL);
             verificationErrors = new StringBuilder();
-            //ui.login();
+            ui.login();
             ui.gotoMachete();
         }
 

@@ -66,6 +66,7 @@ namespace Machete.Test
             //Arrange
             Employer _emp = frb.CloneEmployer();
             Employer _emp1 = frb.CloneEmployer();
+            _emp1.businessname = "Chocolate Factory";
             //Act
             //starts with /Employer/Create
             ui.employerCreate(_emp1);

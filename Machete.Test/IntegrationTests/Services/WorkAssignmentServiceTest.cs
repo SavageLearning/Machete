@@ -186,7 +186,7 @@ namespace Machete.Test
         public void Integration_WA_Service_GetIndexView_check_search_skill()
         {
             // arrange
-            frb.AddWorkAssignment(skill: 70);
+            frb.AddWorkAssignment(skill: 71);
             dOptions.sSearch = "masonry";
             dOptions.orderDescending = true;
             dOptions.woid = frb.ToWorkOrder().ID;
@@ -197,7 +197,7 @@ namespace Machete.Test
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
             Assert.IsInstanceOfType(result, typeof(dataTableResult<WorkAssignment>));
-            Assert.AreEqual(70, tolist[0].skillID); //ID=70 is Digging
+            Assert.AreEqual(71, tolist[0].skillID); //ID=71 is masonry
             Assert.AreEqual(1, result.query.Count());
         }
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
