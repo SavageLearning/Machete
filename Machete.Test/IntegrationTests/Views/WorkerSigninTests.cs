@@ -48,7 +48,7 @@ namespace Machete.Test
         private StringBuilder verificationErrors;
         private static string baseURL;
         private static sharedUI ui;
-        private static string testdir;
+        //private static string testdir;
         private static string testimagefile;
         private static MacheteContext DB;
         private static DbSet<Worker> wSet;

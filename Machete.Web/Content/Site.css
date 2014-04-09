@@ -152,7 +152,7 @@ page width. Or, you can specify an exact pixel width. */
 }
 
 ul#menu {
-    padding: 0 0 3px;
+    padding-bottom: 3px;
     position: relative;
     margin: 0 1em 0;
     text-align: right;
