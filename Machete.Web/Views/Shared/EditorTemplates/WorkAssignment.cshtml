@@ -167,7 +167,8 @@
                      function (r) {
                          if (r == true) {
                             $('#workerAssigned-@(Model.ID)').val(null);
-                            $('#workerAssignedDisplay-@(Model.ID)').val(null);
+                             $('#workerAssignedDisplay-@(Model.ID)').val(null);
+                             $('#waEditSubmitBtn-@(Model.ID)').click();
                          }
                      }
             );
