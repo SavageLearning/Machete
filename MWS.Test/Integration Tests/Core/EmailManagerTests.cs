@@ -33,6 +33,7 @@ namespace MWS.Test
             frb = null;
         }
 
+        [Ignore] //MWS deprecated
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.MWS), TestCategory(TC.Emails)]
         public void Integration_Email_MWS_ProcessQueue_send_one_email()
         {
@@ -50,6 +51,7 @@ namespace MWS.Test
             Assert.AreEqual(0, mgr.exceptionStack.Count);
         }
 
+        [Ignore] //MWS deprecated
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.MWS), TestCategory(TC.Emails)]
         public void Integration_Email_MWS_ProcessQueue_send_one_email_with_attachent()
         {
