@@ -169,6 +169,7 @@
         changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
         });
 
+    // "Daily List" used to be "Lottery" and still is in code
     var lotteryDTOptions = {
         "sScrollY": "300px",
         "bFilter": false,
@@ -240,7 +241,7 @@
         });
         $('#lotteryTable').show();
         $('#lotteryList').show();
-        $('.ui-dialog-titlebar-close').one('click', function() {
+        $('.ui-dialog-titlebar-close').click( function() {
             $('#signinTable').dataTable().fnSort( [ [2,'asc']] );
         });
     });
