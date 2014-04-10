@@ -295,6 +295,9 @@ namespace Machete.Test
             ReplaceElementText(By.Id(prefix + "zipcode"), _emp.zipcode);
             ReplaceElementText(By.Id(prefix + "phone"), _emp.phone);
             ReplaceElementText(By.Id(prefix + "cellphone"), _emp.cellphone);
+            ReplaceElementText(By.Id(prefix + "driverslicense"), _emp.driverslicense);
+            ReplaceElementText(By.Id(prefix + "licenseplate"), _emp.licenseplate);
+            //ReplaceElementText(By.Id(prefix + "businessname"), _emp.businessname);
             // select lists
             //http://stackoverflow.com/questions/4672658/how-do-i-set-a-an-option-as-selected-using-selenium-webdriver-selenium-2-0-cli
             //ReplaceElementText(By.Id(prefix + "referredby"), _emp.referredby.ToString());
@@ -343,6 +346,9 @@ namespace Machete.Test
             getAttributeAssertEqual(_emp.city, "city");
             getAttributeAssertEqual(_emp.state, "state");
             getAttributeAssertEqual(_emp.zipcode, "zipcode");
+            getAttributeAssertEqual(_emp.licenseplate, "licenseplate");
+            getAttributeAssertEqual(_emp.driverslicense, "driverslicense");
+            //getAttributeAssertEqual(_emp.businessname, "businessname");
             getAttributeAssertEqual(_emp.phone, "phone");
             getAttributeAssertEqual(_emp.cellphone, "cellphone");
             //getAttributeAssertEqual(_emp.referredby.ToString(), "referredby");

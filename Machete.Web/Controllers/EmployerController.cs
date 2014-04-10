@@ -89,6 +89,8 @@ namespace Machete.Web.Controllers
                 address1 = p.address1, 
                 city = p.city, 
                 phone =  p.phone, 
+                driverslicense = p.driverslicense,
+                licenseplate = p.licenseplate,
                 dateupdated = Convert.ToString(p.dateupdated),
                 Updatedby = p.Updatedby,
                 onlineSource = p.onlineSource ? Shared.True : Shared.False
