@@ -99,6 +99,7 @@ namespace Machete.Service
             if (o.date != null) IndexViewBase.diffDays(o, ref q); 
             if (o.typeofwork_grouping > 0) IndexViewBase.typeOfWork(o, ref q, lRepo);
             if (o.woid > 0) IndexViewBase.WOID(o, ref q);
+            if (o.personID > 0) IndexViewBase.WID(o, ref q);
             if (o.status > 0) IndexViewBase.status(o, ref q);
             if (o.showPending == false) IndexViewBase.filterPending(o, ref q);
             if (!string.IsNullOrEmpty(o.wa_grouping)) IndexViewBase.waGrouping(o, ref q, lRepo);
