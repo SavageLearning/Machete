@@ -78,6 +78,24 @@
             @Html.ValidationMessageFor(model => model.zipcode)
         </div>
 
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.driverslicense)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.business)
+            @Html.ValidationMessageFor(model => model.driverslicense)
+        </div>
+
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.licenseplate)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.business)
+            @Html.ValidationMessageFor(model => model.licenseplate)
+        </div>
+
         <div class="editor-label">
             @Html.LabelFor(model => model.business)
         </div>

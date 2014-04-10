@@ -144,11 +144,17 @@
   <data name="cityrequired" xml:space="preserve">
     <value>La ciudad es obligatoria</value>
   </data>
+  <data name="driverslicense" xml:space="preserve">
+    <value>Numero de licensia de conducir</value>
+  </data>
   <data name="email" xml:space="preserve">
     <value>Correo electrónico</value>
   </data>
   <data name="isbusiness" xml:space="preserve">
     <value>¿Es negocio?</value>
+  </data>
+  <data name="licenseplate" xml:space="preserve">
+    <value>Numero de placa</value>
   </data>
   <data name="name" xml:space="preserve">
     <value>Nombre</value>

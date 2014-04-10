@@ -12,54 +12,56 @@
     <div class="tb-row">
         @Html.mUITableLabelAndTextBoxFor(model => model.name, new { tabindex = "1", id = idPrefix + "name" })
         @Html.mUITableLabelFor(model => model.business)
-        @Html.mUIDropDownYesNoFor(model => model.business, new { tabindex = "11", id = idPrefix + "business" })
+        @Html.mUIDropDownYesNoFor(model => model.business, new { tabindex = "2", id = idPrefix + "business" })
     </div>
     <div class="tb-row" id="hidebusinessname">
-        @Html.mUITableLabelAndTextBoxFor(model => model.businessname, new { tabindex = "12", id = idPrefix + "businessname" })
+        @Html.mUITableLabelAndTextBoxFor(model => model.businessname, new { tabindex = "3", id = idPrefix + "businessname" })
     </div><!--why are these all mixed up? todo: fix groupings-->
     <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.phone, new { tabindex = "3", id = idPrefix + "phone" })
-        @Html.mUITableLabelAndTextBoxFor(model => model.address1, new { tabindex = "2", id = idPrefix + "address1" })
+        @Html.mUITableLabelAndTextBoxFor(model => model.phone, new { tabindex = "4", id = idPrefix + "phone" })
+        @Html.mUITableLabelAndTextBoxFor(model => model.address1, new { tabindex = "5", id = idPrefix + "address1" })
     </div><!--tb-row-->
     <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.cellphone, new { tabindex = "5", id = idPrefix + "cellphone" })
-        @Html.mUITableLabelAndTextBoxFor(model => model.address2, new { tabindex = "4", id = idPrefix + "address2" })
+        @Html.mUITableLabelAndTextBoxFor(model => model.cellphone, new { tabindex = "6", id = idPrefix + "cellphone" })
+        @Html.mUITableLabelAndTextBoxFor(model => model.address2, new { tabindex = "7", id = idPrefix + "address2" })
     </div><!--tb-row-->
     <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.email, new { tabindex = "7", id = idPrefix + "email" })
-        @Html.mUITableLabelAndTextBoxFor(model => model.city, new { tabindex = "6", id = idPrefix + "city" })
+        @Html.mUITableLabelAndTextBoxFor(model => model.email, new { tabindex = "8", id = idPrefix + "email" })
+        @Html.mUITableLabelAndTextBoxFor(model => model.city, new { tabindex = "9", id = idPrefix + "city" })
     </div>
     <!--tb-row-->
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.referredby)
-        @Html.mUIDropDownListFor(model => model.referredby, new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.emplrreference), "Value", "Text", Model.referredby), new { tabindex = "2", id = idPrefix + "referredby" })
-        @Html.mUITableLabelAndTextBoxFor(model => model.state, new { tabindex = "8", id = idPrefix + "state" })
+        @Html.mUIDropDownListFor(model => model.referredby, new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.emplrreference), "Value", "Text", Model.referredby), new { tabindex = "10", id = idPrefix + "referredby" })
+        @Html.mUITableLabelAndTextBoxFor(model => model.state, new { tabindex = "11", id = idPrefix + "state" })
     </div>
     <!--tb-row-->
     <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.referredbyOther, new { tabindex = "9", id = idPrefix + "referredbyOther" })
-        @Html.mUITableLabelAndTextBoxFor(model => model.zipcode, new { tabindex = "10", id = idPrefix + "zipcode" })
+        @Html.mUITableLabelAndTextBoxFor(model => model.referredbyOther, new { tabindex = "12", id = idPrefix + "referredbyOther" })
+        @Html.mUITableLabelAndTextBoxFor(model => model.zipcode, new { tabindex = "13", id = idPrefix + "zipcode" })
     </div>
-    <!-- Adding this 3/31/2014 to add Business Name field. TODO: Check if it looks right. -->
+    <!--  -->
     <div class="tb-row">
+        @Html.mUITableLabelAndTextBoxFor(model => model.licenseplate, new { tabindex = "14", id = idPrefix + "licenseplate" })
+        @Html.mUITableLabelAndTextBoxFor(model => model.driverslicense, new { tabindex = "15", id = idPrefix + "driverslicense" })
     </div>
 
 
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.active)
-        @Html.mUIDropDownYesNoFor(model => model.active, new { tabindex = "13", id = idPrefix + "active" })
+        @Html.mUIDropDownYesNoFor(model => model.active, new { tabindex = "16", id = idPrefix + "active" })
         @Html.mUITableLabelFor(model => model.blogparticipate)
-        @Html.mUIDropDownYesNoFor(model => model.blogparticipate, new { tabindex = "14", id = idPrefix + "blogparticipate" })
+        @Html.mUIDropDownYesNoFor(model => model.blogparticipate, new { tabindex = "17", id = idPrefix + "blogparticipate" })
     </div>
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.returnCustomer)
-        @Html.mUIDropDownYesNoFor(model => model.returnCustomer, new { tabindex = "15", id = idPrefix + "returnCustomer" })
+        @Html.mUIDropDownYesNoFor(model => model.returnCustomer, new { tabindex = "18", id = idPrefix + "returnCustomer" })
         @Html.mUITableLabelFor(model => model.receiveUpdates)
-        @Html.mUIDropDownYesNoFor(model => model.receiveUpdates, new { tabindex = "16", id = idPrefix + "blogparticipate" })
+        @Html.mUIDropDownYesNoFor(model => model.receiveUpdates, new { tabindex = "19", id = idPrefix + "blogparticipate" })
     </div>
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.onlineSource)
-        @Html.mUIDropDownYesNoFor(model => model.onlineSource, new { tabindex = "17", id = idPrefix + "onlineSource" })
+        @Html.mUIDropDownYesNoFor(model => model.onlineSource, new { tabindex = "20", id = idPrefix + "onlineSource" })
 
     </div>
 </div>
@@ -69,7 +71,7 @@
             @Html.LabelFor(model => model.notes)
         </div>
         <div class="tb-field desc-field">
-            @Html.TextAreaFor(model => model.notes, new { tabindex = "18", @class="desc-field" , id = idPrefix + "notes"})
+            @Html.TextAreaFor(model => model.notes, new { tabindex = "21", @class="desc-field" , id = idPrefix + "notes"})
             @Html.ValidationMessageFor(model => model.notes)
         </div>
     </div>

@@ -142,6 +142,15 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Driver&apos;s License Number.
+        /// </summary>
+        public static string driverslicense {
+            get {
+                return ResourceManager.GetString("driverslicense", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email address.
         /// </summary>
         public static string email {
@@ -156,6 +165,15 @@ namespace Machete.Domain.Resources {
         public static string isbusiness {
             get {
                 return ResourceManager.GetString("isbusiness", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to License Plate.
+        /// </summary>
+        public static string licenseplate {
+            get {
+                return ResourceManager.GetString("licenseplate", resourceCulture);
             }
         }
         
