@@ -158,6 +158,7 @@ namespace Machete.Test
         public static Employer employer = new Employer
         {
             name = "Willy Wonka",
+            businessname = "Chocolate Factory",
             active = false,
             address1 = "Mayor's Office",
             address2 = "P.O. Box 94749",
@@ -168,6 +169,8 @@ namespace Machete.Test
             cellphone = "123-456-7890",
             referredby = MacheteLookup.cache.First(c => c.category == "emplrreference" && c.text_EN == "Facebook").ID,
             email = "willy@wonka.com",
+            driverslicense = "wonkawi028f5",
+            licenseplate = "123-CDY",
             notes = "A note!",
             referredbyOther = "another reference",
             blogparticipate = true,

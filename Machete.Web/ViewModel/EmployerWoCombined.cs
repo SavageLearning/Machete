@@ -87,6 +87,14 @@ namespace Machete.Web.ViewModel
         //[RegularExpression(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$")]
         public string email { get; set; }
         //
+        [LocalizedDisplayName("licenseplate", NameResourceType = typeof(Domain.Resources.Employer))]
+        [StringLength(10, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Domain.Resources.Employer))]
+        public string licenseplate { get; set; }
+        //
+        [LocalizedDisplayName("driverslicense", NameResourceType = typeof(Domain.Resources.Employer))]
+        [StringLength(30, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Domain.Resources.Employer))]
+        public string driverslicense { get; set; }
+        //
         [LocalizedDisplayName("referredby", NameResourceType = typeof(Domain.Resources.Employer))]
         public int? referredby { get; set; }
         //
