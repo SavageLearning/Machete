@@ -150,6 +150,10 @@ namespace Machete.Service
         {
             q = q.Where(p => p.workOrderID == o.woid);
         }
+        public static void WID(viewOptions o, ref IQueryable<WorkAssignment> q)
+        {
+            q = q.Where(p => p.workerAssignedID == o.personID);
+        }
         public static void status(viewOptions o, ref IQueryable<WorkAssignment> q)
         {
             q = q.Where(p => p.workOrder.status == o.status);

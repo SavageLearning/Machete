@@ -920,6 +920,7 @@
     <Content Include="Views\Account\_RemoveAccountPartial.cshtml" />
     <Content Include="Views\Account\_SetPasswordPartial.cshtml" />
     <None Include="Properties\PublishProfiles\Zip.pubxml" />
+    <Content Include="Views\Shared\WorkerWAIndex.cshtml" />
     <None Include="Web.CasaLatina.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
