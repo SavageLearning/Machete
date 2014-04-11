@@ -167,6 +167,8 @@
             $('#showSExWorkers').val(true);
             $('#updateBtn').click();
         });
-        $('#updateBtn').click( function () { $('#personTable').dataTable().fnDraw(); });
+        $('#updateBtn').click(function () { $('#personTable').dataTable().fnDraw(); });
+
+        $('#personListTab').click(function () { $('#updateBtn').click(); })
     });
 </script>
