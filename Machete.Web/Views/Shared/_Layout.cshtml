@@ -58,7 +58,7 @@
                     @if (Html.IsInRole(Html.Role_AM()) || Html.IsInRole(Html.Role_T()))
                     { 
                         <li>@Html.ActionLink(@Machete.Web.Resources.Shared.persontab, "Index", "Person", null, new { id = "menulinkperson" })</li>
-                        <li>@Html.ActionLink(@Machete.Web.Resources.Shared.workerstab, "Index", "Worker", null, new { id = "menulinkworker" })</li>
+                        @*<li>@Html.ActionLink(@Machete.Web.Resources.Shared.workerstab, "Index", "Worker", null, new { id = "menulinkworker" })</li>*@
                     }
                     @if (Html.IsInRole(Html.Role_AM()) || Html.IsInRole(Html.Role_T()))
                     { 

@@ -351,6 +351,7 @@
     <Compile Include="ViewModel\EmailView.cs" />
     <Compile Include="ViewModel\EmployerWoCombined.cs" />
     <Compile Include="ViewModel\ReportPrintView.cs" />
+    <Compile Include="ViewModel\PeopleIndex.cs" />
     <Compile Include="ViewModel\WorkAssignmentIndex.cs" />
     <Compile Include="ViewModel\WorkOrderGroupPrintView.cs" />
   </ItemGroup>

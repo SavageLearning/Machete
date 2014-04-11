@@ -72,6 +72,10 @@ namespace Machete.Service
         //public bool showInactiveWorker;
         //public bool showSanctionedWorker;
         //public bool showExpiredWorker;
+        public bool showExpiredWorkers;
+        public bool showSExWorkers;
+        public bool showNotWorkers;
+        public bool showWorkers;
         //public bool showExpelledWorker;
         public bool attendedActivities;
         public bool authenticated = true;

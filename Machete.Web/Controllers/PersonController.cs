@@ -46,11 +46,15 @@ namespace Machete.Web.Controllers
     public class PersonController : MacheteController
     { 
         private readonly IPersonService personService;
+        private readonly ILookupCache lcache;
         System.Globalization.CultureInfo CI;
-        public PersonController(IPersonService personService)
+
+        public PersonController(IPersonService personService, ILookupCache _lcache)
         {
             this.personService = personService;
+            this.lcache = _lcache;
         }
+
         protected override void Initialize(RequestContext requestContext)
         {
             base.Initialize(requestContext);
@@ -77,7 +81,10 @@ namespace Machete.Web.Controllers
             {
                 tabref = "/Person/Edit/" + Convert.ToString(p.ID),
                 tablabel = p.firstname1 + ' ' + p.lastname1,
+                dwccardnum = p.Worker == null ? "" : p.Worker.dwccardnum.ToString(),
                 active = p.active ? Shared.True : Shared.False,
+                status = p.active,
+                workerStatus = p.Worker == null ? "Not a worker" : lcache.textByID(p.Worker.memberStatus, CI.TwoLetterISOLanguageName),
                 firstname1 = p.firstname1,
                 firstname2 = p.firstname2,
                 lastname1 = p.lastname1,

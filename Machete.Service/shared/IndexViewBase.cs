@@ -449,6 +449,31 @@ namespace Machete.Service
         }
         #endregion
         #region WORKERS
+        public static void getWorkers(viewOptions o, ref IQueryable<Person> q)
+        {
+            q = q.Where(x => x.Worker.dwccardnum > 0);
+        }
+
+        public static void getNotWorkers(viewOptions o, ref IQueryable<Person> q)
+        {
+            q = q.Where(x => x.Worker == null);
+        }
+
+        public static void getExpiredWorkers(viewOptions o, int exp, ref IQueryable<Person> q)
+        {
+            q = q.Where(x => x.Worker.memberStatus == exp);
+        }
+
+        /// <summary>
+        /// Returns a list of sanctioned or expelled workers.
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="q"></param>
+        public static void getSExWorkers(viewOptions o, int s, int Ex, ref IQueryable<Person> q)
+        {
+            q = q.Where(x => x.Worker.memberStatus == s || x.Worker.memberStatus == Ex);
+        }
+
         public static void search(viewOptions o, ref IQueryable<Worker> q)
         {
             q = q.Where(p => SqlFunctions.StringConvert((decimal)p.dwccardnum).Contains(o.sSearch) ||

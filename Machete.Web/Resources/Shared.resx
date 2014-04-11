@@ -142,7 +142,7 @@
     <value>Website</value>
   </data>
   <data name="persontab" xml:space="preserve">
-    <value>Persons</value>
+    <value>People</value>
   </data>
   <data name="title" xml:space="preserve">
     <value>machete::</value>
@@ -245,5 +245,8 @@
   </data>
   <data name="useracctmgmt" xml:space="preserve">
     <value>User Account Management</value>
+  </data>
+  <data name="not" xml:space="preserve">
+    <value>Not</value>
   </data>
 </root>

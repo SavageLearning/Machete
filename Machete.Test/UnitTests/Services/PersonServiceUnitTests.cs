@@ -43,6 +43,7 @@ namespace Machete.Test.UnitTests.Services
     {
         Mock<IPersonRepository> _repo;
         Mock<IUnitOfWork> _uow;
+        Mock<ILookupCache> _lcache;
         PersonService _serv;
         public PersonServiceUnitTests()
         {
@@ -93,7 +94,8 @@ namespace Machete.Test.UnitTests.Services
         {
             _repo = new Mock<IPersonRepository>();
             _uow = new Mock<IUnitOfWork>();
-            _serv = new PersonService(_repo.Object, _uow.Object);
+            _lcache = new Mock<ILookupCache>();
+            _serv = new PersonService(_repo.Object, _uow.Object, _lcache.Object);
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Persons)]
         public void PersonService_GetPersons_returns_Enumerable()
@@ -149,12 +151,13 @@ namespace Machete.Test.UnitTests.Services
             Person _p = (Person)Records.person.Clone();
             _repo = new Mock<IPersonRepository>();
             _uow = new Mock<IUnitOfWork>();
+            _lcache = new Mock<ILookupCache>();
             string user = "UnitTest";
             int id = 1;
             Person dp = new Person();
             _repo.Setup(r => r.Delete(It.IsAny<Person>())).Callback((Person p) => { dp = p;  });
             _repo.Setup(r => r.GetById(id)).Returns(_p);
-            var _serv = new PersonService(_repo.Object, _uow.Object);
+            var _serv = new PersonService(_repo.Object, _uow.Object, _lcache.Object);
             //
             //Act
             _serv.Delete(id, user);
@@ -171,10 +174,11 @@ namespace Machete.Test.UnitTests.Services
             Person _p = (Person)Records.person.Clone();
             _repo = new Mock<IPersonRepository>();
             _uow = new Mock<IUnitOfWork>();
+            _lcache = new Mock<ILookupCache>();
             string user = "UnitTest";
             _p.datecreated = DateTime.MinValue;
             _p.dateupdated = DateTime.MinValue;
-            var _serv = new PersonService(_repo.Object, _uow.Object);
+            var _serv = new PersonService(_repo.Object, _uow.Object, _lcache.Object);
             //
             //Act
             _serv.Save(_p, user);
