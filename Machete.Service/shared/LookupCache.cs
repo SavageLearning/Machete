@@ -124,7 +124,12 @@ namespace Machete.Service
             return getCache().Single(s => s.ID == id);
         }
         //
-        // Get the Id string for a given lookup number
+        /// <summary>
+        /// Get the English or Spanish name for a given lookup number
+        /// </summary>
+        /// <param name="ID">ID of the record to look up</param>
+        /// <param name="locale">Two Letter ISO Language Name</param>
+        /// <returns></returns>
         public string textByID(int ID, string locale)
         {
             Lookup record;

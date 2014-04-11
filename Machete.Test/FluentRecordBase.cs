@@ -451,7 +451,8 @@ namespace Machete.Test
             // DEPENDENCIES
             if (_repoP == null) AddRepoPerson();
             if (_uow == null) AddUOW();
-            _servP = new PersonService(_repoP, _uow);
+            if (_lcache == null) AddLookupCache();
+            _servP = new PersonService(_repoP, _uow, _lcache);
             return this;
         }
 

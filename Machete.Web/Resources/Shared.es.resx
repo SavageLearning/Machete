@@ -142,7 +142,7 @@
     <value>Sitio Web</value>
   </data>
   <data name="persontab" xml:space="preserve">
-    <value>Personas</value>
+    <value>Gente</value>
   </data>
   <data name="title" xml:space="preserve">
     <value>machete::</value>
@@ -245,5 +245,8 @@
   </data>
   <data name="useracctmgmt" xml:space="preserve">
     <value>Manejo de Cuentas de Usuarios</value>
+  </data>
+  <data name="not" xml:space="preserve">
+    <value>No</value>
   </data>
 </root>
