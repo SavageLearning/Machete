@@ -82,21 +82,23 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#@(idPrefix)name').attr('disabled', 'disabled');
-        $('#className').hide();
+        
 
-        $('#@(idPrefix)type').change(function () {
-            if($('#@(idPrefix)type option:selected').val() == "@Lookups.byKeys(LCategory.activityType, LActType.Class)")
-            {
-                $('#className').show();
-                $('#@(idPrefix)name').removeAttr('disabled');
-            }
-            else
-            {
-                $('#@(idPrefix)name').attr('disabled', 'disabled');
-                $('#className').hide();
-            }
-        });
+        $('#@(idPrefix)type').change(
+            function () {
+                if (
+                    $('#@(idPrefix)type option:selected').val() == @Lookups.byKeys(LCategory.activityType, LActType.Assembly)
+                    || $('#@(idPrefix)type option:selected').val() == @Lookups.byKeys(LCategory.activityType, LActType.OrgMtg)
+                    )
+                {
+                    $('#@(idPrefix)name').attr('disabled', 'disabled');
+                    $('#className').hide();
+                }
+                else {
+                    $('#className').show();
+                    $('#@(idPrefix)name').removeAttr('disabled');                
+                }} 
+        );
 
         $("#@(idPrefix)dateStart").datetimepicker({
             stepMinute: 15,
