@@ -7,11 +7,13 @@
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
     string recType = "activity";
     string idPrefix = recType + Model.ID + "-";
+    
 }
 @Html.HiddenFor(model => model.firstID, new { @class="hiddenRecID", id=idPrefix + "isFirstID"})
 <div class="tb-table" style="float: left;">
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.type): @(Lookups.byID(Model.type))
+        @Html.HiddenFor(model => model.type)
     </div>
     @if(Model.type == Lookups.byKeys(LCategory.activityType, LActType.Assembly) ||
         Model.type == Lookups.byKeys(LCategory.activityType, LActType.OrgMtg))
@@ -22,6 +24,7 @@
     {
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.name): @(Lookups.byID(Model.name))
+        @Html.HiddenFor(model => model.name)
     </div>
     }
     <div class="tb-row">
