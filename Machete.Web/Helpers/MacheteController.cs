@@ -57,7 +57,7 @@ namespace Machete.Web.Controllers
             exceptionMsg = RootException.Get(filterContext.Exception, this.ToString());
             modelerrors = string.Join("; ", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage));
             levent.Level = LogLevel.Error; levent.Message = this.ToString() + "EXCEPTIONS:" + exceptionMsg + "MODELERR:" + modelerrors;
-            levent.Properties["RecordID"] = ModelState["ID"].Value.ConvertTo(typeof(int));
+            levent.Properties["RecordID"] = ModelState["ID"];//.Value.ConvertTo(typeof(int));
             log.Log(levent);
             filterContext.Result = Json(new
             {
