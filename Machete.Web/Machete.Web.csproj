@@ -356,6 +356,11 @@
     <Compile Include="ViewModel\WorkOrderGroupPrintView.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\back_disabled.jpg" />
+    <Content Include="Content\back_disabled.png" />
+    <Content Include="Content\back_enabled.jpg" />
+    <Content Include="Content\back_enabled.png" />
+    <Content Include="Content\back_enabled_hover.png" />
     <Content Include="Content\calendar.gif" />
     <Content Include="Content\casa_logo.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -365,6 +370,11 @@
     <Content Include="Content\confirm\info.gif" />
     <Content Include="Content\confirm\jquery.alerts.css" />
     <Content Include="Content\confirm\title.gif" />
+    <Content Include="Content\forward_disabled.jpg" />
+    <Content Include="Content\forward_disabled.png" />
+    <Content Include="Content\forward_enabled.jpg" />
+    <Content Include="Content\forward_enabled.png" />
+    <Content Include="Content\forward_enabled_hover.png" />
     <Content Include="Content\images\8-point-workflow.png" />
     <Content Include="Content\images\application-exit-2.png" />
     <Content Include="Content\images\application-exit-4.png" />
@@ -398,18 +408,8 @@
     <Content Include="Content\dataTables\ui-bg_highlight-soft_75_cccccc_1x100.png" />
     <Content Include="Content\favicon.ico" />
     <Content Include="Content\images\404error.jpg" />
-    <Content Include="Content\images\back_disabled.jpg" />
-    <Content Include="Content\images\back_disabled.png" />
-    <Content Include="Content\images\back_enabled.jpg" />
-    <Content Include="Content\images\back_enabled.png" />
-    <Content Include="Content\images\back_enabled_hover.png" />
     <Content Include="Content\images\favicon.ico" />
     <Content Include="Content\images\Files-Download-File-icon.png" />
-    <Content Include="Content\images\forward_disabled.jpg" />
-    <Content Include="Content\images\forward_disabled.png" />
-    <Content Include="Content\images\forward_enabled.jpg" />
-    <Content Include="Content\images\forward_enabled.png" />
-    <Content Include="Content\images\forward_enabled_hover.png" />
     <Content Include="Content\images\lightbox-blank.gif" />
     <Content Include="Content\images\lightbox-btn-close.gif" />
     <Content Include="Content\images\lightbox-btn-next.gif" />
@@ -417,11 +417,6 @@
     <Content Include="Content\images\lightbox-ico-loading.gif" />
     <Content Include="Content\images\NO-IMAGE-AVAILABLE.jpg" />
     <Content Include="Content\images\pdf.png" />
-    <Content Include="Content\images\sort_asc.png" />
-    <Content Include="Content\images\sort_asc_disabled.png" />
-    <Content Include="Content\images\sort_both.png" />
-    <Content Include="Content\images\sort_desc.png" />
-    <Content Include="Content\images\sort_desc_disabled.png" />
     <Content Include="Content\images\ui-bg_diagonals-thick_18_b81900_40x40.png" />
     <Content Include="Content\images\ui-bg_diagonals-thick_20_666666_40x40.png" />
     <Content Include="Content\images\ui-bg_diamond_10_4f4221_10x8.png" />
@@ -476,6 +471,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\jquery-ui-1.8.6.custom.css" />
+    <Content Include="Content\sort_asc.png" />
+    <Content Include="Content\sort_asc_disabled.png" />
+    <Content Include="Content\sort_both.png" />
+    <Content Include="Content\sort_desc.png" />
+    <Content Include="Content\sort_desc_disabled.png" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="notes.txt" />
