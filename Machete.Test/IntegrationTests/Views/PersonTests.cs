@@ -96,6 +96,24 @@ namespace Machete.Test
         }
 
         [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Persons)]
+        public void SePerson_delete_worker()
+        {
+            //Arrange
+            Person _per = (Person)Records.person.Clone();
+            Worker _wkr = (Worker)Records.worker.Clone();
+            _wkr.memberexpirationdate = DateTime.Now.AddYears(1);
+            //Act
+            ui.personCreate(_per);
+            _wkr.ID = _per.ID;
+            _wkr.dwccardnum = frb.GetNextMemberID();
+            ui.workerCreate(_wkr, testimagefile);
+            ui.workerDelete(_wkr);
+
+            //Assert
+            ui.confirmWorkerDeleted();
+        }
+
+        [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Persons)]
         public void SePerson_create_event()
         {
             //Arrange
