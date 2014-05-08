@@ -217,6 +217,23 @@ namespace Machete.Test
             return true;
         }
 
+        public bool workerDelete(Worker _wkr)
+        {
+            WaitThenClickElement(By.Id("deleteWorkerButton-" + _wkr.ID.ToString()));
+            WaitThenClickElement(By.Id("popup_ok"));
+
+            return true;
+        }
+
+        public bool confirmWorkerDeleted()
+        {
+            Thread.Sleep(5000);
+            bool result = WaitForElementValue(By.Id("workerCreateTab"), "Create Worker");
+            Assert.IsTrue(result, "Create tab label not updated by formSubmit");
+
+            return true;
+        }
+
         public bool createSomeWorkers(int numWorkers, DbSet<Worker> workers)
         {
             for (int i = numWorkers; i >= 0; --i)
@@ -684,7 +701,7 @@ namespace Machete.Test
             //Wait for the page to load
             WaitForElement(By.Id(prefix + "name"));
 
-            Assert.AreEqual(1, GetOptionIndex(By.Id(prefix + "name")));
+            Assert.AreEqual(2, GetOptionIndex(By.Id(prefix + "name")));
             Assert.AreEqual(1, GetOptionIndex(By.Id(prefix + "type")));
             Assert.AreEqual(_act.teacher, GetOptionText(By.Id(prefix + "teacher")));
             Assert.AreEqual(_act.notes, WaitForElement(By.Id(prefix + "notes")).GetAttribute("value"));
