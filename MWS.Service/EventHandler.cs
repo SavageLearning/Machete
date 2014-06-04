@@ -8,7 +8,7 @@ namespace MWS.Service
 {
     public interface IEventHandler
     {
-        void Initialize();
+        //void Initialize();
         System.Diagnostics.EventLog MWSEventLog { get; set; }
 
     }
@@ -16,26 +16,24 @@ namespace MWS.Service
     {
         public System.Diagnostics.EventLog MWSEventLog {get; set;} 
 
-        public EventHandler() { }
-
-        public void Initialize()
+        public EventHandler() 
         {
             this.MWSEventLog = new System.Diagnostics.EventLog();
             ((System.ComponentModel.ISupportInitialize)(this.MWSEventLog)).BeginInit();
             // 
             // MWSEventLog
             // 
-            this.MWSEventLog.Log = EVcfg.log;
-            this.MWSEventLog.Source = EVcfg.source;
+            this.MWSEventLog.Log = EventViewerConfig.log;
+            this.MWSEventLog.Source = EventViewerConfig.source;
             // 
             // ServiceHost
             // 
             ((System.ComponentModel.ISupportInitialize)(this.MWSEventLog)).EndInit();
 
-            if (!System.Diagnostics.EventLog.SourceExists(EVcfg.source))
+            if (!System.Diagnostics.EventLog.SourceExists(EventViewerConfig.source))
             {
                 System.Diagnostics.EventLog.CreateEventSource(
-                    EVcfg.source, EVcfg.log);
+                    EventViewerConfig.source, EventViewerConfig.log);
             }
         }
 

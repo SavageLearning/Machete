@@ -89,6 +89,8 @@ namespace Machete.Web.Controllers
                 address1 = p.address1, 
                 city = p.city, 
                 phone =  p.phone, 
+                driverslicense = p.driverslicense,
+                licenseplate = p.licenseplate,
                 dateupdated = Convert.ToString(p.dateupdated),
                 Updatedby = p.Updatedby,
                 onlineSource = p.onlineSource ? Shared.True : Shared.False
@@ -122,8 +124,8 @@ namespace Machete.Web.Controllers
         {
             var _model = new Employer();
             _model.active = true;
-            _model.city = "Seattle";
-            _model.state = "WA";
+        //    _model.city = "Seattle"; // no null types allowed in var
+        //    _model.state = "WA";     // no null types allowed in var
             _model.blogparticipate = false;
             _model.referredby = Lookups.getDefaultID(LCategory.emplrreference);
             return PartialView("Create", _model);

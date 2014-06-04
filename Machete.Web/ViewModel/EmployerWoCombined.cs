@@ -37,6 +37,10 @@ namespace Machete.Web.ViewModel
     {
         [LocalizedDisplayName("isbusiness", NameResourceType = typeof(Domain.Resources.Employer))]
         public bool business { get; set; }
+
+        [LocalizedDisplayName("businessname", NameResourceType = typeof(Domain.Resources.Employer))]
+        public string businessname { get; set; }
+        
         [LocalizedDisplayName("name", NameResourceType = typeof(Domain.Resources.Employer))]
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Domain.Resources.Employer))]
         [Required(ErrorMessageResourceName = "namerequired", ErrorMessageResourceType = typeof(Domain.Resources.Employer))]
@@ -82,6 +86,14 @@ namespace Machete.Web.ViewModel
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Domain.Resources.Employer))]
         //[RegularExpression(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$")]
         public string email { get; set; }
+        //
+        [LocalizedDisplayName("licenseplate", NameResourceType = typeof(Domain.Resources.Employer))]
+        [StringLength(10, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Domain.Resources.Employer))]
+        public string licenseplate { get; set; }
+        //
+        [LocalizedDisplayName("driverslicense", NameResourceType = typeof(Domain.Resources.Employer))]
+        [StringLength(30, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Domain.Resources.Employer))]
+        public string driverslicense { get; set; }
         //
         [LocalizedDisplayName("referredby", NameResourceType = typeof(Domain.Resources.Employer))]
         public int? referredby { get; set; }

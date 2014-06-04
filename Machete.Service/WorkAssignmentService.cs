@@ -30,10 +30,10 @@ using Machete.Data;
 using Machete.Data.Infrastructure;
 using NLog;
 using System.Globalization;
-using System.Data.Objects;
-using System.Data.Objects.SqlClient;
 using System.Text.RegularExpressions;
 using System.Linq.Expressions;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity;
 
 namespace Machete.Service
 {
@@ -55,14 +55,17 @@ namespace Machete.Service
         private readonly IUnitOfWork unitOfWork;
         private readonly ILookupRepository lRepo;
         private readonly ILookupCache lcache;
+        private readonly IWorkerCache wcache;
         //
         //
-        public WorkAssignmentService(IWorkAssignmentRepository waRepo, 
-                                     IWorkerRepository wRepo, 
-                                     ILookupRepository lRepo, 
-                                     IWorkerSigninRepository wsiRepo,
-                                     ILookupCache lc,
-                                     IUnitOfWork unitOfWork) : base(waRepo, unitOfWork)
+        public WorkAssignmentService(
+            IWorkAssignmentRepository waRepo, 
+            IWorkerRepository wRepo, 
+            ILookupRepository lRepo, 
+            IWorkerSigninRepository wsiRepo,
+            IWorkerCache wc,
+            ILookupCache lc,
+            IUnitOfWork unitOfWork) : base(waRepo, unitOfWork)
         {
             this.waRepo = waRepo;
             this.unitOfWork = unitOfWork;
@@ -70,6 +73,7 @@ namespace Machete.Service
             this.lRepo = lRepo;
             this.wsiRepo = wsiRepo;
             this.lcache = lc;
+            this.wcache = wc;
             this.logPrefix = "WorkAssignment";
         }
         /// <summary>
@@ -95,6 +99,7 @@ namespace Machete.Service
             if (o.date != null) IndexViewBase.diffDays(o, ref q); 
             if (o.typeofwork_grouping > 0) IndexViewBase.typeOfWork(o, ref q, lRepo);
             if (o.woid > 0) IndexViewBase.WOID(o, ref q);
+            if (o.personID > 0) IndexViewBase.WID(o, ref q);
             if (o.status > 0) IndexViewBase.status(o, ref q);
             if (o.showPending == false) IndexViewBase.filterPending(o, ref q);
             if (!string.IsNullOrEmpty(o.wa_grouping)) IndexViewBase.waGrouping(o, ref q, lRepo);
@@ -102,12 +107,12 @@ namespace Machete.Service
             //
             // filter on member ID, showing only assignments available to the member based on their skills
             if (o.dwccardnum > 0)
-                e = IndexViewBase.filterOnSkill(o, q, lcache);
+                e = IndexViewBase.filterOnSkill(o, q, lcache, wcache.GetCache());
              else
                 e = q.AsEnumerable();
             //
             // getting worker info from cache, joining to Work Assignments
-            e = e.GroupJoin(WorkerCache.getCache(),  //LINQ
+            e = e.GroupJoin(wcache.GetCache(),  //LINQ
                                 wa => wa.workerAssignedID, 
                                 wc => wc.ID, 
                                 (wa, wc) => new { wa, wc }
@@ -128,7 +133,7 @@ namespace Machete.Service
             //
             //Limit results to the display length and offset
             //if ((int)o.displayLength >= 0)
-            result.query = e.Skip((int)o.displayStart).Take((int)o.displayLength);
+            result.query = e; // e.Skip((int)o.displayStart).Take((int)o.displayLength);
            
            result.totalCount = waRepo.GetAllQ().Count();
            return result;
@@ -147,7 +152,7 @@ namespace Machete.Service
             var sum_query = from wa in query //LINQ
                             group wa by new
                             {
-                                dateSoW = EntityFunctions
+                                dateSoW = DbFunctions
                                 .TruncateTime(wa.workOrder.dateTimeofWork),                               
                                 wa.workOrder.status
                             } into dayGroup

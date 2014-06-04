@@ -179,6 +179,12 @@ namespace Machete.Web.Helpers
         public bool showExpelledWorker { get; set; }
         public bool attendedActivities { get; set; }
 
+        // new for "People" tab
+        public bool showExpiredWorkers { get; set; }
+        public bool showSExWorkers { get; set; }
+        public bool showNotWorkers { get; set; }
+        public bool showWorkers { get; set; }
+
         #endregion
         /// <summary>
         /// Converts iSortCol_0 to an mDataProp name

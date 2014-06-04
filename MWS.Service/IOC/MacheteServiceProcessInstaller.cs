@@ -14,9 +14,7 @@ namespace MWS.Service
     {
         public MacheteServiceProcessInstaller() : base()
         {
-            Account = System.ServiceProcess.ServiceAccount.LocalSystem;
-            Password = null;
-            Username = null;
+            Account = ServiceAccount.LocalSystem;
         }
     }
 }

@@ -177,4 +177,16 @@
   <data name="workerinfo" xml:space="preserve">
     <value>Información del trabajador</value>
   </data>
+  <data name="allf" xml:space="preserve">
+    <value>Toda</value>
+  </data>
+  <data name="clicksort" xml:space="preserve">
+    <value>Haz clic en los botones a la izquierda para filtrar la tabla.</value>
+  </data>
+  <data name="expired" xml:space="preserve">
+    <value>Vencido</value>
+  </data>
+  <data name="sancExp" xml:space="preserve">
+    <value>Sancionado/Expulsado</value>
+  </data>
 </root>

@@ -44,7 +44,6 @@ namespace Machete.Test.IntegrationTests.Services
         public void TestInitialize()
         {
             frb = new FluentRecordBase();
-            frb.Initialize(new MacheteInitializer(), "macheteConnection");
             dOptions = new viewOptions
             {
                 CI = new CultureInfo("en-US", false),
@@ -62,7 +61,6 @@ namespace Machete.Test.IntegrationTests.Services
         [TestCleanup]
         public void TestCleanup()
         {
-            frb.Dispose();
             frb = null;
         }
 
@@ -83,7 +81,7 @@ namespace Machete.Test.IntegrationTests.Services
             var email = frb.ToEmail();
             var serv = frb.ToServEmail();
             //ACT
-            var result = serv.Create(email, "interation test", wo.ID);
+            var result = serv.Create(email, "integration test", wo.ID);
             // ASSERT
             Assert.IsNotNull(result.ID, "Email.ID is null");
             Assert.IsNotNull(result.WorkOrders);
@@ -109,7 +107,7 @@ namespace Machete.Test.IntegrationTests.Services
             var wo = frb.ToWorkOrder();
             var email = frb.ToEmail();
             var serv = frb.ToServEmail();
-            var joinedEmail = serv.Create(email, "interation test", wo.ID);
+            var joinedEmail = serv.Create(email, "integration test", wo.ID);
             dOptions.woid = wo.ID;
             // ACT
             var result = serv.GetIndexView(dOptions);
@@ -126,7 +124,7 @@ namespace Machete.Test.IntegrationTests.Services
             email.emailTo = cfg.fromAddress;
             var serv = frb.ToServEmail();
             email.statusID = Email.iReadyToSend;
-            var emailsent = serv.Create(email, "interation test");
+            var emailsent = serv.Create(email, "integration test");
             Assert.AreEqual(Email.iSent, emailsent.statusID);
         }
     }

@@ -109,7 +109,7 @@ namespace Machete.Service
         /// </summary>
         /// <param name="id"></param>
         /// <param name="user"></param>
-        public void Delete(int id, string user)
+        public virtual void Delete(int id, string user)
         {
             T record = repo.GetById(id);
             repo.Delete(record);

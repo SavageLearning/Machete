@@ -142,7 +142,7 @@
     <value>Sitio Web</value>
   </data>
   <data name="persontab" xml:space="preserve">
-    <value>Personas</value>
+    <value>Gente</value>
   </data>
   <data name="title" xml:space="preserve">
     <value>machete::</value>
@@ -220,7 +220,7 @@
     <value>Documentación</value>
   </data>
   <data name="All" xml:space="preserve">
-    <value>Todo</value>
+    <value>Todos los programas</value>
   </data>
   <data name="emailstab" xml:space="preserve">
     <value>Correos</value>
@@ -230,5 +230,23 @@
   </data>
   <data name="True" xml:space="preserve">
     <value>Verdad</value>
+  </data>
+  <data name="um02" xml:space="preserve">
+    <value>Manual de Instruccion, Seccion 2</value>
+  </data>
+  <data name="backup" xml:space="preserve">
+    <value>Copia de Seguridad</value>
+  </data>
+  <data name="dailylist" xml:space="preserve">
+    <value>Lista Diaria</value>
+  </data>
+  <data name="introduction" xml:space="preserve">
+    <value>Inicio de Machete Wiki</value>
+  </data>
+  <data name="useracctmgmt" xml:space="preserve">
+    <value>Manejo de Cuentas de Usuarios</value>
+  </data>
+  <data name="not" xml:space="preserve">
+    <value>No</value>
   </data>
 </root>

@@ -35,13 +35,15 @@ namespace Machete.Service
     public interface IWorkerService : IService<Worker>
     {
         Worker GetWorkerByNum(int dwccardnum);
-        void RefreshCache();
+        int GetNextWorkerNum();
         dataTableResult<Worker> GetIndexView(viewOptions o);
     }
     public class WorkerService : ServiceBase<Worker>, IWorkerService
     {
-        public WorkerService(IWorkerRepository wRepo, IUnitOfWork uow) : base(wRepo, uow)
+        private IWorkerCache wcache;
+        public WorkerService(IWorkerRepository wRepo, IWorkerCache wc, IUnitOfWork uow) : base(wRepo, uow)
         {
+            this.wcache = wc;
             this.logPrefix = "Worker";
         }
         public Worker GetWorkerByNum(int dwccardnum)
@@ -50,18 +52,47 @@ namespace Machete.Service
             return worker;
         }
 
+        public int GetNextWorkerNum()
+        {
+            var all = repo.GetAllQ().Select(x => x.dwccardnum);
+            var asc = all.OrderBy(x => x).FirstOrDefault();
+            if (asc == 0)
+            {
+                return 10000;
+            }
+            var desc = all.OrderByDescending(x => x).FirstOrDefault();
+            if (desc < 99999)
+            {
+                return desc + 1;
+            }
+            else if (desc == 99999 && asc > 10000)
+            {
+                return asc - 1;
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException("The minimum and maximum card numbers are already taken. Reorganize your members' card numbers to automatically generate new numbers.");
+            }
+        }
+
         public override Worker Create(Worker record, string user)
         {
             var result = base.Create(record, user);
-            RefreshCache();
+            wcache.Refresh();
             return result;
         }
 
-        public void RefreshCache()
+        public override void Save(Worker record, string user)
         {
-            ((IWorkerRepository)repo).RefreshCache();
+            base.Save(record, user);
+            wcache.Refresh();
         }
 
+        public override void Delete(int id, string user)
+        {
+            base.Delete(id, user);
+            wcache.Refresh();
+        }
         public dataTableResult<Worker> GetIndexView(viewOptions o)
         {
             var result = new dataTableResult<Worker>();

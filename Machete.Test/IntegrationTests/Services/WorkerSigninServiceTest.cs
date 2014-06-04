@@ -48,7 +48,6 @@ namespace Machete.Test
         public void TestInitialize()
         {
             frb = new FluentRecordBase();
-            frb.Initialize(new MacheteInitializer(), "macheteConnection");
             _dOptions = new viewOptions
             {
                 CI = new CultureInfo("en-US", false),
@@ -63,7 +62,7 @@ namespace Machete.Test
             };
         }
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
-        public void Integration_WorkerSigin_LotterySignin()
+        public void Integration_WorkerSignin_LotterySignin()
         {
             // Arrange
             frb.AddWorker().AddWorkerSignin();
@@ -118,7 +117,7 @@ namespace Machete.Test
             frb.AddWorker(skill1:61).AddWorkerSignin();
             var w = frb.ToWorker();
             var wsi = frb.ToWorkerSignin();
-            WorkerCache.Refresh(frb.DB); // gets worker info from cache
+            frb.ToWorkerCache().Refresh(); // gets worker info from cache
             //
             //Act
             _dOptions.dwccardnum = w.dwccardnum;
@@ -137,18 +136,36 @@ namespace Machete.Test
         {
             //
             // Arrange
-            frb.AddWorker(skill1: 61).AddWorkerSignin().AddWorkerRequest();
+            frb.AddWorker(skill1: 61);
+            frb.AddWorkerSignin();
+            frb.AddWorkerRequest();
             var w = frb.ToWorker();
             //
             //Act
             _dOptions.dwccardnum = w.dwccardnum;
             _dOptions.wa_grouping = "requested";
-            dataTableResult<wsiView> result = frb.ToServWorkerSignin().GetIndexView(_dOptions);
+            var wsi = frb.ToServWorkerSignin();
+            dataTableResult<wsiView> result = wsi.GetIndexView(_dOptions);
             //
             //Assert
             List<wsiView> tolist = result.query.ToList();
             Assert.AreEqual(61, tolist[0].skill1);
             Assert.AreEqual(1, result.query.Count());
         }
+
+        //The right way.
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
+        public void Integration_WorkerSigninService_Intergation_Chaim1()
+        {
+            //
+            // Arrange
+            //
+            //Act
+            var result = frb.ToServWorkerSignin().listDuplicate(DateTime.Parse("10/4/2013"), "Chaim");
+            //
+            //Assert
+            Assert.IsNotNull(result);
+        }
+    
     }
 }

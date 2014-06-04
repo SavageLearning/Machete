@@ -86,10 +86,16 @@ namespace Machete.Web.Models
         [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         public string LastName { get; set; }
         [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [ValidatePasswordLength]
+        [DataType(DataType.Password)]
+        [LocalizedDisplayName("PasswordNew", NameResourceType = typeof(ValidationStrings))]
         public string Password { get; set; }
-        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [DataType(DataType.Password)]
+        [LocalizedDisplayName("PasswordConfirm", NameResourceType = typeof(ValidationStrings))]
+        [System.ComponentModel.DataAnnotations.Compare("NewPassword", ErrorMessageResourceName = "PasswordCompare", ErrorMessageResourceType = typeof(ValidationStrings))]
         public string ConfirmPassword { get; set; }
         [StringLength(40)]
+        [DataType(DataType.EmailAddress)]
         [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         public string Email { get; set; }
         [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]

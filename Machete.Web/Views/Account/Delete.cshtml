@@ -1,74 +1,46 @@
-﻿@model  System.Web.Security.MembershipUser   
+﻿@model Machete.Web.Models.EditUserViewModel
+
 @{
     ViewBag.Title = "Delete";
 }
+<div class="account-background">
+    <h2>Delete</h2>
 
-<h2>Delete</h2>
-@using (Html.BeginForm())
-{
-    @Html.ValidationSummary(true)
-    <div class="tb-table">
-        <div class="tb-row">
-            <div class="tb-cell">
-                <fieldset id="accountSet">
-                    <legend>Account Info?!</legend>
-                    <div class="tb-table">
-                        <div class="tb-row">
-                            <div class="tb-label">
-                                @Html.LabelFor(model => model.UserName)
-                            </div>
-                            <div class="tb-field">
-                                @Html.EditorFor(model => model.UserName)
-                            </div>
-                        </div>
-                        <div class="tb-row">
-                            <div class="tb-label">
-                                @Html.LabelFor(model => model.Email)
-                            </div>
-                            <div class="tb-field">
-                                @Html.EditorFor(model => model.Email)
-                            </div>
-                        </div>
-                        <div class="tb-row">
-                            <div class="tb-label">
-                                @Html.LabelFor(model => model.IsApproved)
-                            </div>
-                            <div class="tb-field">
-                                @Html.EditorFor(model => model.IsApproved)
-                            </div>
-                        </div>
-                        <input type="submit" value="Delete?!" />
-                    </div>
-                </fieldset>
+    <h3>Are you sure you want to delete this user?</h3>
+    <div>
+        <h4>@Html.DisplayFor(model => model.UserName)</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                <strong>@Html.DisplayNameFor(model => model.FirstName)</strong>
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.FirstName)
+            </dd>
+
+            <dt>
+                <strong>@Html.DisplayNameFor(model => model.LastName)</strong>
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.LastName)
+            </dd>
+
+            <dt>
+                <strong>@Html.DisplayNameFor(model => model.Email)</strong>
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+        </dl>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-actions no-color">
+                <input type="submit" value="Delete" class="btn btn-default" /> |
+                @Html.ActionLink("Back to List", "Index", "Account")
             </div>
-            <div class="tb-cell">
-                <fieldset id="rolesSet">
-                    <legend>Roles?!</legend>
-                    <div class="tb-table">        
-                            @foreach (String role in Roles.GetAllRoles())
-                            {
-                                <div class="tb-row">
-                                    <div class="tb-cell">
-                                        <label for="@role">@role:</label> 
-                                    </div>
-                                    <div class="tb-cell">
-                                        @Html.CheckBox(role, Roles.IsUserInRole(Model.UserName, role), new { @class = "check-box" })
-                                    </div>
-                                </div>
-                            }
-                    </div>
-                </fieldset>
-            </div>
-        </div>
+        }
     </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
 </div>
-<script type="text/javascript">
-    $().ready(function () {
-        $('input.check-box, input.text-box').attr('disabled', 'disabled');
-
-    });
-</script>

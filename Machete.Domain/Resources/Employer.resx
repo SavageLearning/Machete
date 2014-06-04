@@ -132,6 +132,9 @@
   <data name="blogparticipate" xml:space="preserve">
     <value>Participate in blog?</value>
   </data>
+  <data name="businessname" xml:space="preserve">
+    <value>Business name</value>
+  </data>
   <data name="cellphone" xml:space="preserve">
     <value>Cell phone</value>
   </data>
@@ -141,11 +144,17 @@
   <data name="cityrequired" xml:space="preserve">
     <value>A city is required</value>
   </data>
+  <data name="driverslicense" xml:space="preserve">
+    <value>Driver's License Number</value>
+  </data>
   <data name="email" xml:space="preserve">
     <value>Email address</value>
   </data>
   <data name="isbusiness" xml:space="preserve">
     <value>Is a business?</value>
+  </data>
+  <data name="licenseplate" xml:space="preserve">
+    <value>License Plate</value>
   </data>
   <data name="name" xml:space="preserve">
     <value>Name</value>

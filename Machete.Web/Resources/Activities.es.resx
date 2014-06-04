@@ -138,11 +138,20 @@
   <data name="createtitle" xml:space="preserve">
     <value>Crear actividad</value>
   </data>
+  <data name="deleteallconfirmation" xml:space="preserve">
+    <value>¿Estás seguro que quieres eliminar esta actividad y todas las futuras actividades de este grupo? Toda la información, incluso las registraciones, será borrada para siempre.</value>
+  </data>
+  <data name="deletealllink" xml:space="preserve">
+    <value>DeleteMany</value>
+  </data>
+  <data name="deleteallsubmit" xml:space="preserve">
+    <value>Borrar Eventos Futuros</value>
+  </data>
   <data name="deleteconfirmation" xml:space="preserve">
     <value>¿Estás seguro que quieres eliminar esta actividad? Toda la información será borrada para siempre.</value>
   </data>
   <data name="deletelink" xml:space="preserve">
-    <value>Borrar</value>
+    <value>Delete</value>
   </data>
   <data name="deletesubmit" xml:space="preserve">
     <value>Borrar</value>

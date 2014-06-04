@@ -32,9 +32,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Validation;
 using System.Diagnostics;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Common;
+using System.Data.Entity.Infrastructure;
+using Microsoft.AspNet.Identity.EntityFramework;
 namespace Machete.Data
 {
-    public class MacheteContext : DbContext, IDisposable
+    public class MacheteContext : IdentityDbContext<ApplicationUser>, IDisposable
     {
         public MacheteContext() : base("macheteConnection") 
         {
@@ -43,7 +46,6 @@ namespace Machete.Data
             //  new MigrateDatabaseToLatestVersion<MacheteContext, CustomMigrationsConfiguration>());            
         }
         public MacheteContext(string connectionString) : base(connectionString) { }
-
         //Machete here defines the database to use, by convention.
         public DbSet<Person> Persons { get; set; }
         public DbSet<Worker> Workers { get; set; }
@@ -57,7 +59,8 @@ namespace Machete.Data
         public DbSet<WorkerRequest> WorkerRequests { get; set; }
         public DbSet<Event> Events {get; set;}
         public DbSet<Activity> Activities { get; set; }
-        public DbSet<ActivitySignin> ActivitySignins { get; set; }              
+        public DbSet<ActivitySignin> ActivitySignins { get; set; }
+        //public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         public virtual void Commit()
         {

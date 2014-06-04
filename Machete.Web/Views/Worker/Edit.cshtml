@@ -10,7 +10,7 @@
 }
 @using (Html.BeginForm("Edit", "Worker", FormMethod.Post,
                     new { @class = "edittab-form EditPost", 
-                          @id = "workderEditTab-" + Model.ID, 
+                          @id = "workerEditTab-" + Model.ID, 
                           enctype = "multipart/form-data" }))
 {
     @*<input type="button" value="@Workers.printlink" class="formButton" id="viewWorker-@(Model.ID)" />*@
@@ -36,12 +36,14 @@
     }
 }
 
+@Html.Partial("WorkerWAIndex", Model)
+
 <script type="text/javascript">
     $(document).ready(function () {
         var personPartsTab = $('#@(parentPrefix)personPartsTabs');
         $('.formButton').button();
         //TODO: Tab order $('#contactName').focus();
-        $.validator.unobtrusive.parseDynamicContent($('#workderEditTab-@Model.ID'));
+        $.validator.unobtrusive.parseDynamicContent($('#workerEditTab-@Model.ID'));
         //
         // open work order view for printing
         // TODO: remove worker print
@@ -65,14 +67,14 @@
         });
         //
         // submit edit
-        $('#workderEditTab-@Model.ID').mUI('tabFormSubmit', {
+        $('#workerEditTab-@Model.ID').mUI('tabFormSubmit', {
             create: false,
             selectTab: 0,
             formLevel: 1
         });
         // 
         //
-        $('#workderEditTab-@Model.ID').mUI('formDetectChanges', {
+        $('#workerEditTab-@Model.ID').mUI('formDetectChanges', {
             recType: "@(recType)",
             formLevel: 1,
             changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",

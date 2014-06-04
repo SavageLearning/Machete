@@ -44,13 +44,11 @@ namespace Machete.Test
         public void TestInitialize()
         {
             frb = new FluentRecordBase();
-            frb.Initialize(new MacheteInitializer(), "macheteConnection");
         }
 
         [TestCleanup]
         public void TestCleanup()
         {
-            frb.Dispose();
             frb = null;
         }
         /// <summary>

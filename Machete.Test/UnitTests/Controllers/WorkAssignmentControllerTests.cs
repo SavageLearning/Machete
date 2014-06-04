@@ -54,6 +54,7 @@ namespace Machete.Test.Controllers
         WorkAssignmentIndex _view;
         FormCollection fakeform;
         Mock<ILookupCache> lcache;
+        Mock<IDatabaseFactory> dbfactory;
 
         [TestInitialize]
         public void TestInitialize()
@@ -63,12 +64,13 @@ namespace Machete.Test.Controllers
             _woServ = new Mock<IWorkOrderService>();
             _wsiServ = new Mock<IWorkerSigninService>();
             lcache = new Mock<ILookupCache>();
+            dbfactory = new Mock<IDatabaseFactory>();
             _ctrlr = new WorkAssignmentController(_waServ.Object, _wkrServ.Object, _woServ.Object, _wsiServ.Object, lcache.Object);
             _view = new WorkAssignmentIndex();
             _ctrlr.SetFakeControllerContext();
             fakeform = new FormCollection();
             fakeform.Add("ID", "12345");
-            Lookups.Initialize(lcache.Object);
+            Lookups.Initialize(lcache.Object, dbfactory.Object);
         }
         //
         //   Testing /Index functionality
@@ -94,7 +96,7 @@ namespace Machete.Test.Controllers
             var lc = new List<Lookup>();
             lcache.Setup(p => p.getCache()).Returns(() => lc);
             //Act
-            var result = (PartialViewResult)_ctrlr.Create(0);
+            var result = (PartialViewResult)_ctrlr.Create(0, "Unit WA Cntroller desc");
             //Assert
             Assert.IsInstanceOfType(result.ViewData.Model, typeof(WorkAssignment));
         }

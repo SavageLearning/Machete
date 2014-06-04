@@ -121,7 +121,7 @@
     <value>Todos</value>
   </data>
   <data name="datesignin" xml:space="preserve">
-    <value>Firmado en la fecha</value>
+    <value>Hora de inicio</value>
   </data>
   <data name="deleteconfirmation" xml:space="preserve">
     <value>¿Estás seguro que quieres borrar este ingreso?</value>
@@ -136,7 +136,7 @@
     <value>ingresar::borrar</value>
   </data>
   <data name="dwccardnum" xml:space="preserve">
-    <value>DWC tarjeta#</value>
+    <value>No.Tarjeta</value>
   </data>
   <data name="dwccardnumerror" xml:space="preserve">
     <value>Número de la tarjeta debe ser de 5 dígitos</value>
@@ -147,6 +147,9 @@
   <data name="expirationdate" xml:space="preserve">
     <value>Fecha de caducidad:</value>
   </data>
+  <data name="firstname" xml:space="preserve">
+    <value>Primer nombre</value>
+  </data>
   <data name="fullname" xml:space="preserve">
     <value>Nombre completo</value>
   </data>
@@ -155,6 +158,9 @@
   </data>
   <data name="indextitle" xml:space="preserve">
     <value>ingresar::listar</value>
+  </data>
+  <data name="lastname" xml:space="preserve">
+    <value>Apellido</value>
   </data>
   <data name="lotteryClearConfirmation" xml:space="preserve">
     <value>¿Está seguro que desea borrar este registro de la lotería? El trabajador perderá su lugar en el sorteo de la lotería.</value>
@@ -169,7 +175,7 @@
     <value>Borrar el registro de la lotería</value>
   </data>
   <data name="memberexpiration" xml:space="preserve">
-    <value>Fecha de expiración</value>
+    <value>Vencimiento</value>
   </data>
   <data name="membershipexpiredmessage" xml:space="preserve">
     <value>MIEMBROS VENCIDO!</value>

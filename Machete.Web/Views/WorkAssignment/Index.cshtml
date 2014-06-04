@@ -6,142 +6,156 @@
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
 }
-@using (Html.BeginForm())
-{
-<div style="display:none;">
-    @Html.LabelFor(m => m.wa_grouping)
-    @Html.TextBoxFor(m => m.wa_grouping)
-    @Html.LabelFor(m => m.typeofwork_grouping)
-    @Html.TextBoxFor(m => m.typeofwork_grouping)
-    @Html.LabelFor(m => m.assignedWorker_visible)
-    @Html.TextBoxFor(m => m.assignedWorker_visible)
-    @Html.LabelFor(m => m.signin_visible)
-    @Html.TextBoxFor(m => m.signin_visible)
-    @Html.LabelFor(m => m.status)
-    @Html.TextBoxFor(m => m.status)
-    @Html.LabelFor(m => m.requestedWorkers_visible)
-    @Html.TextBoxFor(m => m.requestedWorkers_visible)
-    @Html.LabelFor(m => m.dwccardnum)
-    @Html.TextBoxFor(m => m.dwccardnum, new { @style = "width: 5em;" })
-</div>   
+<div class="wa-content">
+    @using (Html.BeginForm())
+    {
+        <div style="display:none;">
+            @Html.LabelFor(m => m.wa_grouping)
+            @Html.TextBoxFor(m => m.wa_grouping)
+            @Html.LabelFor(m => m.typeofwork_grouping)
+            @Html.TextBoxFor(m => m.typeofwork_grouping)
+            @Html.LabelFor(m => m.assignedWorker_visible)
+            @Html.TextBoxFor(m => m.assignedWorker_visible)
+            @Html.LabelFor(m => m.signin_visible)
+            @Html.TextBoxFor(m => m.signin_visible)
+            @Html.LabelFor(m => m.status)
+            @Html.TextBoxFor(m => m.status)
+            @Html.LabelFor(m => m.requestedWorkers_visible)
+            @Html.TextBoxFor(m => m.requestedWorkers_visible)
+            @Html.LabelFor(m => m.dwccardnum)
+            @Html.TextBoxFor(m => m.dwccardnum, new { @style = "width: 5em;" })
+        </div>
 
-    <div>
-        <input type="button" value="@(WorkAssignments.btnUpdate)" id="updateBtn" class="formButton"/>
-        <label for="todaysdate">@WorkAssignments.todaysdate</label>
-        @Html.TextBoxFor(m => m.todaysdate, new { @class = "ui-datepicker", @style = "width: 15em;" })
+        <div>
+            <input type="button" value="@(WorkAssignments.btnUpdate)" id="updateBtn" class="formButton" />
+            <label for="todaysdate">@WorkAssignments.todaysdate</label>
+            @Html.TextBoxFor(m => m.todaysdate, new { @class = "ui-datepicker", @style = "width: 15em;" })
             @Html.DropDownList("TypeOfWorkList",
                         new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.worktype),
                         "Value", "Text"), Shared.All, new { id = "TypeOfWorkList" })
 
-    </div>
-
-}        
-<div id="buttonDivider">
-
-    <div class="radio">
-    <input type="button" id="bOpenLottery" class="formButton dispatchButton" value="Lottery" />
-    </div>
-    <div class="radio">
-        <input type="button" id="bAssign" class="formButton dispatchButton" value="@(WorkAssignments.btnAssign)" />
-        <input type="button" id="bUnassign" class="formButton dispatchButton" value="@(WorkAssignments.btnUnassign)"/>
-        <input type="button" id="bClear" class="formButton dispatchButton" value="@(WorkAssignments.btnClear)"/>
-    </div>
-    <div id="radioOpenFilled" class="radio">
-        <input type="radio" id="rA1_requested" name="radioOpenFilled" /><label for="rA1_requested" class="dispatchButton">@(WorkAssignments.btnRequested)<br/>@(WorkAssignments.btnSubActive)</label>
-		<input type="radio" id="rA1_skilled" name="radioOpenFilled" /><label for="rA1_skilled" class="dispatchButton">@(WorkAssignments.btnSkilled)<br />@(WorkAssignments.btnSubActive)</label>
-        <input type="radio" id="rA1_open" name="radioOpenFilled" /><label for="rA1_open" class="dispatchButton">@(WorkAssignments.btnOpen)<br />@(WorkAssignments.btnSubActive)</label>
-		<input type="radio" id="rA1_assigned" name="radioOpenFilled" /><label for="rA1_assigned" class="dispatchButton">@(WorkAssignments.btnAssigned)<br />@(WorkAssignments.btnSubActive)</label>
-        <input type="radio" id="rA1_completed" name="radioOpenFilled"  /><label for="rA1_completed" class="dispatchButton">@(WorkAssignments.btnAll)<br />@(WorkAssignments.btnSubCompleted)</label>
-        <input type="radio" id="rA1_All" name="radioOpenFilled" checked="checked" /><label for="rA1_All">@(WorkAssignments.btnAll)</label>
-	</div>
-                
-</div>
-
-<div class="tb-table" style="clear: left;">
-    <div class="tb-row">
-        <div id="signinTab" class="tb-cell">
-            <ul>
-                <li><a href="#signinList" class="ListTab">@Machete.Web.Resources.WorkAssignments.signin</a></li>
-            </ul>
-            <div id="signinList">
-                <table id="signinTable" class="display">
-                    <thead>
-                        <tr>
-                            <th>@Machete.Web.Resources.WorkAssignments.memberID</th>
-                            <th>@Machete.Web.Resources.WorkAssignments.skills</th>
-                            <th>@Machete.Web.Resources.WorkAssignments.lotteryShort</th>
-                            <th>@Machete.Web.Resources.WorkAssignments.programShort</th>
-                            <th>@Machete.Web.Resources.WorkAssignments.fullname</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
         </div>
 
-        <div id="assignmentTab" class="tb-cell">
-            <ul>
-                <li><a href="#availAssignList" class="ListTab">@Machete.Web.Resources.WorkAssignments.assignments</a></li>
-            </ul>
-            <div id="availAssignList">
+    }
+    <div id="buttonDivider">
 
-                <table id="availAssignTable" class="display">
-                    <thead>
-                        <tr>
-                            <th>assigned Worker</th>
-                            <th>requested Workers</th>
-                            <th>ID#</th>
-                            <th>@WorkOrder.dateTimeofWork</th>
-                            <th>@WorkAssignment.englishlevelshort</th>
-                            <th>@WorkAssignment.skillID</th>
-                            <th>@WorkAssignment.hourlyWage</th>
-                            <th>@WorkAssignment.hours</th>
-                            <th>@WorkAssignment.hourRange</th>
-                            <th>@WorkAssignment.days</th>
-                            <th>@WorkAssignments.earnings</th>
-                            <th>@WorkAssignment.description</th>
-                        </tr>
-                    </thead>
-                </table>
+        <div class="radio">
+            <input type="button" id="bOpenLottery" class="formButton dispatchButton" value="@(WorkAssignments.lottery)" />
+        </div>
+        <div class="radio">
+            <input type="button" id="bAssign" class="formButton dispatchButton" value="@(WorkAssignments.btnAssign)" />
+            <input type="button" id="bUnassign" class="formButton dispatchButton" value="@(WorkAssignments.btnUnassign)" />
+            <input type="button" id="bClear" class="formButton dispatchButton" value="@(WorkAssignments.btnClear)" />
+        </div>
+        <div id="radioOpenFilled" class="radio">
+            <input type="radio" id="rA1_requested" name="radioOpenFilled" /><label for="rA1_requested" class="dispatchButton">@(WorkAssignments.btnRequested)<br />@(WorkAssignments.btnSubActive)</label>
+            <input type="radio" id="rA1_skilled" name="radioOpenFilled" /><label for="rA1_skilled" class="dispatchButton">@(WorkAssignments.btnSkilled)<br />@(WorkAssignments.btnSubActive)</label>
+            <input type="radio" id="rA1_open" name="radioOpenFilled" /><label for="rA1_open" class="dispatchButton">@(WorkAssignments.btnOpen)<br />@(WorkAssignments.btnSubActive)</label>
+            <input type="radio" id="rA1_assigned" name="radioOpenFilled" /><label for="rA1_assigned" class="dispatchButton">@(WorkAssignments.btnAssigned)<br />@(WorkAssignments.btnSubActive)</label>
+            <input type="radio" id="rA1_completed" name="radioOpenFilled" /><label for="rA1_completed" class="dispatchButton">@(WorkAssignments.btnAll)<br />@(WorkAssignments.btnSubCompleted)</label>
+            <input type="radio" id="rA1_All" name="radioOpenFilled" checked="checked" /><label for="rA1_All">@(WorkAssignments.btnAll)</label>
+        </div>
+
+    </div>
+
+    <div class="tb-table" style="clear: left;">
+        <div class="tb-row">
+            <div id="signinTab" class="tb-cell">
+                <ul>
+                    <li><a href="#signinList" class="ListTab">@Machete.Web.Resources.WorkAssignments.signin</a></li>
+                </ul>
+                <div id="signinList">
+                    <table id="signinTable" class="display">
+                        <thead>
+                            <tr>
+                                <th>@Machete.Web.Resources.WorkAssignments.memberID</th>
+                                <th>@Machete.Web.Resources.WorkAssignments.skills</th>
+                                <th>@Machete.Web.Resources.WorkAssignments.lotteryShort</th>
+                                <th>@Machete.Web.Resources.WorkAssignments.programShort</th>
+                                <th>@Machete.Web.Resources.WorkAssignments.fullname</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+
+            <div id="assignmentTab" class="tb-cell">
+                <ul>
+                    <li><a href="#availAssignList" class="ListTab">@Machete.Web.Resources.WorkAssignments.assignments</a></li>
+                </ul>
+                <div id="availAssignList">
+
+                    <table id="availAssignTable" class="display">
+                        <thead>
+                            <tr>
+                                <th>assigned Worker</th>
+                                <th>requested Workers</th>
+                                <th>ID#</th>
+                                <th>@WorkOrder.dateTimeofWork</th>
+                                <th>@WorkAssignment.englishlevelshort</th>
+                                <th>@WorkAssignment.skillID</th>
+                                <th>@WorkAssignment.hourlyWage</th>
+                                <th>@WorkAssignment.hours</th>
+                                <th>@Employer.name</th>
+                                <th>@WorkAssignment.days</th>
+                                <th>@WorkAssignments.earnings</th>
+                                <th>@WorkAssignment.description</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div id="lotteryList" class="dialogPopup">
-            @using (Html.BeginForm("lotterySignin", "WorkerSignin", FormMethod.Post,
-                            new { @class = "edittab-form", @id = "lotterySigninForm"}))
-            {
-                @Html.ValidationSummary(true)
-                <div class="tb-table">
+    <div id="lotteryList" class="dialogPopup font-larger">
+        @using (Html.BeginForm("lotterySignin", "WorkerSignin", FormMethod.Post,
+                            new { @class = "edittab-form", @id = "lotterySigninForm" }))
+        {
+            @Html.ValidationSummary(true)
+            <div class="tb-table">
                 <div class="tb-row">
-                <div class="tb-field">
-                    @Html.TextBox("lotterycardnum", "", new {style="width: 100px;" })
-                    
-                </div>
-                <div class="tb-field">
-                    @Html.TextBox("lotterysignindate", "", new { @readonly="readonly"})
-                    
-                </div>
-                <div class="tb-field">
-                    <input type="submit" value="@WorkerSignins.indexsubmit" id="lotterySubmit"/>
-                </div>
+                    <div class="tb-field">
+                        @Html.TextBox("lotterycardnum", "", new { style = "width: 100px;" })
+
+                    </div>
+                    <div class="tb-field">
+                        @Html.TextBox("lotterysignindate", "", new { @readonly = "readonly" })
+
+                    </div>
+                    <div class="tb-field">
+                        <input type="submit" value="@WorkerSignins.indexsubmit" id="lotterySubmit" />
+                    </div>
+                    <div class="tb-field">
+                        <input type="button" value="@WorkAssignments.wkListDupe" id="listDuplicate" />
+                    </div>
                 </div>
             </div>
-            }
-    <table id="lotteryTable" class="display">
-        <thead>
-            <tr>
-                <th>@Machete.Web.Resources.WorkAssignments.memberID</th>
-                <th>@Machete.Web.Resources.WorkAssignments.lottery</th>
-                <th>@Machete.Web.Resources.WorkAssignments.fullname</th>
-            </tr>
-        </thead>
-    </table>
+        }
+        <table id="lotteryTable" class="display">
+            <thead>
+                <tr>
+                    <th class="dt-smallcol">@Machete.Web.Resources.WorkAssignments.lottery</th>
+                    <th>@Machete.Web.Resources.WorkAssignments.fullname</th>
+                    <th>@Machete.Web.Resources.WorkAssignments.memberID</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    @Html.Partial("WorkerIndex")
 </div>
-@Html.Partial("WorkerIndex")
 <script type="text/javascript">
     //@@ sourceURL=WorkAssignment_inline.js
-    $(document).ready(function () {
+$(document).ready(function () {
+    $('#listDuplicate').hide();
+    var True = true;
+    var False = false;
+
+    if (@Boolean.Parse(System.Web.Configuration.WebConfigurationManager.AppSettings["CenterUsesDuplicateDailyList"]))
+    {
+        $('#listDuplicate').show();
+    }
+
     assignTableCount = 0;
     DatePicker();
     $( ".radio" ).buttonset();
@@ -152,35 +166,36 @@
     $('#typeofwork_grouping').val(null);
     $('#status').val(false);
     $("#assignmentTab").mUI('createTabs', {
-        prefix: "ui-tabs-assignment-", 
+        prefix: "ui-tabs-assignment-",
         formLevel: 1,
         changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
         changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
         });
-    $("#signinTab").mUI('createTabs', { 
-        prefix: "ui-tabs-signin-", 
+    $("#signinTab").mUI('createTabs', {
+        prefix: "ui-tabs-signin-",
         formLevel: 1,
         changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
         changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
         });
 
+    // "Daily List" used to be "Lottery" and still is in code
     var lotteryDTOptions = {
-        //"sScrollY": "300px",
+        "sScrollY": "300px",
         "bFilter": false,
-        "bPaginate": true,
-        "bLengthChange": false,
+        "bPaginate": false,
+        "bLengthChange": true,
         "iDisplayLength": 15,
-        "bAutoWidth": true,        
+        "bAutoWidth": true,
         "bServerSide": true,
-        "aaSorting": [[1, 'asc']],
+        "aaSorting": [[0, 'asc']],
         "sAjaxSource": "/WorkerSignin/AjaxHandler",
         "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
         "bProcessing": true,
         "aoColumns": [
-            {"mDataProp": "dwccardnum"},
-            {"mDataProp": "lotterySequence"},
-            {"mDataProp": "fullname"}
-        ],
+            { "mDataProp": "lotterySequence"},
+            { "mDataProp": "fullname"},
+            { "mDataProp": "dwccardnum" },
+    ],
         // lottery is straight dataTable, so using standard method for data callback
         "fnServerData": function (sSource, aoData, fnCallback) {
             /* Add some extra data to the sender */
@@ -195,16 +210,19 @@
         },
         "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
             $(nRow).attr('ID', "wsiRec" +aData['recordid']);
-            var lotteryField = $(nRow).find('td:nth-child(2)');
+            var lotteryField = $(nRow).find('td:nth-child(3)');
             var value = $(lotteryField).text();
             if (lotteryField.text()) {
-                lotteryField.append('  ');
-                lotteryField.append('<a class="confirm_clearLottery" href="/WorkerSignin/clearLottery/'+aData['recordid']+'">Clear</a>');
-                }
-            //$(nRow).attr('requestedID', aData['WSIID']);
+                lotteryField.append('<a class="movedown_Lottery wa-table-image-left" title="Move Down" href="/WorkerSignin/moveDown/'
+                    + aData['recordid'] + '"><img src="/Content/images/arrow-down-2.png" /></a>');
+                lotteryField.append('<a class="moveup_Lottery" title="Move Up" href="/WorkerSignin/moveUp/'
+                    + aData['recordid'] + '"><img src="/Content/images/arrow-up-2.png" /></a>');
+                lotteryField.append('<a class="confirm_clearLottery wa-table-image-right" title="Erase/Borrar" href="/WorkerSignin/clearLottery/'
+                    + aData['recordid'] + '"><img src="/Content/images/application-exit-2.png" /></a>');
+            }
             if (aData['WAID'] > 0) { // green -- WA record associated with WSI record
                 $(nRow).addClass('statusGreen');
-            }                
+            }
             return nRow;
         }
     }
@@ -232,7 +250,7 @@
         });
         $('#lotteryTable').show();
         $('#lotteryList').show();
-        $('.ui-dialog-titlebar-close').one('click', function() {
+        $('.ui-dialog-titlebar-close').click( function() {
             $('#signinTable').dataTable().fnSort( [ [2,'asc']] );
         });
     });
@@ -245,14 +263,16 @@
         $('#lotteryTable').dataTable().fnDraw();
         e.preventDefault();
     });
+        //
+        //
     //
     //
     //
     $("#signinTable").mUI('createTable', {
-        tab: null, 
+        tab: null,
         options: {
-            //"sScrollY": "300px",
-            "bPaginate": true,
+            "sScrollY": "300px",
+            "bPaginate": false,
             "bLengthChange": true,
             "bAutoWidth": false,
             "bServerSide": true,
@@ -277,22 +297,22 @@
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 if (aData['WAID'] > 0) { // green
                     $(nRow).addClass('statusGreen');
-                }                
+                }
                 return nRow;
-            } 
-        }, 
+            }
+        },
         dblClickEvent: wsiDblClickEvent,
         tabLabel: null
         });
     //
     //
-    $("#availAssignTable").mUI('createTable', { 
+    $("#availAssignTable").mUI('createTable', {
         tab: $("#assignmentTab"),
         options: {
-            //"sScrollY": "300px",
-            "bPaginate": true,
+            "sScrollY": "300px",
+            "bPaginate": false,
             "bLengthChange": true,
-            "aaSorting": [[4, 'desc']],
+            "aaSorting": [[3, 'asc']],
             "bFilter": true,
             //"bSort": true,
             "bAutoWidth": false,
@@ -302,18 +322,18 @@
             "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
             "bProcessing": true,
             "aoColumns": [
-                            { "mDataProp": "assignedWorker", "bVisible": false, "bSortable": true}, 
-                            { "mDataProp": "requestedList", "bVisible": false, "bSortable": false}, 
-                            { "mDataProp": "pWAID" },                            
-                            { "mDataProp": "dateTimeofWork"},                            
-                            { "mDataProp": "englishlevel"}, 
-                            { "mDataProp": "skill"}, 
-                            { "mDataProp": "hourlywage"}, 
-                            { "mDataProp": "hours"}, 
-                            { "mDataProp": "hourRange"}, 
+                            { "mDataProp": "assignedWorker", "bVisible": false, "bSortable": true},
+                            { "mDataProp": "requestedList", "bVisible": false, "bSortable": false},
+                            { "mDataProp": "pWAID", "bVisible": false, "bSortable": true },
+                            { "mDataProp": "timeofwork"},
+                            { "mDataProp": "englishlevel"},
+                            { "mDataProp": "skill"},
+                            { "mDataProp": "hourlywage"},
+                            { "mDataProp": "hours"},
+                            { "mDataProp": "employername"},
                             { "mDataProp": "days"},
                             { "mDataProp": "earnings"},
-                            { "mDataProp": "description"},                        
+                            { "mDataProp": "description"},
                         ],
             "aoSearchCols" : [null, null, null, null, null, null, null, null, null, null, null],
             "fnServerDataExtra": function () {
@@ -336,11 +356,11 @@
                     case "orphaned": $(nRow).addClass('statusYellow'); break;
                     case "cancelled": $(nRow).addClass('statusRed'); break;
                     default: $(nRow).addClass('statusBlue');
-                }           
+                }
                 return nRow;
-            }, 
+            },
             "fnDrawCallback": function () { assignTableCount++; }
-            },          
+            },
         dblClickEvent: null,
         tabLabel: null
         });
@@ -348,11 +368,11 @@
         //
         //
         $('#bAssign').click(function (e) {
-            e.preventDefault();                
+            e.preventDefault();
             var assignRow = $('#availAssignTable').find('tbody').find('tr.row_selected').attr('recordid');
             var signinRow = $('#signinTable').find('tbody').find('tr.row_selected').attr('recordid');
 
-            $.post("/WorkAssignment/Assign", 
+            $.post("/WorkAssignment/Assign",
                 {
                     waid: assignRow,
                     wsiid: signinRow
@@ -361,7 +381,7 @@
                     if (data.jobSuccess == false) {
                         alert(data.rtnMessage);
                     } else {
-                        $("#updateBtn").click();     
+                        $("#updateBtn").click();
                     }
                 }
             );
@@ -370,7 +390,7 @@
         //
         //
         $('#bUnassign').click(function (e) {
-            e.preventDefault();                
+            e.preventDefault();
             var assignRow = $('#availAssignTable').find('tbody').find('tr.row_selected').attr('recordid');
             var signinRow = $('#signinTable').find('tbody').find('tr.row_selected').attr('recordid');
             //alert("WSI-ID: " + signinRow + " WA-ID: " + assignRow);
@@ -382,8 +402,8 @@
                 if (data.jobSuccess == false) {
                     alert(data.rtnMessage);
                     return;
-                } 
-                $("#updateBtn").click();                     
+                }
+                $("#updateBtn").click();
             });
         });
         //
@@ -396,31 +416,31 @@
         //
         $('#rA1_requested').click(function (e) {
             e.preventDefault();
-            $('#wa_grouping').val('requested'); 
+            $('#wa_grouping').val('requested');
             $('#signin_visible').val(true);
             $('#assignedWorker_visible').val(false);
             $('#requestedWorkers_visible').val(true);
             $('#status').val(@(Machete.Domain.WorkOrder.iActive));
-            $("#updateBtn").click();     
+            $("#updateBtn").click();
         });
         $('#rA1_open').click(function (e) {
-            e.preventDefault(); 
-            $('#wa_grouping').val('open'); 
+            e.preventDefault();
+            $('#wa_grouping').val('open');
             $('#signin_visible').val(true);
             $('#assignedWorker_visible').val(false);
             $('#requestedWorkers_visible').val(false);
             $('#status').val(@(Machete.Domain.WorkOrder.iActive));
-            $("#updateBtn").click(); 
+            $("#updateBtn").click();
         });
         $('#rA1_skilled').click(function (e) {
-            e.preventDefault();  
-            $('#wa_grouping').val('skilled'); 
+            e.preventDefault();
+            $('#wa_grouping').val('skilled');
             $('#signin_visible').val(true);
             $('#assignedWorker_visible').val(false);
             $('#requestedWorkers_visible').val(false);
             $('#status').val(@(Machete.Domain.WorkOrder.iActive));
-            $("#updateBtn").click();    
-          
+            $("#updateBtn").click();
+
         });
         $('#rA1_assigned').click(function (e) {
             e.preventDefault();
@@ -429,37 +449,37 @@
             $('#assignedWorker_visible').val(true);
             $('#requestedWorkers_visible').val(true);
             $('#status').val(@(Machete.Domain.WorkOrder.iActive));
-            $("#updateBtn").click();                 
+            $("#updateBtn").click();
         });
         $('#rA1_completed').click(function (e) {
-            e.preventDefault();            
-            $('#wa_grouping').val('completed'); 
+            e.preventDefault();
+            $('#wa_grouping').val('completed');
             $('#signin_visible').val(true);
             $('#assignedWorker_visible').val(true);
             $('#requestedWorkers_visible').val(false);
             $('#status').val(@(Machete.Domain.WorkOrder.iCompleted));
-            $("#updateBtn").click();    
+            $("#updateBtn").click();
         });
         $('#rA1_All').click(function (e) {
             e.preventDefault();
             $('#wa_grouping').val(false);
             $('#signin_visible').val(true);
-            $('#assignedWorker_visible').val(true);
+            $('#assignedWorker_visible').val(false);
             $('#requestedWorkers_visible').val(false);
             $('#status').val(false);
             $('#dwccardnum').val('');
-            $("#updateBtn").click();                 
+            $("#updateBtn").click();
         });
         $('#TypeOfWorkList').click(function (e) {
             e.preventDefault();
             $('#typeofwork_grouping').val($('#TypeOfWorkList').val());
-            $("#updateBtn").click();                 
+            $("#updateBtn").click();
         });
 
-          
+
         $("#updateBtn").click(function (e) {
             e.preventDefault();
-            //$('#dwccardnum').val(""); 
+            //$('#dwccardnum').val("");
             if ($('#assignedWorker_visible').val() == 'true') {
                 $("#availAssignTable").dataTable().fnSetColumnVis( 0, true , false);
             } else {
@@ -476,36 +496,76 @@
                 $("#signinTab").hide();
             }
             $("#signinTable").dataTable().fnDraw();
-            $("#availAssignTable").dataTable().fnDraw();            
+            $("#availAssignTable").dataTable().fnDraw();
         });
+
+        // .live() deprecated as of jQ 1.7
+        // tried to switch to 'on' but it cancels .preventDefault()
         $('.confirm_clearLottery').live('click', function (e) {
-            e.preventDefault;
+            e.preventDefault();
             //TODO: event is posting and returning page, not JSON
             var action =  $(this).attr('href');
             $.alerts.okButton = "@WorkerSignins.lotteryClearSubmit";
             jConfirm('@WorkerSignins.lotteryClearConfirmation','@WorkerSignins.lotteryClearTitle',
                 function (r) {
-                    if (r == true) { 
+                    if (r == true) {
                         $.post(action, null, function(data) {
                             $('#lotteryTable').dataTable().fnDraw();
-                                    
+
                             if (!data.jobSuccess) {
-                                alert(data.rtnMessage);                                        
-                            } 
+                                alert(data.rtnMessage);
+                            }
                         });
                     }
-                    $('#lotterycardnum').focus();                                                                     
+                    $('#lotterycardnum').focus();
                 });
-            $('#lotterycardnum').focus();                                                                     
+            $('#lotterycardnum').focus();
             return false;
         });
+
+        $('#listDuplicate').live('click', function (event) {
+            event.preventDefault();
+            var url = "/WorkerSignin/ListDuplicate";
+            $.post(url, { todaysdate: $('#todaysdate').val() }, function (data) {
+                $('#lotteryTable').dataTable().fnDraw();
+                $('#lotterycardnum').focus();
+                if (!data.jobSuccess) { alert(data.rtnMessage); }
+            });
+            $('#lotterycardnum').focus();
+            return false;
+        });
+
+        $('.movedown_Lottery').live('click', function (event) {
+            event.preventDefault();
+            var url = $(this).attr('href');
+            $.post(url, null, function (data) {
+                $('#lotteryTable').dataTable().fnDraw();
+                $('#lotterycardnum').focus();
+                if (!data.jobSuccess) { alert(data.rtnMessage); }
+            });
+            $('#lotterycardnum').focus();
+            return false;
+        });
+
+        $('.moveup_Lottery').live('click', function (event) {
+            event.preventDefault();
+            var url = $(this).attr('href');
+            $.post(url, null, function (data) {
+                $('#lotteryTable').dataTable().fnDraw();
+                $('#lotterycardnum').focus();
+                if (!data.jobSuccess) { alert(data.rtnMessage); }
+            });
+            $('#lotterycardnum').focus();
+            return false;
+        });
+//
     });
     function DatePicker() {
         $('.ui-datepicker').datepicker({
             dateFormat: 'DD, d MM yy',
             showOtherMonths: true,
 			selectOtherMonths: true
-//            buttonImage: '@Url.Content("~/Content/calendar.gif")',
+//            buttonImage: '@*Url.Content("~/Content/calendar.gif")*@',
 //            buttonImageOnly: true,
 //            showOn: "button"
         });

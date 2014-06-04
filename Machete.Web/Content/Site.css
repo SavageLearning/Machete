@@ -120,13 +120,14 @@ page width. Or, you can specify an exact pixel width. */
     }
 
 #main {
-    padding: 20px 10px 10px 10px;
-    background-color: #fff;
+    padding: 0 1em 1em 1em;
+    background-color: #414d5b;
     margin-bottom: 30px;
     _height: 1px; /* only IE6 applies CSS properties starting with an underscore */
 }
 
 #footer {
+    clear: both;
     color: #999;
     padding: 10px 0;
     text-align: center;
@@ -137,17 +138,30 @@ page width. Or, you can specify an exact pixel width. */
 
 /* TAB MENU   
 ----------------------------------------------------------*/
+#menulinkhome {
+    background: url(/Content/machete_1_close_crop.png) no-repeat top left;
+    display: block;
+    width: 202px;
+    height: 69px;
+}
+
+#menulinkhome:hover,#menulinkhome:visited,#menulinkhome:link,#menulinkhome:active
+{
+    color: #414d5b;
+    text-decoration: none;
+}
+
 ul#menu {
-    border-bottom: 1px #414D5B solid;
-    padding: 0 0 2px;
+    padding-bottom: 3px;
     position: relative;
-    margin: 0;
+    margin: 0 1em 0;
     text-align: right;
 }
 
     ul#menu li {
         display: inline;
         list-style: none;
+        border-radius: 1em;
     }
 
         ul#menu li#greeting {
@@ -159,12 +173,14 @@ ul#menu {
         }
 
         ul#menu li a {
+            border-radius: .7em;
             padding: 10px 10px;
             font-weight: bold;
             text-decoration: none;
             line-height: 2.8em;
             background-color: #e8eef4;
-            color: #034af3;
+            background: linear-gradient(#e8eef4, #4f4f5b);
+            color: #30303A;
         }
 
             ul#menu li a.menulinkactive {
@@ -258,12 +274,12 @@ table {
 }
 
     table td {
-        padding: 5px;
+        padding: .25em .5em;
         border: solid 1px #e8eef4;
     }
 
     table th {
-        padding: 6px 5px;
+        padding: .25em .5em;
         text-align: left;
         background-color: #e8eef4;
         border: solid 1px #e8eef4;
@@ -271,6 +287,17 @@ table {
 
 /* MISC  
 ----------------------------------------------------------*/
+
+.person-help {
+  word-wrap: break-word;
+  width: 160px;
+  padding: 0;
+  margin: 0;
+  font-size: .8em;
+  vertical-align: middle;
+  display: none;
+}
+
 .clear {
     clear: both;
 }
@@ -280,15 +307,18 @@ table {
 }
 
 #menucontainer {
-    margin-top: 40px;
+    margin-top: 3em;
     clear: left;
 }
 
 div#title {
+    background-image: url(/Content/machete_1_close_crop.png);
     display: block;
     float: left;
     text-align: left;
+    text-decoration: none;
     padding: 0 0 0 0;
+    margin-left: .5em;
 }
 
 div.recordButtons {
@@ -372,20 +402,31 @@ div.recordButtons {
 
 .tb-table {
     display: table;
+    font-size: 1em;
 }
 
 .tb-row {
     display: table-row;
 }
 
-.tb-cell {
+.tb-cell, .tb-cell-nospace {
     display: table-cell;
+}
+
+.tb-cell-nospace {
+    padding: .2em .4em;
+    margin: 0;
+}
+
+.tb-cell-bigger-text {
+
+    font-size: 1.4em;
 }
 
 .tb-label {
     /*border: 1px solid red;*/
     width: 13em;
-    margin: 0em 0 0 0;
+    margin: 0;
     font-weight: bold;
     font-size: 90%;
     padding: 1px;
@@ -477,11 +518,20 @@ input[type="text"].ui-datepicker {
     width: 200px;
 }
 
-.print_off {
+.print-off {
+}
+
+.print-on {
+    background: white;
+    margin: 0;
+    width: 100%;
+}
+
+.print-text {
+    color: #000 !important;
 }
 
 input.ui-button.dispatchButton {
-    padding: 1em;
     float: left;
 }
 
@@ -512,7 +562,6 @@ input.ui-button.dispatchButton {
 }
 
 .dialogPopup {
-    width: 300px;
 }
 /* Person page
 ----------------------------------------------------------*/
@@ -643,7 +692,9 @@ div.mui-event-image-text-row-field {
 /* WorkOrder/View: Box floating in upper right */
 .dateNeeded {
     float: right;
-    border: 1px solid Black;
+    /*border: 1px solid Black;*/
+    margin: 0;
+    padding: 0;
 }
 
 /* WorkOrder/View: Box floating in upper right */
@@ -697,4 +748,232 @@ html[xmlns] .clearfix {
 
 * html .clearfix {
     height: 1%;
+}
+
+/**/
+/**/ /*Settings*/
+/**/
+
+.index-padding-thick {
+    padding: 4em 8em 8em;
+}
+
+.partial-background-white {
+    background: white;
+}
+
+.a-block-nodecoration {
+    display: block;
+    line-height: 1em;
+    text-decoration: none !important;
+}
+
+/**/
+/**/ /*Reports*/
+/**/
+
+.report-button {
+    background: linear-gradient(#e8eef4, #9f9fae) !important;
+    color: #303030 !important;
+}
+
+.report-chart {
+    clear: both;
+    margin: 0;
+    border: 0;
+    padding: 0;
+}
+
+.report-chart-inner {
+    display: inline-block;
+}
+
+.report-chart-inner-only {
+    display: block;
+}
+
+.report-data {
+    clear: both;
+    margin: 0;
+    border: 0;
+    padding: 0;
+}
+
+.report-em {
+    font-weight: 700;
+}
+
+
+.report-subtitle {
+    clear: both;
+}
+
+.report-table-header {
+    background: linear-gradient(#efefff, #cfcfdf) !important;
+}
+
+.report-wrapper {
+    clear: both;
+}
+
+.report-datepicker, .report-datepicker-weekly, .assignment-datepicker {
+    height: 2em;
+    width: 6em !important;
+    padding: 0;
+    border-radius: .5em;
+    text-align: center;
+    font-weight: bold;
+}
+
+.report-inline {
+    display: inline;
+}
+
+.report-drill {
+    margin-left: auto;
+    margin-right: 0;
+    background: #90A2B6;
+    border: solid 2px gray;
+    border-collapse: separate;
+}
+
+.report-align-right {
+    text-align: right;
+    float: right;
+}
+
+.report-instructions,
+.report-padding-left-half {
+    padding-left: .5em
+}
+
+.report-tip {
+    background: #A2B3C6;
+    border-radius: .5em;
+    clear: both;
+    display: inline-block;
+    font-weight: bold;
+    text-align: center;
+    margin: 0 .5em;
+    padding: .2em .5em .2em;
+}
+
+.report-top {
+    margin-bottom: 1em;
+}
+
+.report-top-div-left {
+    float:left; 
+    width:60%;
+}
+
+.report-top-div-right {
+    float:left; 
+    width:40%;
+}
+
+.report-top-text {
+    font-style: italic;
+    font-weight: bold;
+}
+
+/**/
+/**/ /* MISCELLANY */
+/**/
+.font-larger {
+    font-size: 1.2em;
+}
+
+.list-fleshy {
+    margin: 0 3em;
+    padding: .3em;
+    border: .1em solid gray;
+    border-radius: .5em;
+    font-size: 1.2em;
+}
+
+.home-container
+{
+    padding: 0 0 0 1.5em !important;
+    font-size: 1.2em;
+}
+
+.home-title-main
+{
+
+}
+
+.home-text-main
+{
+    display: inline-block;
+    max-width: 480px;
+    min-width: 260px;
+}
+
+.home-image-main
+{
+    display: inline-block;
+    min-width: 30%;
+    max-width: 45%;
+    margin-left: 5em;
+    margin-right: 3em;
+    vertical-align: top;
+}
+
+.home-version
+{
+    font-size: .8em;
+}
+
+.wsi-content
+{
+    background-color: #eeeeee;
+    min-height: 420px;
+    border-radius: .5em;
+    padding-top: 1em;
+}
+
+.wsi-dwccardnum, .wsi-datepicker
+{
+    height: 2em;
+    width: 6em !important;
+    padding: 0;
+    border-radius: .5em;
+    text-align: center;
+    font-weight: bold;
+}
+
+.wsi-image
+{
+    max-width: 200px;
+    vertical-align: top;
+    margin-left: 2em;
+}
+
+.wa-content
+{
+    background-color: #eeeeee;
+    min-height: 420px;
+    border-radius: .5em;
+}
+
+.account-background
+{
+    background-color: #efeeee;
+    padding: 2em;
+    border-radius: .5em;
+}
+
+.dt-smallcol {
+    max-width: 15px;
+}
+
+.wa-table-image-left {
+    margin-left: 2em;
+    margin-right: .5em;
+}
+
+.wa-table-image-right {
+    margin-left: .5em;
+    margin-right: 0;
 }
