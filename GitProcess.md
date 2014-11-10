@@ -46,7 +46,7 @@
 (master) $ git add .
 (master) $ git commit
 
-# Now delete the local and remote feature branches:
+# AFTER Pull requests changes merged to main on remote GitHub repo, delete the local and remote feature branches:
 (master) $ git branch -D issues/{issue-number}
 (master) $ git push origin :issues/{issue-number}
 
