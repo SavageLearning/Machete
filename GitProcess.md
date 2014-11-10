@@ -55,6 +55,8 @@ $ git add .
 $ git commit
 $ git push origin
 
+# Once the issue has been fully resolved, add the pull request ID to the issue & close the issue in GitHub
+
 # -----------------------------------------------------------------
 # Useful GIT Articles
 # -----------------------------------------------------------------
