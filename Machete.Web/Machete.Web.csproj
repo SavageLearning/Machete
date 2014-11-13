@@ -8,7 +8,7 @@
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{D2C4C806-4D23-4E62-B96D-23BDAB953C73}</ProjectGuid>
-    <ProjectTypeGuids>{E3E379DF-F4C6-4180-9B81-6769533ABE47};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Machete.Web</RootNamespace>
@@ -553,6 +553,7 @@
     <EmbeddedResource Include="Resources\Employers.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Employers.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Events.es.resx" />
     <EmbeddedResource Include="Resources\Events.resx">
@@ -566,6 +567,7 @@
     <EmbeddedResource Include="Resources\Persons.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Persons.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Reports.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
