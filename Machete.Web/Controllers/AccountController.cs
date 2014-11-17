@@ -261,7 +261,7 @@ namespace Machete.Web.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Edit(string id, ManageMessageId? Message = null)
         {
             var Db = DatabaseFactory.Get();
@@ -277,7 +277,7 @@ namespace Machete.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator, Manager")]
         public async Task<ActionResult> Edit(EditUserViewModel model)
         {
             var Db = DatabaseFactory.Get();
@@ -341,7 +341,7 @@ namespace Machete.Web.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Delete(string id = null)
         {
             var Db = DatabaseFactory.Get();
@@ -356,7 +356,7 @@ namespace Machete.Web.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator, Manager")]
         public ActionResult DeleteConfirmed(string id)
         {
             var Db = DatabaseFactory.Get();
