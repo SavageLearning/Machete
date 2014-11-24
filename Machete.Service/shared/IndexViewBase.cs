@@ -228,6 +228,7 @@ namespace Machete.Service
                         p.sk.text_EN.Contains(o.sSearch) ||
                         p.sk.text_ES.Contains(o.sSearch) ||
                         p.wa.workOrder.contactName.Contains(o.sSearch) ||
+                        p.wa.workOrder.Employer.name.Contains(o.sSearch) ||
                         //p.dateupdated.ToString().ContainsOIC(param.sSearch) ||
                         p.wa.Updatedby.Contains(o.sSearch)).Select(p => p.wa);
             }
