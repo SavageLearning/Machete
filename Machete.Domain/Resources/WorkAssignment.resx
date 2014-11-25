@@ -201,4 +201,7 @@
   <data name="WOdescription" xml:space="preserve">
     <value>Additional information from work order</value>
   </data>
+  <data name="WAID" xml:space="preserve">
+    <value>ID</value>
+  </data>
 </root>
