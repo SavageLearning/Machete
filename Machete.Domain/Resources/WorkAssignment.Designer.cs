@@ -304,7 +304,7 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ID.
+        ///   Looks up a localized string similar to Work ID.
         /// </summary>
         public static string WAID {
             get {
