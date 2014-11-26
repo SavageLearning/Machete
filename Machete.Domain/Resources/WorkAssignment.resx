@@ -202,6 +202,6 @@
     <value>Additional information from work order</value>
   </data>
   <data name="WAID" xml:space="preserve">
-    <value>ID</value>
+    <value>Work ID</value>
   </data>
 </root>
