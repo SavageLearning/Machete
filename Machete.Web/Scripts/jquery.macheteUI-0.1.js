@@ -945,7 +945,7 @@
         var myDays = opt.days;
         var rangeVal = $(myRange).val();
         var wageVal = $(myWage).val();
-        var hourVal = $(myHour).find('option:selected').val();
+        var hourVal = $(myHour).val();
         var daysVal = $(myDays).find('option:selected').val();
         $(myTotal).attr('disabled', 'disabled');
         $(myTotalRange).attr('disabled', 'disabled');
