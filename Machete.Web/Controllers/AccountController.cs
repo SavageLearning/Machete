@@ -52,15 +52,15 @@ namespace Machete.Web.Controllers
         public ActionResult Index()
         {
             IEnumerable<UserSettingsViewModel> model;
-            
+
             var users = DatabaseFactory.Get().Users.ToList();
-            
+
             model = users
                     .Select(list => new UserSettingsViewModel
-                        {                            
+                        {
                             ProviderUserKey = list.Id,
                             UserName = list.UserName,
-                            Email = list.Email, 
+                            Email = list.Email,
                             IsApproved = list.IsApproved ? "Yes" : "No",
                             IsLockedOut = list.IsLockedOut ? "Yes" : "No",
                             IsOnline = (list.LastLoginDate > DateTime.Now.AddHours(-1)) ? "Yes" : "No",
@@ -112,6 +112,54 @@ namespace Machete.Web.Controllers
             return View(model);
         }
 
+        [AllowAnonymous]
+        public async Task<JsonResult> IsPasswordExpired(string username, string password)
+        {
+            var isPasswordExpired = false;
+            if (ModelState.IsValid)
+            {
+                var user = await UserManager.FindAsync(username, password);
+                if (user != null)
+                {
+                    isPasswordExpired = user.LastPasswordChangedDate.AddMonths(6) <= DateTime.Today;
+                }
+            }
+
+            return Json(new { isPasswordExpired = isPasswordExpired }, JsonRequestBehavior.AllowGet);
+        }
+
+        [AllowAnonymous]
+        public async Task<JsonResult> ChangeExpiredPassword(string username, string password, string newpassword)
+        {
+            var message = "Could not update password";
+            var status = false;
+
+            if (ModelState.IsValid)
+            {
+                var user = await UserManager.FindAsync(username, password);
+                if (user != null)
+                {
+                    IdentityResult result = await UserManager.ChangePasswordAsync(user.Id, password, newpassword);
+                    if (result.Succeeded)
+                    {
+                        message = "Password successfully updated.";
+                        status = true;
+
+                        user.LastPasswordChangedDate = DateTime.Today;
+                        var Db = DatabaseFactory.Get();
+                        Db.Entry(user).State = System.Data.Entity.EntityState.Modified;
+                        await Db.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        message = result.Errors.First();
+                    }
+                }
+            }
+
+            return Json(new { succeeded = status, message = message }, JsonRequestBehavior.AllowGet);
+        }
+
         //
         // GET: /Account/Register
         [AllowAnonymous]
@@ -131,7 +179,7 @@ namespace Machete.Web.Controllers
             {
                 var currentApplicationId = GetApplicationID();
                 string newUserName = model.FirstName.Trim() + "." + model.LastName.Trim();
-                var user = new ApplicationUser() { UserName = newUserName, LoweredUserName = newUserName.ToLower(), ApplicationId=currentApplicationId };
+                var user = new ApplicationUser() { UserName = newUserName, LoweredUserName = newUserName.ToLower(), ApplicationId = currentApplicationId };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -150,10 +198,10 @@ namespace Machete.Web.Controllers
 
         private Guid GetApplicationID()
         {
-                var blarg = DatabaseFactory.Get().Users
-                    .Select(p => p.ApplicationId)
-                    .First();
-                return blarg;
+            var blarg = DatabaseFactory.Get().Users
+                .Select(p => p.ApplicationId)
+                .First();
+            return blarg;
         }
 
         //
@@ -285,7 +333,7 @@ namespace Machete.Web.Controllers
             if (ModelState.IsValid)
             {
                 var user = Db.Users.First(u => u.Id == model.Id);
-                string name = model.FirstName.Trim() +"." + model.LastName.Trim();
+                string name = model.FirstName.Trim() + "." + model.LastName.Trim();
                 // Update the user data:
                 //user.FirstName = model.FirstName; //We can't have FirstName and
                 //user.LastName = model.LastName;   //LastName without refactor
@@ -400,8 +448,8 @@ namespace Machete.Web.Controllers
                 return RedirectToAction("index");
             }
             return View();
-        }        
-        
+        }
+
         //
         // POST: /Account/ExternalLogin
         [HttpPost]
@@ -621,7 +669,8 @@ namespace Machete.Web.Controllers
 
         private class ChallengeResult : HttpUnauthorizedResult
         {
-            public ChallengeResult(string provider, string redirectUri) : this(provider, redirectUri, null)
+            public ChallengeResult(string provider, string redirectUri)
+                : this(provider, redirectUri, null)
             {
             }
 
