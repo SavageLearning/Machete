@@ -264,6 +264,9 @@
   <data name="viewtitle" xml:space="preserve">
     <value>workassignment::view</value>
   </data>
+  <data name="WAID" xml:space="preserve">
+    <value>Work ID</value>
+  </data>
   <data name="wkListClear" xml:space="preserve">
     <value>Clear</value>
   </data>
