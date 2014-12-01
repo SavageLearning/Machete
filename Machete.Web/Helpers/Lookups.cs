@@ -209,13 +209,13 @@ namespace Machete.Web.Helpers
             {
                 //TODO: Selection of ES/EN not scalable on i18n. Kludge.
                 textFunc = (ll => "[" + ll.ltrCode + ll.level + "] " + (locale == "es" ? ll.text_ES : ll.text_EN));
-                prelist = prelist.Where(s => s.speciality == true).OrderBy(s => textFunc(s)); //LINQ & FUNC
+                Func<Lookup, string> sortFunc = (ll => locale == "es" ? ll.text_ES : ll.text_EN); //created new sortFunc to sort only by skill text and not by concatenated ltrCode + skills 
+                prelist = prelist.Where(s => s.speciality == true).OrderBy(s => sortFunc(s)); //LINQ & FUNC
             }
             else
             {
-                textFunc = (ll => locale == "es" ? ll.text_ES : ll.text_EN);
-                if (locale == "es") prelist = prelist.OrderBy(s => s.sortorder).ThenBy(s => s.text_ES);
-                else prelist = prelist.OrderBy(s => s.sortorder).ThenBy(s => s.text_EN);
+                textFunc = (ll => locale == "es" ? ll.text_ES : ll.text_EN);           
+                prelist = prelist.OrderBy(s => textFunc(s));
             }
             return new List<SelectListItemEx>(prelist
                     .Select(x => new SelectListItemEx
