@@ -61,7 +61,7 @@
 </div>
 
 <div id="passwordChange" title="@Machete.Web.Resources.ValidationStrings.ChangeTitle">
-    <p><h5><small>Password has expired.Please provide new password.</small></h5></p>
+    <p><h5><small>Password has expired. Please provide new password.</small></h5></p>
     <form>
         <label for="newpassword">@Machete.Web.Resources.ValidationStrings.PasswordNew</label><br>
         <input type="password" name="newpassword" id="newpassword" value="" class="text ui-widget-content ui-corner-all"><br>
@@ -109,19 +109,22 @@
     function getIsPasswordExpired() {
         $.ajax({
             url: "/Account/IsPasswordExpired",
-            data: { username: $('#UserName')[0].value, password: $('#Password')[0].value },
-            success: function (data) {
-                if (data.isPasswordExpired)
-                {
-                    passwordChangeDialog.dialog("open");
-                }
-                else
-                {
-                    logon();
-                }
-            },
+            data: { username: $('#UserName')[0].value, password: $('#Password')[0].value }, //#Password found using inspect element on Log on Machete window
+
+            success: onSuccessIsPasswordExpired,
             dataType: "json"
         });
+    }
+
+    function onSuccessIsPasswordExpired(result) {
+        if (result.pwdExpired)
+        {
+            passwordChangeDialog.dialog("open");
+        }
+        else
+        {
+            logon();
+        }
     }
 
     function logon() {
@@ -130,13 +133,13 @@
 
     function changePassword() {
         var newpassword = $("#newpassword")[0].value,
-            confirmnewpassword = $("#confirmnewpassword")[0].value;
-        if (newpassword != confirmnewpassword)
+            confirmnewpassword = $("#confirmnewpassword")[0].value; 
+        if (newpassword != confirmnewpassword) // verifying that new password and confirmed passwords are the same
         {
             showMessage("@Machete.Web.Resources.ValidationStrings.PasswordsMustMatch");
             return;
         }
-        if (newpassword === $('#Password')[0].value) {
+        if (newpassword === $('#Password')[0].value) { //#Password found using inspect element on Log on Machete window Checking that new password is not same as current password
             showMessage("Password cannot be the same as existing password.");
             return;
         }
@@ -144,14 +147,16 @@
         $.ajax({
             url: "/Account/ChangeExpiredPassword",
             data: { username: $('#UserName')[0].value, password: $('#Password')[0].value, newpassword: newpassword },
-            success: function (data) {
-                if (data.succeeded) {
+
+            success: function (result) {
+                if (result.succeeded) {
                     passwordChangeDialog.dialog("close");
+                    //showMessage(result.message);
                     $('#Password')[0].value = newpassword;
                     logon();
                 }
                 else {
-                    showMessage(data.message);
+                    showMessage(result.message);
                 }
             },
             dataType: "json"
