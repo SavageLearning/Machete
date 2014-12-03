@@ -940,6 +940,7 @@
     <None Include="Web.Concord.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+    <None Include="Web.Congreso.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
