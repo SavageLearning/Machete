@@ -115,17 +115,17 @@ namespace Machete.Web.Controllers
         [AllowAnonymous]
         public async Task<JsonResult> IsPasswordExpired(string username, string password)
         {
-            var isPasswordExpired = false;
+            var isExpired = false;
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindAsync(username, password);
                 if (user != null)
                 {
-                    isPasswordExpired = user.LastPasswordChangedDate.AddMonths(6) <= DateTime.Today;
+                    isExpired = (user.LastPasswordChangedDate <= DateTime.Today.AddMonths(-6));
                 }
             }
 
-            return Json(new { isPasswordExpired = isPasswordExpired }, JsonRequestBehavior.AllowGet);
+            return Json(new { pwdExpired = isExpired }, JsonRequestBehavior.AllowGet);
         }
 
         [AllowAnonymous]
