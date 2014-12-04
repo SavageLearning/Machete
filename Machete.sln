@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A89D8B77-274B-4032-8A72-0DFC7879BD44}"
 	ProjectSection(SolutionItems) = preProject
@@ -106,8 +106,8 @@ Global
 		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Concord|Mixed Platforms.ActiveCfg = Concord|Any CPU
 		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Concord|Mixed Platforms.Build.0 = Concord|Any CPU
 		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Concord|x86.ActiveCfg = Concord|Any CPU
-		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Congreso|Any CPU.ActiveCfg = Release|Any CPU
-		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Congreso|Any CPU.Build.0 = Release|Any CPU
+		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Congreso|Any CPU.ActiveCfg = Congreso|Any CPU
+		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Congreso|Any CPU.Build.0 = Congreso|Any CPU
 		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Congreso|Mixed Platforms.ActiveCfg = Congreso|Any CPU
 		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Congreso|Mixed Platforms.Build.0 = Congreso|Any CPU
 		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Congreso|x86.ActiveCfg = Congreso|Any CPU
@@ -199,8 +199,8 @@ Global
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.Concord|Mixed Platforms.ActiveCfg = Concord|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.Concord|Mixed Platforms.Build.0 = Concord|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.Concord|x86.ActiveCfg = Concord|Any CPU
-		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.Congreso|Any CPU.ActiveCfg = Release|Any CPU
-		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.Congreso|Any CPU.Build.0 = Release|Any CPU
+		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.Congreso|Any CPU.ActiveCfg = Congreso|Any CPU
+		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.Congreso|Any CPU.Build.0 = Congreso|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.Congreso|Mixed Platforms.ActiveCfg = Congreso|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.Congreso|Mixed Platforms.Build.0 = Congreso|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.Congreso|x86.ActiveCfg = Congreso|Any CPU
@@ -278,10 +278,11 @@ Global
 		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.Concord|Mixed Platforms.ActiveCfg = Concord|x86
 		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.Concord|Mixed Platforms.Build.0 = Concord|x86
 		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.Concord|x86.ActiveCfg = Concord|x86
-		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.Congreso|Any CPU.ActiveCfg = Release|x86
+		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.Congreso|Any CPU.ActiveCfg = Congreso|x86
 		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.Congreso|Mixed Platforms.ActiveCfg = Congreso|x86
 		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.Congreso|Mixed Platforms.Build.0 = Congreso|x86
 		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.Congreso|x86.ActiveCfg = Congreso|x86
+		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.Congreso|x86.Build.0 = Congreso|x86
 		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.Dev|Any CPU.ActiveCfg = Debug|x86
 		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.Dev|Mixed Platforms.ActiveCfg = Debug|x86
 		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.Dev|x86.ActiveCfg = Debug|x86
@@ -357,8 +358,8 @@ Global
 		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Concord|Mixed Platforms.ActiveCfg = Concord|Any CPU
 		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Concord|Mixed Platforms.Build.0 = Concord|Any CPU
 		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Concord|x86.ActiveCfg = Concord|Any CPU
-		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Congreso|Any CPU.ActiveCfg = Release|Any CPU
-		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Congreso|Any CPU.Build.0 = Release|Any CPU
+		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Congreso|Any CPU.ActiveCfg = Congreso|Any CPU
+		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Congreso|Any CPU.Build.0 = Congreso|Any CPU
 		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Congreso|Mixed Platforms.ActiveCfg = Congreso|Any CPU
 		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Congreso|Mixed Platforms.Build.0 = Congreso|Any CPU
 		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Congreso|x86.ActiveCfg = Congreso|Any CPU
@@ -452,8 +453,8 @@ Global
 		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Concord|Mixed Platforms.ActiveCfg = Concord|Any CPU
 		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Concord|Mixed Platforms.Build.0 = Concord|Any CPU
 		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Concord|x86.ActiveCfg = Concord|Any CPU
-		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Congreso|Any CPU.ActiveCfg = Release|Any CPU
-		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Congreso|Any CPU.Build.0 = Release|Any CPU
+		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Congreso|Any CPU.ActiveCfg = Congreso|Any CPU
+		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Congreso|Any CPU.Build.0 = Congreso|Any CPU
 		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Congreso|Mixed Platforms.ActiveCfg = Congreso|Any CPU
 		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Congreso|Mixed Platforms.Build.0 = Congreso|Any CPU
 		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Congreso|x86.ActiveCfg = Congreso|Any CPU
@@ -544,7 +545,7 @@ Global
 		{3E1B598D-9E47-4967-93E6-4D6DDF4AB7EF}.Concord|Mixed Platforms.ActiveCfg = Concord|Any CPU
 		{3E1B598D-9E47-4967-93E6-4D6DDF4AB7EF}.Concord|Mixed Platforms.Build.0 = Concord|Any CPU
 		{3E1B598D-9E47-4967-93E6-4D6DDF4AB7EF}.Concord|x86.ActiveCfg = Concord|Any CPU
-		{3E1B598D-9E47-4967-93E6-4D6DDF4AB7EF}.Congreso|Any CPU.ActiveCfg = Release|Any CPU
+		{3E1B598D-9E47-4967-93E6-4D6DDF4AB7EF}.Congreso|Any CPU.ActiveCfg = Congreso|Any CPU
 		{3E1B598D-9E47-4967-93E6-4D6DDF4AB7EF}.Congreso|Mixed Platforms.ActiveCfg = Congreso|Any CPU
 		{3E1B598D-9E47-4967-93E6-4D6DDF4AB7EF}.Congreso|Mixed Platforms.Build.0 = Congreso|Any CPU
 		{3E1B598D-9E47-4967-93E6-4D6DDF4AB7EF}.Congreso|x86.ActiveCfg = Congreso|Any CPU
@@ -620,7 +621,7 @@ Global
 		{A8DE6677-0E32-4229-8B83-9A3C17C87E85}.Concord|Mixed Platforms.ActiveCfg = Concord|Any CPU
 		{A8DE6677-0E32-4229-8B83-9A3C17C87E85}.Concord|Mixed Platforms.Build.0 = Concord|Any CPU
 		{A8DE6677-0E32-4229-8B83-9A3C17C87E85}.Concord|x86.ActiveCfg = Concord|Any CPU
-		{A8DE6677-0E32-4229-8B83-9A3C17C87E85}.Congreso|Any CPU.ActiveCfg = Release|Any CPU
+		{A8DE6677-0E32-4229-8B83-9A3C17C87E85}.Congreso|Any CPU.ActiveCfg = Congreso|Any CPU
 		{A8DE6677-0E32-4229-8B83-9A3C17C87E85}.Congreso|Mixed Platforms.ActiveCfg = Congreso|Any CPU
 		{A8DE6677-0E32-4229-8B83-9A3C17C87E85}.Congreso|Mixed Platforms.Build.0 = Congreso|Any CPU
 		{A8DE6677-0E32-4229-8B83-9A3C17C87E85}.Congreso|x86.ActiveCfg = Congreso|Any CPU
@@ -696,7 +697,7 @@ Global
 		{61A494C4-6B88-4E63-BD3B-4503EE203EF6}.Concord|Mixed Platforms.ActiveCfg = Concord|Any CPU
 		{61A494C4-6B88-4E63-BD3B-4503EE203EF6}.Concord|Mixed Platforms.Build.0 = Concord|Any CPU
 		{61A494C4-6B88-4E63-BD3B-4503EE203EF6}.Concord|x86.ActiveCfg = Concord|Any CPU
-		{61A494C4-6B88-4E63-BD3B-4503EE203EF6}.Congreso|Any CPU.ActiveCfg = Release|Any CPU
+		{61A494C4-6B88-4E63-BD3B-4503EE203EF6}.Congreso|Any CPU.ActiveCfg = Congreso|Any CPU
 		{61A494C4-6B88-4E63-BD3B-4503EE203EF6}.Congreso|Mixed Platforms.ActiveCfg = Congreso|Any CPU
 		{61A494C4-6B88-4E63-BD3B-4503EE203EF6}.Congreso|Mixed Platforms.Build.0 = Congreso|Any CPU
 		{61A494C4-6B88-4E63-BD3B-4503EE203EF6}.Congreso|x86.ActiveCfg = Congreso|Any CPU
