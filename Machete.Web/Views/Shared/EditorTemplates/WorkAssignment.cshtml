@@ -53,11 +53,16 @@
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.hourlyWage)
         <div class="tb-field">
-            @Html.TextBox("hourlyWage", Html.Encode(System.String.Format("{0:f2}", Model.hourlyWage)), new { tabindex = "1", @class = "money-field earnings-part", @id = idPrefix + "hourlyWage" })
+            @Html.TextBox("hourlyWage", Html.Encode(System.String.Format("{0:f2}", Model.hourlyWage)), new { tabindex = "1", @class = "money-field earnings-part", min="1", @id = idPrefix + "hourlyWage" })
             @Html.ValidationMessageFor(model => model.hourlyWage)
         </div>
         @Html.mUITableLabelFor(model => model.hours)
-        @Html.mUIDropDownListFor(model => model.hours, new SelectList(Lookups.hours(), "Value", "Text", Model.hours), new { tabindex = "1", @id = idPrefix + "hours", @class = "earnings-part" })
+        <div class="tb-field">
+            @Html.TextBox("hours", Html.Encode(System.String.Format("{0:f2}", Model.hours)), new { tabindex = "1", @id = idPrefix + "hours", @class = "earnings-part", min="1", style = "width: 6em;" })
+            @Html.ValidationMessageFor(model => model.hours)
+        </div>
+
+       @* @Html.mUIDropDownListFor(model => model.hours, new SelectList(Lookups.hours(), "Value", "Text", Model.hours), new { tabindex = "1", @id = idPrefix + "hours", @class = "earnings-part" })*@
         @Html.mUITableLabelFor(model => model.hourRange)
         @Html.mUIDropDownListFor(model => model.hourRange, new SelectList(Lookups.hours(), "Value", "Text", Model.hourRange), new { tabindex = "1", @id = idPrefix + "hourRange", @class = "earnings-part" })
     </div>
