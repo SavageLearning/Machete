@@ -1,0 +1,235 @@
+﻿@model Machete.Domain.WorkerSignin
+@using Machete.Web.Resources
+@using Machete.Domain.Resources
+<link href="@Url.Content("~/Content/print.css")" rel="stylesheet" type="text/css" media="print" />
+@{
+    ViewBag.Title = WorkerSignins.indextitle;
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+}
+
+<div id="container" class="wsi-content">
+    <div id="signinData" class="signinColumn" style="float: left;">
+        <div class="print_off">
+        @using (Html.BeginForm("Index", "WorkerSignin", FormMethod.Post, new { @id = "signinForm" }))
+        {
+            @Html.ValidationSummary(true)
+            <div class="tb-table">
+                <div class="tb-row">
+                    <div class="tb-label">
+                        @Html.LabelFor(model => model.dwccardnum)
+                    </div>
+                    <div class="tb-field">
+                        @Html.TextBox("dwccardnum", "", new { style = "width: 100px;", @class="wsi-dwccardnum" })
+                        @Html.ValidationMessageFor(model => model.dwccardnum)
+                    </div>
+                    <div class="tb-field">
+                        @Html.TextBox("dateforsignin",
+                            Html.Encode(String.Format("{0:mm/dd/yy}", DateTime.Today.ToShortDateString())),
+                            new { @class = "ui-datepicker wsi-datepicker", style = "width: 100px;" })
+                        @Html.ValidationMessageFor(model => model.dateforsignin)
+                    </div>
+                    <div class="tb-field">            
+                        <input type="submit" value="@WorkerSignins.indexsubmit" class="formButton report-button" />
+                    </div>
+                    <div class="tb-field">
+                        <input type="button" value="@WorkAssignments.wkListDupe" id="listDuplicate" class="formButton report-button" />
+                    </div>
+                </div>
+            </div>
+        }
+        </div>
+        <div id="signinTable">
+            <table id="wsiTable" class="display">
+                <thead>
+                    <tr>
+                        <th class="print_off"></th>
+                        <th>@Worker.dwccardnum</th>
+                        <th class="print_off">@WorkerSignins.memberexpiration</th>
+                        <th class="print_off">@WorkerSignins.status</th>
+                        <th>@WorkerSignins.firstname</th>
+                        <th>@WorkerSignins.lastname</th>
+                        <th class="print_off">@WorkerSignins.datesignin</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+    <div id="signinImage" class="mui-signin-imagebox print_off">
+        <img id="wsiImage" src="/Content/images/NO-IMAGE-AVAILABLE.jpg" alt="" class="wsi-image" />
+    </div>
+</div>
+<div id="signin-red-dialog">
+    @WorkerSignins.redmessage
+    <img id="wsiRedImage" src="" alt="" style="width: 200px"/>
+</div>
+<div id ="signin-unknown">
+    @WorkerSignins.unknownmessage
+</div>
+
+<script type="text/javascript">
+    $().ready(function () {
+        var blankImage = "/Content/images/NO-IMAGE-AVAILABLE.jpg";
+        var currentUrl = window.location.href;
+        var True = true;
+        var False = false;
+        //
+        $('#listDuplicate').hide();
+        if (@Boolean.Parse(System.Web.Configuration.WebConfigurationManager.AppSettings["CenterUsesDuplicateSigninList"]))
+        {
+            $('#listDuplicate').show();
+        }
+
+        //
+        $('.ui-datepicker').datepicker({
+            dateFormat: 'mm/dd/yy',
+            onClose: function () { $('#wsiTable').dataTable().fnDraw(); }
+        });
+        //
+        //
+        $('#dwccardnum').focus();
+        $('#signin-red-dialog').hide();
+        $('#signin-unknown').hide();
+        $('.confirm_delete').live('click', function (e) {
+            e.preventDefault;
+            //TODO: event is posting and returning page, not JSON
+            var action =  $(this).attr('href');
+            $.alerts.okButton = "@WorkerSignins.deletesubmit";
+            jConfirm('@WorkerSignins.deleteconfirmation',
+                         '@WorkerSignins.deletetitle',
+                         function (r) {
+                             if (r == true) { 
+                             $.post(action, null, function(data) {
+
+                                 $('#wsiTable').dataTable().fnDraw();
+                                 $('#wsiImage').attr('src', blankImage);
+                                    if (!data.jobSuccess) {
+                                        alert(data.rtnMessage);                                        
+                                    } 
+                             });
+                             }
+                             $('#dwccardnum').focus();
+                         });
+            return false;
+        });
+        //
+        //
+        $('#wsiTable').dataTable({
+            "sScrollY": "315px",
+            "bPaginate": false,
+            "bLengthChange": true,
+            "bAutoWidth": false,
+            "bServerSide": true,
+            "bInfo": true,
+            "bSort": true,
+            "bFilter": true,
+            "sAjaxSource": "/WorkerSignin/AjaxHandler",
+            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "bProcessing": true,
+            "iDisplayLength": 15,
+            //"aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "@WorkerSignins.allrecords"]],
+            "aoColumns": [
+                {mDataProp: "recordid", sClass: "print_off"},
+                {mDataProp: "dwccardnum"},
+                {mDataProp: "expirationDate", sClass: "print_off"},
+                {mDataProp: "memberStatus", sClass: "print_off"},
+                {mDataProp: "firstname1"},
+                {mDataProp: "lastname1"},
+                {mDataProp: "dateforsigninstring", sClass: "print_off"}
+            ],
+            "fnServerData": function ( sSource, aoData, fnCallback ) {
+			    /* Add some extra data to the sender */
+			    aoData.push( { "name": "todaysdate", "value": $('#dateforsignin').val() } );
+			    $.getJSON( sSource, aoData, function (json) { 
+				    /* Do whatever additional processing you want on the callback, then tell DataTables */
+				    fnCallback(json)
+			    } );
+		    },
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $(nRow).attr('ID', "wsiRec" +aData['recordid']);
+                $(nRow).find('td:first-child').html('<a class="confirm_delete" href="/WorkerSignin/delete/'+aData['recordid']+'">Delete</a>');
+                if (aData['imageID']) {
+                    $(nRow).attr('imageRef', "/Image/GetImage/" + aData['imageID']);
+                } else {
+                    $(nRow).attr('imageRef', blankImage);
+                }
+                $(nRow).addClass('statusBlue');
+                if (aData['memberInactive'] || aData['memberExpired']) { 
+                    $(nRow).removeClass('statusBlue');
+                    $(nRow).addClass('statusYellow');
+                } 
+                if (aData['memberSanctioned'] || aData['memberExpelled']) {
+                    $(nRow).removeClass('statusBlue');
+                    $(nRow).removeClass('statusYellow');
+                    $(nRow).addClass('statusRed');
+                } 
+                return nRow;
+            }
+        });
+        //
+        //
+        $('.dataTables_length, .dataTables_filter, .dataTables_info, #wsiTable_previous, #wsiTable_next').addClass('print_off');
+        $('#wsiTable tbody').bind('dblclick', function(e) {
+            console.log('d-click');
+            var $node = $(e.target.parentNode);
+            $('#wsiImage').attr('src', $node.attr('imageRef'));
+        });
+        //
+        //
+        $('#signinForm').submit(function(e) {
+            var form = this;
+            e.preventDefault();
+            if ($(form).valid()) {
+                $.post($(this).attr("action"), $(this).serialize(), 
+                    function(data) {
+                        $('#dwccardnum').val(null); // clear cardnum field
+                        $('#wsiImage').attr('src', data.imageRef); //reload image
+                        $('#wsiTable').dataTable().fnDraw(); //reload datatable
+
+                        if (data.message != "Success!") {
+                            alert(data.message);
+                        }
+                        if (data.memberSanctioned || data.memberExpelled) {
+                            $("#wsiRedImage").attr('src', data.imageRef);
+                            $('#signin-red-dialog').dialog({ 
+                                modal: true,
+                                buttons: {
+				                    Ok: function() {
+					                    $( this ).dialog( "close" );
+				                    }
+			                    },
+                                title: "@(WorkerSignins.redmessagetitle)",
+                                close: function(event, ui) { $('#dwccardnum').focus(); }
+                                 });
+                        }
+                        if (data.jobSuccess == false) {
+                        $('#signin-unknown').dialog({ 
+                                modal: true,
+                                buttons: {
+				                    Ok: function() {
+					                    $( this ).dialog( "close" );
+				                    }
+			                    },
+
+                                title: "@(WorkerSignins.unknownmessagetitle)",
+                                close: function(event, ui) { $('#dwccardnum').focus(); }
+                                 });
+                        }
+                        $('#dwccardnum').focus();
+                    });
+            }    
+        });
+
+        $('#listDuplicate').live('click', function (event) {
+            event.preventDefault();
+            var url = "/WorkerSignin/SigninDuplicate";
+            $.post(url, { todaysdate: $('#dateforsignin').val() }, function (data) {
+                $('#wsiTable').dataTable().fnDraw();
+                $('#dwccardnum').focus();
+                alert(data.message);
+                if (!data.jobSuccess) { alert(data.rtnMessage); }
+            });
+            $('#dwccardnum').focus();
+            return false;
+        });
+    });
+</script>

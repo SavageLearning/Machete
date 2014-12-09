@@ -1,0 +1,16 @@
+﻿@model Machete.Domain.Image
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+
+
+<div id="superfoo">
+@Html.EditorFor(model => model)
+</div>
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

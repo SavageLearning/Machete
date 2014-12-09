@@ -1,0 +1,56 @@
+﻿@model Machete.Web.ViewModel.EmailView
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "email";
+}
+
+@using (Html.BeginForm("Duplicate", "Email", FormMethod.Post,
+                        new { @class = "edittab-form DuplicatePost", @id = Model.idPrefix + "dupForm" }))
+{
+    <input type="submit" value="@Emails.duplicateWO" class="formButton" id="duplicate-@(Model.ID)"/>
+    
+    <br />    
+    @Html.ValidationSummary(true)
+    @Html.DisplayForModel()
+
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.formButton').button();
+
+        //
+        // edit form submit
+@*        $('#d@(Model.idPrefix)dupForm').click(function (e) {
+            return;
+            var form = $('#@(Model.idPrefix)dupForm');
+            $.post($(form).attr("action"), $(form).serialize(), function (data) {
+                if (data.jobSuccess == false) {
+                    alert(data.rtnMessage);
+                } else {
+
+                }
+            });
+        });*@
+
+        $('#@(Model.idPrefix)dupForm').mUI('formSubmit', {
+            preProcess: function () {
+                // encode any attachment HTML            
+@*                var field = $('#@(Model.idPrefix)attachment');
+                var encoded = $('<div/>').text($(field).val()).html();
+                field.val(encoded);*@
+            },
+            // callback for 
+            callback: function () {
+                $('#@(Model.idPrefix)dupForm').closest('.ui-dialog').find('a.ui-dialog-titlebar-close').click();
+                //alert("foo");
+                $('#WO@(Model.woid)-emailConfirm').click();
+            }
+        });
+
+
+
+    });
+</script>

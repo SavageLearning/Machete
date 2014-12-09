@@ -1,0 +1,124 @@
+﻿@model Machete.Domain.Person
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "person";
+    string idPrefix = recType + Model.ID + "-";
+}
+<!--The table for the first name and last name-->
+<div class="tb-table">
+    <div id="namerow1" class="tb-row">
+        <div class="tb-label">
+            @Html.LabelFor(model => model.firstname1)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.firstname1, new { tabindex = "1", @class="personEditor", @id=idPrefix + "firstname1"})
+            @Html.ValidationMessageFor(model => model.firstname1)
+        </div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.firstname2)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.firstname2, new { tabindex = "1", @class = "personEditor", @id=idPrefix + "firstname2" })
+            @Html.ValidationMessageFor(model => model.firstname2)
+        </div>
+    </div>
+    <div id="namerow2" class="tb-row">
+        <div class="tb-label">
+            @Html.LabelFor(model => model.lastname1)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.lastname1, new { tabindex = "1", @class = "personEditor", @id=idPrefix + "lastname1" })
+            @Html.ValidationMessageFor(model => model.lastname1)
+        </div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.lastname2)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.lastname2, new { tabindex = "1", @class = "personEditor", @id=idPrefix + "lastname2"})
+            @Html.ValidationMessageFor(model => model.lastname2)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label">
+            @Html.LabelFor(model => model.address1)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.address1, new { tabindex = "1", @class = "personEditor", @id=idPrefix + "address1" })
+            @Html.ValidationMessageFor(model => model.address1)
+        </div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.phone)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.phone, new { tabindex = "2", @class = "personEditor", @id=idPrefix + "phone" })
+            @Html.ValidationMessageFor(model => model.phone)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label">
+            @Html.LabelFor(model => model.address2)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.address2, new { tabindex = "1", @class = "personEditor", @id=idPrefix + "address2" })
+            @Html.ValidationMessageFor(model => model.address2)
+        </div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.gender)
+        </div>
+        <div class="tb-field">
+            @Html.DropDownListFor(model => model.gender, new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.gender), "Value", "Text", Model.gender), @Machete.Web.Resources.Shared.choose, new { tabindex = "2", @id=idPrefix + "gender" })
+            @Html.ValidationMessageFor(model => model.gender)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label">
+            @Html.LabelFor(model => model.city)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.city, new { tabindex = "1", @class = "personEditor", @id=idPrefix + "city" })
+            @Html.ValidationMessageFor(model => model.city)
+        </div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.genderother)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.genderother, new { tabindex = "2", @class = "personEditor", @id=idPrefix + "genderOther" })
+            @Html.ValidationMessageFor(model => model.genderother)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label">
+            @Html.LabelFor(model => model.state)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.state, new { tabindex = "1", @class = "personEditor", @id=idPrefix + "state" })
+            @Html.ValidationMessageFor(model => model.state)
+        </div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.active)
+        </div>
+        <div class="tb-field">
+            @Html.CheckBoxFor(model => model.active, new { tabindex = "2", @class = "personEditor", @id=idPrefix + "active" })
+            @Html.ValidationMessageFor(model => model.active)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label">
+            @Html.LabelFor(model => model.zipcode)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.zipcode, new { tabindex = "1", @class = "personEditor", @id = idPrefix + "zipcode" })
+            @Html.ValidationMessageFor(model => model.zipcode)
+        </div>
+    </div>
+</div>
+@Html.Partial("ManagerInfo")
+@Html.Partial("AdministratorInfo")
+
+@*<script type="text/javascript">
+    $().ready(function () {
+        $("#phone").mask("999-999-9999", {placeholder:" "});
+    });
+</script>*@

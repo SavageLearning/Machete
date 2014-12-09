@@ -1,0 +1,67 @@
+﻿@model Machete.Web.ViewModel.EmailView
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "email";
+}
+
+@using (Html.BeginForm("Duplicate", "Email", FormMethod.Post,
+                        new { @class = "edittab-form DuplicatePost", @id = "DuplicateEmail-" + Model.ID }))
+{
+    <input type="button" value="@Emails.duplicateWO" class="formButton" id="duplicate-@(Model.ID)"/>
+    if (Html.IsInRole(Html.Role_AM()))
+    {
+        <input id="deleteEmailButton-@Model.ID" type="button" value="@Emails.deletesubmit" 
+                class="formButton deleteButton" />
+    }
+    <br />    
+    @Html.ValidationSummary(true)
+    @Html.DisplayForModel()
+
+}
+@if (Html.IsInRole(Html.Role_AM()))
+{
+    //
+    // Only Managers can delete email records.
+    // The phonedesk can edit and save.
+    //
+    using (Html.BeginForm("Delete", "Email", FormMethod.Post,
+                            new { @class = "edittab-form DeletePost", @id = "DeleteEmail-" + Model.ID }))
+    {
+        @Html.HiddenFor(model => model.ID);
+    }
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.formButton').button();
+        $('#emailName').focus();
+        // machete UI detect changes on forms in tabs   
+        $("#@(Model.idPrefix)editForm").mUI('formDetectChanges', {
+            recType: "@(recType)",
+            formLevel: 1,
+            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+        });
+        //
+        // delete button confirmation
+        $("#deleteEmailButton-@Model.ID").mUI('formClickDelete', {
+            ok: "@(Emails.deletesubmit)",
+            confirm: '@(Emails.deleteconfirmation)',
+            title: '@(Emails.deletetitle)',
+            form: $('#DeleteEmail-@Model.ID')
+        });
+        //
+        // edit form submit
+        $('#duplicate-@Model.ID').mUI('formClickDuplicate', {
+            dupForm: $('#DuplicateEmail-@(Model.ID)')
+        });
+        $("#DuplicateEmail-@(Model.ID)").mUI('tabFormSubmit', {
+            exclusiveTab: false,
+            create: true,
+            recType: "@(recType)",
+            formLevel: 1
+         });
+    });
+</script>

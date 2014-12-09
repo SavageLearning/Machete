@@ -1,0 +1,2 @@
+insert into aspnet_roles (ApplicationId, RoleId, RoleName, LoweredRoleName, Description) 
+values ('C5419CFD-353B-4BD4-8ECA-A3E5DB08609B','BB133CA4-AEB5-45DB-9B1F-8C1482EC2B04','Teacher','teacher','NULL')

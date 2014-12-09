@@ -1,0 +1,124 @@
+﻿@model Machete.Domain.WorkAssignment
+@using Machete.Web.Helpers           
+@using Machete.Web.Resources
+@{
+    string recType = "WA";
+    string woRecType = "WO";
+    string idPrefix = recType + Model.ID + "-";
+    string woPrefix = woRecType + Model.workOrderID + "-"; 
+    int editDisable = 0;
+    if (!Html.IsInRole(Html.Role_AM()) && (Html.IsInRole(Html.Role_AMP()) && Model.workOrder.dateTimeofWork < DateTime.Today))
+    {
+        editDisable = 1;
+    }
+}
+@using (Html.BeginForm("Edit", "WorkAssignment", FormMethod.Post,
+                        new { @class = "edittab-form EditPost", @id = idPrefix +"waForm" }))
+{
+    @*<input type="button" value="@WorkAssignments.viewlink" class="formButton" id="view-@(Model.ID)" />*@
+    if ((Html.IsInRole(Html.Role_AMP()) && Model.workOrder.dateTimeofWork >= DateTime.Today) || Html.IsInRole(Html.Role_AM()))
+    {
+    <input type="submit" value="@WorkAssignments.editsubmit" class="formButton saveBtn" id="waEditSubmitBtn-@(Model.ID)"/>
+    <input type="button" value="@WorkAssignments.dupsubmit" class="formButton" id="duplicate-@(Model.ID)" />
+    }
+
+    if ((Html.IsInRole(Html.Role_AMP()) &&
+        Model.workOrder.dateTimeofWork >= DateTime.Today) ||
+    Html.IsInRole(Html.Role_AM())
+    )
+    {
+        <input id="deleteWorkAssignmentButton-@(Model.ID)" type="button" value="@WorkAssignments.deletesubmit" 
+                class="formButton deleteButton" />
+    }
+    <br />  
+    @Html.ValidationSummary(true)
+    @Html.EditorFor(model => model)
+
+}
+
+@using (Html.BeginForm("Duplicate", "WorkAssignment", FormMethod.Post,
+                        new { @class = "edittab-form DuplicatePost", @id = "DuplicateWorkAssignment-" + Model.ID }))
+{
+    @Html.HiddenFor(model => model.ID);
+}
+
+@if ((Html.IsInRole(Html.Role_AMP()) &&
+        Model.workOrder.dateTimeofWork >= DateTime.Today) ||
+    Html.IsInRole(Html.Role_AM())
+    )
+{
+    using (Html.BeginForm("Delete", "WorkAssignment", FormMethod.Post,
+                            new { @class = "edittab-form DeletePost", @id = "DeleteWorkAssignment-" + Model.ID }))
+    {
+        @Html.HiddenFor(model => model.ID);
+    }
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        var waForm = $('#@(idPrefix)waForm');
+        //
+        // Block phonedesk from editing old orders
+        //
+        if (@(editDisable)) { 
+            waForm.find('input,select,textarea').attr('disabled', 'disabled');
+        }
+        $('#activateWorkOrderButton-@(Model.workOrderID)').hide();
+        $('.formButton').button();
+        $('#contactName').focus();
+        $.validator.unobtrusive.parseDynamicContent('#@(idPrefix)waForm');
+        //
+        // wage calculations
+        waForm.mUI('waFormConfiguration', {
+            days: waForm.find('#@(idPrefix)days'),
+            hourlyWage: waForm.find('#@(idPrefix)hourlyWage'),
+            hour: waForm.find('#@(idPrefix)hours'),
+            range: waForm.find('#@(idPrefix)hourRange'),
+            total: waForm.find('#@(idPrefix)total'),
+            totalRange: waForm.find('#@(idPrefix)totalRange'),
+            skillID: waForm.find('#@(idPrefix)skillID'),
+            errCalcMsg: "@(Machete.Web.Resources.Shared.notcalculable)"
+        });
+        //
+        //  Edit submit event
+        waForm.mUI('tabFormSubmit', { 
+            exclusiveTab: false,
+            formLevel: 3,
+            preProcess: function () {
+                waForm.find('#@(idPrefix)hourlyWage').removeAttr('disabled', 'disabled');
+                waForm.find('#@(idPrefix)hours').removeAttr('disabled', 'disabled');
+                waForm.find('#@(idPrefix)hourRange').removeAttr('disabled', 'disabled');
+            }
+        });
+        //
+        // Delete confirmation 
+        $("#deleteWorkAssignmentButton-@(Model.ID)").mUI('formClickDelete', {
+            ok: "@WorkAssignments.deletesubmit",
+            confirm: '@WorkAssignments.deleteconfirmation',
+            title: '@WorkAssignments.deletetitle',
+            form: $('#DeleteWorkAssignment-@Model.ID')
+        });
+        //
+        // machete UI detect changes on forms in tabs   
+        waForm.mUI('formDetectChanges', { 
+            recType: "@(recType)",
+            formLevel: 3,
+            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+        });
+
+        //
+        // Duplicate submit event
+        $("#duplicate-@(Model.ID)").mUI('formClickDuplicate', {
+            editForm: waForm,
+            dupForm: $('#DuplicateWorkAssignment-@(Model.ID)')
+        });
+        //
+        // duplicate form submit
+        $("#DuplicateWorkAssignment-@(Model.ID)").mUI('tabFormSubmit', {
+            exclusiveTab: false,
+            create: true,
+            recType: "@(recType)",
+            formLevel: 3
+        });
+    });
+</script>

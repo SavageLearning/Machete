@@ -1,0 +1,131 @@
+﻿@using Machete.Web.Resources
+<div id="activityWrapper" class="report-wrapper">
+    <div id="activityHeader">
+        <div id="activityPopup">
+            <h3 class="report-padding-left-half">                
+                @Reports.activitiesHeader
+                <input type="button" value="?" class="formButton report-top report-align-right report-instructions-show" />
+            </h3>
+
+            <p id="activityInstructions" class="report-instructions">
+                @Reports.activityInstructions
+                <input type="button" value="@Reports.hideHelp" class="formButton report-top report-align-right report-instructions-hide" />
+            </p>
+        </div>
+    </div>
+    <div id="summaryReports" class="report-accordion">
+        <h3 class="report-subtitle"><a href="#" id="wecLink">Weekly</a></h3>
+        <div id="wecTable" class="report-container">
+            <input type="button" value="Refresh" class="formButton report-top" id="wecDataOnlyBtn" />
+            <input type="button" value="Print" class="formButton report-top" id="wecPrintReport" />
+            <input type="button" value="Spreadsheet" class="formButton report-top" id="wecSpreadsheet" />
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker-weekly report-top", @id = "weekActDate" })
+            <p id="wecHelp" class="report-inline report-top"><em>@Reports.weekInstructions</em></p>
+            <table id="weekActDataTable" class="display report-datatable">
+                <thead>
+                    <tr>
+                        <th>@Reports.date</th>
+                        <th>@Reports.safetyTraining</th>
+                        <th>@Reports.skillsTraining</th>
+                        <th>@Reports.eslAssessed</th>
+                        <th>@Reports.basicGarden</th>
+                        <th>@Reports.advGarden</th>
+                        <th>@Reports.finEd</th>
+                        <th>@Reports.osha</th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <h3 class="report-subtitle"><a href="#" id="mwdLink">Monthly</a></h3>
+        <div id="mwdTable" class="report-container">
+            <input type="button" value="Refresh" class="formButton report-top" id="mwdDataOnlyBtn" />
+            <input type="button" value="Print" class="formButton report-top" id="mwdPrintReport" />
+            <input type="button" value="Spreadsheet" class="formButton report-top" id="mwdSpreadsheet" />
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker report-top", @id = "monthActDate" })
+            <p id="mwdHelp" class="report-inline report-top"><em>@Reports.monthInstructions</em></p>
+            <table id="monthActDataTable" class="display report-datatable">
+                <thead>
+                    <tr>
+                        <th>@Reports.date</th>
+                        <th>@Reports.safetyTraining</th>
+                        <th>@Reports.skillsTraining</th>
+                        <th>@Reports.eslAssessed</th>
+                        <th>@Reports.basicGarden</th>
+                        <th>@Reports.advGarden</th>
+                        <th>@Reports.finEd</th>
+                        <th>@Reports.osha</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th></th>
+                        <th><strong>Totals</strong></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td colspan="4"></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+            @*            <div id="monthlyPieChart1" style="height:auto;width:80%;margin-top:3em;"></div> *@
+        </div>
+        <h3 class="report-subtitle"><a href="#" id="ywdLink">Yearly</a></h3>
+        <div id="ywdTable" class="report-container">
+            <input type="button" value="Refresh" class="formButton report-top" id="ywdDataOnlyBtn" />
+            <input type="button" value="Print" class="formButton report-top" id="ywdPrintReport" />
+            <input type="button" value="Spreadsheet" class="formButton report-top" id="ywdSpreadsheet" />
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker report-top", @id = "yearActDate" })
+            <p id="ywdHelp" class="report-inline report-top"><em>@Reports.yearInstructions</em></p>
+            <table id="yearActDataTable" class="display report-datatable">
+                <thead>
+                    <tr>
+                        <th>@Reports.date</th>
+                        <th>@Reports.safetyTraining</th>
+                        <th>@Reports.skillsTraining</th>
+                        <th>@Reports.eslAssessed</th>
+                        <th>@Reports.basicGarden</th>
+                        <th>@Reports.advGarden</th>
+                        <th>@Reports.finEd</th>
+                        <th>@Reports.osha</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th></th>
+                        <th><strong>Totals</strong></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td colspan="4"></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+            @*            <div id="yearlyPieChart1" style="height:auto;width:80%;margin-top:3em;"></div> *@
+        </div>
+    </div>
+</div>

@@ -1,0 +1,186 @@
+﻿@model Machete.Domain.Person
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using Machete.Domain.Resources
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "aji";
+    string idPrefix = recType + Model.ID + "-";
+    string parentPrefix = "person" + Model.ID + "-";
+}
+
+<div id="actJoinList">
+    
+    <div class="tb-table" style="clear: left;">
+        <div class="tb-row">
+            <div id="actInTab" class="tb-cell actDataEntryTab">
+                <ul>
+                <li><a href="#actInList" class="ListTab">@Activities.includedTab</a></li>
+                </ul>
+                <div id="actInList">
+                    <table id="@(idPrefix)actInTable" class="display actTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>LABEL</th>
+                                <th>@Activity.name</th>
+                                <th>@Activity.type</th>
+                                <th>@Activity.teacher</th>
+                                <th>@Activity.dateStart</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+       
+            <div class="mui-activities-join-box">
+                <div class="mui-activities-join-btn">            
+                    <button id="bActAssign" class="leftArrow">@Activities.includeAction</button>
+                </div>
+                <div class="mui-activities-join-btn">
+                    <button id="bActUnassign" class="rightArrow">@Activities.excludeAction</button>
+                </div>
+            </div>
+    
+            <div id="actOutTab" class="tb-cell actDataEntryTab">
+                <ul>
+                <li><a href="#actOutList" class="ListTab">@Activities.excludedTab</a></li>
+                </ul>
+                <div id="actOutList">
+                    <table id="@(idPrefix)actOutTable" class="display actTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>LABEL</th>
+                                <th>@Activity.name</th>
+                                <th>@Activity.type</th>
+                                <th>@Activity.teacher</th>
+                                <th>@Activity.dateStart</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#bActUnassign').button({
+            icons: {
+                secondary: "ui-icon-circle-triangle-e"
+            }
+         });
+
+        $('#bActAssign').button({
+            icons: {
+                primary: "ui-icon-circle-triangle-w"
+            }
+         });
+        $("#actOutTab").mUI('createTabs', {
+            prefix: "ui-tabs-actOut-", 
+            formLevel: 3,
+            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+        });
+        $("#actInTab").mUI('createTabs', {
+            prefix: "ui-tabs-actIn-", 
+            formLevel: 3,
+            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+        });
+        jqrfyTable({
+            table: $('#@(idPrefix)actOutTable'), 
+            tab: $('#@(parentPrefix)personPartsTabs'),
+            options: {
+                "bPaginate": true,
+                "bLengthChange": true,
+                "aaSorting": [[5, 'desc']],
+                "bFilter": true,
+                "bSort": true,
+                "bInfo": true,
+                "bAutoWidth": false,
+                "bServerSide": true,
+                "sAjaxSource": "/Activity/AjaxHandler", 
+                "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+                "bProcessing": true,
+                "aoColumns": [
+                                {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                                {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                                {"mDataProp": "name" },
+                                {"mDataProp": "type" },
+                                {"mDataProp": "teacher" },
+                                {"mDataProp": "dateStart" },
+                ],
+                "fnServerDataExtra": function () {
+                    return [
+                    { "name": "personID", "value": $('#personID').val() },
+                    { "name": "attendedActivities", "value": false }
+                    ]
+                },
+            }, 
+            dblClickEvent: null,
+            clickEvent: function (e) {
+                    if ( $(e.target.parentNode).hasClass('row_selected') ) 
+                        $(e.target.parentNode).removeClass('row_selected'); 
+                    else $(e.target.parentNode).addClass('row_selected'); 
+            },
+            tabLabel: "@(recType)"
+            });
+        
+        jqrfyTable({
+            table: $('#@(idPrefix)actInTable'), 
+            tab: $('#@(parentPrefix)personPartsTabs'),
+            options: {
+                "bPaginate": true,
+                "bLengthChange": true,
+                "aaSorting": [[5, 'desc']],
+                "bFilter": true,
+                "bSort": true,
+                "bInfo": true,
+                "bAutoWidth": false,
+                "bServerSide": true,
+                "sAjaxSource": "/Activity/AjaxHandler", 
+                "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+                "bProcessing": true,
+                "aoColumns": [
+                                {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                                {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                                {"mDataProp": "name" },
+                                {"mDataProp": "type" },
+                                {"mDataProp": "teacher" },
+                                {"mDataProp": "dateStart" },
+                ],
+                "fnServerDataExtra": function () {
+                    return [
+                    { "name": "personID", "value": $('#personID').val() },
+                    { "name": "attendedActivities", "value": true }
+                    ]
+                },
+            }, 
+            dblClickEvent: null,
+            clickEvent: function (e) {
+                    if ( $(e.target.parentNode).hasClass('row_selected') ) 
+                        $(e.target.parentNode).removeClass('row_selected'); 
+                    else $(e.target.parentNode).addClass('row_selected'); 
+            },
+            tabLabel: "@(recType)"
+        });
+        //
+        //         
+        $('#bActAssign').mUI('postSelectedRows', {
+            targetTable: $('#@(idPrefix)actOutTable'),
+            person: $('#personID'),
+            refreshTables: $('.actTable'),
+            url: '/Activity/Assign'
+        });
+        //
+        //
+        $('#bActUnassign').mUI('postSelectedRows', {
+            targetTable: $('#@(idPrefix)actInTable'),
+            person: $('#personID'),
+            refreshTables: $('.actTable'),
+            url: '/Activity/Unassign'
+        });
+    });
+</script>

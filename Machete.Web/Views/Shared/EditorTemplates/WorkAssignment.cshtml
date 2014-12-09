@@ -1,0 +1,182 @@
+﻿@model Machete.Domain.WorkAssignment
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using Machete.Domain.Resources
+@Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID" })
+@Html.HiddenFor(model => model.workOrderID)
+@{
+    string myStr = "";
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string idPrefix = "WA" + Model.ID + "-";
+}
+
+<div class="tb-table">
+
+    <div class="tb-row">
+        @Html.mUITableLabelFor(model => model.englishLevelID)
+        @Html.mUIDropDownListFor(model => model.englishLevelID, Lookups.skillLevels(), new {tabindex = "1", @id = idPrefix + "englishLevelID"})
+        @Html.mUITableLabelFor(model => model.skillID)
+        <div class="tb-field">
+            <select name="skillID" id=@(idPrefix + "skillID") 
+                    data-val-required="A skill is required (use general labor if none was specified)" 
+                    data-val-number="The field Skill must be a number." 
+                    data-val="true"
+                    tabindex="1"
+                    class="valid"><option value="">@Shared.choose</option>
+                @foreach (var item in Lookups.getSkill(specializedOnly: false))
+                {
+                    @*kludgy way to print selected or not. couldn't get other syntax to work*@
+                    if (Model.skillID == Convert.ToInt16(item.Value))
+                    {
+                        <option value="@(item.Value)" 
+                                wage="@(item.wage)" 
+                                minHour="@(item.minHour)" 
+                                fixedJob="@(item.fixedJob)" 
+                                selected="selected">@item.Text</option>
+                    }
+                    else
+                    {                                                
+                        <option value="@(item.Value)" 
+                                wage="@(item.wage)" 
+                                minHour="@(item.minHour)" 
+                                fixedJob="@(item.fixedJob)">@item.Text</option>
+                    }
+                } 
+            </select>
+            @*@Html.DropDownListFor(model => model.skillID, new SelectList(Lookups.skill(), "Value", "Text", Model.skillID), @Machete.Web.Resources.Shared.choose)*@
+            @Html.ValidationMessageFor(model => model.skillID)
+        </div>
+        @Html.mUITableLabelAndTextBoxFor(model => model.pseudoID, new { tabindex = "1", style = "width: 2em", @readonly = "readonly", @id = idPrefix + "pseudoID" })
+    </div>
+</div>
+<div class="tb-table">
+    <div class="tb-row">
+        @Html.mUITableLabelFor(model => model.hourlyWage)
+        <div class="tb-field">
+            @Html.TextBox("hourlyWage", Html.Encode(System.String.Format("{0:f2}", Model.hourlyWage)), new { tabindex = "1", @class = "money-field earnings-part", min="1", @id = idPrefix + "hourlyWage" })
+            @Html.ValidationMessageFor(model => model.hourlyWage)
+        </div>
+        @Html.mUITableLabelFor(model => model.hours)
+        <div class="tb-field">
+            @Html.TextBox("hours", Html.Encode(System.String.Format("{0:f2}", Model.hours)), new { tabindex = "1", @id = idPrefix + "hours", @class = "earnings-part", min="1", style = "width: 6em;" })
+            @Html.ValidationMessageFor(model => model.hours)
+        </div>
+
+       @* @Html.mUIDropDownListFor(model => model.hours, new SelectList(Lookups.hours(), "Value", "Text", Model.hours), new { tabindex = "1", @id = idPrefix + "hours", @class = "earnings-part" })*@
+        @Html.mUITableLabelFor(model => model.hourRange)
+        @Html.mUIDropDownListFor(model => model.hourRange, new SelectList(Lookups.hours(), "Value", "Text", Model.hourRange), new { tabindex = "1", @id = idPrefix + "hourRange", @class = "earnings-part" })
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelFor(model => model.days)
+        @Html.mUIDropDownListFor(model => model.days, new SelectList(Lookups.days(), "Value", "Text", Model.days), new { tabindex = "1", @id = idPrefix + "days", @class = "earnings-part" })
+        <div class="tb-label">
+            @Html.Label("total", @Machete.Web.Resources.WorkAssignments.total)
+        </div>
+        <div class="tb-field">
+            @Html.TextBox( idPrefix + "total", null, new { tabindex = "1", style = "width: 6em;"})
+        </div>
+        <div class="tb-label">
+            @Html.Label("totalRange", @Machete.Web.Resources.WorkAssignments.totalRange)
+        </div>
+        <div class="tb-field">
+            @Html.TextBox(idPrefix + "totalRange", null, new { tabindex = "1", style = "width: 6em;"})
+        </div>
+        @Html.mUITableLabelFor(model => model.surcharge)
+        <div class="tb-field">
+            @Html.TextBox("surcharge", Html.Encode(System.String.Format("{0:f2}", Model.surcharge)), new { tabindex = "1", @class = "money-field earnings-part", @id = idPrefix + "surcharge" })
+            @Html.ValidationMessageFor(model => model.surcharge)
+        </div>
+    </div>
+</div>
+<div class="tb-table">
+    <div class="tb-row">
+        <div class="tb-label desc-label">
+            @Html.LabelFor(model => model.description)
+        </div>
+        <div class="tb-field desc-field">
+            @*@Html.TextAreaFor("description", Model.description, new { style = "width: 40em; height: 4em;" })*@
+            @Html.TextAreaFor(model => model.description, new { tabindex = "1", @class = "desc-field", @id = idPrefix + "description" })
+            @Html.ValidationMessageFor(model => model.description)
+        </div>
+    </div>
+</div>
+@if (Html.IsInRole(Html.Role_AM()))
+{
+<div class="Accordion" id="dispatchAccordion">
+    <h3><a href="#">@Machete.Domain.Resources.WorkAssignment.dispatchinfo</a></h3>
+    <div class="tb-table">
+        <div class="tb-row">
+            @Html.mUITableLabelFor(model => model.workerAssignedID)
+            <div class="tb-display">
+                @Html.HiddenFor(model => model.workerAssignedID,
+                    new { 
+                       @id="workerAssigned-" + Model.ID
+                    })           
+                @{                    
+                    if (Model.workerAssigned != null)
+                    {
+                        myStr = Model.workerAssigned.dwccardnum + " " +
+                                        Model.workerAssigned.Person.fullName();
+                    }
+                }
+                @Html.TextBox("workerAssignedDisplay", 
+                    myStr, 
+                    new { 
+                        style = "width: 20em",
+                        @disabled = "disabled",
+                        @id = "workerAssignedDisplay-" + Model.ID
+                    })
+             </div>
+             <div class="tb-label">
+                    <input type="button" value="@Machete.Domain.Resources.WorkAssignment.change" 
+                            class="formButton" 
+                            id="changeAssigned-@(Model.ID)"/>
+                    <input type="button" value="@Machete.Domain.Resources.WorkAssignment.delete" 
+                            class="formButton" 
+                            id="deleteAssigned-@(Model.ID)"/>
+             </div>
+        </div>
+    </div>
+</div>
+}
+
+@Html.Partial("ManagerInfo")
+@Html.Partial("AdministratorInfo")
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#changeAssigned-@(Model.ID)').click(function () {
+
+            $('#workerTable').dataTable().fnDraw();
+            $('#workerTable').show();
+            //
+            // TODO: remove global. ugly kludge.
+            M_workerRequestHandler = function (myID, myLabel) {
+                //
+                //Anon function to handle doubleclick of record selector
+                $('#workerAssigned-@(Model.ID)').val(myID);
+                $('#workerAssignedDisplay-@(Model.ID)').val(myLabel);
+                //$('#WorkAssignmentTab-@(Model.ID)').submit();
+            }
+            $("#workerDialog").dialog({
+                    height: 340,
+                    width: 1000,
+                    modal: true
+            });            
+            $('#workerDialog').show();
+        });
+        //
+        // Delete confirmation 
+        $('#deleteAssigned-@(Model.ID)').click(function () {
+            jConfirm('@Machete.Domain.Resources.WorkAssignment.deleteassignedconfirm',
+                     '@Machete.Domain.Resources.WorkAssignment.deleteassignedtitle',
+                     function (r) {
+                         if (r == true) {
+                            $('#workerAssigned-@(Model.ID)').val(null);
+                             $('#workerAssignedDisplay-@(Model.ID)').val(null);
+                             $('#waEditSubmitBtn-@(Model.ID)').click();
+                         }
+                     }
+            );
+        });
+    });
+</script>

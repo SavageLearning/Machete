@@ -1,0 +1,12 @@
+﻿@model Machete.Domain.Person
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+<link href="@Url.Content("~/Content/print.css")" rel="stylesheet" type="text/css" media="print" />
+@{
+    ViewBag.Title = Persons.viewtitle;
+}
+<fieldset>
+    <legend>@Persons.boxlegend</legend>
+
+    @Html.EditorForModel()
+</fieldset>

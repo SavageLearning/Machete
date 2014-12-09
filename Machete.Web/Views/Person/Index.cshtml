@@ -1,0 +1,174 @@
+﻿@model Machete.Web.ViewModel.PeopleIndex
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using Machete.Domain.Resources
+@{
+    ViewBag.Title = Persons.indextitle;
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "person";
+}
+@using (Html.BeginForm())
+{
+    <div style="display:none;">
+        @Html.LabelFor(m => m.showWorkers)
+        @Html.TextBoxFor(m => m.showWorkers)
+        @Html.LabelFor(m => m.showNotWorkers)
+        @Html.TextBoxFor(m => m.showNotWorkers)
+        @Html.LabelFor(m => m.showExpiredWorkers)
+        @Html.TextBoxFor(m => m.showExpiredWorkers)
+        @Html.LabelFor(m => m.showSExWorkers)
+        @Html.TextBoxFor(m => m.showSExWorkers)
+        <input type="button" value="@(WorkAssignments.btnUpdate)" id="updateBtn" class="formButton" />
+    </div>
+
+}
+<div class="wa-content">
+    <div id="buttonDivider">
+        <div class="radio">
+            <input type="button" id="bSortPersons" class="formButton report-button" value="@(Persons.allf) @(Shared.persontab)" />
+            <input type="button" id="bSortWorkers" class="formButton report-button" value="@(Shared.workerstab)" />
+            <input type="button" id="bSortNotWorkers" class="formButton report-button" value="@(Shared.not) @(Shared.workerstab)" />
+            <input type="button" id="bSortExpired" class="formButton report-button" value="@(Persons.expired)" />
+            <input type="button" id="bSortSEx" class="formButton report-button" value="@(Persons.sancExp)" />
+            <div id ="personHelp" class="person-help">@(Persons.clicksort)</div>
+            <input type="button" id="bHelp" class="formButton report-button" style="float:right;" value="?" />
+        </div>
+    </div>
+
+    <div class="clear">
+        <div id="personTabs" class="ExclusiveTab">
+            <ul>
+                <li><a href="#personList" id="personListTab" class="ListTab">@Persons.listlink</a> </li>
+                <li><a href="/Person/Create" id="personCreateTab" class="CreateTab">@Persons.createlink</a></li>
+            </ul>
+            <div id="personList">
+                <table id="personTable" class="display">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>LABEL</th>
+                            <th>@Worker.memberStatus</th>
+                            <th>@Worker.dwccardnum</th>
+                            <th>@Person.firstname</th>
+                            <th></th>
+                            <th>@Person.lastname</th>
+                            <th></th>
+                            <th>@Person.phone</th>
+                            <th>@Record.dateupdated</th>
+                            <th>@Record.updatedby</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#bHelp').click(function () {
+            if ($('#personHelp').is(":visible")) {
+                $('#personHelp').css('display', 'none');
+            }
+            else {
+                $('#personHelp').css('display', 'inline-block');
+            }
+        });
+
+        //jqrfyTable({
+        //table:
+        $('#personTable').mUI('createTable', {
+            tab: $('#personTabs'),
+            options: {
+                "sScrollY": "300px",
+                "bPaginate": false,
+                "bLengthChange": true,
+                "aaSorting": [[10, 'asc']],
+                "bFilter": true,
+                //"bSort": true,
+                "bAutoWidth": false,
+                "bInfo": true,
+                "bServerSide": true,
+                "sAjaxSource": "/Person/AjaxHandler",
+                "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+                "bProcessing": true,
+                "aoColumns": [
+                    { "mDataProp": "tabref", "bSearchable": false, "bSortable": false, "bVisible": false },
+                    { "mDataProp": "tablabel", "bSearchable": false, "bSortable": false, "bVisible": false },
+                    { "mDataProp": "workerStatus" },
+                    { "mDataProp": "dwccardnum" },
+                    { "mDataProp": "firstname1" },
+                    { "mDataProp": "firstname2" },
+                    { "mDataProp": "lastname1" },
+                    { "mDataProp": "lastname2" },
+                    { "mDataProp": "phone" },
+                    { "mDataProp": "dateupdated" },
+                    { "mDataProp": "Updatedby", "bSortable": false }
+                ],
+                "aoSearchCols": [null, null, null, null, null, null, null, null, null, null, null],
+                "fnServerDataExtra": function () {
+                    return [
+                        { "name": "showWorkers", "value": $('#showWorkers').val() },
+                        { "name": "showNotWorkers", "value": $('#showNotWorkers').val() },
+                        { "name": "showExpiredWorkers", "value": $('#showExpiredWorkers').val() },
+                        { "name": "showSExWorkers", "value": $('#showSExWorkers').val() }
+                    ]
+                }
+            },
+            dblClickEvent: null,
+            tabLabel: "@(recType)"
+        });
+        $('#personTable_filter input').attr('ID', 'personSearchBox');
+        $('#personTabs').mUI("createTabs", {
+            prefix: "ui-tabs-person-",
+            formLevel: 1,
+            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+        });
+
+        $('#bSortPersons').click(function (e) {
+            e.preventDefault();
+            $('#showWorkers').val(false);
+            $('#showNotWorkers').val(false);
+            $('#showExpiredWorkers').val(false);
+            $('#showSExWorkers').val(false);
+            $('#updateBtn').click();
+        });
+        $('#bSortWorkers').click(function (e) {
+            e.preventDefault();
+            $('#showWorkers').val(true);
+            $('#showNotWorkers').val(false);
+            $('#showExpiredWorkers').val(false);
+            $('#showSExWorkers').val(false);
+            $('#updateBtn').click();
+        });
+        $('#bSortNotWorkers').click(function (e) {
+            e.preventDefault();
+            $('#showWorkers').val(false);
+            $('#showNotWorkers').val(true);
+            $('#showExpiredWorkers').val(false);
+            $('#showSExWorkers').val(false);
+            $('#updateBtn').click();
+        });
+        $('#bSortExpired').click(function (e) {
+            e.preventDefault();
+            $('#showWorkers').val(false);
+            $('#showNotWorkers').val(false);
+            $('#showExpiredWorkers').val(true);
+            $('#showSExWorkers').val(false);
+            $('#updateBtn').click();
+        });
+        $('#bSortSEx').click(function (e) {
+            e.preventDefault();
+            $('#showWorkers').val(false);
+            $('#showNotWorkers').val(false);
+            $('#showExpiredWorkers').val(false);
+            $('#showSExWorkers').val(true);
+            $('#updateBtn').click();
+        });
+        $('#updateBtn').click(function () { $('#personTable').dataTable().fnDraw(); });
+
+        $('#personListTab').click(function () { $('#updateBtn').click(); })
+    });
+</script>

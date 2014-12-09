@@ -1,0 +1,312 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="boxcontactname" xml:space="preserve">
+    <value>Persona de contacto:</value>
+  </data>
+  <data name="boxdatecreated" xml:space="preserve">
+    <value>Creado en:</value>
+  </data>
+  <data name="boxlegend" xml:space="preserve">
+    <value>Orden de Trabajo:</value>
+  </data>
+  <data name="createlink" xml:space="preserve">
+    <value>Crear nueva orden de trabajo</value>
+  </data>
+  <data name="createnolinkmsg" xml:space="preserve">
+    <value>Para crear una nueva orden de trabajo, primero debe seleccionar un registro del empleador existente o crear una nueva empresa. Haga clic en el cuadro de menú (arriba) para crear o seleccionar un empleador. Alternativamente, usted puede ver una orden de trabajo existentes (abajo) y luego ver todos los pedidos de ese empleador.</value>
+  </data>
+  <data name="createsubmit" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="createtitle" xml:space="preserve">
+    <value>Crear Orden del Trabajo</value>
+  </data>
+  <data name="deleteconfirmation" xml:space="preserve">
+    <value>¿Está seguro que desea eliminar esta orden de trabajo? Toda la información será borrada para siempre. Si desea desactivar esta orden de trabajo, cancelación de este diálogo y desmarque la caja 'activa' en la página de la orden de trabajo.</value>
+  </data>
+  <data name="deletelink" xml:space="preserve">
+    <value>Borrar</value>
+  </data>
+  <data name="deletesubmit" xml:space="preserve">
+    <value>Borrar</value>
+  </data>
+  <data name="deletetitle" xml:space="preserve">
+    <value>Borrar Orden del Trabajo</value>
+  </data>
+  <data name="editlink" xml:space="preserve">
+    <value>Editar</value>
+  </data>
+  <data name="editsubmit" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="edittitle" xml:space="preserve">
+    <value>Editar Orden del Trabajo</value>
+  </data>
+  <data name="editworkorderlink" xml:space="preserve">
+    <value>Editar orden del trabajo</value>
+  </data>
+  <data name="indexreturnlink" xml:space="preserve">
+    <value>Volver a la lista de órdenes de trabajo</value>
+  </data>
+  <data name="indextitle" xml:space="preserve">
+    <value>Lista de órdenes de trabajo</value>
+  </data>
+  <data name="listlink" xml:space="preserve">
+    <value>Lista de órdenes de trabajo</value>
+  </data>
+  <data name="listlinkall" xml:space="preserve">
+    <value>Lista de los todos de órdenes de trabajo</value>
+  </data>
+  <data name="listOfPositions" xml:space="preserve">
+    <value>Lista de posiciones</value>
+  </data>
+  <data name="printlink" xml:space="preserve">
+    <value>Imprimir orden</value>
+  </data>
+  <data name="printWorkOrder" xml:space="preserve">
+    <value>Imprimir orden del trabajo</value>
+  </data>
+  <data name="viewlink" xml:space="preserve">
+    <value>Ver</value>
+  </data>
+  <data name="viewtitle" xml:space="preserve">
+    <value>Ver Orden del trabajo</value>
+  </data>
+  <data name="copyemployerinfo" xml:space="preserve">
+    <value>Copiar info. del empleador</value>
+  </data>
+  <data name="tabprefix" xml:space="preserve">
+    <value>Orden #: </value>
+  </data>
+  <data name="activatesubmit" xml:space="preserve">
+    <value>Activar orden</value>
+  </data>
+  <data name="mapbutton" xml:space="preserve">
+    <value>Abrir mapa de Google</value>
+  </data>
+  <data name="assigncount" xml:space="preserve">
+    <value>Conta de los Asignaciones</value>
+  </data>
+  <data name="dateneeded" xml:space="preserve">
+    <value>Fecha necesitado:</value>
+  </data>
+  <data name="flexible" xml:space="preserve">
+    <value>(flexible)</value>
+  </data>
+  <data name="sharp" xml:space="preserve">
+    <value>(en punto)</value>
+  </data>
+  <data name="transportFeeExtraShort" xml:space="preserve">
+    <value>Tarifa extra</value>
+  </data>
+  <data name="transportFeeShort" xml:space="preserve">
+    <value>Tarifa de trans</value>
+  </data>
+  <data name="transportfeetotal" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="transportMethodIDShort" xml:space="preserve">
+    <value>Trans método:</value>
+  </data>
+  <data name="woidcount" xml:space="preserve">
+    <value>Trabajador #</value>
+  </data>
+  <data name="activeassignment" xml:space="preserve">
+    <value>Asignación activo</value>
+  </data>
+  <data name="activeorder" xml:space="preserve">
+    <value>Orden activa</value>
+  </data>
+  <data name="btnActive" xml:space="preserve">
+    <value>Activo</value>
+  </data>
+  <data name="btnAll" xml:space="preserve">
+    <value>Todo</value>
+  </data>
+  <data name="btnCancelled" xml:space="preserve">
+    <value>Cancelado</value>
+  </data>
+  <data name="btnCompleted" xml:space="preserve">
+    <value>Completado</value>
+  </data>
+  <data name="btnExpired" xml:space="preserve">
+    <value>Expirado</value>
+  </data>
+  <data name="btnPending" xml:space="preserve">
+    <value>Pendiente</value>
+  </data>
+  <data name="cancelledassignment" xml:space="preserve">
+    <value>Asignación cancelado</value>
+  </data>
+  <data name="cancelledorder" xml:space="preserve">
+    <value>Orden Cancelado</value>
+  </data>
+  <data name="completeactiveassigned" xml:space="preserve">
+    <value>Completar los órdenes activos y asignados</value>
+  </data>
+  <data name="completedassignment" xml:space="preserve">
+    <value>Asignación completado</value>
+  </data>
+  <data name="completedorder" xml:space="preserve">
+    <value>Orden completado</value>
+  </data>
+  <data name="date" xml:space="preserve">
+    <value>Fecha</value>
+  </data>
+  <data name="details" xml:space="preserve">
+    <value>Detailes</value>
+  </data>
+  <data name="expiredassignment" xml:space="preserve">
+    <value>Asignación expirado</value>
+  </data>
+  <data name="expiredorder" xml:space="preserve">
+    <value>Orden expirado</value>
+  </data>
+  <data name="groupviewerror" xml:space="preserve">
+    <value>No hay pedidos activa con las tareas de los trabajadores cumplirse para la fecha seleccionada.</value>
+  </data>
+  <data name="pendingassignment" xml:space="preserve">
+    <value>Asignación pendiente</value>
+  </data>
+  <data name="pendingorder" xml:space="preserve">
+    <value>Orden pendiente</value>
+  </data>
+  <data name="printactive" xml:space="preserve">
+    <value>Imprimir órdenes activos</value>
+  </data>
+  <data name="printactiveassigned" xml:space="preserve">
+    <value>Imprimir órdenes activos y asignados</value>
+  </data>
+  <data name="summary" xml:space="preserve">
+    <value>Resumen</value>
+  </data>
+  <data name="weekday" xml:space="preserve">
+    <value>Día de la semana</value>
+  </data>
+  <data name="workername" xml:space="preserve">
+    <value>NOMBRE DELTRABAJADOR:</value>
+  </data>
+  <data name="changeemployer" xml:space="preserve">
+    <value>Cambiar de empleador</value>
+  </data>
+  <data name="btnOnline" xml:space="preserve">
+    <value>Online</value>
+  </data>
+</root>

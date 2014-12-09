@@ -1,0 +1,175 @@
+﻿@using Machete.Web.Resources
+<div id="summaryWrapper" class="report-wrapper">
+    <div id="summaryHeader">
+        <div id="summaryPopup">
+            <h3 class="report-padding-left-half">
+                @Reports.summaryHeader
+                <input type="button" value="?" class="formButton report-button report-top report-align-right report-instructions-show" />
+            </h3>
+            <p id="summaryInstructions" class="report-instructions">
+                @Reports.summaryInstructions
+                <input type="button" value="@Reports.hideHelp" class="formButton report-button report-top report-align-right report-instructions-hide" />
+            </p>
+        </div>
+    </div>
+    <div id="summaryReports" class="report-accordion">
+    <h3 class="report-subtitle"><a href="#" id="dclLink">Daily</a></h3>            
+        <div id="dclTable" class="report-container">
+            <input type="button" value="Refresh" class="formButton report-button report-top" id="dclDataOnlyBtn" />
+            <input type="button" value="Print Report" class="formButton report-button report-top" id="dclPrintReport" />
+            <input type="button" value="Spreadsheet" class="formButton report-button report-top" id="dclSpreadsheet" />
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker report-top", @id = "dclDate" })
+            <p id="dclHelp" class="report-inline report-instructions report-tip report-top"><em>@Reports.dayInstructions</em></p>
+            <div class="report-data">
+                <table id="dclDataTable" class="display report-datatable">
+                    <thead>
+                        <tr>
+                            <th class="report-table-header">@Reports.dwcList</th>
+                            <th class="report-table-header">@Reports.dwcPropio</th>
+                            <th class="report-table-header">@Reports.hhhList</th>
+                            <th class="report-table-header">@Reports.hhhPropio</th>
+                            <th class="report-table-header">Unique</th>
+                            <th class="report-table-header">@Reports.totalSignins</th>
+                            <th class="report-table-header">@Reports.totalAssignments</th>
+                            <th class="report-table-header">@Reports.cancelledJobs</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="report-chart">
+                <div id="dailyPieChart1" class="report-chart-inner"></div>
+                <div id="dailyPieChart2" class="report-chart-inner"></div>
+            </div>
+        </div>
+    <h3 class="report-subtitle"><a href="#" id="wecLink">Weekly</a></h3>
+        <div id="wecTable" class="report-container">
+            <input type="button" value="Refresh" class="formButton report-button report-top" id="wecDataOnlyBtn" />
+            <input type="button" value="Print" class="formButton report-button report-top" id="wecPrintReport" />
+            <input type="button" value="Spreadsheet" class="formButton report-button report-top" id="wecSpreadsheet" />
+            <p class="report-inline report-top report-top-text">Week ending </p>@Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker-weekly report-top", @id = "wecDate" })
+            <p id="wecHelp" class="report-tip report-top report-instructions"><em>@Reports.weekInstructions</em></p>
+            <div class="report-data">
+                <table id="wecDataTable" class="display report-datatable">
+                    <thead>
+                        <tr>
+                            <th class="report-table-header">@Reports.weekday</th>
+                            <th class="report-table-header">@Reports.totalSignins</th>
+                            <th class="report-table-header">@Reports.totalAssignments</th>
+                            <th class="report-table-header">@Reports.weekEstDailyHours</th>
+                            <th class="report-table-header">@Reports.weekEstPayment</th>
+                            <th class="report-table-header">@Reports.weekHourlyWage</th>
+                            <th class="report-table-header"></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="report-chart">
+                <div id="weeklyPieChart" class="report-chart-inner"></div>
+            </div>
+        </div>
+    <h3 class="report-subtitle"><a href="#" id="mwdLink">Monthly</a></h3>
+        <div id="mwdTable" class="report-container">
+            <input type="button" value="Refresh" class="formButton report-button report-top" id="mwdDataOnlyBtn" />
+            <input type="button" value="Print" class="formButton report-button report-top" id="mwdPrintReport" />
+            <input type="button" value="Spreadsheet" class="formButton report-button report-top" id="mwdSpreadsheet" />
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker report-top", @id = "mwdDate" })
+            <p id="mwdHelp" class="report-tip report-instructions report-top"><em>@Reports.monthInstructions</em></p>
+            <div class="report-data">
+                <table id="mwdDataTable" class="display report-datatable">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th class="report-table-header">@Reports.date</th>
+                            <th class="report-table-header">@Reports.activeMembers</th>
+                            <th class="report-table-header">@Reports.totalSignins</th>
+                            <th class="report-table-header">@Reports.wentToClass</th>
+                            <th class="report-table-header">@Reports.dispatched</th>
+                            <th class="report-table-header">@Reports.totalHours</th>
+                            <th class="report-table-header">@Reports.totalIncome</th>
+                            <th class="report-table-header">@Reports.avgIncome</th>
+                            <th class="report-table-header"></th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th><strong>Totals</strong></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td colspan="4"></td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        <div class="report-chart">
+            <div id="monthlyChart" class="report-chart-inner-only"></div>
+        </div>
+        </div>
+    <h3 class="report-subtitle"><a href="#" id="ywdLink">Yearly</a></h3>
+        <div id="ywdTable" class="report-container">
+        <input type="button" value="Refresh" class="formButton report-button report-top" id="ywdDataOnlyBtn" />
+        <input type="button" value="Print" class="formButton report-button report-top" id="ywdPrintReport" />
+        <input type="button" value="Spreadsheet" class="formButton report-button report-top" id="ywdSpreadsheet" />
+        @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker report-top", @id = "ywdDate" })
+        <p id="ywdHelp" class="report-tip report-top report-instructions"><em>@Reports.yearInstructions</em></p>
+            <div class="report-data">
+                <table id="ywdDataTable" class="display report-datatable">
+                    <thead>
+                        <tr>
+                            <th></th> @*Hidden date*@
+                            <th class="report-table-header">@Reports.date</th>
+                            <th class="report-table-header">@Reports.activeMembers</th>
+                            <th class="report-table-header">@Reports.totalSignins</th>
+                            <th class="report-table-header">@Reports.wentToClass</th>
+                            <th class="report-table-header">@Reports.dispatched</th>
+                            <th class="report-table-header">@Reports.totalHours</th>
+                            <th class="report-table-header">@Reports.totalIncome</th>
+                            <th class="report-table-header">@Reports.avgIncome</th>
+                            <th class="report-table-header"></th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th><strong>Totals</strong></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td colspan="4"></td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="report-chart">
+                <div id="yearlyChart" class="report-chart-inner-only"></div>
+            </div>
+        </div>
+    </div>
+</div>

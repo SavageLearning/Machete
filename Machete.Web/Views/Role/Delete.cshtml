@@ -1,0 +1,11 @@
+﻿@{
+    ViewBag.Title = "Delete";
+}
+    <h2>Delete Role @Html.Encode(ViewData["Role"]) ?</h2>
+    
+    @Html.ValidationSummary("Role deletion was unsuccessful. Please correct the errors and try again.")
+
+    @using (Html.BeginForm("Delete", "Role")) {
+        <input type="submit" value="Delete" />
+    } 
+

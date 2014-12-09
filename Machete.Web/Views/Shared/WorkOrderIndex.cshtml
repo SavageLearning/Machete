@@ -1,0 +1,195 @@
+﻿@model Machete.Domain.Employer
+@using Machete.Web.Helpers
+@using Machete.Domain.Resources
+@using Machete.Web.Resources
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "WO";
+    string idPrefix = recType + Model.ID + "-";
+}
+<div id="workOrderTabs_@(Model.ID)" >
+    <ul>
+        <li><a href="#@(idPrefix)workOrderList" id="workOrderListTab_@(Model.ID)" class="ListTab">@WorkOrders.listlink</a> </li>
+        <li><a href="/WorkOrder/Create?EmployerID=@(Model.ID)" id="workOrderCreateTab_@(Model.ID)" class="CreateTab">@WorkOrders.createlink</a></li>        
+    </ul>
+    <div id="@(idPrefix)workOrderList">
+        <table id="workOrderTable_@(Model.ID)" class="display">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>LABEL</th>
+                    <th>EmployerID</th>
+                    <th>@WorkOrder.workorderID</th>
+                    <th>@WorkOrder.dateTimeofWork</th>
+                    <th>@WorkOrder.statusShort</th>
+                    <th>@WorkOrders.assigncount</th>
+                    <th>@WorkOrder.contactName</th>
+                    <th>@WorkOrder.workSiteAddress1</th>
+                    <th>@Record.dateupdated</th>
+                    <th>@Record.updatedby</th>
+                </tr>
+            </thead>
+        </table>        
+    </div>
+</div>
+
+<div id="employerSelectDialog" title="@WorkOrders.empChgConfirmTitle">
+    <table id="employerSelectTable" class="display">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>LABEL</th>
+            <th>@Machete.Domain.Resources.Employer.active</th>
+            <th>@Machete.Domain.Resources.Employer.name</th>
+            <th>@Machete.Domain.Resources.Employer.address1</th>
+            <th>@Machete.Domain.Resources.Employer.city</th>
+            <th>@Machete.Domain.Resources.Employer.phone</th>
+            <th>@Machete.Domain.Resources.Record.dateupdated</th>
+            <th>@Machete.Domain.Resources.Record.updatedby</th>
+        </tr>
+    </thead>
+</table>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        ////////////////////////////////////////////////////////////////
+        //
+        // Setup work order Tabs
+        //       
+        $('#workOrderTabs_@(Model.ID)').mUI('createTabs', {
+            prefix: "ui-tabs-workorder-e_@(Model.ID)-",
+            formLevel: 2,
+            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)",
+            updateDatatable: true
+        });
+        ////////////////////////////////////////////////////////////////
+        //
+        // Setup workorder Table
+        //
+        var oWOTable = jqrfyTable({
+            table: $('#workOrderTable_@(Model.ID)'), 
+            tab: $('#workOrderTabs_@(Model.ID)'),
+            options: {
+                "bPaginate": true,
+                "bLengthChange": true,
+                "aaSorting": [[7, 'desc']],
+                "bFilter": true,
+                "bSort": true,
+                "bInfo": true,
+                "bAutoWidth": false,
+                "bServerSide": true,
+                "sAjaxSource": "/WorkOrder/AjaxHandler",
+                "bProcessing": true,
+                "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+                "aoColumns": [
+                                { "mDataProp": "tabref", "bSearchable": false, "bSortable": false, "bVisible": false },
+                                { "mDataProp": "tablabel", "bSearchable": false, "bSortable": false, "bVisible": false },
+                                { "mDataProp": "EID", "bSearchable": false, "bSortable": false, "bVisible": false },
+                                { "mDataProp": "WOID" },
+                                { "mDataProp": "dateTimeofWork" },
+                                { "mDataProp": "status" },
+                                { "mDataProp": "WAcount" },
+                                { "mDataProp": "contactName" },
+                                { "mDataProp": "workSiteAddress1" },
+                                { "mDataProp": "dateupdated" },
+                                { "mDataProp": "updatedby" }
+                ],
+                "aoSearchCols" :  [null, null, { "sSearch": "@(Model.ID)" }, null, null, null, null, null, null],
+                "fnServerDataExtra": function() { return [{ name: "showOrdersWorkers", value: true }]},
+                "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                    if (aData['workers'] != null && aData['WAcount'] > 0) {                    
+                        $('td:eq(3)', nRow).prepend('<img src="/Content/dataTables/details_open.png">');
+                    }                
+                    return nRow;
+                }   
+            
+            }, 
+            dblClickEvent: null, 
+            tabLabel: "@(recType)" 
+        });
+        $('#workOrderTable_@(Model.ID) tbody td img').live('click', function () {
+            var nTr = $(this).parents('tr')[0];
+
+            if ( oWOTable.fnIsOpen(nTr) )
+            {
+                /* This row is already open - close it */
+                this.src = "/Content/dataTables/details_open.png";
+                oWOTable.fnClose( nTr );
+            } else {
+                /* Open this row */
+                this.src = "/Content/dataTables/details_close.png";
+                oWOTable.fnOpen( nTr, fnFormatDetails(oWOTable, nTr), 'details' );
+            }
+        });
+
+
+        function fnFormatDetails ( oTable, nTr )
+        {
+            var aData = oTable.fnGetData( nTr );
+            var wkrList = aData['workers'];
+            var sOut = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
+            sOut += '<thead><tr><th>@Machete.Domain.Resources.Worker.dwccardnum</th>';
+            sOut += '<th>@Machete.Web.Resources.WorkAssignments.fullname</th>';
+            sOut += '<th>@Machete.Web.Resources.WorkAssignments.skills</th>';
+            sOut += '<th>@Machete.Web.Resources.WorkAssignments.hours</th>';
+            sOut += '<th>@Machete.Domain.Resources.WorkAssignment.hourlyWage</th>';
+            sOut += '</tr></thead>';
+            sOut += '<tbody>';
+            for (var i in wkrList)
+            {
+                var wkr = wkrList[i];
+                sOut += '<tr><td>'+wkr.WID+'</td><td>'+wkr.name+'</td><td>'+wkr.skill+'</td><td>'+wkr.hours+'</td><td>'+wkr.wage+'</td></tr>';
+            }
+            sOut += '</tbody></table>';     
+            return sOut;
+        }
+        ////////////////////////////////////////////////////////////////
+        //
+        // table for selecting employer (for workorder move functionality)
+        //
+        $('#employerSelectTable').dataTable({
+            "bPaginate": true,
+            "bLengthChange": true,
+            "aaSorting": [[7, 'desc']],
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "iDeferLoading": true,
+            "bAutoWidth": false,
+            "bServerSide": true,
+            "sAjaxSource": "/Employer/AjaxHandler", 
+            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "bProcessing": true,
+            "aoColumns": [
+                            {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                            {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                            {"mDataProp": "active" },
+                            {"mDataProp": "name" },
+                            {"mDataProp": "address1" },
+                            {"mDataProp": "city" },
+                            {"mDataProp": "phone" },
+                            {"mDataProp": "dateupdated" },
+                            {"mDataProp": "Updatedby", "bSortable": false }
+            ],
+            // callback populates html attr with row data from JSON            
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $(nRow).attr('recordid', aData['EID']);              
+                return nRow;
+            }    
+        }).fnSetFilteringDelay(250);
+        $('#employerSelectTable_filter input').attr('ID', 'employerSelectTable_searchbox');
+        //////////////////////////////////////////////////
+        //
+        //
+        $('#employerSelectDialog').hide();
+        $('#employerSelectTable').hide();
+        
+        $('#employerSelectTable').find('tbody').mUI('selectEmployerDblClick',
+        {
+            okButton: "@WorkOrders.empChgConfirmSubmit",
+            message: "@WorkOrders.empChgConfirm",
+            title: '@WorkOrders.empChgConfirmSubmit' 
+        });
+    });
+</script>

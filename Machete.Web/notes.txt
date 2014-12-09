@@ -1,0 +1,54 @@
+﻿[--Adding lookup--]
+Create Domain class
+Add MacheteContextcs DbSet<>
+Add data to Data/Initialize/MacheteLookups.cs
+	define init_ method
+	method call in Initialize()
+Add Initialize to Web/Helpers/Lookups.cs
+Add Controller ViewBag for each Action
+Add dropdown Web/Views/EditorTemplates
+
+[--Adding Page--]
+Create domain object
+	Link EF virtuals
+	Decorate w/ attributes
+		Domain.resources for LocalizedDisplayName
+		Verify stringlengths against Mote spec
+create repository
+create service
+	create nlog errors
+	create service tests
+		Create Records.cs testing classes
+Add repository and service to Unity
+Add DbSets, ModelBuilders, EntityTypeConfigurations 
+Create controller
+	Index,	Create, Edit, View, Delete
+		ViewModel for index or other
+	check authorize permissions
+	add Elmah errors
+	create controller tests
+Create view
+	Index, Create, Edit, View, Delete
+		create viewmodel/*Index model
+		disable view and delete fields
+		add datatables to index
+		add filter form to index
+			add filter object to controller
+check authorize permissions
+	create localization tags
+	web.resources for Spanish
+	create view tests
+	Add jQuery if necessary
+		date picker
+		delete confirmation
+
+VS2010 requirements for Machete
+MVC3
+EntityFramework 4.0
+Unity 2.0
+Elmah
+Moq 4.0.10827
+NLog
+
+
+copy $(ProjectDir)Content\Site_$(ConfigurationName).css $(ProjectDir)Content\Site.css
