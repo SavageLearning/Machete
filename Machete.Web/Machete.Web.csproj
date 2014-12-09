@@ -553,6 +553,7 @@
     <EmbeddedResource Include="Resources\Employers.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Employers.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Events.es.resx" />
     <EmbeddedResource Include="Resources\Events.resx">
@@ -566,6 +567,7 @@
     <EmbeddedResource Include="Resources\Persons.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Persons.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Reports.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
