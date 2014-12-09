@@ -81,6 +81,7 @@ MWS.Service_1_TemporaryKey.pfx
 *.ldf
 
 Web.MacheteTest.config
+Web.Congreso.config
 Web.Test.config
 Web.CasaLatina.config
 Web.CentroHumanitario.config
