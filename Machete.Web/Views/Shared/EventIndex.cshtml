@@ -1,0 +1,64 @@
+﻿@model Machete.Domain.Person
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using Machete.Domain.Resources
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "event";
+    string idPrefix = recType + Model.ID + "-";
+    string parentPrefix = "person" + Model.ID + "-";
+}
+<div id="eventList">
+    <table id="@(idPrefix)eventTable" class="display">
+        <thead>
+            <tr>
+                <th>EDITREF</th>
+                <th>LABEL</th>
+                <th>@Event.eventType</th>
+                <th>@Event.notes</th>
+                <th>@Events.dateFrom</th>
+                <th>@Events.dateTo</th>
+                <th>@Events.fileCount</th>
+                <th>@Record.dateupdated</th>
+                <th>@Record.updatedby</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        jqrfyTable({
+            table: $('#@(idPrefix)eventTable'),
+            tab: $('#@(parentPrefix)personPartsTabs'),
+            options: {
+                "bPaginate": true,
+                "bLengthChange": true,
+                "aaSorting": [[8, 'desc']],
+                "bFilter": true,
+                "bSort": true,
+                "bInfo": true,
+                "bAutoWidth": false,
+                "bServerSide": true,
+                "sAjaxSource": "/Event/AjaxHandler", 
+                "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+                "bProcessing": true,
+                "aoColumns": [
+                    {"mDataProp": "tabref", "bSearchable": false, "bSortable": false, "bVisible": false },
+                    {"mDataProp": "tablabel", "bSearchable": false, "bSortable": false, "bVisible": false },
+                    {"mDataProp": "type" },
+                    {"mDataProp": "notes" },
+                    {"mDataProp": "datefrom" },
+                    {"mDataProp": "dateto" },
+                    {"mDataProp": "fileCount" },
+                    {"mDataProp": "dateupdated" },
+                    { "mDataProp": "Updatedby", "bSortable": false }
+                ],
+                "fnServerDataExtra": function () { return [{ "name": "personID", "value": $('#personID').val() }] },
+            },
+            dblClickEvent: null, 
+            tabLabel: "@(recType)"
+        });
+        $('#@(idPrefix)eventTable_filter input').attr('ID','personSearchBox');
+    });
+</script>

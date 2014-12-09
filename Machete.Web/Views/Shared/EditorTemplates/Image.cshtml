@@ -1,0 +1,26 @@
+﻿@model Machete.Domain.Image
+
+
+
+@using (Html.BeginForm("Create", "Image", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>Image</legend>
+        
+        @if (Model.ImageData == null)
+        {
+            <p>
+            @Html.Label("No image")
+            </p>
+        }
+        else
+        {
+            <img src="@Url.Action("GetImage", "Image", new { Model.ID })" alt="" />
+        }
+        <div>Upload new image: <input type="file" name="imagefile" /></div>
+        <p>
+            <input type="submit" value="Upload" />
+        </p>
+    </fieldset>
+}

@@ -1,0 +1,25 @@
+﻿@model Machete.Web.ViewModel.WorkOrderGroupPrintView
+@using Machete.Domain           
+@using Machete.Web.Resources
+@using Machete.Web.Helpers
+@using System.Globalization
+           
+@if (Model.orders.Count() == 0)
+{
+    <h3> @Html.Encode(Machete.Web.Resources.WorkOrders.groupviewerror) </h3>
+}
+else
+{
+foreach (WorkOrder order in Model.orders)
+{
+    @Html.Partial("View", order);
+    <div style="page-break-before: always;">
+    </div>
+}
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.formButton').hide();
+        $('#printOrder:first').show();
+    });
+</script>

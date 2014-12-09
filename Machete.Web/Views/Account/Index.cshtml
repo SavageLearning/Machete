@@ -1,0 +1,84 @@
+﻿@using Machete.Web.Models
+
+@model IEnumerable<UserSettingsViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+<div class="partial-background-white index-padding-thick">
+    <h2>Machete Configuration Page</h2>
+
+    <p style="color:red;">
+        <strong>@Html.ValidationSummary()</strong>
+    </p>
+    <p>
+        @Html.ActionLink("Manage Current User", "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Manage", @class = "button-standard" }) 
+        @Html.ActionLink("Create New User", "Register", routeValues: null, htmlAttributes: new { @class = "button-standard" }) 
+        @Html.ActionLink("Configure Lookups", "Index", "Config", routeValues: null, htmlAttributes: new { @class = "button-standard" })
+    </p>
+    <h3>Users Table</h3>
+    <table>
+        <tr>
+            <th></th>
+            <th>
+                UserName
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                IsApproved
+            </th>
+            <th>
+                IsLockedOut
+            </th>
+            <th>
+                IsOnline
+            </th>
+            <th>
+                CreationDate
+            </th>
+            <th>
+                LastLoginDate
+            </th>
+        </tr>
+
+        @foreach (UserSettingsViewModel item in Model)
+        {
+            <tr>
+                <td class="tb-cell-nospace">
+                    @Html.ActionLink("Edit", "Edit", "Account", new { id = item.ProviderUserKey }, htmlAttributes: new { @class = "a-block-nodecoration" })
+                    @Html.ActionLink("Delete", "Delete", "Account", new { id = item.ProviderUserKey }, htmlAttributes: new { @class = "a-block-nodecoration" })
+                    @Html.ActionLink("Roles", "UserRoles", "Account", new { id = item.ProviderUserKey }, htmlAttributes: new { @class = "a-block-nodecoration" })
+                </td>
+                <td class="tb-cell-bigger-text">
+                    @item.UserName
+                </td>
+                <td class="tb-cell-bigger-text">
+                    @item.Email
+                </td>
+                <td class="tb-cell-bigger-text">
+                    @item.IsApproved
+                </td>
+                <td class="tb-cell-bigger-text">
+                    @item.IsLockedOut
+                </td>
+                <td class="tb-cell-bigger-text">
+                    @item.IsOnline
+                </td>
+                <td>
+                    @String.Format("{0:g}", item.CreationDate)
+                </td>
+                <td>
+                    @String.Format("{0:g}", item.LastLoginDate)
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+<script>
+    $(document).ready(function () {
+        $('.button-standard').button();
+    });
+</script>

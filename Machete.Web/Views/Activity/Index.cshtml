@@ -1,0 +1,91 @@
+﻿@using Machete.Web.Models
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using Machete.Domain.Resources
+
+@model Machete.Web.Models.ActivityViewModel
+
+<div id="activityTabs" class="ExclusiveTab">
+    <ul>
+        <li><a href="#activityList" id="activityListTab" class="ListTab">@Activities.listlink</a> </li>
+        <li><a href="/Activity/Create" id="activityCreateTab" class="CreateTab">@Activities.createlink</a></li>
+    </ul>
+    @Html.Partial("ActivityIndex")
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.formButton').button();
+        $('#activityTabs').mUI('createTabs', { 
+            prefix: "ui-tabs-activity-",
+            formLevel: 1,
+            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)",
+            maxTabs: 1
+        });
+
+        //$('#activityTable').dataTable().fnDestroy();
+
+        //
+        // Create Activity table
+        jqrfyTable({
+            table: $('#activityTable'), 
+            tab: $('#activityTabs'),
+            options: {
+        //$('#activityTable').dataTable({
+                //"iDisplayLength": 15,
+                //"aLengthMenu": [[-1],["All"]],
+                "bDestroy": true,
+                "sScrollY": "315px",
+                "bPaginate": false,
+                "bLengthChange": false,
+                "bAutoWidth": false,
+                "bFilter": true,
+                "bSort": true,
+                "bInfo": true,
+                "bServerSide": true,
+                "sAjaxSource": "/Activity/AjaxHandler",
+                "bProcessing": true,
+                "aaSorting": [[6, 'desc']],
+                "oLanguage": datatable_lang_@(Model.CI.TwoLetterISOLanguageName),
+                "aoColumns": [                           //dataTable column definition
+                                {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                                {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                                {"mDataProp": "name" },
+                                {"mDataProp": "type" },
+                                {"mDataProp": "teacher" },
+                                {"mDataProp": "count" },
+                                {"mDataProp": "dateStart" },
+                                {"mDataProp": "dateEnd" }
+                ],
+                "fnServerData": function (sSource, aoData, fnCallback) {
+                    //aoData.push(
+                    //    { "name": "todaysdate", "value": $('#actDate').val() });
+                    $.getJSON(sSource, aoData, function (json) {
+                        /* Do whatever additional processing you want on the callback, then tell DataTables */
+                        fnCallback(json);
+                    });
+                },
+                "fnFooterCallback": null
+                }, 
+            dblClickEvent: null, 
+            tabLabel: "activity",
+            maxTabs: 2
+        });
+
+        $('#activityListTab').click(function () { $('#activityTable').dataTable().fnDraw(); });
+        //pagetimer for unauthorized view
+        @*if (@Model.authenticated === 0) {
+            // Reloads Activities list after 10 minutes if Activity List tab is NOT selected and interaction is idle               
+            // When a tab is selected, set/clear time and bind/unbind idle handler
+            $('#activityTabs').mUI('tabTimer', {});
+                
+            //reload ActivityTable data every 10 minutes
+            $('#activityTable').everyTime(30*1000, function() {
+                $(this).dataTable().fnDraw();
+            });   
+        }*@
+
+    });
+</script>
+

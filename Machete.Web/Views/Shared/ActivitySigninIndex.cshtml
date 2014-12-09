@@ -1,0 +1,253 @@
+﻿@model Machete.Domain.ActivitySignin
+@using Machete.Web.Resources
+@using Machete.Domain.Resources
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "asi";
+    string idPrefix = recType + Model.activityID + "-";
+    int maxTabs = User.Identity.IsAuthenticated == true ? 2 : 1; //If auth, 2 tab limit
+
+    //To hide JS features for unauthorized
+    int authenticated = 0;
+    if (User.Identity.IsAuthenticated)
+    {
+        authenticated = 1;
+    }
+}
+<div id="@(idPrefix)Tabs">
+    <ul>
+        <li><a href="#container" id="@(idPrefix)ListTab" class="ListTab">@Activities.signinlistlink</a>
+        </li>
+    </ul>
+    <div id="container" class="clearfix">
+        <div id="signinData" class="signinColumn" style="float: left;">
+            @using (Html.BeginForm("Index", "ActivitySignin", FormMethod.Post, new { id = idPrefix+"SigninForm" }))
+            {
+                @Html.Hidden("activityID", Model.activityID, new { id=idPrefix + "activityID"});
+                @Html.ValidationSummary(true)
+                <div class="tb-table">
+                    <div class="tb-row">
+                        <div class="tb-label">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                @Html.LabelFor(model => model.dwccardnum)
+                            }
+                            else
+                            {
+                                @Html.Label(@Activities.touch)
+                            }
+                        </div>
+                        <div class="tb-field">
+                            @Html.TextBox("dwccardnum", "", new { style = "width: 100px;", id = idPrefix + "dwccardnum", placeholder = @Activities.touchhere })
+                            @Html.ValidationMessage("dwccardnum", new { @id = idPrefix + "dwccardnum" })
+                        </div>
+                        <div class="tb-field">
+                            <input type="submit" value="@(WorkerSignins.indexsubmit)"  id="@(idPrefix)submit"/>
+                            <input type="button" value="@(Activities.clear)" id="@(idPrefix)resetText" />
+                        </div>
+                    </div>
+                </div>
+            }
+            <div id="signinTable" style="float: left;">
+                <table id="@(idPrefix)asiTable" class="display">
+                    <thead>
+                        <tr>
+                            <th class="print_off">
+                            </th>
+                            <th>@Worker.dwccardnum
+                            </th>
+                            <th class="print_off">@WorkerSignins.memberexpiration
+                            </th>
+                            <th class="print_off">@WorkerSignins.status
+                            </th>
+                            <th>@Person.firstname1
+                            </th>
+                            <th>@Person.lastname1
+                            </th>
+                            <th class="print_off">@WorkerSignins.datesignin
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div id="@(idPrefix)ImageDiv" class="mui-signin-imagebox print_off">
+            <img id="@(idPrefix)Image" src="/Content/images/NO-IMAGE-AVAILABLE.jpg" alt="" style="width: 200px" />
+        </div>
+    </div>
+</div>
+
+<div id="@(idPrefix)red-dialog">
+    @WorkerSignins.redmessage
+    <img id="@(idPrefix)RedImage" src="" alt="" style="width: 200px"/>
+</div>
+<div id ="@(idPrefix)signin-unknown">
+    @WorkerSignins.unknownmessage
+</div>
+<script type="text/javascript">
+    $().ready(function () {
+        var blankImage = "/Content/images/NO-IMAGE-AVAILABLE.jpg";
+        //
+        //
+        $('#@(idPrefix)submit').button();
+        $('#@(idPrefix)resetText').button();
+        $('#@(idPrefix)signin-unknown').hide();
+        $('#@(idPrefix)dwccardnum').focus();
+        $('#@(idPrefix)red-dialog').hide();
+        $('#@(idPrefix)resetText').bind('click', function() {
+            console.log("reset clicked");
+            $('#@(idPrefix)dwccardnum').val('');
+            $('#@(idPrefix)dwccardnum').focus();
+        });
+        //
+        //
+        $('#@(idPrefix)Tabs').mUI('createTabs', {
+            prefix: "@(idPrefix)ui-tabs",
+            formLevel: 2,
+            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+            });
+
+        $('.ui-datepicker').datepicker({
+            dateFormat: 'mm/dd/yy',
+            buttonImage: '@Url.Content("~/Content/calendar.gif")',
+            buttonImageOnly: true,
+            showOn: "button",
+            onClose: function () { SigninFocus(); }
+        });
+        //
+        // Delete confirmation on signin event
+        $('.confirm_delete').live('click', function (e) {
+            e.preventDefault;
+            //TODO: event is posting and returning page, not JSON
+            var action =  $(this).attr('href');
+            $.alerts.okButton = "@WorkerSignins.deletesubmit";
+            jConfirm('@WorkerSignins.deleteconfirmation',
+                         '@WorkerSignins.deletetitle',
+                         function (r) {
+                             if (r == true) { 
+                                 $.post(action, null, function(data) {
+
+                                     $('#@(idPrefix)asiTable').dataTable().fnDraw();
+                                     $('#@(idPrefix)Image').attr('src', blankImage);
+                                        if (!data.jobSuccess) {
+                                            alert(data.rtnMessage);                                        
+                                        } 
+                                 });
+                             }
+                             $('#@(idPrefix)dwccardnum').focus();
+                         });
+            return false;
+        });
+        //
+        //  Datatables
+        $('#@(idPrefix)asiTable').dataTable({
+            "bPaginate": true,
+            "bLengthChange": @(authenticated),
+            "bAutoWidth": false,
+            "bServerSide": true,
+            "bInfo": @(authenticated),
+            "bSort": true,
+            "bFilter": @(authenticated),
+            "sAjaxSource": "/ActivitySignin/AjaxHandler",
+            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "bProcessing": true,
+            "iDisplayLength": -1,
+            "aLengthMenu": [[25, 50, 100, -1], [25, 50, 100, "@WorkerSignins.allrecords"]],
+            "aoColumns": [
+                {mDataProp: "recordid", sClass: "print_off"},
+                {mDataProp: "dwccardnum"},
+                {mDataProp: "expirationDate", sClass: "print_off"},
+                {mDataProp: "memberStatus", sClass: "print_off"},
+                {mDataProp: "firstname1"},
+                {mDataProp: "lastname1"},
+                {mDataProp: "dateforsigninstring", sClass: "print_off"}
+            ],
+            "fnServerData": function ( sSource, aoData, fnCallback ) {
+			    /* Add some extra data to the sender */
+                aoData.push( { "name": "activityID", "value": $('#@(idPrefix)activityID').val() } );
+			    $.getJSON( sSource, aoData, function (json) { 
+				    /* Do whatever additional processing you want on the callback, then tell DataTables */
+				    fnCallback(json)
+			    } );
+		    },
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $(nRow).attr('ID', "asiRec-" +aData['recordid']);
+                if (@(authenticated) == 0) {
+                    $(nRow).find('td:first-child').html('');
+                } else {
+                    $(nRow).find('td:first-child').html('<a class="confirm_delete" href="/ActivitySignin/delete/'+aData['recordid']+'">Delete</a>');
+                }
+                if (aData['imageID']) {
+                    $(nRow).attr('imageRef', "/Image/GetImage/" + aData['imageID']);
+                } else {
+                    $(nRow).attr('imageRef', blankImage);
+                }
+                $(nRow).addClass('statusBlue');
+                if (aData['memberInactive'] || aData['memberExpired']) { 
+                    $(nRow).removeClass('statusBlue');
+                    $(nRow).addClass('statusYellow');
+                } 
+                if (aData['memberSanctioned'] || aData['memberExpelled']) {
+                    $(nRow).removeClass('statusBlue');
+                    $(nRow).removeClass('statusYellow');
+                    $(nRow).addClass('statusRed');
+                } 
+                return nRow;
+            }
+        });
+        //
+        // Hide some elements for printing with css
+        $('.dataTables_length, .dataTables_filter, .dataTables_info, #@(idPrefix)asiTable_previous, #@(idPrefix)asiTable_next')
+            .addClass('print_off');
+        //
+        // Datatable double-click event 
+        $('#@(idPrefix)asiTable tbody').bind('dblclick', function(e) {
+            console.log('@(idPrefix)asiTable double-click');
+            var $node = $(e.target.parentNode);
+            $('#@(idPrefix)Image').attr('src', $node.attr('imageRef'));
+        });
+        //
+        // Submit ID number for registration
+        $('#@(idPrefix)SigninForm').submit(function(e) {
+            var form = this;
+            e.preventDefault();
+            if ($(form).valid()) {
+                $.post($(this).attr("action"), $(this).serialize(), 
+                    function(data) {
+                        //callback on signin
+                        $('#@(idPrefix)dwccardnum').val(null); // clear cardnum field
+                        $('#@(idPrefix)Image').attr('src', data.imageRef); //reload image
+                        $('#@(idPrefix)asiTable').dataTable().fnDraw(); //reload datatable
+                        // pop modal for warning
+                        if (data.memberSanctioned || data.memberExpelled) {
+                            $("#@(idPrefix)RedImage").attr('src', data.imageRef);
+                            $('#@(idPrefix)red-dialog').dialog({ 
+                                modal: true,
+                                buttons: {
+				                    Ok: function() {
+					                    $( this ).dialog( "close" );
+				                    }
+			                    },
+                                title: "@(WorkerSignins.redmessagetitle)",
+                                close: function(event, ui) { $('#@(idPrefix)dwccardnum').focus(); }
+                                 });
+                        }
+                        if (data.jobSuccess == false) {
+                        $('#@(idPrefix)signin-unknown').dialog({ 
+                                modal: true,
+                                buttons: {
+				                    Ok: function() {
+					                    $( this ).dialog( "close" );
+				                    }
+			                    },
+                                title: "@(WorkerSignins.unknownmessagetitle)",
+                                close: function(event, ui) { $('#@(idPrefix)dwccardnum').focus(); }
+                                 });
+                        }
+                        $('#@(idPrefix)dwccardnum').focus();
+                    });
+            }    
+        });
+    });
+</script>

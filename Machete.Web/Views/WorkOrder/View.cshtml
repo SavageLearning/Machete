@@ -1,0 +1,164 @@
+﻿@model Machete.Domain.WorkOrder
+@using Machete.Domain.Resources
+@using Machete.Web.Resources
+@using Machete.Web.Helpers
+@using System.Globalization
+<div class="print-on print-text">
+    @*<link href="@Url.Content("~/Content/print.css")" rel="stylesheet" type="text/css" media="print" />*@
+    @{
+        ViewBag.Title = WorkOrders.viewtitle;
+        CultureInfo CI = (CultureInfo)Session["Culture"];
+    }
+    <div class="dateNeeded">
+        <div class="neededText">@WorkOrders.dateneeded</div>
+        <div class="neededText">@System.String.Format("{0:dddd}", Model.dateTimeofWork), @System.String.Format("{0:d}", Model.dateTimeofWork)</div>
+        <div class="neededText">@System.String.Format("{0:t}", Model.dateTimeofWork)</div>
+        @if (Model.timeFlexible == true)
+        {
+            <div class="neededText">@WorkOrders.flexible</div>
+        }
+        else
+        {
+            <div class="neededText">@WorkOrders.sharp</div>
+        }
+    </div>
+    <br />
+    @if (Model.paperOrderNum.HasValue)
+    {
+        <h2>@WorkOrders.boxlegend No. @Model.paperOrderNum</h2>
+    }
+    else
+    {
+        <h2>@WorkOrders.boxlegend No. @Model.ID</h2>
+    }
+    <h3>@Employers.boxlegend: @Model.Employer.name</h3>
+    <div class="recordButtons print-off">
+        @*<input type="button" id="printOrder" class="formButton" value="@WorkOrders.printWorkOrder" />
+            <input type="button" id="printMap" class="formButton" value="@Shared.printGoogleMap" />*@
+    </div>
+    @Html.DisplayForModel()
+    <div class="tb-label">
+        @Html.LabelFor(model => model.workerRequests)
+    </div>
+    <div class="tb-field">
+        @foreach (var req in Model.workerRequests)
+        {
+            @System.String.Format(req.workerRequested.dwccardnum + "--" + req.fullName) <br />
+        }
+    </div>
+    <h4>@WorkOrders.listOfPositions</h4>
+    <table>
+        <thead>
+            <tr>
+                <td>@WorkOrders.woidcount</td>
+                <td>@WorkAssignment.skillID</td>
+                <td>@WorkAssignment.hourlyWage</td>
+                <td>@WorkAssignments.hours</td>
+                <td>@WorkAssignments.hourRange</td>
+                <td>@WorkAssignment.days</td>
+                <td>@WorkAssignment.surcharge</td>
+                <td>@WorkAssignments.earnings</td>
+                <td>@WorkAssignments.earningsRange</td>
+                <td>@WorkAssignment.englishLevelID</td>
+            </tr>
+        </thead>
+        @foreach (var item in Model.workAssignments)
+        {
+            <tr>
+                <td class="tb-field-fixed">@item.pseudoID</td>
+                <td class="tb-field-fixed">@Lookups.byID(item.skillID)</td>
+                <td class="tb-field-fixed">@System.String.Format("{0:C}", item.hourlyWage)</td>
+                <td class="tb-field-fixed">@Html.DisplayFor(modelItem => item.hours)</td>
+                @if (item.hourRange > 0)
+                {
+                    <td class="tb-field-fixed">@Html.DisplayFor(modelItem => item.hourRange)</td>
+                }
+                else
+                {
+                    <td></td>
+                }
+                <td class="tb-field-fixed">@Html.DisplayFor(modelItem => item.days)</td>
+                <td class="tb-field-fixed">@System.String.Format("{0:C}", item.surcharge)</td>
+                <td class="tb-field-fixed">@System.String.Format("{0:C}", item.getMinEarnings)</td>
+                @if (item.hourRange > 0)
+                {
+                    <td class="tb-field-fixed">@System.String.Format("{0:C}", item.getMaxEarnings)</td>
+                }
+                else
+                {
+                    <td></td>
+                }
+                <td class="tb-field-fixed">@item.englishLevelID</td>
+            </tr>
+            <tr>
+                <td colspan="10">
+                    <div class="tb-table">
+                        <div class="tb-row">
+                            <div class="tb-label">
+                                <p>@Machete.Web.Resources.WorkOrders.workername</p>
+                            </div>
+                            <div class="tb-field">
+                                @if (item.workerAssigned != null)
+                                {
+                                    <p>@Html.Encode(item.workerAssigned.Person.fullName())</p>
+                                }
+                                else
+                                {
+                                    @Html.Encode("_____________________________________________")
+                                }
+                            </div>
+                        </div>
+                        @if (item.description != null)
+                        {
+                            <div class="tb-row">
+                                <div class="tb-label">
+                                    @WorkAssignment.description
+                                </div>
+                                <div class="tb-field">
+                                    @Html.DisplayFor(modelItem => item.description)
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+        }
+    </table>
+    <br />
+    <table>
+        <tr>
+            <td>
+                @Html.LabelFor(model => model.Createdby)
+            </td>
+            <td>
+                @Html.LabelFor(model => model.datecreated)
+            </td>
+            <td>
+                @Html.LabelFor(model => model.Updatedby)
+            </td>
+            <td>
+                @Html.LabelFor(model => model.dateupdated)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.Createdby)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.datecreated)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.Updatedby)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.dateupdated)
+            </td>
+        </tr>
+    </table>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () { 
+        $('.print-off').hide();
+        window.print();
+    });
+</script>

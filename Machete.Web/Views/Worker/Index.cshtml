@@ -1,0 +1,87 @@
+﻿@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using Machete.Domain.Resources
+@{
+    ViewBag.Title = Workers.indextitle;
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+}
+<div id="workerTabs">
+    <ul>
+        <li><a href="#workerList" id="workerListTab" class="ListTab">@Workers.listlink</a> </li>
+        @*<li><a href="/Worker/Create" id="workerCreateTab" class="CreateTab">@Workers.createlink</a></li>*@
+    </ul>
+    <div id="workerList">
+        <table id="workerTable" class="display">
+            <thead>
+                <tr>
+                    <th>EDITREF</th>
+                    <th>LABEL</th>
+                    <th>ID</th>
+                    <th>@Worker.dwccardnum</th>
+                    <th>@Worker.memberStatus</th>
+                    <th>@Person.firstname1</th>
+                    <th>@Person.firstname2</th>
+                    <th>@Person.lastname1</th>
+                    <th>@Person.lastname2</th>
+                    <th>@Worker.memberexpirationdate</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        jqrfyTable({
+        table: $('#workerTable'), 
+        tab: $('#workerTabs'),
+        options: {
+            "bPaginate": true,
+            "bLengthChange": true,
+            "aaSorting": [[9, 'desc']],
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "bServerSide": true,
+            "sAjaxSource": "Worker/AjaxHandler", 
+            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "bProcessing": true,
+            "aoColumns": [
+                { "mDataProp": "tabref","bSearchable": false, "bSortable": false, "bVisible": false },
+                { "mDataProp": "tablabel","bSearchable": false, "bSortable": false, "bVisible": false },
+                { "mDataProp": "WID","bSearchable": false, "bSortable": false, "bVisible": false },
+                { "mDataProp": "dwccardnum" },
+                { "mDataProp": "wkrStatus" },
+                { "mDataProp": "firstname1" },
+                { "mDataProp": "firstname2" },
+                { "mDataProp": "lastname1" },
+                { "mDataProp": "lastname2" },
+                { "mDataProp": "memberexpirationdate" }
+            ],
+            // callback populates html attr with row data from JSON            
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $(nRow).attr('recordid', aData['WID']);
+                switch (aData['wkrStatus'])
+                {
+                    // magic strings in WorkAssignmentController
+                    case "active": $(nRow).addClass('statusBlue'); break;
+                    case "inactive": $(nRow).addClass('statusYellow'); break;
+                    case "expired": $(nRow).addClass('statusYellow'); break;
+                    case "sanctioned": $(nRow).addClass('statusRed'); break;
+                    case "expelled": $(nRow).addClass('statusRed'); break;
+                    default: $(nRow).addClass('statusBlue');
+                }                 
+                return nRow;
+            }        
+        },
+        dblClickEvent: null,
+        tabLabel: null
+        });
+        $('#workerTabs').mUI('createTabs', {
+            prefix: "ui-tabs-worker-",
+            formLevel: 1,
+            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+            changeTitle:   "@(Machete.Web.Resources.Shared.changeTitle)"
+        });
+    });  
+</script>

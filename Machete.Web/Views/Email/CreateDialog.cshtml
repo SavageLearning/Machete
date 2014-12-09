@@ -1,0 +1,55 @@
+﻿@model Machete.Web.ViewModel.EmailView
+@using Machete.Web.Resources
+@using Machete.Domain
+
+@using (Html.BeginForm("Create", "Email", FormMethod.Post, 
+                        new { @id = Model.idPrefix + "createForm" }))
+{
+    <div>
+        <input type="submit" id="@(Model.idPrefix)SaveBtn" class="formButton saveBtn" 
+               value="@Emails.createsubmit"  tabindex="9"/>
+        @if (Machete.Domain.Email.iPending == Model.statusID)
+        { 
+        <input type="button" id="@(Model.idPrefix)SendBtn" class="formButton" value="@Emails.sendEmail" />
+        }
+    </div>
+    @Html.ValidationSummary(true)
+    @Html.EditorForModel(Model)
+
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.formButton').button();
+        var emailCreateForm = $("#@(Model.idPrefix)createForm");
+        var emailSendBtn = $("#@(Model.idPrefix)SendBtn");
+        $.validator.unobtrusive.parseDynamicContent('#@(Model.idPrefix)createForm');
+        $('#emailName').focus();
+        // Email Create submit event
+
+        emailCreateForm.mUI('formSubmit', {
+            preProcess: function () {
+                var field = $('#@(Model.idPrefix)attachment');
+                var encoded = $('<div/>').text($(field).val()).html();
+                //console.log(encoded);
+                field.val(encoded);
+            },
+            postProcess: function () {
+                $('#@(Model.idPrefix)createForm').closest('.ui-dialog').find('a.ui-dialog-titlebar-close').click();
+            }
+        });
+        emailSendBtn.mUI('btnSendEmail', {
+            statusBox: $('#@(Model.idPrefix)status'),
+            emailForm: $("#@(Model.idPrefix)createForm"),
+            sendStatus: @(Email.iReadyToSend)
+        });
+        //
+        // machete UI detect changes on forms in tabs   
+        emailCreateForm.mUI('formDetectChanges', {
+            recType: "@(Model.idString)",
+            formLevel: 1,
+            changeConfirm: "@(Shared.changeConfirm)",
+            changeTitle: "@(Shared.changeTitle)"
+        });
+
+    });
+</script>

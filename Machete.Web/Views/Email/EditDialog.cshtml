@@ -1,0 +1,84 @@
+﻿@model Machete.Web.ViewModel.EmailView
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using Machete.Domain
+
+@if (Html.IsInRole(Html.Role_AMPCU()) || Html.IsInRole(Html.Role_T()))
+{
+    using (Html.BeginForm("Edit", "Email", FormMethod.Post,
+                            new { @class = "edittab-form EditPost", 
+                                  @id = Model.idPrefix + "editForm"}))
+    {
+        <input type="submit" value="@Emails.editsubmit" class="formButton saveBtn"/>
+            if (Machete.Domain.Email.iPending == Model.statusID)
+            { 
+                <input type="button" id="@(Model.idPrefix)SendBtn" class="formButton" value="@Emails.sendEmail" />
+            }
+            if (Html.IsInRole(Html.Role_AM()))
+            {
+            <input id="@(Model.idPrefix)deleteBtn" type="button" value="@Emails.deletesubmit" 
+                    class="formButton deleteButton" />
+            }
+        <br />    
+        @Html.ValidationSummary(true)
+        @Html.EditorForModel(Model)
+    }
+
+    if (Html.IsInRole(Html.Role_AM()))
+    {
+        //
+        // Only Managers can delete email records.
+        // The phonedesk can edit and save.
+        //
+        using (Html.BeginForm("Delete", "Email", FormMethod.Post,
+                                new { @class = "edittab-form DeletePost", @id = Model.idPrefix + "deleteForm" }))
+        {
+            @Html.HiddenFor(model => model.ID);
+        }
+    }
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.formButton').button();
+        $('#emailName').focus();
+        var emailSendBtn = $("#@(Model.idPrefix)SendBtn");
+        // machete UI detect changes on forms in tabs   
+        $("#@(Model.idPrefix)editForm").mUI('formDetectChanges', {
+            recType: "@(Model.idString)",
+            formLevel: 1,
+            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+        });
+        //
+        // validation for elements added after page load
+        $.validator.unobtrusive.parseDynamicContent($('#@(Model.idPrefix)editForm'));
+        //
+        // delete button confirmation
+        $("#@(Model.idPrefix)deleteBtn").mUI('formClickDelete', {
+            ok: "@(Emails.deletesubmit)",
+            confirm: '@(Emails.deleteconfirmation)',
+            title: '@(Emails.deletetitle)',
+            form: $('#@(Model.idPrefix)deleteForm'),
+            altClose: $('#@(Model.idPrefix)editForm').closest('.ui-dialog').find('a.ui-dialog-titlebar-close')
+        });
+        //
+        // edit form submit
+        $('#@(Model.idPrefix)editForm').mUI('formSubmit', {
+            preProcess: function () {
+            // encode any attachment HTML            
+                var field = $('#@(Model.idPrefix)attachment');
+                var encoded = $('<div/>').text($(field).val()).html();
+                field.val(encoded);
+            },
+            callback: function () {
+                $('#@(Model.idPrefix)editForm').closest('.ui-dialog').find('a.ui-dialog-titlebar-close').click();
+            }
+        });
+
+        emailSendBtn.mUI('btnSendEmail', {
+            statusBox: $('#@(Model.idPrefix)status'),
+            emailForm: $("#@(Model.idPrefix)editForm"),
+            sendStatus: @(Email.iReadyToSend)
+        });
+    });
+</script>

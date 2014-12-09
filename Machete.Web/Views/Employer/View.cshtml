@@ -1,0 +1,28 @@
+﻿@* TODO: remove employer view model for printing
+@model Machete.Web.ViewModel.EmployerViewModel
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using Machete.Domain.Resources
+<link href="@Url.Content("~/Content/print.css")" rel="stylesheet" type="text/css" media="print" />
+@{
+    ViewBag.Title = Employers.viewtitle;
+}
+<h2>@Employers.viewtitle</h2>
+<p class="print_off">
+    @if (Html.IsInRole(Html.Role_AMP()))
+    {
+        @Html.ActionLink(Employers.editlink, "Edit", new { id = Model.employer.ID }) 
+        @Html.Encode(" | ")
+    }
+    @Html.ActionLink(Employers.indexreturnlink, "Index")
+    @if (Html.IsInRole(Html.Role_AMP()))
+    {
+        @Html.Encode(" | ")
+        @Html.ActionLink(WorkOrders.createlink, "Create", "WorkOrder", new { EmployerID = Model.employer.ID }, null)
+    }
+</p>
+
+    <h3>@Employers.boxlegend</h3>
+    @Html.EditorFor(model => model.employer)
+
+@Html.DisplayFor(model => model.orders, "WorkOrderIndex")*@

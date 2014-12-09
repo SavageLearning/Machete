@@ -1,0 +1,84 @@
+﻿@model Machete.Domain.WorkOrder
+@using Machete.Web.Resources
+@{
+    string recType = "WO";
+    string empRecType = "employer";
+    string idPrefix = recType + Model.ID + "-";
+    string empPrefix = empRecType + Model.EmployerID + "-";
+}
+@using (Html.BeginForm("Create", "WorkOrder", FormMethod.Post, 
+                        new { @id = "workOrderCreateForm" }))
+{
+    <input type="button" id="@(idPrefix)copyEmployerInfo" class="formButton"
+           value="@WorkOrders.copyemployerinfo" tabindex="9" />
+    <input type="submit" id="@(idPrefix)SaveBtn" class="formButton saveBtn"
+           value="@WorkOrders.createsubmit" tabindex="9"/>
+
+
+    @Html.ValidationSummary(true)
+    @Html.EditorForModel()   
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        var woCreateForm = $('#workOrderCreateForm');
+        $('.formButton').button();
+        //
+        // Toggle English required note box
+        $('#@(idPrefix)englishRequired').mUI('selectToggleOnValue', {
+            target: $('#@(idPrefix)englishRequiredNoteRow'),
+            showVal: "@(Shared.yes)"
+        });
+        //
+        // machete UI detect changes on forms in tabs   
+        woCreateForm.mUI('formDetectChanges', {
+            recType: "@(recType)",
+            formLevel: 2,
+            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+        });
+        //
+        // Add validation to dynamic content
+        $.validator.unobtrusive.parseDynamicContent('#workOrderCreateForm');
+        //
+        // Find tabindex attribute (for tab order, not jquery tabs) and increment by 10
+        $('#workOrderCreateForm [tabindex]').each(function () {
+            $(this).attr('tabindex', parseInt($(this).attr('tabindex')) + 10)
+        });
+        //
+        // Get the employerID and put it in the WO form field
+        var eid = $('#employerTabs').find(".EditPost .hiddenRecID").val();
+        woCreateForm.find('#@(idPrefix)EmployerID').val(eid);
+        //
+        // WorkOrder Create submit event
+        woCreateForm.mUI('tabFormSubmit', {
+            create: true,
+            exclusivetab: false,
+            recType: "@(recType)",
+            preProcess: function () {
+                $('#workerRequests2_WO-@(Model.ID)').find('option').attr("selected", "selected");
+            },
+            postProcess: function () {
+                $('html, body').animate({ scrollTop: $(document).height() }, 'slow');
+            },
+            formLevel: 2
+        });
+        ////////////////////////////////////////////////////////////////
+        //
+        // Copy info  submit event
+        //
+        $('#@(idPrefix)copyEmployerInfo').bind("click.employerEvents", function (e) {
+            var employerTab = $('form[id^=EmployerTab]');
+            woCreateForm.find('#@(idPrefix)contactName').val(employerTab.find('#@(empPrefix)name').val());
+            woCreateForm.find('#@(idPrefix)workSiteAddress1').val(employerTab.find('#@(empPrefix)address1').val());
+            woCreateForm.find('#@(idPrefix)workSiteAddress2').val(employerTab.find('#@(empPrefix)address2').val());
+            woCreateForm.find('#@(idPrefix)city').val(employerTab.find('#@(empPrefix)city').val());
+            woCreateForm.find('#@(idPrefix)state').val(employerTab.find('#@(empPrefix)state').val());
+            woCreateForm.find('#@(idPrefix)zipcode').val(employerTab.find('#@(empPrefix)zipcode').val());
+            woCreateForm.find('#@(idPrefix)phone').val(employerTab.find('#@(empPrefix)phone').val());
+            $(woCreateForm).mUI('markChanged', {
+                level: 2,
+                recType: "@(recType)"
+            });
+        });
+    });
+</script>

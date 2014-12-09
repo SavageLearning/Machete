@@ -1,0 +1,96 @@
+﻿@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using Machete.Domain.Resources
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "employer";
+}
+<div id="employerTabs" class="ExclusiveTab">
+    <ul>
+        <li><a href="#employerList" id="employerListTab" class="ListTab">@Employers.listlink</a> </li>
+
+        @if (Html.IsRoleAllowed("Employer.CreateNew.ShowTab"))
+        {
+            <li><a href="/Employer/Create" id="employerCreateTab" class="CreateTab">@Employers.createlink</a></li>
+        }
+        
+    </ul>
+    <div id="employerList"> @* This div is the ui.panel  *@
+        <input type="button" value="@Machete.Web.Resources.WorkOrders.btnAll" class="formButton" id="allOrdersBtn"/>
+        <input type="button" value="@Machete.Web.Resources.WorkOrders.btnOnline" class="formButton" id="onlineOrdersBtn"/>
+        <table id="employerTable" class="display">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>LABEL</th>
+                    <th>@Employer.active</th>
+                    <th>@Employer.name</th>
+                    <th>@Employer.address1</th>
+                    <th>@Employer.city</th>
+                    <th>@Employer.phone</th>
+                    <th>@Record.dateupdated</th>
+                    <th>@Record.updatedby</th>
+                    <th>@Employer.onlineSource</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+@Html.Partial("WorkerIndex")
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.formButton').button();
+        ////////////////////////////////////////////////////////////////
+        //
+        // Create Employer table
+        //
+        var oTable = jqrfyTable({
+            table: $('#employerTable'), 
+            tab: $('#employerTabs'),
+            options: {
+                //"sScrollY": "315px",
+                //"iDisplaylength": 15,
+                "bPaginate": true,
+                "bLengthChange": true,
+                "aaSorting": [[7, 'desc']],
+                "bFilter": true,
+                "bSort": true,
+                "bInfo": true,
+                "bAutoWidth": false,
+                "bServerSide": true,
+                "sAjaxSource": "/Employer/AjaxHandler",
+                "bProcessing": true,
+                "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+                "aoColumns": [                           //dataTable column definition
+                                {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                                {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                                {"mDataProp": "active" },
+                                {"mDataProp": "name" },
+                                {"mDataProp": "address1" },
+                                {"mDataProp": "city" },
+                                {"mDataProp": "phone" },
+                                {"mDataProp": "dateupdated" },
+                                { "mDataProp": "Updatedby", "bSortable": false },
+                                { "mDataProp": "onlineSource", "bSearchable": false, "bSortable": true, "bVisible": true }
+                            ]             
+            }, 
+            dblClickEvent: null, 
+            tabLabel: "@(recType)"
+        });
+        $('#employerTabs').mUI('createTabs', { 
+            prefix: "ui-tabs-employer-",
+            formLevel: 1,
+            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)",
+            updateDataTable: true
+            });
+        $('#allOrdersBtn').click(function() {
+            oTable.dataTable().fnResetAllFilters();
+        });
+        $('#onlineOrdersBtn').click(function() {
+            oTable.dataTable().fnResetAllFilters(false);
+            oTable.dataTable().fnFilter(true, 9); //sync with DT array above
+        });
+    });
+</script>
+

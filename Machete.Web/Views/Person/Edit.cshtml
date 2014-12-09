@@ -1,0 +1,108 @@
+﻿@model Machete.Domain.Person
+@using Machete.Web.Resources
+@using Machete.Web.Helpers
+@{
+    string recType = "person";
+    string idPrefix = recType + Model.ID + "-";
+}
+<div id="@(idPrefix)personPartsTabs">
+    <ul>
+        <li><a href="#personGeneralTabRef" id="personGeneralTab" class="GeneralTab">@Machete.Web.Resources.Persons.basicinfo</a></li>
+        @if (Model.Worker == null)
+        {
+            <li><a href="/Worker/Create?ID=@(Model.ID)" id="workerCreateTab" class="CreateTab">@Machete.Web.Resources.Persons.createworker</a></li>
+        }
+        @if (Html.IsRoleAllowed("Worker.Edit.WorkerInfo.ShowTab") && Model.Worker != null)
+        {
+            <li><a href="/Worker/Edit/@(Model.ID)" id="workerEditTab">@Machete.Web.Resources.Persons.workerinfo</a></li>
+        }
+        @if (Html.IsInRole(Html.Role_AM()))
+        {
+            <li><a href="#eventList" id="eventListTab" class="ListTab">@Events.eventtab</a> </li>
+            <li><a href="/Event/Create?PersonID=@(Model.ID)" id="eventCreateTab" class="CreateTab">@Events.createlink</a></li>
+        }
+        @if (Html.IsInRole(Html.Role_T()) && Model.Worker != null)
+        {
+            <li><a href="#actJoinList" id="actJoinTab" class="ListTab">@Activities.actJoinTab</a></li>
+            <li><a hidden href="/Worker/Edit/@(Model.ID)" id="workerEditTab">@Machete.Web.Resources.Persons.workerinfo</a></li>
+        }
+    </ul>
+    <div id="personGeneralTabRef">
+        @using (Html.BeginForm("Edit", "Person", FormMethod.Post,
+                    new { @class = "edittab-form", @id = "Persontab-" + Model.ID }))
+        {
+
+            <input type="button" value="@Persons.viewlink" class="formButton" id="view-@Model.ID" />
+            <input type="submit" value="@Persons.editsubmit" class="formButton saveBtn" />
+            if (Html.IsInRole(Html.Role_AM()))
+            {
+                <input id="delete-@Model.ID" type="button" value="@Persons.deletesubmit"
+                       class="formButton deleteButton" />
+            }
+            <br />
+            @Html.ValidationSummary(true)
+            @Html.EditorForModel()
+
+        }
+        @if (Html.IsInRole(Html.Role_AM()))
+        {
+            using (Html.BeginForm("Delete", "Person", FormMethod.Post,
+                                    new { @class = "edittab-form", @id = "DeletePerson-" + Model.ID }))
+            {
+                @* TODO: create UI tests, remove generic "ID" label *@
+                @Html.HiddenFor(model => model.ID);
+            @Html.Hidden("personID", Model.ID);
+            }
+        }
+    </div>
+    @Html.Partial("EventIndex", Model)
+    @if (Html.IsInRole(Html.Role_T()) && Model.Worker != null)
+    {
+        @Html.Partial("ActivityJoinIndex", Model)
+    }
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var personEditForm = $('#Persontab-@Model.ID');
+        var personPartTabs = $('#@(idPrefix)personPartsTabs');
+        var personDeleteForm = $('#DeletePerson-@Model.ID');
+        var personDeleteBtn = $("#delete-@Model.ID");
+        $('#view-@Model.ID').click(function () {
+            printwindow = window.open('/Person/View/@Model.ID');
+        });
+        $('.formButton').button();
+        $('#firstname1').focus();
+        $.validator.unobtrusive.parseDynamicContent(personEditForm);
+        //
+        //
+        personPartTabs.mUI('createTabs', {
+            prefix: "ui-tabs-personParts-",
+            formLevel: 1,
+            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+        });
+        //
+        // delete button confirmation
+        personDeleteBtn.mUI('formClickDelete', {
+            ok: "@Persons.deletesubmit",
+            confirm: '@Persons.deleteconfirmation',
+            title: '@Persons.deletetitle',
+            form: personDeleteForm,
+            altClose: $("#@(idPrefix)CloseBtn")
+        });
+        //
+        // edit form submit
+        personEditForm.mUI('tabFormSubmit', {
+            create: false,
+            selectTab: 0,
+            formLevel: 1
+        });
+        personEditForm.mUI('formDetectChanges', {
+            recType: "@(recType)",
+            formLevel: 1,
+            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+        });
+    });
+</script>

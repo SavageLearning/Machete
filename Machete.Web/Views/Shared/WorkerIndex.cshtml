@@ -1,0 +1,96 @@
+﻿@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using Machete.Domain.Resources
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    //string recType = "WO";
+    //string idPrefix = recType + Model.ID + "-";
+}
+<div id="workerDialog" title="@Machete.Domain.Resources.WorkOrder.requestTitle">
+    <table id="workerTable" class="display" style="display: none">
+        <thead>
+            <tr>
+                <th>EDITREF</th>
+                <th>LABEL</th>
+                <th>ID</th>
+                <th>@Worker.dwccardnum</th>
+                <th>@Worker.active</th>
+                <th>@Person.firstname1</th>
+                <th>@Person.firstname2</th>
+                <th>@Person.lastname1</th>
+                <th>@Person.lastname2</th>
+                <th>@Worker.memberexpirationdate</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#workerTable').dataTable({
+            "bPaginate": true,
+            "bLengthChange": true,
+            "aaSorting": [[9, 'desc']],
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "iDeferLoading": true,
+            "bAutoWidth": false,
+            "bServerSide": true,
+            "sAjaxSource": "/Worker/AjaxHandler", 
+            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "bProcessing": true,
+            "aoColumns": [
+                { "mDataProp": "tabref","bSearchable": false, "bSortable": false, "bVisible": false },
+                { "mDataProp": "tablabel","bSearchable": false, "bSortable": false, "bVisible": false },
+                { "mDataProp": "WID","bSearchable": false, "bSortable": false, "bVisible": false },
+                { "mDataProp": "dwccardnum" },
+                { "mDataProp": "wkrStatus" },
+                { "mDataProp": "firstname1" },
+                { "mDataProp": "firstname2" },
+                { "mDataProp": "lastname1" },
+                { "mDataProp": "lastname2" },
+                { "mDataProp": "memberexpirationdate" }
+            ],
+            // callback populates html attr with row data from JSON            
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $(nRow).attr('recordid', aData['WID']);
+                switch (aData['wkrStatus'])
+                {
+                    // magic strings in WorkAssignmentController
+                    case "active": $(nRow).addClass('statusBlue'); break;
+                    case "inactive": $(nRow).addClass('statusYellow'); break;
+                    case "expired": $(nRow).addClass('statusYellow'); break;
+                    case "sanctioned": $(nRow).addClass('statusRed'); break;
+                    case "expelled": $(nRow).addClass('statusRed'); break;
+                    default: $(nRow).addClass('statusBlue');
+                }                 
+                return nRow;
+            }         
+        }).fnSetFilteringDelay(250);
+        //
+        // workRequest Dialog -doubleclick on row to select
+        // create event to handle worker selection from dialog
+        $('#workerTable').find('tbody').dblclick(function (event) {            
+            var myTr = event.target.parentNode;
+            var myID = $(myTr).attr('recordid');  
+            var myLabel =  $(myTr).find('td:eq(0)') //get card num
+                                .text() + ' '+
+                                $(myTr).find('td:eq(2)').text() + ' '+ //get first name
+                                $(myTr).find('td:eq(4)').text();       //get last name
+            //
+            // handler function created by addRequestionBtn create event
+            // TODO: kill this global variable kludge
+            M_workerRequestHandler(myID, myLabel);
+            //
+            // Close the worker dialog
+            $('a.ui-dialog-titlebar-close').click();
+        });
+        //////////////////////////////////////////////////
+        //
+        //
+        $('#workerDialog').hide();
+        $('#workerTable').hide();
+        //$("#wophone").mask("999-999-9999", { placeholder: " " });
+    });
+</script>

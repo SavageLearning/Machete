@@ -1,0 +1,267 @@
+﻿@model Machete.Domain.Worker
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string lang = CI.TwoLetterISOLanguageName;
+    string recType = "worker";
+    string idPrefix = recType + Model.ID + "-";
+}
+@Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID" })
+<div class="mui-edit-block">
+    <div class="tb-table">
+        <div class="tb-row">
+            @Html.mUITableLabelFor(model => model.dwccardnum)
+            @Html.mUITableTextBoxFor(model => model.dwccardnum,
+                new { @tabindex = "1", @class = "workerEditor", @id = idPrefix + "dwccardnum" })
+            @Html.mUITableLabelFor(model => model.dateOfMembership)
+            @Html.mUITableDateTextBoxFor(m => m.dateOfMembership,
+                new { @tabindex = "2", @class = "ui-datepicker workerEditor", id = idPrefix + "dateOfMembership" })
+        </div>
+        <div class="tb-row">
+            @Html.mUITableLabelFor(model => model.memberStatus)
+            @Html.mUITableDropDownListFor(model => model.memberStatus, Lookups.getSelectList(Machete.Domain.LCategory.memberstatus),
+                new { tabindex = "1", @class = "workerEditor", id = idPrefix + "memberStatus" })
+            @Html.mUITableLabelFor(model => model.memberReactivateDate)
+            @Html.mUITableDateTextBoxFor(m => m.memberReactivateDate,
+                new { tabindex = "2", @class = "ui-datepicker workerEditor",  id = idPrefix + "memberReactivateDate" })
+        </div>
+        <div class="tb-row">
+            @Html.mUITableLabelFor(model => model.englishlevelID)
+            @Html.mUITableDropDownListFor(model => model.englishlevelID, Lookups.skillLevels(),
+                new { tabindex = "1", @class = "workerEditor", id = idPrefix + "englishlevelID" })
+            @Html.mUITableLabelFor(model => model.memberexpirationdate)
+            @Html.mUITableDateTextBoxFor(m => m.memberexpirationdate,
+                new { tabindex = "2", @class = "ui-datepicker workerEditor",  id = idPrefix + "memberexpirationdate" })
+        </div>
+    </div>
+    <div class="tb-table">
+        <div class="tb-row">
+            @Html.mUITableLabelFor(model => model.typeOfWorkID)
+            @Html.mUITableDropDownListFor(model => model.typeOfWorkID, Lookups.getSelectList(Machete.Domain.LCategory.worktype), 
+                new { tabindex = "1", @class = "workerEditor", id = idPrefix + "typeOfWorkID" })
+        </div>
+    </div>
+    <div class="tb-table">
+        <div class="tb-row">
+            @Html.mUITableLabelFor(model => model.RaceID)
+            @Html.mUITableDropDownListFor(model => model.RaceID, Lookups.getSelectList(Machete.Domain.LCategory.race),
+                new { tabindex = "1", @class = "workerEditor", id = idPrefix + "RaceID" })
+            @Html.mUITableLabelFor(model => model.raceother)
+            @Html.mUITableTextBoxFor(m => m.raceother, 
+                new { tabindex = "2",@class = "workerEditor", id = idPrefix + "raceother" })
+        </div>
+        <div class="tb-row">
+            @Html.mUITableLabelFor(model => model.height)
+            @Html.mUITableTextBoxFor(m => m.height, new { @class = "workerEditor", id = idPrefix + "height", tabindex = "1" })
+            @Html.mUITableLabelFor(model => model.dateOfBirth)
+            @Html.mUITableDateTextBoxFor(m => m.dateOfBirth, new { @class = "ui-datepicker workerEditor", tabindex = "2", id = idPrefix + "dateOfBirth" })
+        </div>
+        <div class="tb-row">
+            @Html.mUITableLabelFor(model => model.weight)
+            @Html.mUITableTextBoxFor(m => m.weight, new { @class = "workerEditor", id = idPrefix + "weight", tabindex = "1" })
+            @Html.mUITableLabelFor(model => model.neighborhoodID)
+            @Html.mUITableDropDownListFor(model => model.neighborhoodID, Lookups.getSelectList(Machete.Domain.LCategory.neighborhood),
+                    new { tabindex = "2", @class = "workerEditor", id = idPrefix + "neighborhoodID" })
+        </div>
+        <div class="tb-row">
+            @Html.mUITableLabelFor(model => model.recentarrival)
+            @Html.mUIDropDownYesNoFor(model => model.recentarrival, new { tabindex = "1", @class = "workerEditor", id = idPrefix + "recentarrival" })
+            @Html.mUITableLabelFor(model => model.dateinUSA)
+            @Html.mUITableDateTextBoxFor(m => m.dateinUSA, new { @class = "ui-datepicker workerEditor", tabindex = "2", id = idPrefix + "dateinUSA" })
+        </div>
+        <div class="tb-row">
+            @Html.mUITableLabelFor(model => model.countryoforiginID)
+            @Html.mUIDropDownListFor(model => model.countryoforiginID, Lookups.getSelectList(Machete.Domain.LCategory.countryoforigin),
+                        new { tabindex = "1", @class = "workerEditor", id = idPrefix + "countryoforiginID" })
+            @Html.mUITableLabelFor(model => model.dateinseattle)
+            @Html.mUITableDateTextBoxFor(m => m.dateinseattle, new { @class = "ui-datepicker workerEditor", tabindex = "2", id = idPrefix + "dateinseattle" })
+        </div>
+        <div class="tb-row">
+            @Html.mUITableLabelFor(model => model.disabled)
+            @Html.mUIDropDownYesNoFor(model => model.disabled, new { tabindex = "1", @class = "workerEditor", id = idPrefix + "disabled" })
+            @Html.mUITableLabelFor(model => model.disabilitydesc)
+            @Html.mUITableTextBoxFor(m => m.disabilitydesc, new { tabindex = "2", @class = "workerEditor", id = idPrefix + "disabilitydesc" })
+        </div>
+        <div class="tb-row">
+            @Html.mUITableLabelFor(model => model.maritalstatus)
+            @Html.mUIDropDownListFor(model => model.maritalstatus, Lookups.getSelectList(Machete.Domain.LCategory.maritalstatus),
+                                        new { tabindex = "1", @class = "workerEditor", id = idPrefix + "maritalstatus" })
+            @Html.mUITableLabelFor(model => model.livewithchildren)
+            @Html.mUIDropDownYesNoFor(model => model.livewithchildren, new { tabindex = "2", @class = "workerEditor", id = idPrefix + "livewithchildren" })
+        </div>
+        <div class="tb-row">
+            @Html.mUITableLabelFor(model => model.numofchildren)
+            @Html.mUITableTextBoxFor(m => m.numofchildren, new { tabindex = "1", @class = "workerEditor", id = idPrefix + "numofchildren" })
+            @Html.mUITableLabelFor(model => model.incomeID)
+            @Html.mUIDropDownListFor(model => model.incomeID, Lookups.getSelectList(Machete.Domain.LCategory.income),
+                                        new { tabindex = "2", @class = "workerEditor", id = idPrefix + "incomeID" })
+        </div>
+        <div class="tb-row">
+            @Html.mUITableLabelFor(model => model.livealone)
+            @Html.mUIDropDownYesNoFor(model => model.livealone, new { @tabindex = "1", @class = "workerEditor", @id = idPrefix + "livealone" })
+            @Html.mUITableLabelFor(model => model.immigrantrefugee)
+            @Html.mUIDropDownYesNoFor(model => model.immigrantrefugee, new { tabindex = "2", @class = "workerEditor", id = idPrefix + "immigrantrefugee" })
+        </div>
+        <div class="tb-row">
+            @Html.mUITableLabelFor(model => model.homeless)
+            @Html.mUIDropDownYesNoFor(model => model.homeless, new { @tabindex = "1", @class = "workerEditor", @id = idPrefix + "homeless" })
+        </div>
+        <div class="tb-row">
+            @Html.mUITableLabelFor(model => model.driverslicense)
+            @Html.mUIDropDownYesNoFor(model => model.driverslicense, new { tabindex = "1", @class = "workerEditor", id = idPrefix + "driverslicense" })
+            @Html.mUITableLabelFor(model => model.licenseexpirationdate)
+            @Html.mUITableDateTextBoxFor(m => m.licenseexpirationdate, new { @class = "ui-datepicker workerEditor", tabindex = "2", id = idPrefix + "licenseexpirationdate" })
+        </div>
+        <div class="tb-row">
+            @Html.mUITableLabelFor(model => model.carinsurance)
+            @Html.mUIDropDownYesNoFor(model => model.carinsurance, new { tabindex = "1", @class = "workerEditor", id = idPrefix + "carinsurance" })
+            @Html.mUITableLabelFor(model => model.insuranceexpiration)
+            @Html.mUITableDateTextBoxFor(m => m.insuranceexpiration, new { @class = "ui-datepicker workerEditor", tabindex = "2", id = idPrefix + "insuranceexpiration" })
+        </div>
+    </div>
+</div>
+<div class="tb-table mui-edit-worker-picture">
+    <div class="tb-row">
+        @if (Model.ImageID == null || Model.ImageID == 0)
+        {
+            <img id="ImageID" src="/Content/images/NO-IMAGE-AVAILABLE.jpg" alt="no image" style="width: 200px" />
+        }
+        else
+        {
+            <img src="@Url.Action("GetImage", "Image", new { ID = Model.ImageID })" alt="no image" style="width: 200px"/>            
+        }
+        <div class="view_off print_off">
+            <div>
+                @Workers.uploadnewimage
+            </div>
+            <input id="@(idPrefix)imagefile" type="file" name="imagefile" />
+        </div>
+    </div>
+</div>
+<!--Image-->
+<div class="tb-table mui-edit-worker-footer">
+    <div class="tb-row">
+        <div class="tb-label tri-col" style="text-align: left">
+            @Html.LabelFor(model => model.skill1)
+        </div>
+        <div class="tb-label tri-col" style="text-align: left">
+            @Html.LabelFor(model => model.skill2)
+        </div>
+        <div class="tb-label tri-col" style="text-align: left">
+            @Html.LabelFor(model => model.skill3)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-field tri-col">
+            @Html.DropDownListFor(model => model.skill1,
+            new SelectList(Lookups.getSkill(true),
+                "Value",
+                "Text",
+                Model.skill1),
+                         @Machete.Web.Resources.Shared.choose, new { tabindex = "4" })
+            @Html.ValidationMessageFor(model => model.skill1)
+        </div>
+        <div class="tb-field tri-col">
+            @Html.DropDownListFor(model => model.skill2,
+            new SelectList(Lookups.getSkill(true),
+                "Value",
+                "Text", Model.skill2),
+                         @Machete.Web.Resources.Shared.choose, new { tabindex = "4" })
+            @Html.ValidationMessageFor(model => model.skill2)
+        </div>
+        <div class="tb-field tri-col">
+            @Html.DropDownListFor(model => model.skill3,
+            new SelectList(Lookups.getSkill(true),
+                "Value",
+                "Text", Model.skill3),
+                         @Machete.Web.Resources.Shared.choose, new { tabindex = "4" })
+            @Html.ValidationMessageFor(model => model.skill3)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label tri-col" style="text-align: left">
+            @Html.LabelFor(model => model.emcontUSAname)
+        </div>
+        <div class="tb-label tri-col" style="text-align: left">
+            @Html.LabelFor(model => model.emcontUSArelation)
+        </div>
+        <div class="tb-label tri-col" style="text-align: left">
+            @Html.LabelFor(model => model.emcontUSAphone)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-field tri-col">
+            @Html.TextBox("emcontUSAname", Model.emcontUSAname, new { tabindex = "4" })
+            @Html.ValidationMessageFor(model => model.emcontUSAname)
+        </div>
+        <div class="tb-field tri-col">
+            @Html.TextBox("emcontUSArelation", Model.emcontUSArelation, new { tabindex = "4" })
+            @Html.ValidationMessageFor(model => model.emcontUSArelation)
+        </div>
+        <div class="tb-field tri-col">
+            @Html.TextBox("emcontUSAphone", Model.emcontUSAphone, new { tabindex = "4" })
+            @Html.ValidationMessageFor(model => model.emcontUSAphone)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label tri-col" style="text-align: left">
+            @Html.LabelFor(model => model.emcontoriginname)
+        </div>
+        <div class="tb-label tri-col" style="text-align: left">
+            @Html.LabelFor(model => model.emcontoriginrelation)
+        </div>
+        <div class="tb-label tri-col" style="text-align: left">
+            @Html.LabelFor(model => model.emcontoriginphone)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-field tri-col">
+            @Html.TextBox("emcontUSAname", Model.emcontoriginname, new { tabindex = "4" })
+            @Html.ValidationMessageFor(model => model.emcontoriginname)
+        </div>
+        <div class="tb-field tri-col">
+            @Html.TextBox("emcontoriginrelation", Model.emcontoriginrelation, new { tabindex = "4" })
+            @Html.ValidationMessageFor(model => model.emcontoriginrelation)
+        </div>
+        <div class="tb-field tri-col">
+            @Html.TextBox("emcontoriginphone", Model.emcontoriginphone, new { tabindex = "4" })
+            @Html.ValidationMessageFor(model => model.emcontoriginphone)
+        </div>
+    </div>
+</div>
+<!--contacts-->
+@Html.Partial("ManagerInfo")
+@Html.Partial("AdministratorInfo")
+<script type="text/javascript">
+    $(document).ready(function () {
+        //
+        $("#@(idPrefix)RaceID").mUI('selectEnableOnValue', {
+            target: $("#@(idPrefix)raceother"),
+            enableVal: "7" //Race other from lookups table
+        });
+        //
+        $("#@(idPrefix)disabled").mUI('selectEnableOnValue', {
+            target: $("#@(idPrefix)disabilitydesc"),
+            enableVal: "true"
+        });
+        //
+        $("#@(idPrefix)driverslicense").mUI('selectEnableOnValue', {
+            target: $("#@(idPrefix)licenseexpirationdate"),
+            enableVal: "true"
+        });
+        //
+        $("#@(idPrefix)carinsurance").mUI('selectEnableOnValue', {
+            target: $("#@(idPrefix)insuranceexpiration"),
+            enableVal: "true"
+        });
+        //
+        $('.ui-datepicker').datepicker({
+            dateFormat: 'mm/dd/yy',
+            buttonImage: '@Url.Content("~/Content/calendar.gif")',
+            buttonImageOnly: true,
+            showOn: "button"
+        });
+        $('.ui-datepicker-trigger').addClass('print_off');
+    });
+</script>

@@ -1,0 +1,46 @@
+﻿@model Machete.Web.Models.EditUserViewModel
+
+@{
+    ViewBag.Title = "Delete";
+}
+<div class="account-background">
+    <h2>Delete</h2>
+
+    <h3>Are you sure you want to delete this user?</h3>
+    <div>
+        <h4>@Html.DisplayFor(model => model.UserName)</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                <strong>@Html.DisplayNameFor(model => model.FirstName)</strong>
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.FirstName)
+            </dd>
+
+            <dt>
+                <strong>@Html.DisplayNameFor(model => model.LastName)</strong>
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.LastName)
+            </dd>
+
+            <dt>
+                <strong>@Html.DisplayNameFor(model => model.Email)</strong>
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+        </dl>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-actions no-color">
+                <input type="submit" value="Delete" class="btn btn-default" /> |
+                @Html.ActionLink("Back to List", "Index", "Account")
+            </div>
+        }
+    </div>
+</div>

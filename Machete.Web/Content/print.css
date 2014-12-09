@@ -1,0 +1,508 @@
+﻿/*----------------------------------------------------------
+The base color for this template is #5c87b2. If you'd like
+to use a different color start by replacing all instances of
+#5c87b2 with your new color. Deep red is #800000
+
+
+----------------------------------------------------------*/
+
+/* _Layout.cshtml -- style for all page bodies  */
+body
+{
+    background-color: #5c87b2;
+    font-size: 75%;
+    font-family: Verdana, Tahoma, Arial, "Helvetica Neue" , Helvetica, Sans-Serif;
+    margin: 0;
+    padding: 0;
+    color: black;
+}
+
+.casaLogo 
+{
+    float: left; 
+    width: 75px; 
+    clear:left;
+
+}
+
+a:link
+{
+    color: #034af3;
+    text-decoration: underline;
+}
+a:visited
+{
+    color: #505abc;
+}
+a:hover
+{
+    color: #1d60ff;
+    text-decoration: none;
+}
+a:active
+{
+    color: #12eb87;
+}
+
+p, ul
+{
+    margin-bottom: 20px;
+    line-height: 1.6em;
+}
+
+/* HEADINGS   
+----------------------------------------------------------*/
+h1, h2, h3, h4, h5, h6
+{
+    font-size: 1.5em;
+    color: black;
+}
+
+h1
+{
+    font-size: 2em;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+h2
+{
+    padding: 0 0 0 0;
+    text-align: left;
+}
+h3
+{
+    font-size: 1.2em;
+}
+h4
+{
+    font-size: 1.1em;
+}
+h5, h6
+{
+    font-size: 1em;
+}
+
+/* this rule styles <h2> tags that are the 
+first child of the left and right table columns */
+.rightColumn > h1, .rightColumn > h2, .leftColumn > h1, .leftColumn > h2
+{
+    margin-top: 0;
+}
+
+/* PRIMARY LAYOUT ELEMENTS   
+----------------------------------------------------------*/
+
+/* you can specify a greater or lesser percentage for the 
+page width. Or, you can specify an exact pixel width. */
+.page
+{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#header
+{
+
+}
+
+#header h1
+{
+
+}
+
+#main
+{
+    /*padding: 30px 30px 15px 30px;*/
+    background-color: #fff;
+    margin-bottom: 30px;
+    _height: 1px; /* only IE6 applies CSS properties starting with an underscore */
+}
+
+#footer
+{
+    color: #999;
+    padding: 10px 0;
+    text-align: center;
+    line-height: normal;
+    margin: 0;
+    font-size: .9em;
+}
+
+/* TAB MENU   
+----------------------------------------------------------*/
+ul#menu
+{
+    border-bottom: 1px #5c87b2 solid;
+    padding: 0 0 2px;
+    position: relative;
+    margin: 0;
+    text-align: right;
+}
+
+ul#menu li
+{
+    display: inline;
+    list-style: none;
+}
+
+ul#menu li#greeting
+{
+    padding: 10px 20px;
+    font-weight: bold;
+    text-decoration: none;
+    line-height: 2.8em;
+    color: #fff;
+}
+
+ul#menu li a
+{
+    padding: 10px 20px;
+    font-weight: bold;
+    text-decoration: none;
+    line-height: 2.8em;
+    background-color: #e8eef4;
+    color: #034af3;
+}
+
+ul#menu li a:hover
+{
+    background-color: #fff;
+    text-decoration: none;
+}
+
+ul#menu li a:active
+{
+    background-color: #a6e2a6;
+    text-decoration: none;
+}
+
+ul#menu li.selected a
+{
+    background-color: #fff;
+    color: #000;
+}
+
+/* FORM LAYOUT ELEMENTS   
+----------------------------------------------------------*/
+
+fieldset 
+{
+    border:1px solid #black;
+    padding:0;
+    margin:0;
+}
+
+legend 
+{
+    font-size:1.2em;
+    font-weight: bold;
+}
+
+textarea 
+{
+    min-height: 75px;
+}
+/*
+input[type="text"]
+{
+    width: 200px;
+    border: 1px solid #black;
+}
+*/
+.personEditor
+{
+    width: 150px;
+    outline: medium none;
+    border: 1px solid #CCC;
+}
+
+.workerEditor
+{
+    width: 150px;
+    outline: medium none;
+    border: 1px solid #CCC;
+}
+
+input[type="password"] 
+{
+    width: 200px;
+    border: 1px solid #black;
+}
+
+/* TABLE
+----------------------------------------------------------*/
+
+table 
+{
+  border: solid 1px black;
+  border-collapse: collapse;
+}
+
+table td 
+{
+  padding: 1px;   
+  border: solid 1px black;
+  font-size: 80%;
+}
+
+table th
+{
+  padding: 1px 1px;
+  text-align: left;
+  background-color: #e8eef4; 
+  border: solid 1px black;   
+  font-size: 70%;
+}
+
+/* MISC  
+----------------------------------------------------------*/
+.clear
+{
+    clear: both;
+}
+
+.error
+{
+    color:Red;
+}
+
+#menucontainer
+{
+    margin-top:40px;
+}
+
+div#title
+{
+    display:block;
+    float:left;
+    text-align:left;
+}
+
+#logindisplay
+{
+    font-size:1.1em;
+    display:none;
+    text-align:right;
+    margin:10px;
+    color:White;
+}
+
+#logindisplay a:link
+{
+    color: white;
+    text-decoration: underline;
+}
+
+#logindisplay a:visited
+{
+    color: white;
+    text-decoration: underline;
+}
+
+#logindisplay a:hover
+{
+    color: white;
+    text-decoration: none;
+}
+
+/* Styles for validation helpers
+-----------------------------------------------------------*/
+.field-validation-error
+{
+    color: #ff0000;
+}
+
+.field-validation-valid
+{
+    display: none;
+}
+
+.input-validation-error
+{
+    border: 1px solid #ff0000;
+    background-color: #ffeeee;
+}
+
+.validation-summary-errors
+{
+    font-weight: bold;
+    color: #ff0000;
+}
+
+.validation-summary-valid
+{
+    display: none;
+}
+
+/* Styles for editor and display helpers
+----------------------------------------------------------*/
+
+/* Used for description labels on forms  */
+.desc-label
+{
+    vertical-align: top;
+    width: 8em;
+}
+/* Used for description fields on forms  */
+.desc-field
+{
+    width: 40em;
+    height: 2em !important;
+}
+/* Used on workorder and workassignment;   */
+.money-field
+{
+    width: 5em !important;
+}
+/*   */
+.text-box
+{
+    width: 30em;
+}
+
+.tb-table
+{
+    display: table;
+}
+
+.tb-row
+{
+    display: table-row;
+}
+
+.tb-cell
+{
+    display: table-cell;
+}
+
+.tb-label
+{
+    /*border: 1px solid red;*/
+    width: 12em;
+    margin: 0em 0 0 0;
+    font-weight: normal;
+    font-size: 80%;
+    padding: 1px;
+    text-align: right;
+    vertical-align: text-top;
+    display: table-cell;
+}
+
+.tb-header
+{
+    border: 1px solid black;
+    margin: 1em 0 0 0;
+    font-weight: bold;
+    padding: 5px;
+    text-align: left;
+    display: table-cell;
+}
+/* WorkOrder view, formats workAssignment list */
+.tb-header-fixed
+{
+    border: 1px solid black;
+    margin: 1em 0 0 0;
+    font-weight: bold;
+    padding: 5px;
+    text-align: left;
+    width: 80px;
+    font-size: 80%;
+    display: table-cell;
+}
+
+.tb-field
+{
+    /*border: 1px solid blue;*/
+    margin:0.5em 0 0 0;
+    /*font-weight: bold;*/
+    padding: 1px;
+    display: table-cell;
+}
+/* WorkOrder view, formats workAssignment list */
+.tb-field-fixed
+{
+    /*border: 1px solid blue;*/
+    margin:0.5em 0 0 0;
+    padding: 5px;
+    /*font-weight: bold;*/
+    width: 80px;
+    text-align: center;
+    padding: 5px;
+    display: table-cell;
+}
+
+
+.tb-underline
+{
+    font-weight: bold;
+    text-decoration: underline;
+    display: table-cell;  
+}
+/* WorkOrder view */
+.tb-bordered_field
+{
+    border: 1px solid black;
+    margin: 1em 0 0 0;    
+    padding: 5px;
+    text-align: left;
+    display: table-cell;
+}
+
+.tb-display
+{
+    margin:0.5em 0 0 0;
+    display: table-cell;
+}
+
+
+.tri-col
+{
+    width: 230px;   
+}
+.tri-col input[type="text"]
+{
+    width: 200px;
+}
+
+.print_off,
+.print_off *,
+.print_off
+{
+    display: none;
+}
+
+.completeOrderContainer
+{
+    display: block;
+}
+
+.completeOrderButton
+{
+    width: 100%;
+    margin: 10px 0; 
+    padding: 10px !important;
+    border: 1px solid red !important;
+    color: Red !important; 
+}
+/* Delete button formatting */
+.deleteButton
+{
+    float: right;
+}
+
+/* WorkOrder --------------------------------------------------------------*/
+
+/* WorkOrder/View: Box floating in upper right */
+.dateNeeded 
+{
+    float:right; 
+    border: 1px solid Black;
+}
+
+/* WorkOrder/View: Box floating in upper right */
+.neededText 
+{
+    font-size: 1.5em;
+    color: #000;
+    margin: 2px;
+}

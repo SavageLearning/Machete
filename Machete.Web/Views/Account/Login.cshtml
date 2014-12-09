@@ -1,0 +1,165 @@
+﻿@model Machete.Web.Models.LoginViewModel
+
+@{
+    ViewBag.Title = @Machete.Web.Resources.ValidationStrings.LogOnTitle;
+}
+<div class="account-background">
+    <h2>@Machete.Web.Resources.ValidationStrings.LogOnTitle</h2>
+    <p>
+        @Machete.Web.Resources.ValidationStrings.LogOnRegisterString1 @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.Register, "Register") @Machete.Web.Resources.ValidationStrings.LogOnRegisterString2
+    </p>
+
+    @Html.ValidationSummary(true, @Machete.Web.Resources.ValidationStrings.LogOnUnsuccessful)
+
+    <div class="row">
+        <div class="col-md-8">
+            <section id="loginForm">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <fieldset>
+                        <legend>@Machete.Web.Resources.ValidationStrings.LogOnLegend</legend>
+                        <div class="tb-table">
+                            <div class="tb-row">
+                                <div class="tb-label">
+                                    @Html.LabelFor(m => m.UserName)
+                                </div>
+                                <div class="tb-field">
+                                    @Html.TextBoxFor(m => m.UserName)
+                                    @Html.ValidationMessageFor(m => m.UserName)
+                                </div>
+                            </div>
+                            <div class="tb-row">
+                                <div class="tb-label">
+                                    @Html.LabelFor(m => m.Password)
+                                </div>
+                                <div class="tb-field">
+                                    @Html.PasswordFor(m => m.Password)
+                                    @Html.ValidationMessageFor(m => m.Password)
+                                </div>
+                            </div>
+                            <div class="tb-row">
+                                <div class="tb-label">
+                                    @Html.LabelFor(m => m.RememberMe)
+                                </div>
+                                <div class="tb-field">
+                                    @Html.CheckBoxFor(m => m.RememberMe)
+                                    <input name="logonB" type="button" onclick="getIsPasswordExpired()" value="@Machete.Web.Resources.ValidationStrings.LogOn" />
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                }
+            </section>
+        </div>
+        <div class="col-md-4">
+            <section id="socialLoginForm">
+                @Html.Partial("_ExternalLoginsListPartial")
+            </section>
+        </div>
+    </div>
+</div>
+
+<div id="passwordChange" title="@Machete.Web.Resources.ValidationStrings.ChangeTitle">
+    <p><h5><small>Password has expired. Please provide new password.</small></h5></p>
+    <form>
+        <label for="newpassword">@Machete.Web.Resources.ValidationStrings.PasswordNew</label><br>
+        <input type="password" name="newpassword" id="newpassword" value="" class="text ui-widget-content ui-corner-all"><br>
+        <br>
+        <label for="confirmnewpassword">@Machete.Web.Resources.ValidationStrings.PasswordConfirm</label><br>
+        <input type="password" name="confirmnewpasswordd" id="confirmnewpassword" value="" class="text ui-widget-content ui-corner-all">
+    </form>
+</div>
+
+<div id="messageDialog">
+    <p id="messageDialogText"></p>
+</div>
+
+<script type="text/javascript">
+
+    var passwordChangeDialog = $("#passwordChange").dialog({
+        autoOpen: false,
+        height: 280,
+        width: 300,
+        modal: true,
+        resizable: false,
+        closeOnEscape: false,
+        buttons: {
+            "@Machete.Web.Resources.ValidationStrings.Change": changePassword
+        }
+    });
+
+    var messageDialog = $("#messageDialog").dialog({
+        autoOpen: false,
+        height: 200,
+        width: 300,
+        modal: true,
+        closeOnEscape: true,
+        buttons: {
+            "Ok": function () { $(this).dialog("close"); }
+        }
+    });
+
+    function showMessage(messageText)
+    {
+        $("#messageDialogText").text(messageText);
+        messageDialog.dialog("open");
+    }
+
+    function getIsPasswordExpired() {
+        $.ajax({
+            url: "/Account/IsPasswordExpired",
+            data: { username: $('#UserName')[0].value, password: $('#Password')[0].value }, //#Password found using inspect element on Log on Machete window
+
+            success: onSuccessIsPasswordExpired,
+            dataType: "json"
+        });
+    }
+
+    function onSuccessIsPasswordExpired(result) {
+        if (result.pwdExpired)
+        {
+            passwordChangeDialog.dialog("open");
+        }
+        else
+        {
+            logon();
+        }
+    }
+
+    function logon() {
+        $("form:first").submit();
+    }
+
+    function changePassword() {
+        var newpassword = $("#newpassword")[0].value,
+            confirmnewpassword = $("#confirmnewpassword")[0].value; 
+        if (newpassword != confirmnewpassword) // verifying that new password and confirmed passwords are the same
+        {
+            showMessage("@Machete.Web.Resources.ValidationStrings.PasswordsMustMatch");
+            return;
+        }
+        if (newpassword === $('#Password')[0].value) { //#Password found using inspect element on Log on Machete window Checking that new password is not same as current password
+            showMessage("Password cannot be the same as existing password.");
+            return;
+        }
+
+        $.ajax({
+            url: "/Account/ChangeExpiredPassword",
+            data: { username: $('#UserName')[0].value, password: $('#Password')[0].value, newpassword: newpassword },
+
+            success: function (result) {
+                if (result.succeeded) {
+                    passwordChangeDialog.dialog("close");
+                    //showMessage(result.message);
+                    $('#Password')[0].value = newpassword;
+                    logon();
+                }
+                else {
+                    showMessage(result.message);
+                }
+            },
+            dataType: "json"
+        });
+    }
+</script>

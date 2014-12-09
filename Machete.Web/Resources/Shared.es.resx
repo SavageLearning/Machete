@@ -1,0 +1,252 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="employerstab" xml:space="preserve">
+    <value>Patrones</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="ErrorPgActionLabel" xml:space="preserve">
+    <value>Nombre de la acción:</value>
+  </data>
+  <data name="ErrorPgControllerLabel" xml:space="preserve">
+    <value>Nombre de la controladora:</value>
+  </data>
+  <data name="ErrorPgExceptionLabel" xml:space="preserve">
+    <value>Seguimiento de la pila:</value>
+  </data>
+  <data name="ErrorPgApology" xml:space="preserve">
+    <value>Lo sentimos, ha ocurrido un error al procesar su solicitud.</value>
+  </data>
+  <data name="hometab" xml:space="preserve">
+    <value>Inicio</value>
+  </data>
+  <data name="parentwebtitle" xml:space="preserve">
+    <value>Sitio Web</value>
+  </data>
+  <data name="persontab" xml:space="preserve">
+    <value>Gente</value>
+  </data>
+  <data name="title" xml:space="preserve">
+    <value>machete::</value>
+  </data>
+  <data name="workassignmentstab" xml:space="preserve">
+    <value>Despachos</value>
+  </data>
+  <data name="workerstab" xml:space="preserve">
+    <value>Trabajadores</value>
+  </data>
+  <data name="workorderstab" xml:space="preserve">
+    <value>Órdenes</value>
+  </data>
+  <data name="ErrorPgExplanation" xml:space="preserve">
+    <value>Ha ocurrido un error. Se ha registrado y será revisado por un administrador. Por favor, utilice el botón "Atrás" de su navegador para regresar a la pantalla anterior y probar su acción de nuevo. Si llegó a esta página de un marcador, el marcador ya no es válida.</value>
+  </data>
+  <data name="workersignintab" xml:space="preserve">
+    <value>Registros</value>
+  </data>
+  <data name="managerinformation" xml:space="preserve">
+    <value>Información del jefe</value>
+  </data>
+  <data name="administratorinformation" xml:space="preserve">
+    <value>Información del administrador</value>
+  </data>
+  <data name="choose" xml:space="preserve">
+    <value>(elegir)</value>
+  </data>
+  <data name="no" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="yes" xml:space="preserve">
+    <value>Sí</value>
+  </data>
+  <data name="about" xml:space="preserve">
+    <value>Sobre</value>
+  </data>
+  <data name="bannerbtn" xml:space="preserve">
+    <value>Mostrar bandera</value>
+  </data>
+  <data name="frontpage" xml:space="preserve">
+    <value>Machete noticias</value>
+  </data>
+  <data name="googleMap" xml:space="preserve">
+    <value>Mapa de Google</value>
+  </data>
+  <data name="issuetracker" xml:space="preserve">
+    <value>Seguimiento de incidencias</value>
+  </data>
+  <data name="notcalculable" xml:space="preserve">
+    <value>No calculable</value>
+  </data>
+  <data name="printGoogleMap" xml:space="preserve">
+    <value>Imprimir mapa de Google</value>
+  </data>
+  <data name="wiki" xml:space="preserve">
+    <value>Wiki</value>
+  </data>
+  <data name="reportstab" xml:space="preserve">
+    <value>Reportes</value>
+  </data>
+  <data name="changeConfirm" xml:space="preserve">
+    <value>Los cambios se hicieron a uno de los registros abiertos. Para guardar los cambios, haga clic en Cancelar y guarde su trabajo. Para descartar, haga clic en Aceptar.</value>
+  </data>
+  <data name="changeTitle" xml:space="preserve">
+    <value>Descartar los cambios?</value>
+  </data>
+  <data name="activitytab" xml:space="preserve">
+    <value>Actividades</value>
+  </data>
+  <data name="newsupdates" xml:space="preserve">
+    <value>Actualizaciones de Machete</value>
+  </data>
+  <data name="docs" xml:space="preserve">
+    <value>Documentación</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>Todos los programas</value>
+  </data>
+  <data name="emailstab" xml:space="preserve">
+    <value>Correos</value>
+  </data>
+  <data name="False" xml:space="preserve">
+    <value>Falso</value>
+  </data>
+  <data name="True" xml:space="preserve">
+    <value>Verdad</value>
+  </data>
+  <data name="um02" xml:space="preserve">
+    <value>Manual de Instruccion, Seccion 2</value>
+  </data>
+  <data name="backup" xml:space="preserve">
+    <value>Copia de Seguridad</value>
+  </data>
+  <data name="dailylist" xml:space="preserve">
+    <value>Lista Diaria</value>
+  </data>
+  <data name="introduction" xml:space="preserve">
+    <value>Inicio de Machete Wiki</value>
+  </data>
+  <data name="useracctmgmt" xml:space="preserve">
+    <value>Manejo de Cuentas de Usuarios</value>
+  </data>
+  <data name="not" xml:space="preserve">
+    <value>No</value>
+  </data>
+</root>

@@ -1,0 +1,55 @@
+﻿@model Machete.Domain.WorkAssignment
+@using Machete.Web.Helpers
+@using Machete.Web.Resources        
+@Html.HiddenFor(model => model.ID)
+<div class="tb-table">
+    <div class="tb-row">
+            <div class="tb-label">
+            @Html.LabelFor(model => model.qualityOfWork)
+        </div>
+        <div class="tb-field">
+            @Html.EditorFor(model => model.qualityOfWork)
+            @Html.ValidationMessageFor(model => model.qualityOfWork)
+        </div>
+
+        <div class="tb-label">
+            @Html.LabelFor(model => model.followDirections)
+        </div>
+        <div class="tb-field">
+            @Html.EditorFor(model => model.followDirections)
+            @Html.ValidationMessageFor(model => model.followDirections)
+        </div>
+
+        <div class="tb-label">
+            @Html.LabelFor(model => model.attitude)
+        </div>
+        <div class="tb-field">
+            @Html.EditorFor(model => model.attitude)
+            @Html.ValidationMessageFor(model => model.attitude)
+        </div>
+
+        <div class="tb-label">
+            @Html.LabelFor(model => model.reliability)
+        </div>
+        <div class="tb-field">
+            @Html.EditorFor(model => model.reliability)
+            @Html.ValidationMessageFor(model => model.reliability)
+        </div>
+
+        <div class="tb-label">
+            @Html.LabelFor(model => model.transportProgram)
+        </div>
+        <div class="tb-field">
+            @Html.EditorFor(model => model.transportProgram)
+            @Html.ValidationMessageFor(model => model.transportProgram)
+        </div>
+
+        <div class="tb-label">
+            @Html.LabelFor(model => model.comments)
+        </div>
+        <div class="tb-field">
+            @Html.EditorFor(model => model.comments)
+            @Html.ValidationMessageFor(model => model.comments)
+        </div>
+    </div>
+</div>

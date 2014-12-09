@@ -1,0 +1,60 @@
+﻿@model Machete.Domain.Worker
+@using Machete.Web.Resources
+@{  
+    string recType = "worker";
+    string idPrefix = recType + Model.ID + "-";
+}
+@using (Html.BeginForm("Create", "Worker", FormMethod.Post, 
+    new { @id = "workerCreateForm", enctype = "multipart/form-data" }))
+{
+    <div class="mui-button-row">
+        <input type="submit" id="createWorkerBtn"  class="formButton saveBtn" value="@Workers.createsubmit" tabindex="9"/>
+        <p class="validation-summary-errors">@ViewBag.OrganizeMe</p>
+    </div>
+    @Html.ValidationSummary(true)
+    @Html.EditorForModel()
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.formButton').button();
+        var workerCreateForm = $('#workerCreateForm');
+        $.validator.unobtrusive.parseDynamicContent(workerCreateForm);
+        //
+        // submit edit
+        workerCreateForm.mUI('tabFormSubmit', {
+            recType: "@(recType)", //for add_rectab
+            create: false, // worker doesn't create a new tab
+            selectTab: 0,
+            formLevel: 1,
+            postProcess: function () {
+                var oTabs = $(workerCreateForm).closest('.ui-tabs');
+                //$(oTabs).tabs("select", 0);
+                $(oTabs).tabs("url", 1, "/Worker/Edit/@(Model.ID)");
+                var createtab = $(oTabs).children('.ui-tabs-nav').find('a').get('1');
+                $(createtab).text("@(Persons.workerinfo)");
+            }
+        });
+        workerCreateForm.mUI('formDetectChanges', {
+            recType: "@(recType)",
+            formLevel: 1,
+            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+        });
+//        workerCreateForm.submit(function (e) {
+//            e.preventDefault();
+//            if ($('#workerCreateForm').valid()) {
+
+//                $.post($(this).attr("action"), $(this).serialize(),
+//                    function (data) {
+//                    }
+//                );
+//                var oTabs = $(e.target).closest('.ui-tabs');
+//                $(oTabs).tabs("select", 0);
+//                $(oTabs).tabs("url", 1, "/Worker/Edit/@(Model.ID)");
+//                var createtab = $(oTabs).children('.ui-tabs-nav').find('a').get('1');
+//                $(createtab).text("@(Persons.workerinfo)");
+//            }
+//            //TODO: javascript...need to deal with ajax error
+//        });
+    });
+</script>

@@ -1,0 +1,18 @@
+Create x509 certificate
+	https://help.ubuntu.com/10.04/serverguide/certificates-and-security.html
+
+openssl genrsa -des3 -out casaweb2.key 1024
+openssl rsa -in casaweb2.key -out casaweb2.key.insecure
+mv casaweb2.key casaweb2.key.secure
+mv casaweb2.key.insecure casaweb2.key
+openssl req -new -key casaweb2.key -out casaweb2.csr
+openssl x509 -req -days 365 -in casaweb2.csr -signkey casaweb2.key -out casaweb2.crt
+
+Add casaweb2.crt to Machete production server 
+In Python script, use casaweb2.crt and casaweb2.key combination
+
+For Firefox, you create a pkcs12 (.p12) file from the x.509 public cert and private key
+	openssl pkcs12 -export -in casaweb2.crt -inkey casaweb2.key -out casaweb2.p12
+	
+In Firefox
+	Edit > Preferences > Advanced > Encryption > View Certificates > Your Certificates > Import

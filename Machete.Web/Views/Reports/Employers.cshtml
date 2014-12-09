@@ -1,0 +1,100 @@
+﻿@using Machete.Web.Resources
+<div id="employersWrapper" class="report-wrapper">
+    <div id="employersHeader">
+        <div id="employersPopup">
+            <h3 class="report-padding-left-half">
+                @Reports.employersHeader
+                <input type="button" value="?" class="formButton report-top report-align-right report-instructions-show" />
+            </h3>
+            <p id="employerInstructions" class="report-instructions">
+                @Reports.employersInstructions
+                <input type="button" value="@Reports.hideHelp" class="formButton report-instructions-hide" />
+            </p>
+        </div>
+    </div>
+    <div id="employersReports" class="report-accordion">
+        <h3 class="report-subtitle"><a href="#" id="empWeekLink">Employers, By Week</a></h3>
+        <div id="weekEmpTable" class="report-container">
+            <input type="button" value="Refresh" class="formButton report-top" id="weekEmpDataRefreshBtn" />
+            <input type="button" value="Print" class="formButton report-top" id="weekEmpPrint" />
+            <input type="button" value="Spreadsheet" class="formButton report-top" id="weekEmpSpreadsheet" />
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker-weekly", @id = "weekEmpDate" })
+            <p id="weekEmpHelp" class="report-inline report-top"><em>Select a date to see results for the week ending on that day.</em></p>
+            <table id="weekEmpDataTable" class="display report-datatable">
+                <thead>
+                    <tr>
+                        <th>@Reports.empZipCodes</th>
+                        <th>#ordersFromZip</th>
+                        <th>#empsInZip</th>
+                        <th>#dd</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+            @*<div id="emppiechart1" style="float:left;height:auto;width:50%;"><p id="testp1">Pie chart one goats here.</p></div>*@
+        </div>
+
+        <h3><a href="#" id="monthEmpLink">Employers, By Month</a></h3>
+        <div id="monthEmpTable" class="report-container">
+            <input type="button" value="Refresh" class="formButton report-top" id="monthEmpDataRefreshBtn" />
+            <input type="button" value="Print" class="formButton report-top" id="monthEmpPrint" />
+            <input type="button" value="Spreadsheet" class="formButton report-top" id="monthEmpSpreadsheet" />
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker", @id = "monthEmpDate" })
+            <p id="monthEmpHelp" class="report-inline report-top"><em>Select any day in a month to see results for that month.</em></p>
+            <table id="monthEmpDataTable" class="display report-datatable">
+                <thead>
+                    <tr>
+                        <th>@Reports.empZipCodes</th>
+                        <th>#ordersFromZip</th>
+                        <th>#empsInZip</th>
+                        <th>#dd</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+            @*<div id="emppiechart1" style="float:left;height:auto;width:50%;"><p id="testp1">Pie chart one goats here.</p></div>*@
+        </div>
+
+        <h3><a href="#" id="yearEmpLink">Employers, By Year</a></h3>
+        <div id="empYearTable" class="report-container">
+            <input type="button" value="Refresh" class="formButton report-top" id="yearEmpDataRefreshBtn" />
+            <input type="button" value="Print" class="formButton report-top" id="yearEmpPrint" />
+            <input type="button" value="Spreadsheet" class="formButton report-top" id="yearEmpSpreadsheet" />
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker", @id = "yearEmpDate" })
+            <p id="yearEmpHelp" class="report-inline report-top"><em>Select a date to see results for the fiscal year ending on that day.</em></p>
+            <table id="yearEmpDataTable" class="display report-datatable">
+                <thead>
+                    <tr>
+                        <th>@Reports.empZipCodes</th>
+                        <th>#ordersFromZip</th>
+                        <th>#empsInZip</th>
+                        <th>#dd</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+            @*<div id="emppiechart1" style="float:left;height:auto;width:50%;"><p id="testp1">Pie chart one goats here.</p></div>*@
+        </div>
+    </div>
+</div>

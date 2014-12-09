@@ -1,0 +1,102 @@
+﻿<div id="workersWrapper" class="report-wrapper">
+    <div id="workersHeader">
+        <div id="workersPopup">
+            <h3 class="report-padding-left-half">
+                @Machete.Web.Resources.Reports.workersHeader
+                <input type="button" value="?" class="formButton report-top report-align-right report-instructions-show" />
+            </h3>
+            <p id="workerInstructions" class="report-instructions">
+                @Machete.Web.Resources.Reports.workersInstructions
+                <input type="button" value="Hide Help" class="formButton report-instructions-hide" />
+            </p>
+        </div>
+    </div>
+    <div id="workersReports" class="report-accordion">
+        <h3 class="report-subtitle"><a href="#" id="wkrWeekLink">New Workers, By Week</a></h3>
+        <div id="wkrWeekTable" class="report-container">
+            <input type="button" value="Refresh" class="formButton report-top" id="weekWkrDataRefreshBtn" />
+            <input type="button" value="Print" class="formButton report-top" id="weekWkrPrint" />
+            <input type="button" value="Spreadsheet" class="formButton report-top" id="weekWkrSpreadsheet" />
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker-weekly", @id = "weekWkrDate" })
+            <p id="wkrWeekHelp" class="report-inline report-top"><em>Select a date to see results for the week ending on that day.</em></p>
+            <table id="weekWkrDataTable" class="display report-datatable">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.date</th>
+                        <th>@Machete.Web.Resources.Reports.singleAdults</th>
+                        <th>@Machete.Web.Resources.Reports.familyHouseholds</th>
+                        <th>@Machete.Web.Resources.Reports.newSingleAdults</th>
+                        <th>@Machete.Web.Resources.Reports.newFamilyHousholds</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th colspan="2"></th>
+                        <th>Total New:</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+            @*<div id="wkrpiechart1" style="float:left;height:auto;width:50%;"><p id="testp1">Pie chart one goats here.</p></div>*@
+        </div>
+
+        <h3><a href="#" id="wkrMonthLink">New Workers, By Month</a></h3>
+        <div id="wkrMonthTable" class="report-container">
+            <input type="button" value="Refresh" class="formButton report-top" id="monthWkrDataRefreshBtn" />
+            <input type="button" value="Print" class="formButton report-top" id="monthWkrPrint" />
+            <input type="button" value="Spreadsheet" class="formButton report-top" id="monthWkrSpreadsheet" />
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker", @id = "monthWkrDate" })
+            <p id="wkrMonthHelp" class="report-inline report-top"><em>Select any day in a month to see results for that month.</em></p>
+            <table id="monthWkrDataTable" class="display report-datatable">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.date</th>
+                        <th>@Machete.Web.Resources.Reports.singleAdults</th>
+                        <th>@Machete.Web.Resources.Reports.familyHouseholds</th>
+                        <th>@Machete.Web.Resources.Reports.newSingleAdults</th>
+                        <th>@Machete.Web.Resources.Reports.newFamilyHousholds</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th colspan="2"></th>
+                        <th>Total New:</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+            @*<div id="wkrpiechart1" style="float:left;height:auto;width:50%;"><p id="testp1">Pie chart one goats here.</p></div>*@
+        </div>
+
+        <h3><a href="#" id="wkrWeekLink">New Workers, By Year</a></h3>
+        <div id="wkrYearTable" class="report-container">
+            <input type="button" value="Refresh" class="formButton report-top" id="yearWkrDataRefreshBtn" />
+            <input type="button" value="Print" class="formButton report-top" id="yearWkrPrint" />
+            <input type="button" value="Spreadsheet" class="formButton report-top" id="yearWkrSpreadsheet" />
+            @Html.TextBox("activeDate", @DateTime.Now.ToShortDateString(), new { @class = "report-datepicker", @id = "yearWkrDate" })
+            <p id="wkrYearHelp" class="report-inline report-top"><em>Select a date to see results for the fiscal year ending on that day.</em></p>
+            <table id="yearWkrDataTable" class="display report-datatable">
+                <thead>
+                    <tr>
+                        <th>@Machete.Web.Resources.Reports.date</th>
+                        <th>@Machete.Web.Resources.Reports.singleAdults</th>
+                        <th>@Machete.Web.Resources.Reports.familyHouseholds</th>
+                        <th>@Machete.Web.Resources.Reports.newSingleAdults</th>
+                        <th>@Machete.Web.Resources.Reports.newFamilyHousholds</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th colspan="2"></th>
+                        <th>Total New:</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+            @*<div id="wkrpiechart1" style="float:left;height:auto;width:50%;"><p id="testp1">Pie chart one goats here.</p></div>*@
+        </div>
+    </div>
+</div>

@@ -1,0 +1,117 @@
+﻿@model Machete.Domain.Activity
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using Machete.Domain
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "activity";
+
+    //To hide JS features for unauthorized
+    int donthideme = 0;
+    int donthidemeT = 0;
+
+    if (Html.IsInRole(Html.Role_T()))
+    {
+        donthidemeT = 1;
+    }
+    
+    if (Html.IsInRole(Html.Role_AM()))
+    {
+        donthideme = 1;
+    }
+}
+@if (Html.IsInRole(Html.Role_AMPCU()) || Html.IsInRole(Html.Role_T()))
+{
+    using (Html.BeginForm("Edit", "Activity", FormMethod.Post,
+                            new { @class = "edittab-form EditPost", @id = "ActivityTab-" + Model.ID }))
+    {
+        @*<input type="button" value="@Activities.viewlink" class="formButton" id="viewActivity-@Model.ID" />*@
+        <input type="submit" value="@Activities.editsubmit" class="formButton saveBtn"/>
+        if (Html.IsInRole(Html.Role_AM()) || Html.IsInRole(Html.Role_T()))
+        {
+            <input id="deleteActivityButton-@Model.ID" type="button" value="@Activities.deletesubmit" 
+                    class="formButton deleteButton" />
+        }
+        if (Html.IsInRole(Html.Role_AM()) && Model.recurring)
+        {
+            <input id="deleteAllActivityButton-@Model.firstID" type="button" value="@Activities.deleteallsubmit" 
+                    class="formButton deleteButton" />
+        }
+        <br />    
+        @Html.ValidationSummary(true)
+        @Html.EditorForModel()
+
+    }
+    if (Html.IsInRole(Html.Role_AM()) || Html.IsInRole(Html.Role_T()))
+    {
+        using (Html.BeginForm("Delete", "Activity", FormMethod.Post,
+                                new { @class = "edittab-form DeletePost", @id = "DeleteActivity-" + Model.ID }))
+        {
+            @Html.HiddenFor(model => model.ID);
+        }
+    }
+    if (Html.IsInRole(Html.Role_AM()))
+    {
+        using (Html.BeginForm("DeleteMany", "Activity", FormMethod.Post,
+                                new { @class = "edittab-form DeletePost", @id = "DeleteManyActivity-" + Model.ID }))
+        {
+            @Html.HiddenFor(model => model.ID);
+        }
+    }
+}
+@Html.Partial("ActivitySigninIndex", new ActivitySignin() { activityID = Model.ID})
+<script type="text/javascript">
+    $(document).ready(function () {
+        var donthide = @(donthideme) == 0 ? false : true;
+        var donthideT = @(donthidemeT) == 0 ? false : true;
+
+        $('#viewActivity-@Model.ID').click(function () {
+            printwindow = window.open('/Activity/View/@Model.ID');
+        });
+        $('.formButton').button();
+        $('#activityName').focus();
+
+        //Checks Html.Role_AM() == true
+        if (donthide || donthideT) {
+
+            //
+            // machete UI detect changes on forms in tabs   
+            $("#ActivityTab-@(Model.ID)").mUI('formDetectChanges', {
+                recType: "@(recType)",
+                formLevel: 1,
+                changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+                changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+            });
+            //
+            // validation for elements added after page load
+            $.validator.unobtrusive.parseDynamicContent($('#ActivityTab-@Model.ID'));
+            //
+            // delete button confirmation
+            $("#deleteActivityButton-@Model.ID").mUI('formClickDelete', {
+                ok: "@(Activities.deletesubmit)",
+                confirm: '@(Activities.deleteconfirmation)',
+                title: '@(Activities.deletetitle)',
+                form: $('#DeleteActivity-@Model.ID')
+            });
+        
+            //
+            // edit form submit
+            $('#ActivityTab-@Model.ID').mUI('tabFormSubmit', {
+                create: false,
+                selectTab: 0,
+                formLevel: 1,
+                callback: function() { $('#activityTable').dataTable().fnDraw(); }
+            });
+        }
+        
+        if (donthide) {
+            $("#deleteAllActivityButton-@Model.firstID").mUI('formClickDelete', {
+                ok: "@(Activities.deleteallsubmit)",
+                confirm: '@(Activities.deleteallconfirmation)',
+                title: '@(Activities.deletetitle)',
+                form: $('#DeleteManyActivity-@Model.ID')
+            });
+        
+        }
+    });
+</script>

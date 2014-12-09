@@ -1,0 +1,23 @@
+﻿@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using Machete.Domain.Resources
+
+<div id="activityList"> @* This div is the ui.panel  *@
+    @*<p>Search by date:</p>
+    @Html.TextBox("activeDate", "", new { @class = "report-datepicker report-top", @id = "actDate" })*@
+    <table id="activityTable" class="display">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>LABEL</th>
+                <th>@Activity.name</th>
+                <th>@Activity.type</th>
+                <th>@Activity.teacher</th>
+                <th>@Activities.count</th>
+                <th>@Activity.dateStart</th>
+                <th>@Activity.dateEnd</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
