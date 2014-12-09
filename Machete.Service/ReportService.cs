@@ -1200,7 +1200,7 @@ namespace Machete.Service
     public class AverageWageModel
     {
         public DateTime date { get; set; }
-        public int hours { get; set; }
+        public double hours { get; set; }
         public double wages { get; set; }
         public double avg { get; set; }
     }
@@ -1280,7 +1280,7 @@ namespace Machete.Service
         public DateTime date { get; set; }
         public int totalSignins { get; set; }
         public int noWeekJobs { get; set; }
-        public int weekEstDailyHours { get; set; }
+        public double weekEstDailyHours { get; set; }
         public double weekEstPayment { get; set; }
         public double weekHourlyWage { get; set; }
         public IEnumerable<ReportUnit> topJobs { get; set; }
@@ -1301,7 +1301,7 @@ namespace Machete.Service
         public int tempDispatched { get; set; }
         public int permanentPlacements { get; set; }
         public int undupDispatched { get; set; }
-        public int totalHours { get; set; }
+        public double totalHours { get; set; }
         public double totalIncome { get; set; }
         public double avgIncomePerHour { get; set; }
         public int stillHere { get; set; }
@@ -1320,7 +1320,7 @@ namespace Machete.Service
         public int tempDispatched { get; set; }
         public int permanentPlacements { get; set; }
         public int undupDispatched { get; set; }
-        public int totalHours { get; set; }
+        public double totalHours { get; set; }
         public double totalIncome { get; set; }
         public double avgIncomePerHour { get; set; }
         public int stillHere { get; set; }
