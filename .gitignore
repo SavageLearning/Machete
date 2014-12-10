@@ -2,7 +2,6 @@
 [Tt]humbs.db
 *.DS_Store
 *.cache
-*.csproj
 Machete.suo
 
 *.Web.Publish.xml
