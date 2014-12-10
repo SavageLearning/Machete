@@ -904,6 +904,7 @@
     <None Include="Properties\PublishProfiles\CasaLatina.pubxml" />
     <None Include="Properties\PublishProfiles\CentroHumanitario.pubxml" />
     <None Include="Properties\PublishProfiles\Concord.pubxml" />
+    <None Include="Properties\PublishProfiles\Congreso.pubxml" />
     <None Include="Properties\PublishProfiles\DonBosco.pubxml" />
     <None Include="Properties\PublishProfiles\ElCentro.pubxml" />
     <None Include="Properties\PublishProfiles\Graton.pubxml" />
@@ -944,6 +945,7 @@
     </None>
     <None Include="Web.Congreso.config">
       <SubType>Designer</SubType>
+      <DependentUpon>Web.config</DependentUpon>
     </None>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -1168,7 +1170,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>4213</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
