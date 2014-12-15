@@ -32,6 +32,7 @@ namespace Machete.Web.Controllers
         public IMyUserManager<ApplicationUser> UserManager { get; private set; }
         private readonly IDatabaseFactory DatabaseFactory;
         private CultureInfo CI;
+        private const int PasswordExpirationInMonths = 6; // this constant represents number of months where users passwords expire 
 
         public AccountController(IMyUserManager<ApplicationUser> userManager, IDatabaseFactory databaseFactory)
         {
@@ -121,7 +122,7 @@ namespace Machete.Web.Controllers
                 var user = await UserManager.FindAsync(username, password);
                 if (user != null)
                 {
-                    isExpired = (user.LastPasswordChangedDate <= DateTime.Today.AddMonths(-6));
+                    isExpired = (user.LastPasswordChangedDate <= DateTime.Today.AddMonths(-PasswordExpirationInMonths));
                 }
             }
 
@@ -274,6 +275,9 @@ namespace Machete.Web.Controllers
                     IdentityResult result = await UserManager.ChangePasswordAsync(user.Id, model.OldPassword, model.NewPassword);
                     if (result.Succeeded)
                     {
+                        user.LastPasswordChangedDate = DateTime.Today;
+                        Db.Entry(user).State = System.Data.Entity.EntityState.Modified;
+                        await Db.SaveChangesAsync();
                         return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
                     }
                     else
@@ -354,8 +358,8 @@ namespace Machete.Web.Controllers
                         IdentityResult result = await UserManager.AddPasswordAsync(user.Id, model.NewPassword);
                         if (result.Succeeded)
                         {
+                            user.LastPasswordChangedDate = DateTime.Today.AddMonths(-PasswordExpirationInMonths);
                             ViewBag.Message = "Password successfully updated.";
-                            //return RedirectToAction("Index");
                         }
                         else
                         {
