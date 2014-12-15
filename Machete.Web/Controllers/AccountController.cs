@@ -357,7 +357,7 @@ namespace Machete.Web.Controllers
                         IdentityResult result = await UserManager.AddPasswordAsync(user.Id, model.NewPassword);
                         if (result.Succeeded)
                         {
-                            user.LastPasswordChangedDate = DateTime.Today;
+                            user.LastPasswordChangedDate = DateTime.Today.AddMonths(-6);
                             ViewBag.Message = "Password successfully updated.";
                         }
                         else
