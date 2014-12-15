@@ -434,7 +434,7 @@ namespace Machete.Web.Controllers
                 var user = await UserManager.FindByIdAsync(model.UserId);
                 foreach (var role in model.Roles)
                 {
-                    bool iNoEdit = User.IsInRole("Manager") && role.RoleName == "Administrator" ? true : false;
+                    bool iNoEdit = User.IsInRole("Manager") && !User.IsInRole("Administrator") && role.RoleName == "Administrator" ? true : false;
                     bool iEdit = await UserManager.IsInRoleAsync(user.Id, role.RoleName);
                     if (!role.Selected && !iNoEdit)
                     {
