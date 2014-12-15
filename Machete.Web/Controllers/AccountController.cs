@@ -274,6 +274,9 @@ namespace Machete.Web.Controllers
                     IdentityResult result = await UserManager.ChangePasswordAsync(user.Id, model.OldPassword, model.NewPassword);
                     if (result.Succeeded)
                     {
+                        user.LastPasswordChangedDate = DateTime.Today;
+                        Db.Entry(user).State = System.Data.Entity.EntityState.Modified;
+                        await Db.SaveChangesAsync();
                         return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
                     }
                     else
@@ -354,8 +357,8 @@ namespace Machete.Web.Controllers
                         IdentityResult result = await UserManager.AddPasswordAsync(user.Id, model.NewPassword);
                         if (result.Succeeded)
                         {
+                            user.LastPasswordChangedDate = DateTime.Today;
                             ViewBag.Message = "Password successfully updated.";
-                            //return RedirectToAction("Index");
                         }
                         else
                         {
