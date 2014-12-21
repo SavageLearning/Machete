@@ -220,7 +220,7 @@
     <value>Lunch?</value>
   </data>
   <data name="dateTimeofWork" xml:space="preserve">
-    <value>Date &amp; time needed</value>
+    <value>Time needed</value>
   </data>
   <data name="dateTimeofWorkrequired" xml:space="preserve">
     <value>A date and time is required</value>
