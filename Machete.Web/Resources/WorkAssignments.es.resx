@@ -264,6 +264,9 @@
   <data name="viewtitle" xml:space="preserve">
     <value>Asignación:ver</value>
   </data>
+  <data name="WAID" xml:space="preserve">
+    <value>#Asignación</value>
+  </data>
   <data name="wkListClear" xml:space="preserve">
     <value>Borrar</value>
   </data>
