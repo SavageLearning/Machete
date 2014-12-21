@@ -145,7 +145,7 @@
     <value>Delete dispatch record</value>
   </data>
   <data name="description" xml:space="preserve">
-    <value>Additional information from work assignment</value>
+    <value>Additional information</value>
   </data>
   <data name="dispatchinfo" xml:space="preserve">
     <value>Dispatch information</value>
