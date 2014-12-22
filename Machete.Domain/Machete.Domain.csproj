@@ -396,10 +396,12 @@
     <EmbeddedResource Include="Resources\WorkAssignment.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>WorkAssignment.es.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\WorkAssignment.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>WorkAssignment.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Worker.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

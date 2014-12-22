@@ -255,4 +255,10 @@
   <data name="onlineSource" xml:space="preserve">
     <value>Creado por formulario web pedido?</value>
   </data>
+  <data name="transportTransactID" xml:space="preserve">
+    <value>Transaction ID#</value>
+  </data>
+  <data name="transportTransactType" xml:space="preserve">
+    <value>Payment Type</value>
+  </data>
 </root>
