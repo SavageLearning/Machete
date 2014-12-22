@@ -145,13 +145,13 @@
     <value>Delete dispatch record</value>
   </data>
   <data name="description" xml:space="preserve">
-    <value>Additional information</value>
+    <value>Additional Information</value>
   </data>
   <data name="dispatchinfo" xml:space="preserve">
     <value>Dispatch information</value>
   </data>
   <data name="englishLevelID" xml:space="preserve">
-    <value>English level required</value>
+    <value>Required English Level</value>
   </data>
   <data name="englishlevelshort" xml:space="preserve">
     <value>Eng #</value>
@@ -160,16 +160,16 @@
     <value>Ability to follow directions</value>
   </data>
   <data name="hourlyWage" xml:space="preserve">
-    <value>Hourly wage</value>
+    <value>Hourly Wage</value>
   </data>
   <data name="hourlyWagerequired" xml:space="preserve">
     <value>An hourly wage is required</value>
   </data>
   <data name="hourRange" xml:space="preserve">
-    <value>Hour range</value>
+    <value>Hour Range</value>
   </data>
   <data name="hours" xml:space="preserve">
-    <value>Hours of work</value>
+    <value>Hours of Work</value>
   </data>
   <data name="hoursChambita" xml:space="preserve">
     <value>Hours chambita</value>

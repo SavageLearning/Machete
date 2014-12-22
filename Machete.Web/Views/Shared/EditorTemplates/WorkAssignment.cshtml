@@ -14,7 +14,7 @@
 
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.englishLevelID)
-        @Html.mUIDropDownListFor(model => model.englishLevelID, Lookups.skillLevels(), new {tabindex = "1", @id = idPrefix + "englishLevelID"})
+        @Html.mUIDropDownListFor(model => model.englishLevelID, Lookups.skillLevels(), new {tabindex = "23", @id = idPrefix + "englishLevelID"})
         @Html.mUITableLabelFor(model => model.skillID)
         <div class="tb-field">
             <select name="skillID" id=@(idPrefix + "skillID") 
@@ -46,44 +46,44 @@
             @*@Html.DropDownListFor(model => model.skillID, new SelectList(Lookups.skill(), "Value", "Text", Model.skillID), @Machete.Web.Resources.Shared.choose)*@
             @Html.ValidationMessageFor(model => model.skillID)
         </div>
-        @Html.mUITableLabelAndTextBoxFor(model => model.pseudoID, new { tabindex = "1", style = "width: 2em", @readonly = "readonly", @id = idPrefix + "pseudoID" })
+        @Html.mUITableLabelAndTextBoxFor(model => model.pseudoID, new { tabindex = "31", style = "width: 2em", @readonly = "readonly", @id = idPrefix + "pseudoID" })
     </div>
 </div>
 <div class="tb-table">
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.hourlyWage)
         <div class="tb-field">
-            @Html.TextBox("hourlyWage", Html.Encode(System.String.Format("{0:f2}", Model.hourlyWage)), new { tabindex = "1", @class = "money-field earnings-part", min="1", @id = idPrefix + "hourlyWage" })
+            @Html.TextBox("hourlyWage", Html.Encode(System.String.Format("{0:f2}", Model.hourlyWage)), new { tabindex = "25", @class = "money-field earnings-part", min="1", @id = idPrefix + "hourlyWage" })
             @Html.ValidationMessageFor(model => model.hourlyWage)
         </div>
         @Html.mUITableLabelFor(model => model.hours)
         <div class="tb-field">
-            @Html.TextBox("hours", Html.Encode(System.String.Format("{0:f2}", Model.hours)), new { tabindex = "1", @id = idPrefix + "hours", @class = "earnings-part", min="1", style = "width: 6em;" })
+            @Html.TextBox("hours", Html.Encode(System.String.Format("{0:f2}", Model.hours)), new { tabindex = "26", @id = idPrefix + "hours", @class = "earnings-part", min="1", style = "width: 6em;" })
             @Html.ValidationMessageFor(model => model.hours)
         </div>
 
        @* @Html.mUIDropDownListFor(model => model.hours, new SelectList(Lookups.hours(), "Value", "Text", Model.hours), new { tabindex = "1", @id = idPrefix + "hours", @class = "earnings-part" })*@
         @Html.mUITableLabelFor(model => model.hourRange)
-        @Html.mUIDropDownListFor(model => model.hourRange, new SelectList(Lookups.hours(), "Value", "Text", Model.hourRange), new { tabindex = "1", @id = idPrefix + "hourRange", @class = "earnings-part" })
+        @Html.mUIDropDownListFor(model => model.hourRange, new SelectList(Lookups.hours(), "Value", "Text", Model.hourRange), new { tabindex = "27", @id = idPrefix + "hourRange", @class = "earnings-part" })
     </div>
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.days)
-        @Html.mUIDropDownListFor(model => model.days, new SelectList(Lookups.days(), "Value", "Text", Model.days), new { tabindex = "1", @id = idPrefix + "days", @class = "earnings-part" })
+        @Html.mUIDropDownListFor(model => model.days, new SelectList(Lookups.days(), "Value", "Text", Model.days), new { tabindex = "28", @id = idPrefix + "days", @class = "earnings-part" })
         <div class="tb-label">
             @Html.Label("total", @Machete.Web.Resources.WorkAssignments.total)
         </div>
         <div class="tb-field">
-            @Html.TextBox( idPrefix + "total", null, new { tabindex = "1", style = "width: 6em;"})
+            @Html.TextBox( idPrefix + "total", null, new { tabindex = "32", style = "width: 6em;"})
         </div>
         <div class="tb-label">
             @Html.Label("totalRange", @Machete.Web.Resources.WorkAssignments.totalRange)
         </div>
         <div class="tb-field">
-            @Html.TextBox(idPrefix + "totalRange", null, new { tabindex = "1", style = "width: 6em;"})
+            @Html.TextBox(idPrefix + "totalRange", null, new { tabindex = "33", style = "width: 6em;"})
         </div>
         @Html.mUITableLabelFor(model => model.surcharge)
         <div class="tb-field">
-            @Html.TextBox("surcharge", Html.Encode(System.String.Format("{0:f2}", Model.surcharge)), new { tabindex = "1", @class = "money-field earnings-part", @id = idPrefix + "surcharge" })
+            @Html.TextBox("surcharge", Html.Encode(System.String.Format("{0:f2}", Model.surcharge)), new { tabindex = "29", @class = "money-field earnings-part", @id = idPrefix + "surcharge" })
             @Html.ValidationMessageFor(model => model.surcharge)
         </div>
     </div>
@@ -95,7 +95,7 @@
         </div>
         <div class="tb-field desc-field">
             @*@Html.TextAreaFor("description", Model.description, new { style = "width: 40em; height: 4em;" })*@
-            @Html.TextAreaFor(model => model.description, new { tabindex = "1", @class = "desc-field", @id = idPrefix + "description" })
+            @Html.TextAreaFor(model => model.description, new { tabindex = "30", @class = "desc-field", @id = idPrefix + "description" })
             @Html.ValidationMessageFor(model => model.description)
         </div>
     </div>
