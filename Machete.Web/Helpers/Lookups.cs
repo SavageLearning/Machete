@@ -45,7 +45,7 @@ namespace Machete.Web.Helpers
         public static int hoursDefault { get { return 5; } }
         public static int daysDefault { get { return 1;  } }
         public static int skillLevelDefault { get { return 1; } }
-        public static double hourlyWageDefault { get { return 12; } }
+        public static double hourlyWageDefault { get { return getDefaultSkillWage(); } }
         public static SelectList hours() { return hoursNum; }
         public static SelectList days() { return daysNum; }
         public static SelectList skillLevels() { return skillLevelNum; }
@@ -157,6 +157,24 @@ namespace Machete.Web.Helpers
             }
             return count;
         }
+
+        public static double getDefaultSkillWage()
+        {
+            double wage = 0.0;
+            int count = lcache.getCache()
+                .Where(s => s.selected == true &&
+                            s.category == LCategory.skill)
+                .Count();
+            if (count > 0)
+            {
+                return lcache.getCache()
+                            .Where(s => s.selected == true &&
+                                        s.category == LCategory.skill)
+                            .SingleOrDefault().wage ?? 0.0;
+            }
+            return wage;
+        }
+
         /// <summary>
         /// Get the SelectList for the group
         /// </summary>
