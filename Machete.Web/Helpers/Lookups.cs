@@ -42,7 +42,7 @@ namespace Machete.Web.Helpers
 
     public static class Lookups
     {
-        public static int hoursDefault { get { return 5; } }
+        public static int hoursDefault { get { return getDefaultSkillHours(); } }
         public static int daysDefault { get { return 1;  } }
         public static int skillLevelDefault { get { return 1; } }
         public static double hourlyWageDefault { get { return getDefaultSkillWage(); } }
@@ -173,6 +173,23 @@ namespace Machete.Web.Helpers
                             .SingleOrDefault().wage ?? 0.0;
             }
             return wage;
+        }
+
+        public static int getDefaultSkillHours()
+        {
+            int hours = 0;
+            int count = lcache.getCache()
+                .Where(s => s.selected == true &&
+                            s.category == LCategory.skill)
+                .Count();
+            if (count > 0)
+            {
+                return lcache.getCache()
+                            .Where(s => s.selected == true &&
+                                        s.category == LCategory.skill)
+                            .SingleOrDefault().minHour ?? 0;
+            }
+            return hours;
         }
 
         /// <summary>
