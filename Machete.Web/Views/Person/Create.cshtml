@@ -8,11 +8,16 @@
     new { @id = "personCreateForm" }))
 {
     @Html.AntiForgeryToken()
-    <input type="submit" id="@(idPrefix)SaveBtn" class="formButton saveBtn" 
+    <input type="button" onclick="FindPersonDuplicate()" id="@(idPrefix)SaveBtn" class="formButton saveBtn" 
             value="@Persons.createsubmit" tabindex="9"/>
     @Html.ValidationSummary(true)
     @Html.EditorForModel()
 }
+
+<div id="messageDialog" title="Warning">
+    <p id="messageDialogText">Another person with the same first name, last name and phone number already exists. Do you still want to save?</p>
+</div>
+
 <script type="text/javascript">
     $(document).ready(function () {
         var personCreateForm = $('#personCreateForm');
@@ -35,4 +40,43 @@
             changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
         });
     });
+
+    var messageDialog = $("#messageDialog").dialog({
+        autoOpen: false,
+        height: 200,
+        width: 300,
+        modal: true,
+        closeOnEscape: false,
+        buttons: {
+            "Save":     function () { $(this).dialog("close"); savePerson(); },
+            "Cancel": function () { $(this).dialog("close"); }
+        }
+    });
+
+
+    function FindPersonDuplicate() {
+        $.ajax({
+            url: "/Person/GetDuplicates",
+            data: {
+                firstname: $('#person0-firstname1')[0].value,
+                lastname: $('#person0-lastname1')[0].value,
+                phone: $('#person0-phone')[0].value
+            }, 
+            success: onSuccessFindPersonDuplicate,
+            dataType: "json"
+        });
+    }
+
+    function onSuccessFindPersonDuplicate(result) {
+        if (result.isDuplicate) {
+            messageDialog.dialog("open");
+        }
+        else {
+            savePerson();
+        }
+    }
+
+    function savePerson() {
+        $("#personCreateForm").submit();
+    }
 </script>
