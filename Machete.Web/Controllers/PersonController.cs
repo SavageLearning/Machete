@@ -21,24 +21,25 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using AutoMapper;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Helpers;
-using NLog;
-using Machete.Web.ViewModel;
 using Machete.Web.Models;
-using System.Web.Routing;
-using System.Data.Entity.Infrastructure;
-using AutoMapper;
-using System.Globalization;
 using Machete.Web.Resources;
+using Machete.Web.ViewModel;
+using NLog;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace Machete.Web.Controllers
 {
@@ -207,6 +208,32 @@ namespace Machete.Web.Controllers
                 deletedID = id
             },
             JsonRequestBehavior.AllowGet);
+        }
+
+        private bool DuplicatePersons(string firstname, string lastname, string phone)
+        {
+            //Get all the records            
+            IEnumerable<Person> list = personService.GetAll();
+
+            foreach (var person in list)
+            {
+                //checking if person already exists in dbase
+                if (person.firstname1.Equals(firstname, StringComparison.CurrentCultureIgnoreCase)
+                    && person.lastname1.Equals(lastname, StringComparison.CurrentCultureIgnoreCase) 
+                    && (person.phone == phone 
+                        || (string.IsNullOrEmpty(person.phone) && string.IsNullOrEmpty(phone))))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        [AllowAnonymous]
+        public JsonResult GetDuplicates(string firstname, string lastname, string phone)
+        {
+            bool duplicateFound = DuplicatePersons(firstname, lastname, phone);
+            return Json(new { isDuplicate = duplicateFound }, JsonRequestBehavior.AllowGet);
         }
     }
 }
