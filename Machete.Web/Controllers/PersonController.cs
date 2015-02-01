@@ -210,18 +210,30 @@ namespace Machete.Web.Controllers
             JsonRequestBehavior.AllowGet);
         }
 
+        //public class Regex
+
+        //string trim = Regex.Replace(text, @"s", "");
+
         private bool DuplicatePersons(string firstname, string lastname, string phone)
         {
             //Get all the records            
             IEnumerable<Person> list = personService.GetAll();
+            firstname = firstname.Replace(" ", "");
+            lastname = lastname.Replace(" ", "");
 
             foreach (var person in list)
             {
-                //checking if person already exists in dbase
-                if (person.firstname1.Equals(firstname, StringComparison.CurrentCultureIgnoreCase)
-                    && person.lastname1.Equals(lastname, StringComparison.CurrentCultureIgnoreCase) 
-                    && (person.phone == phone 
-                        || (string.IsNullOrEmpty(person.phone) && string.IsNullOrEmpty(phone))))
+                var person_FirstName = person.firstname1.Replace(" ", "");
+                var person_LastName = person.lastname1.Replace(" ", "");
+               //checking if person already exists in dbase
+                if (person_FirstName.Equals(firstname, StringComparison.CurrentCultureIgnoreCase)
+                    && person_LastName.Equals(lastname, StringComparison.CurrentCultureIgnoreCase)
+                    || person_FirstName.Equals(firstname, StringComparison.CurrentCultureIgnoreCase)
+                        && (person.phone == phone
+                            || string.IsNullOrEmpty(person.phone) && string.IsNullOrEmpty(phone))
+                    || person_LastName.Equals(lastname, StringComparison.CurrentCultureIgnoreCase)
+                        && (person.phone == phone
+                            || (string.IsNullOrEmpty(person.phone) && string.IsNullOrEmpty(phone))))
                 {
                     return true;
                 }
