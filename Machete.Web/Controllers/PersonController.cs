@@ -210,42 +210,47 @@ namespace Machete.Web.Controllers
             JsonRequestBehavior.AllowGet);
         }
 
-        //public class Regex
+ 
 
-        //string trim = Regex.Replace(text, @"s", "");
-
-        private bool DuplicatePersons(string firstname, string lastname, string phone)
+        private List<Dictionary<string, string>> DuplicatePersons(string firstname, string lastname, string phone)
         {
             //Get all the records            
             IEnumerable<Person> list = personService.GetAll();
+            var peopleFound = new List<Dictionary<string, string>>();
             firstname = firstname.Replace(" ", "");
             lastname = lastname.Replace(" ", "");
-
+            phone = string.IsNullOrEmpty(phone) ? "x" : phone;
+ 
             foreach (var person in list)
             {
                 var person_FirstName = person.firstname1.Replace(" ", "");
                 var person_LastName = person.lastname1.Replace(" ", "");
+                var person_Phone = string.IsNullOrEmpty(person.phone) ? "y" : person.phone;
+
                //checking if person already exists in dbase
-                if (person_FirstName.Equals(firstname, StringComparison.CurrentCultureIgnoreCase)
-                    && person_LastName.Equals(lastname, StringComparison.CurrentCultureIgnoreCase)
-                    || person_FirstName.Equals(firstname, StringComparison.CurrentCultureIgnoreCase)
-                        && (person.phone == phone
-                            || string.IsNullOrEmpty(person.phone) && string.IsNullOrEmpty(phone))
-                    || person_LastName.Equals(lastname, StringComparison.CurrentCultureIgnoreCase)
-                        && (person.phone == phone
-                            || (string.IsNullOrEmpty(person.phone) && string.IsNullOrEmpty(phone))))
+                if ((person_FirstName.Equals(firstname, StringComparison.CurrentCultureIgnoreCase)
+                    && person_LastName.Equals(lastname, StringComparison.CurrentCultureIgnoreCase))
+                    || (person_FirstName.Equals(firstname, StringComparison.CurrentCultureIgnoreCase)
+                        && person.phone == phone)
+                    || (person_LastName.Equals(lastname, StringComparison.CurrentCultureIgnoreCase)
+                        && person.phone == phone))
                 {
-                    return true;
+                    var personFound = new Dictionary<string, string>();
+                    personFound.Add("First Name", person.firstname1);
+                    personFound.Add("Last Name", person.lastname1);
+                    personFound.Add("Phone", person.phone);
+                   
+                    peopleFound.Add(personFound);
                 }
             }
-            return false;
+            return peopleFound;
         }
 
         [AllowAnonymous]
         public JsonResult GetDuplicates(string firstname, string lastname, string phone)
         {
-            bool duplicateFound = DuplicatePersons(firstname, lastname, phone);
-            return Json(new { isDuplicate = duplicateFound }, JsonRequestBehavior.AllowGet);
+            var duplicateFound = DuplicatePersons(firstname, lastname, phone);
+            return Json(new { duplicates = duplicateFound }, JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -15,7 +15,6 @@
 }
 
 <div id="messageDialog" title="Warning">
-    <p id="messageDialogText">Already found a person with same name, last name and phone number. Do you still want to save?</p>
 </div>
 
 <script type="text/javascript">
@@ -43,13 +42,13 @@
 
     var messageDialog = $("#messageDialog").dialog({
         autoOpen: false,
-        height: 200,
-        width: 300,
+        height: 400,
+        width: 400,
         modal: true,
         closeOnEscape: false,
         buttons: {
-            "Save":     function () { $(this).dialog("close"); savePerson(); },
-            "Cancel": function () { $(this).dialog("close"); }
+            "Cancel": function () { $(this).dialog("close"); },
+            "Save": function () { $(this).dialog("close"); savePerson(); }
         }
     });
 
@@ -67,9 +66,31 @@
         });
     }
 
+    function CreateHtmlText(duplicates) {
+        var dialogHtmlText = '<p>  Already found persons with similar names:'
+            +  '<table class="duplicatePersons" style="width:100%" border="1" cellpadding="2">'
+            + '<tr>'
+            + '<th>First Name</th>'
+            + '<th>Last Name</th>'
+            + '<th>Phone number</th>'
+            +'</tr>';
+        for (var i = 0; i < duplicates.length; i++) {
+            dialogHtmlText += '<tr>' 
+                + '<td>'+ duplicates[i]["First Name"] + '</td>'
+                + '<td>'+ duplicates[i]["Last Name"] + '</td>'
+                + '<td>'+ duplicates[i]["Phone"] + '</td> </tr>';
+        }
+
+        dialogHtmlText += '</table> <p></p> <p></p> Do you still want to save? </p>';
+        
+        return dialogHtmlText;
+    }
+
     function onSuccessFindPersonDuplicate(result) {
-        if (result.isDuplicate) {
+        if (result.duplicates.length > 0) {
+
             messageDialog.dialog("open");
+            messageDialog.html(CreateHtmlText(result.duplicates));
         }
         else {
             savePerson();
