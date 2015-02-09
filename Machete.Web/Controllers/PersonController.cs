@@ -21,24 +21,25 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using AutoMapper;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Helpers;
-using NLog;
-using Machete.Web.ViewModel;
 using Machete.Web.Models;
-using System.Web.Routing;
-using System.Data.Entity.Infrastructure;
-using AutoMapper;
-using System.Globalization;
 using Machete.Web.Resources;
+using Machete.Web.ViewModel;
+using NLog;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace Machete.Web.Controllers
 {
@@ -207,6 +208,49 @@ namespace Machete.Web.Controllers
                 deletedID = id
             },
             JsonRequestBehavior.AllowGet);
+        }
+
+ 
+
+        private List<Dictionary<string, string>> DuplicatePersons(string firstname, string lastname, string phone)
+        {
+            //Get all the records            
+            IEnumerable<Person> list = personService.GetAll();
+            var peopleFound = new List<Dictionary<string, string>>();
+            firstname = firstname.Replace(" ", "");
+            lastname = lastname.Replace(" ", "");
+            phone = string.IsNullOrEmpty(phone) ? "x" : phone;
+ 
+            foreach (var person in list)
+            {
+                var person_FirstName = person.firstname1.Replace(" ", "");
+                var person_LastName = person.lastname1.Replace(" ", "");
+                var person_Phone = string.IsNullOrEmpty(person.phone) ? "y" : person.phone;
+
+               //checking if person already exists in dbase
+                if ((person_FirstName.Equals(firstname, StringComparison.CurrentCultureIgnoreCase)
+                    && person_LastName.Equals(lastname, StringComparison.CurrentCultureIgnoreCase))
+                    || (person_FirstName.Equals(firstname, StringComparison.CurrentCultureIgnoreCase)
+                        && person.phone == phone)
+                    || (person_LastName.Equals(lastname, StringComparison.CurrentCultureIgnoreCase)
+                        && person.phone == phone))
+                {
+                    var personFound = new Dictionary<string, string>();
+                    personFound.Add("First Name", person.firstname1);
+                    personFound.Add("Last Name", person.lastname1);
+                    personFound.Add("Phone", person.phone);
+                   
+                    peopleFound.Add(personFound);
+                }
+            }
+            return peopleFound;
+        }
+
+        [AllowAnonymous]
+        public JsonResult GetDuplicates(string firstname, string lastname, string phone)
+        {
+            var duplicateFound = DuplicatePersons(firstname, lastname, phone);
+            return Json(new { duplicates = duplicateFound }, JsonRequestBehavior.AllowGet);
         }
     }
 }
