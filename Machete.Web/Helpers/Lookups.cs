@@ -79,7 +79,7 @@ namespace Machete.Web.Helpers
                 "Value", "Text", "0");
             categories = new SelectList(new[] {
                 LCategory.maritalstatus, LCategory.race, LCategory.neighborhood, LCategory.gender,
-                LCategory.transportmethod, LCategory.countryoforigin, LCategory.activityName, 
+                LCategory.transportmethod, LCategory.transportTransactType, LCategory.countryoforigin, LCategory.activityName, 
                 LCategory.activityType, LCategory.eventtype, LCategory.orderstatus, LCategory.emplrreference, 
                 LCategory.worktype, LCategory.memberstatus,LCategory.skill,LCategory.emailstatus, LCategory.emailTemplate}
                 .Select(x => new SelectListItem { Value = x, Text = x}),
@@ -153,7 +153,7 @@ namespace Machete.Web.Helpers
                 return lcache.getCache()
                             .Where(s => s.selected == true &&
                                         s.category == type)
-                            .SingleOrDefault().ID;
+                            .FirstOrDefault().ID;
             }
             return count;
         }

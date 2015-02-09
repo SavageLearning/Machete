@@ -22,6 +22,7 @@ namespace Machete.Domain
         public const string worktype = "worktype";
         public const string emplrreference = "emplrreference";
         public const string transportmethod = "transportmethod";
+        public const string transportTransactType = "transportPaymentType";
         public const string maritalstatus = "maritalstatus";
         public const string gender = "gender";
         public const string orderstatus = "orderstatus";
