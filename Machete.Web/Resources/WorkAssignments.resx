@@ -253,10 +253,10 @@
     <value>Today's date:</value>
   </data>
   <data name="total" xml:space="preserve">
-    <value>min. total</value>
+    <value>Min. Total</value>
   </data>
   <data name="totalRange" xml:space="preserve">
-    <value>max. total</value>
+    <value>Max. Total</value>
   </data>
   <data name="viewlink" xml:space="preserve">
     <value>View</value>

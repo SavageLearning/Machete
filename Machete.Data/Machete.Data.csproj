@@ -302,7 +302,10 @@
     <Compile Include="Migrations\201412032229104_AlterHoursTypeIntegerToFloat.Designer.cs">
       <DependentUpon>201412032229104_AlterHoursTypeIntegerToFloat.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Migrations\201412212342567_AddTransportTransactionData.cs" />
+    <Compile Include="Migrations\201412212342567_AddTransportTransactionData.Designer.cs">
+      <DependentUpon>201412212342567_AddTransportTransactionData.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AllRepositories.cs" />
   </ItemGroup>
@@ -347,6 +350,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201412032229104_AlterHoursTypeIntegerToFloat.resx">
       <DependentUpon>201412032229104_AlterHoursTypeIntegerToFloat.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201412212342567_AddTransportTransactionData.resx">
+      <DependentUpon>201412212342567_AddTransportTransactionData.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
