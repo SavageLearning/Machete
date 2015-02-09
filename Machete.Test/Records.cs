@@ -205,7 +205,9 @@ namespace Machete.Test
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime
             Createdby = "initialization script",
-            Updatedby = "initialization script"
+            Updatedby = "initialization script",
+            transportTransactType = 256,
+            transportTransactID = "#6169"
         };
 
         public static WorkAssignment assignment = new WorkAssignment

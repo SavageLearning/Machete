@@ -223,7 +223,7 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hours chambita.
+        ///   Looks up a localized string similar to Hours Chambita.
         /// </summary>
         public static string hoursChambita {
             get {
@@ -241,7 +241,7 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Quality of work completed.
+        ///   Looks up a localized string similar to Work Quality.
         /// </summary>
         public static string qualityOfWork {
             get {

@@ -124,7 +124,7 @@
     <value>A city is required</value>
   </data>
   <data name="description" xml:space="preserve">
-    <value>Work Requested Description</value>
+    <value>Work Description</value>
   </data>
   <data name="contactName" xml:space="preserve">
     <value>Contact Name (Work Site)</value>
@@ -193,13 +193,13 @@
     <value>Order #:</value>
   </data>
   <data name="workSiteAddress1" xml:space="preserve">
-    <value>Work Site Address (1)</value>
+    <value>Address (1) (Work Site)</value>
   </data>
   <data name="workSiteAddress1required" xml:space="preserve">
     <value>An address is required</value>
   </data>
   <data name="workSiteAddress2" xml:space="preserve">
-    <value>Work Site Address (2)</value>
+    <value>Address (2) (Work Site)</value>
   </data>
   <data name="zipcode" xml:space="preserve">
     <value>Zipcode</value>
@@ -256,7 +256,7 @@
     <value>Created Online?</value>
   </data>
   <data name="transportTransactID" xml:space="preserve">
-    <value>Transaction ID#</value>
+    <value>Payment #</value>
   </data>
   <data name="transportTransactType" xml:space="preserve">
     <value>Payment Type</value>
