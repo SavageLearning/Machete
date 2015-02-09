@@ -21,6 +21,7 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +35,7 @@ using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity;
+
 namespace Machete.Service
 {
     public interface IWorkOrderService : IService<WorkOrder>
@@ -51,119 +53,201 @@ namespace Machete.Service
     }
 
     // Business logic for WorkOrder record management
-    // Ïf I made a non-web app, would I still need the code? If yes, put in here.
+    // This class should contain all of the business logic that would exist even for a non-web app
     public class WorkOrderService : ServiceBase<WorkOrder>, IWorkOrderService
     {
         private readonly IWorkAssignmentService waServ;
+        
         /// <summary>
-        /// 
+        /// Constructor
         /// </summary>
-        /// <param name="repo"></param>
-        /// <param name="unitOfWork"></param>
+        /// <param name="repo">Work Order repository</param>
+        /// <param name="waServ">Work Assignment service</param>
+        /// <param name="unitOfWork">Unit of Work</param>
         public WorkOrderService(IWorkOrderRepository repo, 
                                 IWorkAssignmentService waServ,
                                 IUnitOfWork unitOfWork) : base(repo, unitOfWork)
         {
             this.waServ = waServ;
-            this.logPrefix = "WorkOrder";
+            this.logPrefix = "WorkOrder"; // Initialize log prefix
         }
 
         /// <summary>
-        /// Get all orders for a specific Employer, or all orders if null
+        /// Retrieve all worker orders for a specific Employer, or all work orders if null
         /// </summary>
-        /// <param name="empID"></param>
-        /// <returns></returns>
+        /// <param name="id">Employer ID</param>
+        /// <returns>WorkOrders associated with employer</returns>
         public IEnumerable<WorkOrder> GetByEmployer(int id)
         {
-             return repo.GetMany(w => w.EmployerID == id);
+            // TODO: investigate what happens if ID = null (should return all WO)
+            // Retrieve work orders for given employer
+            return repo.GetMany(wo => wo.EmployerID == id);
         }
+
         /// <summary>
-        /// Gets active orders for a given day. Active and assigned OR all active
+        /// Retrieve active orders for a given day. Active and assigned OR all active
         /// </summary>
         /// <param name="date">filter for the date</param>
         /// <param name="assignedOnly">filter to only orders with fully assigned jobs</param>
-        /// <returns></returns>
+        /// <returns>WorkOrders associated with a given date that are active</returns>
         public IEnumerable<WorkOrder> GetActiveOrders(DateTime date, bool assignedOnly)
         {
-            IQueryable<WorkOrder> query = repo.GetAllQ();
-                            query = query.Where(wo => wo.status == WorkOrder.iActive && 
-                                           DbFunctions.DiffDays(wo.dateTimeofWork, date) == 0 ? true : false)
-                                    .AsQueryable();
-            List<WorkOrder> list = query.ToList();
-            List<WorkOrder> final = list.ToList();
-            if (!assignedOnly) return final;
-            foreach (WorkOrder wo in list)
+            // Retrieve all active work orders
+            IQueryable<WorkOrder> woRecords = repo.GetAllQ()
+                    .Where(wo => wo.status == WorkOrder.iActive && 
+                            DbFunctions.DiffDays(wo.dateTimeofWork, date) == 0 ? true : false)
+                    .AsQueryable();
+
+            // Return results if assignedOnly flag not set
+            if (!assignedOnly)
             {
+                return woRecords.AsEnumerable();
+            }
+
+            // Return list - should include only assigned workOrders
+            // Note: Need to convert to list to remove items (as IQueryable & IEnumerable are read-only data structures)
+            List<WorkOrder> finalResults = woRecords.ToList();
+            
+            // Remove unassigned work orders from results
+            foreach (WorkOrder wo in woRecords)
+            {   
+                // Iterate through associated work assignments
                 foreach (WorkAssignment wa in wo.workAssignments)
                 {
+                    // Remove WO from results list, if any WA is unassigned
                     if (wa.workerAssignedID == null)
                     {
-                        final.Remove(wo);
+                        finalResults.Remove(wo);
                         break;
                     }
                 }
             }
-            return final;
+
+            // Return results
+            return finalResults.AsEnumerable();
         }
+
         /// <summary>
-        /// 
+        /// Complete active orders - change all WO status for a given date to complete
         /// </summary>
-        /// <param name="date"></param>
-        /// <param name="user"></param>
-        /// <returns></returns>
+        /// <param name="date">Date to change WO status</param>
+        /// <param name="user">User performing action</param>
+        /// <returns>Count of completed work orders</returns>
         public int CompleteActiveOrders(DateTime date, string user)
         {
-            IEnumerable<WorkOrder> list = this.GetActiveOrders(date, true);
+            // Retrieve list of active orders for given date
+            IEnumerable<WorkOrder> woRecords = this.GetActiveOrders(date, true);
+
+            // Count of active orders that were changed to completed
             int count = 0;
-            foreach (WorkOrder wo in list)
+
+            // TODO: should there be logic to check if WO is unassigned or orphaned?
+
+            // Iterate through list of active work orders
+            foreach (WorkOrder wo in woRecords)
             {
+                // Retrieve work order
                 var order = this.Get(wo.ID);
+
+                // Change work order state
                 order.status = WorkOrder.iCompleted;
+                
+                // Save work order
                 this.Save(order, user);
+                
+                // Increment counter
                 count++;
             }
+
             return count;
         }
+
         /// <summary>
-        /// 
+        /// Retrieve index view of work orders
         /// </summary>
-        /// <param name="o">viewOptions object</param>
-        /// <returns></returns>
-        public dataTableResult<WorkOrder> GetIndexView(viewOptions o)
+        /// <param name="vo">viewOptions object</param>
+        /// <returns>Table of work orders</returns>
+        public dataTableResult<WorkOrder> GetIndexView(viewOptions vo)
         {
-            //Get all the records
+            // Initialize return table
             var result = new dataTableResult<WorkOrder>();
-            IQueryable<WorkOrder> q = repo.GetAllQ();
-            //
-            if (o.EmployerID != null) IndexViewBase.filterEmployer(o, ref q);
-            if (o.status != null) IndexViewBase.filterStatus(o, ref q);
-            if (o.onlineSource == true) IndexViewBase.filterOnlineSource(o, ref q);
-            if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
-            IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
-            //
-            result.filteredCount = q.Count();
-            result.query = q.Skip<WorkOrder>((int)o.displayStart).Take((int)o.displayLength);
+
+            // Retrieve all the records
+            IQueryable<WorkOrder> woRecords = repo.GetAllQ();
+
+            // Filter by employerID - if viewOption set
+            if (vo.EmployerID != null)
+            {
+                IndexViewBase.filterEmployer(vo, ref woRecords);
+            }
+
+            // Filter by status - if viewOption set
+            if (vo.status != null)
+            {
+                IndexViewBase.filterStatus(vo, ref woRecords);
+            }
+
+            // Filter by status - if viewOption set
+            if (vo.onlineSource == true)
+            {
+                IndexViewBase.filterOnlineSource(vo, ref woRecords);
+            }
+
+            // Filter by status - if viewOption set
+            if (!string.IsNullOrEmpty(vo.sSearch))
+            {
+                IndexViewBase.search(vo, ref woRecords);
+            }
+
+            // Sort results based on viewOptions
+            IndexViewBase.sortOnColName(vo.sortColName, vo.orderDescending, ref woRecords);
+
+            // Set results filtered count
+            result.filteredCount = woRecords.Count();
+
+            // Return query - based on displayStart & number of records to display
+            result.query = woRecords.Skip<WorkOrder>((int)vo.displayStart).Take((int)vo.displayLength);
+
+            // Set results total count
             result.totalCount = repo.GetAllQ().Count();
+
             return result;
         }
+
+        /// <summary>
+        /// Retrieve WO summary results - count of work orders with each status type for each date
+        /// </summary>
+        /// <returns>Work Order summary results</returns>
         public IQueryable<WorkOrderSummary> GetSummary()
         {
+            // Call GetSummary() without search string
             return GetSummary(null);
         }
+
         /// <summary>
-        /// 
+        /// Retrieve WO summary results - count of work orders with each status type for each date
         /// </summary>
-        /// <returns></returns>
+        /// <param name="search">Search string criteria</param>
+        /// <returns>Work Order summary results</returns>
         public IQueryable<WorkOrderSummary> GetSummary(string search)
         {
-            IQueryable<WorkOrder> query;
-            if (!string.IsNullOrEmpty(search)) 
-                query = IndexViewBase.filterDateTimeOfWork(repo.GetAllQ(), search);            
-            else query = repo.GetAllQ();
-            var group_query = from wo in query
+            IQueryable<WorkOrder> woResults;
+
+            // Use search string if provided to retrieve all work orders on given date/time
+            if (!string.IsNullOrEmpty(search))
+            {
+                woResults = IndexViewBase.filterDateTimeOfWork(repo.GetAllQ(), search);
+            }
+            else
+            {
+                woResults = repo.GetAllQ();
+            }
+
+            // Group work orders by date / status
+            var group_query = from wo in woResults
                             group wo by new { 
-                                dateSoW = DbFunctions.TruncateTime(wo.dateTimeofWork),                                              
-                                wo.status
+                                dateSoW = DbFunctions.TruncateTime(wo.dateTimeofWork), // Group by date (not time)                                             
+                                wo.status // Group by status
                             } into dayGroup
                             select new WorkOrderSummary()
                             {
@@ -172,39 +256,46 @@ namespace Machete.Service
                                 count = dayGroup.Count()
                             };
 
+            // Return summary results (count of work orders with each status type for each date)
             return group_query;
         }
+
         /// <summary>
-        /// 
+        /// Create Work Order
         /// </summary>
-        /// <param name="workOrder"></param>
-        /// <param name="user"></param>
-        /// <returns></returns>
+        /// <param name="workOrder">Work order to create</param>
+        /// <param name="user">User performing action</param>
+        /// <returns>Work Order object</returns>
         public override WorkOrder Create(WorkOrder workOrder, string user)
         {
             WorkOrder wo;
-            workOrder.createdby(user);
+            workOrder.createdby(user); // TODO: investigate if this is needed- this appears to already be set elsewhere (WHERE?)
             wo = repo.Add(workOrder);
+            // TODO: investigate why worker requests collection is added to wo - there is a similar collection of wa added to wo
             wo.workerRequests = new Collection<WorkerRequest>();
             uow.Commit();
-            if (wo.paperOrderNum == null) wo.paperOrderNum = wo.ID;
-            uow.Commit();
+            
+            // Initialize PaperOrdernum to WO ID if not set
+            if (wo.paperOrderNum == null)
+            {
+                wo.paperOrderNum = wo.ID;
+                uow.Commit();
+            }
+            
+            // Log results
             _log(workOrder.ID, user, "WorkOrder created");
+
             return wo;
         }
-        private void _log(int ID, string user, string msg)
-        {
-            levent.Level = LogLevel.Info;
-            levent.Message = msg;
-            levent.Properties["RecordID"] = ID; //magic string maps to NLog config
-            levent.Properties["username"] = user;
-            nlog.Log(levent);
-        }
+
         /// <summary>
-        /// 
+        /// Provide combined summary of WO/WA status
         /// </summary>
-        /// <param name="search"></param>
-        /// <returns></returns>
+        /// <param name="search">Search text criteria</param>
+        /// <param name="orderDescending">Flag indicating whether results are sorted in descending order</param>
+        /// <param name="displayStart">Record to start displaying (used for pagination)</param>
+        /// <param name="displayLength">Number of records to display</param>
+        /// <returns>WO/WA Summary table of status counts for a given day</returns>
         public dataTableResult<WOWASummary> CombinedSummary(string search, 
             bool orderDescending,
             int displayStart,
@@ -213,49 +304,76 @@ namespace Machete.Service
 
             IEnumerable<WorkOrderSummary> woResult;
             IEnumerable<WorkAssignmentSummary> waResult;
-            IEnumerable<WOWASummary> q;
+            IEnumerable<WOWASummary> wowaResult;
             var result = new dataTableResult<WOWASummary>();
+
             //pulling from DB here because the joins grind it to a halt
-            woResult = GetSummary(search).ToList();
-            waResult = waServ.GetSummary(search).ToList();
-                q = woResult.Join(waResult,
-                            wo => new { wo.date, wo.status },
-                            wa => new { wa.date, wa.status },
-                            (wo, wa) => new
-                            {
-                                wo.date,
-                                wo.status,
-                                wo_count = wo.count,
-                                wa_count = wa.count
-                            })
-            .GroupBy(gb => gb.date)
-            .Select(g => new WOWASummary
+            // TODO: investigate how to do a left join - results only appear when there are WA assigned to WO
+            woResult = GetSummary(search).AsEnumerable();
+            waResult = waServ.GetSummary(search).AsEnumerable();
+            wowaResult = woResult.Join(waResult,
+                        wo => new { wo.date, wo.status },
+                        wa => new { wa.date, wa.status },
+                        (wo, wa) => new
+                        {
+                            wo.date,
+                            wo.status,
+                            wo_count = wo.count,
+                            wa_count = wa.count
+                        })
+                        .GroupBy(gb => gb.date)
+                        .Select(g => new WOWASummary
+                        {
+                            date = g.Key,
+                            weekday = Convert.ToDateTime(g.Key).ToString("dddd"),
+                            pending_wo = g.Where(c => c.status == WorkOrder.iPending).Sum(d => d.wo_count),
+                            pending_wa = g.Where(c => c.status == WorkOrder.iPending).Sum(d => d.wa_count),
+                            active_wo = g.Where(c => c.status == WorkOrder.iActive).Sum(d => d.wo_count),
+                            active_wa = g.Where(c => c.status == WorkOrder.iActive).Sum(d => d.wa_count),
+                            completed_wo = g.Where(c => c.status == WorkOrder.iCompleted).Sum(d => d.wo_count),
+                            completed_wa = g.Where(c => c.status == WorkOrder.iCompleted).Sum(d => d.wa_count),
+                            cancelled_wo = g.Where(c => c.status == WorkOrder.iCancelled).Sum(d => d.wo_count),
+                            cancelled_wa = g.Where(c => c.status == WorkOrder.iCancelled).Sum(d => d.wa_count),
+                            expired_wo = g.Where(c => c.status == WorkOrder.iExpired).Sum(d => d.wo_count),
+                            expired_wa = g.Where(c => c.status == WorkOrder.iExpired).Sum(d => d.wa_count)
+                        });
+
+            // Sort results on date (depending on orderDescending input parameter)
+            if (orderDescending)
             {
-                date = g.Key,
-                weekday = Convert.ToDateTime(g.Key).ToString("dddd"),
-                pending_wo = g.Where(c => c.status == WorkOrder.iPending).Sum(d => d.wo_count),
-                pending_wa = g.Where(c => c.status == WorkOrder.iPending).Sum(d => d.wa_count),
-                active_wo = g.Where(c => c.status == WorkOrder.iActive).Sum(d => d.wo_count),
-                active_wa = g.Where(c => c.status == WorkOrder.iActive).Sum(d => d.wa_count),
-                completed_wo = g.Where(c => c.status == WorkOrder.iCompleted).Sum(d => d.wo_count),
-                completed_wa = g.Where(c => c.status == WorkOrder.iCompleted).Sum(d => d.wa_count),
-                cancelled_wo = g.Where(c => c.status == WorkOrder.iCancelled).Sum(d => d.wo_count),
-                cancelled_wa = g.Where(c => c.status == WorkOrder.iCancelled).Sum(d => d.wa_count),
-                expired_wo = g.Where(c => c.status == WorkOrder.iExpired).Sum(d => d.wo_count),
-                expired_wa = g.Where(c => c.status == WorkOrder.iExpired).Sum(d => d.wa_count)
-            });
+                wowaResult = wowaResult.OrderByDescending(p => p.date);
+            }
+            else
+            {
+                wowaResult = wowaResult.OrderBy(p => p.date);
+            }
 
-                if (orderDescending)
-                    q = q.OrderByDescending(p => p.date);
-                else
-                    q = q.OrderBy(p => p.date);
+            result.filteredCount = wowaResult.Count();
+            result.query = wowaResult.Skip<WOWASummary>((int)displayStart).Take((int)displayLength);
+            result.totalCount = repo.GetAllQ().Count();
+            return result;
+        }
 
-                result.filteredCount = q.Count();
-                result.query = q.Skip<WOWASummary>((int)displayStart).Take((int)displayLength);
-                result.totalCount = repo.GetAllQ().Count();
-                return result;
+        /// <summary>
+        /// Log messages
+        /// </summary>
+        /// <param name="int">Work Order ID</param>
+        /// <param name="user">User performing action</param>
+        /// <param name="msg">Logging message</param>
+        /// <returns>N/A</returns>
+        private void _log(int ID, string user, string msg)
+        {
+            levent.Level = LogLevel.Info;
+            levent.Message = msg;
+            levent.Properties["RecordID"] = ID; //magic string maps to NLog config
+            levent.Properties["username"] = user;
+            nlog.Log(levent);
         }
     }
+
+    /// <summary>
+    /// Summary object of WO/WA status on a given date
+    /// </summary>
     public class WOWASummary
     {
         public DateTime? date { get; set; }

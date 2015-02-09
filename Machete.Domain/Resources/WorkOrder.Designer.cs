@@ -115,7 +115,7 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Work Requested Description.
+        ///   Looks up a localized string similar to Work Description.
         /// </summary>
         public static string description {
             get {
@@ -394,7 +394,7 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Transaction ID#.
+        ///   Looks up a localized string similar to Payment #.
         /// </summary>
         public static string transportTransactID {
             get {
@@ -448,7 +448,7 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Work Site Address (1).
+        ///   Looks up a localized string similar to Address (1) (Work Site).
         /// </summary>
         public static string workSiteAddress1 {
             get {
@@ -466,7 +466,7 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Work Site Address (2).
+        ///   Looks up a localized string similar to Address (2) (Work Site).
         /// </summary>
         public static string workSiteAddress2 {
             get {

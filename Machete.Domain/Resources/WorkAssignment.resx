@@ -172,13 +172,13 @@
     <value>Hours of Work</value>
   </data>
   <data name="hoursChambita" xml:space="preserve">
-    <value>Hours chambita</value>
+    <value>Hours Chambita</value>
   </data>
   <data name="printListOfPositions" xml:space="preserve">
     <value>List of Positions in work order</value>
   </data>
   <data name="qualityOfWork" xml:space="preserve">
-    <value>Quality of work completed</value>
+    <value>Work Quality</value>
   </data>
   <data name="reliability" xml:space="preserve">
     <value>Reliability</value>
