@@ -256,7 +256,7 @@
     <value>Creado por formulario web pedido?</value>
   </data>
   <data name="transportTransactID" xml:space="preserve">
-    <value>Transaction ID#</value>
+    <value>Payment #</value>
   </data>
   <data name="transportTransactType" xml:space="preserve">
     <value>Payment Type</value>

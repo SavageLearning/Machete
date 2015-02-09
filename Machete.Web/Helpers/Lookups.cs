@@ -153,7 +153,7 @@ namespace Machete.Web.Helpers
                 return lcache.getCache()
                             .Where(s => s.selected == true &&
                                         s.category == type)
-                            .SingleOrDefault().ID;
+                            .FirstOrDefault().ID;
             }
             return count;
         }

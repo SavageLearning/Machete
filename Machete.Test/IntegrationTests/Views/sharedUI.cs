@@ -413,15 +413,15 @@ namespace Machete.Test
             ReplaceElementText(By.Id(prefix + "city"), _wo.city);
             ReplaceElementText(By.Id(prefix + "state"), _wo.state);
             ReplaceElementText(By.Id(prefix + "zipcode"), _wo.zipcode);
-            ReplaceElementText(By.Id(prefix + "transportFee"), _wo.transportFee);
-            ReplaceElementText(By.Id(prefix + "transportFeeExtra"), _wo.transportFeeExtra);
+            //ReplaceElementText(By.Id(prefix + "transportFee"), _wo.transportFee);
+            //ReplaceElementText(By.Id(prefix + "transportFeeExtra"), _wo.transportFeeExtra);
             //ReplaceElementText(By.Id(prefix + "englishRequiredNote"), _wo.englishRequiredNote);
             ReplaceElementText(By.Id(prefix + "description"), _wo.description);
             ReplaceElementText(By.Id(prefix + "transportTransactID"), _wo.transportTransactID);
 
            // SelectOption(By.Id(prefix + "status"), MacheteLookup.cache.First(c => c.category == "orderstatus" && c.ID == _wo.status).text_EN);
             SelectOptionByIndex(By.Id(prefix + "transportMethodID"), _wo.transportMethodID);
-            SelectOptionByIndex(By.Id(prefix + "transportTransactType"), _wo.transportTransactType);
+            //SelectOptionByIndex(By.Id(prefix + "transportTransactType"), _wo.transportTransactType);
             SelectOptionByIndex(By.Id(prefix + "timeFlexible"), _wo.timeFlexible ? 2 : 1);
             SelectOptionByIndex(By.Id(prefix + "permanentPlacement"), _wo.permanentPlacement ? 2 : 1);
             SelectOptionByIndex(By.Id(prefix + "englishRequired"), _wo.englishRequired ? 2 : 1);
