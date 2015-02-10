@@ -2,7 +2,6 @@
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
 @using Machete.Service
-@using System.Web.Configuration
 
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
@@ -131,8 +130,8 @@
             formLevel: 2
         });
         $('#@(idPrefix)printMap').click(function () { 
-            openGoogleMap("@Html.Encode(Model.workSiteAddress1 + ' ' + Model.city + ' ' + Model.state)", 
-                '@System.Web.Configuration.WebConfigurationManager.AppSettings["OrganizationAddress"]'); 
+            openGoogleMap("@Html.Encode(Model.workSiteAddress1 + ', ' + Model.city + ', ' + Model.state + ', ' + Model.zipCode)", 
+                '@Html.Encode(System.Web.Configuration.WebConfigurationManager.AppSettings["OrganizationAddress"])'); 
         });
         //
         // emailConfirm
