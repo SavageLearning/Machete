@@ -2,6 +2,8 @@
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
 @using Machete.Service
+@using System.Web.Configuration
+
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
     string recType = "WO";
@@ -130,7 +132,7 @@
         });
         $('#@(idPrefix)printMap').click(function () { 
             openGoogleMap("@Html.Encode(Model.workSiteAddress1 + ' ' + Model.city + ' ' + Model.state)", 
-                null) 
+                @(WebConfigurationManager.AppSettings["OrganizationAddress"])) 
         });
         //
         // emailConfirm
