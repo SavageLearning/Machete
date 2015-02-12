@@ -10,6 +10,8 @@
     @Html.AntiForgeryToken()
     <input type="button" onclick="FindPersonDuplicate()" id="@(idPrefix)SaveBtn" class="formButton saveBtn" 
             value="@Persons.createsubmit" tabindex="9"/>
+    <input type="button" onclick="setFormData(true)" id="@(idPrefix)SaveBtn" class="formButton saveBtn" 
+            value="Clear" tabindex="9"/>
     @Html.ValidationSummary(true)
     @Html.EditorForModel()
 }
@@ -19,12 +21,13 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+
+        setFormData(false);
         var personCreateForm = $('#personCreateForm');
         $('.formButton').button();
         $.validator.unobtrusive.parseDynamicContent(personCreateForm);
         $('#firstname1').focus();
-        //
-        //
+
         personCreateForm.mUI('tabFormSubmit', {
             recType: "@(recType)", //for add_rectab
             create: true,
@@ -39,6 +42,39 @@
             changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
         });
     });
+
+    // function to restore typed-not saved fields on Create New Person form when tabbing back from List of Persons
+    function setFormData(clearForm) {
+        
+        //Fields = ["firstname1", "firstname2", "lastname1", "lastname2",
+        //    "phone", "address1", "address2", "city", "state", "gender", "genderOther", "active"];
+        
+        //for (field in Fields) {
+        //    var a = $("#person0-" + field)[0].value;
+        //    if (a != null && a > 0) {
+        //        a[0].value = clearForm ? "" : window.localStorage.getItem(field);
+        //    }
+        //}
+
+        $("#person0-firstname1")[0].value = clearForm ? "" : window.localStorage.getItem("firstname1");
+        $("#person0-firstname2")[0].value = clearForm ? "" : window.localStorage.getItem("firstname1");
+        $("#person0-lastname1")[0].value = clearForm ? "" : window.localStorage.getItem("lastname1");
+        $("#person0-lastname2")[0].value = clearForm ? "" : window.localStorage.getItem("lastname2");
+        $("#person0-phone")[0].value = clearForm ? "" : window.localStorage.getItem("phone");
+        $("#person0-address1")[0].value = clearForm ? "" : window.localStorage.getItem("address1");
+        $("#person0-address2")[0].value = clearForm ? "" : window.localStorage.getItem("address2");
+        $("#person0-city")[0].value = clearForm ? "" : window.localStorage.getItem("city");
+        $("#person0-state")[0].value = clearForm ? "" : window.localStorage.getItem("state");
+        $("#person0-gender")[0].value = clearForm ? "" : window.localStorage.getItem("gender");
+        $("#person0-genderOther")[0].value = clearForm ? "" : window.localStorage.getItem("genderOther");
+        $("#person0-active")[0].value = clearForm ? "" : window.localStorage.getItem("active");
+
+        //    $("#person0-" + field[0].valueOf) = clearForm ? "" : window.localStorage.getItem(field);
+
+ 
+    }
+
+    
 
     var messageDialog = $("#messageDialog").dialog({
         autoOpen: false,
