@@ -169,6 +169,26 @@
         });
         $('#updateBtn').click(function () { $('#personTable').dataTable().fnDraw(); });
 
-        $('#personListTab').click(function () { $('#updateBtn').click(); })
+        $('#personListTab').click(function () { $('#updateBtn').click(); });
+
+        $('#personCreateTab').click(function () {
+
+            // capturing not-saved typed fields from Create New Person form to localStorage variables 
+            var tempStorage = window.localStorage;
+
+            arrayFields = ["firstname1", "firstname2", "lastname1", "lastname2",
+                "phone", "address1", "address2", "city", "state", "gender", "genderOther", "active"];
+            for (field in arrayFields) {
+                var a = $("#person0-"+ arrayFields[field]);
+                if (a != null && a.length > 0) {
+                    tempStorage.setItem(arrayFields[field], a[0].value);
+                }
+            }          
+       
+            return true;
+        })
+
     });
+
+
 </script>
