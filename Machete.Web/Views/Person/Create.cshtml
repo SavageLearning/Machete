@@ -10,7 +10,7 @@
     @Html.AntiForgeryToken()
     <input type="button" onclick="FindPersonDuplicate()" id="@(idPrefix)SaveBtn" class="formButton saveBtn" 
             value="@Persons.createsubmit" tabindex="9"/>
-    <input type="button" onclick="setFormData(true)" id="@(idPrefix)SaveBtn" class="formButton saveBtn" 
+    <input type="button" onclick="setFormData(true)" id="@(idPrefix)ClearBtn" class="formButton saveBtn" 
             value="Clear" tabindex="9"/>
     @Html.ValidationSummary(true)
     @Html.EditorForModel()
@@ -26,6 +26,7 @@
         var personCreateForm = $('#personCreateForm');
         $('.formButton').button();
         $.validator.unobtrusive.parseDynamicContent(personCreateForm);
+
         $('#firstname1').focus();
 
         personCreateForm.mUI('tabFormSubmit', {
@@ -112,10 +113,15 @@
         }
         else {
             savePerson();
+
         }
     }
 
     function savePerson() {
-        $("#personCreateForm").submit();
+        var form = $('#personCreateForm');
+        form.submit();
+        if (form.valid()) {
+            setFormData(true);
+        }
     }
 </script>
