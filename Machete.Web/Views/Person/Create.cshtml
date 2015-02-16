@@ -47,8 +47,9 @@
     // function to restore typed-not saved fields on Create New Person form when tabbing back from List of Persons
     function setFormData(clearForm) {
 
+        var form = $('#personCreateForm');
         var fieldChanged = false;
-        $.each($('#personCreateForm').serializeArray(), function (i, field) {
+        $.each(form.serializeArray(), function (i, field) {
             if (field.name == "active") {
                 return;
             }
@@ -60,13 +61,14 @@
                 }
             }
         });
+        // if any field had a change then it triggers save button to be highlighted again
         if (fieldChanged) {
-            $('#personCreateForm').mUI('markChanged', {
-                level: 1,
-                recType: "@(recType)"
-            });
+            form.find('.saveBtn').addClass('highlightSave');
         }
-     
+        else {
+            form.find('.saveBtn').removeClass('highlightSave');
+        }
+
     }
 
     
