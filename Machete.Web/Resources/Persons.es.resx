@@ -189,4 +189,7 @@
   <data name="sancExp" xml:space="preserve">
     <value>Sancionado/Expulsado</value>
   </data>
+  <data name="createClear" xml:space="preserve">
+    <value>Limpiar</value>
+  </data>
 </root>
