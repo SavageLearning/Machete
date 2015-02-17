@@ -207,6 +207,9 @@
   <data name="changeConfirm" xml:space="preserve">
     <value>Changes were made to one of the open records. To save your changes, click cancel and then save your work. To discard, click ok.</value>
   </data>
+  <data name="changeConfirmPerson" xml:space="preserve">
+    <value>Warning: Data that you entered has not been saved. Click Cancel to stay on this tab and save your work. Click OK to switch to another tab. (You can come back to this tab to save later)</value>
+  </data>
   <data name="changeTitle" xml:space="preserve">
     <value>Discard changes?</value>
   </data>
@@ -248,5 +251,17 @@
   </data>
   <data name="not" xml:space="preserve">
     <value>Not</value>
+  </data>
+  <data name="changeTitlePerson" xml:space="preserve">
+    <value>Remember to save your changes</value>
+  </data>
+  <data name="DuplicatePersonsMessage" xml:space="preserve">
+    <value>Already found persons with similar names:</value>
+  </data>
+  <data name="DuplicatePersonsTitle" xml:space="preserve">
+    <value>Warning: Check for duplicates</value>
+  </data>
+  <data name="SaveMessageDuplicatePersons" xml:space="preserve">
+    <value>Do you still want to save?</value>
   </data>
 </root>
