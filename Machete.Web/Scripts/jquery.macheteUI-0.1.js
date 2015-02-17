@@ -701,6 +701,7 @@
                     level: level,
                     recType: recType
                 });
+
             });
             window.onbeforeunload = function () {
                 if (mUI.state.changed(1)) {
