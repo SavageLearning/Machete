@@ -16,12 +16,13 @@
     @Html.EditorForModel()
 }
 
-<div id="messageDialog" title="Warning">
+<div id="messageDialog" title="@(Machete.Web.Resources.Shared.DuplicatePersonsTitle)">
 </div>
+
 
 <script type="text/javascript">
     $(document).ready(function () {
-
+        //setFormData is false, then the fields are kept (not cleared) on the Create New Person form
         setFormData(false);
         var personCreateForm = $('#personCreateForm');
         $('.formButton').button();
@@ -34,6 +35,7 @@
             create: true,
             formLevel: 1
         });
+  
         //
         // machete UI detect changes on forms in tabs   
         personCreateForm.mUI('formDetectChanges', {
@@ -72,7 +74,6 @@
     }
 
     
-
     var messageDialog = $("#messageDialog").dialog({
         autoOpen: false,
         height: 400,
@@ -87,20 +88,26 @@
 
 
     function FindPersonDuplicate() {
-        $.ajax({
-            url: "/Person/GetDuplicates",
-            data: {
-                firstname: $('#person0-firstname1')[0].value,
-                lastname: $('#person0-lastname1')[0].value,
-                phone: $('#person0-phone')[0].value
-            }, 
-            success: onSuccessFindPersonDuplicate,
-            dataType: "json"
-        });
+        var form = $('#personCreateForm');
+        if (form.valid()) {
+            $.ajax({
+                url: "/Person/GetDuplicates",
+                data: {
+                    firstname: $('#person0-firstname1')[0].value,
+                    lastname: $('#person0-lastname1')[0].value,
+                    phone: $('#person0-phone')[0].value
+                },
+                success: onSuccessFindPersonDuplicate,
+                dataType: "json"
+            });
+        }
+        else {
+            form.submit();
+        }
     }
 
     function CreateHtmlText(duplicates) {
-        var dialogHtmlText = '<p>  Already found persons with similar names:'
+        var dialogHtmlText = '<p>@(Machete.Web.Resources.Shared.DuplicatePersonsMessage)</p>'
             +  '<table class="duplicatePersons" style="width:100%" border="1" cellpadding="2">'
             + '<tr>'
             + '<th>First Name</th>'
@@ -114,7 +121,7 @@
                 + '<td>'+ duplicates[i]["Phone"] + '</td> </tr>';
         }
 
-        dialogHtmlText += '</table> <p></p> <p></p> Do you still want to save? </p>';
+        dialogHtmlText += '</table> <p></p> <p></p>@(Machete.Web.Resources.Shared.SaveMessageDuplicatePersons)</p>';
         
         return dialogHtmlText;
     }
