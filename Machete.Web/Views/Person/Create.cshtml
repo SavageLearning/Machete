@@ -11,7 +11,7 @@
     <input type="button" onclick="FindPersonDuplicate()" id="@(idPrefix)SaveBtn" class="formButton saveBtn" 
             value="@Persons.createsubmit" tabindex="9"/>
     <input type="button" onclick="setFormData(true)" id="@(idPrefix)ClearBtn" class="formButton saveBtn" 
-            value="Clear" tabindex="9"/>
+            value="@Persons.createClear" tabindex="9"/>
     @Html.ValidationSummary(true)
     @Html.EditorForModel()
 }
@@ -115,10 +115,17 @@
             + '<th>Phone number</th>'
             +'</tr>';
         for (var i = 0; i < duplicates.length; i++) {
+            if (duplicates[i].Phone != null) {
             dialogHtmlText += '<tr>' 
-                + '<td>'+ duplicates[i]["First Name"] + '</td>'
+                + '<td>' + duplicates[i]["First Name"] + '</td>'
                 + '<td>'+ duplicates[i]["Last Name"] + '</td>'
-                + '<td>'+ duplicates[i]["Phone"] + '</td> </tr>';
+                + '<td>' + duplicates[i]["Phone"] + '</td> </tr>';
+            } else {
+                dialogHtmlText += '<tr>'
+               + '<td>' + duplicates[i]["First Name"] + '</td>'
+               + '<td>' + duplicates[i]["Last Name"] + '</td>'
+               + '<td>   N/A    </td> </tr>';
+            }
         }
 
         dialogHtmlText += '</table> <p></p> <p></p>@(Machete.Web.Resources.Shared.SaveMessageDuplicatePersons)</p>';
