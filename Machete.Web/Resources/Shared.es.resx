@@ -208,7 +208,7 @@
     <value>Los cambios se hicieron a uno de los registros abiertos. Para guardar los cambios, haga clic en CANCEL y guarde su trabajo. Para descartar, haga clic en OK.</value>
   </data>
   <data name="changeConfirmPerson" xml:space="preserve">
-    <value>Cuidado: Los cambios no han sido grabados. Haga click en CANCEL para quedarse en esta pagina y grabar sus datos. Click en OK para moverse a otra pagina. (Puede volver luego a grabar sus datos)</value>
+    <value>Cuidado: Los cambios no han sido grabados. Haga click en CANCEL para quedarse en esta pagina y grabar sus datos. Click en OK para moverse a otra pagina.</value>
   </data>
   <data name="changeTitle" xml:space="preserve">
     <value>Descartar los cambios?</value>
