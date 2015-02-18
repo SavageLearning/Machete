@@ -124,7 +124,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Warning: Data that you entered has not been saved. Click Cancel to stay on this tab and save your work. Click OK to switch to another tab. (You can come back to this tab to save later).
+        ///   Looks up a localized string similar to Warning: Data that you entered has not been saved. Click Cancel to stay on this tab and save your work. Click OK to switch to another tab. .
         /// </summary>
         public static string changeConfirmPerson {
             get {

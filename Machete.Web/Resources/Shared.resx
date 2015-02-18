@@ -208,7 +208,7 @@
     <value>Changes were made to one of the open records. To save your changes, click cancel and then save your work. To discard, click ok.</value>
   </data>
   <data name="changeConfirmPerson" xml:space="preserve">
-    <value>Warning: Data that you entered has not been saved. Click Cancel to stay on this tab and save your work. Click OK to switch to another tab. (You can come back to this tab to save later)</value>
+    <value>Warning: Data that you entered has not been saved. Click Cancel to stay on this tab and save your work. Click OK to switch to another tab. </value>
   </data>
   <data name="changeTitle" xml:space="preserve">
     <value>Discard changes?</value>
