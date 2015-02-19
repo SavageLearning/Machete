@@ -176,10 +176,11 @@
 
             // capturing not-saved typed fields from Create New Person form to localStorage variables 
             var tempStorage = window.localStorage;
-           // serializeArray captures all the form fields 
-            $.each($('#personCreateForm').serializeArray(), function (i, field) {
-                tempStorage.setItem(field.name, field.value);
-            });
+            // serializeArray captures all the form fields 
+            tempStorage.setItem("person0", JSON.stringify($('#personCreateForm').serializeArray()));
+            //$.each($('#personCreateForm').serializeArray(), function (i, field) {
+            //    tempStorage.setItem(field.name, field.value);
+            //});
             return true;
         })
 
