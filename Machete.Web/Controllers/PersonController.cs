@@ -223,6 +223,7 @@ namespace Machete.Web.Controllers
  
             foreach (var person in list)
             {
+                //if (id != null && id == person.ID) { continue; }
                 var person_FirstName = person.firstname1.Replace(" ", "");
                 var person_LastName = person.lastname1.Replace(" ", "");
                 var person_Phone = string.IsNullOrEmpty(person.phone) ? "y" : person.phone;
@@ -239,7 +240,7 @@ namespace Machete.Web.Controllers
                     personFound.Add("First Name", person.firstname1);
                     personFound.Add("Last Name", person.lastname1);
                     personFound.Add("Phone", person.phone);
-                   
+                    personFound.Add("ID", person.ID.ToString());                   
                     peopleFound.Add(personFound);
                 }
             }
