@@ -261,4 +261,7 @@
   <data name="transportTransactType" xml:space="preserve">
     <value>Payment Type</value>
   </data>
+  <data name="workerCount" xml:space="preserve">
+    <value>Worker Count</value>
+  </data>
 </root>

@@ -1,0 +1,164 @@
+﻿@using Machete.Web.Helpers
+@using Machete.Domain.Resources
+@using Machete.Web.Resources
+@using Machete.Service
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+}
+<div id="woDispatchTabs" >
+    <ul>
+        <li><a href="#orderList" id="pendingOrderListTab" class="ListTab">@Machete.Web.Resources.WorkOrders.details</a> </li>
+    </ul>
+    <div id="orderList">
+        <input type="button" value="@Machete.Web.Resources.WorkOrders.btnPending" class="formButton" id="pendingOrdersBtn"/>
+        <input type="button" value="@Machete.Web.Resources.WorkOrders.btnActive" class="formButton" id="activeOrdersBtn"/>
+        <input type="button" value="@Machete.Web.Resources.WorkOrders.btnCompleted" class="formButton" id="completedOrdersBtn"/>
+        <input type="button" value="@Machete.Web.Resources.WorkOrders.btnCancelled" class="formButton" id="cancelledOrdersBtn"/>
+        <input type="button" value="@Machete.Web.Resources.WorkOrders.btnExpired" class="formButton" id="expiredOrdersBtn"/>
+        <input type="button" value="@Machete.Web.Resources.WorkOrders.btnAll" class="formButton" id="allOrdersBtn"/>
+        <input type="button" value="@Machete.Web.Resources.WorkOrders.btnOnline" class="formButton" id="onlineOrdersBtn"/>
+        <table id="orderTable" class="display">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>LABEL</th>
+                    <th>EmployerID</th>
+                    <th>@WorkOrder.workorderID</th>
+                    <th>@WorkOrder.dateTimeofWork</th>
+                    <th>@WorkOrder.statusShort</th>
+                    <th>@WorkOrder.transportMethodID</th>
+                    <th>@WorkOrder.workerCount</th>
+                    <th>@WorkOrder.contactName</th>
+                    <th>@WorkOrder.workSiteAddress1</th>
+                    <th>@WorkOrder.zipcode</th>
+                    <th>@WorkOrders.onlineSource</th>                  
+                </tr>
+            </thead>
+        </table>        
+    </div>
+</div>
+
+<script type="text/javascript">
+    var oTableDefaults = {
+            "bPaginate": true,
+            "bLengthChange": true,
+            "aaSorting": [[4, "desc"]],
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "iDeferLoading": true,
+            "bAutoWidth": false,
+            "bServerSide": true,
+            "sAjaxSource": "/HirerWorkOrder/AjaxHandler",
+            "bProcessing": true,
+            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "aoColumns": [
+                            { "mDataProp": "tabref", "bSearchable": false, "bSortable": false, "bVisible": false },
+                            { "mDataProp": "tablabel", "bSearchable": false, "bSortable": false, "bVisible": false },
+                            { "mDataProp": "EID", "bSearchable": false, "bSortable": false, "bVisible": false },
+                            { "mDataProp": "WOID" },
+                            { "mDataProp": "dateTimeofWork" },
+                            { "mDataProp": "status" },
+                            { "mDataProp": "transportMethod" },
+                            { "mDataProp": "WAcount" },
+                            { "mDataProp": "contactName" },
+                            { "mDataProp": "workSiteAddress1" },
+                            { "mDataProp": "zipcode" },
+                            { "mDataProp": "onlineSource", "bSearchable": false, "bSortable": true, "bVisible": true }
+                        ],
+            "aoSearchCols" :  [null, null, null, null, null, null, null, null, null, null, null, null],
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                        $(nRow).attr("edittabref", aData["tabref"]);
+                        $(nRow).attr("edittablabel", aData["tablabel"]);
+                        if (aData['displayState'] == "Pending") {
+                            $(nRow).addClass('statusGrey');
+                        } 
+                        if (aData['displayState'] == "Active") {
+                            $(nRow).addClass('statusBlue');
+                        } 
+                        if (aData['displayState'] == "Completed") {
+                            $(nRow).addClass('statusGreen');
+                        } 
+                        if (aData['displayState'] == "Cancelled") {
+                            $(nRow).addClass('statusRed');
+                        } 
+                        if (aData['displayState'] == "Expired") {
+                            $(nRow).addClass('statusExpired');
+                        }
+                        if (aData['displayState'] == "Orphaned") {
+                            $(nRow).addClass('statusYellow');
+                        }
+                        if (aData['displayState'] == "Unassigned") {
+                            $(nRow).addClass('statusOrange');
+                        }
+                        return nRow;
+            }
+        };
+    var orderDefs = jQuery.extend(true, {}, oTableDefaults); //example of copying js object
+    delete orderDefs["iDeferLoading"];
+    orderDefs["iDisplayLength"] = 15;
+    orderDefs["aLengthMenu"] = [[15, 50, 100], [15, 50, 100]];      
+    //////////////////////////////////////////////
+    //
+    //
+    //
+    $(document).ready(function () {
+        ////////////////////////////////////////////////////////////////
+        //
+        // Setup work order Tabs
+        //
+        $('.formButton').button();
+        $('#woDispatchTabs').mUI('createTabs', {
+            prefix: "ui-tabs-dispatch-", 
+            formLevel: 1,
+            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)",
+            updateDatatable: true
+            });
+        ////////////////////////////////////////////////////////////////
+        //
+        // Setup workorder Table
+        //
+        var oTable = jqrfyTable({
+            table: $('#orderTable'), 
+            tab: $('#woDispatchTabs'), 
+            options: orderDefs, 
+            dblClickEvent: false,
+            tabLabel: null
+            });
+
+        ////////////////////////////////////////////////////////////////
+        //
+        // filtering buttons on details page
+        //
+        $('#pendingOrdersBtn').click(function() {            
+            oTable.dataTable().fnResetAllFilters(false);
+            oTable.dataTable().fnFilter('@Machete.Domain.WorkOrder.iPending', 5); //sync with DT array above
+        });
+        $('#activeOrdersBtn').click(function() {            
+            oTable.dataTable().fnResetAllFilters(false);
+            oTable.dataTable().fnFilter('@Machete.Domain.WorkOrder.iActive', 5); //sync with DT array above
+        });
+        $('#completedOrdersBtn').click(function() {            
+            oTable.dataTable().fnResetAllFilters(false);
+            oTable.dataTable().fnFilter('@Machete.Domain.WorkOrder.iCompleted', 5); //sync with DT array above
+        });
+        $('#expiredOrdersBtn').click(function() {            
+            oTable.dataTable().fnResetAllFilters(false);
+            oTable.dataTable().fnFilter('@Machete.Domain.WorkOrder.iExpired', 5); //sync with DT array above
+        });
+        $('#allOrdersBtn').click(function() {
+            oTable.dataTable().fnResetAllFilters();
+//            oTable.dataTable().fnFilter("");
+//            oTable.dataTable().fnFilter("", 5); //sync with DT array above
+        });
+        $('#cancelledOrdersBtn').click(function() {
+            oTable.dataTable().fnResetAllFilters(false);
+            oTable.dataTable().fnFilter('@Machete.Domain.WorkOrder.iCancelled', 5); //sync with DT array above
+        });
+        $('#onlineOrdersBtn').click(function() {
+            oTable.dataTable().fnResetAllFilters(false);
+            oTable.dataTable().fnFilter(true, 11); //sync with DT array above
+        });
+    });
+</script>

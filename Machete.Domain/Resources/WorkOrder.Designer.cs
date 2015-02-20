@@ -430,6 +430,15 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Worker Count.
+        /// </summary>
+        public static string workerCount {
+            get {
+                return ResourceManager.GetString("workerCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Requests for Workers.
         /// </summary>
         public static string workerRequests {
