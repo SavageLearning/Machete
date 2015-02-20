@@ -1,4 +1,4 @@
-﻿@model Machete.Web.Models.LoginViewModel
+﻿@model Machete.Web.Models.HirerLoginViewModel
 
 @{
     ViewBag.Title = @Machete.Web.Resources.ValidationStrings.LogOnTitle;
@@ -39,13 +39,7 @@
                                 </div>
                             </div>
                             <div class="tb-row">
-                                <div class="tb-label">
-                                    @Html.LabelFor(m => m.RememberMe)
-                                </div>
-                                <div class="tb-field">
-                                    @Html.CheckBoxFor(m => m.RememberMe)
-                                    <input name="logonB" type="button" onclick="getIsPasswordExpired()" value="@Machete.Web.Resources.ValidationStrings.LogOn" />
-                                </div>
+                                <input type="submit" value="@Machete.Web.Resources.ValidationStrings.LogOn" />
                             </div>
                         </div>
                     </fieldset>
@@ -59,7 +53,7 @@
         </div>
     </div>
 </div>
-
+<!--
 <div id="passwordChange" title="@Machete.Web.Resources.ValidationStrings.ChangeTitle">
     <p><h5><small>Password has expired. Please provide new password.</small></h5></p>
     <form>
@@ -70,13 +64,13 @@
         <input type="password" name="confirmnewpasswordd" id="confirmnewpassword" value="" class="text ui-widget-content ui-corner-all">
     </form>
 </div>
-
+-->
 <div id="messageDialog">
     <p id="messageDialogText"></p>
 </div>
 
 <script type="text/javascript">
-
+/*
     var passwordChangeDialog = $("#passwordChange").dialog({
         autoOpen: false,
         height: 280,
@@ -88,7 +82,7 @@
             "@Machete.Web.Resources.ValidationStrings.Change": changePassword
         }
     });
-
+*/
     var messageDialog = $("#messageDialog").dialog({
         autoOpen: false,
         height: 200,
@@ -104,27 +98,6 @@
     {
         $("#messageDialogText").text(messageText);
         messageDialog.dialog("open");
-    }
-
-    function getIsPasswordExpired() {
-        $.ajax({
-            url: "/Account/IsPasswordExpiredAsync",
-            data: { username: $('#UserName')[0].value, password: $('#Password')[0].value }, //#Password found using inspect element on Log on Machete window
-
-            success: onSuccessIsPasswordExpired,
-            dataType: "json"
-        });
-    }
-
-    function onSuccessIsPasswordExpired(result) {
-        if (result.pwdExpired)
-        {
-            passwordChangeDialog.dialog("open");
-        }
-        else
-        {
-            logon();
-        }
     }
 
     function logon() {
@@ -143,23 +116,5 @@
             showMessage("Password cannot be the same as existing password.");
             return;
         }
-
-        $.ajax({
-            url: "/Account/ChangeExpiredPasswordAsync",
-            data: { username: $('#UserName')[0].value, password: $('#Password')[0].value, newpassword: newpassword },
-
-            success: function (result) {
-                if (result.succeeded) {
-                    passwordChangeDialog.dialog("close");
-                    //showMessage(result.message);
-                    $('#Password')[0].value = newpassword;
-                    logon();
-                }
-                else {
-                    showMessage(result.message);
-                }
-            },
-            dataType: "json"
-        });
     }
 </script>

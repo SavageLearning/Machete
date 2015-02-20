@@ -44,7 +44,6 @@
                     {
                         <li>@Html.ActionLink(@Machete.Web.Resources.Shared.reportstab, "Index", "Reports", null, new { id = "menulinkreports" })</li>
                         <li>@Html.ActionLink(@Machete.Web.Resources.Shared.emailstab, "Index", "Email", null, new { id = "menulinkemails" })</li>
-
                     }
                     @if (Html.IsInRole(Html.Role_AMP()))
                     {
@@ -67,6 +66,10 @@
                     @if (Html.IsInRole(Html.Role_AMPCU()))
                     { 
                     <li>@Html.ActionLink(@Machete.Web.Resources.Shared.workersignintab, "Index", "WorkerSignin", null, new { id = "menulinkworkersignin" })</li>
+                    }
+                    @if (Html.IsInRole(Html.Role_H()))
+                    {
+                        <li>@Html.ActionLink(@Machete.Web.Resources.Shared.workorderstab, "Index", "HirerWorkOrder", null, new { id = "menulinkhirerworkorder" })</li>
                     }
                 </ul>
             </div>

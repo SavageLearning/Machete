@@ -1,37 +1,20 @@
-﻿@model Machete.Web.Models.RegisterViewModel
+﻿@model Machete.Web.Models.HirerRegisterViewModel
 @{
-    ViewBag.Title = @Machete.Web.Resources.ValidationStrings.RegisterTitle;
+    ViewBag.Title = @Machete.Web.Resources.ValidationStrings.HirerRegisterTitle;
 }
 <div class="account-background">
-    <h2>@Machete.Web.Resources.ValidationStrings.RegisterSubTitle</h2>
+    <h2>@Machete.Web.Resources.ValidationStrings.HirerRegister</h2>
     <p>
-        @Machete.Web.Resources.ValidationStrings.RegisterInstructions
+        @Machete.Web.Resources.ValidationStrings.HirerRegisterInstructions
     </p>
-
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, @Machete.Web.Resources.ValidationStrings.RegisterValSummary)
         <div>
             <fieldset>
-                <legend>@Machete.Web.Resources.ValidationStrings.AccountInfoLegend</legend>
+                <legend>@Machete.Web.Resources.ValidationStrings.accountCreation</legend>
                 <div class="tb-table">
-                    <div class="tb-row">
-                        <div class="tb-label">
-                            @Html.LabelFor(m => m.FirstName)
-                        </div>
-                        <div class="tb-field">
-                            @Html.TextBoxFor(m => m.FirstName)
-                            @Html.ValidationMessageFor(m => m.FirstName)
-                        </div>
-                        <div class="tb-label">
-                            @Html.LabelFor(m => m.LastName)
-                        </div>
-                        <div class="tb-field">
-                            @Html.TextBoxFor(m => m.LastName)
-                            @Html.ValidationMessageFor(m => m.LastName)
-                        </div>
-                    </div>
                     <div class="tb-row">
                         <div class="tb-label">
                             @Html.LabelFor(m => m.Email)
@@ -59,7 +42,7 @@
                     </div>
                 </div>
                 <p>
-                    <input type="submit" value="@Machete.Web.Resources.ValidationStrings.Register" />
+                    <input type="submit" value="@Machete.Web.Resources.ValidationStrings.create" />
                 </p>
             </fieldset>
         </div>

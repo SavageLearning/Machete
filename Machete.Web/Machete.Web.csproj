@@ -207,6 +207,8 @@
     <Compile Include="Controllers\EmployerController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\EventController.cs" />
+    <Compile Include="Controllers\HirerAccountController.cs" />
+    <Compile Include="Controllers\HirerWorkOrderController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImageController.cs" />
     <Compile Include="Controllers\OldAccountController.cs" />
@@ -354,6 +356,7 @@
     <Compile Include="ViewModel\PeopleIndex.cs" />
     <Compile Include="ViewModel\WorkAssignmentIndex.cs" />
     <Compile Include="ViewModel\WorkOrderGroupPrintView.cs" />
+    <Compile Include="Views\HirerAccount.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\back_disabled.jpg" />
@@ -936,6 +939,14 @@
     </None>
     <None Include="Properties\PublishProfiles\Zip.pubxml" />
     <Content Include="Views\Shared\WorkerWAIndex.cshtml" />
+    <Content Include="Views\HirerAccount\Register.cshtml" />
+    <Content Include="Views\HirerAccount\Login.cshtml" />
+    <Content Include="Views\HirerAccount\_ExternalLoginsListPartial.cshtml" />
+    <Content Include="Views\HirerWorkOrder\Create.cshtml" />
+    <Content Include="Views\HirerWorkOrder\Index.cshtml" />
+    <Content Include="Views\HirerWorkOrder\Edit.cshtml" />
+    <Content Include="Views\Shared\HirerWorkOrderView.cshtml" />
+    <Content Include="Views\Shared\HirerWorkOrderEdit.cshtml" />
     <None Include="Web.CasaLatina.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
