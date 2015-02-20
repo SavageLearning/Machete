@@ -7,7 +7,9 @@
 }
 <div id="woDispatchTabs" >
     <ul>
-        <li><a href="#orderList" id="pendingOrderListTab" class="ListTab">@Machete.Web.Resources.WorkOrders.details</a> </li>
+        <li><a href="#orderList" id="pendingOrderListTab" class="ListTab">@Machete.Web.Resources.WorkOrders.workOrders</a> </li>
+        <li><a href="/Home/About" id="hirerAccountTab" class="ListTab">@Machete.Web.Resources.WorkOrders.hirerAccount</a> </li>
+        <li><a href="#hirerWorkOrder" id="hireWorkerTab" class="ListTab">@Machete.Web.Resources.WorkOrders.hireWorker</a> </li>
     </ul>
     <div id="orderList">
         <input type="button" value="@Machete.Web.Resources.WorkOrders.btnPending" class="formButton" id="pendingOrdersBtn"/>
@@ -36,8 +38,13 @@
             </thead>
         </table>        
     </div>
+    <div id="hirerAccount">
+        <input type="button" value="@Machete.Web.Resources.WorkOrders.btnPending" class="formButton" id="pendingOrdersBtn"/>
+    </div>
+    <div id="hirerWorkOrder">
+        <input type="button" value="@Machete.Web.Resources.WorkOrders.btnPending" class="formButton" id="pendingOrdersBtn"/>
+    </div>
 </div>
-
 <script type="text/javascript">
     var oTableDefaults = {
             "bPaginate": true,

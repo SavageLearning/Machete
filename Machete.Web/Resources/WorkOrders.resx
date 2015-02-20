@@ -321,4 +321,16 @@
   <data name="onlineSource" xml:space="preserve">
     <value>Online source?</value>
   </data>
+  <data name="editcancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="hirerAccount" xml:space="preserve">
+    <value>Account</value>
+  </data>
+  <data name="hireWorker" xml:space="preserve">
+    <value>Hire a Worker</value>
+  </data>
+  <data name="workOrders" xml:space="preserve">
+    <value>Work Orders</value>
+  </data>
 </root>
