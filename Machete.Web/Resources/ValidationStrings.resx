@@ -120,15 +120,6 @@
   <data name="Change" xml:space="preserve">
     <value>Change Password</value>
   </data>
-  <data name="ChangeLegend" xml:space="preserve">
-    <value>Account Information</value>
-  </data>
-  <data name="ChangePassLength1" xml:space="preserve">
-    <value>New passwords are required to be a minimum of</value>
-  </data>
-  <data name="ChangePassLength2" xml:space="preserve">
-    <value>characters in length.</value>
-  </data>
   <data name="ChangeSubTitle" xml:space="preserve">
     <value>Use the form below to change your password.</value>
   </data>
@@ -142,7 +133,7 @@
     <value>Password change was unsuccessful. Please correct the errors and try again.</value>
   </data>
   <data name="EmailAddress" xml:space="preserve">
-    <value>Email address</value>
+    <value>Email Address</value>
   </data>
   <data name="LogOff" xml:space="preserve">
     <value>Logoff</value>
@@ -150,7 +141,7 @@
   <data name="LogOn" xml:space="preserve">
     <value>Logon</value>
   </data>
-  <data name="LogOnLegend" xml:space="preserve">
+  <data name="AccountInfoLegend" xml:space="preserve">
     <value>Account Information</value>
   </data>
   <data name="LogOnRegisterString1" xml:space="preserve">
@@ -165,9 +156,6 @@
   <data name="LogOnUnsuccessful" xml:space="preserve">
     <value>Login was unsuccessful. Please correct the errors and try again.</value>
   </data>
-  <data name="NewPasswordsMustMatch" xml:space="preserve">
-    <value>The new password and confirmation password do not match.</value>
-  </data>
   <data name="password" xml:space="preserve">
     <value>Password</value>
   </data>
@@ -175,34 +163,19 @@
     <value>The new password and confirmation password do not match.</value>
   </data>
   <data name="PasswordConfirm" xml:space="preserve">
-    <value>Confirm new password</value>
+    <value>Confirm New Password</value>
   </data>
   <data name="PasswordCurrent" xml:space="preserve">
-    <value>Current password</value>
-  </data>
-  <data name="PasswordMinLength" xml:space="preserve">
-    <value>{0} must be at least {1} characters long.</value>
+    <value>Current Password</value>
   </data>
   <data name="PasswordNew" xml:space="preserve">
-    <value>New password</value>
-  </data>
-  <data name="PasswordsMustMatch" xml:space="preserve">
-    <value>The password and confirmation password do not match.</value>
+    <value>New Password</value>
   </data>
   <data name="Register" xml:space="preserve">
     <value>Register</value>
   </data>
   <data name="RegisterInstructions" xml:space="preserve">
     <value>Use the form below to create a new account.</value>
-  </data>
-  <data name="RegisterLegend" xml:space="preserve">
-    <value>Account Information</value>
-  </data>
-  <data name="RegisterPassLength1" xml:space="preserve">
-    <value>Passwords are required to be a minimum of</value>
-  </data>
-  <data name="RegisterPassLength2" xml:space="preserve">
-    <value>characters in length.</value>
   </data>
   <data name="RegisterSubTitle" xml:space="preserve">
     <value>Create a New Account</value>
@@ -214,7 +187,7 @@
     <value>Account creation was unsuccessful. Please correct the errors and try again.</value>
   </data>
   <data name="rememberme" xml:space="preserve">
-    <value>Remember me?</value>
+    <value>Remember Me?</value>
   </data>
   <data name="Required" xml:space="preserve">
     <value>field "{0}" is required</value>
@@ -223,15 +196,48 @@
     <value>Settings</value>
   </data>
   <data name="username" xml:space="preserve">
-    <value>User name</value>
+    <value>Username</value>
   </data>
   <data name="Welcome" xml:space="preserve">
     <value>Welcome</value>
   </data>
   <data name="firstname" xml:space="preserve">
-    <value>First name</value>
+    <value>First Name</value>
   </data>
   <data name="lastname" xml:space="preserve">
-    <value>Last name</value>
+    <value>Last Name</value>
+  </data>
+  <data name="hirersignin" xml:space="preserve">
+    <value>Sign In (Hirer)</value>
+  </data>
+  <data name="signup" xml:space="preserve">
+    <value>Sign Up</value>
+  </data>
+  <data name="accountCreation" xml:space="preserve">
+    <value>Account Creation</value>
+  </data>
+  <data name="create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="emailValidation" xml:space="preserve">
+    <value>The email format is invalid</value>
+  </data>
+  <data name="HirerRegister" xml:space="preserve">
+    <value>Create an Account to Hire a Worker</value>
+  </data>
+  <data name="HirerRegisterInstructions" xml:space="preserve">
+    <value>Complete the form to create an account to hire a worker</value>
+  </data>
+  <data name="HirerRegisterTitle" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="invalidLogin" xml:space="preserve">
+    <value>Invalid username or password.</value>
+  </data>
+  <data name="passwordLengthMin" xml:space="preserve">
+    <value>The Password must be at least 6 characters long.</value>
+  </data>
+  <data name="stringLengthMax" xml:space="preserve">
+    <value>The {0} must be no more than {1} characters.</value>
   </data>
 </root>
