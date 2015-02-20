@@ -947,6 +947,7 @@
     <Content Include="Views\HirerWorkOrder\Edit.cshtml" />
     <Content Include="Views\Shared\HirerWorkOrderView.cshtml" />
     <Content Include="Views\Shared\HirerWorkOrderEdit.cshtml" />
+    <Content Include="Views\HirerAccount\Edit.cshtml" />
     <None Include="Web.CasaLatina.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
