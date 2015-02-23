@@ -147,9 +147,9 @@
         var dialogHtmlText = '<p>@(Machete.Web.Resources.Shared.DuplicatePersonsMessage)</p>'
             + '<table class="duplicatePersons" style="width:100%" border="1" cellpadding="2">'
             + '<tr>'
-            + '<th>First Name</th>'
-            + '<th>Last Name</th>'
-            + '<th>Phone</th>'
+            + '<th>@(Machete.Web.Resources.Persons.firstname)</th>'
+            + '<th>@(Machete.Web.Resources.Persons.lastname)</th>'
+            + '<th>@(Machete.Web.Resources.Persons.phone)</th>'
             + '</tr>';
 
         for (var i = 0; i < duplicates.length; i++) {
