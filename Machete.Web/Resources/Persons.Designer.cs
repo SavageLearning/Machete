@@ -223,6 +223,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to First Name.
+        /// </summary>
+        public static string firstname {
+            get {
+                return ResourceManager.GetString("firstname", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Return to List of Persons.
         /// </summary>
         public static string indexreturnlink {
@@ -241,11 +250,29 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Last Name.
+        /// </summary>
+        public static string lastname {
+            get {
+                return ResourceManager.GetString("lastname", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to List persons.
         /// </summary>
         public static string listlink {
             get {
                 return ResourceManager.GetString("listlink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Phone.
+        /// </summary>
+        public static string phone {
+            get {
+                return ResourceManager.GetString("phone", resourceCulture);
             }
         }
         
