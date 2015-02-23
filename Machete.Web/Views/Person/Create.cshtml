@@ -1,18 +1,17 @@
 ﻿@model Machete.Domain.Person
 @using Machete.Web.Resources
-@using Machete.Domain.Resources
-@{
+@{  
     string recType = "person";
     string idPrefix = recType + Model.ID + "-";
 }
-@using (Html.BeginForm("Create", "Person", FormMethod.Post,
+@using (Html.BeginForm("Create", "Person", FormMethod.Post, 
     new { @id = "personCreateForm" }))
 {
     @Html.AntiForgeryToken()
-    <input type="button" onclick="FindPersonDuplicate()" id="@(idPrefix)SaveBtn" class="formButton saveBtn"
-           value="@Persons.createsubmit" tabindex="9" />
-    <input type="button" onclick="setFormData(true)" id="@(idPrefix)ClearBtn" class="formButton saveBtn"
-           value="@Persons.createClear" tabindex="9" />
+    <input type="button" onclick="FindPersonDuplicate()" id="@(idPrefix)SaveBtn" class="formButton saveBtn" 
+            value="@Persons.createsubmit" tabindex="9"/>
+    <input type="button" onclick="setFormData(true)" id="@(idPrefix)ClearBtn" class="formButton saveBtn" 
+            value="@Persons.createClear" tabindex="9"/>
     @Html.ValidationSummary(true)
     @Html.EditorForModel()
 }
@@ -36,9 +35,9 @@
             create: true,
             formLevel: 1
         });
-
+  
         //
-        // machete UI detect changes on forms in tabs
+        // machete UI detect changes on forms in tabs   
         personCreateForm.mUI('formDetectChanges', {
             recType: "@(recType)",
             formLevel: 1,
@@ -52,14 +51,13 @@
 
         var form = $('#personCreateForm');
         var fieldChanged = false;
-        var tempStorage = {};
-        $.each(JSON.parse(window.localStorage.getItem("person0")), function (i, field) {
-            tempStorage[field.name] = field.value;
-        });
         $.each(form.serializeArray(), function (i, field) {
+            if (field.name == "active") {
+                return;
+            }
             var fieldObj = $("#person0-" + field.name);
             if (fieldObj != null && fieldObj.length > 0) {
-                fieldObj.val(clearForm ? "" : tempStorage[field.name]);
+                fieldObj.val(clearForm ? "" : window.localStorage.getItem(field.name));
                 if (fieldObj.val() != "") {
                     fieldChanged = true;
                 }
@@ -75,7 +73,7 @@
 
     }
 
-
+    
     var messageDialog = $("#messageDialog").dialog({
         autoOpen: false,
         height: 400,
@@ -110,18 +108,18 @@
 
     function CreateHtmlText(duplicates) {
         var dialogHtmlText = '<p>@(Machete.Web.Resources.Shared.DuplicatePersonsMessage)</p>'
-            + '<table class="duplicatePersons" style="width:100%" border="1" cellpadding="2">'
+            +  '<table class="duplicatePersons" style="width:100%" border="1" cellpadding="2">'
             + '<tr>'
-            + '<th>@(Machete.Domain.Resources.Person.firstname)</th>'
-            + '<th>@(Machete.Domain.Resources.Person.lastname)</th>'
-            + '<th>@(Machete.Domain.Resources.Person.phone)</th>'
-            + '</tr>';
+            + '<th>First Name</th>'
+            + '<th>Last Name</th>'
+            + '<th>Phone number</th>'
+            +'</tr>';
         for (var i = 0; i < duplicates.length; i++) {
             if (duplicates[i].Phone != null) {
-                dialogHtmlText += '<tr>'
-                    + '<td>' + duplicates[i]["First Name"] + '</td>'
-                    + '<td>' + duplicates[i]["Last Name"] + '</td>'
-                    + '<td>' + duplicates[i]["Phone"] + '</td> </tr>';
+            dialogHtmlText += '<tr>' 
+                + '<td>' + duplicates[i]["First Name"] + '</td>'
+                + '<td>'+ duplicates[i]["Last Name"] + '</td>'
+                + '<td>' + duplicates[i]["Phone"] + '</td> </tr>';
             } else {
                 dialogHtmlText += '<tr>'
                + '<td>' + duplicates[i]["First Name"] + '</td>'
@@ -131,7 +129,7 @@
         }
 
         dialogHtmlText += '</table> <p></p> <p></p>@(Machete.Web.Resources.Shared.SaveMessageDuplicatePersons)</p>';
-
+        
         return dialogHtmlText;
     }
 
