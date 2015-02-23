@@ -1,7 +1,6 @@
 ﻿@model Machete.Domain.Person
 @using Machete.Web.Resources
 @using Machete.Web.Helpers
-@*@using Machete.Domain.Resources*@
 @{
     string recType = "person";
     string idPrefix = recType + Model.ID + "-";
@@ -68,6 +67,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+       // setFormData(false);
         var personEditForm = $('#Persontab-@Model.ID');
         var personPartTabs = $('#@(idPrefix)personPartsTabs');
         var personDeleteForm = $('#DeletePerson-@Model.ID');
@@ -147,13 +147,12 @@
         var dialogHtmlText = '<p>@(Machete.Web.Resources.Shared.DuplicatePersonsMessage)</p>'
             + '<table class="duplicatePersons" style="width:100%" border="1" cellpadding="2">'
             + '<tr>'
-            + '<th>@(Machete.Domain.Resources.Person.firstname)</th>'
-            + '<th>@(Machete.Domain.Resources.Person.lastname)</th>'
-            + '<th>@(Machete.Domain.Resources.Person.phone)</th>'
+            + '<th>First Name</th>'
+            + '<th>Last Name</th>'
+            + '<th>Phone</th>'
             + '</tr>';
 
         for (var i = 0; i < duplicates.length; i++) {
-            if (duplicates[i].ID == '@Model.ID') { continue;}
             if (duplicates[i].Phone != null) {
                 dialogHtmlText += '<tr>'
                     + '<td>' + duplicates[i]["First Name"] + '</td>'
