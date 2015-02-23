@@ -192,4 +192,13 @@
   <data name="createClear" xml:space="preserve">
     <value>Clear</value>
   </data>
+  <data name="firstname" xml:space="preserve">
+    <value>First Name</value>
+  </data>
+  <data name="lastname" xml:space="preserve">
+    <value>Last Name</value>
+  </data>
+  <data name="phone" xml:space="preserve">
+    <value>Phone</value>
+  </data>
 </root>
