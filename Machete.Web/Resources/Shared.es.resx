@@ -205,7 +205,10 @@
     <value>Reportes</value>
   </data>
   <data name="changeConfirm" xml:space="preserve">
-    <value>Los cambios se hicieron a uno de los registros abiertos. Para guardar los cambios, haga clic en Cancelar y guarde su trabajo. Para descartar, haga clic en Aceptar.</value>
+    <value>Los cambios se hicieron a uno de los registros abiertos. Para guardar los cambios, haga clic en CANCEL y guarde su trabajo. Para descartar, haga clic en OK.</value>
+  </data>
+  <data name="changeConfirmPerson" xml:space="preserve">
+    <value>Cuidado: Los cambios no han sido grabados. Haga click en CANCEL para quedarse en esta pagina y grabar sus datos. Click en OK para moverse a otra pagina.</value>
   </data>
   <data name="changeTitle" xml:space="preserve">
     <value>Descartar los cambios?</value>
@@ -248,5 +251,17 @@
   </data>
   <data name="not" xml:space="preserve">
     <value>No</value>
+  </data>
+  <data name="changeTitlePerson" xml:space="preserve">
+    <value>Recuerde grabar los cambios en los registros</value>
+  </data>
+  <data name="DuplicatePersonsMessage" xml:space="preserve">
+    <value>Lista de personas con nombres similares:</value>
+  </data>
+  <data name="DuplicatePersonsTitle" xml:space="preserve">
+    <value>Aviso: Verifique si hay registros repetidos</value>
+  </data>
+  <data name="SaveMessageDuplicatePersons" xml:space="preserve">
+    <value>Aun desea grabar este registro? </value>
   </data>
 </root>
