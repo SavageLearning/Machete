@@ -153,6 +153,7 @@
             + '</tr>';
 
         for (var i = 0; i < duplicates.length; i++) {
+            if (duplicates[i].ID == '@Model.ID') { continue; }
             if (duplicates[i].Phone != null) {
                 dialogHtmlText += '<tr>'
                     + '<td>' + duplicates[i]["First Name"] + '</td>'

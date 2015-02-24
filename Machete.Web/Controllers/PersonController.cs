@@ -239,6 +239,7 @@ namespace Machete.Web.Controllers
                     personFound.Add("First Name", person.firstname1);
                     personFound.Add("Last Name", person.lastname1);
                     personFound.Add("Phone", person.phone);
+                    personFound.Add("ID", person.ID.ToString()); 
                    
                     peopleFound.Add(personFound);
                 }
