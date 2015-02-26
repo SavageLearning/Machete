@@ -191,15 +191,9 @@ namespace Machete.Domain
         /// Retrieve API string to edit specific WO
         /// </summary>
         /// <returns>String representing the API string for WO</returns>
-        public string getTabRef(bool? isThisForHirer = false)
+        public string getTabRef()
         {
-            if (isThisForHirer.HasValue && isThisForHirer.Value)
-            {
-                return "/HirerWorkOrder/Edit/" + Convert.ToString(this.ID);
-            }
-            else {
-                return "/WorkOrder/Edit/" + Convert.ToString(this.ID);
-            }
+            return "/WorkOrder/Edit/" + Convert.ToString(this.ID);
         }
 
         /// <summary>

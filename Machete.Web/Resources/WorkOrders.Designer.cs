@@ -520,6 +520,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to List of Work Assignments.
+        /// </summary>
+        public static string listWorkAssignments {
+            get {
+                return ResourceManager.GetString("listWorkAssignments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Google map.
         /// </summary>
         public static string mapbutton {

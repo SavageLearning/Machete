@@ -264,4 +264,10 @@
   <data name="workerCount" xml:space="preserve">
     <value>Worker Count</value>
   </data>
+  <data name="addressWorkSite" xml:space="preserve">
+    <value>Address (Work Site)</value>
+  </data>
+  <data name="phoneWorkSite" xml:space="preserve">
+    <value>Phone (Work Site)</value>
+  </data>
 </root>

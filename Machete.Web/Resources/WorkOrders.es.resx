@@ -321,4 +321,7 @@
   <data name="workOrders" xml:space="preserve">
     <value>Work Orders</value>
   </data>
+  <data name="listWorkAssignments" xml:space="preserve">
+    <value>List Of Work Assignments</value>
+  </data>
 </root>

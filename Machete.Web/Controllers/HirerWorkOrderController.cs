@@ -142,10 +142,11 @@ namespace Machete.Web.Controllers
         /// <returns>Work Order </returns>
         public object dtResponse(ref WorkOrder wo, bool showWorkers)
         {
+            // tabref = "/HirerWorkOrder/Edit" + Convert.ToString(wo.ID),
             int ID = wo.ID;
             return new
             {
-                tabref = wo.getTabRef(true),
+                tabref = "/HirerWorkOrder/View/" + Convert.ToString(wo.ID),
                 tablabel = Machete.Web.Resources.WorkOrders.tabprefix + wo.getTabLabel(),
                 EID = Convert.ToString(wo.EmployerID),
                 WOID = System.String.Format("{0,5:D5}", wo.paperOrderNum), // Note: paperOrderNum defaults to the value of the WO when a paperOrderNum is not provided
@@ -170,32 +171,6 @@ namespace Machete.Web.Controllers
                         } : null
 
             };
-                /*
-                tabref = wo.getTabRef(),
-                tablabel = "dd" + Machete.Web.Resources.WorkOrders.tabprefix + wo.getTabLabel(),
-                EID = Convert.ToString(wo.EmployerID),
-                WOID = System.String.Format("{0,5:D5}", wo.paperOrderNum), // Note: paperOrderNum defaults to the value of the WO when a paperOrderNum is not provided
-                dateTimeofWork = wo.dateTimeofWork.ToString(),
-                status = lcache.textByID(wo.status, CI.TwoLetterISOLanguageName),
-                WAcount = wo.workAssignments.Count(a => a.workOrderID == ID).ToString(),
-                contactName = wo.contactName,
-                workSiteAddress1 = wo.workSiteAddress1,
-                zipcode = wo.zipcode,
-                transportMethod = lcache.textByID(wo.transportMethodID, CI.TwoLetterISOLanguageName),
-                displayState = _getDisplayState(wo), // State is used to provide color highlighting to records based on state
-                onlineSource = wo.onlineSource ? Shared.True : Shared.False,
-                workers = showWorkers ? // Workers is only loaded when showWorkers parameter set to TRUE
-                        from w in wo.workAssignments
-                        select new
-                        {
-                            WID = w.workerAssigned != null ? (int?)w.workerAssigned.dwccardnum : null,
-                            name = w.workerAssigned != null ? w.workerAssigned.Person.firstname1 : null, // Note: hirers should only have access to the workers first name
-                            skill = lcache.textByID(w.skillID, CI.TwoLetterISOLanguageName),
-                            hours = w.hours,
-                            wage = w.hourlyWage
-                        } : null
-            };
-                 */
         }
 
 
