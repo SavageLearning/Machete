@@ -136,7 +136,7 @@
     <value>English Required (at least one worker)?</value>
   </data>
   <data name="englishRequiredNote" xml:space="preserve">
-    <value>English required note</value>
+    <value>English Required Note</value>
   </data>
   <data name="lunchSupplied" xml:space="preserve">
     <value>Lunch Supplied?</value>
@@ -263,5 +263,11 @@
   </data>
   <data name="workerCount" xml:space="preserve">
     <value>Worker Count</value>
+  </data>
+  <data name="addressWorkSite" xml:space="preserve">
+    <value>Address (Work Site)</value>
+  </data>
+  <data name="phoneWorkSite" xml:space="preserve">
+    <value>Phone (Work Site)</value>
   </data>
 </root>

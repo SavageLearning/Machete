@@ -10,7 +10,7 @@
     string idPrefix = recType + Model.ID + "-";
     string empPrefix = empRecType + Model.EmployerID + "-";
     int editDisable = 0;
-    if (!Html.IsInRole(Html.Role_AM()) && (Html.IsInRole(Html.Role_AMP()) && Model.dateTimeofWork < DateTime.Today))
+    if (!Html.IsInRole(Html.Role_H()))
     {
         editDisable = 1;
     }

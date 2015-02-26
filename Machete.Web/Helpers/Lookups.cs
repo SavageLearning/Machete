@@ -81,7 +81,7 @@ namespace Machete.Web.Helpers
                 LCategory.maritalstatus, LCategory.race, LCategory.neighborhood, LCategory.gender,
                 LCategory.transportmethod, LCategory.transportTransactType, LCategory.countryoforigin, LCategory.activityName, 
                 LCategory.activityType, LCategory.eventtype, LCategory.orderstatus, LCategory.emplrreference, 
-                LCategory.worktype, LCategory.memberstatus,LCategory.skill,LCategory.emailstatus, LCategory.emailTemplate}
+                LCategory.worktype, LCategory.memberstatus,LCategory.skill,LCategory.emailstatus, LCategory.emailTemplate, LCategory.englishLevel}
                 .Select(x => new SelectListItem { Value = x, Text = x}),
                 "Value", "Text", LCategory.activityName);
 
