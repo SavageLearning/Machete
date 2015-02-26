@@ -180,4 +180,10 @@
   <data name="viewtitle" xml:space="preserve">
     <value>trabajador::ver</value>
   </data>
+  <data name="workerDwcCardNum" xml:space="preserve">
+    <value>Worker ID#:</value>
+  </data>
+  <data name="workerName" xml:space="preserve">
+    <value>Worker Name</value>
+  </data>
 </root>
