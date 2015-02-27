@@ -10,7 +10,7 @@
         CultureInfo CI = (CultureInfo)Session["Culture"];
     }
     <div>
-        <input type="button" id="printOrder" class="formButton" value="@WorkOrders.printWorkOrder" />
+        <input type="button" id="printOrder" class="formButton" value="@Worker.rateWorker" />
     </div>
     <div class="tb-table">
         <div class="tb-row">
@@ -191,11 +191,11 @@
                             <div class="tb-field">
                                 @if (item.workerAssigned != null)
                                 {
-                                    <p>@Html.Encode(item.workerAssigned.Person.firstname1)</p>
+                                    <p>@item.workerAssigned.Person.firstname1</p>
                                 }
                                 else
                                 {
-                                    @Html.Encode("_____________________________________________")
+                                    <p>_____________________________________________</p>
                                 }
                             </div>
                             <div class="tb-label">
@@ -205,11 +205,11 @@
                             <div class="tb-field">
                                 @if (item.workerAssigned != null)
                                 {
-                                    <p>@Html.Encode(item.workerAssigned.Person.Worker.dwccardnum)</p>
+                                    <p>@item.workerAssigned.Person.Worker.dwccardnum</p>
                                 }
                                 else
                                 {
-                                    @Html.Encode("_____________________________________________")
+                                    <p>_____________________________________________</p>
                                 }
                             </div>
                             <div>

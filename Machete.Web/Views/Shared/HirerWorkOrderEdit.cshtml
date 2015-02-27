@@ -33,73 +33,139 @@
 </ul>
 <p>See the bottom of this page for labor prices.</p>
 </div>
+<input type="button" class="formButton" value="@WorkOrders.createsubmit" />
 <div class="tb-table">
+    <h3>Work Request</h3>
     <div class="tb-row">
         @Html.mUITableLabelAndTextBoxFor(model => model.dateTimeofWork, new { tabindex = "1", id = idPrefix + "dateTimeofWork" })
-        @Html.mUITableLabelFor(model => model.timeFlexible)
-        @Html.mUIDropDownYesNoFor(model => model.timeFlexible, new { tabindex = "12", id = idPrefix + "timeFlexible" }) 
     </div>
     <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.status)
-        <div class="tb-header">
-        @Lookups.byID(Model.status)
-        @Html.HiddenFor(model => model.status, new { tabindex = "2", id = idPrefix + "status" })
-        </div>
-        @Html.mUITableLabelFor(model => model.permanentPlacement)
-        @Html.mUIDropDownYesNoFor(model => model.permanentPlacement, new { tabindex = "13", id = idPrefix + "permanentPlacement" })
+        @Html.mUITableLabelAndTextBoxFor(model => model.workSiteAddress1, new { tabindex = "2", id = idPrefix + "workSiteAddress1" })
     </div>
     <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.contactName, new { tabindex = "3", id = idPrefix + "contactName" })
-        <div class="tb-label englishRequired_@(Model.ID)">
-            @Html.LabelFor(model => model.englishRequired)
-        </div>
-        <div class="tb-field englishRequired_@(Model.ID)">
-            @Html.mUIDropDownYesNoFor(model => model.englishRequired, new { tabindex = "14", id = idPrefix + "englishRequired" })
-        </div>
+        @Html.mUITableLabelAndTextBoxFor(model => model.workSiteAddress2, new { tabindex = "3", id = idPrefix + "workSiteAddress2" })
     </div>
     <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.workSiteAddress1, new { tabindex = "4", id = idPrefix + "workSiteAddress1" })
-        @Html.mUITableLabelFor(model => model.lunchSupplied)
-        @Html.mUIDropDownYesNoFor(model => model.lunchSupplied, new { tabindex = "15", id = idPrefix + "lunchSupplied" })
+        @Html.mUITableLabelAndTextBoxFor(model => model.city, new { tabindex = "4", id = idPrefix + "city" })
     </div>
     <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.workSiteAddress2, new { tabindex = "5", id = idPrefix + "workSiteAddress2" })
+        @Html.mUITableLabelAndTextBoxFor(model => model.state, new { tabindex = "5", id = idPrefix + "state" })
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelAndTextBoxFor(model => model.zipcode, new { tabindex = "6", id = idPrefix + "zipcode" })
+    </div>
+    <div class="tb-row">
         @Html.mUITableLabelFor(model => model.transportMethodID)
         @Html.mUIDropDownListFor(model => model.transportMethodID,
                         new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.transportmethod), "Value", "Text", Model.transportMethodID),
-                        new { tabindex = "16", id = idPrefix + "transportMethodID" })
+                        new { tabindex = "7", id = idPrefix + "transportMethodID" })
     </div>
-    <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.city, new { tabindex = "6", id = idPrefix + "city" })
 <!--
         @Html.mUITableLabelFor(model => model.transportTransactType)
         @Html.mUIDropDownListFor(model => model.transportTransactType,
                         new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.transportTransactType), "Value", "Text", Model.transportTransactType),
-                        new { tabindex = "19", id = idPrefix + "transportTransactType" })
+                        new { tabindex = "8", id = idPrefix + "transportTransactType" })
 -->
-    </div>
-    <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.state, new { tabindex = "7", id = idPrefix + "state" })
-    </div>
-    <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.zipcode, new { tabindex = "8", id = idPrefix + "zipcode" })
-    </div>
-    <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.phone, new { tabindex = "9", id = idPrefix + "phone" })
+     <div class="tb-row desc-field">
+        @Html.mUITableDescLabelFor(model => model.description)
+        <div class="tb-field">
+            @Html.ValidationMessageFor(model => model.description)
+            @Html.TextAreaFor(model => model.description, new { tabindex = "9", @class = "desc-field", id = idPrefix + "description" })
+        </div>
     </div>
 </div><!--tb-table main workorder table-->
-
 <div class="tb-table">
+    <h3>Profile</h3>
+    <div class="tb-row">
+        @Html.mUITableLabelFor(model => model.Employer.business)
+        @Html.mUIDropDownYesNoFor(model => model.Employer.business, new { tabindex = "10", id = idPrefix + "business" }) 
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelAndTextBoxFor(model => model.Employer.name, new { tabindex = "11", id = idPrefix + "employerName" })
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelAndTextBoxFor(model => model.Employer.businessname, new { tabindex = "12", id = idPrefix + "businessname" })
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelAndTextBoxFor(model => model.Employer.address1, new { tabindex = "13", id = idPrefix + "employerAddress1" })
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelAndTextBoxFor(model => model.Employer.address2, new { tabindex = "14", id = idPrefix + "employerAddress2" })
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelAndTextBoxFor(model => model.Employer.city, new { tabindex = "15", id = idPrefix + "employerCity" })
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelAndTextBoxFor(model => model.Employer.state, new { tabindex = "16", id = idPrefix + "employerState" })
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelAndTextBoxFor(model => model.Employer.zipcode, new { tabindex = "17", id = idPrefix + "employerZipcode" })
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelAndTextBoxFor(model => model.Employer.phone, new { tabindex = "18", id = idPrefix + "employerPhone" })
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelAndTextBoxFor(model => model.Employer.cellphone, new { tabindex = "19", id = idPrefix + "employerCellphone" })
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelAndTextBoxFor(model => model.Employer.email, new { tabindex = "20", id = idPrefix + "email" })
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelFor(model => model.Employer.referredby)
+        @Html.mUIDropDownListFor(model => model.Employer.referredby,
+                        new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.emplrreference), "Value", "Text", Model.Employer.referredby),
+                        new { tabindex = "21", id = idPrefix + "referredby" })
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelAndTextBoxFor(model => model.Employer.referredbyOther, new { tabindex = "22", id = idPrefix + "referredbyOther" })
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelFor(model => model.Employer.returnCustomer)
+        @Html.mUIDropDownYesNoFor(model => model.Employer.returnCustomer, new { tabindex = "23", id = idPrefix + "returnCustomer" }) 
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelFor(model => model.Employer.receiveUpdates)
+        @Html.mUIDropDownYesNoFor(model => model.Employer.receiveUpdates, new { tabindex = "24", id = idPrefix + "receiveUpdates" }) 
+    </div>
+</div><!--tb-table main workorder table-->
+<div class="tb-table">
+    <h3>Work Details</h3>
+    
+    <div class="tb-row">
+        @Html.mUITableLabelAndTextBoxFor(model => model.contactName, new { tabindex = "25", id = idPrefix + "contactName" })
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelAndTextBoxFor(model => model.phone, new { tabindex = "26", id = idPrefix + "phone" })
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelFor(model => model.timeFlexible)
+        @Html.mUIDropDownYesNoFor(model => model.timeFlexible, new { tabindex = "27", id = idPrefix + "timeFlexible" }) 
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelFor(model => model.permanentPlacement)
+        @Html.mUIDropDownYesNoFor(model => model.permanentPlacement, new { tabindex = "28", id = idPrefix + "permanentPlacement" })
+    </div>
+    <div class="tb-row">
+        <div class="tb-label englishRequired_@(Model.ID)">
+            @Html.LabelFor(model => model.englishRequired)
+        </div>
+        <div class="tb-field englishRequired_@(Model.ID)">
+            @Html.mUIDropDownYesNoFor(model => model.englishRequired, new { tabindex = "29", id = idPrefix + "englishRequired" })
+        </div>
+    </div>
     <!-- Note: Field only appears in table when englishRequired = TRUE -->
     <div class="tb-row englishNoteRow" id="@(idPrefix)englishRequiredNoteRow">
         @Html.mUITableDescLabelFor(model => model.englishRequiredNote)
         <div class="tb-field">
-            @Html.TextAreaFor(model => model.englishRequiredNote, new { tabindex = "21", @class = "desc-field", id = idPrefix + "englishRequiredNote" })
+            @Html.TextAreaFor(model => model.englishRequiredNote, new { tabindex = "30", @class = "desc-field", id = idPrefix + "englishRequiredNote" })
             @Html.ValidationMessageFor(model => model.englishRequiredNote)
         </div>
     </div>
     <div class="tb-row">
-<!--
+        @Html.mUITableLabelFor(model => model.lunchSupplied)
+        @Html.mUIDropDownYesNoFor(model => model.lunchSupplied, new { tabindex = "31", id = idPrefix + "lunchSupplied" })
+    </div>
+    <div class="tb-row">
         <div class="tb-label desc-label">
             @Html.LabelFor(model => model.workerRequests)
             <br />
@@ -107,16 +173,14 @@
             <input type="button" value="@Machete.Domain.Resources.WorkOrder.requestRemove" class="formButton" id="removeRequestBtn-@(Model.ID)"/>
         </div>
         <div class="tb-field desc-field">
-            @Html.ListBox("workerRequests2", new SelectList(ViewBag.workerRequests, "Value", "Text"), new { id = "workerRequests2_WO-"+ Model.ID, tabindex = "22", style="min-width: 16em;"})
-        </div>
--->
-        @Html.mUITableDescLabelFor(model => model.description)
-        <div class="tb-field desc-field">
-            @Html.TextAreaFor(model => model.description, new { tabindex = "23", @class = "desc-field", id = idPrefix + "description" })
-            @Html.ValidationMessageFor(model => model.description)
+            @Html.ListBox("workerRequests2", new SelectList(ViewBag.workerRequests, "Value", "Text"), new { id = "workerRequests2_WO-"+ Model.ID, tabindex = "32", style="min-width: 16em;"})
         </div>
     </div>
-</div>
+    <div class="tb-row">
+        @Html.mUITableLabelAndTextBoxFor(model => model.Employer.onlineSource, new { tabindex = "33", id = idPrefix + "onlineSource" })
+    </div>
+<input type="button" class="formButton" value="@WorkOrders.createsubmit" />
+</div><!--tb-table main workorder table-->
 
 <div id="workerDialog-@(Model.ID)" title="@Machete.Domain.Resources.WorkOrder.requestTitle">
     <table id="workerTable-@(Model.ID)" class="display" style="display: none">
@@ -126,12 +190,7 @@
                 <th>LABEL</th>
                 <th>ID</th>
                 <th>@Worker.dwccardnum</th>
-                <th>@Worker.active</th>
                 <th>@Person.firstname1</th>
-                <th>@Person.firstname2</th>
-                <th>@Person.lastname1</th>
-                <th>@Person.lastname2</th>
-                <th>@Worker.memberexpirationdate</th>
             </tr>
         </thead>
     </table>
@@ -284,12 +343,7 @@
                 { "mDataProp": "tablabel","bSearchable": false, "bSortable": false, "bVisible": false },
                 { "mDataProp": "WID","bSearchable": false, "bSortable": false, "bVisible": false },
                 { "mDataProp": "dwccardnum" },
-                { "mDataProp": "active" },
-                { "mDataProp": "firstname1" },
-                { "mDataProp": "firstname2" },
-                { "mDataProp": "lastname1" },
-                { "mDataProp": "lastname2" },
-                { "mDataProp": "memberexpirationdate" }
+                { "mDataProp": "firstname1" }
             ],
             // callback populates html attr with row data from JSON            
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
