@@ -146,7 +146,7 @@ namespace Machete.Web.Controllers
             int ID = wo.ID;
             return new
             {
-                tabref = "/HirerWorkOrder/View/" + Convert.ToString(wo.ID),
+                tabref = "/HirerWorkOrder/Edit/" + Convert.ToString(wo.ID),
                 tablabel = Machete.Web.Resources.WorkOrders.tabprefix + wo.getTabLabel(),
                 EID = Convert.ToString(wo.EmployerID),
                 WOID = System.String.Format("{0,5:D5}", wo.paperOrderNum), // Note: paperOrderNum defaults to the value of the WO when a paperOrderNum is not provided

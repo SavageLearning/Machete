@@ -250,4 +250,7 @@
   <data name="homeless" xml:space="preserve">
     <value>Homeless</value>
   </data>
+  <data name="rateWorker" xml:space="preserve">
+    <value>Rate Worker</value>
+  </data>
 </root>

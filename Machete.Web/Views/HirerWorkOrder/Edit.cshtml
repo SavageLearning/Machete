@@ -18,7 +18,6 @@
 @using (Html.BeginForm("Edit", "HirerWorkOrder", FormMethod.Post,
                         new { @class = "edittab-form EditPost", @id = "WorkOrderTab-" + Model.ID }))
 {
-    <input type="button" value="@WorkOrders.printlink" class="formButton" id="viewWorkOrder-@(Model.ID)" />
     //
     // Phonedesk can save changes if work order is today or in the future
     if ((Html.IsInRole(Html.Role_AMP()) && Model.dateTimeofWork >= DateTime.Today) || Html.IsInRole(Html.Role_AM()))
