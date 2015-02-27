@@ -178,6 +178,24 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Already found employers with similar names:.
+        /// </summary>
+        public static string DuplicateEmployerMessage {
+            get {
+                return ResourceManager.GetString("DuplicateEmployerMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warning: Check for duplicates.
+        /// </summary>
+        public static string DuplicateEmployerTitle {
+            get {
+                return ResourceManager.GetString("DuplicateEmployerTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Already found persons with similar names:.
         /// </summary>
         public static string DuplicatePersonsMessage {
