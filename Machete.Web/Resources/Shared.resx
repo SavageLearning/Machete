@@ -264,4 +264,10 @@
   <data name="SaveMessageDuplicatePersons" xml:space="preserve">
     <value>Do you still want to save?</value>
   </data>
+  <data name="DuplicateEmployerMessage" xml:space="preserve">
+    <value>Already found employers with similar names:</value>
+  </data>
+  <data name="DuplicateEmployerTitle" xml:space="preserve">
+    <value>Warning: Check for duplicates</value>
+  </data>
 </root>

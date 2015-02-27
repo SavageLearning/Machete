@@ -72,8 +72,8 @@
                                 {"mDataProp": "dateupdated" },
                                 { "mDataProp": "Updatedby", "bSortable": false },
                                 { "mDataProp": "onlineSource", "bSearchable": false, "bSortable": true, "bVisible": true }
-                            ]             
-            }, 
+                            ]
+            },
             dblClickEvent: null, 
             tabLabel: "@(recType)"
         });
@@ -91,6 +91,18 @@
             oTable.dataTable().fnResetAllFilters(false);
             oTable.dataTable().fnFilter(true, 9); //sync with DT array above
         });
+
+        $('#employerCreateTab').click(function () {
+
+            // capturing not-saved typed fields from Create New Employer form to localStorage variables 
+            var tempStorage = window.localStorage;
+
+            // serializeArray captures all the form fields 
+            $.each($('#employerCreateForm').serializeArray(), function (i, field) {             
+                tempStorage.setItem(field.name, field.value);
+            });         
+            return true;
+        })
     });
 </script>
 
