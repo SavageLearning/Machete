@@ -120,6 +120,9 @@
   <data name="boxlegend" xml:space="preserve">
     <value>Empleador</value>
   </data>
+  <data name="createclear" xml:space="preserve">
+    <value>Limpiar</value>
+  </data>
   <data name="createlink" xml:space="preserve">
     <value>Crear un empleador nuevo</value>
   </data>
