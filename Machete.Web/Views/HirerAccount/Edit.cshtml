@@ -8,13 +8,7 @@
 @using (Html.BeginForm("Edit", "Employer", FormMethod.Post, 
                         new { @class = "edittab-form EditPost", @id="EmployerTab-" + Model.ID }))
 {
-    @*<input type="button" value="@Employers.viewlink" class="formButton" id="viewEmployer-@Model.ID" />*@
     <input type="submit" value="@Employers.editsubmit" class="formButton saveBtn"/>
-    if (Html.IsInRole(Html.Role_AM()))
-    {
-        <input id="deleteEmployerButton-@Model.ID" type="button" value="@Employers.deletesubmit" 
-                class="formButton deleteButton" />
-    }
     <br />    
     @Html.ValidationSummary(true)
     @Html.EditorForModel()

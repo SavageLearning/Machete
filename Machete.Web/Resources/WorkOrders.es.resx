@@ -324,4 +324,7 @@
   <data name="listWorkAssignments" xml:space="preserve">
     <value>List Of Work Assignments</value>
   </data>
+  <data name="hirerProfile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
 </root>

@@ -945,7 +945,6 @@
     <Content Include="Views\HirerWorkOrder\Create.cshtml" />
     <Content Include="Views\HirerWorkOrder\Index.cshtml" />
     <Content Include="Views\HirerWorkOrder\Edit.cshtml" />
-    <Content Include="Views\Shared\HirerWorkOrderView.cshtml" />
     <Content Include="Views\Shared\HirerWorkOrderEdit.cshtml" />
     <Content Include="Views\HirerAccount\Edit.cshtml" />
     <Content Include="Views\HirerWorkOrder\View.cshtml" />

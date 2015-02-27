@@ -457,11 +457,20 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Account.
+        ///   Looks up a localized string similar to Account History.
         /// </summary>
         public static string hirerAccount {
             get {
                 return ResourceManager.GetString("hirerAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Profile.
+        /// </summary>
+        public static string hirerProfile {
+            get {
+                return ResourceManager.GetString("hirerProfile", resourceCulture);
             }
         }
         
