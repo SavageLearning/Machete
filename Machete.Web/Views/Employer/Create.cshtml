@@ -67,13 +67,17 @@
 
         var form = $('#employerCreateForm');
         var fieldChanged = false;
-        $.each(form.serializeArray(), function (i, field) {
-            if (field.name == "ID") {return;}
+        var employerFormContent = JSON.parse(localStorage.getItem("employerCreateForm"));
+
+        $.each(employerFormContent, function (i, field) {
+            if (field.name == "ID") {
+                return;
+            }
             var fieldObj = $("#employer0-" + field.name);
             if (fieldObj != null && fieldObj.length > 0) {
-                fieldObj.val(clearForm ? getClearValue(field.name) : window.localStorage.getItem(field.name));
-                if (fieldObj.val() != "") {
-                fieldChanged = true;
+                fieldObj.val(clearForm ? getClearValue(field.name) : field.value);
+                if (fieldObj.val() != getClearValue(field.name)) {
+                    fieldChanged = true;
                 }
             }
         });
@@ -103,6 +107,7 @@
     function FindEmployerDuplicate() {
 
         var form = $('#employerCreateForm');
+        if (form.valid()) {
             $.ajax({
                 url: "/Employer/GetDuplicates",
                 data: {
@@ -115,12 +120,12 @@
                 success: onSuccessFindEmployerDuplicate,
                 dataType: "json"
             });
-//        }
-        //else {
-        //    alert("form is NOT VALID");
-        //    form.submit();
-        //}
+        }
+        else {
+            form.submit();
+        }
     }
+   
 
     function CreateHtmlText(duplicates) {
         var dialogHtmlText = '<p>@(Machete.Web.Resources.Shared.DuplicateEmployerMessage)</p>'
@@ -164,7 +169,7 @@
         form.validate();
         form.submit();
         if (form.valid()) {
-         setFormData(true);
+            setFormData(true);
         }
     }
 
