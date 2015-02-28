@@ -51,20 +51,21 @@
 
         var form = $('#personCreateForm');
         var fieldChanged = false;
-        $.each(form.serializeArray(), function (i, field) {
+        var personFormContent = JSON.parse(localStorage.getItem("personCreateForm"));
+
+        $.each(personFormContent, function (i, field) {
             if (field.name == "active") {
                 return;
-            }
+            }           
             var fieldObj = $("#person0-" + field.name);
             if (fieldObj != null && fieldObj.length > 0) {
-                fieldObj.val(clearForm ? "" : window.localStorage.getItem(field.name));
+                fieldObj.val(clearForm ? "" : field.value);
                 if (fieldObj.val() != "") {
                     fieldChanged = true;
                 }
             }
         });
-        $("#person0-gender").value = 38;
-        // if any field had a change then it triggers save button to be highlighted again
+
         if (fieldChanged) {
             form.find('.saveBtn').addClass('highlightSave');
         }
@@ -154,4 +155,5 @@
             setFormData(true);
         }
     }
+
 </script>
