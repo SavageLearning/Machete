@@ -385,15 +385,6 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Rate Worker.
-        /// </summary>
-        public static string rateWorker {
-            get {
-                return ResourceManager.GetString("rateWorker", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Recent arrival to the USA?.
         /// </summary>
         public static string recentarrival {
@@ -462,6 +453,15 @@ namespace Machete.Domain.Resources {
         public static string weight {
             get {
                 return ResourceManager.GetString("weight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Worker Rating.
+        /// </summary>
+        public static string workerRating {
+            get {
+                return ResourceManager.GetString("workerRating", resourceCulture);
             }
         }
     }

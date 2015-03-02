@@ -280,8 +280,7 @@ namespace Machete.Web.Controllers
                 {
                     Value = a.WorkerID.ToString(),
                     Text = a.workerRequested.dwccardnum.ToString() + ' ' +
-                    a.workerRequested.Person.firstname1 + ' ' +
-                    a.workerRequested.Person.lastname1
+                    a.workerRequested.Person.firstname1
                 });
 
             return PartialView("Edit", workOrder);
