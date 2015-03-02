@@ -35,6 +35,7 @@
 </div>
 <input type="button" class="formButton" value="@WorkOrders.createsubmit" />
 <div class="tb-table">
+    <span id=@(idPrefix)hirerWorkOrderValidationErrors></span>
     <h3>Work Request</h3>
     <div class="tb-row">
         @Html.mUITableLabelAndTextBoxFor(model => model.dateTimeofWork, new { tabindex = "1", id = idPrefix + "dateTimeofWork" })
@@ -77,13 +78,19 @@
 <div class="tb-table">
     <h3>Profile</h3>
     <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.Employer.business)
-        @Html.mUIDropDownYesNoFor(model => model.Employer.business, new { tabindex = "10", id = idPrefix + "business" }) 
+        <div class="tb-label business_@(Model.ID)">
+            @Html.mUITableLabelFor(model => model.Employer.business)
+        </div>
+        <div class="tb-field business_@(Model.ID)">
+            @Html.mUIDropDownYesNoFor(model => model.Employer.business, new { tabindex = "10", id = idPrefix + "business" }) 
+        </div>
     </div>
-    <div class="tb-row">
+    <!-- Note: Field only appears in table when englishRequired = FALSE -->
+    <div class="tb-row employerNameRow" id="@(idPrefix)employerNameRow">
         @Html.mUITableLabelAndTextBoxFor(model => model.Employer.name, new { tabindex = "11", id = idPrefix + "employerName" })
     </div>
-    <div class="tb-row">
+    <!-- Note: Field only appears in table when englishRequired = TRUE -->
+    <div class="tb-row businessNameRow" id="@(idPrefix)businessNameRow">
         @Html.mUITableLabelAndTextBoxFor(model => model.Employer.businessname, new { tabindex = "12", id = idPrefix + "businessname" })
     </div>
     <div class="tb-row">
@@ -97,12 +104,15 @@
     </div>
     <div class="tb-row">
         @Html.mUITableLabelAndTextBoxFor(model => model.Employer.state, new { tabindex = "16", id = idPrefix + "employerState" })
+        @Html.ValidationMessageFor(model => model.Employer.state)
+
     </div>
     <div class="tb-row">
         @Html.mUITableLabelAndTextBoxFor(model => model.Employer.zipcode, new { tabindex = "17", id = idPrefix + "employerZipcode" })
     </div>
     <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.Employer.phone, new { tabindex = "18", id = idPrefix + "employerPhone" })
+        @Html.mUITableLabelFor(model => model.Employer.phone)
+        @Html.mUITableTextBoxFor(model => model.Employer.phone, new { tabindex = "18", id = idPrefix + "employerPhone" })
     </div>
     <div class="tb-row">
         @Html.mUITableLabelAndTextBoxFor(model => model.Employer.cellphone, new { tabindex = "19", id = idPrefix + "employerCellphone" })
@@ -111,12 +121,18 @@
         @Html.mUITableLabelAndTextBoxFor(model => model.Employer.email, new { tabindex = "20", id = idPrefix + "email" })
     </div>
     <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.Employer.referredby)
-        @Html.mUIDropDownListFor(model => model.Employer.referredby,
+        <div class="tb-label referredby_@(Model.ID)">
+            @Html.mUITableLabelFor(model => model.Employer.referredby)
+        </div>
+        <div class="tb-field referredby_@(Model.ID)">
+            @Html.mUIDropDownListFor(model => model.Employer.referredby,
                         new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.emplrreference), "Value", "Text", Model.Employer.referredby),
                         new { tabindex = "21", id = idPrefix + "referredby" })
+        </div>
     </div>
-    <div class="tb-row">
+    <!-- Note: Field only appears in table when referredBy = "Other" -->
+    <!-- TODO: Need to make sure that grabbing the english text to do the string comparison  -->
+    <div class="tb-row referredbyOtherRow" id="@(idPrefix)referredbyOtherRow">
         @Html.mUITableLabelAndTextBoxFor(model => model.Employer.referredbyOther, new { tabindex = "22", id = idPrefix + "referredbyOther" })
     </div>
     <div class="tb-row">
@@ -135,15 +151,8 @@
         @Html.mUITableLabelAndTextBoxFor(model => model.contactName, new { tabindex = "25", id = idPrefix + "contactName" })
     </div>
     <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.phone, new { tabindex = "26", id = idPrefix + "phone" })
-    </div>
-    <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.timeFlexible)
-        @Html.mUIDropDownYesNoFor(model => model.timeFlexible, new { tabindex = "27", id = idPrefix + "timeFlexible" }) 
-    </div>
-    <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.permanentPlacement)
-        @Html.mUIDropDownYesNoFor(model => model.permanentPlacement, new { tabindex = "28", id = idPrefix + "permanentPlacement" })
+        @Html.Label(Machete.Domain.Resources.WorkOrder.phoneWorkSite)
+        @Html.mUITableTextBoxFor(model => model.phone, new { tabindex = "26", id = idPrefix + "phone" })
     </div>
     <div class="tb-row">
         <div class="tb-label englishRequired_@(Model.ID)">
@@ -162,10 +171,6 @@
         </div>
     </div>
     <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.lunchSupplied)
-        @Html.mUIDropDownYesNoFor(model => model.lunchSupplied, new { tabindex = "31", id = idPrefix + "lunchSupplied" })
-    </div>
-    <div class="tb-row">
         <div class="tb-label desc-label">
             @Html.LabelFor(model => model.workerRequests)
             <br />
@@ -175,9 +180,6 @@
         <div class="tb-field desc-field">
             @Html.ListBox("workerRequests2", new SelectList(ViewBag.workerRequests, "Value", "Text"), new { id = "workerRequests2_WO-"+ Model.ID, tabindex = "32", style="min-width: 16em;"})
         </div>
-    </div>
-    <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.Employer.onlineSource, new { tabindex = "33", id = idPrefix + "onlineSource" })
     </div>
 <input type="button" class="formButton" value="@WorkOrders.createsubmit" />
 </div><!--tb-table main workorder table-->
@@ -313,6 +315,106 @@
     $(document).ready(function () {
         //
         //
+
+        $("#@(idPrefix)dateTimeofWork").focusout(function() {
+            var userInput = $("#@(idPrefix)dateTimeofWork").val();
+            var userInputInMs = new Date(userInput);
+            /*
+            http://stackoverflow.com/questions/5619202/converting-string-to-date-in-js
+            Date.parse almost gets you what you want. It chokes on the am/pm part, but with some hacking you can get it to work:
+
+            var str = 'Sun Apr 25, 2010 3:30pm',
+                timestamp;
+
+            timestamp = Date.parse(str.replace(/[ap]m$/i, ''));
+
+            if(str.match(/pm$/i) >= 0) {
+                timestamp += 12 * 60 * 60 * 1000;
+            }
+            */
+            if (isNaN(userInputInMs.valueOf())) {
+                // TODO: provide error handling
+            }
+            var dayOfWeek = userInputInMs.getDay();
+            console.log("The day of week is: " + dayOfWeek);
+            /*
+            var d = new Date();
+            var weekday = new Array(7);
+            weekday[0]=  "Sunday";
+            weekday[1] = "Monday";
+            weekday[2] = "Tuesday";
+            weekday[3] = "Wednesday";
+            weekday[4] = "Thursday";
+            weekday[5] = "Friday";
+            weekday[6] = "Saturday";
+
+            var n = weekday[d.getDay()];
+            */
+            var advanceHours;
+            if (dayOfWeek == 0) { // Sunday
+                advanceHours = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineAdvanceHoursSunday"]);
+            } else if (dayOfWeek == 1) { // Monday
+                advanceHours = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineAdvanceHoursMonday"]);
+            } else if (dayOfWeek == 2) { // Tuesday
+                advanceHours = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineAdvanceHoursTuesday"]);
+            } else if (dayOfWeek == 3) { // Wednesday
+                advanceHours = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineAdvanceHoursWednesday"]);
+            } else if (dayOfWeek == 4) { // Thursday
+                advanceHours = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineAdvanceHoursThursday"]);
+            } else if (dayOfWeek == 5) { // Friday
+                advanceHours = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineAdvanceHoursFriday"]);
+            } else if (dayOfWeek == 6) { // Saturday
+                advanceHours = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineAdvanceHoursSaturday"]);
+            }
+            if (isNaN(advanceHours)) { // In case valid value not set in configuration file, set default
+                advanceHours = 36;
+            }
+
+            var future = Date.now() + (advanceHours * 60 * 60 * 1000);
+             
+            if(userInputInMs >= future) {
+                // TODO: need to remove error & enable button when the date / time are valid
+                console.log('date is good >=48 hours');
+            } else {
+                // TODO: rethink this - maybe create a list of errors at the top & hide /show them instead of managing list
+                $("#@(idPrefix)hirerWorkOrderValidationErrors").append("<p>Date must be at least " + advanceHours + " hours from now</p>");
+                // TODO: need to disenable button when the date / time are invalid
+
+                //var newSpan = $('<span for="#WO6-dateTimeofWork" generated="true" class>Date must be at least 48 hours from now</span>')
+                //$("#@(idPrefix)dateTimeofWork").next().text('Date must be at least 48 hours from now');
+                //$("span[data-valmsg-for='dateTimeofWork']").text('Date must be at least 48 hours from now');
+            }
+        });
+        
+        $("#@(idPrefix)zipcode").focusout(function() {
+
+            var transportFee;
+            var allowableZipcode = false;
+            var transportMethod = $("#@(idPrefix)transportMethodID").val();
+            console.log(transportMethod);
+
+            // TODO: Ensure that all lookup tables have the same values here
+            if (transportMethod == 26) { // Worker buses = 26
+                var insideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportBusInsideZone"];
+                var outsideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportBusOutsideZone"];
+                if (insideZipCodes.indexOf(parseInt($("#@(idPrefix)zipcode"))) != -1) {
+                    // Zipcode is in the allowable list of zipcodes within zone
+                    allowableZipcode = true;
+                    transportFee = @System.Web.Configuration.WebConfigurationManager.AppSettings["TransportBusInsideZoneCost"];
+                } else if (outsideZipCodes.indexOf(parseInt($("#@(idPrefix)zipcode"))) != -1) {
+                    // Zipcode is in the allowable list of zipcodes outside zone
+                    allowableZipcode = true;
+                    transportFee = @System.Web.Configuration.WebConfigurationManager.AppSettings["TransportBusOutsideZoneCost"];
+                }
+                if (!allowableZipcode) {
+                    $("#@(idPrefix)hirerWorkOrderValidationErrors").append("<p>This zipcode is not a valid zipcode that we provide service to</p>");
+                }
+                //@System.String.Format("{0:C}", transportFee)
+                //$("#@(idPrefix)hirerWorkOrderValidationErrors").append("<p>The transportation costs are " + transportFee + " and must be paid via PayPal to complete order</p>");
+            }
+        });
+
+        // http://trentrichardson.com/examples/timepicker/
         $("#@(idPrefix)dateTimeofWork").datetimepicker({
             stepMinute: 15,
             ampm: true,
@@ -323,8 +425,7 @@
             minuteGrid: 15,
             hourGrid: 4
         });
-        //
-        //
+
         $('#workerTable-@(Model.ID)').dataTable({
             "bPaginate": true,
             "bLengthChange": true,
@@ -352,6 +453,7 @@
                 return nRow;
             }         
         }).fnSetFilteringDelay(250);
+
         // workRequest Dialog -doubleclick on row to select
         // create event to handle worker selection from dialog
         $('#workerTable-@(Model.ID)').find('tbody').dblclick(function (event) {            

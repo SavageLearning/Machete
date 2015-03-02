@@ -125,6 +125,10 @@ namespace Machete.Domain
         [LocalizedDisplayName("notes", NameResourceType = typeof(Resources.Employer))]
         [StringLength(4000, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Employer))]
         public string notes { get; set; }
-
+        // TODO: Add reference to online Employer signin ID
+        /*
+        [StringLength(128, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Employer))]
+        public string onlineSigninID { get; set; }
+        */
     }
 }
