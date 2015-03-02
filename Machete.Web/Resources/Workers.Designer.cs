@@ -214,6 +214,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rate Worker.
+        /// </summary>
+        public static string rateWorker {
+            get {
+                return ResourceManager.GetString("rateWorker", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Upload new image:.
         /// </summary>
         public static string uploadnewimage {

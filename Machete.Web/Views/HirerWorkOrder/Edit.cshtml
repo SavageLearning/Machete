@@ -18,17 +18,13 @@
 @using (Html.BeginForm("Edit", "HirerWorkOrder", FormMethod.Post,
                         new { @class = "edittab-form EditPost", @id = "WorkOrderTab-" + Model.ID }))
 {
-    //
-    // Phonedesk can save changes if work order is today or in the future
-    if ((Html.IsInRole(Html.Role_AMP()) && Model.dateTimeofWork >= DateTime.Today) || Html.IsInRole(Html.Role_AM()))
+    // Can save changes if work order is today or in the future
+    if (Model.dateTimeofWork >= DateTime.Today)
     {
-    <input type="submit" value="@WorkOrders.editsubmit" class="formButton saveBtn" id="@(idPrefix)SaveBtn"/>
+        <input type="submit" value="@WorkOrders.editsubmit" class="formButton saveBtn" id="@(idPrefix)SaveBtn"/>
     }
 
-    if (Html.IsInRole(Html.Role_AM()))
-    {
-        <input id="deleteWorkOrderButton-@(Model.ID)" type="button" value="@WorkOrders.deletesubmit" class="formButton deleteButton" />
-    }
+    <input id="deleteWorkOrderButton-@(Model.ID)" type="button" value="@WorkOrders.deletesubmit" class="formButton deleteButton" />
     <br />  
     @Html.ValidationSummary(true)
     @Html.Partial("HirerWorkOrderEdit", Model)
@@ -59,6 +55,24 @@
         $('#@(idPrefix)englishRequired').mUI('selectToggleOnValue', {
             target: $('#@(idPrefix)englishRequiredNoteRow'),
             showVal: "@(Shared.yes)"
+        });
+
+        // Business name toggle
+        $('#@(idPrefix)business').mUI('selectToggleOnValue', {
+            target: $('#@(idPrefix)businessNameRow'),
+            showVal: "@(Shared.yes)"
+        });
+
+        // Employer name toggle
+        $('#@(idPrefix)business').mUI('selectToggleOnValue', {
+            target: $('#@(idPrefix)employerNameRow'),
+            showVal: "@(Shared.no)"
+        });
+
+        // ReferredBy Other toggle
+        $('#@(idPrefix)referredby').mUI('selectToggleOnValue', {
+            target: $('#@(idPrefix)referredbyOtherRow'),
+            showVal: "Other"
         });
 
         // machete UI detect changes on forms in tabs   

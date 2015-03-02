@@ -3,15 +3,11 @@
 @using Machete.Web.Resources
 @using Machete.Web.Helpers
 @using System.Globalization
-<div class="print-on print-text">
-    @*<link href="@Url.Content("~/Content/print.css")" rel="stylesheet" type="text/css" media="print" />*@
+<div class="print-on">
     @{
         ViewBag.Title = WorkOrders.viewtitle;
         CultureInfo CI = (CultureInfo)Session["Culture"];
     }
-    <div>
-        <input type="button" id="printOrder" class="formButton" value="@Worker.rateWorker" />
-    </div>
     <div class="tb-table">
         <div class="tb-row">
             <div class="tb-label">
@@ -44,14 +40,6 @@
         </div>
         <div class="tb-row">
             <div class="tb-label">
-                @Html.Label(WorkOrder.lunchSupplied)
-            </div>
-            <div class="tb-field">
-                @Lookups.getBool(Model.lunchSupplied)  
-            </div>
-        </div>
-        <div class="tb-row">
-            <div class="tb-label">
                 @Html.Label(WorkOrder.transportMethodID)
             </div>
             <div class="tb-field">
@@ -69,31 +57,52 @@
                     @System.String.Format("{0:C}", Model.transportFee)     
                 </div>
             </div>
+
+            if (Model.transportTransactType != null && Model.transportTransactType != 0)
+            {
+                <div class="tb-row">
+                    <div class="tb-label">
+                        @Html.LabelFor(model => model.transportTransactType)
+                    </div>
+                    <div class="tb-field">
+                        @Lookups.byID(Model.transportTransactType)     
+                    </div>
+                </div>
+                <div class="tb-row">
+                    <div class="tb-label">
+                        @Html.LabelFor(model => model.transportTransactID)
+                    </div>
+                    <div class="tb-field">
+                        @Html.DisplayTextFor(model => model.transportTransactID)   
+                    </div>
+                </div>
+            }
         }
 
-        @if (Model.transportFeeExtra != null && Model.transportFeeExtra != 0)
-        {
-            <div class="tb-row">
-                <div class="tb-label">
-                    @Html.LabelFor(model => model.transportFeeExtra)
-                </div>
-                <div class="tb-field">
-                    @System.String.Format("{0:C}", Model.transportFeeExtra)         
-                </div>
+        <div class="tb-row">
+            <div class="tb-label">
+                @Html.LabelFor(model => model.englishRequiredNote)
             </div>
-        }
-
-        @if (Model.englishRequired == true)
-        {
-            <div class="tb-row">
-                <div class="tb-label">
-                    @Html.LabelFor(model => model.englishRequiredNote)
-                </div>
-                <div class="tb-field">
+            <div class="tb-field">
+                @if (Model.englishRequired == true)
+                {
                     @Html.DisplayTextFor(model => model.englishRequiredNote)            
-                </div>
+                }
+                else
+                {
+                    @Machete.Web.Resources.WorkAssignments.englishNotRequired
+                }
             </div>
-        }
+        </div>
+        <div class="tb-row">
+            <div class="tb-label">
+                @Html.LabelFor(model => model.description)
+            </div>
+            <div class="tb-bordered_field">
+                @Html.DisplayTextFor(model => model.description)
+            </div>
+        </div>
+        <!-- TODO: Need to change this to a new AdditionalNotes field when db updated -->
         <div class="tb-row">
             <div class="tb-label">
                 @Html.LabelFor(model => model.description)
@@ -146,7 +155,6 @@
                 <td>@WorkAssignments.hours</td>
                 <td>@WorkAssignments.hourRange</td>
                 <td>@WorkAssignment.days</td>
-                <td>@WorkAssignment.surcharge</td>
                 <td>@WorkAssignments.earnings</td>
                 <td>@WorkAssignments.earningsRange</td>
                 <td>@WorkAssignment.englishLevelID</td>
@@ -168,8 +176,7 @@
                     <td></td>
                 }
                 <td class="tb-field-fixed">@Html.DisplayFor(modelItem => item.days)</td>
-                <td class="tb-field-fixed">@System.String.Format("{0:C}", item.surcharge)</td>
-                <td class="tb-field-fixed">@System.String.Format("{0:C}", item.getMinEarnings)</td>
+                <td class="tb-field-fixed">@System.String.Format("{0:C}", (item.getMinEarnings + item.surcharge))</td>
                 @if (item.hourRange != null && item.hourRange > 0)
                 {
                     <td class="tb-field-fixed">@System.String.Format("{0:C}", item.getMaxEarnings)</td>
@@ -212,8 +219,25 @@
                                     <p>_____________________________________________</p>
                                 }
                             </div>
-                            <div>
-                                <input type="button" class="formButton" value="@WorkOrders.printWorkOrder" />
+
+                            <div class="tb-label">
+                                <p>@Machete.Domain.Resources.WorkAssignment.workerRating</p>
+                            </div>
+
+                            <div class="tb-field">
+                                <!-- TODO: need to replace qualityOfWork with workerRating when db updated -->
+                                @if (item.workerAssigned != null && item.qualityOfWork != null && item.qualityOfWork != 0)
+                                {
+                                    <!-- TODO: need to replace qualityOfWork with workerRating when db updated -->
+                                    <p>@Lookups.byID(item.qualityOfWork)</p>
+                                }
+                                else
+                                {
+                                    <p>@Machete.Web.Resources.WorkAssignments.workerNotRated</p>
+                                    <div>
+                                        <input type="button" class="formButton" value="@Workers.rateWorker" />
+                                    </div>
+                                }
                             </div>
                         </div>
                         @if (item.description != null)

@@ -171,6 +171,9 @@
   <data name="printlink" xml:space="preserve">
     <value>Imprimir trabajador</value>
   </data>
+  <data name="rateWorker" xml:space="preserve">
+    <value>Rate Worker</value>
+  </data>
   <data name="uploadnewimage" xml:space="preserve">
     <value>Cargar imagen nuevo:</value>
   </data>
