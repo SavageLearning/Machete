@@ -168,6 +168,9 @@
   <data name="printlink" xml:space="preserve">
     <value>Print worker</value>
   </data>
+  <data name="rateWorker" xml:space="preserve">
+    <value>Rate Worker</value>
+  </data>
   <data name="uploadnewimage" xml:space="preserve">
     <value>Upload new image:</value>
   </data>
@@ -176,5 +179,11 @@
   </data>
   <data name="viewtitle" xml:space="preserve">
     <value>worker::view</value>
+  </data>
+  <data name="workerDwcCardNum" xml:space="preserve">
+    <value>Worker ID#:</value>
+  </data>
+  <data name="workerName" xml:space="preserve">
+    <value>Worker Name:</value>
   </data>
 </root>

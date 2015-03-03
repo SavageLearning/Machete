@@ -34,6 +34,8 @@ namespace Machete.Domain
         public const string activityType = "activityType";
         public const string emailstatus = "emailstatus";
         public const string emailTemplate = "emailTemplate";
+        public const string englishLevel = "englishLevel";
+        public const string workerRating = "workerRating";
     }
 
     public struct LMemberStatus

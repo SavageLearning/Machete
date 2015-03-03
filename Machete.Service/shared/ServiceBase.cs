@@ -123,7 +123,7 @@ namespace Machete.Service
         /// <param name="user"></param>
         public virtual void Save(T record, string user)
         {
-            record.updatedby(user);
+            record.updatedby(user); // Set update timestamp
             log(record.ID, user, logPrefix + " edited");
             uow.Commit();
         }

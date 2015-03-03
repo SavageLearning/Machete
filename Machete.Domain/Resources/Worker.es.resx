@@ -246,4 +246,7 @@
   <data name="homeless" xml:space="preserve">
     <value>Sin hogar</value>
   </data>
+  <data name="workerRating" xml:space="preserve">
+    <value>Worker Rating</value>
+  </data>
 </root>

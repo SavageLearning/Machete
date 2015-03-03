@@ -100,6 +100,12 @@ namespace Machete.Domain
         [LocalizedDisplayName("comments", NameResourceType = typeof(Resources.WorkAssignment))]
         public string comments { get; set; }
 
+        // TODO: Add worker rating capability
+        /*
+        [LocalizedDisplayName("workerRating", NameResourceType = typeof(Resources.Worker))]
+        public int? workerRating { get; set; }
+        */
+
         public string fullIDandName()
         {
             if (this.workerAssigned != null) return this.workerAssigned + " " + this.workerAssigned.Person.fullName();

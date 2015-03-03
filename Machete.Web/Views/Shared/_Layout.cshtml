@@ -44,7 +44,6 @@
                     {
                         <li>@Html.ActionLink(@Machete.Web.Resources.Shared.reportstab, "Index", "Reports", null, new { id = "menulinkreports" })</li>
                         <li>@Html.ActionLink(@Machete.Web.Resources.Shared.emailstab, "Index", "Email", null, new { id = "menulinkemails" })</li>
-
                     }
                     @if (Html.IsInRole(Html.Role_AMP()))
                     {
@@ -76,7 +75,7 @@
             @RenderBody()
             <div id="footer" class="print-off">
             <p class="print-off">
-                Web solution by Savage Learning, LLC. Copyright 2011-2014. Licensed under GNU GPL v3.0.
+                Web solution by Savage Learning, LLC. Copyright 2011-2015. Licensed under GNU GPL v3.0.
             </p>
             </div><!--footer-->        
         </div><!--main-->

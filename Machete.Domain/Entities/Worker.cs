@@ -200,6 +200,11 @@ namespace Machete.Domain
         //
         [LocalizedDisplayName("skill3", NameResourceType = typeof(Resources.Worker))]
         public int? skill3 { get; set; }
+        // TODO: Add worker rating capability
+        /*
+        [LocalizedDisplayName("workerRating", NameResourceType = typeof(Resources.Worker))]
+        public int? workerRating { get; set; }
+        */
         //
         public bool isActive 
         {

@@ -27,16 +27,16 @@ namespace Machete.Web.Controllers
 {
     [Authorize]
     [ElmahHandleError]
-    public class AccountController : Controller
+    public class HirerAccountController : Controller
     {
         Logger log = LogManager.GetCurrentClassLogger();
-        LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "AccountController", "");
+        LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "HirerAccountController", "");
         public IMyUserManager<ApplicationUser> UserManager { get; private set; }
         private readonly IDatabaseFactory DatabaseFactory;
         private CultureInfo CI;
-        private const int PASSWORD_EXPIRATION_IN_MONTHS = 6; // this constant represents number of months where users passwords expire 
+        // private const int PASSWORD_EXPIRATION_IN_MONTHS = 6; // this constant represents number of months where users passwords expire 
 
-        public AccountController(IMyUserManager<ApplicationUser> userManager, IDatabaseFactory databaseFactory)
+        public HirerAccountController(IMyUserManager<ApplicationUser> userManager, IDatabaseFactory databaseFactory)
         {
             UserManager = userManager;
             DatabaseFactory = databaseFactory;
@@ -48,68 +48,65 @@ namespace Machete.Web.Controllers
             CI = (CultureInfo)Session["Culture"];
         }
 
-        // GET: /Account/Index
+        // GET: /HirerAccount/Index
+        // TODO: Consider implementing this functionality - currently there is no admin account page to manage Employer user accounts
         [Authorize(Roles = "Manager, Administrator")]
         public ActionResult Index()
         {
-            // Retrieve users 
-            // Note: Hirer accounts use email addresses as username, so the list filters out usernames that are email addresses
-            // This display is only to modify internal Machete user accounts (not to modify employer accounts)
+            // Retrieve hirers
+            // Note: Hirer accounts use email addresses as username, so the list filters for usernames that are email addresses
             IDbSet<ApplicationUser> users = DatabaseFactory.Get().Users;
             if (users == null)
             {
                 // TODO: throw alert
             }
             IQueryable<UserSettingsViewModel> model = users
-                    .Select(u => new UserSettingsViewModel {
-                            ProviderUserKey = u.Id,
-                            UserName = u.UserName,
-                            Email = u.Email,
-                            IsApproved = u.IsApproved ? "Yes" : "No",
-                            IsLockedOut = u.IsLockedOut ? "Yes" : "No",
-                            IsOnline = (DbFunctions.DiffHours(u.LastLoginDate, DateTime.Now) < 1) ? "Yes" : "No",
-                            CreationDate = u.CreateDate,
-                            LastLoginDate = u.LastLoginDate
-                        })
-                        .Where (u => !u.UserName.Contains("@"));
+                    .Select(u => new UserSettingsViewModel
+                    {
+                        ProviderUserKey = u.Id,
+                        UserName = u.UserName,
+                        Email = u.Email,
+                        IsApproved = u.IsApproved ? "Yes" : "No",
+                        IsLockedOut = u.IsLockedOut ? "Yes" : "No",
+                        IsOnline = (DbFunctions.DiffHours(u.LastLoginDate, DateTime.Now) < 1) ? "Yes" : "No",
+                        CreationDate = u.CreateDate,
+                        LastLoginDate = u.LastLoginDate
+                    })
+                    .Where(u => u.UserName.Contains("@"));
 
             // TODO: consider messaging user if no users were found
 
             return View(model);
         }
 
-        // GET: /Account/Login
+        // GET: /HirerAccount/Login
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
-            LoginViewModel model = new LoginViewModel();
+            HirerLoginViewModel model = new HirerLoginViewModel();
             model.Action = "ExternalLogin";
             model.ReturnUrl = returnUrl;
             return View(model);
         }
 
         // TODO: Consider changing name to LoginAsync for naming convention
-        // POST: /Account/Login
+        // POST: /HirerAccount/Login
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+        public async Task<ActionResult> Login(HirerLoginViewModel model, string returnUrl)
         {
             if (ModelState.IsValid)
             {
                 ApplicationUser user = await UserManager.FindAsync(model.UserName, model.Password);
                 if (user != null)
                 {
-                    // Log successful log on
-                    levent.Level = LogLevel.Info; 
-                    levent.Message = "Logon successful";
-                    levent.Properties["username"] = model.UserName; 
-                    log.Log(levent);
+                    await SignInAsync(user, false);
 
-                    await SignInAsync(user, model.RememberMe);
-                    
-                    return RedirectToLocal(returnUrl);
+                    //return RedirectToAction("Index", "Home");
+                    return RedirectToAction("/", "HirerWorkOrder");
+                    // TODO: return RedirectToLocal(returnUrl);
                 }
                 else
                 {
@@ -118,92 +115,112 @@ namespace Machete.Web.Controllers
             }
 
             // If we got this far, something failed, log event & redisplay form
-            levent.Level = LogLevel.Info; 
+            levent.Level = LogLevel.Info;
             levent.Message = "Logon failed for " + model.UserName;
             log.Log(levent);
 
             return View(model);
         }
 
-        [AllowAnonymous]
-        public async Task<JsonResult> IsPasswordExpiredAsync(string username, string password)
-        {
-            bool isExpired = false;
-            if (ModelState.IsValid)
-            {
-                ApplicationUser user = await UserManager.FindAsync(username, password);
-                if (user != null)
-                {
-                    isExpired = (user.LastPasswordChangedDate <= DateTime.Today.AddMonths(-PASSWORD_EXPIRATION_IN_MONTHS));
-                }
-            }
-
-            return Json(new { pwdExpired = isExpired }, JsonRequestBehavior.AllowGet);
-        }
-
-        [AllowAnonymous]
-        public async Task<JsonResult> ChangeExpiredPasswordAsync(string username, string password, string newpassword)
-        {
-            // TODO: internationalize string
-            string message = "Could not update password";
-            bool status = false;
-
-            if (ModelState.IsValid)
-            {
-                ApplicationUser user = await UserManager.FindAsync(username, password);
-                if (user != null)
-                {
-                    IdentityResult result = await UserManager.ChangePasswordAsync(user.Id, password, newpassword);
-                    if (result.Succeeded)
-                    {
-                        // TODO: internationalize string
-                        message = "Password successfully updated.";
-                        status = true;
-
-                        user.LastPasswordChangedDate = DateTime.Today;
-                        MacheteContext Db = DatabaseFactory.Get();
-                        Db.Entry(user).State = System.Data.Entity.EntityState.Modified;
-                        await Db.SaveChangesAsync();
-                    }
-                    else
-                    {
-                        message = result.Errors.First();
-                    }
-                }
-            }
-
-            return Json(new { succeeded = status, message = message }, JsonRequestBehavior.AllowGet);
-        }
-
-        // GET: /Account/Register
+        // GET: /HirerAccount/Register
         [AllowAnonymous]
         public ActionResult Register()
         {
-            return View();
+            HirerRegisterViewModel model = new HirerRegisterViewModel();
+            return View(model);
         }
 
-        // POST: /Account/Register
+        // POST: /HirerAccount/Register
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> Register(HirerRegisterViewModel model)
         {
-            
             if (ModelState.IsValid)
             {
-                string newUserName = model.FirstName.Trim() + "." + model.LastName.Trim();
-                ApplicationUser user = new ApplicationUser() { UserName = newUserName, LoweredUserName = newUserName.ToLower(), ApplicationId = GetApplicationID(), Email = model.Email.Trim(), LoweredEmail = model.Email.Trim() };
-                IdentityResult result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
+                // Initialize user object
+                ApplicationUser user = new ApplicationUser() { UserName = model.Email.ToLower().Trim(), LoweredUserName = model.Email.Trim().ToLower(), ApplicationId = GetApplicationID(), Email = model.Email.Trim(), LoweredEmail = model.Email.Trim().ToLower() };
+
+                MacheteContext Db = DatabaseFactory.Get();
+
+                // TODO: Check if user already exists before adding to db (Is this necessary - will the create method return a decent error?)
+                ApplicationUser userCheck = Db.Users.FirstOrDefault(x => x.UserName.ToLower() == model.Email.ToLower().Trim());
+                if (userCheck == null)
                 {
-                    // TODO: add user role to user & sign them in
-                    // TODO: provide messaging to administrator to add appropriate roles to their account
-                    //await SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "Home");
+                    // Create user
+                    IdentityResult result = await UserManager.CreateAsync(user, model.Password);
+                    if (result.Succeeded)
+                    {
+                        // Retrieve newly created user record to retrieve userId
+                        ApplicationUser newUser = await UserManager.FindAsync(user.UserName, model.Password);
+                        if (newUser != null)
+                        {
+                            result = await UserManager.AddToRoleAsync(newUser.Id, "Hirer");
+                            if (result.Succeeded)
+                            {
+                                // Sign in user
+                                await SignInAsync(user, isPersistent: false);
+
+                                // Retrieve employer user ID (from AspNetUser - NOT Employer table)
+                                string eid = newUser.Id;
+
+                                // Check if user already exists
+                                Domain.Employer employer = Db.Employers.FirstOrDefault(e => e.referredbyOther == eid);
+                                if (employer == null)
+                                {
+                                    // Add default user to database
+                                    employer = new Domain.Employer();
+                                    employer.referredbyOther = newUser.Id; // TODO: create db field to hold the UserIdentity
+                                    employer.email = user.UserName; // The Employer's username is their email address
+                                    employer.active = true; // TODO: create db field to indicate that the employer profile is not set yet
+                                    employer.business = false;
+                                    employer.name = "New Online Employer";
+                                    employer.address1 = "New Online Employer";
+                                    employer.city = "New Online Employer";
+                                    employer.state = "NA";
+                                    employer.phone = "555-555-5555";
+                                    employer.zipcode = "55555";
+                                    employer.blogparticipate = false;
+                                    employer.datecreated = DateTime.Now;
+                                    employer.dateupdated = DateTime.Now;
+                                    employer.Createdby = "Online Form";
+                                    employer.Updatedby = "Online Form";
+                                    employer.onlineSource = true;
+                                    employer.returnCustomer = false;
+                                    employer.receiveUpdates = true;
+                                    Domain.Employer savedEmployer = Db.Employers.Add(employer);
+                                    int saveResult = Db.SaveChanges();
+                                    if (saveResult != 1)
+                                    {
+                                        // TODO: handle error
+                                    }
+                                }
+
+                                // TODO: redirect to hire worker page
+                                return RedirectToAction("/", "HirerWorkOrder");
+
+                            }
+                            else
+                            {
+                                AddErrors(result);
+                            }
+
+                        }
+                        else // new user couldn't be found
+                        {
+                            // TODO: provide error reporting
+                        }
+
+                    }
+                    else // create new user failed
+                    {
+                        // TODO: message the user
+                        AddErrors(result);
+                    }
                 }
-                else
+                else // user with same username already exists
                 {
-                    AddErrors(result);
+                    // TODO: provide error reporting
                 }
             }
 
@@ -219,8 +236,7 @@ namespace Machete.Web.Controllers
             return appId;
         }
 
-        //
-        // POST: /Account/Disassociate
+        // POST: /HirerAccount/Disassociate
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Manager")]
@@ -240,8 +256,8 @@ namespace Machete.Web.Controllers
         }
 
         // Manage (update) account of current signed-in user
-        // GET: /Account/Manage
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, Teacher")]
+        // GET: /HirerAccount/Manage
+        [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Manage(ManageMessageId? message)
         {
             MacheteContext Db = DatabaseFactory.Get();
@@ -279,11 +295,10 @@ namespace Machete.Web.Controllers
             return View(model);
         }
 
-        //
-        // POST: /Account/Manage
+        // POST: /HirerAccount/Manage
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, Teacher")]
+        [Authorize(Roles = "Administrator, Manager")]
         public async Task<ActionResult> Manage(ManageUserViewModel model)
         {
             MacheteContext Db = DatabaseFactory.Get();
@@ -339,6 +354,7 @@ namespace Machete.Web.Controllers
             return View(model);
         }
 
+        // GET: /HirerAccount/Edit
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Edit(string id, ManageMessageId? Message = null)
         {
@@ -353,6 +369,7 @@ namespace Machete.Web.Controllers
             return View(model);
         }
 
+        // POST: /HirerAccount/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Manager")]
@@ -382,7 +399,7 @@ namespace Machete.Web.Controllers
                         IdentityResult result = await UserManager.AddPasswordAsync(user.Id, model.NewPassword);
                         if (result.Succeeded)
                         {
-                            user.LastPasswordChangedDate = DateTime.Today.AddMonths(-PASSWORD_EXPIRATION_IN_MONTHS);
+                            user.LastPasswordChangedDate = DateTime.Today;
                             ViewBag.Message = "Password successfully updated.";
                         }
                         else
@@ -417,7 +434,7 @@ namespace Machete.Web.Controllers
             return View(model);
         }
 
-        // GET: Account/Delete
+        // GET: /HirerAccount/Delete
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Delete(string id = null)
         {
@@ -457,68 +474,7 @@ namespace Machete.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult UserRoles(string id)
-        {
-            // Retrieve User
-            ApplicationUser user = DatabaseFactory.Get().Users.First(u => u.Id == id);
-
-            // Load model data for view
-            SelectUserRolesViewModel model = new SelectUserRolesViewModel(user, DatabaseFactory);
-
-            return View(model);
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "Administrator, Manager")]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UserRoles(SelectUserRolesViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                IdentityResult result;
-
-                foreach (SelectRoleEditorViewModel role in model.Roles)
-                {
-                    // Only administrators can provide administrator access
-                    bool isAdminRestricted = !User.IsInRole("Administrator") && role.RoleName == "Administrator" ? true : false;
-                    bool isUserInRole = await UserManager.IsInRoleAsync(model.UserId, role.RoleName);
-
-                    // If role is deselected & user is assigned to this role - remove role from user
-                    if (isAdminRestricted)
-                    {
-                        // TODO: provide error reporting - must be an administrator to modify administrator accounts
-                    }
-                    else if (!role.Selected && isUserInRole)
-                    {
-                        result = await UserManager.RemoveFromRoleAsync(model.UserId, role.RoleName);
-                        if (!result.Succeeded)
-                        {
-                            // TODO: provide error reporting
-                        }
-                    }
-                    else if (role.Selected && !isUserInRole)
-                    {
-                        result = await UserManager.AddToRoleAsync(model.UserId, role.RoleName);
-                        if (!result.Succeeded)
-                        {
-                            // TODO: provide error reporting
-                        }
-                    }
-                    else
-                    {
-                        // TODO: provide error reporting
-                    }
-                }
-                // Display user account index view
-                return RedirectToAction("index");
-            }
-            // Re-display current user roles view
-            return View();
-        }
-
-        //
-        // POST: /Account/ExternalLogin
+        // POST: /HirerAccount/ExternalLogin
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -528,8 +484,7 @@ namespace Machete.Web.Controllers
             return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
         }
 
-        //
-        // GET: /Account/ExternalLoginCallback
+        // GET: /HirerAccount/ExternalLoginCallback
         [AllowAnonymous]
         public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
         {
@@ -556,8 +511,7 @@ namespace Machete.Web.Controllers
             }
         }
 
-        //
-        // POST: /Account/LinkLogin
+        // POST: /HirerAccount/LinkLogin
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LinkLogin(string provider)
@@ -566,8 +520,7 @@ namespace Machete.Web.Controllers
             return new ChallengeResult(provider, Url.Action("LinkLoginCallback", "Account"), User.Identity.GetUserId());
         }
 
-        //
-        // GET: /Account/LinkLoginCallback
+        // GET: /HirerAccount/LinkLoginCallback
         public async Task<ActionResult> LinkLoginCallback()
         {
             ExternalLoginInfo loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync(XsrfKey, User.Identity.GetUserId());
@@ -583,8 +536,7 @@ namespace Machete.Web.Controllers
             return RedirectToAction("Manage", new { Message = ManageMessageId.Error });
         }
 
-        //
-        // POST: /Account/ExternalLoginConfirmation
+        // POST: /HirerAccount/ExternalLoginConfirmation
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -621,39 +573,23 @@ namespace Machete.Web.Controllers
             return View(model);
         }
 
-        //
-        // GET: /Account/Signup
-        [AllowAnonymous]
-        public ActionResult Signup()
-        {
-            return View("Signup");
-        }
-
-        //
-        // GET: /Account/Signup
-        [AllowAnonymous]
-        public ActionResult HirerSignon()
-        {
-            return RedirectToAction("Login", "Account");
-        }
-
-        //
-        // GET: /Account/LogOff
+        // GET: /HirerAccount/LogOff
         [AllowAnonymous]
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut();
+            // TODO: redirect to generic page
             return RedirectToAction("Index", "Home");
         }
 
-        //
-        // GET: /Account/ExternalLoginFailure
+        // GET: /HirerAccount/ExternalLoginFailure
         [AllowAnonymous]
         public ActionResult ExternalLoginFailure()
         {
             return View();
         }
 
+        // GET: /HirerAccount/RemoveAccountList
         [ChildActionOnly]
         public ActionResult RemoveAccountList()
         {
@@ -663,10 +599,10 @@ namespace Machete.Web.Controllers
                 (
                     user.Logins
                         .Select(x => new UserLoginInfo(x.LoginProvider, x.ProviderKey)
-                            {
-                                LoginProvider = x.LoginProvider,
-                                ProviderKey = x.ProviderKey
-                            })
+                        {
+                            LoginProvider = x.LoginProvider,
+                            ProviderKey = x.ProviderKey
+                        })
                         .ToList()
                 );
             ViewBag.ShowRemoveButton = HasPassword(user) || linkedAccounts.Count > 1;
