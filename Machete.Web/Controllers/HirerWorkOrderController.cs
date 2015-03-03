@@ -1,5 +1,5 @@
 ﻿#region COPYRIGHT
-// File:     WorkOrderController.cs
+// File:     HirerWorkOrderController.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
 // License:  GPL v3
@@ -22,29 +22,30 @@
 // 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using AutoMapper;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Helpers;
-using NLog;
-using Machete.Web.ViewModel;
-using System.Web.Routing;
 using Machete.Web.Models;
-using System.Text.RegularExpressions;
-using AutoMapper;
-using System.Globalization;
 using Machete.Web.Resources;
+using Machete.Web.ViewModel;
+using Microsoft.AspNet.Identity;
+using NLog;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace Machete.Web.Controllers
 {
     [ElmahHandleError]
-    public class WorkOrderController : MacheteController
+    public class HirerWorkOrderController : MacheteController
     {
         private readonly IWorkOrderService woServ;
         private readonly IEmployerService eServ;
@@ -63,7 +64,7 @@ namespace Machete.Web.Controllers
         /// <param name="wServ">Worker service</param>
         /// <param name="wrServ">Worker request service</param>
         /// <param name="lcache">Lookup cache</param>
-        public WorkOrderController(IWorkOrderService woServ,
+        public HirerWorkOrderController(IWorkOrderService woServ,
                                    IWorkAssignmentService waServ,
                                    IEmployerService eServ,
                                    IWorkerService wServ,
@@ -90,10 +91,10 @@ namespace Machete.Web.Controllers
 
         #region Index
         /// <summary>
-        /// HTTP GET /WorkOrder/Index
+        /// HTTP GET /HirerWorkOrder/Index
         /// </summary>
         /// <returns>MVC Action Result</returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Hirer")]
         public ActionResult Index()
         {
             return View();
@@ -101,68 +102,37 @@ namespace Machete.Web.Controllers
 
         #endregion
 
-        #region AJaxSummary
-        /// <summary>
-        /// Provides json grid of wo/wa summaries and their statuses
-        /// </summary>
-        /// <param name="param">contains parameters for filtering</param>
-        /// <returns>JsonResult for DataTables consumption</returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public ActionResult AjaxSummary(jQueryDataTableParam param)
-        {
-            // TODO: investigate if this can be removed
-            // System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
-
-            // Retrieve WO/WA Summary based on parameters
-            dataTableResult<WOWASummary> dtr = woServ.CombinedSummary(param.sSearch,
-                                                Request["sSortDir_0"] == "asc" ? false : true, // Is Date column sorted descending
-                                                param.iDisplayStart,
-                                                param.iDisplayLength);
-
-            //return what's left to datatables
-            var result = from p in dtr.query
-                         select new[] { System.String.Format("{0:MM/dd/yyyy}", p.date),
-                                         p.weekday.ToString(),
-                                         p.pending_wo > 0 ? p.pending_wo.ToString(): null,
-                                         p.pending_wa > 0 ? p.pending_wa.ToString(): null,
-                                         p.active_wo > 0 ? p.active_wo.ToString(): null,
-                                         p.active_wa > 0 ? p.active_wa.ToString(): null,
-                                         p.completed_wo > 0 ? p.completed_wo.ToString(): null,
-                                         p.completed_wa > 0 ? p.completed_wa.ToString(): null,
-                                         p.cancelled_wo > 0 ? p.cancelled_wo.ToString(): null,
-                                         p.cancelled_wa > 0 ? p.cancelled_wa.ToString(): null,
-                                         p.expired_wo > 0 ? p.expired_wo.ToString(): null,
-                                         p.expired_wa > 0 ? p.expired_wa.ToString(): null
-                         };
-
-            return Json(new
-            {
-                sEcho = param.sEcho,
-                iTotalRecords = dtr.totalCount,
-                iTotalDisplayRecords = dtr.filteredCount,
-                aaData = result
-            },
-            JsonRequestBehavior.AllowGet);
-        }
-        #endregion
-
-        // TODO: investigate why the following columns aren't properly sortable: Weekday, Completed Assignment
-        // TODO: investigate why the following work orders aren't appearing in the summary results: active & cancelled - they only appear once a WA is created!!!
-
         #region Ajaxhandler
         /// <summary>
-        /// Provides json grid of orders
+        /// Provides json grid of work orders -- used with the hirerworkorders/index view
         /// </summary>
         /// <param name="param">contains parameters for filtering</param>
         /// <returns>JsonResult for DataTables consumption</returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Hirer")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
-            vo.CI =  this.CI;
+            vo.CI = this.CI;
+
+            // Retrieve employer ID of signed in Employer
+            string employerID = HttpContext.User.Identity.GetUserId();
+
+            // TODO: remove referredbyOther with db change
+            Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.referredbyOther == employerID).FirstOrDefault();
+            if (employer != null)
+            {
+                vo.EmployerID = employer.ID;
+            }
+            else
+            {
+                // TODO: add error processing.
+            }
 
             //Get all the records
             dataTableResult<WorkOrder> dtr = woServ.GetIndexView(vo);
+
+            // TODO: investigate this
+            param.showOrdersWorkers = true;
 
             return Json(new
             {
@@ -176,50 +146,48 @@ namespace Machete.Web.Controllers
         }
 
         /// <summary>
-        /// Returns Work Order object - presented on the WorkOrder Details tab
+        /// Returns Work Order object to AjaxHandler - presented on the WorkOrder Details tab
         /// </summary>
         /// <param name="wo">WorkOrder</param>
         /// <param name="showWorkers">bool flag determining whether the workers associated with the WorkOrder should be retrieved</param>
         /// <returns>Work Order </returns>
         public object dtResponse(ref WorkOrder wo, bool showWorkers)
         {
+            // tabref = "/HirerWorkOrder/Edit" + Convert.ToString(wo.ID),
             int ID = wo.ID;
-            return new 
+            return new
             {
-                tabref = wo.getTabRef(),
+                tabref = "/HirerWorkOrder/View/" + Convert.ToString(wo.ID),
                 tablabel = Machete.Web.Resources.WorkOrders.tabprefix + wo.getTabLabel(),
-                EID = Convert.ToString(wo.EmployerID), // Note: Employer ID appears to be unused
-                WOID = System.String.Format("{0,5:D5}", wo.paperOrderNum), // TODO: investigate why PaperOrderNum is used - shouldn't this be the Order # from the WO Table?
+                EID = Convert.ToString(wo.EmployerID),
+                WOID = System.String.Format("{0,5:D5}", wo.paperOrderNum), // Note: paperOrderNum defaults to the value of the WO when a paperOrderNum is not provided
                 dateTimeofWork = wo.dateTimeofWork.ToString(),
                 status = lcache.textByID(wo.status, CI.TwoLetterISOLanguageName),
                 WAcount = wo.workAssignments.Count(a => a.workOrderID == ID).ToString(),
                 contactName = wo.contactName,
                 workSiteAddress1 = wo.workSiteAddress1,
                 zipcode = wo.zipcode,
-                dateupdated = System.String.Format("{0:MM/dd/yyyy HH:mm:ss}", wo.dateupdated), // Note: Date Updated appears to be unused
-                updatedby = wo.Updatedby,
-                transportMethod = lcache.textByID(wo.transportMethodID, CI.TwoLetterISOLanguageName), // Note: Transport Method appears to be unused
-                displayState = _getDisplayState(wo), // Note: Display State appears to be unused
+                transportMethod = lcache.textByID(wo.transportMethodID, CI.TwoLetterISOLanguageName),
+                displayState = _getDisplayState(wo), // State is used to provide color highlighting to records based on state
                 onlineSource = wo.onlineSource ? Shared.True : Shared.False,
-                emailSentCount = wo.Emails.Where(e => e.statusID == Email.iSent || e.statusID == Email.iReadyToSend).Count(),
-                emailErrorCount = wo.Emails.Where(e => e.statusID == Email.iTransmitError).Count(),
-                recordid = wo.ID.ToString(), // Note: Work Order ID appears not to be used
-                workers = showWorkers ? // Note: Workers appears to not be used
+                workers = showWorkers ? // Workers is only loaded when showWorkers parameter set to TRUE
                         from w in wo.workAssignments
                         select new
                         {
                             WID = w.workerAssigned != null ? (int?)w.workerAssigned.dwccardnum : null,
-                            name = w.workerAssigned != null ? w.workerAssigned.Person.fullName() : null,
+                            name = w.workerAssigned != null ? w.workerAssigned.Person.firstname1 : null, // Note: hirers should only have access to the workers first name
                             skill = lcache.textByID(w.skillID, CI.TwoLetterISOLanguageName),
                             hours = w.hours,
                             wage = w.hourlyWage
                         } : null
+
             };
         }
 
 
         /// <summary>
-        /// Determines displayState value in WorkOrder/AjaxHandler
+        /// Determines displayState value in WorkOrder/AjaxHandler. Display state is used to provide color highlighting to records based on state.
+        /// The displayState is not presented to the user, so don't have to provide internationalization text.
         /// </summary>
         /// <param name="wo">WorkOrder</param>
         /// <returns>status string</returns>
@@ -247,40 +215,53 @@ namespace Machete.Web.Controllers
         #region Create
 
         /// <summary>
-        /// HTTP GET /WorkOrder/Create
+        /// HTTP GET /HirerWorkOrder/Create
         /// </summary>
         /// <param name="employerID">Employer ID associated with Work Order (Parent Object)</param>
         /// <returns>MVC Action Result</returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public ActionResult Create(int EmployerID)
+        [Authorize(Roles = "Hirer")]
+        public ActionResult Create()
         {
-            WorkOrder _wo = new WorkOrder();
+            WorkOrder wo = new WorkOrder();
+
+            // Retrieve employer ID of signed in Employer
+            string employerID = HttpContext.User.Identity.GetUserId();
+
+            // TODO: remove referredbyOther with db change
+            Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.referredbyOther == employerID).FirstOrDefault();
+            if (employer != null)
+            {
+                wo.EmployerID = employer.ID;
+            }
+            else
+            {
+                // TODO: add error processing
+            }
 
             // Set default values
-            _wo.EmployerID = EmployerID;
-            _wo.dateTimeofWork = DateTime.Today;
-            _wo.transportMethodID = Lookups.getDefaultID(LCategory.transportmethod); // TODO: investigate if it make sense to have this as a default
-            _wo.typeOfWorkID = Lookups.getDefaultID(LCategory.worktype); // TODO: investigate if it make sense to have this as a default
-            _wo.status = Lookups.getDefaultID(LCategory.orderstatus);
-            _wo.timeFlexible = true;
-            ViewBag.workerRequests = new List<SelectListItem> {};
-
-            return PartialView("Create", _wo);
+            wo.dateTimeofWork = DateTime.Today;
+            wo.transportMethodID = Lookups.getDefaultID(LCategory.transportmethod);
+            wo.typeOfWorkID = Lookups.getDefaultID(LCategory.worktype);
+            wo.status = Lookups.getDefaultID(LCategory.orderstatus);
+            wo.timeFlexible = true;
+            wo.onlineSource = true;
+            ViewBag.workerRequests = new List<SelectListItem> { };
+            return PartialView("Create", wo);
         }
 
         /// <summary>
-        /// POST: /WorkOrder/Create
+        /// POST: /HirerWorkOrder/Create
         /// </summary>
         /// <param name="wo">WorkOrder to create</param>
         /// <param name="userName">User performing action</param>
         /// <param name="workerRequestList">List of workers requested</param>
         /// <returns>JSON Object representing new Work Order</returns>
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Hirer")]
         public ActionResult Create(WorkOrder wo, string userName, List<WorkerRequest> workerRequestList)
         {
             UpdateModel(wo);
-            WorkOrder neworder = woServ.Create(wo, userName);           
+            WorkOrder neworder = woServ.Create(wo, userName);
 
             // New Worker Requests to add
             foreach (var workerRequest in workerRequestList)
@@ -294,12 +275,12 @@ namespace Machete.Web.Controllers
             woServ.Save(neworder, userName);
 
             // JSON object with new work order data
-            return Json(new 
+            return Json(new
             {
                 sNewRef = neworder.getTabRef(),
-                sNewLabel = "ff" + Machete.Web.Resources.WorkOrders.tabprefix + neworder.getTabLabel(),
+                sNewLabel = "cc" + Machete.Web.Resources.WorkOrders.tabprefix + neworder.getTabLabel(),
                 iNewID = neworder.ID
-            }, 
+            },
             JsonRequestBehavior.AllowGet);
         }
 
@@ -307,31 +288,30 @@ namespace Machete.Web.Controllers
 
         #region Edit
         /// <summary>
-        /// GET: /WorkOrder/Edit/ID
+        /// GET: /HirerWorkOrder/Edit/ID
         /// </summary>
         /// <param name="id">WorkOrder ID</param>
         /// <returns>MVC Action Result</returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Hirer")]
         public ActionResult Edit(int id)
         {
             // Retrieve Work Order
             WorkOrder workOrder = woServ.Get(id);
-            
+
             // Retrieve Worker Requests associated with Work Order
-            ViewBag.workerRequests = workOrder.workerRequests.Select(a => 
+            ViewBag.workerRequests = workOrder.workerRequests.Select(a =>
                 new SelectListItem
-                { 
-                    Value = a.WorkerID.ToString(), 
-                    Text = a.workerRequested.dwccardnum.ToString() + ' ' + 
-                    a.workerRequested.Person.firstname1 + ' ' + 
-                    a.workerRequested.Person.lastname1 
+                {
+                    Value = a.WorkerID.ToString(),
+                    Text = a.workerRequested.dwccardnum.ToString() + ' ' +
+                    a.workerRequested.Person.firstname1
                 });
 
             return PartialView("Edit", workOrder);
         }
 
         /// <summary>
-        /// POST: /WorkOrder/Edit/ID
+        /// POST: /HirerWorkOrder/Edit/ID
         /// </summary>
         /// <param name="id">WorkOrder ID</param>
         /// <param name="collection">FormCollection</param>
@@ -340,7 +320,7 @@ namespace Machete.Web.Controllers
         /// <returns>MVC Action Result</returns>
         ///[Bind(Exclude = "workerRequests")]
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Hirer")]
         public ActionResult Edit(int id, FormCollection collection, string userName, List<WorkerRequest> workerRequestList)
         {
             WorkOrder workOrder = woServ.Get(id);
@@ -373,15 +353,15 @@ namespace Machete.Web.Controllers
             JsonRequestBehavior.AllowGet);
         }
         #endregion
- 
+
         #region View
 
         /// <summary>
-        /// GET: /WorkOrder/View/ID
+        /// GET: /HirerWorkOrder/View/ID
         /// </summary>
         /// <param name="id">WorkOrder ID</param>
         /// <returns>MVC Action Result</returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Hirer")]
         public ActionResult View(int id)
         {
             WorkOrder workOrder = woServ.Get(id);
@@ -393,56 +373,24 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="id">WorkOrder ID</param>
         /// <returns>MVC Action Result</returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Hirer")]
         public ActionResult ViewForEmail(int id)
         {
             WorkOrder workOrder = woServ.Get(id);
             return PartialView(workOrder);
         }
-
-        /// <summary>
-        /// Creates the view to print all orders for a given day
-        /// </summary>
-        /// <param name="date">Date to perform action</param>
-        /// <param name="assignedOnly">Optional flag: if True, only shows orders that are fully assigned</param>
-        /// <returns>MVC Action Result</returns>
-        [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult GroupView(DateTime date, bool? assignedOnly)
-        {
-            WorkOrderGroupPrintView view = new WorkOrderGroupPrintView();
-            if (assignedOnly == true) view.orders = woServ.GetActiveOrders(date, true );
-            else view.orders = woServ.GetActiveOrders(date, false);
-            return View(view);
-        }
-
-        /// <summary>
-        /// Completes all orders for a given day
-        /// </summary>
-        /// <param name="date">Date to perform action</param>
-        /// <param name="userName">UserName performing action</param>
-        /// <returns>MVC Action Result</returns>
-        [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult CompleteOrders(DateTime date, string userName)
-        {
-            int count = woServ.CompleteActiveOrders(date, userName);
-            return Json(new
-            {
-                completedCount = count
-            },
-            JsonRequestBehavior.AllowGet);
-        }
         #endregion
 
+        // TODO: Consider allowing an employer to cancel a work order
         #region Delete
         /// <summary>
-        /// POST: /WorkOrder/Delete/ID
+        /// POST: /HirerWorkOrder/Delete/ID
         /// </summary>
         /// <param name="id">WorkOrder ID</param>
         /// <param name="user">User performing action</param>
         /// <returns>MVC Action Result</returns>
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Hirer")]
         public ActionResult Delete(int id, string user)
         {
             woServ.Delete(id, user);
@@ -450,35 +398,6 @@ namespace Machete.Web.Controllers
             {
                 status = "OK",
                 deletedID = id
-            },
-            JsonRequestBehavior.AllowGet);
-        }
-        #endregion
-
-        #region Activate
-        /// <summary>
-        /// POST: /WorkOrder/Activate/ID
-        /// </summary>
-        /// <param name="id">WorkOrder ID</param>
-        /// <param name="user">User performing action</param>
-        /// <returns>MVC Action Result</returns>
-        [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public ActionResult Activate(int id, string userName)
-        {
-            // Retrieve WO
-            var workOrder = woServ.Get(id);
-
-            // Set WO status to active
-            workOrder.status = WorkOrder.iActive;
-
-            // Save WO
-            woServ.Save(workOrder, userName);
-         
-            // Return Json result
-            return Json(new
-            {
-                status = "activated"
             },
             JsonRequestBehavior.AllowGet);
         }

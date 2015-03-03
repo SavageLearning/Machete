@@ -126,7 +126,7 @@
   <data name="LogOn" xml:space="preserve">
     <value>Entrada</value>
   </data>
-  <data name="LogOnLegend" xml:space="preserve">
+  <data name="AccountInfoLegend" xml:space="preserve">
     <value>Información de la cuenta</value>
   </data>
   <data name="LogOnRegisterString1" xml:space="preserve">
@@ -141,9 +141,6 @@
   <data name="LogOnUnsuccessful" xml:space="preserve">
     <value>Entrada no tuvo éxito. Por favor, corrija los errores y vuelva a intentarlo.</value>
   </data>
-  <data name="NewPasswordsMustMatch" xml:space="preserve">
-    <value>La nueva contraseña y la contraseña de confirmación no coinciden</value>
-  </data>
   <data name="password" xml:space="preserve">
     <value>Contraseña</value>
   </data>
@@ -156,14 +153,8 @@
   <data name="PasswordCurrent" xml:space="preserve">
     <value>Contraseña actual</value>
   </data>
-  <data name="PasswordMinLength" xml:space="preserve">
-    <value>{0} debe ser por lo menos {1} caracteres</value>
-  </data>
   <data name="PasswordNew" xml:space="preserve">
     <value>Contraseña nueva</value>
-  </data>
-  <data name="PasswordsMustMatch" xml:space="preserve">
-    <value>La contraceña y la contraseña de la confirmación no coinciden</value>
   </data>
   <data name="Register" xml:space="preserve">
     <value>Crear una cuenta</value>
@@ -186,15 +177,6 @@
   <data name="Change" xml:space="preserve">
     <value>Cambiar la contraseña</value>
   </data>
-  <data name="ChangeLegend" xml:space="preserve">
-    <value>Información de la cuenta</value>
-  </data>
-  <data name="ChangePassLength1" xml:space="preserve">
-    <value>Las nuevas contraseñas deben tener un mínimo de</value>
-  </data>
-  <data name="ChangePassLength2" xml:space="preserve">
-    <value>caracteres de longitud.</value>
-  </data>
   <data name="ChangeSubTitle" xml:space="preserve">
     <value>Use the form below to change your password.</value>
   </data>
@@ -210,15 +192,6 @@
   <data name="RegisterInstructions" xml:space="preserve">
     <value>Utilice el formulario a continuación para crear una nueva cuenta.</value>
   </data>
-  <data name="RegisterLegend" xml:space="preserve">
-    <value>Información de la cuenta</value>
-  </data>
-  <data name="RegisterPassLength1" xml:space="preserve">
-    <value>La contraseña deben tener un mínimo de</value>
-  </data>
-  <data name="RegisterPassLength2" xml:space="preserve">
-    <value>caracteres.</value>
-  </data>
   <data name="RegisterSubTitle" xml:space="preserve">
     <value>Crear una cuenta nueva</value>
   </data>
@@ -233,5 +206,44 @@
   </data>
   <data name="lastname" xml:space="preserve">
     <value>Apellido</value>
+  </data>
+  <data name="hirersignin" xml:space="preserve">
+    <value>Sign In (Hirer)</value>
+  </data>
+  <data name="signup" xml:space="preserve">
+    <value>Sign Up</value>
+  </data>
+  <data name="accountCreation" xml:space="preserve">
+    <value>Account Creation</value>
+  </data>
+  <data name="create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="emailValidation" xml:space="preserve">
+    <value>The email format is invalid</value>
+  </data>
+  <data name="HirerRegister" xml:space="preserve">
+    <value>Create an Account to Hire a Worker</value>
+  </data>
+  <data name="HirerRegisterInstructions" xml:space="preserve">
+    <value>Complete the form to create an account to hire a worker</value>
+  </data>
+  <data name="HirerRegisterTitle" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="invalidLogin" xml:space="preserve">
+    <value>Invalid username or password.</value>
+  </data>
+  <data name="stringLengthMax" xml:space="preserve">
+    <value>The {0} must be no more than {1} characters.</value>
+  </data>
+  <data name="stringLengthMin" xml:space="preserve">
+    <value>The {0} must be at least {2} characters long.</value>
+  </data>
+  <data name="haveAccount" xml:space="preserve">
+    <value>if you already have created an account.</value>
+  </data>
+  <data name="signIn" xml:space="preserve">
+    <value>Sign In</value>
   </data>
 </root>

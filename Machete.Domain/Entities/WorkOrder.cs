@@ -122,7 +122,6 @@ namespace Machete.Domain
         // Flag indicating if english is required for at least one worker
         [LocalizedDisplayName("englishRequired", NameResourceType = typeof(Resources.WorkOrder))]
         public bool englishRequired { get; set; }
-        // TODO: investigate deleting this - it doesn't appear in the WO interface
 
         // Description of english skills required
         [LocalizedDisplayName("englishRequiredNote", NameResourceType = typeof(Resources.WorkOrder))]
@@ -171,6 +170,7 @@ namespace Machete.Domain
 
         // Date / time of work
         [LocalizedDisplayName("dateTimeofWork", NameResourceType = typeof(Resources.WorkOrder))]
+        [DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true)]
         [Required(ErrorMessageResourceName = "dateTimeofWorkrequired", ErrorMessageResourceType = typeof(Resources.WorkOrder))]
         public DateTime dateTimeofWork { get; set; }
 
@@ -212,4 +212,5 @@ namespace Machete.Domain
         public int status { get; set; }
         public int count { get; set; }
     }
+
 }

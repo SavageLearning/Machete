@@ -18,7 +18,7 @@
                 {
                     @Html.AntiForgeryToken()
                     <fieldset>
-                        <legend>@Machete.Web.Resources.ValidationStrings.LogOnLegend</legend>
+                        <legend>@Machete.Web.Resources.ValidationStrings.AccountInfoLegend</legend>
                         <div class="tb-table">
                             <div class="tb-row">
                                 <div class="tb-label">
@@ -108,7 +108,7 @@
 
     function getIsPasswordExpired() {
         $.ajax({
-            url: "/Account/IsPasswordExpired",
+            url: "/Account/IsPasswordExpiredAsync",
             data: { username: $('#UserName')[0].value, password: $('#Password')[0].value }, //#Password found using inspect element on Log on Machete window
 
             success: onSuccessIsPasswordExpired,
@@ -136,7 +136,7 @@
             confirmnewpassword = $("#confirmnewpassword")[0].value; 
         if (newpassword != confirmnewpassword) // verifying that new password and confirmed passwords are the same
         {
-            showMessage("@Machete.Web.Resources.ValidationStrings.PasswordsMustMatch");
+            showMessage("@Machete.Web.Resources.ValidationStrings.PasswordCompare");
             return;
         }
         if (newpassword === $('#Password')[0].value) { //#Password found using inspect element on Log on Machete window Checking that new password is not same as current password
@@ -145,7 +145,7 @@
         }
 
         $.ajax({
-            url: "/Account/ChangeExpiredPassword",
+            url: "/Account/ChangeExpiredPasswordAsync",
             data: { username: $('#UserName')[0].value, password: $('#Password')[0].value, newpassword: newpassword },
 
             success: function (result) {

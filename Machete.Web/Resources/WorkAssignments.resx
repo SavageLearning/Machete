@@ -273,4 +273,10 @@
   <data name="wkListDupe" xml:space="preserve">
     <value>Duplicate Prev.</value>
   </data>
+  <data name="englishNotRequired" xml:space="preserve">
+    <value>English Not Required</value>
+  </data>
+  <data name="workerNotRated" xml:space="preserve">
+    <value>Work Not Rated Yet</value>
+  </data>
 </root>

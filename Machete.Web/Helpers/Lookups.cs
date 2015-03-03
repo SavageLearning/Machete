@@ -81,7 +81,7 @@ namespace Machete.Web.Helpers
                 LCategory.maritalstatus, LCategory.race, LCategory.neighborhood, LCategory.gender,
                 LCategory.transportmethod, LCategory.transportTransactType, LCategory.countryoforigin, LCategory.activityName, 
                 LCategory.activityType, LCategory.eventtype, LCategory.orderstatus, LCategory.emplrreference, 
-                LCategory.worktype, LCategory.memberstatus,LCategory.skill,LCategory.emailstatus, LCategory.emailTemplate}
+                LCategory.worktype, LCategory.memberstatus,LCategory.skill,LCategory.emailstatus, LCategory.emailTemplate, LCategory.englishLevel}
                 .Select(x => new SelectListItem { Value = x, Text = x}),
                 "Value", "Text", LCategory.activityName);
 
@@ -264,6 +264,35 @@ namespace Machete.Web.Helpers
                     }));
         }
 
+        /// <summary>
+        /// get the List of skills to present to Employer in Employer online interface
+        /// </summary>
+        /// <returns>List of skills</returns>
+        public static List<SelectListItemEx> getEmployerSkill()
+        {
+            var locale = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant();
+            IEnumerable<Lookup> prelist = lcache.getCache()
+                                                     .Where(s => s.category == LCategory.skill);
+            Func<Lookup, string> textFunc; //anon function
+            if (prelist == null) throw new ArgumentNullException("No skills returned");
+ 
+            //TODO: Selection of ES/EN not scalable on i18n. Kludge.
+            textFunc = (ll => "[" + ll.ltrCode + ll.level + "] " + (locale == "es" ? ll.text_ES : ll.text_EN));
+            Func<Lookup, string> sortFunc = (ll => locale == "es" ? ll.text_ES : ll.text_EN); //created new sortFunc to sort only by skill text and not by concatenated ltrCode + skills 
+            prelist = prelist.Where(s => s.speciality == true).OrderBy(s => sortFunc(s)); //LINQ & FUNC
+            // TODO: (above) filter by employerView (not speciality)
+            // TODO: return typeOfWorkID & description
+            return new List<SelectListItemEx>(prelist
+                    .Select(x => new SelectListItemEx
+                    {
+                        Selected = x.selected,
+                        Value = Convert.ToString(x.ID),
+                        Text = textFunc(x),
+                        wage = Convert.ToString(x.wage),
+                        minHour = Convert.ToString(x.minHour),
+                        fixedJob = Convert.ToString(x.fixedJob)
+                    }));
+        }
     }
     public class LookupNumber
     {
