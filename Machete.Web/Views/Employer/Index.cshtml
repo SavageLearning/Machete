@@ -72,16 +72,16 @@
                                 {"mDataProp": "dateupdated" },
                                 { "mDataProp": "Updatedby", "bSortable": false },
                                 { "mDataProp": "onlineSource", "bSearchable": false, "bSortable": true, "bVisible": true }
-                            ]             
-            }, 
+                            ]
+            },
             dblClickEvent: null, 
             tabLabel: "@(recType)"
         });
         $('#employerTabs').mUI('createTabs', { 
             prefix: "ui-tabs-employer-",
             formLevel: 1,
-            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
-            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)",
+            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirmPerson)",
+            changeTitle: "@(Machete.Web.Resources.Shared.changeTitlePerson)",
             updateDataTable: true
             });
         $('#allOrdersBtn').click(function() {
@@ -91,6 +91,16 @@
             oTable.dataTable().fnResetAllFilters(false);
             oTable.dataTable().fnFilter(true, 9); //sync with DT array above
         });
+
+        $('#employerCreateTab').click(function () {
+
+            // capturing not-saved typed fields from Create New Employer form to localStorage variables 
+
+            // serializeArray captures all the form fields
+            var employerFormContent = $('#employerCreateForm').serializeArray();
+            window.localStorage.setItem("employerCreateForm", JSON.stringify(employerFormContent));
+        });         
+            return true;
     });
 </script>
 
