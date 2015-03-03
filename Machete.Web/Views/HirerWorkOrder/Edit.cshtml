@@ -24,7 +24,6 @@
         <input type="submit" value="@WorkOrders.editsubmit" class="formButton saveBtn" id="@(idPrefix)SaveBtn"/>
     }
 
-    <input id="deleteWorkOrderButton-@(Model.ID)" type="button" value="@WorkOrders.deletesubmit" class="formButton deleteButton" />
     <br />  
     @Html.ValidationSummary(true)
     @Html.Partial("HirerWorkOrderEdit", Model)
