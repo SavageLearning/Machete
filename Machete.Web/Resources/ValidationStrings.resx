@@ -226,7 +226,7 @@
     <value>Create an Account to Hire a Worker</value>
   </data>
   <data name="HirerRegisterInstructions" xml:space="preserve">
-    <value>Complete the form to create an account to hire a worker</value>
+    <value>Complete the form to create an account to hire a worker.</value>
   </data>
   <data name="HirerRegisterTitle" xml:space="preserve">
     <value>Register</value>
@@ -239,5 +239,11 @@
   </data>
   <data name="stringLengthMax" xml:space="preserve">
     <value>The {0} must be no more than {1} characters.</value>
+  </data>
+  <data name="haveAccount" xml:space="preserve">
+    <value>if you already have created an account.</value>
+  </data>
+  <data name="signIn" xml:space="preserve">
+    <value>Sign In</value>
   </data>
 </root>

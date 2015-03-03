@@ -49,6 +49,7 @@ namespace Machete.Web.Controllers
         }
 
         // GET: /HirerAccount/Index
+        // TODO: Consider implementing this functionality - currently there is no admin account page to manage Employer user accounts
         [Authorize(Roles = "Manager, Administrator")]
         public ActionResult Index()
         {
@@ -101,16 +102,10 @@ namespace Machete.Web.Controllers
                 ApplicationUser user = await UserManager.FindAsync(model.UserName, model.Password);
                 if (user != null)
                 {
-                    // Log successful log on
-                    levent.Level = LogLevel.Info;
-                    levent.Message = "Logon successful";
-                    levent.Properties["username"] = model.UserName;
-                    log.Log(levent);
-
                     await SignInAsync(user, false);
 
-                    return RedirectToAction("Index", "Home");
-                    //return RedirectToAction("Create", "HirerWorkOrder");
+                    //return RedirectToAction("Index", "Home");
+                    return RedirectToAction("/", "HirerWorkOrder");
                     // TODO: return RedirectToLocal(returnUrl);
                 }
                 else
@@ -146,8 +141,10 @@ namespace Machete.Web.Controllers
                 // Initialize user object
                 ApplicationUser user = new ApplicationUser() { UserName = model.Email.ToLower().Trim(), LoweredUserName = model.Email.Trim().ToLower(), ApplicationId = GetApplicationID(), Email = model.Email.Trim(), LoweredEmail = model.Email.Trim().ToLower() };
 
+                MacheteContext Db = DatabaseFactory.Get();
+
                 // TODO: Check if user already exists before adding to db (Is this necessary - will the create method return a decent error?)
-                ApplicationUser userCheck = DatabaseFactory.Get().Users.First(x => x.UserName.ToLower() == model.Email.ToLower().Trim());
+                ApplicationUser userCheck = Db.Users.FirstOrDefault(x => x.UserName.ToLower() == model.Email.ToLower().Trim());
                 if (userCheck == null)
                 {
                     // Create user
@@ -163,6 +160,45 @@ namespace Machete.Web.Controllers
                             {
                                 // Sign in user
                                 await SignInAsync(user, isPersistent: false);
+
+                                // Retrieve employer user ID (from AspNetUser - NOT Employer table)
+                                string eid = newUser.Id;
+
+                                // Check if user already exists
+                                Domain.Employer employer = Db.Employers.FirstOrDefault(e => e.referredbyOther == eid);
+                                if (employer == null)
+                                {
+                                    // Add default user to database
+                                    employer = new Domain.Employer();
+                                    employer.referredbyOther = newUser.Id; // TODO: create db field to hold the UserIdentity
+                                    employer.email = user.UserName; // The Employer's username is their email address
+                                    employer.active = true; // TODO: create db field to indicate that the employer profile is not set yet
+                                    employer.business = false;
+                                    employer.name = "New Online Employer";
+                                    employer.address1 = "New Online Employer";
+                                    employer.city = "New Online Employer";
+                                    employer.state = "NA";
+                                    employer.phone = "555-555-5555";
+                                    employer.zipcode = "55555";
+                                    employer.blogparticipate = false;
+                                    employer.datecreated = DateTime.Now;
+                                    employer.dateupdated = DateTime.Now;
+                                    employer.Createdby = "Online Form";
+                                    employer.Updatedby = "Online Form";
+                                    employer.onlineSource = true;
+                                    employer.returnCustomer = false;
+                                    employer.receiveUpdates = true;
+                                    Domain.Employer savedEmployer = Db.Employers.Add(employer);
+                                    int saveResult = Db.SaveChanges();
+                                    if (saveResult != 1)
+                                    {
+                                        // TODO: handle error
+                                    }
+                                }
+
+                                // TODO: redirect to hire worker page
+                                return RedirectToAction("/", "HirerWorkOrder");
+
                             }
                             else
                             {
@@ -175,8 +211,6 @@ namespace Machete.Web.Controllers
                             // TODO: provide error reporting
                         }
 
-                        // TODO: redirect to hire worker page
-                        return RedirectToAction("Create", "HirerWorkOrder");
                     }
                     else // create new user failed
                     {

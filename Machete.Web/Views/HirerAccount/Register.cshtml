@@ -5,7 +5,7 @@
 <div class="account-background">
     <h2>@Machete.Web.Resources.ValidationStrings.HirerRegister</h2>
     <p>
-        @Machete.Web.Resources.ValidationStrings.HirerRegisterInstructions
+        @Machete.Web.Resources.ValidationStrings.HirerRegisterInstructions @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.signIn, "Login") @Machete.Web.Resources.ValidationStrings.haveAccount
     </p>
     @using (Html.BeginForm())
     {
