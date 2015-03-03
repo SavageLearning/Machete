@@ -33,9 +33,12 @@
 </ul>
 <p>See the bottom of this page for labor prices.</p>
 </div>
-<input type="button" class="formButton" value="@WorkOrders.createsubmit" />
 <div class="tb-table">
     <span id=@(idPrefix)hirerWorkOrderValidationErrors></span>
+    <!-- TODO: replace span with this dialog box -->
+    <div id="messageDialog">
+        <p id="messageDialogText"></p>
+    </div>
     <h3>Work Request</h3>
     <div class="tb-row">
         @Html.mUITableLabelAndTextBoxFor(model => model.dateTimeofWork, new { tabindex = "1", id = idPrefix + "dateTimeofWork" })
@@ -391,6 +394,8 @@
             var transportFee;
             var allowableZipcode = false;
             var transportMethod = $("#@(idPrefix)transportMethodID").val();
+            // TODO: retrieve num workers assigned to work order
+            var numWorkers = 1;
             console.log(transportMethod);
 
             // TODO: Ensure that all lookup tables have the same values here
@@ -409,10 +414,73 @@
                 if (!allowableZipcode) {
                     $("#@(idPrefix)hirerWorkOrderValidationErrors").append("<p>This zipcode is not a valid zipcode that we provide service to</p>");
                 }
-                //@System.String.Format("{0:C}", transportFee)
-                //$("#@(idPrefix)hirerWorkOrderValidationErrors").append("<p>The transportation costs are " + transportFee + " and must be paid via PayPal to complete order</p>");
+                $("#@(idPrefix)hirerWorkOrderValidationErrors").append("<p>The transportation costs are $" + transportFee.toFixed(2) + " and must be paid via PayPal to complete order</p>");
+            } else if (transportMethod == 29) { // Van service = 29
+                var insideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportVanInsideZone"];
+                var outsideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportVanOutsideZone"];
+                if (insideZipCodes.indexOf(parseInt($("#@(idPrefix)zipcode"))) != -1) {
+                    // Zipcode is in the allowable list of zipcodes within zone
+                    allowableZipcode = true;
+                    if (numWorkers = 1) {
+                        transportFee = @System.Web.Configuration.WebConfigurationManager.AppSettings["TransportVanInsideZoneCostOneWorker"];
+                    } else if (numWorkers > 1) {
+                        transportFee = @System.Web.Configuration.WebConfigurationManager.AppSettings["TransportVanInsideZoneCostMultipleWorkers"];
+                    }
+                } else if (outsideZipCodes.indexOf(parseInt($("#@(idPrefix)zipcode"))) != -1) {
+                    // Zipcode is in the allowable list of zipcodes outside zone
+                    allowableZipcode = true;
+                    transportFee = @System.Web.Configuration.WebConfigurationManager.AppSettings["TransportVanOutsideZoneCost"];
+                }
+                if (!allowableZipcode) {
+                    $("#@(idPrefix)hirerWorkOrderValidationErrors").append("<p>This zipcode is not a valid zipcode that we provide service to</p>");
+                }
+                $("#@(idPrefix)hirerWorkOrderValidationErrors").append("<p>The transportation costs are $" + transportFee.toFixed(2) + " and must be paid via PayPal to complete order</p>");
             }
         });
+
+        // TODO: add new dialog modal boxes
+        /*
+            var passwordChangeDialog = $("#passwordChange").dialog({
+                autoOpen: false,
+                height: 280,
+                width: 300,
+                modal: true,
+                resizable: false,
+                closeOnEscape: false,
+                buttons: {
+                    "@Machete.Web.Resources.ValidationStrings.Change": changePassword
+                }
+            });
+            var messageDialog = $("#messageDialog").dialog({
+                autoOpen: false,
+                height: 200,
+                width: 300,
+                modal: true,
+                closeOnEscape: true,
+                buttons: {
+                    "Ok": function () { $(this).dialog("close"); }
+                }
+            });
+    function showMessage(messageText) {
+        $("#messageDialogText").text(messageText);
+        messageDialog.dialog("open");
+    }
+
+    function changePassword() {
+        var newpassword = $("#newpassword")[0].value,
+            confirmnewpassword = $("#confirmnewpassword")[0].value; 
+        if (newpassword != confirmnewpassword) // verifying that new password and confirmed passwords are the same
+        {
+            showMessage("@Machete.Web.Resources.ValidationStrings.PasswordCompare");
+            return;
+        }
+        if (newpassword === $('#Password')[0].value) { //#Password found using inspect element on Log on Machete window Checking that new password is not same as current password
+            showMessage("Password cannot be the same as existing password.");
+            return;
+        }
+    }
+
+        */
 
         // http://trentrichardson.com/examples/timepicker/
         $("#@(idPrefix)dateTimeofWork").datetimepicker({

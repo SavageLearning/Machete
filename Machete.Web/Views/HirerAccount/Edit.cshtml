@@ -10,24 +10,14 @@
 {
     <input type="submit" value="@Employers.editsubmit" class="formButton saveBtn"/>
     <br />    
-    @Html.ValidationSummary(true)
+    @Html.ValidationSummary(true, @Machete.Web.Resources.ValidationStrings.RegisterValSummary)
     @Html.EditorForModel()
+}
 
-}
-@if (Html.IsInRole(Html.Role_AM()))
-{
-    //
-    // Only Managers can delete employer records
-    // The phonedesk can edit and save
-    //
-    using (Html.BeginForm("Delete", "Employer", FormMethod.Post, 
-                            new { @class = "edittab-form DeletePost", @id = "DeleteEmployer-" + Model.ID }))
-    {
-        @Html.HiddenFor(model => model.ID);
-    }
-}
 @Html.Partial("WorkOrderIndex", Model)
+
 <script type="text/javascript">
+    // TODO: add custom validation above in the Validation summary
     $(document).ready(function () {
         // TODO: Remove Employer View Model
         //$('#viewEmployer-@Model.ID').click(function () {
