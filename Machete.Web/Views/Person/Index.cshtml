@@ -175,15 +175,10 @@
         $('#personCreateTab').click(function () {
 
             // capturing not-saved typed fields from Create New Person form to localStorage variables 
-            var tempStorage = window.localStorage;
-           // serializeArray captures all the form fields 
-            $.each($('#personCreateForm').serializeArray(), function (i, field) {
-                tempStorage.setItem(field.name, field.value);
-            });
-            return true;
-        })
-
+            var personFormContent = $('#personCreateForm').serializeArray();
+            window.localStorage.setItem("personCreateForm", JSON.stringify(personFormContent));
+        });
+        return true;
     });
-
 
 </script>

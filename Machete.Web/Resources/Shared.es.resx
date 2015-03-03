@@ -264,4 +264,10 @@
   <data name="SaveMessageDuplicatePersons" xml:space="preserve">
     <value>Aun desea grabar este registro? </value>
   </data>
+  <data name="DuplicateEmployerMessage" xml:space="preserve">
+    <value>Lista de patrones con nombres similares:</value>
+  </data>
+  <data name="DuplicateEmployerTitle" xml:space="preserve">
+    <value>Aviso: Verifique si hay registros repetidos</value>
+  </data>
 </root>
