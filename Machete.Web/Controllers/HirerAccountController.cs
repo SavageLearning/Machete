@@ -257,7 +257,7 @@ namespace Machete.Web.Controllers
 
         // Manage (update) account of current signed-in user
         // GET: /HirerAccount/Manage
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, Teacher")]
+        [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Manage(ManageMessageId? message)
         {
             MacheteContext Db = DatabaseFactory.Get();
@@ -298,7 +298,7 @@ namespace Machete.Web.Controllers
         // POST: /HirerAccount/Manage
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in, Teacher")]
+        [Authorize(Roles = "Administrator, Manager")]
         public async Task<ActionResult> Manage(ManageUserViewModel model)
         {
             MacheteContext Db = DatabaseFactory.Get();

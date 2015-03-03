@@ -12,18 +12,9 @@
         </text>
     }
 
-    using (Html.BeginForm("LogOff", "HirerAccount", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
-    {
-        @Html.AntiForgeryToken()
-        <text>@Machete.Web.Resources.ValidationStrings.Welcome <b>@User.Identity.GetUserName()</b>
-        [ @Html.ActionLink("Manage", "Manage", "HirerAccount") ]
-        [ @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.LogOff, "LogOff", "HirerAccount") ]
-        </text>
-    }
 }
 else
 {
     @:[ @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.LogOn, "Login", "Account") ]
-    @:[ @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.signup, "Register", "HirerAccount") ]
-    @:[ @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.hirersignin, "Login", "HirerAccount") ]
+
 }

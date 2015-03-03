@@ -114,8 +114,19 @@ namespace Machete.Web.Controllers
             var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI = this.CI;
 
-            // TODO: filter by current employer
-            vo.EmployerID = 1;
+            // Retrieve employer ID of signed in Employer
+            string employerID = HttpContext.User.Identity.GetUserId();
+
+            // TODO: remove referredbyOther with db change
+            Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.referredbyOther == employerID).FirstOrDefault();
+            if (employer != null)
+            {
+                vo.EmployerID = employer.ID;
+            }
+            else
+            {
+                // TODO: add error processing.
+            }
 
             //Get all the records
             dataTableResult<WorkOrder> dtr = woServ.GetIndexView(vo);
@@ -213,8 +224,21 @@ namespace Machete.Web.Controllers
         {
             WorkOrder wo = new WorkOrder();
 
+            // Retrieve employer ID of signed in Employer
+            string employerID = HttpContext.User.Identity.GetUserId();
+
+            // TODO: remove referredbyOther with db change
+            Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.referredbyOther == employerID).FirstOrDefault();
+            if (employer != null)
+            {
+                wo.EmployerID = employer.ID;
+            }
+            else
+            {
+                // TODO: add error processing
+            }
+
             // Set default values
-            wo.EmployerID = 1; // TODO: replace this value
             wo.dateTimeofWork = DateTime.Today;
             wo.transportMethodID = Lookups.getDefaultID(LCategory.transportmethod);
             wo.typeOfWorkID = Lookups.getDefaultID(LCategory.worktype);
