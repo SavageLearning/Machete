@@ -80,6 +80,7 @@ namespace Machete.Data
             ir = rm.Create(new IdentityRole("PhoneDesk"));
             ir = rm.Create(new IdentityRole("Teacher"));
             ir = rm.Create(new IdentityRole("User"));
+            ir = rm.Create(new IdentityRole("Hirer")); // This role is used exclusively for the online hiring interface
 
             var um = new UserManager<ApplicationUser>(
                 new UserStore<ApplicationUser>(context));
