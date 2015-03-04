@@ -23,5 +23,7 @@ namespace Machete.Data
             // DELETE FROM Lookups WHERE category='transportPaymentType';
             Sql("DELETE FROM Lookups WHERE category='transportPaymentType';");
         }
+
+        
     }
 }
