@@ -464,5 +464,14 @@ namespace Machete.Domain.Resources {
                 return ResourceManager.GetString("workerRating", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Worker Rating Comments.
+        /// </summary>
+        public static string workerRatingComments {
+            get {
+                return ResourceManager.GetString("workerRatingComments", resourceCulture);
+            }
+        }
     }
 }

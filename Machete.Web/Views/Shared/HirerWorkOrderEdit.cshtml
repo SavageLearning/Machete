@@ -184,6 +184,13 @@
             @Html.ListBox("workerRequests2", new SelectList(ViewBag.workerRequests, "Value", "Text"), new { id = "workerRequests2_WO-"+ Model.ID, tabindex = "32", style="min-width: 16em;"})
         </div>
     </div>
+     <div class="tb-row desc-field">
+        @Html.mUITableDescLabelFor(model => model.additionalNotes)
+        <div class="tb-field">
+            @Html.ValidationMessageFor(model => model.additionalNotes)
+            @Html.TextAreaFor(model => model.additionalNotes, new { tabindex = "33", @class = "desc-field", id = idPrefix + "additionalNotes" })
+        </div>
+    </div>
 <input type="button" class="formButton" value="@WorkOrders.createsubmit" />
 </div><!--tb-table main workorder table-->
 
