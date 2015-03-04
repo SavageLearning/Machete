@@ -6,11 +6,12 @@
     string empRecType = "employer";
     string idPrefix = recType + Model.ID + "-";
     string empPrefix = empRecType + Model.EmployerID + "-";
+
 }
 @using (Html.BeginForm("Create", "HirerWorkOrder", FormMethod.Post, 
                         new { @id = "workOrderCreateForm" }))
 {
-    @Html.ValidationSummary(true, @Machete.Web.Resources.ValidationStrings.RegisterValSummary)
+    @Html.ValidationSummary(true, @Machete.Web.Resources.ValidationStrings.HirerWOCreateValSummary)
     @Html.Partial("HirerWorkOrderEdit", Model)
 
     <input type="submit" id="@(idPrefix)SaveBtn" class="formButton saveBtn"
@@ -18,7 +19,6 @@
 
 }
 <script type="text/javascript">
-// TODO: add custom validation above in the Validation summary
     $(document).ready(function () {
         var woCreateForm = $('#workOrderCreateForm');
         $('.formButton').button();
@@ -41,8 +41,22 @@
         $.validator.unobtrusive.parseDynamicContent('#workOrderCreateForm');
         //
         // Get the employerID and put it in the WO form field
-        // TODO: retrieve employer ID
-        //var eid = $('#employerTabs').find(".EditPost .hiddenRecID").val();
+        // TODO - fix this
+        /*
+            // Retrieve employer ID of signed in Employer
+    int eid;
+    string employerID = HttpContext.User.Identity.GetUserId();
+
+    Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == employerID).FirstOrDefault();
+    if (employer != null)
+    {
+        eid = employer.ID;
+    }
+    else
+    {
+        // TODO: add error processing.
+    }
+*/
         var eid = 1;
         woCreateForm.find('#@(idPrefix)EmployerID').val(eid);
         //
