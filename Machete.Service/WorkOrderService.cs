@@ -92,41 +92,33 @@ namespace Machete.Service
         /// <returns>WorkOrders associated with a given date that are active</returns>
         public IEnumerable<WorkOrder> GetActiveOrders(DateTime date, bool assignedOnly)
         {
-            // Retrieve all active work orders
-            IQueryable<WorkOrder> woRecords = repo.GetAllQ()
-                    .Where(wo => wo.status == WorkOrder.iActive && 
+            IQueryable<WorkOrder> query = repo.GetAllQ();
+            query = query.Where(wo => wo.status == WorkOrder.iActive && 
                             DbFunctions.DiffDays(wo.dateTimeofWork, date) == 0 ? true : false)
                     .AsQueryable();
-
-            // Return results if assignedOnly flag not set
-            if (!assignedOnly)
+            List<WorkOrder> list = query.ToList();
+            List<WorkOrder> final = list.ToList();
+            if (!assignedOnly) return final;
+            int waCounter = 0;
+            foreach (WorkOrder wo in list)
             {
-                return woRecords.AsEnumerable();
-            }
-
-            // Return list - should include only assigned workOrders
-            // Note: Need to convert to list to remove items (as IQueryable & IEnumerable are read-only data structures)
-            List<WorkOrder> finalResults = woRecords.ToList();
-            
-            // Remove unassigned work orders from results
-            foreach (WorkOrder wo in woRecords)
-            {   
-                // Iterate through associated work assignments
+                waCounter = 0;
                 foreach (WorkAssignment wa in wo.workAssignments)
                 {
-                    // Remove WO from results list, if any WA is unassigned
+                    waCounter++;
                     if (wa.workerAssignedID == null)
                     {
-                        finalResults.Remove(wo);
+                        final.Remove(wo);
                         break;
                     }
                 }
+                if (waCounter == 0) // WO must have at least one WA to be completed
+                {
+                    final.Remove(wo);
+                }
             }
-
-            // Return results
-            return finalResults.AsEnumerable();
+            return final;
         }
-
         /// <summary>
         /// Complete active orders - change all WO status for a given date to complete
         /// </summary>

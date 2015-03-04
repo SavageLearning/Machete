@@ -297,7 +297,7 @@ namespace Machete.Web.Controllers
             return Json(new 
             {
                 sNewRef = neworder.getTabRef(),
-                sNewLabel = "ff" + Machete.Web.Resources.WorkOrders.tabprefix + neworder.getTabLabel(),
+                sNewLabel = Machete.Web.Resources.WorkOrders.tabprefix + neworder.getTabLabel(),
                 iNewID = neworder.ID
             }, 
             JsonRequestBehavior.AllowGet);
