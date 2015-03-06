@@ -90,8 +90,8 @@ namespace Machete.Data
                 IsApproved = true,
                 Email = "here@there.org"
             };
-            
-            ir = um.Create(user, "ChangeMe");
+
+            ir = um.Create(user, "!justicia14");
             if (ir.Succeeded == false)
                 return ir.Succeeded;
             ir = um.AddToRole(user.Id, "Administrator"); //Default Administrator, edit to change
