@@ -7,7 +7,7 @@ namespace Machete.Data
     {
         public override void Up()
         {
-            AlterColumn("dbo.WorkAssignments", "hours", c => c.Double());
+            AlterColumn("dbo.WorkAssignments", "hours", c => c.Double(nullable: false));
         
         }
         
