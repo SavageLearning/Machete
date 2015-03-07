@@ -77,7 +77,7 @@ namespace Machete.Domain
         //
         [Required(ErrorMessageResourceName = "required", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("raceID", NameResourceType = typeof(Resources.Worker))]
-        public int RaceID { get; set; }
+        public int? RaceID { get; set; }
         //
         [LocalizedDisplayName("raceother", NameResourceType = typeof(Resources.Worker))]
         [StringLength(20, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Worker))]
