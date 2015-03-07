@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A89D8B77-274B-4032-8A72-0DFC7879BD44}"
 	ProjectSection(SolutionItems) = preProject
@@ -32,6 +32,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Machete.Web", "Machete.Web\
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Alabama|Any CPU = Alabama|Any CPU
+		Alabama|Mixed Platforms = Alabama|Mixed Platforms
+		Alabama|x86 = Alabama|x86
 		CasaLatina|Any CPU = CasaLatina|Any CPU
 		CasaLatina|Mixed Platforms = CasaLatina|Mixed Platforms
 		CasaLatina|x86 = CasaLatina|x86
@@ -91,6 +94,11 @@ Global
 		WorkersJustice|x86 = WorkersJustice|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Alabama|Any CPU.ActiveCfg = Release|Any CPU
+		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Alabama|Any CPU.Build.0 = Release|Any CPU
+		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Alabama|Mixed Platforms.ActiveCfg = Alabama|Any CPU
+		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Alabama|Mixed Platforms.Build.0 = Alabama|Any CPU
+		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Alabama|x86.ActiveCfg = Alabama|Any CPU
 		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.CasaLatina|Any CPU.ActiveCfg = Release|Any CPU
 		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.CasaLatina|Any CPU.Build.0 = Release|Any CPU
 		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.CasaLatina|Mixed Platforms.ActiveCfg = Release|Any CPU
@@ -186,6 +194,11 @@ Global
 		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.WorkersJustice|Mixed Platforms.ActiveCfg = WorkersJustice|Any CPU
 		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.WorkersJustice|Mixed Platforms.Build.0 = WorkersJustice|Any CPU
 		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.WorkersJustice|x86.ActiveCfg = WorkersJustice|Any CPU
+		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.Alabama|Any CPU.ActiveCfg = Release|Any CPU
+		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.Alabama|Any CPU.Build.0 = Release|Any CPU
+		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.Alabama|Mixed Platforms.ActiveCfg = Alabama|Any CPU
+		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.Alabama|Mixed Platforms.Build.0 = Alabama|Any CPU
+		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.Alabama|x86.ActiveCfg = Alabama|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.CasaLatina|Any CPU.ActiveCfg = Release|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.CasaLatina|Any CPU.Build.0 = Release|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.CasaLatina|Mixed Platforms.ActiveCfg = Release|Any CPU
@@ -266,6 +279,11 @@ Global
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.WorkersJustice|Mixed Platforms.ActiveCfg = WorkersJustice|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.WorkersJustice|Mixed Platforms.Build.0 = WorkersJustice|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.WorkersJustice|x86.ActiveCfg = WorkersJustice|Any CPU
+		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.Alabama|Any CPU.ActiveCfg = Release|x86
+		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.Alabama|Mixed Platforms.ActiveCfg = Alabama|x86
+		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.Alabama|Mixed Platforms.Build.0 = Alabama|x86
+		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.Alabama|x86.ActiveCfg = Alabama|x86
+		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.Alabama|x86.Build.0 = Alabama|x86
 		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.CasaLatina|Any CPU.ActiveCfg = Release|x86
 		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.CasaLatina|Mixed Platforms.ActiveCfg = Release|x86
 		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.CasaLatina|x86.ActiveCfg = Release|x86
@@ -343,6 +361,11 @@ Global
 		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.WorkersJustice|Mixed Platforms.ActiveCfg = WorkersJustice|x86
 		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.WorkersJustice|Mixed Platforms.Build.0 = WorkersJustice|x86
 		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.WorkersJustice|x86.ActiveCfg = WorkersJustice|x86
+		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Alabama|Any CPU.ActiveCfg = Release|Any CPU
+		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Alabama|Any CPU.Build.0 = Release|Any CPU
+		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Alabama|Mixed Platforms.ActiveCfg = Alabama|Any CPU
+		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Alabama|Mixed Platforms.Build.0 = Alabama|Any CPU
+		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Alabama|x86.ActiveCfg = Alabama|Any CPU
 		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.CasaLatina|Any CPU.ActiveCfg = Release|Any CPU
 		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.CasaLatina|Any CPU.Build.0 = Release|Any CPU
 		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.CasaLatina|Mixed Platforms.ActiveCfg = Release|Any CPU
@@ -438,6 +461,11 @@ Global
 		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.WorkersJustice|Mixed Platforms.ActiveCfg = WorkersJustice|Any CPU
 		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.WorkersJustice|Mixed Platforms.Build.0 = WorkersJustice|Any CPU
 		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.WorkersJustice|x86.ActiveCfg = WorkersJustice|Any CPU
+		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Alabama|Any CPU.ActiveCfg = Release|Any CPU
+		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Alabama|Any CPU.Build.0 = Release|Any CPU
+		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Alabama|Mixed Platforms.ActiveCfg = Alabama|Any CPU
+		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Alabama|Mixed Platforms.Build.0 = Alabama|Any CPU
+		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Alabama|x86.ActiveCfg = Alabama|Any CPU
 		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.CasaLatina|Any CPU.ActiveCfg = Release|Any CPU
 		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.CasaLatina|Any CPU.Build.0 = Release|Any CPU
 		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.CasaLatina|Mixed Platforms.ActiveCfg = Release|Any CPU
@@ -533,6 +561,10 @@ Global
 		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.WorkersJustice|Mixed Platforms.ActiveCfg = WorkersJustice|Any CPU
 		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.WorkersJustice|Mixed Platforms.Build.0 = WorkersJustice|Any CPU
 		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.WorkersJustice|x86.ActiveCfg = WorkersJustice|Any CPU
+		{3E1B598D-9E47-4967-93E6-4D6DDF4AB7EF}.Alabama|Any CPU.ActiveCfg = Release|Any CPU
+		{3E1B598D-9E47-4967-93E6-4D6DDF4AB7EF}.Alabama|Mixed Platforms.ActiveCfg = Alabama|Any CPU
+		{3E1B598D-9E47-4967-93E6-4D6DDF4AB7EF}.Alabama|Mixed Platforms.Build.0 = Alabama|Any CPU
+		{3E1B598D-9E47-4967-93E6-4D6DDF4AB7EF}.Alabama|x86.ActiveCfg = Alabama|Any CPU
 		{3E1B598D-9E47-4967-93E6-4D6DDF4AB7EF}.CasaLatina|Any CPU.ActiveCfg = Release|Any CPU
 		{3E1B598D-9E47-4967-93E6-4D6DDF4AB7EF}.CasaLatina|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{3E1B598D-9E47-4967-93E6-4D6DDF4AB7EF}.CasaLatina|Mixed Platforms.Build.0 = Release|Any CPU
@@ -608,6 +640,10 @@ Global
 		{3E1B598D-9E47-4967-93E6-4D6DDF4AB7EF}.WorkersJustice|Mixed Platforms.ActiveCfg = WorkersJustice|Any CPU
 		{3E1B598D-9E47-4967-93E6-4D6DDF4AB7EF}.WorkersJustice|Mixed Platforms.Build.0 = WorkersJustice|Any CPU
 		{3E1B598D-9E47-4967-93E6-4D6DDF4AB7EF}.WorkersJustice|x86.ActiveCfg = WorkersJustice|Any CPU
+		{A8DE6677-0E32-4229-8B83-9A3C17C87E85}.Alabama|Any CPU.ActiveCfg = Release|Any CPU
+		{A8DE6677-0E32-4229-8B83-9A3C17C87E85}.Alabama|Mixed Platforms.ActiveCfg = Alabama|Any CPU
+		{A8DE6677-0E32-4229-8B83-9A3C17C87E85}.Alabama|Mixed Platforms.Build.0 = Alabama|Any CPU
+		{A8DE6677-0E32-4229-8B83-9A3C17C87E85}.Alabama|x86.ActiveCfg = Alabama|Any CPU
 		{A8DE6677-0E32-4229-8B83-9A3C17C87E85}.CasaLatina|Any CPU.ActiveCfg = Release|Any CPU
 		{A8DE6677-0E32-4229-8B83-9A3C17C87E85}.CasaLatina|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{A8DE6677-0E32-4229-8B83-9A3C17C87E85}.CasaLatina|Mixed Platforms.Build.0 = Release|Any CPU
@@ -683,6 +719,10 @@ Global
 		{A8DE6677-0E32-4229-8B83-9A3C17C87E85}.WorkersJustice|Mixed Platforms.ActiveCfg = WorkersJustice|Any CPU
 		{A8DE6677-0E32-4229-8B83-9A3C17C87E85}.WorkersJustice|Mixed Platforms.Build.0 = WorkersJustice|Any CPU
 		{A8DE6677-0E32-4229-8B83-9A3C17C87E85}.WorkersJustice|x86.ActiveCfg = WorkersJustice|Any CPU
+		{61A494C4-6B88-4E63-BD3B-4503EE203EF6}.Alabama|Any CPU.ActiveCfg = Release|Any CPU
+		{61A494C4-6B88-4E63-BD3B-4503EE203EF6}.Alabama|Mixed Platforms.ActiveCfg = Alabama|Any CPU
+		{61A494C4-6B88-4E63-BD3B-4503EE203EF6}.Alabama|Mixed Platforms.Build.0 = Alabama|Any CPU
+		{61A494C4-6B88-4E63-BD3B-4503EE203EF6}.Alabama|x86.ActiveCfg = Alabama|Any CPU
 		{61A494C4-6B88-4E63-BD3B-4503EE203EF6}.CasaLatina|Any CPU.ActiveCfg = Release|Any CPU
 		{61A494C4-6B88-4E63-BD3B-4503EE203EF6}.CasaLatina|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{61A494C4-6B88-4E63-BD3B-4503EE203EF6}.CasaLatina|Mixed Platforms.Build.0 = Release|Any CPU
@@ -758,6 +798,11 @@ Global
 		{61A494C4-6B88-4E63-BD3B-4503EE203EF6}.WorkersJustice|Mixed Platforms.ActiveCfg = WorkersJustice|Any CPU
 		{61A494C4-6B88-4E63-BD3B-4503EE203EF6}.WorkersJustice|Mixed Platforms.Build.0 = WorkersJustice|Any CPU
 		{61A494C4-6B88-4E63-BD3B-4503EE203EF6}.WorkersJustice|x86.ActiveCfg = WorkersJustice|Any CPU
+		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.Alabama|Any CPU.ActiveCfg = Alabama|Any CPU
+		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.Alabama|Any CPU.Build.0 = Alabama|Any CPU
+		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.Alabama|Mixed Platforms.ActiveCfg = Alabama|Any CPU
+		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.Alabama|Mixed Platforms.Build.0 = Alabama|Any CPU
+		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.Alabama|x86.ActiveCfg = Alabama|Any CPU
 		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.CasaLatina|Any CPU.ActiveCfg = CasaLatina|Any CPU
 		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.CasaLatina|Any CPU.Build.0 = CasaLatina|Any CPU
 		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.CasaLatina|Mixed Platforms.ActiveCfg = CasaLatina|Any CPU
