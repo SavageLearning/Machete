@@ -904,6 +904,7 @@
   <ItemGroup>
     <Content Include="Content\documentation\MacheteUserManual-Current.pdf" />
     <Content Include="Content\documentation\MacheteUserManual-html-Current.zip" />
+    <None Include="Properties\PublishProfiles\Alabama.pubxml" />
     <None Include="Properties\PublishProfiles\CasaLatina.pubxml" />
     <None Include="Properties\PublishProfiles\CentroHumanitario.pubxml" />
     <None Include="Properties\PublishProfiles\Concord.pubxml" />
@@ -1174,6 +1175,9 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Alabama|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
