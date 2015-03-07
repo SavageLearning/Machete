@@ -117,8 +117,7 @@ namespace Machete.Web.Controllers
             // Retrieve employer ID of signed in Employer
             string employerID = HttpContext.User.Identity.GetUserId();
 
-            // TODO: remove referredbyOther with db change
-            Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.referredbyOther == employerID).FirstOrDefault();
+            Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == employerID).FirstOrDefault();
             if (employer != null)
             {
                 vo.EmployerID = employer.ID;
@@ -227,8 +226,7 @@ namespace Machete.Web.Controllers
             // Retrieve employer ID of signed in Employer
             string employerID = HttpContext.User.Identity.GetUserId();
 
-            // TODO: remove referredbyOther with db change
-            Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.referredbyOther == employerID).FirstOrDefault();
+            Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == employerID).FirstOrDefault();
             if (employer != null)
             {
                 wo.EmployerID = employer.ID;

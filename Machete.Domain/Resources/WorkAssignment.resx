@@ -207,4 +207,7 @@
   <data name="workerRating" xml:space="preserve">
     <value>Worker Rating</value>
   </data>
+  <data name="additionalNotes" xml:space="preserve">
+    <value>Additional Notes</value>
+  </data>
 </root>
