@@ -7,14 +7,14 @@ namespace Machete.Data
     {
         public override void Up()
         {
-            AddColumn("dbo.Workers", "workerRating", c => c.Single(nullable: true));
-            AddColumn("dbo.WorkAssignments", "workerRating", c => c.Int(nullable: true));
-            AddColumn("dbo.WorkAssignments", "workerRatingComments", c => c.String(nullable:true, maxLength: 500));
-            AddColumn("dbo.WorkAssignments", "additionalNotes", c => c.String(nullable:true, maxLength: 1000));
-            AddColumn("dbo.Employers", "onlineSigninID", c => c.String(nullable:true, maxLength: 128));
-            AddColumn("dbo.Employers", "isOnlineProfileComplete", c => c.Boolean(nullable:true));
+            AddColumn("dbo.Workers", "workerRating", c => c.Single());
+            AddColumn("dbo.WorkAssignments", "workerRating", c => c.Int());
+            AddColumn("dbo.WorkAssignments", "workerRatingComments", c => c.String(maxLength: 500));
+            AddColumn("dbo.WorkAssignments", "additionalNotes", c => c.String(maxLength: 1000));
+            AddColumn("dbo.Employers", "onlineSigninID", c => c.String(maxLength: 128));
+            AddColumn("dbo.Employers", "isOnlineProfileComplete", c => c.Boolean());
         }
-        
+
         public override void Down()
         {
             DropColumn("dbo.Employers", "isOnlineProfileComplete");
