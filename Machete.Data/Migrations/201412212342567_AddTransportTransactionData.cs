@@ -18,5 +18,7 @@ namespace Machete.Data
             // ALTER TABLE dbo.WorkOrders DROP COLUMN transportTransactType;
             DropColumn("dbo.WorkOrders", "transportTransactType");
         }
+
+        
     }
 }

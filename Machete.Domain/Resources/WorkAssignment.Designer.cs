@@ -70,6 +70,15 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Additional Notes.
+        /// </summary>
+        public static string additionalNotes {
+            get {
+                return ResourceManager.GetString("additionalNotes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Attitude.
         /// </summary>
         public static string attitude {

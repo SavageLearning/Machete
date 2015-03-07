@@ -205,6 +205,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Work Order creation was unsuccessful. Please correct the errors and try again..
+        /// </summary>
+        public static string HirerWOCreateValSummary {
+            get {
+                return ResourceManager.GetString("HirerWOCreateValSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid username or password..
         /// </summary>
         public static string invalidLogin {
