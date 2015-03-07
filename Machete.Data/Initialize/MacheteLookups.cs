@@ -162,10 +162,20 @@ namespace Machete.Data
                 new Lookup { ID=256,category = LCategory.transportTransactType, text_EN="Paypal",         text_ES="Paypal",          selected = false },
                 new Lookup { ID=257,category = LCategory.transportTransactType, text_EN="Check",         text_ES="Check",          selected = false },
                 new Lookup { ID=258,category = LCategory.transportTransactType, text_EN="Credit Card",         text_ES="Credit Card",          selected = false },
+
+                // OnlineOrdering related lookups:
+
                 new Lookup { ID=259,category = LCategory.englishLevel, text_EN="1-No English", text_ES="1-No English", selected=true },
                 new Lookup { ID=260,category = LCategory.englishLevel, text_EN="2-Limited English", text_ES="2-Limited English", selected=false },
                 new Lookup { ID=261,category = LCategory.englishLevel, text_EN="3-Working English", text_ES="3-Working English", selected=false },
-                new Lookup { ID=262,category = LCategory.englishLevel, text_EN="4-Fluent English", text_ES="4-Fluent English", selected=false }
+                new Lookup { ID=262,category = LCategory.englishLevel, text_EN="4-Fluent English", text_ES="4-Fluent English", selected=false },
+
+                new Lookup { ID=263,category = LCategory.workerRating, text_EN="1-Unacceptable experience", text_ES="1-Unacceptable experience", selected=false },
+                new Lookup { ID=264,category = LCategory.workerRating, text_EN="2-Needs improvement", text_ES="2-Needs improvement", selected=false },
+                new Lookup { ID=265,category = LCategory.workerRating, text_EN="3-Okay Experience", text_ES="3-Okay Experience", selected=false },
+                new Lookup { ID=266,category = LCategory.workerRating, text_EN="4-Would Recommend", text_ES="4-Would Recommend", selected=false },
+                new Lookup { ID=267,category = LCategory.workerRating, text_EN="5-Excellent Experience", text_ES="5-Excellent Experience", selected=true }
+
             };
         //
         //
