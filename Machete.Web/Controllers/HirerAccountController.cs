@@ -104,9 +104,7 @@ namespace Machete.Web.Controllers
                 {
                     await SignInAsync(user, false);
 
-                    //return RedirectToAction("Index", "Home");
                     return RedirectToAction("/", "HirerWorkOrder");
-                    // TODO: return RedirectToLocal(returnUrl);
                 }
                 else
                 {
@@ -170,24 +168,27 @@ namespace Machete.Web.Controllers
                                 {
                                     // Add default user to database
                                     employer = new Domain.Employer();
-                                    employer.referredbyOther = newUser.Id; // TODO: create db field to hold the UserIdentity
-                                    employer.email = user.UserName; // The Employer's username is their email address
-                                    employer.active = true; // TODO: create db field to indicate that the employer profile is not set yet
-                                    employer.business = false;
-                                    employer.name = "New Online Employer";
-                                    employer.address1 = "New Online Employer";
-                                    employer.city = "New Online Employer";
-                                    employer.state = "NA";
-                                    employer.phone = "555-555-5555";
-                                    employer.zipcode = "55555";
-                                    employer.blogparticipate = false;
-                                    employer.datecreated = DateTime.Now;
-                                    employer.dateupdated = DateTime.Now;
-                                    employer.Createdby = "Online Form";
-                                    employer.Updatedby = "Online Form";
-                                    employer.onlineSource = true;
-                                    employer.returnCustomer = false;
-                                    employer.receiveUpdates = true;
+
+                                        // Set up default online Employer profile
+                                        employer.isOnlineProfileComplete = false;
+                                        employer.onlineSigninID = newUser.Id; 
+                                        employer.email = user.UserName; // The Employer's username is their email address
+                                        employer.active = true; 
+                                        employer.business = false;
+                                        employer.name = "New Online Employer";
+                                        employer.address1 = "New Online Employer";
+                                        employer.city = "New Online Employer";
+                                        employer.state = "NA";
+                                        employer.phone = "555-555-5555";
+                                        employer.zipcode = "55555";
+                                        employer.blogparticipate = false;
+                                        employer.datecreated = DateTime.Now;
+                                        employer.dateupdated = DateTime.Now;
+                                        employer.Createdby = "Online Form";
+                                        employer.Updatedby = "Online Form";
+                                        employer.onlineSource = true;
+                                        employer.returnCustomer = false;
+                                        employer.receiveUpdates = true;
                                     Domain.Employer savedEmployer = Db.Employers.Add(employer);
                                     int saveResult = Db.SaveChanges();
                                     if (saveResult != 1)
@@ -220,7 +221,7 @@ namespace Machete.Web.Controllers
                 }
                 else // user with same username already exists
                 {
-                    // TODO: provide error reporting
+                    // TODO: provide error reporting - IMPORTANT CASE TO HANDLE
                 }
             }
 
