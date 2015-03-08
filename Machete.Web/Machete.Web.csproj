@@ -950,6 +950,9 @@
     <Content Include="Views\HirerAccount\Edit.cshtml" />
     <Content Include="Views\HirerWorkOrder\View.cshtml" />
     <Content Include="Views\HirerWorkOrder\ViewForEmail.cshtml" />
+    <None Include="Web.Alabama.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
     <None Include="Web.CasaLatina.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
