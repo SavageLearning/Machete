@@ -192,6 +192,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Alabama|x86'">
     <OutputPath>bin\x86\Alabama\</OutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WindofSpirit|x86'">
+    <OutputPath>bin\x86\WindofSpirit\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="docs\machete cheetsheets.vsd" />
