@@ -906,6 +906,7 @@
     <Content Include="Content\documentation\MacheteUserManual-html-Current.zip" />
     <None Include="Properties\PublishProfiles\Alabama.pubxml" />
     <None Include="Properties\PublishProfiles\CasaLatina.pubxml" />
+    <None Include="Properties\PublishProfiles\Cel.pubxml" />
     <None Include="Properties\PublishProfiles\CentroHumanitario.pubxml" />
     <None Include="Properties\PublishProfiles\Concord.pubxml" />
     <None Include="Properties\PublishProfiles\Congreso.pubxml" />
@@ -1184,6 +1185,9 @@
     <OutputPath>bin\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WindofSpirit|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Cel|AnyCPU'">
     <OutputPath>bin\</OutputPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
