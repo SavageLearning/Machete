@@ -169,6 +169,33 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Create an account.
+        /// </summary>
+        public static string HirerCreateAccount {
+            get {
+                return ResourceManager.GetString("HirerCreateAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter your email address and password..
+        /// </summary>
+        public static string HirerLogOnRegisterString1 {
+            get {
+                return ResourceManager.GetString("HirerLogOnRegisterString1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to if you don&apos;t have one..
+        /// </summary>
+        public static string HirerLogOnRegisterString2 {
+            get {
+                return ResourceManager.GetString("HirerLogOnRegisterString2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Create an Account to Hire a Worker.
         /// </summary>
         public static string HirerRegister {

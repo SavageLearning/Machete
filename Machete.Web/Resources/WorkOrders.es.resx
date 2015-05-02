@@ -313,18 +313,75 @@
     <value>Cancel</value>
   </data>
   <data name="hirerAccount" xml:space="preserve">
-    <value>Account</value>
+    <value>Contratar a un trabajador</value>
   </data>
   <data name="hireWorker" xml:space="preserve">
     <value>Hire a Worker</value>
   </data>
   <data name="workOrders" xml:space="preserve">
-    <value>Work Orders</value>
+    <value>Orden de trabajo</value>
   </data>
   <data name="listWorkAssignments" xml:space="preserve">
     <value>List Of Work Assignments</value>
   </data>
   <data name="hirerProfile" xml:space="preserve">
-    <value>Profile</value>
+    <value>Perfil</value>
+  </data>
+  <data name="businessHoursModal" xml:space="preserve">
+    <value>Business Hours</value>
+  </data>
+  <data name="acknowledgement" xml:space="preserve">
+    <value>Entiendo que:</value>
+  </data>
+  <data name="contactName" xml:space="preserve">
+    <value>Who will be managing the worker(s) at the work site? This may be the person placing the order or another person.</value>
+  </data>
+  <data name="workDescription" xml:space="preserve">
+    <value>Por favor describa con tantos detalles que sean posibles el trabajo requerido. Proveer esta información nos ayuda mandarle el mejor trabajador posible. Si un trabajador está pedido hacer algo que no está descrito aquí, guarda el derecho de negar servicios y el sueldo mínimo todavía estará cobrado.</value>
+  </data>
+  <data name="workersRequested" xml:space="preserve">
+    <value>Trabajadores pedidos</value>
+  </data>
+  <data name="workSiteAddress1Dialog" xml:space="preserve">
+    <value>Provea la dirección donde el trabajo estará completado. Esta es la dirección donde mandaremos los trabajadores.</value>
+  </data>
+  <data name="submit" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="businessName" xml:space="preserve">
+    <value>Nombre del negocio</value>
+  </data>
+  <data name="contactNameWorkSite" xml:space="preserve">
+    <value>Nombre del contacto en el sitio de trabajo</value>
+  </data>
+  <data name="disclaimer" xml:space="preserve">
+    <value>Renuncia</value>
+  </data>
+  <data name="isBusiness" xml:space="preserve">
+    <value>¿Es un negocio?</value>
+  </data>
+  <data name="phoneWorkSite" xml:space="preserve">
+    <value>Teléfono</value>
+  </data>
+  <data name="timeNeeded" xml:space="preserve">
+    <value>Hore requerida</value>
+  </data>
+  <data name="workAssignments" xml:space="preserve">
+    <value>Assign Workers</value>
+  </data>
+  <data name="workDetails" xml:space="preserve">
+    <value>Detalles del trabajo</value>
+  </data>
+  <data name="workRequest" xml:space="preserve">
+    <value>Work Request</value>
+  </data>
+  <data name="workSiteAddress1" xml:space="preserve">
+    <value>Dirección del sitio de trabajo (1)</value>
+  </data>
+  <data name="workSiteAddress2" xml:space="preserve">
+    <value>Dirección del sitio de trabajo (2)</value>
+  </data>
+  <data name="weightRequirements" xml:space="preserve">
+    <value>Weight Requirements</value>
   </data>
 </root>
