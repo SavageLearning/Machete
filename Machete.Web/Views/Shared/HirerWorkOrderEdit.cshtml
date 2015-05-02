@@ -9,149 +9,115 @@
 }
 @Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID" })
 @Html.HiddenFor(model => model.EmployerID, new { @id = idPrefix + "EmployerID" })
+@Html.HiddenFor(model => model.onlineSource)
+@Html.HiddenFor(model => model.status)
+@Html.HiddenFor(model => model.typeOfWorkID)
+@Html.HiddenFor(model => model.timeFlexible)
+@* Need to figure out how waPseudoIDCounter is used in the WO - should probably be set *@
+@* Need to add typeOfWorkID based on Skill *@
+
+
+<input type="hidden" name="workerAssignments" id="workerAssignments" value="">
 
 <!-- MAIN WORK ORDER FORM -->
 <div>
-<h1>Worker Online Order Form</h1>
-<p>If you are ready to hire a worker, please follow the instructions below and fill out the following form.</p>
-<p>If you still have questions about hiring a worker, please call us at 206-956-0779 x3 or contact us <a href="http://casa-latina.org/contact-us">here</a>.</p>
-<h2>Please note:</h2>
-<ol>
-<li>This order is <u>not complete until a Casa Latina representative contacts</u> you to verify your order. If you do not hear from us or you need the worker within 48 hours, please call 206-956-0779 x3 during our office hours.</li>
-<li>Please <u>allow a one hour window for the worker(s) to arrive</u>. This will account for routes with multiple stops and for traffic.</li>
-<li>There is no transportation fee to hire a Casa Latina worker when you <u>pick them up from our office</u>. However, for a small fee we will send a worker to your door.</li>
-</ol>
-<p>Workers can be dropped off at your home or worksite for a small fee with our van service. This allows for a more accurate arrival time and is most convenient for our workers. Rates according to distance from Casa Latina:</p>
-<ul>
-<li>Within the City of Seattle: $15 for 1 worker; $20 for 2+ workers</li>
-<li>Outside the City of Seattle: $25 for 1+ workers</li>
-</ul>
-<p>Workers can also arrive at your home or worksite via <strong>public transportation</strong>. Workers arriving by public transportation will have a more flexible arrival time. **This fee supports logistical assistance for the workers. These rates apply:</p>
-<ul>
-<li>Within Seattle city limits: $5</li>
-<li>Outside Seattle city limits: $10 Note: this service allows for workers to arrive to a Park and Ride or Transit Center near your home or worksite. You are responsible for providing the workers with transportation from the Park and Ride or Transit center to your home or worksite. We can only guarantee delivery of workers in Seattle, Mercer Island, or Bellevue in the 98006 area code. If you live outside these areas, we will get back to you to make transportation arrangements.</li>
-</ul>
-<p>See the bottom of this page for labor prices.</p>
+    <!-- Display Header information - worker center specific -->
+    @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
+        @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["CreateWOHeader_EN"])
+    } else {
+        @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["CreateWOHeader_ES"])
+    }
 </div>
+<!-- TODO: Remove console.log statements -->
+<!-- TODO: Share error messages (.text) with Sierra -->
+
 <div class="tb-table">
-    <span id=@(idPrefix)hirerWorkOrderValidationErrors></span>
-    <!-- TODO: replace span with this dialog box -->
+    <div id="estimatedCosts">
+        <h3>Estimated Costs:</h3>
+        <p>Worker Rates:</p>
+        <p id="workerRates">TBD</p>
+        <div id="transportationFeesHeader">
+        <p>Transportation Fees:</p>
+        <p id="transportationFees"></p>
+        <p>Transportation fees must be paid via PayPal to complete order</p>
+        <!-- TODO: insert paypal button -->
+        </div>
+    </div>
+    <!-- Form errors -->
+    <!-- TODO: make sure all error sections are set - consider moving these next to the fields that they apply to -->
     <div id="messageDialog">
-        <p id="messageDialogText"></p>
+        <p id="futureTime"></p>
+        <p id="earliestTime"></p>
+        <p id="latestTime"></p>
+        <p id="invalidDate"></p>
+        <p id="invalidZipcode"></p>
+        <p id="invalidTransportDate"></p>
+        <p id="requiredFieldWorkSiteAddress1"></p>
+        <p id="requiredFieldCity"></p>
+        <p id="requiredFieldState"></p>
+        <p id="requiredFieldZipcode"></p>
+        <p id="requiredFieldTransportMethod"></p>
+        <p id="requiredFieldWorkDescription"></p>
     </div>
-    <h3>Work Request</h3>
+
+    <h3>@Machete.Web.Resources.WorkOrders.workRequest</h3>
     <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.dateTimeofWork, new { tabindex = "1", id = idPrefix + "dateTimeofWork" })
-    </div>
-    <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.workSiteAddress1, new { tabindex = "2", id = idPrefix + "workSiteAddress1" })
-    </div>
-    <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.workSiteAddress2, new { tabindex = "3", id = idPrefix + "workSiteAddress2" })
-    </div>
-    <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.city, new { tabindex = "4", id = idPrefix + "city" })
-    </div>
-    <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.state, new { tabindex = "5", id = idPrefix + "state" })
-    </div>
-    <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.zipcode, new { tabindex = "6", id = idPrefix + "zipcode" })
+        @Html.Label(Machete.Web.Resources.WorkOrders.timeNeeded)
+        @Html.mUITableTextBoxFor(model => model.dateTimeofWork, new { tabindex = "1", id = idPrefix + "dateTimeofWork" })
     </div>
     <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.transportMethodID)
+        <div class="tb-label desc-label">
+            @Html.Label(Machete.Web.Resources.WorkOrders.workAssignments)
+            <br />
+            <input type="button" value="@Machete.Domain.Resources.WorkOrder.requestAdd" class="formButton" id="addWABtn-@(Model.ID)"/>
+            <input type="button" value="@Machete.Domain.Resources.WorkOrder.requestRemove" class="formButton" id="removeWABtn-@(Model.ID)"/>
+        </div>
+        <div class="tb-field desc-field">
+            @Html.ListBox("workAssignments", new SelectList(ViewBag.workAssignments, "Value", "Text"), new { id = "workAssignments_WO-"+ Model.ID, tabindex = "2", style="min-width: 16em;"})
+        </div>
+    </div>
+    <div class="tb-row">
+        <a href="#" id="workSiteAddress1Modal">@Html.Label(Machete.Web.Resources.WorkOrders.workSiteAddress1)</a>
+        <div class="tb-field">
+            @Html.mUITableTextBoxFor(model => model.workSiteAddress1, new { tabindex = "3", id = idPrefix + "workSiteAddress1" })
+        </div>
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelAndTextBoxFor(model => model.workSiteAddress2, new { tabindex = "4", id = idPrefix + "workSiteAddress2" })
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelAndTextBoxFor(model => model.city, new { tabindex = "5", id = idPrefix + "city" })
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelAndTextBoxFor(model => model.state, new { tabindex = "6", id = idPrefix + "state" })
+    </div>
+    <div class="tb-row">
+        @Html.mUITableLabelAndTextBoxFor(model => model.zipcode, new { tabindex = "7", id = idPrefix + "zipcode" })
+    </div>
+    <div class="tb-row">
+        <a href="#" id="transportationMethodModal">@Html.mUITableLabelFor(model => model.transportMethodID)</a>
         @Html.mUIDropDownListFor(model => model.transportMethodID,
                         new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.transportmethod), "Value", "Text", Model.transportMethodID),
-                        new { tabindex = "7", id = idPrefix + "transportMethodID" })
+                        new { tabindex = "8", id = idPrefix + "transportMethodID" })
     </div>
-<!--
-        @Html.mUITableLabelFor(model => model.transportTransactType)
-        @Html.mUIDropDownListFor(model => model.transportTransactType,
-                        new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.transportTransactType), "Value", "Text", Model.transportTransactType),
-                        new { tabindex = "8", id = idPrefix + "transportTransactType" })
--->
-     <div class="tb-row desc-field">
-        @Html.mUITableDescLabelFor(model => model.description)
+    <!-- TODO: The only acceptable online payment is paypal - there needs to be a note to Employers here -->
+    <!-- TODO: set transportTransactType=PayPal if transportMethod = Bus || Van -->
+    <div class="tb-row desc-field">
+        <a href="#" id="workDescriptionModal">@Html.mUITableDescLabelFor(model => model.description)</a>
         <div class="tb-field">
             @Html.ValidationMessageFor(model => model.description)
             @Html.TextAreaFor(model => model.description, new { tabindex = "9", @class = "desc-field", id = idPrefix + "description" })
         </div>
     </div>
 </div><!--tb-table main workorder table-->
-<div class="tb-table">
-    <h3>Profile</h3>
-    <div class="tb-row">
-        <div class="tb-label business_@(Model.ID)">
-            @Html.mUITableLabelFor(model => model.Employer.business)
-        </div>
-        <div class="tb-field business_@(Model.ID)">
-            @Html.mUIDropDownYesNoFor(model => model.Employer.business, new { tabindex = "10", id = idPrefix + "business" }) 
-        </div>
-    </div>
-    <!-- Note: Field only appears in table when englishRequired = FALSE -->
-    <div class="tb-row employerNameRow" id="@(idPrefix)employerNameRow">
-        @Html.mUITableLabelAndTextBoxFor(model => model.Employer.name, new { tabindex = "11", id = idPrefix + "employerName" })
-    </div>
-    <!-- Note: Field only appears in table when englishRequired = TRUE -->
-    <div class="tb-row businessNameRow" id="@(idPrefix)businessNameRow">
-        @Html.mUITableLabelAndTextBoxFor(model => model.Employer.businessname, new { tabindex = "12", id = idPrefix + "businessname" })
-    </div>
-    <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.Employer.address1, new { tabindex = "13", id = idPrefix + "employerAddress1" })
-    </div>
-    <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.Employer.address2, new { tabindex = "14", id = idPrefix + "employerAddress2" })
-    </div>
-    <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.Employer.city, new { tabindex = "15", id = idPrefix + "employerCity" })
-    </div>
-    <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.Employer.state, new { tabindex = "16", id = idPrefix + "employerState" })
-        @Html.ValidationMessageFor(model => model.Employer.state)
 
-    </div>
-    <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.Employer.zipcode, new { tabindex = "17", id = idPrefix + "employerZipcode" })
-    </div>
-    <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.Employer.phone)
-        @Html.mUITableTextBoxFor(model => model.Employer.phone, new { tabindex = "18", id = idPrefix + "employerPhone" })
-    </div>
-    <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.Employer.cellphone, new { tabindex = "19", id = idPrefix + "employerCellphone" })
-    </div>
-    <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.Employer.email, new { tabindex = "20", id = idPrefix + "email" })
-    </div>
-    <div class="tb-row">
-        <div class="tb-label referredby_@(Model.ID)">
-            @Html.mUITableLabelFor(model => model.Employer.referredby)
-        </div>
-        <div class="tb-field referredby_@(Model.ID)">
-            @Html.mUIDropDownListFor(model => model.Employer.referredby,
-                        new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.emplrreference), "Value", "Text", Model.Employer.referredby),
-                        new { tabindex = "21", id = idPrefix + "referredby" })
-        </div>
-    </div>
-    <!-- Note: Field only appears in table when referredBy = "Other" -->
-    <!-- TODO: Need to make sure that grabbing the english text to do the string comparison  -->
-    <div class="tb-row referredbyOtherRow" id="@(idPrefix)referredbyOtherRow">
-        @Html.mUITableLabelAndTextBoxFor(model => model.Employer.referredbyOther, new { tabindex = "22", id = idPrefix + "referredbyOther" })
-    </div>
-    <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.Employer.returnCustomer)
-        @Html.mUIDropDownYesNoFor(model => model.Employer.returnCustomer, new { tabindex = "23", id = idPrefix + "returnCustomer" }) 
-    </div>
-    <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.Employer.receiveUpdates)
-        @Html.mUIDropDownYesNoFor(model => model.Employer.receiveUpdates, new { tabindex = "24", id = idPrefix + "receiveUpdates" }) 
-    </div>
-</div><!--tb-table main workorder table-->
+
 <div class="tb-table">
-    <h3>Work Details</h3>
+    <h3>@Machete.Web.Resources.WorkOrders.workDetails</h3>
     
     <div class="tb-row">
-        @Html.mUITableLabelAndTextBoxFor(model => model.contactName, new { tabindex = "25", id = idPrefix + "contactName" })
+        <a href="#" id="contactNameModal">@Html.Label(Machete.Web.Resources.WorkOrders.contactNameWorkSite)</a>
+        @Html.mUITableTextBoxFor(model => model.contactName, new { tabindex = "25", id = idPrefix + "contactName" })
     </div>
     <div class="tb-row">
         @Html.Label(Machete.Domain.Resources.WorkOrder.phoneWorkSite)
@@ -162,37 +128,145 @@
             @Html.LabelFor(model => model.englishRequired)
         </div>
         <div class="tb-field englishRequired_@(Model.ID)">
-            @Html.mUIDropDownYesNoFor(model => model.englishRequired, new { tabindex = "29", id = idPrefix + "englishRequired" })
+            @Html.mUIDropDownYesNoFor(model => model.englishRequired, new { tabindex = "27", id = idPrefix + "englishRequired" })
         </div>
     </div>
     <!-- Note: Field only appears in table when englishRequired = TRUE -->
     <div class="tb-row englishNoteRow" id="@(idPrefix)englishRequiredNoteRow">
         @Html.mUITableDescLabelFor(model => model.englishRequiredNote)
         <div class="tb-field">
-            @Html.TextAreaFor(model => model.englishRequiredNote, new { tabindex = "30", @class = "desc-field", id = idPrefix + "englishRequiredNote" })
+            @Html.TextAreaFor(model => model.englishRequiredNote, new { tabindex = "28", @class = "desc-field", id = idPrefix + "englishRequiredNote" })
             @Html.ValidationMessageFor(model => model.englishRequiredNote)
         </div>
     </div>
     <div class="tb-row">
         <div class="tb-label desc-label">
-            @Html.LabelFor(model => model.workerRequests)
+            @Html.Label(Machete.Web.Resources.WorkOrders.workersRequested)
             <br />
             <input type="button" value="@Machete.Domain.Resources.WorkOrder.requestAdd" class="formButton" id="addRequestBtn-@(Model.ID)"/>
             <input type="button" value="@Machete.Domain.Resources.WorkOrder.requestRemove" class="formButton" id="removeRequestBtn-@(Model.ID)"/>
         </div>
         <div class="tb-field desc-field">
-            @Html.ListBox("workerRequests2", new SelectList(ViewBag.workerRequests, "Value", "Text"), new { id = "workerRequests2_WO-"+ Model.ID, tabindex = "32", style="min-width: 16em;"})
+            @Html.ListBox("workerRequests2", new SelectList(ViewBag.workerRequests, "Value", "Text"), new { id = "workerRequests2_WO-"+ Model.ID, tabindex = "29", style="min-width: 16em;"})
         </div>
     </div>
      <div class="tb-row desc-field">
         @Html.mUITableDescLabelFor(model => model.additionalNotes)
         <div class="tb-field">
             @Html.ValidationMessageFor(model => model.additionalNotes)
-            @Html.TextAreaFor(model => model.additionalNotes, new { tabindex = "33", @class = "desc-field", id = idPrefix + "additionalNotes" })
+            @Html.TextAreaFor(model => model.additionalNotes, new { tabindex = "30", @class = "desc-field", id = idPrefix + "additionalNotes" })
         </div>
     </div>
-<input type="button" class="formButton" value="@WorkOrders.createsubmit" />
 </div><!--tb-table main workorder table-->
+
+<div>
+    <h3>@Machete.Web.Resources.WorkOrders.disclaimer</h3>
+    @* This will always have a value that is set in the default values - it can be nullable in database, though, to support other types of WO *@
+    @if (Model.disclosureAgreement.HasValue) 
+    {
+        @Html.CheckBoxFor(model => model.disclosureAgreement.Value)
+        @Html.Label(Machete.Web.Resources.WorkOrders.acknowledgement)
+    }
+
+    <!-- Display Disclaimer information - worker center specific -->
+    @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
+        @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["Disclaimer_EN"])
+    } else {
+        @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["Disclaimer_ES"])
+    }
+</div>
+
+<div>
+    <!-- Display Submission information - worker center specific -->
+    @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
+        @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["Submission_EN"])
+    } else {
+        @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["Submission_ES"])
+    }
+</div>
+
+<!-- POP-UP MODALS -->
+<!-- Display Request Workers pop-up - worker center specific -->
+<!-- TODO: only enable the worker request feature IF the employer has hired in the past -->
+<!-- Display Work Assignment pop-up - worker center specific -->
+<div id="workAssignmentDialog-@(Model.ID)" title="@Machete.Web.Resources.WorkOrders.workAssignments" class="display" style="display: none">
+    <table>
+        <tr>
+            <!-- Skill -->
+            <td>
+                @Html.Label(Machete.Domain.Resources.WorkAssignment.skillID)
+            </td>
+            <td>
+                <!-- TODO: remove paperOrderNum model reference -->
+                @Html.DropDownListFor(model => model.paperOrderNum,
+                new SelectList(Lookups.getOnlineEmployerSkill(),
+                    "Value",
+                    "Text",
+                    Model.typeOfWorkID),
+                             @Machete.Web.Resources.Shared.choose, new { tabindex = "1" })
+            </td>
+            <td width="10%">
+                <p id="validateSkill"></p>
+            </td>
+            <!-- Skill Description - READ-ONLY -->
+            <td>
+                @Html.Label(Machete.Web.Resources.WorkAssignments.skillDescription)
+            </td>
+            <td>
+                @Html.TextArea("SkillDescription", "", new { @readonly="readonly" })
+            </td>
+        </tr>
+        <tr>
+            <!-- Requested Hours -->
+            <td>
+                @Html.Label(Machete.Domain.Resources.WorkAssignment.hours)
+            </td>
+            <td>
+                <!-- TODO: remove paperOrderNum model reference -->
+                @Html.DropDownListFor(model => model.waPseudoIDCounter,
+                new SelectList(Lookups.getTransportationMethodList(),
+                    "Value",
+                    "Text",
+                    Model.typeOfWorkID),
+                             @Machete.Web.Resources.Shared.choose, new { tabindex = "2" })
+            </td>
+            <td width="10%">
+                <p id="validateHours"></p>
+            </td>
+            <!-- Minimum Hours - READ-ONLY -->
+            <td>
+                @Html.Label(Machete.Web.Resources.WorkAssignments.minHours)
+            </td>
+            <td>
+                @Html.TextBox("MinimumHours", "", new { @readonly="readonly" })
+            </td>
+        </tr>
+        <tr>
+            <!-- Additional Description -->
+            <td>
+                @Html.Label(Machete.Web.Resources.WorkAssignments.additionalDescription)
+            </td>
+            <td>
+                @Html.TextArea("AdditionalDescription")
+            </td>
+            <td width="20%">
+                <p id="validateAdditionalDescription"></p>
+            </td>
+            <td>
+                @Html.Label(Machete.Domain.Resources.WorkAssignment.hourlyWage)
+            </td>
+            <!-- Hourly Wage - READ-ONLY -->
+            <td>
+                @Html.TextBox("HourlyWage", "", new { @readonly="readonly" })
+            </td>
+        </tr>
+    </table>
+    @Html.Label(Machete.Domain.Resources.WorkAssignment.weightLifted)
+    @Html.CheckBox("Weight")
+    <br />
+    <input type="button" value="@Machete.Web.Resources.WorkOrders.createsubmit" class="formButton" id="addWorkerBtn-@(Model.ID)"/>
+    <input type="button" value="@Machete.Web.Resources.WorkOrders.editcancel" class="formButton" id="removeWorkerBtn-@(Model.ID)"/>
+</div>
 
 <div id="workerDialog-@(Model.ID)" title="@Machete.Domain.Resources.WorkOrder.requestTitle">
     <table id="workerTable-@(Model.ID)" class="display" style="display: none">
@@ -207,292 +281,57 @@
         </thead>
     </table>
 </div>
-    
-<div>
-    <p><strong style="line-height: 1.538em;">Worker performance disclaimer</strong></p>
-    <p>Casa Latina does not employ the workers whom we refer; when you make the decision to hire them, you are their employer and they are your employees. Thus, while we do our best to only refer workers who are skilled and dependable, we cannot and do not guarantee that worker performance will always meet your expectations. Casa Latina is not responsible for any failure in worker performance or for any damage or injuries that could conceivably occur during the performance of the work you have hired these workers to perform.</p>
-    <h2>Skill Pricing</h2>
-    <table border="1" cellpadding="0" cellspacing="0" style="width: 100%;">
-        <thead>
-        <tr>
-            <th scope="col">Skilled Labor</th>
-            <th scope="col">Starting At***</th>
-            <th scope="col">Additional Hours At</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>Carpentry (Framing and cabinetry)</td>
-            <td>$100</td>
-            <td>$20-hr</td>
-        </tr>
-        <tr>
-            <td>Sheetrock (Hanging, taping, mudding, and sanding)</td>
-            <td>$90</td>
-            <td>$18-hr</td>
-        </tr>
-        <tr>
-            <td>Flooring(Laminate, vinyl, wood)</td>
-            <td>$90</td>
-            <td>$18-hr</td>
-        </tr>
-        <tr>
-            <td>Brick masonry and Tile installation</td>
-            <td>$90</td>
-            <td>$18-hr</td>
-        </tr>
-        <tr>
-            <td>Roofing (installation only)</td>
-            <td>$90</td>
-            <td>$18-hr</td>
-        </tr>
-        <tr>
-            <td>Painting-spray (Preparation, cutting, and taping)</td>
-            <td>$100</td>
-            <td>$20-hr</td>
-        </tr>
-        <tr>
-            <td>Painting-brush (Preparation, cutting, taping, and clean-up)</td>
-            <td>$90</td>
-            <td>$18-hr</td>
-        </tr>
-        <tr>
-            <td>Skilled Gardening (includes pruning, trimming, transplanting, and basic yard work)</td>
-            <td>$90</td>
-            <td>$18-hr</td>
-        </tr>
-        <tr>
-            <td>Yard work (only: yard cleaning, mowing, weeding and planting, pressure washing)</td>
-            <td>$80</td>
-            <td>$16-hr</td>
-        </tr>
-        <tr>
-            <td>Landscaping (patio pavers, retaining walls, and walkways)</td>
-            <td>$100</td>
-            <td>$20-hr</td>
-        </tr>
-        <tr>
-            <td>Digging (trenches, drains, laying sod, holes)</td>
-            <td>$90</td>
-            <td>$18-hr</td>
-        </tr>
-        <tr>
-            <td>Moving (furniture, appliances, and boxes)</td>
-            <td>$90</td>
-            <td>$18-hr</td>
-        </tr>
-        <tr>
-            <td>Hauling (heavy material, lumber, dirt, rocks, bricks, mulch compost, or heavy branches)</td>
-            <td>$90</td>
-            <td>$18-hr</td>
-        </tr>
-        <tr>
-            <td>Demolition(Chimneys require hard hats)</td>
-            <td>$90</td>
-            <td>$18-hr</td>
-        </tr>
-        <tr>
-            <td>Party and event staffing</td>
-            <td>$80</td>
-            <td>$16-hr</td>
-        </tr>
-        </tbody>
-    </table>
-    <p><strong>***Includes 5 hours of work</strong></p>
-    <table border="1" cellpadding="0" cellspacing="0" style="width: 100%;">
-        <thead>
-        <tr>
-            <th scope="col">House Cleaning</th>
-            <th scope="col">Starting At*</th>
-            <th scope="col">Additional Hours At</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td width="65%">House cleaning</td>
-            <td>$65</td>
-            <td>$16-hr</td>
-        </tr>
-        </tbody>
-    </table>
-    <p><strong>*Includes 3 hours of work</strong></p>
-<!--
-    <p id="why-email"><strong>Why does Casa Latina ask for my e-mail address?</strong></p>
-    <p>We use your e-mail address to confirm your order and to update you on the status of your order.</p>
--->
+
+<!-- Display Business Hours pop-up - worker center specific -->
+<div id="businessHoursDialog" title="@Machete.Web.Resources.WorkOrders.businessHoursModal" class="display" style="display: none">
+    @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
+        @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["BusinessHours_EN"])
+    } else {
+        @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["BusinessHours_ES"])
+    }
+</div>
+<!-- Display Work Site address pop-up -->
+<div id="workSiteAddress1Dialog" title="@Machete.Web.Resources.WorkOrders.workSiteAddress1" class="display" style="display: none">
+    <p>@Machete.Web.Resources.WorkOrders.workSiteAddress1Dialog</p>
+</div>
+<!-- Display Employer address pop-up -->
+<div id="employerAddress1Dialog" title="@Machete.Domain.Resources.Employer.address1" class="display" style="display: none">
+    <p>@Machete.Web.Resources.Employers.employerAddress1Dialog</p>
+</div>
+<!-- Display Weight Lift Requirement pop-up - worker center specific -->
+<div id="weightLiftedDialog" title="@Machete.Web.Resources.WorkOrders.weightRequirements" class="display" style="display: none">
+    @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
+        @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["WeightLifted_EN"])
+    } else {
+        @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["WeightLifted_ES"])
+    }
+</div>
+<!-- Display Transportation Method pop-up - worker center specific -->
+<div id="transportationMethodDialog" title="@Machete.Domain.Resources.WorkOrder.transportMethodID" class="display" style="display: none">
+    @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
+        @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["TransportationMethod_EN"])
+    } else {
+        @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["TransportationMethod_ES"])
+    }
+</div>
+<!-- Display Work Description pop-up -->
+<div id="workDescriptionDialog" title="@Machete.Domain.Resources.WorkOrder.description" class="display" style="display: none">
+    <p>@Machete.Web.Resources.WorkOrders.workDescription</p>
+</div>
+<!-- Display Contact Name pop-up -->
+<div id="contactNameDialog" title="@Machete.Domain.Resources.WorkOrder.contactName" class="display" style="display: none">
+    <p>@Machete.Web.Resources.WorkOrders.contactName</p>
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        //
-        //
+        alert("Testing JQuery");
 
-        $("#@(idPrefix)dateTimeofWork").focusout(function() {
-            var userInput = $("#@(idPrefix)dateTimeofWork").val();
-            var userInputInMs = new Date(userInput);
-            /*
-            http://stackoverflow.com/questions/5619202/converting-string-to-date-in-js
-            Date.parse almost gets you what you want. It chokes on the am/pm part, but with some hacking you can get it to work:
-
-            var str = 'Sun Apr 25, 2010 3:30pm',
-                timestamp;
-
-            timestamp = Date.parse(str.replace(/[ap]m$/i, ''));
-
-            if(str.match(/pm$/i) >= 0) {
-                timestamp += 12 * 60 * 60 * 1000;
-            }
-            */
-            if (isNaN(userInputInMs.valueOf())) {
-                // TODO: provide error handling
-            }
-            var dayOfWeek = userInputInMs.getDay();
-            console.log("The day of week is: " + dayOfWeek);
-            /*
-            var d = new Date();
-            var weekday = new Array(7);
-            weekday[0]=  "Sunday";
-            weekday[1] = "Monday";
-            weekday[2] = "Tuesday";
-            weekday[3] = "Wednesday";
-            weekday[4] = "Thursday";
-            weekday[5] = "Friday";
-            weekday[6] = "Saturday";
-
-            var n = weekday[d.getDay()];
-            */
-            var advanceHours;
-            if (dayOfWeek == 0) { // Sunday
-                advanceHours = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineAdvanceHoursSunday"]);
-            } else if (dayOfWeek == 1) { // Monday
-                advanceHours = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineAdvanceHoursMonday"]);
-            } else if (dayOfWeek == 2) { // Tuesday
-                advanceHours = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineAdvanceHoursTuesday"]);
-            } else if (dayOfWeek == 3) { // Wednesday
-                advanceHours = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineAdvanceHoursWednesday"]);
-            } else if (dayOfWeek == 4) { // Thursday
-                advanceHours = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineAdvanceHoursThursday"]);
-            } else if (dayOfWeek == 5) { // Friday
-                advanceHours = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineAdvanceHoursFriday"]);
-            } else if (dayOfWeek == 6) { // Saturday
-                advanceHours = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineAdvanceHoursSaturday"]);
-            }
-            if (isNaN(advanceHours)) { // In case valid value not set in configuration file, set default
-                advanceHours = 36;
-            }
-
-            var future = Date.now() + (advanceHours * 60 * 60 * 1000);
-             
-            if(userInputInMs >= future) {
-                // TODO: need to remove error & enable button when the date / time are valid
-                console.log('date is good >=48 hours');
-            } else {
-                // TODO: rethink this - maybe create a list of errors at the top & hide /show them instead of managing list
-                $("#@(idPrefix)hirerWorkOrderValidationErrors").append("<p>Date must be at least " + advanceHours + " hours from now</p>");
-                // TODO: need to disenable button when the date / time are invalid
-
-                //var newSpan = $('<span for="#WO6-dateTimeofWork" generated="true" class>Date must be at least 48 hours from now</span>')
-                //$("#@(idPrefix)dateTimeofWork").next().text('Date must be at least 48 hours from now');
-                //$("span[data-valmsg-for='dateTimeofWork']").text('Date must be at least 48 hours from now');
-            }
-        });
-        
-        $("#@(idPrefix)zipcode").focusout(function() {
-
-            var transportFee;
-            var allowableZipcode = false;
-            var transportMethod = $("#@(idPrefix)transportMethodID").val();
-            // TODO: retrieve num workers assigned to work order
-            var numWorkers = 1;
-            console.log(transportMethod);
-
-            // TODO: Ensure that all lookup tables have the same values here
-            if (transportMethod == 26) { // Worker buses = 26
-                var insideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportBusInsideZone"];
-                var outsideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportBusOutsideZone"];
-                if (insideZipCodes.indexOf(parseInt($("#@(idPrefix)zipcode"))) != -1) {
-                    // Zipcode is in the allowable list of zipcodes within zone
-                    allowableZipcode = true;
-                    transportFee = @System.Web.Configuration.WebConfigurationManager.AppSettings["TransportBusInsideZoneCost"];
-                } else if (outsideZipCodes.indexOf(parseInt($("#@(idPrefix)zipcode"))) != -1) {
-                    // Zipcode is in the allowable list of zipcodes outside zone
-                    allowableZipcode = true;
-                    transportFee = @System.Web.Configuration.WebConfigurationManager.AppSettings["TransportBusOutsideZoneCost"];
-                }
-                if (!allowableZipcode) {
-                    $("#@(idPrefix)hirerWorkOrderValidationErrors").append("<p>This zipcode is not a valid zipcode that we provide service to</p>");
-                }
-                $("#@(idPrefix)hirerWorkOrderValidationErrors").append("<p>The transportation costs are $" + transportFee.toFixed(2) + " and must be paid via PayPal to complete order</p>");
-            } else if (transportMethod == 29) { // Van service = 29
-                var insideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportVanInsideZone"];
-                var outsideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportVanOutsideZone"];
-                if (insideZipCodes.indexOf(parseInt($("#@(idPrefix)zipcode"))) != -1) {
-                    // Zipcode is in the allowable list of zipcodes within zone
-                    allowableZipcode = true;
-                    if (numWorkers = 1) {
-                        transportFee = @System.Web.Configuration.WebConfigurationManager.AppSettings["TransportVanInsideZoneCostOneWorker"];
-                    } else if (numWorkers > 1) {
-                        transportFee = @System.Web.Configuration.WebConfigurationManager.AppSettings["TransportVanInsideZoneCostMultipleWorkers"];
-                    }
-                } else if (outsideZipCodes.indexOf(parseInt($("#@(idPrefix)zipcode"))) != -1) {
-                    // Zipcode is in the allowable list of zipcodes outside zone
-                    allowableZipcode = true;
-                    transportFee = @System.Web.Configuration.WebConfigurationManager.AppSettings["TransportVanOutsideZoneCost"];
-                }
-                if (!allowableZipcode) {
-                    $("#@(idPrefix)hirerWorkOrderValidationErrors").append("<p>This zipcode is not a valid zipcode that we provide service to</p>");
-                }
-                $("#@(idPrefix)hirerWorkOrderValidationErrors").append("<p>The transportation costs are $" + transportFee.toFixed(2) + " and must be paid via PayPal to complete order</p>");
-            }
-        });
-
-        // TODO: add new dialog modal boxes
-        /*
-            var passwordChangeDialog = $("#passwordChange").dialog({
-                autoOpen: false,
-                height: 280,
-                width: 300,
-                modal: true,
-                resizable: false,
-                closeOnEscape: false,
-                buttons: {
-                    "@Machete.Web.Resources.ValidationStrings.Change": changePassword
-                }
-            });
-            var messageDialog = $("#messageDialog").dialog({
-                autoOpen: false,
-                height: 200,
-                width: 300,
-                modal: true,
-                closeOnEscape: true,
-                buttons: {
-                    "Ok": function () { $(this).dialog("close"); }
-                }
-            });
-    function showMessage(messageText) {
-        $("#messageDialogText").text(messageText);
-        messageDialog.dialog("open");
-    }
-
-    function changePassword() {
-        var newpassword = $("#newpassword")[0].value,
-            confirmnewpassword = $("#confirmnewpassword")[0].value; 
-        if (newpassword != confirmnewpassword) // verifying that new password and confirmed passwords are the same
-        {
-            showMessage("@Machete.Web.Resources.ValidationStrings.PasswordCompare");
-            return;
-        }
-        if (newpassword === $('#Password')[0].value) { //#Password found using inspect element on Log on Machete window Checking that new password is not same as current password
-            showMessage("Password cannot be the same as existing password.");
-            return;
-        }
-    }
-
-        */
+        $("#transportationFeesHeader").hide();
 
         // http://trentrichardson.com/examples/timepicker/
         $("#@(idPrefix)dateTimeofWork").datetimepicker({
             stepMinute: 15,
-            ampm: true,
+            ampm: false,
             hourMin: 7,
             hourMax: 23,
             minuteMin: 0,
@@ -529,6 +368,409 @@
             }         
         }).fnSetFilteringDelay(250);
 
+        // Toggle English required note box
+        $('#@(idPrefix)englishRequired').mUI('selectToggleOnValue', {
+            target: $('#@(idPrefix)englishRequiredNoteRow'),
+            showVal: "@(Shared.yes)"
+        });
+
+        // Business name toggle - ON
+        $('#@(idPrefix)business').mUI('selectToggleOnValue', {
+            target: $('#@(idPrefix)businessNameRow'),
+            showVal: "@(Shared.yes)"
+        });
+
+        // Employer name toggle - OFF
+        $('#@(idPrefix)business').mUI('selectToggleOnValue', {
+            target: $('#@(idPrefix)employerNameRow'),
+            showVal: "@(Shared.no)"
+        });
+
+        // ReferredBy Other toggle
+        $('#@(idPrefix)referredby').mUI('selectToggleOnValue', {
+            target: $('#@(idPrefix)referredbyOtherRow'),
+            showVal: "Other"
+        });
+
+        //////////////////////////////////////////////////////////////////////////
+        // POP-UP MODALS
+        //////////////////////////////////////////////////////////////////////////
+        $('#addWABtn-@(Model.ID)').click(function () {
+            $('#workAssignmentDialog-@(Model.ID)').dialog({
+                height: 340,
+                width: 1000,
+                modal: true
+            });
+
+            $('#workAssignmentDialog-@(Model.ID)').show();
+        });
+
+        $('#transportationMethodModal').click(function () {
+
+            $("#transportationMethodDialog").dialog({
+                height: 340,
+                width: 1000,
+                modal: true
+            });
+
+            $('#transportationMethodDialog').show();
+        });
+
+        $('#contactNameModal').click(function () {
+
+            $("#contactNameDialog").dialog({
+                height: 340,
+                width: 1000,
+                modal: true
+            });
+
+            $('#contactNameDialog').show();
+        });
+
+        $('#workDescriptionModal').click(function () {
+
+            $("#workDescriptionDialog").dialog({
+                height: 340,
+                width: 1000,
+                modal: true
+            });
+
+            $('#workDescriptionDialog').show();
+        });
+
+        $('#workSiteAddress1Modal').click(function () {
+
+            $("#workSiteAddress1Dialog").dialog({
+                height: 340,
+                width: 1000,
+                modal: true
+            });
+
+            $('#workSiteAddress1Dialog').show();
+        });
+
+        $('#weightLiftedModal').click(function () {
+
+            $("#weightLiftedDialog").dialog({
+                height: 340,
+                width: 1000,
+                modal: true
+            });
+
+            $('#weightLiftedDialog').show();
+        });
+
+        $('#businessHoursModal').click(function () {
+
+            $("#businessHoursDialog").dialog({
+                height: 340,
+                width: 1000,
+                modal: true
+            });
+
+            $('#businessHoursDialog').show();
+        });
+
+        $('#businessHoursModal2').click(function () {
+
+            $("#businessHoursDialog").dialog({
+                height: 340,
+                width: 1000,
+                modal: true
+            });
+
+            $('#businessHoursDialog').show();
+        });
+
+        $('#employerAddress1Modal').click(function () {
+            $("#employerAddress1Dialog").dialog({
+                height: 340,
+                width: 1000,
+                modal: true
+            });
+
+            $('#employerAddress1Dialog').show();
+        });
+
+        //////////////////////////////////////////////////////////////////////////
+        // HELPER FUNCTIONS
+        //////////////////////////////////////////////////////////////////////////
+        function checkDate() {
+
+            var userInput = $("#@(idPrefix)dateTimeofWork").val();
+            var userInputInMs = new Date(userInput);
+
+            /*
+            http://stackoverflow.com/questions/5619202/converting-string-to-date-in-js
+            Date.parse almost gets you what you want. It chokes on the am/pm part, but with some hacking you can get it to work:
+
+            var str = 'Sun Apr 25, 2010 3:30pm',
+                timestamp;
+
+            timestamp = Date.parse(str.replace(/[ap]m$/i, ''));
+
+            if(str.match(/pm$/i) >= 0) {
+                timestamp += 12 * 60 * 60 * 1000;
+            }
+            */
+
+            if (isNaN(userInputInMs.valueOf())) {
+                $("#invalidDate").text("The date must be in a valid date form (e.g. 03/14/2015 14:00)").show();
+                return;
+            } else {
+                $("#invalidDate").hide();
+            }
+
+            var dayOfWeek = userInputInMs.getDay();
+            console.log("The day of week is: " + dayOfWeek);
+            var hourOfDay = userInputInMs.getHours();
+            console.log("The hour of day is: " + hourOfDay);
+
+            // Set up Day of Week Conversion
+            var weekday = new Array(7);
+            weekday[0]=  "Sunday";
+            weekday[1] = "Monday";
+            weekday[2] = "Tuesday";
+            weekday[3] = "Wednesday";
+            weekday[4] = "Thursday";
+            weekday[5] = "Friday";
+            weekday[6] = "Saturday";
+
+            var advanceHours;
+            var earliestHour;
+            var latestHour;
+
+            if (dayOfWeek == 0) { // Sunday
+                advanceHours = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineAdvanceHoursSunday"]);
+                earliestHour = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineEarliestHoursSunday"]);
+                latestHour = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineLatestHoursSunday"]);
+            } else if (dayOfWeek == 1) { // Monday
+                advanceHours = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineAdvanceHoursMonday"]);
+                earliestHour = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineEarliestHoursMonday"]);
+                latestHour = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineLatestHoursMonday"]);
+            } else if (dayOfWeek == 2) { // Tuesday
+                advanceHours = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineAdvanceHoursTuesday"]);
+                earliestHour = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineEarliestHoursTuesday"]);
+                latestHour = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineLatestHoursTuesday"]);
+            } else if (dayOfWeek == 3) { // Wednesday
+                advanceHours = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineAdvanceHoursWednesday"]);
+                earliestHour = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineEarliestHoursWednesday"]);
+                latestHour = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineLatestHoursWednesday"]);
+            } else if (dayOfWeek == 4) { // Thursday
+                advanceHours = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineAdvanceHoursThursday"]);
+                earliestHour = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineEarliestHoursThursday"]);
+                latestHour = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineLatestHoursThursday"]);
+            } else if (dayOfWeek == 5) { // Friday
+                advanceHours = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineAdvanceHoursFriday"]);
+                earliestHour = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineEarliestHoursFriday"]);
+                latestHour = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineLatestHoursFriday"]);
+            } else if (dayOfWeek == 6) { // Saturday
+                advanceHours = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineAdvanceHoursSaturday"]);
+                earliestHour = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineEarliestHoursSaturday"]);
+                latestHour = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineLatestHoursSaturday"]);
+            }
+
+            if (isNaN(advanceHours)) { // In case valid value not set in configuration file, set default
+                advanceHours = 36;
+            }
+
+            var future = Date.now() + (advanceHours * 60 * 60 * 1000);
+             
+            // Confirm that enough advance hours have been provided
+            if(userInputInMs >= future) {
+                $("#futureTime").hide();
+            } else {
+                $("#futureTime").text("Date must be at least " + advanceHours + " hours from now to place an order on " + weekday[dayOfWeek]).show();
+            }
+
+            // Confirm that earliest time of day is valid
+            if (hourOfDay < earliestHour) {
+                $("#earliestTime").text("Time must start after " + earliestHour + " O'Clock on " + weekday[dayOfWeek]).show();
+            } else {
+                $("#earliestTime").hide();
+            }
+
+            // Confirm that earliest time of day is valid
+            if (hourOfDay > latestHour) {
+                $("#latestTime").text("Time must start after " + latestHour + " O'Clock on " + weekday[dayOfWeek]).show();
+            } else {
+                $("#latestTime").hide();
+            }
+        };
+
+        function validateZipcodes() {
+            // Check that required fields are set
+            if (($("#@(idPrefix)transportMethodID").val() == "") || ($("#@(idPrefix)zipcode"))) {
+                console.log("empty string");
+                return;
+            }
+
+            var allowableZipcode = true;
+            var transportMethod = $("#@(idPrefix)transportMethodID").val();
+
+            // TODO: Ensure that all lookup tables have the same values here
+            if (transportMethod == 26) { // Worker buses = 26
+                var insideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportBusInsideZone"];
+                var outsideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportBusOutsideZone"];
+
+                if (insideZipCodes == "" || outsideZipCodes == "") {
+                    $("#invalidZipcode").hide();
+                    return;
+                }
+
+                if (insideZipCodes.indexOf(parseInt($("#@(idPrefix)zipcode"))) != -1) {
+                    // Zipcode is in the allowable list of zipcodes within zone
+                    allowableZipcode = true;
+                } else if (outsideZipCodes.indexOf(parseInt($("#@(idPrefix)zipcode"))) != -1) {
+                    // Zipcode is in the allowable list of zipcodes outside zone
+                    allowableZipcode = true;
+                } else {
+                    allowableZipcode = false;
+                }
+
+            } else if (transportMethod == 29) { // Van service = 29
+                var insideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportVanInsideZone"];
+                var outsideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportVanOutsideZone"];
+
+                if (insideZipCodes == "" || outsideZipCodes == "") {
+                    $("#invalidZipcode").hide();
+                    return;
+                }
+
+                if (insideZipCodes.indexOf(parseInt($("#@(idPrefix)zipcode"))) != -1) {
+                    // Zipcode is in the allowable list of zipcodes within zone
+                    allowableZipcode = true;
+                } else if (outsideZipCodes.indexOf(parseInt($("#@(idPrefix)zipcode"))) != -1) {
+                    // Zipcode is in the allowable list of zipcodes outside zone
+                    allowableZipcode = true;
+                } else {
+                    allowableZipcode = false;
+                }
+            }
+
+            if (!allowableZipcode) {
+                $("#invalidZipcode").text("This zipcode is not a valid zipcode that we provide service to").show();
+            } else {
+                $("#invalidZipcode").hide();
+            }
+        }
+
+        function calculateTransportationFees() {
+
+            // Check that required fields are set
+            // TODO: Check that a worker has been assigned to the WO
+            if (($("#@(idPrefix)transportMethodID").val() == "") || ($("#@(idPrefix)zipcode"))) {
+                return;
+            }
+
+            var transportFee;
+            var transportMethod = $("#@(idPrefix)transportMethodID").val();
+            var isTransportFeeSet = false;
+
+            // TODO: retrieve num workers assigned to work order
+            var numWorkers = 1;
+
+            // TODO: Ensure that all lookup tables have the same values here
+            if (transportMethod == 26) { // Worker buses = 26
+                var insideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportBusInsideZone"];
+                if (insideZipCodes != "") {
+                    if (insideZipCodes.indexOf(parseInt($("#@(idPrefix)zipcode"))) != -1) {
+                        // Zipcode is in the allowable list of zipcodes within zone
+                        transportFee = @System.Web.Configuration.WebConfigurationManager.AppSettings["TransportBusInsideZoneCost"];
+                        if (transportFee != "") {
+                            isTransportFeeSet = true;
+                        }
+                    } 
+                }
+                var outsideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportBusOutsideZone"];
+                if (outsideZipCodes != "") {
+                    if (outsideZipCodes.indexOf(parseInt($("#@(idPrefix)zipcode"))) != -1) {
+                        // Zipcode is in the allowable list of zipcodes outside zone
+                        transportFee = @System.Web.Configuration.WebConfigurationManager.AppSettings["TransportBusOutsideZoneCost"];
+                        if (transportFee != "") {
+                            isTransportFeeSet = true;
+                        }
+                    }
+                }
+
+            } else if (transportMethod == 29) { // Van service = 29
+                var insideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportVanInsideZone"];
+                if (insideZipCodes != "") {
+                    if (insideZipCodes.indexOf(parseInt($("#@(idPrefix)zipcode"))) != -1) {
+                        // Zipcode is in the allowable list of zipcodes within zone
+                        if (numWorkers = 1) {
+                            transportFee = @System.Web.Configuration.WebConfigurationManager.AppSettings["TransportVanInsideZoneCostOneWorker"];
+                            if (transportFee != "") {
+                                isTransportFeeSet = true;
+                            }
+                        } else if (numWorkers > 1) {
+                            transportFee = @System.Web.Configuration.WebConfigurationManager.AppSettings["TransportVanInsideZoneCostMultipleWorkers"];
+                            if (transportFee != "") {
+                                isTransportFeeSet = true;
+                            }
+                        }
+                    }
+                } 
+                var outsideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportVanOutsideZone"];
+                if (outsideZipCodes != "") {
+                    if (outsideZipCodes.indexOf(parseInt($("#@(idPrefix)zipcode"))) != -1) {
+                        // Zipcode is in the allowable list of zipcodes outside zone
+                        transportFee = @System.Web.Configuration.WebConfigurationManager.AppSettings["TransportVanOutsideZoneCost"];
+                        if (transportFee != "") {
+                            isTransportFeeSet = true;
+                        }
+                    }
+                }
+            }
+
+            if (isTransportFeeSet) {
+                $("#transportationFeesHeader").show();
+                $("#transportationFees").text("$" + transportFee.toFixed(2)).show();
+            } else {
+                $("#transportationFeesHeader").hide();
+            }
+
+        };
+
+        //////////////////////////////////////////////////////////////////////////
+        // VALIDATION
+        //////////////////////////////////////////////////////////////////////////
+        function enableButton() {
+            // TODO: Check that a worker has been assigned to the WO
+            if( ($("#futureTime").is(":visible") == true) || ($("#latestTime").is(":visible") == true) || ($("#earliestTime").is(":visible") == true)  || 
+                ($("#invalidDate").is(":visible") == true) || ($("#invalidZipcode").is(":visible") == true)){
+                // Disable button
+                $("#@(idPrefix)SaveBtn").hide();
+            } else {
+                // Enable button
+                $("#@(idPrefix)SaveBtn").show();
+            }
+        };
+
+        $("#@(idPrefix)dateTimeofWork").focusin(function() {
+            // Confirm date is valid
+            checkDate();
+
+            // Confirm transportation method is valid with date
+            checkTransportationMethodDate();
+
+            // Enable Submit button if valid
+            enableButton();
+        });
+
+        $("#@(idPrefix)employerPhone").focusout(function() {
+        	
+            if($("#@(idPrefix)phone").val() == "") {
+                $("#@(idPrefix)phone").val($("#@(idPrefix)employerPhone").val());
+            }
+
+            // Enable Submit button if valid
+            enableButton();
+        });
+        
+        //////////////////////////////////////////////////////////////////////////
+        // WORKER REQUESTS
+        //////////////////////////////////////////////////////////////////////////
         // workRequest Dialog -doubleclick on row to select
         // create event to handle worker selection from dialog
         $('#workerTable-@(Model.ID)').find('tbody').dblclick(function (event) {            
@@ -537,23 +779,17 @@
             var myLabel =  $(myTr).find('td:eq(0)').text() + ' '+
                                               $(myTr).find('td:eq(2)').text() + ' '+
                                               $(myTr).find('td:eq(4)').text();
-          // handler function created by addRequestionBtn create event
-          //M_workerRequestHandler_@(Model.ID)(myID, myLabel);
-              $('#workerRequests2_WO-@(Model.ID)').append(
-                    $('<option></option>').val(myID).html(myLabel)                
-                );
-          $('a.ui-dialog-titlebar-close').click();
+            // handler function created by addRequestionBtn create event
+            //M_workerRequestHandler_@(Model.ID)(myID, myLabel);
+            $('#workerRequests2_WO-@(Model.ID)').append(
+                  $('<option></option>').val(myID).html(myLabel)                
+              );
+            $('a.ui-dialog-titlebar-close').click();
         });
-        //////////////////////////////////////////////////
-        //
-        //
+
         $('#workerDialog-@(Model.ID)').hide();
         $('#workerTable-@(Model.ID)').hide();
-        //$("#wophone").mask("999-999-9999", { placeholder: " " });
 
-        //////////////////////////////////////////////////
-        //
-        //
         $('#addRequestBtn-@(Model.ID)').click(function () {
             $('#workerTable-@(Model.ID)').dataTable().fnDraw();
             $('#workerTable-@(Model.ID)').show();
@@ -565,18 +801,49 @@
             //    );
             //}
             $("#workerDialog-@(Model.ID)").dialog({
-                    height: 340,
-                    width: 1000,
-                    modal: true
+                height: 340,
+                width: 1000,
+                modal: true
             });
             
             $('#workerDialog-@(Model.ID)').show();
         });
-        //////////////////////////////////////////////////
-        //
-        //
+
         $('#removeRequestBtn-@(Model.ID)').click(function () {
             $('#workerRequests2_WO-@(Model.ID)').find('option:selected').remove();
         });
+
+        //////////////////////////////////////////////////////////////////////////
+        // WORK ASSIGNMENTS
+        //////////////////////////////////////////////////////////////////////////
+        $('#removeWorkerBtn-@(Model.ID)').click(function () {
+            $('a.ui-dialog-titlebar-close').click();
+        });
+
+        var workAssignments = {list: []};
+
+        $('#addWorkerBtn-@(Model.ID)').click(function () {
+            var option = $('<option></option>').val(1).html("HERE"); 
+            $('#workAssignments_WO-@(Model.ID)').append(option);
+
+            var wa = {};
+            wa.skillId = $('#paperOrderNum').val();
+            wa.hours = $('#waPseudoIDCounter').val();
+            wa.desc = $('#AdditionalDescription').val();
+            wa.weight = $('#Weight').val();
+            wa.skillDesc = $('#SkillDescription').val();
+            wa.minHours = $('#MinimumHours').val();
+            wa.hourlyWage = $('#HourlyWage').val();
+
+            //var stringifiedWa = JSON.stringify(wa);
+            workAssignments['list'].push(wa);
+
+            console.log(JSON.stringify(workAssignments));
+            //$('#workerAssignments').val(JSON.stringify(workAssignments));
+            
+            $('#workerAssignments').val(JSON.stringify(workAssignments));
+            $('a.ui-dialog-titlebar-close').click();
+        });
+
     });
 </script>

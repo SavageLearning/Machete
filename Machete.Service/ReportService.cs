@@ -78,7 +78,7 @@ namespace Machete.Service
         public IQueryable<ReportUnit> CountSignins(DateTime beginDate, DateTime endDate)
         {
             IQueryable<ReportUnit> query;
-            var wsiQ = wsiRepo.GetAllQ();
+            IQueryable<WorkerSignin> wsiQ = wsiRepo.GetAllQ();
 
             query = wsiQ
                 .Where(whr => whr.dateforsignin >= beginDate
@@ -105,7 +105,7 @@ namespace Machete.Service
         public IQueryable<ReportUnit> CountUniqueSignins(DateTime beginDate, DateTime endDate)
         {
             IQueryable<ReportUnit> query;
-            var wsiQ = wsiRepo.GetAllQ();
+            IQueryable<WorkerSignin> wsiQ = wsiRepo.GetAllQ();
 
             query = wsiQ
                 .Where(whr => whr.dateforsignin <= endDate)
@@ -135,7 +135,7 @@ namespace Machete.Service
         public IQueryable<ReportUnit> CountAssignments(DateTime beginDate, DateTime endDate)
         {
             IQueryable<ReportUnit> query;
-            var waQ = waRepo.GetAllQ();
+            IQueryable<WorkAssignment> waQ = waRepo.GetAllQ();
 
 
             query = waQ
@@ -161,8 +161,7 @@ namespace Machete.Service
         public IQueryable<ReportUnit> CountCancelled(DateTime beginDate, DateTime endDate)
         {
             IQueryable<ReportUnit> query;
-            var woQ = woRepo.GetAllQ();
-
+            IQueryable<WorkOrder> woQ = woRepo.GetAllQ();
 
             query = woQ.Where(whr => DbFunctions.TruncateTime(whr.dateTimeofWork) == beginDate
                                   && whr.status == WorkOrder.iCancelled)
@@ -187,11 +186,10 @@ namespace Machete.Service
         {
             IQueryable<TypeOfDispatchModel> query;
 
-            var waQ = waRepo.GetAllQ();
-            var wrQ = wrRepo.GetAllQ();
-            var loD = lookCache.getByKeys("worktype", "DWC");
-            var loH = lookCache.getByKeys("worktype", "HHH");
-
+            IQueryable<WorkAssignment> waQ = waRepo.GetAllQ();
+            IQueryable<WorkerRequest> wrQ = wrRepo.GetAllQ();
+            int loD = lookCache.getByKeys("worktype", "DWC");
+            int loH = lookCache.getByKeys("worktype", "HHH");
 
             query = waQ
                 .GroupJoin(wrQ,
@@ -233,9 +231,9 @@ namespace Machete.Service
         {
             IQueryable<AverageWageModel> query;
 
-            var waQ = waRepo.GetAllQ();
-            var woQ = woRepo.GetAllQ();
-            var wsiQ = wsiRepo.GetAllQ();
+            IQueryable<WorkAssignment> waQ = waRepo.GetAllQ();
+            IQueryable<WorkOrder> woQ = woRepo.GetAllQ();
+            IQueryable<WorkerSignin> wsiQ = wsiRepo.GetAllQ();
 
             //ensure we are getting all relevant times (no assumptions)
 
@@ -273,9 +271,9 @@ namespace Machete.Service
         {
             IQueryable<ReportUnit> query;
 
-            var waQ = waRepo.GetAllQ();
-            var woQ = woRepo.GetAllQ();
-            var lQ = lookRepo.GetAllQ();
+            IQueryable<WorkAssignment> waQ = waRepo.GetAllQ();
+            IQueryable<WorkOrder> woQ = woRepo.GetAllQ();
+            IQueryable<Lookup> lQ = lookRepo.GetAllQ();
 
             query = waQ
                 .Join(woQ,
@@ -313,8 +311,8 @@ namespace Machete.Service
         {
             IQueryable<ZipUnit> query;
 
-            var waQ = waRepo.GetAllQ();
-            var lQ = lookRepo.GetAllQ();
+            IQueryable<WorkAssignment> waQ = waRepo.GetAllQ();
+            IQueryable<Lookup> lQ = lookRepo.GetAllQ();
 
             query = waQ
                 .Join(lQ,
@@ -350,9 +348,9 @@ namespace Machete.Service
         {
             IQueryable<ZipModel> query;
 
-            var waQ = waRepo.GetAllQ();
-            var eQ = eRepo.GetAllQ();
-            var skillsQ = ListJobsByZip(beginDate, endDate);
+            IQueryable<WorkAssignment> waQ = waRepo.GetAllQ();
+            IQueryable<Employer> eQ = eRepo.GetAllQ();
+            IQueryable<ZipUnit> skillsQ = ListJobsByZip(beginDate, endDate);
 
             query = waQ
                 .Where(w => w.workOrder.dateTimeofWork >= beginDate 
@@ -377,7 +375,7 @@ namespace Machete.Service
             IQueryable<PlacementUnit> query;
 
 
-            var waQ = waRepo.GetAllQ();
+            IQueryable<WorkAssignment> waQ = waRepo.GetAllQ();
 
             var undup = waQ
                 .Where(whr => whr.workOrder.dateTimeofWork >= beginDate
@@ -435,8 +433,8 @@ namespace Machete.Service
         {
             IQueryable<ActivityUnit> query;
 
-            var asQ = asRepo.GetAllQ();
-            var lQ = lookRepo.GetAllQ();
+            IQueryable<ActivitySignin> asQ = asRepo.GetAllQ();
+            IQueryable<Lookup> lQ = lookRepo.GetAllQ();
 
             query = asQ.Join(lQ,
                     aj => aj.Activity.name,
@@ -482,8 +480,8 @@ namespace Machete.Service
         {
             IQueryable<ReportUnit> query;
 
-            var asQ = asRepo.GetAllQ();
-            var lQ = lookRepo.GetAllQ();
+            IQueryable<ActivitySignin> asQ = asRepo.GetAllQ();
+            IQueryable<Lookup> lQ = lookRepo.GetAllQ();
 
             query = asQ
                 .Join(lQ,
@@ -532,7 +530,7 @@ namespace Machete.Service
             // TODO: Add years as an option for the year-to-year comparison.
             IQueryable<StatusUnit> query;
 
-            var wQ = wRepo.GetAllQ();
+            IQueryable<Worker> wQ = wRepo.GetAllQ();
 
             if (unitOfMeasure == "months" && interval > 0)
             {
@@ -566,15 +564,18 @@ namespace Machete.Service
 
                 return query;
             }
-            else throw new Exception("unitOfMeasure must be \"months\" or \"days\" and interval must be a positive integer > 0.");
+            else
+            {
+                throw new Exception("unitOfMeasure must be \"months\" or \"days\" and interval must be a positive integer > 0.");
+            }
         }
 
         public IQueryable<MemberDateModel> SingleAdults()
         {
             IQueryable<MemberDateModel> query;
 
-            var lQ = lookRepo.GetAllQ();
-            var wQ = wRepo.GetAllQ();
+            IQueryable<Lookup> lQ = lookRepo.GetAllQ();
+            IQueryable<Worker> wQ = wRepo.GetAllQ();
 
             query = wQ
                 .Join(lQ, worker => worker.maritalstatus, lookup => lookup.ID, (worker, lookup) => new
@@ -602,8 +603,8 @@ namespace Machete.Service
         {
             IQueryable<MemberDateModel> query;
 
-            var lQ = lookRepo.GetAllQ();
-            var wQ = wRepo.GetAllQ();
+            IQueryable<Lookup> lQ = lookRepo.GetAllQ();
+            IQueryable<Worker> wQ = wRepo.GetAllQ();
 
             query = wQ
                 .Join(lQ, worker => worker.maritalstatus, lookup => lookup.ID, (worker, lookup) => new
@@ -632,7 +633,7 @@ namespace Machete.Service
             IQueryable<ReportUnit> query;
 
 
-            var wQ = wRepo.GetAllQ();
+            IQueryable<Worker> wQ = wRepo.GetAllQ();
 
             query = wQ
                 .Where(whr => whr.memberexpirationdate > beginDate && whr.dateOfMembership < endDate)
@@ -651,8 +652,8 @@ namespace Machete.Service
             IQueryable<ReportUnit> query;
 
 
-            var wQ = wRepo.GetAllQ();
-            var lQ = lookRepo.GetAllQ();
+            IQueryable<Worker> wQ = wRepo.GetAllQ();
+            IQueryable<Lookup> lQ = lookRepo.GetAllQ();
 
             query = wQ
                 .Where(whr => whr.memberexpirationdate > beginDate && whr.dateOfMembership < endDate)
@@ -684,8 +685,8 @@ namespace Machete.Service
             IQueryable<ReportUnit> query;
 
 
-            var wQ = wRepo.GetAllQ();
-            var lQ = lookRepo.GetAllQ();
+            IQueryable<Worker> wQ = wRepo.GetAllQ();
+            IQueryable<Lookup> lQ = lookRepo.GetAllQ();
 
             query = wQ
                 .Where(whr => whr.memberexpirationdate > beginDate && whr.dateOfMembership < endDate)
@@ -714,8 +715,7 @@ namespace Machete.Service
         {
             IQueryable<ReportUnit> query;
 
-
-            var wQ = wRepo.GetAllQ();
+            IQueryable<Worker> wQ = wRepo.GetAllQ();
 
             query = wQ
                 .Where(whr => whr.memberexpirationdate > beginDate && whr.dateOfMembership < endDate)
@@ -749,8 +749,8 @@ namespace Machete.Service
             IQueryable<ReportUnit> query;
 
 
-            var wQ = wRepo.GetAllQ();
-            var lQ = lookRepo.GetAllQ();
+            IQueryable<Worker> wQ = wRepo.GetAllQ();
+            IQueryable<Lookup> lQ = lookRepo.GetAllQ();
 
             query = wQ
                 .Where(whr => whr.memberexpirationdate > beginDate && whr.dateOfMembership < endDate)
@@ -772,7 +772,7 @@ namespace Machete.Service
             IQueryable<ReportUnit> query;
 
 
-            var wQ = wRepo.GetAllQ();
+            IQueryable<Worker> wQ = wRepo.GetAllQ();
 
             query = wQ
                 .Where(whr => whr.memberexpirationdate > beginDate && whr.dateOfMembership < endDate)
@@ -791,8 +791,8 @@ namespace Machete.Service
             IQueryable<ReportUnit> query;
 
 
-            var wQ = wRepo.GetAllQ();
-            var lQ = lookRepo.GetAllQ();
+            IQueryable<Worker> wQ = wRepo.GetAllQ();
+            IQueryable<Lookup> lQ = lookRepo.GetAllQ();
 
             query = wQ
                 .Where(whr => whr.memberexpirationdate > beginDate && whr.dateOfMembership < endDate)
@@ -819,8 +819,8 @@ namespace Machete.Service
             IQueryable<ReportUnit> query;
 
 
-            var wQ = wRepo.GetAllQ();
-            var lQ = lookRepo.GetAllQ();
+            IQueryable<Worker> wQ = wRepo.GetAllQ();
+            IQueryable<Lookup> lQ = lookRepo.GetAllQ();
 
             query = wQ
                 .Where(whr => whr.memberexpirationdate > beginDate && whr.dateOfMembership < endDate)
@@ -838,8 +838,7 @@ namespace Machete.Service
         {
             IQueryable<ReportUnit> query;
 
-
-            var wQ = wRepo.GetAllQ();
+            IQueryable<Worker> wQ = wRepo.GetAllQ();
 
             query = wQ
                 .Where(whr => whr.memberexpirationdate > beginDate && whr.dateOfMembership < endDate)
@@ -992,22 +991,25 @@ namespace Machete.Service
 
             if (reportType == "weekly" || reportType == "monthly")
             {
-                 getDates = Enumerable.Range(0, 1 + endDate.Subtract(beginDate).Days)
-                    .Select(offset => beginDate.AddDays(offset))
-                    .ToArray();
+                getDates = Enumerable.Range(0, 1 + endDate.Subtract(beginDate).Days)
+                   .Select(offset => beginDate.AddDays(offset))
+                   .ToArray();
             }
-            else throw new Exception("Please select \"weekly\" or \"monthly\" as the report type.");
+            else
+            {
+                throw new Exception("Please select \"weekly\" or \"monthly\" as the report type.");
+            }
 
             getAllClassAttendance = GetAllActivitySignins(beginDate, endDate).ToList();
             eslAssessed = AdultsEnrolledAndAssessedInESL().ToList();
-            var safetyTrainees = getAllClassAttendance
+            IEnumerable<ActivityUnit> safetyTrainees = getAllClassAttendance
                         .Where(whr => whr.activityType == "Health & Safety");
-            var skillsTrainees = getAllClassAttendance
+            IEnumerable<ActivityUnit> skillsTrainees = getAllClassAttendance
                         .Where(whr => whr.activityType == "Skills Training" || whr.activityType == "Leadership Development");
-            var basGardenTrainees = getAllClassAttendance.Where(basic => basic.info == "Basic Gardening");
-            var advGardenTrainees = getAllClassAttendance.Where(adv => adv.info == "Advanced Gardening");
-            var finTrainees = getAllClassAttendance.Where(fin => fin.info == "Financial Education");
-            var oshaTrainees = getAllClassAttendance.Where(osha => osha.info.Contains("OSHA"));
+            IEnumerable<ActivityUnit> basGardenTrainees = getAllClassAttendance.Where(basic => basic.info == "Basic Gardening");
+            IEnumerable<ActivityUnit> advGardenTrainees = getAllClassAttendance.Where(adv => adv.info == "Advanced Gardening");
+            IEnumerable<ActivityUnit> finTrainees = getAllClassAttendance.Where(fin => fin.info == "Financial Education");
+            IEnumerable<ActivityUnit> oshaTrainees = getAllClassAttendance.Where(osha => osha.info.Contains("OSHA"));
 
             q = getDates
                 .Select(g => new ActivityData
@@ -1086,14 +1088,14 @@ namespace Machete.Service
 
             getAllClassAttendance = GetAllActivitySignins(beginDate, endDate).ToList();
             eslAssessed = AdultsEnrolledAndAssessedInESL().ToList();
-            var safetyTrainees = getAllClassAttendance
+            IEnumerable<ActivityUnit> safetyTrainees = getAllClassAttendance
                         .Where(whr => whr.info == "Chemical Safety" );
-            var skillsTrainees = getAllClassAttendance
+            IEnumerable<ActivityUnit> skillsTrainees = getAllClassAttendance
                         .Where(whr => whr.activityType == "Class" || whr.activityType == "Workshops" || whr.info == "Mujeres sin Fronteras");
-            var basGardenTrainees = getAllClassAttendance.Where(basic => basic.info == "Basic Gardening");
-            var advGardenTrainees = getAllClassAttendance.Where(adv => adv.info == "Advanced Gardening");
-            var finTrainees = getAllClassAttendance.Where(fin => fin.info == "Financial Education");
-            var oshaTrainees = getAllClassAttendance.Where(osha => osha.info.Contains("Health & Safety"));
+            IEnumerable<ActivityUnit> basGardenTrainees = getAllClassAttendance.Where(basic => basic.info == "Basic Gardening");
+            IEnumerable<ActivityUnit> advGardenTrainees = getAllClassAttendance.Where(adv => adv.info == "Advanced Gardening");
+            IEnumerable<ActivityUnit> finTrainees = getAllClassAttendance.Where(fin => fin.info == "Financial Education");
+            IEnumerable<ActivityUnit> oshaTrainees = getAllClassAttendance.Where(osha => osha.info.Contains("Health & Safety"));
 
             q = getDates
                 .Select(x => new ActivityData
@@ -1168,7 +1170,10 @@ namespace Machete.Service
                                         + familyHouseholds.Where(y => y.zip != null && y.expDate >= x && y.memDate < x.AddMonths(3).AddDays(1)).Count()
                     });
             }
-            else throw new Exception("Report type must be \"weekly\", \"monthly\" or \"yearly\".");
+            else
+            {
+                throw new Exception("Report type must be \"weekly\", \"monthly\" or \"yearly\".");
+            }
 
             return q;
         }

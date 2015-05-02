@@ -4,10 +4,11 @@
     ViewBag.Title = @Machete.Web.Resources.ValidationStrings.LogOnTitle;
 }
 <div class="account-background">
-    <h2>@Machete.Web.Resources.ValidationStrings.LogOnTitle</h2>
+    <h2>@System.Web.Configuration.WebConfigurationManager.AppSettings["LogOnTitle_EN"]</h2>
     <p>
-        @Machete.Web.Resources.ValidationStrings.LogOnRegisterString1 @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.Register, "Register") @Machete.Web.Resources.ValidationStrings.LogOnRegisterString2
+        @Machete.Web.Resources.ValidationStrings.HirerLogOnRegisterString1 @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.HirerCreateAccount, "Register") @Machete.Web.Resources.ValidationStrings.HirerLogOnRegisterString2
     </p>
+    @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["WorkCenterDescription_EN"]) 
 
     @Html.ValidationSummary(true, @Machete.Web.Resources.ValidationStrings.LogOnUnsuccessful)
 
@@ -49,7 +50,10 @@
     </div>
 </div>
 <script type="text/javascript">
-    function logon() {
-        $("form:first").submit();
-    }
+    $(document).ready(function () {
+    });
+
+        function logon() {
+            $("form:first").submit();
+        }
 </script>

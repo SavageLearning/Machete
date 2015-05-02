@@ -521,7 +521,7 @@ namespace Machete.Test
             if (_uow == null) AddUOW();
             if (_wcache == null) AddWorkerCache();
 
-            _servW = new WorkerService(_repoW, _wcache, _uow);
+            _servW = new WorkerService(_repoW, _wcache, _uow, _repoWA, _repoWO, _repoP);
             return this;
         }
 

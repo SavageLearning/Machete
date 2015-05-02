@@ -178,6 +178,13 @@ namespace Machete.Domain
         [LocalizedDisplayName("timeFlexible", NameResourceType = typeof(Resources.WorkOrder))]
         public bool timeFlexible { get; set; }
 
+        [LocalizedDisplayName("additionalNotes", NameResourceType = typeof(Resources.WorkAssignment))]
+        [StringLength(1000, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.WorkAssignment))]
+        public string additionalNotes { get; set; }
+
+        [LocalizedDisplayName("disclosureAgreement", NameResourceType = typeof(Resources.WorkAssignment))]
+        public bool? disclosureAgreement { get; set; }
+
         /// <summary>
         /// Retrieve paperOrderNum if it exists, else internal WOID
         /// </summary>

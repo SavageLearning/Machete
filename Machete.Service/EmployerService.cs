@@ -61,15 +61,25 @@ namespace Machete.Service
         /// <returns></returns>
         public dataTableResult<Employer> GetIndexView(viewOptions o)
         {
-            var result = new dataTableResult<Employer>();
+            dataTableResult<Employer> result = new dataTableResult<Employer>();
+
             //Get all the records
             IQueryable<Employer> q = repo.GetAllQ();
-            //Search based on search-bar string 
-            if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
 
-            if (o.onlineSource == true) IndexViewBase.filterOnlineSource(o, ref q);
+            //Search based on search-bar string 
+            if (!string.IsNullOrEmpty(o.sSearch))
+            {
+                IndexViewBase.search(o, ref q);
+            }
+
+            if (o.onlineSource == true)
+            {
+                IndexViewBase.filterOnlineSource(o, ref q);
+            }
+
             //Sort the Persons based on column selection
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
+            
             //Limit results to the display length and offset
             result.filteredCount = q.Count();
             result.totalCount = repo.GetAllQ().Count();

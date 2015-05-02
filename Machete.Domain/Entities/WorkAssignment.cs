@@ -108,9 +108,9 @@ namespace Machete.Domain
         [StringLength(500, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Employer))]
         public string workerRatingComments { get; set; }
 
-        [LocalizedDisplayName("additionalNotes", NameResourceType = typeof(Resources.WorkAssignment))]
-        [StringLength(1000, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.WorkAssignment))]
-        public string additionalNotes { get; set; }
+
+        [LocalizedDisplayName("weightLifted", NameResourceType = typeof(Resources.WorkAssignment))]
+        public bool? weightLifted { get; set; }
 
         public string fullIDandName()
         {
