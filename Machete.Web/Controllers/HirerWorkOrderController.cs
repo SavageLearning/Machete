@@ -32,6 +32,7 @@ using Machete.Web.Models;
 using Machete.Web.Resources;
 using Machete.Web.ViewModel;
 using Microsoft.AspNet.Identity;
+using Newtonsoft.Json.Linq;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -96,6 +97,19 @@ namespace Machete.Web.Controllers
         /// <returns>MVC Action Result</returns>
         [Authorize(Roles = "Hirer")]
         public ActionResult Index()
+        {
+            return View();
+        }
+
+        #endregion
+
+        #region List
+        /// <summary>
+        /// HTTP GET /HirerWorkOrder/List
+        /// </summary>
+        /// <returns>MVC Action Result</returns>
+        [Authorize(Roles = "Hirer")]
+        public ActionResult List()
         {
             return View();
         }
@@ -216,34 +230,45 @@ namespace Machete.Web.Controllers
         /// <summary>
         /// HTTP GET /HirerWorkOrder/Create
         /// </summary>
-        /// <param name="employerID">Employer ID associated with Work Order (Parent Object)</param>
         /// <returns>MVC Action Result</returns>
         [Authorize(Roles = "Hirer")]
         public ActionResult Create()
         {
             WorkOrder wo = new WorkOrder();
+            
+            // Retrieve user ID of signed in Employer
+            string userID = HttpContext.User.Identity.GetUserId();
 
-            // Retrieve employer ID of signed in Employer
-            string employerID = HttpContext.User.Identity.GetUserId();
-
-            Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == employerID).FirstOrDefault();
+            // Retrieve Employer record
+            Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == userID).FirstOrDefault();
             if (employer != null)
             {
+                // Employer has created profile or work order already
+
+                // Associate WO with Employer
                 wo.EmployerID = employer.ID;
-            }
-            else
-            {
-                // TODO: add error processing
+
+                // Set up default values from Employer record
+                wo.contactName = employer.name;
+                wo.phone = employer.phone;
+                wo.workSiteAddress1 = employer.address1;
+                wo.workSiteAddress2 = employer.address2;
+                wo.city = employer.city;
+                wo.state = employer.state;
+                wo.zipcode = employer.zipcode;
             }
 
             // Set default values
-            wo.dateTimeofWork = DateTime.Today;
+            wo.dateTimeofWork = DateTime.Today.AddHours(9).AddDays(3); // Set default work time to 9am three days from now
             wo.transportMethodID = Lookups.getDefaultID(LCategory.transportmethod);
             wo.typeOfWorkID = Lookups.getDefaultID(LCategory.worktype);
             wo.status = Lookups.getDefaultID(LCategory.orderstatus);
             wo.timeFlexible = true;
             wo.onlineSource = true;
+            wo.disclosureAgreement = false;
             ViewBag.workerRequests = new List<SelectListItem> { };
+            ViewBag.workAssignments = new List<SelectListItem> { };
+
             return PartialView("Create", wo);
         }
 
@@ -256,27 +281,108 @@ namespace Machete.Web.Controllers
         /// <returns>JSON Object representing new Work Order</returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Hirer")]
-        public ActionResult Create(WorkOrder wo, string userName, List<WorkerRequest> workerRequestList)
+        //public ActionResult Create(WorkOrder wo, string userName, List<WorkerRequest> workerRequestList, List<WorkAssignment> workAssignments)
+        //public ActionResult Create(WorkOrder wo, string userName, string testField)
+        public ActionResult Create(WorkOrder wo, string userName, string workerAssignments)
         {
             UpdateModel(wo);
+
+            // Retrieve user ID of signed in Employer
+            string userID = HttpContext.User.Identity.GetUserId();
+
+            // Retrieve Employer record
+            Employer onlineEmployer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == userID).FirstOrDefault();
+            if (onlineEmployer != null)
+            {
+                // Employer has created profile or work order already
+
+                // Associate WO with Employer
+                wo.EmployerID = onlineEmployer.ID;
+            }
+            else
+            {
+                // Employer has NOT created profile or work order yet
+                Employer employer = new Employer();
+
+                // Set up default values from WO
+                employer.name = wo.contactName;
+                employer.phone = wo.phone;
+                employer.address1 = wo.workSiteAddress1;
+                employer.address2 = wo.workSiteAddress2;
+                employer.city = wo.city;
+                employer.state = wo.state;
+                employer.zipcode = wo.zipcode;
+
+                // Set up default online Employer profile
+                employer.isOnlineProfileComplete = true;
+                employer.onlineSigninID = userID;
+                employer.email = HttpContext.User.Identity.GetUserName(); // The Employer's username is their email address
+                employer.active = true;
+                employer.business = false;
+                employer.blogparticipate = false;
+                employer.onlineSource = true;
+                employer.returnCustomer = false;
+                employer.receiveUpdates = true;
+                employer.business = false;
+
+                Employer newEmployer = eServ.Create(employer, userName);
+                if (newEmployer != null)
+                {
+                    wo.EmployerID = newEmployer.ID;
+                }
+            }
+
+            // Create Work Order
             WorkOrder neworder = woServ.Create(wo, userName);
 
-            // New Worker Requests to add
-            foreach (var workerRequest in workerRequestList)
-            {
-                workerRequest.workOrder = neworder;
-                workerRequest.workerRequested = wServ.Get(workerRequest.WorkerID);
-                workerRequest.updatedby(userName);
-                workerRequest.createdby(userName);
-                neworder.workerRequests.Add(workerRequest);
-            }
-            woServ.Save(neworder, userName);
+            // Create Work Assignments
+            dynamic parsedWorkerRequests = JObject.Parse(workerAssignments);
 
+            for (int i = 0; i < parsedWorkerRequests["list"].Count; i++)
+            {
+                WorkAssignment wa = new WorkAssignment();
+
+
+                // Create WA from Employer data
+                wa.workOrderID = neworder.ID;
+                wa.skillID = parsedWorkerRequests["list"][i].skillId;
+                wa.hours = parsedWorkerRequests["list"][i].hours;
+                wa.weightLifted = parsedWorkerRequests["list"][i].weight;
+                wa.hourlyWage = 15; // TODO: lookup this value intead parsedWorkerRequests["list"][i].hourlyWage;
+                wa.pseudoID = i + 1;
+                wa.description = parsedWorkerRequests["list"][i].desc;
+
+                // Set up defaults
+                wa.active = true;
+                wa.englishLevelID = 0; // TODO: note- all incoming online work assignments won't have the proper English level set (this needs to be set by the worker center)
+                wa.surcharge = 0.0;
+                wa.days = 1;
+                wa.qualityOfWork = 0;
+                wa.followDirections = 0;
+                wa.attitude = 0;
+                wa.reliability = 0;
+                wa.transportProgram = 0;
+
+                WorkAssignment newWa = waServ.Create(wa, userName);
+            }
+
+            //// New Worker Requests to add
+            //foreach (var workerRequest in workerRequestList)
+            //{
+            //    workerRequest.workOrder = neworder;
+            //    workerRequest.workerRequested = wServ.Get(workerRequest.WorkerID);
+            //    workerRequest.updatedby(userName);
+            //    workerRequest.createdby(userName);
+            //    neworder.workerRequests.Add(workerRequest);
+            //}
+            //woServ.Save(neworder, userName);
+
+            /* TODO: remove this JSON return - this was previously used to repopulate the page - need to redirect user to new page instead */
             // JSON object with new work order data
             return Json(new
             {
                 sNewRef = neworder.getTabRef(),
-                sNewLabel = "cc" + Machete.Web.Resources.WorkOrders.tabprefix + neworder.getTabLabel(),
+                sNewLabel = Machete.Web.Resources.WorkOrders.tabprefix + neworder.getTabLabel(),
                 iNewID = neworder.ID
             },
             JsonRequestBehavior.AllowGet);
@@ -365,41 +471,6 @@ namespace Machete.Web.Controllers
             WorkOrder workOrder = woServ.Get(id);
             return View(workOrder);
         }
-
-        /// <summary>
-        /// Creates the view for email
-        /// </summary>
-        /// <param name="id">WorkOrder ID</param>
-        /// <returns>MVC Action Result</returns>
-        [Authorize(Roles = "Hirer")]
-        public ActionResult ViewForEmail(int id)
-        {
-            WorkOrder workOrder = woServ.Get(id);
-            return PartialView(workOrder);
-        }
         #endregion
-
-        // TODO: Consider allowing an employer to cancel a work order
-        #region Delete
-        /// <summary>
-        /// POST: /HirerWorkOrder/Delete/ID
-        /// </summary>
-        /// <param name="id">WorkOrder ID</param>
-        /// <param name="user">User performing action</param>
-        /// <returns>MVC Action Result</returns>
-        [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Hirer")]
-        public ActionResult Delete(int id, string user)
-        {
-            woServ.Delete(id, user);
-            return Json(new
-            {
-                status = "OK",
-                deletedID = id
-            },
-            JsonRequestBehavior.AllowGet);
-        }
-        #endregion
-
     }
 }

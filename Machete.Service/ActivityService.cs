@@ -57,24 +57,33 @@ namespace Machete.Service
 
         public dataTableResult<Activity> GetIndexView(viewOptions o)
         {
-            var result = new dataTableResult<Activity>();
+            dataTableResult<Activity> result = new dataTableResult<Activity>();
             IQueryable<Activity> q = repo.GetAllQ();
             IEnumerable<Activity> e;
-            var asRepo = (IActivitySigninRepository)asServ.GetRepo();
+            IActivitySigninRepository asRepo = (IActivitySigninRepository)asServ.GetRepo();
 
             if (o.personID > 0 && o.attendedActivities == false)
+            {
                 IndexViewBase.getUnassociated(o.personID, ref q, repo, asRepo);
+            }
             if (o.personID > 0 && o.attendedActivities == true)
+            {
                 IndexViewBase.getAssociated(o.personID, ref q, asRepo);
+            }
             if (!o.authenticated)
             {
-                if (o.date == null) o.date = DateTime.Now;
+                if (o.date == null)
+                {
+                    o.date = DateTime.Now;
+                }
                 IndexViewBase.unauthenticatedView((DateTime)o.date, ref q);
             }
 
             e = q.AsEnumerable();
             if (!string.IsNullOrEmpty(o.sSearch))
+            {
                 IndexViewBase.search(o, ref e, lcache);
+            }
 
             IndexViewBase.sortOnColName(o.sortColName, 
                                         o.orderDescending, 
@@ -94,7 +103,10 @@ namespace Machete.Service
             foreach (int aID in actList)
             {
                 Activity act = repo.GetById(aID);
-                if (act == null) throw new Exception("Activity from list is null");
+                if (act == null)
+                {
+                    throw new Exception("Activity from list is null");
+                }
                 int matches = asServ.GetManyByPersonID(aID, personID).Count();
 
                 if (matches == 0)
@@ -114,9 +126,15 @@ namespace Machete.Service
             foreach (int aID in actList)
             {
                 Activity act = repo.GetById(aID);
-                if (act == null) throw new Exception("Activity from list is null");
+                if (act == null)
+                {
+                    throw new Exception("Activity from list is null");
+                }
                 ActivitySignin asi = asServ.GetByPersonID(aID, personID);
-                if (asi == null) throw new NullReferenceException("ActivitySignin.GetByPersonID returned null");
+                if (asi == null)
+                {
+                    throw new NullReferenceException("ActivitySignin.GetByPersonID returned null");
+                }
                 asServ.Delete(asi.ID, user);
             }
         }

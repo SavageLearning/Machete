@@ -57,8 +57,16 @@ namespace Machete.Service
             IQueryable<Lookup> q = repo.GetAllQ();
             //
             //Search based on search-bar string 
-            if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
-            if (!string.IsNullOrEmpty(o.category)) IndexViewBase.byCategory(o, ref q);
+            if (!string.IsNullOrEmpty(o.sSearch))
+            {
+                IndexViewBase.search(o, ref q);
+            }
+
+            if (!string.IsNullOrEmpty(o.category))
+            {
+                IndexViewBase.byCategory(o, ref q);
+            }
+
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
 
             q = q.Skip<Lookup>(o.displayStart).Take(o.displayLength);

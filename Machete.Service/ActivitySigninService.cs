@@ -81,17 +81,28 @@ namespace Machete.Service
             IQueryable<ActivitySignin> q = repo.GetAllQ();
             IEnumerable<ActivitySignin> e;
             IEnumerable<asiView> eSIV;
-            //
-            if (o.date != null) IndexViewBase.diffDays(o, ref q);
-            // WHERE on activityID
+
+            if (o.date != null)
+            {
+                IndexViewBase.diffDays(o, ref q);
+            }
+
+
             if (o.personID > 0)
+            {
                 IndexViewBase.GetAssociated(o.personID, ref q);
+            }
+
             if (o.activityID != null)
+            {
                 q = q.Where(p => p.activityID == o.activityID);
-            //            
+            }
+
             e = q.ToList();
             if (!string.IsNullOrEmpty(o.sSearch))
+            {
                 IndexViewBase.search(o, ref e, wcache.GetCache());
+            }
 
             eSIV = e.Join(wcache.GetCache(),
                             s => s.dwccardnum,
@@ -104,9 +115,13 @@ namespace Machete.Service
             result.filteredCount = eSIV.Count();
             result.totalCount = repo.GetAllQ().Count();
             if ((int)o.displayLength >= 0)
+            {
                 result.query = eSIV.Skip((int)o.displayStart).Take((int)o.displayLength);
+            }
             else
-                result.query = eSIV;           
+            {
+                result.query = eSIV;
+            }
             return result;
         }
         /// <summary>
@@ -119,21 +134,34 @@ namespace Machete.Service
             Person p = null;
             Worker w = null;
             int count = 0;
-            if (s.activityID == 0) throw new ArgumentOutOfRangeException("ActivitySignin's activityID is zero");
+            if (s.activityID == 0)
+            {
+                throw new ArgumentOutOfRangeException("ActivitySignin's activityID is zero");
+            }
             //
             // Two possible keys to find person record: personID and dwccardnum
             // card signins will only have dwccardnums. AssignLists will only have personID.
             if (s.personID == null && s.dwccardnum == 0)
+            {
                 throw new NullReferenceException("ActivitySignin's personID and dwccardnum are both null");
+            }
             if (s.personID < 1 && s.dwccardnum < 1)
+            {
                 throw new NullReferenceException("ActivitySignin's personID and dwccardnum are invalid values");
+            }
 
             if (s.personID > 0)
             {
                 p = pRepo.GetById((int)s.personID);
                 w = p.Worker;
-                if (w == null) throw new NullReferenceException("Worker object is null. A Worker record must exist to assign a person to activities.");
-                if (w.dwccardnum == 0) throw new ArgumentOutOfRangeException("Membership ID in Worker record is zero.");
+                if (w == null)
+                {
+                    throw new NullReferenceException("Worker object is null. A Worker record must exist to assign a person to activities.");
+                }
+                if (w.dwccardnum == 0)
+                {
+                    throw new ArgumentOutOfRangeException("Membership ID in Worker record is zero.");
+                }
                 s.dwccardnum = w.dwccardnum;
             }
             else //assuming dwccardnum pressent
@@ -141,7 +169,10 @@ namespace Machete.Service
                 //
                 //TODO: GENERALIZE away from 5 digit dwccardnum
                 w = wRepo.Get(ww => ww.dwccardnum == s.dwccardnum);
-                if (w == null) throw new NullReferenceException("card ID doesn't match a worker");
+                if (w == null)
+                {
+                    throw new NullReferenceException("card ID doesn't match a worker");
+                }
                 p = w.Person;
                 
                 //
@@ -154,7 +185,10 @@ namespace Machete.Service
             //Search for duplicate signin for the same day
             count = repo.GetAllQ().Count(q => q.activityID == s.activityID &&
                                               q.personID == p.ID);
-            if (count == 0) Create(s, user);
+            if (count == 0)
+            {
+                Create(s, user);
+            }
             return w;
         }
 

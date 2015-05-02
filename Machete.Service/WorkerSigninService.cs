@@ -101,7 +101,9 @@ namespace Machete.Service
             int nextID = (wsiDown.lottery_sequence ?? 0) + 1; // 5
 
             if (nextID == 1)
+            {
                 return false;
+            }
             //this can't happen with current GUI settings (10/10/2013)
 
             WorkerSignin wsiUp = repo.GetById(
@@ -140,7 +142,9 @@ namespace Machete.Service
             int prevID = (wsiUp.lottery_sequence ?? 0) - 1; // 3
 
             if (prevID < 1)
+            {
                 return false;
+            }
 
             WorkerSignin wsiDown = repo.GetById(
                                     repo.GetAllQ()
@@ -177,7 +181,9 @@ namespace Machete.Service
             wsi.lottery_timestamp = null;
             Save(wsi, user);
             if (date != null)
+            {
                 sequenceLottery(date, user);
+            }
             return true;
         }
         /// <summary>
@@ -332,8 +338,14 @@ namespace Machete.Service
                     iWasNotSignedIn.Append(addMeToTheList);
                 }
             }
-            if (iWasNotSignedIn.Length > 0) return iWasNotSignedIn.ToString();
-            else return "Success!";
+            if (iWasNotSignedIn.Length > 0)
+            {
+                return iWasNotSignedIn.ToString();
+            }
+            else
+            {
+                return "Success!";
+            }
         }
 
 
@@ -344,26 +356,38 @@ namespace Machete.Service
         /// <returns>dataTableResult wsiView</returns>
         public dataTableResult<wsiView> GetIndexView(viewOptions o)
         {
-            //
-            var result = new dataTableResult<wsiView>();
+
+            dataTableResult<wsiView> result = new dataTableResult<wsiView>();
             IQueryable<WorkerSignin> q = repo.GetAllQ();
             IEnumerable<WorkerSignin> e;
             IEnumerable<wsiView> eSIV;
-            //
-            if (o.date != null) IndexViewBase.diffDays(o, ref q);                
-            //
+
+            if (o.date != null)
+            {
+                IndexViewBase.diffDays(o, ref q);
+            }
+
             if (o.typeofwork_grouping != null)
+            {
                 IndexViewBase.typeOfWork(o, ref q);
-            // 
+            }
+
             // wa_grouping
             IndexViewBase.waGrouping(o, ref q, wrRepo);
-            //
+
             // dwccardnum populated
-            if (o.dwccardnum > 0) IndexViewBase.dwccardnum(o, ref q);
+            if (o.dwccardnum > 0)
+            {
+                IndexViewBase.dwccardnum(o, ref q);
+            }
+
             e = q.ToList();
             if (!string.IsNullOrEmpty(o.sSearch))
+            {
                 IndexViewBase.search(o, ref e, wcache.GetCache());
-            var cache = wcache.GetCache();
+            }
+
+            IEnumerable<Worker> cache = wcache.GetCache();
             eSIV = e.Join(cache, 
                             s => s.dwccardnum, 
                             w => w.dwccardnum, 
@@ -375,9 +399,14 @@ namespace Machete.Service
             result.filteredCount = eSIV.Count();
             result.totalCount = repo.GetAllQ().Count();
             if ((int)o.displayLength >= 0)
+            {
                 result.query = eSIV.Skip((int)o.displayStart).Take((int)o.displayLength);
+            }
             else
+            {
                 result.query = eSIV;
+            }
+
             return result;
 
         }
@@ -391,6 +420,7 @@ namespace Machete.Service
             //Search for worker with matching card number
             Worker wfound;
             wfound = wRepo.GetAllQ().FirstOrDefault(s => s.dwccardnum == signin.dwccardnum);
+
             if (wfound != null)
             {
                 signin.WorkerID = wfound.ID;
@@ -401,11 +431,11 @@ namespace Machete.Service
             
             try 
             { 
-            sfound = srepo
-                .Select(s => new { s.dwccardnum, s.dateforsignin })
-                .Where(t => DbFunctions.TruncateTime(t.dateforsignin) == signin.dateforsignin.Date
-                    && t.dwccardnum == signin.dwccardnum)
-                .Count();
+                sfound = srepo
+                    .Select(s => new { s.dwccardnum, s.dateforsignin })
+                    .Where(t => DbFunctions.TruncateTime(t.dateforsignin) == signin.dateforsignin.Date
+                        && t.dwccardnum == signin.dwccardnum)
+                    .Count();
             }
             catch(NotSupportedException _nse)
             {
@@ -418,8 +448,14 @@ namespace Machete.Service
                     .Count();
             }
 
-            if (sfound == 0) Create(signin, user);
-            else throw new InvalidOperationException("has already been signed in!");
+            if (sfound == 0)
+            {
+                Create(signin, user);
+            }
+            else
+            {
+                throw new InvalidOperationException("has already been signed in!");
+            }
         }
     }
 }

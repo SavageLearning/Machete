@@ -98,7 +98,10 @@ namespace Machete.Service
                     .AsQueryable();
             List<WorkOrder> list = query.ToList();
             List<WorkOrder> final = list.ToList();
-            if (!assignedOnly) return final;
+            if (!assignedOnly)
+            {
+                return final;
+            }
             int waCounter = 0;
             foreach (WorkOrder wo in list)
             {
@@ -261,19 +264,19 @@ namespace Machete.Service
         public override WorkOrder Create(WorkOrder workOrder, string user)
         {
             WorkOrder wo;
-            workOrder.createdby(user); // TODO: investigate if this is needed- this appears to already be set elsewhere (WHERE?)
+            workOrder.createdby(user); // Set timestamps
             wo = repo.Add(workOrder);
             // TODO: investigate why worker requests collection is added to wo - there is a similar collection of wa added to wo
             wo.workerRequests = new Collection<WorkerRequest>();
-            uow.Commit();
             
             // Initialize PaperOrdernum to WO ID if not set
             if (wo.paperOrderNum == null)
             {
                 wo.paperOrderNum = wo.ID;
-                uow.Commit();
             }
-            
+
+            uow.Commit();
+
             // Log results
             _log(workOrder.ID, user, "WorkOrder created");
 
@@ -297,7 +300,7 @@ namespace Machete.Service
             IEnumerable<WorkOrderSummary> woResult;
             IEnumerable<WorkAssignmentSummary> waResult;
             IEnumerable<WOWASummary> wowaResult;
-            var result = new dataTableResult<WOWASummary>();
+            dataTableResult<WOWASummary> result = new dataTableResult<WOWASummary>();
 
             //pulling from DB here because the joins grind it to a halt
             // TODO: investigate how to do a left join - results only appear when there are WA assigned to WO
