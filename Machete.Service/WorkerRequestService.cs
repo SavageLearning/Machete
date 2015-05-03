@@ -48,5 +48,6 @@ namespace Machete.Service
         {
             return repo.Get(wr => wr.WorkOrderID == woid && wr.WorkerID == wkrid);
         }
+
     }
 }

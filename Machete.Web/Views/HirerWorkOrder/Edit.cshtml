@@ -43,6 +43,8 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        alert("jQuery library is loaded!");
+
         var eDis = @editDisable; //ignore visual studio error; moved assignment here so it would parse the rest
         if ( eDis == 1 ) { 
             $('#WorkOrderTab-@(Model.ID)').find('input,select,textarea').attr('disabled', 'disabled');
@@ -54,24 +56,6 @@
         $('#@(idPrefix)englishRequired').mUI('selectToggleOnValue', {
             target: $('#@(idPrefix)englishRequiredNoteRow'),
             showVal: "@(Shared.yes)"
-        });
-
-        // Business name toggle
-        $('#@(idPrefix)business').mUI('selectToggleOnValue', {
-            target: $('#@(idPrefix)businessNameRow'),
-            showVal: "@(Shared.yes)"
-        });
-
-        // Employer name toggle
-        $('#@(idPrefix)business').mUI('selectToggleOnValue', {
-            target: $('#@(idPrefix)employerNameRow'),
-            showVal: "@(Shared.no)"
-        });
-
-        // ReferredBy Other toggle
-        $('#@(idPrefix)referredby').mUI('selectToggleOnValue', {
-            target: $('#@(idPrefix)referredbyOtherRow'),
-            showVal: "Other"
         });
 
         // machete UI detect changes on forms in tabs   

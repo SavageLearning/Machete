@@ -249,4 +249,13 @@
   <data name="HirerWOCreateValSummary" xml:space="preserve">
     <value>Work Order creation was unsuccessful. Please correct the errors and try again.</value>
   </data>
+  <data name="HirerCreateAccount" xml:space="preserve">
+    <value>Create an account</value>
+  </data>
+  <data name="HirerLogOnRegisterString1" xml:space="preserve">
+    <value>Please enter your email address and password.</value>
+  </data>
+  <data name="HirerLogOnRegisterString2" xml:space="preserve">
+    <value>if you don't have one.</value>
+  </data>
 </root>

@@ -339,4 +339,61 @@
   <data name="hirerProfile" xml:space="preserve">
     <value>Profile</value>
   </data>
+  <data name="businessHoursModal" xml:space="preserve">
+    <value>Business Hours</value>
+  </data>
+  <data name="acknowledgement" xml:space="preserve">
+    <value>I acknowledge that:</value>
+  </data>
+  <data name="contactName" xml:space="preserve">
+    <value>Who will be managing the worker(s) at the work site? This may be the person placing the order or another person.</value>
+  </data>
+  <data name="workDescription" xml:space="preserve">
+    <value>Please be as detailed as possible in describing the work needed. Providing detailed information allows us to match you with the best available worker. If worker is asked to do something not listed here, he or she reserves the right to refuse service and minimum wages will still be charged.</value>
+  </data>
+  <data name="workersRequested" xml:space="preserve">
+    <value>Workers Requested</value>
+  </data>
+  <data name="workSiteAddress1Dialog" xml:space="preserve">
+    <value>Please provide the address where the work will be completed. This is the address to which we will send workers.</value>
+  </data>
+  <data name="submit" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="businessName" xml:space="preserve">
+    <value>Business Name</value>
+  </data>
+  <data name="contactNameWorkSite" xml:space="preserve">
+    <value>Contact Name (Work Site)</value>
+  </data>
+  <data name="disclaimer" xml:space="preserve">
+    <value>Disclaimer</value>
+  </data>
+  <data name="isBusiness" xml:space="preserve">
+    <value>Is a Business?</value>
+  </data>
+  <data name="phoneWorkSite" xml:space="preserve">
+    <value>Phone (Work Site)</value>
+  </data>
+  <data name="timeNeeded" xml:space="preserve">
+    <value>Time Needed</value>
+  </data>
+  <data name="workAssignments" xml:space="preserve">
+    <value>Assign Worker</value>
+  </data>
+  <data name="workDetails" xml:space="preserve">
+    <value>Work Details</value>
+  </data>
+  <data name="workRequest" xml:space="preserve">
+    <value>Work Request</value>
+  </data>
+  <data name="workSiteAddress1" xml:space="preserve">
+    <value>Address (1) Work Site</value>
+  </data>
+  <data name="workSiteAddress2" xml:space="preserve">
+    <value>Address (2) Work Site</value>
+  </data>
+  <data name="weightRequirements" xml:space="preserve">
+    <value>Weight Requirements</value>
+  </data>
 </root>

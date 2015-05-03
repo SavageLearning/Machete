@@ -6,29 +6,25 @@
     string empRecType = "employer";
     string idPrefix = recType + Model.ID + "-";
     string empPrefix = empRecType + Model.EmployerID + "-";
-
 }
+
 @using (Html.BeginForm("Create", "HirerWorkOrder", FormMethod.Post, 
                         new { @id = "workOrderCreateForm" }))
 {
     @Html.ValidationSummary(true, @Machete.Web.Resources.ValidationStrings.HirerWOCreateValSummary)
     @Html.Partial("HirerWorkOrderEdit", Model)
-
     <input type="submit" id="@(idPrefix)SaveBtn" class="formButton saveBtn"
-           value="@WorkOrders.createsubmit" tabindex="41"/>
-
+        value="@WorkOrders.submit" tabindex="41" />
 }
+    
 <script type="text/javascript">
     $(document).ready(function () {
+
+        alert("Testing JQuery II");
+
         var woCreateForm = $('#workOrderCreateForm');
         $('.formButton').button();
 
-        // Toggle English required note box
-        $('#@(idPrefix)englishRequired').mUI('selectToggleOnValue', {
-            target: $('#@(idPrefix)englishRequiredNoteRow'),
-            showVal: "@(Shared.yes)"
-        });
-        //
         // machete UI detect changes on forms in tabs   
         woCreateForm.mUI('formDetectChanges', {
             recType: "@(recType)",
@@ -36,30 +32,10 @@
             changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
             changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
         });
-        //
+
         // Add validation to dynamic content
         $.validator.unobtrusive.parseDynamicContent('#workOrderCreateForm');
-        //
-        // Get the employerID and put it in the WO form field
-        // TODO - fix this
-        /*
-            // Retrieve employer ID of signed in Employer
-    int eid;
-    string employerID = HttpContext.User.Identity.GetUserId();
 
-    Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == employerID).FirstOrDefault();
-    if (employer != null)
-    {
-        eid = employer.ID;
-    }
-    else
-    {
-        // TODO: add error processing.
-    }
-*/
-        var eid = 1;
-        woCreateForm.find('#@(idPrefix)EmployerID').val(eid);
-        //
         // WorkOrder Create submit event
         woCreateForm.mUI('tabFormSubmit', {
             create: true,
@@ -67,31 +43,52 @@
             recType: "@(recType)",
             preProcess: function () {
                 $('#workerRequests2_WO-@(Model.ID)').find('option').attr("selected", "selected");
+                $('#workAssignments_WO-@(Model.ID)').find('option').attr("selected", "selected");
             },
             postProcess: function () {
                 $('html, body').animate({ scrollTop: $(document).height() }, 'slow');
             },
             formLevel: 2
         });
-        ////////////////////////////////////////////////////////////////
-        //
-        // Copy info  submit event
-        //
-/*
-        $('#@(idPrefix)copyEmployerInfo').bind("click.employerEvents", function (e) {
-            var employerTab = $('form[id^=EmployerTab]');
-            woCreateForm.find('#@(idPrefix)contactName').val(employerTab.find('#@(empPrefix)name').val());
-            woCreateForm.find('#@(idPrefix)workSiteAddress1').val(employerTab.find('#@(empPrefix)address1').val());
-            woCreateForm.find('#@(idPrefix)workSiteAddress2').val(employerTab.find('#@(empPrefix)address2').val());
-            woCreateForm.find('#@(idPrefix)city').val(employerTab.find('#@(empPrefix)city').val());
-            woCreateForm.find('#@(idPrefix)state').val(employerTab.find('#@(empPrefix)state').val());
-            woCreateForm.find('#@(idPrefix)zipcode').val(employerTab.find('#@(empPrefix)zipcode').val());
-            woCreateForm.find('#@(idPrefix)phone').val(employerTab.find('#@(empPrefix)phone').val());
-            $(woCreateForm).mUI('markChanged', {
-                level: 2,
-                recType: "@(recType)"
-            });
-        });
-*/
+
+        // Note: this code was causing JQuery not to load when placed in HirerWorkOrderEdit.cshtml
+        // TODO: investigate why!?
+        function checkTransportationMethodDate() {
+            if ($("#@(idPrefix)transportMethodID").val() == "") {
+                return;
+            }
+
+            // Note: this is logic that is specific to Casa Latina only
+            var workerCenter = @System.Web.Configuration.WebConfigurationManager.AppSettings["OrganizationName"];
+            if (workerCenter != "Casa Latina") {
+                $("#invalidTransportDate").hide();
+                return;
+            }
+
+            var userInput = $("#@(idPrefix)dateTimeofWork").val();
+            var userInputInMs = new Date(userInput);
+
+            if (isNaN(userInputInMs.valueOf())) {
+                $("#invalidDate").text("The date must be in a valid date form (e.g. 03/14/2015 14:00)").show();
+                return;
+            } else {
+                $("#invalidDate").hide();
+            }
+
+            var dayOfWeek = userInputInMs.getDay();
+
+            if (dayOfWeek == 0) { // Sunday
+                // Note: only valid transportation method on Sunday is Pickup
+                // TODO: this value is hard-coded, should be replaced
+                if ((transportMethod == 26) || (transportMethod == 29)) { // Worker buses = 26
+                    $("#invalidTransportDate").text("Workers can only be picked up for work on Sunday").show();
+                } else {
+                    $("#invalidTransportDate").hide();
+                }
+            }
+
+        };
+
+
     });
 </script>

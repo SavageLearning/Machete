@@ -86,7 +86,7 @@ namespace Machete.Data
                 new UserStore<ApplicationUser>(context));
             var user = new ApplicationUser()
             {
-                UserName = "jadmin",
+                UserName = "j.admin",
                 IsApproved = true,
                 Email = "here@there.org"
             };

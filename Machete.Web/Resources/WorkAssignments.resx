@@ -279,4 +279,13 @@
   <data name="workerNotRated" xml:space="preserve">
     <value>Work Not Rated Yet</value>
   </data>
+  <data name="additionalDescription" xml:space="preserve">
+    <value>Additional Description</value>
+  </data>
+  <data name="minHours" xml:space="preserve">
+    <value>Minimum Hours</value>
+  </data>
+  <data name="skillDescription" xml:space="preserve">
+    <value>Skill Description</value>
+  </data>
 </root>

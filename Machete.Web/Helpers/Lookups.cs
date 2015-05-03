@@ -212,6 +212,27 @@ namespace Machete.Web.Helpers
             return list;
         }
 
+        /// <summary>
+        /// Get the SelectList for the group
+        /// </summary>
+        /// <param name="locale"></param>
+        /// <returns></returns>
+        public static SelectList getTransportationMethodList()
+        {
+            var locale = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant();
+            string field;
+            SelectList list;
+            if (locale == "ES") field = "text_ES";
+            else field = "text_EN";
+            // NOTE: transportation methods hard-coded to support Casa Latina
+            list = new SelectList(lcache.getCache().Where(s => s.category == "transportmethod" && (s.ID == 29 || s.ID == 31 || s.ID == 32)),
+                                    "ID",
+                                    field,
+                                    getDefaultID("transportmethod"));
+            if (list == null) throw new ArgumentNullException("Get returned no lookups");
+            return list;
+        }
+
         public static List<SelectListItemEmail> getEmailTemplates()
         {
             var locale = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant();
@@ -293,7 +314,39 @@ namespace Machete.Web.Helpers
                         fixedJob = Convert.ToString(x.fixedJob)
                     }));
         }
+
+        /// <summary>
+        /// get the List of skills to present to Employer in Employer online interface
+        /// </summary>
+        /// <returns>List of skills</returns>
+        public static List<SelectListItemEx> getOnlineEmployerSkill()
+        {
+            var locale = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant();
+            IEnumerable<Lookup> prelist = lcache.getCache()
+                                                     .Where(s => s.category == LCategory.skill);
+            Func<Lookup, string> textFunc; //anon function
+            if (prelist == null) throw new ArgumentNullException("No skills returned");
+
+            //TODO: Selection of ES/EN not scalable on i18n. Kludge.
+            textFunc = (ll => (locale == "es" ? ll.text_ES : ll.text_EN));
+            Func<Lookup, string> sortFunc = (ll => locale == "es" ? ll.text_ES : ll.text_EN); //created new sortFunc to sort only by skill text and not by concatenated ltrCode + skills 
+            // Note: the following are the Skills that should appear in the Employer online ordering site for Casa Latina - this is hard-coded for now (Lookups table should be updated to identify which should be exposed to the Employer)
+            // Casa Latina List: (s.ID == 60 || s.ID == 61 || s.ID == 62 || s.ID == 63 || s.ID == 64 || s.ID == 65 || s.ID == 66 || s.ID == 67 || s.ID == 68 || s.ID == 69 || s.ID == 77 || s.ID == 83 || s.ID == 88 || s.ID == 89 ||  s.ID == 118 || s.ID == 120 || s.ID == 122 || s.ID == 128 || s.ID == 131 || s.ID == 132 || s.ID == 133 || s.ID == 183)
+            prelist = prelist.Where(s => s.ID == 60 || s.ID == 61 || s.ID == 62 || s.ID == 63 || s.ID == 64 || s.ID == 65 || s.ID == 66 || s.ID == 67 || s.ID == 68 || s.ID == 69 || s.ID == 77 || s.ID == 83 || s.ID == 88 || s.ID == 89 || s.ID == 118 || s.ID == 120 || s.ID == 122 || s.ID == 128 || s.ID == 131 || s.ID == 132 || s.ID == 133 || s.ID == 183).OrderBy(s => sortFunc(s)); //LINQ & FUNC
+            return new List<SelectListItemEx>(prelist
+                    .Select(x => new SelectListItemEx
+                    {
+                        Selected = x.selected,
+                        Value = Convert.ToString(x.ID),
+                        Text = textFunc(x),
+                        wage = Convert.ToString(x.wage),
+                        minHour = Convert.ToString(x.minHour),
+                        fixedJob = Convert.ToString(x.fixedJob)
+                    }));
+        }
+
     }
+
     public class LookupNumber
     {
         public string Value { get; set; }

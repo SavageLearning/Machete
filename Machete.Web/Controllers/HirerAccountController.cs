@@ -159,6 +159,9 @@ namespace Machete.Web.Controllers
                                 // Sign in user
                                 await SignInAsync(user, isPersistent: false);
 
+                                // Redirect to hire worker page
+                                return RedirectToAction("/", "HirerWorkOrder");
+                                /* 
                                 // Retrieve employer user ID (from AspNetUser - NOT Employer table)
                                 string eid = newUser.Id;
 
@@ -189,6 +192,7 @@ namespace Machete.Web.Controllers
                                         employer.onlineSource = true;
                                         employer.returnCustomer = false;
                                         employer.receiveUpdates = true;
+                                        employer.business = false;
                                     Domain.Employer savedEmployer = Db.Employers.Add(employer);
                                     int saveResult = Db.SaveChanges();
                                     if (saveResult != 1)
@@ -197,8 +201,7 @@ namespace Machete.Web.Controllers
                                     }
                                 }
 
-                                // TODO: redirect to hire worker page
-                                return RedirectToAction("/", "HirerWorkOrder");
+                                    */
 
                             }
                             else
