@@ -160,6 +160,15 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disclosure Agreement Accepted.
+        /// </summary>
+        public static string disclosureAgreement {
+            get {
+                return ResourceManager.GetString("disclosureAgreement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dispatch information.
         /// </summary>
         public static string dispatchinfo {
@@ -318,6 +327,15 @@ namespace Machete.Domain.Resources {
         public static string WAID {
             get {
                 return ResourceManager.GetString("WAID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Require Weight Lifted.
+        /// </summary>
+        public static string weightLifted {
+            get {
+                return ResourceManager.GetString("weightLifted", resourceCulture);
             }
         }
         

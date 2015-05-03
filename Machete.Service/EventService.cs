@@ -68,7 +68,7 @@ namespace Machete.Service
         /// <returns></returns>
         public dataTableResult<Event> GetIndexView(viewOptions o)
         {
-            var result = new dataTableResult<Event>();
+            dataTableResult<Event> result = new dataTableResult<Event>();
             //Get all the records
             IQueryable<Event> q = GetEvents(o.personID);
             result.totalCount = q.Count();
@@ -82,8 +82,16 @@ namespace Machete.Service
             //Sort the Persons based on column selection
             switch (o.sortColName)
             {
-                case "dateupdated": q = o.orderDescending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated); break;
-                default: q = o.orderDescending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated); break;
+                case "dateupdated":
+                {
+                    q = o.orderDescending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated);
+                    break;
+                }
+                default:
+                {
+                    q = o.orderDescending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated);
+                    break;
+                }
             }
 
             //Limit results to the display length and offset

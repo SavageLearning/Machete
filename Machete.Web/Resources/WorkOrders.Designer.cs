@@ -61,6 +61,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to I acknowledge that:.
+        /// </summary>
+        public static string acknowledgement {
+            get {
+                return ResourceManager.GetString("acknowledgement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Activate order.
         /// </summary>
         public static string activatesubmit {
@@ -187,6 +196,24 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Business Hours.
+        /// </summary>
+        public static string businessHoursModal {
+            get {
+                return ResourceManager.GetString("businessHoursModal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Business Name.
+        /// </summary>
+        public static string businessName {
+            get {
+                return ResourceManager.GetString("businessName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancelled assignment.
         /// </summary>
         public static string cancelledassignment {
@@ -237,6 +264,24 @@ namespace Machete.Web.Resources {
         public static string completedorder {
             get {
                 return ResourceManager.GetString("completedorder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Who will be managing the worker(s) at the work site? This may be the person placing the order or another person..
+        /// </summary>
+        public static string contactName {
+            get {
+                return ResourceManager.GetString("contactName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Contact Name (Work Site).
+        /// </summary>
+        public static string contactNameWorkSite {
+            get {
+                return ResourceManager.GetString("contactNameWorkSite", resourceCulture);
             }
         }
         
@@ -345,6 +390,15 @@ namespace Machete.Web.Resources {
         public static string details {
             get {
                 return ResourceManager.GetString("details", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disclaimer.
+        /// </summary>
+        public static string disclaimer {
+            get {
+                return ResourceManager.GetString("disclaimer", resourceCulture);
             }
         }
         
@@ -502,6 +556,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Is a Business?.
+        /// </summary>
+        public static string isBusiness {
+            get {
+                return ResourceManager.GetString("isBusiness", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to List Work Orders.
         /// </summary>
         public static string listlink {
@@ -574,6 +637,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Phone (Work Site).
+        /// </summary>
+        public static string phoneWorkSite {
+            get {
+                return ResourceManager.GetString("phoneWorkSite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Print active orders.
         /// </summary>
         public static string printactive {
@@ -619,6 +691,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Submit.
+        /// </summary>
+        public static string submit {
+            get {
+                return ResourceManager.GetString("submit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Summary.
         /// </summary>
         public static string summary {
@@ -633,6 +714,15 @@ namespace Machete.Web.Resources {
         public static string tabprefix {
             get {
                 return ResourceManager.GetString("tabprefix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time Needed.
+        /// </summary>
+        public static string timeNeeded {
+            get {
+                return ResourceManager.GetString("timeNeeded", resourceCulture);
             }
         }
         
@@ -700,11 +790,47 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Weight Requirements.
+        /// </summary>
+        public static string weightRequirements {
+            get {
+                return ResourceManager.GetString("weightRequirements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Worker #.
         /// </summary>
         public static string woidcount {
             get {
                 return ResourceManager.GetString("woidcount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assign Worker.
+        /// </summary>
+        public static string workAssignments {
+            get {
+                return ResourceManager.GetString("workAssignments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please be as detailed as possible in describing the work needed. Providing detailed information allows us to match you with the best available worker. If worker is asked to do something not listed here, he or she reserves the right to refuse service and minimum wages will still be charged..
+        /// </summary>
+        public static string workDescription {
+            get {
+                return ResourceManager.GetString("workDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Work Details.
+        /// </summary>
+        public static string workDetails {
+            get {
+                return ResourceManager.GetString("workDetails", resourceCulture);
             }
         }
         
@@ -718,11 +844,56 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Workers Requested.
+        /// </summary>
+        public static string workersRequested {
+            get {
+                return ResourceManager.GetString("workersRequested", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Work Orders.
         /// </summary>
         public static string workOrders {
             get {
                 return ResourceManager.GetString("workOrders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Work Request.
+        /// </summary>
+        public static string workRequest {
+            get {
+                return ResourceManager.GetString("workRequest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Address (1) Work Site.
+        /// </summary>
+        public static string workSiteAddress1 {
+            get {
+                return ResourceManager.GetString("workSiteAddress1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please provide the address where the work will be completed. This is the address to which we will send workers..
+        /// </summary>
+        public static string workSiteAddress1Dialog {
+            get {
+                return ResourceManager.GetString("workSiteAddress1Dialog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Address (2) Work Site.
+        /// </summary>
+        public static string workSiteAddress2 {
+            get {
+                return ResourceManager.GetString("workSiteAddress2", resourceCulture);
             }
         }
     }

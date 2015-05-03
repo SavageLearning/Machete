@@ -61,6 +61,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Additional Description.
+        /// </summary>
+        public static string additionalDescription {
+            get {
+                return ResourceManager.GetString("additionalDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Assignments.
         /// </summary>
         public static string assignments {
@@ -430,6 +439,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Minimum Hours.
+        /// </summary>
+        public static string minHours {
+            get {
+                return ResourceManager.GetString("minHours", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Prog.
         /// </summary>
         public static string programShort {
@@ -444,6 +462,15 @@ namespace Machete.Web.Resources {
         public static string signin {
             get {
                 return ResourceManager.GetString("signin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skill Description.
+        /// </summary>
+        public static string skillDescription {
+            get {
+                return ResourceManager.GetString("skillDescription", resourceCulture);
             }
         }
         
