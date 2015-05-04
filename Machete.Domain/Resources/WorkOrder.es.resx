@@ -270,4 +270,22 @@
   <data name="phoneWorkSite" xml:space="preserve">
     <value>Phone (Work Site)</value>
   </data>
+  <data name="disclosureAgreement" xml:space="preserve">
+    <value>Disclosure Agreement Accepted</value>
+  </data>
+  <data name="paypal" xml:space="preserve">
+    <value>PayPal</value>
+  </data>
+  <data name="paypalCorrelationId" xml:space="preserve">
+    <value>PayPal CorrelationID</value>
+  </data>
+  <data name="paypalFee" xml:space="preserve">
+    <value>PayPal Fee</value>
+  </data>
+  <data name="paypalPayerId" xml:space="preserve">
+    <value>PayPal PayerID</value>
+  </data>
+  <data name="paypalToken" xml:space="preserve">
+    <value>PayPal Token</value>
+  </data>
 </root>
