@@ -5,11 +5,18 @@
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
 }
-<div id="woDispatchTabs" >
+<div id="woOnlineTabs" >
     <ul>
-        <li><a href="/HirerWorkOrder/Create" id="pendingOrderListTab" class="ListTab">@Machete.Web.Resources.WorkOrders.hirerAccount</a> </li>
+        <li><a href="/HirerWorkOrder/View/1" id="hirerProfileTab" class="ListTab">@Machete.Web.Resources.WorkOrders.hirerProfile</a> </li>
+        <li><a href="/HirerWorkOrder/Create" id="pendingOrderListTab" class="ListTab">@Machete.Web.Resources.WorkOrders.hireWorker</a> </li>
+        <li><a href="/HirerWorkOrder/Create" id="paypalTab" class="ListTab">@Machete.Domain.Resources.WorkOrder.paypal</a> </li>
+        <!-- TODO: Disable
         <li><a href="/HirerWorkOrder/List" id="hirerAccountTab" class="ListTab">@Machete.Web.Resources.WorkOrders.workOrders</a> </li>
-        <li><a href="/HirerAccount/Edit/1" id="hirerProfileTab" class="ListTab">@Machete.Web.Resources.WorkOrders.hirerProfile</a> </li>
+        @* @if(ViewBag.employerId) *@
+        @*{ *@
+            <li><a href="/HirerAccount/Edit/ViewBag.employerId" id="hirerProfileTab" class="ListTab">@Machete.Web.Resources.WorkOrders.hirerAccount</a> </li>
+        @*} *@
+        -->
     </ul>
 <script type="text/javascript">
 
@@ -18,7 +25,8 @@
         //
         // Setup work order Tabs
         //
-        $('#woDispatchTabs').tabs();
+        $('#woOnlineTabs').tabs();
+        //$('#woOnlineTabs').tabs('select', 1);
 
     });
 </script>

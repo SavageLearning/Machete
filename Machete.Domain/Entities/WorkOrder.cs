@@ -182,8 +182,25 @@ namespace Machete.Domain
         [StringLength(1000, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.WorkAssignment))]
         public string additionalNotes { get; set; }
 
-        [LocalizedDisplayName("disclosureAgreement", NameResourceType = typeof(Resources.WorkAssignment))]
+        [LocalizedDisplayName("disclosureAgreement", NameResourceType = typeof(Resources.WorkOrder))]
         public bool? disclosureAgreement { get; set; }
+
+        // Fee charged by PayPal for online payments
+        [LocalizedDisplayName("paypalFee", NameResourceType = typeof(Resources.WorkOrder))]
+        [DisplayFormat(DataFormatString = "{0:n}", ApplyFormatInEditMode = true)]
+        public double? paypalFee { get; set; }
+
+        [LocalizedDisplayName("paypalCorrelationId", NameResourceType = typeof(Resources.WorkOrder))]
+        [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.WorkOrder))]
+        public string paypalCorrelationId { get; set; }
+
+        [LocalizedDisplayName("paypalToken", NameResourceType = typeof(Resources.WorkOrder))]
+        [StringLength(20, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.WorkOrder))]
+        public string paypalToken { get; set; }
+
+        [LocalizedDisplayName("paypalPayerId", NameResourceType = typeof(Resources.WorkOrder))]
+        [StringLength(15, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.WorkOrder))]
+        public string paypalPayerId { get; set; }
 
         /// <summary>
         /// Retrieve paperOrderNum if it exists, else internal WOID
