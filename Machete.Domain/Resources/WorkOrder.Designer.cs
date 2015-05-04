@@ -142,6 +142,15 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disclosure Agreement Accepted.
+        /// </summary>
+        public static string disclosureAgreement {
+            get {
+                return ResourceManager.GetString("disclosureAgreement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to English Required (at least one worker)?.
         /// </summary>
         public static string englishRequired {
@@ -219,6 +228,51 @@ namespace Machete.Domain.Resources {
         public static string paperOrderNumFormat {
             get {
                 return ResourceManager.GetString("paperOrderNumFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PayPal.
+        /// </summary>
+        public static string paypal {
+            get {
+                return ResourceManager.GetString("paypal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PayPal CorrelationID.
+        /// </summary>
+        public static string paypalCorrelationId {
+            get {
+                return ResourceManager.GetString("paypalCorrelationId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PayPal Fee.
+        /// </summary>
+        public static string paypalFee {
+            get {
+                return ResourceManager.GetString("paypalFee", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PayPal PayerID.
+        /// </summary>
+        public static string paypalPayerId {
+            get {
+                return ResourceManager.GetString("paypalPayerId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PayPal Token.
+        /// </summary>
+        public static string paypalToken {
+            get {
+                return ResourceManager.GetString("paypalToken", resourceCulture);
             }
         }
         

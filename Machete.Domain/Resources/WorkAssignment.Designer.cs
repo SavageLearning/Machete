@@ -160,15 +160,6 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Disclosure Agreement Accepted.
-        /// </summary>
-        public static string disclosureAgreement {
-            get {
-                return ResourceManager.GetString("disclosureAgreement", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Dispatch information.
         /// </summary>
         public static string dispatchinfo {

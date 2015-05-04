@@ -28,17 +28,21 @@ using Machete.Data.Infrastructure;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Helpers;
+using Machete.Web.Helpers.PayPal;
 using Machete.Web.Models;
 using Machete.Web.Resources;
 using Machete.Web.ViewModel;
 using Microsoft.AspNet.Identity;
 using Newtonsoft.Json.Linq;
 using NLog;
+using PayPal.PayPalAPIInterfaceService;
+using PayPal.PayPalAPIInterfaceService.Model;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -91,6 +95,7 @@ namespace Machete.Web.Controllers
         }
 
         #region Index
+
         /// <summary>
         /// HTTP GET /HirerWorkOrder/Index
         /// </summary>
@@ -98,12 +103,24 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Hirer")]
         public ActionResult Index()
         {
+            ViewBag.employerId = null;
+
+            // Retrieve employer ID of signed in Employer
+            string employerID = HttpContext.User.Identity.GetUserId();
+
+            Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == employerID).FirstOrDefault();
+            if (employer != null)
+            {
+                ViewBag.employerId = employer.ID;
+            }
+             
             return View();
         }
 
         #endregion
 
         #region List
+
         /// <summary>
         /// HTTP GET /HirerWorkOrder/List
         /// </summary>
@@ -117,6 +134,7 @@ namespace Machete.Web.Controllers
         #endregion
 
         #region Ajaxhandler
+
         /// <summary>
         /// Provides json grid of work orders -- used with the hirerworkorders/index view
         /// </summary>
@@ -197,7 +215,6 @@ namespace Machete.Web.Controllers
             };
         }
 
-
         /// <summary>
         /// Determines displayState value in WorkOrder/AjaxHandler. Display state is used to provide color highlighting to records based on state.
         /// The displayState is not presented to the user, so don't have to provide internationalization text.
@@ -223,6 +240,7 @@ namespace Machete.Web.Controllers
             }
             return status;
         }
+
         #endregion
 
         #region Create
@@ -277,12 +295,10 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="wo">WorkOrder to create</param>
         /// <param name="userName">User performing action</param>
-        /// <param name="workerRequestList">List of workers requested</param>
+        /// <param name="workerAssignments">List of worker assignments & requests</param>
         /// <returns>JSON Object representing new Work Order</returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Hirer")]
-        //public ActionResult Create(WorkOrder wo, string userName, List<WorkerRequest> workerRequestList, List<WorkAssignment> workAssignments)
-        //public ActionResult Create(WorkOrder wo, string userName, string testField)
         public ActionResult Create(WorkOrder wo, string userName, string workerAssignments)
         {
             UpdateModel(wo);
@@ -332,53 +348,73 @@ namespace Machete.Web.Controllers
                 }
             }
 
+            // TODO: remove this after the calculations are complete - hard-coding for now...
+            wo.transportFee = 2.00;
+
+            if (workerAssignments == "")
+            {
+                // TODO: validate that at least one WA assigned to WO
+                // Set WA counter 
+                wo.waPseudoIDCounter = 0;
+            }
+
             // Create Work Order
             WorkOrder neworder = woServ.Create(wo, userName);
 
-            // Create Work Assignments
-            dynamic parsedWorkerRequests = JObject.Parse(workerAssignments);
-
-            for (int i = 0; i < parsedWorkerRequests["list"].Count; i++)
+            if (workerAssignments != "")
             {
-                WorkAssignment wa = new WorkAssignment();
+                // Create Work Assignments
+                dynamic parsedWorkerRequests = JObject.Parse(workerAssignments);
+
+                // Set WA counter 
+                wo.waPseudoIDCounter = parsedWorkerRequests["assignments"].Count;
+                woServ.Save(neworder, userName);
+
+                for (int i = 0; i < parsedWorkerRequests["assignments"].Count; i++)
+                {
+                    WorkAssignment wa = new WorkAssignment();
 
 
-                // Create WA from Employer data
-                wa.workOrderID = neworder.ID;
-                wa.skillID = parsedWorkerRequests["list"][i].skillId;
-                wa.hours = parsedWorkerRequests["list"][i].hours;
-                wa.weightLifted = parsedWorkerRequests["list"][i].weight;
-                wa.hourlyWage = 15; // TODO: lookup this value intead parsedWorkerRequests["list"][i].hourlyWage;
-                wa.pseudoID = i + 1;
-                wa.description = parsedWorkerRequests["list"][i].desc;
+                    // Create WA from Employer data
+                    wa.workOrderID = neworder.ID;
+                    wa.skillID = parsedWorkerRequests["assignments"][i].skillId;
+                    wa.hours = parsedWorkerRequests["assignments"][i].hours;
+                    wa.weightLifted = parsedWorkerRequests["assignments"][i].weight;
+                    wa.hourlyWage = 15; // TODO: lookup this value intead parsedWorkerRequests["list"][i].hourlyWage;
+                    wa.pseudoID = i + 1;
+                    wa.description = parsedWorkerRequests["assignments"][i].desc;
 
-                // Set up defaults
-                wa.active = true;
-                wa.englishLevelID = 0; // TODO: note- all incoming online work assignments won't have the proper English level set (this needs to be set by the worker center)
-                wa.surcharge = 0.0;
-                wa.days = 1;
-                wa.qualityOfWork = 0;
-                wa.followDirections = 0;
-                wa.attitude = 0;
-                wa.reliability = 0;
-                wa.transportProgram = 0;
+                    // Set up defaults
+                    wa.active = true;
+                    wa.englishLevelID = 0; // TODO: note- all incoming online work assignments won't have the proper English level set (this needs to be set by the worker center)
+                    wa.surcharge = 0.0;
+                    wa.days = 1;
+                    wa.qualityOfWork = 0;
+                    wa.followDirections = 0;
+                    wa.attitude = 0;
+                    wa.reliability = 0;
+                    wa.transportProgram = 0;
 
-                WorkAssignment newWa = waServ.Create(wa, userName);
+                    WorkAssignment newWa = waServ.Create(wa, userName);
+                }
+
+                // TODO: test
+                // New Worker Requests to add
+                for (int i = 0; i < parsedWorkerRequests["requests"].Count; i++)
+                {
+                    WorkerRequest wr = new WorkerRequest();
+
+                    // Create Worker Request from Employer data
+                    wr.WorkOrderID = neworder.ID;
+                    wr.WorkerID = parsedWorkerRequests["requests"][i].workerId;
+
+                    WorkerRequest newWr = wrServ.Create(wr, userName);
+                }
             }
-
-            //// New Worker Requests to add
-            //foreach (var workerRequest in workerRequestList)
-            //{
-            //    workerRequest.workOrder = neworder;
-            //    workerRequest.workerRequested = wServ.Get(workerRequest.WorkerID);
-            //    workerRequest.updatedby(userName);
-            //    workerRequest.createdby(userName);
-            //    neworder.workerRequests.Add(workerRequest);
-            //}
-            //woServ.Save(neworder, userName);
 
             /* TODO: remove this JSON return - this was previously used to repopulate the page - need to redirect user to new page instead */
             // JSON object with new work order data
+            /*
             return Json(new
             {
                 sNewRef = neworder.getTabRef(),
@@ -386,11 +422,14 @@ namespace Machete.Web.Controllers
                 iNewID = neworder.ID
             },
             JsonRequestBehavior.AllowGet);
+             * */
+            return RedirectToAction("PaymentPre", neworder);
         }
 
         #endregion
 
         #region Edit
+
         /// <summary>
         /// GET: /HirerWorkOrder/Edit/ID
         /// </summary>
@@ -402,60 +441,9 @@ namespace Machete.Web.Controllers
             // Retrieve Work Order
             WorkOrder workOrder = woServ.Get(id);
 
-            // Retrieve Worker Requests associated with Work Order
-            ViewBag.workerRequests = workOrder.workerRequests.Select(a =>
-                new SelectListItem
-                {
-                    Value = a.WorkerID.ToString(),
-                    Text = a.workerRequested.dwccardnum.ToString() + ' ' +
-                    a.workerRequested.Person.firstname1
-                });
-
             return PartialView("Edit", workOrder);
         }
 
-        /// <summary>
-        /// POST: /HirerWorkOrder/Edit/ID
-        /// </summary>
-        /// <param name="id">WorkOrder ID</param>
-        /// <param name="collection">FormCollection</param>
-        /// <param name="userName">UserName performing action</param>
-        /// <param name="workerRequestList">List of workers requested</param>
-        /// <returns>MVC Action Result</returns>
-        ///[Bind(Exclude = "workerRequests")]
-        [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Hirer")]
-        public ActionResult Edit(int id, FormCollection collection, string userName, List<WorkerRequest> workerRequestList)
-        {
-            WorkOrder workOrder = woServ.Get(id);
-            UpdateModel(workOrder);
-
-            // Stale requests to remove
-            foreach (var rem in workOrder.workerRequests.Except<WorkerRequest>(workerRequestList, new WorkerRequestComparer()).ToArray())
-            {
-                var request = wrServ.GetWorkerRequestsByNum(workOrder.ID, rem.WorkerID);
-                wrServ.Delete(request.ID, userName);
-                workOrder.workerRequests.Remove(rem);
-            }
-
-            // New requests to add
-            foreach (var add in workerRequestList.Except<WorkerRequest>(workOrder.workerRequests, new WorkerRequestComparer()))
-            {
-                add.workOrder = workOrder;
-                add.workerRequested = wServ.Get(add.WorkerID);
-                add.updatedby(userName);
-                add.createdby(userName);
-                workOrder.workerRequests.Add(add);
-            }
-
-            woServ.Save(workOrder, userName);
-            return Json(new
-            {
-                status = "OK",
-                editedID = id
-            },
-            JsonRequestBehavior.AllowGet);
-        }
         #endregion
 
         #region View
@@ -469,8 +457,281 @@ namespace Machete.Web.Controllers
         public ActionResult View(int id)
         {
             WorkOrder workOrder = woServ.Get(id);
+
+            // TODO: Update the return view
+            return View("IndexPrePaypal", workOrder);
+        }
+
+        /// <summary>
+        /// GET: /HirerWorkOrder/PaymentPre
+        /// </summary>
+        /// <param name="id">WorkOrder ID</param>
+        /// <returns>MVC Action Result</returns>
+        [UserNameFilter]
+        [Authorize(Roles = "Hirer")]
+        public ActionResult PaymentPre(int id)
+        {
+            WorkOrder workOrder = woServ.Get(id);
+
+            return View("IndexPrePaypal", workOrder);
+        }
+
+        /// <summary>
+        /// GET: /HirerWorkOrder/PaymentPre
+        /// </summary>
+        /// <param name="id">WorkOrder ID</param>
+        /// <returns>MVC Action Result</returns>
+        [HttpPost, UserNameFilter]
+        [Authorize(Roles = "Hirer")]
+        public ActionResult PaymentPre(string orderId, string userName)
+        {
+            // Retrieve Work Order
+            WorkOrder workOrder = woServ.Get(Convert.ToInt32(orderId));
+
+            if (workOrder == null)
+            {
+                // TODO: WO couldn't be retrieved - can't process payment
+                // Log error & return
+            }
+
+            double payment = workOrder.transportFee;
+            if (payment <= 0.0)
+            {
+                // TODO: No fee associated with WO - can't process payment
+                // Log error & return
+            }
+
+            PaypalExpressCheckout paypal = new PaypalExpressCheckout();
+            SetExpressCheckoutResponseType response = paypal.SetExpressCheckout(payment.ToString());
+            if (response != null)
+            {
+                // # Success values
+                if (response.Ack.ToString().Trim().ToUpper().Equals("SUCCESS"))
+                {
+                    // # Redirecting to PayPal for authorization
+                    // Once you get the "Success" response, needs to authorise the
+                    // transaction by making buyer to login into PayPal. For that,
+                    // need to construct redirect url using EC token from response.
+                    // For example,
+                    // `redirectURL="https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=" + setExpressCheckoutResponse.Token;`
+
+                    // Save PayPal token
+                    workOrder.paypalToken = response.Token;
+
+                    // Redirect to PayPal to authenticate user & payment
+                    Response.BufferOutput = true;
+                    Response.Redirect("https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=" + response.Token);
+                }
+                // # Error Values
+                else
+                {
+                    List<ErrorType> errorMessages = response.Errors;
+                    foreach (ErrorType error in errorMessages)
+                    {
+                        // TODO: redirect page
+                        Console.WriteLine("API Error: " + error.LongMessage + "\n");
+                        // TODO: log error(s)
+                        Console.WriteLine("API Error: " + error.ShortMessage + "\n");
+                        // Log & return
+                    }
+                }
+            }
+            else
+            {
+                // TODO: Invalid PayPal response - system error
+                // Log error & return
+            }
+
+            // Save work order updates
+            woServ.Save(workOrder, userName);
+
+            // TODO: investigate the best way to handle the redirects (what is the Action Result return)
+            return View("IndexPrePaypal", workOrder);
+        }
+
+        /// <summary>
+        /// GET: /HirerWorkOrder/PaymentPost
+        /// </summary>
+        /// <param name="id">WorkOrder ID</param>
+        /// <returns>MVC Action Result</returns>
+        [UserNameFilter]
+        [Authorize(Roles = "Hirer")]
+        public ActionResult PaymentPost(string token, string payerId, string userName)
+        {
+            // TODO: store payerID in WO table - not being stored for some reason?!
+            double payment = 0.0;
+
+            // TODO: There was an issue with the WO returned by the first query below - the work order
+            // can't be saved unless the work order is retrieved with the woServ.Get() call
+            WorkOrder woAll = woServ.GetRepo().GetAllQ().Where(wo => wo.paypalToken == token).FirstOrDefault();
+            WorkOrder workOrder = woServ.Get(woAll.ID);
+            if (workOrder != null)
+            {
+                if (workOrder.transportFee <= 0.0)
+                {
+                    // TODO: No fee associated with WO - can't process payment
+                    // Log & return
+                }
+                else
+                {
+                    payment = workOrder.transportFee;
+                }
+            }
+            else
+            {
+                // TODO: WO couldn't be retrieved - can't process payment
+                // Log & return
+            }
+
+            // PayPal call to get buyer details
+            PaypalExpressCheckout paypal = new PaypalExpressCheckout();
+            GetExpressCheckoutDetailsResponseType detailsResponse = paypal.GetExpressCheckoutDetails(token);
+
+            if (detailsResponse != null)
+            {
+                // # Success values
+                if (detailsResponse.Ack.ToString().Trim().ToUpper().Equals("SUCCESS"))
+                {
+                    if ((detailsResponse.GetExpressCheckoutDetailsResponseDetails.PaymentDetails == null) ||
+                        (Convert.ToDouble(detailsResponse.GetExpressCheckoutDetailsResponseDetails.PaymentDetails[0].OrderTotal.value) != workOrder.transportFee))
+                    {
+                        // TODO: PayPal charge is different than the system charge - can't process payment
+                        // Log error & return
+                    }
+
+                    // Unique PayPal Customer Account identification number. This value will be null unless 
+                    // you authorize the payment by redirecting to PayPal after `SetExpressCheckout` call.
+                    workOrder.paypalPayerId = detailsResponse.GetExpressCheckoutDetailsResponseDetails.PayerInfo.PayerID;
+
+                    woServ.Save(workOrder, userName);
+
+                    // PayPal call to authorize payment
+                    DoExpressCheckoutPaymentResponseType paymentResponse = paypal.DoExpressCheckoutPayment(token, payerId, payment.ToString());
+
+                    if (paymentResponse != null)
+                    {
+                        // # Success values
+                        if (paymentResponse.Ack.ToString().Trim().ToUpper().Equals("SUCCESS"))
+                        {
+                            if (paymentResponse.DoExpressCheckoutPaymentResponseDetails.Token != token)
+                            {
+                                // TODO: Retrieved token doesn't match stored token
+                                // Log error & continue - payment already made
+                            }
+
+                            if (paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo != null)
+                            {
+                                // Note: Only one payment should be sent
+                                if (paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo.Count != 1)
+                                {
+                                    // TODO: Number of payments different from expected payments
+                                    // Log error & continue - payment already made
+                                }
+
+                                if (Convert.ToDouble(paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].GrossAmount.value) != workOrder.transportFee)
+                                {
+                                    // TODO: PayPal charge different from expected charge
+                                    // Log error & continue - payment already made
+                                }
+
+                                // Note: PayPal charges for online payment service
+                                workOrder.paypalFee = Convert.ToDouble(paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].FeeAmount.value);
+
+                            }
+                            else
+                            {
+                                // TODO: PayPal information not provided
+                                // Log error & continue - payment already made
+                            }
+
+                            // TODO: This value is hard-coded in for PayPal - should do a lookup instead
+                            workOrder.transportTransactType = 256;
+
+                            // Transaction identification number of the transaction that was created. This field is only 
+                            // returned after a successful transaction for DoExpressCheckout has occurred.
+                            // Note: truncated string to ensure it fits in database
+                            workOrder.transportTransactID = ("ID: " + paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].TransactionID +
+                                "|| Date: " + paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].PaymentDate + workOrder.transportTransactID).Substring(0, 50);
+
+                            woServ.Save(workOrder, userName);
+
+                            // Pass Data to view
+                            ViewBag.payment = "$" + workOrder.transportFee.ToString();
+                        }
+                        // # Error Values
+                        else
+                        {
+                            List<ErrorType> errorMessages = paymentResponse.Errors;
+                            foreach (ErrorType error in errorMessages)
+                            {
+                                // TODO: redirect page
+                                Console.WriteLine("API Error: " + error.LongMessage + "\n");
+                                // TODO: log error(s)
+                                Console.WriteLine("API Error: " + error.ShortMessage + "\n");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // TODO: system error
+                        // Log error & return
+                    }
+                }
+                // # Error Values
+                else
+                {
+                    List<ErrorType> errorMessages = detailsResponse.Errors;
+                    foreach (ErrorType error in errorMessages)
+                    {
+                        // TODO: redirect page
+                        Console.WriteLine("API Error: " + error.LongMessage + "\n");
+                        // TODO: log error(s)
+                        Console.WriteLine("API Error: " + error.ShortMessage + "\n");
+                    }
+                }
+            }
+            else
+            {
+                // TODO: system error
+                // Log error & return
+            }
+
+            return View("IndexPostPaypal", workOrder);
+            
+        }
+
+        /// <summary>
+        /// GET: /HirerWorkOrder/View/ID
+        /// </summary>
+        /// <param name="id">WorkOrder ID</param>
+        /// <returns>MVC Action Result</returns>
+        [Authorize(Roles = "Hirer")]
+        public ActionResult PaymentCancel()
+        {
+            WorkOrder workOrder = woServ.Get(1);
+            return View("IndexCancel", workOrder);
+        }
+
+        /// <summary>
+        /// GET: /HirerWorkOrder/View/ID
+        /// </summary>
+        /// <param name="id">WorkOrder ID</param>
+        /// <returns>MVC Action Result</returns>
+        [Authorize(Roles = "Hirer")]
+        public ActionResult PaymentComplete()
+        {
+            WorkOrder workOrder = woServ.Get(1);
+            return View("IndexComplete", workOrder);
+        }
+
+
+        /*
+        public ActionResult View(int id)
+        {
+            WorkOrder workOrder = woServ.Get(id);
             return View(workOrder);
         }
+         * */
         #endregion
     }
 }
