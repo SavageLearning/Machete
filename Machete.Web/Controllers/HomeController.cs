@@ -38,9 +38,7 @@ namespace Machete.Web.Controllers
     {
         public ActionResult Index()
         {
-           
-           return View();
-
+            return RedirectToAction("Login", "Account");
         }
 
         public ActionResult Changes()

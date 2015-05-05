@@ -83,6 +83,16 @@ namespace Machete.Web.Controllers
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
+            if (returnUrl != null && returnUrl != "")
+            {
+                // Redirect users back to external signin
+                string[] controller = returnUrl.Split(new Char[] {'/'});
+                if (controller.Length >= 2 && (controller[1] == "HirerWorkOrder" || controller[1] == "HirerAccount"))
+                {
+                    return RedirectToAction("Login", "HirerAccount");
+                }
+            }
+
             LoginViewModel model = new LoginViewModel();
             model.Action = "ExternalLogin";
             model.ReturnUrl = returnUrl;

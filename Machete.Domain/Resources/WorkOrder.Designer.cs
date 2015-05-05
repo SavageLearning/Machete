@@ -241,11 +241,11 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to PayPal CorrelationID.
+        ///   Looks up a localized string similar to PayPal Errors.
         /// </summary>
-        public static string paypalCorrelationId {
+        public static string paypalErrors {
             get {
-                return ResourceManager.GetString("paypalCorrelationId", resourceCulture);
+                return ResourceManager.GetString("paypalErrors", resourceCulture);
             }
         }
         

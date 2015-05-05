@@ -291,6 +291,7 @@ namespace Machete.Web.Controllers
                 workerRequest.createdby(userName);
                 neworder.workerRequests.Add(workerRequest);
             }
+
             woServ.Save(neworder, userName);
 
             // JSON object with new work order data
