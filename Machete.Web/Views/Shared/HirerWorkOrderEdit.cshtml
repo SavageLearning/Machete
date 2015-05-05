@@ -13,7 +13,7 @@
 @Html.HiddenFor(model => model.status)
 @Html.HiddenFor(model => model.typeOfWorkID)
 @Html.HiddenFor(model => model.timeFlexible)
-@* Need to figure out how waPseudoIDCounter is used in the WO - should probably be set *@
+@Html.HiddenFor(model => model.waPseudoIDCounter)
 @* Need to add typeOfWorkID based on Skill *@
 
 
@@ -820,7 +820,7 @@
             $('a.ui-dialog-titlebar-close').click();
         });
 
-        var workAssignments = {list: []};
+        var workAssignments = {assignments: [], requests: [] };
 
         $('#addWorkerBtn-@(Model.ID)').click(function () {
             var option = $('<option></option>').val(1).html("HERE"); 
@@ -835,13 +835,11 @@
             wa.minHours = $('#MinimumHours').val();
             wa.hourlyWage = $('#HourlyWage').val();
 
-            //var stringifiedWa = JSON.stringify(wa);
-            workAssignments['list'].push(wa);
+            workAssignments['assignments'].push(wa);
+            $('#workerAssignments').val(JSON.stringify(workAssignments));
 
             console.log(JSON.stringify(workAssignments));
-            //$('#workerAssignments').val(JSON.stringify(workAssignments));
             
-            $('#workerAssignments').val(JSON.stringify(workAssignments));
             $('a.ui-dialog-titlebar-close').click();
         });
 

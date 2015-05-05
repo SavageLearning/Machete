@@ -42,8 +42,7 @@
             exclusivetab: false,
             recType: "@(recType)",
             preProcess: function () {
-                $('#workerRequests2_WO-@(Model.ID)').find('option').attr("selected", "selected");
-                $('#workAssignments_WO-@(Model.ID)').find('option').attr("selected", "selected");
+
             },
             postProcess: function () {
                 $('html, body').animate({ scrollTop: $(document).height() }, 'slow');

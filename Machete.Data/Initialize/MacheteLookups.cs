@@ -165,17 +165,33 @@ namespace Machete.Data
 
                 // OnlineOrdering related lookups:
 
-                new Lookup { ID=259,category = LCategory.englishLevel, text_EN="1-No English", text_ES="1-No English", selected=true },
-                new Lookup { ID=260,category = LCategory.englishLevel, text_EN="2-Limited English", text_ES="2-Limited English", selected=false },
-                new Lookup { ID=261,category = LCategory.englishLevel, text_EN="3-Working English", text_ES="3-Working English", selected=false },
-                new Lookup { ID=262,category = LCategory.englishLevel, text_EN="4-Fluent English", text_ES="4-Fluent English", selected=false },
-
                 new Lookup { ID=263,category = LCategory.workerRating, text_EN="1-Unacceptable experience", text_ES="1-Unacceptable experience", selected=false },
                 new Lookup { ID=264,category = LCategory.workerRating, text_EN="2-Needs improvement", text_ES="2-Needs improvement", selected=false },
                 new Lookup { ID=265,category = LCategory.workerRating, text_EN="3-Okay Experience", text_ES="3-Okay Experience", selected=false },
                 new Lookup { ID=266,category = LCategory.workerRating, text_EN="4-Would Recommend", text_ES="4-Would Recommend", selected=false },
-                new Lookup { ID=267,category = LCategory.workerRating, text_EN="5-Excellent Experience", text_ES="5-Excellent Experience", selected=true }
+                new Lookup { ID=267,category = LCategory.workerRating, text_EN="5-Excellent Experience", text_ES="5-Excellent Experience", selected=true },
 
+                // Demographic related lookups:
+
+                new Lookup { ID=269,category = LCategory.housingType, text_EN="Rent", text_ES="Rent", selected=true },
+                new Lookup { ID=270,category = LCategory.housingType, text_EN="Own", text_ES="Own", selected=false },
+                new Lookup { ID=271,category = LCategory.vehicleTypeID, text_EN="Truck", text_ES="Truck", selected=true },
+                new Lookup { ID=272,category = LCategory.vehicleTypeID, text_EN="Car", text_ES="Car", selected=false },
+                new Lookup { ID=273,category = LCategory.incomeSourceID, text_EN="No Income", text_ES="No Income", selected=true },
+                new Lookup { ID=274,category = LCategory.incomeSourceID, text_EN="Employment", text_ES="Employment", selected=false },
+                new Lookup { ID=275,category = LCategory.incomeSourceID, text_EN="Federal or State Benefits", text_ES="Federal or State Benefits", selected=false },
+                new Lookup { ID=276,category = LCategory.usBornChildren, text_EN="No", text_ES="No", selected=true },
+                new Lookup { ID=277,category = LCategory.usBornChildren, text_EN="Yes", text_ES="Yes", selected=false },
+                new Lookup { ID=278,category = LCategory.usBornChildren, text_EN="Refuse to Answer", text_ES="Refuse to Answer", selected=false },
+                new Lookup { ID=279,category = LCategory.educationLevel, text_EN="Less Than High School", text_ES="Less Than High School", selected=true },
+                new Lookup { ID=280,category = LCategory.educationLevel, text_EN="High School", text_ES="High School", selected=false },
+                new Lookup { ID=281,category = LCategory.educationLevel, text_EN="Some College", text_ES="Some College", selected=false },
+                new Lookup { ID=282,category = LCategory.educationLevel, text_EN="Bachelors", text_ES="Bachelors", selected=false },
+                new Lookup { ID=283,category = LCategory.educationLevel, text_EN="Masters and Above", text_ES="Masters and Above", selected=false },
+                new Lookup { ID=284,category = LCategory.farmLabor, text_EN="Farmer", text_ES="Farmer", selected=true },
+                new Lookup { ID=285,category = LCategory.farmLabor, text_EN="Migrant Farm Worker", text_ES="Migrant Farm Worker", selected=false },
+                new Lookup { ID=286,category = LCategory.farmLabor, text_EN="Seasonal Farm Worker", text_ES="Seasonal Farm Worker", selected=false },
+                new Lookup { ID=287,category = LCategory.training, text_EN="OSHA", text_ES="OSHA", selected=true },
             };
         //
         //

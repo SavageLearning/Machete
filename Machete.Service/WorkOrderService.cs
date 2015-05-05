@@ -268,14 +268,14 @@ namespace Machete.Service
             wo = repo.Add(workOrder);
             // TODO: investigate why worker requests collection is added to wo - there is a similar collection of wa added to wo
             wo.workerRequests = new Collection<WorkerRequest>();
+            uow.Commit();
             
             // Initialize PaperOrdernum to WO ID if not set
             if (wo.paperOrderNum == null)
             {
                 wo.paperOrderNum = wo.ID;
+                uow.Commit();
             }
-
-            uow.Commit();
 
             // Log results
             _log(workOrder.ID, user, "WorkOrder created");

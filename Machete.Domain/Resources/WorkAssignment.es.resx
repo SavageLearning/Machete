@@ -207,7 +207,4 @@
   <data name="weightLifted" xml:space="preserve">
     <value>¿El trabajador estará responsables para transportar materiales pesando más de 50 libras?</value>
   </data>
-  <data name="disclosureAgreement" xml:space="preserve">
-    <value>Disclosure Agreement Accepted</value>
-  </data>
 </root>

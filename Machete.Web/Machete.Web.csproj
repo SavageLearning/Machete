@@ -53,6 +53,12 @@
     <Reference Include="NLog.Extended">
       <HintPath>..\packages\NLog.Extended.2.1.0.1\lib\net45-full\NLog.Extended.dll</HintPath>
     </Reference>
+    <Reference Include="PayPalCoreSDK">
+      <HintPath>..\packages\PayPalCoreSDK.1.6.2\lib\net45\PayPalCoreSDK.dll</HintPath>
+    </Reference>
+    <Reference Include="PayPalMerchantSDK">
+      <HintPath>..\packages\PayPalMerchantSDK.2.15.117\lib\net20\PayPalMerchantSDK.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -231,6 +237,7 @@
     <Compile Include="Helpers\MacheteController.cs" />
     <Compile Include="Helpers\MacheteMapper.cs" />
     <Compile Include="Helpers\mUIExtensions.cs" />
+    <Compile Include="Helpers\PayPal\PaypalExpressCheckout.cs" />
     <Compile Include="Helpers\workerRequestBinder.cs" />
     <Compile Include="IoC\CustomControllerActivator.cs" />
     <Compile Include="IoC\UnityDependencyResolver.cs" />
@@ -951,7 +958,13 @@
     <Content Include="Views\Shared\HirerWorkOrderEdit.cshtml" />
     <Content Include="Views\HirerAccount\Edit.cshtml" />
     <Content Include="Views\HirerWorkOrder\View.cshtml" />
-    <Content Include="Views\HirerWorkOrder\ViewForEmail.cshtml" />
+    <Content Include="Views\HirerWorkOrder\PaymentPre.cshtml" />
+    <Content Include="Views\HirerWorkOrder\PaymentPost.cshtml" />
+    <Content Include="Views\HirerWorkOrder\IndexPrePaypal.cshtml" />
+    <Content Include="Views\HirerWorkOrder\IndexPostPaypal.cshtml" />
+    <Content Include="Views\HirerWorkOrder\IndexCancel.cshtml" />
+    <Content Include="Views\HirerWorkOrder\IndexComplete.cshtml" />
+    <Content Include="Views\HirerWorkOrder\IndexError.cshtml" />
     <None Include="Web.Alabama.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

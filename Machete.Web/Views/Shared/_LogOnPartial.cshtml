@@ -5,16 +5,31 @@
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
         @Html.AntiForgeryToken()
+        <!-- Greeting announcing signed in user -->
         <text>@Machete.Web.Resources.ValidationStrings.Welcome <b>@User.Identity.GetUserName()</b>
-        [ @if(Html.IsInRole(Html.Role_AM())) { @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.Settings, "Index", "Account") }
-        else { @Html.ActionLink("Manage", "Manage", "Account") } ]
-        [ @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.LogOff, "LogOff", "Account") ]
+        [ @if(Html.IsInRole(Html.Role_AM())) 
+            { 
+                @* Settings console *@
+                @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.Settings, "Index", "Account") 
+            }
+            else 
+            { 
+                @* Settings console *@
+                if(!Html.IsInRole(Html.Role_H())) 
+                {
+                    @* User account console *@
+                    @Html.ActionLink("Manage", "Manage", "Account") 
+                }
+            } ]
+        [ @if(Html.IsInRole(Html.Role_H())) 
+            {
+                @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.LogOff, "LogOff", "HirerAccount")
+            }
+            else
+            {
+                @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.LogOff, "LogOff", "Account") 
+            } ]
         </text>
     }
-
-}
-else
-{
-    @:[ @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.LogOn, "Login", "Account") ]
 
 }
