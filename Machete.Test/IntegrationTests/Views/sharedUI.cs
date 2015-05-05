@@ -161,10 +161,10 @@ namespace Machete.Test
             string prefix = "worker"+_wkr.ID+"-";
             WaitThenClickElement(By.Id("workerCreateTab"));
             WaitForElement(By.Id(prefix + "dateOfMembership"));            
-            _d.FindElement(By.Id(prefix + "dateOfMembership")).SendKeys(_wkr.dateOfMembership.ToShortDateString());            
-            _d.FindElement(By.Id(prefix + "dateOfBirth")).SendKeys(_wkr.dateOfBirth.ToShortDateString());
-            _d.FindElement(By.Id(prefix + "dateinUSA")).SendKeys(((DateTime)_wkr.dateinUSA).ToShortDateString());
-            _d.FindElement(By.Id(prefix + "dateinseattle")).SendKeys(((DateTime)_wkr.dateinseattle).ToShortDateString());
+            _d.FindElement(By.Id(prefix + "dateOfMembership")).SendKeys(_wkr.dateOfMembership.ToShortDateString());
+            _d.FindElement(By.Id(prefix + "dateOfBirth")).SendKeys(((DateTime)_wkr.dateOfBirth.Value).ToShortDateString());
+            _d.FindElement(By.Id(prefix + "dateinUSA")).SendKeys(((DateTime)_wkr.dateinUSA.Value).ToShortDateString());
+            _d.FindElement(By.Id(prefix + "dateinseattle")).SendKeys(((DateTime)_wkr.dateinseattle.Value).ToShortDateString());
             _d.FindElement(By.Id(prefix + "memberexpirationdate")).SendKeys(_wkr.memberexpirationdate.ToShortDateString());
             _d.FindElement(By.Id(prefix + "height")).SendKeys(_wkr.height);
             _d.FindElement(By.Id(prefix + "weight")).SendKeys(_wkr.weight);
@@ -199,10 +199,9 @@ namespace Machete.Test
         {
             string prefix = "worker"+_wkr.ID+"-";
             bool result = WaitForElementValue(By.Id("workerCreateTab"), "Worker information");
-            Assert.IsTrue(result, "Create tab label not updated by formSubmit");
-
+            Assert.IsTrue(result, "Create tab label not updated by formSubmit");            
             Assert.AreEqual(_wkr.dateOfMembership.ToShortDateString(), WaitForElement(By.Id(prefix + "dateOfMembership")).GetAttribute("value"));
-            Assert.AreEqual(_wkr.dateOfBirth.ToShortDateString(), WaitForElement(By.Id(prefix + "dateOfMembership")).GetAttribute("value"));
+            Assert.AreEqual(((DateTime)_wkr.dateOfBirth.Value).ToShortDateString(), WaitForElement(By.Id(prefix + "dateOfMembership")).GetAttribute("value"));
             Assert.AreEqual(((DateTime)_wkr.dateinUSA).ToShortDateString(), WaitForElement(By.Id(prefix + "dateinUSA")).GetAttribute("value"));
             Assert.AreEqual(((DateTime)_wkr.dateinseattle).ToShortDateString(), WaitForElement(By.Id(prefix + "dateinseattle")).GetAttribute("value"));
             Assert.AreEqual(_wkr.memberexpirationdate.ToShortDateString(), WaitForElement(By.Id(prefix + "memberexpirationdate")).GetAttribute("value"));
@@ -323,7 +322,7 @@ namespace Machete.Test
             ReplaceElementText(By.Id(prefix + "referredbyOther"), _emp.referredbyOther);
 
             SelectOptionByIndex(By.Id(prefix + "active"), _emp.active ? 2 : 1);
-            SelectOptionByIndex(By.Id(prefix + "blogparticipate"), _emp.blogparticipate ? 2 : 1);
+            SelectOptionByIndex(By.Id(prefix + "blogparticipate"), _emp.blogparticipate.Value ? 2 : 1);
             SelectOptionByIndex(By.Id(prefix + "business"), _emp.business ? 2 : 1);
             SelectOption(By.Id(prefix + "referredby"), MacheteLookup.cache.First(c => c.category == "emplrreference" && c.ID == _emp.referredby).text_EN);
 
@@ -376,7 +375,7 @@ namespace Machete.Test
             WaitForElement(By.Id(prefix + "active"));
             Assert.AreEqual(_emp.active ? 2 : 1, GetOptionIndex(By.Id(prefix + "active")));
             WaitForElement(By.Id(prefix + "blogparticipate"));
-            Assert.AreEqual(_emp.blogparticipate ? 2 : 1, GetOptionIndex(By.Id(prefix + "blogparticipate")));
+            Assert.AreEqual(_emp.blogparticipate.Value ? 2 : 1, GetOptionIndex(By.Id(prefix + "blogparticipate")));
             WaitForElement(By.Id(prefix + "business"));
             Assert.AreEqual(_emp.business ? 2 : 1, GetOptionIndex(By.Id(prefix + "business")));
             WaitForElement(By.Id(prefix + "referredbyOther"));

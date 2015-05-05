@@ -103,10 +103,12 @@ namespace Machete.Domain
 
         [LocalizedDisplayName("email", NameResourceType = typeof(Resources.Person))]
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Person))]
+        [RegularExpression(@"^$|^[\d]{3,3}-[\d]{3,3}-[\d]{4,4}$", ErrorMessageResourceName = "phoneformat", ErrorMessageResourceType = typeof(Resources.Person))]
         public string email { get; set; }
 
         [LocalizedDisplayName("facebook", NameResourceType = typeof(Resources.Person))]
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Person))]
+        [RegularExpression(@"^$|^[\d]{3,3}-[\d]{3,3}-[\d]{4,4}$", ErrorMessageResourceName = "phoneformat", ErrorMessageResourceType = typeof(Resources.Person))]
         public string facebook { get; set; }
 
         [LocalizedDisplayName("gender", NameResourceType = typeof(Resources.Person))]

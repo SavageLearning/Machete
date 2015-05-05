@@ -276,8 +276,8 @@
   <data name="paypal" xml:space="preserve">
     <value>PayPal</value>
   </data>
-  <data name="paypalCorrelationId" xml:space="preserve">
-    <value>PayPal CorrelationID</value>
+  <data name="paypalErrors" xml:space="preserve">
+    <value>PayPal Errors</value>
   </data>
   <data name="paypalFee" xml:space="preserve">
     <value>PayPal Fee</value>
