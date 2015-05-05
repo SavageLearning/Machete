@@ -191,7 +191,7 @@ namespace Machete.Domain
         public double? paypalFee { get; set; }
 
         [LocalizedDisplayName("paypalErrors", NameResourceType = typeof(Resources.WorkOrder))]
-        [StringLength(1000, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.WorkOrder))]
+        [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.WorkOrder))]
         public string paypalErrors { get; set; }
 
         [LocalizedDisplayName("paypalToken", NameResourceType = typeof(Resources.WorkOrder))]

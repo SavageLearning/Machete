@@ -964,6 +964,7 @@
     <Content Include="Views\HirerWorkOrder\IndexPostPaypal.cshtml" />
     <Content Include="Views\HirerWorkOrder\IndexCancel.cshtml" />
     <Content Include="Views\HirerWorkOrder\IndexComplete.cshtml" />
+    <Content Include="Views\HirerWorkOrder\IndexError.cshtml" />
     <None Include="Web.Alabama.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

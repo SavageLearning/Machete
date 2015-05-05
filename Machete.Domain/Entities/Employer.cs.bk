@@ -88,7 +88,7 @@ namespace Machete.Domain
         [RegularExpression(@"^[\d]{3,3}-[\d]{3,3}-[\d]{4,4}$", ErrorMessageResourceName = "phoneformat", ErrorMessageResourceType = typeof(Resources.Employer))]
         public string phone { get; set; }
 
-        [LocalizedDisplayName("fax", NameResourceType = typeof(Resources.Employer))]
+        [LocalizedDisplayName("phone", NameResourceType = typeof(Resources.Employer))]
         [StringLength(12, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Employer))]
         [RegularExpression(@"^[\d]{3,3}-[\d]{3,3}-[\d]{4,4}$", ErrorMessageResourceName = "phoneformat", ErrorMessageResourceType = typeof(Resources.Employer))]
         public string fax { get; set; }

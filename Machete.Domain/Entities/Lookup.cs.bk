@@ -91,16 +91,10 @@ namespace Machete.Domain
         [Column(TypeName = "nvarchar(MAX)")]
         public string emailTemplate { get; set; }
 
-        [LocalizedDisplayName("skillDescriptionEn", NameResourceType = typeof(Resources.Lookup))]
         [StringLength(300, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Lookup))]
-        public string skillDescriptionEn { get; set; }
+        public string skillDescription { get; set; }
 
-        [LocalizedDisplayName("skillDescriptionEs", NameResourceType = typeof(Resources.Lookup))]
-        [StringLength(300, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Lookup))]
-        public string skillDescriptionEs { get; set; }
-
-        [LocalizedDisplayName("minimumCost", NameResourceType = typeof(Resources.Lookup))]
-        public double? minimumCost { get; set; }
+        public double? minimumWage { get; set; }
 
         /// <summary>
         /// Set only for records that correspond to internal component or status
