@@ -1,0 +1,49 @@
+﻿@model Machete.Domain.WorkOrder
+@using Machete.Web.Helpers
+@using Machete.Domain.Resources
+@using Machete.Web.Resources
+@using Machete.Service
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+}
+
+<div id="woPaypalTabs" >
+    <ul>
+        <li><a href="#" id="paypalTab" class="ListTab">@Machete.Domain.Resources.WorkOrder.paypal</a> </li>
+    </ul>
+@using (Html.BeginForm("PaymentComplete", "HirerWorkOrder", FormMethod.Get,
+                        new { @class = "edittab-form EditPost", @id = "WorkOrderTab-" + Model.ID }))
+{
+    <div>
+    <h1>Pay Transportation Fees With PayPal</h1>
+    <p>You are now authenticated to pay with PayPal</p>
+    <p>Select button below to confirm the following charges to your PayPal account</p>
+    <p>Contact Casa Latina during business hours if you have any questions/issues.</p>
+    <br />
+    <p>Transportation Costs:</p>
+    <p>@(ViewBag.payment).00</p>
+    </div>
+    <div class="tb-table">
+        <div class="tb-row">
+            <button type="submit" class"btTxt submit" id="paypal" class="paypal" align="left" style="margin-right:7px;">Confirm Order</button>
+            <!-- TODO: get order ID from WO lookup -->
+            <input type="hidden" name="orderId" id="orderId" value="@(Model.ID)">
+            <div id="response">
+
+            </div>
+        </div>
+    </div>
+    
+}
+</div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        ////////////////////////////////////////////////////////////////
+        //
+        // Setup work order Tabs
+        //
+        $('#woPaypalTabs').tabs();
+
+    });
+</script>

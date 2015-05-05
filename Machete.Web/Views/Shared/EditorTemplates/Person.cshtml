@@ -20,7 +20,7 @@
             @Html.LabelFor(model => model.firstname2)
         </div>
         <div class="tb-field">
-            @Html.TextBoxFor(model => model.firstname2, new { tabindex = "1", @class = "personEditor", @id=idPrefix + "firstname2" })
+            @Html.TextBoxFor(model => model.firstname2, new { tabindex = "9", @class = "personEditor", @id=idPrefix + "firstname2" })
             @Html.ValidationMessageFor(model => model.firstname2)
         </div>
     </div>
@@ -29,14 +29,14 @@
             @Html.LabelFor(model => model.lastname1)
         </div>
         <div class="tb-field">
-            @Html.TextBoxFor(model => model.lastname1, new { tabindex = "1", @class = "personEditor", @id=idPrefix + "lastname1" })
+            @Html.TextBoxFor(model => model.lastname1, new { tabindex = "2", @class = "personEditor", @id=idPrefix + "lastname1" })
             @Html.ValidationMessageFor(model => model.lastname1)
         </div>
         <div class="tb-label">
             @Html.LabelFor(model => model.lastname2)
         </div>
         <div class="tb-field">
-            @Html.TextBoxFor(model => model.lastname2, new { tabindex = "1", @class = "personEditor", @id=idPrefix + "lastname2"})
+            @Html.TextBoxFor(model => model.lastname2, new { tabindex = "10", @class = "personEditor", @id=idPrefix + "lastname2"})
             @Html.ValidationMessageFor(model => model.lastname2)
         </div>
     </div>
@@ -45,15 +45,15 @@
             @Html.LabelFor(model => model.address1)
         </div>
         <div class="tb-field">
-            @Html.TextBoxFor(model => model.address1, new { tabindex = "1", @class = "personEditor", @id=idPrefix + "address1" })
+            @Html.TextBoxFor(model => model.address1, new { tabindex = "3", @class = "personEditor", @id=idPrefix + "address1" })
             @Html.ValidationMessageFor(model => model.address1)
         </div>
         <div class="tb-label">
-            @Html.LabelFor(model => model.phone)
+            @Html.LabelFor(model => model.nickname)
         </div>
         <div class="tb-field">
-            @Html.TextBoxFor(model => model.phone, new { tabindex = "2", @class = "personEditor", @id=idPrefix + "phone" })
-            @Html.ValidationMessageFor(model => model.phone)
+            @Html.TextBoxFor(model => model.nickname, new { tabindex = "11", @class = "personEditor", @id=idPrefix + "nickname" })
+            @Html.ValidationMessageFor(model => model.nickname)
         </div>
     </div>
     <div class="tb-row">
@@ -61,15 +61,15 @@
             @Html.LabelFor(model => model.address2)
         </div>
         <div class="tb-field">
-            @Html.TextBoxFor(model => model.address2, new { tabindex = "1", @class = "personEditor", @id=idPrefix + "address2" })
+            @Html.TextBoxFor(model => model.address2, new { tabindex = "4", @class = "personEditor", @id=idPrefix + "address2" })
             @Html.ValidationMessageFor(model => model.address2)
         </div>
         <div class="tb-label">
-            @Html.LabelFor(model => model.gender)
+            @Html.LabelFor(model => model.phone)
         </div>
         <div class="tb-field">
-            @Html.DropDownListFor(model => model.gender, new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.gender), "Value", "Text", Model.gender), @Machete.Web.Resources.Shared.choose, new { tabindex = "2", @id=idPrefix + "gender" })
-            @Html.ValidationMessageFor(model => model.gender)
+            @Html.TextBoxFor(model => model.phone, new { tabindex = "12", @class = "personEditor", @id=idPrefix + "phone" })
+            @Html.ValidationMessageFor(model => model.phone)
         </div>
     </div>
     <div class="tb-row">
@@ -77,15 +77,15 @@
             @Html.LabelFor(model => model.city)
         </div>
         <div class="tb-field">
-            @Html.TextBoxFor(model => model.city, new { tabindex = "1", @class = "personEditor", @id=idPrefix + "city" })
+            @Html.TextBoxFor(model => model.city, new { tabindex = "5", @class = "personEditor", @id=idPrefix + "city" })
             @Html.ValidationMessageFor(model => model.city)
         </div>
         <div class="tb-label">
-            @Html.LabelFor(model => model.genderother)
+            @Html.LabelFor(model => model.cellphone)
         </div>
         <div class="tb-field">
-            @Html.TextBoxFor(model => model.genderother, new { tabindex = "2", @class = "personEditor", @id=idPrefix + "genderOther" })
-            @Html.ValidationMessageFor(model => model.genderother)
+            @Html.TextBoxFor(model => model.cellphone, new { tabindex = "13", @class = "personEditor", @id=idPrefix + "cellphone" })
+            @Html.ValidationMessageFor(model => model.cellphone)
         </div>
     </div>
     <div class="tb-row">
@@ -93,15 +93,15 @@
             @Html.LabelFor(model => model.state)
         </div>
         <div class="tb-field">
-            @Html.TextBoxFor(model => model.state, new { tabindex = "1", @class = "personEditor", @id=idPrefix + "state" })
+            @Html.TextBoxFor(model => model.state, new { tabindex = "6", @class = "personEditor", @id=idPrefix + "state" })
             @Html.ValidationMessageFor(model => model.state)
         </div>
         <div class="tb-label">
-            @Html.LabelFor(model => model.active)
+            @Html.LabelFor(model => model.gender)
         </div>
         <div class="tb-field">
-            @Html.CheckBoxFor(model => model.active, new { tabindex = "2", @class = "personEditor", @id=idPrefix + "active" })
-            @Html.ValidationMessageFor(model => model.active)
+            @Html.DropDownListFor(model => model.gender, new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.gender), "Value", "Text", Model.gender), @Machete.Web.Resources.Shared.choose, new { tabindex = "14", @id=idPrefix + "gender" })
+            @Html.ValidationMessageFor(model => model.gender)
         </div>
     </div>
     <div class="tb-row">
@@ -109,8 +109,31 @@
             @Html.LabelFor(model => model.zipcode)
         </div>
         <div class="tb-field">
-            @Html.TextBoxFor(model => model.zipcode, new { tabindex = "1", @class = "personEditor", @id = idPrefix + "zipcode" })
+            @Html.TextBoxFor(model => model.zipcode, new { tabindex = "7", @class = "personEditor", @id = idPrefix + "zipcode" })
             @Html.ValidationMessageFor(model => model.zipcode)
+        </div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.genderother)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.genderother, new { tabindex = "15", @class = "personEditor", @id=idPrefix + "genderOther" })
+            @Html.ValidationMessageFor(model => model.genderother)
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label">
+            @Html.LabelFor(model => model.email)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.email, new { tabindex = "8", @class = "personEditor", @id=idPrefix + "email" })
+            @Html.ValidationMessageFor(model => model.email)
+        </div>
+        <div class="tb-label">
+            @Html.LabelFor(model => model.facebook)
+        </div>
+        <div class="tb-field">
+            @Html.TextBoxFor(model => model.facebook, new { tabindex = "16", @class = "personEditor", @id=idPrefix + "facebook" })
+            @Html.ValidationMessageFor(model => model.facebook)
         </div>
     </div>
 </div>

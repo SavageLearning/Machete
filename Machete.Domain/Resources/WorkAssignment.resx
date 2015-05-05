@@ -213,7 +213,4 @@
   <data name="weightLifted" xml:space="preserve">
     <value>Require Weight Lifted</value>
   </data>
-  <data name="disclosureAgreement" xml:space="preserve">
-    <value>Disclosure Agreement Accepted</value>
-  </data>
 </root>
