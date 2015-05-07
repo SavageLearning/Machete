@@ -1,8 +1,5 @@
 ﻿@model Machete.Domain.WorkOrder
-@using Machete.Web.Helpers
-@using Machete.Domain.Resources
 @using Machete.Web.Resources
-@using Machete.Service
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
 }
@@ -14,35 +11,26 @@
 @using (Html.BeginForm("PaymentComplete", "HirerWorkOrder", FormMethod.Get,
                         new { @class = "edittab-form EditPost", @id = "WorkOrderTab-" + Model.ID }))
 {
+    <input type="hidden" name="payerId" id="payerId" value="@(Model.paypalPayerId)">
+    <input type="hidden" name="token" id="token" value="@(Model.paypalToken)">
     <div>
-    <h1>Pay Transportation Fees With PayPal</h1>
-    <p>You are now authenticated to pay with PayPal</p>
-    <p>Select button below to confirm the following charges to your PayPal account</p>
-    <p>Contact Casa Latina during business hours if you have any questions/issues.</p>
-    <br />
-    <p>Transportation Costs:</p>
-    <p>@(ViewBag.payment).00</p>
+        <h1>Transportation Fees - PayPal Authorization</h1>
+        <p>You have authorized a PayPal payment - please select the link below to confirm the payment.</p>
+        <p>The transportation fees must be paid before a Work Order can be confirmed</p>
+        <p>Contact Casa Latina during business hours if you have any questions/issues.</p>
+        <p>The Work Order Number is: @(Model.ID)</p>
+        <p>The transportation fee is: $@(Model.transportFee).00</p>
+        <br />
     </div>
-    <div class="tb-table">
-        <div class="tb-row">
-            <button type="submit" class"btTxt submit" id="paypal" class="paypal" align="left" style="margin-right:7px;">Confirm Order</button>
-            <!-- TODO: get order ID from WO lookup -->
-            <input type="hidden" name="orderId" id="orderId" value="@(Model.ID)">
-            <div id="response">
-
-            </div>
-        </div>
+    <div>
+        <button type="submit" class="btn btn-default" id="confirmPayment" name="provider" value="confirmPayment">Confirm Payment</button>
     </div>
-    
 }
 </div>
+    
 <script type="text/javascript">
-
     $(document).ready(function () {
-        ////////////////////////////////////////////////////////////////
-        //
-        // Setup work order Tabs
-        //
+
         $('#woPaypalTabs').tabs();
 
     });

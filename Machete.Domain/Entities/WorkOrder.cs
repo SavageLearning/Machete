@@ -198,6 +198,9 @@ namespace Machete.Domain
         [StringLength(20, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.WorkOrder))]
         public string paypalToken { get; set; }
 
+        [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.WorkOrder))]
+        public string paypalTransactID { get; set; }
+
         [LocalizedDisplayName("paypalPayerId", NameResourceType = typeof(Resources.WorkOrder))]
         [StringLength(15, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.WorkOrder))]
         public string paypalPayerId { get; set; }

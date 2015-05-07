@@ -138,7 +138,6 @@ namespace Machete.Service
             levent.Level = LogLevel.Info;
             levent.Message = msg;
             levent.Properties["RecordID"] = ID; //magic string maps to NLog config
-            levent.Properties["username"] = user;
             nlog.Log(levent);
         }
         public IRepository<T> GetRepo()
