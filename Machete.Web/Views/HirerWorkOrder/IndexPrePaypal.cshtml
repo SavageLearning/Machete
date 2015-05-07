@@ -9,18 +9,7 @@
 
 <div id="woPaypalTabs" >
     <ul>
-        <!--
-        <li><a href="/HirerWorkOrder/View/1" id="hirerProfileTab" class="ListTab">@Machete.Web.Resources.WorkOrders.hirerProfile</a> </li>
-        <li><a href="/HirerWorkOrder/Create" id="pendingOrderListTab" class="ListTab">@Machete.Web.Resources.WorkOrders.hireWorker</a> </li>
-        -->
         <li><a href="#" id="paypalTab" class="ListTab">@Machete.Domain.Resources.WorkOrder.paypal</a> </li>
-        <!-- TODO: Disable
-        <li><a href="/HirerWorkOrder/List" id="hirerAccountTab" class="ListTab">@Machete.Web.Resources.WorkOrders.workOrders</a> </li>
-        @* @if(ViewBag.employerId) *@
-        @*{ *@
-            <li><a href="/HirerAccount/Edit/ViewBag.employerId" id="hirerProfileTab" class="ListTab">@Machete.Web.Resources.WorkOrders.hirerAccount</a> </li>
-        @*} *@
-        -->
     </ul>
 @using (Html.BeginForm("PaymentPre", "HirerWorkOrder", FormMethod.Post,
                         new { @class = "edittab-form EditPost", @id = "WorkOrderTab-" + Model.ID }))
@@ -30,33 +19,25 @@
     <p>There are transportation fees for worker(s) to arrive by bus or van. The transportation fees must be paid before a Work Order can be confirmed</p>
     <p>You must pay in advance for the transportaion fees by selecting the PayPal link below. You will be taken to PayPal to authenticate & then returned to this site to complete the purchase. You must complete all steps in order for the order to be confirmed.</p>
     <p>Contact Casa Latina during business hours if you have any questions/issues.</p>
+        <p>The Work Order Number is: @(Model.ID)</p>
+        <p>The transportation fee is: $@(Model.transportFee).00</p>
     <br />
     </div>
     <div class="tb-table">
         <div class="tb-row">
             <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" class"btTxt submit" id="paypal" class="paypal" align="left" style="margin-right:7px;">
-            <!-- TODO: get order ID from WO lookup -->
             <input type="hidden" name="orderId" id="orderId" value="@(Model.ID)">
-            <div id="response">
-
-            </div>
         </div>
     </div>
     
 }
 </div>
-<!--
-<img src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" onclick="javascript:callWebApi();" align="left" style="margin-right:7px;">
--->
     
 
 <script type="text/javascript">
 
     $(document).ready(function () {
-        ////////////////////////////////////////////////////////////////
-        //
-        // Setup work order Tabs
-        //
+
         $('#woPaypalTabs').tabs();
 
     });

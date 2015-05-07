@@ -4,155 +4,32 @@
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
 }
 
-@using (Html.BeginForm("PaymentConfirm", "HirerWorkOrder", FormMethod.Get,
+<div id="woPaypalTabs" >
+    <ul>
+        <li><a href="#" id="paypalTab" class="ListTab">@Machete.Domain.Resources.WorkOrder.paypal</a> </li>
+    </ul>
+@using (Html.BeginForm("PaymentComplete", "HirerWorkOrder", FormMethod.Get,
                         new { @class = "edittab-form EditPost", @id = "WorkOrderTab-" + Model.ID }))
 {
-
-    <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" class"btTxt submit" id="paypal" class="paypal" align="left" style="margin-right:7px;">
-    <div id="response">
-        The purchase amount is @(ViewBag.payment)
+    <div>
+        <h1>Transportation Fees - PayPal Authorization</h1>
+        <p>You have authorized a PayPal payment - please select the link below to confirm the payment.</p>
+        <p>The transportation fees must be paid before a Work Order can be confirmed</p>
+        <p>Contact Casa Latina during business hours if you have any questions/issues.</p>
+        <p>The Work Order Number is: @(Model.ID)</p>
+        <p>The transportation fee is: $@(Model.transportFee).00</p>
+        <br />
     </div>
-
+    <div>
+        <button type="submit" class="btn btn-default" id="confirmPayment" name="provider" value="confirmPayment">Confirm Payment</button>
+    </div>
 }
-
-<!--
-<img src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" onclick="javascript:callWebApi();" align="left" style="margin-right:7px;">
--->
+</div>
     
 <script type="text/javascript">
     $(document).ready(function () {
 
-        alert("Testing JQuery II");
-        $('#paypal2').click(function (event) {
-            event.preventDefault();
-            alert("And click happened");
-            
-            // TODO: ask shahzaib the following - why was async set to false?!
-            var httpRequestUrl = "https://api-3t.sandbox.paypal.com/nvp";
-            var httpMethod = 'GET';
-/*
-            $.ajax({
-                url: 'http://api.joind.in/v2.1/talks/10889',
-                data: {
-                    format: 'json'
-                },
-                error: function () {
-                    $('#response').html('<p>An error has occurred</p>');
-                },
-                dataType: 'jsonp',
-                success: function (data) {
-                    var $title = $('<h1>').text(data.talks[0].talk_title);
-                    var $description = $('<p>').text(data.talks[0].talk_description);
-                    $('#response')
-                       .append($title)
-                       .append($description);
-                },
-                type: 'GET'
-            });
-*/
-            
-            $.ajax({
-                url: 'https://api-3t.sandbox.paypal.com/nvp',
-                type: 'GET',
-                data: {
-                    USER: 'sabina-facilitator_api1.casa-latina.org',
-                    PWD: '***REMOVED***',
-                    SIGNATURE: 'AFcWxV21C7fd0v3bYYYRCpSSRl31ASaaVUWXC3EwjFnevyjmX7BNTpgF',
-                    VERSION: '121',
-                    METHOD: 'SetExpressCheckout',
-                    PAYMENTREQUEST_0_AMT: '19',
-                    PAYMENTREQUEST_0_PAYMENTACTION: 'Sale',
-                    PAYMENTREQUEST_0_CURRENCYCODE: 'USD',
-                    returnUrl: 'http://www.example.com/success.html',
-                    cancelUrl: 'http://www.example.com/cancel.html'
-                },
-                async: true,
-                success: function (data) {
-                    alert("Success!!");
-                    //successCallback(data, caller);
-                    $('response').html('<p>Yippee</p>');
-                },
-                error: function (error) {
-                    alert("An error occurred: " + error.status + " " + error.statusText);
-                    //self.processErrorResponseCallback(data, httpMethod, httpRequestUrl);
-                }
-            });
-            /*
-LIVE : https://api-3t.paypal.com/nvp
-curl -s --insecure  https://api-3t.sandbox.paypal.com/nvp  -d  "USER=sabina_api1.casa-latina.org&PWD=***REMOVED***&SIGNATURE=AFcWxV21C7fd0v3bYYYRCpSSRl31AKGmJRn1hi1Zj2N4GzcRijnkUdyB&METHOD=SetExpressCheckout&VERSION=78&PAYMENTREQUEST_0_PAYMENTACTION=SALE&PAYMENTREQUEST_0_AMT=19&PAYMENTREQUEST_0_CURRENCYCODE=USD&cancelUrl=http://www.example.com/cancel.html&returnUrl=http://www.example.com/success.html"
-curl -s --insecure  https://api-3t.sandbox.paypal.com/nvp  -d  "USER=sabina-facilitator_api1.casa-latina.org&PWD=***REMOVED***&SIGNATURE=AFcWxV21C7fd0v3bYYYRCpSSRl31ASaaVUWXC3EwjFnevyjmX7BNTpgF&METHOD=SetExpressCheckout&VERSION=78&PAYMENTREQUEST_0_PAYMENTACTION=SALE&PAYMENTREQUEST_0_AMT=19&PAYMENTREQUEST_0_CURRENCYCODE=USD&cancelUrl=http://www.example.com/cancel.html&returnUrl=http://www.example.com/success.html"
-curl -s --insecure  https://api-3t.sandbox.paypal.com/nvp  -d  "USER=platfo_1255077030_biz_api1.gmail.com&PWD=1255077037&SIGNATURE=Abg0gYcQyxQvnf2HDJkKtA-p6pqhA1k-KTYE0Gcy1diujFio4io5Vqjf&METHOD=SetExpressCheckout&VERSION=78&PAYMENTREQUEST_0_PAYMENTACTION=SALE&PAYMENTREQUEST_0_AMT=19&PAYMENTREQUEST_0_CURRENCYCODE=USD&cancelUrl=http://www.example.com/cancel.html&returnUrl=http://www.example.com/success.html"
-            */
-            /*
-            
-            $.ajax({
-                url: httpRequestUrl,
-                headers: {
-                    'Accept': 'JSON'
-                },
-                type: httpMethod,
-                data: {
-                    'USER': 'sabina_api1.casa-latina.org',
-                    'PWD': '***REMOVED***',
-                    'SIGNATURE': 'AFcWxV21C7fd0v3bYYYRCpSSRl31AKGmJRn1hi1Zj2N4GzcRijnkUdyB',
-                    'VERSION': '78',
-                    'METHOD': 'SetExpressCheckout',
-                    'PAYMENTREQUEST_0_AMT': '19',
-                    'PAYMENTREQUEST_0_PAYMENTACTION': 'SALE',
-                    'PAYMENTREQUEST_0_CURRENCYCODE': 'USD',
-                    'returnUrl': 'http://www.example.com/success.html',
-                    'cancelUrl': 'http://www.example.com/cancel.html'
-                },
-                async: true,
-                success: function (data) {
-                    alert("Success!!");
-                    //successCallback(data, caller);
-                    $('response').html('<p>Yippee</p>');
-                },
-                error: function (error) {
-                    alert("An error occurred: " + error.status + " " + error.statusText);
-                    //self.processErrorResponseCallback(data, httpMethod, httpRequestUrl);
-                }
-            });
+        $('#woPaypalTabs').tabs();
 
-                            */
-        });
-        function callWebApi(event) {
-            event.preventDefault();
-            alert("And click happened");
-
-            // TODO: ask shahzaib the following - why was async set to false?!
-            var httpRequestUrl = "https://api-3t.sandbox.paypal.com/nvp";
-            var httpMethod = 'GET';
-            $.ajax({
-                url: httpRequestUrl,
-                headers: {
-                    'Accept': 'JSON'
-                },
-                type: httpMethod,
-                data: {
-                    'USER': 'sabina_api1.casa-latina.org',
-                    'PWD': '***REMOVED***',
-                    'SIGNATURE': 'AFcWxV21C7fd0v3bYYYRCpSSRl31AKGmJRn1hi1Zj2N4GzcRijnkUdyB',
-                    'VERSION': '78',
-                    'METHOD': 'SetExpressCheckout',
-                    'PAYMENTREQUEST_0_AMT': '19',
-                    'PAYMENTREQUEST_0_PAYMENTACTION': 'SALE',
-                    'PAYMENTREQUEST_0_CURRENCYCODE': 'USD',
-                    'returnUrl': 'http://www.example.com/success.html',
-                    'cancelUrl': 'http://www.example.com/cancel.html'
-                },
-                async: true,
-                success: function (data) {
-                    alert("Success!!");
-                    //successCallback(data, caller);
-                    $('response').html('<p>Yippee</p>');
-                },
-                error: function (error) {
-                    alert("An error occurred: " + error.status + " " + error.statusText);
-                    //self.processErrorResponseCallback(data, httpMethod, httpRequestUrl);
-                }
-            });
-        }
     });
 </script>

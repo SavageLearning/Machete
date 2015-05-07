@@ -32,6 +32,7 @@
 <!-- TODO: Share error messages (.text) with Sierra -->
 
 <div class="tb-table">
+    <!-- TODO: Add this section back later
     <div id="estimatedCosts">
         <h3>Estimated Costs:</h3>
         <p>Worker Rates:</p>
@@ -40,9 +41,9 @@
         <p>Transportation Fees:</p>
         <p id="transportationFees"></p>
         <p>Transportation fees must be paid via PayPal to complete order</p>
-        <!-- TODO: insert paypal button -->
         </div>
     </div>
+        -->
     <!-- Form errors -->
     <!-- TODO: make sure all error sections are set - consider moving these next to the fields that they apply to -->
     <div id="messageDialog">
@@ -70,11 +71,15 @@
             @Html.Label(Machete.Web.Resources.WorkOrders.workAssignments)
             <br />
             <input type="button" value="@Machete.Domain.Resources.WorkOrder.requestAdd" class="formButton" id="addWABtn-@(Model.ID)"/>
+            <!-- TODO: add this button back later
             <input type="button" value="@Machete.Domain.Resources.WorkOrder.requestRemove" class="formButton" id="removeWABtn-@(Model.ID)"/>
+            -->
         </div>
+        <!-- TODO: add this back later
         <div class="tb-field desc-field">
             @Html.ListBox("workAssignments", new SelectList(ViewBag.workAssignments, "Value", "Text"), new { id = "workAssignments_WO-"+ Model.ID, tabindex = "2", style="min-width: 16em;"})
         </div>
+        -->
     </div>
     <div class="tb-row">
         <a href="#" id="workSiteAddress1Modal">@Html.Label(Machete.Web.Resources.WorkOrders.workSiteAddress1)</a>
@@ -139,6 +144,7 @@
             @Html.ValidationMessageFor(model => model.englishRequiredNote)
         </div>
     </div>
+    <!-- TODO: add this section back later
     <div class="tb-row">
         <div class="tb-label desc-label">
             @Html.Label(Machete.Web.Resources.WorkOrders.workersRequested)
@@ -150,6 +156,7 @@
             @Html.ListBox("workerRequests2", new SelectList(ViewBag.workerRequests, "Value", "Text"), new { id = "workerRequests2_WO-"+ Model.ID, tabindex = "29", style="min-width: 16em;"})
         </div>
     </div>
+    -->
      <div class="tb-row desc-field">
         @Html.mUITableDescLabelFor(model => model.additionalNotes)
         <div class="tb-field">
@@ -209,20 +216,25 @@
                 <p id="validateSkill"></p>
             </td>
             <!-- Skill Description - READ-ONLY -->
+            <!-- TODO: add this back later
             <td>
                 @Html.Label(Machete.Web.Resources.WorkAssignments.skillDescription)
             </td>
             <td>
                 @Html.TextArea("SkillDescription", "", new { @readonly="readonly" })
             </td>
+            -->
         </tr>
         <tr>
             <!-- Requested Hours -->
+            <!-- TODO: add this back later
             <td>
                 @Html.Label(Machete.Domain.Resources.WorkAssignment.hours)
             </td>
             <td>
-                <!-- TODO: remove paperOrderNum model reference -->
+            -->
+                <!-- TODO: remove waPseudoIDCounter model reference -->
+            <!-- TODO: add this back later
                 @Html.DropDownListFor(model => model.waPseudoIDCounter,
                 new SelectList(Lookups.getTransportationMethodList(),
                     "Value",
@@ -233,13 +245,16 @@
             <td width="10%">
                 <p id="validateHours"></p>
             </td>
+            -->
             <!-- Minimum Hours - READ-ONLY -->
+            <!-- TODO: add this back later
             <td>
                 @Html.Label(Machete.Web.Resources.WorkAssignments.minHours)
             </td>
             <td>
                 @Html.TextBox("MinimumHours", "", new { @readonly="readonly" })
             </td>
+            -->
         </tr>
         <tr>
             <!-- Additional Description -->
@@ -252,13 +267,15 @@
             <td width="20%">
                 <p id="validateAdditionalDescription"></p>
             </td>
+            <!-- Hourly Wage - READ-ONLY -->
+            <!-- TODO: add this back later
             <td>
                 @Html.Label(Machete.Domain.Resources.WorkAssignment.hourlyWage)
             </td>
-            <!-- Hourly Wage - READ-ONLY -->
             <td>
                 @Html.TextBox("HourlyWage", "", new { @readonly="readonly" })
             </td>
+            -->
         </tr>
     </table>
     @Html.Label(Machete.Domain.Resources.WorkAssignment.weightLifted)
@@ -324,7 +341,9 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        alert("Testing JQuery");
+        
+        // TODO: remove
+        //alert("Testing JQuery");
 
         $("#transportationFeesHeader").hide();
 
