@@ -1,4 +1,5 @@
-﻿using PayPal.PayPalAPIInterfaceService;
+﻿using NLog;
+using PayPal.PayPalAPIInterfaceService;
 using PayPal.PayPalAPIInterfaceService.Model;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,9 @@ namespace Machete.Web.Helpers.PayPal
 {
     public class PaypalExpressCheckout
     {
+        Logger log = LogManager.GetCurrentClassLogger();
+        LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "PaypalExpressCheckout", "");
+
         // # SetExpressCheckout API Operation
         // The SetExpressCheckout API operation initiates an Express Checkout transaction. 
         public SetExpressCheckoutResponseType SetExpressCheckout(string payment)
@@ -27,7 +31,6 @@ namespace Machete.Web.Helpers.PayPal
                 // `Note:
                 // PayPal recommends that the value be the final review page on which
                 // the buyer confirms the order and payment or billing agreement.`
-                // TODO: don't use Hosting endpoint - this needs to be something else in config file!
                 setExpressCheckoutRequestDetails.ReturnURL = System.Web.Configuration.WebConfigurationManager.AppSettings["HostingEndpoint"] + "/HirerWorkOrder/PaymentPost";
 
                 // URL to which the buyer is returned if the buyer does not approve the
@@ -36,7 +39,6 @@ namespace Machete.Web.Helpers.PayPal
                 // `Note:
                 // PayPal recommends that the value be the original page on which the
                 // buyer chose to pay with PayPal or establish a billing agreement.`
-                // TODO: don't use Hosting endpoint - this needs to be something else in config file!
                 setExpressCheckoutRequestDetails.CancelURL = System.Web.Configuration.WebConfigurationManager.AppSettings["HostingEndpoint"] + "/HirerWorkOrder/PaymentCancel";
 
                 // # Payment Information
@@ -93,14 +95,7 @@ namespace Machete.Web.Helpers.PayPal
 
                 // A unique identifier of the specific payment request, which is
                 // required for parallel payments.
-                paymentDetails1.PaymentRequestID = "PaymentRequest1"; // TODO: I don't think I need this - I'm not doing parallel payments?
-
-                // IPN URL
-                // * PayPal Instant Payment Notification is a call back system that is initiated when a transaction is completed        
-                // * The transaction related IPN variables will be received on the call back URL specified in the request       
-                // * The IPN variables have to be sent back to the PayPal system for validation, upon validation PayPal will send a response string "VERIFIED" or "INVALID"     
-                // * PayPal would continuously resend IPN if a wrong IPN is sent        
-                paymentDetails1.NotifyURL = "http://IPNhost"; // TODO: investigate this
+                paymentDetails1.PaymentRequestID = "PaymentRequest1";
 
                 paymentDetailsList.Add(paymentDetails1);
 
@@ -122,7 +117,9 @@ namespace Machete.Web.Helpers.PayPal
             catch (System.Exception ex)
             {
                 // Log the exception message       
-                Console.WriteLine("Error Message : " + ex.Message);
+                levent.Level = LogLevel.Error;
+                levent.Message = "Logon failed for PaypalExpressCheckout: " + ex.Message;
+                log.Log(levent);
             }
             return responseSetExpressCheckoutResponseType;
         }
@@ -154,7 +151,9 @@ namespace Machete.Web.Helpers.PayPal
             catch (System.Exception ex)
             {
                 // Log the exception message       
-                Console.WriteLine("Error Message : " + ex.Message);
+                levent.Level = LogLevel.Error;
+                levent.Message = "Logon failed for PaypalExpressCheckout: " + ex.Message;
+                log.Log(levent);
             }
             return responseGetExpressCheckoutDetailsResponseType;
         }
@@ -178,12 +177,10 @@ namespace Machete.Web.Helpers.PayPal
                 // The timestamped token value that was returned in the
                 // `SetExpressCheckout` response and passed in the
                 // `GetExpressCheckoutDetails` request.
-                // TODO: pass the token here
                 doExpressCheckoutPaymentRequestDetails.Token = token;
 
                 // Unique paypal buyer account identification number as returned in
                 // `GetExpressCheckoutDetails` Response
-                // TODO: pass the token here
                 doExpressCheckoutPaymentRequestDetails.PayerID = payerId;
 
                 // # Payment Information
@@ -263,7 +260,9 @@ namespace Machete.Web.Helpers.PayPal
             catch (System.Exception ex)
             {
                 // Log the exception message       
-                Console.WriteLine("Error Message : " + ex.Message);
+                levent.Level = LogLevel.Error;
+                levent.Message = "Logon failed for PaypalExpressCheckout: " + ex.Message;
+                log.Log(levent);
             }
             return responseDoExpressCheckoutPaymentResponseType;
         }

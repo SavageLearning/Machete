@@ -59,6 +59,8 @@ namespace Machete.Web.Controllers
         private readonly IWorkAssignmentService waServ;
         private readonly ILookupCache lcache;
         CultureInfo CI;
+        Logger log = LogManager.GetCurrentClassLogger();
+        LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "HirerWorkOrderController", "");
 
         /// <summary>
         /// Constructor
@@ -295,7 +297,7 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="wo">WorkOrder to create</param>
         /// <param name="userName">User performing action</param>
-        /// <param name="workerAssignments">List of worker assignments & requests</param>
+        /// <param name="workerAssignments">List of worker assignments & requests (stringified JSON object with array of Assignments objects & array of Requests objects</param>
         /// <returns>JSON Object representing new Work Order</returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Hirer")]
@@ -349,7 +351,7 @@ namespace Machete.Web.Controllers
             }
 
             // TODO: remove this after the calculations are complete - hard-coding for now...
-            wo.transportFee = 2.00;
+            wo.transportFee = 10.00;
 
             if (workerAssignments == "")
             {
@@ -480,6 +482,7 @@ namespace Machete.Web.Controllers
         /// GET: /HirerWorkOrder/PaymentPre
         /// </summary>
         /// <param name="id">WorkOrder ID</param>
+        /// <param name="userName">User performing action</param>
         /// <returns>MVC Action Result</returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Hirer")]
@@ -490,15 +493,19 @@ namespace Machete.Web.Controllers
 
             if (workOrder == null)
             {
-                // TODO: WO couldn't be retrieved - can't process payment
-                // Log error & return
+                levent.Level = LogLevel.Error;
+                levent.Message = "WorkOrder ID not valid Work Order. WO#:" + orderId;
+                log.Log(levent);
+                return View("IndexError", workOrder);
             }
 
             double payment = workOrder.transportFee;
             if (payment <= 0.0)
             {
-                // TODO: No fee associated with WO - can't process payment
-                // Log error & return
+                levent.Level = LogLevel.Error;
+                levent.Message = "There is no transportation fee associated with this work order - there is no PayPal transaction required. WO#:" + orderId;
+                log.Log(levent);
+                return View("IndexError", workOrder);
             }
 
             PaypalExpressCheckout paypal = new PaypalExpressCheckout();
@@ -518,9 +525,19 @@ namespace Machete.Web.Controllers
                     // Save PayPal token
                     workOrder.paypalToken = response.Token;
 
+                    // Save work order updates
+                    woServ.Save(workOrder, userName);
+
+                    var redirectUrl = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=" + response.Token;
+                    return new RedirectResult(redirectUrl, false);
+
+                    /*
                     // Redirect to PayPal to authenticate user & payment
                     Response.BufferOutput = true;
                     Response.Redirect("https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=" + response.Token);
+                    */
+
+                    // TODO: return from here
                 }
                 // # Error Values
                 else
@@ -528,37 +545,45 @@ namespace Machete.Web.Controllers
                     List<ErrorType> errorMessages = response.Errors;
                     foreach (ErrorType error in errorMessages)
                     {
-                        // TODO: redirect page
-                        Console.WriteLine("API Error: " + error.LongMessage + "\n");
-                        // TODO: log error(s)
-                        Console.WriteLine("API Error: " + error.ShortMessage + "\n");
-                        // Log & return
+                        levent.Level = LogLevel.Error;
+                        levent.Message += error.LongMessage;
+                        log.Log(levent);
+
+                        workOrder.paypalErrors += error.ShortMessage;
                     }
+
+                    // Save work order updates
+                    woServ.Save(workOrder, userName);
+
+                    return View("IndexError", workOrder);
                 }
             }
             else
             {
-                // TODO: Invalid PayPal response - system error
-                // Log error & return
+                levent.Level = LogLevel.Error;
+                levent.Message = "The response from PayPal SetExpressCheckoutResponseType API was null. WO#:" + orderId;
+                log.Log(levent);
+                return View("IndexError", workOrder);
             }
 
             // Save work order updates
-            woServ.Save(workOrder, userName);
+            //woServ.Save(workOrder, userName);
 
             // TODO: investigate the best way to handle the redirects (what is the Action Result return)
-            return View("IndexPrePaypal", workOrder);
+            //return View("IndexPrePaypal", workOrder);
         }
 
         /// <summary>
         /// GET: /HirerWorkOrder/PaymentPost
         /// </summary>
-        /// <param name="id">WorkOrder ID</param>
+        /// <param name="token">PayPal token</param>
+        /// <param name="payerId">PayPal Payer ID</param>
+        /// <param name="userName">User performing action</param>
         /// <returns>MVC Action Result</returns>
         [UserNameFilter]
         [Authorize(Roles = "Hirer")]
         public ActionResult PaymentPost(string token, string payerId, string userName)
         {
-            // TODO: store payerID in WO table - not being stored for some reason?!
             double payment = 0.0;
 
             // TODO: There was an issue with the WO returned by the first query below - the work order
@@ -569,8 +594,10 @@ namespace Machete.Web.Controllers
             {
                 if (workOrder.transportFee <= 0.0)
                 {
-                    // TODO: No fee associated with WO - can't process payment
-                    // Log & return
+                    levent.Level = LogLevel.Error;
+                    levent.Message = "There is no transportation fee associated with this work order - there is no PayPal transaction required. WO#:" + workOrder.ID;
+                    log.Log(levent);
+                    return View("IndexError", workOrder);
                 }
                 else
                 {
@@ -579,8 +606,10 @@ namespace Machete.Web.Controllers
             }
             else
             {
-                // TODO: WO couldn't be retrieved - can't process payment
-                // Log & return
+                levent.Level = LogLevel.Error;
+                levent.Message = "WorkOrder ID not valid Work Order. WO#:" + workOrder.ID;
+                log.Log(levent);
+                return View("IndexError", workOrder);
             }
 
             // PayPal call to get buyer details
@@ -595,8 +624,11 @@ namespace Machete.Web.Controllers
                     if ((detailsResponse.GetExpressCheckoutDetailsResponseDetails.PaymentDetails == null) ||
                         (Convert.ToDouble(detailsResponse.GetExpressCheckoutDetailsResponseDetails.PaymentDetails[0].OrderTotal.value) != workOrder.transportFee))
                     {
-                        // TODO: PayPal charge is different than the system charge - can't process payment
-                        // Log error & return
+                        // PayPal charge is different than transportFee in database - can't process payment
+                        levent.Level = LogLevel.Error;
+                        levent.Message = "Transport Fee request to PayPal is a different amount than associated with the WO in database. WO# " + workOrder.ID;
+                        log.Log(levent);
+                        return View("IndexError", workOrder);
                     }
 
                     // Unique PayPal Customer Account identification number. This value will be null unless 
@@ -605,77 +637,6 @@ namespace Machete.Web.Controllers
 
                     woServ.Save(workOrder, userName);
 
-                    // PayPal call to authorize payment
-                    DoExpressCheckoutPaymentResponseType paymentResponse = paypal.DoExpressCheckoutPayment(token, payerId, payment.ToString());
-
-                    if (paymentResponse != null)
-                    {
-                        // # Success values
-                        if (paymentResponse.Ack.ToString().Trim().ToUpper().Equals("SUCCESS"))
-                        {
-                            if (paymentResponse.DoExpressCheckoutPaymentResponseDetails.Token != token)
-                            {
-                                // TODO: Retrieved token doesn't match stored token
-                                // Log error & continue - payment already made
-                            }
-
-                            if (paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo != null)
-                            {
-                                // Note: Only one payment should be sent
-                                if (paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo.Count != 1)
-                                {
-                                    // TODO: Number of payments different from expected payments
-                                    // Log error & continue - payment already made
-                                }
-
-                                if (Convert.ToDouble(paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].GrossAmount.value) != workOrder.transportFee)
-                                {
-                                    // TODO: PayPal charge different from expected charge
-                                    // Log error & continue - payment already made
-                                }
-
-                                // Note: PayPal charges for online payment service
-                                workOrder.paypalFee = Convert.ToDouble(paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].FeeAmount.value);
-
-                            }
-                            else
-                            {
-                                // TODO: PayPal information not provided
-                                // Log error & continue - payment already made
-                            }
-
-                            // TODO: This value is hard-coded in for PayPal - should do a lookup instead
-                            workOrder.transportTransactType = 256;
-
-                            // Transaction identification number of the transaction that was created. This field is only 
-                            // returned after a successful transaction for DoExpressCheckout has occurred.
-                            // Note: truncated string to ensure it fits in database
-                            workOrder.transportTransactID = ("ID: " + paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].TransactionID +
-                                "|| Date: " + paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].PaymentDate + workOrder.transportTransactID).Substring(0, 50);
-
-                            woServ.Save(workOrder, userName);
-
-                            // Pass Data to view
-                            ViewBag.payment = "$" + workOrder.transportFee.ToString();
-                        }
-                        // # Error Values
-                        else
-                        {
-                            List<ErrorType> errorMessages = paymentResponse.Errors;
-                            foreach (ErrorType error in errorMessages)
-                            {
-                                // TODO: redirect page
-                                Console.WriteLine("API Error: " + error.LongMessage + "\n");
-                                // TODO: log error(s)
-                                Console.WriteLine("API Error: " + error.ShortMessage + "\n");
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // TODO: system error
-                        // Log error & return
-                    }
                 }
                 // # Error Values
                 else
@@ -683,17 +644,25 @@ namespace Machete.Web.Controllers
                     List<ErrorType> errorMessages = detailsResponse.Errors;
                     foreach (ErrorType error in errorMessages)
                     {
-                        // TODO: redirect page
-                        Console.WriteLine("API Error: " + error.LongMessage + "\n");
-                        // TODO: log error(s)
-                        Console.WriteLine("API Error: " + error.ShortMessage + "\n");
+                        levent.Level = LogLevel.Error;
+                        levent.Message += error.LongMessage;
+                        log.Log(levent);
+
+                        workOrder.paypalErrors += error.ShortMessage;
                     }
+
+                    // Save work order updates
+                    woServ.Save(workOrder, userName);
+
+                    return View("IndexError", workOrder);
                 }
             }
             else
             {
-                // TODO: system error
-                // Log error & return
+                levent.Level = LogLevel.Error;
+                levent.Message = "The response from PayPal GetExpressCheckoutDetailsResponseType API was null. WO#:" + workOrder.ID;
+                log.Log(levent);
+                return View("IndexError", workOrder);
             }
 
             return View("IndexPostPaypal", workOrder);
@@ -701,37 +670,178 @@ namespace Machete.Web.Controllers
         }
 
         /// <summary>
-        /// GET: /HirerWorkOrder/View/ID
+        /// GET: /HirerWorkOrder/PaymentCancel
         /// </summary>
-        /// <param name="id">WorkOrder ID</param>
+        /// <param name="token">PayPal Token</param>
         /// <returns>MVC Action Result</returns>
         [Authorize(Roles = "Hirer")]
-        public ActionResult PaymentCancel()
+        public ActionResult PaymentCancel(string token)
         {
-            WorkOrder workOrder = woServ.Get(1);
+            // TODO: There was an issue with the WO returned by the first query below - the work order
+            // can't be saved unless the work order is retrieved with the woServ.Get() call
+            WorkOrder woAll = woServ.GetRepo().GetAllQ().Where(wo => wo.paypalToken == token).FirstOrDefault();
+            WorkOrder workOrder = woServ.Get(woAll.ID);
+            if (workOrder == null)
+            {
+                levent.Level = LogLevel.Error;
+                levent.Message = "WorkOrder ID not valid Work Order. WO#:" + workOrder.ID;
+                log.Log(levent);
+                return View("IndexError", workOrder);
+            }
+
             return View("IndexCancel", workOrder);
         }
 
         /// <summary>
-        /// GET: /HirerWorkOrder/View/ID
+        /// GET: /HirerWorkOrder/PaymentComplete
         /// </summary>
-        /// <param name="id">WorkOrder ID</param>
+        /// <param name="token">PayPal Token</param>
+        /// <param name="payerId">PayPal Payer ID</param>
+        /// <param name="userName">User performing action</param>
         /// <returns>MVC Action Result</returns>
+        [UserNameFilter]
         [Authorize(Roles = "Hirer")]
-        public ActionResult PaymentComplete()
+        public ActionResult PaymentComplete(string token, string payerId, string userName)
         {
-            WorkOrder workOrder = woServ.Get(1);
+            // TODO: store payerID in WO table - not being stored for some reason?!
+            double payment = 0.0;
+
+            // TODO: There was an issue with the WO returned by the first query below - the work order
+            // can't be saved unless the work order is retrieved with the woServ.Get() call
+            WorkOrder woAll = woServ.GetRepo().GetAllQ().Where(wo => wo.paypalToken == token).FirstOrDefault();
+            WorkOrder workOrder = woServ.Get(woAll.ID);
+            if (workOrder != null)
+            {
+                if (workOrder.transportFee <= 0.0)
+                {
+                    levent.Level = LogLevel.Error;
+                    levent.Message = "There is no transportation fee associated with this work order - there is no PayPal transaction required. WO#:" + workOrder.ID;
+                    log.Log(levent);
+                    return View("IndexError", workOrder);
+                }
+                else
+                {
+                    payment = workOrder.transportFee;
+                }
+            }
+            else
+            {
+                levent.Level = LogLevel.Error;
+                levent.Message = "WorkOrder ID not valid Work Order. WO#:" + workOrder.ID;
+                log.Log(levent);
+                return View("IndexError", workOrder);
+            }
+
+            if (workOrder.paypalTransactID != null)
+            {
+                // Error - an attempt is being made to make a second payment request on token
+                levent.Level = LogLevel.Error;
+                levent.Message = "An attempt is being made to make a second payment request on token. WO# " + workOrder.ID;
+                log.Log(levent);
+                return View("IndexError", workOrder);
+            }
+            else
+            {
+                // PayPal call to authorize payment
+                PaypalExpressCheckout paypal = new PaypalExpressCheckout();
+                DoExpressCheckoutPaymentResponseType paymentResponse = paypal.DoExpressCheckoutPayment(token, payerId, payment.ToString());
+
+                if (paymentResponse != null)
+                {
+                    // # Success values
+                    if (paymentResponse.Ack.ToString().Trim().ToUpper().Equals("SUCCESS"))
+                    {
+                        if (paymentResponse.DoExpressCheckoutPaymentResponseDetails.Token != token)
+                        {
+                            // Retrieved token doesn't match stored token
+                            // Log error & continue - payment already made
+                            levent.Level = LogLevel.Error;
+                            levent.Message = "Retrieved token doesn't match stored token - payment accepted for token. WO# " + workOrder.ID + "Token# " + token;
+                            log.Log(levent);
+                        }
+
+                        if (paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo != null)
+                        {
+                            // Note: Only one payment should be sent
+                            if (paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo.Count != 1)
+                            {
+                                // Number of payments different from expected payments
+                                // Log error & continue - payment already made
+                                levent.Level = LogLevel.Error;
+                                levent.Message = "Number of payments different from expected payments. WO# " + workOrder.ID + "Payment Count: " + paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo.Count;
+                                log.Log(levent);
+                            }
+
+                            if (Convert.ToDouble(paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].GrossAmount.value) != workOrder.transportFee)
+                            {
+                                // PayPal charge different from expected charge
+                                // Log error & continue - payment already made
+                                levent.Level = LogLevel.Error;
+                                levent.Message = "PayPal charge different from expected charge. WO# " + workOrder.ID + "PayPal Charge: " + paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].GrossAmount.value;
+                                log.Log(levent);
+                            }
+
+                            // Note: PayPal charges for online payment service
+                            workOrder.paypalFee = Convert.ToDouble(paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].FeeAmount.value);
+
+                        }
+                        else
+                        {
+                            // PayPal information not provided
+                            // Log error & continue - payment already made
+                            levent.Level = LogLevel.Error;
+                            levent.Message = "PayPal return information not provided (internal error). WO# " + workOrder.ID;
+                            log.Log(levent);
+                        }
+
+                        // TODO: This value is hard-coded in for PayPal - should do a lookup instead
+                        workOrder.transportTransactType = 256;
+
+                        // Store transactID in hidden field for comparisons
+                        workOrder.paypalTransactID = paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].TransactionID;
+
+                        // Transaction identification number of the transaction that was created. This field is only 
+                        // returned after a successful transaction for DoExpressCheckout has occurred.
+                        // Note: truncated string to ensure it fits in database
+                        workOrder.transportTransactID = ("ID: " + paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].TransactionID +
+                            "|| Date: " + paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].PaymentDate + workOrder.transportTransactID).Substring(0, 50);
+
+                        woServ.Save(workOrder, userName);
+
+                        // Pass Data to view
+                        ViewBag.payment = "$" + workOrder.transportFee.ToString();
+                    }
+                    // # Error Values
+                    else
+                    {
+                        List<ErrorType> errorMessages = paymentResponse.Errors;
+                        foreach (ErrorType error in errorMessages)
+                        {
+                            levent.Level = LogLevel.Error;
+                            levent.Message += error.LongMessage;
+                            log.Log(levent);
+
+                            workOrder.paypalErrors += error.ShortMessage;
+                        }
+
+                        // Save work order updates
+                        woServ.Save(workOrder, userName);
+
+                        return View("IndexError", workOrder);
+                    }
+                }
+                else
+                {
+                    levent.Level = LogLevel.Error;
+                    levent.Message = "The response from PayPal GetExpressCheckoutDetailsResponseType API was null. WO#:" + workOrder.ID;
+                    log.Log(levent);
+                    return View("IndexError", workOrder);
+                }
+            }
+
             return View("IndexComplete", workOrder);
         }
 
-
-        /*
-        public ActionResult View(int id)
-        {
-            WorkOrder workOrder = woServ.Get(id);
-            return View(workOrder);
-        }
-         * */
         #endregion
     }
 }

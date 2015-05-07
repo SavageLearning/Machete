@@ -582,8 +582,7 @@ namespace Machete.Web.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut();
-            // TODO: redirect to generic page
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login");
         }
 
         // GET: /HirerAccount/ExternalLoginFailure

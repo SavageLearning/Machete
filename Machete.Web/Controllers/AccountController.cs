@@ -83,6 +83,19 @@ namespace Machete.Web.Controllers
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
+
+            if (User.Identity.IsAuthenticated)
+            {
+                if (User.IsInRole("Hirer"))
+                {
+                    return RedirectToAction("Index", "HirerWorkOrder");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+
             if (returnUrl != null && returnUrl != "")
             {
                 // Redirect users back to external signin
@@ -653,7 +666,7 @@ namespace Machete.Web.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Home");
         }
 
         //
