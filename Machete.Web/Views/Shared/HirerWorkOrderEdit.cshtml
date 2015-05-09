@@ -18,7 +18,10 @@
 
 
 <input type="hidden" name="workerAssignments" id="workerAssignments" value="">
-
+<!-- Note: there are really weird quirks in the way the JS & Razor interact with these key/value pairs, so to have logic in JS that is worker center -->
+<!-- specific, this config key value MUST be a unique worker center name with no spaces (e.g. "CasaLatina" - NOT "Casa Latina" -->
+<!-- JS can't read string values from the config file, so passing the string value into a hidden field that it can interpret -->
+<input type="hidden" name="workerCenter" id="workerCenter" value='@System.Web.Configuration.WebConfigurationManager.AppSettings["OrganizationName"]'>
 <!-- MAIN WORK ORDER FORM -->
 <div>
     <!-- Display Header information - worker center specific -->
@@ -59,6 +62,8 @@
         <p id="requiredFieldZipcode"></p>
         <p id="requiredFieldTransportMethod"></p>
         <p id="requiredFieldWorkDescription"></p>
+        <p id="requiredFieldName"></p>
+        <p id="requiredFieldPhone"></p>
     </div>
 
     <h3>@Machete.Web.Resources.WorkOrders.workRequest</h3>
@@ -343,7 +348,7 @@
     $(document).ready(function () {
         
         // TODO: remove
-        //alert("Testing JQuery");
+        alert("Testing JQuery");
 
         $("#transportationFeesHeader").hide();
 
@@ -751,6 +756,44 @@
 
         };
 
+        console.log($("#workerCenter").val());
+        function checkTransportationMethodDate() {
+            if ($("#@(idPrefix)transportMethodID").val() == "") {
+                return;
+            }
+
+            // Note: this is logic that is specific to Casa Latina only
+            var workerCenter = $("#workerCenter").val();
+            if (workerCenter != "CasaLatina") {
+                $("#invalidTransportDate").hide();
+                return;
+            }
+
+            var userInput = $("#@(idPrefix)dateTimeofWork").val();
+            var userInputInMs = new Date(userInput);
+
+            if (isNaN(userInputInMs.valueOf())) {
+                $("#invalidDate").text("The date must be in a valid date form (e.g. 03/14/2015 14:00)").show();
+                return;
+            } else {
+                $("#invalidDate").hide();
+            }
+
+            var dayOfWeek = userInputInMs.getDay();
+            var transportMethod = $("#@(idPrefix)transportMethodID").val();
+
+            if (dayOfWeek == 0) { // Sunday
+                // Note: only valid transportation method on Sunday is Pickup
+                // TODO: this value is hard-coded, should be replaced
+                if ((transportMethod == 26) || (transportMethod == 29)) { // Worker buses = 26
+                    $("#invalidTransportDate").text("Workers can only be picked up for work on Sunday").show();
+                } else {
+                    $("#invalidTransportDate").hide();
+                }
+            }
+
+        };
+
         //////////////////////////////////////////////////////////////////////////
         // VALIDATION
         //////////////////////////////////////////////////////////////////////////
@@ -766,6 +809,65 @@
             }
         };
 
+        $("#@(idPrefix)description").focusout(function() {
+            // Check required field
+            if ($("#@(idPrefix)description").val() == "") {
+                var field = $("#@(idPrefix)description").parent().prev().text();
+                $("#requiredFieldWorkDescription").text("REQUIRED FIELD: ").append(field).show();
+            } else {
+                $("#requiredFieldWorkDescription").hide();
+            }
+
+            // Enable Submit button if valid
+            enableButton();
+        });
+        
+        $("#@(idPrefix)city").focusout(function() {
+            // Check required field
+            if ($("#@(idPrefix)city").val() == "") {
+                var field = $("#@(idPrefix)city").parent().prev().text();
+                $("#requiredFieldCity").text("REQUIRED FIELD: ").append(field).show();
+            } else {
+                $("#requiredFieldCity").hide();
+            }
+
+            // Enable Submit button if valid
+            enableButton();
+        });
+
+        $("#@(idPrefix)transportMethodID").focusout(function() {
+
+            // Calculate Transport fees
+            calculateTransportationFees();
+
+            // Confirm transportation method is valid with date
+            checkTransportationMethodDate();
+
+            // Check required field
+            if ($("#@(idPrefix)transportMethodID").val() == "") {
+                var field = $("#@(idPrefix)transportMethodID").parent().prev().text();
+                $("#requiredFieldTransportMethod").text("REQUIRED FIELD: ").append(field).show();
+            } else {
+                $("#requiredFieldTransportMethod").hide();
+            }
+
+            // Enable Submit button if valid
+            enableButton();
+        });
+
+        $("#@(idPrefix)workSiteAddress1").focusout(function() {
+            // Check required field
+            if ($("#@(idPrefix)workSiteAddress1").val() == "") {
+                var field = $("#@(idPrefix)workSiteAddress1").parent().prev().text();
+                $("#requiredFieldWorkSiteAddress1").text("REQUIRED FIELD: ").append(field).show();
+            } else {
+                $("#requiredFieldWorkSiteAddress1").hide();
+            }
+
+            // Enable Submit button if valid
+            enableButton();
+        });
+
         $("#@(idPrefix)dateTimeofWork").focusin(function() {
             // Confirm date is valid
             checkDate();
@@ -777,16 +879,65 @@
             enableButton();
         });
 
-        $("#@(idPrefix)employerPhone").focusout(function() {
-        	
-            if($("#@(idPrefix)phone").val() == "") {
-                $("#@(idPrefix)phone").val($("#@(idPrefix)employerPhone").val());
+        $("#@(idPrefix)state").focusout(function() {
+            // Check required field
+            var field = $("#@(idPrefix)state").parent().prev().text();
+            if ($("#@(idPrefix)state").val() == "") {
+                $("#requiredFieldState").text("REQUIRED FIELD: ").append(field).show();
+            } else {
+                $("#requiredFieldState").hide();
             }
 
             // Enable Submit button if valid
             enableButton();
         });
-        
+
+        $("#@(idPrefix)contactName").focusout(function() {
+            // Check required field
+            var field = $("#@(idPrefix)contactName").parent().prev().text();
+            if ($("#@(idPrefix)contactName").val() == "") {
+                $("#requiredFieldName").text("REQUIRED FIELD: ").append(field).show();
+            } else {
+                $("#requiredFieldName").hide();
+            }
+
+            // Enable Submit button if valid
+            enableButton();
+        });
+
+        $("#@(idPrefix)phone").focusout(function() {
+            // Check required field
+            var field = $("#@(idPrefix)phone").parent().prev().text();
+            if ($("#@(idPrefix)phone").val() == "") {
+                $("#requiredFieldPhone").text("REQUIRED FIELD: ").append(field).show();
+            } else {
+                $("#requiredFieldPhone").hide();
+            }
+
+            // Enable Submit button if valid
+            enableButton();
+        });
+
+        $("#@(idPrefix)zipcode").focusout(function() {
+
+            // Validate zipcode
+            validateZipcodes();
+
+            // Check required field
+            var field = $("#@(idPrefix)zipcode").parent().prev().text();
+            if ($("#@(idPrefix)zipcode").val() == "") {
+                $("#requiredFieldZipcode").text("REQUIRED FIELD: ").append(field).show();
+            } else {
+                $("#requiredFieldZipcode").hide();
+            }
+
+            // Calculate transportation fee
+            calculateTransportationFees();
+
+            // Enable Submit button if valid
+            enableButton();
+        });
+
         //////////////////////////////////////////////////////////////////////////
         // WORKER REQUESTS
         //////////////////////////////////////////////////////////////////////////
@@ -863,4 +1014,4 @@
         });
 
     });
-</script>
+</script>workSiteAddress1
