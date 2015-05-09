@@ -11,7 +11,7 @@
 @using (Html.BeginForm("Create", "HirerWorkOrder", FormMethod.Post, 
                         new { @id = "workOrderCreateForm" }))
 {
-    @Html.ValidationSummary(true, @Machete.Web.Resources.ValidationStrings.HirerWOCreateValSummary)
+    @Html.ValidationSummary(true)
     @Html.Partial("HirerWorkOrderEdit", Model)
     <input type="submit" id="@(idPrefix)SaveBtn" class="formButton saveBtn"
         value="@WorkOrders.submit" tabindex="41" />
@@ -50,44 +50,6 @@
             },
             formLevel: 2
         });
-
-        // Note: this code was causing JQuery not to load when placed in HirerWorkOrderEdit.cshtml
-        // TODO: investigate why!?
-        function checkTransportationMethodDate() {
-            if ($("#@(idPrefix)transportMethodID").val() == "") {
-                return;
-            }
-
-            // Note: this is logic that is specific to Casa Latina only
-            var workerCenter = @System.Web.Configuration.WebConfigurationManager.AppSettings["OrganizationName"];
-            if (workerCenter != "Casa Latina") {
-                $("#invalidTransportDate").hide();
-                return;
-            }
-
-            var userInput = $("#@(idPrefix)dateTimeofWork").val();
-            var userInputInMs = new Date(userInput);
-
-            if (isNaN(userInputInMs.valueOf())) {
-                $("#invalidDate").text("The date must be in a valid date form (e.g. 03/14/2015 14:00)").show();
-                return;
-            } else {
-                $("#invalidDate").hide();
-            }
-
-            var dayOfWeek = userInputInMs.getDay();
-
-            if (dayOfWeek == 0) { // Sunday
-                // Note: only valid transportation method on Sunday is Pickup
-                // TODO: this value is hard-coded, should be replaced
-                if ((transportMethod == 26) || (transportMethod == 29)) { // Worker buses = 26
-                    $("#invalidTransportDate").text("Workers can only be picked up for work on Sunday").show();
-                } else {
-                    $("#invalidTransportDate").hide();
-                }
-            }
-
-        };
 
 
     });

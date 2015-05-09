@@ -44,6 +44,11 @@ http://www.emilsoman.com/blog/2013/05/18/building-a-tested/
 http://stackoverflow.com/questions/3297048/403-forbidden-vs-401-unauthorized-http-responses/6937030#6937030
 http://rspec.info/about/
 
+            var workerCenter = @System.Web.Configuration.WebConfigurationManager.AppSettings["OrganizationName"];
+            if (workerCenter != "Casa Latina") {
+                $("#invalidTransportDate").hide();
+                return;
+            }
 
         function calculateWorkerFees() {
             // TODO
@@ -87,51 +92,12 @@ http://rspec.info/about/
             enableButton();
         });
 
-        $("#@(idPrefix)workSiteAddress2").focusout(function() {
-            /*
-            // Auto-complete Employer fields based on Work Order fields
-            if($("#@(idPrefix)employerAddress2").val() == "") {
-                $("#@(idPrefix)employerAddress2").val($("#@(idPrefix)workSiteAddress2").val());
-            }
-            */
+        $("#@(idPrefix)dateTimeofWork").focusin(function() {
+            // Confirm date is valid
+            checkDate();
 
-            // Enable Submit button if valid
-            enableButton();
-        });
-
-        $("#@(idPrefix)city").focusout(function() {
-            /*
-            // Auto-complete Employer fields based on Work Order fields
-            if($("#@(idPrefix)employerCity").val() == "") {
-                $("#@(idPrefix)employerCity").val($("#@(idPrefix)city").val());
-            }
-            */
-
-            // Check required field
-            if ($("#@(idPrefix)city").val() == "") {
-                $("#requiredFieldCity").text("REQUIRED FIELD: " + @Html.LabelFor(model => model.city)).show();
-            } else {
-                $("#requiredFieldCity").hide();
-            }
-
-            // Enable Submit button if valid
-            enableButton();
-        });
-
-        $("#@(idPrefix)state").focusout(function() {
-            /*
-            // Auto-complete Employer fields based on Work Order fields
-            if($("#@(idPrefix)employerState").val() == "") {
-                $("#@(idPrefix)employerState").val($("#@(idPrefix)state").val());
-            }
-            */
-
-            // Check required field
-            if ($("#@(idPrefix)state").val() == "") {
-                $("#requiredFieldState").text("REQUIRED FIELD: " + @Html.LabelFor(model => model.state)).show();
-            } else {
-                $("#requiredFieldState").hide();
-            }
+            // Confirm transportation method is valid with date
+            checkTransportationMethodDate();
 
             // Enable Submit button if valid
             enableButton();
@@ -163,7 +129,39 @@ http://rspec.info/about/
             enableButton();
         });
 
-        $("#@(idPrefix)contactName").focusout(function() {
+        $("#@(idPrefix)city").focusout(function() {
+            // Check required field
+            if ($("#@(idPrefix)city").val() == "") {
+                $("#requiredFieldCity").text("REQUIRED FIELD: " + @Html.LabelFor(model => model.city)).show();
+            } else {
+                $("#requiredFieldCity").hide();
+            }
+
+            // Enable Submit button if valid
+            enableButton();
+        });
+
+        $("#@(idPrefix)state").focusout(function() {
+            // Check required field
+            if ($("#@(idPrefix)state").val() == "") {
+                $("#requiredFieldState").text("REQUIRED FIELD: " + @Html.LabelFor(model => model.state)).show();
+            } else {
+                $("#requiredFieldState").hide();
+            }
+
+            // Enable Submit button if valid
+            enableButton();
+        });
+
+        $("#@(idPrefix)employerPhone").focusout(function() {
+        	
+            if($("#@(idPrefix)phone").val() == "") {
+                $("#@(idPrefix)phone").val($("#@(idPrefix)employerPhone").val());
+            }
+
+            // Enable Submit button if valid
+            enableButton();
+        });        $("#@(idPrefix)contactName").focusout(function() {
             /*
             // Auto-complete Employer fields based on Work Order fields
             if($("#@(idPrefix)business").val()) {
