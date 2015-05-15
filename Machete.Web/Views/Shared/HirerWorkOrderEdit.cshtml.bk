@@ -219,7 +219,7 @@
                 new SelectList(Lookups.getOnlineEmployerSkill(),
                     "Value",
                     "Text",
-                    Model.paperOrderNum),
+                    Model.typeOfWorkID),
                              @Machete.Web.Resources.Shared.choose, new { tabindex = "40" })
             </td>
             <td width="10%">

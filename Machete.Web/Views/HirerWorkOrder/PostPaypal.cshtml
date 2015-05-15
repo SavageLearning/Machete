@@ -1,0 +1,31 @@
+﻿@model Machete.Domain.WorkOrder
+@using Machete.Web.Resources
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+}
+
+@using (Html.BeginForm("PaymentComplete", "HirerWorkOrder", FormMethod.Get,
+                        new { @class = "edittab-form EditPost", @id = "WorkOrderTab-" + Model.ID }))
+{
+    <input type="hidden" name="payerId" id="payerId" value="@(Model.paypalPayerId)">
+    <input type="hidden" name="token" id="token" value="@(Model.paypalToken)">
+    <div>
+        <h1>Transportation Fees - PayPal Authorization</h1>
+        <p>You have authorized a PayPal payment - please select the link below to confirm the payment.</p>
+        <p>The transportation fees must be paid before a Work Order can be confirmed</p>
+        <p>Contact Casa Latina during business hours if you have any questions/issues.</p>
+        <p>The Work Order Number is: @(Model.ID)</p>
+        <p>The transportation fee is: $@(Model.transportFee).00</p>
+        <br />
+    </div>
+    <div>
+        <button type="submit" class="btn btn-default" id="confirmPayment" name="provider" value="confirmPayment">Confirm Payment</button>
+    </div>
+}
+    
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+    });
+</script>

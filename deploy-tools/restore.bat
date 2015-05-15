@@ -44,266 +44,43 @@ http://www.emilsoman.com/blog/2013/05/18/building-a-tested/
 http://stackoverflow.com/questions/3297048/403-forbidden-vs-401-unauthorized-http-responses/6937030#6937030
 http://rspec.info/about/
 
+        $('#removeWABtn-@(Model.ID)').click(function () {
+        
+        }
+
+        <!-- TODO: Disable
+        <li><a href="/HirerWorkOrder/View/1" id="hirerProfileTab" class="ListTab">@Machete.Web.Resources.WorkOrders.hirerProfile</a> </li>
+        <li><a href="/HirerWorkOrder/Create" id="paypalTab" class="ListTab">@Machete.Domain.Resources.WorkOrder.paypal</a> </li>
+        <li><a href="/HirerWorkOrder/List" id="hirerAccountTab" class="ListTab">@Machete.Web.Resources.WorkOrders.workOrders</a> </li>
+        @* @if(ViewBag.employerId) *@
+        @*{ *@
+            <li><a href="/HirerAccount/Edit/ViewBag.employerId" id="hirerProfileTab" class="ListTab">@Machete.Web.Resources.WorkOrders.hirerAccount</a> </li>
+        @*} *@
+        -->
+
+Look from Index line 137
+    <h3>@Employers.boxlegend: @Model.Employer.name</h3>
+
+        // Business name toggle - ON
+        $('#@(idPrefix)business').mUI('selectToggleOnValue', {
+            target: $('#@(idPrefix)businessNameRow'),
+            showVal: "@(Shared.yes)"
+        });
+
+        // Employer name toggle - OFF
+        $('#@(idPrefix)business').mUI('selectToggleOnValue', {
+            target: $('#@(idPrefix)employerNameRow'),
+            showVal: "@(Shared.no)"
+        });
+
+
             var workerCenter = @System.Web.Configuration.WebConfigurationManager.AppSettings["OrganizationName"];
             if (workerCenter != "Casa Latina") {
                 $("#invalidTransportDate").hide();
                 return;
             }
 
-        function calculateWorkerFees() {
-            // TODO
-        };
-
-        $("#@(idPrefix)transportMethodID").focusout(function() {
-
-            // Calculate Transport fees
-            calculateTransportationFees();
-
-            // Confirm transportation method is valid with date
-            checkTransportationMethodDate();
-
-            // Check required field
-            if ($("#@(idPrefix)transportMethodID").val() == "") {
-                $("#requiredFieldTransportMethod").text("REQUIRED FIELD: " + @Html.LabelFor(model => model.transportMethodID)).show();
-            } else {
-                $("#requiredFieldTransportMethod").hide();
-            }
-
-            // Enable Submit button if valid
-            enableButton();
-        });
-
-        $("#@(idPrefix)workSiteAddress1").focusout(function() {
-            /*
-            // Auto-complete Employer fields based on Work Order fields
-            if($("#@(idPrefix)employerAddress1").val() == "") {
-                $("#@(idPrefix)employerAddress1").val($("#@(idPrefix)workSiteAddress1").val());
-            }
-            */
-
-            // Check required field
-            if ($("#@(idPrefix)workSiteAddress1").val() == "") {
-                $("#requiredFieldWorkSiteAddress1").text("REQUIRED FIELD: " + @Html.Label(Machete.Web.Resources.WorkOrders.workSiteAddress1)).show();
-            } else {
-                $("#requiredFieldWorkSiteAddress1").hide();
-            }
-
-            // Enable Submit button if valid
-            enableButton();
-        });
-
-        $("#@(idPrefix)dateTimeofWork").focusin(function() {
-            // Confirm date is valid
-            checkDate();
-
-            // Confirm transportation method is valid with date
-            checkTransportationMethodDate();
-
-            // Enable Submit button if valid
-            enableButton();
-        });
-
-        $("#@(idPrefix)zipcode").focusout(function() {
-
-            // Validate zipcode
-            validateZipcodes();
-
-            /*
-            // Auto-complete Employer fields based on Work Order fields
-            if($("#@(idPrefix)employerZipcode").val() == "") {
-                $("#@(idPrefix)employerZipcode").val($("#@(idPrefix)zipcode").val());
-            }
-            */
-
-            // Check required field
-            if ($("#@(idPrefix)zipcode").val() == "") {
-                $("#requiredFieldZipcode").text("REQUIRED FIELD: " + @Html.LabelFor(model => model.zipcode)).show();
-            } else {
-                $("#requiredFieldZipcode").hide();
-            }
-
-            // Calculate transportation fee
-            calculateTransportationFees();
-
-            // Enable Submit button if valid
-            enableButton();
-        });
-
-        $("#@(idPrefix)city").focusout(function() {
-            // Check required field
-            if ($("#@(idPrefix)city").val() == "") {
-                $("#requiredFieldCity").text("REQUIRED FIELD: " + @Html.LabelFor(model => model.city)).show();
-            } else {
-                $("#requiredFieldCity").hide();
-            }
-
-            // Enable Submit button if valid
-            enableButton();
-        });
-
-        $("#@(idPrefix)state").focusout(function() {
-            // Check required field
-            if ($("#@(idPrefix)state").val() == "") {
-                $("#requiredFieldState").text("REQUIRED FIELD: " + @Html.LabelFor(model => model.state)).show();
-            } else {
-                $("#requiredFieldState").hide();
-            }
-
-            // Enable Submit button if valid
-            enableButton();
-        });
-
-        $("#@(idPrefix)employerPhone").focusout(function() {
-        	
-            if($("#@(idPrefix)phone").val() == "") {
-                $("#@(idPrefix)phone").val($("#@(idPrefix)employerPhone").val());
-            }
-
-            // Enable Submit button if valid
-            enableButton();
-        });        $("#@(idPrefix)contactName").focusout(function() {
-            /*
-            // Auto-complete Employer fields based on Work Order fields
-            if($("#@(idPrefix)business").val()) {
-                if($("#@(idPrefix)businessname").val() == "") {
-                    $("#@(idPrefix)businessname").val($("#@(idPrefix)contactName").val());
-                }
-            } else {
-                if($("#@(idPrefix)employerName").val() == "") {
-                    $("#@(idPrefix)employerName").val($("#@(idPrefix)contactName").val());
-                }
-            }
-            */
-
-            // TODO: Check required field
-
-            // Enable Submit button if valid
-            enableButton();
-        });
-
-        $("#@(idPrefix)phone").focusout(function() {
-
-            // Auto-complete Employer fields based on Work Order fields
-            if($("#@(idPrefix)employerPhone").val() == "") {
-                $("#@(idPrefix)employerPhone").val($("#@(idPrefix)phone").val());
-            }
-
-            // TODO: Check required field
-
-            // Enable Submit button if valid
-            enableButton();
-        });
-
-        $("#@(idPrefix)employerAddress1").focusout(function() {
-
-            // Auto-complete Work Order fields based on Employer fields
-            if($("#@(idPrefix)workSiteAddress1").val() == "") {
-                $("#@(idPrefix)workSiteAddress1").val($("#@(idPrefix)employerAddress1").val());
-            }
-
-            // Enable Submit button if valid
-            enableButton();
-        });
-
-        $("#@(idPrefix)employerAddress2").focusout(function() {
-
-            // Auto-complete Work Order fields based on Employer fields
-            if($("#@(idPrefix)workSiteAddress2").val() == "") {
-                $("#@(idPrefix)workSiteAddress2").val($("#@(idPrefix)employerAddress2").val());
-            }
-
-            // Enable Submit button if valid
-            enableButton();
-        });
-
-        $("#@(idPrefix)employerCity").focusout(function() {
-
-            // Auto-complete Work Order fields based on Employer fields
-            if($("#@(idPrefix)city").val() == "") {
-                $("#@(idPrefix)city").val($("#@(idPrefix)employerCity").val());
-            }
-
-            // Enable Submit button if valid
-            enableButton();
-        });
-
-        $("#@(idPrefix)employerState").focusout(function() {
-
-            // Auto-complete Work Order fields based on Employer fields
-            if($("#@(idPrefix)state").val() == "") {
-                $("#@(idPrefix)state").val($("#@(idPrefix)employerState").val());
-            }
-
-            // Enable Submit button if valid
-            enableButton();
-        });
-
-        $("#@(idPrefix)employerZipcode").focusout(function() {
-
-            // Auto-complete Work Order fields based on Employer fields
-            if($("#@(idPrefix)zipcode").val() == "") {
-                $("#@(idPrefix)zipcode").val($("#@(idPrefix)employerZipcode").val());
-            }
-
-            // Enable Submit button if valid
-            enableButton();
-        });
-
-        $("#@(idPrefix)business").focusout(function() {
-
-            // Auto-complete Work Order fields based on Employer fields
-            if($("#@(idPrefix)business").val()) {
-                if($("#@(idPrefix)contactName").val() == "") {
-                    if($("#@(idPrefix)businessname").val() != "") {
-                        $("#@(idPrefix)contactName").val($("#@(idPrefix)businessname").val());
-                    }
-                }
-            } else {
-                if($("#@(idPrefix)contactName").val() == "") {
-                    if($("#@(idPrefix)employerName").val() != "") {
-                        $("#@(idPrefix)contactName").val($("#@(idPrefix)employerName").val());
-                    }
-                }
-            }
-
-            // Enable Submit button if valid
-            enableButton();
-        });
-
-        $("#@(idPrefix)businessname").focusout(function() {
-
-            // Auto-complete Work Order fields based on Employer fields
-            if($("#@(idPrefix)business").val()) {
-                if($("#@(idPrefix)contactName").val() == "") {
-                    $("#@(idPrefix)contactName").val($("#@(idPrefix)businessname").val());
-                }
-            }
-
-            // Enable Submit button if valid
-            enableButton();
-        });
-
-        $("#@(idPrefix)employerName").focusout(function() {
-
-            // Auto-complete Work Order fields based on Employer fields
-            if(! $("#@(idPrefix)business").val()) {
-                if($("#@(idPrefix)contactName").val() == "") {
-                    $("#@(idPrefix)contactName").val($("#@(idPrefix)employerName").val());
-                }
-            }
-
-            // Enable Submit button if valid
-            enableButton();
-        });
-
-        $("#@(idPrefix)employerPhone").focusout(function() {
-            if($("#@(idPrefix)phone").val() == "") {
-                $("#@(idPrefix)phone").val($("#@(idPrefix)employerPhone").val());
-            }
-
-            // Enable Submit button if valid
-            enableButton();
-        });
+    <!-- add key="ValidationSettings:UnobtrusiveValidationMode" value="None" / -->
 
         // TODO: add new dialog modal boxes
         /*
@@ -395,9 +172,6 @@ http://rspec.info/about/
         //////////////////////////////////////////////////
         //
         //
-        $('#removeRequestBtn-@(Model.ID)').click(function () {
-            $('#workerRequests2_WO-@(Model.ID)').find('option:selected').remove();
-        });
 
 
 =======================================================
