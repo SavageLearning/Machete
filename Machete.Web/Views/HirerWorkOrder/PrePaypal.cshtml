@@ -7,11 +7,6 @@
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
 }
 
-<div id="woPaypalTabs" >
-    <ul>
-        <li><a href="#" id="paypalTab" class="ListTab">@Machete.Domain.Resources.WorkOrder.paypal</a> </li>
-    </ul>
-</div>
 @using (Html.BeginForm("PaymentPre", "HirerWorkOrder", FormMethod.Post,
                         new { @class = "edittab-form EditPost", @id = "WorkOrderTab-" + Model.ID }))
 {
@@ -32,13 +27,9 @@
     </div>
     
 }
-    
-
 <script type="text/javascript">
 
     $(document).ready(function () {
-
-        $('#woPaypalTabs').tabs();
 
     });
 </script>

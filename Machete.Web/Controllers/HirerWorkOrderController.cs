@@ -116,7 +116,7 @@ namespace Machete.Web.Controllers
                 ViewBag.employerId = employer.ID;
             }
              
-            return View();
+            return View("Index");
         }
 
         #endregion
@@ -309,9 +309,18 @@ namespace Machete.Web.Controllers
                     ViewBag.ID[counter] = lup.ID;
                     ViewBag.text_EN[counter] = lup.text_EN;
                     ViewBag.text_ES[counter] = lup.text_ES;
-                    ViewBag.wage[counter] = lup.wage;
-                    ViewBag.minHour[counter] = lup.minHour;
-                    ViewBag.workType[counter] = lup.typeOfWorkID;
+                    if (lup.wage.HasValue)
+                    {
+                        ViewBag.wage[counter] = lup.wage.Value;
+                    }
+                    if (lup.minHour.HasValue)
+                    {
+                        ViewBag.minHour[counter] = lup.minHour.Value;
+                    }
+                    if (lup.typeOfWorkID.HasValue)
+                    {
+                        ViewBag.workType[counter] = lup.typeOfWorkID.Value;
+                    }
                     ViewBag.desc_ES[counter] = lup.skillDescriptionEs;
                     ViewBag.desc_EN[counter] = lup.skillDescriptionEn;
                     counter++;
@@ -443,19 +452,10 @@ namespace Machete.Web.Controllers
                 }
             }
 
-            /* TODO: remove this JSON return - this was previously used to repopulate the page - need to redirect user to new page instead */
-            // JSON object with new work order data
-            /*
-            return Json(new
-            {
-                sNewRef = neworder.getTabRef(),
-                sNewLabel = Machete.Web.Resources.WorkOrders.tabprefix + neworder.getTabLabel(),
-                iNewID = neworder.ID
-            },
-            JsonRequestBehavior.AllowGet);
-            */
-            return PartialView("IndexPrePaypal", neworder);
+            //return PartialView("View", neworder);
 
+            var redirectUrl = "http://casa-latina.org/casa-latina.org/get-involved/hire-worker";
+            return new RedirectResult(redirectUrl, false);
             //return RedirectToAction("PaymentPre", neworder);
             //return View("IndexPrePaypal", neworder);
 
@@ -494,7 +494,7 @@ namespace Machete.Web.Controllers
             WorkOrder workOrder = woServ.Get(id);
 
             // TODO: Update the return view
-            return View("IndexPrePaypal", workOrder);
+            return PartialView("PrePaypal", workOrder);
         }
 
         /// <summary>
@@ -512,7 +512,7 @@ namespace Machete.Web.Controllers
         }
 
         /// <summary>
-        /// GET: /HirerWorkOrder/PaymentPre
+        /// POST: /HirerWorkOrder/PaymentPre
         /// </summary>
         /// <param name="id">WorkOrder ID</param>
         /// <param name="userName">User performing action</param>
@@ -564,13 +564,6 @@ namespace Machete.Web.Controllers
                     var redirectUrl = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=" + response.Token;
                     return new RedirectResult(redirectUrl, false);
 
-                    /*
-                    // Redirect to PayPal to authenticate user & payment
-                    Response.BufferOutput = true;
-                    Response.Redirect("https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=" + response.Token);
-                    */
-
-                    // TODO: return from here
                 }
                 // # Error Values
                 else
@@ -599,11 +592,6 @@ namespace Machete.Web.Controllers
                 return View("IndexError", workOrder);
             }
 
-            // Save work order updates
-            //woServ.Save(workOrder, userName);
-
-            // TODO: investigate the best way to handle the redirects (what is the Action Result return)
-            //return View("IndexPrePaypal", workOrder);
         }
 
         /// <summary>
