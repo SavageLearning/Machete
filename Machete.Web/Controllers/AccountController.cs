@@ -666,7 +666,7 @@ namespace Machete.Web.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut();
-            return RedirectToAction("Login", "Home");
+            return RedirectToAction("Login", "Account");
         }
 
         //

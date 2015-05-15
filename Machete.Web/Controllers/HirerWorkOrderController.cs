@@ -287,7 +287,36 @@ namespace Machete.Web.Controllers
             wo.onlineSource = true;
             wo.disclosureAgreement = false;
             ViewBag.workerRequests = new List<SelectListItem> { };
-            ViewBag.workAssignments = new List<SelectListItem> { };
+
+            // Build Skill lookups
+            ViewBag.ID = new int[22];
+            ViewBag.text_EN = new string[22];
+            ViewBag.text_ES = new string[22];
+            ViewBag.wage = new double[22];
+            ViewBag.minHour = new int[22];
+            ViewBag.workType = new int[22];
+            ViewBag.desc_ES = new string[22];
+            ViewBag.desc_EN = new string[22];
+
+            int counter = 0;
+            IEnumerable<Lookup> lookup = lcache.getCache();
+            for (int i = 0; i < lookup.Count(); i++)
+            {
+
+                Lookup lup = lookup.ElementAt(i);
+                if (lup.ID == 60 || lup.ID == 61 || lup.ID == 62 || lup.ID == 63 || lup.ID == 64 || lup.ID == 65 || lup.ID == 66 || lup.ID == 67 || lup.ID == 68 || lup.ID == 69 || lup.ID == 77 || lup.ID == 83 || lup.ID == 88 || lup.ID == 89 || lup.ID == 118 || lup.ID == 120 || lup.ID == 122 || lup.ID == 128 || lup.ID == 131 || lup.ID == 132 || lup.ID == 133 || lup.ID == 183)
+                {
+                    ViewBag.ID[counter] = lup.ID;
+                    ViewBag.text_EN[counter] = lup.text_EN;
+                    ViewBag.text_ES[counter] = lup.text_ES;
+                    ViewBag.wage[counter] = lup.wage;
+                    ViewBag.minHour[counter] = lup.minHour;
+                    ViewBag.workType[counter] = lup.typeOfWorkID;
+                    ViewBag.desc_ES[counter] = lup.skillDescriptionEs;
+                    ViewBag.desc_EN[counter] = lup.skillDescriptionEn;
+                    counter++;
+                }
+            }
 
             return PartialView("Create", wo);
         }
@@ -351,7 +380,7 @@ namespace Machete.Web.Controllers
             }
 
             // TODO: remove this after the calculations are complete - hard-coding for now...
-            wo.transportFee = 10.00;
+            //wo.transportFee = 10.00;
 
             if (workerAssignments == "")
             {
@@ -382,7 +411,7 @@ namespace Machete.Web.Controllers
                     wa.skillID = parsedWorkerRequests["assignments"][i].skillId;
                     wa.hours = parsedWorkerRequests["assignments"][i].hours;
                     wa.weightLifted = parsedWorkerRequests["assignments"][i].weight;
-                    wa.hourlyWage = 15; // TODO: lookup this value intead parsedWorkerRequests["list"][i].hourlyWage;
+                    wa.hourlyWage = parsedWorkerRequests["assignments"][i].hourlyWage; // TODO: consider looking this up instead - however, this is the value quoted to the customer online
                     wa.pseudoID = i + 1;
                     wa.description = parsedWorkerRequests["assignments"][i].desc;
 
@@ -424,8 +453,12 @@ namespace Machete.Web.Controllers
                 iNewID = neworder.ID
             },
             JsonRequestBehavior.AllowGet);
-             * */
-            return RedirectToAction("PaymentPre", neworder);
+            */
+            return PartialView("IndexPrePaypal", neworder);
+
+            //return RedirectToAction("PaymentPre", neworder);
+            //return View("IndexPrePaypal", neworder);
+
         }
 
         #endregion
