@@ -141,90 +141,39 @@ namespace Machete.Web.Controllers
 
                 MacheteContext Db = DatabaseFactory.Get();
 
-                // TODO: Check if user already exists before adding to db (Is this necessary - will the create method return a decent error?)
-                ApplicationUser userCheck = Db.Users.FirstOrDefault(x => x.UserName.ToLower() == model.Email.ToLower().Trim());
-                if (userCheck == null)
+                // Create user
+                IdentityResult result = await UserManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
                 {
-                    // Create user
-                    IdentityResult result = await UserManager.CreateAsync(user, model.Password);
-                    if (result.Succeeded)
+                    // Retrieve newly created user record to retrieve userId
+                    ApplicationUser newUser = await UserManager.FindAsync(user.UserName, model.Password);
+                    if (newUser != null)
                     {
-                        // Retrieve newly created user record to retrieve userId
-                        ApplicationUser newUser = await UserManager.FindAsync(user.UserName, model.Password);
-                        if (newUser != null)
+                        result = await UserManager.AddToRoleAsync(newUser.Id, "Hirer");
+                        if (result.Succeeded)
                         {
-                            result = await UserManager.AddToRoleAsync(newUser.Id, "Hirer");
-                            if (result.Succeeded)
-                            {
-                                // Sign in user
-                                await SignInAsync(user, isPersistent: false);
+                            // Sign in user
+                            await SignInAsync(user, isPersistent: false);
 
-                                // Redirect to hire worker page
-                                return RedirectToAction("/", "HirerWorkOrder");
-                                /* 
-                                // Retrieve employer user ID (from AspNetUser - NOT Employer table)
-                                string eid = newUser.Id;
-
-                                // Check if user already exists
-                                Domain.Employer employer = Db.Employers.FirstOrDefault(e => e.referredbyOther == eid);
-                                if (employer == null)
-                                {
-                                    // Add default user to database
-                                    employer = new Domain.Employer();
-
-                                        // Set up default online Employer profile
-                                        employer.isOnlineProfileComplete = false;
-                                        employer.onlineSigninID = newUser.Id; 
-                                        employer.email = user.UserName; // The Employer's username is their email address
-                                        employer.active = true; 
-                                        employer.business = false;
-                                        employer.name = "New Online Employer";
-                                        employer.address1 = "New Online Employer";
-                                        employer.city = "New Online Employer";
-                                        employer.state = "NA";
-                                        employer.phone = "555-555-5555";
-                                        employer.zipcode = "55555";
-                                        employer.blogparticipate = false;
-                                        employer.datecreated = DateTime.Now;
-                                        employer.dateupdated = DateTime.Now;
-                                        employer.Createdby = "Online Form";
-                                        employer.Updatedby = "Online Form";
-                                        employer.onlineSource = true;
-                                        employer.returnCustomer = false;
-                                        employer.receiveUpdates = true;
-                                        employer.business = false;
-                                    Domain.Employer savedEmployer = Db.Employers.Add(employer);
-                                    int saveResult = Db.SaveChanges();
-                                    if (saveResult != 1)
-                                    {
-                                        // TODO: handle error
-                                    }
-                                }
-
-                                    */
-
-                            }
-                            else
-                            {
-                                AddErrors(result);
-                            }
-
+                            // Redirect to hire worker page
+                            return RedirectToAction("/", "HirerWorkOrder");
                         }
-                        else // new user couldn't be found
+                        else
                         {
-                            // TODO: provide error reporting
+                            AddErrors(result);
                         }
 
                     }
-                    else // create new user failed
+                    else // new user couldn't be found
                     {
-                        // TODO: message the user
-                        AddErrors(result);
+                        // TODO: provide error reporting
                     }
+
                 }
-                else // user with same username already exists
+                else // create new user failed
                 {
-                    // TODO: provide error reporting - IMPORTANT CASE TO HANDLE
+                    // Message the user
+                    AddErrors(result);
                 }
             }
 
