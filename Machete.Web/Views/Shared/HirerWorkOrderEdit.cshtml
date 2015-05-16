@@ -14,6 +14,7 @@
 @Html.HiddenFor(model => model.typeOfWorkID)
 @Html.HiddenFor(model => model.timeFlexible)
 @Html.HiddenFor(model => model.waPseudoIDCounter)
+@Html.HiddenFor(model => model.transportFee, new { @id = "transportFee" })
 
 
 <input type="hidden" name="workerAssignments" id="workerAssignments" value="">
@@ -769,10 +770,12 @@
 
             if (isTransportFeeSet) {
                 $("#transportationFees").text("$" + transportFee.toFixed(2));
+                $("#transportFee").val(transportFee.toFixed(2));
                 $("#paypalWarning").show();
             } else {
                 $("#transportationFees").text("n/a");
                 $("#paypalWarning").hide();
+                $("#transportFee").val(0);
             }
 
         };
@@ -789,7 +792,7 @@
             }
 
             // Note: this is logic that is specific to Casa Latina only
-            var workerCenter = $("#workerCenter").val();
+            var workerCenter = "" + $("#workerCenter").val() + "";
             if (workerCenter != "Casa Latina") {
                 $("#invalidTransportDate").hide();
                 return;
@@ -1171,6 +1174,9 @@
             // Trigger cost estimates
             CalculateWorkerFees();
 
+            // Trigger transportation fees
+            calculateTransportationFees();
+
         });
 
         $('#workAssignments_WO-@(Model.ID)').change(function () {
@@ -1211,7 +1217,7 @@
 
         function CalculateWorkerFees() {
             var totalWorkerRates = 0;
-            var workerCenter = $("#workerCenter").val();
+            var workerCenter = "" + $("#workerCenter").val() + "";
             console.log(workerCenter);
 
             for (var i = 0; i < workAssignments.assignments.length; i++)
@@ -1365,7 +1371,10 @@
                 checkWorkersAssigned();
 
                 // Trigger cost estimates
-                CalculateWorkerFees()
+                CalculateWorkerFees();
+
+                // Trigger transportation fees
+                calculateTransportationFees();
 
                 $('a.ui-dialog-titlebar-close').click();
             }
