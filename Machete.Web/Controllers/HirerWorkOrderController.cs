@@ -388,12 +388,11 @@ namespace Machete.Web.Controllers
                 }
             }
 
-            // TODO: remove this after the calculations are complete - hard-coding for now...
-            //wo.transportFee = 10.00;
+            // Set disclosure agreement - to get here, the user had to accept
+            wo.disclosureAgreement = true;
 
             if (workerAssignments == "")
             {
-                // TODO: validate that at least one WA assigned to WO
                 // Set WA counter 
                 wo.waPseudoIDCounter = 0;
             }

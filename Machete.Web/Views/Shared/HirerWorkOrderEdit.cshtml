@@ -215,12 +215,10 @@
                 @Html.Label(Machete.Domain.Resources.WorkAssignment.skillID)
             </td>
             <td>
-                <!-- TODO: remove paperOrderNum model reference -->
-                @Html.DropDownListFor(model => model.paperOrderNum,
+                @Html.DropDownList("skillsList",
                 new SelectList(Lookups.getOnlineEmployerSkill(),
                     "Value",
-                    "Text",
-                    Model.paperOrderNum),
+                    "Text"),
                              @Machete.Web.Resources.Shared.choose, new { tabindex = "40" })
             </td>
             <td width="10%">
@@ -342,8 +340,9 @@
 <script type="text/javascript">
     $(document).ready(function () {
         
-        // TODO: remove
+
         //alert("Testing JQuery");
+
         var lSkillID = [ @(string.Join(", ", (int[])ViewBag.ID)) ];
         var lMinHour = [ @(string.Join(", ", (int[])ViewBag.minHour)) ];
         var lWorkType = [ @(string.Join(", ", (int[])ViewBag.workType)) ];
@@ -364,7 +363,7 @@
         // http://trentrichardson.com/examples/timepicker/
         $("#@(idPrefix)dateTimeofWork").datetimepicker({
             stepMinute: 15,
-            ampm: false,
+            ampm: true,
             hourMin: 7,
             hourMax: 23,
             minuteMin: 0,
@@ -422,6 +421,8 @@
             $('#workAssignmentDialog-@(Model.ID)').dialog({
                 height: 440,
                 width: 1000,
+                position: "fixed",
+                top: "50%",
                 modal: true
             });
 
@@ -433,6 +434,8 @@
             $("#transportationMethodDialog").dialog({
                 height: 340,
                 width: 1000,
+                position: "fixed",
+                top: "50%",
                 modal: true
             });
 
@@ -444,6 +447,8 @@
             $("#contactNameDialog").dialog({
                 height: 340,
                 width: 1000,
+                position: "fixed",
+                top: "50%",
                 modal: true
             });
 
@@ -455,6 +460,8 @@
             $("#workDescriptionDialog").dialog({
                 height: 340,
                 width: 1000,
+                position: "fixed",
+                top: "50%",
                 modal: true
             });
 
@@ -466,6 +473,8 @@
             $("#workSiteAddress1Dialog").dialog({
                 height: 340,
                 width: 1000,
+                position: "fixed",
+                top: "50%",
                 modal: true
             });
 
@@ -477,6 +486,8 @@
             $("#weightLiftedDialog").dialog({
                 height: 340,
                 width: 1000,
+                position: "fixed",
+                top: "50%",
                 modal: true
             });
 
@@ -488,6 +499,8 @@
             $("#businessHoursDialog").dialog({
                 height: 340,
                 width: 1000,
+                position: "fixed",
+                top: "50%",
                 modal: true
             });
 
@@ -499,6 +512,8 @@
             $("#businessHoursDialog").dialog({
                 height: 340,
                 width: 1000,
+                position: "fixed",
+                top: "50%",
                 modal: true
             });
 
@@ -509,6 +524,8 @@
             $("#employerAddress1Dialog").dialog({
                 height: 340,
                 width: 1000,
+                position: "fixed",
+                top: "50%",
                 modal: true
             });
 
@@ -631,8 +648,7 @@
             var allowableZipcode = true;
             var transportMethod = $("#@(idPrefix)transportMethodID").val();
 
-            // TODO: Ensure that all lookup tables have the same values here
-            if (transportMethod == 26) { // Worker buses = 26
+            if (transportMethod == 29) { // Worker buses = 29
                 var insideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportBusInsideZone"];
                 var outsideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportBusOutsideZone"];
 
@@ -642,16 +658,19 @@
                 }
 
                 if (insideZipCodes.indexOf(parseInt($("#@(idPrefix)zipcode"))) != -1) {
+                    console.log("Within bus inside zone");
                     // Zipcode is in the allowable list of zipcodes within zone
                     allowableZipcode = true;
                 } else if (outsideZipCodes.indexOf(parseInt($("#@(idPrefix)zipcode"))) != -1) {
+                    console.log("Within bus outside zone");
                     // Zipcode is in the allowable list of zipcodes outside zone
                     allowableZipcode = true;
                 } else {
+                    console.log("NOT within bus zone");
                     allowableZipcode = false;
                 }
 
-            } else if (transportMethod == 29) { // Van service = 29
+            } else if (transportMethod == 32) { // Van service = 32
                 var insideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportVanInsideZone"];
                 var outsideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportVanOutsideZone"];
 
@@ -661,18 +680,21 @@
                 }
 
                 if (insideZipCodes.indexOf(parseInt($("#@(idPrefix)zipcode"))) != -1) {
+                    console.log("Within van inside zone");
                     // Zipcode is in the allowable list of zipcodes within zone
                     allowableZipcode = true;
                 } else if (outsideZipCodes.indexOf(parseInt($("#@(idPrefix)zipcode"))) != -1) {
+                    console.log("Within van outside zone");
                     // Zipcode is in the allowable list of zipcodes outside zone
                     allowableZipcode = true;
                 } else {
+                    console.log("NOT within bus outside zone");
                     allowableZipcode = false;
                 }
             }
 
             if (!allowableZipcode) {
-                $("#invalidZipcode").text("This zipcode is not a valid zipcode that we provide service to").show();
+                $("#invalidZipcode").text("This zipcode is not a valid zipcode that we provide (van/bus) service to").show();
             } else {
                 $("#invalidZipcode").hide();
             }
@@ -690,9 +712,9 @@
             var insideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportBusInsideZone"];
             var outsideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportBusOutsideZone"];
             if (insideZipCodes != "" && outsideZipCodes != "") {
-                // If zipcode not serviceable by bus - set default to pick up
+                // If zipcode not serviceable by bus - set default to pick up (31)
                 if (insideZipCodes.indexOf(parseInt(zipcode)) == -1 && outsideZipCodes.indexOf(parseInt(zipcode)) == -1) {
-                    var transportMethod = $("#@(idPrefix)transportMethodID").val(28);
+                    var transportMethod = $("#@(idPrefix)transportMethodID").val(31);
                 } 
             }
         }
@@ -713,8 +735,7 @@
             var transportFee;
             var isTransportFeeSet = false;
 
-            // TODO: Ensure that all lookup tables have the same values here
-            if (transportMethod == 26) { // Worker buses = 26
+            if (transportMethod == 29) { // Worker buses = 29
                 var insideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportBusInsideZone"];
                 if (insideZipCodes != "") {
                     if (insideZipCodes.indexOf(parseInt(zipcode)) != -1) {
@@ -737,12 +758,12 @@
                     }
                 }
 
-            } else if (transportMethod == 29) { // Van service = 29
+            } else if (transportMethod == 32) { // Van service = 32
                 var insideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportVanInsideZone"];
                 if (insideZipCodes != "") {
                     if (insideZipCodes.indexOf(parseInt(zipcode)) != -1) {
                         // Zipcode is in the allowable list of zipcodes within zone
-                        if (numWorkers < 1) {
+                        if (numWorkers <= 1) {
                             // Note: defaulting the bus cost for just one worker before any workers are assigned & only changing value if more than one worker is assigned
                             transportFee = @System.Web.Configuration.WebConfigurationManager.AppSettings["TransportVanInsideZoneCostOneWorker"];
                             if (transportFee != "") {
@@ -811,10 +832,11 @@
             var dayOfWeek = userInputInMs.getDay();
             var transportMethod = $("#@(idPrefix)transportMethodID").val();
 
+            console.log("Day of week is: ", dayOfWeek);
+            console.log("Transport method is: ", transportMethod);
             if (dayOfWeek == 0) { // Sunday
                 // Note: only valid transportation method on Sunday is Pickup
-                // TODO: this value is hard-coded, should be replaced
-                if ((transportMethod == 26) || (transportMethod == 29)) { // Worker buses = 26
+                if ((transportMethod == 29) || (transportMethod == 32)) { // Worker buses = 29
                     $("#invalidTransportDate").text("Workers can only be picked up for work on Sunday").show();
                 } else {
                     $("#invalidTransportDate").hide();
@@ -825,15 +847,15 @@
 
         function clearDropDownList() {
             // There are more transport methods available than should be visible to employer 
-            // Remove everything except for Bus(26), Van(29), & Pickup(28)
+            // Remove everything except for Bus(29), Van(32), & Pickup(31)
             var transportMethods = document.getElementById('WO0-transportMethodID')
 
             for (var i = 0; i < transportMethods.length; i++)
             {
-                // TODO: these values are hard-coded - make sure all worker centers have these values
-                if ((transportMethods.options[i].value != "26") &&
-                    (transportMethods.options[i].value != "29") &&
-                    (transportMethods.options[i].value != "28") )
+                if ((transportMethods.options[i].value != "29") &&
+                    (transportMethods.options[i].value != "32") &&
+                    (transportMethods.options[i].value != "31") ||
+                    (transportMethods.options[i].value == "130"))
                 {
                     transportMethods.remove(i);
                 }
@@ -962,6 +984,8 @@
 
         $("#@(idPrefix)transportMethodID").change(function() {
 
+            console.log("Transport Method changed");
+
             // Calculate Transport fees
             calculateTransportationFees();
 
@@ -976,6 +1000,9 @@
                 $("#requiredFieldTransportMethod").hide();
             }
 
+            // Validate zipcode
+            validateZipcodes();
+            
             // Enable Submit button if valid
             enableButton();
         });
@@ -1014,8 +1041,8 @@
                 $("#requiredFieldState").hide();
 
                 // Validate that there are two letters
-                var regEx = /[A-Za-z]{2}/;
-                var isValid = regEx.exec($("#@(idPrefix)state").val());
+                var state = $("#@(idPrefix)state").val();
+                var isValid = state.match(/\b[A-Za-z]{2}\b/g);
                 if (isValid)
                 {
                     // Hide error text
@@ -1063,6 +1090,8 @@
 
         $("#@(idPrefix)zipcode").focusout(function() {
 
+            console.log("Zip code changed");
+
             // Validate zipcode
             validateZipcodes();
 
@@ -1074,10 +1103,8 @@
                 $("#requiredFieldZipcode").hide();
 
                 // Validate that there are five numbers
-                //var regEx = /(\d{5})(^[0-9\w])/;
-                //var regEx = /\d{5}|(\d{5})([-])(\d{4})/;
-                var regEx = /\d{5}/;
-                var isValid = regEx.exec($("#@(idPrefix)zipcode").val());
+                var zip = $("#@(idPrefix)zipcode").val();
+                var isValid = zip.match(/\b\d{5}\b/g);
                 if (isValid)
                 {
                     // Hide error text
@@ -1134,6 +1161,8 @@
             $("#workerDialog-@(Model.ID)").dialog({
                 height: 340,
                 width: 1000,
+                position: "fixed",
+                top: "50%",
                 modal: true
             });
             
@@ -1226,9 +1255,7 @@
                 if (workerCenter == "Casa Latina") {
                     if (workAssignments.assignments[i].skillId == "64")
                     {
-                        // TODO: fix this hard-coded value. This represents the fact that type of work 
-                        $("#typeOfWorkID").val(19); // worktype = Domestic Workers Program (19)
-                        // TODO: fix this hard-coded values. These represents Casa's scale of hiring HHH workers at $65 for first
+                        // This represents Casa's scale of hiring HHH workers at $65 for first
                         // 3 hours & an additional $16/hr afterwards
                         if (workAssignments.assignments[i].hours <= 3)
                         {
@@ -1241,8 +1268,6 @@
                     }               
                     else
                     {
-                        // TODO: fix this hard-coded value. This represents the fact that type of work 
-                        $("#typeOfWorkID").val(18); // worktype = Day Worker Center (18)
                         totalWorkerRates += workAssignments.assignments[i].hours * workAssignments.assignments[i].hourlyWage; 
                     } 
                 }
@@ -1264,18 +1289,23 @@
             validateSkill();
         });
 
-        $('#paperOrderNum').change(function() {
+        $('#skillsList').change(function() {
             validateSkill();
-            var skillsSelect = document.getElementById("paperOrderNum");
+            var skillsSelect = document.getElementById("skillsList");
             var selectedId = skillsSelect.options[skillsSelect.selectedIndex].value;
             for (var i = 0; i < lSkillID.length; i++)
             {
                 if (selectedId == lSkillID[i])
                 {
-                    // TODO: check culture setting & return the correct language
-                    $("#SkillDescription").val(lDescEN[i]);
+                    @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
+                        @:$("#SkillDescription").val(lDescEN[i]);
+                    } else {
+                        @:$("#SkillDescription").val(lDescES[i]);
+                    }
+
                     $("#MinimumHours").val(lMinHour[i]);
                     $("#HourlyWage").val(lWage[i]);
+                    $("#typeOfWorkID").val(lWorkType[i]);
                     break;
                 }
             }
@@ -1286,7 +1316,7 @@
             var hasError = false;
 
             // if selected -- choose or not selected
-            var skillsSelect = document.getElementById("paperOrderNum");
+            var skillsSelect = document.getElementById("skillsList");
             var selectedText = skillsSelect.options[skillsSelect.selectedIndex].text;
             if (selectedText == "(choose)" || selectedText == "") {
                 // Enable error text
@@ -1340,9 +1370,7 @@
 
             if (validateSkill()) {
 
-                // TODO: extract skill title & # hours
-
-                var skillsSelect = document.getElementById("paperOrderNum");
+                var skillsSelect = document.getElementById("skillsList");
                 var selectedText = skillsSelect.options[skillsSelect.selectedIndex].text;
                 var hourlyWage = $('#HourlyWage').val();
                 var hours = $('#RequestedHours').val();
@@ -1353,8 +1381,7 @@
 
                 var wa = {};
                 wa.listId = waCounter - 1;
-                // TODO: remove reference to paperOrderNum
-                wa.skillId = $('#paperOrderNum').val();
+                wa.skillId = $('#skillsList').val();
                 wa.hours = $('#RequestedHours').val();
                 wa.desc = $('#AdditionalDescription').val();
                 wa.weight = $('#Weight').val();

@@ -958,15 +958,11 @@
     <Content Include="Views\Shared\HirerWorkOrderEdit.cshtml" />
     <Content Include="Views\HirerAccount\Edit.cshtml" />
     <Content Include="Views\HirerWorkOrder\View.cshtml" />
-    <Content Include="Views\HirerWorkOrder\PaymentPre.cshtml" />
-    <Content Include="Views\HirerWorkOrder\PaymentPost.cshtml" />
     <Content Include="Views\HirerWorkOrder\IndexPrePaypal.cshtml" />
     <Content Include="Views\HirerWorkOrder\IndexPostPaypal.cshtml" />
     <Content Include="Views\HirerWorkOrder\IndexCancel.cshtml" />
     <Content Include="Views\HirerWorkOrder\IndexComplete.cshtml" />
     <Content Include="Views\HirerWorkOrder\IndexError.cshtml" />
-    <Content Include="Views\HirerWorkOrder\PrePaypal.cshtml" />
-    <Content Include="Views\HirerWorkOrder\PostPaypal.cshtml" />
     <None Include="Web.Alabama.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
