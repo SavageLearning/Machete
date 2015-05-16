@@ -1,5 +1,4 @@
-﻿@model Machete.Domain.WorkOrder
-@using Machete.Web.Helpers
+﻿@using Machete.Web.Helpers
 @using Machete.Domain.Resources
 @using Machete.Web.Resources
 @using Machete.Service
@@ -12,20 +11,13 @@
         <li><a href="#" id="paypalTab" class="ListTab">@Machete.Web.Resources.WorkOrders.orderConfirmation</a> </li>
     </ul>
 @using (Html.BeginForm("Index", "HirerWorkOrder", FormMethod.Get,
-                        new { @class = "edittab-form EditPost", @id = "WorkOrderTab-" + Model.ID }))
+                        new { @class = "edittab-form EditPost", @id = "WorkOrderTab" }))
 {
     <div>
-    <h1>Casa Latina - Hire a Worker</h1>
-    <p>Your order is now complete!</p>
-    <p>Contact Casa Latina during business hours if you have any questions/issues.</p>
-        <p>The Work Order Number is: @(Model.ID)</p>
-        <p>The transportation fee (paid to worker center) is: $@(Model.transportFee).00</p>
-    <br />
-    </div>
-    <div class="tb-table">
-        <div class="tb-row">
-            <input type="hidden" name="orderId" id="orderId" value="@(Model.ID)">
-        </div>
+        <h1>Casa Latina - Hire a Worker</h1>
+        <p>Your order is now complete!</p>
+        <p>Contact Casa Latina during business hours if you have any questions/issues.</p>
+        <br />
     </div>
     <div>
         <button type="submit" class="btn btn-default formButton" id="hireWorker" name="hireWorker" value="hireWorker">Hire Another Worker</button>
@@ -41,7 +33,5 @@
 
         $('.formButton').button();
 
-        //var transportFee = @(Model.transportFee)
-        //$("#transportFee").val(transportFee.toFixed(2));
     });
 </script>

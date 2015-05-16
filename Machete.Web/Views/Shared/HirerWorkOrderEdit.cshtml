@@ -104,7 +104,7 @@
     <div class="tb-row">
         <a href="#" id="transportationMethodModal">@Html.mUITableLabelFor(model => model.transportMethodID)</a>
         @Html.mUIDropDownListFor(model => model.transportMethodID,
-                        new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.transportmethod), "Value", "Text", Model.transportMethodID),
+                        new SelectList(Lookups.getTransportationMethodList(), "Value", "Text", Model.transportMethodID),
                         new { tabindex = "8", id = idPrefix + "transportMethodID" })
     </div>
     <div class="tb-row desc-field">
@@ -229,7 +229,7 @@
                 @Html.Label(Machete.Web.Resources.WorkAssignments.skillDescription)
             </td>
             <td>
-                @Html.TextArea("SkillDescription", "", new { @readonly="readonly" })
+                @Html.TextArea("SkillDescription", "", new { @readonly="readonly", disabled="disabled" })
             </td>
         </tr>
         <tr>
@@ -248,7 +248,7 @@
                 @Html.Label(Machete.Web.Resources.WorkAssignments.minHours)
             </td>
             <td>
-                @Html.TextBox("MinimumHours", "", new { @readonly="readonly" })
+                @Html.TextBox("MinimumHours", "", new { @readonly="readonly", disabled="disabled" })
             </td>
         </tr>
         <tr>
@@ -257,9 +257,9 @@
                 @Html.Label(Machete.Web.Resources.WorkAssignments.additionalDescription)
             </td>
             <td>
-                @Html.TextArea("AdditionalDescription")
+                @Html.TextArea("AdditionalDescription", new { tabindex = "42"})
             </td>
-            <td width="20%">
+            <td width="10%">
                 <p id="validateAdditionalDescription"></p>
             </td>
             <!-- Hourly Wage - READ-ONLY -->
@@ -267,19 +267,35 @@
                 @Html.Label(Machete.Domain.Resources.WorkAssignment.hourlyWage)
             </td>
             <td>
-                @Html.TextBox("HourlyWage", "", new { @readonly="readonly" })
+                @Html.TextBox("HourlyWage", "", new { @readonly="readonly", disabled="disabled"  })
             </td>
         </tr>
     </table>
-    @Html.Label(Machete.Domain.Resources.WorkAssignment.weightLifted)
-    @Html.CheckBox("Weight")
+
+    <a href="#" id="weightLiftedModal">@Html.Label(Machete.Domain.Resources.WorkAssignment.weightLifted)</a>
+    <input id="Weight" name="Weight" type="checkbox" />
     <br />
     <p></p>
-    <input type="button" value="@Machete.Web.Resources.WorkOrders.createsubmit" class="formButton" id="addWorkerBtn-@(Model.ID)"/>
-    <input type="button" value="@Machete.Web.Resources.WorkOrders.editcancel" class="formButton" id="removeWorkerBtn-@(Model.ID)"/>
+    <input type="button" value="@Machete.Web.Resources.WorkOrders.createsubmit" class="formButton" id="addWorkerBtn-@(Model.ID)" tabindex = "43" />
+    <input type="button" value="@Machete.Web.Resources.WorkOrders.editcancel" class="formButton" id="removeWorkerBtn-@(Model.ID)" tabindex = "44"/>
     <div id="skillsErrorDialog">
         <h4>Errors</h4>
         <p id="skillsError" style="color:red"></p>
+    </div>
+    <!-- Display Weight Lift Requirement pop-up - worker center specific -->
+    <div id="weightLiftedDialog" class="display" style="display: none">
+        <br />
+
+        @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
+            @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["WeightLifted_EN"])
+        } else {
+            @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["WeightLifted_ES"])
+        }
+    </div>
+    <!-- Display Weight Lift Requirement pop-up - worker center specific -->
+    <div id="domesticWorkerDialog" class="display" style="display: none">
+        <br />
+        Note: The domestic worker / housecleaning rate is a flat $65 for the first 3 hours & the hourly wage applies to each additional hour
     </div>
 </div>
 
@@ -312,14 +328,6 @@
 <!-- Display Employer address pop-up -->
 <div id="employerAddress1Dialog" title="@Machete.Domain.Resources.Employer.address1" class="display" style="display: none">
     <p>@Machete.Web.Resources.Employers.employerAddress1Dialog</p>
-</div>
-<!-- Display Weight Lift Requirement pop-up - worker center specific -->
-<div id="weightLiftedDialog" title="@Machete.Web.Resources.WorkOrders.weightRequirements" class="display" style="display: none">
-    @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
-        @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["WeightLifted_EN"])
-    } else {
-        @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["WeightLifted_ES"])
-    }
 </div>
 <!-- Display Transportation Method pop-up - worker center specific -->
 <div id="transportationMethodDialog" title="@Machete.Domain.Resources.WorkOrder.transportMethodID" class="display" style="display: none">
@@ -419,10 +427,11 @@
             $("#skillsErrorDialog").hide();
 
             $('#workAssignmentDialog-@(Model.ID)').dialog({
-                height: 440,
-                width: 1000,
+                height: 480,
+                width: 800,
                 position: "fixed",
                 top: "50%",
+                left: "50%",
                 modal: true
             });
 
@@ -433,7 +442,7 @@
 
             $("#transportationMethodDialog").dialog({
                 height: 340,
-                width: 1000,
+                width: 400,
                 position: "fixed",
                 top: "50%",
                 modal: true
@@ -446,7 +455,7 @@
 
             $("#contactNameDialog").dialog({
                 height: 340,
-                width: 1000,
+                width: 400,
                 position: "fixed",
                 top: "50%",
                 modal: true
@@ -459,7 +468,7 @@
 
             $("#workDescriptionDialog").dialog({
                 height: 340,
-                width: 1000,
+                width: 400,
                 position: "fixed",
                 top: "50%",
                 modal: true
@@ -472,7 +481,7 @@
 
             $("#workSiteAddress1Dialog").dialog({
                 height: 340,
-                width: 1000,
+                width: 400,
                 position: "fixed",
                 top: "50%",
                 modal: true
@@ -482,23 +491,32 @@
         });
 
         $('#weightLiftedModal').click(function () {
+            // This is not a modal - it is just a display at the bottom of the modal
 
-            $("#weightLiftedDialog").dialog({
-                height: 340,
-                width: 1000,
-                position: "fixed",
-                top: "50%",
-                modal: true
-            });
+            // Toggle display message
+            if ($("#weightLiftedDialog").is(":visible") == true) {
+                $('#weightLiftedDialog').hide();
+            } else {
+                $('#weightLiftedDialog').show();
+            }
+        });
 
-            $('#weightLiftedDialog').show();
+        $('#Weight').change(function () {
+            // This is not a modal - it is just a display at the bottom of the modal
+
+            // Toggle display message
+            if (document.getElementById("Weight").checked) {
+                $('#weightLiftedDialog').show();
+            } else {
+                $('#weightLiftedDialog').hide();
+            }
         });
 
         $('#businessHoursModal').click(function () {
 
             $("#businessHoursDialog").dialog({
                 height: 340,
-                width: 1000,
+                width: 400,
                 position: "fixed",
                 top: "50%",
                 modal: true
@@ -511,7 +529,7 @@
 
             $("#businessHoursDialog").dialog({
                 height: 340,
-                width: 1000,
+                width: 400,
                 position: "fixed",
                 top: "50%",
                 modal: true
@@ -523,7 +541,7 @@
         $('#employerAddress1Modal').click(function () {
             $("#employerAddress1Dialog").dialog({
                 height: 340,
-                width: 1000,
+                width: 400,
                 position: "fixed",
                 top: "50%",
                 modal: true
@@ -848,10 +866,12 @@
         function clearDropDownList() {
             // There are more transport methods available than should be visible to employer 
             // Remove everything except for Bus(29), Van(32), & Pickup(31)
+/*
             var transportMethods = document.getElementById('WO0-transportMethodID')
 
             for (var i = 0; i < transportMethods.length; i++)
             {
+                console.log("TransportMethod: ", transportMethods.options[i].value, transportMethods.options[i].text) 
                 if ((transportMethods.options[i].value != "29") &&
                     (transportMethods.options[i].value != "32") &&
                     (transportMethods.options[i].value != "31") ||
@@ -860,6 +880,7 @@
                     transportMethods.remove(i);
                 }
             }
+*/
         }
 
         //////////////////////////////////////////////////////////////////////////
@@ -1160,7 +1181,7 @@
             //}
             $("#workerDialog-@(Model.ID)").dialog({
                 height: 340,
-                width: 1000,
+                width: 900,
                 position: "fixed",
                 top: "50%",
                 modal: true
@@ -1253,7 +1274,7 @@
             {
                 // Note: this is logic that is specific to Casa Latina only
                 if (workerCenter == "Casa Latina") {
-                    if (workAssignments.assignments[i].skillId == "64")
+                    if (workAssignments.assignments[i].skillId == "67")
                     {
                         // This represents Casa's scale of hiring HHH workers at $65 for first
                         // 3 hours & an additional $16/hr afterwards
@@ -1263,12 +1284,21 @@
                         }
                         else
                         {
-                            totalWorkerRates += 65 + (workAssignments.assignments[i].hours * 16);
+                            // Note: charge a minimum of $18/hr if lifting weight is required
+                            if (document.getElementById("Weight").checked && (workAssignments.assignments[i].hourlyWage < 18)) {
+                                totalWorkerRates += 65 + ((workAssignments.assignments[i].hours - 3) * 18);
+                            } else {
+                                totalWorkerRates += 65 + ((workAssignments.assignments[i].hours - 3) * workAssignments.assignments[i].hourlyWage);
+                            }
                         }
                     }               
                     else
                     {
-                        totalWorkerRates += workAssignments.assignments[i].hours * workAssignments.assignments[i].hourlyWage; 
+                        if (document.getElementById("Weight").checked && (workAssignments.assignments[i].hourlyWage < 18)) {
+                            totalWorkerRates += workAssignments.assignments[i].hours * 18;
+                        } else {
+                            totalWorkerRates += workAssignments.assignments[i].hours * workAssignments.assignments[i].hourlyWage; 
+                        }
                     } 
                 }
                 else
@@ -1309,6 +1339,16 @@
                     break;
                 }
             }
+    
+            // Note: this is logic that is specific to Casa Latina only
+            if (workerCenter == "Casa Latina") {
+                if (workAssignments.assignments[i].skillId == "67")
+                {
+                    $("#domesticWorkerDialog").show();
+                } else {
+                    $("#domesticWorkerDialog").hide();
+                }
+            }
         });
 
         function validateSkill() {
@@ -1345,7 +1385,7 @@
                 if (requestedHours > 8) {
                     console.log("Too many hours were selected for this skill");
                     hasError = true;
-                    $("#skillsError").text("Must select number of hours less than 8");
+                    $("#skillsError").text("Total number of hours must be 8 or less");
                     $("#skillsErrorDialog").show();
                 }
             }
@@ -1384,7 +1424,7 @@
                 wa.skillId = $('#skillsList').val();
                 wa.hours = $('#RequestedHours').val();
                 wa.desc = $('#AdditionalDescription').val();
-                wa.weight = $('#Weight').val();
+                wa.weight = document.getElementById("Weight").checked;
                 wa.skillDesc = $('#SkillDescription').val();
                 wa.minHours = $('#MinimumHours').val();
                 wa.hourlyWage = hourlyWage;
