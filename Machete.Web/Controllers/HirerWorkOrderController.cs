@@ -35,10 +35,12 @@ using Machete.Web.ViewModel;
 using Microsoft.AspNet.Identity;
 using Newtonsoft.Json.Linq;
 using NLog;
+using PayPal.Exception;
 using PayPal.PayPalAPIInterfaceService;
 using PayPal.PayPalAPIInterfaceService.Model;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -547,7 +549,27 @@ namespace Machete.Web.Controllers
                     // Save work order updates
                     woServ.Save(workOrder, userName);
 
-                    var redirectUrl = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=" + response.Token;
+                    object paypalConfigSection = null;
+                    try
+                    {
+                        paypalConfigSection = System.Web.Configuration.WebConfigurationManager.GetSection("paypal");
+                    }
+                    catch (System.Exception ex)
+                    {
+                        throw new ConfigException("Unable to load 'paypal' section from *.config: " + ex.Message);
+                    }
+
+                    if (paypalConfigSection == null)
+                    {
+                        throw new ConfigException(
+                            "Cannot parse *.Config file. Ensure you have configured the 'paypal' section correctly.");
+                    }
+
+                    NameValueConfigurationCollection paypalSettings = (NameValueConfigurationCollection)paypalConfigSection.GetType().GetProperty("Settings").GetValue(paypalConfigSection, null);
+                    
+                    var paypalUrl = paypalSettings["paypalUrl"].Value;
+                    var redirectUrl = paypalUrl + "_express-checkout&token=" + response.Token;
+
                     return new RedirectResult(redirectUrl, false);
 
                 }
