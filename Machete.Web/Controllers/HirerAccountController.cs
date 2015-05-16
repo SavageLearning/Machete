@@ -34,7 +34,6 @@ namespace Machete.Web.Controllers
         public IMyUserManager<ApplicationUser> UserManager { get; private set; }
         private readonly IDatabaseFactory DatabaseFactory;
         private CultureInfo CI;
-        // private const int PASSWORD_EXPIRATION_IN_MONTHS = 6; // this constant represents number of months where users passwords expire 
 
         public HirerAccountController(IMyUserManager<ApplicationUser> userManager, IDatabaseFactory databaseFactory)
         {

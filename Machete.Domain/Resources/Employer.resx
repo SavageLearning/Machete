@@ -150,6 +150,9 @@
   <data name="email" xml:space="preserve">
     <value>Email address</value>
   </data>
+  <data name="emailValidation" xml:space="preserve">
+    <value>The email format is invalid</value>
+  </data>
   <data name="fax" xml:space="preserve">
     <value>Fax Number</value>
   </data>

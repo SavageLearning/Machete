@@ -18,9 +18,7 @@ namespace Machete.Web.Models
         [LocalizedDisplayName("username", NameResourceType = typeof(Resources.ValidationStrings))]
         public string UserName { get; set; }
 
-        [RegularExpression(@"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$",
-                ErrorMessageResourceName = "emailValidation", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
-        [DataType(DataType.EmailAddress)]
+        [DataType(DataType.EmailAddress, ErrorMessageResourceName = "emailValidation", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
         [LocalizedDisplayName("EmailAddress", NameResourceType = typeof(Resources.ValidationStrings))]
         public string Email { get; set; }
 
@@ -97,9 +95,7 @@ namespace Machete.Web.Models
     {
         // Note: Hirer's username is their email address
         [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
-        [RegularExpression(@"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$",
-                ErrorMessageResourceName = "emailValidation", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
-        [DataType(DataType.EmailAddress)]
+        [DataType(DataType.EmailAddress, ErrorMessageResourceName = "emailValidation", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
         [LocalizedDisplayName("EmailAddress", NameResourceType = typeof(Resources.ValidationStrings))]
         public string UserName { get; set; }
 
@@ -141,9 +137,7 @@ namespace Machete.Web.Models
         public string LastName { get; set; } // Note: not in db - how is this used?
 
         [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
-        [RegularExpression(@"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$",
-                ErrorMessageResourceName = "emailValidation", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
-        [DataType(DataType.EmailAddress)]
+        [DataType(DataType.EmailAddress, ErrorMessageResourceName = "emailValidation", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
         [LocalizedDisplayName("EmailAddress", NameResourceType = typeof(Resources.ValidationStrings))]
         public string Email { get; set; }
         
@@ -176,9 +170,7 @@ namespace Machete.Web.Models
         public string ConfirmPassword { get; set; } // Note: not in db - how is this used?
 
         [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
-        [RegularExpression(@"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$",
-                ErrorMessageResourceName = "emailValidation", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
-        [DataType(DataType.EmailAddress)]
+        [DataType(DataType.EmailAddress, ErrorMessageResourceName = "emailValidation", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
         [LocalizedDisplayName("EmailAddress", NameResourceType = typeof(Resources.ValidationStrings))]
         public string Email { get; set; }
 
@@ -235,9 +227,7 @@ namespace Machete.Web.Models
         public string LastName { get; set; } // Note: not in db - how is this used?
 
         [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
-        [RegularExpression(@"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$",
-                ErrorMessageResourceName = "emailValidation", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
-        [DataType(DataType.EmailAddress)]
+        [DataType(DataType.EmailAddress, ErrorMessageResourceName = "emailValidation", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
         [LocalizedDisplayName("EmailAddress", NameResourceType = typeof(Resources.ValidationStrings))]
         public string Email { get; set; }
 

@@ -619,6 +619,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Order Confirmation.
+        /// </summary>
+        public static string orderConfirmation {
+            get {
+                return ResourceManager.GetString("orderConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pending assignment.
         /// </summary>
         public static string pendingassignment {

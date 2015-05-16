@@ -211,6 +211,6 @@
     <value>Additional Notes</value>
   </data>
   <data name="weightLifted" xml:space="preserve">
-    <value>Require Weight Lifted</value>
+    <value>Requires Heavy Lifting</value>
   </data>
 </root>
