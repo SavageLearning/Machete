@@ -135,6 +135,9 @@
   <data name="email" xml:space="preserve">
     <value>Email</value>
   </data>
+  <data name="emailValidation" xml:space="preserve">
+    <value>The email format is invalid</value>
+  </data>
   <data name="facebook" xml:space="preserve">
     <value>Facebook</value>
   </data>

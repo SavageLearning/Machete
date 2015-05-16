@@ -530,6 +530,7 @@ namespace Machete.Web.Controllers
             }
 
             PaypalExpressCheckout paypal = new PaypalExpressCheckout();
+
             SetExpressCheckoutResponseType response = paypal.SetExpressCheckout(payment.ToString());
             if (response != null)
             {
@@ -548,7 +549,7 @@ namespace Machete.Web.Controllers
 
                     // Save work order updates
                     woServ.Save(workOrder, userName);
-
+                    
                     object paypalConfigSection = null;
                     try
                     {
@@ -732,6 +733,11 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Hirer")]
         public ActionResult PaymentComplete(string token, string payerId, string userName)
         {
+            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(payerId)) 
+            {
+                return View("IndexCompleteEmpty");
+            }
+
             // TODO: store payerID in WO table - not being stored for some reason?!
             double payment = 0.0;
 

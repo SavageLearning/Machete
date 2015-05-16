@@ -36,21 +36,20 @@ namespace Machete.Web.Controllers
     [ElmahHandleError]
     public class HomeController : Controller
     {
-        [Authorize(Roles = "Manager, Administrator, PhoneDesk, User, Teacher, Check-in")]
         public ActionResult Index()
         {
             if (User.Identity.IsAuthenticated)
             {
                 if (User.IsInRole("Hirer"))
                 {
-                    return RedirectToAction("Create", "HirerWorkOrder");
+                    return RedirectToAction("Index", "HirerWorkOrder");
                 }
                 else
                 {
                     return View();
                 }
             }
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("Login", "HirerAccount");
         }
 
         [Authorize(Roles = "Manager, Administrator, PhoneDesk, User, Teacher, Check-in")]

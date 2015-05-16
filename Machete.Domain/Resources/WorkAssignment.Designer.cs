@@ -322,7 +322,7 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Require Weight Lifted.
+        ///   Looks up a localized string similar to Requires Heavy Lifting.
         /// </summary>
         public static string weightLifted {
             get {

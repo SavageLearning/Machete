@@ -102,6 +102,7 @@ namespace Machete.Domain
         public string cellphone { get; set; }
 
         [LocalizedDisplayName("email", NameResourceType = typeof(Resources.Person))]
+        [DataType(DataType.EmailAddress, ErrorMessageResourceName = "emailValidation", ErrorMessageResourceType = typeof(Resources.Person))]
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Person))]
         public string email { get; set; }
 

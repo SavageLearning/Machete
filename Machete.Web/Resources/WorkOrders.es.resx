@@ -384,4 +384,7 @@
   <data name="weightRequirements" xml:space="preserve">
     <value>Weight Requirements</value>
   </data>
+  <data name="orderConfirmation" xml:space="preserve">
+    <value>Order Confirmation</value>
+  </data>
 </root>

@@ -160,6 +160,15 @@ namespace Machete.Domain.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The email format is invalid.
+        /// </summary>
+        public static string emailValidation {
+            get {
+                return ResourceManager.GetString("emailValidation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fax Number.
         /// </summary>
         public static string fax {

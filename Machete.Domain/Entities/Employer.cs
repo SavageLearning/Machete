@@ -105,8 +105,8 @@ namespace Machete.Domain
         public string zipcode { get; set; }
 
         [LocalizedDisplayName("email", NameResourceType = typeof(Resources.Employer))]
+        [DataType(DataType.EmailAddress, ErrorMessageResourceName = "emailValidation", ErrorMessageResourceType = typeof(Resources.Employer))]
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Employer))]
-        //[RegularExpression(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$")]
         public string email { get; set; }
 
         [LocalizedDisplayName("licenseplate", NameResourceType = typeof(Resources.Employer))]
