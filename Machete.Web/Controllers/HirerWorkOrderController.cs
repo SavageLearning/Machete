@@ -452,13 +452,14 @@ namespace Machete.Web.Controllers
                 }
             }
 
-            //return PartialView("View", neworder);
-
-            var redirectUrl = "http://casa-latina.org/casa-latina.org/get-involved/hire-worker";
-            return new RedirectResult(redirectUrl, false);
-            //return RedirectToAction("PaymentPre", neworder);
-            //return View("IndexPrePaypal", neworder);
-
+            if (neworder.transportFee > 0)
+            {
+                return View("IndexPrePaypal", neworder);
+            }
+            else
+            {
+                return View("IndexComplete", neworder);
+            }
         }
 
         #endregion
@@ -482,20 +483,6 @@ namespace Machete.Web.Controllers
         #endregion
 
         #region View
-
-        /// <summary>
-        /// GET: /HirerWorkOrder/View/ID
-        /// </summary>
-        /// <param name="id">WorkOrder ID</param>
-        /// <returns>MVC Action Result</returns>
-        [Authorize(Roles = "Hirer")]
-        public ActionResult View(int id)
-        {
-            WorkOrder workOrder = woServ.Get(id);
-
-            // TODO: Update the return view
-            return PartialView("PrePaypal", workOrder);
-        }
 
         /// <summary>
         /// GET: /HirerWorkOrder/PaymentPre

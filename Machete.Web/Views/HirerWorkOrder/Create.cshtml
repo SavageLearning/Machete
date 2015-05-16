@@ -26,31 +26,7 @@
         var woCreateForm = $('#workOrderCreateForm');
         $('.formButton').button();
 
-        // machete UI detect changes on forms in tabs   
-        woCreateForm.mUI('formDetectChanges', {
-            recType: "@(recType)",
-            formLevel: 2,
-            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
-            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
-        });
-
         // Add validation to dynamic content
         $.validator.unobtrusive.parseDynamicContent('#workOrderCreateForm');
-
-        // WorkOrder Create submit event
-        woCreateForm.mUI('tabFormSubmit', {
-            create: true,
-            exclusivetab: false,
-            recType: "@(recType)",
-            preProcess: function () {
-
-            },
-            postProcess: function () {
-                $('html, body').animate({ scrollTop: $(document).height() }, 'slow');
-            },
-            formLevel: 2
-        });
-
-
     });
 </script>
