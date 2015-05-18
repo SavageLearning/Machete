@@ -300,31 +300,25 @@ namespace Machete.Web.Controllers
             ViewBag.desc_ES = new string[22];
             ViewBag.desc_EN = new string[22];
 
+
+            //IEnumerable<Lookup> lookup = lcache.getCache();
+            List<SelectListEmployerSkills> lookup = Lookups.getOnlineEmployerSkill();
+
             int counter = 0;
-            IEnumerable<Lookup> lookup = lcache.getCache();
+
             for (int i = 0; i < lookup.Count(); i++)
             {
-
-                Lookup lup = lookup.ElementAt(i);
+                SelectListEmployerSkills lup = lookup.ElementAt(i);
+                //Lookup lup = lookup.ElementAt(i);
+                //if (lup.ID == 60 || lup.ID == 61 || lup.ID == 62 || lup.ID == 63 || lup.ID == 64 || lup.ID == 65 || lup.ID == 66 || lup.ID == 67 || lup.ID == 68 || lup.ID == 69 || lup.ID == 77 || lup.ID == 83 || lup.ID == 88 || lup.ID == 89 || lup.ID == 118 || lup.ID == 120 || lup.ID == 122 || lup.ID == 128 || lup.ID == 131 || lup.ID == 132 || lup.ID == 133 || lup.ID == 183)
                 if (lup.ID == 60 || lup.ID == 61 || lup.ID == 62 || lup.ID == 63 || lup.ID == 64 || lup.ID == 65 || lup.ID == 66 || lup.ID == 67 || lup.ID == 68 || lup.ID == 69 || lup.ID == 77 || lup.ID == 83 || lup.ID == 88 || lup.ID == 89 || lup.ID == 118 || lup.ID == 120 || lup.ID == 122 || lup.ID == 128 || lup.ID == 131 || lup.ID == 132 || lup.ID == 133 || lup.ID == 183)
                 {
                     ViewBag.ID[counter] = lup.ID;
-                    ViewBag.text_EN[counter] = lup.text_EN;
-                    ViewBag.text_ES[counter] = lup.text_ES;
-                    if (lup.wage.HasValue)
-                    {
-                        ViewBag.wage[counter] = lup.wage.Value;
-                    }
-                    if (lup.minHour.HasValue)
-                    {
-                        ViewBag.minHour[counter] = lup.minHour.Value;
-                    }
-                    if (lup.typeOfWorkID.HasValue)
-                    {
-                        ViewBag.workType[counter] = lup.typeOfWorkID.Value;
-                    }
-                    ViewBag.desc_ES[counter] = lup.skillDescriptionEs;
-                    ViewBag.desc_EN[counter] = lup.skillDescriptionEn;
+                    ViewBag.wage[counter] = lup.wage;
+                    ViewBag.minHour[counter] = lup.minHour;
+                    ViewBag.workType[counter] = lup.typeOfWorkID;
+                    ViewBag.text_EN[counter] = lup.skillDescriptionEn;
+                    ViewBag.text_ES[counter] = lup.skillDescriptionEs;
                     counter++;
                 }
             }
