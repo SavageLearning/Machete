@@ -321,7 +321,7 @@ namespace Machete.Web.Helpers
         /// get the List of skills to present to Employer in Employer online interface
         /// </summary>
         /// <returns>List of skills</returns>
-        public static List<SelectListItemEx> getOnlineEmployerSkill()
+        public static List<SelectListEmployerSkills> getOnlineEmployerSkill()
         {
             var locale = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant();
             IEnumerable<Lookup> prelist = lcache.getCache()
@@ -335,15 +335,18 @@ namespace Machete.Web.Helpers
             // Note: the following are the Skills that should appear in the Employer online ordering site for Casa Latina - this is hard-coded for now (Lookups table should be updated to identify which should be exposed to the Employer)
             // Casa Latina List: (s.ID == 60 || s.ID == 61 || s.ID == 62 || s.ID == 63 || s.ID == 64 || s.ID == 65 || s.ID == 66 || s.ID == 67 || s.ID == 68 || s.ID == 69 || s.ID == 77 || s.ID == 83 || s.ID == 88 || s.ID == 89 ||  s.ID == 118 || s.ID == 120 || s.ID == 122 || s.ID == 128 || s.ID == 131 || s.ID == 132 || s.ID == 133 || s.ID == 183)
             prelist = prelist.Where(s => s.ID == 60 || s.ID == 61 || s.ID == 62 || s.ID == 63 || s.ID == 64 || s.ID == 65 || s.ID == 66 || s.ID == 67 || s.ID == 68 || s.ID == 69 || s.ID == 77 || s.ID == 83 || s.ID == 88 || s.ID == 89 || s.ID == 118 || s.ID == 120 || s.ID == 122 || s.ID == 128 || s.ID == 131 || s.ID == 132 || s.ID == 133 || s.ID == 183).OrderBy(s => sortFunc(s)); //LINQ & FUNC
-            return new List<SelectListItemEx>(prelist
-                    .Select(x => new SelectListItemEx
+            return new List<SelectListEmployerSkills>(prelist
+                    .Select(x => new SelectListEmployerSkills
                     {
                         Selected = x.selected,
                         Value = Convert.ToString(x.ID),
                         Text = textFunc(x),
-                        wage = Convert.ToString(x.wage),
-                        minHour = Convert.ToString(x.minHour),
-                        fixedJob = Convert.ToString(x.fixedJob)
+                        wage = x.wage.Value,
+                        minHour = x.minHour.Value,
+                        ID = x.ID,
+                        typeOfWorkID = x.typeOfWorkID.Value,
+                        skillDescriptionEs = x.skillDescriptionEs,
+                        skillDescriptionEn = x.skillDescriptionEn
                     }));
         }
 
