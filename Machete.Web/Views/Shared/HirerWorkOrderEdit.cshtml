@@ -222,7 +222,6 @@
                              @Machete.Web.Resources.Shared.choose, new { tabindex = "40" })
             </td>
             <td width="10%">
-                <p id="validateSkill"></p>
             </td>
             <!-- Skill Description - READ-ONLY -->
             <td>
@@ -241,7 +240,6 @@
                 @Html.TextBox("RequestedHours", "", new { tabindex = "41" })
             </td>
             <td width="10%">
-                <p id="validateHours"></p>
             </td>
             <!-- Minimum Hours - READ-ONLY -->
             <td>
@@ -260,7 +258,6 @@
                 @Html.TextArea("AdditionalDescription", new { tabindex = "42"})
             </td>
             <td width="10%">
-                <p id="validateAdditionalDescription"></p>
             </td>
             <!-- Hourly Wage - READ-ONLY -->
             <td>
@@ -357,7 +354,9 @@
         var lWage = [ @(string.Join(", ", (double[])ViewBag.wage)) ];
         var lDescES = [ @(string.Join(", ", (string[])ViewBag.desc_ES)) ];
         var lDescEN = [ @(string.Join(", ", (string[])ViewBag.desc_EN)) ];
-
+        //console.log("The first loaded skill is: ", lSkillID[0], lMinHour[0], lWage[0]);
+        //console.log("The last loaded skill is: ", lSkillID[14], lMinHour[14], lWage[14]);
+        //console.log("The size of the arrays: ", lSkillID.length, lMinHour.length, lWage.length);        
         var workAssignments = {assignments: [], requests: [] };
 
         $("#futureTime").hide();
@@ -506,6 +505,7 @@
 
             // Toggle display message
             if (document.getElementById("Weight").checked) {
+                if ($("#HourlyWage").
                 $('#weightLiftedDialog').show();
             } else {
                 $('#weightLiftedDialog').hide();
@@ -1320,36 +1320,49 @@
         });
 
         $('#skillsList').change(function() {
-            validateSkill();
+            console.log("Finished validating");
             var skillsSelect = document.getElementById("skillsList");
             var selectedId = skillsSelect.options[skillsSelect.selectedIndex].value;
-            for (var i = 0; i < lSkillID.length; i++)
+            console.log("Selected skillID:", selectedId);
+            var i = 0;
+            for (; i < lSkillID.length; i++)
             {
+                console.log("Found SkillID: ", lSkillID[i]);
+                console.log("Found Skill Description: ", lDescEN[i]);
+                console.log("Found Minimum Hours: ", lMinHour[i]);
+                console.log("Found Hourly Wage: ", lWage[i]);
+                console.log("Found Type Of Work ID: ", lWorkType[i]);
+
                 if (selectedId == lSkillID[i])
                 {
                     @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
                         @:$("#SkillDescription").val(lDescEN[i]);
                     } else {
-                        @:$("#SkillDescription").val(lDescES[i]);
-                    }
-
-                    $("#MinimumHours").val(lMinHour[i]);
-                    $("#HourlyWage").val(lWage[i]);
-                    $("#typeOfWorkID").val(lWorkType[i]);
-                    break;
+                    @:$("#SkillDescription").val(lDescES[i]);
                 }
+
+                $("#MinimumHours").val(lMinHour[i]);
+                $("#HourlyWage").val(lWage[i]);
+                $("#typeOfWorkID").val(lWorkType[i]);
+                break;
             }
+        }
     
             // Note: this is logic that is specific to Casa Latina only
+            console.log("Worker center: ", workerCenter);
+            var workerCenter = "" + $("#workerCenter").val() + "";
             if (workerCenter == "Casa Latina") {
-                if (workAssignments.assignments[i].skillId == "67")
+                console.log("Worker center: ", lSkillID[i]);
+                if (lSkillID[i] == "67")
                 {
                     $("#domesticWorkerDialog").show();
                 } else {
                     $("#domesticWorkerDialog").hide();
                 }
             }
-        });
+
+            validateSkill();
+    });
 
         function validateSkill() {
             console.log("Validating skill");
@@ -1415,7 +1428,17 @@
                 var hourlyWage = $('#HourlyWage').val();
                 var hours = $('#RequestedHours').val();
 
-                var option = $('<option></option>').val(waCounter++).html(selectedText).append(" - ").append(hours).append(" hour(s) @@ $").append(parseInt(hourlyWage).toFixed(2)).append("/hour"); 
+                var skillsSelect = document.getElementById("skillsList");
+                var selectedId = skillsSelect.options[skillsSelect.selectedIndex].value;
+                if (selectedId == "67") {
+                    if ($("#RequestedHours").val() <= 3) {
+                        var option = $('<option></option>').val(waCounter++).html(selectedText).append(" - ").append(hours).append(" hour(s) @@ $65.00 (flat rate)");
+                    } else {
+                        var option = $('<option></option>').val(waCounter++).html(selectedText).append(" - ").append(hours).append(" hour(s) @@ $65.00 (flat rate) + ").append(parseInt(hourlyWage).toFixed(2)).append("/hour");
+                    } 
+                } else {
+                    var option = $('<option></option>').val(waCounter++).html(selectedText).append(" - ").append(hours).append(" hour(s) @@ $").append(parseInt(hourlyWage).toFixed(2)).append("/hour"); 
+                }
                 console.log(option);
                 $('#workAssignments_WO-@(Model.ID)').append(option);
 
