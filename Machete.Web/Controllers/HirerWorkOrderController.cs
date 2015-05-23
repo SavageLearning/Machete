@@ -459,6 +459,97 @@ namespace Machete.Web.Controllers
 
         #endregion
 
+        #region Profile
+
+        /// <summary>
+        /// HTTP GET /HirerWorkOrder/Profile
+        /// </summary>
+        /// <returns>MVC Action Result</returns>
+        [Authorize(Roles = "Hirer")]
+        public ActionResult HirerProfile()
+        {
+            // Retrieve user ID of signed in Employer
+            string userID = HttpContext.User.Identity.GetUserId();
+
+            // Retrieve Employer record
+            Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == userID).FirstOrDefault();
+            if (employer != null)
+            {
+                // Employer has created profile or work order already
+            }
+            else
+            {
+                employer = new Employer();
+            }
+
+            // Set default values
+            employer.active = true;
+            employer.onlineSource = true;
+            employer.returnCustomer = false;
+            employer.receiveUpdates = true;
+            employer.business = false;
+            employer.email = HttpContext.User.Identity.Name;
+            employer.onlineSigninID = userID;
+            employer.isOnlineProfileComplete = true;
+
+            return PartialView("Profile", employer);
+        }
+
+        /// <summary>
+        /// POST: /HirerWorkOrder/Profile
+        /// </summary>
+        /// <param name="e">Employer record to update/create</param>
+        /// <param name="wo">Profile to create</param>
+        /// <param name="userName">User performing action</param>
+        [HttpPost, UserNameFilter]
+        [Authorize(Roles = "Hirer")]
+        public ActionResult HirerProfile(Employer e, string userName)
+        {
+            UpdateModel(e);
+
+            // Retrieve user ID of signed in Employer
+            string userID = HttpContext.User.Identity.GetUserId();
+
+            // Retrieve Employer record
+            Employer onlineEmp = eServ.GetRepo().GetAllQ().Where(emp => emp.onlineSigninID == userID).FirstOrDefault();
+
+            if (onlineEmp != null)
+            {
+                Employer onlineEmployer = eServ.Get(onlineEmp.ID);
+                //e.ID = onlineEmployer.ID;
+                onlineEmployer.active = true;
+                onlineEmployer.address1 = e.address1;
+                onlineEmployer.address2 = e.address2;
+                onlineEmployer.business = e.business;
+                onlineEmployer.businessname = e.businessname;
+                onlineEmployer.cellphone = e.cellphone;
+                onlineEmployer.city = e.city;
+                onlineEmployer.email = e.email;
+                onlineEmployer.isOnlineProfileComplete = true;
+                onlineEmployer.name = e.name;
+                onlineEmployer.onlineSigninID = HttpContext.User.Identity.GetUserId();
+                onlineEmployer.onlineSource = true;
+                onlineEmployer.phone = e.phone;
+                onlineEmployer.receiveUpdates = e.receiveUpdates;
+                onlineEmployer.referredby = e.referredby;
+                onlineEmployer.referredbyOther = e.referredbyOther;
+                onlineEmployer.returnCustomer = e.returnCustomer;
+                onlineEmployer.state = e.state;
+                onlineEmployer.zipcode = e.zipcode;
+                // Employer has created profile already - just need to update profile
+                eServ.Save(onlineEmployer, userName);
+                return View("Index");
+            }
+            else
+            {
+                // Create Employer record
+                Employer newEmployer = eServ.Create(e, userName);
+                return View("Index");
+            }
+        }
+
+        #endregion
+
         #region Edit
 
         /// <summary>
@@ -773,13 +864,29 @@ namespace Machete.Web.Controllers
             {
                 // PayPal call to authorize payment
                 PaypalExpressCheckout paypal = new PaypalExpressCheckout();
-                DoExpressCheckoutPaymentResponseType paymentResponse = paypal.DoExpressCheckoutPayment(token, payerId, payment.ToString());
+                if (paypal == null)
+                {
+                    // Error - an attempt is being made to make a second payment request on token
+                    levent.Level = LogLevel.Error;
+                    levent.Message = "PayPal ExpressCheckout call failed for: " + workOrder.ID;
+                    log.Log(levent);
+                    return View("IndexError", workOrder);
+                }
 
+                DoExpressCheckoutPaymentResponseType paymentResponse = paypal.DoExpressCheckoutPayment(token, payerId, payment.ToString());
                 if (paymentResponse != null)
                 {
                     // # Success values
-                    if (paymentResponse.Ack.ToString().Trim().ToUpper().Equals("SUCCESS"))
+                    if (paymentResponse.Ack != null && paymentResponse.Ack.ToString().Trim().ToUpper().Equals("SUCCESS"))
                     {
+                        if (paymentResponse.DoExpressCheckoutPaymentResponseDetails == null)
+                        {
+                            levent.Level = LogLevel.Error;
+                            levent.Message = "DoExpressCheckoutPaymentResponseDetails is null. WO# " + workOrder.ID;
+                            log.Log(levent);
+                            return View("IndexError", workOrder);
+                        }
+
                         if (paymentResponse.DoExpressCheckoutPaymentResponseDetails.Token != token)
                         {
                             // Retrieved token doesn't match stored token
@@ -801,18 +908,27 @@ namespace Machete.Web.Controllers
                                 log.Log(levent);
                             }
 
-                            if (Convert.ToDouble(paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].GrossAmount.value) != workOrder.transportFee)
+                            if (paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0] == null || 
+                                paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].GrossAmount == null || 
+                                Convert.ToDouble(paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].GrossAmount.value) != workOrder.transportFee)
                             {
                                 // PayPal charge different from expected charge
                                 // Log error & continue - payment already made
                                 levent.Level = LogLevel.Error;
-                                levent.Message = "PayPal charge different from expected charge. WO# " + workOrder.ID + "PayPal Charge: " + paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].GrossAmount.value;
+                                levent.Message = "PayPal charge different from expected charge. WO# " + workOrder.ID;
                                 log.Log(levent);
                             }
-
-                            // Note: PayPal charges for online payment service
-                            workOrder.paypalFee = Convert.ToDouble(paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].FeeAmount.value);
-
+                            else if (paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].FeeAmount == null)
+                            {
+                                levent.Level = LogLevel.Error;
+                                levent.Message = "PayPal fee not charged. WO# " + workOrder.ID;
+                                log.Log(levent);
+                            }
+                            else
+                            {
+                                // Note: PayPal charges for online payment service
+                                workOrder.paypalFee = Convert.ToDouble(paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].FeeAmount.value);
+                            }
                         }
                         else
                         {
@@ -826,14 +942,17 @@ namespace Machete.Web.Controllers
                         // TODO: This value is hard-coded in for PayPal - should do a lookup instead
                         workOrder.transportTransactType = 256;
 
-                        // Store transactID in hidden field for comparisons
-                        workOrder.paypalTransactID = paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].TransactionID;
+                        if (paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0] != null)
+                        {
+                            // Store transactID in hidden field for comparisons
+                            workOrder.paypalTransactID = paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].TransactionID;
 
-                        // Transaction identification number of the transaction that was created. This field is only 
-                        // returned after a successful transaction for DoExpressCheckout has occurred.
-                        // Note: truncated string to ensure it fits in database
-                        workOrder.transportTransactID = ("ID: " + paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].TransactionID +
-                            "|| Date: " + paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].PaymentDate + workOrder.transportTransactID).Substring(0, 50);
+                            // Transaction identification number of the transaction that was created. This field is only 
+                            // returned after a successful transaction for DoExpressCheckout has occurred.
+                            // Note: truncated string to ensure it fits in database
+                            workOrder.transportTransactID = ("ID: " + paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].TransactionID +
+                                "|| Date: " + paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].PaymentDate + workOrder.transportTransactID).Substring(0, 50);
+                        }
 
                         woServ.Save(workOrder, userName);
 
@@ -844,18 +963,26 @@ namespace Machete.Web.Controllers
                     else
                     {
                         List<ErrorType> errorMessages = paymentResponse.Errors;
-                        foreach (ErrorType error in errorMessages)
+                        if (errorMessages != null)
+                        {
+                            foreach (ErrorType error in errorMessages)
+                            {
+                                levent.Level = LogLevel.Error;
+                                levent.Message += error.LongMessage;
+                                log.Log(levent);
+
+                                workOrder.paypalErrors += error.ShortMessage;
+                            }
+
+                            // Save work order updates
+                            woServ.Save(workOrder, userName);
+                        }
+                        else
                         {
                             levent.Level = LogLevel.Error;
-                            levent.Message += error.LongMessage;
+                            levent.Message = "Retrieved error list is null for token. WO# " + workOrder.ID + "Token# " + token;
                             log.Log(levent);
-
-                            workOrder.paypalErrors += error.ShortMessage;
                         }
-
-                        // Save work order updates
-                        woServ.Save(workOrder, userName);
-
                         return View("IndexError", workOrder);
                     }
                 }
