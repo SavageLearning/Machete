@@ -963,6 +963,7 @@
     <Content Include="Views\HirerWorkOrder\IndexComplete.cshtml" />
     <Content Include="Views\HirerWorkOrder\IndexError.cshtml" />
     <Content Include="Views\HirerWorkOrder\IndexCompleteEmpty.cshtml" />
+    <Content Include="Views\HirerWorkOrder\Profile.cshtml" />
     <None Include="Web.Alabama.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
