@@ -44,7 +44,9 @@
         <td id="transportationFees">TBD</td>
     </div>
 </table>
-    <p id="paypalWarning">Transportation fees must be paid via PayPal to complete order</p>
+    <p class="paypalWarning">Transportation fees must be paid via PayPal to complete order</p>
+    <p class="paypalWarning">To see an available Casa Latina van drop-off time, please click on <a href="#" id="transportationCalendarModal">Drop Off Calendar</a></p>
+
     <!-- Form errors -->
     <!-- TODO: make sure all error sections are set - consider moving these next to the fields that they apply to -->
     <div id="messageDialog">
@@ -102,7 +104,7 @@
         @Html.mUITableLabelAndTextBoxFor(model => model.zipcode, new { tabindex = "7", id = idPrefix + "zipcode" })
     </div>
     <div class="tb-row">
-        <a href="#" id="transportationMethodModal">@Html.mUITableLabelFor(model => model.transportMethodID)</a>
+        <a href="#" id="transportationMethodModal2">@Html.mUITableLabelFor(model => model.transportMethodID)</a>
         @Html.mUIDropDownListFor(model => model.transportMethodID,
                         new SelectList(Lookups.getTransportationMethodList(), "Value", "Text", Model.transportMethodID),
                         new { tabindex = "8", id = idPrefix + "transportMethodID" })
@@ -329,9 +331,40 @@
 <!-- Display Transportation Method pop-up - worker center specific -->
 <div id="transportationMethodDialog" title="@Machete.Domain.Resources.WorkOrder.transportMethodID" class="display" style="display: none">
     @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
-        @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["TransportationMethod_EN"])
+        <p>There is no transportation fee to hire a Casa Latina worker when you <b>pick them up from our office</b>. However, for a small fee we will send a worker to your door.</p>
+        <p>Workers can be dropped off at your home or worksite for a small fee with our <b>van service</b>. This allows for a more accurate arrival time and is most convenient for our workers. Rates according to distance from Casa Latina:</p>
+        <br /> 
+        <p>Within the City of Seattle: $15 for 1 worker; $20 for 2+ workers</p>
+        <p>Outside the City of Seattle: $25 for 1+ workers</p>
+        <br /> 
+        <p>Workers can also arrive at your home or worksite via public transportation. Workers arriving by <b>public transportation</b> will have a more flexible arrival time. **This fee supports logistical assistance for the workers. These rates apply:</p>
+        <br /> 
+        <p>Within Seattle city limits: $5 </p>
+        <p>Outside Seattle city limits: $10 </p>
+        <br /> 
+        <p>Note: this service allows for workers to arrive to a Park and Ride or Transit Center near your home or worksite. You are responsible for providing the workers with transportation from the Park and Ride or Transit center to your home or worksite. We can only guarantee delivery of workers in Seattle, Mercer Island, or Bellevue in the 98006 area code. If you live outside these areas, we will get back to you to make transportation arrangements.</p>
+        <br />
     } else {
-        @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["TransportationMethod_ES"])
+        <p>There is no transportation fee to hire a Casa Latina worker when you <b>pick them up from our office</b>. However, for a small fee we will send a worker to your door.</p>
+        <p>Workers can be dropped off at your home or worksite for a small fee with our <b>van service</b>. This allows for a more accurate arrival time and is most convenient for our workers. Rates according to distance from Casa Latina:</p>
+        <br /> 
+        <p>Within the City of Seattle: $15 for 1 worker; $20 for 2+ workers</p>
+        <p>Outside the City of Seattle: $25 for 1+ workers</p>
+        <br /> 
+        <p>Workers can also arrive at your home or worksite via public transportation. Workers arriving by <b>public transportation</b> will have a more flexible arrival time. **This fee supports logistical assistance for the workers. These rates apply:</p>
+        <br /> 
+        <p>Within Seattle city limits: $5 </p>
+        <p>Outside Seattle city limits: $10 </p>
+        <br /> 
+        <p>Note: this service allows for workers to arrive to a Park and Ride or Transit Center near your home or worksite. You are responsible for providing the workers with transportation from the Park and Ride or Transit center to your home or worksite. We can only guarantee delivery of workers in Seattle, Mercer Island, or Bellevue in the 98006 area code. If you live outside these areas, we will get back to you to make transportation arrangements.</p>
+        <br />
+   }
+</div>
+<div id="transportationCalendarDialog" title="Transportation Calendar" class="display" style="display: none">
+    @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
+        @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["TransportationCalendar_EN"])
+    } else {
+        @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["TransportationCalendar_ES"])
     }
 </div>
 <!-- Display Work Description pop-up -->
@@ -440,14 +473,40 @@
         $('#transportationMethodModal').click(function () {
 
             $("#transportationMethodDialog").dialog({
-                height: 340,
-                width: 400,
+                height: 650,
+                width: 800,
                 position: "fixed",
                 top: "50%",
                 modal: true
             });
 
             $('#transportationMethodDialog').show();
+        });
+
+        $('#transportationMethodModal2').click(function () {
+
+            $("#transportationMethodDialog").dialog({
+                height: 650,
+                width: 800,
+                position: "fixed",
+                top: "50%",
+                modal: true
+            });
+
+            $('#transportationMethodDialog').show();
+        });
+
+        $('#transportationCalendarModal').click(function () {
+
+            $("#transportationCalendarDialog").dialog({
+                height: 500,
+                width: 1050,
+                position: "fixed",
+                top: "50%",
+                modal: true
+            });
+
+            $('#transportationCalendarDialog').show();
         });
 
         $('#contactNameModal').click(function () {
@@ -515,8 +574,8 @@
         $('#businessHoursModal').click(function () {
 
             $("#businessHoursDialog").dialog({
-                height: 340,
-                width: 400,
+                height: 400,
+                width: 450,
                 position: "fixed",
                 top: "50%",
                 modal: true
@@ -528,8 +587,8 @@
         $('#businessHoursModal2').click(function () {
 
             $("#businessHoursDialog").dialog({
-                height: 340,
-                width: 400,
+                height: 400,
+                width: 450,
                 position: "fixed",
                 top: "50%",
                 modal: true
@@ -810,10 +869,10 @@
             if (isTransportFeeSet) {
                 $("#transportationFees").text("$" + transportFee.toFixed(2));
                 $("#transportFee").val(transportFee.toFixed(2));
-                $("#paypalWarning").show();
+                $(".paypalWarning").show();
             } else {
                 $("#transportationFees").text("n/a");
-                $("#paypalWarning").hide();
+                $(".paypalWarning").hide();
                 $("#transportFee").val(0);
             }
 
