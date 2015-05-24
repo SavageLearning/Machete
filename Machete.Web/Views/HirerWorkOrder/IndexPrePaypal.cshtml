@@ -18,19 +18,32 @@
     <h1>Transportation Fees</h1>
     <p>There are transportation fees for worker(s) to arrive by bus or van. The transportation fees must be paid before a Work Order can be confirmed</p>
     <p>You must pay in advance for the transportaion fees by selecting the PayPal link below. You will be taken to PayPal to authenticate & then returned to this site to complete the purchase. You must complete all steps in order for the order to be confirmed.</p>
-    <p>Contact Casa Latina during business hours if you have any questions/issues.</p>
+    <p>Please call 206.956.0779 x3 during <a href="#" id="businessHoursModal">business hours</a> if you have any questions/issues.</p>
         <p>The Work Order Number is: @(Model.ID)</p>
-        <p>The transportation fee (paid to worker center) is: $@(Model.transportFee).00</p>
+        <p>The transportation fee (paid to Casa Latina Day Worker Center) is: $@(Model.transportFee).00</p>
     <br />
     </div>
     <div class="tb-table">
         <div class="tb-row">
             <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" class"btTxt submit" id="paypal" class="paypal" align="left" style="margin-right:7px;">
             <input type="hidden" name="orderId" id="orderId" value="@(Model.ID)">
-        <button type="button" class="btn btn-default formButton" id="proceed" name="proceed" onclick="location.href='@Url.Action("PaymentComplete", "HirerWorkOrder")'" value="proceed">Proceed Without Payment</button>
+        <p>OR</p> 
         </div>
     </div>
+    <div id="businessHoursDialog" title="@Machete.Web.Resources.WorkOrders.businessHoursModal" class="display" style="display: none">
+        @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
+            @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["BusinessHours_EN"])
+        } else {
+            @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["BusinessHours_ES"])
+        }
+    </div>    
     
+}
+@using (Html.BeginForm("PaymentCancel", "HirerWorkOrder", FormMethod.Get,
+                        new { @class = "edittab-form EditPost", @id = "WorkOrderTab-" + Model.ID }))
+{
+            <input type="hidden" name="orderId" id="orderID" value="@(Model.ID)">
+        <button type="submit" class="btn btn-default formButton" id="proceed" name="proceed" onclick="location.href='@Url.Action("PaymentCancel", "HirerWorkOrder")'" value="proceed">Pay by Calling</button>
 }
 </div>
 
@@ -42,5 +55,17 @@
         $('#woPaypalTabs').tabs();
 
         $('.formButton').button();
+        $('#businessHoursModal').click(function () {
+
+            $("#businessHoursDialog").dialog({
+                height: 400,
+                width: 450,
+                position: "fixed",
+                top: "50%",
+                modal: true
+            });
+
+            $('#businessHoursDialog').show();
+        });
     });
 </script>

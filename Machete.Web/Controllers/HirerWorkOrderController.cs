@@ -790,11 +790,40 @@ namespace Machete.Web.Controllers
         /// <param name="token">PayPal Token</param>
         /// <returns>MVC Action Result</returns>
         [Authorize(Roles = "Hirer")]
-        public ActionResult PaymentCancel(string token)
+        public ActionResult PaymentCancel(string token, string orderID)
         {
-            // TODO: There was an issue with the WO returned by the first query below - the work order
-            // can't be saved unless the work order is retrieved with the woServ.Get() call
-            WorkOrder woAll = woServ.GetRepo().GetAllQ().Where(wo => wo.paypalToken == token).FirstOrDefault();
+            WorkOrder woAll;
+            WorkOrder workOrder;
+            if (string.IsNullOrEmpty(token))
+            {
+                workOrder = woServ.Get(Convert.ToInt32(orderID));
+            }
+            else
+            {
+                woAll = woServ.GetRepo().GetAllQ().Where(wo => wo.paypalToken == token).FirstOrDefault();
+                workOrder = woServ.Get(woAll.ID);
+            }
+            if (workOrder == null)
+            {
+                levent.Level = LogLevel.Error;
+                levent.Message = "WorkOrder ID not valid Work Order. WO#:" + workOrder.ID;
+                log.Log(levent);
+                return View("IndexError", workOrder);
+            }
+
+            return View("IndexCancel", workOrder);
+        }
+
+        /// <summary>
+        /// POST: /HirerWorkOrder/PaymentCancel
+        /// </summary>
+        /// <param name="token">PayPal Token</param>
+        /// <returns>MVC Action Result</returns>
+        [HttpPost]
+        [Authorize(Roles = "Hirer")]
+        public ActionResult PaymentCancel(string token2)
+        {
+            WorkOrder woAll = woServ.GetRepo().GetAllQ().Where(wo => wo.paypalToken == token2).FirstOrDefault();
             WorkOrder workOrder = woServ.Get(woAll.ID);
             if (workOrder == null)
             {
