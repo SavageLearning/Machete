@@ -792,9 +792,10 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Hirer")]
         public ActionResult PaymentCancel(string token, string orderID)
         {
+            /*
             WorkOrder woAll;
             WorkOrder workOrder;
-            if (string.IsNullOrEmpty(token))
+            if (string.IsNullOrEmpty(token) && orderID != null)
             {
                 workOrder = woServ.Get(Convert.ToInt32(orderID));
             }
@@ -810,8 +811,8 @@ namespace Machete.Web.Controllers
                 log.Log(levent);
                 return View("IndexError", workOrder);
             }
-
-            return View("IndexCancel", workOrder);
+            */
+            return View("IndexCancel");
         }
 
         /// <summary>
@@ -845,13 +846,40 @@ namespace Machete.Web.Controllers
         /// <returns>MVC Action Result</returns>
         [UserNameFilter]
         [Authorize(Roles = "Hirer")]
-        public ActionResult PaymentComplete(string token, string payerId, string userName)
+        public ActionResult PaymentComplete(string userName)
         {
+            /*
             if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(payerId)) 
             {
                 return View("IndexCompleteEmpty");
             }
 
+            WorkOrder woAll = woServ.GetRepo().GetAllQ().Where(wo => wo.paypalToken == token).FirstOrDefault();
+            WorkOrder workOrder = woServ.Get(woAll.ID);
+            if (workOrder != null)
+            {
+                if (workOrder.transportFee <= 0.0)
+                {
+                    levent.Level = LogLevel.Error;
+                    levent.Message = "There is no transportation fee associated with this work order - there is no PayPal transaction required. WO#:" + workOrder.ID;
+                    log.Log(levent);
+                    return View("IndexError", workOrder);
+                }
+                else
+                {
+                    payment = workOrder.transportFee;
+                }
+            }
+            else
+            {
+                levent.Level = LogLevel.Error;
+                levent.Message = "WorkOrder ID not valid Work Order. WO#:" + workOrder.ID;
+                log.Log(levent);
+                return View("IndexError", workOrder);
+            }
+            */
+            return View("IndexCompleteEmpty");
+            /*
             // TODO: store payerID in WO table - not being stored for some reason?!
             double payment = 0.0;
 
@@ -1023,8 +1051,7 @@ namespace Machete.Web.Controllers
                     return View("IndexError", workOrder);
                 }
             }
-
-            return View("IndexComplete", workOrder);
+            */
         }
 
         #endregion
