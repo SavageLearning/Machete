@@ -11,13 +11,10 @@
     <ul>
         <li><a href="#" id="paypalTab" class="ListTab">@Machete.Web.Resources.WorkOrders.orderConfirmation</a> </li>
     </ul>
-@using (Html.BeginForm("PaymentPre", "HirerWorkOrder", FormMethod.Post,
-                        new { @class = "edittab-form EditPost", @id = "WorkOrderTab-" + Model.ID }))
-{
     <div>
     <h1>Transportation Fees</h1>
     <p>There are transportation fees for worker(s) to arrive by bus or van. The transportation fees must be paid before a Work Order can be confirmed</p>
-    <p>You must pay in advance for the transportaion fees by selecting the PayPal link below. You will be taken to PayPal to authenticate & then returned to this site to complete the purchase. You must complete all steps in order for the order to be confirmed.</p>
+    <p>You must pay in advance for the transportaion fees by selecting the PayPal link below. You will be taken to PayPal to complete the purchase. </p>
     <p>Please call 206.956.0779 x3 during <a href="#" id="businessHoursModal">business hours</a> if you have any questions/issues.</p>
         <p>The Work Order Number is: @(Model.ID)</p>
         <p>The transportation fee (paid to Casa Latina Day Worker Center) is: $@(Model.transportFee).00</p>
@@ -25,9 +22,48 @@
     </div>
     <div class="tb-table">
         <div class="tb-row">
-            <input type="image" src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" class"btTxt submit" id="paypal" class="paypal" align="left" style="margin-right:7px;">
-            <input type="hidden" name="orderId" id="orderId" value="@(Model.ID)">
-        <p>OR</p> 
+            @if(Model.transportFee == 5) 
+            {
+                <!-- The $5.00 Transportation Fee -->
+                <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                    <input type="hidden" name="cmd" value="_s-xclick">
+                    <input type="hidden" name="hosted_button_id" value="D7RBTVWLBF9YY">
+                    <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_paynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                    <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                </form>
+            } else if (Model.transportFee == 10) {
+                <!-- The $10.00 Transportation Fee -->
+                <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                    <input type="hidden" name="cmd" value="_s-xclick">
+                    <input type="hidden" name="hosted_button_id" value="JLKFSP5DXM5QC">
+                    <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_paynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                    <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                </form>
+            } else if (Model.transportFee == 15) {
+                <!-- The $15.00 Transportation Fee -->
+                <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                    <input type="hidden" name="cmd" value="_s-xclick">
+                    <input type="hidden" name="hosted_button_id" value="GM3M8ESXSJTC4">
+                    <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_paynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                    <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                </form>
+            } else if (Model.transportFee == 20) {
+                <!-- The $20.00 Transportation Fee -->
+                <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                    <input type="hidden" name="cmd" value="_s-xclick">
+                    <input type="hidden" name="hosted_button_id" value="J4533DV6776ZG">
+                    <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_paynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                    <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                </form>
+            } else if (Model.transportFee == 25) {
+                <!-- The $25.00 Transportation Fee -->
+                <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                    <input type="hidden" name="cmd" value="_s-xclick">
+                    <input type="hidden" name="hosted_button_id" value="3FXV3UPQQ5YME">
+                    <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_paynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                    <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                </form>
+            }
         </div>
     </div>
     <div id="businessHoursDialog" title="@Machete.Web.Resources.WorkOrders.businessHoursModal" class="display" style="display: none">
@@ -37,16 +73,7 @@
             @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["BusinessHours_ES"])
         }
     </div>    
-    
-}
-@using (Html.BeginForm("PaymentCancel", "HirerWorkOrder", FormMethod.Get,
-                        new { @class = "edittab-form EditPost", @id = "WorkOrderTab-" + Model.ID }))
-{
-            <input type="hidden" name="orderId" id="orderID" value="@(Model.ID)">
-        <button type="submit" class="btn btn-default formButton" id="proceed" name="proceed" onclick="location.href='@Url.Action("PaymentCancel", "HirerWorkOrder")'" value="proceed">Pay by Calling</button>
-}
 </div>
-
 
 <script type="text/javascript">
 

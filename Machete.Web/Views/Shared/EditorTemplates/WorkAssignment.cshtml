@@ -47,6 +47,8 @@
             @Html.ValidationMessageFor(model => model.skillID)
         </div>
         @Html.mUITableLabelAndTextBoxFor(model => model.pseudoID, new { tabindex = "31", style = "width: 2em", @readonly = "readonly", @id = idPrefix + "pseudoID" })
+        @Html.mUITableLabelFor(model => model.weightLifted)
+        @Html.mUIDropDownYesNoFor(model => model.weightLifted, new { tabindex = "35", id = idPrefix + "weightLifted" })
     </div>
 </div>
 <div class="tb-table">

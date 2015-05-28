@@ -798,6 +798,13 @@
 
         function calculateTransportationFees() {
             console.log("Calculating transport fees");
+
+            // Note: this is logic that is specific to Casa Latina only
+            var workerCenter = "" + $("#workerCenter").val() + "";
+            if (workerCenter != "Casa Latina") {
+                return;
+            }
+
             // Count number of workers
             var numWorkers = workAssignments.assignments.length;
 
