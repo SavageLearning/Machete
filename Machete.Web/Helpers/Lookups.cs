@@ -172,7 +172,7 @@ namespace Machete.Web.Helpers
                 return lcache.getCache()
                             .Where(s => s.selected == true &&
                                         s.category == LCategory.skill)
-                            .SingleOrDefault().wage ?? 0.0;
+                            .FirstOrDefault().wage ?? 0.0;
             }
             return wage;
         }
@@ -189,7 +189,7 @@ namespace Machete.Web.Helpers
                 return lcache.getCache()
                             .Where(s => s.selected == true &&
                                         s.category == LCategory.skill)
-                            .SingleOrDefault().minHour ?? 0;
+                            .FirstOrDefault().minHour ?? 0;
             }
             return hours;
         }
