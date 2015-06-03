@@ -44,7 +44,7 @@
         <td id="transportationFees">TBD</td>
     </div>
 </table>
-    <p class="paypalWarning">Transportation fees must be paid via PayPal to complete order</p>
+    <p class="paypalWarning">@Machete.Web.Resources.WorkOrders.payPalNotice</p>
     <p class="paypalWarning">To see an available Casa Latina van drop-off time, please click on <a href="#" id="transportationCalendarModal">Drop Off Calendar</a></p>
 
     <!-- Form errors -->
@@ -484,6 +484,19 @@
         });
 
         $('#transportationMethodModal2').click(function () {
+
+            $("#transportationMethodDialog").dialog({
+                height: 650,
+                width: 800,
+                position: "fixed",
+                top: "50%",
+                modal: true
+            });
+
+            $('#transportationMethodDialog').show();
+        });
+
+        $('#transportationMethodModal3').click(function () {
 
             $("#transportationMethodDialog").dialog({
                 height: 650,
