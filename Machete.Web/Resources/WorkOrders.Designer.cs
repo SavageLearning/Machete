@@ -196,6 +196,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please call 206.956.0779 x3 during &lt;a href=&quot;#&quot; id=&quot;businessHoursModal&quot;&gt;business hours&lt;/a&gt; if you have any questions/issues..
+        /// </summary>
+        public static string businessHours {
+            get {
+                return ResourceManager.GetString("businessHours", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Business Hours.
         /// </summary>
         public static string businessHoursModal {
@@ -628,6 +637,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Transportation fees must be paid online to Casa Latina by using this form. You may pay with debit, credit, or PayPal. Your order is not complete until you have paid the transportation fee..
+        /// </summary>
+        public static string payPalNotice {
+            get {
+                return ResourceManager.GetString("payPalNotice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pending assignment.
         /// </summary>
         public static string pendingassignment {
@@ -736,6 +754,15 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The transportation fee (paid to Casa Latina Day Worker Center) is:.
+        /// </summary>
+        public static string transportationFee {
+            get {
+                return ResourceManager.GetString("transportationFee", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Extra fee.
         /// </summary>
         public static string transportFeeExtraShort {
@@ -817,7 +844,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Assign Worker.
+        ///   Looks up a localized string similar to Request Worker(s).
         /// </summary>
         public static string workAssignments {
             get {
@@ -858,6 +885,15 @@ namespace Machete.Web.Resources {
         public static string workersRequested {
             get {
                 return ResourceManager.GetString("workersRequested", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Work Order Number is:.
+        /// </summary>
+        public static string workOrderNumber {
+            get {
+                return ResourceManager.GetString("workOrderNumber", resourceCulture);
             }
         }
         

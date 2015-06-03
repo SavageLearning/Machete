@@ -379,7 +379,7 @@
     <value>Time Needed</value>
   </data>
   <data name="workAssignments" xml:space="preserve">
-    <value>Assign Worker</value>
+    <value>Request Worker(s)</value>
   </data>
   <data name="workDetails" xml:space="preserve">
     <value>Work Details</value>
@@ -398,5 +398,17 @@
   </data>
   <data name="orderConfirmation" xml:space="preserve">
     <value>Order Confirmation</value>
+  </data>
+  <data name="businessHours" xml:space="preserve">
+    <value>Please call 206.956.0779 x3 during &lt;a href="#" id="businessHoursModal"&gt;business hours&lt;/a&gt; if you have any questions/issues.</value>
+  </data>
+  <data name="payPalNotice" xml:space="preserve">
+    <value>Transportation fees must be paid online to Casa Latina by using this form. You may pay with debit, credit, or PayPal. Your order is not complete until you have paid the transportation fee.</value>
+  </data>
+  <data name="transportationFee" xml:space="preserve">
+    <value>The transportation fee (paid to Casa Latina Day Worker Center) is:</value>
+  </data>
+  <data name="workOrderNumber" xml:space="preserve">
+    <value>The Work Order Number is:</value>
   </data>
 </root>
