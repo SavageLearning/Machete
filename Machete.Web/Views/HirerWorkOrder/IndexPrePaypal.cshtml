@@ -12,13 +12,15 @@
         <li><a href="#" id="paypalTab" class="ListTab">@Machete.Web.Resources.WorkOrders.orderConfirmation</a> </li>
     </ul>
     <div>
-    <h1>Transportation Fees</h1>
-    <p>There are transportation fees for worker(s) to arrive by bus or van. The transportation fees must be paid before a Work Order can be confirmed</p>
-    <p>You must pay in advance for the transportaion fees by selecting the PayPal link below. You will be taken to PayPal to complete the purchase. </p>
-    <p>Please call 206.956.0779 x3 during <a href="#" id="businessHoursModal">business hours</a> if you have any questions/issues.</p>
-        <p>The Work Order Number is: @(Model.ID)</p>
-        <p>The transportation fee (paid to Casa Latina Day Worker Center) is: $@(Model.transportFee).00</p>
-    <br />
+        <h1>Transportation Fees</h1>
+        @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
+            @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["PayPalPayment_EN"])
+        } else {
+            @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["PayPalPayment_ES"])
+        }
+        <p>@Machete.Web.Resources.WorkOrders.workOrderNumber @(Model.ID)</p>
+        <p>@Machete.Web.Resources.WorkOrders.transportationFee $@(Model.transportFee).00</p>
+        <br />
     </div>
     <div class="tb-table">
         <div class="tb-row">
@@ -66,6 +68,7 @@
             }
         </div>
     </div>
+    <p>Please call 206.956.0779 x3 during <a href="#" id="businessHoursModal">business hours</a> if you have any questions/issues.</p>
     <div id="businessHoursDialog" title="@Machete.Web.Resources.WorkOrders.businessHoursModal" class="display" style="display: none">
         @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
             @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["BusinessHours_EN"])

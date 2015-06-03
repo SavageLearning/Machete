@@ -367,7 +367,7 @@
     <value>Hore requerida</value>
   </data>
   <data name="workAssignments" xml:space="preserve">
-    <value>Assign Workers</value>
+    <value>Pedir Trabajador(es)</value>
   </data>
   <data name="workDetails" xml:space="preserve">
     <value>Detalles del trabajo</value>
@@ -386,5 +386,17 @@
   </data>
   <data name="orderConfirmation" xml:space="preserve">
     <value>Order Confirmation</value>
+  </data>
+  <data name="businessHours" xml:space="preserve">
+    <value>Si tiene cualquier pregunta o duda, favor de llamar a 206.956.0779 x3 durante las &lt;a href="#" id="businessHoursModal"&gt;horas de negocio&lt;/a&gt;.</value>
+  </data>
+  <data name="payPalNotice" xml:space="preserve">
+    <value>Se requiere pagar la cuota de transporte a Casa Latina a través de este formulario. Puede pagar con débito, crédito, o su cuenta de PayPal. Esta orden no está completa sin hacer este pago.</value>
+  </data>
+  <data name="transportationFee" xml:space="preserve">
+    <value>La cuota de transporte (paid to Casa Latina Day Worker Center) es:</value>
+  </data>
+  <data name="workOrderNumber" xml:space="preserve">
+    <value>El número de su orden es:</value>
   </data>
 </root>
