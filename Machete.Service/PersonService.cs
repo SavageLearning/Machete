@@ -42,10 +42,14 @@ namespace Machete.Service
     // Ïf I made a non-web app, would I still need the code? If yes, put in here.
     public class PersonService : ServiceBase<Person>, IPersonService
     {
+        private readonly ILookupCache lcache;
+
         public PersonService(IPersonRepository pRepo, 
-                             IUnitOfWork unitOfWork) : base(pRepo, unitOfWork) 
+                             IUnitOfWork unitOfWork,
+                             ILookupCache _lcache) : base(pRepo, unitOfWork) 
         {
             this.logPrefix = "Person";
+            this.lcache = _lcache;
         }  
 
         public dataTableResult<Person> GetIndexView(viewOptions o)
@@ -57,9 +61,13 @@ namespace Machete.Service
             //
             //Search based on search-bar string 
             if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
+            if (o.showWorkers == true) IndexViewBase.getWorkers(o, ref q);
+            if (o.showNotWorkers == true) IndexViewBase.getNotWorkers(o, ref q);
+            if (o.showExpiredWorkers == true) IndexViewBase.getExpiredWorkers(o, lcache.getByKeys(LCategory.memberstatus, LMemberStatus.Expired), ref q);
+            if (o.showSExWorkers == true) IndexViewBase.getSExWorkers(o, lcache.getByKeys(LCategory.memberstatus, LMemberStatus.Sanctioned), lcache.getByKeys(LCategory.memberstatus, LMemberStatus.Expelled), ref q);
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
             result.filteredCount = q.Count();
-            result.query = q.Skip<Person>(o.displayStart).Take(o.displayLength);
+            result.query = q;//.Skip<Person>(o.displayStart).Take(o.displayLength);
             return result;
         }
     }

@@ -229,10 +229,10 @@
     <value>List of ALL work assignments</value>
   </data>
   <data name="lottery" xml:space="preserve">
-    <value>Lottery</value>
+    <value>Daily List</value>
   </data>
   <data name="lotteryShort" xml:space="preserve">
-    <value>Ltry</value>
+    <value>List</value>
   </data>
   <data name="memberID" xml:space="preserve">
     <value>Card#</value>
@@ -263,5 +263,11 @@
   </data>
   <data name="viewtitle" xml:space="preserve">
     <value>workassignment::view</value>
+  </data>
+  <data name="wkListClear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="wkListDupe" xml:space="preserve">
+    <value>Duplicate Prev.</value>
   </data>
 </root>

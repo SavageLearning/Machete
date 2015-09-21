@@ -43,5 +43,6 @@ namespace Machete.Web.ViewModel
         public bool assignedWorker_visible { get; set; }
         public bool signin_visible { get; set; }
         public bool requestedWorkers_visible { get; set; }
+        public WorkerSignin _wsi { get; set; }
     }
 }

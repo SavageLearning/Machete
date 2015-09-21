@@ -1,23 +1,29 @@
 ﻿@model Machete.Domain.Activity
+
 @using Machete.Web.Resources
+@using Machete.Web.Helpers
+
 @{  
     string recType = "activity";
     string idPrefix = recType + Model.ID + "-";
 }
+
 @using (Html.BeginForm("Create", "Activity", FormMethod.Post, 
                         new { @id = "activityCreateForm" }))
 {
     <div>
         <input type="submit" id="@(idPrefix)SaveBtn" class="formButton saveBtn" 
-               value="@Activities.createsubmit"  tabindex="9"/>
+               value="@Activities.createsubmit" tabindex="9" />
     </div>
     @Html.ValidationSummary(true)
-    @Html.EditorForModel()
+
+    @Html.EditorForModel("Activity")
 }
+
 <script type="text/javascript">
     $(document).ready(function () {
         $('.formButton').button();
-        var activityCreateForm = $("#activityCreateForm")
+        var activityCreateForm = $("#activityCreateForm");
         $.validator.unobtrusive.parseDynamicContent('#activityCreateForm');
         $('#activityName').focus();
         // Activity Create submit event

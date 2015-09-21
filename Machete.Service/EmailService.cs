@@ -180,6 +180,12 @@ namespace Machete.Service
             message.IsBodyHtml = true;
             message.Body = email.body;
             message.To.Add(email.emailTo);
+            if (email.attachment != null)
+            {
+                var a = Attachment.CreateAttachmentFromString(email.attachment, email.attachmentContentType);
+                a.Name = "Order.html";
+                message.Attachments.Add(a);
+            }
 
             smtpClient.Send(message);
             email.statusID = Email.iSent;

@@ -28,7 +28,6 @@ using System.Text;
 using Machete.Domain;
 using Machete.Data;
 using Machete.Data.Infrastructure;
-using System.Data.Objects;
 using System.ComponentModel;
 
 namespace Machete.Service
@@ -55,6 +54,7 @@ namespace Machete.Service
             this.lcache = lc;
             this.asServ = asServ;
         }
+
         public dataTableResult<Activity> GetIndexView(viewOptions o)
         {
             var result = new dataTableResult<Activity>();
@@ -85,7 +85,7 @@ namespace Machete.Service
             //if (o.displayLength >= 0)
             result.filteredCount = e.Count();
             result.totalCount = repo.GetAllQ().Count();
-            result.query = e.Skip(o.displayStart).Take(o.displayLength);
+            result.query = e;//.Skip(o.displayStart).Take(o.displayLength);
             return result;
         }
 

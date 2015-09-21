@@ -35,7 +35,6 @@ namespace Machete.Test
         public void SetupTest()
         {
             frb = new FluentRecordBase();
-            frb.Initialize(new MacheteInitializer(), "macheteConnection");
             driver = new ChromeDriver(ConfigurationManager.AppSettings["CHROMEDRIVERPATH"]);
             baseURL = "http://localhost:4213/";
             ui = new sharedUI(driver, baseURL);
@@ -119,27 +118,35 @@ namespace Machete.Test
                 rowcount += frb.ToRepoWorker().GetAllQ().Where(q => q.dwccardnum == cardNum).Count();
             }
             ui.WaitThenClickElement(By.Id("activityListTab"));
-            ui.SelectOption(By.XPath("//*[@id='activityTable_length']/label/select"), "100");
+            //ui.SelectOption(By.XPath("//*[@id='activityTable_length']/label/select"), "100");
             
             //Assert
 
+            // Chaim 4/2/2014 
+            // This isn't working because I disabled auto-reload. It was making
+            // the table appear strangely when I disabled pagination. I did that
+            // because pagination was unpopular with users.
+
+            // Todo: Either make auto-reload work or find another way of reloading
+            // the page.
+
             //Locate record within activitylist datatable and compare the count (column 4) with numberSignedIn
-            //Assert.AreEqual(numberSignedIn.ToString(), ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr[@recordid='" + _act.ID + "']/td[4]")).Text);
+            Assert.AreEqual(numberSignedIn.ToString(), ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr[@recordid='" + _act.ID + "']/td[4]")).Text);
 
             //walk through pagination to search for recordid
-            var activityRecordCount = "what";
-            bool tableRecordMatch = false;
-            while (tableRecordMatch == false) {
-                if (ui.WaitForElementExists(By.XPath("//table[@id='activityTable']/tbody/tr[@recordid='" + _act.ID + "']"))) {
-                    tableRecordMatch = true;
-                    activityRecordCount = ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr[@recordid='" + _act.ID + "']/td[4]")).Text;
-                } else {
+            //var activityRecordCount = "what";
+            //bool tableRecordMatch = false;
+            //while (tableRecordMatch == false) {
+            //    if (ui.WaitForElementExists(By.XPath("//table[@id='activityTable']/tbody/tr[@recordid='" + _act.ID + "']"))) {
+            //        tableRecordMatch = true;
+            //        activityRecordCount = ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr[@recordid='" + _act.ID + "']/td[4]")).Text;
+            //    } else {
                     //check for #activityTable_next.paginate_disabled_next
-                    Assert.IsTrue(ui.WaitThenClickElement(By.CssSelector("#activityTable_next.paginate_enabled_next")), "Could not locate record in table pagination");
-                }
-            }
+                    //Assert.IsTrue(ui.WaitThenClickElement(By.CssSelector("#activityTable_next.paginate_enabled_next")), "Could not locate record in table pagination");
+                //}
+            //}
 
-            Assert.AreEqual(numberSignedIn.ToString(), activityRecordCount);
+            //Assert.AreEqual(numberSignedIn.ToString(), activityRecordCount);
         }
 
         [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Activities)]
@@ -202,6 +209,7 @@ namespace Machete.Test
             Assert.IsTrue(ui.activitySignInIsSanctioned(), "Sanctioned worker box is not visible like it should be.");
         }
 
+        [Ignore] // Pagination disabled on Activities page
         [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Activities)]
         public void SeActivity_test_pagination()
         {
@@ -252,6 +260,7 @@ namespace Machete.Test
             Assert.IsTrue(result, "Activities search not returning proper results");
         }
 
+        [Ignore] // Pagination has been disabled
         [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Activities)]
         public void SeActivity_test_record_limit()
         {

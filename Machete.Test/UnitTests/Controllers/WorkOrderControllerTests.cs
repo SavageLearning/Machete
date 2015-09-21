@@ -56,6 +56,7 @@ namespace Machete.Test.Controllers
         Mock<IWorkerRequestService> _wrServ;
         //Mock<ICollection<WorkerRequest>> _requests;
         Mock<ILookupCache> lcache;
+        Mock<IDatabaseFactory> dbfactory;
         FormCollection fakeform;
         List<WorkerRequest> workerRequest;
         WorkOrderController _ctrlr;
@@ -86,10 +87,11 @@ namespace Machete.Test.Controllers
             _wrServ = new Mock<IWorkerRequestService>();
             workerRequest = new List<WorkerRequest> { };
             lcache = new Mock<ILookupCache>();
+            dbfactory = new Mock<IDatabaseFactory>();
             _ctrlr = new WorkOrderController(_serv.Object, _waServ.Object, _empServ.Object, _reqServ.Object, _wrServ.Object, lcache.Object);
             _ctrlr.SetFakeControllerContext();
             // TODO: Include Lookups in Dependency Injection, remove initialize statements
-            Lookups.Initialize(lcache.Object);
+            Lookups.Initialize(lcache.Object, dbfactory.Object);
         }
         //
         //   Testing /Index functionality

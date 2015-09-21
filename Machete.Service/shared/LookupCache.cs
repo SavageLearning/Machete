@@ -45,12 +45,12 @@ namespace Machete.Service
     }
     public class LookupCache : ILookupCache
     {
-        private Func<IDatabaseFactory> DB { get; set; }
+        private IDatabaseFactory DB { get; set; }
         private CacheItem DbCache { get; set; }
         private ObjectCache cache;
         //
         //
-        public LookupCache(Func<IDatabaseFactory> db)
+        public LookupCache(IDatabaseFactory db)
         {
             cache = MemoryCache.Default;
             DB = db;
@@ -65,10 +65,10 @@ namespace Machete.Service
         //
         private void FillCache()
         {
-            IEnumerable<Lookup> lookups = DB().Get().Lookups.AsNoTracking().ToList();
+            IEnumerable<Lookup> lookups = DB.Get().Lookups.AsNoTracking().ToList();
             CacheItemPolicy policy = new CacheItemPolicy();
             //TODO: Put LookupCache expire time in config file
-            policy.AbsoluteExpiration = new DateTimeOffset(DateTime.Now.AddHours(1));
+            policy.AbsoluteExpiration = new DateTimeOffset(DateTime.Now.AddMinutes(20));
             CacheItem wCacheItem = new CacheItem("lookupCache", lookups);
             cache.Set(wCacheItem, policy);
             //
@@ -124,7 +124,12 @@ namespace Machete.Service
             return getCache().Single(s => s.ID == id);
         }
         //
-        // Get the Id string for a given lookup number
+        /// <summary>
+        /// Get the English or Spanish name for a given lookup number
+        /// </summary>
+        /// <param name="ID">ID of the record to look up</param>
+        /// <param name="locale">Two Letter ISO Language Name</param>
+        /// <returns></returns>
         public string textByID(int ID, string locale)
         {
             Lookup record;

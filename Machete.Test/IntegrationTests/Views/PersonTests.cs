@@ -25,22 +25,21 @@ namespace Machete.Test
         private StringBuilder verificationErrors;
         private string baseURL;
         private sharedUI ui;
-        private static string testdir;
+        //private static string testdir;
         private static string testimagefile;
         FluentRecordBase frb;
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext) {
             string solutionDirectory = sharedUI.SolutionDirectory();
-            testdir = solutionDirectory + "\\Machete.test\\";
-            testimagefile = testdir + "jimmy_machete.jpg";
+            //testdir = solutionDirectory + "\\Machete.test\\";
+            testimagefile = solutionDirectory + "\\jimmy_machete.jpg";
         }
 
         [TestInitialize]
         public void SetupTest()
         {
             frb = new FluentRecordBase();
-            frb.Initialize(new MacheteInitializer(), "macheteConnection");
             driver = new ChromeDriver(ConfigurationManager.AppSettings["CHROMEDRIVERPATH"]);
             baseURL = "http://localhost:4213/";
             ui = new sharedUI(driver, baseURL);
@@ -97,6 +96,24 @@ namespace Machete.Test
         }
 
         [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Persons)]
+        public void SePerson_delete_worker()
+        {
+            //Arrange
+            Person _per = (Person)Records.person.Clone();
+            Worker _wkr = (Worker)Records.worker.Clone();
+            _wkr.memberexpirationdate = DateTime.Now.AddYears(1);
+            //Act
+            ui.personCreate(_per);
+            _wkr.ID = _per.ID;
+            _wkr.dwccardnum = frb.GetNextMemberID();
+            ui.workerCreate(_wkr, testimagefile);
+            ui.workerDelete(_wkr);
+
+            //Assert
+            ui.confirmWorkerDeleted();
+        }
+
+        [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Persons)]
         public void SePerson_create_event()
         {
             //Arrange
@@ -120,7 +137,7 @@ namespace Machete.Test
             Person _per = (Person)Records.person.Clone();
             Worker _wkr = (Worker)Records.worker.Clone();
             _wkr.memberexpirationdate = DateTime.Now.AddYears(1);
-            _wkr.dwccardnum = sharedUI.nextAvailableDwccardnum(frb.DB);
+            _wkr.dwccardnum = sharedUI.nextAvailableDwccardnum(frb.ToFactory().Get());
             Event _san = (Event)Records.event1.Clone();
             _san.Person = _per;
             _san.eventType = MacheteLookup.cache.First(x => x.category == "eventtype" && x.text_EN == "Sanction").ID;

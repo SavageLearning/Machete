@@ -18,20 +18,20 @@
         @Html.mUITableLabelFor(model => model.status)
         
 
-        @if (Html.IsInRole(Html.Role_AM()))
-        {
+        @*if (Html.IsInRole(Html.Role_AM()))
+        {*@
             @Html.mUIDropDownListFor(model => model.status,
                                          new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.orderstatus), "Value", "Text", Model.status),
                                     new { @id = idPrefix + "status" })
                 
-        }
-        else
-        {
-            <div class="tb-header">
-            @Lookups.byID(Model.status)
-            @Html.HiddenFor(model => model.status, new { @id = idPrefix + "status" })
-            </div>
-        }
+        @*}
+    else
+    {
+        <div class="tb-header">
+        @Lookups.byID(Model.status)
+        @Html.HiddenFor(model => model.status, new { @id = idPrefix + "status" })
+        </div>
+    }*@
         @Html.mUITableLabelFor(model => model.timeFlexible)
         @Html.mUIDropDownYesNoFor(model => model.timeFlexible, new { tabindex = "2", id = idPrefix + "timeFlexible" }) 
     </div>

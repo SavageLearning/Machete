@@ -129,6 +129,9 @@
   <data name="city" xml:space="preserve">
     <value>City</value>
   </data>
+  <data name="firstname" xml:space="preserve">
+    <value>First Name</value>
+  </data>
   <data name="firstname1" xml:space="preserve">
     <value>First Name (1)</value>
   </data>
@@ -146,6 +149,9 @@
   </data>
   <data name="genderother" xml:space="preserve">
     <value>Other gender</value>
+  </data>
+  <data name="lastname" xml:space="preserve">
+    <value>Last Name</value>
   </data>
   <data name="lastname1" xml:space="preserve">
     <value>Last Name (1)</value>

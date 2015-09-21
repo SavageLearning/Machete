@@ -49,6 +49,7 @@ namespace Machete.Test.Controllers
     {
         Mock<IPersonService> _serv;
         Mock<ILookupCache> lcache;
+        Mock<IDatabaseFactory> dbfactory;
         PersonController _ctrlr;
         FormCollection fakeform;
 
@@ -57,14 +58,15 @@ namespace Machete.Test.Controllers
         {
             _serv = new Mock<IPersonService>();
             lcache = new Mock<ILookupCache>();
-            _ctrlr = new PersonController(_serv.Object);
+            dbfactory = new Mock<IDatabaseFactory>();
+            _ctrlr = new PersonController(_serv.Object, lcache.Object);
             _ctrlr.SetFakeControllerContext();
             fakeform = new FormCollection();
             fakeform.Add("ID", "12345");
             fakeform.Add("firstname1", "Ronald");
             fakeform.Add("lastname1", "Reagan");
             // TODO: Include Lookups in Dependency Injection, remove initialize statements
-            Lookups.Initialize(lcache.Object);
+            Lookups.Initialize(lcache.Object, dbfactory.Object);
         }
         //
         //   Testing /Index functionality
@@ -135,7 +137,7 @@ namespace Machete.Test.Controllers
             int testid = 4242;
             Person fakeperson = new Person();
             _serv.Setup(p => p.Get(testid)).Returns(fakeperson);
-            var _ctrlr = new PersonController(_serv.Object);
+            var _ctrlr = new PersonController(_serv.Object, lcache.Object);
             //Act
             var result = (PartialViewResult)_ctrlr.Edit(testid);
             //Assert
@@ -164,7 +166,7 @@ namespace Machete.Test.Controllers
                                                     savedperson = p;
                                                     user = str;
                                                 });
-            var _ctrlr = new PersonController(_serv.Object);
+            var _ctrlr = new PersonController(_serv.Object, lcache.Object);
             _ctrlr.SetFakeControllerContext();
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
@@ -228,7 +230,7 @@ namespace Machete.Test.Controllers
             _serv = new Mock<IPersonService>();
             int testid = 4242;
             FormCollection fakeform = new FormCollection();
-            var _ctrlr = new PersonController(_serv.Object);
+            var _ctrlr = new PersonController(_serv.Object, lcache.Object);
             _ctrlr.SetFakeControllerContext();
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act

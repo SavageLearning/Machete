@@ -48,7 +48,7 @@ namespace Machete.Test
         private StringBuilder verificationErrors;
         private static string baseURL;
         private static sharedUI ui;
-        private static string testdir;
+        //private static string testdir;
         private static string testimagefile;
         private static MacheteContext DB;
         private static DbSet<Worker> wSet;
@@ -60,8 +60,8 @@ namespace Machete.Test
         {
             // getting Project path for dummy image
             string solutionDirectory = sharedUI.SolutionDirectory();
-            testdir = solutionDirectory + "\\Machete.test\\";
-            testimagefile = testdir + "jimmy_machete.jpg";
+            //testdir = solutionDirectory + "\\Machete.test\\";
+            testimagefile = solutionDirectory + "\\jimmy_machete.jpg";
             driver = new ChromeDriver(ConfigurationManager.AppSettings["CHROMEDRIVERPATH"]);
             baseURL = "http://localhost:4213/";
             ui = new sharedUI(driver, baseURL);
@@ -76,6 +76,7 @@ namespace Machete.Test
         [TestInitialize]
         public void SetupTest()
         {
+            //ui.iisX.Start();
             //driver = new FirefoxDriver();
             //baseURL = "http://localhost:4213/";
             //ui = new sharedUI(driver, baseURL);
@@ -114,7 +115,7 @@ namespace Machete.Test
         [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.WSIs)]
         public void SeWSI_create_signin()
         {
-            //IEnumerable<WorkerSignin> wList = wsiSet.Where(w => w.dwccardnum < 30000).AsEnumerable();
+            IEnumerable<WorkerSignin> wList = wsiSet.Where(w => w.dwccardnum < 30000).AsEnumerable();
         }
     }
 }

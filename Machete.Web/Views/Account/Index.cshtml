@@ -1,72 +1,84 @@
-﻿@model System.Web.Security.MembershipUserCollection
+﻿@using Machete.Web.Models
+
+@model IEnumerable<UserSettingsViewModel>
 
 @{
     ViewBag.Title = "Index";
 }
+<div class="partial-background-white index-padding-thick">
+    <h2>Machete Configuration Page</h2>
 
-<h2>Index</h2>
-<p>
-    @Html.ActionLink("Create New User Account", "Create")
-    <br />
-    @Html.ActionLink("Configure Lookups", "Index", "Config")
-</p>
-<table>
-    <tr>
-        <th></th>
-        <th>
-            UserName
-        </th>
-        <th>
-            Email
-        </th>
-        <th>
-            IsApproved
-        </th>
-        <th>
-            IsLockedOut
-        </th>
-        <th>
-            IsOnline
-        </th>
-        <th>
-            CreationDate
-        </th>
-        <th>
-            LastLoginDate
-        </th>
-    </tr>
+    <p style="color:red;">
+        <strong>@Html.ValidationSummary()</strong>
+    </p>
+    <p>
+        @Html.ActionLink("Manage Current User", "Manage", "Account", routeValues: null, htmlAttributes: new { title = "Manage", @class = "button-standard" }) 
+        @Html.ActionLink("Create New User", "Register", routeValues: null, htmlAttributes: new { @class = "button-standard" }) 
+        @Html.ActionLink("Configure Lookups", "Index", "Config", routeValues: null, htmlAttributes: new { @class = "button-standard" })
+    </p>
+    <h3>Users Table</h3>
+    <table>
+        <tr>
+            <th></th>
+            <th>
+                UserName
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                IsApproved
+            </th>
+            <th>
+                IsLockedOut
+            </th>
+            <th>
+                IsOnline
+            </th>
+            <th>
+                CreationDate
+            </th>
+            <th>
+                LastLoginDate
+            </th>
+        </tr>
 
-@foreach (MembershipUser item in Model)
-{
-    <tr>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.ProviderUserKey }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.ProviderUserKey }) |
-            @Html.ActionLink("Set Password", "AdminChangePassword", new { id = item.ProviderUserKey })
-        </td>
-        <td>
-            @item.UserName
-        </td>
-        <td>
-            @item.Email
-        </td>
-        <td>
-            @item.IsApproved
-        </td>
-        <td>
-            @item.IsLockedOut
-        </td>
-        <td>
-            @item.IsOnline
-        </td>
-        <td>
-            @String.Format("{0:g}", item.CreationDate)
-        </td>
-        <td>
-            @String.Format("{0:g}", item.LastLoginDate)
-        </td>
-    </tr>
-}
+        @foreach (UserSettingsViewModel item in Model)
+        {
+            <tr>
+                <td class="tb-cell-nospace">
+                    @Html.ActionLink("Edit", "Edit", "Account", new { id = item.ProviderUserKey }, htmlAttributes: new { @class = "a-block-nodecoration" })
+                    @Html.ActionLink("Delete", "Delete", "Account", new { id = item.ProviderUserKey }, htmlAttributes: new { @class = "a-block-nodecoration" })
+                    @Html.ActionLink("Roles", "UserRoles", "Account", new { id = item.ProviderUserKey }, htmlAttributes: new { @class = "a-block-nodecoration" })
+                </td>
+                <td class="tb-cell-bigger-text">
+                    @item.UserName
+                </td>
+                <td class="tb-cell-bigger-text">
+                    @item.Email
+                </td>
+                <td class="tb-cell-bigger-text">
+                    @item.IsApproved
+                </td>
+                <td class="tb-cell-bigger-text">
+                    @item.IsLockedOut
+                </td>
+                <td class="tb-cell-bigger-text">
+                    @item.IsOnline
+                </td>
+                <td>
+                    @String.Format("{0:g}", item.CreationDate)
+                </td>
+                <td>
+                    @String.Format("{0:g}", item.LastLoginDate)
+                </td>
+            </tr>
+        }
 
-</table>
-
+    </table>
+</div>
+<script>
+    $(document).ready(function () {
+        $('.button-standard').button();
+    });
+</script>

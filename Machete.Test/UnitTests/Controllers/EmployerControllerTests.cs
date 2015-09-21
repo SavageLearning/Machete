@@ -31,6 +31,7 @@ using Machete.Domain;
 using Machete.Web.ViewModel;
 using Machete.Web.Helpers;
 using Machete.Data;
+using Machete.Data.Infrastructure;
 
 namespace Machete.Test.UnitTests.Controllers
 {
@@ -44,6 +45,7 @@ namespace Machete.Test.UnitTests.Controllers
         Mock<IEmployerService> serv;
         Mock<IWorkOrderService> woServ;
         Mock<ILookupCache> lcache;
+        Mock<IDatabaseFactory> dbfactory;
         EmployerController ctrlr;
         FormCollection form;
         const int Testid = 4242;
@@ -55,6 +57,7 @@ namespace Machete.Test.UnitTests.Controllers
             serv = new Mock<IEmployerService>();
             woServ = new Mock<IWorkOrderService>();
             lcache = new Mock<ILookupCache>();
+            dbfactory = new Mock<IDatabaseFactory>();
 
             ctrlr = new EmployerController(serv.Object, woServ.Object);
             ctrlr.SetFakeControllerContext();
@@ -68,7 +71,7 @@ namespace Machete.Test.UnitTests.Controllers
                            {"phone", "123-456-7890"},
                            {"zipcode", "1234567890"}
                        };
-            Lookups.Initialize(lcache.Object);
+            Lookups.Initialize(lcache.Object, dbfactory.Object);
             MacheteMapper.Initialize();
         }
         //

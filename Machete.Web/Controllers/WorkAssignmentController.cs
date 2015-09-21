@@ -34,10 +34,9 @@ using Machete.Service;
 using Machete.Web.Helpers;
 using NLog;
 using Machete.Web.ViewModel;
+using System.Web.Configuration;
 using System.Web.Routing;
 using Machete.Web.Models;
-using System.Data.Objects;
-using System.Data.Objects.SqlClient;
 using AutoMapper;
 
 namespace Machete.Web.Controllers
@@ -78,8 +77,7 @@ namespace Machete.Web.Controllers
         {
             WorkAssignmentIndex _model = new WorkAssignmentIndex();
             //_model.todaysdate = DateTime.Today.ToShortDateString();
-            _model.todaysdate = System.String.Format("{0:dddd, d MMMM yyyy}", DateTime.Today);
-
+            _model.todaysdate = System.String.Format("{0:MM/dd/yyyy}", DateTime.Today);
             return View(_model);
         }
 
@@ -100,16 +98,19 @@ namespace Machete.Web.Controllers
                             WAID = Convert.ToString(p.ID),
                             recordid = Convert.ToString(p.ID),
                             pWAID = p.getFullPseudoID(), 
+                            employername = p.workOrder.Employer.name,
                             englishlevel = Convert.ToString(p.englishLevelID),
                             skill =  lcache.textByID(p.skillID, CI.TwoLetterISOLanguageName),
                             hourlywage = System.String.Format("${0:f2}", p.hourlyWage),
                             hours = Convert.ToString(p.hours),
                             hourRange = p.hourRange > 0 ? Convert.ToString(p.hourRange) : "",
                             days = Convert.ToString(p.days),
-                            description = p.description,
+                            description = p.description, // WA description now matches WO description unless they change it, see Create method
+                            datecreated = Convert.ToString(p.datecreated),
                             dateupdated = Convert.ToString(p.dateupdated), 
                             updatedby = p.Updatedby,
-                            dateTimeofWork = p.workOrder.dateTimeofWork.ToString(),
+                            dateTimeofWork = p.workOrder.dateTimeofWork.AddHours(Convert.ToDouble(WebConfigurationManager.AppSettings["TimeZoneDifferenceFromPacific"])).ToString(),
+                            timeofwork = p.workOrder.dateTimeofWork.AddHours(Convert.ToDouble(WebConfigurationManager.AppSettings["TimeZoneDifferenceFromPacific"])).ToShortTimeString(),
                             status = p.workOrder.status.ToString(),
                             earnings = System.String.Format("${0:f2}",p.getMinEarnings),
                             maxEarnings = System.String.Format("${0:f2}", p.getMaxEarnings),
@@ -165,7 +166,7 @@ namespace Machete.Web.Controllers
         //
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         #region Create
-        public ActionResult Create(int WorkOrderID)
+        public ActionResult Create(int WorkOrderID, string _description)
         {
             WorkAssignment _assignment = new WorkAssignment();
             _assignment.active = true;
@@ -174,6 +175,7 @@ namespace Machete.Web.Controllers
             _assignment.hours = Lookups.hoursDefault;
             _assignment.days = Lookups.daysDefault;
             _assignment.hourlyWage = Lookups.hourlyWageDefault;
+            _assignment.description = _description;
             return PartialView(_assignment);
         }
 

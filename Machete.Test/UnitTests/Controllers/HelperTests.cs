@@ -30,6 +30,7 @@ using AutoMapper;
 using Machete.Web.Helpers;
 using Moq;
 using Machete.Service;
+using Machete.Data.Infrastructure;
 
 namespace Machete.Test.UnitTests.Controllers
 {
@@ -37,12 +38,14 @@ namespace Machete.Test.UnitTests.Controllers
     public class HelperTests
     {
         Mock<ILookupCache> lcache;
+        Mock<IDatabaseFactory> dbfactory;
 
         [TestInitialize]
         public void TestInitialize()
         {
             lcache = new Mock<ILookupCache>();
-            Lookups.Initialize(lcache.Object);
+            dbfactory = new Mock<IDatabaseFactory>();
+            Lookups.Initialize(lcache.Object, dbfactory.Object);
         }
 
         [TestMethod]

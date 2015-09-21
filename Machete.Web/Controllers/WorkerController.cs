@@ -37,6 +37,7 @@ using NLog;
 using Machete.Web.Helpers;
 using System.Web.Routing;
 using AutoMapper;
+using Machete.Data;
 
 namespace Machete.Web.Controllers
 {
@@ -45,12 +46,15 @@ namespace Machete.Web.Controllers
     {
         private readonly IWorkerService serv;
         private readonly IImageService imageServ;
+        private readonly IWorkerCache wcache;
         System.Globalization.CultureInfo CI;
 
         public WorkerController(IWorkerService workerService, 
                                 IPersonService personService,
-                                IImageService  imageServ)
+                                IImageService  imageServ,
+                                IWorkerCache wc)
         {
+            this.wcache = wc;
             this.serv = workerService;
             this.imageServ = imageServ;
         }
@@ -63,7 +67,7 @@ namespace Machete.Web.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        [Authorize(Roles = "Manager, Administrator, PhoneDesk")]
+        [Authorize(Roles = "Manager, Administrator, Teacher, PhoneDesk")]
         public ActionResult Index()
         {
             return View();
@@ -73,7 +77,7 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator, Manager, Teacher, PhoneDesk")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
@@ -128,11 +132,19 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="ID"></param>
         /// <returns></returns>
-        [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
+        [Authorize(Roles = "PhoneDesk, Manager, Teacher, Administrator")] 
         public ActionResult Create(int ID)
         {
             var _model = new Worker();
             _model.ID = ID;
+            try
+            {
+                _model.dwccardnum = serv.GetNextWorkerNum();
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                ViewBag.OrganizeMe = ex.Message;
+            }
             _model.RaceID = Lookups.getDefaultID(LCategory.race);
             _model.countryoforiginID = Lookups.getDefaultID(LCategory.countryoforigin);
             _model.englishlevelID = 0;
@@ -148,7 +160,7 @@ namespace Machete.Web.Controllers
         /// <param name="imagefile"></param>
         /// <returns></returns>
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "PhoneDesk, Manager, Administrator")]
+        [Authorize(Roles = "PhoneDesk, Manager, Teacher, Administrator")]
         public ActionResult Create(Worker worker, string userName, HttpPostedFileBase imagefile)
         {
             UpdateModel(worker);
@@ -168,7 +180,7 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize(Roles = "PhoneDesk, Manager, Administrator")] 
+        [Authorize(Roles = "PhoneDesk, Manager, Teacher, Administrator")] 
         public ActionResult Edit(int id)
         {
             Worker _worker = serv.Get(id);
@@ -183,7 +195,7 @@ namespace Machete.Web.Controllers
         /// <param name="imagefile"></param>
         /// <returns></returns>
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "PhoneDesk, Manager, Administrator")]
+        [Authorize(Roles = "PhoneDesk, Manager, Teacher, Administrator")]
         public ActionResult Edit(int id, Worker _model, string userName, HttpPostedFileBase imagefile)
         {
             Worker worker = serv.Get(id);
@@ -219,12 +231,12 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult RefreshCache()
         {
-            serv.RefreshCache();
+            wcache.Refresh();
             return Json(new
             {
                 status = "OK"
             },
-JsonRequestBehavior.AllowGet);
+            JsonRequestBehavior.AllowGet);
         }
         /// <summary>
         /// 

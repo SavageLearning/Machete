@@ -11,6 +11,7 @@ using OpenQA.Selenium.Support.UI;
 using Machete.Data;
 using System.Data.Entity;
 using Machete.Test.Rx;
+using System.Reflection;
 
 
 namespace Machete.Test
@@ -21,10 +22,18 @@ namespace Machete.Test
         string _url;
         public int maxwait = 4; // seconds
         int sleepFor = 1000; //milliseconds
+        
+        // Tried to update WebServer.cs 4/2/2014...unsuccessful. Why won't IIS Express start from code?
+        //public WebServer iisX;
+
         public sharedUI(IWebDriver driver, string url)
         {
             _d = driver;
             _url = url;
+            //string[] _spl = url.Split(':');
+            //string _path = _spl[0] + ":" + _spl[1];
+            //int _port = Convert.ToInt32(_spl[2].TrimEnd('/'));
+            //iisX = new WebServer(_path, _port); 
         }
 
         public bool refreshCache()
@@ -52,7 +61,7 @@ namespace Machete.Test
             _d.FindElement(By.Id("UserName")).Clear();
             _d.FindElement(By.Id("UserName")).SendKeys("jadmin");
             _d.FindElement(By.Id("Password")).Clear();
-            _d.FindElement(By.Id("Password")).SendKeys("machete");
+            _d.FindElement(By.Id("Password")).SendKeys("ChangeMe");
             _d.FindElement(By.Name("logonB")).Click();
             WaitForText("Welcome", maxwait);
             return true;
@@ -163,10 +172,10 @@ namespace Machete.Test
             _d.FindElement(By.Id(prefix + "dwccardnum")).SendKeys(_wkr.dwccardnum.ToString());
 
             SelectOption(By.Id(prefix + "memberStatus"), "Active");
-            SelectOption(By.Id(prefix + "neighborhoodID"), "Kent");
-            SelectOption(By.Id(prefix + "typeOfWorkID"), @"(DWC) Day Worker Center");
+            SelectOption(By.Id(prefix + "neighborhoodID"), "Primary City");
+            SelectOption(By.Id(prefix + "typeOfWorkID"), @"Day Worker Center");
             SelectOption(By.Id(prefix + "englishlevelID"), "2");
-            SelectOption(By.Id(prefix + "incomeID"), @"Less than $15,000");
+            SelectOption(By.Id(prefix + "incomeID"), @"Poor (Less than $15,000)");
             _d.FindElement(By.Id(prefix + "imagefile")).SendKeys(imagepath);
             _d.FindElement(By.Id("createWorkerBtn")).Click();
             //
@@ -201,10 +210,27 @@ namespace Machete.Test
             Assert.AreEqual(_wkr.weight, WaitForElement(By.Id(prefix + "weight")).GetAttribute("value"));
             Assert.AreEqual(_wkr.dwccardnum.ToString(), WaitForElement(By.Id(prefix + "dwccardnum")).GetAttribute("value"));
             Assert.AreEqual("Active", GetOptionText(By.Id(prefix + "memberStatus")));
-            Assert.AreEqual("Kent", GetOptionText(By.Id(prefix + "neighborhoodID")));
-            Assert.AreEqual(@"(DWC) Day Worker Center", GetOptionText(By.Id(prefix + "typeOfWorkID")));
+            Assert.AreEqual("Primary City", GetOptionText(By.Id(prefix + "neighborhoodID")));
+            Assert.AreEqual(@"Day Worker Center", GetOptionText(By.Id(prefix + "typeOfWorkID")));
             Assert.AreEqual("2", GetOptionText(By.Id(prefix + "englishlevelID")));
-            Assert.AreEqual(@"Less than $15,000", GetOptionText(By.Id(prefix + "incomeID")));
+            Assert.AreEqual(@"Poor (Less than $15,000)", GetOptionText(By.Id(prefix + "incomeID")));
+            return true;
+        }
+
+        public bool workerDelete(Worker _wkr)
+        {
+            WaitThenClickElement(By.Id("deleteWorkerButton-" + _wkr.ID.ToString()));
+            WaitThenClickElement(By.Id("popup_ok"));
+
+            return true;
+        }
+
+        public bool confirmWorkerDeleted()
+        {
+            Thread.Sleep(5000);
+            bool result = WaitForElementValue(By.Id("workerCreateTab"), "Create Worker");
+            Assert.IsTrue(result, "Create tab label not updated by formSubmit");
+
             return true;
         }
 
@@ -282,9 +308,13 @@ namespace Machete.Test
             ReplaceElementText(By.Id(prefix + "address1"), _emp.address1);
             ReplaceElementText(By.Id(prefix + "address2"), _emp.address2);
             ReplaceElementText(By.Id(prefix + "city"), _emp.city);
+            ReplaceElementText(By.Id(prefix + "state"), _emp.state);
             ReplaceElementText(By.Id(prefix + "zipcode"), _emp.zipcode);
             ReplaceElementText(By.Id(prefix + "phone"), _emp.phone);
             ReplaceElementText(By.Id(prefix + "cellphone"), _emp.cellphone);
+            ReplaceElementText(By.Id(prefix + "driverslicense"), _emp.driverslicense);
+            ReplaceElementText(By.Id(prefix + "licenseplate"), _emp.licenseplate);
+            //ReplaceElementText(By.Id(prefix + "businessname"), _emp.businessname);
             // select lists
             //http://stackoverflow.com/questions/4672658/how-do-i-set-a-an-option-as-selected-using-selenium-webdriver-selenium-2-0-cli
             //ReplaceElementText(By.Id(prefix + "referredby"), _emp.referredby.ToString());
@@ -333,6 +363,9 @@ namespace Machete.Test
             getAttributeAssertEqual(_emp.city, "city");
             getAttributeAssertEqual(_emp.state, "state");
             getAttributeAssertEqual(_emp.zipcode, "zipcode");
+            getAttributeAssertEqual(_emp.licenseplate, "licenseplate");
+            getAttributeAssertEqual(_emp.driverslicense, "driverslicense");
+            //getAttributeAssertEqual(_emp.businessname, "businessname");
             getAttributeAssertEqual(_emp.phone, "phone");
             getAttributeAssertEqual(_emp.cellphone, "cellphone");
             //getAttributeAssertEqual(_emp.referredby.ToString(), "referredby");
@@ -518,12 +551,13 @@ namespace Machete.Test
             // Look for WA datatable to have a first row (at least one record)
             By walt = By.XPath("//table[@id='workAssignTable-wo-" + _wo.ID + "']/tbody/tr/td[1]");
             // The #####-## order number from the first column
-            var waltText =WaitForElement(walt).Text;
+            var waltText = WaitForElement(walt).Text;
             WaitForElementValue(walt, _wa.getFullPseudoID());
             Assert.AreEqual(_wa.getFullPseudoID(), waltText, "Unexpected PseudoID in assignment's list");
             Thread.Sleep(1000);
             WaitThenClickElement(By.Id("activateWorkOrderButton-" + _wo.ID));
-            _wo.status = 42; // changing test object to reflect activate status from previous action
+            // todo: find a way to change this hard-coded value assignment
+            _wo.status = 40; // changing test object to reflect activate status from previous action
             return true;
         }
 
@@ -610,10 +644,14 @@ namespace Machete.Test
             Assert.AreEqual("$" + (hourlyWage * hourRange * daysWork).ToString("F"), WaitForElement(By.Id(prefix + "totalRange")).GetAttribute("value"), "Max Total pay doesn't match hourRange, wage and day calculation");
 
             //select fixed job and verify hourly pay is fixed
-            String skillValue = MacheteLookup.cache.First(x => x.category == LCategory.skill && x.text_EN == "DWC Chambita 1hr").ID.ToString();
-            SelectOptionByValue(By.Id(prefix + "skillID"), skillValue);
-            Thread.Sleep(1000); // to avoid race condition
-            Assert.AreEqual("true", WaitForElement(By.Id(prefix + "hourlyWage")).GetAttribute("disabled"), "Hourly Wage should be fixed (disabled) in response to skill selection");
+            // TODO: Find another way of testing this. I took fixed categories out of the Lookups.
+            // Centers should be aware that they *can* fix pay in the config, but Casa Latina is the
+            // only center that's had that as a requirement for certain types of jobs.
+
+            //String skillValue = MacheteLookup.cache.First(x => x.category == LCategory.skill && x.text_EN == "DWC Chambita 1hr").ID.ToString();
+            //SelectOptionByValue(By.Id(prefix + "skillID"), skillValue);
+            //Thread.Sleep(1000); // to avoid race condition
+            //Assert.AreEqual("true", WaitForElement(By.Id(prefix + "hourlyWage")).GetAttribute("disabled"), "Hourly Wage should be fixed (disabled) in response to skill selection");
 
             return true;
         }
@@ -637,10 +675,11 @@ namespace Machete.Test
             //Go to create an activity tab
             WaitThenClickElement(By.Id("activityCreateTab"));
             //Wait for page to load
-            WaitForElement(By.Id(prefix + "name"));
+            WaitForElement(By.Id(prefix + "type"));
             //Enter information
-            SelectOptionByIndex(By.Id(prefix + "name"), _act.name - 97);
-            SelectOptionByIndex(By.Id(prefix + "type"), _act.type - 100);
+            SelectOptionByValue(By.Id(prefix + "type"), _act.type.ToString());
+            WaitForElement(By.Id(prefix + "name"));
+            SelectOptionByValue(By.Id(prefix + "name"), _act.name.ToString());
             SelectOption(By.Id(prefix + "teacher"), _act.teacher);
             ReplaceElementText(By.Id(prefix + "notes"), _act.notes);
             //Hit the save button
@@ -662,8 +701,8 @@ namespace Machete.Test
             //Wait for the page to load
             WaitForElement(By.Id(prefix + "name"));
 
-            Assert.AreEqual(_act.name - 97, GetOptionIndex(By.Id(prefix + "name")));
-            Assert.AreEqual(_act.type - 100, GetOptionIndex(By.Id(prefix + "type")));
+            Assert.AreEqual(2, GetOptionIndex(By.Id(prefix + "name")));
+            Assert.AreEqual(1, GetOptionIndex(By.Id(prefix + "type")));
             Assert.AreEqual(_act.teacher, GetOptionText(By.Id(prefix + "teacher")));
             Assert.AreEqual(_act.notes, WaitForElement(By.Id(prefix + "notes")).GetAttribute("value"));
             return true;
@@ -671,9 +710,10 @@ namespace Machete.Test
         public bool activitySignIn(string idPrefix, int dwccardnum)
         {
             var textboxID = idPrefix + "dwccardnum";
+            var submitID = idPrefix + "submit";
             WaitForElement(By.Id(textboxID));
             ReplaceElementText(By.Id(textboxID), dwccardnum.ToString());
-            WaitForElement(By.Id(textboxID)).Submit();
+            WaitThenClickElement(By.Id(submitID));
 
             return true;
         }
@@ -955,13 +995,13 @@ namespace Machete.Test
         }
         public static string SolutionDirectory()
         {
-            string solutionDirectory = ((EnvDTE.DTE)System.Runtime
-                              .InteropServices
-                              .Marshal
-                              .GetActiveObject("VisualStudio.DTE.11.0"))
-                   .Solution
-                   .FullName;
-            return System.IO.Path.GetDirectoryName(solutionDirectory);
+            //string solutionDirectory = ((EnvDTE.DTE)System.Runtime
+            //                  .InteropServices
+            //                  .Marshal
+            //                  .GetActiveObject("VisualStudio.DTE.11.0"))
+            //       .Solution
+            //       .FullName;
+            return System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         }
         public static int nextAvailableDwccardnum(MacheteContext DB)
         {

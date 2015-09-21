@@ -34,6 +34,7 @@ using Machete.Data;
 using Machete.Web.Models;
 using System.Web.Routing;
 using AutoMapper;
+using System.Web.Configuration;
 
 namespace Machete.Web.Controllers
 {
@@ -73,15 +74,24 @@ namespace Machete.Web.Controllers
         public ActionResult Index(int dwccardnum, DateTime dateforsignin)
         {
             Worker worker = _wServ.GetWorkerByNum(dwccardnum);
-            if (worker == null) throw new NullReferenceException("card ID doesn't match a worker");
+            if (worker == null) throw new NullReferenceException("Card ID doesn't match a worker!");
             var _signin = new WorkerSignin();
-            // Tthe card just swiped
+            string result = "";
+            // The card just swiped
             _signin.dwccardnum = dwccardnum;
-            _signin.dateforsignin = dateforsignin;
+            _signin.dateforsignin = new DateTime(dateforsignin.Year, dateforsignin.Month, dateforsignin.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
             _signin.memberStatus = worker.memberStatus;
             //
             //
-            _serv.CreateSignin(_signin, this.User.Identity.Name);
+            try
+            {
+                _serv.CreateSignin(_signin, this.User.Identity.Name);
+            }
+            catch(InvalidOperationException eek)
+            {
+                result = dwccardnum.ToString() + " " + eek.Message;
+            }
+
             //Get picture from checkin, show with next view
             Image checkin_image = _serv.getImage(dwccardnum);           
             string imageRef = "/Content/images/NO-IMAGE-AVAILABLE.jpg";
@@ -90,12 +100,16 @@ namespace Machete.Web.Controllers
                 imageRef = "/Image/GetImage/" + checkin_image.ID;
             }
 
+            if (result.Length == 0)
+                result = "Success!";
+
             return Json(new
             {
                 memberExpired = worker.isExpired,
                 memberInactive = worker.isInactive,
                 memberSanctioned = worker.isSanctioned,
                 memberExpelled = worker.isExpelled,
+                message = result,
                 imageRef = imageRef,
                 expirationDate = worker.memberexpirationdate
             },
@@ -134,8 +148,40 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
+
         [UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, Check-in")]
+        public ActionResult ListDuplicate(DateTime todaysdate, string userName)
+        {
+            _serv.listDuplicate(todaysdate, userName);
+            return Json(new
+            {
+                jobSuccess = true,
+                status = "OK",
+                date = todaysdate
+            },
+            JsonRequestBehavior.AllowGet);
+        }
+
+        [UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager, Check-in")]
+        public ActionResult SigninDuplicate(DateTime todaysdate, string userName)
+        {
+            string result = _serv.signinDuplicate(todaysdate, userName);
+            return Json(new
+            {
+                jobSuccess = true,
+                status = "OK",
+                message = result,
+                date = todaysdate
+            },
+            JsonRequestBehavior.AllowGet);
+        }
+       
+       
+       [UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager, Check-in")]
+       //to do: rename this method to clearList
         public ActionResult clearLottery(int id, string userName)
         {
             _serv.clearLottery(id, userName);
@@ -148,20 +194,84 @@ namespace Machete.Web.Controllers
             JsonRequestBehavior.AllowGet);
         }
 
-        //
-        // GET: /WorkerSignin/Delete/5
+        /// <summary>
+        /// This method invokes IWorkerSigninService.moveDown,
+        /// which moves a worker down in numerical order in the daily 
+        /// ('lottery') list,
+        /// and moves the proceeding (next) set member into their spot.
+        /// </summary>
+        /// <param name="id">The Worker ID of the person to be moved down.</param>
+        /// <param name="userName">The username of the person making the request.</param>
+        /// <returns>Json (bool jobSuccess, string status)</returns>
         [UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, Check-in")]
-        public ActionResult Delete(int id, string userName)
+        public ActionResult moveDown(int id, string userName)
         {
-            _serv.Delete(id, userName);            
+            _serv.moveDown(id, userName);
+            return Json(new
+            {
+                jobSuccess = true,
+                status = "OK", 
+                workerID = id
+            },
+            JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// This method invokes IWorkerSigninService.moveUp,
+        /// which moves a worker up in numerical order in the 
+        /// daily ('lottery') list,
+        /// and moves the preceeding set member into their spot.
+        /// </summary>
+        /// <param name="id">The Worker ID of the person to be moved down.</param>
+        /// <param name="userName">The username of the person making the request.</param>
+        /// <returns>Json (bool jobSuccess, string status)</returns>
+        [UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager, Check-in")]
+        public ActionResult moveUp(int id, string userName)
+        {
+            _serv.moveUp(id, userName);
             return Json(new
             {
                 jobSuccess = true,
                 status = "OK",
-                deletedID = id
+                workerID = id
             },
             JsonRequestBehavior.AllowGet);
+        }
+
+        // GET: /WorkerSignin/Delete/5
+       /// <summary>
+       /// This method deletes a signin from the master Worker Signins list for the day.
+       /// </summary>
+       /// <param name="id">The Worker ID of the worker.</param>
+       /// <param name="userName">The user performing the action.</param>
+       /// <returns>Json (bool jobSuccess, string status, int deletedID)</returns>
+        [UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager, Check-in")]
+        public JsonResult Delete(int id, string userName)
+        {
+            var record = _serv.Get(id);
+            if (record.lottery_sequence != null)
+            {
+                return Json(new
+                    {
+                        jobSuccess = false,
+                        rtnMessage = "You cannot delete a signin that has already been added to the daily list. Remove the signin from the daily list and try again."
+                    },
+                    JsonRequestBehavior.AllowGet);
+            }
+            else
+            { 
+                _serv.Delete(id, userName);            
+                return Json(new
+                {
+                    jobSuccess = true,
+                    status = "OK",
+                    deletedID = id
+                },
+                JsonRequestBehavior.AllowGet);
+            }
         }
 
 
@@ -182,8 +292,8 @@ namespace Machete.Web.Controllers
                 firstname2 = p.firstname2,
                 lastname1 = p.lastname1,
                 lastname2 = p.lastname2, 
-                dateforsignin = p.dateforsignin,
-                dateforsigninstring = p.dateforsignin.ToShortDateString(),
+                dateforsignin = p.dateforsignin.AddHours(Convert.ToDouble(WebConfigurationManager.AppSettings["TimeZoneDifferenceFromPacific"])).ToString(),
+                dateforsigninstring = p.dateforsignin.AddHours(Convert.ToDouble(WebConfigurationManager.AppSettings["TimeZoneDifferenceFromPacific"])).ToShortTimeString(),
                 WAID = p.waid ?? 0,
                 memberStatus = lcache.textByID(p.memberStatus, CI.TwoLetterISOLanguageName),
                 memberInactive = p.w.isInactive,
