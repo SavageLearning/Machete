@@ -120,13 +120,206 @@
   <data name="activitiesTab" xml:space="preserve">
     <value>Actividades</value>
   </data>
+  <data name="avgIncome" xml:space="preserve">
+    <value>Ingresos Promedios</value>
+  </data>
+  <data name="cancelledJobs" xml:space="preserve">
+    <value>Cancelados</value>
+  </data>
+  <data name="date" xml:space="preserve">
+    <value>Fecha</value>
+  </data>
+  <data name="dwcDispatch" xml:space="preserve">
+    <value>Despachos Laborales</value>
+  </data>
+  <data name="dwcFuture" xml:space="preserve">
+    <value>Futuro Laboral</value>
+  </data>
+  <data name="dwcList" xml:space="preserve">
+    <value>Labor</value>
+  </data>
+  <data name="dwcPropio" xml:space="preserve">
+    <value>(Propio)</value>
+  </data>
+  <data name="dwcPropioFuture" xml:space="preserve">
+    <value>Futuro Labor (PP)</value>
+  </data>
+  <data name="dwcSignins" xml:space="preserve">
+    <value>Entradas Laborales</value>
+  </data>
+  <data name="futureTotal" xml:space="preserve">
+    <value>Futuro (total)</value>
+  </data>
+  <data name="hhhDispatch" xml:space="preserve">
+    <value>Despacho Doméstico</value>
+  </data>
+  <data name="hhhFuture" xml:space="preserve">
+    <value>Fut. Doméstico</value>
+  </data>
+  <data name="hhhList" xml:space="preserve">
+    <value>Doméstico</value>
+  </data>
+  <data name="hhhPropio" xml:space="preserve">
+    <value>(Propio)</value>
+  </data>
+  <data name="hhhPropioFuture" xml:space="preserve">
+    <value>Fut.Doméstico (PP)</value>
+  </data>
+  <data name="hhhSignins" xml:space="preserve">
+    <value>Entradas Domésticas</value>
+  </data>
+  <data name="noWeekJobs" xml:space="preserve">
+    <value>Trabajos diarios</value>
+  </data>
   <data name="ordersTab" xml:space="preserve">
     <value>Órdenes</value>
   </data>
+  <data name="summaryHeader" xml:space="preserve">
+    <value>Reportes de Órdenes (Resúmenes)</value>
+  </data>
+  <data name="summaryInstructions" xml:space="preserve">
+    <value>Utiliza los menús abajo para elegir los distintos tipos de reportajes periódicos. Puede utilizar los botones por encima del reporte para alternar la visualización.</value>
+  </data>
   <data name="summaryTab" xml:space="preserve">
-    <value>Resúmenes</value>
+    <value>Resúmenes de Órdenes</value>
+  </data>
+  <data name="totalAssignments" xml:space="preserve">
+    <value>Despachados</value>
+  </data>
+  <data name="totalHours" xml:space="preserve">
+    <value>Horas</value>
+  </data>
+  <data name="totalIncome" xml:space="preserve">
+    <value>Ingresos</value>
+  </data>
+  <data name="totalSignins" xml:space="preserve">
+    <value>Entradas</value>
+  </data>
+  <data name="weekday" xml:space="preserve">
+    <value>Día</value>
+  </data>
+  <data name="weekEstDailyHours" xml:space="preserve">
+    <value>Horas de trabajo</value>
+  </data>
+  <data name="weekEstPayment" xml:space="preserve">
+    <value>Ingresos</value>
+  </data>
+  <data name="weekHourlyWage" xml:space="preserve">
+    <value>Salario x semana</value>
+  </data>
+  <data name="weekJobsSect" xml:space="preserve">
+    <value>Habilidades</value>
   </data>
   <data name="workersTab" xml:space="preserve">
     <value>Trabajadores</value>
+  </data>
+  <data name="empJobs" xml:space="preserve">
+    <value>Trabajos Principales</value>
+  </data>
+  <data name="empZipCodes" xml:space="preserve">
+    <value>Códigos Postales Principales</value>
+  </data>
+  <data name="ordersHeader" xml:space="preserve">
+    <value>Informes sobre órdenes de trabajo</value>
+  </data>
+  <data name="ordersInstructions" xml:space="preserve">
+    <value>Utiliza los menús abajo para elegir los distintos tipos de reportajes sobre el estado de órdenes de trabajo. Puede utilizar los botones por encima del reporte para alternar la visualización.</value>
+  </data>
+  <data name="ssrsTab" xml:space="preserve">
+    <value>SSRS</value>
+  </data>
+  <data name="workersHeader" xml:space="preserve">
+    <value>Reportes de Trabajadores</value>
+  </data>
+  <data name="advGarden" xml:space="preserve">
+    <value>Jardinería 2</value>
+  </data>
+  <data name="basicGarden" xml:space="preserve">
+    <value>Jardinería 1</value>
+  </data>
+  <data name="eslAssessed" xml:space="preserve">
+    <value>Inglés (&gt; 12 h.)</value>
+  </data>
+  <data name="finEd" xml:space="preserve">
+    <value>Educación Fiscal</value>
+  </data>
+  <data name="safetyTraining" xml:space="preserve">
+    <value>Seguridad</value>
+  </data>
+  <data name="skillsTraining" xml:space="preserve">
+    <value>Capacitación</value>
+  </data>
+  <data name="tempJobs" xml:space="preserve">
+    <value>Temporal</value>
+  </data>
+  <data name="uniqueSignins" xml:space="preserve">
+    <value>Únicos</value>
+  </data>
+  <data name="familyHouseholds" xml:space="preserve">
+    <value>En familia (total)</value>
+  </data>
+  <data name="newFamilyHousholds" xml:space="preserve">
+    <value>En familia (nuevo)</value>
+  </data>
+  <data name="newSingleAdults" xml:space="preserve">
+    <value>Solteros (nuevos)</value>
+  </data>
+  <data name="singleAdults" xml:space="preserve">
+    <value>Solteros (total)</value>
+  </data>
+  <data name="activeMembers" xml:space="preserve">
+    <value>Activos</value>
+  </data>
+  <data name="dispatched" xml:space="preserve">
+    <value>Despachados</value>
+  </data>
+  <data name="wentToClass" xml:space="preserve">
+    <value>Asistieron Clase</value>
+  </data>
+  <data name="unique" xml:space="preserve">
+    <value>Únicos</value>
+  </data>
+  <data name="osha" xml:space="preserve">
+    <value>OSHA</value>
+  </data>
+  <data name="activityInstructions" xml:space="preserve">
+    <value>Utiliza los menús abajo para elegir los distintos tipos de reportes de actividades. Puede utilizar los botones por encima del reporte para alternar la visualización. Para información diaria sobre las actividades, véase el resumen de la pesteña Actividades.</value>
+  </data>
+  <data name="dayInstructions" xml:space="preserve">
+    <value>Elija un día del agenda para ver los resultados.</value>
+  </data>
+  <data name="monthInstructions" xml:space="preserve">
+    <value>Elija cualquier día en un mes para ver los resultados de ese mes.</value>
+  </data>
+  <data name="weekInstructions" xml:space="preserve">
+    <value>Elija un día para ver los resultados de esa semana.</value>
+  </data>
+  <data name="yearInstructions" xml:space="preserve">
+    <value>Elija cualquier día del año para ver los resultados del año fiscal que termina en esa fecha.</value>
+  </data>
+  <data name="name" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="zip" xml:space="preserve">
+    <value>Código Postal
+</value>
+  </data>
+  <data name="zipplusfour" xml:space="preserve">
+    <value>+4</value>
+  </data>
+  <data name="employersHeader" xml:space="preserve">
+    <value>Reportes de Patrones</value>
+  </data>
+  <data name="employersInstructions" xml:space="preserve">
+    <value>Utilice los menús abajo para elegir distintos tipos de reportes sobre empleadores. Puede utilizar los botones por encima del reporte para elegir distintas visualizaciones.</value>
+  </data>
+  <data name="employersTab" xml:space="preserve">
+    <value>Patrones</value>
+  </data>
+  <data name="hideHelp" xml:space="preserve">
+    <value>Ya entendí</value>
+  </data>
+  <data name="workersInstructions" xml:space="preserve">
+    <value>Utilice los menús abajo para elegir distintos tipos de reportes sobre trabajadores. Puede utilizar los botones por encima del reporte para elegir distintas visualizaciones.</value>
   </data>
 </root>

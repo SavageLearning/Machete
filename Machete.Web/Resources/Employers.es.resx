@@ -141,6 +141,9 @@
   <data name="deletetitle" xml:space="preserve">
     <value>Borrar empleador</value>
   </data>
+  <data name="driverslicense" xml:space="preserve">
+    <value>Numero de licensia de conducir</value>
+  </data>
   <data name="editlink" xml:space="preserve">
     <value>Editar</value>
   </data>
@@ -158,6 +161,9 @@
   </data>
   <data name="indextitle" xml:space="preserve">
     <value>Listar empleadores</value>
+  </data>
+  <data name="licenseplate" xml:space="preserve">
+    <value>Numero de placa</value>
   </data>
   <data name="listlink" xml:space="preserve">
     <value>Lista de los empleadores</value>

@@ -394,7 +394,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Lottery.
+        ///   Looks up a localized string similar to Daily List.
         /// </summary>
         public static string lottery {
             get {
@@ -403,7 +403,7 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ltry.
+        ///   Looks up a localized string similar to List.
         /// </summary>
         public static string lotteryShort {
             get {
@@ -498,6 +498,24 @@ namespace Machete.Web.Resources {
         public static string viewtitle {
             get {
                 return ResourceManager.GetString("viewtitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear.
+        /// </summary>
+        public static string wkListClear {
+            get {
+                return ResourceManager.GetString("wkListClear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Duplicate Prev..
+        /// </summary>
+        public static string wkListDupe {
+            get {
+                return ResourceManager.GetString("wkListDupe", resourceCulture);
             }
         }
     }

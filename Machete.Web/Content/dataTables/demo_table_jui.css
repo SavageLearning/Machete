@@ -58,10 +58,11 @@
 
 .dataTables_paginate {
 	width: auto;
+    padding-top: 1em;
 }
 
 .dataTables_info {
-	padding-top: 3px;
+	padding-top: 1em;
 }
 
 table.display thead th {
@@ -109,9 +110,10 @@ table.display thead th div.DataTables_sort_wrapper span {
 
 .dataTables_wrapper {
 	position: relative;
-	min-height: 302px;
+	min-height: 90px;
 	_height: 302px;
 	clear: both;
+    margin: 0 1em;
 }
 
 .dataTables_processing {
@@ -157,19 +159,19 @@ table.display thead th div.DataTables_sort_wrapper span {
 }
 
 .paginate_disabled_previous {
-	background-image: url('../images/back_disabled.jpg');
+	background-image: url('back_disabled.jpg');
 }
 
 .paginate_enabled_previous {
-	background-image: url('../images/back_enabled.jpg');
+	background-image: url('back_enabled.jpg');
 }
 
 .paginate_disabled_next {
-	background-image: url('../images/forward_disabled.jpg');
+	background-image: url('forward_disabled.jpg');
 }
 
 .paginate_enabled_next {
-	background-image: url('../images/forward_enabled.jpg');
+	background-image: url('forward_enabled.jpg');
 }
 
 
@@ -195,7 +197,7 @@ table.display tr.heading2 td {
 }
 
 table.display td {
-	padding: 3px 10px;
+	padding: .2em .4em !important;
 }
 
 table.display td.center {
@@ -209,23 +211,23 @@ table.display td.center {
  */
 
 .sorting_asc {
-	background: url('../images/sort_asc.png') no-repeat center right;
+	background: url('sort_asc.png') no-repeat center right;
 }
 
 .sorting_desc {
-	background: url('../images/sort_desc.png') no-repeat center right;
+	background: url('sort_desc.png') no-repeat center right;
 }
 
 .sorting {
-	background: url('../images/sort_both.png') no-repeat center right;
+	background: url('sort_both.png') no-repeat center right;
 }
 
 .sorting_asc_disabled {
-	background: url('../images/sort_asc_disabled.png') no-repeat center right;
+	background: url('sort_asc_disabled.png') no-repeat center right;
 }
 
 .sorting_desc_disabled {
-	background: url('../images/sort_desc_disabled.png') no-repeat center right;
+	background: url('sort_desc_disabled.png') no-repeat center right;
 }
 
 

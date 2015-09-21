@@ -142,7 +142,7 @@
     <value>Website</value>
   </data>
   <data name="persontab" xml:space="preserve">
-    <value>Persons</value>
+    <value>People</value>
   </data>
   <data name="title" xml:space="preserve">
     <value>machete::</value>
@@ -220,7 +220,7 @@
     <value>Documentation</value>
   </data>
   <data name="All" xml:space="preserve">
-    <value>All</value>
+    <value>All Programs</value>
   </data>
   <data name="emailstab" xml:space="preserve">
     <value>Emails</value>
@@ -230,5 +230,23 @@
   </data>
   <data name="True" xml:space="preserve">
     <value>True</value>
+  </data>
+  <data name="um02" xml:space="preserve">
+    <value>User Manual Section 2</value>
+  </data>
+  <data name="backup" xml:space="preserve">
+    <value>Backups</value>
+  </data>
+  <data name="dailylist" xml:space="preserve">
+    <value>Daily List Feature</value>
+  </data>
+  <data name="introduction" xml:space="preserve">
+    <value>Machete Wiki Home</value>
+  </data>
+  <data name="useracctmgmt" xml:space="preserve">
+    <value>User Account Management</value>
+  </data>
+  <data name="not" xml:space="preserve">
+    <value>Not</value>
   </data>
 </root>

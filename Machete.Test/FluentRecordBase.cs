@@ -1,25 +1,25 @@
 ﻿#region COPYRIGHT
 // File:     IntegrationServiceHelpers.cs
 // Author:   Savage Learning, LLC.
-// Created:  2012/06/17 
+// Created:  2012/06/17
 // License:  GPL v3
 // Project:  Machete.Test
 // Contact:  savagelearning
-// 
+//
 // Copyright 2011 Savage Learning, LLC., all rights reserved.
-// 
+//
 // This source file is free software, under either the GPL v3 license or a
 // BSD style license, as supplied with this software.
-// 
-// This source file is distributed in the hope that it will be useful, but 
-// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+//
+// This source file is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
 // or FITNESS FOR A PARTICULAR PURPOSE. See the license files for details.
-//  
-// For details please refer to: 
-// http://www.savagelearning.com/ 
+//
+// For details please refer to:
+// http://www.savagelearning.com/
 //    or
 // http://www.github.com/jcii/machete/
-// 
+//
 #endregion
 using System;
 using System.Collections.Generic;
@@ -38,7 +38,7 @@ namespace Machete.Test
     {
         #region internal fields
         private ActivityRepository _repoA;
-        private ActivitySigninRepository _repoAS; 
+        private ActivitySigninRepository _repoAS;
         private WorkerSigninRepository _repoWSI;
         private WorkerRepository _repoW;
         private PersonRepository _repoP;
@@ -52,6 +52,7 @@ namespace Machete.Test
         private EventRepository _repoEV;
         private DatabaseFactory _dbFactory;
         private LookupCache _lcache;
+        private WorkerCache _wcache;
         private WorkerSigninService _servWSI;
         private WorkerService _servW;
         private PersonService _servP;
@@ -61,14 +62,13 @@ namespace Machete.Test
         private WorkAssignmentService _servWA;
         private ActivityService _servA;
         private ActivitySigninService _servAS;
+        private ReportService _servR;
         private EmployerService _servE;
         private EmailService _servEM;
         private EventService _servEV;
         private LookupService _servL;
         private IUnitOfWork _uow;
-        private IEmailConfig _emCfg;
-        public MacheteContext DB { get; set; }
-        private Employer _emp;
+        private IEmailConfig _emCfg;        private Employer _emp;
         private Email _email;
         private Event _event;
         private WorkOrder _wo;
@@ -94,31 +94,11 @@ namespace Machete.Test
             _user = user;
         }
 
-        public FluentRecordBase Initialize(IDatabaseInitializer<MacheteContext> initializer, string connection)
-        {
-            DB = new MacheteContext(connection);
-            return Initialize(initializer, DB);
-        }
 
-        public FluentRecordBase Initialize(IDatabaseInitializer<MacheteContext> initializer, MacheteContext DB)
+        public FluentRecordBase AddDBFactory(string connStringName = "MacheteConnection")
         {
-            Database.SetInitializer<MacheteContext>(initializer);
-            WorkerCache.Initialize(DB);
-            _dbFactory = new DatabaseFactory();
-            _dbFactory.Set(DB);
-            ILookupCache lcache = new LookupCache(() => _dbFactory);
-            return this;
-        }
-
-        public void Dispose()
-        {
-            WorkerCache.Dispose();
-            DB.Dispose();
-        }
-
-        public FluentRecordBase AddDBFactory()
-        {
-            Initialize(new MacheteInitializer(), "macheteConnection");
+            Database.SetInitializer<MacheteContext>(new MacheteInitializer());
+            _dbFactory = new DatabaseFactory(connStringName);
             _uow = new UnitOfWork(_dbFactory);
             AddLookupCache();
             return this;
@@ -133,7 +113,7 @@ namespace Machete.Test
         public FluentRecordBase AddLookupCache()
         {
             if (_dbFactory == null) AddDBFactory();
-            _lcache = new LookupCache(() => _dbFactory); // it wants Func<IDatabaseFactory>, it gets it
+            _lcache = new LookupCache(_dbFactory);
             return this;
         }
 
@@ -141,6 +121,19 @@ namespace Machete.Test
         {
             if (_lcache == null) AddLookupCache();
             return _lcache;
+        }
+
+        public FluentRecordBase AddWorkerCache()
+        {
+            if (_dbFactory == null) AddDBFactory();
+            _wcache = new WorkerCache(() => _dbFactory);
+            return this;
+        }
+
+        public WorkerCache ToWorkerCache()
+        {
+            if (_wcache == null) AddWorkerCache();
+            return _wcache;
         }
 
         #region Employers
@@ -208,7 +201,7 @@ namespace Machete.Test
             return e;
         }
 
-        #endregion  
+        #endregion
 
         #region WorkOrders
 
@@ -246,7 +239,7 @@ namespace Machete.Test
         public FluentRecordBase AddWorkOrder(
             DateTime? datecreated = null,
             DateTime? dateupdated = null,
-            DateTime? dateTimeOfWork = null, 
+            DateTime? dateTimeOfWork = null,
             int? paperordernum = null,
             int? status = null
         )
@@ -284,11 +277,11 @@ namespace Machete.Test
 
         public void Reload<T>(T entity) where T : Record
         {
-            if (DB == null) AddDBFactory();
-             DB.Entry<T>(entity).Reload();
+            if (_dbFactory == null) AddDBFactory();
+             _dbFactory.Get().Entry<T>(entity).Reload();
         }
 
-        #endregion 
+        #endregion
 
         #region WorkAssignments
 
@@ -315,8 +308,9 @@ namespace Machete.Test
             if (_repoL == null) AddRepoLookup();
             if (_repoWSI == null) AddRepoWorkerSignin();
             if (_lcache == null) AddLookupCache();
+            if (_wcache == null) AddWorkerCache();
             if (_uow == null) AddUOW();
-            _servWA = new WorkAssignmentService(_repoWA, _repoW, _repoL, _repoWSI, _lcache, _uow);
+            _servWA = new WorkAssignmentService(_repoWA, _repoW, _repoL, _repoWSI, _wcache, _lcache, _uow);
             return this;
         }
 
@@ -368,7 +362,7 @@ namespace Machete.Test
             return wa;
         }
 
-        #endregion 
+        #endregion
 
         #region WorkerSignins
 
@@ -394,8 +388,9 @@ namespace Machete.Test
             if (_repoW == null) AddRepoWorker();
             if (_repoL == null) AddRepoImage();
             if (_repoWR == null) AddRepoWorkerRequest();
+            if (_wcache == null) AddWorkerCache();
             if (_uow == null) AddUOW();
-            _servWSI = new WorkerSigninService(_repoWSI, _repoW, _repoI, _repoWR, _uow);
+            _servWSI = new WorkerSigninService(_repoWSI, _repoW, _repoI, _repoWR, _wcache, _uow);
             return this;
         }
 
@@ -432,7 +427,7 @@ namespace Machete.Test
             return _wsi;
         }
 
-        #endregion 
+        #endregion
 
         #region Persons
 
@@ -456,7 +451,8 @@ namespace Machete.Test
             // DEPENDENCIES
             if (_repoP == null) AddRepoPerson();
             if (_uow == null) AddUOW();
-            _servP = new PersonService(_repoP, _uow);
+            if (_lcache == null) AddLookupCache();
+            _servP = new PersonService(_repoP, _uow, _lcache);
             return this;
         }
 
@@ -499,7 +495,7 @@ namespace Machete.Test
             return p;
         }
 
-        #endregion 
+        #endregion
 
         #region Workers
 
@@ -523,7 +519,9 @@ namespace Machete.Test
             // DEPENDENCIES
             if (_repoW == null) AddRepoWorker();
             if (_uow == null) AddUOW();
-            _servW = new WorkerService(_repoW, _uow);
+            if (_wcache == null) AddWorkerCache();
+
+            _servW = new WorkerService(_repoW, _wcache, _uow);
             return this;
         }
 
@@ -561,7 +559,7 @@ namespace Machete.Test
             if (memberexpirationdate != null) _w.memberexpirationdate = (DateTime)memberexpirationdate;
             if (memberReactivateDate != null) _w.memberReactivateDate = (DateTime)memberReactivateDate;
             // kludge
-            _w.dwccardnum = Records.GetNextMemberID(DB.Workers);
+            _w.dwccardnum = Records.GetNextMemberID(_dbFactory.Get().Workers);
             //
             // ACT
             _servW.Create(_w, _user);
@@ -571,7 +569,7 @@ namespace Machete.Test
         public int GetNextMemberID()
         {
             if (_dbFactory == null) AddDBFactory();
-            return Records.GetNextMemberID(DB.Workers);
+            return Records.GetNextMemberID(_dbFactory.Get().Workers);
         }
 
         public Worker ToWorker()
@@ -580,7 +578,7 @@ namespace Machete.Test
             return _w;
         }
 
-        #endregion 
+        #endregion
 
         #region WorkerRequests
 
@@ -643,7 +641,7 @@ namespace Machete.Test
             return _wr;
         }
 
-        #endregion 
+        #endregion
 
         #region Images
 
@@ -702,7 +700,7 @@ namespace Machete.Test
             return _i;
         }
 
-        #endregion 
+        #endregion
 
         #region Lookups
 
@@ -761,7 +759,7 @@ namespace Machete.Test
             return _l;
         }
 
-        #endregion 
+        #endregion
 
         #region Activitys
 
@@ -826,7 +824,7 @@ namespace Machete.Test
             return _a;
         }
 
-        #endregion 
+        #endregion
 
         #region ActivitySignins
 
@@ -852,8 +850,9 @@ namespace Machete.Test
             if (_repoW == null) AddRepoWorker();
             if (_repoL == null) AddRepoImage();
             if (_repoAS == null) AddRepoWorkerRequest();
+            if (_wcache == null) AddWorkerCache();
             if (_uow == null) AddUOW();
-            _servAS = new ActivitySigninService(_repoAS, _repoW, _repoP, _repoI, _repoWR, _uow);
+            _servAS = new ActivitySigninService(_repoAS, _repoW, _repoP, _repoI, _repoWR,_wcache, _uow);
             return this;
         }
 
@@ -895,8 +894,33 @@ namespace Machete.Test
             return _as;
         }
 
-        #endregion 
+        #endregion
 
+        #region Reports
+
+        public FluentRecordBase AddServReports()
+        {
+            //
+            // DEPENDENCIES
+            if (_repoWO == null) AddRepoWorkOrder();
+            if (_repoWA == null) AddRepoWorkAssignment();
+            if (_repoW == null) AddRepoWorker();
+            if (_repoWSI == null) AddRepoWorkerSignin();
+            if (_repoWR == null) AddRepoWorkerRequest();
+            if (_repoL == null) AddRepoLookup();
+            if (_lcache == null) AddRepoLookup();
+            if (_repoAS == null) AddRepoActivitySignin();
+            _servR = new ReportService(_repoWO, _repoWA, _repoW, _repoWSI, _repoWR, _repoL, _lcache, _repoE, _repoAS);
+            return this;
+        }
+
+        public ReportService ToServReports()
+        {
+            if (_servR == null) AddServReports();
+            return _servR;
+        }
+
+        #endregion
         #region Emails
 
         public FluentRecordBase AddRepoEmail()
@@ -972,7 +996,7 @@ namespace Machete.Test
             return p;
         }
 
-        #endregion 
+        #endregion
 
         #region Events
 
@@ -1034,8 +1058,7 @@ namespace Machete.Test
             if (_event == null) AddEvent();
             return _event;
         }
-        #endregion 
-
+        #endregion
 
         public FluentRecordBase AddUOW()
         {

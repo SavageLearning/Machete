@@ -16,7 +16,7 @@
         @if ((Html.IsInRole(Html.Role_AMP()) && Model.dateTimeofWork >= DateTime.Today) || Html.IsInRole(Html.Role_AM()))
         {
             <li>
-                <a href="/WorkAssignment/Create?WorkOrderID=@(Model.ID)" 
+                <a href="/WorkAssignment/Create?WorkOrderID=@(Model.ID)&_description=@(Model.description)" 
                     class="workAssignCreateTab CreateTab" 
                     id="wact-@(Model.ID)">@WorkAssignments.createlink</a>
              </li>
@@ -58,8 +58,9 @@
             prefix: "ui-tabs-workAssign-wo-@(Model.ID)-", 
             defaultTab: 1,
             formLevel: 3,
-        changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
-        changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
+            changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
+            changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)",
+            updateDatatable: true
         });
         ////////////////////////////////////////////////////////////////
         //

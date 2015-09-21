@@ -145,7 +145,7 @@
     <value>Delete dispatch record</value>
   </data>
   <data name="description" xml:space="preserve">
-    <value>Additional information</value>
+    <value>Additional information from work assignment</value>
   </data>
   <data name="dispatchinfo" xml:space="preserve">
     <value>Dispatch information</value>
@@ -197,5 +197,8 @@
   </data>
   <data name="surcharge" xml:space="preserve">
     <value>Surcharge</value>
+  </data>
+  <data name="WOdescription" xml:space="preserve">
+    <value>Additional information from work order</value>
   </data>
 </root>

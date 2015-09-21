@@ -28,9 +28,7 @@ using System.Text;
 using Machete.Domain;
 using Machete.Data;
 using Machete.Data.Infrastructure;
-using System.Data.Objects.SqlClient;
 using System.Globalization;
-using System.Data.Objects;
 
 namespace Machete.Service
 {
@@ -43,18 +41,22 @@ namespace Machete.Service
         protected readonly IWorkerRepository wRepo;
         protected readonly IWorkerRequestRepository wrRepo;
         protected readonly IImageRepository iRepo;
+        protected readonly IWorkerCache wcache;
         //
         //
-        protected SigninServiceBase(IRepository<T> repo,
-                                   IWorkerRepository wRepo,
-                                   IImageRepository iRepo,
-                                   IWorkerRequestRepository wrRepo,
-                                   IUnitOfWork uow)
+        protected SigninServiceBase(
+            IRepository<T> repo,
+            IWorkerRepository wRepo,
+            IImageRepository iRepo,
+            IWorkerRequestRepository wrRepo,
+            IWorkerCache wc,
+            IUnitOfWork uow)
             : base(repo, uow)
         {
             this.wRepo = wRepo;
             this.wrRepo = wrRepo;
             this.iRepo = iRepo;
+            this.wcache = wc;
             this.logPrefix = "SigninServiceBase";
         }
 

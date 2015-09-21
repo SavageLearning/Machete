@@ -28,6 +28,15 @@ namespace Machete.Web
                         "~/Scripts/jquery.everytime-1.2.0.js"
                         ));
 
+            bundles.Add(new ScriptBundle("~/bundles/reports").Include(
+                    "~/Scripts/jquery.jqplot.js",
+                    "~/Scripts/jqplot.cursor.js",
+                    "~/Scripts/jqplot.dateAxisRenderer.js",
+                    "~/Scripts/jqplot.highligher.js",
+                    "~/Scripts/jqplot.pieRenderer.js",
+                    "~/Scripts/reports.js"
+                ));
+
             //bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
             //            "~/Scripts/jquery-ui-{version}.js"));
 
@@ -45,6 +54,10 @@ namespace Machete.Web
                 "~/Content/confirm/jquery.alerts.css",
                 "~/Content/dataTables/demo_table_jui.css",
                 "~/Content/jquery-ui-1.8.6.custom.css"));
+
+            bundles.Add(new StyleBundle("~/Content/reportcss").Include(
+                    "~/Content/jquery.jqplot.css"
+                ));
 
                         //"~/Content/themes/base/jquery.ui.core.css",
                         //"~/Content/themes/base/jquery.ui.resizable.css",

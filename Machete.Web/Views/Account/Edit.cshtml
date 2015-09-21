@@ -1,76 +1,99 @@
-﻿@model System.Web.Security.MembershipUser          
+﻿@model Machete.Web.Models.EditUserViewModel        
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Edit User";
 }
-<h2>Edit</h2>
-@Html.ValidationSummary(true)
-@using (Html.BeginForm())
-{
+<div class="account-background">
+    <h2>@ViewBag.Title</h2>
 
-    <div class="tb-table" style="float: left;">
-    <fieldset>
-    <legend>MembersModel</legend>
-        <div class="tb-row">
-            <div class="tb-label">
-                @Html.LabelFor(model => model.UserName)
-            </div>
-            <div class="tb-field">
-                @Html.DisplayTextFor(model => model.UserName)
-                @Html.ValidationMessageFor(model => model.UserName)
-            </div>
+    @using (Html.BeginForm("Edit", "Account", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken();
+        <p style="color:red;"><strong>@Html.ValidationSummary()</strong></p>
+        <p style="color:red;"><strong>@Model.ErrorMessage</strong></p>
+        <div class="tb-table" style="float: left;">
+            <fieldset>
+                <legend>Basic User Info</legend>
+                <div class="tb-row">
+                    <div class="tb-label">
+                        @Html.LabelFor(model => model.UserName)
+                    </div>
+                    <div class="tb-field">
+                        @Html.DisplayTextFor(model => model.UserName)
+                    </div>
+                </div>
+                <div class="tb-row">
+                    <div class="tb-label">
+                        @Html.LabelFor(model => model.FirstName)
+                    </div>
+                    <div class="tb-field">
+                        @Html.TextBoxFor(model => model.FirstName)
+                        @Html.ValidationMessageFor(model => model.FirstName)
+                    </div>
+                </div>
+                <div class="tb-row">
+                    <div class="tb-label">
+                        @Html.LabelFor(model => model.LastName)
+                    </div>
+                    <div class="tb-field">
+                        @Html.TextBoxFor(model => model.LastName)
+                        @Html.ValidationMessageFor(model => model.LastName)
+                    </div>
+                </div>
+                <div class="tb-row">
+                    <div class="tb-label">
+                        @Html.LabelFor(model => model.Email)
+                    </div>
+                    <div class="tb-field">
+                        @Html.TextBoxFor(model => model.Email)
+                        @Html.ValidationMessageFor(model => model.Email)
+                    </div>
+                </div>
+                <div class="tb-row">
+                    <div class="tb-label">
+                        @Html.LabelFor(model => model.IsApproved)
+                    </div>
+                    <div class="tb-field">
+                        @Html.CheckBoxFor(model => model.IsApproved)
+                    </div>
+                </div>
+                <div class="tb-row">
+                    <div class="tb-label">
+                        @Html.LabelFor(model => model.IsLockedOut)
+                    </div>
+                    <div class="tb-field">
+                        @Html.CheckBoxFor(model => model.IsLockedOut)
+                    </div>
+                </div>
+                <p>
+                    <input type="submit" value="Save" />
+                </p>
+            </fieldset>
         </div>
-        <div class="tb-row">
-            <div class="tb-label">
-                @Html.LabelFor(model => model.Email)
+
+
+        <div class="tb-table" style="float: left; margin-left: 3em;">
+            <h3>Password Recovery</h3>
+            <div class="tb-row">
+                <div class="tb-label">
+                    @Html.LabelFor(model => model.NewPassword)
+                </div>
+                <div class="tb-field">
+                    @Html.PasswordFor(model => model.NewPassword)
+                </div>
             </div>
-            <div class="tb-field">
-                @Html.EditorFor(model => model.Email)
-                @Html.ValidationMessageFor(model => model.Email)
+            <div class="tb-row">
+                <div class="tb-label">
+                    @Html.LabelFor(model => model.ConfirmPassword)
+                </div>
+                <div class="tb-field">
+                    @Html.PasswordFor(model => model.ConfirmPassword)
+                </div>
             </div>
+            <p>(Leave this blank unless you want to change the user's password.)</p>
         </div>
-        <div class="tb-row">
-            <div class="tb-label">
-                @Html.LabelFor(model => model.IsApproved)
-            </div>
-            <div class="tb-field">
-                @Html.EditorFor(model => model.IsApproved)
-                @Html.ValidationMessageFor(model => model.IsApproved)
-            </div>
-        </div>
-        <div class="tb-row">
-            <div class="tb-label">
-                @Html.LabelFor(model => model.IsLockedOut)
-            </div>
-            <div class="tb-field">
-                @Html.EditorFor(model => model.IsLockedOut)
-                @Html.ValidationMessageFor(model => model.IsLockedOut)
-            </div>
-        </div>
-        <p>
-            <input type="submit" value="Save" />
-        </p>
-        </fieldset>
+
+    }
+    <div style="clear: left;">
+        @Html.ActionLink("Back to List", "Index")
     </div>
-
-
-    <div class="tb-table" style="float: left;">
-    <fieldset>
-    <legend>Roles</legend>    
-        @foreach (String role in Roles.GetAllRoles())
-        {   
-        <div class="tb-row">
-            <div class="tb-label">
-                <label for="@role">@role:</label>
-            </div>   
-            <div class="tb-label">               
-                @Html.CheckBox(role, Roles.IsUserInRole(Model.UserName, role))
-            </div>
-        </div>                        
-        }
-        </fieldset>
-    </div>
-
-}
-<div style="clear: left;">
-    @Html.ActionLink("Back to List", "Index")
 </div>

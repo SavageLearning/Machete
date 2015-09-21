@@ -23,14 +23,19 @@
 #endregion
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Machete.Data;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Helpers;
-using System.Globalization;
+using Machete.Web.Models;
+using Machete.Web.ViewModel;
 using AutoMapper;
+using NLog;
 
 namespace Machete.Web.Controllers
 {
@@ -56,11 +61,17 @@ namespace Machete.Web.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        //[Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator, Manager, Teacher")]
         public ActionResult Index()
         {
-            return View();
+            var model = new ActivityViewModel();
+            if (User.IsInRole("Administrator") || User.IsInRole("Manager"))
+                model.authenticated = 1;
+            else model.authenticated = 0;
+            model.CI = (System.Globalization.CultureInfo)Session["Culture"];
+            return View(model);
         }
+
         /// <summary>
         /// GET: /Activity/AjaxHandler
         /// </summary>
@@ -102,18 +113,29 @@ namespace Machete.Web.Controllers
                 Updatedby = p.Updatedby
             };
         }
-        private string EditTabRef(Activity emp)
+        private string EditTabRef(Activity act)
         {
-            if (emp == null) return null;
-            return "/Activity/Edit/" + Convert.ToString(emp.ID);
+            if (act == null) return null;
+            return "/Activity/Edit/" + Convert.ToString(act.ID);
         }
-        private string EditTabLabel(Activity emp)
+        private string EditTabLabel(Activity act)
         {
-            if (emp == null) return null;
-            return emp.dateStart.ToString() + " - " + 
-                    lcache.textByID(emp.name, CI.TwoLetterISOLanguageName) + " - " +
-                    emp.teacher;
+            if (act == null) return null;
+            return lcache.textByID(act.name, CI.TwoLetterISOLanguageName) + " with " +
+                    act.teacher;
         }
+
+        private string CreateManyTabRef(Activity act)
+        {
+            if (act == null) return null;
+            return "/Activity/CreateMany/" + Convert.ToString(act.ID);
+        }
+        private string CreateManyTabLabel(Activity act)
+        {
+            if (act == null) return null;
+            return "Recurring Event with " + act.teacher;
+        }
+
         /// <summary>
         /// GET: /Activity/Create
         /// </summary>
@@ -122,18 +144,14 @@ namespace Machete.Web.Controllers
         public ActionResult Create()
         {
             var _model = new Activity();
-            _model.dateStart = DateTime.Today;
-            _model.dateEnd = DateTime.Today;
-            //_model.city = "Seattle";
-            //_model.state = "WA";
-            //_model.blogparticipate = false;
-            //_model.referredby = Lookups.emplrreferenceDefault;
+            _model.dateStart = DateTime.Now;
+            _model.dateEnd = DateTime.Now.AddHours(1);
             return PartialView("Create", _model);
         }
         /// <summary>
         /// POST: /Activity/Create
         /// </summary>
-        /// <param name="employer"></param>
+        /// <param name="activity"></param>
         /// <param name="userName"></param>
         /// <returns></returns>
         [HttpPost, UserNameFilter]
@@ -141,27 +159,111 @@ namespace Machete.Web.Controllers
         public JsonResult Create(Activity activ, string userName)
         {
             UpdateModel(activ);
-            Activity newActivity = serv.Create(activ, userName);
+            activ.firstID = activ.ID;
 
+            if (activ.name == 0)
+            {
+                if (activ.type == lcache.getByKeys(LCategory.activityType, LActType.Assembly))
+                    activ.name = lcache.getByKeys(LCategory.activityName, LActName.Assembly);
+                else if (activ.type == lcache.getByKeys(LCategory.activityType, LActType.OrgMtg))
+                    activ.name = lcache.getByKeys(LCategory.activityName, LActName.OrgMtg);
+                else
+                    throw new MacheteIntegrityException("Something went wrong with Activity Types.");
+            }
+
+            if (activ.dateEnd < activ.dateStart)
+                return Json(new { jobSuccess = false, rtnMessage = "End date must be greater than start date." });
+            else if (activ.recurring == true)
+            {
+                Activity firstAct = serv.Create(activ, userName);
+
+                return Json(new
+                {
+                    sNewRef = CreateManyTabRef(firstAct),
+                    sNewLabel = CreateManyTabLabel(firstAct),
+                    iNewID = activ.ID,
+                    jobSuccess = true
+                });
+            }
+            else { 
+                Activity newActivity = serv.Create(activ, userName);
+
+                return Json(new
+                {
+                    sNewRef = EditTabRef(newActivity),
+                    sNewLabel = EditTabLabel(newActivity),
+                    iNewID = newActivity.ID,
+                    jobSuccess = true
+                },
+                JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [Authorize(Roles = "Administrator, Manager")]
+        public ActionResult CreateMany(int id)
+        {
+            Activity firstAct = serv.Get(id);
+            var _model = new ActivitySchedule(firstAct);
+            return PartialView("CreateMany", _model);
+        }
+
+        [HttpPost, UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager")]
+        public JsonResult CreateMany(ActivitySchedule actSched, string userName)
+        {
+            UpdateModel(actSched); // copy values from form to object. why this is necessary if the object is being passed as arg, I don't know.
+            Activity firstActivity = serv.Get(actSched.firstID);
+            var instances = actSched.stopDate.Subtract(actSched.dateStart).Days;
+            var length = actSched.dateEnd.Subtract(actSched.dateStart).TotalMinutes;
+
+            for (var i = 0; i <= instances; ++i) // This should skip right over firstAct.
+            {
+                var date = actSched.dateStart.AddDays(i);
+                var day = (int)date.DayOfWeek;
+
+                if (day == 0 && !actSched.sunday) ;
+                else if (day == 1 && !actSched.monday) ;
+                else if (day == 2 && !actSched.tuesday) ;
+                else if (day == 3 && !actSched.wednesday) ;
+                else if (day == 4 && !actSched.thursday) ;
+                else if (day == 5 && !actSched.friday) ;
+                else if (day == 6 && !actSched.saturday) ;
+                else
+                {
+                    var activ = new Activity();
+                    activ.name = actSched.name;
+                    activ.type = actSched.type;
+                    activ.dateStart = date;
+                    activ.dateEnd = date.AddMinutes(length);
+                    activ.recurring = true;
+                    activ.firstID = firstActivity.ID;
+                    activ.teacher = actSched.teacher;
+                    activ.notes = actSched.notes;
+
+                    Activity act = serv.Create(activ, userName);
+                }
+            }
+            
             return Json(new
             {
-                sNewRef = EditTabRef(newActivity),
-                sNewLabel = EditTabLabel(newActivity),
-                iNewID = newActivity.ID,
+                sNewRef = EditTabRef(firstActivity),
+                sNewLabel = EditTabLabel(firstActivity),
+                iNewID = firstActivity.ID,
                 jobSuccess = true
             },
             JsonRequestBehavior.AllowGet);
         }
+
         /// <summary>
         /// GET: /Activity/Edit/5
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        //[Authorize(Roles = "Administrator, Manager, Teacher")]
+        [Authorize(Roles = "Administrator, Manager, Teacher")]
         public ActionResult Edit(int id)
         {
-            Activity employer = serv.Get(id);
-            return PartialView("Edit", employer);
+            Activity activity = serv.Get(id);
+            return PartialView("Edit", activity);
         }
         /// <summary>
         /// POST: /Activity/Edit/5
@@ -174,9 +276,9 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Teacher")]
         public JsonResult Edit(int id, FormCollection collection, string userName)
         {
-            Activity employer = serv.Get(id);
-            UpdateModel(employer);
-            serv.Save(employer, userName);
+            Activity activity = serv.Get(id);
+            UpdateModel(activity);
+            serv.Save(activity, userName);
             return Json(new
             {
                 jobSuccess = true
@@ -202,10 +304,32 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
+
+        [HttpPost, UserNameFilter]
+        [Authorize(Roles = "Administrator, Manager")]
+        public JsonResult DeleteMany(int id, string userName)
+        {
+            Activity firstToDelete = serv.Get(id);
+            IEnumerable<Activity> allToDelete = serv.GetAll()
+                .Where(w => w.firstID == firstToDelete.firstID && w.dateStart >= firstToDelete.dateStart);
+
+            foreach (Activity toDelete in allToDelete)
+            {
+                serv.Delete(toDelete.ID, userName);
+            }
+
+            return Json(new
+            {
+                status = "OK",
+                jobSuccess = true,
+                deletedID = id
+            },
+            JsonRequestBehavior.AllowGet);
+        }
         //
         //
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager,Teacher")]
+        [Authorize(Roles = "Administrator, Manager, Teacher")]
         public JsonResult Assign(int personID, List<int> actList, string userName)
         {
             if (actList == null) throw new Exception("Activity List is null");
@@ -214,15 +338,14 @@ namespace Machete.Web.Controllers
             return Json(new
             {
                 status = "OK",
-                jobSuccess = true//,
-                //deletedID = id
+                jobSuccess = true
             },
             JsonRequestBehavior.AllowGet);
         }
         //
         //
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager,Teacher")]
+        [Authorize(Roles = "Administrator, Manager, Teacher")]
         public JsonResult Unassign(int personID, List<int> actList, string userName)
         {
             if (actList == null) throw new Exception("Activity List is null");
@@ -231,8 +354,7 @@ namespace Machete.Web.Controllers
             return Json(new
             {
                 status = "OK",
-                jobSuccess = true//,
-                //deletedID = id
+                jobSuccess = true
             },
             JsonRequestBehavior.AllowGet);
         }

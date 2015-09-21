@@ -141,6 +141,9 @@
   <data name="deletetitle" xml:space="preserve">
     <value>employer::delete</value>
   </data>
+  <data name="driverslicense" xml:space="preserve">
+    <value>Driver's License Number</value>
+  </data>
   <data name="editlink" xml:space="preserve">
     <value>Edit</value>
   </data>
@@ -158,6 +161,9 @@
   </data>
   <data name="indextitle" xml:space="preserve">
     <value>employer::index</value>
+  </data>
+  <data name="licenseplate" xml:space="preserve">
+    <value>License Plate Number</value>
   </data>
   <data name="listlink" xml:space="preserve">
     <value>List Employers</value>

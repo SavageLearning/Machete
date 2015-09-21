@@ -28,43 +28,74 @@ using System.Text;
 using System.Data.Entity;
 using Machete.Domain;
 using System.Data.Entity.Migrations;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Machete.Data
 {
     //public class MacheteInitializer : DropCreateDatabaseIfModelChanges<MacheteContext>
-    public class MacheteInitializer : CreateDatabaseIfNotExists<MacheteContext>
+    public class MacheteInitializer : MigrateDatabaseToLatestVersion<MacheteContext, MacheteConfiguration>
     {
-        
+
+    }
+    public class TestInitializer : MigrateDatabaseToLatestVersion<MacheteContext, MacheteConfiguration>
+    {
+
+    }
+
+    public class MacheteConfiguration : DbMigrationsConfiguration<MacheteContext>
+    {
+        public MacheteConfiguration()
+            : base()
+        {
+            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationDataLossAllowed = true;
+        }
+
         protected override void Seed(MacheteContext DB)
         {
             //Initialize Lookups
-            MacheteLookup.Initialize(DB);
-            DB.SaveChanges();
-            DB.Database.ExecuteSqlCommand("CREATE NONCLUSTERED INDEX [dateTimeofWork] ON [dbo].[WorkOrders] ([dateTimeofWork] ASC) WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]");
+            if (!DB.Lookups.Any())
+            {
+                MacheteLookup.Initialize(DB);
+                DB.SaveChanges();
+            }
+
+            if (!DB.Users.Any())
+            {
+                AddUserAndRole(DB);
+            }
         }
-    }
-    public class TestInitializer : DropCreateDatabaseAlways<MacheteContext>
-    {
-        protected override void Seed(MacheteContext DB)
+
+
+        bool AddUserAndRole(MacheteContext context)
         {
-            //Initialize Lookup tables with static data
-            MacheteLookup.Initialize(DB); //Adds the Lookups table records
-            DB.SaveChanges();
-            DB.Database.ExecuteSqlCommand("CREATE NONCLUSTERED INDEX [dateTimeofWork] ON [dbo].[WorkOrders] ([dateTimeofWork] ASC) WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]");
+            IdentityResult ir;
+
+            var rm = new RoleManager<IdentityRole>
+               (new RoleStore<IdentityRole>(context));
+            ir = rm.Create(new IdentityRole("Administrator"));
+            ir = rm.Create(new IdentityRole("Manager"));
+            ir = rm.Create(new IdentityRole("Check-in"));
+            ir = rm.Create(new IdentityRole("PhoneDesk"));
+            ir = rm.Create(new IdentityRole("Teacher"));
+            ir = rm.Create(new IdentityRole("User"));
+
+            var um = new UserManager<ApplicationUser>(
+                new UserStore<ApplicationUser>(context));
+            var user = new ApplicationUser()
+            {
+                UserName = "jadmin",
+                IsApproved = true,
+                Email = "here@there.org"
+            };
+            
+            ir = um.Create(user, "ChangeMe");
+            if (ir.Succeeded == false)
+                return ir.Succeeded;
+            ir = um.AddToRole(user.Id, "Administrator"); //Default Administrator, edit to change
+            ir = um.AddToRole(user.Id, "Teacher"); //Required to make tests work
+            return ir.Succeeded;
         }
     }
-
-    //public class CustomMigrationsConfiguration : DbMigrationsConfiguration<MacheteContext>
-    //{
-    //    public CustomMigrationsConfiguration()
-    //        : base()
-    //    {
-    //        AutomaticMigrationsEnabled = true;
-    //        AutomaticMigrationDataLossAllowed = true;
-    //    }
-
-    //    //protected override void Seed(MacheteContext context)
-    //    //{
-    //    //}
-    //}
 }

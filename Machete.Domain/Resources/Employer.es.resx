@@ -118,19 +118,22 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="active" xml:space="preserve">
-    <value>Empleador activa?</value>
+    <value>¿Empleador activo?</value>
   </data>
   <data name="address1" xml:space="preserve">
     <value>Dirección (1)</value>
   </data>
   <data name="address1required" xml:space="preserve">
-    <value>Una dirección es obligatoria</value>
+    <value>La dirección es obligatoria</value>
   </data>
   <data name="address2" xml:space="preserve">
     <value>Dirección (2)</value>
   </data>
   <data name="blogparticipate" xml:space="preserve">
-    <value>Participar en el blog?</value>
+    <value>¿Participar en el blog?</value>
+  </data>
+  <data name="businessname" xml:space="preserve">
+    <value>Nombre de empresa</value>
   </data>
   <data name="cellphone" xml:space="preserve">
     <value>Teléfono celular</value>
@@ -139,13 +142,19 @@
     <value>Ciudad</value>
   </data>
   <data name="cityrequired" xml:space="preserve">
-    <value>Una ciudad es obligatoria</value>
+    <value>La ciudad es obligatoria</value>
+  </data>
+  <data name="driverslicense" xml:space="preserve">
+    <value>Numero de licensia de conducir</value>
   </data>
   <data name="email" xml:space="preserve">
     <value>Correo electrónico</value>
   </data>
   <data name="isbusiness" xml:space="preserve">
-    <value>Es una empresa?</value>
+    <value>¿Es negocio?</value>
+  </data>
+  <data name="licenseplate" xml:space="preserve">
+    <value>Numero de placa</value>
   </data>
   <data name="name" xml:space="preserve">
     <value>Nombre</value>
@@ -157,13 +166,13 @@
     <value>Notas</value>
   </data>
   <data name="onlineSource" xml:space="preserve">
-    <value>Creado por web?</value>
+    <value>¿Creado por web?</value>
   </data>
   <data name="phone" xml:space="preserve">
     <value>Teléfono</value>
   </data>
   <data name="phoneformat" xml:space="preserve">
-    <value>Por favor, utilice este formulario: ###-###-####</value>
+    <value>Por favor, ingrese el número de la siguiente manera: ###-###-####</value>
   </data>
   <data name="phonerequired" xml:space="preserve">
     <value>Por lo menos un número de teléfono es obligatorio</value>

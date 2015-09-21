@@ -32,10 +32,10 @@ namespace Machete.Test
     // Stops and starts web server for Selenium integration tests
     public class WebServer
     {
-        private readonly string physicalPath;
-        private readonly int port;
+        private readonly string iisPath;
+        private readonly int iisPort;
         private readonly string virtualDirectory;
-        private Process webServerProcess;
+        private Process iisXProcess;
 
         public WebServer(string physicalPath, int port)
             : this(physicalPath, port, "")
@@ -44,27 +44,38 @@ namespace Machete.Test
 
         public WebServer(string physicalPath, int port, string virtualDirectory)
         {
-            this.port = port;
-            this.physicalPath = physicalPath.TrimEnd('\\');
+            this.iisPort = port;
+            this.iisPath = physicalPath.TrimEnd('\\');
             this.virtualDirectory = virtualDirectory;
         }
 
         public void Start()
         {
-            webServerProcess = new Process();
-            const string webDevServerPath = @"C:\Program Files (x86)\Common Files\Microsoft Shared\DevServer\10.0\WebDev.WebServer40.exe";
-            string arguments = string.Format("/port:{0} /path:\"{1}\" /vpath:{2}", port, physicalPath, virtualDirectory);
-            webServerProcess.StartInfo = new ProcessStartInfo(webDevServerPath, arguments);
-            webServerProcess.Start();
+            ProcessStartInfo _psi = new ProcessStartInfo()
+            {
+                ErrorDialog = false,
+                CreateNoWindow = true,
+                UseShellExecute = false,
+                Arguments = string.Format("/path:\"{0}\" /port:{1}", this.iisPath, this.iisPort, virtualDirectory)
+            };
+            
+            string iisServerPath = (!string.IsNullOrEmpty(_psi.EnvironmentVariables["programfiles(x86)"]) ? _psi.EnvironmentVariables["programfiles(x86)"] : _psi.EnvironmentVariables["programfiles"]) + "\\IIS Express\\iisexpress.exe";
+
+            _psi.FileName = iisServerPath;
+
+            this.iisXProcess = new Process() { StartInfo = _psi };
+            
+            this.iisXProcess.Start();
         }
 
         public void Stop()
         {
-            if (webServerProcess == null)
+            if (this.iisXProcess == null)
             {
                 throw new InvalidOperationException("Start() must be called before Stop()");
             }
-            webServerProcess.Kill();
+
+            this.iisXProcess.Kill();
         }
     }
 }

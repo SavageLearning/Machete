@@ -46,11 +46,15 @@ namespace Machete.Web.Controllers
     public class PersonController : MacheteController
     { 
         private readonly IPersonService personService;
+        private readonly ILookupCache lcache;
         System.Globalization.CultureInfo CI;
-        public PersonController(IPersonService personService)
+
+        public PersonController(IPersonService personService, ILookupCache _lcache)
         {
             this.personService = personService;
+            this.lcache = _lcache;
         }
+
         protected override void Initialize(RequestContext requestContext)
         {
             base.Initialize(requestContext);
@@ -60,12 +64,12 @@ namespace Machete.Web.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator, Manager, Teacher, PhoneDesk")]
         public ActionResult Index()
         {
             return View();
         }
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator, Manager, Teacher, PhoneDesk")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             //Get all the records            
@@ -77,7 +81,10 @@ namespace Machete.Web.Controllers
             {
                 tabref = "/Person/Edit/" + Convert.ToString(p.ID),
                 tablabel = p.firstname1 + ' ' + p.lastname1,
+                dwccardnum = p.Worker == null ? "" : p.Worker.dwccardnum.ToString(),
                 active = p.active ? Shared.True : Shared.False,
+                status = p.active,
+                workerStatus = p.Worker == null ? "Not a worker" : lcache.textByID(p.Worker.memberStatus, CI.TwoLetterISOLanguageName),
                 firstname1 = p.firstname1,
                 firstname2 = p.firstname2,
                 lastname1 = p.lastname1,
@@ -100,7 +107,7 @@ namespace Machete.Web.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")] 
+        [Authorize(Roles = "Administrator, Manager, Teacher, PhoneDesk")] 
         public ActionResult Create()
         {
             var _model = new Person();
@@ -115,7 +122,8 @@ namespace Machete.Web.Controllers
         /// <param name="userName"></param>
         /// <returns></returns>
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, Manager, Teacher, PhoneDesk")]
         public ActionResult Create(Person person, string userName)
         {
             Person newperson = null;
@@ -145,7 +153,7 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")] 
+        [Authorize(Roles = "Administrator, Manager, Teacher, PhoneDesk")] 
         public ActionResult Edit(int id)
         {
             Person person = personService.Get(id);
@@ -158,7 +166,7 @@ namespace Machete.Web.Controllers
         /// <param name="userName"></param>
         /// <returns></returns>
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")] 
+        [Authorize(Roles = "Administrator, Manager, Teacher, PhoneDesk")] 
         public ActionResult Edit(int id, string userName)
         {
             Person person = personService.Get(id);          
@@ -175,7 +183,7 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator, Manager, Teacher, PhoneDesk")]
         public ActionResult View(int id)
         {
             Person person = personService.Get(id);

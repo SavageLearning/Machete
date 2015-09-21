@@ -121,7 +121,8 @@
     <value>Country of origin</value>
   </data>
   <data name="dateinseattle" xml:space="preserve">
-    <value>Date in Seattle</value>
+    <value>Date in This City</value>
+    <comment>variables will retain name "Date in Seattle"</comment>
   </data>
   <data name="dateinUSA" xml:space="preserve">
     <value>Date in the USA</value>

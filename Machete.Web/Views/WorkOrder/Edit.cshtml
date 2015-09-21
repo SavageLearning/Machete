@@ -67,7 +67,8 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        if ( @(editDisable) ) { 
+        var eDis = @editDisable; //ignore visual studio error; moved assignment here so it would parse the rest
+        if ( eDis == 1 ) { 
             $('#WorkOrderTab-@(Model.ID)').find('input,select,textarea').attr('disabled', 'disabled');
         }
         $('#activateWorkOrder-@(Model.ID)').hide();
@@ -98,7 +99,7 @@
         //
         // open work order view for printing
         $('#viewWorkOrder-@(Model.ID)').click(function () {
-            printwindow = window.open('/WorkOrder/View/@(Model.ID)');
+            window.open('/WorkOrder/View/@(Model.ID)');
         });
         //
         // Delete confirmation 
@@ -120,10 +121,11 @@
         });
         //
         // submit activate
+        // this is actually happening before the button appears, right after clicking "Save" on the form
         $("#ActivateWorkOrder-@(Model.ID)").mUI('tabFormSubmit', {
             clickButton: $("#activateWorkOrderButton-@(Model.ID)"),
             selectTab: 0,
-            closeTab: true,
+            closeTab: false,
             formLevel: 2
         });
         $('#@(idPrefix)printMap').click(function () { 
