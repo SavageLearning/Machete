@@ -8,10 +8,11 @@
 <div id="@(idPrefix)personPartsTabs">
     <ul>
         <li><a href="#personGeneralTabRef" id="personGeneralTab" class="GeneralTab">@Machete.Web.Resources.Persons.basicinfo</a></li>
-        @if (Model.Worker == null) {
-            <li><a href="/Worker/Create?ID=@(Model.ID)" id="workerCreateTab" class="CreateTab">@Machete.Web.Resources.Persons.createworker</a></li>        
+        @if (Model.Worker == null)
+        {
+            <li><a href="/Worker/Create?ID=@(Model.ID)" id="workerCreateTab" class="CreateTab">@Machete.Web.Resources.Persons.createworker</a></li>
         }
-        else
+        @if (Html.IsRoleAllowed("Worker.Edit.WorkerInfo.ShowTab") && Model.Worker != null)
         {
             <li><a href="/Worker/Edit/@(Model.ID)" id="workerEditTab">@Machete.Web.Resources.Persons.workerinfo</a></li>
         }
@@ -22,7 +23,8 @@
         }
         @if (Html.IsInRole(Html.Role_T()) && Model.Worker != null)
         {
-            <li><a href="#actJoinList" id="actJoinTab" class="ListTab">@Activities.actJoinTab</a></li>           
+            <li><a href="#actJoinList" id="actJoinTab" class="ListTab">@Activities.actJoinTab</a></li>
+            <li><a hidden href="/Worker/Edit/@(Model.ID)" id="workerEditTab">@Machete.Web.Resources.Persons.workerinfo</a></li>
         }
     </ul>
     <div id="personGeneralTabRef">
@@ -31,16 +33,16 @@
         {
 
             <input type="button" value="@Persons.viewlink" class="formButton" id="view-@Model.ID" />
-            <input type="submit" value="@Persons.editsubmit" class="formButton saveBtn"/>
+            <input type="submit" value="@Persons.editsubmit" class="formButton saveBtn" />
             if (Html.IsInRole(Html.Role_AM()))
             {
-                <input id="delete-@Model.ID" type="button" value="@Persons.deletesubmit" 
-                        class="formButton deleteButton" />
+                <input id="delete-@Model.ID" type="button" value="@Persons.deletesubmit"
+                       class="formButton deleteButton" />
             }
             <br />
             @Html.ValidationSummary(true)
             @Html.EditorForModel()
-    
+
         }
         @if (Html.IsInRole(Html.Role_AM()))
         {
@@ -49,7 +51,7 @@
             {
                 @* TODO: create UI tests, remove generic "ID" label *@
                 @Html.HiddenFor(model => model.ID);
-                @Html.Hidden("personID", Model.ID);
+            @Html.Hidden("personID", Model.ID);
             }
         }
     </div>

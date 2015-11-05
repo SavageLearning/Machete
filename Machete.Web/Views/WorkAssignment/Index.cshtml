@@ -73,6 +73,7 @@
                                 <th>@Machete.Web.Resources.WorkAssignments.lotteryShort</th>
                                 <th>@Machete.Web.Resources.WorkAssignments.programShort</th>
                                 <th>@Machete.Web.Resources.WorkAssignments.fullname</th>
+                                <th>@Machete.Web.Resources.WorkAssignments.WAID</th>
                             </tr>
                         </thead>
                     </table>
@@ -90,11 +91,12 @@
                             <tr>
                                 <th>assigned Worker</th>
                                 <th>requested Workers</th>
-                                <th>ID#</th>
+                                <th>@Machete.Web.Resources.WorkAssignments.WAID</th>
                                 <th>@WorkOrder.dateTimeofWork</th>
                                 <th>@WorkAssignment.englishlevelshort</th>
                                 <th>@WorkAssignment.skillID</th>
                                 <th>@WorkAssignment.hourlyWage</th>
+
                                 <th>@WorkAssignment.hours</th>
                                 <th>@Employer.name</th>
                                 <th>@WorkAssignment.days</th>
@@ -284,7 +286,8 @@ $(document).ready(function () {
                 {"mDataProp": "skills"},
                 {"mDataProp": "lotterySequence"},
                 {"mDataProp": "program"},
-                {"mDataProp": "fullname"}
+                {"mDataProp": "fullname"},
+                {"mDataProp": "WAID"}
             ],
             "fnServerDataExtra": function () {
                 return [
@@ -324,7 +327,7 @@ $(document).ready(function () {
             "aoColumns": [
                             { "mDataProp": "assignedWorker", "bVisible": false, "bSortable": true},
                             { "mDataProp": "requestedList", "bVisible": false, "bSortable": false},
-                            { "mDataProp": "pWAID", "bVisible": false, "bSortable": true },
+                            { "mDataProp": "WAID", "bVisible": true, "bSortable": true },
                             { "mDataProp": "timeofwork"},
                             { "mDataProp": "englishlevel"},
                             { "mDataProp": "skill"},
