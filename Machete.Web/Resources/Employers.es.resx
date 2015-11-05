@@ -120,6 +120,9 @@
   <data name="boxlegend" xml:space="preserve">
     <value>Empleador</value>
   </data>
+  <data name="createclear" xml:space="preserve">
+    <value>Limpiar</value>
+  </data>
   <data name="createlink" xml:space="preserve">
     <value>Crear un empleador nuevo</value>
   </data>
@@ -156,6 +159,9 @@
   <data name="editworkerlink" xml:space="preserve">
     <value>Editar empleador</value>
   </data>
+  <data name="employerAddress1Dialog" xml:space="preserve">
+    <value>Por favor provea la dirección major para contactarle.</value>
+  </data>
   <data name="indexreturnlink" xml:space="preserve">
     <value>Volver a la lista de empleadores</value>
   </data>
@@ -167,6 +173,9 @@
   </data>
   <data name="listlink" xml:space="preserve">
     <value>Lista de los empleadores</value>
+  </data>
+  <data name="referredBy" xml:space="preserve">
+    <value>Empleadores se refirieron de</value>
   </data>
   <data name="viewlink" xml:space="preserve">
     <value>Imprimir</value>

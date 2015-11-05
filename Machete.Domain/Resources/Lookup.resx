@@ -138,8 +138,17 @@
   <data name="minHour" xml:space="preserve">
     <value>Minimum hour</value>
   </data>
+  <data name="minimumCost" xml:space="preserve">
+    <value>Minimum Cost for Dispatch (English)</value>
+  </data>
   <data name="selected" xml:space="preserve">
     <value>Default</value>
+  </data>
+  <data name="skillDescriptionEn" xml:space="preserve">
+    <value>Skill Description (English)</value>
+  </data>
+  <data name="skillDescriptionEs" xml:space="preserve">
+    <value>Skill Description (Spanish)</value>
   </data>
   <data name="sortorder" xml:space="preserve">
     <value>Sort integer</value>

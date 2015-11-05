@@ -1,0 +1,32 @@
+﻿@model Machete.Domain.WorkOrder
+@using Machete.Web.Resources
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+    string recType = "WO";
+    string empRecType = "employer";
+    string idPrefix = recType + Model.ID + "-";
+    string empPrefix = empRecType + Model.EmployerID + "-";
+}
+
+@using (Html.BeginForm("Create", "HirerWorkOrder", FormMethod.Post, 
+                        new { @id = "workOrderCreateForm" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.Partial("HirerWorkOrderEdit", Model)
+    <input type="submit" id="@(idPrefix)SaveBtn" class="formButton saveBtn"
+        value="@WorkOrders.submit" tabindex="50" />
+}
+    
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        // TODO: remove
+        //alert("Testing JQuery II");
+
+        var woCreateForm = $('#workOrderCreateForm');
+        $('.formButton').button();
+
+        // Add validation to dynamic content
+        $.validator.unobtrusive.parseDynamicContent('#workOrderCreateForm');
+    });
+</script>

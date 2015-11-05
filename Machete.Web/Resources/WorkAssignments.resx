@@ -253,10 +253,10 @@
     <value>Today's date:</value>
   </data>
   <data name="total" xml:space="preserve">
-    <value>min. total</value>
+    <value>Min. Total</value>
   </data>
   <data name="totalRange" xml:space="preserve">
-    <value>max. total</value>
+    <value>Max. Total</value>
   </data>
   <data name="viewlink" xml:space="preserve">
     <value>View</value>
@@ -264,10 +264,28 @@
   <data name="viewtitle" xml:space="preserve">
     <value>workassignment::view</value>
   </data>
+  <data name="WAID" xml:space="preserve">
+    <value>Work ID</value>
+  </data>
   <data name="wkListClear" xml:space="preserve">
     <value>Clear</value>
   </data>
   <data name="wkListDupe" xml:space="preserve">
     <value>Duplicate Prev.</value>
+  </data>
+  <data name="englishNotRequired" xml:space="preserve">
+    <value>English Not Required</value>
+  </data>
+  <data name="workerNotRated" xml:space="preserve">
+    <value>Work Not Rated Yet</value>
+  </data>
+  <data name="additionalDescription" xml:space="preserve">
+    <value>Additional Description</value>
+  </data>
+  <data name="minHours" xml:space="preserve">
+    <value>Minimum Hours</value>
+  </data>
+  <data name="skillDescription" xml:space="preserve">
+    <value>Skill Description</value>
   </data>
 </root>

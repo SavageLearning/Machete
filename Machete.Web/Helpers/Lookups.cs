@@ -42,10 +42,10 @@ namespace Machete.Web.Helpers
 
     public static class Lookups
     {
-        public static int hoursDefault { get { return 5; } }
+        public static int hoursDefault { get { return getDefaultSkillHours(); } }
         public static int daysDefault { get { return 1;  } }
         public static int skillLevelDefault { get { return 1; } }
-        public static double hourlyWageDefault { get { return 12; } }
+        public static double hourlyWageDefault { get { return getDefaultSkillWage(); } }
         public static SelectList hours() { return hoursNum; }
         public static SelectList days() { return daysNum; }
         public static SelectList skillLevels() { return skillLevelNum; }
@@ -79,9 +79,11 @@ namespace Machete.Web.Helpers
                 "Value", "Text", "0");
             categories = new SelectList(new[] {
                 LCategory.maritalstatus, LCategory.race, LCategory.neighborhood, LCategory.gender,
-                LCategory.transportmethod, LCategory.countryoforigin, LCategory.activityName, 
+                LCategory.transportmethod, LCategory.transportTransactType, LCategory.countryoforigin, LCategory.activityName, 
                 LCategory.activityType, LCategory.eventtype, LCategory.orderstatus, LCategory.emplrreference, 
-                LCategory.worktype, LCategory.memberstatus,LCategory.skill,LCategory.emailstatus, LCategory.emailTemplate}
+                LCategory.worktype, LCategory.memberstatus,LCategory.skill,LCategory.emailstatus, LCategory.emailTemplate, LCategory.housingType,
+                LCategory.vehicleTypeID, LCategory.workerRating, LCategory.incomeSourceID, LCategory.usBornChildren, LCategory.educationLevel,
+                LCategory.farmLabor, LCategory.training }
                 .Select(x => new SelectListItem { Value = x, Text = x}),
                 "Value", "Text", LCategory.activityName);
 
@@ -153,10 +155,45 @@ namespace Machete.Web.Helpers
                 return lcache.getCache()
                             .Where(s => s.selected == true &&
                                         s.category == type)
-                            .SingleOrDefault().ID;
+                            .FirstOrDefault().ID;
             }
             return count;
         }
+
+        public static double getDefaultSkillWage()
+        {
+            double wage = 0.0;
+            int count = lcache.getCache()
+                .Where(s => s.selected == true &&
+                            s.category == LCategory.skill)
+                .Count();
+            if (count > 0)
+            {
+                return lcache.getCache()
+                            .Where(s => s.selected == true &&
+                                        s.category == LCategory.skill)
+                            .FirstOrDefault().wage ?? 0.0;
+            }
+            return wage;
+        }
+
+        public static int getDefaultSkillHours()
+        {
+            int hours = 0;
+            int count = lcache.getCache()
+                .Where(s => s.selected == true &&
+                            s.category == LCategory.skill)
+                .Count();
+            if (count > 0)
+            {
+                return lcache.getCache()
+                            .Where(s => s.selected == true &&
+                                        s.category == LCategory.skill)
+                            .FirstOrDefault().minHour ?? 0;
+            }
+            return hours;
+        }
+
         /// <summary>
         /// Get the SelectList for the group
         /// </summary>
@@ -173,6 +210,27 @@ namespace Machete.Web.Helpers
                                     "ID",
                                     field,
                                     getDefaultID(type));
+            if (list == null) throw new ArgumentNullException("Get returned no lookups");
+            return list;
+        }
+
+        /// <summary>
+        /// Get the SelectList for the group
+        /// </summary>
+        /// <param name="locale"></param>
+        /// <returns></returns>
+        public static SelectList getTransportationMethodList()
+        {
+            var locale = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant();
+            string field;
+            SelectList list;
+            if (locale == "ES") field = "text_ES";
+            else field = "text_EN";
+            // NOTE: transportation methods hard-coded to support Casa Latina
+            list = new SelectList(lcache.getCache().Where(s => s.category == "transportmethod" && (s.ID == 29 || s.ID == 31 || s.ID == 32)),
+                                    "ID",
+                                    field,
+                                    getDefaultID("transportmethod"));
             if (list == null) throw new ArgumentNullException("Get returned no lookups");
             return list;
         }
@@ -209,13 +267,13 @@ namespace Machete.Web.Helpers
             {
                 //TODO: Selection of ES/EN not scalable on i18n. Kludge.
                 textFunc = (ll => "[" + ll.ltrCode + ll.level + "] " + (locale == "es" ? ll.text_ES : ll.text_EN));
-                prelist = prelist.Where(s => s.speciality == true).OrderBy(s => textFunc(s)); //LINQ & FUNC
+                Func<Lookup, string> sortFunc = (ll => locale == "es" ? ll.text_ES : ll.text_EN); //created new sortFunc to sort only by skill text and not by concatenated ltrCode + skills 
+                prelist = prelist.Where(s => s.speciality == true).OrderBy(s => sortFunc(s)); //LINQ & FUNC
             }
             else
             {
-                textFunc = (ll => locale == "es" ? ll.text_ES : ll.text_EN);
-                if (locale == "es") prelist = prelist.OrderBy(s => s.sortorder).ThenBy(s => s.text_ES);
-                else prelist = prelist.OrderBy(s => s.sortorder).ThenBy(s => s.text_EN);
+                textFunc = (ll => locale == "es" ? ll.text_ES : ll.text_EN);           
+                prelist = prelist.OrderBy(s => textFunc(s));
             }
             return new List<SelectListItemEx>(prelist
                     .Select(x => new SelectListItemEx
@@ -229,7 +287,71 @@ namespace Machete.Web.Helpers
                     }));
         }
 
+        /// <summary>
+        /// get the List of skills to present to Employer in Employer online interface
+        /// </summary>
+        /// <returns>List of skills</returns>
+        public static List<SelectListItemEx> getEmployerSkill()
+        {
+            var locale = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant();
+            IEnumerable<Lookup> prelist = lcache.getCache()
+                                                     .Where(s => s.category == LCategory.skill);
+            Func<Lookup, string> textFunc; //anon function
+            if (prelist == null) throw new ArgumentNullException("No skills returned");
+ 
+            //TODO: Selection of ES/EN not scalable on i18n. Kludge.
+            textFunc = (ll => "[" + ll.ltrCode + ll.level + "] " + (locale == "es" ? ll.text_ES : ll.text_EN));
+            Func<Lookup, string> sortFunc = (ll => locale == "es" ? ll.text_ES : ll.text_EN); //created new sortFunc to sort only by skill text and not by concatenated ltrCode + skills 
+            prelist = prelist.Where(s => s.speciality == true).OrderBy(s => sortFunc(s)); //LINQ & FUNC
+            // TODO: (above) filter by employerView (not speciality)
+            // TODO: return typeOfWorkID & description
+            return new List<SelectListItemEx>(prelist
+                    .Select(x => new SelectListItemEx
+                    {
+                        Selected = x.selected,
+                        Value = Convert.ToString(x.ID),
+                        Text = textFunc(x),
+                        wage = Convert.ToString(x.wage),
+                        minHour = Convert.ToString(x.minHour),
+                        fixedJob = Convert.ToString(x.fixedJob)
+                    }));
+        }
+
+        /// <summary>
+        /// get the List of skills to present to Employer in Employer online interface
+        /// </summary>
+        /// <returns>List of skills</returns>
+        public static List<SelectListEmployerSkills> getOnlineEmployerSkill()
+        {
+            var locale = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant();
+            IEnumerable<Lookup> prelist = lcache.getCache()
+                                                     .Where(s => s.category == LCategory.skill);
+            Func<Lookup, string> textFunc; //anon function
+            if (prelist == null) throw new ArgumentNullException("No skills returned");
+
+            //TODO: Selection of ES/EN not scalable on i18n. Kludge.
+            textFunc = (ll => (locale == "es" ? ll.text_ES : ll.text_EN));
+            Func<Lookup, string> sortFunc = (ll => locale == "es" ? ll.text_ES : ll.text_EN); //created new sortFunc to sort only by skill text and not by concatenated ltrCode + skills 
+            // Note: the following are the Skills that should appear in the Employer online ordering site for Casa Latina - this is hard-coded for now (Lookups table should be updated to identify which should be exposed to the Employer)
+            // Casa Latina List: (s.ID == 60 || s.ID == 61 || s.ID == 62 || s.ID == 63 || s.ID == 64 || s.ID == 65 || s.ID == 66 || s.ID == 67 || s.ID == 68 || s.ID == 69 || s.ID == 77 || s.ID == 83 || s.ID == 88 || s.ID == 89 ||  s.ID == 118 || s.ID == 120 || s.ID == 122 || s.ID == 128 || s.ID == 131 || s.ID == 132 || s.ID == 133 || s.ID == 183)
+            prelist = prelist.Where(s => s.ID == 60 || s.ID == 61 || s.ID == 62 || s.ID == 63 || s.ID == 64 || s.ID == 65 || s.ID == 66 || s.ID == 67 || s.ID == 68 || s.ID == 69 || s.ID == 77 || s.ID == 83 || s.ID == 88 || s.ID == 89 || s.ID == 118 || s.ID == 120 || s.ID == 122 || s.ID == 128 || s.ID == 131 || s.ID == 132 || s.ID == 133 || s.ID == 183).OrderBy(s => sortFunc(s)); //LINQ & FUNC
+            return new List<SelectListEmployerSkills>(prelist
+                    .Select(x => new SelectListEmployerSkills
+                    {
+                        Selected = x.selected,
+                        Value = Convert.ToString(x.ID),
+                        Text = textFunc(x),
+                        wage = x.wage.Value,
+                        minHour = x.minHour.Value,
+                        ID = x.ID,
+                        typeOfWorkID = x.typeOfWorkID.Value,
+                        skillDescriptionEs = x.skillDescriptionEs,
+                        skillDescriptionEn = x.skillDescriptionEn
+                    }));
+        }
+
     }
+
     public class LookupNumber
     {
         public string Value { get; set; }

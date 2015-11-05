@@ -264,10 +264,19 @@
   <data name="viewtitle" xml:space="preserve">
     <value>Asignación:ver</value>
   </data>
+  <data name="WAID" xml:space="preserve">
+    <value>#Asignación</value>
+  </data>
   <data name="wkListClear" xml:space="preserve">
     <value>Borrar</value>
   </data>
   <data name="wkListDupe" xml:space="preserve">
     <value>Copiar Lista Prev.</value>
+  </data>
+  <data name="englishNotRequired" xml:space="preserve">
+    <value>English Not Required</value>
+  </data>
+  <data name="workerNotRated" xml:space="preserve">
+    <value>Worker Not Rated Yet</value>
   </data>
 </root>

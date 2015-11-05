@@ -123,7 +123,7 @@ namespace Machete.Service
         /// <param name="user"></param>
         public virtual void Save(T record, string user)
         {
-            record.updatedby(user);
+            record.updatedby(user); // Set update timestamp
             log(record.ID, user, logPrefix + " edited");
             uow.Commit();
         }
@@ -138,7 +138,6 @@ namespace Machete.Service
             levent.Level = LogLevel.Info;
             levent.Message = msg;
             levent.Properties["RecordID"] = ID; //magic string maps to NLog config
-            levent.Properties["username"] = user;
             nlog.Log(levent);
         }
         public IRepository<T> GetRepo()

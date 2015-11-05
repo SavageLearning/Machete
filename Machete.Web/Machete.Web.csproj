@@ -8,7 +8,7 @@
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{D2C4C806-4D23-4E62-B96D-23BDAB953C73}</ProjectGuid>
-    <ProjectTypeGuids>{E3E379DF-F4C6-4180-9B81-6769533ABE47};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Machete.Web</RootNamespace>
@@ -53,6 +53,12 @@
     <Reference Include="NLog.Extended">
       <HintPath>..\packages\NLog.Extended.2.1.0.1\lib\net45-full\NLog.Extended.dll</HintPath>
     </Reference>
+    <Reference Include="PayPalCoreSDK">
+      <HintPath>..\packages\PayPalCoreSDK.1.6.2\lib\net45\PayPalCoreSDK.dll</HintPath>
+    </Reference>
+    <Reference Include="PayPalMerchantSDK">
+      <HintPath>..\packages\PayPalMerchantSDK.2.15.117\lib\net20\PayPalMerchantSDK.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -64,30 +70,30 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.0.0\lib\net45\System.Web.Helpers.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Mvc, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.0.0\lib\net45\System.Web.Mvc.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Optimization">
       <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.2\lib\net40\System.Web.Optimization.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.Razor.3.0.0\lib\net45\System.Web.Razor.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.0.0\lib\net45\System.Web.WebPages.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.0.0\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.0.0\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
     <Reference Include="WebActivatorEx">
       <HintPath>..\packages\WebActivatorEx.2.0.4\lib\net40\WebActivatorEx.dll</HintPath>
@@ -207,6 +213,8 @@
     <Compile Include="Controllers\EmployerController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\EventController.cs" />
+    <Compile Include="Controllers\HirerAccountController.cs" />
+    <Compile Include="Controllers\HirerWorkOrderController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImageController.cs" />
     <Compile Include="Controllers\OldAccountController.cs" />
@@ -229,6 +237,7 @@
     <Compile Include="Helpers\MacheteController.cs" />
     <Compile Include="Helpers\MacheteMapper.cs" />
     <Compile Include="Helpers\mUIExtensions.cs" />
+    <Compile Include="Helpers\PayPal\PaypalExpressCheckout.cs" />
     <Compile Include="Helpers\workerRequestBinder.cs" />
     <Compile Include="IoC\CustomControllerActivator.cs" />
     <Compile Include="IoC\UnityDependencyResolver.cs" />
@@ -354,6 +363,7 @@
     <Compile Include="ViewModel\PeopleIndex.cs" />
     <Compile Include="ViewModel\WorkAssignmentIndex.cs" />
     <Compile Include="ViewModel\WorkOrderGroupPrintView.cs" />
+    <Compile Include="Views\HirerAccount.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\back_disabled.jpg" />
@@ -553,6 +563,7 @@
     <EmbeddedResource Include="Resources\Employers.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Employers.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Events.es.resx" />
     <EmbeddedResource Include="Resources\Events.resx">
@@ -566,6 +577,7 @@
     <EmbeddedResource Include="Resources\Persons.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Persons.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Reports.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -899,9 +911,12 @@
   <ItemGroup>
     <Content Include="Content\documentation\MacheteUserManual-Current.pdf" />
     <Content Include="Content\documentation\MacheteUserManual-html-Current.zip" />
+    <None Include="Properties\PublishProfiles\Alabama.pubxml" />
     <None Include="Properties\PublishProfiles\CasaLatina.pubxml" />
+    <None Include="Properties\PublishProfiles\Cel.pubxml" />
     <None Include="Properties\PublishProfiles\CentroHumanitario.pubxml" />
     <None Include="Properties\PublishProfiles\Concord.pubxml" />
+    <None Include="Properties\PublishProfiles\Congreso.pubxml" />
     <None Include="Properties\PublishProfiles\DonBosco.pubxml" />
     <None Include="Properties\PublishProfiles\ElCentro.pubxml" />
     <None Include="Properties\PublishProfiles\Graton.pubxml" />
@@ -928,9 +943,30 @@
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\_RemoveAccountPartial.cshtml" />
     <Content Include="Views\Account\_SetPasswordPartial.cshtml" />
-    <None Include="Properties\PublishProfiles\WorkersJustice.pubxml" />
+    <None Include="Properties\PublishProfiles\WindofSpirit.pubxml" />
+    <None Include="Properties\PublishProfiles\WorkersJustice.pubxml">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\PublishProfiles\Zip.pubxml" />
     <Content Include="Views\Shared\WorkerWAIndex.cshtml" />
+    <Content Include="Views\HirerAccount\Register.cshtml" />
+    <Content Include="Views\HirerAccount\Login.cshtml" />
+    <Content Include="Views\HirerAccount\_ExternalLoginsListPartial.cshtml" />
+    <Content Include="Views\HirerWorkOrder\Create.cshtml" />
+    <Content Include="Views\HirerWorkOrder\Index.cshtml" />
+    <Content Include="Views\Shared\HirerWorkOrderEdit.cshtml" />
+    <Content Include="Views\HirerAccount\Edit.cshtml" />
+    <Content Include="Views\HirerWorkOrder\View.cshtml" />
+    <Content Include="Views\HirerWorkOrder\IndexPrePaypal.cshtml" />
+    <Content Include="Views\HirerWorkOrder\IndexPostPaypal.cshtml" />
+    <Content Include="Views\HirerWorkOrder\IndexCancel.cshtml" />
+    <Content Include="Views\HirerWorkOrder\IndexComplete.cshtml" />
+    <Content Include="Views\HirerWorkOrder\IndexError.cshtml" />
+    <Content Include="Views\HirerWorkOrder\IndexCompleteEmpty.cshtml" />
+    <Content Include="Views\HirerWorkOrder\Profile.cshtml" />
+    <None Include="Web.Alabama.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
     <None Include="Web.CasaLatina.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -938,6 +974,10 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <None Include="Web.Concord.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Congreso.config">
+      <SubType>Designer</SubType>
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <None Include="Web.Debug.config">
@@ -1143,6 +1183,24 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Congreso|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Alabama|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WindofSpirit|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Cel|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />

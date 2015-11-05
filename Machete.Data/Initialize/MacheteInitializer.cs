@@ -48,7 +48,7 @@ namespace Machete.Data
         public MacheteConfiguration()
             : base()
         {
-            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationsEnabled = false;
             AutomaticMigrationDataLossAllowed = true;
         }
 
@@ -80,6 +80,7 @@ namespace Machete.Data
             ir = rm.Create(new IdentityRole("PhoneDesk"));
             ir = rm.Create(new IdentityRole("Teacher"));
             ir = rm.Create(new IdentityRole("User"));
+            ir = rm.Create(new IdentityRole("Hirer")); // This role is used exclusively for the online hiring interface
 
             var um = new UserManager<ApplicationUser>(
                 new UserStore<ApplicationUser>(context));
@@ -89,8 +90,8 @@ namespace Machete.Data
                 IsApproved = true,
                 Email = "here@there.org"
             };
-            
-            ir = um.Create(user, "ChangeMe");
+
+            ir = um.Create(user, "!justicia14");
             if (ir.Succeeded == false)
                 return ir.Succeeded;
             ir = um.AddToRole(user.Id, "Administrator"); //Default Administrator, edit to change

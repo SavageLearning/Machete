@@ -1,0 +1,371 @@
+﻿@model Machete.Domain.Employer
+@using Machete.Web.Helpers
+@using Machete.Web.Resources
+@using Machete.Domain.Resources
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+}
+
+
+@using (Html.BeginForm("HirerProfile", "HirerWorkOrder", FormMethod.Post, 
+                        new { @id = "profileForm" }))
+{
+        @Html.HiddenFor(model => model.isOnlineProfileComplete);
+        @Html.HiddenFor(model => model.onlineSigninID);
+        @Html.HiddenFor(model => model.onlineSource);
+        @Html.HiddenFor(model => model.active);
+        <!-- Form errors -->
+        <div id="profileDialog">
+            <p id="requiredFieldEmpEmail" style="color:red"></p>
+            <p id="requiredFieldEmpAddress1" style="color:red"></p>
+            <p id="requiredFieldEmpCity" style="color:red"></p>
+            <p id="requiredFieldEmpState" style="color:red"></p>
+            <p id="requiredFieldEmpZipcode" style="color:red"></p>
+            <p id="requiredFieldEmpName" style="color:red"></p>
+            <p id="requiredFieldEmpBizName" style="color:red"></p>
+            <p id="requiredFieldEmpPhone" style="color:red"></p>
+            <p id="invalidFormatEmpState" style="color:red"></p>
+            <p id="invalidFormatEmpZipcode" style="color:red"></p>
+        </div>
+
+        <div class="tb-table">
+            <h3>@Machete.Web.Resources.WorkOrders.hirerProfile</h3>
+            <div class="tb-row">
+                <div class="tb-label">
+                    @Html.Label(Machete.Web.Resources.WorkOrders.isBusiness)
+                </div>
+                <div class="tb-field business_@(Model.ID)">
+                    @Html.mUIDropDownYesNoFor(model => model.business, new { tabindex = "1", id = "business" }) 
+                </div>
+            </div>
+            <!-- Note: Field only appears in table when englishRequired = FALSE -->
+            <div class="tb-row employerNameRow" id="employerNameRow">
+                @Html.mUITableLabelAndTextBoxFor(model => model.name, new { tabindex = "2", id = "employerName" })
+            </div>
+            <!-- Note: Field only appears in table when englishRequired = TRUE -->
+            <div class="tb-row businessNameRow" id="businessNameRow">
+                <div class="tb-label">
+                    @Html.Label(Machete.Web.Resources.WorkOrders.businessName)
+                </div>
+                @Html.mUITableTextBoxFor(model => model.businessname, new { tabindex = "3", id = "businessName" })
+            </div>
+            <div class="tb-row">
+                @Html.mUITableLabelFor(model => model.address1)
+                @Html.mUITableTextBoxFor(model => model.address1, new { tabindex = "4", id = "employerAddress1" })
+            </div>
+            <div class="tb-row">
+                @Html.mUITableLabelAndTextBoxFor(model => model.address2, new { tabindex = "5", id = "employerAddress2" })
+            </div>
+            <div class="tb-row">
+                @Html.mUITableLabelAndTextBoxFor(model => model.city, new { tabindex = "6", id = "employerCity" })
+            </div>
+            <div class="tb-row">
+                @Html.mUITableLabelAndTextBoxFor(model => model.state, new { tabindex = "7", id = "employerState" })
+            </div>
+            <div class="tb-row">
+                @Html.mUITableLabelAndTextBoxFor(model => model.zipcode, new { tabindex = "8", id = "employerZipcode" })
+            </div>
+            <div class="tb-row">
+                @Html.mUITableLabelFor(model => model.phone)
+                @Html.mUITableTextBoxFor(model => model.phone, new { tabindex = "9", id = "employerPhone" })
+            </div>
+            <div class="tb-row">
+                @Html.mUITableLabelAndTextBoxFor(model => model.cellphone, new { tabindex = "10", id = "employerCellphone" })
+            </div>
+            <div class="tb-row">
+                @Html.mUITableLabelAndTextBoxFor(model => model.email, new { tabindex = "11", id = "email" })
+            </div>
+            <div class="tb-row">
+                <div class="tb-label">
+                    @Html.Label(Machete.Web.Resources.Employers.referredBy)
+                </div>
+                <div class="tb-field referredby_@(Model.ID)">
+                    @Html.mUIDropDownListFor(model => model.referredby,
+                                new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.emplrreference), "Value", "Text"),
+                                new { tabindex = "12", id = "referredby" })
+                </div>
+            </div>
+            <!-- Note: Field only appears in table when referredBy = "Other" -->
+            <!-- TODO: Need to make sure that grabbing the english text to do the string comparison  -->
+            <div class="tb-row referredbyOtherRow" id="referredbyOtherRow">
+                @Html.mUITableLabelAndTextBoxFor(model => model.referredbyOther, new { tabindex = "13", id = "referredbyOther" })
+            </div>
+            <div class="tb-row">
+                <!-- Display Previously hired information - worker center specific -->
+                <div class="tb-label">
+                    @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
+                        @Html.Label(System.Web.Configuration.WebConfigurationManager.AppSettings["PreviouslyHired_EN"])
+                    } else {
+                        @Html.Label(System.Web.Configuration.WebConfigurationManager.AppSettings["PreviouslyHired_ES"])
+                    }
+                </div>
+                @Html.mUIDropDownYesNoFor(model => model.returnCustomer, new { tabindex = "14", id = "returnCustomer" }) 
+            </div>
+            <div class="tb-row">
+                <!-- Display Receive Updates information - worker center specific -->
+                <div class="tb-label">
+                    @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
+                        @Html.Label(System.Web.Configuration.WebConfigurationManager.AppSettings["ReceiveUpdates_EN"])
+                    } else {
+                        @Html.Label(System.Web.Configuration.WebConfigurationManager.AppSettings["ReceiveUpdates_ES"])
+                    }
+                </div>
+                @Html.mUIDropDownYesNoFor(model => model.receiveUpdates, new { tabindex = "15", id = "receiveUpdates" }) 
+            </div>
+        </div>
+        <br />
+        <p></p>
+    @Html.ValidationSummary(true)
+    <input type="submit" id="SaveBtn" class="formButton saveBtn"
+        value="Submit" tabindex="16" />
+}
+    
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        // TODO: remove
+        //alert("Testing JQuery II");
+
+        $("#requiredFieldEmpEmail").hide();
+        $("#requiredFieldEmpAddress1").hide();
+        $("#requiredFieldEmpCity").hide();
+        $("#requiredFieldEmpState").hide();
+        $("#requiredFieldEmpZipcode").hide();
+        $("#requiredFieldEmpName").hide();
+        $("#requiredFieldEmpBizName").hide();
+        $("#requiredFieldEmpPhone").hide();
+        $("#invalidFormatEmpState").hide();
+        $("#invalidFormatEmpZipcode").hide();
+
+        var woCreateForm = $('#profileForm');
+        $('.formButton').button();
+
+        // Add validation to dynamic content
+        $.validator.unobtrusive.parseDynamicContent('#profileForm');
+
+        // ReferredBy Other toggle
+        $('#referredby').mUI('selectToggleOnValue', {
+            target: $('#referredbyOtherRow'),
+            showVal: "Other"
+        });
+
+        // Business name toggle - ON
+        $('#business').mUI('selectToggleOnValue', {
+            target: $('#businessNameRow'),
+            showVal: "@(Shared.yes)"
+        });
+
+        // Employer name toggle - OFF
+        $('#business').mUI('selectToggleOnValue', {
+            target: $('#employerNameRow'),
+            showVal: "@(Shared.no)"
+        });
+
+        function enableEmpButton() {
+            console.log("Checking validity");
+
+            if ($("#requiredFieldEmpAddress1").is(":visible") == true) {
+                console.log("ERROR: requiredFieldEmpAddress1");
+                // Disable button
+                $("#SaveBtn").hide();
+                //$("#SaveBtn").prop("disabled", true);
+            } else if ($("#requiredFieldEmpCity").is(":visible") == true) {
+                console.log("ERROR: requiredFieldEmpCity");
+                // Disable button
+                $("#SaveBtn").hide();
+            } else if ($("#requiredFieldEmpState").is(":visible") == true) {
+                console.log("ERROR: requiredFieldEmpState");
+                // Disable button
+                $("#SaveBtn").hide();
+            } else if ($("#requiredFieldEmpZipcode").is(":visible") == true) {
+                console.log("ERROR: requiredFieldEmpZipcode");
+                // Disable button
+                $("#SaveBtn").hide();
+            } else if ($("#requiredFieldEmpName").is(":visible") == true) {
+                console.log("ERROR: requiredFieldEmpName");
+                // Disable button
+                $("#SaveBtn").hide();
+            } else if ($("#requiredFieldEmpBizName").is(":visible") == true) {
+                console.log("ERROR: requiredFieldEmpBizName");
+                // Disable button
+                $("#SaveBtn").hide();
+            } else if ($("#requiredFieldEmpPhone").is(":visible") == true) {
+                console.log("ERROR: requiredFieldEmpPhone");
+                // Disable button
+                $("#SaveBtn").hide();
+            } else if ($("#invalidFormatEmpState").is(":visible") == true) {
+                console.log("ERROR: invalidFormatEmpState");
+                // Disable button
+                $("#SaveBtn").hide();
+            } else if ($("#requiredFieldEmpEmail").is(":visible") == true) {
+                console.log("ERROR: requiredFieldEmpEmail");
+                // Disable button
+                $("#SaveBtn").hide();
+            } else if ($("#invalidFormatEmpZipcode").is(":visible") == true) {
+                console.log("ERROR: invalidFormatEmpZipcode");
+                // Disable button
+                $("#SaveBtn").hide();
+            } else {
+                // Enable button
+                $("#SaveBtn").show();
+            }
+        };
+
+        $("#employerAddress1").focusout(function () {
+            // Check required field
+            if ($("#employerAddress1").val() == "") {
+                var field = $("#employerAddress1").parent().prev().text();
+                $("#requiredFieldEmpAddress1").text("REQUIRED FIELD: ").append(field).show();
+            } else {
+                $("#requiredFieldEmpAddress1").hide();
+            }
+
+            // Enable Submit button if valid
+            enableEmpButton();
+        });
+
+        $("#email").focusout(function () {
+            // Check required field
+            if ($("#email").val() == "") {
+                var field = $("#email").parent().prev().text();
+                $("#requiredFieldEmpEmail").text("REQUIRED FIELD: ").append(field).show();
+            } else {
+                $("#requiredFieldEmpEmail").hide();
+            }
+
+            // Enable Submit button if valid
+            enableEmpButton();
+        });
+
+        $("#employerCity").focusout(function () {
+            // Check required field
+            if ($("#employerCity").val() == "") {
+                var field = $("#employerCity").parent().prev().text();
+                $("#requiredFieldEmpCity").text("REQUIRED FIELD: ").append(field).show();
+            } else {
+                $("#requiredFieldEmpCity").hide();
+            }
+
+            // Enable Submit button if valid
+            enableEmpButton();
+        });
+
+        $("#employerZipcode").focusout(function () {
+            // Check required field
+            var field = $("#employerZipcode").parent().prev().text();
+            if ($("#employerZipcode").val() == "") {
+                $("#requiredFieldEmpZipcode").text("REQUIRED FIELD: ").append(field).show();
+            } else {
+                $("#requiredFieldEmpZipcode").hide();
+
+                // Validate that there are five numbers
+                var zip = $("#employerZipcode").val();
+                var isValid = zip.match(/\b\d{5}\b/g);
+                if (isValid) {
+                    // Hide error text
+                    $("#invalidFormatEmpZipcode").hide();
+                    console.log("Valid zipcode");
+                }
+                else {
+                    // Enable error text
+                    $("#invalidFormatEmpZipcode").text("INVALID FORMAT: ").append(field).append(" - Must have exactly five numbers").show();
+                    console.log("Invalid zipcode");
+                }
+            }
+
+            // Enable Submit button if valid
+            enableEmpButton();
+        });
+
+        $("#employerPhone").focusout(function () {
+            // Check required field
+            var field = $("#employerPhone").parent().prev().text();
+            if ($("#employerPhone").val() == "") {
+                $("#requiredFieldEmpPhone").text("REQUIRED FIELD: ").append(field).show();
+            } else {
+                $("#requiredFieldEmpPhone").hide();
+            }
+
+            // Enable Submit button if valid
+            enableEmpButton();
+        });
+
+        function validateName() {
+            if ($("#business").val() == "") {
+                console.log("Business type not selected");
+                var field = $("#business").parent().parent().prev().text();
+                $("#requiredFieldEmpName").text("REQUIRED FIELD: ").append(field).show();
+            } else if ($("#business").val() == "true") {
+                console.log("Name is business");
+                // Check required field
+                var field = $("#businessName").parent().prev().text();
+                if ($("#businessName").val() == "") {
+                    $("#requiredFieldEmpBizName").text("REQUIRED FIELD: ").append(field).show();
+                    $("#requiredFieldEmpName").hide();
+                } else {
+                    $("#requiredFieldEmpBizName").hide();
+                }
+            } else {
+                console.log("Name is personal");
+                // Check required field
+                var field = $("#employerName").parent().prev().text();
+                if ($("#employerName").val() == "") {
+                    $("#requiredFieldEmpName").text("REQUIRED FIELD: ").append(field).show();
+                    $("#requiredFieldEmpBizName").hide();
+                } else {
+                    $("#requiredFieldEmpName").hide();
+                }
+            }
+        }
+
+        $("#business").change(function () {
+
+            validateName();
+
+            // Enable Submit button if valid
+            enableEmpButton();
+        });
+
+        $("#employerName").focusout(function () {
+
+            validateName();
+
+            // Enable Submit button if valid
+            enableEmpButton();
+        });
+
+        $("#businessName").focusout(function () {
+
+            validateName();
+
+            // Enable Submit button if valid
+            enableEmpButton();
+        });
+
+        $("#employerState").focusout(function () {
+            // Check required field
+            var field = $("#employerState").parent().prev().text();
+            if ($("#employerState").val() == "") {
+                $("#requiredFieldEmpState").text("REQUIRED FIELD: ").append(field).show();
+            } else {
+                // Validate that there are two letters
+                var state = $("#employerState").val();
+                var isValid = state.match(/\b[A-Za-z]{2}\b/g);
+                if (isValid == null) {
+                    // Enable error text
+                    $("#invalidFormatEmpState").text("INVALID FORMAT: ").append(field).append(" - Must have exactly two letters").show();
+                    console.log("Invalid state");
+                    // Hide error text
+                } else {
+                    $("#invalidFormatEmpState").hide();
+                    $("#employerState").val($("#employerState").val().toUpperCase())
+                    console.log("Valid state");
+                }
+            }
+
+            // Enable Submit button if valid
+            enableEmpButton();
+        });
+
+    });
+</script>

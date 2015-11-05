@@ -8,24 +8,34 @@
     new { @id = "personCreateForm" }))
 {
     @Html.AntiForgeryToken()
-    <input type="submit" id="@(idPrefix)SaveBtn" class="formButton saveBtn" 
+    <input type="button" onclick="FindPersonDuplicate()" id="@(idPrefix)SaveBtn" class="formButton saveBtn" 
             value="@Persons.createsubmit" tabindex="9"/>
+    <input type="button" onclick="setFormData(true)" id="@(idPrefix)ClearBtn" class="formButton saveBtn" 
+            value="@Persons.createClear" tabindex="9"/>
     @Html.ValidationSummary(true)
     @Html.EditorForModel()
 }
+
+<div id="messageDialog" title="@(Machete.Web.Resources.Shared.DuplicatePersonsTitle)">
+</div>
+
+
 <script type="text/javascript">
     $(document).ready(function () {
+        //setFormData is false, then the fields are kept (not cleared) on the Create New Person form
+        setFormData(false);
         var personCreateForm = $('#personCreateForm');
         $('.formButton').button();
         $.validator.unobtrusive.parseDynamicContent(personCreateForm);
+
         $('#firstname1').focus();
-        //
-        //
+
         personCreateForm.mUI('tabFormSubmit', {
             recType: "@(recType)", //for add_rectab
             create: true,
             formLevel: 1
         });
+  
         //
         // machete UI detect changes on forms in tabs   
         personCreateForm.mUI('formDetectChanges', {
@@ -35,4 +45,115 @@
             changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
         });
     });
+
+    // function to restore typed-not saved fields on Create New Person form when tabbing back from List of Persons
+    function setFormData(clearForm) {
+
+        var form = $('#personCreateForm');
+        var fieldChanged = false;
+        var personFormContent = JSON.parse(localStorage.getItem("personCreateForm"));
+
+        $.each(personFormContent, function (i, field) {
+            if (field.name == "active") {
+                return;
+            }           
+            var fieldObj = $("#person0-" + field.name);
+            if (fieldObj != null && fieldObj.length > 0) {
+                fieldObj.val(clearForm ? "" : field.value);
+                if (fieldObj.val() != "") {
+                    fieldChanged = true;
+                }
+            }
+        });
+
+        if (fieldChanged) {
+            form.find('.saveBtn').addClass('highlightSave');
+        }
+        else {
+            form.find('.saveBtn').removeClass('highlightSave');
+        }
+
+    }
+
+    
+    var messageDialog = $("#messageDialog").dialog({
+        autoOpen: false,
+        height: 400,
+        width: 400,
+        modal: true,
+        closeOnEscape: false,
+        buttons: {
+            "Cancel": function () { $(this).dialog("close"); },
+            "Save": function () { $(this).dialog("close"); savePerson(); }
+        }
+    });
+
+
+    function FindPersonDuplicate() {
+        var form = $('#personCreateForm');
+        if (form.valid()) {
+            $.ajax({
+                url: "/Person/GetDuplicates",
+                data: {
+                    firstname: $('#person0-firstname1')[0].value,
+                    lastname: $('#person0-lastname1')[0].value,
+                    phone: $('#person0-phone')[0].value
+                },
+                success: onSuccessFindPersonDuplicate,
+                dataType: "json"
+            });
+        }
+        else {
+            form.submit();
+        }
+    }
+
+    function CreateHtmlText(duplicates) {
+        var dialogHtmlText = '<p>@(Machete.Web.Resources.Shared.DuplicatePersonsMessage)</p>'
+            +  '<table class="duplicatePersons" style="width:100%" border="1" cellpadding="2">'
+            + '<tr>'
+            + '<th>@(Machete.Web.Resources.Persons.firstname)</th>'
+            + '<th>@(Machete.Web.Resources.Persons.lastname)</th>'
+            + '<th>@(Machete.Web.Resources.Persons.phone)</th>'
+            +'</tr>';
+        for (var i = 0; i < duplicates.length; i++) {
+            if (duplicates[i].Phone != null) {
+            dialogHtmlText += '<tr>' 
+                + '<td>' + duplicates[i]["First Name"] + '</td>'
+                + '<td>'+ duplicates[i]["Last Name"] + '</td>'
+                + '<td>' + duplicates[i]["Phone"] + '</td>'
+                + '</tr>';
+            } else {
+                dialogHtmlText += '<tr>'
+               + '<td>' + duplicates[i]["First Name"] + '</td>'
+               + '<td>' + duplicates[i]["Last Name"] + '</td>'
+               + '<td>   N/A    </td> </tr>';
+            }
+        }
+
+        dialogHtmlText += '</table> <p></p> <p></p>@(Machete.Web.Resources.Shared.SaveMessageDuplicatePersons)</p>';
+        
+        return dialogHtmlText;
+    }
+
+    function onSuccessFindPersonDuplicate(result) {
+        if (result.duplicates.length > 0) {
+
+            messageDialog.dialog("open");
+            messageDialog.html(CreateHtmlText(result.duplicates));
+        }
+        else {
+            savePerson();
+
+        }
+    }
+
+    function savePerson() {
+        var form = $('#personCreateForm');
+        form.submit();
+        if (form.valid()) {
+            setFormData(true);
+        }
+    }
+
 </script>

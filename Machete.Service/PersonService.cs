@@ -54,17 +54,37 @@ namespace Machete.Service
 
         public dataTableResult<Person> GetIndexView(viewOptions o)
         {
-            var result = new dataTableResult<Person>();
+            dataTableResult<Person> result = new dataTableResult<Person>();
             //Get all the records
             IQueryable<Person> q = repo.GetAllQ();
             result.totalCount = q.Count();
-            //
+
             //Search based on search-bar string 
-            if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
-            if (o.showWorkers == true) IndexViewBase.getWorkers(o, ref q);
-            if (o.showNotWorkers == true) IndexViewBase.getNotWorkers(o, ref q);
-            if (o.showExpiredWorkers == true) IndexViewBase.getExpiredWorkers(o, lcache.getByKeys(LCategory.memberstatus, LMemberStatus.Expired), ref q);
-            if (o.showSExWorkers == true) IndexViewBase.getSExWorkers(o, lcache.getByKeys(LCategory.memberstatus, LMemberStatus.Sanctioned), lcache.getByKeys(LCategory.memberstatus, LMemberStatus.Expelled), ref q);
+            if (!string.IsNullOrEmpty(o.sSearch))
+            {
+                IndexViewBase.search(o, ref q);
+            }
+
+            if (o.showWorkers == true)
+            {
+                IndexViewBase.getWorkers(o, ref q);
+            }
+
+            if (o.showNotWorkers == true)
+            {
+                IndexViewBase.getNotWorkers(o, ref q);
+            }
+
+            if (o.showExpiredWorkers == true)
+            {
+                IndexViewBase.getExpiredWorkers(o, lcache.getByKeys(LCategory.memberstatus, LMemberStatus.Expired), ref q);
+            }
+
+            if (o.showSExWorkers == true)
+            {
+                IndexViewBase.getSExWorkers(o, lcache.getByKeys(LCategory.memberstatus, LMemberStatus.Sanctioned), lcache.getByKeys(LCategory.memberstatus, LMemberStatus.Expelled), ref q);
+            }
+
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
             result.filteredCount = q.Count();
             result.query = q;//.Skip<Person>(o.displayStart).Take(o.displayLength);

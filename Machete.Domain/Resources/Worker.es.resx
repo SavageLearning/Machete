@@ -187,7 +187,7 @@
     <value>Vive con niños</value>
   </data>
   <data name="maritalstatus" xml:space="preserve">
-    <value>Estado civil</value>
+    <value>EE.UU. Estado civil</value>
   </data>
   <data name="memberexpirationdate" xml:space="preserve">
     <value>Fecha de vencimiento</value>
@@ -196,13 +196,13 @@
     <value>Barrio</value>
   </data>
   <data name="numofchildren" xml:space="preserve">
-    <value>Número de niños</value>
+    <value>Número de niños in USA</value>
   </data>
   <data name="numofchildrenRxError" xml:space="preserve">
     <value>Los niños deben estar entre 0 y 20</value>
   </data>
   <data name="raceID" xml:space="preserve">
-    <value>Raza</value>
+    <value>Raza / Ethnicity</value>
   </data>
   <data name="raceother" xml:space="preserve">
     <value>Otra raza</value>
@@ -245,5 +245,68 @@
   </data>
   <data name="homeless" xml:space="preserve">
     <value>Sin hogar</value>
+  </data>
+  <data name="workerRating" xml:space="preserve">
+    <value>Worker Rating</value>
+  </data>
+  <data name="workerRatingComments" xml:space="preserve">
+    <value>Worker Rating Comments</value>
+  </data>
+  <data name="americanBornChildren" xml:space="preserve">
+    <value>American Born Children</value>
+  </data>
+  <data name="educationLevel" xml:space="preserve">
+    <value>Education Level</value>
+  </data>
+  <data name="farmLaborCharacteristics" xml:space="preserve">
+    <value>Farm Labor Characteristics</value>
+  </data>
+  <data name="healthInsurance" xml:space="preserve">
+    <value>Health Insurance?</value>
+  </data>
+  <data name="healthInsuranceDate" xml:space="preserve">
+    <value>Health Insurance Expiration</value>
+  </data>
+  <data name="housingType" xml:space="preserve">
+    <value>Housing Type</value>
+  </data>
+  <data name="incomeSourceID" xml:space="preserve">
+    <value>Income Source</value>
+  </data>
+  <data name="introToCenter" xml:space="preserve">
+    <value>Intro To Center</value>
+  </data>
+  <data name="lastPaymentAmount" xml:space="preserve">
+    <value>Last Payment Amount</value>
+  </data>
+  <data name="lastPaymentDate" xml:space="preserve">
+    <value>Last Payment Date</value>
+  </data>
+  <data name="lgbtq" xml:space="preserve">
+    <value>LGBTQ?</value>
+  </data>
+  <data name="liveWithDescription" xml:space="preserve">
+    <value>Lives With Description</value>
+  </data>
+  <data name="liveWithSpouse" xml:space="preserve">
+    <value>Lives With Spouse</value>
+  </data>
+  <data name="numChildrenUnder18" xml:space="preserve">
+    <value>Number of Children Under 18</value>
+  </data>
+  <data name="ownTools" xml:space="preserve">
+    <value>Own Tools?</value>
+  </data>
+  <data name="usVeteran" xml:space="preserve">
+    <value>US Veteran</value>
+  </data>
+  <data name="vehicleTypeID" xml:space="preserve">
+    <value>Vehicle Type</value>
+  </data>
+  <data name="wageTheftRecoveryAmount" xml:space="preserve">
+    <value>Wage Theft Recovery Amount</value>
+  </data>
+  <data name="wageTheftVictim" xml:space="preserve">
+    <value>Wage Theft Victim</value>
   </data>
 </root>

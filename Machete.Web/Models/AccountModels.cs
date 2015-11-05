@@ -23,7 +23,6 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
@@ -38,78 +37,105 @@ namespace Machete.Web.Models
 
     #region Models
 
+    /* Note: only used by OldAccountController
     public class ChangePasswordModel
     {
-        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
         [DataType(DataType.Password)]
-        [LocalizedDisplayName("PasswordCurrent", NameResourceType = typeof(ValidationStrings))]
+        [LocalizedDisplayName("PasswordCurrent", NameResourceType = typeof(Resources.ValidationStrings))]
         public string OldPassword { get; set; }
 
-        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
-        [ValidatePasswordLength]
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
+        [StringLength(100, ErrorMessageResourceName = "stringLengthMax", ErrorMessageResourceType = typeof(Resources.ValidationStrings))] // 100 char max
+        [RegularExpression(@"^.{6,}$", ErrorMessageResourceName = "passwordLengthMin", ErrorMessageResourceType = typeof(Resources.ValidationStrings))] // 6 char min
+        //[ValidatePasswordLength]
         [DataType(DataType.Password)]
-        [LocalizedDisplayName("PasswordNew", NameResourceType = typeof(ValidationStrings))]
+        [LocalizedDisplayName("PasswordNew", NameResourceType = typeof(Resources.ValidationStrings))]
         public string NewPassword { get; set; }
 
         [DataType(DataType.Password)]
-        [LocalizedDisplayName("PasswordConfirm", NameResourceType = typeof(ValidationStrings))]
-        [System.ComponentModel.DataAnnotations.Compare("NewPassword", ErrorMessageResourceName = "PasswordCompare", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [LocalizedDisplayName("PasswordConfirm", NameResourceType = typeof(Resources.ValidationStrings))]
+        [System.ComponentModel.DataAnnotations.Compare("NewPassword", ErrorMessageResourceName = "PasswordCompare", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
         public string ConfirmPassword { get; set; }
     }
+    */
 
+    /* Note: only used by OldAccountController
     public class AdminChangePasswordModel
     {
         
         public string UserName { get; set; }
+
         [Required]
         public Guid id { get; set; }
-        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
-        [ValidatePasswordLength]
+
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
+        [StringLength(100, ErrorMessageResourceName = "stringLengthMax", ErrorMessageResourceType = typeof(Resources.ValidationStrings))] // 100 char max
+        [RegularExpression(@"^.{6,}$", ErrorMessageResourceName = "passwordLengthMin", ErrorMessageResourceType = typeof(Resources.ValidationStrings))] // 6 char min
+        //[ValidatePasswordLength]
         [DataType(DataType.Password)]
-        [LocalizedDisplayName("PasswordNew", NameResourceType = typeof(ValidationStrings))]
+        [LocalizedDisplayName("PasswordNew", NameResourceType = typeof(Resources.ValidationStrings))]
         public string NewPassword { get; set; }
         
         [DataType(DataType.Password)]
-        [LocalizedDisplayName("PasswordConfirm", NameResourceType = typeof(ValidationStrings))]
-        [System.ComponentModel.DataAnnotations.Compare("NewPassword", ErrorMessageResourceName = "PasswordCompare", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [LocalizedDisplayName("PasswordConfirm", NameResourceType = typeof(Resources.ValidationStrings))]
+        [System.ComponentModel.DataAnnotations.Compare("NewPassword", ErrorMessageResourceName = "PasswordCompare", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
         public string ConfirmPassword { get; set; }
     }
+    */
 
+    /* Note: only used by OldAccountController
     public class MembersModel
     {
         //public int personID { get; set; }
-        [StringLength(30)]
-        
-        public string UserName { get; set;  }
-        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+
+        [LocalizedDisplayName("username", NameResourceType = typeof(Resources.ValidationStrings))]
+        public string UserName { get; set; }
+
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
+        [LocalizedDisplayName("firstname", NameResourceType = typeof(Resources.ValidationStrings))]
         public string FirstName { get; set; }
-        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
+        [LocalizedDisplayName("lastname", NameResourceType = typeof(Resources.ValidationStrings))]
         public string LastName { get; set; }
-        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
-        [ValidatePasswordLength]
+
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
+        [StringLength(100, ErrorMessageResourceName = "stringLengthMax", ErrorMessageResourceType = typeof(Resources.ValidationStrings))] // 100 char max
+        [RegularExpression(@"^.{6,}$", ErrorMessageResourceName = "passwordLengthMin", ErrorMessageResourceType = typeof(Resources.ValidationStrings))] // 6 char min
+        //[ValidatePasswordLength]
         [DataType(DataType.Password)]
-        [LocalizedDisplayName("PasswordNew", NameResourceType = typeof(ValidationStrings))]
+        [LocalizedDisplayName("PasswordNew", NameResourceType = typeof(Resources.ValidationStrings))]
         public string Password { get; set; }
+
         [DataType(DataType.Password)]
-        [LocalizedDisplayName("PasswordConfirm", NameResourceType = typeof(ValidationStrings))]
-        [System.ComponentModel.DataAnnotations.Compare("NewPassword", ErrorMessageResourceName = "PasswordCompare", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [LocalizedDisplayName("PasswordConfirm", NameResourceType = typeof(Resources.ValidationStrings))]
+        [System.ComponentModel.DataAnnotations.Compare("NewPassword", ErrorMessageResourceName = "PasswordCompare", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
         public string ConfirmPassword { get; set; }
-        [StringLength(40)]
-        [DataType(DataType.EmailAddress)]
-        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
+        [DataType(DataType.EmailAddress,
+                ErrorMessageResourceName = "emailValidation", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
+        [LocalizedDisplayName("EmailAddress", NameResourceType = typeof(Resources.ValidationStrings))]
         public string Email { get; set; }
-        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
         public bool IsApproved { get; set; }
+
         public bool IsLockedOut { get; set; }
-        //[Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+
+        //[Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
         public string question { get; set; }
-        //[Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+
+        //[Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
         public string answer { get; set; }
+
         //public bool IsOnline { get; set; }
         //public DateTime CreationDate { get; set; }
         //public DateTime LastActivityDate { get; set; }
         //public DateTime LastLoginDate { get; set; }
         //public Guid ProviderUserKey { get; set; }
+
         public MembershipUser member { get; set; }
   
         public MembersModel()
@@ -120,60 +146,74 @@ namespace Machete.Web.Models
             this.member = user; 
         }
     }
-    
+    */
+
+    /* Note: only used by OldAccountController
     public class LogOnModel
     {
-        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
+        [LocalizedDisplayName("username", NameResourceType = typeof(Resources.ValidationStrings))]
+        public string UserName { get; set; }
+
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
+        [StringLength(100, ErrorMessageResourceName = "stringLengthMax", ErrorMessageResourceType = typeof(Resources.ValidationStrings))] // 100 char max
+        [RegularExpression(@"^.{6,}$", ErrorMessageResourceName = "passwordLengthMin", ErrorMessageResourceType = typeof(Resources.ValidationStrings))] // 6 char min
+        [DataType(DataType.Password)]
+        [LocalizedDisplayName("password", NameResourceType = typeof(Resources.ValidationStrings))]
+        public string Password { get; set; }
+
+        [LocalizedDisplayName("rememberme", NameResourceType = typeof(Resources.ValidationStrings))]
+        public bool RememberMe { get; set; }
+    }
+    */
+
+    /* Note: only used by OldAccountController
+    public class RegisterModel
+    {
+        //[Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
         [LocalizedDisplayName("username", NameResourceType = typeof(ValidationStrings))]
         public string UserName { get; set; }
 
-        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
-        [DataType(DataType.Password)]
-        [LocalizedDisplayName("password", NameResourceType = typeof(ValidationStrings))]
-        public string Password { get; set; }
-
-        [LocalizedDisplayName("rememberme", NameResourceType = typeof(ValidationStrings))]
-        public bool RememberMe { get; set; }
-    }
-
-    //[PropertiesMustMatch("Password", "ConfirmPassword", ErrorMessageResourceName = "PasswordMustMatch", ErrorMessageResourceType = typeof(ValidationStrings))]
-    public class RegisterModel
-    {
-        //[Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
-        //[LocalizedDisplayName("username", NameResourceType = typeof(ValidationStrings))]
-        public string UserName { get; set; }
-        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
-        [LocalizedDisplayName("firstname", NameResourceType = typeof(ValidationStrings))]
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
+        [LocalizedDisplayName("firstname", NameResourceType = typeof(Resources.ValidationStrings))]
         public string FirstName { get; set; }
-        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
-        [LocalizedDisplayName("lastname", NameResourceType = typeof(ValidationStrings))]
+
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
+        [LocalizedDisplayName("lastname", NameResourceType = typeof(Resources.ValidationStrings))]
         public string LastName { get; set; }
 
-        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
-        [DataType(DataType.EmailAddress)]
-        [LocalizedDisplayName("EmailAddress", NameResourceType = typeof(ValidationStrings))]
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
+        [DataType(DataType.EmailAddress,
+                ErrorMessageResourceName = "emailValidation", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
+        [LocalizedDisplayName("EmailAddress", NameResourceType = typeof(Resources.ValidationStrings))]
         public string Email { get; set; }
 
-        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
-        [ValidatePasswordLength(ErrorMessageResourceName = "PasswordMinLength", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
+        //[ValidatePasswordLength(ErrorMessageResourceName = "PasswordLengthMin", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
         [DataType(DataType.Password)]
-        [LocalizedDisplayName("password", NameResourceType = typeof(ValidationStrings))]
+        [StringLength(100, ErrorMessageResourceName = "stringLengthMax", ErrorMessageResourceType = typeof(Resources.ValidationStrings))] // 100 char max
+        [RegularExpression(@"^.{6,}$", ErrorMessageResourceName = "passwordLengthMin", ErrorMessageResourceType = typeof(Resources.ValidationStrings))] // 6 char min
+        [LocalizedDisplayName("password", NameResourceType = typeof(Resources.ValidationStrings))]
         public string Password { get; set; }
 
-        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
         [DataType(DataType.Password)]
-        [LocalizedDisplayName("PasswordConfirm", NameResourceType = typeof(ValidationStrings))]
-        [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessageResourceName = "PasswordsMustMatch", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [LocalizedDisplayName("PasswordConfirm", NameResourceType = typeof(Resources.ValidationStrings))]
+        [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessageResourceName = "PasswordCompare", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
         public string ConfirmPassword { get; set; }
 
+        // TODO: Remove - not used
         [StringLength(256)]
-        //[Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        //[Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
         public string question { get; set; }
-        
+
+        // TODO: Remove - not used
         [StringLength(128)]
-        //[Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        //[Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
         public string answer { get; set; }
     }
+    */
+
     #endregion
 
     #region Services
@@ -182,6 +222,7 @@ namespace Machete.Web.Models
     // how to create an abstract wrapper around such a type in order to make the AccountController
     // code unit testable.
 
+    /* Note: only used by OldAccountController
     public interface IMembershipService
     {
         int MinPasswordLength { get; }
@@ -190,7 +231,9 @@ namespace Machete.Web.Models
         MembershipCreateStatus CreateUser(string userName, string password, string email, string question, string answer);
         bool ChangePassword(string userName, string oldPassword, string newPassword);
     }
+    */
 
+    /* Note: only used by OldAccountController
     public class AccountMembershipService : IMembershipService
     {
         private readonly MembershipProvider _provider;
@@ -242,7 +285,7 @@ namespace Machete.Web.Models
             // than return false in certain failure scenarios.
             try
             {
-                MembershipUser currentUser = _provider.GetUser(userName, true /* userIsOnline */);
+                MembershipUser currentUser = _provider.GetUser(userName, true); // userIsOnline
                 return currentUser.ChangePassword(oldPassword, newPassword);
             }
             catch (ArgumentException)
@@ -255,7 +298,9 @@ namespace Machete.Web.Models
             }
         }
     }
+    */
 
+    /* Note: only used by OldAccountController
     public interface IFormsAuthenticationService
     {
         void SignIn(string userName, bool createPersistentCookie);
@@ -276,9 +321,11 @@ namespace Machete.Web.Models
             FormsAuthentication.SignOut();
         }
     }
+    */
     #endregion
 
     #region Validation
+    /* Note: only used by OldAccountController
     public static class AccountValidation
     {
         public static string ErrorCodeToString(MembershipCreateStatus createStatus)
@@ -319,7 +366,9 @@ namespace Machete.Web.Models
             }
         }
     }
+    */
 
+    /* Note: only used by OldAccountController
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
     public sealed class ValidatePasswordLengthAttribute : ValidationAttribute, IClientValidatable
     {
@@ -350,6 +399,7 @@ namespace Machete.Web.Models
             };
         }
     }
+    */
     #endregion
 
 }

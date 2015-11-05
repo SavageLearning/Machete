@@ -220,7 +220,7 @@
     <value>Almuerzo?</value>
   </data>
   <data name="dateTimeofWork" xml:space="preserve">
-    <value>Fecha y hora se necesitado</value>
+    <value>Hora requerida</value>
   </data>
   <data name="dateTimeofWorkrequired" xml:space="preserve">
     <value>La fecha y la hora es obligatorio</value>
@@ -254,5 +254,38 @@
   </data>
   <data name="onlineSource" xml:space="preserve">
     <value>Creado por formulario web pedido?</value>
+  </data>
+  <data name="transportTransactID" xml:space="preserve">
+    <value>Payment #</value>
+  </data>
+  <data name="transportTransactType" xml:space="preserve">
+    <value>Payment Type</value>
+  </data>
+  <data name="workerCount" xml:space="preserve">
+    <value>Worker Count</value>
+  </data>
+  <data name="addressWorkSite" xml:space="preserve">
+    <value>Address (Work Site)</value>
+  </data>
+  <data name="phoneWorkSite" xml:space="preserve">
+    <value>Phone (Work Site)</value>
+  </data>
+  <data name="disclosureAgreement" xml:space="preserve">
+    <value>Disclosure Agreement Accepted</value>
+  </data>
+  <data name="paypal" xml:space="preserve">
+    <value>PayPal</value>
+  </data>
+  <data name="paypalErrors" xml:space="preserve">
+    <value>PayPal Errors</value>
+  </data>
+  <data name="paypalFee" xml:space="preserve">
+    <value>PayPal Fee</value>
+  </data>
+  <data name="paypalPayerId" xml:space="preserve">
+    <value>PayPal PayerID</value>
+  </data>
+  <data name="paypalToken" xml:space="preserve">
+    <value>PayPal Token</value>
   </data>
 </root>

@@ -1,108 +1,177 @@
 ﻿using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
+using Machete.Domain.Resources;
 using Machete.Web.Resources;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Entity;
 
 namespace Machete.Web.Models
 {
     public class UserSettingsViewModel
     {
-        public string ProviderUserKey { get; set; }
+        public string ProviderUserKey { get; set; } // Note: not in db - is this used?
+
+        [LocalizedDisplayName("username", NameResourceType = typeof(Resources.ValidationStrings))]
         public string UserName { get; set; }
+
+        [DataType(DataType.EmailAddress, ErrorMessageResourceName = "emailValidation", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
+        [LocalizedDisplayName("EmailAddress", NameResourceType = typeof(Resources.ValidationStrings))]
         public string Email { get; set; }
+
         public string IsApproved { get; set; }
+
         public string IsLockedOut { get; set; }
-        public string IsOnline { get; set; }
-        public DateTime CreationDate { get; set; }
+
+        public string IsOnline { get; set; } // Note: not in db - is this used?
+
+        public DateTime CreationDate { get; set; } // Note: not in db - is this used? Db has CreateDate
+
         public DateTime LastLoginDate { get; set; }
     }
 
     public class ExternalLoginConfirmationViewModel
     {
-        [Required]
-        [Display(Name = "First name")]
-        public string FirstName { get; set; }
-        
-        [Required]
-        [Display(Name = "Last name")]
-        public string LastName { get; set; }
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [LocalizedDisplayName("firstname", NameResourceType = typeof(Resources.ValidationStrings))]
+        public string FirstName { get; set; } // Note: not in db - how is this used?
+
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [LocalizedDisplayName("lastname", NameResourceType = typeof(Resources.ValidationStrings))]
+        public string LastName { get; set; } // Note: not in db - how is this used?
     }
 
     public class ManageUserViewModel
     {
-        [Required]
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         [DataType(DataType.Password)]
-        [Display(Name = "Current password")]
-        public string OldPassword { get; set; }
+        [LocalizedDisplayName("PasswordCurrent", NameResourceType = typeof(Resources.ValidationStrings))]
+        public string OldPassword { get; set; } // Note: not in db - how is this used?
 
-        [Required]
-        [StringLength(100, ErrorMessage =
-            "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [StringLength(100, ErrorMessageResourceName = "stringLengthMax", ErrorMessageResourceType = typeof(Resources.ValidationStrings))] // 100 char max
+        [RegularExpression(@"^.{6,}$", ErrorMessageResourceName = "passwordLengthMin", ErrorMessageResourceType = typeof(Resources.ValidationStrings))] // 6 char min
         [DataType(DataType.Password)]
-        [Display(Name = "New password")]
-        public string NewPassword { get; set; }
-
+        [LocalizedDisplayName("PasswordNew", NameResourceType = typeof(Resources.ValidationStrings))]
+        public string NewPassword { get; set; } // Note: not in db - how is this used?
+       
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm new password")]
-        [Compare("NewPassword", ErrorMessage =
-            "The new password and confirmation password do not match.")]
-        public string ConfirmPassword { get; set; }
+        [LocalizedDisplayName("PasswordConfirm", NameResourceType = typeof(Resources.ValidationStrings))]
+        [Compare("NewPassword", ErrorMessageResourceName = "PasswordCompare", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
+        public string ConfirmPassword { get; set; } // Note: not in db - how is this used?
 
-        public string Action { get; set; }
+        public string Action { get; set; } // Note: not in db - how is this used?
 
-        public string ReturnUrl { get; set; }
+        public string ReturnUrl { get; set; } // Note: not in db - how is this used?
     }
 
 
     public class LoginViewModel
     {
-        [Required]
-        [Display(Name = "User name")]
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [LocalizedDisplayName("username", NameResourceType = typeof(Resources.ValidationStrings))]
         public string UserName { get; set; }
 
-        [Required]
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
-        public string Password { get; set; }
+        [StringLength(100, ErrorMessageResourceName = "stringLengthMax", ErrorMessageResourceType = typeof(Resources.ValidationStrings))] // 100 char max
+        [RegularExpression(@"^.{6,}$", ErrorMessageResourceName = "passwordLengthMin", ErrorMessageResourceType = typeof(Resources.ValidationStrings))] // 6 char min
+        [LocalizedDisplayName("password", NameResourceType = typeof(Resources.ValidationStrings))]
+        public string Password { get; set; } // Note: not in db - how is this used?
 
-        [Display(Name = "Remember me?")]
-        public bool RememberMe { get; set; }
+        [LocalizedDisplayName("rememberme", NameResourceType = typeof(Resources.ValidationStrings))]
+        public bool RememberMe { get; set; } // Note: not in db - how is this used?
 
-        public string Action { get; set; }
-        public string ReturnUrl { get; set; }
+        public string Action { get; set; } // Note: not in db - how is this used?
+
+        public string ReturnUrl { get; set; } // Note: not in db - how is this used?
     }
 
 
+    public class HirerLoginViewModel
+    {
+        // Note: Hirer's username is their email address
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [DataType(DataType.EmailAddress, ErrorMessageResourceName = "emailValidation", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
+        [LocalizedDisplayName("EmailAddress", NameResourceType = typeof(Resources.ValidationStrings))]
+        public string UserName { get; set; }
+
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [DataType(DataType.Password)]
+        [LocalizedDisplayName("password", NameResourceType = typeof(Resources.ValidationStrings))]
+        [StringLength(100, ErrorMessageResourceName = "stringLengthMax", ErrorMessageResourceType = typeof(Resources.ValidationStrings))] // 100 char max
+        [RegularExpression(@"^.{6,}$", ErrorMessageResourceName = "passwordLengthMin", ErrorMessageResourceType = typeof(Resources.ValidationStrings))] // 6 char min
+        public string Password { get; set; } // Note: not in db - how is this used?
+
+        // TODO: investigate how these are used & whether they are needed
+        public string Action { get; set; } // Note: not in db - how is this used?
+
+        public string ReturnUrl { get; set; } // Note: not in db - how is this used?
+    }
+
+
+    // View Model used for Machete worker center members to sign up
     public class RegisterViewModel
     {
-        [Required]
-        [StringLength(100, ErrorMessage =
-            "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [StringLength(100, ErrorMessageResourceName = "stringLengthMax", ErrorMessageResourceType = typeof(Resources.ValidationStrings))] // 100 char max
+        [RegularExpression(@"^.{6,}$", ErrorMessageResourceName = "passwordLengthMin", ErrorMessageResourceType = typeof(Resources.ValidationStrings))] // 6 char min
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
-        public string Password { get; set; }
+        [LocalizedDisplayName("password", NameResourceType = typeof(Resources.ValidationStrings))]
+        public string Password { get; set; } // Note: not in db - how is this used?
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage =
-            "The password and confirmation password do not match.")]
-        public string ConfirmPassword { get; set; }
+        [LocalizedDisplayName("PasswordConfirm", NameResourceType = typeof(Resources.ValidationStrings))]
+        [Compare("Password", ErrorMessageResourceName = "PasswordCompare", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
+        public string ConfirmPassword { get; set; } // Note: not in db - how is this used?
 
-        // New Fields added to extend Application User class:
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [LocalizedDisplayName("firstname", NameResourceType = typeof(Resources.ValidationStrings))]
+        public string FirstName { get; set; } // Note: not in db - how is this used?
 
-        [Required]
-        [Display(Name = "First Name")]
-        public string FirstName { get; set; }
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [LocalizedDisplayName("lastname", NameResourceType = typeof(Resources.ValidationStrings))]
+        public string LastName { get; set; } // Note: not in db - how is this used?
 
-        [Required]
-        [Display(Name = "Last Name")]
-        public string LastName { get; set; }
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [DataType(DataType.EmailAddress, ErrorMessageResourceName = "emailValidation", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
+        [LocalizedDisplayName("EmailAddress", NameResourceType = typeof(Resources.ValidationStrings))]
+        public string Email { get; set; }
+        
+        // Return a pre-populated instance of ApplicationUser:
+        public ApplicationUser GetUser()
+        {
+            var user = new ApplicationUser()
+            {
+                UserName = this.FirstName.Trim() + "." + this.LastName.Trim(),
+                Email = this.Email.Trim(),
+            };
+           
+            return user;
+        }
+    }
 
-        [Required]
+    // View Model used for Hirers to sign up
+    public class HirerRegisterViewModel
+    {
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [StringLength(100, ErrorMessageResourceName = "stringLengthMax", ErrorMessageResourceType = typeof(Resources.ValidationStrings))] // 100 char max
+        [RegularExpression(@"^.{6,}$", ErrorMessageResourceName = "passwordLengthMin", ErrorMessageResourceType = typeof(Resources.ValidationStrings))] // 6 char min
+        [DataType(DataType.Password)]
+        [LocalizedDisplayName("password", NameResourceType = typeof(Resources.ValidationStrings))]
+        public string Password { get; set; } // Note: not in db - how is this used?
+
+        [DataType(DataType.Password)]
+        [LocalizedDisplayName("PasswordConfirm", NameResourceType = typeof(Resources.ValidationStrings))]
+        [Compare("Password", ErrorMessageResourceName = "PasswordCompare", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
+        public string ConfirmPassword { get; set; } // Note: not in db - how is this used?
+
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [DataType(DataType.EmailAddress, ErrorMessageResourceName = "emailValidation", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
+        [LocalizedDisplayName("EmailAddress", NameResourceType = typeof(Resources.ValidationStrings))]
         public string Email { get; set; }
 
         // Return a pre-populated instance of ApplicationUser:
@@ -110,14 +179,15 @@ namespace Machete.Web.Models
         {
             var user = new ApplicationUser()
             {
-                UserName = this.FirstName.Trim() + "." + this.LastName.Trim(),
+                UserName = this.Email,
                 Email = this.Email,
             };
+
             return user;
         }
     }
 
-
+    // TODO: need to understand this class better & need to restrict it to only non-employer users
     public class EditUserViewModel
     {
         public EditUserViewModel() { }
@@ -125,6 +195,7 @@ namespace Machete.Web.Models
         // Allow Initialization with an instance of ApplicationUser:
         public EditUserViewModel(ApplicationUser user)
         {
+            // TODO: add logic here to only retrieve first/last name if not hirer
             this.UserName = user.UserName;
             string[] firstLast = user.UserName.Split('.');
             if (firstLast.Length == 2)
@@ -140,53 +211,56 @@ namespace Machete.Web.Models
             this.Email = user.Email;
             this.IsApproved = user.IsApproved;
             this.IsLockedOut = user.IsLockedOut;
+            this.Id = user.Id;
         }
 
-        //[Required]
-        [Display(Name = "User Name")]
+        //[Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [LocalizedDisplayName("username", NameResourceType = typeof(Resources.ValidationStrings))]
         public string UserName { get; set; }
 
-        [Required]
-        [Display(Name = "First Name")]
-        public string FirstName { get; set; }
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [LocalizedDisplayName("firstname", NameResourceType = typeof(Resources.ValidationStrings))]
+        public string FirstName { get; set; } // Note: not in db - how is this used?
 
-        [Required]
-        [Display(Name = "Last Name")]
-        public string LastName { get; set; }
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [LocalizedDisplayName("lastname", NameResourceType = typeof(Resources.ValidationStrings))]
+        public string LastName { get; set; } // Note: not in db - how is this used?
 
-        [Required]
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
+        [DataType(DataType.EmailAddress, ErrorMessageResourceName = "emailValidation", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
+        [LocalizedDisplayName("EmailAddress", NameResourceType = typeof(Resources.ValidationStrings))]
         public string Email { get; set; }
 
         public bool IsApproved { get; set; }
 
         public bool IsLockedOut { get; set; }
 
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessageResourceName = "stringLengthMax", ErrorMessageResourceType = typeof(Resources.ValidationStrings))] // 100 char max
+        [RegularExpression(@"^.{6,}$", ErrorMessageResourceName = "passwordLengthMin", ErrorMessageResourceType = typeof(Resources.ValidationStrings))] // 6 char min
         [DataType(DataType.Password)]
-        [Display(Name = "New password")]
-        public string NewPassword { get; set; }
+        [LocalizedDisplayName("password", NameResourceType = typeof(Resources.ValidationStrings))]
+        public string NewPassword { get; set; } // Note: not in db - how is this used?
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm new password")]
-        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
-        public string ConfirmPassword { get; set; }
+        [LocalizedDisplayName("PasswordConfirm", NameResourceType = typeof(Resources.ValidationStrings))]
+        [Compare("NewPassword", ErrorMessageResourceName = "PasswordCompare", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
+        public string ConfirmPassword { get; set; } // Note: not in db - how is this used?
 
         public string Id { get; set; }
 
-        public string ErrorMessage { get; set; }
+        public string ErrorMessage { get; set; } // Note: not in db - how is this used?
     }
 
 
     public class SelectUserRolesViewModel
     {
-        IDatabaseFactory Db;
         public SelectUserRolesViewModel()
         {
             this.Roles = new List<SelectRoleEditorViewModel>();
         }
 
         // Enable initialization with an instance of ApplicationUser:
-        public SelectUserRolesViewModel(ApplicationUser user, IDatabaseFactory plop)
+        public SelectUserRolesViewModel(ApplicationUser user, IDatabaseFactory dbFactory)
             : this()
         {
             this.UserName = user.UserName;
@@ -201,10 +275,10 @@ namespace Machete.Web.Models
                 this.LastName = "";
             }
 
-            Db = plop;
+            this.UserId = user.Id;
 
             // Add all available roles to the list of EditorViewModels:
-            var allRoles = Db.Get().Roles;
+            IDbSet<IdentityRole> allRoles = dbFactory.Get().Roles;
             foreach (var role in allRoles)
             {
                 // An EditorViewModel will be used by Editor Template:
@@ -214,25 +288,32 @@ namespace Machete.Web.Models
 
             // Set the Selected property to true for those roles for 
             // which the current user is a member:
-            foreach (var userRole in user.Roles)
+            foreach (IdentityUserRole userRole in user.Roles)
             {
-                var checkUserRole =
+                SelectRoleEditorViewModel checkUserRole =
                     this.Roles.Find(r => r.RoleName == userRole.Role.Name);
                 checkUserRole.Selected = true;
             }
         }
 
+        [LocalizedDisplayName("username", NameResourceType = typeof(Resources.ValidationStrings))]
         public string UserName { get; set; }
+
+        [LocalizedDisplayName("firstname", NameResourceType = typeof(Resources.ValidationStrings))]
         public string FirstName { get; set; }
+
+        [LocalizedDisplayName("lastname", NameResourceType = typeof(Resources.ValidationStrings))]
         public string LastName { get; set; }
+
         public string UserId { get; set; }
+
         public List<SelectRoleEditorViewModel> Roles { get; set; }
     }
 
     // Used to display a single role with a checkbox, within a list structure:
     public class SelectRoleEditorViewModel
     {
-        public SelectRoleEditorViewModel() { }
+        public SelectRoleEditorViewModel() {}
         public SelectRoleEditorViewModel(IdentityRole role)
         {
             this.RoleName = role.Name;
@@ -240,7 +321,7 @@ namespace Machete.Web.Models
 
         public bool Selected { get; set; }
 
-        [Required]
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         public string RoleName { get; set; }
     }
 }

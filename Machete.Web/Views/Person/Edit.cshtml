@@ -8,10 +8,11 @@
 <div id="@(idPrefix)personPartsTabs">
     <ul>
         <li><a href="#personGeneralTabRef" id="personGeneralTab" class="GeneralTab">@Machete.Web.Resources.Persons.basicinfo</a></li>
-        @if (Model.Worker == null) {
-            <li><a href="/Worker/Create?ID=@(Model.ID)" id="workerCreateTab" class="CreateTab">@Machete.Web.Resources.Persons.createworker</a></li>        
+        @if (Model.Worker == null)
+        {
+            <li><a href="/Worker/Create?ID=@(Model.ID)" id="workerCreateTab" class="CreateTab">@Machete.Web.Resources.Persons.createworker</a></li>
         }
-        else
+        @if (Html.IsRoleAllowed("Worker.Edit.WorkerInfo.ShowTab") && Model.Worker != null)
         {
             <li><a href="/Worker/Edit/@(Model.ID)" id="workerEditTab">@Machete.Web.Resources.Persons.workerinfo</a></li>
         }
@@ -22,7 +23,8 @@
         }
         @if (Html.IsInRole(Html.Role_T()) && Model.Worker != null)
         {
-            <li><a href="#actJoinList" id="actJoinTab" class="ListTab">@Activities.actJoinTab</a></li>           
+            <li><a href="#actJoinList" id="actJoinTab" class="ListTab">@Activities.actJoinTab</a></li>
+            <li><a hidden href="/Worker/Edit/@(Model.ID)" id="workerEditTab">@Machete.Web.Resources.Persons.workerinfo</a></li>
         }
     </ul>
     <div id="personGeneralTabRef">
@@ -31,16 +33,16 @@
         {
 
             <input type="button" value="@Persons.viewlink" class="formButton" id="view-@Model.ID" />
-            <input type="submit" value="@Persons.editsubmit" class="formButton saveBtn"/>
+            <input type="button" onclick="FindPersonDuplicate()" value="@Persons.editsubmit" class="formButton saveBtn" />
             if (Html.IsInRole(Html.Role_AM()))
             {
-                <input id="delete-@Model.ID" type="button" value="@Persons.deletesubmit" 
-                        class="formButton deleteButton" />
+                <input id="delete-@Model.ID" type="button" value="@Persons.deletesubmit"
+                       class="formButton deleteButton" />
             }
             <br />
             @Html.ValidationSummary(true)
             @Html.EditorForModel()
-    
+
         }
         @if (Html.IsInRole(Html.Role_AM()))
         {
@@ -49,7 +51,7 @@
             {
                 @* TODO: create UI tests, remove generic "ID" label *@
                 @Html.HiddenFor(model => model.ID);
-                @Html.Hidden("personID", Model.ID);
+            @Html.Hidden("personID", Model.ID);
             }
         }
     </div>
@@ -60,8 +62,12 @@
     }
 </div>
 
+<div id="messageDialog" title="@(Machete.Web.Resources.Shared.DuplicatePersonsTitle)">
+</div>
+
 <script type="text/javascript">
     $(document).ready(function () {
+       // setFormData(false);
         var personEditForm = $('#Persontab-@Model.ID');
         var personPartTabs = $('#@(idPrefix)personPartsTabs');
         var personDeleteForm = $('#DeletePerson-@Model.ID');
@@ -102,5 +108,87 @@
             changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
             changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)"
         });
+
     });
+
+
+    var messageDialog = $("#messageDialog").dialog({
+        autoOpen: false,
+        height: 400,
+        width: 400,
+        modal: true,
+        closeOnEscape: false,
+        buttons: {
+            "Cancel": function () { $(this).dialog("close"); },
+            "Save": function () { $(this).dialog("close"); saveEditedPerson(); }
+        }
+    });
+
+    function FindPersonDuplicate() {
+        var form = $('#Persontab-@Model.ID');
+        if (form.valid()) {
+            $.ajax({
+                url: "/Person/GetDuplicates",
+                data: {
+                    firstname: $('#person'+@Model.ID+'-firstname1')[0].value,
+                    lastname: $('#person'+@Model.ID+'-lastname1')[0].value,
+                    phone: $('#person' +@Model.ID +'-phone')[0].value
+                },
+                success: onSuccessFindPersonDuplicate,
+                dataType: "json"
+            });
+        }
+        else {
+            form.submit();
+        }
+    }
+
+    function CreateHtmlText(duplicates) {
+        var dialogHtmlText = '<p>@(Machete.Web.Resources.Shared.DuplicatePersonsMessage)</p>'
+            + '<table class="duplicatePersons" style="width:100%" border="1" cellpadding="2">'
+            + '<tr>'
+            + '<th>@(Machete.Web.Resources.Persons.firstname)</th>'
+            + '<th>@(Machete.Web.Resources.Persons.lastname)</th>'
+            + '<th>@(Machete.Web.Resources.Persons.phone)</th>'
+            + '</tr>';
+
+        for (var i = 0; i < duplicates.length; i++) {
+            if (duplicates[i].ID == '@Model.ID') { continue; }
+            if (duplicates[i].Phone != null) {
+                dialogHtmlText += '<tr>'
+                    + '<td>' + duplicates[i]["First Name"] + '</td>'
+                    + '<td>' + duplicates[i]["Last Name"] + '</td>'
+                    + '<td>' + duplicates[i]["Phone"] + '</td> </tr>';
+            } else {
+                dialogHtmlText += '<tr>'
+                   + '<td>' + duplicates[i]["First Name"] + '</td>'
+                   + '<td>' + duplicates[i]["Last Name"] + '</td>'
+                   + '<td>   N/A    </td> </tr>';
+            }
+        }
+        dialogHtmlText += '</table> <p></p> <p></p>@(Machete.Web.Resources.Shared.SaveMessageDuplicatePersons)</p>';
+
+        return dialogHtmlText;
+    }
+
+    function onSuccessFindPersonDuplicate(result) {
+        if (result.duplicates.length > 1) {
+
+            messageDialog.dialog("open");
+            messageDialog.html(CreateHtmlText(result.duplicates));
+        }
+        else {
+            saveEditedPerson();
+
+        }
+    }
+
+    function saveEditedPerson() {
+        var form = $('#Persontab-@Model.ID');
+        if (form.valid()) {
+            form.submit();
+        }
+    }
+
+
 </script>

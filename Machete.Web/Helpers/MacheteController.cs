@@ -30,6 +30,7 @@ using NLog;
 using Machete.Web.Helpers;
 using Machete.Service;
 using Machete.Domain;
+using System.Text;
 
 namespace Machete.Web.Controllers
 {
@@ -56,8 +57,30 @@ namespace Machete.Web.Controllers
 
             exceptionMsg = RootException.Get(filterContext.Exception, this.ToString());
             modelerrors = string.Join("; ", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage));
-            levent.Level = LogLevel.Error; levent.Message = this.ToString() + "EXCEPTIONS:" + exceptionMsg + "MODELERR:" + modelerrors;
-            levent.Properties["RecordID"] = ModelState["ID"].Value.ConvertTo(typeof(int));
+            levent.Level = LogLevel.Error;
+
+            //
+            // Build errorMessage string with detail call-stacks
+            //
+
+            StringBuilder errorMessage = new StringBuilder(this.ToString());
+
+            errorMessage.Append(string.Format(", EXCEPTIONS: {0}", exceptionMsg));
+            errorMessage.Append(string.Format(", MODELERR: {0}", modelerrors));
+            errorMessage.Append(string.Format(", OUTER_EXCEPTION_STACKTRACE: {0}", filterContext.Exception.StackTrace));
+
+            if (filterContext.Exception.InnerException != null) {
+                errorMessage.Append(string.Format(", INNER_EXCEPTION_STACKTRACE: {0}", filterContext.Exception.InnerException.StackTrace));
+            }
+            
+            levent.Message = errorMessage.ToString();
+
+
+            ModelState modelStateIdData = ModelState["ID"];
+            if (modelStateIdData != null) {
+                levent.Properties["RecordID"] = modelStateIdData.Value.ConvertTo(typeof(int));
+            }
+            
             log.Log(levent);
             filterContext.Result = Json(new
             {
