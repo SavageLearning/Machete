@@ -34,10 +34,26 @@ namespace Machete.Web.Helpers
     //
     public static class IsInRoleHelper
     {
+        private static Dictionary<string, string[]> _functionalityRole = new Dictionary<string, string[]> {
+            {"Worker.Edit.WorkerInfo.ShowTab", new[] { "Administrator", "Manager" }},
+            {"Employer.CreateNew.ShowTab", new[] { "Administrator", "Manager", "PhoneDesk"}}
+        };
+
         public static bool IsInRole(this HtmlHelper instance, params string[] roles)
         {
             var user = instance.ViewContext.HttpContext.User;
             foreach (var role in roles)
+            {
+                if (user.IsInRole(role))
+                    return true;
+            }
+            return false;
+        }
+
+        public static bool IsRoleAllowed(this HtmlHelper instance, string functionality)
+        {
+            var user = instance.ViewContext.HttpContext.User;
+            foreach (var role in _functionalityRole[functionality])
             {
                 if (user.IsInRole(role))
                     return true;

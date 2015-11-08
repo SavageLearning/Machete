@@ -229,6 +229,15 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Congreso|AnyCPU'">
+    <OutputPath>bin\Congreso\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -289,6 +298,11 @@
     <Compile Include="Migrations\201404090418125_EmployerLicenseMigration.Designer.cs">
       <DependentUpon>201404090418125_EmployerLicenseMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201412032229104_AlterHoursTypeIntegerToFloat.cs" />
+    <Compile Include="Migrations\201412032229104_AlterHoursTypeIntegerToFloat.Designer.cs">
+      <DependentUpon>201412032229104_AlterHoursTypeIntegerToFloat.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AllRepositories.cs" />
   </ItemGroup>
@@ -330,6 +344,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201404090418125_EmployerLicenseMigration.resx">
       <DependentUpon>201404090418125_EmployerLicenseMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201412032229104_AlterHoursTypeIntegerToFloat.resx">
+      <DependentUpon>201412032229104_AlterHoursTypeIntegerToFloat.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

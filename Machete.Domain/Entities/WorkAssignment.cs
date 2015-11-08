@@ -72,7 +72,7 @@ namespace Machete.Domain
         public double hourlyWage { get; set; }
         //
         [LocalizedDisplayName("hours", NameResourceType = typeof(Resources.WorkAssignment))]
-        public int hours { get; set; }
+        public double hours { get; set; }
         //
         [LocalizedDisplayName("hourRange", NameResourceType = typeof(Resources.WorkAssignment))]
         public int? hourRange { get; set; }
