@@ -88,6 +88,11 @@ namespace Machete.Domain
         [RegularExpression(@"^[\d]{3,3}-[\d]{3,3}-[\d]{4,4}$", ErrorMessageResourceName = "phoneformat", ErrorMessageResourceType = typeof(Resources.Employer))]
         public string phone { get; set; }
         //
+        [LocalizedDisplayName("fax", NameResourceType = typeof(Resources.Employer))]
+        [StringLength(12, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Employer))]
+        [RegularExpression(@"^[\d]{3,3}-[\d]{3,3}-[\d]{4,4}$", ErrorMessageResourceName = "phoneformat", ErrorMessageResourceType = typeof(Resources.Employer))]
+        public string fax { get; set; }
+
         [LocalizedDisplayName("cellphone", NameResourceType = typeof(Resources.Employer))]
         [StringLength(12, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Employer))]
         //[RequiredIfEmpty("phone", ErrorMessageResourceName = "phonerequired", ErrorMessageResourceType = typeof(Resources.Employer))]
@@ -100,6 +105,7 @@ namespace Machete.Domain
         public string zipcode { get; set; }
         //
         [LocalizedDisplayName("email", NameResourceType = typeof(Resources.Employer))]
+        [DataType(DataType.EmailAddress, ErrorMessageResourceName = "emailValidation", ErrorMessageResourceType = typeof(Resources.Employer))]
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Employer))]
         //[RegularExpression(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$")]
         public string email { get; set; }
@@ -120,11 +126,15 @@ namespace Machete.Domain
         public string referredbyOther { get; set; }
         //
         [LocalizedDisplayName("blogparticipate", NameResourceType = typeof(Resources.Employer))]
-        public bool blogparticipate { get; set; }
-        //
+        public bool? blogparticipate { get; set; }
+
         [LocalizedDisplayName("notes", NameResourceType = typeof(Resources.Employer))]
         [StringLength(4000, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Employer))]
         public string notes { get; set; }
 
+        [StringLength(128, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Employer))]
+        public string onlineSigninID { get; set; }
+
+        public bool? isOnlineProfileComplete { get; set; }
     }
 }

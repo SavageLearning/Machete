@@ -131,6 +131,7 @@ namespace Machete.Web.Models
         }
     }
 
+    /* Note: only used by OldAccountController
     public class IdentityManager
     {
         IDatabaseFactory Db;
@@ -187,5 +188,6 @@ namespace Machete.Web.Models
             }
         }
     }
+    */
 
 }

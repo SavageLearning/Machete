@@ -71,7 +71,7 @@ namespace Machete.Web.Controllers
         // POST: /WorkerSignin/Index -- records a signin
         [HttpPost]
         [Authorize(Roles = "Manager, Administrator, Check-in")]
-        public ActionResult Index(int dwccardnum, DateTime dateforsignin)
+        public ActionResult Index(int dwccardnum, DateTime dateforsignin, string userName)
         {
             Worker worker = _wServ.GetWorkerByNum(dwccardnum);
             if (worker == null) throw new NullReferenceException("Card ID doesn't match a worker!");
@@ -81,6 +81,13 @@ namespace Machete.Web.Controllers
             _signin.dwccardnum = dwccardnum;
             _signin.dateforsignin = new DateTime(dateforsignin.Year, dateforsignin.Month, dateforsignin.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
             _signin.memberStatus = worker.memberStatus;
+
+            if (_signin.lottery_timestamp == null)
+            {
+                _signin.lottery_sequence = _serv.GetNextLotterySequence(dateforsignin);
+                _signin.lottery_timestamp = DateTime.Now;
+                _serv.Save(_signin, userName);
+            }  
             //
             //
             try
