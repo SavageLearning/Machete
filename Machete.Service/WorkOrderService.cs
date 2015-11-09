@@ -210,14 +210,14 @@ namespace Machete.Service
             _log(workOrder.ID, user, "WorkOrder created");
             return wo;
         }
-        private void _log(int ID, string user, string msg)
-        {
-            levent.Level = LogLevel.Info;
-            levent.Message = msg;
-            levent.Properties["RecordID"] = ID; //magic string maps to NLog config
-            levent.Properties["username"] = user;
-            nlog.Log(levent);
-        }
+        //private void _log(int ID, string user, string msg)
+        //{
+        //    levent.Level = LogLevel.Info;
+        //    levent.Message = msg;
+        //    levent.Properties["RecordID"] = ID; //magic string maps to NLog config
+        //    levent.Properties["username"] = user;
+        //    nlog.Log(levent);
+        //}
         /// <summary>
         /// Provide combined summary of WO/WA status
         /// </summary>
