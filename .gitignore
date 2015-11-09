@@ -2,7 +2,6 @@
 [Tt]humbs.db
 *.DS_Store
 *.cache
-*.csproj
 Machete.suo
 
 *.Web.Publish.xml
@@ -64,7 +63,6 @@ packages/
 /Machete.Web/log.txt
 /Machete.suo
 
-Machete.sln*
 /Machete1.vsmdi
 /Machete.WebOld
 
@@ -75,27 +73,8 @@ Machete.sln*
 */ASPNETDB.MDF
 */aspnetdb_log.ldf
 
-/Machete.Web/Properties/PublishProfiles/*.pubxml
 MWS.Service_1_TemporaryKey.pfx
 *.MDF
 *.ldf
 
-Web.MacheteTest.config
-Web.Congreso.config
-Web.Test.config
-Web.CasaLatina.config
-Web.CentroHumanitario.config
-Web.Concord.config
-Web.Congreso.config
-Web.DonBosco.config
-Web.ElCentro.config
-Web.Graton.config
-Web.MountainView.config
-Web.Nice.config
-Web.Pasadena.config
-Web.Pomona.config
-Web.PortlandVoz.config
-Web.SanFrancisco.config
-Web.SantaCruz.config
-Web.Southside.config
-Web.WorkersJustice.config
+

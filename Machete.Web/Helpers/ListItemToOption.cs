@@ -84,6 +84,40 @@ namespace System.Web.Mvc
         }
     }
 
+    public class SelectListEmployerSkills : SelectListItem
+    {
+        public double wage
+        {
+            get;
+            set;
+        }
+        public int minHour
+        {
+            get;
+            set;
+        }
+        public int ID
+        {
+            get;
+            set;
+        }
+        public int typeOfWorkID
+        {
+            get;
+            set;
+        }
+        public string skillDescriptionEs
+        {
+            get;
+            set;
+        }
+        public string skillDescriptionEn
+        {
+            get;
+            set;
+        }
+    }
+
     public class SelectListItemEmail : SelectListItem
     {
         public string template

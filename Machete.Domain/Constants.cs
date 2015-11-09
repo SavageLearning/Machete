@@ -22,6 +22,7 @@ namespace Machete.Domain
         public const string worktype = "worktype";
         public const string emplrreference = "emplrreference";
         public const string transportmethod = "transportmethod";
+        public const string transportTransactType = "transportPaymentType";
         public const string maritalstatus = "maritalstatus";
         public const string gender = "gender";
         public const string orderstatus = "orderstatus";
@@ -33,6 +34,14 @@ namespace Machete.Domain
         public const string activityType = "activityType";
         public const string emailstatus = "emailstatus";
         public const string emailTemplate = "emailTemplate";
+        public const string workerRating = "workerRating";
+        public const string housingType = "housingType";
+        public const string educationLevel = "educationLevel";
+        public const string farmLabor = "farmLabor";
+        public const string vehicleTypeID = "vehicleTypeID";
+        public const string incomeSourceID = "incomeSourceID";
+        public const string usBornChildren = "usBornChildren";
+        public const string training = "training";
     }
 
     public struct LMemberStatus

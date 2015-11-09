@@ -1,0 +1,101 @@
+﻿@model Machete.Domain.WorkOrder
+@using Machete.Web.Helpers
+@using Machete.Domain.Resources
+@using Machete.Web.Resources
+@using Machete.Service
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+}
+
+<div id="woPaypalTabs" >
+    <ul>
+        <li><a href="#" id="paypalTab" class="ListTab">@Machete.Web.Resources.WorkOrders.orderConfirmation</a> </li>
+    </ul>
+    <div>
+        <h1>Transportation Fees</h1>
+        @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
+            @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["PayPalPayment_EN"])
+        } else {
+            @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["PayPalPayment_ES"])
+        }
+        <p>@Machete.Web.Resources.WorkOrders.workOrderNumber @(Model.ID)</p>
+        <p>@Machete.Web.Resources.WorkOrders.transportationFee $@(Model.transportFee).00</p>
+        <br />
+    </div>
+    <div class="tb-table">
+        <div class="tb-row">
+            @if(Model.transportFee == 5) 
+            {
+                <!-- The $5.00 Transportation Fee -->
+                <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                    <input type="hidden" name="cmd" value="_s-xclick">
+                    <input type="hidden" name="hosted_button_id" value="D7RBTVWLBF9YY">
+                    <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_paynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                    <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                </form>
+            } else if (Model.transportFee == 10) {
+                <!-- The $10.00 Transportation Fee -->
+                <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                    <input type="hidden" name="cmd" value="_s-xclick">
+                    <input type="hidden" name="hosted_button_id" value="JLKFSP5DXM5QC">
+                    <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_paynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                    <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                </form>
+            } else if (Model.transportFee == 15) {
+                <!-- The $15.00 Transportation Fee -->
+                <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                    <input type="hidden" name="cmd" value="_s-xclick">
+                    <input type="hidden" name="hosted_button_id" value="GM3M8ESXSJTC4">
+                    <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_paynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                    <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                </form>
+            } else if (Model.transportFee == 20) {
+                <!-- The $20.00 Transportation Fee -->
+                <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                    <input type="hidden" name="cmd" value="_s-xclick">
+                    <input type="hidden" name="hosted_button_id" value="J4533DV6776ZG">
+                    <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_paynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                    <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                </form>
+            } else if (Model.transportFee == 25) {
+                <!-- The $25.00 Transportation Fee -->
+                <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                    <input type="hidden" name="cmd" value="_s-xclick">
+                    <input type="hidden" name="hosted_button_id" value="3FXV3UPQQ5YME">
+                    <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_paynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                    <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                </form>
+            }
+        </div>
+    </div>
+    <p>Please call 206.956.0779 x3 during <a href="#" id="businessHoursModal">business hours</a> if you have any questions/issues.</p>
+    <div id="businessHoursDialog" title="@Machete.Web.Resources.WorkOrders.businessHoursModal" class="display" style="display: none">
+        @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
+            @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["BusinessHours_EN"])
+        } else {
+            @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["BusinessHours_ES"])
+        }
+    </div>    
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('#woPaypalTabs').tabs();
+
+        $('.formButton').button();
+        $('#businessHoursModal').click(function () {
+
+            $("#businessHoursDialog").dialog({
+                height: 400,
+                width: 450,
+                position: "fixed",
+                top: "50%",
+                modal: true
+            });
+
+            $('#businessHoursDialog').show();
+        });
+    });
+</script>

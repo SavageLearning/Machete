@@ -7,17 +7,14 @@
     <p>
         @Machete.Web.Resources.ValidationStrings.RegisterInstructions
     </p>
-    <p>
-        @Machete.Web.Resources.ValidationStrings.RegisterPassLength1 @ViewBag.MinimumLength
-        @Machete.Web.Resources.ValidationStrings.RegisterPassLength2
-    </p>
+
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, @Machete.Web.Resources.ValidationStrings.RegisterValSummary)
         <div>
             <fieldset>
-                <legend>@Machete.Web.Resources.ValidationStrings.RegisterLegend</legend>
+                <legend>@Machete.Web.Resources.ValidationStrings.AccountInfoLegend</legend>
                 <div class="tb-table">
                     <div class="tb-row">
                         <div class="tb-label">

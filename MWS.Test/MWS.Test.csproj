@@ -187,6 +187,15 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Alabama|AnyCPU'">
+    <OutputPath>bin\Alabama\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WindofSpirit|AnyCPU'">
+    <OutputPath>bin\WindofSpirit\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Cel|AnyCPU'">
+    <OutputPath>bin\Cel\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -210,6 +219,15 @@
     <Reference Include="Microsoft.Practices.Unity.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Unity.3.0.1304.0\lib\Net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PayPalCoreSDK">
+      <HintPath>..\packages\PayPalCoreSDK.1.6.2\lib\net45\PayPalCoreSDK.dll</HintPath>
+    </Reference>
+    <Reference Include="PayPalMerchantSDK">
+      <HintPath>..\packages\PayPalMerchantSDK.2.15.117\lib\net20\PayPalMerchantSDK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />

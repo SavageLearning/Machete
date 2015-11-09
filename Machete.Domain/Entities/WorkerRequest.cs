@@ -66,6 +66,14 @@ namespace Machete.Domain
                      p.lastname2;
             }
         }
+        public string firstNameOnly
+        {
+            get
+            {
+                Person p = this.workerRequested.Person;
+                return p.firstname1;
+            }
+        }
     }
     public class WorkerRequestComparer : IEqualityComparer<WorkerRequest>
     {

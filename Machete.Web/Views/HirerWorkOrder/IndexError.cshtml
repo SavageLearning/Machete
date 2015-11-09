@@ -1,0 +1,63 @@
+﻿@model Machete.Domain.WorkOrder
+@using Machete.Web.Helpers
+@using Machete.Domain.Resources
+@using Machete.Web.Resources
+@using Machete.Service
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+}
+
+<div id="woPaypalTabs" >
+    <ul>
+        <li><a href="#" id="paypalTab" class="ListTab">@Machete.Web.Resources.WorkOrders.orderConfirmation</a> </li>
+    </ul>
+
+@using (Html.BeginForm("Index", "HirerWorkOrder", FormMethod.Get,
+                        new { @class = "edittab-form EditPost", @id = "WorkOrderTab-" + Model.ID }))
+{
+    <div>
+    <h1>Payment Error</h1>
+    <p>An error has occurred while processing your payment - the transaction has not been completed.</p>
+    <p>Please call 206.956.0779 x3 during <a href="#" id="businessHoursModal">business hours</a> if you have any questions/issues.</p>
+    <br />
+    </div>
+    
+    <div class="tb-table">
+        <div class="tb-row">
+            <input type="hidden" name="orderId" id="orderId" value="@(Model.ID)">
+        </div>
+    </div>
+    <div>
+        <button type="submit" class="btn btn-default formButton" id="hireWorker" name="hireWorker" value="hireWorker">Hire Another Worker</button>
+    </div>    
+    <div id="businessHoursDialog" title="@Machete.Web.Resources.WorkOrders.businessHoursModal" class="display" style="display: none">
+        @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
+            @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["BusinessHours_EN"])
+        } else {
+            @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["BusinessHours_ES"])
+        }
+    </div>    
+}
+</div>
+    
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('#woPaypalTabs').tabs();
+        $('#businessHoursModal').click(function () {
+
+            $("#businessHoursDialog").dialog({
+                height: 400,
+                width: 450,
+                position: "fixed",
+                top: "50%",
+                modal: true
+            });
+
+            $('#businessHoursDialog').show();
+        });
+
+    });
+</script>

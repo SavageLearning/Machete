@@ -198,4 +198,13 @@
   <data name="surcharge" xml:space="preserve">
     <value>Recargo</value>
   </data>
+  <data name="workerRating" xml:space="preserve">
+    <value>Worker Rating</value>
+  </data>
+  <data name="additionalNotes" xml:space="preserve">
+    <value>Additional Notes</value>
+  </data>
+  <data name="weightLifted" xml:space="preserve">
+    <value>¿El trabajador estará responsables para transportar materiales pesando más de 50 libras?</value>
+  </data>
 </root>

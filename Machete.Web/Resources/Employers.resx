@@ -120,6 +120,9 @@
   <data name="boxlegend" xml:space="preserve">
     <value>Employer</value>
   </data>
+  <data name="createclear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
   <data name="createlink" xml:space="preserve">
     <value>Create New Employer</value>
   </data>
@@ -156,6 +159,9 @@
   <data name="editworkerlink" xml:space="preserve">
     <value>Edit Employer</value>
   </data>
+  <data name="employerAddress1Dialog" xml:space="preserve">
+    <value>Please provide the best contact address for you (or your business)</value>
+  </data>
   <data name="indexreturnlink" xml:space="preserve">
     <value>Return to List of Employers</value>
   </data>
@@ -167,6 +173,9 @@
   </data>
   <data name="listlink" xml:space="preserve">
     <value>List Employers</value>
+  </data>
+  <data name="referredBy" xml:space="preserve">
+    <value>Referred by</value>
   </data>
   <data name="viewlink" xml:space="preserve">
     <value>Print</value>

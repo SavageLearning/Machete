@@ -92,6 +92,7 @@
                                 <th>assigned Worker</th>
                                 <th>requested Workers</th>
                                 <th>@Machete.Web.Resources.WorkAssignments.WAID</th>
+                                <th>@WorkOrder.workorderID</th>
                                 <th>@WorkOrder.dateTimeofWork</th>
                                 <th>@WorkAssignment.englishlevelshort</th>
                                 <th>@WorkAssignment.skillID</th>
@@ -276,6 +277,7 @@ $(document).ready(function () {
             "sScrollY": "300px",
             "bPaginate": false,
             "bLengthChange": true,
+            "aaSorting":[[2,'asc']],
             "bAutoWidth": false,
             "bServerSide": true,
             "sAjaxSource": "/WorkerSignin/AjaxHandler",
@@ -328,6 +330,7 @@ $(document).ready(function () {
                             { "mDataProp": "assignedWorker", "bVisible": false, "bSortable": true},
                             { "mDataProp": "requestedList", "bVisible": false, "bSortable": false},
                             { "mDataProp": "WAID", "bVisible": true, "bSortable": true },
+                            { "mDataProp": "WOID", "bVisible": true, "bSortable": true },
                             { "mDataProp": "timeofwork"},
                             { "mDataProp": "englishlevel"},
                             { "mDataProp": "skill"},
