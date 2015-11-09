@@ -39,6 +39,30 @@
     </div>
     <div class="tb-row">
         <div class="tb-label">
+            @Html.LabelFor(model => model.transportTransactID)
+        </div>
+        <div class="tb-field">
+            @Html.DisplayTextFor(model => model.transportTransactID)            
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label">
+            @Html.LabelFor(model => model.transportTransactType)
+        </div>
+        <div class="tb-field">
+            @Html.DisplayTextFor(model => model.transportTransactType)            
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label">
+            @Html.LabelFor(model => model.phone)
+        </div>
+        <div class="tb-field">
+            @Html.DisplayTextFor(model => model.phone)            
+        </div>
+    </div>
+    <div class="tb-row">
+        <div class="tb-label">
             @Html.Label(WorkOrder.lunchShort)
         </div>
         <div class="tb-field">
@@ -54,8 +78,6 @@
             @Html.Label(WorkOrders.transportfeetotal)
         </div>
     </div>
-
-
     <div class="tb-row">
         <div class="tb-label">
             @Html.Label(WorkOrders.transportMethodIDShort)

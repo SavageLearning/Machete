@@ -124,28 +124,28 @@
     <value>A city is required</value>
   </data>
   <data name="description" xml:space="preserve">
-    <value>Description of work to be performed</value>
+    <value>Work Description</value>
   </data>
   <data name="contactName" xml:space="preserve">
-    <value>Contact name at work site</value>
+    <value>Contact Name (Work Site)</value>
   </data>
   <data name="contactNamerequired" xml:space="preserve">
     <value>A contact name is required</value>
   </data>
   <data name="englishRequired" xml:space="preserve">
-    <value>Is English required for at least one worker?</value>
+    <value>English Required (at least one worker)?</value>
   </data>
   <data name="englishRequiredNote" xml:space="preserve">
-    <value>English required note</value>
+    <value>English Required Note</value>
   </data>
   <data name="lunchSupplied" xml:space="preserve">
-    <value>Is lunch supplied?</value>
+    <value>Lunch Supplied?</value>
   </data>
   <data name="notes" xml:space="preserve">
     <value>Work order notes</value>
   </data>
   <data name="permanentPlacement" xml:space="preserve">
-    <value>Is this a permanent placement?</value>
+    <value>Permanent Placement?</value>
   </data>
   <data name="phone" xml:space="preserve">
     <value>Phone</value>
@@ -160,7 +160,7 @@
     <value>A state is required</value>
   </data>
   <data name="status" xml:space="preserve">
-    <value>Work order status</value>
+    <value>Status</value>
   </data>
   <data name="statusrequired" xml:space="preserve">
     <value>A status is required (use pending if unsure)</value>
@@ -169,22 +169,22 @@
     <value>Please enter no more than {1} characters</value>
   </data>
   <data name="transportFee" xml:space="preserve">
-    <value>Transportation fee (if any)</value>
+    <value>Transportation Fee</value>
   </data>
   <data name="transportFeeExtra" xml:space="preserve">
-    <value>Extra transportation fee (if any)</value>
+    <value>Extra Transportation Fee</value>
   </data>
   <data name="transportFeeRequired" xml:space="preserve">
     <value>A fee is required (can be $0)</value>
   </data>
   <data name="transportMethodID" xml:space="preserve">
-    <value>Transportation method</value>
+    <value>Transportation Method</value>
   </data>
   <data name="transportMethodIDrequired" xml:space="preserve">
     <value>A transport method is required</value>
   </data>
   <data name="typeOfWorkID" xml:space="preserve">
-    <value>Type of work</value>
+    <value>Work Program Type</value>
   </data>
   <data name="typeOfWorkIDrequired" xml:space="preserve">
     <value>A type of work is required</value>
@@ -193,19 +193,19 @@
     <value>Order #:</value>
   </data>
   <data name="workSiteAddress1" xml:space="preserve">
-    <value>Work site address (1)</value>
+    <value>Address (1) (Work Site)</value>
   </data>
   <data name="workSiteAddress1required" xml:space="preserve">
     <value>An address is required</value>
   </data>
   <data name="workSiteAddress2" xml:space="preserve">
-    <value>Work site address (2)</value>
+    <value>Address (2) (Work Site)</value>
   </data>
   <data name="zipcode" xml:space="preserve">
-    <value>Zip code</value>
+    <value>Zipcode</value>
   </data>
   <data name="zipcoderequired" xml:space="preserve">
-    <value>A zip code is required</value>
+    <value>A zipcode is required</value>
   </data>
   <data name="descriptionRequired" xml:space="preserve">
     <value>A description of the work is required</value>
@@ -220,7 +220,7 @@
     <value>Lunch?</value>
   </data>
   <data name="dateTimeofWork" xml:space="preserve">
-    <value>Date &amp; time needed</value>
+    <value>Time Needed</value>
   </data>
   <data name="dateTimeofWorkrequired" xml:space="preserve">
     <value>A date and time is required</value>
@@ -229,13 +229,13 @@
     <value>Status</value>
   </data>
   <data name="timeFlexible" xml:space="preserve">
-    <value>Is start time flexible?</value>
+    <value>Start Time Flexible?</value>
   </data>
   <data name="phoneformat" xml:space="preserve">
     <value>Please use this form: ###-###-####</value>
   </data>
   <data name="paperOrderNum" xml:space="preserve">
-    <value>Alternate (paper) order ID</value>
+    <value>Alternate (Paper) Order #</value>
   </data>
   <data name="paperOrderNumFormat" xml:space="preserve">
     <value>This number must be 5 digits, or blank</value>
@@ -247,12 +247,45 @@
     <value>Remove</value>
   </data>
   <data name="requestTitle" xml:space="preserve">
-    <value>Select a worker</value>
+    <value>Select Requested Worker</value>
   </data>
   <data name="workerRequests" xml:space="preserve">
-    <value>Requests for workers</value>
+    <value>Requests for Workers</value>
   </data>
   <data name="onlineSource" xml:space="preserve">
-    <value>Created by Online Order Form?</value>
+    <value>Created Online?</value>
+  </data>
+  <data name="transportTransactID" xml:space="preserve">
+    <value>Payment #</value>
+  </data>
+  <data name="transportTransactType" xml:space="preserve">
+    <value>Payment Type</value>
+  </data>
+  <data name="workerCount" xml:space="preserve">
+    <value>Worker Count</value>
+  </data>
+  <data name="addressWorkSite" xml:space="preserve">
+    <value>Address (Work Site)</value>
+  </data>
+  <data name="phoneWorkSite" xml:space="preserve">
+    <value>Phone (Work Site)</value>
+  </data>
+  <data name="disclosureAgreement" xml:space="preserve">
+    <value>Disclosure Agreement Accepted</value>
+  </data>
+  <data name="paypal" xml:space="preserve">
+    <value>PayPal</value>
+  </data>
+  <data name="paypalErrors" xml:space="preserve">
+    <value>PayPal Errors</value>
+  </data>
+  <data name="paypalFee" xml:space="preserve">
+    <value>PayPal Fee</value>
+  </data>
+  <data name="paypalPayerId" xml:space="preserve">
+    <value>PayPal PayerID</value>
+  </data>
+  <data name="paypalToken" xml:space="preserve">
+    <value>PayPal Token</value>
   </data>
 </root>

@@ -1,0 +1,26 @@
+﻿@using Machete.Web.Helpers
+@using Machete.Domain.Resources
+@using Machete.Web.Resources
+@using Machete.Service
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+}
+<div id="woOnlineTabs" >
+    <ul>
+        <li><a href="/HirerWorkOrder/Create" id="pendingOrderListTab" class="ListTab">@Machete.Web.Resources.WorkOrders.hireWorker</a> </li>
+        <li><a href="/HirerWorkOrder/HirerProfile" id="profileTab" class="ListTab">Profile</a> </li>
+    </ul>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        ////////////////////////////////////////////////////////////////
+        //
+        // Setup work order Tabs
+        //
+        $('#woOnlineTabs').tabs();
+        //$('#woOnlineTabs').tabs('select', 1);
+
+    });
+</script>

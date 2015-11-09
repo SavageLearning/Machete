@@ -9,7 +9,7 @@
                         new { @class = "edittab-form EditPost", @id="EmployerTab-" + Model.ID }))
 {
     @*<input type="button" value="@Employers.viewlink" class="formButton" id="viewEmployer-@Model.ID" />*@
-    <input type="submit" value="@Employers.editsubmit" class="formButton saveBtn"/>
+    <input type="button" onclick="FindEmployerDuplicate()" value="@Employers.editsubmit" class="formButton saveBtn"/>
     if (Html.IsInRole(Html.Role_AM()))
     {
         <input id="deleteEmployerButton-@Model.ID" type="button" value="@Employers.deletesubmit" 
@@ -33,12 +33,16 @@
     }
 }
 @Html.Partial("WorkOrderIndex", Model)
+
+<div id="messageDialog" title="@(Machete.Web.Resources.Shared.DuplicatePersonsTitle)">
+</div>
 <script type="text/javascript">
     $(document).ready(function () {
         // TODO: Remove Employer View Model
         //$('#viewEmployer-@Model.ID').click(function () {
         //    printwindow = window.open('/Employer/View/@Model.ID');
         //});
+        var employerEditForm = $('#EmployerTab-@(Model.ID)');
         $('.formButton').button();
         $('#employerName').focus();
         //
@@ -68,4 +72,83 @@
             formLevel: 1
         });
     });
+
+    var messageDialog = $("#messageDialog").dialog({
+        autoOpen: false,
+        height: 400,
+        width: 650,
+        modal: true,
+        closeOnEscape: false,
+        buttons: {
+            "Cancel": function () { $(this).dialog("close"); },
+            "Save": function () { $(this).dialog("close"); saveEmployer(); }
+        }
+    });
+
+    function FindEmployerDuplicate() {
+
+        var form = $('#EmployerTab-@(Model.ID)');
+        if (form.valid()) {
+            $.ajax({
+                url: "/Employer/GetDuplicates",
+                data: {
+                    name: $('#employer@(Model.ID)-name')[0].value,
+                    address: $('#employer@(Model.ID)-address1')[0].value,
+                    phone: $('#employer@(Model.ID)-phone')[0].value,
+                    city: $('#employer@(Model.ID)-city')[0].value,
+                    zipcode: $('#employer@(Model.ID)-zipcode')[0].value
+                },
+                success: onSuccessFindEmployerDuplicate,
+                dataType: "json"
+            });
+        }
+        else {
+            saveEmployer();
+        }
+    }
+
+
+    function CreateHtmlText(duplicates) {
+        var dialogHtmlText = '<p>@(Machete.Web.Resources.Shared.DuplicateEmployerMessage)</p>'
+            + '<table class="duplicateEmployers" style="width:100%" border="1" cellpadding="2">'
+            + '<tr>'
+            + '<th>@(Machete.Domain.Resources.Employer.name)</th>'
+            + '<th>@(Machete.Domain.Resources.Employer.address1)</th>'
+            + '<th>@(Machete.Domain.Resources.Employer.phone)</th>'
+            + '<th>@(Machete.Domain.Resources.Employer.city)</th>'
+            + '<th>@(Machete.Domain.Resources.Employer.zipcode)</th>'
+            + '</tr>';
+        for (var i = 0; i < duplicates.length; i++) {
+            if (duplicates[i].ID == '@Model.ID') { continue; }
+            dialogHtmlText += '<tr>'
+                + '<td>' + duplicates[i]["Name"] + '</td>'
+                + '<td>' + duplicates[i]["Address"] + '</td>'
+                + '<td>' + duplicates[i]["Phone"] + '</td>'
+                + '<td>' + duplicates[i]["City"] + '</td>'
+                + '<td>' + duplicates[i]["ZipCode"] + '</td>'
+                + '</tr>';
+        }
+
+        dialogHtmlText += '</table> <p></p> <p></p>@(Machete.Web.Resources.Shared.SaveMessageDuplicatePersons)</p>';
+
+        return dialogHtmlText;
+    }
+
+    function onSuccessFindEmployerDuplicate(result) {
+        if (result.duplicates.length > 1) {
+
+            messageDialog.dialog("open");
+            messageDialog.html(CreateHtmlText(result.duplicates));
+        }
+        else {
+            saveEmployer();
+        }
+    }
+
+    function saveEmployer() {
+        var form = $('#EmployerTab-@(Model.ID)');
+        if (form.valid()) {
+            form.submit();
+        }
+    }
 </script>
