@@ -124,11 +124,29 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Warning: Data that you entered has not been saved. Click Cancel to stay on this tab and save your work. Click OK to switch to another tab. .
+        /// </summary>
+        public static string changeConfirmPerson {
+            get {
+                return ResourceManager.GetString("changeConfirmPerson", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Discard changes?.
         /// </summary>
         public static string changeTitle {
             get {
                 return ResourceManager.GetString("changeTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remember to save your changes.
+        /// </summary>
+        public static string changeTitlePerson {
+            get {
+                return ResourceManager.GetString("changeTitlePerson", resourceCulture);
             }
         }
         
@@ -156,6 +174,42 @@ namespace Machete.Web.Resources {
         public static string docs {
             get {
                 return ResourceManager.GetString("docs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Already found employers with similar names:.
+        /// </summary>
+        public static string DuplicateEmployerMessage {
+            get {
+                return ResourceManager.GetString("DuplicateEmployerMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warning: Check for duplicates.
+        /// </summary>
+        public static string DuplicateEmployerTitle {
+            get {
+                return ResourceManager.GetString("DuplicateEmployerTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Already found persons with similar names:.
+        /// </summary>
+        public static string DuplicatePersonsMessage {
+            get {
+                return ResourceManager.GetString("DuplicatePersonsMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warning: Check for duplicates.
+        /// </summary>
+        public static string DuplicatePersonsTitle {
+            get {
+                return ResourceManager.GetString("DuplicatePersonsTitle", resourceCulture);
             }
         }
         
@@ -363,6 +417,15 @@ namespace Machete.Web.Resources {
         public static string reportstab {
             get {
                 return ResourceManager.GetString("reportstab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you still want to save?.
+        /// </summary>
+        public static string SaveMessageDuplicatePersons {
+            get {
+                return ResourceManager.GetString("SaveMessageDuplicatePersons", resourceCulture);
             }
         }
         

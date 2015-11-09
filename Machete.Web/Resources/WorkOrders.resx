@@ -321,4 +321,94 @@
   <data name="onlineSource" xml:space="preserve">
     <value>Online source?</value>
   </data>
+  <data name="editcancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="hirerAccount" xml:space="preserve">
+    <value>Account History</value>
+  </data>
+  <data name="hireWorker" xml:space="preserve">
+    <value>Hire a Worker</value>
+  </data>
+  <data name="workOrders" xml:space="preserve">
+    <value>Work Orders</value>
+  </data>
+  <data name="listWorkAssignments" xml:space="preserve">
+    <value>List of Work Assignments</value>
+  </data>
+  <data name="hirerProfile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="businessHoursModal" xml:space="preserve">
+    <value>Business Hours</value>
+  </data>
+  <data name="acknowledgement" xml:space="preserve">
+    <value>I acknowledge that:</value>
+  </data>
+  <data name="contactName" xml:space="preserve">
+    <value>Who will be managing the worker(s) at the work site? This may be the person placing the order or another person.</value>
+  </data>
+  <data name="workDescription" xml:space="preserve">
+    <value>Please be as detailed as possible in describing the work needed. Providing detailed information allows us to match you with the best available worker. If worker is asked to do something not listed here, he or she reserves the right to refuse service and minimum wages will still be charged.</value>
+  </data>
+  <data name="workersRequested" xml:space="preserve">
+    <value>Workers Requested</value>
+  </data>
+  <data name="workSiteAddress1Dialog" xml:space="preserve">
+    <value>Please provide the address where the work will be completed. This is the address to which we will send workers.</value>
+  </data>
+  <data name="submit" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="businessName" xml:space="preserve">
+    <value>Business Name</value>
+  </data>
+  <data name="contactNameWorkSite" xml:space="preserve">
+    <value>Contact Name (Work Site)</value>
+  </data>
+  <data name="disclaimer" xml:space="preserve">
+    <value>Disclaimer</value>
+  </data>
+  <data name="isBusiness" xml:space="preserve">
+    <value>Is a Business?</value>
+  </data>
+  <data name="phoneWorkSite" xml:space="preserve">
+    <value>Phone (Work Site)</value>
+  </data>
+  <data name="timeNeeded" xml:space="preserve">
+    <value>Time Needed</value>
+  </data>
+  <data name="workAssignments" xml:space="preserve">
+    <value>Request Worker(s)</value>
+  </data>
+  <data name="workDetails" xml:space="preserve">
+    <value>Work Details</value>
+  </data>
+  <data name="workRequest" xml:space="preserve">
+    <value>Work Request</value>
+  </data>
+  <data name="workSiteAddress1" xml:space="preserve">
+    <value>Address (1) Work Site</value>
+  </data>
+  <data name="workSiteAddress2" xml:space="preserve">
+    <value>Address (2) Work Site</value>
+  </data>
+  <data name="weightRequirements" xml:space="preserve">
+    <value>Weight Requirements</value>
+  </data>
+  <data name="orderConfirmation" xml:space="preserve">
+    <value>Order Confirmation</value>
+  </data>
+  <data name="businessHours" xml:space="preserve">
+    <value>Please call 206.956.0779 x3 during &lt;a href="#" id="businessHoursModal"&gt;business hours&lt;/a&gt; if you have any questions/issues.</value>
+  </data>
+  <data name="payPalNotice" xml:space="preserve">
+    <value>Transportation fees must be paid online to Casa Latina by using this form. You may pay with debit, credit, or PayPal. Your order is not complete until you have paid the transportation fee.</value>
+  </data>
+  <data name="transportationFee" xml:space="preserve">
+    <value>The transportation fee (paid to Casa Latina Day Worker Center) is:</value>
+  </data>
+  <data name="workOrderNumber" xml:space="preserve">
+    <value>The Work Order Number is:</value>
+  </data>
 </root>

@@ -59,6 +59,10 @@ namespace Machete.Domain
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Person))]
         public string firstname2 { get; set; }
         //
+        [LocalizedDisplayName("nickname", NameResourceType = typeof(Resources.Person))]
+        [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Person))]
+        public string nickname { get; set; }
+
         [LocalizedDisplayName("lastname1", NameResourceType = typeof(Resources.Person))]
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Person))]
         [Required(ErrorMessageResourceName = "lastname1error", ErrorMessageResourceType = typeof(Resources.Person))]
@@ -92,10 +96,25 @@ namespace Machete.Domain
         [StringLength(12, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Person))]
         [RegularExpression(@"^$|^[\d]{3,3}-[\d]{3,3}-[\d]{4,4}$", ErrorMessageResourceName = "phoneformat", ErrorMessageResourceType = typeof(Resources.Person))]
         public string phone { get; set; }
+
+        [LocalizedDisplayName("cellphone", NameResourceType = typeof(Resources.Person))]
+        [StringLength(12, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Person))]
+        [RegularExpression(@"^$|^[\d]{3,3}-[\d]{3,3}-[\d]{4,4}$", ErrorMessageResourceName = "phoneformat", ErrorMessageResourceType = typeof(Resources.Person))]
+        public string cellphone { get; set; }
+
+        [LocalizedDisplayName("email", NameResourceType = typeof(Resources.Person))]
+        [DataType(DataType.EmailAddress, ErrorMessageResourceName = "emailValidation", ErrorMessageResourceType = typeof(Resources.Person))]
+        [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Person))]
+        public string email { get; set; }
+
+        [LocalizedDisplayName("facebook", NameResourceType = typeof(Resources.Person))]
+        [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Person))]
+        public string facebook { get; set; }
+
         [LocalizedDisplayName("gender", NameResourceType = typeof(Resources.Person))]
         [Required(ErrorMessageResourceName = "gendererror", ErrorMessageResourceType = typeof(Resources.Person))]
-        public int gender { get; set; }
-        //
+        public int? gender { get; set; }
+
         [LocalizedDisplayName("genderother", NameResourceType = typeof(Resources.Person))]
         [StringLength(20, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Person))]
         public string genderother { get; set; }

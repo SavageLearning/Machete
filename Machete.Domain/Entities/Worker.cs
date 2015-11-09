@@ -58,82 +58,101 @@ namespace Machete.Domain
         [LocalizedDisplayName("dateOfMembership", NameResourceType = typeof(Resources.Worker))]
         public DateTime dateOfMembership { get; set; }
         //
-        [Required(ErrorMessageResourceName = "dateOfBirth", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("dateOfBirth", NameResourceType = typeof(Resources.Worker))]
-        public DateTime dateOfBirth {get; set;}
-        //
+        public DateTime? dateOfBirth {get; set;}
+
         [Required(ErrorMessageResourceName = "memberStatus", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("memberStatus", NameResourceType = typeof(Resources.Worker))]
         public int memberStatus { get; set; }
         //
         [LocalizedDisplayName("memberReactivateDate", NameResourceType = typeof(Resources.Worker))]
         public DateTime? memberReactivateDate { get; set; }
-        //
+
         [LocalizedDisplayName("active", NameResourceType = typeof(Resources.Worker))]
-        public bool active { get; set; }
-        //
+        public bool? active { get; set; }
+
         [LocalizedDisplayName("homeless", NameResourceType = typeof(Resources.Worker))]
         public bool? homeless { get; set; }
         //
         [Required(ErrorMessageResourceName = "required", ErrorMessageResourceType = typeof(Resources.Worker))]
+        public int? housingType { get; set; }
+
         [LocalizedDisplayName("raceID", NameResourceType = typeof(Resources.Worker))]
-        public int RaceID { get; set; }
-        //
+        public int? RaceID { get; set; }
+
         [LocalizedDisplayName("raceother", NameResourceType = typeof(Resources.Worker))]
         [StringLength(20, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Worker))]
         public string raceother { get; set; }
         //
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Worker))]
-        [Required(ErrorMessageResourceName = "height", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("height", NameResourceType = typeof(Resources.Worker))]
         public string height { get; set; }
         //
         [StringLength(10, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Worker))]
-        [Required(ErrorMessageResourceName = "weight", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("weight", NameResourceType = typeof(Resources.Worker))]
         public string weight { get; set; }
         //
-        [Required(ErrorMessageResourceName = "englishlevelID", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("englishlevelID", NameResourceType = typeof(Resources.Worker))]
         public int englishlevelID { get; set; }
         //
         [LocalizedDisplayName("recentarrival", NameResourceType = typeof(Resources.Worker))]
-        public bool recentarrival { get; set; }
-        //
-        [Required(ErrorMessageResourceName = "dateinUSA", ErrorMessageResourceType = typeof(Resources.Worker))]
+        public bool? recentarrival { get; set; }
+
         [LocalizedDisplayName("dateinUSA", NameResourceType = typeof(Resources.Worker))]
         public DateTime? dateinUSA { get; set; }
         //
-        [Required(ErrorMessageResourceName = "dateinseattle", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("dateinseattle", NameResourceType = typeof(Resources.Worker))]
         public DateTime? dateinseattle { get; set; }
         //
         [LocalizedDisplayName("disabled", NameResourceType = typeof(Resources.Worker))]
-        public bool disabled { get; set; }
-        //
+        public bool? disabled { get; set; }
+
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("disabilitydesc", NameResourceType = typeof(Resources.Worker))]
         public string disabilitydesc { get; set; }
-        //
-        [Required(ErrorMessageResourceName = "maritalstatus", ErrorMessageResourceType = typeof(Resources.Worker))]
+
         [LocalizedDisplayName("maritalstatus", NameResourceType = typeof(Resources.Worker))]
-        public int maritalstatus { get; set; }
-        //
+        public int? maritalstatus { get; set; }
+
         [LocalizedDisplayName("livewithchildren", NameResourceType = typeof(Resources.Worker))]
-        public bool livewithchildren { get; set; }
-        //
-        [LocalizedDisplayName("numofchildren", NameResourceType = typeof(Resources.Worker))]
-        [Required(ErrorMessageResourceName = "numofchildren", ErrorMessageResourceType = typeof(Resources.Worker))]
-        [RegularExpression("^([0-9]|[0-1]\\d|20)$", ErrorMessageResourceName = "numofchildrenRxError", ErrorMessageResourceType = typeof(Resources.Worker))]
-        public int numofchildren { get; set; }
-        //
-        [Required(ErrorMessageResourceName = "incomeID", ErrorMessageResourceType = typeof(Resources.Worker))]
-        [LocalizedDisplayName("incomeID", NameResourceType = typeof(Resources.Worker))]
-        public int incomeID { get; set; }
-        //
+        public bool? livewithchildren { get; set; }
+
+        [LocalizedDisplayName("liveWithSpouse", NameResourceType = typeof(Resources.Worker))]
+        public bool? liveWithSpouse { get; set; }
+
         [LocalizedDisplayName("livealone", NameResourceType = typeof(Resources.Worker))]
-        public bool livealone { get; set; }
-        //
+        public bool? livealone { get; set; }
+
+        [StringLength(1000, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Worker))]
+        [LocalizedDisplayName("liveWithDescription", NameResourceType = typeof(Resources.Worker))]
+        public string liveWithDescription { get; set; }
+
+        [LocalizedDisplayName("numofchildren", NameResourceType = typeof(Resources.Worker))]
+        [RegularExpression("^([0-9]|[0-1]\\d|20)$", ErrorMessageResourceName = "numofchildrenRxError", ErrorMessageResourceType = typeof(Resources.Worker))]
+        public int? numofchildren { get; set; }
+
+        [LocalizedDisplayName("americanBornChildren", NameResourceType = typeof(Resources.Worker))]
+        public int? americanBornChildren { get; set; }
+
+        [LocalizedDisplayName("numChildrenUnder18", NameResourceType = typeof(Resources.Worker))]
+        public int? numChildrenUnder18 { get; set; }
+
+        [LocalizedDisplayName("educationLevel", NameResourceType = typeof(Resources.Worker))]
+        public int? educationLevel { get; set; }
+
+        [LocalizedDisplayName("farmLaborCharacteristics", NameResourceType = typeof(Resources.Worker))]
+        public int? farmLaborCharacteristics { get; set; }
+
+        [LocalizedDisplayName("wageTheftVictim", NameResourceType = typeof(Resources.Worker))]
+        public bool? wageTheftVictim { get; set; }
+
+        [LocalizedDisplayName("wageTheftRecoveryAmount", NameResourceType = typeof(Resources.Worker))]
+        [DisplayFormat(DataFormatString = "{0:n}", ApplyFormatInEditMode = true)]
+        public double? wageTheftRecoveryAmount { get; set; }
+
+        [LocalizedDisplayName("incomeID", NameResourceType = typeof(Resources.Worker))]
+        public int? incomeID { get; set; }
+
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("emcontUSAname", NameResourceType = typeof(Resources.Worker))]
         public string emcontUSAname { get; set; }
@@ -145,23 +164,22 @@ namespace Machete.Domain
         [StringLength(14, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("emcontUSAphone", NameResourceType = typeof(Resources.Worker))]
         public string emcontUSAphone { get; set; }
+
         // TODO: require unique number when EF supports it
         [Required(ErrorMessageResourceName = "dwccardnum", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("dwccardnum", NameResourceType = typeof(Resources.Worker))]
         [RegularExpression("^[0-9]{5,5}$", ErrorMessageResourceName = "dwccardnumerror", ErrorMessageResourceType = typeof(Resources.Worker))]
         public int dwccardnum { get; set; }
         //
-        [Required(ErrorMessageResourceName = "neighborhoodID", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("neighborhoodID", NameResourceType = typeof(Resources.Worker))]
-        public int neighborhoodID { get; set; }
-        //
+        public int? neighborhoodID { get; set; }
+
         [LocalizedDisplayName("immigrantrefugee", NameResourceType = typeof(Resources.Worker))]
-        public bool immigrantrefugee { get; set; }
-        //  
-        [Required(ErrorMessageResourceName = "countryoforiginID", ErrorMessageResourceType = typeof(Resources.Worker))]
+        public bool? immigrantrefugee { get; set; }
+
         [LocalizedDisplayName("countryoforiginID", NameResourceType = typeof(Resources.Worker))]
-        public int countryoforiginID { get; set; }
-        //
+        public int? countryoforiginID { get; set; }
+
         [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("emcontoriginname", NameResourceType = typeof(Resources.Worker))]
         public string emcontoriginname { get; set; }
@@ -179,8 +197,8 @@ namespace Machete.Domain
         public DateTime memberexpirationdate { get; set; }
         //
         [LocalizedDisplayName("driverslicense", NameResourceType = typeof(Resources.Worker))]
-        public bool driverslicense { get; set; }
-        //
+        public bool? driverslicense { get; set; }
+
         [LocalizedDisplayName("licenseexpirationdate", NameResourceType = typeof(Resources.Worker))]
         public DateTime? licenseexpirationdate { get; set; }
         //
@@ -190,6 +208,35 @@ namespace Machete.Domain
         [LocalizedDisplayName("insuranceexpiration", NameResourceType = typeof(Resources.Worker))]
         public DateTime? insuranceexpiration { get; set; }
         //
+        [LocalizedDisplayName("lastPaymentDate", NameResourceType = typeof(Resources.Worker))]
+        public DateTime? lastPaymentDate { get; set; }
+
+        [LocalizedDisplayName("lastPaymentAmount", NameResourceType = typeof(Resources.Worker))]
+        [DisplayFormat(DataFormatString = "{0:n}", ApplyFormatInEditMode = true)]
+        public double? lastPaymentAmount { get; set; }
+
+        [LocalizedDisplayName("ownTools", NameResourceType = typeof(Resources.Worker))]
+        public bool? ownTools { get; set; }
+
+        [LocalizedDisplayName("healthInsurance", NameResourceType = typeof(Resources.Worker))]
+        public bool? healthInsurance { get; set; }
+
+        [LocalizedDisplayName("usVeteran", NameResourceType = typeof(Resources.Worker))]
+        public bool? usVeteran { get; set; }
+
+        [LocalizedDisplayName("healthInsuranceDate", NameResourceType = typeof(Resources.Worker))]
+        public DateTime? healthInsuranceDate { get; set; }
+
+        [LocalizedDisplayName("vehicleTypeID", NameResourceType = typeof(Resources.Worker))]
+        public int? vehicleTypeID { get; set; }
+
+        [LocalizedDisplayName("incomeSourceID", NameResourceType = typeof(Resources.Worker))]
+        public int? incomeSourceID { get; set; }
+
+        [StringLength(1000, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Worker))]
+        [LocalizedDisplayName("introToCenter", NameResourceType = typeof(Resources.Worker))]
+        public string introToCenter { get; set; }
+
         public int? ImageID { get; set; }
         //
         [LocalizedDisplayName("skill1", NameResourceType = typeof(Resources.Worker))]
@@ -201,6 +248,12 @@ namespace Machete.Domain
         [LocalizedDisplayName("skill3", NameResourceType = typeof(Resources.Worker))]
         public int? skill3 { get; set; }
         //
+        [LocalizedDisplayName("workerRating", NameResourceType = typeof(Resources.Worker))]
+        public float? workerRating { get; set; }
+
+        [LocalizedDisplayName("lgbtq", NameResourceType = typeof(Resources.Worker))]
+        public bool? lgbtq { get; set; }
+
         public bool isActive 
         {
             get { return this.memberStatus == iActive ? true : false; }

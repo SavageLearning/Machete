@@ -586,7 +586,7 @@ namespace Machete.Service
                     kids = worker.livewithchildren,
                     mStatus = lookup.text_EN
                 })
-                .Where(worker => !worker.kids && worker.mStatus != "Married")
+                .Where(worker => !worker.kids.Value && worker.mStatus != "Married")
                 .Select(x => new MemberDateModel
                 {
                     dwcnum = x.card,
@@ -615,7 +615,7 @@ namespace Machete.Service
                     kids = worker.livewithchildren,
                     mStatus = lookup.text_EN
                 })
-                .Where(worker => worker.kids && worker.mStatus == "Married")
+                .Where(worker => worker.kids.Value && worker.mStatus == "Married")
                 .Select(x => new MemberDateModel
                 {
                     dwcnum = x.card,
@@ -667,7 +667,7 @@ namespace Machete.Service
                     (gJoin, lJoin) => new
                     {
                         maritalStatus = lJoin.text_EN,
-                        withChildren = gJoin.Key.withChildren ? "With Children" : "Without Children",
+                        withChildren = gJoin.Key.withChildren.Value ? "With Children" : "Without Children",
                         count = gJoin.Count()
                     })
                 .Select(glJoin => new ReportUnit
@@ -721,7 +721,7 @@ namespace Machete.Service
                 .Where(whr => whr.memberexpirationdate > beginDate && whr.dateOfMembership < endDate)
                 .Select(worker => new
                 {
-                    age = (new DateTime(1753, 1, 1) + (DateTime.Now - worker.dateOfBirth)).Year - 1753,
+                    age = (new DateTime(1753, 1, 1) + (DateTime.Now - worker.dateOfBirth.Value)).Year - 1753,
                     dob = worker.dateOfBirth
                 })
                 .Select(ageO => ageO.dob == new DateTime(1900, 1, 1) ? "Unknown" :
@@ -779,7 +779,7 @@ namespace Machete.Service
                 .GroupBy(worker => worker.disabled)
                 .Select(group => new ReportUnit
                 {
-                    info = group.Key ? "Yes" : "No",
+                    info = group.Key.Value ? "Yes" : "No",
                     count = group.Count()
                 });
 
@@ -827,7 +827,7 @@ namespace Machete.Service
                 .GroupBy(worker => worker.immigrantrefugee)
                 .Select(group => new ReportUnit
                 {
-                    info = group.Key ? "Yes" : "No",
+                    info = group.Key.Value ? "Yes" : "No",
                     count = group.Count()
                 });
 

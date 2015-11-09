@@ -44,7 +44,6 @@
                     {
                         <li>@Html.ActionLink(@Machete.Web.Resources.Shared.reportstab, "Index", "Reports", null, new { id = "menulinkreports" })</li>
                         <li>@Html.ActionLink(@Machete.Web.Resources.Shared.emailstab, "Index", "Email", null, new { id = "menulinkemails" })</li>
-
                     }
                     @if (Html.IsInRole(Html.Role_AMP()))
                     {
@@ -55,10 +54,9 @@
                     {
                         <li>@Html.ActionLink(@Machete.Web.Resources.Shared.workassignmentstab, "Index", "WorkAssignment")</li>
                     }
-                    @if (Html.IsInRole(Html.Role_AM()) || Html.IsInRole(Html.Role_T()))
+                    @if (Html.IsInRole(Html.Role_AMP()) || Html.IsInRole(Html.Role_T()))
                     { 
                         <li>@Html.ActionLink(@Machete.Web.Resources.Shared.persontab, "Index", "Person", null, new { id = "menulinkperson" })</li>
-                        @*<li>@Html.ActionLink(@Machete.Web.Resources.Shared.workerstab, "Index", "Worker", null, new { id = "menulinkworker" })</li>*@
                     }
                     @if (Html.IsInRole(Html.Role_AM()) || Html.IsInRole(Html.Role_T()))
                     { 
@@ -76,7 +74,7 @@
             @RenderBody()
             <div id="footer" class="print-off">
             <p class="print-off">
-                Web solution by Savage Learning, LLC. Copyright 2011-2014. Licensed under GNU GPL v3.0.
+                Web solution by Savage Learning, LLC. Copyright 2011-2015. Licensed under GNU GPL v3.0.
             </p>
             </div><!--footer-->        
         </div><!--main-->

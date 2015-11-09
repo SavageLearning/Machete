@@ -20,6 +20,8 @@ using Machete.Data.Infrastructure;
 using System.Web.Routing;
 using Machete.Service;
 using System.Collections.ObjectModel;
+using System.Data.Entity;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace Machete.Web.Controllers
 {
@@ -32,6 +34,7 @@ namespace Machete.Web.Controllers
         public IMyUserManager<ApplicationUser> UserManager { get; private set; }
         private readonly IDatabaseFactory DatabaseFactory;
         private CultureInfo CI;
+        private const int PASSWORD_EXPIRATION_IN_MONTHS = 6; // this constant represents number of months where users passwords expire 
 
         public AccountController(IMyUserManager<ApplicationUser> userManager, IDatabaseFactory databaseFactory)
         {
@@ -45,29 +48,34 @@ namespace Machete.Web.Controllers
             CI = (CultureInfo)Session["Culture"];
         }
 
-        // **************************************
         // URL: /Account/Index
         // **************************************
         [Authorize(Roles = "Manager, Administrator")]
         public ActionResult Index()
         {
-            IEnumerable<UserSettingsViewModel> model;
+            // Retrieve users 
+            // Note: Hirer accounts use email addresses as username, so the list filters out usernames that are email addresses
+            // This display is only to modify internal Machete user accounts (not to modify employer accounts)
+            IDbSet<ApplicationUser> users = DatabaseFactory.Get().Users;
+            if (users == null)
+            {
+                // TODO: throw alert
+            }
+            IQueryable<UserSettingsViewModel> model = users
+                    .Select(u => new UserSettingsViewModel {
+                            ProviderUserKey = u.Id,
+                            UserName = u.UserName,
+                            Email = u.Email,
+                            IsApproved = u.IsApproved ? "Yes" : "No",
+                            IsLockedOut = u.IsLockedOut ? "Yes" : "No",
+                            IsOnline = (DbFunctions.DiffHours(u.LastLoginDate, DateTime.Now) < 1) ? "Yes" : "No",
+                            CreationDate = u.CreateDate,
+                            LastLoginDate = u.LastLoginDate
+                        })
+                        .Where (u => !u.UserName.Contains("@"));
 
-            var users = DatabaseFactory.Get().Users.ToList();
+            // TODO: consider messaging user if no users were found
 
-            model = users
-                    .Select(list => new UserSettingsViewModel
-                        {
-                            ProviderUserKey = list.Id,
-                            UserName = list.UserName,
-                            Email = list.Email,
-                            IsApproved = list.IsApproved ? "Yes" : "No",
-                            IsLockedOut = list.IsLockedOut ? "Yes" : "No",
-                            IsOnline = (list.LastLoginDate > DateTime.Now.AddHours(-1)) ? "Yes" : "No",
-                            CreationDate = list.CreateDate,
-                            LastLoginDate = list.LastLoginDate
-                        }
-                        );
             return View(model);
         }
 
@@ -77,13 +85,36 @@ namespace Machete.Web.Controllers
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
+
+            if (User.Identity.IsAuthenticated)
+            {
+                if (User.IsInRole("Hirer"))
+                {
+                    return RedirectToAction("Index", "HirerWorkOrder");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+
+            if (returnUrl != null && returnUrl != "")
+            {
+                // Redirect users back to external signin
+                string[] controller = returnUrl.Split(new Char[] {'/'});
+                if (controller.Length >= 2 && (controller[1] == "HirerWorkOrder" || controller[1] == "HirerAccount"))
+                {
+                    return RedirectToAction("Login", "HirerAccount");
+                }
+            }
+
             LoginViewModel model = new LoginViewModel();
             model.Action = "ExternalLogin";
             model.ReturnUrl = returnUrl;
             return View(model);
         }
 
-        //
+        // TODO: Consider changing name to LoginAsync for naming convention
         // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
@@ -102,7 +133,7 @@ namespace Machete.Web.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Invalid username or password.");
+                    ModelState.AddModelError("", Machete.Web.Resources.ValidationStrings.invalidLogin);
                 }
             }
 
@@ -113,15 +144,15 @@ namespace Machete.Web.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<JsonResult> IsPasswordExpired(string username, string password)
+        public async Task<JsonResult> IsPasswordExpiredAsync(string username, string password)
         {
-            var isExpired = false;
+            bool isExpired = false;
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindAsync(username, password);
                 if (user != null)
                 {
-                    isExpired = (user.LastPasswordChangedDate <= DateTime.Today.AddMonths(-6));
+                    isExpired = (user.LastPasswordChangedDate <= DateTime.Today.AddMonths(-PASSWORD_EXPIRATION_IN_MONTHS));
                 }
             }
 
@@ -129,8 +160,9 @@ namespace Machete.Web.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<JsonResult> ChangeExpiredPassword(string username, string password, string newpassword)
+        public async Task<JsonResult> ChangeExpiredPasswordAsync(string username, string password, string newpassword)
         {
+            // TODO: internationalize string
             var message = "Could not update password";
             var status = false;
 
@@ -142,6 +174,7 @@ namespace Machete.Web.Controllers
                     IdentityResult result = await UserManager.ChangePasswordAsync(user.Id, password, newpassword);
                     if (result.Succeeded)
                     {
+                        // TODO: internationalize string
                         message = "Password successfully updated.";
                         status = true;
 
@@ -177,12 +210,13 @@ namespace Machete.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var currentApplicationId = GetApplicationID();
                 string newUserName = model.FirstName.Trim() + "." + model.LastName.Trim();
-                var user = new ApplicationUser() { UserName = newUserName, LoweredUserName = newUserName.ToLower(), ApplicationId = currentApplicationId };
-                var result = await UserManager.CreateAsync(user, model.Password);
+                ApplicationUser user = new ApplicationUser() { UserName = newUserName, LoweredUserName = newUserName.ToLower(), ApplicationId = GetApplicationID(), Email = model.Email.Trim(), LoweredEmail = model.Email.Trim() };
+                IdentityResult result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    // TODO: add user role to user & sign them in
+                    // TODO: provide messaging to administrator to add appropriate roles to their account
                     //await SignInAsync(user, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 }
@@ -198,10 +232,10 @@ namespace Machete.Web.Controllers
 
         private Guid GetApplicationID()
         {
-            var blarg = DatabaseFactory.Get().Users
+            Guid appId = DatabaseFactory.Get().Users
                 .Select(p => p.ApplicationId)
                 .First();
-            return blarg;
+            return appId;
         }
 
         //
@@ -274,6 +308,9 @@ namespace Machete.Web.Controllers
                     IdentityResult result = await UserManager.ChangePasswordAsync(user.Id, model.OldPassword, model.NewPassword);
                     if (result.Succeeded)
                     {
+                        user.LastPasswordChangedDate = DateTime.Today;
+                        Db.Entry(user).State = System.Data.Entity.EntityState.Modified;
+                        await Db.SaveChangesAsync();
                         return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
                     }
                     else
@@ -312,14 +349,14 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Edit(string id, ManageMessageId? Message = null)
         {
-            var Db = DatabaseFactory.Get();
-            var user = Db.Users.First(u => u.Id == id);
-            var model = new EditUserViewModel(user);
-            model.Id = user.Id;
+            ApplicationUser user = DatabaseFactory.Get().Users.First(u => u.Id == id);
             if (user == null)
             {
                 return HttpNotFound();
             }
+
+            EditUserViewModel model = new EditUserViewModel(user);
+
             return View(model);
         }
 
@@ -339,8 +376,8 @@ namespace Machete.Web.Controllers
                 //user.LastName = model.LastName;   //LastName without refactor
                 user.UserName = name;
                 user.LoweredUserName = name.ToLower();
-                user.Email = model.Email;
-                user.LoweredEmail = model.Email.ToLower();
+                user.Email = model.Email.Trim();
+                user.LoweredEmail = model.Email.Trim().ToLower();
                 user.IsApproved = model.IsApproved;
                 user.IsLockedOut = model.IsLockedOut;
                 ModelState state = ModelState["NewPassword"];
@@ -354,8 +391,8 @@ namespace Machete.Web.Controllers
                         IdentityResult result = await UserManager.AddPasswordAsync(user.Id, model.NewPassword);
                         if (result.Succeeded)
                         {
+                            user.LastPasswordChangedDate = DateTime.Today.AddMonths(-PASSWORD_EXPIRATION_IN_MONTHS);
                             ViewBag.Message = "Password successfully updated.";
-                            //return RedirectToAction("Index");
                         }
                         else
                         {
@@ -389,6 +426,7 @@ namespace Machete.Web.Controllers
             return View(model);
         }
 
+        // GET: Account/Delete
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Delete(string id = null)
         {
@@ -420,7 +458,7 @@ namespace Machete.Web.Controllers
             var Db = DatabaseFactory.Get();
             var user = Db.Users.First(u => u.Id == id);
             var model = new SelectUserRolesViewModel(user, DatabaseFactory);
-            model.UserId = id;
+
             return View(model);
         }
 
@@ -431,22 +469,44 @@ namespace Machete.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindByIdAsync(model.UserId);
-                foreach (var role in model.Roles)
+                IdentityResult result;
+
+                foreach (SelectRoleEditorViewModel role in model.Roles)
                 {
-                    bool iNoEdit = User.IsInRole("Manager") && role.RoleName == "Administrator" ? true : false;
-                    bool iEdit = await UserManager.IsInRoleAsync(user.Id, role.RoleName);
-                    if (!role.Selected && !iNoEdit)
+                    // Only administrators can provide administrator access
+                    bool isAdminRestricted = !User.IsInRole("Administrator") && role.RoleName == "Administrator" ? true : false;
+                    bool isUserInRole = await UserManager.IsInRoleAsync(model.UserId, role.RoleName);
+
+                    // If role is deselected & user is assigned to this role - remove role from user
+                    if (isAdminRestricted)
                     {
-                        if (iEdit) await UserManager.RemoveFromRoleAsync(user.Id, role.RoleName);
+                        // TODO: provide error reporting - must be an administrator to modify administrator accounts
+                    }
+                    else if (!role.Selected && isUserInRole)
+                    {
+                        result = await UserManager.RemoveFromRoleAsync(model.UserId, role.RoleName);
+                        if (!result.Succeeded)
+                        {
+                            // TODO: provide error reporting
+                        }
+                    }
+                    else if (role.Selected && !isUserInRole)
+                    {
+                        result = await UserManager.AddToRoleAsync(model.UserId, role.RoleName);
+                        if (!result.Succeeded)
+                        {
+                            // TODO: provide error reporting
+                        }
                     }
                     else
                     {
-                        if (!iEdit && !iNoEdit) await UserManager.AddToRoleAsync(user.Id, role.RoleName);
+                        // TODO: provide error reporting
                     }
                 }
+                // Display user account index view
                 return RedirectToAction("index");
             }
+            // Re-display current user roles view
             return View();
         }
 
@@ -555,12 +615,28 @@ namespace Machete.Web.Controllers
         }
 
         //
+        // GET: /Account/Signup
+        [AllowAnonymous]
+        public ActionResult Signup()
+        {
+            return View("Signup");
+        }
+
+        //
+        // GET: /Account/Signup
+        [AllowAnonymous]
+        public ActionResult HirerSignon()
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        //
         // GET: /Account/LogOff
         [AllowAnonymous]
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
 
         //
@@ -628,23 +704,16 @@ namespace Machete.Web.Controllers
             }
         }
 
-        private async Task<bool> HasPassword(string userId)
+        private bool IsInternalUser(ApplicationUser user)
         {
-            var user = await UserManager.FindByIdAsync(userId);
-            if (user != null)
-            {
-                return user.PasswordHash != null;
-            }
-            return false;
+            // Return whether user has a password hash
+            return (user.UserName.Contains("@"));
         }
 
         private bool HasPassword(ApplicationUser user)
         {
-            if (user.PasswordHash != null)
-            {
-                return true;
-            }
-            return false;
+            // Return whether user has a password hash
+            return (user.PasswordHash != null);
         }
 
         public enum ManageMessageId
@@ -669,6 +738,10 @@ namespace Machete.Web.Controllers
 
         private class ChallengeResult : HttpUnauthorizedResult
         {
+            public string LoginProvider { get; set; }
+            public string RedirectUri { get; set; }
+            public string UserId { get; set; }
+
             public ChallengeResult(string provider, string redirectUri)
                 : this(provider, redirectUri, null)
             {

@@ -62,7 +62,7 @@
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.onlineSource)
         @Html.mUIDropDownYesNoFor(model => model.onlineSource, new { tabindex = "20", id = idPrefix + "onlineSource" })
-
+        @Html.mUITableLabelAndTextBoxFor(model => model.fax, new { tabindex = "21", id = idPrefix + "fax" })
     </div>
 </div>
 <div class="tb-table" style="float: left;">

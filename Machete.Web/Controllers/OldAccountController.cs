@@ -43,18 +43,20 @@ namespace Machete.Web.Controllers
     public class OldAccountController : Controller
     {
 
-        public IFormsAuthenticationService FormsService { get; set; }
-        public IMembershipService MembershipService { get; set; }
+        //public IFormsAuthenticationService FormsService { get; set; }
+        // public IMembershipService MembershipService { get; set; }
         Logger log = LogManager.GetCurrentClassLogger();
         LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "AccountController", "");
         
         protected override void Initialize(RequestContext requestContext)
         {
-            if (FormsService == null) { FormsService = new FormsAuthenticationService(); }
-            if (MembershipService == null) { MembershipService = new AccountMembershipService(); }
+            //if (FormsService == null) { FormsService = new FormsAuthenticationService(); }
+            //if (MembershipService == null) { MembershipService = new AccountMembershipService(); }
             
             base.Initialize(requestContext);
         }
+
+        /*
         #region User/Member management
         // **************************************
         // URL: /Account/Index
@@ -258,7 +260,7 @@ namespace Machete.Web.Controllers
 
                 if (createStatus == MembershipCreateStatus.Success)
                 {
-                    FormsService.SignIn(model.UserName, false /* createPersistentCookie */);
+                    FormsService.SignIn(model.UserName, false); // false -> createPersistentCookie
                     levent.Level = LogLevel.Info; levent.Message = "Registered new user: " + model.UserName;
                     log.Log(levent);
                     return RedirectToAction("Index", "Home");
@@ -368,5 +370,6 @@ namespace Machete.Web.Controllers
             // TODO: add user input validation to prevent setting unsupported language
             // TODO: preserve field text when language changes
         }
+        */
     }
 }

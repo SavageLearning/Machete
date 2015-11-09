@@ -235,5 +235,59 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
+
+        private List<Dictionary<string, string>> DuplicateEmployers(string name, string address, 
+            string phone, string city, string zipcode)
+        {
+            //Get all the records            
+            IEnumerable<Employer> list = serv.GetAll();
+            var employersFound = new List<Dictionary<string, string>>();
+            name = name.Replace(" ", "");
+            address = address.Replace(" ", "");
+            phone = string.IsNullOrEmpty(phone) ? "x" : phone;
+            city = city.Replace(" ","");
+            zipcode = zipcode.Replace(" ","");
+
+            foreach (var employer in list)
+            {
+                var employer_Name = employer.name.Replace(" ", "");
+                var employer_Address = employer.address1.Replace(" ", "");
+                var employer_Phone = string.IsNullOrEmpty(employer.phone) ? "y" : employer.phone;
+                var employer_City = employer.city.Replace(" ","");
+                var employer_Zipcode = employer.zipcode.Replace(" ","");
+
+                //checking if person already exists in dbase
+                var matchCount = 0;
+                if (employer_Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)) matchCount++;
+                if (employer_Address.Equals(address, StringComparison.CurrentCultureIgnoreCase)) matchCount++;
+                if (employer_Phone.Equals(phone, StringComparison.CurrentCultureIgnoreCase)) matchCount++;
+                if (employer_Zipcode.Equals(zipcode, StringComparison.CurrentCultureIgnoreCase)) matchCount++;
+                if (employer_City.Equals(city, StringComparison.CurrentCultureIgnoreCase)) matchCount++;
+                
+
+                if (matchCount >= 3)
+                {
+                    var employerFound = new Dictionary<string, string>();
+                    employerFound.Add("Name", employer.name);
+                    employerFound.Add("Address", employer.address1);
+                    employerFound.Add("Phone", employer.phone);
+                    employerFound.Add("City", employer.city);
+                    employerFound.Add("ZipCode", employer.zipcode);
+                    employerFound.Add("ID", employer.ID.ToString());
+
+                    employersFound.Add(employerFound);
+                }
+            }
+
+            return employersFound;
+        }
+
+        [AllowAnonymous]
+        public JsonResult GetDuplicates(string name, string address,
+            string phone, string city, string zipcode )
+        {
+            var duplicateFound = DuplicateEmployers(name, address, phone, city, zipcode);
+            return Json(new { duplicates = duplicateFound }, JsonRequestBehavior.AllowGet);
+        }
     }
 }

@@ -126,8 +126,20 @@
   <data name="address2" xml:space="preserve">
     <value>Address (2)</value>
   </data>
+  <data name="cellphone" xml:space="preserve">
+    <value>Cellphone</value>
+  </data>
   <data name="city" xml:space="preserve">
     <value>City</value>
+  </data>
+  <data name="email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="emailValidation" xml:space="preserve">
+    <value>The email format is invalid</value>
+  </data>
+  <data name="facebook" xml:space="preserve">
+    <value>Facebook</value>
   </data>
   <data name="firstname" xml:space="preserve">
     <value>First Name</value>
@@ -161,6 +173,9 @@
   </data>
   <data name="lastname2" xml:space="preserve">
     <value>Last Name (2)</value>
+  </data>
+  <data name="nickname" xml:space="preserve">
+    <value>Nickname</value>
   </data>
   <data name="phone" xml:space="preserve">
     <value>Phone</value>

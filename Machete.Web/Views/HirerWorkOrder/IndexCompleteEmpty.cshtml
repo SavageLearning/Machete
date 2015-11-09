@@ -1,0 +1,55 @@
+﻿@using Machete.Web.Helpers
+@using Machete.Domain.Resources
+@using Machete.Web.Resources
+@using Machete.Service
+@{
+    System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
+}
+
+<div id="woPaypalTabs" >
+    <ul>
+        <li><a href="#" id="paypalTab" class="ListTab">@Machete.Web.Resources.WorkOrders.orderConfirmation</a> </li>
+    </ul>
+@using (Html.BeginForm("Index", "HirerWorkOrder", FormMethod.Get,
+                        new { @class = "edittab-form EditPost", @id = "WorkOrderTab" }))
+{
+    <div>
+        <h1>Casa Latina - Hire a Worker</h1>
+        <p>Your order has been sent to Casa Latina, where it will be processed and a worker will be assigned. Once the order has been processed, Casa Latina will confirm your order with an email. Please note that your order is not considered complete until you have received the confirmation email. If you do not hear from us within 24 hours, please call 206.956.0779 x3 during our <a href="#" id="businessHoursModal">business hours</a>.</p>
+        <br />
+    </div>
+    <div>
+        <button type="submit" class="btn btn-default formButton" id="hireWorker" name="hireWorker" value="hireWorker">Hire Another Worker</button>
+    </div>    
+    <div id="businessHoursDialog" title="@Machete.Web.Resources.WorkOrders.businessHoursModal" class="display" style="display: none">
+        @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
+            @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["BusinessHours_EN"])
+        } else {
+            @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["BusinessHours_ES"])
+        }
+    </div>    
+}
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('#woPaypalTabs').tabs();
+
+        $('.formButton').button();
+        $('#businessHoursModal').click(function () {
+
+            $("#businessHoursDialog").dialog({
+                height: 400,
+                width: 450,
+                position: "fixed",
+                top: "50%",
+                modal: true
+            });
+
+            $('#businessHoursDialog').show();
+        });
+
+    });
+</script>
