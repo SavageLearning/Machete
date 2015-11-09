@@ -79,15 +79,6 @@ namespace Machete.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Change Password.
-        /// </summary>
-        public static string Change {
-            get {
-                return ResourceManager.GetString("Change", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Use the form below to change your password..
         /// </summary>
         public static string ChangeSubTitle {

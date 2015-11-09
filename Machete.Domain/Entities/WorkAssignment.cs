@@ -50,6 +50,7 @@ namespace Machete.Domain
         public bool active { get; set; }
         [LocalizedDisplayName("pseudoID", NameResourceType = typeof(Resources.WorkOrder))]
         public int? pseudoID { get; set; }
+
         [LocalizedDisplayName("description", NameResourceType = typeof(Resources.WorkAssignment))]        
         [StringLength(1000, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.WorkAssignment))]
         public string description { get; set; }
@@ -99,6 +100,17 @@ namespace Machete.Domain
 
         [LocalizedDisplayName("comments", NameResourceType = typeof(Resources.WorkAssignment))]
         public string comments { get; set; }
+
+        [LocalizedDisplayName("workerRating", NameResourceType = typeof(Resources.WorkAssignment))]
+        public int? workerRating { get; set; }
+
+        [LocalizedDisplayName("workerRatingComments", NameResourceType = typeof(Resources.Worker))]
+        [StringLength(500, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Employer))]
+        public string workerRatingComments { get; set; }
+
+
+        [LocalizedDisplayName("weightLifted", NameResourceType = typeof(Resources.WorkAssignment))]
+        public bool? weightLifted { get; set; }
 
         public string fullIDandName()
         {

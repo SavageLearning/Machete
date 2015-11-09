@@ -181,7 +181,7 @@ namespace Machete.Web.Controllers
         /// <returns>Work Order </returns>
         public object dtResponse(ref WorkOrder wo, bool showWorkers)
         {
-            int ID = p.ID;
+            int ID = wo.ID;
             return new 
             {
                 tabref = wo.getTabRef(),
