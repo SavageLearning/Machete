@@ -114,7 +114,7 @@ namespace Machete.Test.IntegrationTests.Services
             // ASSERT
             Assert.AreEqual(1, result.filteredCount);
         }
-
+        [Ignore]
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Emails)]
         public void Integration_Email_Service_SendEmailSimple()
         {

@@ -208,11 +208,11 @@ namespace Machete.Test
             Assert.AreEqual(_wkr.height, WaitForElement(By.Id(prefix + "height")).GetAttribute("value"));
             Assert.AreEqual(_wkr.weight, WaitForElement(By.Id(prefix + "weight")).GetAttribute("value"));
             Assert.AreEqual(_wkr.dwccardnum.ToString(), WaitForElement(By.Id(prefix + "dwccardnum")).GetAttribute("value"));
-            Assert.AreEqual("Active", GetOptionText(By.Id(prefix + "memberStatus")));
-            Assert.AreEqual("Primary City", GetOptionText(By.Id(prefix + "neighborhoodID")));
-            Assert.AreEqual(@"Day Worker Center", GetOptionText(By.Id(prefix + "typeOfWorkID")));
-            Assert.AreEqual("2", GetOptionText(By.Id(prefix + "englishlevelID")));
-            Assert.AreEqual(@"Poor (Less than $15,000)", GetOptionText(By.Id(prefix + "incomeID")));
+            Assert.AreEqual("Active", GetOptionText(WaitForElement(By.Id(prefix + "memberStatus"))));
+            Assert.AreEqual("Primary City", GetOptionText(WaitForElement(By.Id(prefix + "neighborhoodID"))));
+            Assert.AreEqual(@"Day Worker Center", GetOptionText(WaitForElement(By.Id(prefix + "typeOfWorkID"))));
+            Assert.AreEqual("2", GetOptionText(WaitForElement(By.Id(prefix + "englishlevelID"))));
+            Assert.AreEqual(@"Poor (Less than $15,000)", GetOptionText(WaitForElement(By.Id(prefix + "incomeID"))));
             return true;
         }
 
@@ -705,7 +705,7 @@ namespace Machete.Test
             //Wait for the page to load
             WaitForElement(By.Id(prefix + "name"));
 
-            Assert.AreEqual(2, GetOptionIndex(By.Id(prefix + "name")));
+            Assert.AreEqual(1, GetOptionIndex(By.Id(prefix + "name")));
             Assert.AreEqual(1, GetOptionIndex(By.Id(prefix + "type")));
             Assert.AreEqual(_act.teacher, GetOptionText(By.Id(prefix + "teacher")));
             Assert.AreEqual(_act.notes, WaitForElement(By.Id(prefix + "notes")).GetAttribute("value"));
@@ -770,6 +770,12 @@ namespace Machete.Test
             var selectElem = new SelectElement(dropdown);
             return selectElem.SelectedOption.Text;
         }
+        public string GetOptionText(IWebElement elem)
+        {
+            var selectElem = new SelectElement(elem);
+            return selectElem.SelectedOption.Text;
+        }
+
         public int GetOptionIndex(By by)
         {
             var dropdown = _d.FindElement(by);
@@ -838,7 +844,7 @@ namespace Machete.Test
                     if (elem != null && elem.Displayed) return elem;
                 }
                 catch (Exception)
-                { return null; }
+                {  }
                 Thread.Sleep(sleepFor);
             }
             throw new NotFoundException();

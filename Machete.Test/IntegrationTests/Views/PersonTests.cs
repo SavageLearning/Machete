@@ -34,6 +34,7 @@ namespace Machete.Test
             string solutionDirectory = sharedUI.SolutionDirectory();
             //testdir = solutionDirectory + "\\Machete.test\\";
             testimagefile = solutionDirectory + "\\jimmy_machete.jpg";
+            WebServer.StartIis();
         }
 
         [TestInitialize]
@@ -65,7 +66,7 @@ namespace Machete.Test
             Assert.AreEqual("", verificationErrors.ToString());
         }
         [ClassCleanup]
-        public static void ClassCleanup() { }
+        public static void ClassCleanup() { WebServer.StopIis();  }
 
         [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Persons)]
         public void SePerson_create_person()

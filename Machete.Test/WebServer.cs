@@ -26,56 +26,55 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
-
+using System.Threading;
+using System.Threading.Tasks;
 namespace Machete.Test
 {
-    // Stops and starts web server for Selenium integration tests
-    public class WebServer
+    public static class WebServer
     {
-        private readonly string iisPath;
-        private readonly int iisPort;
-        private readonly string virtualDirectory;
-        private Process iisXProcess;
-
-        public WebServer(string physicalPath, int port)
-            : this(physicalPath, port, "")
+        private static Process _iisProcess;
+        public static void StartIis()
         {
-        }
-
-        public WebServer(string physicalPath, int port, string virtualDirectory)
-        {
-            this.iisPort = port;
-            this.iisPath = physicalPath.TrimEnd('\\');
-            this.virtualDirectory = virtualDirectory;
-        }
-
-        public void Start()
-        {
-            ProcessStartInfo _psi = new ProcessStartInfo()
+            if (_iisProcess == null)
             {
-                ErrorDialog = false,
-                CreateNoWindow = true,
-                UseShellExecute = false,
-                Arguments = string.Format("/path:\"{0}\" /port:{1}", this.iisPath, this.iisPort, virtualDirectory)
-            };
-            
-            string iisServerPath = (!string.IsNullOrEmpty(_psi.EnvironmentVariables["programfiles(x86)"]) ? _psi.EnvironmentVariables["programfiles(x86)"] : _psi.EnvironmentVariables["programfiles"]) + "\\IIS Express\\iisexpress.exe";
-
-            _psi.FileName = iisServerPath;
-
-            this.iisXProcess = new Process() { StartInfo = _psi };
-            
-            this.iisXProcess.Start();
-        }
-
-        public void Stop()
-        {
-            if (this.iisXProcess == null)
-            {
-                throw new InvalidOperationException("Start() must be called before Stop()");
+                var thread = new Thread(StartIisExpress) { IsBackground = true }; 
+                thread.Start();
             }
+        }
+        private static void StartIisExpress()
+        {
+            var startInfo = new ProcessStartInfo
+            {
+                WindowStyle = ProcessWindowStyle.Normal,
+                ErrorDialog = true,
+                LoadUserProfile = true,
+                CreateNoWindow = false,
+                UseShellExecute = false,
+                Arguments = string.Format("/path:\"{0}\" /port:{1}", @"C:\Users\Administrator\Documents\code\Machete\Machete.Web\obj\publish", "4213")
+            };
 
-            this.iisXProcess.Kill();
+            var programfiles = string.IsNullOrEmpty(startInfo.EnvironmentVariables["programfiles"])
+                ? startInfo.EnvironmentVariables["programfiles(x86)"]
+                : startInfo.EnvironmentVariables["programfiles"];
+            startInfo.FileName = programfiles + "\\IIS Express\\iisexpress.exe";
+            try
+            {
+                _iisProcess = new Process { StartInfo = startInfo };
+                _iisProcess.Start();
+                _iisProcess.WaitForExit();
+            }
+            catch
+            {
+                _iisProcess.CloseMainWindow();
+                _iisProcess.Dispose();
+            }
+        }
+        public static void StopIis()
+        {
+            if (_iisProcess != null)
+            {
+                _iisProcess.CloseMainWindow(); _iisProcess.Dispose();
+            }
         }
     }
 }

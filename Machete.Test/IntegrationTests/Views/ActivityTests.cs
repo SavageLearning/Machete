@@ -28,7 +28,7 @@ namespace Machete.Test
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext)
         {
-
+            WebServer.StartIis();
         }
 
         [TestInitialize]
@@ -62,7 +62,7 @@ namespace Machete.Test
             }
         }
         [ClassCleanup]
-        public static void ClassCleanup() { }
+        public static void ClassCleanup() { WebServer.StopIis(); }
 
         [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Activities)]
         public void SeActivity_Create_Validate()
