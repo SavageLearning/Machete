@@ -58,6 +58,7 @@ namespace Machete.Test
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext)
         {
+            WebServer.StartIis();
             // getting Project path for dummy image
             string solutionDirectory = sharedUI.SolutionDirectory();
             //testdir = solutionDirectory + "\\Machete.test\\";
@@ -108,7 +109,7 @@ namespace Machete.Test
         /// 
         /// </summary>
         [ClassCleanup]
-        public static void ClassCleanup() { }
+        public static void ClassCleanup() { WebServer.StopIis(); }
         /// <summary>
         /// 
         /// </summary>

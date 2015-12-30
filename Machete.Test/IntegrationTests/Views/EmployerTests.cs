@@ -23,7 +23,7 @@ namespace Machete.Test
         private FluentRecordBase frb;
 
         [ClassInitialize]
-        public static void ClassInitialize(TestContext testContext) { }
+        public static void ClassInitialize(TestContext testContext) { WebServer.StartIis();  }
 
         [TestInitialize]
         public void SetupTest()
@@ -55,7 +55,7 @@ namespace Machete.Test
 
         }
         [ClassCleanup]
-        public static void ClassCleanup() { }
+        public static void ClassCleanup() { WebServer.StopIis(); }
         /// <summary>
         /// 
         /// 
