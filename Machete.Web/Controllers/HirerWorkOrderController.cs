@@ -175,7 +175,7 @@ namespace Machete.Web.Controllers
                 iTotalRecords = dtr.totalCount,
                 iTotalDisplayRecords = dtr.filteredCount,
                 aaData = from p in dtr.query
-                         select dtResponse(ref p, param.showOrdersWorkers)
+                         select dtResponse (p, param.showOrdersWorkers)
             },
             JsonRequestBehavior.AllowGet);
         }
@@ -186,7 +186,7 @@ namespace Machete.Web.Controllers
         /// <param name="wo">WorkOrder</param>
         /// <param name="showWorkers">bool flag determining whether the workers associated with the WorkOrder should be retrieved</param>
         /// <returns>Work Order </returns>
-        public object dtResponse(ref WorkOrder wo, bool showWorkers)
+        public object dtResponse( WorkOrder wo, bool showWorkers)
         {
             // tabref = "/HirerWorkOrder/Edit" + Convert.ToString(wo.ID),
             int ID = wo.ID;
