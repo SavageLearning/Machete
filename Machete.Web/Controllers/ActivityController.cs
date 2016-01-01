@@ -91,11 +91,11 @@ namespace Machete.Web.Controllers
                 iTotalRecords = list.totalCount,
                 iTotalDisplayRecords = list.filteredCount,
                 aaData = from p in list.query
-                         select dtResponse(ref p)
+                         select dtResponse( p)
             },
             JsonRequestBehavior.AllowGet);
         }
-        private object dtResponse(ref Activity p)
+        private object dtResponse( Activity p)
         {
             return new
             {

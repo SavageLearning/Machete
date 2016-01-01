@@ -1,12 +1,6 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Machete.Web.Models;
-using Microsoft.AspNet.Identity.EntityFramework;
-using System.Web;
-using System.Web.Security;
 using Machete.Data.Infrastructure;
-using Machete.Data;
-using Microsoft.AspNet.Identity;
 using System.Threading.Tasks;
 
 namespace Machete.Test.IntegrationTests.Controllers
@@ -16,7 +10,7 @@ namespace Machete.Test.IntegrationTests.Controllers
     {
         IDatabaseFactory idb;
         string conString;
-        MyUserManager userManager;
+        Machete.Web.Models.MyUserManager userManager;
 
         [TestInitialize]
         public void Initialize()
