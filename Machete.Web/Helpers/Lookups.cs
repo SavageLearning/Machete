@@ -62,10 +62,9 @@ namespace Machete.Web.Helpers
         // Initialize once to prevent re-querying DB
         //
         //public static void Initialize(IEnumerable<Lookup> cache)
-        public static void Initialize(ILookupCache lc, IDatabaseFactory plop)
+        public static void Initialize(ILookupCache lc, IDatabaseFactory Db)
         {
             lcache = lc;
-            Db = plop;
             hoursNum = new SelectList(new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16" }
                 .Select(x => new LookupNumber { Value = x, Text = x }),
                 "Value", "Text", "7"
@@ -366,15 +365,14 @@ namespace Machete.Web.Helpers
             this.Teachers = new List<string>();
         }
 
-        public TeacherEnumerator(IDatabaseFactory plop) : this()
+        public TeacherEnumerator(IDatabaseFactory Db) : this()
         {
-            Db = plop;
             var users = Db.Get().Users;
             //var teachers = users.SelectMany(x => x.Roles).Where(y => y.Role.Name == "Teacher");
-            var usernames = users.Where(y => y.Roles.Any(role => role.Role.Name == "Teacher")).Select(x => x.UserName);
-            foreach (var bliftasplik in usernames)
+            var teacherNames = users.Where(y => y.Roles.Any(role => role.Role.Name == "Teacher")).Select(x => x.UserName);
+            foreach (var name in teacherNames)
             {
-                this.Teachers.Add(bliftasplik);
+                this.Teachers.Add(name);
             }
         }
 
