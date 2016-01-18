@@ -344,6 +344,7 @@
     <Compile Include="Migrations\201505062122096_PaypalTransactID.Designer.cs">
       <DependentUpon>201505062122096_PaypalTransactID.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AllRepositories.cs" />
   </ItemGroup>
@@ -360,6 +361,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Migrations\migration_commands.txt" />
     <Content Include="SQL\AddActivityConstants.sql" />
     <Content Include="SQL\CreateElmahTable.sql" />
     <Content Include="SQL\CreateNLogTable.sql" />
