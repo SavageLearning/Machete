@@ -359,7 +359,6 @@ namespace Machete.Web.Helpers
 
     public class TeacherEnumerator
     {
-        IDatabaseFactory Db;
         public TeacherEnumerator()
         {
             this.Teachers = new List<string>();
