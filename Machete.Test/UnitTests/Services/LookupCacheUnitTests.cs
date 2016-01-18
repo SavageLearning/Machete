@@ -69,6 +69,26 @@ namespace Machete.Test.UnitTests.Services
             // Assert
             Assert.IsInstanceOfType(result, typeof(IEnumerable<Lookup>));
         }
+
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Lookups)]
+        public void LookupCache_getByKeys_returns_int()
+        {
+            // ARrange
+            // Act
+            var result = _serv.getByKeys(LCategory.memberstatus, LMemberStatus.Active);
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(int));
+        }
+
+        [ExpectedException(typeof(MacheteIntegrityException))]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Lookups)]
+        public void LookupCache_getByKeys_throws_exception()
+        {
+            // ARrange
+            // Act
+            var result = _serv.getByKeys(LCategory.memberstatus, "invalid");
+            // Assert
+        }
     }
 
 }
