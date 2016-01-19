@@ -43,7 +43,7 @@ namespace Machete.Test.Unit.Service
         Mock<IWorkOrderService> _woServ;
         EmployerService _serv;
 
-        public EmployerTest()
+        public EmployerTests()
         {
             _repo = new Mock<IEmployerRepository>();
             _uow = new Mock<IUnitOfWork>();

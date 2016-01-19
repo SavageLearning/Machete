@@ -33,22 +33,22 @@ using Machete.Service;
 using Machete.Domain;
 using Machete.Test;
 
-namespace Machete.Test.Unit
+namespace Machete.Test.Unit.Service
 {
     /// <summary>
     /// Summary description for WorkerServiceUnitTests
     /// </summary>
     [TestClass]
-    public class WorkerService
+    public class WorkerTests
     {
         Mock<IWorkerRepository> _repo;
         Mock<IUnitOfWork> _uow;
         Mock<IWorkerCache> _wcache;
-        Service.WorkerService _serv;
+        WorkerService _serv;
         Mock<IWorkAssignmentRepository> _waRepo;
         Mock<IWorkOrderRepository> _woRepo;
         Mock<IPersonRepository> _pRepo;
-        public WorkerService()
+        public WorkerTests()
         {
         }
 
@@ -100,7 +100,7 @@ namespace Machete.Test.Unit
             _waRepo = new Mock<IWorkAssignmentRepository>();
             _woRepo = new Mock<IWorkOrderRepository>();
             _pRepo = new Mock<IPersonRepository>();
-            _serv = new Service.WorkerService(_repo.Object, _wcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object);
+            _serv = new WorkerService(_repo.Object, _wcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object);
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Workers)]
         public void GetWorkers_returns_Enumerable()
@@ -168,7 +168,7 @@ namespace Machete.Test.Unit
             Worker dp = new Worker();
             _repo.Setup(r => r.Delete(It.IsAny<Worker>())).Callback((Worker p) => { dp = p; });
             _repo.Setup(r => r.GetById(id)).Returns(Records.worker);
-            var _serv = new Service.WorkerService(_repo.Object, _wcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object);
+            var _serv = new WorkerService(_repo.Object, _wcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object);
             //
             //Act
             _serv.Delete(id, user);
@@ -188,7 +188,7 @@ namespace Machete.Test.Unit
             string user = "UnitTest";
             Records.worker.datecreated = DateTime.MinValue;
             Records.worker.dateupdated = DateTime.MinValue;
-            var _serv = new Service.WorkerService(_repo.Object, _wcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object);
+            var _serv = new WorkerService(_repo.Object, _wcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object);
             //
             //Act
             _serv.Save(Records.worker, user);
