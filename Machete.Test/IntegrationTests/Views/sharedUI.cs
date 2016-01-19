@@ -1,20 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OpenQA.Selenium;
-using System.Threading;
+﻿using Machete.Data;
 using Machete.Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
-using Machete.Data;
+using System;
 using System.Data.Entity;
-using Machete.Test.Rx;
+using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Threading;
 
 
-namespace Machete.Test
+namespace Machete.Test.Selenium.View
 {
     class sharedUI
     {

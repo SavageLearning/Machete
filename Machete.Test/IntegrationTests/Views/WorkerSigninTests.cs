@@ -21,25 +21,19 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
+using Machete.Data;
+using Machete.Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Firefox;
-using OpenQA.Selenium.Support.UI;
-using OpenQA.Selenium.Interactions;
-using Machete.Domain;
-using System.Reflection;
-using Machete.Data;
+using OpenQA.Selenium.Chrome;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
-using System.Collections.Generic;
-using OpenQA.Selenium.Chrome;
-using System.Configuration;
+using System.Text;
 
-namespace Machete.Test
+namespace Machete.Test.Selenium.View
 {
     [TestClass]
     public class WorkerSigninTests
