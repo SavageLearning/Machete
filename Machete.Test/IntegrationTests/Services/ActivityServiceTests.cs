@@ -33,10 +33,10 @@ using Machete.Service;
 using Machete.Data.Infrastructure;
 using System.Globalization;
 
-namespace Machete.Test.IntegrationTests.Services
+namespace Machete.Test.Integration.Service
 {
     [TestClass]
-    public class ActivityServiceTests
+    public class ActivityTests
     {
         viewOptions dOptions;
         FluentRecordBase frb;
@@ -60,7 +60,7 @@ namespace Machete.Test.IntegrationTests.Services
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Activities)]
-        public void Integration_Activity_Service_CreateRandomClass()
+        public void Create_random_class()
         {
             //Used once to create dummy data to support report creation
             // requires change in app.config to point test database to production
@@ -89,7 +89,7 @@ namespace Machete.Test.IntegrationTests.Services
             //a.
         }
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Activities)]
-        public void Integration_Activity_service_CreateClass_within_hour()
+        public void CreateClass_within_hour()
         {
             IEnumerable<int> cardlist = frb.ToRepoWorker().GetAllQ().Select(q => q.dwccardnum).Distinct();
             IEnumerable<int> classlist = frb.ToRepoLookup().GetAllQ().Where(l => l.category == "activityName").Select(q => q.ID);
@@ -109,7 +109,7 @@ namespace Machete.Test.IntegrationTests.Services
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Activities)]
-        public void Integration_Activity_Service_GetIndexView_authenticated()
+        public void GetIndexView_authenticated()
         {
             //
             //Arrange
