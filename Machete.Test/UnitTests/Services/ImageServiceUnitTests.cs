@@ -33,18 +33,18 @@ using Machete.Service;
 using Machete.Domain;
 using Machete.Test;
 
-namespace Machete.Test.UnitTests.Services
+namespace Machete.Test.Unit.Service
 {
     /// <summary>
     /// Summary description for ImageServiceUnitTests
     /// </summary>
     [TestClass]
-    public class ImageServiceUnitTests
+    public class ImageTests
     {
         Mock<IImageRepository> _repo;
         Mock<IUnitOfWork> _uow;
         
-        public ImageServiceUnitTests()
+        public ImageTests()
         {
         }
 
@@ -89,7 +89,7 @@ namespace Machete.Test.UnitTests.Services
         #endregion
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Images)]
-        public void ImageService_GetImages_returns_Enumerable()
+        public void GetImages_returns_Enumerable()
         {
             //
             //Arrange
@@ -103,7 +103,7 @@ namespace Machete.Test.UnitTests.Services
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Images)]
-        public void ImageService_GetImage_returns_image()
+        public void GetImage_returns_image()
         {
             //
             //Arrange
@@ -122,7 +122,7 @@ namespace Machete.Test.UnitTests.Services
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Images)]
-        public void ImageService_CreateImage_returns_image()
+        public void CreateImage_returns_image()
         {
             //
             //Arrange
@@ -147,7 +147,7 @@ namespace Machete.Test.UnitTests.Services
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Images)]
-        public void ImageService_DeleteImage()
+        public void DeleteImage()
         {
             //
             //Arrange
@@ -169,7 +169,7 @@ namespace Machete.Test.UnitTests.Services
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Images)]
-        public void ImageService_SaveImage_updates_timestamp()
+        public void SaveImage_updates_timestamp()
         {
             //
             //Arrange

@@ -33,20 +33,20 @@ using Machete.Service;
 using Machete.Domain;
 using Machete.Test;
 
-namespace Machete.Test.UnitTests.Services
+namespace Machete.Test.Unit.Service
 {
     /// <summary>
     /// Summary description for WorkOrderServiceUnitTests
     /// </summary>
     [TestClass]
-    public class WorkOrderServiceUnitTests
+    public class WorkOrderTests
     {
         Mock<IWorkOrderRepository> _repo;
         Mock<IWorkAssignmentService> _waServ;
         Mock<IUnitOfWork> _uow;
         WorkOrderService _serv;
 
-        public WorkOrderServiceUnitTests()
+        public WorkOrderTests()
         {
         }
 
@@ -98,7 +98,7 @@ namespace Machete.Test.UnitTests.Services
             _serv = new WorkOrderService(_repo.Object, _waServ.Object, _uow.Object);
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
-        public void WorkOrderService_GetWorkOrders_returns_Enumerable()
+        public void GetWorkOrders_returns_Enumerable()
         {
             //
             //Arrange
@@ -108,7 +108,7 @@ namespace Machete.Test.UnitTests.Services
             Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkOrder>));
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
-        public void WorkOrderService_GetWorkOrder_returns_workOrder()
+        public void GetWorkOrder_returns_workOrder()
         {
             //
             //Arrange
@@ -123,7 +123,7 @@ namespace Machete.Test.UnitTests.Services
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
-        public void WorkOrderService_CreateWorkOrder_returns_workOrder()
+        public void CreateWorkOrder_returns_workOrder()
         {
             //
             //Arrange
@@ -149,7 +149,7 @@ namespace Machete.Test.UnitTests.Services
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
-        public void WorkOrderService_DeleteWorkOrder()
+        public void DeleteWorkOrder()
         {
             //
             //Arrange
@@ -172,7 +172,7 @@ namespace Machete.Test.UnitTests.Services
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
-        public void WorkOrderService_SaveWorkOrder_updates_timestamp()
+        public void SaveWorkOrder_updates_timestamp()
         {
             //
             //Arrange
