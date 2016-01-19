@@ -45,11 +45,10 @@ namespace Machete.Data
 
     public class MacheteConfiguration : DbMigrationsConfiguration<MacheteContext>
     {
-        public MacheteConfiguration()
-            : base()
+        public MacheteConfiguration() : base()
         {
-            AutomaticMigrationsEnabled = true;
-            AutomaticMigrationDataLossAllowed = true;
+            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationDataLossAllowed = false;
         }
 
         protected override void Seed(MacheteContext DB)
