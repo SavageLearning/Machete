@@ -34,10 +34,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 
-namespace Machete.Test
+namespace Machete.Test.Integration.Service
 {
     [TestClass]
-    public class PersonServiceTest
+    public class PersonTests
     {
         FluentRecordBase frb;
 
@@ -56,7 +56,7 @@ namespace Machete.Test
         /// 
         /// </summary>
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Persons)]
-        public void Integration_Person_Service_CreatePerson()
+        public void CreatePerson()
         {
             //Arrange
             //Act
@@ -68,7 +68,7 @@ namespace Machete.Test
         /// CreatePerson calls DbSet.Add() and  Context.SaveChanges() This leads to duplication
         /// </summary>
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Persons)]
-        public void Integration_Person_Service_CreatePersons_TestDuplicateBehavior()
+        public void CreatePersons_TestDuplicateBehavior()
         {
             int reccount = 0;
             //

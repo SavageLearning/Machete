@@ -34,10 +34,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data.Entity;
 using System.Globalization;
 
-namespace Machete.Test
+namespace Machete.Test.Integration.Service
 {
     [TestClass]
-    public class WorkerServiceTest
+    public class WorkerTests
     {
         viewOptions dOptions;
         FluentRecordBase frb;
@@ -63,7 +63,7 @@ namespace Machete.Test
         /// Create a worker record from the Worker Service
         /// </summary>
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Workers), TestCategory(TC.Fluent)]
-        public void Integration_Worker_Service_CreateWorker()
+        public void CreateWorker()
         {
             //
             //Arrange
@@ -78,7 +78,7 @@ namespace Machete.Test
         /// Create, Edit, and Save a worker record from the Worker Service
         /// </summary>
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Workers), TestCategory(TC.Fluent)]
-        public void Integration_Worker_Service_EditWorker()
+        public void EditWorker()
         {
             //
             //Arrange

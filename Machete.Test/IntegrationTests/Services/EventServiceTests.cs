@@ -10,10 +10,10 @@ using Machete.Service;
 using Machete.Data.Infrastructure;
 using System.Globalization;
 
-namespace Machete.Test.IntegrationTests.Services
+namespace Machete.Test.Integration.Service
 {
     [TestClass]
-    public class EventServiceTests
+    public class EventTests
     {
         viewOptions dOptions;
         FluentRecordBase frb;
@@ -43,7 +43,7 @@ namespace Machete.Test.IntegrationTests.Services
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Events)]
-        public void Integration_Events_Service_bvt()
+        public void Add_event()
         {
             var _ev = frb.ToEvent();
 

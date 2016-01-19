@@ -34,7 +34,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 
-namespace Machete.Test
+namespace Machete.Test.Integration.Service
 {
     [TestClass]
     public class IvbFluentRecordBase
@@ -74,7 +74,7 @@ namespace Machete.Test
         //}
 
         [TestMethod, TestCategory(TC.Fluent)]
-        public void Integration_IVB_activity_getUnassociated()
+        public void activity_getUnassociated()
         {
             //Arrange
             var worker = frb.ToWorker();

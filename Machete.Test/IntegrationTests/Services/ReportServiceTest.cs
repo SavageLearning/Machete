@@ -8,10 +8,10 @@ using Machete.Domain;
 using Machete.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Machete.Test.IntegrationTests.Services
+namespace Machete.Test.Integration.Service
 {
     [TestClass]
-    public class ReportServiceTest
+    public class ReportTests
     {
         FluentRecordBase frb;
         viewOptions _dOptions;
@@ -36,7 +36,7 @@ namespace Machete.Test.IntegrationTests.Services
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
-        public void Integration_ReportService_CountSignins()
+        public void CountSignins()
         {
             //Arrange
             DateTime beginDate = DateTime.Today;
@@ -52,7 +52,7 @@ namespace Machete.Test.IntegrationTests.Services
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
-        public void Integration_ReportService_CountUniqueSignins()
+        public void CountUniqueSignins()
         {
             //Arrange
             DateTime beginDate = DateTime.Today;
@@ -68,7 +68,7 @@ namespace Machete.Test.IntegrationTests.Services
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
-        public void Integration_ReportService_CountAssignments()
+        public void CountAssignments()
         {
             //Arrange
             DateTime beginDate = DateTime.Today;
@@ -83,7 +83,7 @@ namespace Machete.Test.IntegrationTests.Services
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
-        public void Integration_ReportService_CountCancelled()
+        public void CountCancelled()
         {
             //Arrange
             DateTime beginDate = DateTime.Today;
@@ -102,7 +102,7 @@ namespace Machete.Test.IntegrationTests.Services
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
-        public void Integration_ReportService_CountTypeofDispatch()
+        public void CountTypeofDispatch()
         {
             //Arrange
             DateTime beginDate = DateTime.Today;
@@ -120,7 +120,7 @@ namespace Machete.Test.IntegrationTests.Services
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
-        public void Integration_ReportService_HourlyWageAverage()
+        public void HourlyWageAverage()
         {
             //Arrange
             DateTime beginDate = DateTime.Today;
@@ -144,7 +144,7 @@ namespace Machete.Test.IntegrationTests.Services
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
-        public void Integration_ReportService_ListJobs()
+        public void ListJobs()
         {
             //Arrange
             DateTime beginDate = DateTime.Today;
@@ -166,7 +166,7 @@ namespace Machete.Test.IntegrationTests.Services
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
-        public void Integration_ReportService_ListZipCodes()
+        public void ListZipCodes()
         {
             //Arrange
             DateTime beginDate = DateTime.Today;
