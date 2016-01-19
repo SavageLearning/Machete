@@ -12,17 +12,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Machete.Test.UnitTests.Services
+namespace Machete.Test.Unit.Service
 {
     [TestClass]
-    public class LookupCacheUnitTests
+    public class LookupCacheTests
     {
         Mock<IDatabaseFactory> _db;
         Mock<MacheteContext> _ctxt;
         Mock<DbSet<Lookup>> _set;
         Mock<DbQuery<Lookup>> _q;
         LookupCache _serv;
-        public LookupCacheUnitTests()
+        public LookupCacheTests()
         {
         }
 
@@ -61,7 +61,7 @@ namespace Machete.Test.UnitTests.Services
 
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Lookups)]
-        public void LookupCache_GetCache_returns_Enumerable()
+        public void GetCache_returns_Enumerable()
         {
             // ARrange
             // Act
@@ -71,7 +71,7 @@ namespace Machete.Test.UnitTests.Services
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Lookups)]
-        public void LookupCache_getByKeys_returns_int()
+        public void getByKeys_returns_int()
         {
             // ARrange
             // Act
@@ -82,7 +82,7 @@ namespace Machete.Test.UnitTests.Services
 
         [ExpectedException(typeof(MacheteIntegrityException))]
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Lookups)]
-        public void LookupCache_getByKeys_throws_exception()
+        public void getByKeys_throws_exception()
         {
             // ARrange
             // Act

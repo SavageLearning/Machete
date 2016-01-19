@@ -33,13 +33,13 @@ using Machete.Service;
 using Machete.Domain;
 using Machete.Test;
 
-namespace Machete.Test.UnitTests.Services
+namespace Machete.Test.Unit.Service
 {
     /// <summary>
     /// Summary description for WorkAssignmentServiceUnitTests
     /// </summary>
     [TestClass]
-    public class WorkAssignmentServiceUnitTests
+    public class WorkAssignmentTests
     {
         Mock<IWorkAssignmentRepository> waRepo;
         Mock<IUnitOfWork> uow;
@@ -51,7 +51,7 @@ namespace Machete.Test.UnitTests.Services
         Mock<ILookupCache> lcache;
         Mock<IWorkerCache> _wcache;
 
-        public WorkAssignmentServiceUnitTests()
+        public WorkAssignmentTests()
         {
         }
 
@@ -109,7 +109,7 @@ namespace Machete.Test.UnitTests.Services
             
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WAs)]
-        public void Unit_WA_Service_GetWorkAssignments_returns_Enumerable()
+        public void GetWorkAssignments_returns_Enumerable()
         {
             //
             //Arrange
@@ -120,7 +120,7 @@ namespace Machete.Test.UnitTests.Services
             Assert.IsInstanceOfType(result, typeof(IEnumerable<WorkAssignment>));
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WAs)]
-        public void Unit_WA_Service_GetWorkAssignment_returns_workAssignment()
+        public void GetWorkAssignment_returns_workAssignment()
         {
             //
             //Arrange
@@ -135,7 +135,7 @@ namespace Machete.Test.UnitTests.Services
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WAs)]
-        public void Unit_WA_Service_CreateWorkAssignment_returns_workAssignment()
+        public void CreateWorkAssignment_returns_workAssignment()
         {
             //
             //Arrange
@@ -156,7 +156,7 @@ namespace Machete.Test.UnitTests.Services
             Assert.IsTrue(result.dateupdated > DateTime.MinValue);
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WAs)]
-        public void Unit_WA_Service_DeleteWorkAssignment()
+        public void DeleteWorkAssignment()
         {
             //
             //Arrange
@@ -175,7 +175,7 @@ namespace Machete.Test.UnitTests.Services
             Assert.AreEqual(dp, _wa);
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WAs)]
-        public void Unit_WA_Service_SaveWorkAssignment_updates_timestamp()
+        public void SaveWorkAssignment_updates_timestamp()
         {
             //
             //Arrange

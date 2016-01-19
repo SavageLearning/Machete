@@ -33,22 +33,22 @@ using Machete.Service;
 using Machete.Domain;
 using Machete.Test;
 
-namespace Machete.Test.UnitTests.Services
+namespace Machete.Test.Unit
 {
     /// <summary>
     /// Summary description for WorkerServiceUnitTests
     /// </summary>
     [TestClass]
-    public class WorkerServiceUnitTests
+    public class WorkerService
     {
         Mock<IWorkerRepository> _repo;
         Mock<IUnitOfWork> _uow;
         Mock<IWorkerCache> _wcache;
-        WorkerService _serv;
+        Service.WorkerService _serv;
         Mock<IWorkAssignmentRepository> _waRepo;
         Mock<IWorkOrderRepository> _woRepo;
         Mock<IPersonRepository> _pRepo;
-        public WorkerServiceUnitTests()
+        public WorkerService()
         {
         }
 
@@ -100,10 +100,10 @@ namespace Machete.Test.UnitTests.Services
             _waRepo = new Mock<IWorkAssignmentRepository>();
             _woRepo = new Mock<IWorkOrderRepository>();
             _pRepo = new Mock<IPersonRepository>();
-            _serv = new WorkerService(_repo.Object, _wcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object);
+            _serv = new Service.WorkerService(_repo.Object, _wcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object);
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Workers)]
-        public void WorkerService_GetWorkers_returns_Enumerable()
+        public void GetWorkers_returns_Enumerable()
         {
             //
             //Arrange
@@ -113,7 +113,7 @@ namespace Machete.Test.UnitTests.Services
             Assert.IsInstanceOfType(result, typeof(IEnumerable<Worker>));
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Workers)]
-        public void WorkerService_GetWorker_returns_worker()
+        public void GetWorker_returns_worker()
         {
             //
             //Arrange
@@ -129,7 +129,7 @@ namespace Machete.Test.UnitTests.Services
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Workers)]
-        public void WorkerService_CreateWorker_returns_worker()
+        public void CreateWorker_returns_worker()
         {
             //
             //Arrange
@@ -156,7 +156,7 @@ namespace Machete.Test.UnitTests.Services
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Workers)]
-        public void WorkerService_DeleteWorker()
+        public void DeleteWorker()
         {
             //
             //Arrange
@@ -168,7 +168,7 @@ namespace Machete.Test.UnitTests.Services
             Worker dp = new Worker();
             _repo.Setup(r => r.Delete(It.IsAny<Worker>())).Callback((Worker p) => { dp = p; });
             _repo.Setup(r => r.GetById(id)).Returns(Records.worker);
-            var _serv = new WorkerService(_repo.Object, _wcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object);
+            var _serv = new Service.WorkerService(_repo.Object, _wcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object);
             //
             //Act
             _serv.Delete(id, user);
@@ -178,7 +178,7 @@ namespace Machete.Test.UnitTests.Services
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Workers)]
-        public void WorkerService_SaveWorker_updates_timestamp()
+        public void SaveWorker_updates_timestamp()
         {
             //
             //Arrange
@@ -188,7 +188,7 @@ namespace Machete.Test.UnitTests.Services
             string user = "UnitTest";
             Records.worker.datecreated = DateTime.MinValue;
             Records.worker.dateupdated = DateTime.MinValue;
-            var _serv = new WorkerService(_repo.Object, _wcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object);
+            var _serv = new Service.WorkerService(_repo.Object, _wcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object);
             //
             //Act
             _serv.Save(Records.worker, user);

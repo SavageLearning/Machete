@@ -30,19 +30,19 @@ using Moq;
 using System;
 using System.Collections.Generic;
 
-namespace Machete.Test.UnitTests.Services
+namespace Machete.Test.Unit.Service
 {
     /// <summary>
     /// Summary description for PersonServiceUnitTests
     /// </summary>
     [TestClass]
-    public class PersonServiceUnitTests
+    public class PersonTests
     {
         Mock<IPersonRepository> _repo;
         Mock<IUnitOfWork> _uow;
         Mock<ILookupCache> _lcache;
         PersonService _serv;
-        public PersonServiceUnitTests()
+        public PersonTests()
         {
         }
 
@@ -95,7 +95,7 @@ namespace Machete.Test.UnitTests.Services
             _serv = new PersonService(_repo.Object, _uow.Object, _lcache.Object);
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Persons)]
-        public void PersonService_GetPersons_returns_Enumerable()
+        public void GetPersons_returns_Enumerable()
         {
             //
             //Arrange
@@ -105,7 +105,7 @@ namespace Machete.Test.UnitTests.Services
             Assert.IsInstanceOfType(result, typeof(IEnumerable<Person>));
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Persons)]
-        public void PersonService_GetPerson_returns_person()
+        public void GetPerson_returns_person()
         {
             //
             //Arrange
@@ -120,7 +120,7 @@ namespace Machete.Test.UnitTests.Services
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Persons)]
-        public void PersonService_CreatePerson_returns_person()
+        public void CreatePerson_returns_person()
         {
             //
             //Arrange
@@ -141,7 +141,7 @@ namespace Machete.Test.UnitTests.Services
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Persons)]
-        public void PersonService_DeletePerson()
+        public void DeletePerson()
         {
             //
             //Arrange
@@ -164,7 +164,7 @@ namespace Machete.Test.UnitTests.Services
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Persons)]
-        public void PersonService_SavePerson_updates_timestamp()
+        public void SavePerson_updates_timestamp()
         {
             //
             //Arrange
