@@ -1,22 +1,14 @@
-﻿using System;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Linq;
+﻿using Machete.Data;
+using Machete.Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Firefox;
-using OpenQA.Selenium.Support.UI;
-using OpenQA.Selenium.Interactions;
-using Machete.Domain;
-using System.Reflection;
-using Machete.Data;
-using System.Data.Entity;
-using Machete.Service;
 using OpenQA.Selenium.Chrome;
+using System;
 using System.Configuration;
+using System.Linq;
+using System.Text;
 
-namespace Machete.Test
+namespace Machete.Test.Selenium.View
 {
     [TestClass]
     public class PersonTests

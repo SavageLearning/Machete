@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
-namespace Machete.Test
+namespace Machete.Test.Selenium.View
 {
     [TestClass]
     public class UnauthActivityTests : FluentRecordBase
