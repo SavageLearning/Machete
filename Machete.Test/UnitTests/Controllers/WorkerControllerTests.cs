@@ -138,21 +138,21 @@ namespace Machete.Test.Unit.Controller
             Assert.AreEqual("{ iNewID = 12345, jobSuccess = True }",
                             result.Data.ToString());
         }
+        // Commented otu because worker form is now (almost) entirely optional
+        //[TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Workers)]
+        //[ExpectedException(typeof(InvalidOperationException),
+        //    "An invalid UpdateModel was inappropriately allowed.")]
+        //public void create_post_invalid_throws_exception()
+        //{
+        //    //Arrange
+        //    var _worker = new Worker();
 
-        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Workers)]
-        [ExpectedException(typeof(InvalidOperationException),
-            "An invalid UpdateModel was inappropriately allowed.")]
-        public void create_post_invalid_throws_exception()
-        {
-            //Arrange
-            var _worker = new Worker();
-
-            fakeform.Remove("height");
-            _ctrlr.ValueProvider = fakeform.ToValueProvider();
-            //Act
-            _ctrlr.Create(_worker, "UnitTest", null);
-            //Assert
-        }
+        //    fakeform.Remove("height");
+        //    _ctrlr.ValueProvider = fakeform.ToValueProvider();
+        //    //Act
+        //    _ctrlr.Create(_worker, "UnitTest", null);
+        //    //Assert
+        //}
 
         //
         //   Testing /Edit functionality
