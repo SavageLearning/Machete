@@ -300,6 +300,7 @@
     <Compile Include="Infrastructure\RepositoryBase.cs" />
     <Compile Include="Infrastructure\UnitOfWork.cs" />
     <Compile Include="Initialize\MacheteLookups.cs" />
+    <Compile Include="Initialize\MacheteUsers.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\MacheteIntercepterTransientErrors.cs" />
     <Compile Include="Logging\MacheteInterceptorLogging.cs" />
