@@ -32,10 +32,10 @@ using System.Data.Entity;
 using Machete.Service;
 using Machete.Data.Infrastructure;
 using System.Globalization;
-namespace Machete.Test.IntegrationTests.Services
+namespace Machete.Test.Integration.Service
 {
     [TestClass]
-    public class EmailServiceTests
+    public class EmailSTests
     {
         viewOptions dOptions;
         FluentRecordBase frb;
@@ -65,7 +65,7 @@ namespace Machete.Test.IntegrationTests.Services
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Emails)]
-        public void Integration_Email_Service_CreateAndValidateKey()
+        public void Create_and_validate_key()
         {
             //Arrange
             //Act
@@ -75,7 +75,7 @@ namespace Machete.Test.IntegrationTests.Services
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Emails)]
-        public void Integration_Email_Service_CreateWithWorkOrderID_joins_successfully()
+        public void Create_with_WorkOrderID_joins_successfully()
         {
             var wo = frb.ToWorkOrder();
             var email = frb.ToEmail();
@@ -89,7 +89,7 @@ namespace Machete.Test.IntegrationTests.Services
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Emails)]
-        public void Integration_Email_Service_GetIndex_filterOn_recordid()
+        public void GetIndex_filterOn_recordid()
         {
             var serv = frb.ToServEmail();
             var _em = frb.ToEmail();
@@ -102,7 +102,7 @@ namespace Machete.Test.IntegrationTests.Services
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Emails)]
-        public void Integration_Email_Service_getIndex_filterOn_woid()
+        public void getIndex_filterOn_woid()
         {
             var wo = frb.ToWorkOrder();
             var email = frb.ToEmail();
@@ -116,7 +116,7 @@ namespace Machete.Test.IntegrationTests.Services
         }
         [Ignore]
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Emails)]
-        public void Integration_Email_Service_SendEmailSimple()
+        public void SendEmailSimple()
         {
             var email = frb.ToEmail();
             var cfg = frb.ToEmailConfig();

@@ -21,18 +21,14 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AutoMapper;
-using Machete.Web.Helpers;
-using Moq;
-using Machete.Service;
 using Machete.Data.Infrastructure;
+using Machete.Service;
+using Machete.Web.Helpers;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
-namespace Machete.Test.UnitTests.Controllers
+namespace Machete.Test.Unit.Controller
 {
     [TestClass]
     public class HelperTests

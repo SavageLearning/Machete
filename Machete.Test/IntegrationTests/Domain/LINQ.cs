@@ -31,7 +31,7 @@ using System.Diagnostics;
 using Machete.Data;
 using System.Data.Entity;
 
-namespace Machete.Test
+namespace Machete.Test.Integration.Domain
 {
     [TestClass]
     public class LINQ

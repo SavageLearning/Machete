@@ -31,18 +31,19 @@ using Machete.Data;
 using Machete.Service;
 using Machete.Data.Infrastructure;
 
-namespace Machete.Test.Controllers
+namespace Machete.Test.Unit.Controller
 {
     [TestClass]
-    public class WorkerSigninControllerTests
+    public class WorkerSigninTests
     {
         Mock<IWorkerSigninService> _sserv ;
         Mock<IWorkerService> _wserv;
         Mock<IPersonService> _pserv;
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
-        public void WorkerSignin_getView_finds_joined_records()
+        public void getView_finds_joined_records()
         {
+            // TODO: Make this do something
             //arrange
             _sserv = new Mock<IWorkerSigninService>();
             _wserv = new Mock<IWorkerService>();

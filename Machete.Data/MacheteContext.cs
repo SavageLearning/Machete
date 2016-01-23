@@ -21,22 +21,17 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data.Entity;
 using Machete.Domain;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration;
-using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Validation;
 using System.Diagnostics;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Common;
-using System.Data.Entity.Infrastructure;
-using Microsoft.AspNet.Identity.EntityFramework;
 namespace Machete.Data
 {
+    [DbConfigurationType(typeof(AzureConfiguration))]
     public class MacheteContext : IdentityDbContext<ApplicationUser>, IDisposable
     {
         public MacheteContext() : base("macheteConnection") 
@@ -50,7 +45,7 @@ namespace Machete.Data
         public DbSet<Person> Persons { get; set; }
         public DbSet<Worker> Workers { get; set; }
         public DbSet<WorkAssignment> WorkAssignments { get; set; }
-        public DbSet<Lookup> Lookups { get; set; }        
+        public virtual DbSet<Lookup> Lookups { get; set; }        
         public DbSet<WorkerSignin> WorkerSignins { get; set; }
         public DbSet<Image> Images { get; set; }
         public DbSet<Employer> Employers { get; set; }
@@ -80,7 +75,7 @@ namespace Machete.Data
                 throw new Exception("Entity Valdiation errors: See debug log");
             }
         }
-
+        
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder); //This calls the other builders (below)

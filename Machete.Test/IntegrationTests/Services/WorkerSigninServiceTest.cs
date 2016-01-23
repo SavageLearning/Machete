@@ -36,10 +36,10 @@ using System.Data.Entity.Validation;
 using System.Globalization;
 using Machete.Web.Helpers;
 
-namespace Machete.Test
+namespace Machete.Test.Integration.Service
 {
     [TestClass]
-    public class WorkerSigninServiceTest
+    public class WorkerSigninTests
     {
         FluentRecordBase frb;
         viewOptions _dOptions;
@@ -62,7 +62,7 @@ namespace Machete.Test
             };
         }
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
-        public void Integration_WorkerSignin_LotterySignin()
+        public void LotterySignin()
         {
             // Arrange
             frb.AddWorker().AddWorkerSignin();
@@ -90,8 +90,9 @@ namespace Machete.Test
         /// Submit an unknown dwccardnum, verify it is recorded and returned by GetIndexView
         /// </summary>
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
-        public void Integration_WorkerSigninService_Integration_GetIndexView_record_unknown_worker()
+        public void GetIndexView_record_unknown_worker()
         {
+            //TODO Enable test
             ////            
             //WorkerSignin _signin = new WorkerSignin();
             //int cardnum = 30040;
@@ -110,7 +111,7 @@ namespace Machete.Test
         /// Filters WSI IndexView based on dwccardnum option. should return all records.
         /// </summary>
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
-        public void Integration_WorkerSigninService_Intergation_GetIndexView_check_search_dwccardnum()
+        public void GetIndexView_check_search_dwccardnum()
         {
             //
             // Arrange
@@ -132,7 +133,7 @@ namespace Machete.Test
         /// Filter on requested grouping
         /// </summary>
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
-        public void Integration_WorkerSigninService_Intergation_GetIndexView_workerRequested()
+        public void GetIndexView_workerRequested()
         {
             //
             // Arrange
@@ -153,9 +154,8 @@ namespace Machete.Test
             Assert.AreEqual(1, result.query.Count());
         }
 
-        //The right way.
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
-        public void Integration_WorkerSigninService_Intergation_Chaim1()
+        public void list_duplicates()
         {
             //
             // Arrange

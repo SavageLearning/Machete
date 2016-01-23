@@ -3,7 +3,7 @@ using Machete.Web.Models;
 using Machete.Data.Infrastructure;
 using System.Threading.Tasks;
 
-namespace Machete.Test.IntegrationTests.Controllers
+namespace Machete.Test.Integration.Controller
 {
     [TestClass]
     public class LoginIntegrationTest

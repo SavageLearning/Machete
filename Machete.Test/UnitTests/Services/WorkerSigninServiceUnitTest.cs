@@ -32,13 +32,13 @@ using Machete.Data.Infrastructure;
 using Machete.Service;
 using Machete.Domain;
 
-namespace Machete.Test.UnitTests.Services
+namespace Machete.Test.Unit.Service
 {
     /// <summary>
     /// Summary description for WorkerSigninServiceUnitTest
     /// </summary>
     [TestClass]
-    public class WorkerSigninServiceUnitTest
+    public class WorkerSigninTests
     {
         Mock<IWorkerSigninRepository> _wsiRepo;
         Mock<IWorkerRepository> _wRepo;
@@ -52,7 +52,7 @@ namespace Machete.Test.UnitTests.Services
         List<Person> _persons;
         List<WorkerRequest> _requests;
 
-        public WorkerSigninServiceUnitTest()
+        public WorkerSigninTests()
         {
         }
 
@@ -116,7 +116,7 @@ namespace Machete.Test.UnitTests.Services
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
-        public void WorkerSigninService_Create_without_worker_match_succeeds()
+        public void Create_WSI_without_worker_match_succeeds()
         {
             //
             //Arrange
@@ -133,7 +133,7 @@ namespace Machete.Test.UnitTests.Services
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
-        public void WorkerSigninService_Create_with_worker_match_succeeds()
+        public void Create_WSI_with_worker_match_succeeds()
         {
             //
             //Arrange
@@ -153,7 +153,7 @@ namespace Machete.Test.UnitTests.Services
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
-        public void WorkerSigninService_Create_deduplicate_succeeds()
+        public void Create_WSI_deduplicate_succeeds()
         {
             //
             //Arrange

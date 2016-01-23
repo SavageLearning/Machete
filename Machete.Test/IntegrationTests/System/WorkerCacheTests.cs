@@ -34,7 +34,7 @@ using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Globalization;
 
-namespace Machete.Test.IntegrationTests.System
+namespace Machete.Test.Integration.System
 {
     [TestClass]
     public class WorkerCacheTests
@@ -61,7 +61,7 @@ namespace Machete.Test.IntegrationTests.System
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Workers)]
-        public void Integration_WorkerCache_ExpireMembers_expires_1_active()
+        public void ExpireMembers_expires_1_active()
         {
 
             //Arrange
@@ -76,7 +76,7 @@ namespace Machete.Test.IntegrationTests.System
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Workers)]
-        public void Integration_WorkerCache_ExpireMembers_doesnt_expire_1_inactive()
+        public void ExpireMembers_doesnt_expire_1_inactive()
         {
 
             //Arrange
@@ -91,7 +91,7 @@ namespace Machete.Test.IntegrationTests.System
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Workers)]
-        public void Integration_WorkerCache_ReactivateMembers_activates_1_sanctioned()
+        public void ReactivateMembers_activates_1_sanctioned()
         {
 
             //Arrange
@@ -107,7 +107,7 @@ namespace Machete.Test.IntegrationTests.System
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Workers)]
-        public void Integration_WorkerCache_ExpireMembers_doesnt_activate_1_current_sanction()
+        public void ExpireMembers_doesnt_activate_1_current_sanction()
         {
 
             //Arrange
@@ -123,7 +123,7 @@ namespace Machete.Test.IntegrationTests.System
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Workers)]
-        public void Integration_WorkerCache_ExpireMembers_doesnt_activate_1_null_reactivation_date()
+        public void ExpireMembers_doesnt_activate_1_null_reactivation_date()
         {
 
             //Arrange

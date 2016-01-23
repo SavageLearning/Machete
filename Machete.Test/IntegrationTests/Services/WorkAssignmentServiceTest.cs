@@ -36,10 +36,10 @@ using System.Data.Entity.Validation;
 using System.Globalization;
 using Machete.Web.Helpers;
 
-namespace Machete.Test
+namespace Machete.Test.Integration.Service
 {
     [TestClass]
-    public class WorkAssignmentServiceTest 
+    public class WorkAssignmentTests
     {
         viewOptions dOptions;
         FluentRecordBase frb;
@@ -71,7 +71,7 @@ namespace Machete.Test
 
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
-        public void Integration_WA_Service_GetIndexView_basic()
+        public void GetIndexView_basic()
         {   
             //
             // Arrange
@@ -92,7 +92,7 @@ namespace Machete.Test
             Assert.AreEqual(8, result.query.Count()); //pending excluded
         }
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
-        public void Integration_WA_Service_GetIndexView_check_workerjoin_blank_worker_ok()
+        public void GetIndexView_check_workerjoin_blank_worker_ok()
         {
             frb.AddWorkAssignment(assignWorker: true);
             dOptions.sortColName = "assignedWorker";
@@ -105,7 +105,7 @@ namespace Machete.Test
             Assert.AreEqual(1, result.query.Count()); //pending excluded
         }
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
-        public void Integration_WA_Service_GetIndexView_checkwoidfilter()
+        public void GetIndexView_checkwoidfilter()
         {
             //Arrange
             frb.AddWorkOrder()
@@ -124,7 +124,7 @@ namespace Machete.Test
             Assert.AreEqual(3, result.query.Count());
         }
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
-        public void Integration_WA_Service_GetIndexView_check_search_paperordernum()
+        public void GetIndexView_check_search_paperordernum()
         { 
             //
             // arrange
@@ -144,7 +144,7 @@ namespace Machete.Test
             Assert.AreEqual(2, result.query.Count());
         }
         [TestMethod, TestCategory(TC.Fluent)]
-        public void Integration_WA_Service_GetIndexView_check_search_description()
+        public void GetIndexView_check_search_description()
         {
             //
             // Arrange
@@ -165,7 +165,7 @@ namespace Machete.Test
             Assert.AreEqual(1, result.query.Count());
         }
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
-        public void Integration_WA_Service_GetIndexView_check_search_Updatedby()
+        public void GetIndexView_check_search_Updatedby()
         {
             var updatedby = frb.RandomString(10);
             frb.AddWorkAssignment();
@@ -183,7 +183,7 @@ namespace Machete.Test
             Assert.AreEqual(1, result.query.Count());
         }
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
-        public void Integration_WA_Service_GetIndexView_check_search_skill()
+        public void GetIndexView_check_search_skill()
         {
             // arrange
             frb.AddWorkAssignment(skill: 71);
@@ -201,7 +201,7 @@ namespace Machete.Test
             Assert.AreEqual(1, result.query.Count());
         }
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
-        public void Integration_WA_Service_GetIndexView_check_searchWODateTimeofWork()
+        public void GetIndexView_check_searchWODateTimeofWork()
         {
             //Arrange
             var time = DateTime.Today.AddHours(9);
@@ -223,7 +223,7 @@ namespace Machete.Test
         // Simulates doubleclicking on a worker in the workerSignin list
         // 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
-        public void Integration_WA_Service_GetIndexView_check_searchdwccardnum()
+        public void GetIndexView_check_searchdwccardnum()
         {
             //arrange
             var skill = frb.ToLookupCache().getByKeys(LCategory.skill,LKey.Default);
@@ -242,7 +242,7 @@ namespace Machete.Test
             Assert.AreEqual(1, result.query.Count());
         }
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
-        public void Integration_WA_Service_GetIndexView_check_requested_filter()
+        public void GetIndexView_check_requested_filter()
         {
             //Arrange
             frb.AddWorkerRequest().AddWorkAssignment();
@@ -260,7 +260,7 @@ namespace Machete.Test
             Assert.AreEqual(1, result.query.Count());
         }
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
-        public void Integration_WA_Service_Assign_updates_WSI_and_WA()
+        public void Assign_updates_WSI_and_WA()
         {
             var wsi1 = frb.ToWorkerSignin();
             var wa1 = frb.ToWorkAssignment();
@@ -274,13 +274,13 @@ namespace Machete.Test
             Assert.IsNotNull(wsi2.WorkerID);
         }
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
-        public void Integration_WA_Service_GetSummary()
+        public void GetSummary()
         {
             var result = frb.ToServWorkAssignment().GetSummary("");
             Assert.IsNotNull(result, "Person.ID is Null");
         }
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
-        public void Integration_WA_Service_Delete_removes_record()
+        public void Delete_removes_record()
 
         {
             frb.AddWorkAssignment().AddWorkAssignment().AddWorkAssignment().AddWorkAssignment().AddWorkAssignment();
