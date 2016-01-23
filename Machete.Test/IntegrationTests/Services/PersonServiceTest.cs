@@ -33,6 +33,7 @@ using Machete.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
+using System.IO;
 
 namespace Machete.Test.Integration.Service
 {
@@ -40,6 +41,11 @@ namespace Machete.Test.Integration.Service
     public class PersonTests
     {
         FluentRecordBase frb;
+        [ClassInitialize]
+        public static void ClassInitalize(TestContext testContext)
+        {
+            AppDomain.CurrentDomain.SetData("DataDirectory", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ""));
+        }
 
         [TestInitialize]
         public void TestInitialize()

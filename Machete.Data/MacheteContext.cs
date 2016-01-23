@@ -74,7 +74,7 @@ namespace Machete.Data
                 throw new Exception("Entity Valdiation errors: See debug log");
             }
         }
-
+        
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder); //This calls the other builders (below)
