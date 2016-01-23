@@ -54,7 +54,7 @@ namespace Machete.Service
         {
             cache = MemoryCache.Default;
             DB = db;
-            //FillCache();
+            FillCache();
         }
         public void Dispose()
         {
