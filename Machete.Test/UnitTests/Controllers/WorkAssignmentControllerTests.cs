@@ -37,14 +37,14 @@ using Machete.Test;
 using Machete.Web.ViewModel;
 using Machete.Web.Helpers;
 
-namespace Machete.Test.Controllers
+namespace Machete.Test.Unit.Controller
 {
     /// <summary>
     /// Summary description for WorkAssignmentControllerUnitTests
     /// </summary>
 
     [TestClass]
-    public class WorkAssignmentsControllerTests
+    public class WorkAssignmentTests
     {
         Mock<IWorkAssignmentService> _waServ;
         Mock<IWorkerService> _wkrServ;
@@ -90,7 +90,7 @@ namespace Machete.Test.Controllers
         //
         #region createtests
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WAs)]
-        public void Unit_WA_Controller_create_get_returns_workAssignment()
+        public void create_get_returns_workAssignment()
         {
             //Arrange
             var lc = new List<Lookup>();
@@ -102,7 +102,7 @@ namespace Machete.Test.Controllers
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WAs)]
-        public void Unit_WA_Controller_create_valid_post_returns_json()
+        public void create_valid_post_returns_json()
         {
             //Arrange            
             WorkAssignment _asmt = new WorkAssignment();
@@ -133,7 +133,7 @@ namespace Machete.Test.Controllers
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WAs)]
         [ExpectedException(typeof(InvalidOperationException),
             "An invalid UpdateModel was inappropriately allowed.")]
-        public void Unit_WA_Controller_create_post_invalid_throws_exception()
+        public void create_post_invalid_throws_exception()
         {
             //Arrange
             WorkAssignment _asmt = new WorkAssignment();
@@ -233,7 +233,7 @@ namespace Machete.Test.Controllers
         #endregion
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WAs)]
-        public void Unit_WA_Controller_delete_post_returns_json()
+        public void delete_post_returns_json()
         {
             //Arrange
             int testid = 4242;

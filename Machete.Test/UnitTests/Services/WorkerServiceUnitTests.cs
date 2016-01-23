@@ -33,13 +33,13 @@ using Machete.Service;
 using Machete.Domain;
 using Machete.Test;
 
-namespace Machete.Test.UnitTests.Services
+namespace Machete.Test.Unit.Service
 {
     /// <summary>
     /// Summary description for WorkerServiceUnitTests
     /// </summary>
     [TestClass]
-    public class WorkerServiceUnitTests
+    public class WorkerTests
     {
         Mock<IWorkerRepository> _repo;
         Mock<IUnitOfWork> _uow;
@@ -48,7 +48,7 @@ namespace Machete.Test.UnitTests.Services
         Mock<IWorkAssignmentRepository> _waRepo;
         Mock<IWorkOrderRepository> _woRepo;
         Mock<IPersonRepository> _pRepo;
-        public WorkerServiceUnitTests()
+        public WorkerTests()
         {
         }
 
@@ -103,7 +103,7 @@ namespace Machete.Test.UnitTests.Services
             _serv = new WorkerService(_repo.Object, _wcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object);
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Workers)]
-        public void WorkerService_GetWorkers_returns_Enumerable()
+        public void GetWorkers_returns_Enumerable()
         {
             //
             //Arrange
@@ -113,7 +113,7 @@ namespace Machete.Test.UnitTests.Services
             Assert.IsInstanceOfType(result, typeof(IEnumerable<Worker>));
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Workers)]
-        public void WorkerService_GetWorker_returns_worker()
+        public void GetWorker_returns_worker()
         {
             //
             //Arrange
@@ -129,7 +129,7 @@ namespace Machete.Test.UnitTests.Services
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Workers)]
-        public void WorkerService_CreateWorker_returns_worker()
+        public void CreateWorker_returns_worker()
         {
             //
             //Arrange
@@ -156,7 +156,7 @@ namespace Machete.Test.UnitTests.Services
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Workers)]
-        public void WorkerService_DeleteWorker()
+        public void DeleteWorker()
         {
             //
             //Arrange
@@ -178,7 +178,7 @@ namespace Machete.Test.UnitTests.Services
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Workers)]
-        public void WorkerService_SaveWorker_updates_timestamp()
+        public void SaveWorker_updates_timestamp()
         {
             //
             //Arrange

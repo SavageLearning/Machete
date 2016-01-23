@@ -31,7 +31,7 @@ using System.Data.Entity;
 using Machete.Domain;
 using System.Data.Entity.Core.Objects;
 
-namespace Machete.Test.Data
+namespace Machete.Test.Integration.Data
 {
     [TestClass]
     public class DatabaseTests

@@ -36,10 +36,10 @@ using System.Data.Entity.Validation;
 using System.Globalization;
 using Machete.Web.Helpers;
 
-namespace Machete.Test
+namespace Machete.Test.Integration.Service
 {
     [TestClass]
-    public class WorkOrderServiceTest 
+    public class WorkOrderTests
     {
         viewOptions dOptions;
         FluentRecordBase frb;
@@ -63,7 +63,7 @@ namespace Machete.Test
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
-        public void Integration_WO_Service_GetSummary()
+        public void GetSummary()
         {
             //
             //Arrange
@@ -86,7 +86,7 @@ namespace Machete.Test
             Assert.IsTrue(result.Where(r => r.status == WorkOrder.iCancelled).First().count == 1, "GetSummary returned incorrect number of Cancelled records");
         }
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
-        public void Integration_WO_Service_CombinedSummary()
+        public void CombinedSummary()
         {
             //
             // Arrange
@@ -122,7 +122,7 @@ namespace Machete.Test
 
         }
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
-        public void Integration_WO_Service_get_GroupView()
+        public void get_GroupView()
         {
             // Arrange
             frb.AddWorkOrder(status: WorkOrder.iActive, dateTimeOfWork: DateTime.Now).AddWorkAssignment();
@@ -132,7 +132,7 @@ namespace Machete.Test
             Assert.IsNotNull(result, "Person.ID is Null");
         }
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
-        public void Integration_WO_Service_GetIndexView()
+        public void GetIndexView()
         {
             //
             //Arrange

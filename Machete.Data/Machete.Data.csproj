@@ -13,6 +13,7 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <OutputPath>bin\Dev\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -299,6 +300,7 @@
     <Compile Include="Infrastructure\RepositoryBase.cs" />
     <Compile Include="Infrastructure\UnitOfWork.cs" />
     <Compile Include="Initialize\MacheteLookups.cs" />
+    <Compile Include="Initialize\MacheteUsers.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\MacheteIntercepterTransientErrors.cs" />
     <Compile Include="Logging\MacheteInterceptorLogging.cs" />
@@ -360,6 +362,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Migrations\migration_commands.txt" />
     <Content Include="SQL\AddActivityConstants.sql" />
     <Content Include="SQL\CreateElmahTable.sql" />
     <Content Include="SQL\CreateNLogTable.sql" />

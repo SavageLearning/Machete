@@ -21,31 +21,26 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
+using Machete.Data.Infrastructure;
+using Machete.Domain;
+using Machete.Service;
+using Machete.Web.Controllers;
+using Machete.Web.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Machete.Data;
-using Machete.Service;
-using Machete.Data.Infrastructure;
-using Machete.Web.Controllers;
+using System;
+using System.Collections.Generic;
 using System.Web.Mvc;
-using Machete.Domain;
-using Machete.Test;
-using Machete.Web.ViewModel;
 using System.Web.Routing;
-using Machete.Web.Helpers;
 
-namespace Machete.Test.Controllers
+namespace Machete.Test.Unit.Controller
 {
     /// <summary>
     /// Summary description for PersonControllerUnitTests
     /// </summary>
 
     [TestClass]
-    public class PersonsControllerTests
+    public class PersonTests
     {
         Mock<IPersonService> _serv;
         Mock<ILookupCache> lcache;
@@ -72,7 +67,7 @@ namespace Machete.Test.Controllers
         //   Testing /Index functionality
         //
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
-        public void PersonController_index_get_returns_ActionResult()
+        public void index_get_returns_ActionResult()
         {
             //Arrange
             //Act
@@ -85,7 +80,7 @@ namespace Machete.Test.Controllers
         //
         #region createtests
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
-        public void PersonController_create_get_returns_person()
+        public void create_get_returns_person()
         {
             //Arrange
             //Act
@@ -95,7 +90,7 @@ namespace Machete.Test.Controllers
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
-        public void PersonController_create_post_valid_returns_JSON()
+        public void create_post_valid_returns_JSON()
         {
             //Arrange
             var person = new Person();
@@ -113,7 +108,7 @@ namespace Machete.Test.Controllers
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
         [ExpectedException(typeof(InvalidOperationException),
             "An invalid UpdateModel was inappropriately allowed.")]
-        public void PersonController_create_post_invalid_throws_exception()
+        public void create_post_invalid_throws_exception()
         {
             //Arrange
             var person = new Person();
@@ -130,7 +125,7 @@ namespace Machete.Test.Controllers
         //
         #region edittests
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
-        public void PersonController_edit_get_returns_person()
+        public void edit_get_returns_person()
         {
             //Arrange
             _serv = new Mock<IPersonService>();
@@ -145,7 +140,7 @@ namespace Machete.Test.Controllers
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
-        public void PersonController_edit_post_valid_updates_model_returns_JSON()
+        public void edit_post_valid_updates_model_returns_JSON()
         {
             //Arrange
             _serv = new Mock<IPersonService>();
@@ -183,7 +178,7 @@ namespace Machete.Test.Controllers
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
         [ExpectedException(typeof(InvalidOperationException),
             "An invalid UpdateModel was inappropriately allowed.")]
-        public void PersonController_edit_post_invalid_throws_exception()
+        public void edit_post_invalid_throws_exception()
         {
             //Arrange
             var person = new Person();
@@ -208,23 +203,9 @@ namespace Machete.Test.Controllers
         //
         // Testing /Delete functionality
         //
-        //[TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
-        //public void PersonController_delete_get_returns_person()
-        //{
-        //    //Arrange
-        //    _serv = new Mock<IPersonService>();
-        //    int testid = 4242;
-        //    Person fakeperson = new Person();
-        //    _serv.Setup(p => p.GetPerson(testid)).Returns(fakeperson);
-        //    var _ctrlr = new PersonController(_serv.Object);
-        //    //Act
-        //    var result = (ViewResult)_ctrlr.Delete(testid);
-        //    //Assert
-        //    Assert.IsInstanceOfType(result.ViewData.Model, typeof(Person));
-        //}
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
-        public void PersonController_delete_post_returns_JSON()
+        public void delete_post_returns_JSON()
         {
             //Arrange
             _serv = new Mock<IPersonService>();

@@ -1,17 +1,13 @@
-﻿using System;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
+﻿using Machete.Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Firefox;
-using OpenQA.Selenium.Support.UI;
-using OpenQA.Selenium.Interactions;
-using Machete.Domain;
 using OpenQA.Selenium.Chrome;
+using System;
 using System.Configuration;
+using System.Text;
+using System.Threading;
 
-namespace Machete.Test
+namespace Machete.Test.Selenium.View
 {
     [TestClass]
     public class EmployerTests

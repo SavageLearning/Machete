@@ -74,7 +74,6 @@ namespace Machete.Domain
         [LocalizedDisplayName("homeless", NameResourceType = typeof(Resources.Worker))]
         public bool? homeless { get; set; }
         //
-        [Required(ErrorMessageResourceName = "required", ErrorMessageResourceType = typeof(Resources.Worker))]
         public int? housingType { get; set; }
 
         [LocalizedDisplayName("raceID", NameResourceType = typeof(Resources.Worker))]

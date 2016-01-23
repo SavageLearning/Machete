@@ -21,26 +21,25 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+using Machete.Data.Infrastructure;
+using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Controllers;
-using System.Web.Mvc;
-using Machete.Domain;
-using Machete.Web.ViewModel;
 using Machete.Web.Helpers;
-using Machete.Data;
-using Machete.Data.Infrastructure;
+using Machete.Web.ViewModel;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using System;
+using System.Web.Mvc;
 
-namespace Machete.Test.UnitTests.Controllers
+namespace Machete.Test.Unit.Controller
 {
     /// <summary>
     /// Summary description for EmployerControllerUnitTests
     /// </summary>
 
     [TestClass]
-    public class EmployersControllerTests
+    public class EmployerTests
     {
         Mock<IEmployerService> serv;
         Mock<IWorkOrderService> woServ;
@@ -78,7 +77,7 @@ namespace Machete.Test.UnitTests.Controllers
         //   Testing /Index functionality
         //
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
-        public void EmployerController_index_get_returns_enumerable_list()
+        public void index_get_returns_enumerable_list()
         {
             //Arrange
             //Act
@@ -91,7 +90,7 @@ namespace Machete.Test.UnitTests.Controllers
         //
         #region createtests
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
-        public void EmployerController_create_get_returns_employer()
+        public void create_get_returns_employer()
         {
             //Arrange
             //Act
@@ -101,7 +100,7 @@ namespace Machete.Test.UnitTests.Controllers
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
-        public void EmployerController_create_valid_post_returns_json()
+        public void create_valid_post_returns_json()
         {
             //Arrange
             var employer = new Employer {ID = 4242, name = "unit test"};
@@ -116,7 +115,7 @@ namespace Machete.Test.UnitTests.Controllers
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
-        public void EmployerController_createcombined_valid_post_returns_json()
+        public void createcombined_valid_post_returns_json()
         {
             //Arrange
             var combined = new EmployerWoCombined { name = "unit test" };
@@ -136,7 +135,7 @@ namespace Machete.Test.UnitTests.Controllers
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
         [ExpectedException(typeof(InvalidOperationException),
             "An invalid UpdateModel was inappropriately allowed.")]
-        public void EmployerController_create_post_invalid_throws_exception()
+        public void create_post_invalid_throws_exception()
         {
             //Arrange
             var employer = new Employer();
@@ -226,7 +225,7 @@ namespace Machete.Test.UnitTests.Controllers
         //
         // Testing /Delete functionality
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
-        public void EmployerController_delete_post_returns_json()
+        public void delete_post_returns_json()
         {
             //Arrange
             serv = new Mock<IEmployerService>();

@@ -21,32 +21,29 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Machete.Data;
-using Moq;
 using Machete.Data.Infrastructure;
-using Machete.Service;
 using Machete.Domain;
-using Machete.Test;
+using Machete.Service;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using System;
+using System.Collections.Generic;
 
-namespace Machete.Test.UnitTests.Services
+namespace Machete.Test.Unit.Service
 {
     /// <summary>
     /// Summary description for EmployerServiceUnitTests
     /// </summary>
     [TestClass]
-    public class EmployerServiceUnitTests
+    public class EmployerTests
     {
         Mock<IEmployerRepository> _repo;
         Mock<IUnitOfWork> _uow;
         Mock<IWorkOrderService> _woServ;
         EmployerService _serv;
 
-        public EmployerServiceUnitTests()
+        public EmployerTests()
         {
             _repo = new Mock<IEmployerRepository>();
             _uow = new Mock<IUnitOfWork>();
@@ -75,7 +72,7 @@ namespace Machete.Test.UnitTests.Services
 
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Employers)]
-        public void EmployerService_GetEmployers_returns_Enumerable()
+        public void GetEmployers_returns_Enumerable()
         {
             //
             //Arrange
@@ -85,7 +82,7 @@ namespace Machete.Test.UnitTests.Services
             Assert.IsInstanceOfType(result, typeof(IEnumerable<Employer>));
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Employers)]
-        public void EmployerService_GetEmployer_returns_employer()
+        public void GetEmployer_returns_employer()
         {
             //
             //Arrange
@@ -101,7 +98,7 @@ namespace Machete.Test.UnitTests.Services
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Employers)]
-        public void EmployerService_CreateEmployer_returns_employer()
+        public void CreateEmployer_returns_employer()
         {
             //
             //Arrange
@@ -127,7 +124,7 @@ namespace Machete.Test.UnitTests.Services
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Employers)]
-        public void EmployerService_DeleteEmployer()
+        public void DeleteEmployer()
         {
             //
             //Arrange
@@ -151,7 +148,7 @@ namespace Machete.Test.UnitTests.Services
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Employers)]
-        public void EmployerService_SaveEmployer_updates_timestamp()
+        public void SaveEmployer_updates_timestamp()
         {
             //
             //Arrange

@@ -65,7 +65,8 @@ namespace Machete.Service
         //
         private void FillCache()
         {
-            IEnumerable<Lookup> lookups = DB.Get().Lookups.AsNoTracking().ToList();
+            var ctxt = DB.Get();
+            IEnumerable<Lookup> lookups = ctxt.Lookups.ToList();
             CacheItemPolicy policy = new CacheItemPolicy();
             //TODO: Put LookupCache expire time in config file
             policy.AbsoluteExpiration = new DateTimeOffset(DateTime.Now.AddMinutes(20));
@@ -152,16 +153,14 @@ namespace Machete.Service
         // Get the ID number for a given lookup string
         public int getByKeys(string category, string key)
         {
-            int rtnint = 0;
             try
             {
-                rtnint = getCache().Single(s => s.category == category && s.key == key).ID;
+                return getCache().Single(s => s.category == category && s.key == key).ID;
             }
             catch
             {
                 throw new MacheteIntegrityException("Unable to Lookup Category: " + category + ", text: " + key);
             }
-            return rtnint;
         }
         //
         //

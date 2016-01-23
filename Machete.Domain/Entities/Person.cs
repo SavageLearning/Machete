@@ -112,7 +112,7 @@ namespace Machete.Domain
         public string facebook { get; set; }
 
         [LocalizedDisplayName("gender", NameResourceType = typeof(Resources.Person))]
-        [Required(ErrorMessageResourceName = "gendererror", ErrorMessageResourceType = typeof(Resources.Person))]
+        //[Required(ErrorMessageResourceName = "gendererror", ErrorMessageResourceType = typeof(Resources.Person))]
         public int? gender { get; set; }
 
         [LocalizedDisplayName("genderother", NameResourceType = typeof(Resources.Person))]
