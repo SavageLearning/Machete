@@ -1,13 +1,6 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Machete.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Machete.Domain;
-using Machete.Data;
-using System.Data.Entity;
-using Machete.Service;
-using Machete.Data.Infrastructure;
+using System;
 using System.Globalization;
 
 namespace Machete.Test.Integration.Service

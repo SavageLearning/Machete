@@ -31,6 +31,7 @@ using Machete.Data.Infrastructure;
 using Machete.Web.Helpers;
 using System.Data.Entity;
 using Machete.Domain;
+using System.IO;
 
 namespace Machete.Test
 {
@@ -91,15 +92,20 @@ namespace Machete.Test
 
         public FluentRecordBase(string user)
         {
+
             _user = user;
         }
 
 
         public FluentRecordBase AddDBFactory(string connStringName = "MacheteConnection")
         {
-            Database.SetInitializer<MacheteContext>(new MacheteInitializer());
+            AppDomain.CurrentDomain.SetData("DataDirectory", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ""));
+            var initializer = new MacheteInitializer();
+            Database.SetInitializer<MacheteContext>(initializer);
             _dbFactory = new DatabaseFactory(connStringName);
+            initializer.InitializeDatabase(_dbFactory.Get());
             _uow = new UnitOfWork(_dbFactory);
+            _uow.Commit();
             AddLookupCache();
             return this;
         }
