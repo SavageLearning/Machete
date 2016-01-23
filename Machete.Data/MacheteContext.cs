@@ -31,6 +31,7 @@ using System.Data.Entity.Validation;
 using System.Diagnostics;
 namespace Machete.Data
 {
+    [DbConfigurationType(typeof(AzureConfiguration))]
     public class MacheteContext : IdentityDbContext<ApplicationUser>, IDisposable
     {
         public MacheteContext() : base("macheteConnection") 
