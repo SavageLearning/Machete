@@ -1,6 +1,9 @@
 Machete
 =======
 
+
+[![Build status-Master](https://ci.appveyor.com/api/projects/status/5rg49kr08b2njv4n?svg=true)](https://ci.appveyor.com/project/jcii/machete) 
+
 Machete is a web application that manages a day labor referral service.
 Machete tracks work orders for employers looking for short term, casual
 labor. It also provides a means for matching laborers with specific
