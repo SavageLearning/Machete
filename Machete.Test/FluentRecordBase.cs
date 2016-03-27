@@ -99,11 +99,9 @@ namespace Machete.Test
 
         public FluentRecordBase AddDBFactory(string connStringName = "MacheteConnection")
         {
-            //AppDomain.CurrentDomain.SetData("DataDirectory", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ""));
-            var initializer = new MacheteInitializer();
-            Database.SetInitializer<MacheteContext>(initializer);
+            AppDomain.CurrentDomain.SetData("DataDirectory", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ""));
+            Database.SetInitializer<MacheteContext>(new MacheteInitializer());
             _dbFactory = new DatabaseFactory(connStringName);
-            initializer.InitializeDatabase(_dbFactory.Get());
             _uow = new UnitOfWork(_dbFactory);
             _uow.Commit();
             AddLookupCache();
