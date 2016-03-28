@@ -21,15 +21,9 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Data.Entity;
-using Machete.Domain;
 using System.Data.Entity.Migrations;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
+using System.Linq;
 
 namespace Machete.Data
 {
