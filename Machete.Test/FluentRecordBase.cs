@@ -118,6 +118,7 @@ namespace Machete.Test
         {
             if (_dbFactory == null) AddDBFactory();
             _lcache = new LookupCache(_dbFactory);
+            _lcache.getCache();
             return this;
         }
 
