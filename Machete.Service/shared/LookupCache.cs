@@ -54,7 +54,7 @@ namespace Machete.Service
         {
             cache = MemoryCache.Default;
             DB = db;
-            FillCache(); //commented out related to moq'ing
+            //FillCache(); //commented out related to moq'ing
         }
         public void Dispose()
         {
