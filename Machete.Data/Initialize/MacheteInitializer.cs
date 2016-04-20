@@ -31,14 +31,14 @@ namespace Machete.Data
     {
 
     }
-    public class TestInitializer : DropCreateDatabaseAlways<MacheteContext>
+    public class TestInitializer : DropAndMigrateDatabaseToLatestVersion<MacheteContext, MacheteConfiguration>
     {
-        protected override void Seed(MacheteContext DB)
-        {
-            MacheteLookup.Initialize(DB);
-            MacheteUsers.Initialize(DB);
-            base.Seed(DB);
-        }
+        //protected override void Seed(MacheteContext DB)
+        //{
+        //    MacheteLookup.Initialize(DB);
+        //    MacheteUsers.Initialize(DB);
+        //    base.Seed(DB);
+        //}
     }
 
     public class MacheteConfiguration : DbMigrationsConfiguration<MacheteContext>
@@ -54,5 +54,29 @@ namespace Machete.Data
             if (!DB.Lookups.Any()) MacheteLookup.Initialize(DB);
             if (!DB.Users.Any())   MacheteUsers.Initialize(DB);
         }
+    }
+    public class DropAndMigrateDatabaseToLatestVersion<TContext, TMigrationsConfiguration>
+        : IDatabaseInitializer<TContext>
+        where TContext : DbContext, new()
+        where TMigrationsConfiguration : DbMigrationsConfiguration<TContext>, new()
+    {
+        TMigrationsConfiguration _config;
+
+        public DropAndMigrateDatabaseToLatestVersion()
+        {
+            _config = new TMigrationsConfiguration();
+        }
+
+        public void InitializeDatabase(TContext context)
+        {
+            context.Database.Delete();
+
+            var migrator = new DbMigrator(_config);
+            migrator.Update();
+
+            Seed(context);
+        }
+
+        public virtual void Seed(TContext context) { }
     }
 }
