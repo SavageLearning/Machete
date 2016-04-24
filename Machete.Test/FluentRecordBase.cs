@@ -106,6 +106,7 @@ namespace Machete.Test
             initializer.InitializeDatabase(_dbFactory.Get());
             _uow = new UnitOfWork(_dbFactory);
             _uow.Commit();
+
             AddLookupCache();
             return this;
         }
@@ -120,6 +121,7 @@ namespace Machete.Test
         {
             if (_dbFactory == null) AddDBFactory();
             _lcache = new LookupCache(_dbFactory);
+            _lcache.getCache();
             return this;
         }
 

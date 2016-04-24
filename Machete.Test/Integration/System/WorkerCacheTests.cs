@@ -87,6 +87,7 @@ namespace Machete.Test.Integration.System
             IEnumerable<Worker> result = frb.ToRepoWorker().GetAll().AsEnumerable()
                 .Where(p => p.memberStatus == Worker.iExpired && p.dwccardnum == _w.dwccardnum);
             //Assert
+            Assert.AreNotEqual(0, Worker.iInactive, "Worker Inactive constant set to zero");
             Assert.AreEqual(0, result.Count(), "Failed to expire members");
         }
 

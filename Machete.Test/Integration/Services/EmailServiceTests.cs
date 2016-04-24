@@ -63,7 +63,7 @@ namespace Machete.Test.Integration.Service
         {
             frb = null;
         }
-
+        [Ignore]
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Emails)]
         public void Create_and_validate_key()
         {
@@ -73,7 +73,7 @@ namespace Machete.Test.Integration.Service
             //Assert
             Assert.IsNotNull(result.ID, "Email.ID is null");
         }
-
+        [Ignore]
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Emails)]
         public void Create_with_WorkOrderID_joins_successfully()
         {
@@ -87,7 +87,7 @@ namespace Machete.Test.Integration.Service
             Assert.IsNotNull(result.WorkOrders);
             Assert.AreEqual(wo.ID, result.WorkOrders.SingleOrDefault().ID);
         }
-
+        [Ignore]
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Emails)]
         public void GetIndex_filterOn_recordid()
         {

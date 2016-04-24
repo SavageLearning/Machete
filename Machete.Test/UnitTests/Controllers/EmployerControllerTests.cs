@@ -70,7 +70,7 @@ namespace Machete.Test.Unit.Controller
                            {"phone", "123-456-7890"},
                            {"zipcode", "1234567890"}
                        };
-            Lookups.Initialize(lcache.Object, dbfactory.Object);
+            Lookups.Initialize(lcache.Object);
             MacheteMapper.Initialize();
         }
         //

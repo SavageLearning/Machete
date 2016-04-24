@@ -55,6 +55,7 @@ namespace Machete.Test.Unit.Service
             _set.As<IQueryable<Lookup>>().Setup(m => m.Expression).Returns(list.Expression);
             _set.As<IQueryable<Lookup>>().Setup(m => m.ElementType).Returns(list.ElementType);
             _set.As<IQueryable<Lookup>>().Setup(m => m.GetEnumerator()).Returns(list.GetEnumerator());
+            _set.Setup(r => r.AsNoTracking()).Returns(_set.Object);
             _ctxt.Setup(r => r.Lookups).Returns(_set.Object);
             _db.Setup(r => r.Get()).Returns(_ctxt.Object);
             _serv = new LookupCache(_db.Object);
