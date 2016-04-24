@@ -118,10 +118,14 @@ namespace Machete.Web
             ModelBinders.Binders.Add(typeof(List<WorkerRequest>), new workerRequestBinder());
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
-            Database.SetInitializer(new MacheteInitializer());
+            var initializer = new MacheteInitializer();
+            Database.SetInitializer(initializer);
             IUnityContainer container = GetUnityContainer();
+            var db = container.Resolve<IDatabaseFactory>();
+            initializer.InitializeDatabase(db.Get());
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
-            Lookups.Initialize(container.Resolve<ILookupCache>(), container.Resolve<IDatabaseFactory>()); // Static object; used in cshtml files; used instead of proper view models
+            //Lookups.Initialize(container.Resolve<ILookupCache>(), container.Resolve<IDatabaseFactory>()); // Static object; used in cshtml files; used instead of proper view models
+            Lookups.Initialize(container.Resolve<ILookupCache>()); // Static object; used in cshtml files; used instead of proper view models
             MacheteMapper.Initialize(); // AutoMapper
         }
 

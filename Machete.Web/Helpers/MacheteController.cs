@@ -34,10 +34,6 @@ using System.Text;
 
 namespace Machete.Web.Controllers
 {
-    //    IDictionary<string, object> data = new RouteValueDictionary(result.Data);
-    //Assert.AreEqual(0, data["iNewID"]);
-    //Assert.AreEqual(null, data["sNewLabel"]);
-    //Assert.AreEqual(null, data["sNewRef"]);
     public class MacheteController : Controller
     {
         private Logger log = LogManager.GetCurrentClassLogger();

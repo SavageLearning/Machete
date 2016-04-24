@@ -41,7 +41,7 @@ namespace Machete.Test.Unit.Controller
         {
             lcache = new Mock<ILookupCache>();
             dbfactory = new Mock<IDatabaseFactory>();
-            Lookups.Initialize(lcache.Object, dbfactory.Object);
+            Lookups.Initialize(lcache.Object);
         }
 
         [TestMethod]

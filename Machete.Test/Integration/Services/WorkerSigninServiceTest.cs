@@ -21,20 +21,13 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.Mvc;
-using Machete.Data;
-using Machete.Data.Infrastructure;
 using Machete.Domain;
 using Machete.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Data.Entity;
-using System.Data.Entity.Validation;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
-using Machete.Web.Helpers;
+using System.Linq;
 
 namespace Machete.Test.Integration.Service
 {
