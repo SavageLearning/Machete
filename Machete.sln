@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A89D8B77-274B-4032-8A72-0DFC7879BD44}"
 	ProjectSection(SolutionItems) = preProject
@@ -62,6 +62,9 @@ Global
 		Graton|Any CPU = Graton|Any CPU
 		Graton|Mixed Platforms = Graton|Mixed Platforms
 		Graton|x86 = Graton|x86
+		localIIS|Any CPU = localIIS|Any CPU
+		localIIS|Mixed Platforms = localIIS|Mixed Platforms
+		localIIS|x86 = localIIS|x86
 		MountainView|Any CPU = MountainView|Any CPU
 		MountainView|Mixed Platforms = MountainView|Mixed Platforms
 		MountainView|x86 = MountainView|x86
@@ -150,6 +153,12 @@ Global
 		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Graton|Mixed Platforms.ActiveCfg = Graton|Any CPU
 		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Graton|Mixed Platforms.Build.0 = Graton|Any CPU
 		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.Graton|x86.ActiveCfg = Graton|Any CPU
+		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.localIIS|Any CPU.ActiveCfg = localIIS|Any CPU
+		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.localIIS|Any CPU.Build.0 = localIIS|Any CPU
+		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.localIIS|Mixed Platforms.ActiveCfg = localIIS|Any CPU
+		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.localIIS|Mixed Platforms.Build.0 = localIIS|Any CPU
+		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.localIIS|x86.ActiveCfg = localIIS|Any CPU
+		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.localIIS|x86.Build.0 = localIIS|Any CPU
 		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.MountainView|Any CPU.ActiveCfg = Release|Any CPU
 		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.MountainView|Any CPU.Build.0 = Release|Any CPU
 		{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}.MountainView|Mixed Platforms.ActiveCfg = MountainView|Any CPU
@@ -255,6 +264,11 @@ Global
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.Graton|Mixed Platforms.ActiveCfg = Graton|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.Graton|Mixed Platforms.Build.0 = Graton|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.Graton|x86.ActiveCfg = Graton|Any CPU
+		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.localIIS|Any CPU.ActiveCfg = localIIS|Any CPU
+		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.localIIS|Any CPU.Build.0 = localIIS|Any CPU
+		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.localIIS|Mixed Platforms.ActiveCfg = localIIS|Any CPU
+		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.localIIS|x86.ActiveCfg = localIIS|Any CPU
+		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.localIIS|x86.Build.0 = localIIS|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.MountainView|Any CPU.ActiveCfg = Release|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.MountainView|Mixed Platforms.ActiveCfg = MountainView|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.MountainView|Mixed Platforms.Build.0 = MountainView|Any CPU
@@ -348,6 +362,9 @@ Global
 		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.Graton|Mixed Platforms.ActiveCfg = Graton|x86
 		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.Graton|Mixed Platforms.Build.0 = Graton|x86
 		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.Graton|x86.ActiveCfg = Graton|x86
+		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.localIIS|Any CPU.ActiveCfg = localIIS|x86
+		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.localIIS|Mixed Platforms.ActiveCfg = localIIS|x86
+		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.localIIS|x86.ActiveCfg = localIIS|x86
 		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.MountainView|Any CPU.ActiveCfg = Release|x86
 		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.MountainView|Mixed Platforms.ActiveCfg = MountainView|x86
 		{2774F04F-8261-4E87-A9BA-5EE8E2807EE6}.MountainView|Mixed Platforms.Build.0 = MountainView|x86
@@ -447,6 +464,12 @@ Global
 		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Graton|Mixed Platforms.ActiveCfg = Graton|Any CPU
 		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Graton|Mixed Platforms.Build.0 = Graton|Any CPU
 		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.Graton|x86.ActiveCfg = Graton|Any CPU
+		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.localIIS|Any CPU.ActiveCfg = localIIS|Any CPU
+		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.localIIS|Any CPU.Build.0 = localIIS|Any CPU
+		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.localIIS|Mixed Platforms.ActiveCfg = localIIS|Any CPU
+		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.localIIS|Mixed Platforms.Build.0 = localIIS|Any CPU
+		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.localIIS|x86.ActiveCfg = localIIS|Any CPU
+		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.localIIS|x86.Build.0 = localIIS|Any CPU
 		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.MountainView|Any CPU.ActiveCfg = Release|Any CPU
 		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.MountainView|Any CPU.Build.0 = Release|Any CPU
 		{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}.MountainView|Mixed Platforms.ActiveCfg = MountainView|Any CPU
@@ -557,6 +580,13 @@ Global
 		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Graton|Mixed Platforms.ActiveCfg = Graton|Any CPU
 		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Graton|Mixed Platforms.Build.0 = Graton|Any CPU
 		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.Graton|x86.ActiveCfg = Graton|Any CPU
+		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.localIIS|Any CPU.ActiveCfg = localIIS|Any CPU
+		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.localIIS|Any CPU.Build.0 = localIIS|Any CPU
+		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.localIIS|Mixed Platforms.ActiveCfg = localIIS|Any CPU
+		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.localIIS|Mixed Platforms.Build.0 = localIIS|Any CPU
+		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.localIIS|Mixed Platforms.Deploy.0 = localIIS|Any CPU
+		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.localIIS|x86.ActiveCfg = localIIS|Any CPU
+		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.localIIS|x86.Build.0 = localIIS|Any CPU
 		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.MountainView|Any CPU.ActiveCfg = Release|Any CPU
 		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.MountainView|Any CPU.Build.0 = Release|Any CPU
 		{A9F879BC-CA11-4470-A655-8541B5DA41A1}.MountainView|Mixed Platforms.ActiveCfg = MountainView|Any CPU
@@ -657,6 +687,10 @@ Global
 		{3E1B598D-9E47-4967-93E6-4D6DDF4AB7EF}.Graton|Mixed Platforms.ActiveCfg = Graton|Any CPU
 		{3E1B598D-9E47-4967-93E6-4D6DDF4AB7EF}.Graton|Mixed Platforms.Build.0 = Graton|Any CPU
 		{3E1B598D-9E47-4967-93E6-4D6DDF4AB7EF}.Graton|x86.ActiveCfg = Graton|Any CPU
+		{3E1B598D-9E47-4967-93E6-4D6DDF4AB7EF}.localIIS|Any CPU.ActiveCfg = localIIS|Any CPU
+		{3E1B598D-9E47-4967-93E6-4D6DDF4AB7EF}.localIIS|Mixed Platforms.ActiveCfg = localIIS|Any CPU
+		{3E1B598D-9E47-4967-93E6-4D6DDF4AB7EF}.localIIS|x86.ActiveCfg = localIIS|Any CPU
+		{3E1B598D-9E47-4967-93E6-4D6DDF4AB7EF}.localIIS|x86.Build.0 = localIIS|Any CPU
 		{3E1B598D-9E47-4967-93E6-4D6DDF4AB7EF}.MountainView|Any CPU.ActiveCfg = Release|Any CPU
 		{3E1B598D-9E47-4967-93E6-4D6DDF4AB7EF}.MountainView|Mixed Platforms.ActiveCfg = MountainView|Any CPU
 		{3E1B598D-9E47-4967-93E6-4D6DDF4AB7EF}.MountainView|Mixed Platforms.Build.0 = MountainView|Any CPU
@@ -744,6 +778,10 @@ Global
 		{A8DE6677-0E32-4229-8B83-9A3C17C87E85}.Graton|Mixed Platforms.ActiveCfg = Graton|Any CPU
 		{A8DE6677-0E32-4229-8B83-9A3C17C87E85}.Graton|Mixed Platforms.Build.0 = Graton|Any CPU
 		{A8DE6677-0E32-4229-8B83-9A3C17C87E85}.Graton|x86.ActiveCfg = Graton|Any CPU
+		{A8DE6677-0E32-4229-8B83-9A3C17C87E85}.localIIS|Any CPU.ActiveCfg = localIIS|Any CPU
+		{A8DE6677-0E32-4229-8B83-9A3C17C87E85}.localIIS|Mixed Platforms.ActiveCfg = localIIS|Any CPU
+		{A8DE6677-0E32-4229-8B83-9A3C17C87E85}.localIIS|x86.ActiveCfg = localIIS|Any CPU
+		{A8DE6677-0E32-4229-8B83-9A3C17C87E85}.localIIS|x86.Build.0 = localIIS|Any CPU
 		{A8DE6677-0E32-4229-8B83-9A3C17C87E85}.MountainView|Any CPU.ActiveCfg = Release|Any CPU
 		{A8DE6677-0E32-4229-8B83-9A3C17C87E85}.MountainView|Mixed Platforms.ActiveCfg = MountainView|Any CPU
 		{A8DE6677-0E32-4229-8B83-9A3C17C87E85}.MountainView|Mixed Platforms.Build.0 = MountainView|Any CPU
@@ -831,6 +869,10 @@ Global
 		{61A494C4-6B88-4E63-BD3B-4503EE203EF6}.Graton|Mixed Platforms.ActiveCfg = Graton|Any CPU
 		{61A494C4-6B88-4E63-BD3B-4503EE203EF6}.Graton|Mixed Platforms.Build.0 = Graton|Any CPU
 		{61A494C4-6B88-4E63-BD3B-4503EE203EF6}.Graton|x86.ActiveCfg = Graton|Any CPU
+		{61A494C4-6B88-4E63-BD3B-4503EE203EF6}.localIIS|Any CPU.ActiveCfg = localIIS|Any CPU
+		{61A494C4-6B88-4E63-BD3B-4503EE203EF6}.localIIS|Mixed Platforms.ActiveCfg = localIIS|Any CPU
+		{61A494C4-6B88-4E63-BD3B-4503EE203EF6}.localIIS|x86.ActiveCfg = localIIS|Any CPU
+		{61A494C4-6B88-4E63-BD3B-4503EE203EF6}.localIIS|x86.Build.0 = localIIS|Any CPU
 		{61A494C4-6B88-4E63-BD3B-4503EE203EF6}.MountainView|Any CPU.ActiveCfg = Release|Any CPU
 		{61A494C4-6B88-4E63-BD3B-4503EE203EF6}.MountainView|Mixed Platforms.ActiveCfg = MountainView|Any CPU
 		{61A494C4-6B88-4E63-BD3B-4503EE203EF6}.MountainView|Mixed Platforms.Build.0 = MountainView|Any CPU
@@ -928,6 +970,12 @@ Global
 		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.Graton|Mixed Platforms.ActiveCfg = Graton|Any CPU
 		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.Graton|Mixed Platforms.Build.0 = Graton|Any CPU
 		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.Graton|x86.ActiveCfg = Graton|Any CPU
+		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.localIIS|Any CPU.ActiveCfg = localIIS|Any CPU
+		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.localIIS|Any CPU.Build.0 = localIIS|Any CPU
+		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.localIIS|Mixed Platforms.ActiveCfg = localIIS|Any CPU
+		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.localIIS|Mixed Platforms.Build.0 = localIIS|Any CPU
+		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.localIIS|x86.ActiveCfg = localIIS|Any CPU
+		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.localIIS|x86.Build.0 = localIIS|Any CPU
 		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.MountainView|Any CPU.ActiveCfg = MountainView|Any CPU
 		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.MountainView|Any CPU.Build.0 = MountainView|Any CPU
 		{D2C4C806-4D23-4E62-B96D-23BDAB953C73}.MountainView|Mixed Platforms.ActiveCfg = MountainView|Any CPU
