@@ -22,6 +22,7 @@
     <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
     <WebGreaseLibPath>..\packages\WebGrease.1.5.2\lib</WebGreaseLibPath>
     <OutputPath>bin\Dev\</OutputPath>
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -954,6 +955,7 @@
     <None Include="Properties\PublishProfiles\DonBosco.pubxml" />
     <None Include="Properties\PublishProfiles\ElCentro.pubxml" />
     <None Include="Properties\PublishProfiles\Graton.pubxml" />
+    <None Include="Properties\PublishProfiles\localIIS.pubxml" />
     <None Include="Properties\PublishProfiles\MountainView.pubxml" />
     <None Include="Properties\PublishProfiles\Nice.pubxml" />
     <None Include="Properties\PublishProfiles\Pasadena.pubxml" />
@@ -1002,6 +1004,9 @@
     <None Include="Web.CasaLatina.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+    <None Include="Web.Cel.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
     <None Include="Web.CentroHumanitario.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1025,6 +1030,9 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <None Include="Web.Hayward.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.localIIS.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <None Include="Web.MountainView.config">
@@ -1052,6 +1060,9 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <None Include="Web.Test.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.WindofSpirit.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <None Include="Web.WorkersJustice.config">
@@ -1234,6 +1245,15 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Cel|AnyCPU'">
     <OutputPath>bin\</OutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'localIIS|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
@@ -1244,7 +1264,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>4213</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
