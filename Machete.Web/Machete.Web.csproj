@@ -955,6 +955,7 @@
     <None Include="Properties\PublishProfiles\DonBosco.pubxml" />
     <None Include="Properties\PublishProfiles\ElCentro.pubxml" />
     <None Include="Properties\PublishProfiles\Graton.pubxml" />
+    <None Include="Properties\PublishProfiles\localIIS.pubxml" />
     <None Include="Properties\PublishProfiles\MountainView.pubxml" />
     <None Include="Properties\PublishProfiles\Nice.pubxml" />
     <None Include="Properties\PublishProfiles\Pasadena.pubxml" />
@@ -1003,6 +1004,9 @@
     <None Include="Web.CasaLatina.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+    <None Include="Web.Cel.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
     <None Include="Web.CentroHumanitario.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1026,6 +1030,9 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <None Include="Web.Hayward.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.localIIS.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <None Include="Web.MountainView.config">
@@ -1053,6 +1060,9 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <None Include="Web.Test.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.WindofSpirit.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <None Include="Web.WorkersJustice.config">
