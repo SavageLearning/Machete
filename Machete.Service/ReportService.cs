@@ -201,10 +201,10 @@ namespace Machete.Service
                     {
                         date = group.Key,
                         count = group.Count(),
-                        dwcList = group.Sum(a => a.dwcList == null ? 0 : a.dwcList),
-                        dwcPropio = group.Sum(a => a.dwcPatron == null ? 0 : a.dwcPatron),
-                        hhhList = group.Sum(a => a.hhhList == null ? 0 : a.hhhList),
-                        hhhPropio = group.Sum(a => a.hhhPatron == null ? 0 : a.hhhPatron),
+                        dwcList = group.Sum(a => a.dwcList),
+                        dwcPropio = group.Sum(a => a.dwcPatron),
+                        hhhList = group.Sum(a => a.hhhList),
+                        hhhPropio = group.Sum(a => a.hhhPatron),
                     })
                 .OrderBy(fini => fini.date);
 
