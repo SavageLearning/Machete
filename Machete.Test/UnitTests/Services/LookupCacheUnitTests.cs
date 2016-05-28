@@ -20,7 +20,7 @@ namespace Machete.Test.Unit.Service
         Mock<IDatabaseFactory> _db;
         Mock<MacheteContext> _ctxt;
         Mock<DbSet<Lookup>> _set;
-        Mock<DbQuery<Lookup>> _q;
+        //Mock<DbQuery<Lookup>> _q;
         LookupCache _serv;
         public LookupCacheTests()
         {

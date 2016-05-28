@@ -217,13 +217,13 @@ namespace Machete.Web.Controllers
                 var date = actSched.dateStart.AddDays(i);
                 var day = (int)date.DayOfWeek;
 
-                if (day == 0 && !actSched.sunday) ;
-                else if (day == 1 && !actSched.monday) ;
-                else if (day == 2 && !actSched.tuesday) ;
-                else if (day == 3 && !actSched.wednesday) ;
-                else if (day == 4 && !actSched.thursday) ;
-                else if (day == 5 && !actSched.friday) ;
-                else if (day == 6 && !actSched.saturday) ;
+                if (day == 0 && !actSched.sunday) break;
+                else if (day == 1 && !actSched.monday) break;
+                else if (day == 2 && !actSched.tuesday) break;
+                else if (day == 3 && !actSched.wednesday) break;
+                else if (day == 4 && !actSched.thursday) break;
+                else if (day == 5 && !actSched.friday) break;
+                else if (day == 6 && !actSched.saturday) break;
                 else
                 {
                     var activ = new Activity();

@@ -70,7 +70,7 @@ namespace Machete.Service
 
         }
 
-        public void Save(Email email, string userName)
+        public override void Save(Email email, string userName)
         {
             if (email.statusID == Email.iSent) { return; } 
             if (email.statusID == Email.iReadyToSend)
