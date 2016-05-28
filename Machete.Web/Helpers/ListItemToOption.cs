@@ -21,12 +21,6 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Text;
-using System.Web.Mvc;
 
 namespace System.Web.Mvc.Html
 {
