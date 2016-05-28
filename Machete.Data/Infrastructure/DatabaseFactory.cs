@@ -21,12 +21,9 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using NLog;
 using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 

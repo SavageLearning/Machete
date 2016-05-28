@@ -21,12 +21,6 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Drawing;
-using System.IO;
 using System.ComponentModel.DataAnnotations;
 
 namespace Machete.Domain

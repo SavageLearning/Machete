@@ -1,22 +1,10 @@
-﻿using System;
+﻿using Machete.Data;
+using Machete.Domain;
+using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-
 using System.Data;
 using System.Data.Entity;
-using System.Data.Entity.Core.Objects;
-using System.Data.SqlClient;
-
-using Machete.Domain;
-using Machete.Domain.Entities;
-
-using Machete.Data;
-using Machete.Data.Infrastructure;
-
-using NLog;
+using System.Linq;
 
 namespace Machete.Service
 {

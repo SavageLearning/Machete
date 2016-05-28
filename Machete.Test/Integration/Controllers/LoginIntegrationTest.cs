@@ -1,6 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Machete.Data.Infrastructure;
 using Machete.Web.Models;
-using Machete.Data.Infrastructure;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
 
 namespace Machete.Test.Integration.Controller

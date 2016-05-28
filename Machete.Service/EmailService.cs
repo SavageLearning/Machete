@@ -7,7 +7,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Text;
 
 namespace Machete.Service
 {

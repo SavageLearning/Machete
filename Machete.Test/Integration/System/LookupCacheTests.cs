@@ -1,16 +1,4 @@
-﻿using Machete.Data.Infrastructure;
-using Machete.Service;
-using Machete.Web;
-using Machete.Web.Helpers;
-using Machete.Web.IoC;
-using Microsoft.Practices.Unity;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Mvc;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Machete.Test.Integration.System
 {
