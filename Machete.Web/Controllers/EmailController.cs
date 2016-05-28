@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using AutoMapper;
 using Machete.Domain;
-using Machete.Data;
-using Machete.Web.Helpers;
 using Machete.Service;
-using System.Web.Routing;
-using System.Globalization;
-using AutoMapper;
-using Machete.Web.ViewModel;
-using System.Configuration;
+using Machete.Web.Helpers;
 using Machete.Web.Resources;
+using Machete.Web.ViewModel;
+using System;
+using System.Configuration;
+using System.Data;
+using System.Globalization;
+using System.Linq;
+using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace Machete.Web.Controllers
 {

@@ -21,21 +21,17 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
-using Machete.Data;
+using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Helpers;
 using Machete.Web.Models;
-using Machete.Web.ViewModel;
-using AutoMapper;
-using NLog;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace Machete.Web.Controllers
 {
