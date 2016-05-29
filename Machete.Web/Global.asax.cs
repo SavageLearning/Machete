@@ -100,7 +100,6 @@ namespace Machete.Web
 
         protected void Application_Start()
         {
-            HibernatingRhinos.Profiler.Appender.EntityFramework.EntityFrameworkProfiler.Initialize();
             AreaRegistration.RegisterAllAreas();
             // from MVC 4 template
             //WebApiConfig.Register(GlobalConfiguration.Configuration);
