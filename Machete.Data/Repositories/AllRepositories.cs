@@ -166,6 +166,11 @@ namespace Machete.Data
     public class PersonRepository : RepositoryBase<Person>, IPersonRepository
     {
         public PersonRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
+
+        override public IQueryable<Person> GetAllQ()
+        {
+            return dbset.Include(a => a.Worker).AsNoTracking().AsQueryable();
+        }
     }
     /// <summary>
     /// 
