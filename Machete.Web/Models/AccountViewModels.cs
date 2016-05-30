@@ -1,7 +1,6 @@
 ﻿using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
-using Machete.Domain.Resources;
 using Machete.Web.Resources;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;

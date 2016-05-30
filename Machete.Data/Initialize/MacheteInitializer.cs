@@ -53,8 +53,8 @@ namespace Machete.Data
 
         protected override void Seed(MacheteContext DB)
         {
-            if (!DB.Lookups.Any()) MacheteLookup.Initialize(DB);
-            if (!DB.Users.Any())   MacheteUsers.Initialize(DB);
+            if (DB.Lookups.Count() == 0) MacheteLookup.Initialize(DB);
+            if (DB.Users.Count() == 0)   MacheteUsers.Initialize(DB);
         }
     }
     public class DropAndMigrateDatabaseToLatestVersion<TContext, TMigrationsConfiguration>

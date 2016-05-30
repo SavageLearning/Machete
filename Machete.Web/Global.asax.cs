@@ -21,32 +21,25 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
-using Microsoft.Practices.Unity;
-using Machete.Web.Models;
-using System.Web.Security;
-using Machete.Web.IoC;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
-using Machete.Web.ViewModel;
 using Machete.Service;
-using Machete.Web.Controllers;
-using System.Globalization;
-using System.Threading;
-using System.Data.Entity;
-
-using System.Data.Entity.ModelConfiguration;
 using Machete.Web.Helpers;
-using AutoMapper;
-using System.Web.Optimization;
+using Machete.Web.IoC;
+using Machete.Web.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.Practices.Unity;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Globalization;
+using System.Threading;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Optimization;
+using System.Web.Routing;
 
 namespace Machete.Web
 {

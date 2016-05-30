@@ -21,13 +21,10 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
+using Machete.Domain;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using Machete.Service;
-using Machete.Domain;
 
 namespace Machete.Web.Helpers
 {

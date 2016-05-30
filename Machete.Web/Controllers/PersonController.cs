@@ -22,22 +22,14 @@
 // 
 #endregion
 using AutoMapper;
-using Machete.Data;
-using Machete.Data.Infrastructure;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Helpers;
-using Machete.Web.Models;
 using Machete.Web.Resources;
-using Machete.Web.ViewModel;
-using NLog;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.Infrastructure;
 using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 

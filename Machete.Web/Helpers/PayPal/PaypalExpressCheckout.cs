@@ -1,10 +1,7 @@
 ﻿using NLog;
 using PayPal.PayPalAPIInterfaceService;
 using PayPal.PayPalAPIInterfaceService.Model;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace Machete.Web.Helpers.PayPal
 {
