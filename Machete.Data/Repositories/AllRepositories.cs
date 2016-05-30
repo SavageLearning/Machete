@@ -92,6 +92,11 @@ namespace Machete.Data
     public class ActivityRepository : RepositoryBase<Activity>, IActivityRepository
     {
         public ActivityRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
+
+        override public IQueryable<Activity> GetAllQ()
+        {
+            return dbset.Include(a => a.Signins).AsNoTracking().AsQueryable();
+        }
     }
     /// <summary>
     /// 
