@@ -79,11 +79,9 @@ namespace Machete.Service
                                         o.CI.TwoLetterISOLanguageName, 
                                         ref e,
                                         lcache);
-            //Limit results to the display length and offset
-            //if (o.displayLength >= 0)
             result.filteredCount = e.Count();
             result.totalCount = repo.GetAllQ().Count();
-            result.query = e;//.Skip(o.displayStart).Take(o.displayLength);
+            result.query = e.Skip(o.displayStart).Take(o.displayLength);
             return result;
         }
 
