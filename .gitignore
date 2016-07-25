@@ -79,3 +79,6 @@ MWS.Service_1_TemporaryKey.pfx
 *.ldf
 
 
+Machete.Test/randomized.csv
+Machete.Test/powershell_stderr.txt
+Machete.Test/powershell_stdout.txt

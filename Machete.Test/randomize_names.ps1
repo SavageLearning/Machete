@@ -1,0 +1,1 @@
+﻿Get-Content names.csv | Sort-Object { Get-Random } | out-file -FilePath  .\randomized.csv -Encoding ascii
