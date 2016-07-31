@@ -110,7 +110,7 @@ namespace Machete.Web.Controllers
                             WSIID = p.workerSigninID ?? 0,
                             WID = p.workerAssignedID ?? 0,
                             assignedWorker = p.workerAssigned != null ? p.workerAssigned.dwccardnum + " " + p.workerAssigned.Person.fullName() : "",
-                            requestedList = p.workOrder.workerRequests.Select(a => a.fullNameAndID).ToArray(),
+                            //requestedList = p.workOrder.workerRequests.Select(a => a.fullNameAndID).ToArray(),
                             asmtStatus = _getStatus(p)
                 };
  
