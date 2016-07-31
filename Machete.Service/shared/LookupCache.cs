@@ -21,14 +21,12 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+using Machete.Data.Infrastructure;
+using Machete.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Machete.Data;
-using Machete.Domain;
 using System.Runtime.Caching;
-using Machete.Data.Infrastructure;
 
 namespace Machete.Service
 {
@@ -54,7 +52,7 @@ namespace Machete.Service
         {
             cache = MemoryCache.Default;
             DB = db;
-            FillCache();
+            FillCache(); //commented out related to moq'ing
         }
         public void Dispose()
         {
@@ -65,14 +63,13 @@ namespace Machete.Service
         //
         private void FillCache()
         {
-            var ctxt = DB.Get();
-            IEnumerable<Lookup> lookups = ctxt.Lookups.ToList();
+            IEnumerable<Lookup> lookups = DB.Get().Lookups.ToList();
             CacheItemPolicy policy = new CacheItemPolicy();
             //TODO: Put LookupCache expire time in config file
             policy.AbsoluteExpiration = new DateTimeOffset(DateTime.Now.AddMinutes(20));
             CacheItem wCacheItem = new CacheItem("lookupCache", lookups);
             cache.Set(wCacheItem, policy);
-            //
+
             #region WORKERS
             Worker.iActive = getByKeys(LCategory.memberstatus, LMemberStatus.Active);
             Worker.iSanctioned = getByKeys(LCategory.memberstatus, LMemberStatus.Sanctioned);

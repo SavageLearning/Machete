@@ -21,21 +21,17 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
-using Machete.Data;
+using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Helpers;
 using Machete.Web.Models;
-using Machete.Web.ViewModel;
-using AutoMapper;
-using NLog;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace Machete.Web.Controllers
 {
@@ -221,13 +217,13 @@ namespace Machete.Web.Controllers
                 var date = actSched.dateStart.AddDays(i);
                 var day = (int)date.DayOfWeek;
 
-                if (day == 0 && !actSched.sunday) ;
-                else if (day == 1 && !actSched.monday) ;
-                else if (day == 2 && !actSched.tuesday) ;
-                else if (day == 3 && !actSched.wednesday) ;
-                else if (day == 4 && !actSched.thursday) ;
-                else if (day == 5 && !actSched.friday) ;
-                else if (day == 6 && !actSched.saturday) ;
+                if (day == 0 && !actSched.sunday) break;
+                else if (day == 1 && !actSched.monday) break;
+                else if (day == 2 && !actSched.tuesday) break;
+                else if (day == 3 && !actSched.wednesday) break;
+                else if (day == 4 && !actSched.thursday) break;
+                else if (day == 5 && !actSched.friday) break;
+                else if (day == 6 && !actSched.saturday) break;
                 else
                 {
                     var activ = new Activity();

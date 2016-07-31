@@ -61,7 +61,7 @@ namespace Machete.Test.Unit.Controller
             fakeform.Add("firstname1", "Ronald");
             fakeform.Add("lastname1", "Reagan");
             // TODO: Include Lookups in Dependency Injection, remove initialize statements
-            Lookups.Initialize(lcache.Object, dbfactory.Object);
+            Lookups.Initialize(lcache.Object);
         }
         //
         //   Testing /Index functionality

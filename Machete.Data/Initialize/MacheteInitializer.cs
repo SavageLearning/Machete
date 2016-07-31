@@ -21,15 +21,9 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Data.Entity;
-using Machete.Domain;
 using System.Data.Entity.Migrations;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
+using System.Linq;
 
 namespace Machete.Data
 {
@@ -38,6 +32,8 @@ namespace Machete.Data
 
     }
     public class TestInitializer : DropCreateDatabaseAlways<MacheteContext>
+
+    //public class TestInitializer : DropAndMigrateDatabaseToLatestVersion<MacheteContext, MacheteConfiguration>
     {
         protected override void Seed(MacheteContext DB)
         {
@@ -57,8 +53,32 @@ namespace Machete.Data
 
         protected override void Seed(MacheteContext DB)
         {
-            if (!DB.Lookups.Any()) MacheteLookup.Initialize(DB);
-            if (!DB.Users.Any())   MacheteUsers.Initialize(DB);
+            if (DB.Lookups.Count() == 0) MacheteLookup.Initialize(DB);
+            if (DB.Users.Count() == 0)   MacheteUsers.Initialize(DB);
         }
+    }
+    public class DropAndMigrateDatabaseToLatestVersion<TContext, TMigrationsConfiguration>
+        : IDatabaseInitializer<TContext>
+        where TContext : DbContext, new()
+        where TMigrationsConfiguration : DbMigrationsConfiguration<TContext>, new()
+    {
+        TMigrationsConfiguration _config;
+
+        public DropAndMigrateDatabaseToLatestVersion()
+        {
+            _config = new TMigrationsConfiguration();
+        }
+
+        public void InitializeDatabase(TContext context)
+        {
+            context.Database.Delete();
+
+            var migrator = new DbMigrator(_config);
+            migrator.Update();
+
+            Seed(context);
+        }
+
+        public virtual void Seed(TContext context) { }
     }
 }

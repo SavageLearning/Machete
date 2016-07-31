@@ -21,24 +21,19 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using AutoMapper;
+using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Helpers;
-using NLog;
-using Machete.Domain;
-using Machete.Data;
-using Machete.Web.Models;
-using System.Web.Routing;
-using AutoMapper;
+using System;
+using System.Linq;
 using System.Web.Configuration;
+using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace Machete.Web.Controllers
 {
-   [ElmahHandleError]
+    [ElmahHandleError]
     public class WorkerSigninController : MacheteController
     {
         private readonly IWorkerSigninService _serv;

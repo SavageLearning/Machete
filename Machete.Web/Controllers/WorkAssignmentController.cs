@@ -21,23 +21,16 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Machete.Data;
-using Machete.Data.Infrastructure;
+using AutoMapper;
 using Machete.Domain;
-//using Machete.Helpers;
 using Machete.Service;
 using Machete.Web.Helpers;
-using NLog;
 using Machete.Web.ViewModel;
+using System;
+using System.Linq;
 using System.Web.Configuration;
+using System.Web.Mvc;
 using System.Web.Routing;
-using Machete.Web.Models;
-using AutoMapper;
 
 namespace Machete.Web.Controllers
 {
@@ -117,7 +110,7 @@ namespace Machete.Web.Controllers
                             WSIID = p.workerSigninID ?? 0,
                             WID = p.workerAssignedID ?? 0,
                             assignedWorker = p.workerAssigned != null ? p.workerAssigned.dwccardnum + " " + p.workerAssigned.Person.fullName() : "",
-                            requestedList = p.workOrder.workerRequests.Select(a => a.fullNameAndID).ToArray(),
+                            //requestedList = p.workOrder.workerRequests.Select(a => a.fullNameAndID).ToArray(),
                             asmtStatus = _getStatus(p)
                 };
  

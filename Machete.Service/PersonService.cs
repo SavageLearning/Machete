@@ -21,15 +21,10 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Machete.Domain;
 using Machete.Data;
 using Machete.Data.Infrastructure;
-using NLog;
-using System.Globalization;
+using Machete.Domain;
+using System.Linq;
 
 namespace Machete.Service
 {
@@ -67,7 +62,7 @@ namespace Machete.Service
             if (o.showSExWorkers == true) IndexViewBase.getSExWorkers(o, lcache.getByKeys(LCategory.memberstatus, LMemberStatus.Sanctioned), lcache.getByKeys(LCategory.memberstatus, LMemberStatus.Expelled), ref q);
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
             result.filteredCount = q.Count();
-            result.query = q;//.Skip<Person>(o.displayStart).Take(o.displayLength);
+            result.query = q.Skip<Person>(o.displayStart).Take(o.displayLength);
             return result;
         }
     }

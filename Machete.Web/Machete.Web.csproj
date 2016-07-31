@@ -22,6 +22,7 @@
     <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
     <WebGreaseLibPath>..\packages\WebGrease.1.5.2\lib</WebGreaseLibPath>
     <OutputPath>bin\Dev\</OutputPath>
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,31 +49,7 @@
       <HintPath>..\packages\AutoMapper.4.1.1\lib\net45\AutoMapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DotNetOpenAuth.AspNet">
-      <HintPath>..\packages\DotNetOpenAuth.AspNet.4.3.4.13329\lib\net45-full\DotNetOpenAuth.AspNet.dll</HintPath>
-    </Reference>
-    <Reference Include="DotNetOpenAuth.Core">
-      <HintPath>..\packages\DotNetOpenAuth.Core.4.3.4.13329\lib\net45-full\DotNetOpenAuth.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="DotNetOpenAuth.OAuth">
-      <HintPath>..\packages\DotNetOpenAuth.OAuth.Core.4.3.4.13329\lib\net45-full\DotNetOpenAuth.OAuth.dll</HintPath>
-    </Reference>
-    <Reference Include="DotNetOpenAuth.OAuth.Consumer">
-      <HintPath>..\packages\DotNetOpenAuth.OAuth.Consumer.4.3.4.13329\lib\net45-full\DotNetOpenAuth.OAuth.Consumer.dll</HintPath>
-    </Reference>
-    <Reference Include="DotNetOpenAuth.OpenId">
-      <HintPath>..\packages\DotNetOpenAuth.OpenId.Core.4.3.4.13329\lib\net45-full\DotNetOpenAuth.OpenId.dll</HintPath>
-    </Reference>
-    <Reference Include="DotNetOpenAuth.OpenId.RelyingParty">
-      <HintPath>..\packages\DotNetOpenAuth.OpenId.RelyingParty.4.3.4.13329\lib\net45-full\DotNetOpenAuth.OpenId.RelyingParty.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Web.Helpers">
-      <HintPath>..\packages\Microsoft.AspNet.WebHelpers.3.2.3\lib\net45\Microsoft.Web.Helpers.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Web.WebPages.OAuth, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.OAuth.2.0.30506.0\lib\net40\Microsoft.Web.WebPages.OAuth.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -146,14 +123,6 @@
     </Reference>
     <Reference Include="WebGrease">
       <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
-    </Reference>
-    <Reference Include="WebMatrix.Data, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.Data.3.2.3\lib\net45\WebMatrix.Data.dll</HintPath>
-    </Reference>
-    <Reference Include="WebMatrix.WebData, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.WebData.3.2.3\lib\net45\WebMatrix.WebData.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -275,7 +244,6 @@
     <Compile Include="Helpers\workerRequestBinder.cs" />
     <Compile Include="IoC\CustomControllerActivator.cs" />
     <Compile Include="IoC\UnityDependencyResolver.cs" />
-    <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActivityModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -522,7 +490,6 @@
     <Content Include="Content\sort_desc_disabled.png" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="notes.txt" />
     <Content Include="Scripts\console-log.js" />
     <Content Include="Scripts\drawpiechart.js" />
     <Content Include="Scripts\jqplot.cursor.js" />
@@ -551,7 +518,6 @@
     <Content Include="Scripts\reports.js" />
     <Content Include="Scripts\ui.datetimepicker.js" />
     <Content Include="Scripts\validation_hack.js" />
-    <Content Include="Unity.Mvc3.README.txt" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -945,24 +911,6 @@
   <ItemGroup>
     <Content Include="Content\documentation\MacheteUserManual-Current.pdf" />
     <Content Include="Content\documentation\MacheteUserManual-html-Current.zip" />
-    <None Include="Properties\PublishProfiles\Alabama.pubxml" />
-    <None Include="Properties\PublishProfiles\CasaLatina.pubxml" />
-    <None Include="Properties\PublishProfiles\Cel.pubxml" />
-    <None Include="Properties\PublishProfiles\CentroHumanitario.pubxml" />
-    <None Include="Properties\PublishProfiles\Concord.pubxml" />
-    <None Include="Properties\PublishProfiles\Congreso.pubxml" />
-    <None Include="Properties\PublishProfiles\DonBosco.pubxml" />
-    <None Include="Properties\PublishProfiles\ElCentro.pubxml" />
-    <None Include="Properties\PublishProfiles\Graton.pubxml" />
-    <None Include="Properties\PublishProfiles\MountainView.pubxml" />
-    <None Include="Properties\PublishProfiles\Nice.pubxml" />
-    <None Include="Properties\PublishProfiles\Pasadena.pubxml" />
-    <None Include="Properties\PublishProfiles\Pomona.pubxml" />
-    <None Include="Properties\PublishProfiles\PortlandVoz.pubxml" />
-    <None Include="Properties\PublishProfiles\SanFrancisco.pubxml" />
-    <None Include="Properties\PublishProfiles\SantaCruz.pubxml" />
-    <None Include="Properties\PublishProfiles\Southside.pubxml" />
-    <None Include="Properties\PublishProfiles\Test.pubxml" />
     <Content Include="Views\Account\Manage.cshtml" />
     <Content Include="Views\Account\UserRoles.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SelectRoleEditorViewModel.cshtml" />
@@ -977,9 +925,6 @@
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\_RemoveAccountPartial.cshtml" />
     <Content Include="Views\Account\_SetPasswordPartial.cshtml" />
-    <None Include="Properties\PublishProfiles\WindofSpirit.pubxml" />
-    <None Include="Properties\PublishProfiles\WorkersJustice.pubxml" />
-    <None Include="Properties\PublishProfiles\Zip.pubxml" />
     <Content Include="Views\Shared\WorkerWAIndex.cshtml" />
     <Content Include="Views\HirerAccount\Register.cshtml" />
     <Content Include="Views\HirerAccount\Login.cshtml" />
@@ -996,10 +941,14 @@
     <Content Include="Views\HirerWorkOrder\IndexError.cshtml" />
     <Content Include="Views\HirerWorkOrder\IndexCompleteEmpty.cshtml" />
     <Content Include="Views\HirerWorkOrder\Profile.cshtml" />
+    <None Include="Properties\PublishProfiles\Test.pubxml" />
     <None Include="Web.Alabama.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <None Include="Web.CasaLatina.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Cel.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <None Include="Web.CentroHumanitario.config">
@@ -1027,6 +976,9 @@
     <None Include="Web.Hayward.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+    <None Include="Web.localIIS.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
     <None Include="Web.MountainView.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1052,6 +1004,9 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <None Include="Web.Test.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.WindofSpirit.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <None Include="Web.WorkersJustice.config">
@@ -1234,6 +1189,15 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Cel|AnyCPU'">
     <OutputPath>bin\</OutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'localIIS|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
@@ -1244,7 +1208,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>4213</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

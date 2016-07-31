@@ -1,13 +1,13 @@
-﻿using System;
-using System.Text;
-using System.Security.Cryptography;
+﻿using Machete.Data;
+using Machete.Data.Infrastructure;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using Machete.Data;
-using System.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
-using Machete.Data.Infrastructure;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Machete.Web.Models
 {

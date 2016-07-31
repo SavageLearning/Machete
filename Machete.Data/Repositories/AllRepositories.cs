@@ -21,14 +21,11 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Machete.Domain;
 using Machete.Data.Infrastructure;
+using Machete.Domain;
+using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
+using System.Linq;
 using System.Text;
 
 namespace Machete.Data
@@ -95,6 +92,11 @@ namespace Machete.Data
     public class ActivityRepository : RepositoryBase<Activity>, IActivityRepository
     {
         public ActivityRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
+
+        override public IQueryable<Activity> GetAllQ()
+        {
+            return dbset.Include(a => a.Signins).AsNoTracking().AsQueryable();
+        }
     }
     /// <summary>
     /// 
@@ -169,6 +171,11 @@ namespace Machete.Data
     public class PersonRepository : RepositoryBase<Person>, IPersonRepository
     {
         public PersonRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
+
+        override public IQueryable<Person> GetAllQ()
+        {
+            return dbset.Include(a => a.Worker).AsNoTracking().AsQueryable();
+        }
     }
     /// <summary>
     /// 

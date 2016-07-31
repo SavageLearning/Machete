@@ -217,6 +217,15 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Cel|AnyCPU'">
     <OutputPath>bin\Cel\</OutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'localIIS|AnyCPU'">
+    <OutputPath>bin\localIIS\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoMapper, Version=4.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
       <HintPath>..\packages\AutoMapper.4.1.1\lib\net45\AutoMapper.dll</HintPath>
@@ -316,10 +325,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.0.0\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="WebActivator">
@@ -340,22 +345,23 @@
   <ItemGroup>
     <Compile Include="FluentRecordBase.cs" />
     <Compile Include="FluentRecordTests.cs" />
-    <Compile Include="IntegrationTests\Controllers\LoginIntegrationTest.cs" />
-    <Compile Include="IntegrationTests\Services\ActivityServiceTests.cs" />
-    <Compile Include="IntegrationTests\Services\ReportServiceTest.cs" />
-    <Compile Include="IntegrationTests\Services\IndexViewBaseServiceTest.cs" />
-    <Compile Include="IntegrationTests\Services\EmailServiceTests.cs" />
-    <Compile Include="IntegrationTests\Services\EventServiceTests.cs" />
-    <Compile Include="IntegrationTests\Services\WorkAssignmentServiceTest.cs" />
-    <Compile Include="IntegrationTests\Services\WorkerSigninServiceTest.cs" />
-    <Compile Include="IntegrationTests\Services\WorkOrderServiceTest.cs" />
-    <Compile Include="IntegrationTests\System\WorkerCacheTests.cs" />
-    <Compile Include="IntegrationTests\Views\ActivityTests.cs" />
-    <Compile Include="IntegrationTests\Views\PersonTests.cs" />
-    <Compile Include="IntegrationTests\Views\sharedUI.cs" />
-    <Compile Include="IntegrationTests\Views\EmployerTests.cs" />
-    <Compile Include="IntegrationTests\Views\UnauthActivityTests.cs" />
-    <Compile Include="IntegrationTests\Views\WorkerSigninTests.cs" />
+    <Compile Include="Integration\Controllers\LoginIntegrationTest.cs" />
+    <Compile Include="Integration\Services\ActivityServiceTests.cs" />
+    <Compile Include="Integration\Services\ReportServiceTest.cs" />
+    <Compile Include="Integration\Services\IndexViewBaseServiceTest.cs" />
+    <Compile Include="Integration\Services\EmailServiceTests.cs" />
+    <Compile Include="Integration\Services\EventServiceTests.cs" />
+    <Compile Include="Integration\Services\WorkAssignmentServiceTest.cs" />
+    <Compile Include="Integration\Services\WorkerSigninServiceTest.cs" />
+    <Compile Include="Integration\Services\WorkOrderServiceTest.cs" />
+    <Compile Include="Integration\System\LookupCacheTests.cs" />
+    <Compile Include="Integration\System\WorkerCacheTests.cs" />
+    <Compile Include="Integration\Views\ActivityTests.cs" />
+    <Compile Include="Integration\Views\PersonTests.cs" />
+    <Compile Include="Integration\Views\sharedUI.cs" />
+    <Compile Include="Integration\Views\EmployerTests.cs" />
+    <Compile Include="Integration\Views\UnauthActivityTests.cs" />
+    <Compile Include="Integration\Views\WorkerSigninTests.cs" />
     <Compile Include="MvcMockHelpers.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -375,14 +381,14 @@
     <Compile Include="UnitTests\Services\WorkerServiceUnitTests.cs" />
     <Compile Include="UnitTests\Services\WorkerSigninServiceUnitTest.cs" />
     <Compile Include="UnitTests\Controllers\WorkerSigninControllerTests.cs" />
-    <Compile Include="IntegrationTests\Data\DatabaseTests.cs" />
-    <Compile Include="IntegrationTests\Domain\LINQ.cs" />
+    <Compile Include="Integration\Data\DatabaseTests.cs" />
+    <Compile Include="Integration\Domain\LINQ.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitTests\Controllers\PersonsControllerTests.cs" />
     <Compile Include="UnitTests\Controllers\WorkerControllerTests.cs" />
-    <Compile Include="IntegrationTests\Services\PersonServiceTest.cs" />
-    <Compile Include="IntegrationTests\Services\WorkerServiceTest.cs" />
-    <Compile Include="IntegrationTests\Domain\WorkerTests.cs" />
+    <Compile Include="Integration\Services\PersonServiceTest.cs" />
+    <Compile Include="Integration\Services\WorkerServiceTest.cs" />
+    <Compile Include="Integration\Domain\WorkerTests.cs" />
     <Compile Include="Records.cs" />
     <Compile Include="UnitTests\Services\ImageServiceUnitTests.cs" />
     <Compile Include="UnitTests\Services\PersonServiceUnitTests.cs" />
@@ -409,6 +415,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="JMETER.md" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

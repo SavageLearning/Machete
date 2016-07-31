@@ -1,22 +1,10 @@
-﻿using System;
+﻿using Machete.Data;
+using Machete.Domain;
+using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-
 using System.Data;
 using System.Data.Entity;
-using System.Data.Entity.Core.Objects;
-using System.Data.SqlClient;
-
-using Machete.Domain;
-using Machete.Domain.Entities;
-
-using Machete.Data;
-using Machete.Data.Infrastructure;
-
-using NLog;
+using System.Linq;
 
 namespace Machete.Service
 {
@@ -213,10 +201,10 @@ namespace Machete.Service
                     {
                         date = group.Key,
                         count = group.Count(),
-                        dwcList = group.Sum(a => a.dwcList == null ? 0 : a.dwcList),
-                        dwcPropio = group.Sum(a => a.dwcPatron == null ? 0 : a.dwcPatron),
-                        hhhList = group.Sum(a => a.hhhList == null ? 0 : a.hhhList),
-                        hhhPropio = group.Sum(a => a.hhhPatron == null ? 0 : a.hhhPatron),
+                        dwcList = group.Sum(a => a.dwcList),
+                        dwcPropio = group.Sum(a => a.dwcPatron),
+                        hhhList = group.Sum(a => a.hhhList),
+                        hhhPropio = group.Sum(a => a.hhhPatron),
                     })
                 .OrderBy(fini => fini.date);
 

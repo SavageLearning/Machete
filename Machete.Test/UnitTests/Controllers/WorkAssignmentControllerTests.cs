@@ -70,7 +70,7 @@ namespace Machete.Test.Unit.Controller
             _ctrlr.SetFakeControllerContext();
             fakeform = new FormCollection();
             fakeform.Add("ID", "12345");
-            Lookups.Initialize(lcache.Object, dbfactory.Object);
+            Lookups.Initialize(lcache.Object);
         }
         //
         //   Testing /Index functionality
