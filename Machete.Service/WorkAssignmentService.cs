@@ -126,8 +126,8 @@ namespace Machete.Service
             result.filteredCount = e.Count();
             //
             //Limit results to the display length and offset
-            //if ((int)o.displayLength >= 0)
-            result.query = e; // e.Skip((int)o.displayStart).Take((int)o.displayLength);
+            if (o.displayLength >= 0)
+            result.query = e.Skip(o.displayStart).Take(o.displayLength);
            
            result.totalCount = waRepo.GetAllQ().Count();
            return result;
