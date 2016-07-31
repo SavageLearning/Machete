@@ -911,25 +911,6 @@
   <ItemGroup>
     <Content Include="Content\documentation\MacheteUserManual-Current.pdf" />
     <Content Include="Content\documentation\MacheteUserManual-html-Current.zip" />
-    <None Include="Properties\PublishProfiles\Alabama.pubxml" />
-    <None Include="Properties\PublishProfiles\CasaLatina.pubxml" />
-    <None Include="Properties\PublishProfiles\Cel.pubxml" />
-    <None Include="Properties\PublishProfiles\CentroHumanitario.pubxml" />
-    <None Include="Properties\PublishProfiles\Concord.pubxml" />
-    <None Include="Properties\PublishProfiles\Congreso.pubxml" />
-    <None Include="Properties\PublishProfiles\DonBosco.pubxml" />
-    <None Include="Properties\PublishProfiles\ElCentro.pubxml" />
-    <None Include="Properties\PublishProfiles\Graton.pubxml" />
-    <None Include="Properties\PublishProfiles\localIIS.pubxml" />
-    <None Include="Properties\PublishProfiles\MountainView.pubxml" />
-    <None Include="Properties\PublishProfiles\Nice.pubxml" />
-    <None Include="Properties\PublishProfiles\Pasadena.pubxml" />
-    <None Include="Properties\PublishProfiles\Pomona.pubxml" />
-    <None Include="Properties\PublishProfiles\PortlandVoz.pubxml" />
-    <None Include="Properties\PublishProfiles\SanFrancisco.pubxml" />
-    <None Include="Properties\PublishProfiles\SantaCruz.pubxml" />
-    <None Include="Properties\PublishProfiles\Southside.pubxml" />
-    <None Include="Properties\PublishProfiles\Test.pubxml" />
     <Content Include="Views\Account\Manage.cshtml" />
     <Content Include="Views\Account\UserRoles.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SelectRoleEditorViewModel.cshtml" />
@@ -944,9 +925,6 @@
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\_RemoveAccountPartial.cshtml" />
     <Content Include="Views\Account\_SetPasswordPartial.cshtml" />
-    <None Include="Properties\PublishProfiles\WindofSpirit.pubxml" />
-    <None Include="Properties\PublishProfiles\WorkersJustice.pubxml" />
-    <None Include="Properties\PublishProfiles\Zip.pubxml" />
     <Content Include="Views\Shared\WorkerWAIndex.cshtml" />
     <Content Include="Views\HirerAccount\Register.cshtml" />
     <Content Include="Views\HirerAccount\Login.cshtml" />
@@ -963,6 +941,7 @@
     <Content Include="Views\HirerWorkOrder\IndexError.cshtml" />
     <Content Include="Views\HirerWorkOrder\IndexCompleteEmpty.cshtml" />
     <Content Include="Views\HirerWorkOrder\Profile.cshtml" />
+    <None Include="Properties\PublishProfiles\Test.pubxml" />
     <None Include="Web.Alabama.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
