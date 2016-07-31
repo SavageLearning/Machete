@@ -82,3 +82,8 @@ MWS.Service_1_TemporaryKey.pfx
 Machete.Test/randomized.csv
 Machete.Test/powershell_stderr.txt
 Machete.Test/powershell_stdout.txt
+Machete.Test/randomized_dates.csv
+Machete.Test/randomized_names.csv
+Machete.Test/randomized_nums.csv
+Machete.Test/BeanShell Sampler.jmx
+.vscode/
