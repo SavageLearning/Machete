@@ -162,7 +162,7 @@ namespace Machete.Data
 
         override public IQueryable<WorkAssignment> GetAllQ()
         {
-            return dbset.Include(a => a.workOrder).AsNoTracking().AsQueryable();
+            return dbset.Include(a => a.workOrder).Include(b => b.workOrder.Employer).AsNoTracking().AsQueryable();
         }
     }
     /// <summary>

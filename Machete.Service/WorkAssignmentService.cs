@@ -127,9 +127,15 @@ namespace Machete.Service
             //
             //Limit results to the display length and offset
             if (o.displayLength >= 0)
-            result.query = e.Skip(o.displayStart).Take(o.displayLength);
-           
-           result.totalCount = waRepo.GetAllQ().Count();
+            {
+                result.query = e.Skip(o.displayStart).Take(o.displayLength);
+            }
+            else
+            {
+                result.query = e;
+            } 
+
+            result.totalCount = waRepo.GetAllQ().Count();
            return result;
       }
         /// <summary>
