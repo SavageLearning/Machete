@@ -62,7 +62,10 @@ namespace Machete.Service
             if (o.showSExWorkers == true) IndexViewBase.getSExWorkers(o, lcache.getByKeys(LCategory.memberstatus, LMemberStatus.Sanctioned), lcache.getByKeys(LCategory.memberstatus, LMemberStatus.Expelled), ref q);
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
             result.filteredCount = q.Count();
-            result.query = q.Skip<Person>(o.displayStart).Take(o.displayLength);
+            if ((int)o.displayLength >= 0)
+                result.query = q.Skip<Person>(o.displayStart).Take(o.displayLength);
+            else
+                result.query = q;
             return result;
         }
     }
