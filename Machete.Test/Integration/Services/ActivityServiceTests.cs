@@ -28,6 +28,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using HibernatingRhinos.Profiler.Appender.EntityFramework;
 
 namespace Machete.Test.Integration.Service
 {
@@ -36,6 +37,12 @@ namespace Machete.Test.Integration.Service
     {
         viewOptions dOptions;
         FluentRecordBase frb;
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext c)
+        {
+            EntityFrameworkProfiler.Initialize();
+
+        }
 
         [TestInitialize]
         public void TestInitialize()
@@ -112,8 +119,29 @@ namespace Machete.Test.Integration.Service
             var maxDate = frb.ToRepoActivity().GetAllQ().Select(a => a.dateStart).Max().AddDays(1);
             frb.AddActivity(startTime: maxDate, endTime: maxDate.AddHours(1));
             frb.AddActivity(startTime: maxDate.AddHours(-4), endTime: maxDate.AddHours(-3));
-            dOptions.authenticated = false;
+            dOptions.authenticated = true;
             dOptions.date = maxDate;
+            //
+            //Act
+            dataTableResult<Activity> result = frb.ToServActivity().GetIndexView(dOptions);
+            //
+            //Assert
+            IEnumerable<Activity> query = result.query.ToList();
+            Assert.IsNotNull(result, "IEnumerable is Null");
+            Assert.AreEqual(1, query.Count());
+        }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Activities)]
+        public void GetIndexView_persons_attended_signins()
+        {
+            //
+            //Arrange
+            //var maxDate = frb.ToRepoActivity().GetAllQ().Select(a => a.dateStart).Max().AddDays(1);
+            //frb.AddActivity(startTime: maxDate, endTime: maxDate.AddHours(1));
+            //frb.AddActivity(startTime: maxDate.AddHours(-4), endTime: maxDate.AddHours(-3));
+            dOptions.authenticated = true;
+            //dOptions.date = maxDate;
+            dOptions.attendedActivities = true;
             //
             //Act
             dataTableResult<Activity> result = frb.ToServActivity().GetIndexView(dOptions);
