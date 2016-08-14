@@ -108,7 +108,7 @@ namespace Machete.Domain
 
         [LocalizedDisplayName("gender", NameResourceType = typeof(Resources.Person))]
         //[Required(ErrorMessageResourceName = "gendererror", ErrorMessageResourceType = typeof(Resources.Person))]
-        public int? gender { get; set; }
+        public int gender { get; set; }
 
         [LocalizedDisplayName("genderother", NameResourceType = typeof(Resources.Person))]
         [StringLength(20, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Person))]
