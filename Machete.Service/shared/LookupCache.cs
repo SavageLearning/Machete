@@ -40,7 +40,10 @@ namespace Machete.Service
         string textByID(int ID, string locale);
         int getByKeys(string category, string key);
         IEnumerable<int> getSkillsByWorkType(int worktypeID);
+        IEnumerable<string> getTeachers();
     }
+
+
     public class LookupCache : ILookupCache
     {
         private IDatabaseFactory DB { get; set; }
@@ -64,11 +67,14 @@ namespace Machete.Service
         private void FillCache()
         {
             IEnumerable<Lookup> lookups = DB.Get().Lookups.ToList();
+            IEnumerable<string> teachers = DB.Get().Users.Where(y => y.Roles.Any(role => role.Role.Name == "Teacher")).Select(x => x.UserName).Distinct().ToList();
             CacheItemPolicy policy = new CacheItemPolicy();
             //TODO: Put LookupCache expire time in config file
-            policy.AbsoluteExpiration = new DateTimeOffset(DateTime.Now.AddMinutes(20));
-            CacheItem wCacheItem = new CacheItem("lookupCache", lookups);
-            cache.Set(wCacheItem, policy);
+            policy.AbsoluteExpiration = new DateTimeOffset(DateTime.Now.AddMinutes(5));
+            var lookupItem = new CacheItem("lookupCache", lookups);
+            var teacherItem = new CacheItem("teacherCache", teachers);
+            cache.Set(lookupItem, policy);
+            cache.Set(teacherItem, policy);
 
             #region WORKERS
             Worker.iActive = getByKeys(LCategory.memberstatus, LMemberStatus.Active);
@@ -170,6 +176,17 @@ namespace Machete.Service
             catch {
                 throw new MacheteIntegrityException("getSkillsByWorkType throws exception for worktype ID:" +worktypeID);
             }
+        }
+
+        public IEnumerable<string> getTeachers()
+        {
+            CacheItem teachers = cache.GetCacheItem("teacherCache");
+            if (teachers == null)
+            {
+                FillCache();
+                teachers = cache.GetCacheItem("teacherCache");
+            }
+            return teachers.Value as IEnumerable<string>;
         }
     }
 }

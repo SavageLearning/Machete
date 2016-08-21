@@ -52,6 +52,8 @@ namespace Machete.Web.Controllers
         {
             base.Initialize(requestContext);
             CI = (CultureInfo)Session["Culture"];
+            ViewBag.teachers = lcache.getTeachers();
+
         }
         /// <summary>
         /// 

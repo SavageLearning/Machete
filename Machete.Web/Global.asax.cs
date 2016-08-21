@@ -118,7 +118,6 @@ namespace Machete.Web
             var db = container.Resolve<IDatabaseFactory>();
             initializer.InitializeDatabase(db.Get());
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
-            //Lookups.Initialize(container.Resolve<ILookupCache>(), container.Resolve<IDatabaseFactory>()); // Static object; used in cshtml files; used instead of proper view models
             Lookups.Initialize(container.Resolve<ILookupCache>()); // Static object; used in cshtml files; used instead of proper view models
             MacheteMapper.Initialize(); // AutoMapper
         }
@@ -133,7 +132,6 @@ namespace Machete.Web
             //.RegisterInstance<MembershipProvider>(Membership.Provider)
             .RegisterType<IUserStore<ApplicationUser>, UserStore<ApplicationUser>>(new PerRequestLifetimeManager())//HttpContextLifetimeManager<IUserStore<ApplicationUser>>())
             .RegisterType<IMyUserManager<ApplicationUser>, MyUserManager>(new PerRequestLifetimeManager())//HttpContextLifetimeManager<IMyUserManager<ApplicationUser>>())
-            //.RegisterInstance<IDatabaseFactory>(new DatabaseFactory())
             //.RegisterType<IDatabaseFactory, DatabaseFactory>(new ContainerControlledLifetimeManager(), new InjectionConstructor("macheteConnection"))
             .RegisterType<IDatabaseFactory, DatabaseFactory>(new PerRequestLifetimeManager(), new InjectionConstructor("macheteConnection"))
             .RegisterType<IUnitOfWork, UnitOfWork>(new PerRequestLifetimeManager())
