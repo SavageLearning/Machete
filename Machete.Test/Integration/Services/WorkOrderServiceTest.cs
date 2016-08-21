@@ -39,7 +39,7 @@ namespace Machete.Test.Integration.Service
         [ClassInitialize]
         public static void ClassInitialize(TestContext c)
         {
-            HibernatingRhinos.Profiler.Appender.EntityFramework.EntityFrameworkProfiler.Initialize();
+            //HibernatingRhinos.Profiler.Appender.EntityFramework.EntityFrameworkProfiler.Initialize();
 
         }
         [TestInitialize]
