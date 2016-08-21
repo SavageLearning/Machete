@@ -117,10 +117,12 @@ namespace Machete.Test.Integration.Service
             //
             //Arrange
             var maxDate = frb.ToRepoActivity().GetAllQ().Select(a => a.dateStart).Max().AddDays(1);
-            frb.AddActivity(startTime: maxDate, endTime: maxDate.AddHours(1));
+            var teacher = "teacher_" + frb.RandomString(4);
+            frb.AddActivity(startTime: maxDate, endTime: maxDate.AddHours(1), teacher: teacher);
             frb.AddActivity(startTime: maxDate.AddHours(-4), endTime: maxDate.AddHours(-3));
             dOptions.authenticated = true;
             dOptions.date = maxDate;
+            dOptions.sSearch = teacher;
             //
             //Act
             dataTableResult<Activity> result = frb.ToServActivity().GetIndexView(dOptions);
@@ -136,12 +138,16 @@ namespace Machete.Test.Integration.Service
         {
             //
             //Arrange
-            //var maxDate = frb.ToRepoActivity().GetAllQ().Select(a => a.dateStart).Max().AddDays(1);
-            //frb.AddActivity(startTime: maxDate, endTime: maxDate.AddHours(1));
-            //frb.AddActivity(startTime: maxDate.AddHours(-4), endTime: maxDate.AddHours(-3));
+            var maxDate = frb.ToRepoActivity().GetAllQ().Select(a => a.dateStart).Max().AddDays(1);
+            var teacher = "teacher_" + frb.RandomString(4);
+
+            frb.AddActivity(startTime: maxDate, endTime: maxDate.AddHours(1), teacher: teacher);
+            frb.AddActivity(startTime: maxDate.AddHours(-4), endTime: maxDate.AddHours(-3));
             dOptions.authenticated = true;
             //dOptions.date = maxDate;
             dOptions.attendedActivities = true;
+            dOptions.sSearch = teacher;
+
             //
             //Act
             dataTableResult<Activity> result = frb.ToServActivity().GetIndexView(dOptions);
