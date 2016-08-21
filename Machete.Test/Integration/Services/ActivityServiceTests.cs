@@ -40,7 +40,7 @@ namespace Machete.Test.Integration.Service
         [ClassInitialize]
         public static void ClassInitialize(TestContext c)
         {
-            EntityFrameworkProfiler.Initialize();
+            //EntityFrameworkProfiler.Initialize();
 
         }
 
