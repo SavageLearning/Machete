@@ -427,7 +427,8 @@ namespace Machete.Service
         public static void search(viewOptions o, ref IQueryable<Person> q)
         {
             q = q
-                .Where(p => p.firstname1.Contains(o.sSearch) ||
+                .Where(p => SqlFunctions.StringConvert((decimal)p.Worker.dwccardnum).Contains(o.sSearch) ||
+                            p.firstname1.Contains(o.sSearch) ||
                             p.firstname2.Contains(o.sSearch) ||
                             p.lastname1.Contains(o.sSearch) ||
                             p.lastname2.Contains(o.sSearch) ||

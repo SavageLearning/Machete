@@ -83,7 +83,7 @@ namespace Machete.Data
         override public IQueryable<ActivitySignin> GetAllQ()
         {
             //return dbset.Include(a => a.worker).AsQueryable();
-            return dbset.AsNoTracking().AsQueryable();
+            return dbset.Include(a => a.Activity).AsNoTracking().AsQueryable();
         }
     }
     /// <summary>
@@ -95,7 +95,7 @@ namespace Machete.Data
 
         override public IQueryable<Activity> GetAllQ()
         {
-            return dbset.Include(a => a.Signins).AsNoTracking().AsQueryable();
+            return dbset.AsNoTracking().AsQueryable();
         }
     }
     /// <summary>
@@ -162,7 +162,7 @@ namespace Machete.Data
 
         override public IQueryable<WorkAssignment> GetAllQ()
         {
-            return dbset.Include(a => a.workOrder).AsNoTracking().AsQueryable();
+            return dbset.Include(a => a.workOrder).Include(b => b.workOrder.Employer).AsNoTracking().AsQueryable();
         }
     }
     /// <summary>

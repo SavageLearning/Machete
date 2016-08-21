@@ -109,8 +109,8 @@ namespace Machete.Web.Controllers
                             maxEarnings = System.String.Format("${0:f2}", p.getMaxEarnings),
                             WSIID = p.workerSigninID ?? 0,
                             WID = p.workerAssignedID ?? 0,
-                            assignedWorker = p.workerAssigned != null ? p.workerAssigned.dwccardnum + " " + p.workerAssigned.Person.fullName() : "",
-                            requestedList = p.workOrder.workerRequests.Select(a => a.fullNameAndID).ToArray(),
+                            //assignedWorker = p.workerAssigned != null ? p.workerAssigned.dwccardnum + " " + p.workerAssigned.Person.fullName() : "",
+                            //requestedList = p.workOrder.workerRequests.Select(a => a.fullNameAndID).ToArray(),
                             asmtStatus = _getStatus(p)
                 };
  

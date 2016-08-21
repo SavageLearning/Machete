@@ -36,7 +36,12 @@ namespace Machete.Test.Integration.Service
     {
         viewOptions dOptions;
         FluentRecordBase frb;
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext c)
+        {
+            //HibernatingRhinos.Profiler.Appender.EntityFramework.EntityFrameworkProfiler.Initialize();
 
+        }
         [TestInitialize]
         public void TestInitialize()
         {

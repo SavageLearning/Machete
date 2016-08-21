@@ -31,23 +31,23 @@ namespace Machete.Data
     {
 
     }
-    public class TestInitializer : DropCreateDatabaseAlways<MacheteContext>
+    //public class TestInitializer : DropCreateDatabaseAlways<MacheteContext>
 
-    //public class TestInitializer : DropAndMigrateDatabaseToLatestVersion<MacheteContext, MacheteConfiguration>
+    public class TestInitializer : MigrateDatabaseToLatestVersion<MacheteContext, MacheteConfiguration>
     {
-        protected override void Seed(MacheteContext DB)
-        {
-            MacheteLookup.Initialize(DB);
-            MacheteUsers.Initialize(DB);
-            base.Seed(DB);
-        }
+        //protected override void Seed(MacheteContext DB)
+        //{
+        //    MacheteLookup.Initialize(DB);
+        //    MacheteUsers.Initialize(DB);
+        //    base.Seed(DB);
+        //}
     }
 
     public class MacheteConfiguration : DbMigrationsConfiguration<MacheteContext>
     {
         public MacheteConfiguration() : base()
         {
-            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationsEnabled = false;
             AutomaticMigrationDataLossAllowed = false;
         }
 

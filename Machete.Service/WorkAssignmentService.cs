@@ -126,10 +126,16 @@ namespace Machete.Service
             result.filteredCount = e.Count();
             //
             //Limit results to the display length and offset
-            //if ((int)o.displayLength >= 0)
-            result.query = e; // e.Skip((int)o.displayStart).Take((int)o.displayLength);
-           
-           result.totalCount = waRepo.GetAllQ().Count();
+            if (o.displayLength >= 0)
+            {
+                result.query = e.Skip(o.displayStart).Take(o.displayLength);
+            }
+            else
+            {
+                result.query = e;
+            } 
+
+            result.totalCount = waRepo.GetAllQ().Count();
            return result;
       }
         /// <summary>
