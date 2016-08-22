@@ -21,21 +21,15 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+using Machete.Data.Infrastructure;
+using Machete.Domain;
+using Machete.Service;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Machete.Domain;
-using Machete.Data;
-using Machete.Service;
-using System.Data.Entity;
-using System.Text.RegularExpressions;
-using System.Web.Security;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
-using Machete.Data.Infrastructure;
-using Microsoft.AspNet.Identity.EntityFramework;
+using System.Web.Mvc;
 
 namespace Machete.Web.Helpers
 {
@@ -57,12 +51,10 @@ namespace Machete.Web.Helpers
         private static List<SelectListItem> yesnoEN { get; set; }
         private static List<SelectListItem> yesnoES { get; set; }
         private static ILookupCache lcache;
-        private static IDatabaseFactory Db;
         //
         // Initialize once to prevent re-querying DB
         //
-        //public static void Initialize(IEnumerable<Lookup> cache)
-        public static void Initialize(ILookupCache lc, IDatabaseFactory Db)
+        public static void Initialize(ILookupCache lc)
         {
             lcache = lc;
             hoursNum = new SelectList(new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16" }
@@ -100,11 +92,6 @@ namespace Machete.Web.Helpers
             return yesnoEN;  //defaults to English
         }
 
-        public static IEnumerable<string> getTeachers()
-        {
-            var teacherEnumerable = new TeacherEnumerator(Db).Teachers.AsEnumerable();
-            return teacherEnumerable;
-        }
         //
         // Get the Id string for a given lookup number
         public static string byID(int ID)
@@ -355,26 +342,5 @@ namespace Machete.Web.Helpers
     {
         public string Value { get; set; }
         public string Text { get; set; }
-    }
-
-    public class TeacherEnumerator
-    {
-        public TeacherEnumerator()
-        {
-            this.Teachers = new List<string>();
-        }
-
-        public TeacherEnumerator(IDatabaseFactory Db) : this()
-        {
-            var users = Db.Get().Users;
-            //var teachers = users.SelectMany(x => x.Roles).Where(y => y.Role.Name == "Teacher");
-            var teacherNames = users.Where(y => y.Roles.Any(role => role.Role.Name == "Teacher")).Select(x => x.UserName);
-            foreach (var name in teacherNames)
-            {
-                this.Teachers.Add(name);
-            }
-        }
-
-        public List<string> Teachers { get; set; }
     }
 }

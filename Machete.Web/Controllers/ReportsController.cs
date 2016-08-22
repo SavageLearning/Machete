@@ -24,25 +24,17 @@
 // forked at http://www.github.com/chaim1221/machete/
 // 
 #endregion
+using AutoMapper;
+using Machete.Service;
+using Machete.Web.Helpers;
+using Machete.Web.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Machete.Web.Helpers;
-using Elmah;
-using Machete.Data;
-using Machete.Data.Infrastructure;
-using Machete.Domain;
-using Machete.Service;
-using NLog;
-using Machete.Web.ViewModel;
-using Machete.Web.Models;
-using System.Web.Routing;
-using System.Text.RegularExpressions;
 using System.Data;
-using AutoMapper;
 using System.Globalization;
+using System.Linq;
+using System.Web.Mvc;
+using System.Web.Routing;
 
 
 namespace Machete.Web.Controllers

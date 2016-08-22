@@ -21,24 +21,19 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+using AutoMapper;
+using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Helpers;
-using NLog;
-using Machete.Domain;
-using Machete.Data;
-using Machete.Web.Models;
-using System.Web.Routing;
-using AutoMapper;
+using System;
+using System.Linq;
 using System.Web.Configuration;
+using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace Machete.Web.Controllers
 {
-   [ElmahHandleError]
+    [ElmahHandleError]
     public class WorkerSigninController : MacheteController
     {
         private readonly IWorkerSigninService _serv;
@@ -211,7 +206,7 @@ namespace Machete.Web.Controllers
         /// <param name="userName">The username of the person making the request.</param>
         /// <returns>Json (bool jobSuccess, string status)</returns>
         [UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager, Check-in")]
+        [Authorize(Roles = "Administrator, Manager")]
         public ActionResult moveDown(int id, string userName)
         {
             _serv.moveDown(id, userName);
@@ -234,7 +229,7 @@ namespace Machete.Web.Controllers
         /// <param name="userName">The username of the person making the request.</param>
         /// <returns>Json (bool jobSuccess, string status)</returns>
         [UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager, Check-in")]
+        [Authorize(Roles = "Administrator, Manager")]
         public ActionResult moveUp(int id, string userName)
         {
             _serv.moveUp(id, userName);

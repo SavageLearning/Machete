@@ -21,23 +21,14 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 using NLog;
-using Machete.Web.Helpers;
-using Machete.Service;
-using Machete.Domain;
+using System;
+using System.Linq;
 using System.Text;
+using System.Web.Mvc;
 
 namespace Machete.Web.Controllers
 {
-    //    IDictionary<string, object> data = new RouteValueDictionary(result.Data);
-    //Assert.AreEqual(0, data["iNewID"]);
-    //Assert.AreEqual(null, data["sNewLabel"]);
-    //Assert.AreEqual(null, data["sNewRef"]);
     public class MacheteController : Controller
     {
         private Logger log = LogManager.GetCurrentClassLogger();

@@ -23,29 +23,21 @@
 #endregion
 
 using AutoMapper;
-using Machete.Data;
-using Machete.Data.Infrastructure;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Helpers;
 using Machete.Web.Helpers.PayPal;
-using Machete.Web.Models;
 using Machete.Web.Resources;
-using Machete.Web.ViewModel;
 using Microsoft.AspNet.Identity;
 using Newtonsoft.Json.Linq;
 using NLog;
 using PayPal.Exception;
-using PayPal.PayPalAPIInterfaceService;
 using PayPal.PayPalAPIInterfaceService.Model;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 

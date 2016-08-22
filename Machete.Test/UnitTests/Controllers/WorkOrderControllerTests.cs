@@ -85,7 +85,7 @@ namespace Machete.Test.Unit.Controller
             _ctrlr = new WorkOrderController(_serv.Object, _waServ.Object, _empServ.Object, _reqServ.Object, _wrServ.Object, lcache.Object);
             _ctrlr.SetFakeControllerContext();
             // TODO: Include Lookups in Dependency Injection, remove initialize statements
-            Lookups.Initialize(lcache.Object, dbfactory.Object);
+            Lookups.Initialize(lcache.Object);
         }
         //
         //   Testing /Index functionality
