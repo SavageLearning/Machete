@@ -65,7 +65,7 @@ namespace Machete.Web.Controllers
         //
         // GET: /WorkAssignment/
         //
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in")]
         public ActionResult Index()
         {
             WorkAssignmentIndex _model = new WorkAssignmentIndex();
@@ -76,7 +76,7 @@ namespace Machete.Web.Controllers
 
         #endregion
 
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             //Get all the records            

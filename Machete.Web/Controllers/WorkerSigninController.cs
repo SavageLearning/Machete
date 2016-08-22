@@ -206,7 +206,7 @@ namespace Machete.Web.Controllers
         /// <param name="userName">The username of the person making the request.</param>
         /// <returns>Json (bool jobSuccess, string status)</returns>
         [UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager, Check-in")]
+        [Authorize(Roles = "Administrator, Manager")]
         public ActionResult moveDown(int id, string userName)
         {
             _serv.moveDown(id, userName);
@@ -229,7 +229,7 @@ namespace Machete.Web.Controllers
         /// <param name="userName">The username of the person making the request.</param>
         /// <returns>Json (bool jobSuccess, string status)</returns>
         [UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager, Check-in")]
+        [Authorize(Roles = "Administrator, Manager")]
         public ActionResult moveUp(int id, string userName)
         {
             _serv.moveUp(id, userName);
