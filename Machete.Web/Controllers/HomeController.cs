@@ -42,7 +42,7 @@ namespace Machete.Web.Controllers
                     return View();
                 }
             }
-            return RedirectToAction("Login", "HirerAccount");
+            return RedirectToAction("Login", "Account");
         }
 
         [Authorize(Roles = "Manager, Administrator, PhoneDesk, User, Teacher, Check-in")]
