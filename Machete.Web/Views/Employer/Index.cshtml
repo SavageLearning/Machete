@@ -45,7 +45,7 @@
         // Create Employer table
         //
         var oTable = jqrfyTable({
-            table: $('#employerTable'), 
+            table: $('#employerTable'),
             tab: $('#employerTabs'),
             options: {
                 //"sScrollY": "315px",
@@ -74,10 +74,10 @@
                                 { "mDataProp": "onlineSource", "bSearchable": false, "bSortable": true, "bVisible": true }
                             ]
             },
-            dblClickEvent: null, 
+            dblClickEvent: null,
             tabLabel: "@(recType)"
         });
-        $('#employerTabs').mUI('createTabs', { 
+        $('#employerTabs').mUI('createTabs', {
             prefix: "ui-tabs-employer-",
             formLevel: 1,
             changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirmPerson)",
