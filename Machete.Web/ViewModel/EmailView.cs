@@ -1,12 +1,8 @@
 ﻿using Machete.Domain;
 using Machete.Web.Helpers;
-using Machete.Web.Resources;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Machete.Web.ViewModel

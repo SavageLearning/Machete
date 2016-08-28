@@ -70,7 +70,7 @@ namespace MWS.Test
             Assert.AreEqual(1, mgr.sentStack.Count);
             Assert.AreEqual(0, mgr.exceptionStack.Count);
         }
-
+        [Ignore]
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.MWS), TestCategory(TC.Emails)]
         [ExpectedException(typeof(DbUpdateConcurrencyException))]
         public void Integration_Email_EF_Test_concurrency_exception()

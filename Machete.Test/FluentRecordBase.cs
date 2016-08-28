@@ -100,12 +100,13 @@ namespace Machete.Test
         public FluentRecordBase AddDBFactory(string connStringName = "MacheteConnection")
         {
             AppDomain.CurrentDomain.SetData("DataDirectory", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ""));
-            var initializer = new MacheteInitializer();
+            var initializer = new TestInitializer();
             Database.SetInitializer<MacheteContext>(initializer);
             _dbFactory = new DatabaseFactory(connStringName);
             initializer.InitializeDatabase(_dbFactory.Get());
             _uow = new UnitOfWork(_dbFactory);
             _uow.Commit();
+
             AddLookupCache();
             return this;
         }
@@ -120,6 +121,7 @@ namespace Machete.Test
         {
             if (_dbFactory == null) AddDBFactory();
             _lcache = new LookupCache(_dbFactory);
+            _lcache.getCache();
             return this;
         }
 
@@ -805,7 +807,8 @@ namespace Machete.Test
             DateTime? datecreated = null,
             DateTime? dateupdated = null,
             DateTime? startTime = null,
-            DateTime? endTime = null
+            DateTime? endTime = null,
+            string    teacher = null
         )
         {
             //
@@ -818,6 +821,7 @@ namespace Machete.Test
             if (dateupdated != null) _a.dateupdated = (DateTime)dateupdated;
             if (startTime != null) _a.dateStart = (DateTime)startTime;
             if (endTime != null) _a.dateEnd = (DateTime)endTime;
+            if (teacher != null) _a.teacher = teacher;
             //
             // ACT
             _servA.Create(_a, _user);

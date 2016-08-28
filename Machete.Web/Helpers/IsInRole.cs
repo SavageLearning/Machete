@@ -21,10 +21,7 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Machete.Web.Helpers
@@ -65,6 +62,7 @@ namespace Machete.Web.Helpers
     public static class RoleGroupHelper
     {
         public static string[] Role_AMPCU(this HtmlHelper html) { return new[]{"Administrator", "Manager", "PhoneDesk", "Check-in", "User"}; }
+        public static string[] Role_AMPC(this HtmlHelper html) { return new[]{"Administrator", "Manager", "PhoneDesk", "Check-in"}; }
         public static string[] Role_AMPU(this HtmlHelper html) { return new[]{"Administrator", "Manager", "PhoneDesk", "User"}; }
         public static string[] Role_AMP(this HtmlHelper html) { return new[]{"Administrator", "Manager", "PhoneDesk"}; }
         public static string[] Role_AM(this HtmlHelper html) { return new[] { "Administrator", "Manager" }; }

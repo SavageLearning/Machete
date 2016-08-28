@@ -21,16 +21,15 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+using Machete.Data.Infrastructure;
+using Machete.Domain;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Machete.Data;
-using Machete.Domain;
 using System.Data.Entity;
-using System.Runtime.Caching;
 using System.Data.Entity.Validation;
-using Machete.Data.Infrastructure;
+using System.Linq;
+using System.Runtime.Caching;
+using System.Text;
 
 namespace Machete.Data
 {

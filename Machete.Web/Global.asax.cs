@@ -21,32 +21,25 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
-using Microsoft.Practices.Unity;
-using Machete.Web.Models;
-using System.Web.Security;
-using Machete.Web.IoC;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
-using Machete.Web.ViewModel;
 using Machete.Service;
-using Machete.Web.Controllers;
-using System.Globalization;
-using System.Threading;
-using System.Data.Entity;
-
-using System.Data.Entity.ModelConfiguration;
 using Machete.Web.Helpers;
-using AutoMapper;
-using System.Web.Optimization;
+using Machete.Web.IoC;
+using Machete.Web.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.Practices.Unity;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Globalization;
+using System.Threading;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Optimization;
+using System.Web.Routing;
 
 namespace Machete.Web
 {
@@ -107,6 +100,7 @@ namespace Machete.Web
 
         protected void Application_Start()
         {
+            //HibernatingRhinos.Profiler.Appender.EntityFramework.EntityFrameworkProfiler.Initialize();
             AreaRegistration.RegisterAllAreas();
             // from MVC 4 template
             //WebApiConfig.Register(GlobalConfiguration.Configuration);
@@ -118,10 +112,13 @@ namespace Machete.Web
             ModelBinders.Binders.Add(typeof(List<WorkerRequest>), new workerRequestBinder());
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
-            Database.SetInitializer(new MacheteInitializer());
+            var initializer = new MacheteInitializer();
+            Database.SetInitializer(initializer);
             IUnityContainer container = GetUnityContainer();
+            var db = container.Resolve<IDatabaseFactory>();
+            initializer.InitializeDatabase(db.Get());
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
-            Lookups.Initialize(container.Resolve<ILookupCache>(), container.Resolve<IDatabaseFactory>()); // Static object; used in cshtml files; used instead of proper view models
+            Lookups.Initialize(container.Resolve<ILookupCache>()); // Static object; used in cshtml files; used instead of proper view models
             MacheteMapper.Initialize(); // AutoMapper
         }
 
@@ -135,7 +132,6 @@ namespace Machete.Web
             //.RegisterInstance<MembershipProvider>(Membership.Provider)
             .RegisterType<IUserStore<ApplicationUser>, UserStore<ApplicationUser>>(new PerRequestLifetimeManager())//HttpContextLifetimeManager<IUserStore<ApplicationUser>>())
             .RegisterType<IMyUserManager<ApplicationUser>, MyUserManager>(new PerRequestLifetimeManager())//HttpContextLifetimeManager<IMyUserManager<ApplicationUser>>())
-            //.RegisterInstance<IDatabaseFactory>(new DatabaseFactory())
             //.RegisterType<IDatabaseFactory, DatabaseFactory>(new ContainerControlledLifetimeManager(), new InjectionConstructor("macheteConnection"))
             .RegisterType<IDatabaseFactory, DatabaseFactory>(new PerRequestLifetimeManager(), new InjectionConstructor("macheteConnection"))
             .RegisterType<IUnitOfWork, UnitOfWork>(new PerRequestLifetimeManager())
