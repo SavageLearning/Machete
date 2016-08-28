@@ -69,7 +69,8 @@
         $('#EmployerTab-@Model.ID').mUI('tabFormSubmit', {
             create: false,
             selectTab: 0,
-            formLevel: 1
+            formLevel: 1,
+            callback: function () { $('#employerTable').dataTable().fnDraw(); }
         });
     });
 

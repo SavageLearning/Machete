@@ -36,6 +36,23 @@
         </table>
     </div>
 </div>
+<div id="employerSelectDialog" title="@WorkOrders.empChgConfirmTitle">
+    <table id="employerSelectTable" class="display">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>LABEL</th>
+                <th>@Machete.Domain.Resources.Employer.active</th>
+                <th>@Machete.Domain.Resources.Employer.name</th>
+                <th>@Machete.Domain.Resources.Employer.address1</th>
+                <th>@Machete.Domain.Resources.Employer.city</th>
+                <th>@Machete.Domain.Resources.Employer.phone</th>
+                <th>@Machete.Domain.Resources.Record.dateupdated</th>
+                <th>@Machete.Domain.Resources.Record.updatedby</th>
+            </tr>
+        </thead>
+    </table>
+</div>
 @Html.Partial("WorkerIndex")
 <script type="text/javascript">
     $(document).ready(function () {
@@ -94,13 +111,62 @@
 
         $('#employerCreateTab').click(function () {
 
-            // capturing not-saved typed fields from Create New Employer form to localStorage variables 
+            // capturing not-saved typed fields from Create New Employer form to localStorage variables
 
             // serializeArray captures all the form fields
             var employerFormContent = $('#employerCreateForm').serializeArray();
             window.localStorage.setItem("employerCreateForm", JSON.stringify(employerFormContent));
-        });         
-            return true;
+        });
+        ////////////////////////////////////////////////////////////////
+        //
+        // table for selecting employer (for workorder move functionality)
+        //
+        $('#employerSelectTable').dataTable().fnDestroy();
+        $('#employerSelectTable').dataTable({
+            "bPaginate": true,
+            "bDeferLoading": true,
+            "bLengthChange": true,
+            "aaSorting": [[7, 'desc']],
+            "bFilter": true,
+            "bSort": true,
+            "bInfo": true,
+            "iDeferLoading": true,
+            "bAutoWidth": false,
+            "bServerSide": true,
+            "sAjaxSource": "/Employer/AjaxHandler",
+            "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
+            "bProcessing": true,
+            "aoColumns": [
+                            {"mDataProp": "tabref",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                            {"mDataProp": "tablabel",  "bSearchable": false, "bSortable": false, "bVisible": false },
+                            {"mDataProp": "active" },
+                            {"mDataProp": "name" },
+                            {"mDataProp": "address1" },
+                            {"mDataProp": "city" },
+                            {"mDataProp": "phone" },
+                            {"mDataProp": "dateupdated" },
+                            {"mDataProp": "Updatedby", "bSortable": false }
+            ],
+            // callback populates html attr with row data from JSON
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $(nRow).attr('recordid', aData['EID']);
+                return nRow;
+            }
+        }).fnSetFilteringDelay(250);
+        $('#employerSelectTable_filter input').attr('ID', 'employerSelectTable_searchbox');
+        //////////////////////////////////////////////////
+        //
+        //
+
+        $('#employerSelectTable').find('tbody').mUI('selectEmployerDblClick',
+        {
+            okButton: "@WorkOrders.empChgConfirmSubmit",
+            message: "@WorkOrders.empChgConfirm",
+            title: '@WorkOrders.empChgConfirmSubmit'
+        });
+        $('#employerSelectDialog').hide();
+        $('#employerSelectTable').hide()
+        return true;
     });
 </script>
 
