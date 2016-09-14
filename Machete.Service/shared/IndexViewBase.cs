@@ -165,17 +165,24 @@ namespace Machete.Service
             //var completedID = LookupCache.getByKeys(LCategory.orderstatus, LOrderStatus.Completed);
             switch (o.wa_grouping)
             {
-                case "open": q = q.Where(p => p.workerAssignedID == null); break;
-                case "assigned": q = q.Where(p => p.workerAssignedID != null); break;
+                case "open": q = q.Where(p => p.workerAssignedID == null 
+                                           && p.workOrder.status == WorkOrder.iActive);
+                    break;
+                case "assigned": q = q.Where(p => p.workerAssignedID != null 
+                                               && p.workOrder.status == WorkOrder.iActive); break;
                 case "requested":
-                    q = q.Where(p => p.workerAssignedID == null && p.workOrder.workerRequests.Any() == true);
+                    q = q.Where(p => p.workerAssignedID == null 
+                                  && p.workOrder.workerRequests.Any() == true 
+                                  && p.workOrder.status == WorkOrder.iActive);
 
                     break;
                 case "skilled": q = q.Join(lRepo.GetAllQ(),
                                     wa => wa.skillID,
                                     sk => sk.ID,
                                     (wa, sk) => new { wa, sk })
-                             .Where(jj => jj.sk.speciality == true && jj.wa.workerAssigned == null)
+                             .Where(jj => jj.sk.speciality == true 
+                                       && jj.wa.workerAssigned == null 
+                                       && jj.wa.workOrder.status == WorkOrder.iActive)
                              .Select(jj => jj.wa);
                     break;
                 case "completed":
