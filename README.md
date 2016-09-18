@@ -1,6 +1,8 @@
 Machete
 =======
 
+[![Join the chat at https://gitter.im/machete-project/Lobby](https://badges.gitter.im/machete-project/Lobby.svg)](https://gitter.im/machete-project/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 
 [![Build status-Master](https://ci.appveyor.com/api/projects/status/5rg49kr08b2njv4n?svg=true)](https://ci.appveyor.com/project/jcii/machete) 
 
