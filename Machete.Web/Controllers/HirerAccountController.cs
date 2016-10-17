@@ -1,27 +1,23 @@
-﻿using System;
+﻿using Machete.Data;
+using Machete.Data.Infrastructure;
+using Machete.Service;
+using Machete.Web.Helpers;
+using Machete.Web.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
+using NLog;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data.Entity;
+using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.Owin.Security;
-using Machete.Web.Models;
-using System.Data.SqlClient;
-using System.Configuration;
-using Machete.Web.Helpers;
-using NLog;
-using System.Globalization;
-using System.Web.Security;
-using Machete.Data;
-using Machete.Data.Infrastructure;
 using System.Web.Routing;
-using Machete.Service;
-using System.Collections.ObjectModel;
-using System.Data.Entity;
-using Microsoft.AspNet.Identity.Owin;
 
 namespace Machete.Web.Controllers
 {
@@ -47,7 +43,6 @@ namespace Machete.Web.Controllers
             CI = (CultureInfo)Session["Culture"];
         }
 
-        // GET: /HirerAccount/Index
         // TODO: Consider implementing this functionality - currently there is no admin account page to manage Employer user accounts
         [Authorize(Roles = "Manager, Administrator")]
         public ActionResult Index()
@@ -78,7 +73,6 @@ namespace Machete.Web.Controllers
             return View(model);
         }
 
-        // GET: /HirerAccount/Login
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
@@ -90,7 +84,6 @@ namespace Machete.Web.Controllers
         }
 
         // TODO: Consider changing name to LoginAsync for naming convention
-        // POST: /HirerAccount/Login
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -119,7 +112,6 @@ namespace Machete.Web.Controllers
             return View(model);
         }
 
-        // GET: /HirerAccount/Register
         [AllowAnonymous]
         public ActionResult Register()
         {
@@ -127,7 +119,6 @@ namespace Machete.Web.Controllers
             return View(model);
         }
 
-        // POST: /HirerAccount/Register
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -188,7 +179,6 @@ namespace Machete.Web.Controllers
             return appId;
         }
 
-        // POST: /HirerAccount/Disassociate
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Manager")]
@@ -208,7 +198,6 @@ namespace Machete.Web.Controllers
         }
 
         // Manage (update) account of current signed-in user
-        // GET: /HirerAccount/Manage
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Manage(ManageMessageId? message)
         {
@@ -247,7 +236,6 @@ namespace Machete.Web.Controllers
             return View(model);
         }
 
-        // POST: /HirerAccount/Manage
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Manager")]
@@ -306,7 +294,6 @@ namespace Machete.Web.Controllers
             return View(model);
         }
 
-        // GET: /HirerAccount/Edit
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Edit(string id, ManageMessageId? Message = null)
         {
@@ -321,7 +308,6 @@ namespace Machete.Web.Controllers
             return View(model);
         }
 
-        // POST: /HirerAccount/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Manager")]
@@ -386,7 +372,6 @@ namespace Machete.Web.Controllers
             return View(model);
         }
 
-        // GET: /HirerAccount/Delete
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Delete(string id = null)
         {
@@ -426,7 +411,6 @@ namespace Machete.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        // POST: /HirerAccount/ExternalLogin
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -436,7 +420,6 @@ namespace Machete.Web.Controllers
             return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
         }
 
-        // GET: /HirerAccount/ExternalLoginCallback
         [AllowAnonymous]
         public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
         {
@@ -463,7 +446,6 @@ namespace Machete.Web.Controllers
             }
         }
 
-        // POST: /HirerAccount/LinkLogin
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult LinkLogin(string provider)
@@ -472,7 +454,6 @@ namespace Machete.Web.Controllers
             return new ChallengeResult(provider, Url.Action("LinkLoginCallback", "Account"), User.Identity.GetUserId());
         }
 
-        // GET: /HirerAccount/LinkLoginCallback
         public async Task<ActionResult> LinkLoginCallback()
         {
             ExternalLoginInfo loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync(XsrfKey, User.Identity.GetUserId());
@@ -488,7 +469,6 @@ namespace Machete.Web.Controllers
             return RedirectToAction("Manage", new { Message = ManageMessageId.Error });
         }
 
-        // POST: /HirerAccount/ExternalLoginConfirmation
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -525,7 +505,6 @@ namespace Machete.Web.Controllers
             return View(model);
         }
 
-        // GET: /HirerAccount/LogOff
         [AllowAnonymous]
         public ActionResult LogOff()
         {
@@ -533,14 +512,12 @@ namespace Machete.Web.Controllers
             return RedirectToAction("Login");
         }
 
-        // GET: /HirerAccount/ExternalLoginFailure
         [AllowAnonymous]
         public ActionResult ExternalLoginFailure()
         {
             return View();
         }
 
-        // GET: /HirerAccount/RemoveAccountList
         [ChildActionOnly]
         public ActionResult RemoveAccountList()
         {

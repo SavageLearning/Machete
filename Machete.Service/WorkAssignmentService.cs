@@ -21,19 +21,13 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Machete.Domain;
 using Machete.Data;
 using Machete.Data.Infrastructure;
-using NLog;
-using System.Globalization;
-using System.Text.RegularExpressions;
-using System.Linq.Expressions;
-using System.Data.Entity.Core.Objects;
+using Machete.Domain;
+using System;
+using System.Collections.Generic;
 using System.Data.Entity;
+using System.Linq;
 
 namespace Machete.Service
 {
@@ -132,10 +126,16 @@ namespace Machete.Service
             result.filteredCount = e.Count();
             //
             //Limit results to the display length and offset
-            //if ((int)o.displayLength >= 0)
-            result.query = e; // e.Skip((int)o.displayStart).Take((int)o.displayLength);
-           
-           result.totalCount = waRepo.GetAllQ().Count();
+            if (o.displayLength >= 0)
+            {
+                result.query = e.Skip(o.displayStart).Take(o.displayLength);
+            }
+            else
+            {
+                result.query = e;
+            } 
+
+            result.totalCount = waRepo.GetAllQ().Count();
            return result;
       }
         /// <summary>

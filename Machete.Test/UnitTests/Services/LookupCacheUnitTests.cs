@@ -20,7 +20,8 @@ namespace Machete.Test.Unit.Service
         Mock<IDatabaseFactory> _db;
         Mock<MacheteContext> _ctxt;
         Mock<DbSet<Lookup>> _set;
-        Mock<DbQuery<Lookup>> _q;
+        Mock<DbSet<ApplicationUser>> _users;
+        //Mock<DbQuery<Lookup>> _q;
         LookupCache _serv;
         public LookupCacheTests()
         {
@@ -33,6 +34,8 @@ namespace Machete.Test.Unit.Service
             // Testing with a mocking framework (EF6 onwards)
             _db = new Mock<IDatabaseFactory>();
             _ctxt = new Mock<MacheteContext>();
+            //
+            // lookupcache
             var list = new List<Lookup> {
                 new Lookup { category = LCategory.memberstatus, key = LMemberStatus.Active },
                 new Lookup { category = LCategory.memberstatus, key = LMemberStatus.Sanctioned },
@@ -55,7 +58,22 @@ namespace Machete.Test.Unit.Service
             _set.As<IQueryable<Lookup>>().Setup(m => m.Expression).Returns(list.Expression);
             _set.As<IQueryable<Lookup>>().Setup(m => m.ElementType).Returns(list.ElementType);
             _set.As<IQueryable<Lookup>>().Setup(m => m.GetEnumerator()).Returns(list.GetEnumerator());
+            _set.Setup(r => r.AsNoTracking()).Returns(_set.Object);
+            //
+            // teacherCache
+            var teachers = new List<ApplicationUser>
+            {
+                new ApplicationUser { UserName = "random name" }
+            }.AsQueryable();
+            _users = new Mock<DbSet<ApplicationUser>>();
+            _users.As<IQueryable<ApplicationUser>>().Setup(m => m.Provider).Returns(teachers.Provider);
+            _users.As<IQueryable<ApplicationUser>>().Setup(m => m.Expression).Returns(teachers.Expression);
+            _users.As<IQueryable<ApplicationUser>>().Setup(m => m.ElementType).Returns(teachers.ElementType);
+            _users.As<IQueryable<ApplicationUser>>().Setup(m => m.GetEnumerator()).Returns(teachers.GetEnumerator());
+            _users.Setup(r => r.AsNoTracking()).Returns(_users.Object);
+
             _ctxt.Setup(r => r.Lookups).Returns(_set.Object);
+            _ctxt.Setup(r => r.Users).Returns(_users.Object);
             _db.Setup(r => r.Get()).Returns(_ctxt.Object);
             _serv = new LookupCache(_db.Object);
 
@@ -63,7 +81,8 @@ namespace Machete.Test.Unit.Service
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Lookups)]
         public void GetCache_returns_Enumerable()
         {
-            // ARrange
+            // Arrange
+            
             // Act
             var result = _serv.getCache();
             // Assert

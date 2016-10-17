@@ -21,15 +21,8 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Machete.Service;
-using System.Web.Helpers;
-using System.Globalization;
 using Machete.Web.Helpers;
+using System.Web.Mvc;
 
 namespace Machete.Web.Controllers
 {
@@ -49,7 +42,7 @@ namespace Machete.Web.Controllers
                     return View();
                 }
             }
-            return RedirectToAction("Login", "HirerAccount");
+            return RedirectToAction("Login", "Account");
         }
 
         [Authorize(Roles = "Manager, Administrator, PhoneDesk, User, Teacher, Check-in")]

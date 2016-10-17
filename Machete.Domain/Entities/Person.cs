@@ -21,13 +21,8 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Machete.Domain.Resources;
 
 
 
@@ -113,7 +108,7 @@ namespace Machete.Domain
 
         [LocalizedDisplayName("gender", NameResourceType = typeof(Resources.Person))]
         //[Required(ErrorMessageResourceName = "gendererror", ErrorMessageResourceType = typeof(Resources.Person))]
-        public int? gender { get; set; }
+        public int gender { get; set; }
 
         [LocalizedDisplayName("genderother", NameResourceType = typeof(Resources.Person))]
         [StringLength(20, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Person))]

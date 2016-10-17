@@ -69,12 +69,12 @@
 <script type="text/javascript">
     $(document).ready(function () {
         var eDis = @editDisable; //ignore visual studio error; moved assignment here so it would parse the rest
-        if ( eDis == 1 ) { 
+        if ( eDis == 1 ) {
             $('#WorkOrderTab-@(Model.ID)').find('input,select,textarea').attr('disabled', 'disabled');
         }
         $('#activateWorkOrder-@(Model.ID)').hide();
         $('.formButton').button();
-        $('#contactName').focus();        
+        $('#contactName').focus();
         //
         // English note toggle
         $('#@(idPrefix)englishRequired').mUI('selectToggleOnValue', {
@@ -82,7 +82,7 @@
             showVal: "@(Shared.yes)"
         });
         //
-        // machete UI detect changes on forms in tabs   
+        // machete UI detect changes on forms in tabs
         $("#WorkOrderTab-@(Model.ID)").mUI('formDetectChanges', {
             recType: "@(recType)",
             formLevel: 2,
@@ -94,8 +94,8 @@
         $.validator.unobtrusive.parseDynamicContent($('#WorkOrderTab-@Model.ID'));
         //
         // Find tabindex attribute (for tab order, not jquery tabs) and increment by 10
-        $('#WorkOrderTab-@Model.ID').find('[tabindex]').each(function () { 
-            $(this).attr('tabindex', parseInt($(this).attr('tabindex')) + 10) 
+        $('#WorkOrderTab-@Model.ID').find('[tabindex]').each(function () {
+            $(this).attr('tabindex', parseInt($(this).attr('tabindex')) + 10)
         });
         //
         // open work order view for printing
@@ -103,7 +103,7 @@
             window.open('/WorkOrder/View/@(Model.ID)');
         });
         //
-        // Delete confirmation 
+        // Delete confirmation
         $("#deleteWorkOrderButton-@(Model.ID)").mUI('formClickDelete', {
             ok: "@WorkOrders.deletesubmit",
             confirm: '@WorkOrders.deleteconfirmation',
@@ -129,9 +129,9 @@
             closeTab: false,
             formLevel: 2
         });
-        $('#@(idPrefix)printMap').click(function () { 
-            openGoogleMap("@Html.Encode(Model.workSiteAddress1 + ',' + Model.city + ',' + Model.state + " " + Model.zipcode)", 
-                    '@Html.Encode(System.Web.Configuration.WebConfigurationManager.AppSettings["OrganizationAddress"])'); 
+        $('#@(idPrefix)printMap').click(function () {
+            openGoogleMap("@Html.Encode(Model.workSiteAddress1 + ',' + Model.city + ',' + Model.state + " " + Model.zipcode)",
+                    '@Html.Encode(System.Web.Configuration.WebConfigurationManager.AppSettings["OrganizationAddress"])');
         });
         //
         // emailConfirm

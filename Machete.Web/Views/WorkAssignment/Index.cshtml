@@ -38,15 +38,17 @@
 
     }
     <div id="buttonDivider">
-
-        <div class="radio">
-            <input type="button" id="bOpenLottery" class="formButton dispatchButton" value="@(WorkAssignments.lottery)" />
-        </div>
-        <div class="radio">
-            <input type="button" id="bAssign" class="formButton dispatchButton" value="@(WorkAssignments.btnAssign)" />
-            <input type="button" id="bUnassign" class="formButton dispatchButton" value="@(WorkAssignments.btnUnassign)" />
-            <input type="button" id="bClear" class="formButton dispatchButton" value="@(WorkAssignments.btnClear)" />
-        </div>
+        @if (Html.IsInRole(Html.Role_AM()))
+        {
+            <div class="radio">
+                <input type="button" id="bOpenLottery" class="formButton dispatchButton" value="@(WorkAssignments.lottery)" />
+            </div>
+            <div class="radio">
+                <input type="button" id="bAssign" class="formButton dispatchButton" value="@(WorkAssignments.btnAssign)" />
+                <input type="button" id="bUnassign" class="formButton dispatchButton" value="@(WorkAssignments.btnUnassign)" />
+                <input type="button" id="bClear" class="formButton dispatchButton" value="@(WorkAssignments.btnClear)" />
+            </div>
+        }       
         <div id="radioOpenFilled" class="radio">
             <input type="radio" id="rA1_requested" name="radioOpenFilled" /><label for="rA1_requested" class="dispatchButton">@(WorkAssignments.btnRequested)<br />@(WorkAssignments.btnSubActive)</label>
             <input type="radio" id="rA1_skilled" name="radioOpenFilled" /><label for="rA1_skilled" class="dispatchButton">@(WorkAssignments.btnSkilled)<br />@(WorkAssignments.btnSubActive)</label>
@@ -89,8 +91,8 @@
                     <table id="availAssignTable" class="display">
                         <thead>
                             <tr>
-                                <th>assigned Worker</th>
-                                <th>requested Workers</th>
+                                @*<th>assigned Worker</th>
+                                <th>requested Workers</th>*@
                                 <th>@Machete.Web.Resources.WorkAssignments.WAID</th>
                                 <th>@WorkOrder.workorderID</th>
                                 <th>@WorkOrder.dateTimeofWork</th>
@@ -198,7 +200,7 @@ $(document).ready(function () {
             { "mDataProp": "lotterySequence"},
             { "mDataProp": "fullname"},
             { "mDataProp": "dwccardnum" },
-    ],
+        ],
         // lottery is straight dataTable, so using standard method for data callback
         "fnServerData": function (sSource, aoData, fnCallback) {
             /* Add some extra data to the sender */
@@ -308,7 +310,7 @@ $(document).ready(function () {
         },
         dblClickEvent: wsiDblClickEvent,
         tabLabel: null
-        });
+    });
     //
     //
     $("#availAssignTable").mUI('createTable', {
@@ -327,8 +329,8 @@ $(document).ready(function () {
             "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
             "bProcessing": true,
             "aoColumns": [
-                            { "mDataProp": "assignedWorker", "bVisible": false, "bSortable": true},
-                            { "mDataProp": "requestedList", "bVisible": false, "bSortable": false},
+                            //{ "mDataProp": "assignedWorker", "bVisible": false, "bSortable": true},
+                            //{ "mDataProp": "requestedList", "bVisible": false, "bSortable": false},
                             { "mDataProp": "WAID", "bVisible": true, "bSortable": true },
                             { "mDataProp": "WOID", "bVisible": true, "bSortable": true },
                             { "mDataProp": "timeofwork"},

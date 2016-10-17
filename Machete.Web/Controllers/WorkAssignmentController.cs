@@ -21,23 +21,16 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Machete.Data;
-using Machete.Data.Infrastructure;
+using AutoMapper;
 using Machete.Domain;
-//using Machete.Helpers;
 using Machete.Service;
 using Machete.Web.Helpers;
-using NLog;
 using Machete.Web.ViewModel;
+using System;
+using System.Linq;
 using System.Web.Configuration;
+using System.Web.Mvc;
 using System.Web.Routing;
-using Machete.Web.Models;
-using AutoMapper;
 
 namespace Machete.Web.Controllers
 {
@@ -72,7 +65,7 @@ namespace Machete.Web.Controllers
         //
         // GET: /WorkAssignment/
         //
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in")]
         public ActionResult Index()
         {
             WorkAssignmentIndex _model = new WorkAssignmentIndex();
@@ -83,7 +76,7 @@ namespace Machete.Web.Controllers
 
         #endregion
 
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             //Get all the records            
@@ -116,8 +109,8 @@ namespace Machete.Web.Controllers
                             maxEarnings = System.String.Format("${0:f2}", p.getMaxEarnings),
                             WSIID = p.workerSigninID ?? 0,
                             WID = p.workerAssignedID ?? 0,
-                            assignedWorker = p.workerAssigned != null ? p.workerAssigned.dwccardnum + " " + p.workerAssigned.Person.fullName() : "",
-                            requestedList = p.workOrder.workerRequests.Select(a => a.fullNameAndID).ToArray(),
+                            //assignedWorker = p.workerAssigned != null ? p.workerAssigned.dwccardnum + " " + p.workerAssigned.Person.fullName() : "",
+                            //requestedList = p.workOrder.workerRequests.Select(a => a.fullNameAndID).ToArray(),
                             asmtStatus = _getStatus(p)
                 };
  

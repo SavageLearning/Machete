@@ -21,19 +21,15 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Linq.Expressions;
-using System.ComponentModel;
-using System.Web.Mvc.Html;
-using System.Globalization;
 using Machete.Web.Resources;
+using System;
+using System.Globalization;
+using System.Linq.Expressions;
+using System.Web.Mvc;
+using System.Web.Mvc.Html;
 
 namespace Machete.Web.Helpers
-{    
+{
     public static class mUIExtensions
     {
         public static string tblabel = "<div class=\"tb-label\">";

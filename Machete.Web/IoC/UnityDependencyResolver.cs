@@ -21,16 +21,14 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+using Microsoft.Practices.Unity;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using Microsoft.Practices.Unity;
 
 namespace Machete.Web.IoC
 {
-public class UnityDependencyResolver : IDependencyResolver
+    public class UnityDependencyResolver : IDependencyResolver
 {        
     IUnityContainer container;       
     public UnityDependencyResolver(IUnityContainer container)

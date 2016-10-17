@@ -7,7 +7,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Text;
 
 namespace Machete.Service
 {
@@ -71,7 +70,7 @@ namespace Machete.Service
 
         }
 
-        public void Save(Email email, string userName)
+        public override void Save(Email email, string userName)
         {
             if (email.statusID == Email.iSent) { return; } 
             if (email.statusID == Email.iReadyToSend)
