@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Machete.Service", "Machete.Service\Machete.Service.csproj", "{BA69BB65-147A-42D8-A6F5-5D1E57E2D783}"
 EndProject
@@ -212,7 +212,6 @@ Global
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.CasaLatina|Any CPU.ActiveCfg = Release|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.CasaLatina|Any CPU.Build.0 = Release|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.CasaLatina|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.CasaLatina|Mixed Platforms.Build.0 = Release|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.CasaLatina|x86.ActiveCfg = Release|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.Cel|Any CPU.ActiveCfg = Release|Any CPU
 		{E667CB78-E80E-4C45-9BDF-1E5EDA0478D3}.Cel|Any CPU.Build.0 = Release|Any CPU
