@@ -11,10 +11,10 @@ namespace Machete.Data
     {
         public AzureConfiguration()
         {
-            SetExecutionStrategy(
-                "System.Data.SqlClient", 
-                () => new SqlAzureExecutionStrategy());
-            DbInterception.Add(new MacheteInterceptorLogging());
+            //SetExecutionStrategy(
+            //    "System.Data.SqlClient", 
+            //    () => new SqlAzureExecutionStrategy());
+            //DbInterception.Add(new MacheteInterceptorLogging());
         }
     }
 }
