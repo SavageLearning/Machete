@@ -26,7 +26,6 @@ using Machete.Data.Infrastructure;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Helpers;
-using Machete.Web.IoC;
 using Machete.Web.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -41,6 +40,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using System.Web.Http;
+using Unity.Mvc4;
 
 namespace Machete.Web
 {
@@ -49,26 +49,6 @@ namespace Machete.Web
 
     public class MvcApplication : System.Web.HttpApplication
     {
-        public static void RegisterGlobalFilters(GlobalFilterCollection filters)
-        {
-            filters.Add(new HandleErrorAttribute());
-        }
-
-        public static void RegisterRoutes(RouteCollection routes)
-        {
-            routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-            routes.IgnoreRoute("elmah.axd");
-            routes.IgnoreRoute("{*favicon}", new { favicon = @"(.*/)?favicon.ico(/.*)?" });
-
-            routes.MapRoute(
-                "Default", // Route name
-                "{controller}/{action}/{id}", // URL with parameters
-                new { controller = "Home", action = "Index", id = UrlParameter.Optional } // Parameter defaults
-            );
-            routes.MapRoute("Error", "{*url}", new { controller = "Error", action = "Http404" });
-
-        }
-
         protected void Application_AcquireRequestState(object sender, EventArgs e)
         {
             //It's important to check whether session object is ready
@@ -105,20 +85,19 @@ namespace Machete.Web
             AreaRegistration.RegisterAllAreas();
             // from MVC 4 template
             WebApiConfig.Register(GlobalConfiguration.Configuration);
-            //FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            //RouteConfig.RegisterRoutes(RouteTable.Routes);
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             //AuthConfig.RegisterAuth();
 
             ModelBinders.Binders.Add(typeof(List<WorkerRequest>), new workerRequestBinder());
-            RegisterGlobalFilters(GlobalFilters.Filters);
-            RegisterRoutes(RouteTable.Routes);
             var initializer = new MacheteInitializer();
             Database.SetInitializer(initializer);
             IUnityContainer container = GetUnityContainer();
             var db = container.Resolve<IDatabaseFactory>();
             initializer.InitializeDatabase(db.Get());
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
+            GlobalConfiguration.Configuration.DependencyResolver = new Unity.WebApi.UnityDependencyResolver(container);
             Lookups.Initialize(container.Resolve<ILookupCache>()); // Static object; used in cshtml files; used instead of proper view models
             MacheteMapper.Initialize(); // AutoMapper
         }
@@ -127,45 +106,41 @@ namespace Machete.Web
         {
             //Create UnityContainer          
             IUnityContainer container = new UnityContainer()
-            .RegisterType<IControllerActivator, CustomControllerActivator>()
-            //.RegisterType<IFormsAuthenticationService, FormsAuthenticationService>()
-            //.RegisterType<IMembershipService, AccountMembershipService>()
-            //.RegisterInstance<MembershipProvider>(Membership.Provider)
-            .RegisterType<IUserStore<ApplicationUser>, UserStore<ApplicationUser>>(new PerRequestLifetimeManager())//HttpContextLifetimeManager<IUserStore<ApplicationUser>>())
-            .RegisterType<IMyUserManager<ApplicationUser>, MyUserManager>(new PerRequestLifetimeManager())//HttpContextLifetimeManager<IMyUserManager<ApplicationUser>>())
-            //.RegisterType<IDatabaseFactory, DatabaseFactory>(new ContainerControlledLifetimeManager(), new InjectionConstructor("macheteConnection"))
-            .RegisterType<IDatabaseFactory, DatabaseFactory>(new PerRequestLifetimeManager(), new InjectionConstructor("macheteConnection"))
-            .RegisterType<IUnitOfWork, UnitOfWork>(new PerRequestLifetimeManager())
+            //.RegisterType<IControllerActivator, CustomControllerActivator>()
+            .RegisterType<IUserStore<ApplicationUser>, UserStore<ApplicationUser>>(new PerResolveLifetimeManager())//HttpContextLifetimeManager<IUserStore<ApplicationUser>>())
+            .RegisterType<IMyUserManager<ApplicationUser>, MyUserManager>(new PerResolveLifetimeManager())//HttpContextLifetimeManager<IMyUserManager<ApplicationUser>>())
+            .RegisterType<IDatabaseFactory, DatabaseFactory>(new PerResolveLifetimeManager(), new InjectionConstructor("macheteConnection"))
+            .RegisterType<IUnitOfWork, UnitOfWork>(new PerResolveLifetimeManager())
             .RegisterInstance<IEmailConfig>(new EmailConfig())
             // 
-            .RegisterType<IPersonRepository, PersonRepository>(new PerRequestLifetimeManager())
-            .RegisterType<IWorkerSigninRepository, WorkerSigninRepository>(new PerRequestLifetimeManager())
-            .RegisterType<IWorkerRepository, WorkerRepository>(new PerRequestLifetimeManager())
-            .RegisterType<IWorkerRequestRepository, WorkerRequestRepository>(new PerRequestLifetimeManager())
-            .RegisterType<IImageRepository, ImageRepository>(new PerRequestLifetimeManager())
-            .RegisterType<IEmployerRepository, EmployerRepository>(new PerRequestLifetimeManager())
-            .RegisterType<IEmailRepository, EmailRepository>(new PerRequestLifetimeManager())
-            .RegisterType<IWorkOrderRepository, WorkOrderRepository>(new PerRequestLifetimeManager())
-            .RegisterType<IWorkAssignmentRepository, WorkAssignmentRepository>(new PerRequestLifetimeManager())
-            .RegisterType<ILookupRepository, LookupRepository>(new PerRequestLifetimeManager())
-            .RegisterType<IEventRepository, EventRepository>(new PerRequestLifetimeManager())
-            .RegisterType<IActivityRepository, ActivityRepository>(new PerRequestLifetimeManager())
-            .RegisterType<IActivitySigninRepository, ActivitySigninRepository>(new PerRequestLifetimeManager())
+            .RegisterType<IPersonRepository, PersonRepository>(new PerResolveLifetimeManager())
+            .RegisterType<IWorkerSigninRepository, WorkerSigninRepository>(new PerResolveLifetimeManager())
+            .RegisterType<IWorkerRepository, WorkerRepository>(new PerResolveLifetimeManager())
+            .RegisterType<IWorkerRequestRepository, WorkerRequestRepository>(new PerResolveLifetimeManager())
+            .RegisterType<IImageRepository, ImageRepository>(new PerResolveLifetimeManager())
+            .RegisterType<IEmployerRepository, EmployerRepository>(new PerResolveLifetimeManager())
+            .RegisterType<IEmailRepository, EmailRepository>(new PerResolveLifetimeManager())
+            .RegisterType<IWorkOrderRepository, WorkOrderRepository>(new PerResolveLifetimeManager())
+            .RegisterType<IWorkAssignmentRepository, WorkAssignmentRepository>(new PerResolveLifetimeManager())
+            .RegisterType<ILookupRepository, LookupRepository>(new PerResolveLifetimeManager())
+            .RegisterType<IEventRepository, EventRepository>(new PerResolveLifetimeManager())
+            .RegisterType<IActivityRepository, ActivityRepository>(new PerResolveLifetimeManager())
+            .RegisterType<IActivitySigninRepository, ActivitySigninRepository>(new PerResolveLifetimeManager())
             // 
-            .RegisterType<ILookupService, LookupService>(new PerRequestLifetimeManager())
-            .RegisterType<IActivitySigninService, ActivitySigninService>(new PerRequestLifetimeManager())
-            .RegisterType<IActivityService, ActivityService>(new PerRequestLifetimeManager())
-            .RegisterType<IEventService, EventService>(new PerRequestLifetimeManager())
-            .RegisterType<IPersonService, PersonService>(new PerRequestLifetimeManager())
-            .RegisterType<IWorkerSigninService, WorkerSigninService>(new PerRequestLifetimeManager())
-            .RegisterType<IWorkerService, WorkerService>(new PerRequestLifetimeManager())
-            .RegisterType<IWorkerRequestService, WorkerRequestService>(new PerRequestLifetimeManager())
-            .RegisterType<IEmployerService, EmployerService>(new PerRequestLifetimeManager())
-            .RegisterType<IEmailService, EmailService>(new PerRequestLifetimeManager())
-            .RegisterType<IWorkOrderService, WorkOrderService>(new PerRequestLifetimeManager())
-            .RegisterType<IWorkAssignmentService, WorkAssignmentService>(new PerRequestLifetimeManager())
-            .RegisterType<IImageService, ImageService>(new PerRequestLifetimeManager())
-            .RegisterType<IReportService, ReportService>(new PerRequestLifetimeManager())
+            .RegisterType<ILookupService, LookupService>(new PerResolveLifetimeManager())
+            .RegisterType<IActivitySigninService, ActivitySigninService>(new PerResolveLifetimeManager())
+            .RegisterType<IActivityService, ActivityService>(new PerResolveLifetimeManager())
+            .RegisterType<IEventService, EventService>(new PerResolveLifetimeManager())
+            .RegisterType<IPersonService, PersonService>(new PerResolveLifetimeManager())
+            .RegisterType<IWorkerSigninService, WorkerSigninService>(new PerResolveLifetimeManager())
+            .RegisterType<IWorkerService, WorkerService>(new PerResolveLifetimeManager())
+            .RegisterType<IWorkerRequestService, WorkerRequestService>(new PerResolveLifetimeManager())
+            .RegisterType<IEmployerService, EmployerService>(new PerResolveLifetimeManager())
+            .RegisterType<IEmailService, EmailService>(new PerResolveLifetimeManager())
+            .RegisterType<IWorkOrderService, WorkOrderService>(new PerResolveLifetimeManager())
+            .RegisterType<IWorkAssignmentService, WorkAssignmentService>(new PerResolveLifetimeManager())
+            .RegisterType<IImageService, ImageService>(new PerResolveLifetimeManager())
+            .RegisterType<IReportService, ReportService>(new PerResolveLifetimeManager())
             // 
             .RegisterType<IWorkerCache, WorkerCache>(new ContainerControlledLifetimeManager())
             .RegisterType<ILookupCache, LookupCache>(new ContainerControlledLifetimeManager());
