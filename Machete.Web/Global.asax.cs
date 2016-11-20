@@ -40,6 +40,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using System.Web.Http;
 
 namespace Machete.Web
 {
@@ -103,7 +104,7 @@ namespace Machete.Web
             //HibernatingRhinos.Profiler.Appender.EntityFramework.EntityFrameworkProfiler.Initialize();
             AreaRegistration.RegisterAllAreas();
             // from MVC 4 template
-            //WebApiConfig.Register(GlobalConfiguration.Configuration);
+            WebApiConfig.Register(GlobalConfiguration.Configuration);
             //FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             //RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
