@@ -69,7 +69,8 @@ namespace Machete.Test
         private EventService _servEV;
         private LookupService _servL;
         private IUnitOfWork _uow;
-        private IEmailConfig _emCfg;        private Employer _emp;
+        private IEmailConfig _emCfg;
+        private Domain.Employer _emp;
         private Email _email;
         private Event _event;
         private WorkOrder _wo;
@@ -186,7 +187,7 @@ namespace Machete.Test
             if (_servE == null) AddServEmployer();
             //
             // ARRANGE
-            _emp = (Employer)Records.employer.Clone();
+            _emp = (Domain.Employer)Records.employer.Clone();
             if (datecreated != null) _emp.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _emp.dateupdated = (DateTime)dateupdated;
             //
@@ -195,15 +196,15 @@ namespace Machete.Test
             return this;
         }
 
-        public Employer ToEmployer()
+        public Domain.Employer ToEmployer()
         {
             if (_emp == null) AddEmployer();
             return _emp;
         }
 
-        public Employer CloneEmployer()
+        public Domain.Employer CloneEmployer()
         {
-            var e = (Employer)Records.employer.Clone();
+            var e = (Domain.Employer)Records.employer.Clone();
             e.name = RandomString(10);
             e.email = "changeme@gmail.com";
             return e;

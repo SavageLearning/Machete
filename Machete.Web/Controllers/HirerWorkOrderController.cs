@@ -104,7 +104,7 @@ namespace Machete.Web.Controllers
             // Retrieve employer ID of signed in Employer
             string employerID = HttpContext.User.Identity.GetUserId();
 
-            Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == employerID).FirstOrDefault();
+            Domain.Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == employerID).FirstOrDefault();
             if (employer != null)
             {
                 ViewBag.employerId = employer.ID;
@@ -145,7 +145,7 @@ namespace Machete.Web.Controllers
             // Retrieve employer ID of signed in Employer
             string employerID = HttpContext.User.Identity.GetUserId();
 
-            Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == employerID).FirstOrDefault();
+            Domain.Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == employerID).FirstOrDefault();
             if (employer != null)
             {
                 vo.EmployerID = employer.ID;
@@ -254,7 +254,7 @@ namespace Machete.Web.Controllers
             string userID = HttpContext.User.Identity.GetUserId();
 
             // Retrieve Employer record
-            Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == userID).FirstOrDefault();
+            Domain.Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == userID).FirstOrDefault();
             if (employer != null)
             {
                 // Employer has created profile or work order already
@@ -335,7 +335,7 @@ namespace Machete.Web.Controllers
             string userID = HttpContext.User.Identity.GetUserId();
 
             // Retrieve Employer record
-            Employer onlineEmployer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == userID).FirstOrDefault();
+            Domain.Employer onlineEmployer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == userID).FirstOrDefault();
             if (onlineEmployer != null)
             {
                 // Employer has created profile or work order already
@@ -346,7 +346,7 @@ namespace Machete.Web.Controllers
             else
             {
                 // Employer has NOT created profile or work order yet
-                Employer employer = new Employer();
+                Domain.Employer employer = new Domain.Employer();
 
                 // Set up default values from WO
                 employer.name = wo.contactName;
@@ -369,7 +369,7 @@ namespace Machete.Web.Controllers
                 employer.receiveUpdates = true;
                 employer.business = false;
 
-                Employer newEmployer = eServ.Create(employer, userName);
+                Domain.Employer newEmployer = eServ.Create(employer, userName);
                 if (newEmployer != null)
                 {
                     wo.EmployerID = newEmployer.ID;
@@ -464,14 +464,14 @@ namespace Machete.Web.Controllers
             string userID = HttpContext.User.Identity.GetUserId();
 
             // Retrieve Employer record
-            Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == userID).FirstOrDefault();
+            Domain.Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == userID).FirstOrDefault();
             if (employer != null)
             {
                 // Employer has created profile or work order already
             }
             else
             {
-                employer = new Employer();
+                employer = new Domain.Employer();
             }
 
             // Set default values
@@ -495,7 +495,7 @@ namespace Machete.Web.Controllers
         /// <param name="userName">User performing action</param>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Hirer")]
-        public ActionResult HirerProfile(Employer e, string userName)
+        public ActionResult HirerProfile(Domain.Employer e, string userName)
         {
             UpdateModel(e);
 
@@ -503,11 +503,11 @@ namespace Machete.Web.Controllers
             string userID = HttpContext.User.Identity.GetUserId();
 
             // Retrieve Employer record
-            Employer onlineEmp = eServ.GetRepo().GetAllQ().Where(emp => emp.onlineSigninID == userID).FirstOrDefault();
+            Domain.Employer onlineEmp = eServ.GetRepo().GetAllQ().Where(emp => emp.onlineSigninID == userID).FirstOrDefault();
 
             if (onlineEmp != null)
             {
-                Employer onlineEmployer = eServ.Get(onlineEmp.ID);
+                Domain.Employer onlineEmployer = eServ.Get(onlineEmp.ID);
                 //e.ID = onlineEmployer.ID;
                 onlineEmployer.active = true;
                 onlineEmployer.address1 = e.address1;
@@ -535,7 +535,7 @@ namespace Machete.Web.Controllers
             else
             {
                 // Create Employer record
-                Employer newEmployer = eServ.Create(e, userName);
+                Domain.Employer newEmployer = eServ.Create(e, userName);
                 return View("Index");
             }
         }

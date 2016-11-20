@@ -72,26 +72,12 @@ namespace Machete.Web.Controllers
         {
             var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI = CI;
-            dataTableResult<Employer> list = serv.GetIndexView(vo);
+            dataTableResult<Domain.Employer> list = serv.GetIndexView(vo);
             //return what's left to datatables
-            var result = from p in list.query select new 
-            { 
-                tabref = _getTabRef(p),
-                tablabel = _getTabLabel(p),
-                active = Convert.ToString(p.active),
-                EID = Convert.ToString(p.ID),
-                recordid = Convert.ToString(p.ID),
-                name = p.name, 
-                address1 = p.address1, 
-                city = p.city, 
-                phone =  p.phone, 
-                driverslicense = p.driverslicense,
-                licenseplate = p.licenseplate,
-                dateupdated = Convert.ToString(p.dateupdated),
-                Updatedby = p.Updatedby,
-                onlineSource = p.onlineSource ? Shared.True : Shared.False
-            };
-
+            var result = list.query
+                .Select(
+                    e => Mapper.Map<Domain.Employer, ViewModel.Employer>(e)
+                ).AsEnumerable();
             return Json(new
             {
                 sEcho = param.sEcho,
@@ -101,16 +87,6 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
-        private string _getTabRef(Employer emp)
-        {
-            if (emp == null) return null;
-            return "/Employer/Edit/" + Convert.ToString(emp.ID);
-        }
-        private string _getTabLabel(Employer emp)
-        {
-            if (emp == null) return null;
-            return emp.name;
-        }
         /// <summary>
         /// GET: /Employer/Create
         /// </summary>
@@ -118,7 +94,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Create()
         {
-            var _model = new Employer();
+            var _model = new Domain.Employer();
             _model.active = true;
         //    _model.city = "Seattle"; // no null types allowed in var
         //    _model.state = "WA";     // no null types allowed in var
@@ -134,16 +110,16 @@ namespace Machete.Web.Controllers
         /// <returns></returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public JsonResult Create(Employer employer, string userName)
+        public JsonResult Create(Domain.Employer employer, string userName)
         {
             UpdateModel(employer);
-            Employer newEmployer = serv.Create(employer, userName);                          
-
+            Domain.Employer newEmployer = serv.Create(employer, userName);                          
+            var result = Mapper.Map<Domain.Employer, ViewModel.Employer>(newEmployer);
             return Json(new
             {
-                sNewRef = _getTabRef(newEmployer),
-                sNewLabel = _getTabLabel(newEmployer),
-                iNewID = newEmployer.ID,
+                sNewRef = result.tabref,
+                sNewLabel = result.tablabel,    
+                iNewID = result.ID,
                 jobSuccess = true
             },
             JsonRequestBehavior.AllowGet);
@@ -162,12 +138,12 @@ namespace Machete.Web.Controllers
         {
             //UpdateModel(combined);
             //split the combined model into domain models
-            Employer mappedEmployer = Mapper.Map<EmployerWoCombined, Employer>(combined);
+            Domain.Employer mappedEmployer = Mapper.Map<EmployerWoCombined, Domain.Employer>(combined);
             WorkOrder mappedWO = Mapper.Map<EmployerWoCombined, WorkOrder>(combined);
             mappedEmployer.onlineSource = true;
             mappedWO.onlineSource = true;
             //update domain
-            Employer newEmployer = serv.Create(mappedEmployer, userName);
+            Domain.Employer newEmployer = serv.Create(mappedEmployer, userName);
             mappedWO.EmployerID = newEmployer.ID;
             mappedWO.status = WorkOrder.iPending;
             WorkOrder newWO = woServ.Create(mappedWO, userName);
@@ -189,7 +165,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Edit(int id)
         {
-            Employer employer = serv.Get(id);
+            Domain.Employer employer = serv.Get(id);
             return PartialView("Edit", employer);
         }
         /// <summary>
@@ -203,7 +179,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public JsonResult Edit(int id, FormCollection collection, string userName)
         {
-            Employer employer = serv.Get(id);
+            Domain.Employer employer = serv.Get(id);
             UpdateModel(employer);
             serv.Save(employer, userName);                            
             return Json(new
@@ -236,7 +212,7 @@ namespace Machete.Web.Controllers
             string phone, string city, string zipcode)
         {
             //Get all the records            
-            IEnumerable<Employer> list = serv.GetAll();
+            IEnumerable<Domain.Employer> list = serv.GetAll();
             var employersFound = new List<Dictionary<string, string>>();
             name = name.Replace(" ", "");
             address = address.Replace(" ", "");

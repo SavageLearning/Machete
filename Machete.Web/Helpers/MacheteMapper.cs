@@ -24,6 +24,7 @@
 using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
+using Machete.Web.Resources;
 using Machete.Web.ViewModel;
 using System;
 using System.Linq;
@@ -53,13 +54,13 @@ namespace Machete.Web.Helpers
                 .ForMember(vo => vo.orderDescending, opt => opt.MapFrom(dt => dt.sSortDir_0 == "asc" ? false : true));
             #region WoCombined
             // Splitting Combined into parts
-            Mapper.CreateMap<EmployerWoCombined, Employer>()
+            Mapper.CreateMap<EmployerWoCombined, Domain.Employer>()
                 .IgnoreAllNonExisting();
             // Splitting Combined into parts
             Mapper.CreateMap<EmployerWoCombined, WorkOrder>()
                 .IgnoreAllNonExisting();
             // re-combineing to view model object
-            Mapper.CreateMap<Employer, EmployerWoCombined>()
+            Mapper.CreateMap<Domain.Employer, EmployerWoCombined>()
                 .IgnoreAllNonExisting();
             // re-combineing to view model object
             Mapper.CreateMap<WorkOrder, EmployerWoCombined>()
@@ -80,6 +81,15 @@ namespace Machete.Web.Helpers
                 .ForMember(e => e.datecreated, opt => opt.Ignore())
                 .ForMember(e => e.dateupdated, opt => opt.Ignore())
                 //.ForMember(e => e.attachment, opt => System.Web)
+                .IgnoreAllNonExisting();
+            Mapper.CreateMap<Domain.Employer, ViewModel.Employer>()
+                .ForMember(ev => ev.tabref, opt => opt.MapFrom(e => "/Employer/Edit/" + Convert.ToString(e.ID)))
+                .ForMember(ev => ev.tablabel, opt => opt.MapFrom(e => e.name))
+                .ForMember(ev => ev.active, opt => opt.MapFrom(e => Convert.ToString(e.active)))
+                .ForMember(ev => ev.EID, opt => opt.MapFrom(e => Convert.ToString(e.ID)))
+                .ForMember(ev => ev.recordid, opt => opt.MapFrom(e => Convert.ToString(e.ID)))
+                .ForMember(ev => ev.dateupdated, opt => opt.MapFrom(e => Convert.ToString(e.dateupdated)))
+                .ForMember(ev => ev.onlineSource, opt => opt.MapFrom(e => e.onlineSource ? Shared.True : Shared.False))
                 .IgnoreAllNonExisting();
         }
         // Thank you stackoverflow, allows IgnoreAllNonExisting!
