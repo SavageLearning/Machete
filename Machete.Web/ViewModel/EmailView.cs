@@ -53,12 +53,5 @@ namespace Machete.Web.ViewModel
                 return false;
             }
         }
-        public SelectList EmailStatuses
-        {
-            get 
-            {
-                return Lookups.getSelectList(Machete.Domain.LCategory.emailstatus);
-            }
-        }
     }
 }

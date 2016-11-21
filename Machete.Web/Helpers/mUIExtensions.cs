@@ -23,6 +23,7 @@
 #endregion
 using Machete.Web.Resources;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Web.Mvc;
@@ -37,27 +38,28 @@ namespace Machete.Web.Helpers
         public static string tbfield = "<div class=\"tb-field\">";
         public static string tbclose = "</div>";
 
-        public static MvcHtmlString mUIDropDownYesNoFor<TModel, TBool>(this HtmlHelper<TModel> htmlHelper, 
-            Expression<Func<TModel, TBool>> expression, 
-            //CultureInfo CI, 
-            object attribs)
-        {            
+        public static MvcHtmlString mUIDropDownYesNoFor<TModel, TBool>(
+            this HtmlHelper<TModel> htmlHelper,
+            Expression<Func<TModel, TBool>> expression,
+             List<SelectListItem> yesNo,
+            object attribs
+            )
+        {
             ModelMetadata metadata = ModelMetadata.FromLambdaExpression(expression, htmlHelper.ViewData);
-            CultureInfo CI = (CultureInfo)htmlHelper.ViewContext.HttpContext.Session["culture"];
-            var yesNo = Lookups.yesnoSelectList(CI);
             return MvcHtmlString.Create(
-                tbfield +
-                htmlHelper.DropDownListFor(
-                    expression,
-                    new SelectList(yesNo,
-                                            "Value",
-                                            "Text",
-                                            metadata.Model),
-                    Shared.choose,
-                    attribs
-                ).ToString() +
-                htmlHelper.ValidationMessageFor(expression) +
-                tbclose);
+                    tbfield +
+                    htmlHelper.DropDownListFor(
+                        expression,
+                        new SelectList(yesNo,
+                                                "Value",
+                                                "Text",
+                                                metadata.Model),
+                        Shared.choose,
+                        attribs
+                    ).ToString() +
+                    htmlHelper.ValidationMessageFor(expression) +
+                    tbclose
+                    );
         }
 
         public static MvcHtmlString mUIDropDownListFor<TModel, TSelect>(this HtmlHelper<TModel> htmlHelper,
@@ -123,7 +125,7 @@ namespace Machete.Web.Helpers
             Expression<Func<TModel, TSelect>> expression)
         {
             return MvcHtmlString.Create(
-                tblabel + 
+                tblabel +
                 htmlHelper.LabelFor(expression).ToString() +
                 tbclose
                 );
@@ -196,14 +198,14 @@ namespace Machete.Web.Helpers
         }
 
 
-        public static MvcHtmlString mUITableDateTextBoxFor<TModel, TSelect>(this HtmlHelper<TModel> htmlHelper, 
+        public static MvcHtmlString mUITableDateTextBoxFor<TModel, TSelect>(this HtmlHelper<TModel> htmlHelper,
             Expression<Func<TModel, TSelect>> expression,
             object attribs)
         {
             string value = String.Empty;
             ModelMetadata metadata = ModelMetadata.FromLambdaExpression(expression, htmlHelper.ViewData);
             value = (DateTime?)metadata.Model == DateTime.MinValue ? "" : metadata.Model == null ? "" : ((DateTime)metadata.Model).ToShortDateString();
-           
+
             return MvcHtmlString.Create(
             tbfield +
                 htmlHelper.TextBox(metadata.PropertyName,

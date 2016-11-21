@@ -41,6 +41,7 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using System.Web.Http;
 using Unity.Mvc4;
+using AutoMapper;
 
 namespace Machete.Web
 {
@@ -98,8 +99,6 @@ namespace Machete.Web
             initializer.InitializeDatabase(db.Get());
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
             GlobalConfiguration.Configuration.DependencyResolver = new Unity.WebApi.UnityDependencyResolver(container);
-            Lookups.Initialize(container.Resolve<ILookupCache>()); // Static object; used in cshtml files; used instead of proper view models
-            MacheteMapper.Initialize(); // AutoMapper
         }
 
         private IUnityContainer GetUnityContainer()
@@ -112,6 +111,7 @@ namespace Machete.Web
             .RegisterType<IDatabaseFactory, DatabaseFactory>(new PerResolveLifetimeManager(), new InjectionConstructor("macheteConnection"))
             .RegisterType<IUnitOfWork, UnitOfWork>(new PerResolveLifetimeManager())
             .RegisterInstance<IEmailConfig>(new EmailConfig())
+            .RegisterInstance<IMapper>(new MapperConfig().get())
             // 
             .RegisterType<IPersonRepository, PersonRepository>(new PerResolveLifetimeManager())
             .RegisterType<IWorkerSigninRepository, WorkerSigninRepository>(new PerResolveLifetimeManager())
@@ -143,7 +143,9 @@ namespace Machete.Web
             .RegisterType<IReportService, ReportService>(new PerResolveLifetimeManager())
             // 
             .RegisterType<IWorkerCache, WorkerCache>(new ContainerControlledLifetimeManager())
-            .RegisterType<ILookupCache, LookupCache>(new ContainerControlledLifetimeManager());
+            .RegisterType<ILookupCache, LookupCache>(new ContainerControlledLifetimeManager())
+            .RegisterType<IDefaults, Defaults>(new ContainerControlledLifetimeManager());
+
             return container;
         }
     }

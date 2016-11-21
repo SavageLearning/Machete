@@ -36,6 +36,7 @@ using Machete.Domain;
 using Machete.Test;
 using Machete.Web.ViewModel;
 using Machete.Web.Helpers;
+using AutoMapper;
 
 namespace Machete.Test.Unit.Controller
 {
@@ -46,10 +47,12 @@ namespace Machete.Test.Unit.Controller
     [TestClass]
     public class WorkAssignmentTests
     {
-        Mock<IWorkAssignmentService> _waServ;
-        Mock<IWorkerService> _wkrServ;
-        Mock<IWorkOrderService> _woServ;
-        Mock<IWorkerSigninService> _wsiServ;
+        Mock<IWorkAssignmentService> waServ;
+        Mock<IWorkerService> wkrServ;
+        Mock<IWorkOrderService> woServ;
+        Mock<IWorkerSigninService> wsiServ;
+        Mock<IDefaults> def;
+        Mock<IMapper> map;
         WorkAssignmentController _ctrlr;
         WorkAssignmentIndex _view;
         FormCollection fakeform;
@@ -59,18 +62,19 @@ namespace Machete.Test.Unit.Controller
         [TestInitialize]
         public void TestInitialize()
         {
-            _waServ = new Mock<IWorkAssignmentService>();
-            _wkrServ = new Mock<IWorkerService>();
-            _woServ = new Mock<IWorkOrderService>();
-            _wsiServ = new Mock<IWorkerSigninService>();
+            waServ = new Mock<IWorkAssignmentService>();
+            wkrServ = new Mock<IWorkerService>();
+            woServ = new Mock<IWorkOrderService>();
+            wsiServ = new Mock<IWorkerSigninService>();
+            def = new Mock<IDefaults>();
+            map = new Mock<IMapper>();
             lcache = new Mock<ILookupCache>();
             dbfactory = new Mock<IDatabaseFactory>();
-            _ctrlr = new WorkAssignmentController(_waServ.Object, _wkrServ.Object, _woServ.Object, _wsiServ.Object, lcache.Object);
+            _ctrlr = new WorkAssignmentController(waServ.Object, wkrServ.Object, woServ.Object, wsiServ.Object, lcache.Object, def.Object, map.Object);
             _view = new WorkAssignmentIndex();
             _ctrlr.SetFakeControllerContext();
             fakeform = new FormCollection();
             fakeform.Add("ID", "12345");
-            Lookups.Initialize(lcache.Object);
         }
         //
         //   Testing /Index functionality
@@ -118,8 +122,8 @@ namespace Machete.Test.Unit.Controller
             int _num = 0;
 
             string username = "UnitTest";
-            _woServ.Setup(p => p.Get(_num)).Returns(() => _wo);
-            _waServ.Setup(p => p.Create(_asmt, username)).Returns(() => _asmt);
+            woServ.Setup(p => p.Get(_num)).Returns(() => _wo);
+            waServ.Setup(p => p.Create(_asmt, username)).Returns(() => _asmt);
             
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
@@ -138,7 +142,7 @@ namespace Machete.Test.Unit.Controller
             //Arrange
             WorkAssignment _asmt = new WorkAssignment();
             fakeform.Add("hours", "invalid data type");
-            _waServ.Setup(p => p.Create(_asmt, "UnitTest")).Returns(_asmt);
+            waServ.Setup(p => p.Create(_asmt, "UnitTest")).Returns(_asmt);
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
             _ctrlr.Create(_asmt, "UnitTest");
@@ -156,7 +160,7 @@ namespace Machete.Test.Unit.Controller
             int testid = 4242;
             var fakeworkAssignment = new WorkAssignment();
             fakeworkAssignment.ID = 4243;
-            _waServ.Setup(p => p.Get(testid)).Returns(() => fakeworkAssignment);
+            waServ.Setup(p => p.Get(testid)).Returns(() => fakeworkAssignment);
             //Act
             PartialViewResult result = (PartialViewResult)_ctrlr.Edit(testid);
             //Assert
@@ -179,15 +183,15 @@ namespace Machete.Test.Unit.Controller
             asmt.workerAssignedID = wkr.ID;
             asmt.ID = testid;
             string user = "";
-            _waServ.Setup(p => p.Get(testid)).Returns(asmt);
-            _waServ.Setup(x => x.Save(It.IsAny<WorkAssignment>(),
+            waServ.Setup(p => p.Get(testid)).Returns(asmt);
+            waServ.Setup(x => x.Save(It.IsAny<WorkAssignment>(),
                                           It.IsAny<string>())
                                          ).Callback((WorkAssignment p, string str) =>
                                          {
                                              savedAsmt = p;
                                              user = str;
                                          });
-            _wkrServ.Setup(p => p.Get((int)asmt.workerAssignedID)).Returns(wkr);
+            wkrServ.Setup(p => p.Get((int)asmt.workerAssignedID)).Returns(wkr);
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act
             var result = _ctrlr.Edit(testid, null, "UnitTest") as JsonResult;
@@ -218,9 +222,9 @@ namespace Machete.Test.Unit.Controller
             fakeform.Add("comments", "UnitTest");
             //
             // Mock service and setup SaveWorkAssignment mock
-            _waServ.Setup(p => p.Save(asmt, "UnitTest"));
-            _waServ.Setup(p => p.Get(testid)).Returns(asmt);
-            _wkrServ.Setup(p => p.Get((int)asmt.workerAssignedID)).Returns(wkr);
+            waServ.Setup(p => p.Save(asmt, "UnitTest"));
+            waServ.Setup(p => p.Get(testid)).Returns(asmt);
+            wkrServ.Setup(p => p.Get((int)asmt.workerAssignedID)).Returns(wkr);
             //
             // Mock HttpContext so that ModelState and FormCollection work
             _ctrlr.ValueProvider = fakeform.ToValueProvider();

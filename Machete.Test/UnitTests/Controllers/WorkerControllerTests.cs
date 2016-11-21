@@ -97,7 +97,6 @@ namespace Machete.Test.Unit.Controller
             fakeform.Add("dateOfMembership", "1/1/2000");
             //fakeform.Add("", "");
             // TODO: Include Lookups in Dependency Injection, remove initialize statements
-            Lookups.Initialize(lcache.Object);
         }
         //
         //   Testing /Index functionality

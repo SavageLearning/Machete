@@ -1,6 +1,5 @@
 ﻿@model Machete.Domain.Employer
 @using Machete.Web.Helpers
-@using Machete.Web.Resources
 
 @{
     System.Globalization.CultureInfo CI = (System.Globalization.CultureInfo)Session["Culture"];
@@ -12,7 +11,7 @@
     <div class="tb-row">
         @Html.mUITableLabelAndTextBoxFor(model => model.name, new { tabindex = "1", id = idPrefix + "name" })
         @Html.mUITableLabelFor(model => model.business)
-        @Html.mUIDropDownYesNoFor(model => model.business, new { tabindex = "2", id = idPrefix + "business" })
+        @Html.mUIDropDownYesNoFor(model => model.business, ViewBag.yesNoList, new { tabindex = "2", id = idPrefix + "business" })
     </div>
     <div class="tb-row" id="hidebusinessname">
         @Html.mUITableLabelAndTextBoxFor(model => model.businessname, new { tabindex = "3", id = idPrefix + "businessname" })

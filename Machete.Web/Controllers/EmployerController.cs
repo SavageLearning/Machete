@@ -41,12 +41,20 @@ namespace Machete.Web.Controllers
     {
         private readonly IEmployerService serv;
         private readonly IWorkOrderService woServ;
+        private readonly IMapper map;
+        private readonly IDefaults def;
         private System.Globalization.CultureInfo CI;
 
-        public EmployerController(IEmployerService employerService, IWorkOrderService workorderService)
-        {
+        public EmployerController(
+            IEmployerService employerService, 
+            IWorkOrderService workorderService,
+            IDefaults def,
+            IMapper map
+        ) {
             this.serv = employerService;
             this.woServ = workorderService;
+            this.map = map;
+            this.def = def;
         }
         protected override void Initialize(RequestContext requestContext)
         {
@@ -70,13 +78,13 @@ namespace Machete.Web.Controllers
         /// <returns></returns>
         public JsonResult AjaxHandler(jQueryDataTableParam param)
         {
-            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
+            var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI = CI;
             dataTableResult<Domain.Employer> list = serv.GetIndexView(vo);
             //return what's left to datatables
             var result = list.query
                 .Select(
-                    e => Mapper.Map<Domain.Employer, ViewModel.Employer>(e)
+                    e => map.Map<Domain.Employer, ViewModel.Employer>(e)
                 ).AsEnumerable();
             return Json(new
             {
@@ -94,12 +102,13 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Create()
         {
+            ViewBag.yesNoList = def.yesnoSelectList(CI);
             var _model = new Domain.Employer();
             _model.active = true;
         //    _model.city = "Seattle"; // no null types allowed in var
         //    _model.state = "WA";     // no null types allowed in var
             _model.blogparticipate = false;
-            _model.referredby = Lookups.getDefaultID(LCategory.emplrreference);
+            _model.referredby = def.getDefaultID(LCategory.emplrreference);
             return PartialView("Create", _model);
         }
         /// <summary>
@@ -114,7 +123,7 @@ namespace Machete.Web.Controllers
         {
             UpdateModel(employer);
             Domain.Employer newEmployer = serv.Create(employer, userName);                          
-            var result = Mapper.Map<Domain.Employer, ViewModel.Employer>(newEmployer);
+            var result = map.Map<Domain.Employer, ViewModel.Employer>(newEmployer);
             return Json(new
             {
                 sNewRef = result.tabref,
@@ -138,8 +147,8 @@ namespace Machete.Web.Controllers
         {
             //UpdateModel(combined);
             //split the combined model into domain models
-            Domain.Employer mappedEmployer = Mapper.Map<EmployerWoCombined, Domain.Employer>(combined);
-            WorkOrder mappedWO = Mapper.Map<EmployerWoCombined, WorkOrder>(combined);
+            Domain.Employer mappedEmployer = map.Map<EmployerWoCombined, Domain.Employer>(combined);
+            WorkOrder mappedWO = map.Map<EmployerWoCombined, WorkOrder>(combined);
             mappedEmployer.onlineSource = true;
             mappedWO.onlineSource = true;
             //update domain

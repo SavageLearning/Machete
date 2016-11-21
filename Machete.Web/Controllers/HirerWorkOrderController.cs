@@ -52,6 +52,8 @@ namespace Machete.Web.Controllers
         private readonly IWorkerRequestService wrServ;
         private readonly IWorkAssignmentService waServ;
         private readonly ILookupCache lcache;
+        private readonly IMapper map;
+        private readonly IDefaults def;
         CultureInfo CI;
         Logger log = LogManager.GetCurrentClassLogger();
         LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "HirerWorkOrderController", "");
@@ -70,7 +72,10 @@ namespace Machete.Web.Controllers
                                    IEmployerService eServ,
                                    IWorkerService wServ,
                                    IWorkerRequestService wrServ,
-                                   ILookupCache lcache)
+                                   ILookupCache lcache,
+                                   IDefaults def,
+                                   IMapper map
+            )
         {
             this.woServ = woServ;
             this.eServ = eServ;
@@ -78,6 +83,8 @@ namespace Machete.Web.Controllers
             this.waServ = waServ;
             this.wrServ = wrServ;
             this.lcache = lcache;
+            this.map = map;
+            this.def = def;
         }
 
         /// <summary>
@@ -109,7 +116,7 @@ namespace Machete.Web.Controllers
             {
                 ViewBag.employerId = employer.ID;
             }
-             
+
             return View("Index");
         }
 
@@ -167,7 +174,7 @@ namespace Machete.Web.Controllers
                 iTotalRecords = dtr.totalCount,
                 iTotalDisplayRecords = dtr.filteredCount,
                 aaData = from p in dtr.query
-                         select dtResponse (p, param.showOrdersWorkers)
+                         select dtResponse(p, param.showOrdersWorkers)
             },
             JsonRequestBehavior.AllowGet);
         }
@@ -178,7 +185,7 @@ namespace Machete.Web.Controllers
         /// <param name="wo">WorkOrder</param>
         /// <param name="showWorkers">bool flag determining whether the workers associated with the WorkOrder should be retrieved</param>
         /// <returns>Work Order </returns>
-        public object dtResponse( WorkOrder wo, bool showWorkers)
+        public object dtResponse(WorkOrder wo, bool showWorkers)
         {
             // tabref = "/HirerWorkOrder/Edit" + Convert.ToString(wo.ID),
             int ID = wo.ID;
@@ -249,7 +256,7 @@ namespace Machete.Web.Controllers
         public ActionResult Create()
         {
             WorkOrder wo = new WorkOrder();
-            
+
             // Retrieve user ID of signed in Employer
             string userID = HttpContext.User.Identity.GetUserId();
 
@@ -274,9 +281,9 @@ namespace Machete.Web.Controllers
 
             // Set default values
             wo.dateTimeofWork = DateTime.Today.AddHours(9).AddDays(3); // Set default work time to 9am three days from now
-            wo.transportMethodID = Lookups.getDefaultID(LCategory.transportmethod);
-            wo.typeOfWorkID = Lookups.getDefaultID(LCategory.worktype);
-            wo.status = Lookups.getDefaultID(LCategory.orderstatus);
+            wo.transportMethodID = def.getDefaultID(LCategory.transportmethod);
+            wo.typeOfWorkID = def.getDefaultID(LCategory.worktype);
+            wo.status = def.getDefaultID(LCategory.orderstatus);
             wo.timeFlexible = true;
             wo.onlineSource = true;
             wo.disclosureAgreement = false;
@@ -294,7 +301,7 @@ namespace Machete.Web.Controllers
 
 
             //IEnumerable<Lookup> lookup = lcache.getCache();
-            List<SelectListEmployerSkills> lookup = Lookups.getOnlineEmployerSkill();
+            List<SelectListEmployerSkills> lookup = def.getOnlineEmployerSkill();
 
             int counter = 0;
 
@@ -626,7 +633,7 @@ namespace Machete.Web.Controllers
 
                     // Save work order updates
                     woServ.Save(workOrder, userName);
-                    
+
                     object paypalConfigSection = null;
                     try
                     {
@@ -644,7 +651,7 @@ namespace Machete.Web.Controllers
                     }
 
                     NameValueConfigurationCollection paypalSettings = (NameValueConfigurationCollection)paypalConfigSection.GetType().GetProperty("Settings").GetValue(paypalConfigSection, null);
-                    
+
                     var paypalUrl = paypalSettings["paypalUrl"].Value;
                     var redirectUrl = paypalUrl + "_express-checkout&token=" + response.Token;
 
@@ -773,7 +780,7 @@ namespace Machete.Web.Controllers
             }
 
             return View("IndexPostPaypal", workOrder);
-            
+
         }
 
         /// <summary>

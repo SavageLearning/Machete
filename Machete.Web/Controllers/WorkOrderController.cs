@@ -45,6 +45,8 @@ namespace Machete.Web.Controllers
         private readonly IWorkerRequestService wrServ;
         private readonly IWorkAssignmentService waServ;
         private readonly ILookupCache lcache;
+        private readonly IMapper map;
+        private readonly IDefaults def;
         CultureInfo CI;
 
         /// <summary>
@@ -57,11 +59,13 @@ namespace Machete.Web.Controllers
         /// <param name="wrServ">Worker request service</param>
         /// <param name="lcache">Lookup cache</param>
         public WorkOrderController(IWorkOrderService woServ,
-                                   IWorkAssignmentService waServ,
-                                   IEmployerService eServ,
-                                   IWorkerService wServ,
-                                   IWorkerRequestService wrServ,
-                                   ILookupCache lcache)
+            IWorkAssignmentService waServ,
+            IEmployerService eServ,
+            IWorkerService wServ,
+            IWorkerRequestService wrServ,
+            ILookupCache lcache,
+            IDefaults def,
+            IMapper map)
         {
             this.woServ = woServ;
             this.eServ = eServ;
@@ -69,6 +73,8 @@ namespace Machete.Web.Controllers
             this.waServ = waServ;
             this.wrServ = wrServ;
             this.lcache = lcache;
+            this.map = map;
+            this.def = def;
         }
 
         /// <summary>
@@ -239,16 +245,16 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Create(int EmployerID)
         {
-            WorkOrder _wo = new WorkOrder();
-            _wo.EmployerID = EmployerID;
-            _wo.dateTimeofWork = DateTime.Today;
-            _wo.transportMethodID = Lookups.getDefaultID(LCategory.transportmethod); // TODO: investigate if it make sense to have this as a default
-            _wo.typeOfWorkID = Lookups.getDefaultID(LCategory.worktype); // TODO: investigate if it make sense to have this as a default
-            _wo.status = Lookups.getDefaultID(LCategory.orderstatus);
-            _wo.timeFlexible = true;
+            WorkOrder wo = new WorkOrder();
+            wo.EmployerID = EmployerID;
+            wo.dateTimeofWork = DateTime.Today;
+            wo.transportMethodID = def.getDefaultID(LCategory.transportmethod); // TODO: investigate if it make sense to have this as a default
+            wo.typeOfWorkID = def.getDefaultID(LCategory.worktype); // TODO: investigate if it make sense to have this as a default
+            wo.status = def.getDefaultID(LCategory.orderstatus);
+            wo.timeFlexible = true;
             ViewBag.workerRequests = new List<SelectListItem> {};
 
-            return PartialView("Create", _wo);
+            return PartialView("Create", wo);
         }
 
         /// <summary>

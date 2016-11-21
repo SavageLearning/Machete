@@ -42,12 +42,16 @@ namespace Machete.Web.Controllers
         private readonly IWorkOrderService woServ;
         private readonly IWorkerSigninService wsiServ;
         private readonly ILookupCache lcache;
+        private readonly IMapper map;
+        private readonly IDefaults def;
         private System.Globalization.CultureInfo CI;
         public WorkAssignmentController(IWorkAssignmentService workAssignmentService,
-                                        IWorkerService workerService,
-                                        IWorkOrderService workOrderService,
-                                        IWorkerSigninService signinService,
-                                        ILookupCache lc)
+            IWorkerService workerService,
+            IWorkOrderService workOrderService,
+            IWorkerSigninService signinService,
+            ILookupCache lc,
+            IDefaults def,
+            IMapper map)
 
         {
             this.waServ = workAssignmentService;
@@ -55,6 +59,8 @@ namespace Machete.Web.Controllers
             this.woServ = workOrderService;
             this.wsiServ = signinService;
             this.lcache = lc;
+            this.map = map;
+            this.def = def;
         }
         protected override void Initialize(RequestContext requestContext)
         {
@@ -161,15 +167,15 @@ namespace Machete.Web.Controllers
         #region Create
         public ActionResult Create(int WorkOrderID, string _description)
         {
-            WorkAssignment _assignment = new WorkAssignment();
-            _assignment.active = true;
-            _assignment.workOrderID = WorkOrderID;
-            _assignment.skillID = Lookups.getDefaultID(LCategory.skill);
-            _assignment.hours = Lookups.hoursDefault;
-            _assignment.days = Lookups.daysDefault;
-            _assignment.hourlyWage = Lookups.hourlyWageDefault;
-            _assignment.description = _description;
-            return PartialView(_assignment);
+            var a = new WorkAssignment();
+            a.active = true;
+            a.workOrderID = WorkOrderID;
+            a.skillID = def.getDefaultID(LCategory.skill);
+            a.hours = def.hoursDefault;
+            a.days = def.daysDefault;
+            a.hourlyWage = def.hourlyWageDefault;
+            a.description = _description;
+            return PartialView(a);
         }
 
         //

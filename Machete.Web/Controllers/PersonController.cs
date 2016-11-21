@@ -40,12 +40,20 @@ namespace Machete.Web.Controllers
     { 
         private readonly IPersonService personService;
         private readonly ILookupCache lcache;
-        System.Globalization.CultureInfo CI;
+        private readonly IMapper map;
+        private readonly IDefaults def;
+        CultureInfo CI;
 
-        public PersonController(IPersonService personService, ILookupCache _lcache)
+        public PersonController(
+            IPersonService personService, 
+            ILookupCache _lcache,
+            IDefaults def,
+            IMapper map)
         {
             this.personService = personService;
             this.lcache = _lcache;
+            this.map = map;
+            this.def = def;
         }
 
         protected override void Initialize(RequestContext requestContext)
@@ -104,7 +112,7 @@ namespace Machete.Web.Controllers
         public ActionResult Create()
         {
             var _model = new Person();
-            _model.gender = Lookups.getDefaultID(LCategory.gender);
+            _model.gender = def.getDefaultID(LCategory.gender);
             _model.active = true;
             return PartialView(_model);
         }
