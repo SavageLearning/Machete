@@ -9,10 +9,10 @@ namespace Machete.Web
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-1.7.1.js",
-                        "~/Scripts/jquery-ui-1.8.11.js",
+                        "~/Scripts/jquery-3.1.1.js",
+                        "~/Scripts/jquery-ui-1.12.1.js",
                         "~/Scripts/jquery.form.js",
-                        "~/Scripts/jquery.dataTables-1.9.0.js",
+                        "~/Scripts/jquery.dataTables-1.10.12.js",
                         "~/Scripts/jquery.validate.js",
                         "~/Scripts/jquery.validate.unobtrusive.js",
                         "~/Scripts/jquery.alerts.js",
@@ -22,7 +22,7 @@ namespace Machete.Web
                         "~/Scripts/validation_hack.js",
                         "~/Scripts/jquery.dataTables.plugins.js",    
                         "~/Scripts/ui.datetimepicker.js",
-                        "~/Scripts/maskedinput-1.3.js",
+                        "~/Scripts/maskedinput-1.4.1.js",
                         "~/Scripts/macheteLayout.js",
                         "~/Scripts/jquery.macheteUI-0.1.js",
                         "~/Scripts/jquery.everytime-1.2.0.js"
