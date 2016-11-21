@@ -38,15 +38,21 @@ namespace Machete.Web.Controllers
         private readonly IActivitySigninService serv;
         private readonly IWorkerService wServ;
         private readonly LookupCache lcache;
+        private readonly IMapper map;
+        private readonly IDefaults def;
         private System.Globalization.CultureInfo CI;
 
         public ActivitySigninController(IActivitySigninService serv, 
                                  IWorkerService wServ,
-                                 LookupCache lc)
+                                 LookupCache lc,
+            IDefaults def,
+            IMapper map)
         {
             this.serv = serv;
             this.wServ = wServ;
             this.lcache = lc;
+            this.map = map;
+            this.def = def;
         }
 
         protected override void Initialize(RequestContext requestContext)
@@ -127,7 +133,7 @@ namespace Machete.Web.Controllers
         //[Authorize(Roles = "Administrator, Manager, Check-in")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
-            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
+            var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI = CI;
             dataTableResult<asiView> was = serv.GetIndexView(vo);
 

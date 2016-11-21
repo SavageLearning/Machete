@@ -41,12 +41,20 @@ namespace Machete.Web.Controllers
     {
         private readonly IActivityService serv;
         private readonly LookupCache lcache;
+        private readonly IMapper map;
+        private readonly IDefaults def;
         private CultureInfo CI;
 
-        public ActivityController(IActivityService aServ, LookupCache lc)
+        public ActivityController(
+            IActivityService aServ, 
+            LookupCache lc,
+            IDefaults def,
+            IMapper map)
         {
             this.lcache = lc;
             this.serv = aServ;
+            this.map = map;
+            this.def = def;
         }
         protected override void Initialize(RequestContext requestContext)
         {
@@ -79,7 +87,7 @@ namespace Machete.Web.Controllers
         public JsonResult AjaxHandler(jQueryDataTableParam param)
         {
             //Get all the records
-            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
+            var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI = CI;
             if (!User.Identity.IsAuthenticated) vo.authenticated = false;
             dataTableResult<Activity> list = serv.GetIndexView(vo);

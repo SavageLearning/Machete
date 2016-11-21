@@ -146,7 +146,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Hirer")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
-            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
+            var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI = this.CI;
 
             // Retrieve employer ID of signed in Employer

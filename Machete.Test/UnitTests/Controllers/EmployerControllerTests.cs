@@ -25,6 +25,7 @@ using AutoMapper;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
 using Machete.Service;
+using Machete.Web;
 using Machete.Web.Controllers;
 using Machete.Web.Helpers;
 using Machete.Web.ViewModel;
@@ -46,7 +47,7 @@ namespace Machete.Test.Unit.Controller
         Mock<IWorkOrderService> woServ;
         Mock<ILookupCache> lcache;
         Mock<IDatabaseFactory> dbfactory;
-        Mock<IMapper> map;
+        IMapper map;
         Mock<IDefaults> def;
         EmployerController ctrlr;
         FormCollection form;
@@ -61,10 +62,10 @@ namespace Machete.Test.Unit.Controller
             lcache = new Mock<ILookupCache>();
             dbfactory = new Mock<IDatabaseFactory>();
             def = new Mock<IDefaults>();
-            map = new Mock<IMapper>();
+            map = new MapperConfig().get();
            
 
-            ctrlr = new EmployerController(serv.Object, woServ.Object, def.Object, map.Object);
+            ctrlr = new EmployerController(serv.Object, woServ.Object, def.Object, map);
             ctrlr.SetFakeControllerContext();
             form = new FormCollection
                        {
@@ -148,7 +149,7 @@ namespace Machete.Test.Unit.Controller
             serv = new Mock<IEmployerService>();
             serv.Setup(p => p.Create(employer, "UnitTest")).Returns(employer);
             woServ = new Mock<IWorkOrderService>();
-            ctrlr = new EmployerController(serv.Object, woServ.Object, def.Object, map.Object);
+            ctrlr = new EmployerController(serv.Object, woServ.Object, def.Object, map);
             ctrlr.SetFakeControllerContext();
             ctrlr.ValueProvider = form.ToValueProvider();
             JsonResult result = ctrlr.Create(employer, "UnitTest");
@@ -168,7 +169,7 @@ namespace Machete.Test.Unit.Controller
             var fakeemployer = new Domain.Employer();
             serv.Setup(p => p.Get(Testid)).Returns(fakeemployer);
             woServ = new Mock<IWorkOrderService>();
-            ctrlr = new EmployerController(serv.Object, woServ.Object, def.Object, map.Object);
+            ctrlr = new EmployerController(serv.Object, woServ.Object, def.Object, map);
             //Act
             var result = ctrlr.Edit(Testid) as PartialViewResult;
             //Assert
@@ -235,7 +236,7 @@ namespace Machete.Test.Unit.Controller
             serv = new Mock<IEmployerService>();
             var fakeform = new FormCollection();
             woServ = new Mock<IWorkOrderService>();
-            ctrlr = new EmployerController(serv.Object, woServ.Object, def.Object, map.Object);
+            ctrlr = new EmployerController(serv.Object, woServ.Object, def.Object, map);
             ctrlr.SetFakeControllerContext();
             ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act

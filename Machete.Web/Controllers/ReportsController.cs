@@ -43,11 +43,17 @@ namespace Machete.Web.Controllers
     public class ReportsController : MacheteController
     {
         private readonly IReportService repServ;
+        private readonly IMapper map;
+        private readonly IDefaults def;
         CultureInfo CI;
 
-        public ReportsController(IReportService repServ)
+        public ReportsController(IReportService repServ,
+            IDefaults def,
+            IMapper map)
         {
             this.repServ = repServ;
+            this.map = map;
+            this.def = def;
         }
 
         /// <summary>
@@ -678,7 +684,7 @@ namespace Machete.Web.Controllers
 
         private DateTime voDate(jQueryDataTableParam param)
         {
-            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
+            var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             if (vo.date != null) return DateTime.Parse(vo.date.ToString());
             else return DateTime.Now;
         }

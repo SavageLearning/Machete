@@ -36,6 +36,7 @@ using Machete.Domain;
 using Machete.Test;
 using Machete.Web.ViewModel;
 using System.Web;
+using AutoMapper;
 using Machete.Web.Helpers;
 
 namespace Machete.Test.Unit.Controller
@@ -49,6 +50,8 @@ namespace Machete.Test.Unit.Controller
         Mock<IDatabaseFactory> dbfactory;
         Mock<IImageService> _iserv;
         Mock<IWorkerCache> _wcache;
+        Mock<IDefaults> def;
+        Mock<IMapper> map;
         WorkerController _ctrlr;
         FormCollection fakeform;
         [TestInitialize]
@@ -59,8 +62,10 @@ namespace Machete.Test.Unit.Controller
             _iserv = new Mock<IImageService>();
             _wcache = new Mock<IWorkerCache>();
             lcache = new Mock<ILookupCache>();
+            def = new Mock<IDefaults>();
+            map = new Mock<IMapper>();
             dbfactory = new Mock<IDatabaseFactory>();
-            _ctrlr = new WorkerController(_wserv.Object, _pserv.Object, _iserv.Object, _wcache.Object);
+            _ctrlr = new WorkerController(_wserv.Object, _pserv.Object, _iserv.Object, _wcache.Object, def.Object, map.Object);
             _ctrlr.SetFakeControllerContext();
             fakeform = new FormCollection();
             fakeform.Add("ID", "12345");

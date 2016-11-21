@@ -37,10 +37,16 @@ namespace Machete.Web.Controllers
     public class ConfigController : MacheteController
     {
         private readonly ILookupService serv;
+        private readonly IMapper map;
+        private readonly IDefaults def;
         System.Globalization.CultureInfo CI;
-        public ConfigController(ILookupService serv)
+        public ConfigController(ILookupService serv,
+            IDefaults def,
+            IMapper map)
         {
             this.serv = serv;
+            this.map = map;
+            this.def = def;
         }
         protected override void Initialize(RequestContext requestContext)
         {
@@ -60,7 +66,7 @@ namespace Machete.Web.Controllers
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             //Get all the records
-            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
+            var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI = CI;
             IEnumerable<Lookup> list = serv.GetIndexView(vo);
             var result = from p in list

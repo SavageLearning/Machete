@@ -14,11 +14,17 @@ namespace Machete.Api.Controllers
     {
         private readonly IEmployerService serv;
         private readonly IWorkOrderService woServ;
+        private readonly IMapper map;
+        private readonly IDefaults def;
 
-        public EmployerController(IEmployerService employerService, IWorkOrderService workorderService)
+        public EmployerController(IEmployerService employerService, IWorkOrderService workorderService,
+            IDefaults def,
+            IMapper map)
         {
             this.serv = employerService;
             this.woServ = workorderService;
+            this.map = map;
+            this.def = def;
         }
         // GET api/values
         public IEnumerable<Web.ViewModel.Employer> Get()
@@ -29,7 +35,7 @@ namespace Machete.Api.Controllers
             dataTableResult<Domain.Employer> list = serv.GetIndexView(vo);
             var result = list.query
                 .Select(
-                    e => Mapper.Map<Domain.Employer, Web.ViewModel.Employer>(e)
+                    e => map.Map<Domain.Employer, Web.ViewModel.Employer>(e)
                 ).AsEnumerable();
             return result;
         }

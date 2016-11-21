@@ -57,7 +57,7 @@ namespace Machete.Web.Controllers
         public JsonResult AjaxHandler(jQueryDataTableParam param)
         {
             //Get all the records
-            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
+            var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI = CI;
             dataTableResult<Email> list = serv.GetIndexView(vo);
             return Json(new
@@ -104,7 +104,7 @@ namespace Machete.Web.Controllers
         public ActionResult Create()
         {
             var e = new Email();
-            var ev = Mapper.Map<Email, EmailView>(e);
+            var ev = map.Map<Email, EmailView>(e);
             ev.status = def.byID(e.statusID);
             ev.templates = def.getEmailTemplates();
             ViewBag.EmailStatuses = def.getSelectList(Machete.Domain.LCategory.emailstatus);
@@ -123,7 +123,7 @@ namespace Machete.Web.Controllers
         {
             Email newEmail;
             UpdateModel(emailview);
-            var email = Mapper.Map<EmailView, Email>(emailview);
+            var email = map.Map<EmailView, Email>(emailview);
             if (emailview.attachment != null)
             {
                 email.attachment = Server.HtmlDecode(emailview.attachment);
@@ -185,7 +185,7 @@ namespace Machete.Web.Controllers
                 pvType = "View";
                 email = serv.Get(id);
             }
-            ev = Mapper.Map<Email, EmailView>(email);
+            ev = map.Map<Email, EmailView>(email);
 
             ev.status = def.byID(email.statusID);
             ev.templates = def.getEmailTemplates();
@@ -205,7 +205,7 @@ namespace Machete.Web.Controllers
         {
             //UpdateModel(emailview);
             var email = serv.Get(emailview.ID);
-            var newemail = Mapper.Map<EmailView, Email>(emailview, email);
+            var newemail = map.Map<EmailView, Email>(emailview, email);
             if (emailview.attachment != null)
             {
                 newemail.attachment = Server.HtmlDecode(emailview.attachment);
@@ -246,7 +246,7 @@ namespace Machete.Web.Controllers
             var email = serv.GetLatestConfirmEmailBy(woid);
             if (email == null)
             {
-                var ev = Mapper.Map<Email, EmailView>(new Email());
+                var ev = map.Map<Email, EmailView>(new Email());
                 var wo = serv.GetAssociatedWorkOrderFor(woid);
                 ev.status = def.byID(email.statusID);
                 ev.templates = def.getEmailTemplates();
@@ -266,14 +266,14 @@ namespace Machete.Web.Controllers
                 var  lockedemail = serv.GetExclusive(email.ID, userName);
                 if (lockedemail != null)
                 {
-                    ev = Mapper.Map<Email, EmailView>(lockedemail);
+                    ev = map.Map<Email, EmailView>(lockedemail);
                     ev.status = def.byID(email.statusID);
                     ev.templates = def.getEmailTemplates();
                     ev.woid = woid;
                     return PartialView("EditDialog", ev);
                 }
                 lockedemail = serv.Get(email.ID);
-                ev = Mapper.Map<Email, EmailView>(lockedemail);
+                ev = map.Map<Email, EmailView>(lockedemail);
                 ev.status = def.byID(email.statusID);
                 ev.templates = def.getEmailTemplates();
                 ev.woid = woid;
