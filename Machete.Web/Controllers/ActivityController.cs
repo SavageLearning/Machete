@@ -25,7 +25,7 @@ using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
 using Machete.Web.Helpers;
-using Machete.Web.Models;
+using Machete.Web.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

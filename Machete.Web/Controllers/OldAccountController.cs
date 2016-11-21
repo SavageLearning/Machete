@@ -30,7 +30,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
-using Machete.Web.Models;
+using Machete.Web.ViewModel;
 using System.Globalization;
 using Machete.Domain;
 using Machete.Service;

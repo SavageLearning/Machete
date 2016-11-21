@@ -253,11 +253,9 @@
     <Compile Include="Helpers\mUIExtensions.cs" />
     <Compile Include="Helpers\PayPal\PaypalExpressCheckout.cs" />
     <Compile Include="Helpers\workerRequestBinder.cs" />
-    <Compile Include="IoC\CustomControllerActivator.cs" />
-    <Compile Include="IoC\UnityDependencyResolver.cs" />
-    <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\ActivityModels.cs" />
-    <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="ViewModel\AccountViewModels.cs" />
+    <Compile Include="ViewModel\ActivityModels.cs" />
+    <Compile Include="ViewModel\IdentityModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Activities.Designer.cs">
       <DependentUpon>Activities.resx</DependentUpon>
@@ -380,7 +378,6 @@
     <Compile Include="Views\HirerAccount.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Readme\Elmah.txt" />
     <Content Include="Content\back_disabled.jpg" />
     <Content Include="Content\back_disabled.png" />
     <Content Include="Content\back_enabled.jpg" />
@@ -596,9 +593,7 @@
     </Content>
     <Content Include="Views\Web.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="packages.config">
       <SubType>Designer</SubType>
