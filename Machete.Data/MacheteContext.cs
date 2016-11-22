@@ -34,13 +34,9 @@ namespace Machete.Data
     [DbConfigurationType(typeof(AzureConfiguration))]
     public class MacheteContext : IdentityDbContext<ApplicationUser>, IDisposable
     {
-        public MacheteContext() : base("macheteConnection") 
-        {
-            //this.Configuration.LazyLoadingEnabled = false;
-            //Database.SetInitializer<MacheteContext>(
-            //  new MigrateDatabaseToLatestVersion<MacheteContext, CustomMigrationsConfiguration>());            
-        }
+        public MacheteContext() : base("macheteConnection") { }
         public MacheteContext(string connectionString) : base(connectionString) { }
+
         //Machete here defines the database to use, by convention.
         public DbSet<Person> Persons { get; set; }
         public DbSet<Worker> Workers { get; set; }
