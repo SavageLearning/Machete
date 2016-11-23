@@ -32,10 +32,11 @@ using System.Diagnostics;
 namespace Machete.Data
 {
     [DbConfigurationType(typeof(AzureConfiguration))]
+    // http://stackoverflow.com/questions/22105583/why-is-asp-net-identity-identitydbcontext-a-black-box
     public class MacheteContext : IdentityDbContext<ApplicationUser>, IDisposable
     {
-        public MacheteContext() : base("macheteConnection") { }
-        public MacheteContext(string connectionString) : base(connectionString) { }
+        public MacheteContext() : base("macheteConnection", throwIfV1Schema: false) { }
+        public MacheteContext(string connectionString) : base(connectionString, throwIfV1Schema: false) { }
 
         //Machete here defines the database to use, by convention.
         public DbSet<Person> Persons { get; set; }
