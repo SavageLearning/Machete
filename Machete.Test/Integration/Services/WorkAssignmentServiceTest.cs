@@ -40,6 +40,7 @@ namespace Machete.Test.Integration.Service
         public void TestInitialize()
         {
             frb = new FluentRecordBase();
+            frb.ToFactory();
             dOptions = new viewOptions
             {
                 CI = new CultureInfo("en-US", false),
@@ -86,7 +87,7 @@ namespace Machete.Test.Integration.Service
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
         public void GetIndexView_check_workerjoin_blank_worker_ok()
         {
-            frb.AddWorkAssignment(assignWorker: true);
+            frb.AddWorkOrder(status: WorkOrder.iActive).AddWorkAssignment(assignWorker: true);
             dOptions.sortColName = "assignedWorker";
             dOptions.woid = frb.ToWorkOrder().ID;
             dOptions.wa_grouping = "assigned";
@@ -237,11 +238,14 @@ namespace Machete.Test.Integration.Service
         public void GetIndexView_check_requested_filter()
         {
             //Arrange
-            frb.AddWorkerRequest().AddWorkAssignment();
-            //Act
+            frb.AddWorkOrder(status: WorkOrder.iActive)
+                .AddWorkerRequest()
+                .AddWorkAssignment();
             dOptions.orderDescending = true;
             dOptions.wa_grouping = "requested";
             dOptions.woid = frb.ToWorkOrder().ID;
+            //Act
+
             var result = frb.ToServWorkAssignment().GetIndexView(dOptions);
             //
             //Assert
