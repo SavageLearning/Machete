@@ -54,6 +54,7 @@ namespace Machete.Web.Controllers
             this.lcache = _lcache;
             this.map = map;
             this.def = def;
+            ViewBag.genderlist = def.getSelectList(Machete.Domain.LCategory.gender);
         }
 
         protected override void Initialize(RequestContext requestContext)

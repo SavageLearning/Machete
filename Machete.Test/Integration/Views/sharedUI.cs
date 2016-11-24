@@ -54,7 +54,7 @@ namespace Machete.Test.Selenium.View
         {
             _d.Navigate().GoToUrl(_url);
 
-            _d.FindElement(By.LinkText("Logon")).Click();
+            //_d.FindElement(By.LinkText("Logon")).Click();
             WaitForText("Account Information", maxwait);
             _d.FindElement(By.Id("UserName")).Clear();
             _d.FindElement(By.Id("UserName")).SendKeys("jadmin");

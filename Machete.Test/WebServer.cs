@@ -50,7 +50,7 @@ namespace Machete.Test
                 LoadUserProfile = true,
                 CreateNoWindow = false,
                 UseShellExecute = false,
-                Arguments = string.Format("/path:\"{0}\" /port:{1}", @"C:\Users\Administrator\Documents\code\Machete\Machete.Web\obj\publish", "4213")
+                Arguments = string.Format("/path:\"{0}\" /port:{1}", @"C:\Users\Administrator\Documents\Machete\Machete.Web\obj\publish", "4213")
             };
 
             var programfiles = string.IsNullOrEmpty(startInfo.EnvironmentVariables["programfiles"])
