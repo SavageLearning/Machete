@@ -147,11 +147,11 @@
                     });
                 }
             }
-            //if (!jQuery.browser.mobile) {
-            //    $(myTable).find('tbody').dblclick(dblclickevent);
-            //} else {
-            $('body').live('click','.rowButton', dblclickevent);
-            //}
+            if (!jQuery.browser.mobile) {
+                $(myTable).find('tbody').dblclick(dblclickevent);
+            } else {
+                $('.rowButton').live('click', dblclickevent);
+            }
 
         },
         //
@@ -235,7 +235,7 @@
             });
             //
             // close tab event
-            $(tabdiv).find("span").on("click",'.ui-icon-close', function (e) {
+            $(tabdiv).find("span.ui-icon-close").live("click", function (e) {
                 var trgTabnav = $(e.target).closest('.ui-tabs');
                 var index = trgTabnav.children('.ui-tabs-nav').index($(this).parent());
                 //
