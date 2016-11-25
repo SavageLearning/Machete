@@ -47,6 +47,7 @@ namespace Machete.Web.Controllers
             this.serv = serv;
             this.map = map;
             this.def = def;
+            ViewBag.configCategories = def.configCategories();
         }
         protected override void Initialize(RequestContext requestContext)
         {

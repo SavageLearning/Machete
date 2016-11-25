@@ -8,23 +8,23 @@
     string recType = "activity";
     string idPrefix = recType + Model.ID + "-";
 }
-@Html.HiddenFor(model => model.ID, new { @class="hiddenRecID", id=idPrefix + "ID"})
-@Html.HiddenFor(model => model.firstID, new { @class="hiddenRecID", id=Model.firstID.ToString() + "isFirstID" })
+@Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID", id = idPrefix + "ID" })
+@Html.HiddenFor(model => model.firstID, new { @class = "hiddenRecID", id = Model.firstID.ToString() + "isFirstID" })
 <div class="tb-table" style="float: left;">
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.type)
         @Html.mUIDropDownListFor(model => model.type,
-                new SelectList(Lookups.getSelectList(LCategory.activityType),
+                new SelectList(ViewBag.activitytype,
                                                     "Value", "Text", Model.type),
                 new { tabindex = "1", id = idPrefix + "type" })
     </div>
     <div class="tb-row" id="className">
         @Html.mUITableLabelFor(model => model.name)
-        @Html.mUIDropDownListFor(model => model.name, 
-                new SelectList(Lookups.getSelectList(LCategory.activityName),
+        @Html.mUIDropDownListFor(model => model.name,
+                new SelectList(ViewBag.activityname,
                                             "Value", "Text", Model.name),
                 new { tabindex = "1", id = idPrefix + "name" })
-     </div>
+    </div>
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.dateStart)
         <div class="tb-field">
@@ -49,17 +49,17 @@
     }
     else
     {
-    <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.recurring)
-        <div class="tb-field">
-            @Html.CheckBox("recurring")
+        <div class="tb-row">
+            @Html.mUITableLabelFor(model => model.recurring)
+            <div class="tb-field">
+                @Html.CheckBox("recurring")
+            </div>
         </div>
-    </div>
     }
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.teacher)
         <div class="tb-field">
-            @Html.DropDownListFor(model => model.teacher, 
+            @Html.DropDownListFor(model => model.teacher,
                     new SelectList(ViewBag.teachers, Model.teacher),
                     @Machete.Web.Resources.Shared.choose,
                     new { tabindex = "1", id = idPrefix + "teacher" })
@@ -70,7 +70,7 @@
     <div class="tb-row">
         @Html.mUITableDescLabelFor(model => model.notes)
         <div class="tb-field desc-field">
-            @Html.TextAreaFor(model => model.notes, new { tabindex = "3", @class="desc-field" , id = idPrefix + "notes"})
+            @Html.TextAreaFor(model => model.notes, new { tabindex = "3", @class = "desc-field", id = idPrefix + "notes" })
             @Html.ValidationMessageFor(model => model.notes)
         </div>
     </div>
@@ -84,39 +84,39 @@
     $(document).ready(function () {
         $('#@(idPrefix)type').change(
             function () {
-                if (
-                    $('#@(idPrefix)type option:selected').val() == @Lookups.byKeys(LCategory.activityType, LActType.Assembly)
-                    || $('#@(idPrefix)type option:selected').val() == @Lookups.byKeys(LCategory.activityType, LActType.OrgMtg)
-                    )
+                if ($('#@(idPrefix)type option:selected').val() == @(ViewBag.activitytype_assembly) || $('#@(idPrefix)type option:selected').val() == @(ViewBag.activitytype_orgmtg))
                 {
                     $('#@(idPrefix)name').attr('disabled', 'disabled');
                     $('#className').hide();
                 }
-                else {
+                else
+                {
                     $('#className').show();
-                    $('#@(idPrefix)name').removeAttr('disabled');                
-                }} 
+                    $('#@(idPrefix)name').removeAttr('disabled');
+                }
+            } 
+
         );
 
-        $("#@(idPrefix)dateStart").datetimepicker({
-            stepMinute: 15,
-            ampm: true,
-            hourMin: 6,
-            hourMax: 21,
-            minuteMin: 0,
-            minuteMax: 45,
-            minuteGrid: 15,
-            hourGrid: 4
-        });
-        $("#@(idPrefix)dateEnd").datetimepicker({
-            stepMinute: 15,
-            ampm: true,
-            hourMin: 8,
-            hourMax: 23,
-            minuteMin: 0,
-            minuteMax: 45,
-            minuteGrid: 15,
-            hourGrid: 4
-        });
+    $("#@(idPrefix)dateStart").datetimepicker({
+        stepMinute: 15,
+        ampm: true,
+        hourMin: 6,
+        hourMax: 21,
+        minuteMin: 0,
+        minuteMax: 45,
+        minuteGrid: 15,
+        hourGrid: 4
+    });
+    $("#@(idPrefix)dateEnd").datetimepicker({
+        stepMinute: 15,
+        ampm: true,
+        hourMin: 8,
+        hourMax: 23,
+        minuteMin: 0,
+        minuteMax: 45,
+        minuteGrid: 15,
+        hourGrid: 4
+    });
     });
 </script>

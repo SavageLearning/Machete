@@ -1,5 +1,5 @@
 ﻿#region COPYRIGHT
-// File:     Lookups.cs
+// File:     Defaults.cs
 // Author:   Savage Learning, LLC.
 // Created:  2012/06/17 
 // License:  GPL v3
@@ -134,7 +134,7 @@ namespace Machete.Web.Helpers
             yesnoES.Add(new SelectListItem() { Selected = false, Text = "No", Value = "false" });
             yesnoES.Add(new SelectListItem() { Selected = false, Text = "Sí", Value = "true" });
         }
-        //TODO: Lookups.yesno needs to use resource files, not hardcoded values
+        //TODO: Defaults.yesno needs to use resource files, not hardcoded values
         public List<SelectListItem> yesnoSelectList(CultureInfo CI)
         {
             if (CI.TwoLetterISOLanguageName == "es") return yesnoES;

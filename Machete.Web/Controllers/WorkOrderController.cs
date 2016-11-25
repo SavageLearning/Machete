@@ -85,6 +85,11 @@ namespace Machete.Web.Controllers
         {
             base.Initialize(requestContext);
             this.CI = (CultureInfo)Session["Culture"];
+            ViewBag.orderstatuses = def.getSelectList(LCategory.orderstatus);
+            ViewBag.transportmethod = def.getSelectList(LCategory.transportmethod);
+            ViewBag.transporttransacttype = def.getSelectList(LCategory.transportTransactType);
+
+
         }
 
         #region Index
@@ -373,6 +378,9 @@ namespace Machete.Web.Controllers
         public ActionResult View(int id)
         {
             WorkOrder workOrder = woServ.Get(id);
+            ViewBag.lunchsupplied = def.getBool(workOrder.lunchSupplied);
+            ViewBag.transportmethod = def.byID(workOrder.transportMethodID);
+
             return View(workOrder);
         }
 
@@ -385,6 +393,9 @@ namespace Machete.Web.Controllers
         public ActionResult ViewForEmail(int id)
         {
             WorkOrder workOrder = woServ.Get(id);
+            ViewBag.lunchsupplied = def.getBool(workOrder.lunchSupplied);
+            ViewBag.transportmethod = def.byID(workOrder.transportMethodID);
+
             return PartialView(workOrder);
         }
         /// <summary>
@@ -401,6 +412,7 @@ namespace Machete.Web.Controllers
             else view.orders = woServ.GetActiveOrders(date, false);
             return View(view);
         }
+        #endregion
 
         /// <summary>
         /// Completes all orders for a given day
@@ -419,7 +431,6 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
-        #endregion
 
         #region Delete
         /// <summary>

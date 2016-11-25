@@ -55,6 +55,10 @@ namespace Machete.Web.Controllers
             this.serv = aServ;
             this.map = map;
             this.def = def;
+            ViewBag.activitytype = def.getSelectList(LCategory.activityType);
+            ViewBag.activitytype_assembly = def.byKeys(LCategory.activityType, LActType.Assembly);
+            ViewBag.activitytype_orgmtg = def.byKeys(LCategory.activityType, LActType.OrgMtg);
+            ViewBag.activityname = def.getSelectList(LCategory.activityName);
         }
         protected override void Initialize(RequestContext requestContext)
         {

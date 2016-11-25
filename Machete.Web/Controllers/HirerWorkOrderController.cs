@@ -85,6 +85,7 @@ namespace Machete.Web.Controllers
             this.lcache = lcache;
             this.map = map;
             this.def = def;
+            ViewBag.employerReferenceList = def.getSelectList(Machete.Domain.LCategory.emplrreference);
         }
 
         /// <summary>

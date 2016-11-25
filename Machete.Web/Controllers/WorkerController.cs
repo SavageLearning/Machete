@@ -144,12 +144,6 @@ namespace Machete.Web.Controllers
             {
                 ViewBag.OrganizeMe = ex.Message;
             }
-			// TODO: contractors removed defaults for worker object...why?
-            //_model.RaceID = Lookups.getDefaultID(LCategory.race);
-            //_model.countryoforiginID = Lookups.getDefaultID(LCategory.countryoforigin);
-            //_model.englishlevelID = 0;
-            //_model.neighborhoodID = Lookups.getDefaultID(LCategory.neighborhood);
-            //_model.maritalstatus = Lookups.getDefaultID(LCategory.maritalstatus);
             return PartialView(_model);
         }
         /// <summary>

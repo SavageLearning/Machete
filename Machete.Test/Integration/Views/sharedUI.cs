@@ -149,7 +149,7 @@ namespace Machete.Test.Selenium.View
             Assert.AreEqual(_per.genderother == null ? "" : _per.genderother, WaitForElement(By.Id(prefix + "genderOther")).GetAttribute("value"));
             Assert.AreEqual(_per.state, WaitForElement(By.Id(prefix + "state")).GetAttribute("value"));
             Assert.AreEqual(_per.zipcode, WaitForElement(By.Id(prefix + "zipcode")).GetAttribute("value"));
-            Assert.AreEqual(_per.active, WaitForElement(By.Id(prefix + "active")).Selected);
+            //Assert.AreEqual(_per.active, WaitForElement(By.Id(prefix + "active")).Selected);
             Assert.AreEqual(_per.gender.ToString(), GetOptionValue(By.Id(prefix + "gender"))); 
             return true;
         }

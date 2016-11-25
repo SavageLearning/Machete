@@ -18,20 +18,9 @@
     </div>
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.status)
-        @*if (Html.IsInRole(Html.Role_AMP()))
-        {*@
-            @Html.mUIDropDownListFor(model => model.status,
-                        new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.orderstatus), "Value", "Text", Model.status),
-                        new { tabindex = "2", id = idPrefix + "status" })
-                
-        @*}
-        else
-        {
-            <div class="tb-header">
-            @Lookups.byID(Model.status)
-            @Html.HiddenFor(model => model.status, new { tabindex = "2", id = idPrefix + "status" })
-            </div>
-        }*@
+        @Html.mUIDropDownListFor(model => model.status,
+                    new SelectList(ViewBag.orderstatuses, "Value", "Text", Model.status),
+                    new { tabindex = "2", id = idPrefix + "status" })                
         @Html.mUITableLabelFor(model => model.timeFlexible)
         @Html.mUIDropDownYesNoFor(model => model.timeFlexible, new { tabindex = "12", id = idPrefix + "timeFlexible" }) 
     </div>
@@ -58,7 +47,7 @@
         @Html.mUITableLabelAndTextBoxFor(model => model.city, new { tabindex = "6", id = idPrefix + "city" })
         @Html.mUITableLabelFor(model => model.transportMethodID)
         @Html.mUIDropDownListFor(model => model.transportMethodID,
-                        new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.transportmethod), "Value", "Text", Model.transportMethodID),
+                        new SelectList(ViewBag.transportmethod, "Value", "Text", Model.transportMethodID),
                         new { tabindex = "16", id = idPrefix + "transportMethodID" })
     </div>
     <div class="tb-row">
@@ -73,7 +62,7 @@
         @Html.mUITableLabelAndTextBoxFor(model => model.phone, new { tabindex = "9", id = idPrefix + "phone" })
         @Html.mUITableLabelFor(model => model.transportTransactType)
         @Html.mUIDropDownListFor(model => model.transportTransactType,
-                        new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.transportTransactType), "Value", "Text", Model.transportTransactType),
+                        new SelectList(ViewBag.transporttransacttype, "Value", "Text", Model.transportTransactType),
                         new { tabindex = "19", id = idPrefix + "transportTransactType" })
     </div>
     <div class="tb-row">

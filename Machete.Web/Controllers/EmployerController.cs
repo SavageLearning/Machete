@@ -55,6 +55,7 @@ namespace Machete.Web.Controllers
             this.woServ = workorderService;
             this.map = map;
             this.def = def;
+            ViewBag.employerReferenceList = def.getSelectList(LCategory.emplrreference);
         }
         protected override void Initialize(RequestContext requestContext)
         {

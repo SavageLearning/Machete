@@ -11,8 +11,8 @@
     <div class="tb-row">
         @Html.mUITableLabelAndTextBoxFor(model => model.name, new { tabindex = "1", id = idPrefix + "name" })
         @Html.mUITableLabelFor(model => model.business)
-        @Html.mUIDropDownYesNoFor(model => model.business, ViewBag.yesNoList, new { tabindex = "2", id = idPrefix + "business" })
-    </div>
+        @Html.mUIDropDownYesNoFor(model => model.business, (List<SelectListItem>)ViewBag.yesNoList, new { tabindex = "2", id = idPrefix + "business" })
+</div>
     <div class="tb-row" id="hidebusinessname">
         @Html.mUITableLabelAndTextBoxFor(model => model.businessname, new { tabindex = "3", id = idPrefix + "businessname" })
     </div><!--why are these all mixed up? todo: fix groupings-->
@@ -31,7 +31,7 @@
     <!--tb-row-->
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.referredby)
-        @Html.mUIDropDownListFor(model => model.referredby, new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.emplrreference), "Value", "Text", Model.referredby), new { tabindex = "10", id = idPrefix + "referredby" })
+        @Html.mUIDropDownListFor(model => model.referredby, new SelectList(ViewBag.employerReferenceList, "Value", "Text", Model.referredby), new { tabindex = "10", id = idPrefix + "referredby" })
         @Html.mUITableLabelAndTextBoxFor(model => model.state, new { tabindex = "11", id = idPrefix + "state" })
     </div>
     <!--tb-row-->
@@ -48,19 +48,19 @@
 
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.active)
-        @Html.mUIDropDownYesNoFor(model => model.active, new { tabindex = "16", id = idPrefix + "active" })
+        @Html.mUIDropDownYesNoFor(model => model.active, (List<SelectListItem>)ViewBag.yesNoList, new { tabindex = "16", id = idPrefix + "active" })
         @Html.mUITableLabelFor(model => model.blogparticipate)
-        @Html.mUIDropDownYesNoFor(model => model.blogparticipate, new { tabindex = "17", id = idPrefix + "blogparticipate" })
+        @Html.mUIDropDownYesNoFor(model => model.blogparticipate, (List<SelectListItem>)ViewBag.yesNoList, new { tabindex = "17", id = idPrefix + "blogparticipate" })
     </div>
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.returnCustomer)
-        @Html.mUIDropDownYesNoFor(model => model.returnCustomer, new { tabindex = "18", id = idPrefix + "returnCustomer" })
+        @Html.mUIDropDownYesNoFor(model => model.returnCustomer, (List<SelectListItem>)ViewBag.yesNoList, new { tabindex = "18", id = idPrefix + "returnCustomer" })
         @Html.mUITableLabelFor(model => model.receiveUpdates)
-        @Html.mUIDropDownYesNoFor(model => model.receiveUpdates, new { tabindex = "19", id = idPrefix + "blogparticipate" })
+        @Html.mUIDropDownYesNoFor(model => model.receiveUpdates, (List<SelectListItem>)ViewBag.yesNoList, new { tabindex = "19", id = idPrefix + "blogparticipate" })
     </div>
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.onlineSource)
-        @Html.mUIDropDownYesNoFor(model => model.onlineSource, new { tabindex = "20", id = idPrefix + "onlineSource" })
+        @Html.mUIDropDownYesNoFor(model => model.onlineSource, (List<SelectListItem>)ViewBag.yesNoList, new { tabindex = "20", id = idPrefix + "onlineSource" })
         @Html.mUITableLabelAndTextBoxFor(model => model.fax, new { tabindex = "21", id = idPrefix + "fax" })
     </div>
 </div>
