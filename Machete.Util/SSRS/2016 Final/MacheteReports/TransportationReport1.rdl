@@ -90,21 +90,6 @@ group by WOs.dateTimeofWork, WOs.paperOrderNum, Ls.text_EN, name, transportFee, 
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="dsDefaultDatabase">
-      <SharedDataSet>
-        <SharedDataSetReference>/Datasets/dsDefaultDatabase</SharedDataSetReference>
-      </SharedDataSet>
-      <Fields>
-        <Field Name="UserLogin">
-          <DataField>UserLogin</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ConnectionString">
-          <DataField>ConnectionString</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-    </DataSet>
   </DataSets>
   <ReportSections>
     <ReportSection>

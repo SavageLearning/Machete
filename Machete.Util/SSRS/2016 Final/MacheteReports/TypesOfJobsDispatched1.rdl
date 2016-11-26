@@ -73,21 +73,6 @@ WHERE wo.dateTimeOfWork &lt; (@end) and wo.dateTimeOfWork &gt; (@beginning)</Com
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="dsDefaultDatabase">
-      <SharedDataSet>
-        <SharedDataSetReference>dsDefaultDatabase</SharedDataSetReference>
-      </SharedDataSet>
-      <Fields>
-        <Field Name="UserLogin">
-          <DataField>UserLogin</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ConnectionString">
-          <DataField>ConnectionString</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-    </DataSet>
   </DataSets>
   <ReportSections>
     <ReportSection>

@@ -47,21 +47,6 @@ group by Lookups.Text_EN, CONVERT(VARCHAR(7), WorkOrders.dateTimeofWork, 111)</C
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="dsDefaultDatabase">
-      <SharedDataSet>
-        <SharedDataSetReference>dsDefaultDatabase</SharedDataSetReference>
-      </SharedDataSet>
-      <Fields>
-        <Field Name="UserLogin">
-          <DataField>UserLogin</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ConnectionString">
-          <DataField>ConnectionString</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-    </DataSet>
   </DataSets>
   <ReportSections>
     <ReportSection>
