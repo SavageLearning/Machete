@@ -852,9 +852,6 @@
     <Content Include="Views\Shared\ActivitySigninIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Shared\AdministratorInfo.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Shared\DisplayTemplates\EmailView.cshtml" />
   </ItemGroup>
   <ItemGroup>
