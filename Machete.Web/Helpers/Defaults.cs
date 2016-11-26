@@ -58,7 +58,7 @@ namespace Machete.Web.Helpers
         SelectList getTransportationMethodList();
         SelectList hours();
         SelectList skillLevels();
-        List<SelectListItem> yesnoSelectList(CultureInfo CI);
+        List<SelectListItem> yesnoSelectList();
     }
 
     public class Defaults : IDefaults
@@ -134,10 +134,18 @@ namespace Machete.Web.Helpers
             yesnoES.Add(new SelectListItem() { Selected = false, Text = "No", Value = "false" });
             yesnoES.Add(new SelectListItem() { Selected = false, Text = "Sí", Value = "true" });
         }
-        //TODO: Defaults.yesno needs to use resource files, not hardcoded values
-        public List<SelectListItem> yesnoSelectList(CultureInfo CI)
+        public CultureInfo getCI()
         {
-            if (CI.TwoLetterISOLanguageName == "es") return yesnoES;
+            return Thread.CurrentThread.CurrentUICulture;
+        }
+        public string getCIString()
+        {
+            return getCI().TwoLetterISOLanguageName.ToUpperInvariant();
+        }
+        //TODO: Defaults.yesno needs to use resource files, not hardcoded values
+        public List<SelectListItem> yesnoSelectList()
+        {
+            if (getCIString() == "ES") return yesnoES;
             return yesnoEN;  //defaults to English
         }
 
@@ -145,7 +153,7 @@ namespace Machete.Web.Helpers
         // Get the Id string for a given lookup number
         public string byID(int ID)
         {
-            return lcache.textByID(ID, Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant());
+            return lcache.textByID(ID, getCIString());
         }
         public string byID(int? ID)
         {

@@ -55,7 +55,7 @@ namespace Machete.Web.Controllers
             this.woServ = workorderService;
             this.map = map;
             this.def = def;
-            ViewBag.employerReferenceList = def.getSelectList(LCategory.emplrreference);
+            //ViewBag.employerReferenceList = def.getSelectList(LCategory.emplrreference);
         }
         protected override void Initialize(RequestContext requestContext)
         {
@@ -103,14 +103,14 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Create()
         {
-            ViewBag.yesNoList = def.yesnoSelectList(CI);
-            var _model = new Domain.Employer();
-            _model.active = true;
-        //    _model.city = "Seattle"; // no null types allowed in var
-        //    _model.state = "WA";     // no null types allowed in var
-            _model.blogparticipate = false;
-            _model.referredby = def.getDefaultID(LCategory.emplrreference);
-            return PartialView("Create", _model);
+            var m = map.Map<Domain.Employer, ViewModel.Employer>(new Domain.Employer()
+            {
+                active = true,
+                blogparticipate = false,
+                referredby = def.getDefaultID(LCategory.emplrreference)
+            });
+            m.def = def;
+            return PartialView("Create", m);
         }
         /// <summary>
         /// POST: /Employer/Create
