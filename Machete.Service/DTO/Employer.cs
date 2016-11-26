@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace Machete.Service.DTO
 {
-    public class Employer : Domain.Record
+    public class Employer : Record
     {
-        public int ID { get; set; }
-        public string tabref { get { return "/Employer/Edit/" + ID.ToString(); } }
-        public string tablabel { get { return name; } }
         public string active { get; set; }
         public string EID { get; set; }
         public string recordid { get; set; }
@@ -21,8 +18,6 @@ namespace Machete.Service.DTO
         public string phone { get; set; }
         public string driverslicense { get; set; }
         public string licenseplate { get; set; }
-        public new string dateupdated { get; set; }
-        public new string Updatedby { get; set; }
         public string onlineSource { get; set; }
 
         public string blogparticipate { get; set; }

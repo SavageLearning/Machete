@@ -64,6 +64,13 @@ namespace Machete.Web
                     .ForMember(ev => ev.recordid, opt => opt.MapFrom(e => Convert.ToString(e.ID)))
                     .ForMember(ev => ev.dateupdated, opt => opt.MapFrom(e => Convert.ToString(e.dateupdated)))
                     .ForMember(ev => ev.onlineSource, opt => opt.MapFrom(e => e.onlineSource.ToString()));
+                    .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/Employer/Edit/" + Convert.ToString(d.ID)))
+                    .ForMember(v => v.tablabel, opt => opt.MapFrom(d => d.name))
+                    .ForMember(v => v.active, opt => opt.MapFrom(d => Convert.ToString(d.active)))
+                    .ForMember(v => v.EID, opt => opt.MapFrom(d => Convert.ToString(d.ID)))
+                    .ForMember(v => v.recordid, opt => opt.MapFrom(d => Convert.ToString(d.ID)))
+                    .ForMember(v => v.dateupdated, opt => opt.MapFrom(d => Convert.ToString(d.dateupdated)))
+                    .ForMember(v => v.onlineSource, opt => opt.MapFrom(d => d.onlineSource.ToString()));
 
             });
         }

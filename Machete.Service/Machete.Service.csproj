@@ -253,6 +253,7 @@
     <Compile Include="ActivityService.cs" />
     <Compile Include="ActivitySigninService.cs" />
     <Compile Include="DTO\Employer.cs" />
+    <Compile Include="DTO\Record.cs" />
     <Compile Include="EmailConfig.cs" />
     <Compile Include="ReportService.cs" />
     <Compile Include="EmailService.cs" />
