@@ -75,8 +75,9 @@ namespace Machete.Service
             result.filteredCount = q.Count();
             result.totalCount = repo.GetAllQ().Count();
             result.query = q.ProjectTo<DTO.EmployerList>(map.ConfigurationProvider)
-            .Skip(o.displayStart)
-            .Take(o.displayLength);
+                .Skip(o.displayStart)
+                .Take(o.displayLength)
+                .AsEnumerable();
             return result;            
         }
     }

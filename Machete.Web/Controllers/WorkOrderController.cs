@@ -165,15 +165,19 @@ namespace Machete.Web.Controllers
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI =  CI;
             //Get all the records
-            dataTableResult<WorkOrder> dtr = woServ.GetIndexView(vo);
-
+            dataTableResult<DTO.WorkOrder> dtr = woServ.GetIndexView(vo);
+            var result = dtr.query
+                .Select(
+                    e => map.Map<Domain.WorkOrder, ViewModel.WorkOrder>(e)
+                ).AsEnumerable();
             return Json(new
             {
                 sEcho = param.sEcho,
                 iTotalRecords = dtr.totalCount,
                 iTotalDisplayRecords = dtr.filteredCount,
-                aaData = from p in dtr.query
-                         select dtResponse( p, param.showOrdersWorkers)
+                aaData = result
+                //aaData = from p in dtr.query
+                //         select dtResponse( p, param.showOrdersWorkers)
             },
             JsonRequestBehavior.AllowGet);
         }
@@ -183,39 +187,39 @@ namespace Machete.Web.Controllers
         /// <param name="wo">WorkOrder</param>
         /// <param name="showWorkers">bool flag determining whether the workers associated with the WorkOrder should be retrieved</param>
         /// <returns>Work Order </returns>
-        public object dtResponse( WorkOrder wo, bool showWorkers)
+        public object dtResponse( ViewModel.WorkOrder wo, bool showWorkers)
         {
             int ID = wo.ID;
             return new 
             {
-                tabref = wo.getTabRef(),
-                tablabel = Machete.Web.Resources.WorkOrders.tabprefix + wo.getTabLabel(),
-                EID = Convert.ToString(wo.EmployerID), // Note: Employer ID appears to be unused
-                WOID = System.String.Format("{0,5:D5}", wo.paperOrderNum), // TODO: investigate why PaperOrderNum is used - shouldn't this be the Order # from the WO Table?
-                dateTimeofWork = wo.dateTimeofWork.ToString(),
-                status = lcache.textByID(wo.status, CI.TwoLetterISOLanguageName),
-                WAcount = wo.workAssignments.Count(a => a.workOrderID == ID).ToString(),
-                contactName = wo.contactName,
-                workSiteAddress1 = wo.workSiteAddress1,
-                zipcode = wo.zipcode,
-                dateupdated = System.String.Format("{0:MM/dd/yyyy HH:mm:ss}", wo.dateupdated), // Note: Date Updated appears to be unused
-                updatedby = wo.Updatedby,
-                transportMethod = lcache.textByID(wo.transportMethodID, CI.TwoLetterISOLanguageName), // Note: Transport Method appears to be unused
-                displayState = _getDisplayState(wo), // Note: Display State appears to be unused
-                onlineSource = wo.onlineSource ? Shared.True : Shared.False,
-                emailSentCount = wo.Emails.Where(e => e.statusID == Email.iSent || e.statusID == Email.iReadyToSend).Count(),
-                emailErrorCount = wo.Emails.Where(e => e.statusID == Email.iTransmitError).Count(),
-                recordid = wo.ID.ToString(), // Note: Work Order ID appears not to be used
-                workers = showWorkers ? // Note: Workers appears to not be used
-                        from w in wo.workAssignments
-                        select new
-                        {
-                            WID = w.workerAssigned != null ? (int?)w.workerAssigned.dwccardnum : null,
-                            name = w.workerAssigned != null ? w.workerAssigned.Person.fullName() : null,
-                            skill = lcache.textByID(w.skillID, CI.TwoLetterISOLanguageName),
-                            hours = w.hours,
-                            wage = w.hourlyWage
-                        } : null
+                //tabref = wo.getTabRef(),
+                //tablabel = Machete.Web.Resources.WorkOrders.tabprefix + wo.getTabLabel(),
+                //EID = Convert.ToString(wo.EmployerID), // Note: Employer ID appears to be unused
+                //WOID = System.String.Format("{0,5:D5}", wo.paperOrderNum), // TODO: investigate why PaperOrderNum is used - shouldn't this be the Order # from the WO Table?
+                //dateTimeofWork = wo.dateTimeofWork.ToString(),
+                //TODO: status = lcache.textByID(wo.status, CI.TwoLetterISOLanguageName),
+                //TODO: WAcount = wo.workAssignments.Count(a => a.workOrderID == ID).ToString(),
+                //contactName = wo.contactName,
+                //workSiteAddress1 = wo.workSiteAddress1,
+                //zipcode = wo.zipcode,
+                //dateupdated = System.String.Format("{0:MM/dd/yyyy HH:mm:ss}", wo.dateupdated), // Note: Date Updated appears to be unused
+                //updatedby = wo.Updatedby,
+                //TODO: transportMethod = lcache.textByID(wo.transportMethodID, CI.TwoLetterISOLanguageName), // Used in Hirer a lot
+                //TODO: displayState = _getDisplayState(wo), // Used to determine row color on /WorkOrder/Index.cshtml
+                //onlineSource = wo.onlineSource ? Shared.True : Shared.False,
+                //TODO: emailSentCount = wo.Emails.Where(e => e.statusID == Email.iSent || e.statusID == Email.iReadyToSend).Count(),
+                //TODO: emailErrorCount = wo.Emails.Where(e => e.statusID == Email.iTransmitError).Count(),
+                //recordid = wo.ID.ToString(), 
+                //TODO: workers = showWorkers ? // Used in Datatables details
+                //        from w in wo.workAssignments
+                //        select new
+                //        {
+                //            WID = w.workerAssigned != null ? (int?)w.workerAssigned.dwccardnum : null,
+                //            name = w.workerAssigned != null ? w.workerAssigned.Person.fullName() : null,
+                //            skill = lcache.textByID(w.skillID, CI.TwoLetterISOLanguageName),
+                //            hours = w.hours,
+                //            wage = w.hourlyWage
+                //        } : null
             };
         }
 
@@ -225,11 +229,11 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="wo">WorkOrder</param>
         /// <returns>status string</returns>
-        private string _getDisplayState(WorkOrder wo)
+        private string _getDisplayState(Domain.WorkOrder wo)
         {
             string status = lcache.textByID(wo.status, "en");
 
-            if (wo.status == WorkOrder.iCompleted)
+            if (wo.status == Domain.WorkOrder.iCompleted)
             {
                 // If WO is completed, but 1 (or more) WA aren't assigned - the WO is still Unassigned
                 if (wo.workAssignments.Count(wa => wa.workerAssignedID == null) > 0) return "Unassigned";
@@ -249,15 +253,17 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Create(int EmployerID)
         {
-            WorkOrder wo = new WorkOrder();
-            wo.EmployerID = EmployerID;
-            wo.dateTimeofWork = DateTime.Today;
-            wo.transportMethodID = def.getDefaultID(LCategory.transportmethod); // TODO: investigate if it make sense to have this as a default
-            wo.typeOfWorkID = def.getDefaultID(LCategory.worktype); // TODO: investigate if it make sense to have this as a default
-            wo.status = def.getDefaultID(LCategory.orderstatus);
-            wo.timeFlexible = true;
+            var wo = map.Map<Domain.WorkOrder, ViewModel.WorkOrder>(new Domain.WorkOrder()
+            {
+                EmployerID = EmployerID,
+                dateTimeofWork = DateTime.Today,
+                transportMethodID = def.getDefaultID(LCategory.transportmethod),
+                typeOfWorkID = def.getDefaultID(LCategory.worktype),
+                status = def.getDefaultID(LCategory.orderstatus),
+                timeFlexible = true
+            });
+            wo.def = def;
             ViewBag.workerRequests = new List<SelectListItem> {};
-
             return PartialView("Create", wo);
         }
 
@@ -270,10 +276,10 @@ namespace Machete.Web.Controllers
         /// <returns>JSON Object representing new Work Order</returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
-        public ActionResult Create(WorkOrder wo, string userName, List<WorkerRequest> workerRequestList)
+        public ActionResult Create(Domain.WorkOrder wo, string userName, List<WorkerRequest> workerRequestList)
         {
             UpdateModel(wo);
-            WorkOrder neworder = woServ.Create(wo, userName);           
+            Domain.WorkOrder neworder = woServ.Create(wo, userName);           
 
             // New Worker Requests to add
             foreach (var workerRequest in workerRequestList)
@@ -288,11 +294,12 @@ namespace Machete.Web.Controllers
             woServ.Save(neworder, userName);
 
             // JSON object with new work order data
+            var result = map.Map<Domain.WorkOrder, ViewModel.WorkOrder>(neworder);
             return Json(new 
             {
-                sNewRef = neworder.getTabRef(),
-                sNewLabel = Machete.Web.Resources.WorkOrders.tabprefix + neworder.getTabLabel(),
-                iNewID = neworder.ID
+                sNewRef = result.tabref,
+                sNewLabel = result.tablabel,
+                iNewID = result.ID
             }, 
             JsonRequestBehavior.AllowGet);
         }
@@ -309,7 +316,7 @@ namespace Machete.Web.Controllers
         public ActionResult Edit(int id)
         {
             // Retrieve Work Order
-            WorkOrder workOrder = woServ.Get(id);
+            Domain.WorkOrder workOrder = woServ.Get(id);
             
             // Retrieve Worker Requests associated with Work Order
             ViewBag.workerRequests = workOrder.workerRequests.Select(a => 
@@ -336,7 +343,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Edit(int id, FormCollection collection, string userName, List<WorkerRequest> workerRequestList)
         {
-            WorkOrder workOrder = woServ.Get(id);
+            Domain.WorkOrder workOrder = woServ.Get(id);
             UpdateModel(workOrder);
 
             // Stale requests to remove
@@ -376,7 +383,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult View(int id)
         {
-            WorkOrder workOrder = woServ.Get(id);
+            Domain.WorkOrder workOrder = woServ.Get(id);
             ViewBag.lunchsupplied = def.getBool(workOrder.lunchSupplied);
             ViewBag.transportmethod = def.byID(workOrder.transportMethodID);
 
@@ -391,7 +398,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult ViewForEmail(int id)
         {
-            WorkOrder workOrder = woServ.Get(id);
+            Domain.WorkOrder workOrder = woServ.Get(id);
             ViewBag.lunchsupplied = def.getBool(workOrder.lunchSupplied);
             ViewBag.transportmethod = def.byID(workOrder.transportMethodID);
 
@@ -407,8 +414,11 @@ namespace Machete.Web.Controllers
         public ActionResult GroupView(DateTime date, bool? assignedOnly)
         {
             WorkOrderGroupPrintView view = new WorkOrderGroupPrintView();
-            if (assignedOnly == true) view.orders = woServ.GetActiveOrders(date, true );
-            else view.orders = woServ.GetActiveOrders(date, false);
+            IEnumerable<Domain.WorkOrder> v;
+            if (assignedOnly == true) v = woServ.GetActiveOrders(date, true );
+            else v = woServ.GetActiveOrders(date, false);
+
+            // TODO2016: map v into view.orders
             return View(view);
         }
         #endregion
@@ -465,7 +475,7 @@ namespace Machete.Web.Controllers
         {
             var workOrder = woServ.Get(id);
             // lookup int value for status active
-            workOrder.status = WorkOrder.iActive;
+            workOrder.status = Domain.WorkOrder.iActive;
             woServ.Save(workOrder, userName);         
             return Json(new
             {

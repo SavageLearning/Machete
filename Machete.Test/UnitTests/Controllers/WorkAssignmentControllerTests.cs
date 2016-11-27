@@ -116,7 +116,7 @@ namespace Machete.Test.Unit.Controller
             fakeform.Add("hours", "5");
             fakeform.Add("hourlyWage", "12");
             fakeform.Add("days", "1");
-            WorkOrder _wo = new WorkOrder();
+            Domain.WorkOrder _wo = new Domain.WorkOrder();
             _wo.paperOrderNum = 12345;
             _wo.ID = 123;
             int _num = 0;

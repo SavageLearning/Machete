@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
+using DTO = Machete.Service.DTO;
 using Machete.Web.Helpers;
 using Machete.Web.Resources;
 using Machete.Web.ViewModel;
@@ -38,11 +39,11 @@ namespace Machete.Web
                 // Splitting Combined into parts
                 c.CreateMap<EmployerWoCombined, Domain.Employer>();
                 // Splitting Combined into parts
-                c.CreateMap<EmployerWoCombined, WorkOrder>();
+                c.CreateMap<EmployerWoCombined, Domain.WorkOrder>();
                 // re-combineing to view model object
                 c.CreateMap<Domain.Employer, EmployerWoCombined>();
                 // re-combineing to view model object
-                c.CreateMap<WorkOrder, EmployerWoCombined>()
+                c.CreateMap<Domain.WorkOrder, EmployerWoCombined>()
                     .ForMember(wo => wo.wo_city, opt => opt.MapFrom(e => e.city))
                     .ForMember(wo => wo.wo_state, opt => opt.MapFrom(e => e.state))
                     .ForMember(wo => wo.wo_phone, opt => opt.MapFrom(e => e.phone))
@@ -55,6 +56,14 @@ namespace Machete.Web
                     .ForMember(e => e.Createdby, opt => opt.Ignore())
                     .ForMember(e => e.datecreated, opt => opt.Ignore())
                     .ForMember(e => e.dateupdated, opt => opt.Ignore());
+                c.CreateMap<Domain.Employer, ViewModel.Employer>()
+                    .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/Employer/Edit/" + Convert.ToString(d.ID)))
+                    .ForMember(v => v.tablabel, opt => opt.MapFrom(d => d.name))
+                    .ForMember(v => v.active, opt => opt.MapFrom(d => Convert.ToString(d.active)))
+                    //.ForMember(v => v.EID, opt => opt.MapFrom(d => Convert.ToString(d.ID)))
+                    //.ForMember(v => v.recordid, opt => opt.MapFrom(d => Convert.ToString(d.ID)))
+                    .ForMember(v => v.dateupdated, opt => opt.MapFrom(d => Convert.ToString(d.dateupdated)))
+                    .ForMember(v => v.onlineSource, opt => opt.MapFrom(d => d.onlineSource.ToString()));
                 c.CreateMap<Domain.Employer, DTO.EmployerList>();
                 c.CreateMap<DTO.EmployerList, ViewModel.EmployerList>()
                     .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/Employer/Edit/" + Convert.ToString(d.ID)))
@@ -64,6 +73,23 @@ namespace Machete.Web
                     .ForMember(v => v.recordid, opt => opt.MapFrom(d => Convert.ToString(d.ID)))
                     .ForMember(v => v.dateupdated, opt => opt.MapFrom(d => Convert.ToString(d.dateupdated)))
                     .ForMember(v => v.onlineSource, opt => opt.MapFrom(d => d.onlineSource.ToString()));
+                c.CreateMap<DTO.WorkOrder, ViewModel.WorkOrder>()
+                    .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/WorkOrder/Edit/" + Convert.ToString(d.ID)))
+                    .ForMember(v => v.tablabel, opt => opt.MapFrom(d =>
+                        Machete.Web.Resources.WorkOrders.tabprefix +
+                        d.paperOrderNum == null ?
+                            System.String.Format("{0,5:D5}", d.ID) :
+                            d.paperOrderNum.ToString()
+                        + " @ " + d.workSiteAddress1))
+                    .ForMember(v => v.EID, opt => opt.MapFrom(d => d.EmployerID.ToString()))
+                    .ForMember(v => v.WOID, opt => opt.MapFrom(d => System.String.Format("{0,5:D5}", d.paperOrderNum)))
+                    .ForMember(v => v.dateTimeofWork, opt => opt.MapFrom(d => d.dateTimeofWork.ToString()))
+                    .ForMember(v => v.dateupdatedstring, opt => opt.MapFrom(d => System.String.Format("{0:MM/dd/yyyy HH:mm:ss}", d.dateupdated)))
+                    .ForMember(v => v.onlineSource, opt => opt.MapFrom(d => d.onlineSource ? Shared.True : Shared.False))
+                    .ForMember(v => v.recordid, opt => opt.MapFrom(d => d.ID.ToString()))
+                    ;
+
+
 
             });
         }

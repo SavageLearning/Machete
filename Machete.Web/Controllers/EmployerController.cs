@@ -150,14 +150,14 @@ namespace Machete.Web.Controllers
             //UpdateModel(combined);
             //split the combined model into domain models
             Domain.Employer mappedEmployer = map.Map<EmployerWoCombined, Domain.Employer>(combined);
-            WorkOrder mappedWO = map.Map<EmployerWoCombined, WorkOrder>(combined);
+            Domain.WorkOrder mappedWO = map.Map<EmployerWoCombined, Domain.WorkOrder>(combined);
             mappedEmployer.onlineSource = true;
             mappedWO.onlineSource = true;
             //update domain
             Domain.Employer newEmployer = serv.Create(mappedEmployer, userName);
             mappedWO.EmployerID = newEmployer.ID;
-            mappedWO.status = WorkOrder.iPending;
-            WorkOrder newWO = woServ.Create(mappedWO, userName);
+            mappedWO.status = Domain.WorkOrder.iPending;
+            Domain.WorkOrder newWO = woServ.Create(mappedWO, userName);
             // return 
             return Json(new
             {

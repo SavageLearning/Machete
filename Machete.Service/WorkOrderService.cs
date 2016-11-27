@@ -44,7 +44,7 @@ namespace Machete.Service
             bool orderDescending,
             int displayStart,
             int displayLength);
-        dataTableResult<WorkOrder> GetIndexView(viewOptions opt);
+        dataTableResult<DTO.WorkOrder> GetIndexView(viewOptions opt);
     }
 
     // Business logic for WorkOrder record management
@@ -136,20 +136,29 @@ namespace Machete.Service
         /// </summary>
         /// <param name="vo">viewOptions object</param>
         /// <returns>Table of work orders</returns>
-        public dataTableResult<WorkOrder> GetIndexView(viewOptions o)
+        public dataTableResult<DTO.WorkOrder> GetIndexView(viewOptions o)
         {
             //Get all the records
-            var result = new dataTableResult<WorkOrder>();
+            var result = new dataTableResult<DTO.WorkOrder>();
             IQueryable<WorkOrder> q = repo.GetAllQ();
             //
             if (o.EmployerID != null) IndexViewBase.filterEmployer(o, ref q);
             if (o.status != null) IndexViewBase.filterStatus(o, ref q);
             if (o.onlineSource == true) IndexViewBase.filterOnlineSource(o, ref q);
             if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
+            //
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
             //
             result.filteredCount = q.Count();
-            result.query = q.Skip<WorkOrder>((int)o.displayStart).Take((int)o.displayLength);
+            result.query = q.Select(d => new DTO.WorkOrder()
+            {
+                WAcount = d.workAssignments.Count(),
+                emailSentCount = d.Emails.Where(e => e.statusID == Email.iSent || e.statusID == Email.iReadyToSend).Count(),
+                emailErrorCount = d.Emails.Where(e => e.statusID == Email.iTransmitError).Count()
+            })
+            .Skip(o.displayStart)
+            .Take(o.displayLength);
+                
             result.totalCount = repo.GetAllQ().Count();
             return result;
         }

@@ -144,41 +144,41 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="param">contains parameters for filtering</param>
         /// <returns>JsonResult for DataTables consumption</returns>
-        [Authorize(Roles = "Hirer")]
-        public ActionResult AjaxHandler(jQueryDataTableParam param)
-        {
-            var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
-            vo.CI = this.CI;
+        //[Authorize(Roles = "Hirer")]
+        //public ActionResult AjaxHandler(jQueryDataTableParam param)
+        //{
+        //    var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
+        //    vo.CI = this.CI;
 
-            // Retrieve employer ID of signed in Employer
-            string employerID = HttpContext.User.Identity.GetUserId();
+        //    // Retrieve employer ID of signed in Employer
+        //    string employerID = HttpContext.User.Identity.GetUserId();
 
-            Domain.Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == employerID).FirstOrDefault();
-            if (employer != null)
-            {
-                vo.EmployerID = employer.ID;
-            }
-            else
-            {
-                // TODO: add error processing.
-            }
+        //    Domain.Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == employerID).FirstOrDefault();
+        //    if (employer != null)
+        //    {
+        //        vo.EmployerID = employer.ID;
+        //    }
+        //    else
+        //    {
+        //        // TODO: add error processing.
+        //    }
 
-            //Get all the records
-            dataTableResult<WorkOrder> dtr = woServ.GetIndexView(vo);
+        //    //Get all the records
+        //    dataTableResult<WorkOrder> dtr = woServ.GetIndexView(vo);
 
-            // TODO: investigate this
-            param.showOrdersWorkers = true;
+        //    // TODO: investigate this
+        //    param.showOrdersWorkers = true;
 
-            return Json(new
-            {
-                sEcho = param.sEcho,
-                iTotalRecords = dtr.totalCount,
-                iTotalDisplayRecords = dtr.filteredCount,
-                aaData = from p in dtr.query
-                         select dtResponse(p, param.showOrdersWorkers)
-            },
-            JsonRequestBehavior.AllowGet);
-        }
+        //    return Json(new
+        //    {
+        //        sEcho = param.sEcho,
+        //        iTotalRecords = dtr.totalCount,
+        //        iTotalDisplayRecords = dtr.filteredCount,
+        //        aaData = from p in dtr.query
+        //                 select dtResponse(p, param.showOrdersWorkers)
+        //    },
+        //    JsonRequestBehavior.AllowGet);
+        //}
 
         /// <summary>
         /// Returns Work Order object to AjaxHandler - presented on the WorkOrder Details tab
@@ -192,29 +192,29 @@ namespace Machete.Web.Controllers
             int ID = wo.ID;
             return new
             {
-                tabref = "/HirerWorkOrder/View/" + Convert.ToString(wo.ID),
-                tablabel = Machete.Web.Resources.WorkOrders.tabprefix + wo.getTabLabel(),
-                EID = Convert.ToString(wo.EmployerID),
-                WOID = System.String.Format("{0,5:D5}", wo.paperOrderNum), // Note: paperOrderNum defaults to the value of the WO when a paperOrderNum is not provided
-                dateTimeofWork = wo.dateTimeofWork.ToString(),
-                status = lcache.textByID(wo.status, CI.TwoLetterISOLanguageName),
-                WAcount = wo.workAssignments.Count(a => a.workOrderID == ID).ToString(),
-                contactName = wo.contactName,
-                workSiteAddress1 = wo.workSiteAddress1,
-                zipcode = wo.zipcode,
-                transportMethod = lcache.textByID(wo.transportMethodID, CI.TwoLetterISOLanguageName),
-                displayState = _getDisplayState(wo), // State is used to provide color highlighting to records based on state
-                onlineSource = wo.onlineSource ? Shared.True : Shared.False,
-                workers = showWorkers ? // Workers is only loaded when showWorkers parameter set to TRUE
-                        from w in wo.workAssignments
-                        select new
-                        {
-                            WID = w.workerAssigned != null ? (int?)w.workerAssigned.dwccardnum : null,
-                            name = w.workerAssigned != null ? w.workerAssigned.Person.firstname1 : null, // Note: hirers should only have access to the workers first name
-                            skill = lcache.textByID(w.skillID, CI.TwoLetterISOLanguageName),
-                            hours = w.hours,
-                            wage = w.hourlyWage
-                        } : null
+                //tabref = "/HirerWorkOrder/View/" + Convert.ToString(wo.ID),
+                //tablabel = Machete.Web.Resources.WorkOrders.tabprefix + wo.getTabLabel(),
+                //EID = Convert.ToString(wo.EmployerID),
+                //WOID = System.String.Format("{0,5:D5}", wo.paperOrderNum), // Note: paperOrderNum defaults to the value of the WO when a paperOrderNum is not provided
+                //dateTimeofWork = wo.dateTimeofWork.ToString(),
+                //status = lcache.textByID(wo.status, CI.TwoLetterISOLanguageName),
+                //WAcount = wo.workAssignments.Count(a => a.workOrderID == ID).ToString(),
+                //contactName = wo.contactName,
+                //workSiteAddress1 = wo.workSiteAddress1,
+                //zipcode = wo.zipcode,
+                //transportMethod = lcache.textByID(wo.transportMethodID, CI.TwoLetterISOLanguageName),
+                //displayState = _getDisplayState(wo), // State is used to provide color highlighting to records based on state
+                //onlineSource = wo.onlineSource ? Shared.True : Shared.False,
+                //workers = showWorkers ? // Workers is only loaded when showWorkers parameter set to TRUE
+                //        from w in wo.workAssignments
+                //        select new
+                //        {
+                //            WID = w.workerAssigned != null ? (int?)w.workerAssigned.dwccardnum : null,
+                //            name = w.workerAssigned != null ? w.workerAssigned.Person.firstname1 : null, // Note: hirers should only have access to the workers first name
+                //            skill = lcache.textByID(w.skillID, CI.TwoLetterISOLanguageName),
+                //            hours = w.hours,
+                //            wage = w.hourlyWage
+                //        } : null
 
             };
         }

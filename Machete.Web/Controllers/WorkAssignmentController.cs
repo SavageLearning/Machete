@@ -135,13 +135,13 @@ namespace Machete.Web.Controllers
         {
             if (asmt.workerAssignedID > 0 && asmt.workerSigninID > 0) // green
                 return "completed";
-            if (asmt.workerAssignedID == null && asmt.workOrder.status == WorkOrder.iCompleted)
+            if (asmt.workerAssignedID == null && asmt.workOrder.status == Domain.WorkOrder.iCompleted)
                 return "incomplete";
-            if (asmt.workerAssignedID > 0 && asmt.workerSigninID == null && asmt.workOrder.status == WorkOrder.iCompleted)
+            if (asmt.workerAssignedID > 0 && asmt.workerSigninID == null && asmt.workOrder.status == Domain.WorkOrder.iCompleted)
                 return "orphaned";
-            if (asmt.workOrder.status == WorkOrder.iCancelled)
+            if (asmt.workOrder.status == Domain.WorkOrder.iCancelled)
                 return "cancelled";
-            if (asmt.workOrder.status == WorkOrder.iActive) // blue
+            if (asmt.workOrder.status == Domain.WorkOrder.iActive) // blue
                 return "active";
             return null;
         }

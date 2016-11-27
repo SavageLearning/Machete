@@ -27,6 +27,7 @@ namespace Machete.Test.Selenium.View
         {
             _d = driver;
             _url = url;
+            this.map = map;
         }
 
         public bool refreshCache()
@@ -441,8 +442,9 @@ namespace Machete.Test.Selenium.View
             // WO object
 
             _wo.ID = getSelectedTabRecordID("WO");
+            var v = map.Map<Domain.WorkOrder, Web.ViewModel.WorkOrder>(_wo);
             Assert.IsTrue(_d.FindElement(By.CssSelector("li.WO.ui-tabs-selected > a"))
-                                            .Text == Machete.Web.Resources.WorkOrders.tabprefix + _wo.getTabLabel(), 
+                                            .Text == v.tablabel, 
                 "Work order anchor label doesn't match work order");
             
             return true;

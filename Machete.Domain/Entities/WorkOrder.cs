@@ -40,6 +40,7 @@ namespace Machete.Domain
         public virtual Employer Employer { get; set; }
 
         public virtual ICollection<WorkAssignment> workAssignments { get; set; }
+
         [LocalizedDisplayName("workerRequests", NameResourceType = typeof(Resources.WorkOrder))]
         public virtual ICollection<WorkerRequest> workerRequests { get; set; }
         public virtual ICollection<Email> Emails { get; set; }
@@ -201,35 +202,6 @@ namespace Machete.Domain
         [LocalizedDisplayName("paypalPayerId", NameResourceType = typeof(Resources.WorkOrder))]
         [StringLength(15, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.WorkOrder))]
         public string paypalPayerId { get; set; }
-
-        /// <summary>
-        /// returns paperOrderNum if it exists, else internal WOID
-        /// </summary>
-        /// <returns></returns>
-        public string getPseudoWOID()
-        {
-            return this.paperOrderNum.HasValue ? System.String.Format("{0,5:D5}", this.paperOrderNum) : System.String.Format("{0,5:D5}", this.ID);
-        }
-
-        /// <summary>
-        /// Retrieve API string to edit specific WO
-        /// </summary>
-        /// <returns>String representing the API string for WO</returns>
-        public string getTabRef()
-        {
-            return "/WorkOrder/Edit/" + Convert.ToString(this.ID);
-        }
-
-        /// <summary>
-        /// Retrieve WO tab label (WO ID# + work site address)
-        /// </summary>
-        /// <returns>String WO tab label</returns>
-        public string getTabLabel()
-        {
-            return this.getPseudoWOID() + " @ " + this.workSiteAddress1;
-        }
-
-
     }
 
     public class WorkOrderSummary

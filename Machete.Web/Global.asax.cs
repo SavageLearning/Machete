@@ -111,7 +111,7 @@ namespace Machete.Web
             .RegisterType<IDatabaseFactory, DatabaseFactory>(new PerResolveLifetimeManager(), new InjectionConstructor("macheteConnection"))
             .RegisterType<IUnitOfWork, UnitOfWork>(new PerResolveLifetimeManager())
             .RegisterInstance<IEmailConfig>(new EmailConfig())
-            .RegisterInstance<IMapper>(new MapperConfig().get())
+            .RegisterInstance<IMapper>(new MapperConfig().getMapper())
             // 
             .RegisterType<IPersonRepository, PersonRepository>(new PerResolveLifetimeManager())
             .RegisterType<IWorkerSigninRepository, WorkerSigninRepository>(new PerResolveLifetimeManager())

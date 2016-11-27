@@ -149,7 +149,7 @@ namespace Machete.Test.Integration.Service
             o.sortColName = "WOID";
             //
             //Act
-            dataTableResult<WorkOrder> result = frb.ToServWorkOrder().GetIndexView(o);
+            dataTableResult<Machete.Service.DTO.WorkOrder> result = frb.ToServWorkOrder().GetIndexView(o);
             //
             //Assert
             IEnumerable<WorkOrder> query = result.query.ToList();

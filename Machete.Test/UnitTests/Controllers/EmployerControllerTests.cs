@@ -56,7 +56,7 @@ namespace Machete.Test.Unit.Controller
         [TestInitialize]
         public void TestInitialize()
         {
-            WorkOrder.iPending = 123;
+            Domain.WorkOrder.iPending = 123;
             serv = new Mock<IEmployerService>();
             woServ = new Mock<IWorkOrderService>();
             lcache = new Mock<ILookupCache>();
@@ -125,9 +125,9 @@ namespace Machete.Test.Unit.Controller
             //Arrange
             var combined = new EmployerWoCombined { name = "unit test" };
             var employer = new Domain.Employer { ID = 4242 };
-            var wo = new WorkOrder { ID= 4243, EmployerID = 4242 };
+            var wo = new Domain.WorkOrder { ID= 4243, EmployerID = 4242 };
             serv.Setup(p => p.Create(It.IsAny<Domain.Employer>(), "UnitTest")).Returns(employer);
-            woServ.Setup(p => p.Create(It.IsAny<WorkOrder>(), "UnitTest")).Returns(wo);
+            woServ.Setup(p => p.Create(It.IsAny<Domain.WorkOrder>(), "UnitTest")).Returns(wo);
             ctrlr.ValueProvider = form.ToValueProvider();
             //Act
             var result = ctrlr.CreateCombined(combined, "UnitTest");
