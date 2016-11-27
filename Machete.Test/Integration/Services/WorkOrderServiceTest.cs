@@ -23,6 +23,7 @@
 #endregion
 using Machete.Domain;
 using Machete.Service;
+using DTO = Machete.Service.DTO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -149,10 +150,10 @@ namespace Machete.Test.Integration.Service
             o.sortColName = "WOID";
             //
             //Act
-            dataTableResult<Machete.Service.DTO.WorkOrder> result = frb.ToServWorkOrder().GetIndexView(o);
+            dataTableResult<DTO.WorkOrderList> result = frb.ToServWorkOrder().GetIndexView(o);
             //
             //Assert
-            IEnumerable<WorkOrder> query = result.query.ToList();
+            IEnumerable<DTO.WorkOrderList> query = result.query.ToList();
             Assert.IsNotNull(result, "IEnumerable is Null");
             Assert.IsNotNull(query, "IEnumerable.query is null");
             Assert.AreEqual(6, query.Count(), "Expected 6, but GetIndexView returned {0} records", query.Count());

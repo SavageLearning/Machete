@@ -21,6 +21,8 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
@@ -44,7 +46,7 @@ namespace Machete.Service
             bool orderDescending,
             int displayStart,
             int displayLength);
-        dataTableResult<DTO.WorkOrder> GetIndexView(viewOptions opt);
+        dataTableResult<DTO.WorkOrderList> GetIndexView(viewOptions opt);
     }
 
     // Business logic for WorkOrder record management
@@ -52,6 +54,7 @@ namespace Machete.Service
     public class WorkOrderService : ServiceBase<WorkOrder>, IWorkOrderService
     {
         private readonly IWorkAssignmentService waServ;
+        private readonly IMapper map;
         /// <summary>
         /// Constructor
         /// </summary>
@@ -60,9 +63,11 @@ namespace Machete.Service
         /// <param name="unitOfWork">Unit of Work</param>
         public WorkOrderService(IWorkOrderRepository repo, 
                                 IWorkAssignmentService waServ,
-                                IUnitOfWork unitOfWork) : base(repo, unitOfWork)
+                                IUnitOfWork unitOfWork,
+                                IMapper map) : base(repo, unitOfWork)
         {
             this.waServ = waServ;
+            this.map = map;
             this.logPrefix = "WorkOrder";
         }
 
@@ -136,10 +141,10 @@ namespace Machete.Service
         /// </summary>
         /// <param name="vo">viewOptions object</param>
         /// <returns>Table of work orders</returns>
-        public dataTableResult<DTO.WorkOrder> GetIndexView(viewOptions o)
+        public dataTableResult<DTO.WorkOrderList> GetIndexView(viewOptions o)
         {
             //Get all the records
-            var result = new dataTableResult<DTO.WorkOrder>();
+            var result = new dataTableResult<DTO.WorkOrderList>();
             IQueryable<WorkOrder> q = repo.GetAllQ();
             //
             if (o.EmployerID != null) IndexViewBase.filterEmployer(o, ref q);
@@ -150,14 +155,10 @@ namespace Machete.Service
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
             //
             result.filteredCount = q.Count();
-            result.query = q.Select(d => new DTO.WorkOrder()
-            {
-                WAcount = d.workAssignments.Count(),
-                emailSentCount = d.Emails.Where(e => e.statusID == Email.iSent || e.statusID == Email.iReadyToSend).Count(),
-                emailErrorCount = d.Emails.Where(e => e.statusID == Email.iTransmitError).Count()
-            })
+            result.query = q.ProjectTo<DTO.WorkOrderList>(map.ConfigurationProvider)
             .Skip(o.displayStart)
-            .Take(o.displayLength);
+            .Take(o.displayLength)
+            .AsEnumerable();
                 
             result.totalCount = repo.GetAllQ().Count();
             return result;

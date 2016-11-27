@@ -73,22 +73,38 @@ namespace Machete.Web
                     .ForMember(v => v.recordid, opt => opt.MapFrom(d => Convert.ToString(d.ID)))
                     .ForMember(v => v.dateupdated, opt => opt.MapFrom(d => Convert.ToString(d.dateupdated)))
                     .ForMember(v => v.onlineSource, opt => opt.MapFrom(d => d.onlineSource.ToString()));
-                c.CreateMap<DTO.WorkOrder, ViewModel.WorkOrder>()
+                c.CreateMap<Domain.WorkOrder, ViewModel.WorkOrder>()
                     .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/WorkOrder/Edit/" + Convert.ToString(d.ID)))
                     .ForMember(v => v.tablabel, opt => opt.MapFrom(d =>
                         Machete.Web.Resources.WorkOrders.tabprefix +
                         d.paperOrderNum == null ?
                             System.String.Format("{0,5:D5}", d.ID) :
-                            d.paperOrderNum.ToString()
+                            Convert.ToString(d.paperOrderNum)
                         + " @ " + d.workSiteAddress1))
-                    .ForMember(v => v.EID, opt => opt.MapFrom(d => d.EmployerID.ToString()))
+                    .ForMember(v => v.EID, opt => opt.MapFrom(d => Convert.ToString(d.EmployerID)))
                     .ForMember(v => v.WOID, opt => opt.MapFrom(d => System.String.Format("{0,5:D5}", d.paperOrderNum)))
-                    .ForMember(v => v.dateTimeofWork, opt => opt.MapFrom(d => d.dateTimeofWork.ToString()))
+                    .ForMember(v => v.dateTimeofWork, opt => opt.MapFrom(d => Convert.ToString(d.dateTimeofWork)))
                     .ForMember(v => v.dateupdatedstring, opt => opt.MapFrom(d => System.String.Format("{0:MM/dd/yyyy HH:mm:ss}", d.dateupdated)))
                     .ForMember(v => v.onlineSource, opt => opt.MapFrom(d => d.onlineSource ? Shared.True : Shared.False))
-                    .ForMember(v => v.recordid, opt => opt.MapFrom(d => d.ID.ToString()))
+                    .ForMember(v => v.recordid, opt => opt.MapFrom(d => Convert.ToString(d.ID)));
+                c.CreateMap<Domain.WorkOrder, DTO.WorkOrderList>()
+                    .ForMember(v => v.WAcount, opt => opt.MapFrom(d => d.workAssignments.Count()))
+                    .ForMember(v => v.emailSentCount, opt => opt.MapFrom(d => d.Emails.Where(e => e.statusID == Email.iSent || e.statusID == Email.iReadyToSend).Count()))
+                    .ForMember(v => v.emailErrorCount, opt => opt.MapFrom(d => d.Emails.Where(e => e.statusID == Email.iTransmitError).Count()))
+                ;
+                c.CreateMap<DTO.WorkOrderList, ViewModel.WorkOrderList>()
+                    .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/WorkOrder/Edit/" + Convert.ToString(d.ID)))
+                    .ForMember(v => v.tablabel, opt => opt.MapFrom(d => 
+                        Machete.Web.Resources.WorkOrders.tabprefix +
+                        d.paperOrderNum == null ?
+                            System.String.Format("{0,5:D5}", d.ID) :
+                            Convert.ToString(d.paperOrderNum)
+                        + " @ " + d.workSiteAddress1))
+                    .ForMember(v => v.EID, opt => opt.MapFrom(d => Convert.ToString(d.EmployerID)))
+                    .ForMember(v => v.WOID, opt => opt.MapFrom(d => System.String.Format("{0,5:D5}", d.paperOrderNum)))
+                    .ForMember(v => v.dateTimeofWork, opt => opt.MapFrom(d => Convert.ToString(d.dateTimeofWork)))
+                    .ForMember(v => v.dateupdated, opt => opt.MapFrom(d => Convert.ToString(d.dateupdated)))
                     ;
-
 
 
             });

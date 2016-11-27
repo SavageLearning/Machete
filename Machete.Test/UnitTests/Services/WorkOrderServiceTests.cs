@@ -32,6 +32,7 @@ using Machete.Data.Infrastructure;
 using Machete.Service;
 using Machete.Domain;
 using Machete.Test;
+using AutoMapper;
 
 namespace Machete.Test.Unit.Service
 {
@@ -44,6 +45,7 @@ namespace Machete.Test.Unit.Service
         Mock<IWorkOrderRepository> _repo;
         Mock<IWorkAssignmentService> _waServ;
         Mock<IUnitOfWork> _uow;
+        Mock<IMapper> _map;
         WorkOrderService _serv;
 
         public WorkOrderTests()
@@ -95,7 +97,8 @@ namespace Machete.Test.Unit.Service
             _repo = new Mock<IWorkOrderRepository>();
             _uow = new Mock<IUnitOfWork>();
             _waServ = new Mock<IWorkAssignmentService>();
-            _serv = new WorkOrderService(_repo.Object, _waServ.Object, _uow.Object);
+            _map = new Mock<IMapper>();
+            _serv = new WorkOrderService(_repo.Object, _waServ.Object, _uow.Object, _map.Object );
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
         public void GetWorkOrders_returns_Enumerable()
@@ -135,7 +138,7 @@ namespace Machete.Test.Unit.Service
             _wo.dateupdated = DateTime.MinValue;
             _repo.Setup(r => r.Add(_wo)).Returns(_wo);
             _waServ = new Mock<IWorkAssignmentService>();
-            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _uow.Object);
+            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _uow.Object, _map.Object);
             //
             //Act
             var result = _serv.Create(_wo, user);
@@ -162,7 +165,7 @@ namespace Machete.Test.Unit.Service
             _repo.Setup(r => r.Delete(It.IsAny<WorkOrder>())).Callback((WorkOrder p) => { dp = p; });
             _repo.Setup(r => r.GetById(id)).Returns(_wo);
             _waServ = new Mock<IWorkAssignmentService>();
-            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _uow.Object);
+            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _uow.Object, _map.Object);
             //
             //Act
             _serv.Delete(id, user);
@@ -183,7 +186,7 @@ namespace Machete.Test.Unit.Service
             _wo.datecreated = DateTime.MinValue;
             _wo.dateupdated = DateTime.MinValue;
             _waServ = new Mock<IWorkAssignmentService>();
-            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _uow.Object);
+            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _uow.Object, _map.Object);
             //
             //Act
             _serv.Save(_wo, user);

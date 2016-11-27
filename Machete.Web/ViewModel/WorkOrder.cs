@@ -57,5 +57,6 @@ namespace Machete.Web.ViewModel
         public string emailSentCount { get; set; }
         public string emailErrorCount { get; set; }
         public string updatedby { get; set; }
+        public string dateupdated { get; set; }
     }
 }
