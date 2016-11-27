@@ -24,6 +24,7 @@
 using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
+using DTO = Machete.Service.DTO;
 using Machete.Web.Helpers;
 using Machete.Web.Resources;
 using Machete.Web.ViewModel;
@@ -88,8 +89,6 @@ namespace Machete.Web.Controllers
             ViewBag.orderstatuses = def.getSelectList(LCategory.orderstatus);
             ViewBag.transportmethod = def.getSelectList(LCategory.transportmethod);
             ViewBag.transporttransacttype = def.getSelectList(LCategory.transportTransactType);
-
-
         }
 
         #region Index

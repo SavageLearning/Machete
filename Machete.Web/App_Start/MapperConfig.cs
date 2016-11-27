@@ -55,15 +55,8 @@ namespace Machete.Web
                     .ForMember(e => e.Createdby, opt => opt.Ignore())
                     .ForMember(e => e.datecreated, opt => opt.Ignore())
                     .ForMember(e => e.dateupdated, opt => opt.Ignore());
-                //.ForMember(e => e.attachment, opt => System.Web)
-                c.CreateMap<Domain.Employer, ViewModel.Employer>()
-                    .ForMember(ev => ev.tabref, opt => opt.MapFrom(e => "/Employer/Edit/" + Convert.ToString(e.ID)))
-                    .ForMember(ev => ev.tablabel, opt => opt.MapFrom(e => e.name))
-                    .ForMember(ev => ev.active, opt => opt.MapFrom(e => Convert.ToString(e.active)))
-                    .ForMember(ev => ev.EID, opt => opt.MapFrom(e => Convert.ToString(e.ID)))
-                    .ForMember(ev => ev.recordid, opt => opt.MapFrom(e => Convert.ToString(e.ID)))
-                    .ForMember(ev => ev.dateupdated, opt => opt.MapFrom(e => Convert.ToString(e.dateupdated)))
-                    .ForMember(ev => ev.onlineSource, opt => opt.MapFrom(e => e.onlineSource.ToString()));
+                c.CreateMap<Domain.Employer, DTO.EmployerList>();
+                c.CreateMap<DTO.EmployerList, ViewModel.EmployerList>()
                     .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/Employer/Edit/" + Convert.ToString(d.ID)))
                     .ForMember(v => v.tablabel, opt => opt.MapFrom(d => d.name))
                     .ForMember(v => v.active, opt => opt.MapFrom(d => Convert.ToString(d.active)))
@@ -76,7 +69,7 @@ namespace Machete.Web
         }
 
 
-        public IMapper get()
+        public IMapper getMapper()
         {
             return map ?? (map = new Mapper(cfg));
         }

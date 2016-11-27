@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
+using DTO = Machete.Service.DTO;
 using Machete.Web.Helpers;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,10 +33,10 @@ namespace Machete.Api.Controllers
             var vo = new viewOptions();
             vo.displayLength = 10;
             vo.displayStart = 0;
-            dataTableResult<Domain.Employer> list = serv.GetIndexView(vo);
+            dataTableResult<DTO.EmployerList> list = serv.GetIndexView(vo);
             var result = list.query
                 .Select(
-                    e => map.Map<Domain.Employer, Web.ViewModel.Employer>(e)
+                    e => map.Map<DTO.EmployerList, Web.ViewModel.Employer>(e)
                 ).AsEnumerable();
             return result;
         }

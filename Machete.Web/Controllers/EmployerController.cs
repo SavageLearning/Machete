@@ -24,6 +24,7 @@
 using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
+using DTO = Machete.Service.DTO;
 using Machete.Web.Helpers;
 using Machete.Web.Resources;
 using Machete.Web.ViewModel;
@@ -81,11 +82,11 @@ namespace Machete.Web.Controllers
         {
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI = CI;
-            dataTableResult<Domain.Employer> list = serv.GetIndexView(vo);
+            dataTableResult<DTO.EmployerList> list = serv.GetIndexView(vo);
             //return what's left to datatables
             var result = list.query
                 .Select(
-                    e => map.Map<Domain.Employer, ViewModel.Employer>(e)
+                    e => map.Map<DTO.EmployerList, ViewModel.EmployerList>(e)
                 ).AsEnumerable();
             return Json(new
             {

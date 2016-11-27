@@ -35,8 +35,12 @@ namespace Machete.Domain
         public DateTime datecreated { get; set; }
         public DateTime dateupdated { get; set; }
         [StringLength(30)]
+        [Column("Createdby")]
+        // TODO: make this lower case, like everything else
         public string Createdby { get; set; }
         [StringLength(30)]
+        [Column("Updatedby")]
+        // TODO: make this lower case, like everything else
         public string Updatedby { get; set; }
 
         public Record() {}

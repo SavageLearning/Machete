@@ -28,7 +28,7 @@ namespace Machete.Test.Selenium.View
             string solutionDirectory = sharedUI.SolutionDirectory();
             //testdir = solutionDirectory + "\\Machete.test\\";
             testimagefile = solutionDirectory + "\\jimmy_machete.jpg";
-            map = new Machete.Web.MapperConfig().get();
+            map = new Machete.Web.MapperConfig().getMapper();
 
             WebServer.StartIis();
         }

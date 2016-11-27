@@ -62,7 +62,7 @@ namespace Machete.Test.Unit.Controller
             lcache = new Mock<ILookupCache>();
             dbfactory = new Mock<IDatabaseFactory>();
             def = new Mock<IDefaults>();
-            map = new MapperConfig().get();
+            map = new MapperConfig().getMapper();
            
 
             ctrlr = new EmployerController(serv.Object, woServ.Object, def.Object, map);

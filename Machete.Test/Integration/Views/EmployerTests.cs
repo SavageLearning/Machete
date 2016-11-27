@@ -24,7 +24,7 @@ namespace Machete.Test.Selenium.View
         public static void ClassInitialize(TestContext testContext)
         {
             WebServer.StartIis();
-            map = new Machete.Web.MapperConfig().get();
+            map = new Machete.Web.MapperConfig().getMapper();
         }
 
         [TestInitialize]

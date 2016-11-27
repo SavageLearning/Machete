@@ -32,6 +32,7 @@ using Machete.Web.Helpers;
 using System.Data.Entity;
 using Machete.Domain;
 using System.IO;
+using AutoMapper;
 
 namespace Machete.Test
 {
@@ -86,6 +87,7 @@ namespace Machete.Test
         private Image _i;
         private string _user = "FluentRecordBase";
         private System.Random _random = new System.Random((int)DateTime.Now.Ticks);
+        private IMapper _map;
 
         #endregion
 
@@ -167,7 +169,8 @@ namespace Machete.Test
             if (_repoE == null) AddRepoEmployer();
             if (_servWO == null) AddServWorkOrder();
             if (_uow == null) AddUOW();
-            _servE = new EmployerService(_repoE, _servWO, _uow);
+            if (_map == null) AddMapper();
+            _servE = new EmployerService(_repoE, _servWO, _uow, _map);
             return this;
         }
 
@@ -932,6 +935,7 @@ namespace Machete.Test
         }
 
         #endregion
+
         #region Emails
 
         public FluentRecordBase AddRepoEmail()
@@ -1070,6 +1074,17 @@ namespace Machete.Test
             return _event;
         }
         #endregion
+
+        public FluentRecordBase AddMapper()
+        {
+            _map = new Machete.Web.MapperConfig().getMapper();
+            return this;
+        }
+
+        public IMapper ToMapper()
+        {
+            return _map;
+        }
 
         public FluentRecordBase AddUOW()
         {
