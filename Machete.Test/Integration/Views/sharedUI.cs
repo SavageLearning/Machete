@@ -1,4 +1,5 @@
-﻿using Machete.Data;
+﻿using AutoMapper;
+using Machete.Data;
 using Machete.Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
@@ -20,25 +21,18 @@ namespace Machete.Test.Selenium.View
         string _url;
         public int maxwait = 4; // seconds
         int sleepFor = 1000; //milliseconds
-        
-        // Tried to update WebServer.cs 4/2/2014...unsuccessful. Why won't IIS Express start from code?
-        //public WebServer iisX;
+        IMapper map;
 
-        public sharedUI(IWebDriver driver, string url)
+        public sharedUI(IWebDriver driver, string url, IMapper map)
         {
             _d = driver;
             _url = url;
-            //string[] _spl = url.Split(':');
-            //string _path = _spl[0] + ":" + _spl[1];
-            //int _port = Convert.ToInt32(_spl[2].TrimEnd('/'));
-            //iisX = new WebServer(_path, _port); 
         }
 
         public bool refreshCache()
         {
             _d.Navigate().GoToUrl("http://localhost:4213/worker/refreshcache");
             return true;
-
         }
 
         public bool gotoMachete()
