@@ -191,8 +191,8 @@ namespace Machete.Service
             asmt.workerAssignedID = wid;
             //
             // update timestamps and save
-            asmt.updatedby(user);
-            signin.updatedby(user);
+            asmt.updatedByUser(user);
+            signin.updatedByUser(user);
             unitOfWork.Commit();
             log(asmt.ID, user, "WSIID:" + signin.ID + " Assign successful");
             return true;
@@ -401,8 +401,8 @@ namespace Machete.Service
             signin.WorkAssignmentID = null;
             asmt.workerSigninID = null;
             asmt.workerAssignedID = null;
-            asmt.updatedby(user);
-            signin.updatedby(user);
+            asmt.updatedByUser(user);
+            signin.updatedByUser(user);
             unitOfWork.Commit();
             log(asmt.ID, user, "WSIID:" + signin.ID + " Unassign successful");
         }
@@ -413,7 +413,7 @@ namespace Machete.Service
             {
                 wa.workerAssigned = wRepo.GetById((int)wa.workerAssignedID);
             }
-            wa.updatedby(user);
+            wa.updatedByUser(user);
             log(wa.ID, user, "WorkAssignment edited");
             unitOfWork.Commit();
         }

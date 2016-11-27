@@ -41,16 +41,16 @@ namespace Machete.Domain
 
         public Record() {}
 
-        public void updatedby(string user)
+        public void updatedByUser(string user)
         {            
             dateupdated = DateTime.Now;  
             Updatedby = user;
         }
-        public void createdby(string user)
+        public void createdByUser(string user)
         {
             datecreated = DateTime.Now;
             Createdby = user;
-            updatedby(user);
+            updatedByUser(user);
         }
         public object Clone()
         {

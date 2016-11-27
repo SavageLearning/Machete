@@ -97,7 +97,7 @@ namespace Machete.Service
         /// <returns></returns>
         public virtual T Create(T record, string user)
         {
-            record.createdby(user);
+            record.createdByUser(user);
             T created = repo.Add(record);
             uow.Commit();
             log(record.ID, user, logPrefix + " created");
@@ -122,7 +122,7 @@ namespace Machete.Service
         /// <param name="user"></param>
         public virtual void Save(T record, string user)
         {
-            record.updatedby(user);
+            record.updatedByUser(user);
             log(record.ID, user, logPrefix + " edited");
             uow.Commit();
         }

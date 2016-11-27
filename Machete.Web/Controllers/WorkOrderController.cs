@@ -281,8 +281,8 @@ namespace Machete.Web.Controllers
             {
                 workerRequest.workOrder = neworder;
                 workerRequest.workerRequested = wServ.Get(workerRequest.WorkerID);
-                workerRequest.updatedby(userName);
-                workerRequest.createdby(userName);
+                workerRequest.updatedByUser(userName);
+                workerRequest.createdByUser(userName);
                 neworder.workerRequests.Add(workerRequest);
             }
 
@@ -353,8 +353,8 @@ namespace Machete.Web.Controllers
             {
                 add.workOrder = workOrder;
                 add.workerRequested = wServ.Get(add.WorkerID);
-                add.updatedby(userName);
-                add.createdby(userName);
+                add.updatedByUser(userName);
+                add.createdByUser(userName);
                 workOrder.workerRequests.Add(add);
             }
 

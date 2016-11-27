@@ -773,9 +773,6 @@
     <Content Include="Views\Employer\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Employer\View.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Error\Http404.cshtml" />
   </ItemGroup>
   <ItemGroup>
