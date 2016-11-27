@@ -327,7 +327,9 @@ namespace Machete.Web.Controllers
                     a.workerRequested.Person.firstname1 + ' ' + 
                     a.workerRequested.Person.lastname1 
                 });
-            return PartialView("Edit", workOrder);
+            var m = map.Map<Domain.WorkOrder, ViewModel.WorkOrder>(workOrder);
+            m.def = def;
+            return PartialView("Edit", m);
         }
 
         /// <summary>

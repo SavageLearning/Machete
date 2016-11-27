@@ -22,7 +22,7 @@ namespace Machete.Web.ViewModel
         //public string updatedby { get; set; }
         //public string createdby { get; set; }
 
-        public new string dateTimeofWork { get; set; }
+        //public new string dateTimeofWork { get; set; }
         public new string disclosureAgreement { get; set; }
         public new string englishRequired { get; set; }
         public new string lunchSupplied { get; set; }
@@ -30,7 +30,7 @@ namespace Machete.Web.ViewModel
         public new string paperOrderNum { get; set; }
         public new string paypalFee { get; set; }
         public new string permanentPlacement { get; set; }
-        public new string status { get; set; }
+        //public new string status { get; set; }
         public new string timeFlexible { get; set; }
         public new string transportFee { get; set; }
         public new string transportFeeExtra { get; set; }
