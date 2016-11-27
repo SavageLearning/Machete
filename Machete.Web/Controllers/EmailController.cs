@@ -79,7 +79,7 @@ namespace Machete.Web.Controllers
                              transmitAttempts = p.transmitAttempts.ToString(),
                              lastAttempt = p.lastAttempt.ToString(),
                              dateupdated = Convert.ToString(p.dateupdated),
-                             Updatedby = p.Updatedby,
+                             updatedby = p.updatedby,
                              hasAttachment = string.IsNullOrEmpty(p.attachment) ?  Shared.False : Shared.True
                          }
             },

@@ -52,8 +52,8 @@ namespace Machete.Web
                 c.CreateMap<Email, EmailView>()
                     .ForMember(ev => ev.statusID, opt => opt.MapFrom(e => e.statusID));
                 c.CreateMap<EmailView, Email>()
-                    .ForMember(e => e.Updatedby, opt => opt.Ignore())
-                    .ForMember(e => e.Createdby, opt => opt.Ignore())
+                    .ForMember(e => e.updatedby, opt => opt.Ignore())
+                    .ForMember(e => e.createdby, opt => opt.Ignore())
                     .ForMember(e => e.datecreated, opt => opt.Ignore())
                     .ForMember(e => e.dateupdated, opt => opt.Ignore());
                 c.CreateMap<Domain.Employer, ViewModel.Employer>()

@@ -142,8 +142,8 @@ namespace Machete.Test.Unit.Service
             //
             //Assert
             Assert.IsInstanceOfType(result, typeof(WorkOrder));
-            Assert.IsTrue(result.Createdby == user);
-            Assert.IsTrue(result.Updatedby == user);
+            Assert.IsTrue(result.createdby == user);
+            Assert.IsTrue(result.updatedby == user);
             Assert.IsTrue(result.datecreated > DateTime.MinValue);
             Assert.IsTrue(result.dateupdated > DateTime.MinValue);
         }
@@ -189,7 +189,7 @@ namespace Machete.Test.Unit.Service
             _serv.Save(_wo, user);
             //
             //Assert
-            Assert.IsTrue(_wo.Updatedby == user);
+            Assert.IsTrue(_wo.updatedby == user);
             Assert.IsTrue(_wo.dateupdated > DateTime.MinValue);
         }
     }

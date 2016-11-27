@@ -80,7 +80,7 @@ namespace Machete.Web.Controllers
                 fileCount = p.JoinEventImages.Count(),
                 type = lcache.textByID(p.eventType, CI.TwoLetterISOLanguageName),
                 dateupdated = Convert.ToString(p.dateupdated),
-                Updatedby = p.Updatedby
+                updatedby = p.updatedby
             };
             return Json(new
             {
@@ -178,8 +178,8 @@ namespace Machete.Web.Controllers
             joiner.EventID = evnt.ID;
             joiner.datecreated = DateTime.Now;
             joiner.dateupdated = DateTime.Now;
-            joiner.Updatedby = user;
-            joiner.Createdby = user;
+            joiner.updatedby = user;
+            joiner.createdby = user;
             // TODO: This tightly couples the MVC straight down to EF. 
             // breaks layering. Should be abstracted.
             evnt.JoinEventImages.Add(joiner);

@@ -234,7 +234,7 @@ namespace Machete.Service
                 i++;
                 wsi.lottery_sequence = i;
                 wsi.lottery_timestamp = DateTime.Now;
-                wsi.Updatedby = user;
+                wsi.updatedby = user;
             }
 
             //get yesterday's lottery/list members, 
@@ -268,7 +268,7 @@ namespace Machete.Service
                 i++;
                 wsi.lottery_sequence = i;
                 wsi.lottery_timestamp = DateTime.Now;
-                wsi.Updatedby = user;
+                wsi.updatedby = user;
                 Save(wsi, user);
             }
             

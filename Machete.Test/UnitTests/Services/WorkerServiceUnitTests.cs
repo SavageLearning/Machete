@@ -147,8 +147,8 @@ namespace Machete.Test.Unit.Service
             //
             //Assert
             Assert.IsInstanceOfType(result, typeof(Worker));
-            Assert.IsTrue(result.Createdby == user);
-            Assert.IsTrue(result.Updatedby == user);
+            Assert.IsTrue(result.createdby == user);
+            Assert.IsTrue(result.updatedby == user);
             Assert.IsTrue(result.datecreated > DateTime.MinValue);
             Assert.IsTrue(result.dateupdated > DateTime.MinValue);
             Assert.IsTrue(result.Person.datecreated == DateTime.MinValue);
@@ -194,7 +194,7 @@ namespace Machete.Test.Unit.Service
             _serv.Save(Records.worker, user);
             //
             //Assert
-            Assert.IsTrue(Records.worker.Updatedby == user);
+            Assert.IsTrue(Records.worker.updatedby == user);
             Assert.IsTrue(Records.worker.dateupdated > DateTime.MinValue);
         }
     }

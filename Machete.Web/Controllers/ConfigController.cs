@@ -89,7 +89,7 @@ namespace Machete.Web.Controllers
                              //specialtiy = p.speciality,
                              ltrCode = p.ltrCode,
                              dateupdated = Convert.ToString(p.dateupdated),
-                             Updatedby = p.Updatedby,
+                             updatedby = p.updatedby,
                              recordid = Convert.ToString(p.ID)
                          };
             return Json(new

@@ -47,8 +47,8 @@ namespace Machete.Test
 
         public static Image image = new Image
         {
-            Createdby = "initialization script",
-            Updatedby = "initialization script"
+            createdby = "initialization script",
+            updatedby = "initialization script"
         };
 
         public static Lookup lookup = new Lookup
@@ -56,8 +56,8 @@ namespace Machete.Test
             category = "test category",
             text_EN = "Test EN",
             text_ES = "Test ES",
-            Createdby = "initialization script",
-            Updatedby = "initialization script"
+            createdby = "initialization script",
+            updatedby = "initialization script"
         };
 
         public static Worker worker = new Worker
@@ -95,8 +95,8 @@ namespace Machete.Test
             insuranceexpiration = DateTime.Now,     //datetime
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime
-            Createdby = "initialization script",
-            Updatedby = "initialization script",
+            createdby = "initialization script",
+            updatedby = "initialization script",
             dateOfBirth = DateTime.Now,
             dateOfMembership = DateTime.Now,
             memberStatus = MacheteLookup.cache.First(x => x.category == "memberstatus" && x.text_EN == "Active").ID
@@ -116,14 +116,14 @@ namespace Machete.Test
             active = true, //true
             datecreated = DateTime.Now,
             dateupdated = DateTime.Now,
-            Createdby = "TestInitializer",
-            Updatedby = "TestInitializer"
+            createdby = "TestInitializer",
+            updatedby = "TestInitializer"
         };
 
         public static Event event1 = new Event
         {
-            Createdby = "TestInitializer",
-            Updatedby = "TestInitializer",
+            createdby = "TestInitializer",
+            updatedby = "TestInitializer",
             datecreated = DateTime.Now,
             dateupdated = DateTime.Now,
             dateFrom = DateTime.Now,
@@ -140,8 +140,8 @@ namespace Machete.Test
             body = "foo",
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime
-            Createdby = "TestInitializer",
-            Updatedby = "TestInitializer"//,
+            createdby = "TestInitializer",
+            updatedby = "TestInitializer"//,
 //            attachment = @"<!DOCTYPE html>
 //<html>
 //<body>
@@ -177,8 +177,8 @@ namespace Machete.Test
             business = true,
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime
-            Createdby = "TestInitializer",
-            Updatedby = "TestInitializer"
+            createdby = "TestInitializer",
+            updatedby = "TestInitializer"
         };
 
         public static WorkOrder order = new WorkOrder
@@ -204,8 +204,8 @@ namespace Machete.Test
             dateTimeofWork = DateTime.Today,
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime
-            Createdby = "initialization script",
-            Updatedby = "initialization script",
+            createdby = "initialization script",
+            updatedby = "initialization script",
             transportTransactType = 256,
             transportTransactID = "#6169"
         };
@@ -230,8 +230,8 @@ namespace Machete.Test
             comments = "I really like to make comments.",
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime
-            Createdby = "initialization script",
-            Updatedby = "initialization script"
+            createdby = "initialization script",
+            updatedby = "initialization script"
         };
 
         public static Activity activity = new Activity
@@ -244,8 +244,8 @@ namespace Machete.Test
             dateEnd = DateTime.Now,
             datecreated = DateTime.Now,
             dateupdated = DateTime.Now,
-            Createdby = "TestInitializer",
-            Updatedby = "TestInitializer"
+            createdby = "TestInitializer",
+            updatedby = "TestInitializer"
         };
 
         public static ActivitySignin activitysignin = new ActivitySignin
@@ -254,8 +254,8 @@ namespace Machete.Test
             dateforsignin = DateTime.Now,
             datecreated = DateTime.Now,
             dateupdated = DateTime.Now,
-            Createdby = "TestInitializer",
-            Updatedby = "TestInitializer"
+            createdby = "TestInitializer",
+            updatedby = "TestInitializer"
         };
 
         public static WorkerSignin signin = new WorkerSignin
@@ -264,16 +264,16 @@ namespace Machete.Test
             dateforsignin = DateTime.Today,
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime
-            Createdby = "TestInitializer",
-            Updatedby = "TestInitializer"
+            createdby = "TestInitializer",
+            updatedby = "TestInitializer"
         };
 
         public static WorkerRequest request = new WorkerRequest
         {
             datecreated = DateTime.Now,             //datetime
             dateupdated = DateTime.Now,              //datetime
-            Createdby = "TestInitializer",
-            Updatedby = "TestInitializer"
+            createdby = "TestInitializer",
+            updatedby = "TestInitializer"
         };
     }
 }

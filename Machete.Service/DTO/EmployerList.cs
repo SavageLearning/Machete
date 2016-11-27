@@ -15,7 +15,7 @@ namespace Machete.Service.DTO
         public string city { get; set; }
         public string phone { get; set; }
         public DateTime dateupdated { get; set; }
-        public string Updatedby { get; set; }
+        public string updatedby { get; set; }
         public bool onlineSource { get; set; }
     }
 }

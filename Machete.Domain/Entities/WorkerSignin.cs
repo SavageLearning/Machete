@@ -97,8 +97,8 @@ namespace Machete.Domain
             signinID = s.ID;
             dateupdated = s.dateupdated;
             datecreated = s.datecreated;
-            Createdby = s.Createdby;
-            Updatedby = s.Updatedby;
+            createdby = s.createdby;
+            updatedby = s.updatedby;
             imageID = p == null ? null : p.Worker.ImageID;
             expirationDate = p == null ? DateTime.MinValue : p.Worker.memberexpirationdate;
             memberStatus = p == null ? 0 : p.Worker.memberStatus;

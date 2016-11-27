@@ -235,7 +235,7 @@ namespace Machete.Service
                         p.wa.workOrder.contactName.Contains(o.sSearch) ||
                         p.wa.workOrder.Employer.name.Contains(o.sSearch) ||
                         //p.dateupdated.ToString().ContainsOIC(param.sSearch) ||
-                        p.wa.Updatedby.Contains(o.sSearch)).Select(p => p.wa);
+                        p.wa.updatedby.Contains(o.sSearch)).Select(p => p.wa);
             }
         }
         public static IEnumerable<WorkAssignment> filterOnSkill(
@@ -317,7 +317,7 @@ namespace Machete.Service
                 case "WOID": q = descending ? q.OrderByDescending(p => p.workOrderID) : q.OrderBy(p => p.workOrderID); break;
                 case "WAID": q = descending ? q.OrderByDescending(p => p.ID) : q.OrderBy(p => p.ID); break;
                 case "description": q = descending ? q.OrderByDescending(p => p.description) : q.OrderBy(p => p.description); break;
-                case "updatedby": q = descending ? q.OrderByDescending(p => p.Updatedby) : q.OrderBy(p => p.Updatedby); break;
+                case "updatedby": q = descending ? q.OrderByDescending(p => p.updatedby) : q.OrderBy(p => p.updatedby); break;
                 case "dateupdated": q = descending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated); break;
                 case "assignedWorker": q = descending ? q.OrderByDescending(p => p.workerAssigned == null ? 0 : p.workerAssigned.dwccardnum) : q.OrderBy(p => p.workerAssigned == null ? 0 : p.workerAssigned.dwccardnum); break;
                 default: q = descending ? q.OrderByDescending(p => p.workOrder.dateTimeofWork) : q.OrderBy(p => p.workOrder.dateTimeofWork); break;
@@ -345,7 +345,7 @@ namespace Machete.Service
                                 SqlFunctions.StringConvert((decimal)p.paperOrderNum).Contains(o.sSearch) ||
                                 p.contactName.Contains(o.sSearch) ||
                                 p.workSiteAddress1.Contains(o.sSearch) ||
-                                p.Updatedby.Contains(o.sSearch));
+                                p.updatedby.Contains(o.sSearch));
             }
         }
         public static void filterEmployer(viewOptions o, ref IQueryable<WorkOrder> q)
@@ -392,7 +392,7 @@ namespace Machete.Service
                 case "WAcount": q = descending ? q.OrderByDescending(p => p.workAssignments.Count) : q.OrderBy(p => p.workAssignments.Count); break;
                 case "contactName": q = descending ? q.OrderByDescending(p => p.contactName) : q.OrderBy(p => p.contactName); break;
                 case "workSiteAddress1": q = descending ? q.OrderByDescending(p => p.workSiteAddress1) : q.OrderBy(p => p.workSiteAddress1); break;
-                case "updatedby": q = descending ? q.OrderByDescending(p => p.Updatedby) : q.OrderBy(p => p.Updatedby); break;
+                case "updatedby": q = descending ? q.OrderByDescending(p => p.updatedby) : q.OrderBy(p => p.updatedby); break;
                 case "onlineSource": q = descending ? q.OrderByDescending(p => p.onlineSource) : q.OrderBy(p => p.onlineSource); break;
                 case "emailSentCount": q = descending ? q.OrderByDescending(p => p.Emails.Count()) : q.OrderBy(p => p.Emails.Count()); break;
                 case "emailErrorCount": q = descending ? q.OrderByDescending(p => p.Emails.Count()) : q.OrderBy(p => p.Emails.Count()); break;
@@ -696,7 +696,7 @@ namespace Machete.Service
             q = q.Where(p => //p.active.ToString().Contains(o.sSearch) ||
                             p.subject.Contains(o.sSearch) ||
                             p.emailTo.Contains(o.sSearch) ||
-                            p.Updatedby.Contains(o.sSearch));
+                            p.updatedby.Contains(o.sSearch));
         }
 
         public static void filterOnID(viewOptions o, ref IQueryable<Email> q)

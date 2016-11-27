@@ -93,7 +93,7 @@ namespace Machete.Web.Controllers
                 lastname2 = p.lastname2,
                 phone = p.phone,
                 dateupdated = Convert.ToString(p.dateupdated),
-                Updatedby = p.Updatedby,
+                updatedby = p.updatedby,
                 recordid = Convert.ToString(p.ID)
             };
             return Json(new

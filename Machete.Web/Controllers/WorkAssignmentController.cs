@@ -107,7 +107,7 @@ namespace Machete.Web.Controllers
                             description = p.description, // WA description now matches WO description unless they change it, see Create method
                             datecreated = Convert.ToString(p.datecreated),
                             dateupdated = Convert.ToString(p.dateupdated), 
-                            updatedby = p.Updatedby,
+                            updatedby = p.updatedby,
                             dateTimeofWork = p.workOrder.dateTimeofWork.AddHours(Convert.ToDouble(WebConfigurationManager.AppSettings["TimeZoneDifferenceFromPacific"])).ToString(),
                             timeofwork = p.workOrder.dateTimeofWork.AddHours(Convert.ToDouble(WebConfigurationManager.AppSettings["TimeZoneDifferenceFromPacific"])).ToShortTimeString(),
                             status = p.workOrder.status.ToString(),

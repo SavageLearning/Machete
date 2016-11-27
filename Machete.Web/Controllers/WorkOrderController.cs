@@ -203,7 +203,7 @@ namespace Machete.Web.Controllers
                 //workSiteAddress1 = wo.workSiteAddress1,
                 //zipcode = wo.zipcode,
                 //dateupdated = System.String.Format("{0:MM/dd/yyyy HH:mm:ss}", wo.dateupdated), // Note: Date Updated appears to be unused
-                //updatedby = wo.Updatedby,
+                //updatedby = wo.updatedby,
                 //TODO: transportMethod = lcache.textByID(wo.transportMethodID, CI.TwoLetterISOLanguageName), // Used in Hirer a lot
                 //TODO: displayState = _getDisplayState(wo), // Used to determine row color on /WorkOrder/Index.cshtml
                 //onlineSource = wo.onlineSource ? Shared.True : Shared.False,

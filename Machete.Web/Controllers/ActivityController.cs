@@ -120,7 +120,7 @@ namespace Machete.Web.Controllers
                 AID = Convert.ToString(p.ID),
                 recordid = Convert.ToString(p.ID),
                 dateupdated = Convert.ToString(p.dateupdated),
-                Updatedby = p.Updatedby
+                updatedby = p.updatedby
             };
         }
         private string EditTabRef(Activity act)

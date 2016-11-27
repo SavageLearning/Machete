@@ -31,6 +31,6 @@ namespace Machete.Web.ViewModel
         public string address1 { get; set; }
         public string city { get; set; }
         public string phone { get; set; }
-        public string Updatedby { get; set; }
+        public string updatedby { get; set; }
     }
 }
