@@ -91,8 +91,8 @@
                     <table id="availAssignTable" class="display">
                         <thead>
                             <tr>
-                                @*<th>assigned Worker</th>
-                                <th>requested Workers</th>*@
+                                <th>assigned Worker</th>
+                                @*<th>requested Workers</th>*@
                                 <th>@Machete.Web.Resources.WorkAssignments.WAID</th>
                                 <th>@WorkOrder.workorderID</th>
                                 <th>@WorkOrder.dateTimeofWork</th>
@@ -329,7 +329,7 @@ $(document).ready(function () {
             "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
             "bProcessing": true,
             "aoColumns": [
-                            //{ "mDataProp": "assignedWorker", "bVisible": false, "bSortable": true},
+                            { "mDataProp": "assignedWorker", "bVisible": false, "bSortable": true},
                             //{ "mDataProp": "requestedList", "bVisible": false, "bSortable": false},
                             { "mDataProp": "WAID", "bVisible": true, "bSortable": true },
                             { "mDataProp": "WOID", "bVisible": true, "bSortable": true },
