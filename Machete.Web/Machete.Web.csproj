@@ -1008,6 +1008,7 @@
     <Content Include="Views\HirerWorkOrder\IndexCompleteEmpty.cshtml" />
     <Content Include="Views\HirerWorkOrder\Profile.cshtml" />
     <None Include="Properties\PublishProfiles\casa.machetessl.org.pubxml" />
+    <None Include="Properties\PublishProfiles\Machete-Casa - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\Test.pubxml" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.1.1.min.map" />
