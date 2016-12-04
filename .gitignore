@@ -3,7 +3,7 @@
 *.DS_Store
 *.cache
 Machete.suo
-
+Machete.Api/
 *.Web.Publish.xml
 */Properties/PublishProfiles/*
 # Build results
