@@ -32,6 +32,7 @@ using Machete.Data.Infrastructure;
 using Machete.Service;
 using Machete.Domain;
 using Machete.Test;
+using AutoMapper;
 
 namespace Machete.Test.Unit.Service
 {
@@ -50,6 +51,7 @@ namespace Machete.Test.Unit.Service
         Mock<IWorkerRequestRepository> wrRepo;
         Mock<ILookupCache> lcache;
         Mock<IWorkerCache> _wcache;
+        Mock<IMapper> _map;
 
         public WorkAssignmentTests()
         {
@@ -105,7 +107,8 @@ namespace Machete.Test.Unit.Service
             wrRepo = new Mock<IWorkerRequestRepository>();
             lcache = new Mock<ILookupCache>();
             _wcache = new Mock<IWorkerCache>();
-            waServ = new WorkAssignmentService(waRepo.Object, wRepo.Object, lRepo.Object, wsiRepo.Object, _wcache.Object, lcache.Object, uow.Object);
+            _map = new Mock<IMapper>();
+            waServ = new WorkAssignmentService(waRepo.Object, wRepo.Object, lRepo.Object, wsiRepo.Object, _wcache.Object, lcache.Object, uow.Object, _map.Object);
             
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WAs)]

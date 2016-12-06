@@ -323,7 +323,8 @@ namespace Machete.Test
             if (_lcache == null) AddLookupCache();
             if (_wcache == null) AddWorkerCache();
             if (_uow == null) AddUOW();
-            _servWA = new WorkAssignmentService(_repoWA, _repoW, _repoL, _repoWSI, _wcache, _lcache, _uow);
+            if (_map == null) AddMapper();
+            _servWA = new WorkAssignmentService(_repoWA, _repoW, _repoL, _repoWSI, _wcache, _lcache, _uow, _map);
             return this;
         }
 

@@ -102,14 +102,14 @@ namespace Machete.Test.Unit.Controller
             //Act
             var result = (PartialViewResult)_ctrlr.Create(0, "Unit WA Cntroller desc");
             //Assert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(WorkAssignment));
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Web.ViewModel.WorkAssignment));
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WAs)]
         public void create_valid_post_returns_json()
         {
             //Arrange            
-            WorkAssignment _asmt = new WorkAssignment();
+            Domain.WorkAssignment _asmt = new Domain.WorkAssignment();
             fakeform.Add("ID", "11");
             fakeform.Add("englishlevelID", "0");
             fakeform.Add("skillID", "60");
@@ -140,7 +140,7 @@ namespace Machete.Test.Unit.Controller
         public void create_post_invalid_throws_exception()
         {
             //Arrange
-            WorkAssignment _asmt = new WorkAssignment();
+            Domain.WorkAssignment _asmt = new Domain.WorkAssignment();
             fakeform.Add("hours", "invalid data type");
             waServ.Setup(p => p.Create(_asmt, "UnitTest")).Returns(_asmt);
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
@@ -158,13 +158,13 @@ namespace Machete.Test.Unit.Controller
         {
             //Arrange            
             int testid = 4242;
-            var fakeworkAssignment = new WorkAssignment();
+            var fakeworkAssignment = new Domain.WorkAssignment();
             fakeworkAssignment.ID = 4243;
             waServ.Setup(p => p.Get(testid)).Returns(() => fakeworkAssignment);
             //Act
             PartialViewResult result = (PartialViewResult)_ctrlr.Edit(testid);
             //Assert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(WorkAssignment));
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Domain.WorkAssignment));
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.WAs)]
@@ -178,15 +178,15 @@ namespace Machete.Test.Unit.Controller
             fakeform.Add("ID", testid.ToString());
             fakeform.Add("description", "blah");     //Every required field must be populated,
             fakeform.Add("comments", "UnitTest");  //or result will be null.            
-            WorkAssignment asmt = new WorkAssignment();
-            WorkAssignment savedAsmt = null;
+            Web.ViewModel.WorkAssignment asmt = new Web.ViewModel.WorkAssignment();
+            Web.ViewModel.WorkAssignment savedAsmt = null;
             asmt.workerAssignedID = wkr.ID;
             asmt.ID = testid;
             string user = "";
             waServ.Setup(p => p.Get(testid)).Returns(asmt);
-            waServ.Setup(x => x.Save(It.IsAny<WorkAssignment>(),
+            waServ.Setup(x => x.Save(It.IsAny<Web.ViewModel.WorkAssignment>(),
                                           It.IsAny<string>())
-                                         ).Callback((WorkAssignment p, string str) =>
+                                         ).Callback((Web.ViewModel.WorkAssignment p, string str) =>
                                          {
                                              savedAsmt = p;
                                              user = str;
@@ -210,7 +210,7 @@ namespace Machete.Test.Unit.Controller
         public void Unit_WA_Controller_edit_post_invalid_throws_exception()
         {
             //Arrange
-            var asmt = new WorkAssignment();
+            var asmt = new Web.ViewModel.WorkAssignment();
             Worker wkr = new Worker();
             wkr.ID = 424;
             int testid = 4243;

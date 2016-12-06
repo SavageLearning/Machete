@@ -34,7 +34,7 @@ namespace Machete.Data
     {
         public MacheteConfiguration() : base()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
             AutomaticMigrationDataLossAllowed = false;
         }
 

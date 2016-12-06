@@ -147,8 +147,9 @@ namespace Machete.Web.Controllers
         }
         private string _getTabLabel(Person per)
         {
-            if (per != null) return per.fullName();
-            else return null;
+            //if (per != null) return per.fullName();
+            //else return null;
+            return null;
         }
         /// <summary>
         /// 

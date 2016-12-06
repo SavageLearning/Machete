@@ -21,6 +21,8 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
@@ -36,7 +38,7 @@ namespace Machete.Service
         IQueryable<WorkAssignmentSummary> GetSummary(string search);
         bool Assign(WorkAssignment assignment, WorkerSignin signin, string user);
         bool Unassign(int? wsiid, int? waid, string user);
-        dataTableResult<WorkAssignment> GetIndexView(viewOptions o);
+        dataTableResult<DTO.WorkAssignmentList> GetIndexView(viewOptions o);
     }
 
     // Business logic for WorkAssignment record management
@@ -50,6 +52,7 @@ namespace Machete.Service
         private readonly ILookupRepository lRepo;
         private readonly ILookupCache lcache;
         private readonly IWorkerCache wcache;
+        private readonly IMapper map;
         //
         //
         public WorkAssignmentService(
@@ -59,7 +62,9 @@ namespace Machete.Service
             IWorkerSigninRepository wsiRepo,
             IWorkerCache wc,
             ILookupCache lc,
-            IUnitOfWork unitOfWork) : base(waRepo, unitOfWork)
+            IUnitOfWork unitOfWork,
+            IMapper map
+            ) : base(waRepo, unitOfWork)
         {
             this.waRepo = waRepo;
             this.unitOfWork = unitOfWork;
@@ -68,6 +73,7 @@ namespace Machete.Service
             this.wsiRepo = wsiRepo;
             this.lcache = lc;
             this.wcache = wc;
+            this.map = map;
             this.logPrefix = "WorkAssignment";
         }
         /// <summary>
@@ -83,14 +89,13 @@ namespace Machete.Service
             }         
             return wa;
         }
-        public dataTableResult<WorkAssignment> GetIndexView(viewOptions o)
+        public dataTableResult<DTO.WorkAssignmentList> GetIndexView(viewOptions o)
         {
-            var result = new dataTableResult<WorkAssignment>();
+            var result = new dataTableResult<DTO.WorkAssignmentList>();
             IQueryable<WorkAssignment> q = waRepo.GetAllQ();
-            IEnumerable<WorkAssignment> e;
             //
             // 
-            if (o.date != null) IndexViewBase.diffDays(o, ref q); 
+            if (o.date != null) IndexViewBase.diffDays(o, ref q);
             if (o.typeofwork_grouping > 0) IndexViewBase.typeOfWork(o, ref q, lRepo);
             if (o.woid > 0) IndexViewBase.WOID(o, ref q);
             if (o.personID > 0) IndexViewBase.WID(o, ref q);
@@ -100,40 +105,35 @@ namespace Machete.Service
             if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q, lRepo);
             //
             // filter on member ID, showing only assignments available to the member based on their skills
-            if (o.dwccardnum > 0)
-                e = IndexViewBase.filterOnSkill(o, q, lcache, wcache.GetCache());
-             else
-                e = q.AsEnumerable();
-            //
-            // getting worker info from cache, joining to Work Assignments
-            e = e.GroupJoin(wcache.GetCache(),  //LINQ
-                                wa => wa.workerAssignedID, 
-                                wc => wc.ID, 
-                                (wa, wc) => new { wa, wc }
-                            )
-                            .SelectMany(jj => jj.wc.DefaultIfEmpty(
-                                    new Worker { 
-                                                 ID = 0, 
-                                                 dwccardnum = 0
-                                               }
-                                        ),
-                                    (jj, row) => jj.wa
-                            );
+            // TODO:2016: replace filter on skill and getting worker data
+            //if (o.dwccardnum > 0)
+            //    e = IndexViewBase.filterOnSkill(o, q, lcache, wcache.GetCache());
+            // else
+            //    e = q.AsEnumerable();
+            ////
+            //// getting worker info from cache, joining to Work Assignments
+            //e = e.GroupJoin(wcache.GetCache(),  //LINQ
+            //                    wa => wa.workerAssignedID, 
+            //                    wc => wc.ID, 
+            //                    (wa, wc) => new { wa, wc }
+            //                )
+            //                .SelectMany(jj => jj.wc.DefaultIfEmpty(
+            //                        new Worker { 
+            //                                     ID = 0, 
+            //                                     dwccardnum = 0
+            //                                   }
+            //                            ),
+            //                        (jj, row) => jj.wa
+            //                );
             //
             //Sort the Persons based on column selection
-            IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref e);
-            e = e.ToList();
-            result.filteredCount = e.Count();
-            //
-            //Limit results to the display length and offset
-            if (o.displayLength >= 0)
-            {
-                result.query = e.Skip(o.displayStart).Take(o.displayLength);
-            }
-            else
-            {
-                result.query = e;
-            } 
+            IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
+            //e = e.ToList();
+            result.filteredCount = q.Count();
+            result.query = q.ProjectTo<DTO.WorkAssignmentList>(map.ConfigurationProvider)
+            .Skip(o.displayStart)
+            .Take(o.displayLength)
+            .AsEnumerable();
 
             result.totalCount = waRepo.GetAllQ().Count();
            return result;

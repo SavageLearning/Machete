@@ -10,8 +10,6 @@ namespace Machete.Service.DTO
     {
         public int ID { get; set; }
         public int EmployerID { get; set; }
-        public string tabref { get; set; }
-        public string tablabel { get; set; }
         public DateTime dateTimeofWork { get; set; }
         public int? paperOrderNum { get; set; }
         public int status { get; set; }

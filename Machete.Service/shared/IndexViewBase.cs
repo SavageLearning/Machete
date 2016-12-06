@@ -304,7 +304,7 @@ namespace Machete.Service
 
             return filteredWA;
         }
-        public static void sortOnColName(string name, bool descending, ref IEnumerable<WorkAssignment> q)
+        public static void sortOnColName(string name, bool descending, ref IQueryable<WorkAssignment> q)
         {
             switch (name)
             {

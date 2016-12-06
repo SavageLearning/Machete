@@ -107,24 +107,24 @@ namespace Machete.Domain
         [LocalizedDisplayName("weightLifted", NameResourceType = typeof(Resources.WorkAssignment))]
         public bool? weightLifted { get; set; }
 
-        public string fullIDandName()
-        {
-            if (this.workerAssigned != null) return this.workerAssigned + " " + this.workerAssigned.Person.fullName();
-            else return null;
-        }
+        //public string fullIDandName()
+        //{
+        //    if (this.workerAssigned != null) return this.workerAssigned + " " + this.workerAssigned.Person.fullName();
+        //    else return null;
+        //}
 
-        public string getFullPseudoID()
-        {
-            int WONum;
-            if (this.workOrder == null) WONum = 0;
-            else if (this.workOrder.paperOrderNum.HasValue) WONum = (int)this.workOrder.paperOrderNum;
-            else WONum = this.workOrderID;
+        //public string getFullPseudoID()
+        //{
+        //    int WONum;
+        //    if (this.workOrder == null) WONum = 0;
+        //    else if (this.workOrder.paperOrderNum.HasValue) WONum = (int)this.workOrder.paperOrderNum;
+        //    else WONum = this.workOrderID;
 
-            return System.String.Format("{0,5:D5}", WONum)
-                    + "-" + (this.pseudoID.HasValue ?
-                        System.String.Format("{0,2:D2}", this.pseudoID) :
-                        System.String.Format("{0,5:D5}", this.ID));
-        }
+        //    return System.String.Format("{0,5:D5}", WONum)
+        //            + "-" + (this.pseudoID.HasValue ?
+        //                System.String.Format("{0,2:D2}", this.pseudoID) :
+        //                System.String.Format("{0,5:D5}", this.ID));
+        //}
         public void incrPseudoID()
         {
             if (this.workOrder == null) throw new ArgumentNullException("workOrder object is null");            
@@ -132,21 +132,21 @@ namespace Machete.Domain
             this.pseudoID = this.workOrder.waPseudoIDCounter;
         }
 
-        public double getMinEarnings
-        {
-            get 
-            {
-                return (this.days * this.surcharge) + (this.hourlyWage * this.hours * this.days);
-            }
-        }
-        public double getMaxEarnings
-        {
-            get
-            {
-                if (this.hourRange == null) return 0;
-                return (this.days * this.surcharge) + (this.hourlyWage * (int)this.hourRange * this.days);
-            }
-        }
+        //public double getMinEarnings
+        //{
+        //    get 
+        //    {
+        //        return (this.days * this.surcharge) + (this.hourlyWage * this.hours * this.days);
+        //    }
+        //}
+        //public double getMaxEarnings
+        //{
+        //    get
+        //    {
+        //        if (this.hourRange == null) return 0;
+        //        return (this.days * this.surcharge) + (this.hourlyWage * (int)this.hourRange * this.days);
+        //    }
+        //}
     }
     public class WorkAssignmentSummary
     {

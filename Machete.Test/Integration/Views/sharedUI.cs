@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Machete.Data;
 using Machete.Domain;
+using Machete.Web;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
@@ -544,14 +545,15 @@ namespace Machete.Test.Selenium.View
         /// <returns></returns>
         public bool workAssignmentActivate(Employer _emp, WorkOrder _wo, WorkAssignment _wa)
         {
+            var mapped = map.Map<Domain.WorkAssignment, Web.ViewModel.WorkAssignment>(_wa);
             // Verify we're on the WA ListTab we expected
             WaitForElement(By.Id("walt-" + _wo.ID));
             // Look for WA datatable to have a first row (at least one record)
             By walt = By.XPath("//table[@id='workAssignTable-wo-" + _wo.ID + "']/tbody/tr/td[1]");
             // The #####-## order number from the first column
             var waltText = WaitForElement(walt).Text;
-            WaitForElementValue(walt, _wa.getFullPseudoID());
-            Assert.AreEqual(_wa.getFullPseudoID(), waltText, "Unexpected PseudoID in assignment's list");
+            WaitForElementValue(walt, mapped.tablabel);
+            Assert.AreEqual(mapped.tablabel, waltText, "Unexpected PseudoID in assignment's list");
             Thread.Sleep(1000);
             WaitThenClickElement(By.Id("activateWorkOrderButton-" + _wo.ID));
             // todo: find a way to change this hard-coded value assignment
