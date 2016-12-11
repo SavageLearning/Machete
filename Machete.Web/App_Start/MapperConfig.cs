@@ -120,6 +120,7 @@ namespace Machete.Web
                      .ForMember(v => v.earnings, opt => opt.MapFrom(d => (d.days * d.surcharge) + (d.hourlyWage * d.hours * d.days)))
                      .ForMember(v => v.maxEarnings, opt => opt.MapFrom(d =>
                         d.hourRange == null ? 0 : (d.days * d.surcharge) + (d.hourlyWage * (int)d.hourRange * d.days)))
+                    .ForMember(v => v.paperOrderNum, opt => opt.MapFrom(d => d.workOrder.paperOrderNum))
                      //.ForMember(v => v.assignedWorker, opt => opt.MapFrom(d =>
                      //   d.workerAssigned == null ? "" :
                      //   Convert.ToString(d.workerAssigned.dwccardnum))) // + " " + PersonFullName(d.workerAssigned.Person))) //TODO:2016: replace person full name
