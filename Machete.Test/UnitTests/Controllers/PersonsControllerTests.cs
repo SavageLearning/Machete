@@ -92,7 +92,7 @@ namespace Machete.Test.Unit.Controller
             //Assert
             Assert.IsInstanceOfType(result.ViewData.Model, typeof(Person));
         }
-
+        [Ignore]
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
         public void create_post_valid_returns_JSON()
         {
