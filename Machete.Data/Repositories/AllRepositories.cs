@@ -72,8 +72,7 @@ namespace Machete.Data
         public WorkerSigninRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
         override public IQueryable<WorkerSignin> GetAllQ()
         {
-            //return dbset.Include(a => a.worker).AsQueryable();
-            return dbset.AsNoTracking().AsQueryable();
+            return dbset.Include(a => a.worker).AsNoTracking().AsQueryable();
         }
     }
     public class ActivitySigninRepository : RepositoryBase<ActivitySignin>, IActivitySigninRepository

@@ -245,7 +245,7 @@ namespace Machete.Web.Controllers
         #region Assign
         public ActionResult Assign(int waid, int wsiid, string userName)
         {
-            WorkerSignin signin = wsiServ.Get(wsiid);
+            Domain.WorkerSignin signin = wsiServ.Get(wsiid);
             Domain.WorkAssignment assignment = waServ.Get(waid);
             waServ.Assign(assignment, signin, userName);
 

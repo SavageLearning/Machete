@@ -58,7 +58,7 @@ namespace Machete.Web
                     .ForMember(e => e.datecreated, opt => opt.Ignore())
                     .ForMember(e => e.dateupdated, opt => opt.Ignore());
                 //
-                //
+                // Employer
                 c.CreateMap<Domain.Employer, ViewModel.Employer>()
                     .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/Employer/Edit/" + Convert.ToString(d.ID)))
                     .ForMember(v => v.tablabel, opt => opt.MapFrom(d => d.name))
@@ -77,7 +77,7 @@ namespace Machete.Web
                     .ForMember(v => v.dateupdated, opt => opt.MapFrom(d => Convert.ToString(d.dateupdated)))
                     .ForMember(v => v.onlineSource, opt => opt.MapFrom(d => d.onlineSource.ToString()));
                 //
-                //
+                // WorkOrder
                 c.CreateMap<Domain.WorkOrder, ViewModel.WorkOrder>()
                     .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/WorkOrder/Edit/" + Convert.ToString(d.ID)))
                     .ForMember(v => v.tablabel, opt => opt.MapFrom(d =>
@@ -107,7 +107,7 @@ namespace Machete.Web
                     .ForMember(v => v.dateupdated, opt => opt.MapFrom(d => Convert.ToString(d.dateupdated)))
                     ;
                 //
-                //
+                // WorkAssignment
                 c.CreateMap<Domain.WorkAssignment, ViewModel.WorkAssignment>()
                     .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/WorkAssignment/Edit/" + Convert.ToString(d.ID)))
                     .ForMember(v => v.tablabel, opt => opt.MapFrom(d => 
@@ -151,6 +151,21 @@ namespace Machete.Web
                             Convert.ToDouble(WebConfigurationManager.AppSettings["TimeZoneDifferenceFromPacific"])).ToShortTimeString()))
                     .ForMember(v => v.earnings, opt => opt.MapFrom(d => System.String.Format("${0:f2}", d.earnings)))
                     .ForMember(v => v.asmtStatus, opt => opt.MapFrom(d => AssignmentStatus(d)))
+                ;
+                //
+                // WorkerSignin
+                c.CreateMap<Domain.WorkerSignin, DTO.WorkerSigninList>()
+                    .ForMember(v => v.lotterySequence, opt => opt.MapFrom(d => d.lottery_sequence))
+                    .ForMember(v => v.englishlevel, opt => opt.MapFrom(d => d == null ? 0 : d.worker.englishlevelID))
+                    .ForMember(v => v.waid, opt => opt.MapFrom(d => d.WorkAssignmentID))
+                    .ForMember(v => v.skill1, opt => opt.MapFrom(d => d == null ? null : d.worker.skill1))
+                    .ForMember(v => v.skill2, opt => opt.MapFrom(d => d == null ? null : d.worker.skill2))
+                    .ForMember(v => v.skill3, opt => opt.MapFrom(d => d == null ? null : d.worker.skill3))
+                    .ForMember(v => v.fullname, opt => opt.MapFrom(d => 
+                        d.worker.Person.firstname1 + " " +
+                        d.worker.Person.firstname2 + " " +
+                        d.worker.Person.lastname1 + " " +
+                        d.worker.Person.lastname2 ))
                 ;
 
             });

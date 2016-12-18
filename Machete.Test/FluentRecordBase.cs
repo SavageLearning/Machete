@@ -404,7 +404,8 @@ namespace Machete.Test
             if (_repoWR == null) AddRepoWorkerRequest();
             if (_wcache == null) AddWorkerCache();
             if (_uow == null) AddUOW();
-            _servWSI = new WorkerSigninService(_repoWSI, _repoW, _repoI, _repoWR, _wcache, _uow);
+            if (_map == null) AddMapper();
+            _servWSI = new WorkerSigninService(_repoWSI, _repoW, _repoI, _repoWR, _wcache, _uow, _map);
             return this;
         }
 
@@ -868,7 +869,8 @@ namespace Machete.Test
             if (_repoAS == null) AddRepoWorkerRequest();
             if (_wcache == null) AddWorkerCache();
             if (_uow == null) AddUOW();
-            _servAS = new ActivitySigninService(_repoAS, _repoW, _repoP, _repoI, _repoWR,_wcache, _uow);
+            if (_map == null) AddMapper();
+            _servAS = new ActivitySigninService(_repoAS, _repoW, _repoP, _repoI, _repoWR, _wcache, _uow, _map);
             return this;
         }
 

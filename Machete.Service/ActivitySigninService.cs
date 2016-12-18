@@ -21,6 +21,7 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+using AutoMapper;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
@@ -62,8 +63,9 @@ namespace Machete.Service
             IImageRepository iRepo,
             IWorkerRequestRepository wrRepo,
             IWorkerCache wc, 
-            IUnitOfWork uow)
-            : base(repo, wRepo, iRepo, wrRepo, wc, uow)
+            IUnitOfWork uow,
+            IMapper map)
+            : base(repo, wRepo, iRepo, wrRepo, wc, uow, map)
         {
             this.logPrefix = "ActivitySignin";
             this.pRepo = pRepo;

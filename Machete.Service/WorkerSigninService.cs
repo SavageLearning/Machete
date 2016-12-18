@@ -21,9 +21,12 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
+using Machete.Service.DTO;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -42,7 +45,7 @@ namespace Machete.Service
         bool sequenceLottery(DateTime date, string user);
         bool listDuplicate(DateTime date, string user);
         string signinDuplicate(DateTime date, string user);
-        dataTableResult<wsiView> GetIndexView(viewOptions o);
+        dataTableResult<WorkerSigninList> GetIndexView(viewOptions o);
         void CreateSignin(WorkerSignin signin, string user);
     }
 
@@ -55,8 +58,9 @@ namespace Machete.Service
             IImageRepository iRepo,
             IWorkerRequestRepository wrRepo,
             IWorkerCache wc, 
-            IUnitOfWork uow)
-            : base(repo, wRepo, iRepo, wrRepo, wc, uow)
+            IUnitOfWork uow,
+            IMapper map)
+            : base(repo, wRepo, iRepo, wrRepo, wc, uow, map)
         {
             this.logPrefix = "WorkerSignin";
         }
@@ -340,42 +344,26 @@ namespace Machete.Service
         /// </summary>
         /// <param name="o">View options from DataTables</param>
         /// <returns>dataTableResult wsiView</returns>
-        public dataTableResult<wsiView> GetIndexView(viewOptions o)
+        public dataTableResult<WorkerSigninList> GetIndexView(viewOptions o)
         {
             //
-            var result = new dataTableResult<wsiView>();
+            var result = new dataTableResult<DTO.WorkerSigninList>();
             IQueryable<WorkerSignin> q = repo.GetAllQ();
             IEnumerable<WorkerSignin> e;
-            IEnumerable<wsiView> eSIV;
             //
             if (o.date != null) IndexViewBase.diffDays(o, ref q);                
-            //
-            if (o.typeofwork_grouping != null)
-                IndexViewBase.typeOfWork(o, ref q);
-            // 
-            // wa_grouping
+            if (o.typeofwork_grouping != null) IndexViewBase.typeOfWork(o, ref q);
             IndexViewBase.waGrouping(o, ref q, wrRepo);
-            //
-            // dwccardnum populated
             if (o.dwccardnum > 0) IndexViewBase.dwccardnum(o, ref q);
-            e = q.ToList();
-            if (!string.IsNullOrEmpty(o.sSearch))
-                IndexViewBase.search(o, ref e, wcache.GetCache());
-            var cache = wcache.GetCache();
-            eSIV = e.Join(cache, 
-                            s => s.dwccardnum, 
-                            w => w.dwccardnum, 
-                            (s, w) => new { s, w }
-                            )
-                    .Select(z => new wsiView( z.w.Person, z.s ));
+            if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
 
-            IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref eSIV);
-            result.filteredCount = eSIV.Count();
+            IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
+            result.filteredCount = q.Count();
             result.totalCount = repo.GetAllQ().Count();
-            if ((int)o.displayLength >= 0)
-                result.query = eSIV.Skip((int)o.displayStart).Take((int)o.displayLength);
-            else
-                result.query = eSIV;
+            result.query = q.ProjectTo<DTO.WorkerSigninList>(map.ConfigurationProvider)
+                .Skip(o.displayStart)
+                .Take(o.displayLength)
+                .AsEnumerable();
             return result;
 
         }

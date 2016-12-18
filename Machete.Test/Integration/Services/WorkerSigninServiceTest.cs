@@ -23,6 +23,7 @@
 #endregion
 using Machete.Domain;
 using Machete.Service;
+using DTO = Machete.Service.DTO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -115,10 +116,10 @@ namespace Machete.Test.Integration.Service
             //
             //Act
             _dOptions.dwccardnum = w.dwccardnum;
-            dataTableResult<wsiView> result = frb.ToServWorkerSignin().GetIndexView(_dOptions);
+            dataTableResult<DTO.WorkerSigninList> result = frb.ToServWorkerSignin().GetIndexView(_dOptions);
             //
             //Assert
-            List<wsiView> tolist = result.query.ToList();
+            List<DTO.WorkerSigninList> tolist = result.query.ToList();
             Assert.AreEqual(1, result.query.Count());
             Assert.AreEqual(61, tolist[0].skill1);
         }
@@ -139,10 +140,10 @@ namespace Machete.Test.Integration.Service
             _dOptions.dwccardnum = w.dwccardnum;
             _dOptions.wa_grouping = "requested";
             var wsi = frb.ToServWorkerSignin();
-            dataTableResult<wsiView> result = wsi.GetIndexView(_dOptions);
+            dataTableResult<DTO.WorkerSigninList> result = wsi.GetIndexView(_dOptions);
             //
             //Assert
-            List<wsiView> tolist = result.query.ToList();
+            List<DTO.WorkerSigninList> tolist = result.query.ToList();
             Assert.AreEqual(61, tolist[0].skill1);
             Assert.AreEqual(1, result.query.Count());
         }

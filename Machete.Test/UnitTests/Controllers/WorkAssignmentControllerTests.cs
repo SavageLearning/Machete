@@ -184,7 +184,7 @@ namespace Machete.Test.Unit.Controller
             map.Setup(x => x.Map<Domain.WorkAssignment, Machete.Web.ViewModel.WorkAssignment>(It.IsAny<Domain.WorkAssignment>()))
                 .Returns(vmwo);
             int testid = 4242;
-            Worker wkr = new Worker();
+            Domain.Worker wkr = new Domain.Worker();
             wkr.ID = 424;
             FormCollection fakeform = new FormCollection();
             fakeform.Add("ID", testid.ToString());
@@ -223,7 +223,7 @@ namespace Machete.Test.Unit.Controller
         {
             //Arrange
             var asmt = new Web.ViewModel.WorkAssignment();
-            Worker wkr = new Worker();
+            Domain.Worker wkr = new Domain.Worker();
             wkr.ID = 424;
             int testid = 4243;
             asmt.ID = testid;

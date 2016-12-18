@@ -24,6 +24,7 @@
 using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
+using DTO = Machete.Service.DTO;
 using Machete.Web.Helpers;
 using System;
 using System.Linq;
@@ -288,32 +289,37 @@ namespace Machete.Web.Controllers
         {
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI = CI;
-            dataTableResult<wsiView> was = _serv.GetIndexView(vo);
+            dataTableResult<Service.DTO.WorkerSigninList> was = _serv.GetIndexView(vo);
+
             //return what's left to datatables
-            var result = from p in was.query select new 
-            {  
-                WSIID = p.ID,
-                recordid = p.ID.ToString(),
-                dwccardnum = p.dwccardnum,
-                fullname = p.fullname,
-                firstname1 = p.firstname1,
-                firstname2 = p.firstname2,
-                lastname1 = p.lastname1,
-                lastname2 = p.lastname2, 
-                dateforsignin = p.dateforsignin.AddHours(Convert.ToDouble(WebConfigurationManager.AppSettings["TimeZoneDifferenceFromPacific"])).ToString(),
-                dateforsigninstring = p.dateforsignin.AddHours(Convert.ToDouble(WebConfigurationManager.AppSettings["TimeZoneDifferenceFromPacific"])).ToShortTimeString(),
-                WAID = p.waid ?? 0,
-                memberStatus = lcache.textByID(p.memberStatus, CI.TwoLetterISOLanguageName),
-                memberInactive = p.w.isInactive,
-                memberSanctioned = p.w.isSanctioned,
-                memberExpired = p.w.isExpired,
-                memberExpelled = p.w.isExpelled,
-                imageID = p.imageID,
-                lotterySequence = p.lotterySequence,
-                expirationDate = p.expirationDate.ToShortDateString(),
-                skills = _getSkillCodes(p.englishlevel, p.skill1, p.skill2, p.skill3),
-                program = lcache.getByID(p.typeOfWorkID).ltrCode
-                };
+            //var result = from p in was.query select new 
+            //{  
+            //    WSIID = p.ID,
+            //    recordid = p.ID.ToString(),
+            //    dwccardnum = p.dwccardnum,
+            //    fullname = p.fullname,
+            //    firstname1 = p.firstname1,
+            //    firstname2 = p.firstname2,
+            //    lastname1 = p.lastname1,
+            //    lastname2 = p.lastname2, 
+            //    dateforsignin = p.dateforsignin.AddHours(Convert.ToDouble(WebConfigurationManager.AppSettings["TimeZoneDifferenceFromPacific"])).ToString(),
+            //    dateforsigninstring = p.dateforsignin.AddHours(Convert.ToDouble(WebConfigurationManager.AppSettings["TimeZoneDifferenceFromPacific"])).ToShortTimeString(),
+            //    WAID = p.waid ?? 0,
+            //    memberStatus = lcache.textByID(p.memberStatus, CI.TwoLetterISOLanguageName),
+            //    memberInactive = p.w.isInactive,
+            //    memberSanctioned = p.w.isSanctioned,
+            //    memberExpired = p.w.isExpired,
+            //    memberExpelled = p.w.isExpelled,
+            //    imageID = p.imageID,
+            //    lotterySequence = p.lotterySequence,
+            //    expirationDate = p.expirationDate.ToShortDateString(),
+            //    skills = _getSkillCodes(p.englishlevel, p.skill1, p.skill2, p.skill3),
+            //    program = lcache.getByID(p.typeOfWorkID).ltrCode
+            //};
+            var result = was.query
+                .Select(
+                    e => map.Map<DTO.WorkerSigninList, ViewModel.WorkerSigninList>(e)
+                ).AsEnumerable();
             return Json(new
             {
                 sEcho = param.sEcho,

@@ -374,10 +374,13 @@
     <Compile Include="ViewModel\EmailView.cs" />
     <Compile Include="ViewModel\Employer.cs" />
     <Compile Include="ViewModel\EmployerWoCombined.cs" />
+    <Compile Include="ViewModel\Person.cs" />
     <Compile Include="ViewModel\ReportPrintView.cs" />
     <Compile Include="ViewModel\PeopleIndex.cs" />
     <Compile Include="ViewModel\WorkAssignment.cs" />
     <Compile Include="ViewModel\WorkAssignmentIndex.cs" />
+    <Compile Include="ViewModel\Worker.cs" />
+    <Compile Include="ViewModel\WorkerSignin.cs" />
     <Compile Include="ViewModel\WorkOrder.cs" />
     <Compile Include="ViewModel\WorkOrderGroupPrintView.cs" />
     <Compile Include="Views\HirerAccount.cs" />
@@ -555,6 +558,7 @@
     <Content Include="Scripts\jqplot.pieRenderer.min.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <None Include="Properties\PublishProfiles\local_selenium.pubxml" />
+    <None Include="Properties\PublishProfiles\selenium_publish.pubxml" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
     <Content Include="Scripts\jquery-3.1.1.min.js" />

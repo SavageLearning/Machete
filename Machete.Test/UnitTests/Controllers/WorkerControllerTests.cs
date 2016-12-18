@@ -123,15 +123,15 @@ namespace Machete.Test.Unit.Controller
             //Act
             var result = (PartialViewResult)_ctrlr.Create(0);
             //Assert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Worker));
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Domain.Worker));
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Workers)]
         public void WorkerController_create_post_valid_returns_json()
         {
             //Arrange
-            var _worker = new Worker();
-            var _person = new Person();
+            var _worker = new Domain.Worker();
+            var _person = new Domain.Person();
             //
             _wserv.Setup(p => p.Create(_worker, "UnitTest")).Returns(_worker);
             _pserv.Setup(p => p.Create(_person, "UnitTest")).Returns(_person);
@@ -166,15 +166,15 @@ namespace Machete.Test.Unit.Controller
         public void edit_get_returns_worker()
         {
             //Arrange
-            var _worker = new Worker();
-            var _person = new Person();
+            var _worker = new Domain.Worker();
+            var _person = new Domain.Person();
             int testid = 4242;
-            Person fakeperson = new Person();
+            Domain.Person fakeperson = new Domain.Person();
             _wserv.Setup(p => p.Get(testid)).Returns(_worker);
             //Act
             var result = (PartialViewResult)_ctrlr.Edit(testid);
             //Assert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Worker));
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Domain.Worker));
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Workers)]
@@ -186,17 +186,17 @@ namespace Machete.Test.Unit.Controller
             Mock<HttpPostedFileBase> image = new Mock<HttpPostedFileBase>();
             FormCollection fakeform = _fakeCollection(testid);
 
-            Worker fakeworker = new Worker();
-            Worker savedworker = new Worker();
-            Person fakeperson = new Person();
+            Domain.Worker fakeworker = new Domain.Worker();
+            Domain.Worker savedworker = new Domain.Worker();
+            Domain.Person fakeperson = new Domain.Person();
             fakeworker.Person = fakeperson;
 
             string user = "TestUser";
             _wserv.Setup(p => p.Get(testid)).Returns(fakeworker);
             _pserv.Setup(p => p.Get(testid)).Returns(fakeperson);
-            _wserv.Setup(x => x.Save(It.IsAny<Worker>(),
+            _wserv.Setup(x => x.Save(It.IsAny<Domain.Worker>(),
                                           It.IsAny<string>())
-                                         ).Callback((Worker p, string str) =>
+                                         ).Callback((Domain.Worker p, string str) =>
                                          {
                                              savedworker = p;
                                              user = str;
