@@ -249,7 +249,7 @@ namespace Machete.Web.Controllers
             return peopleFound;
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Administrator, Manager, Teacher, PhoneDesk")]
         public JsonResult GetDuplicates(string firstname, string lastname, string phone)
         {
             var duplicateFound = DuplicatePersons(firstname, lastname, phone);

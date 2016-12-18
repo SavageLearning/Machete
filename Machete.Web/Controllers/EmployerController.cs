@@ -266,7 +266,7 @@ namespace Machete.Web.Controllers
             return employersFound;
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public JsonResult GetDuplicates(string name, string address,
             string phone, string city, string zipcode )
         {
