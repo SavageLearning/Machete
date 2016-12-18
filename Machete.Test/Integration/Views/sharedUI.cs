@@ -318,9 +318,18 @@ namespace Machete.Test.Selenium.View
             SelectOptionByIndex(By.Id(prefix + "active"), _emp.active ? 2 : 1);
             SelectOptionByIndex(By.Id(prefix + "blogparticipate"), _emp.blogparticipate.Value ? 2 : 1);
             SelectOptionByIndex(By.Id(prefix + "business"), _emp.business ? 2 : 1);
-            SelectOption(By.Id(prefix + "referredby"), MacheteLookup.cache.First(c => c.category == "emplrreference" && c.ID == _emp.referredby).text_EN);
-
+            SelectOption(By.Id(prefix + "referredby"), 
+                MacheteLookup.cache.First(c => c.category == "emplrreference" && c.ID == _emp.referredby).text_EN);
+            // save employer
             _d.FindElement(By.Id(prefix + "SaveBtn")).Click();
+            //
+            // check for duplicate dialog
+            var dialog = WaitForElement(By.Id("duplicatesDialog"));
+            if (dialog != null)
+            {
+                WaitForElement(By.Id("duplicateSaveBtn"));
+                _d.FindElement(By.Id("duplicateSaveBtn")).Click();
+            }
             //
             // look for new open tab with class: .employer.ui-tabs-selected
             var selectedTab = WaitForElement(By.CssSelector("li.employer.ui-tabs-selected"));

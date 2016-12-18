@@ -34,7 +34,7 @@
 }
 @Html.Partial("WorkOrderIndex", Model)
 
-<div id="messageDialog" title="@(Machete.Web.Resources.Shared.DuplicatePersonsTitle)">
+<div id="duplicatesDialog" title="@(Machete.Web.Resources.Shared.DuplicatePersonsTitle)">
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -42,7 +42,7 @@
         $('.formButton').button();
         $('#employerName').focus();
         //
-        // machete UI detect changes on forms in tabs   
+        // machete UI detect changes on forms in tabs
         $("#EmployerTab-@(Model.ID)").mUI('formDetectChanges', {
             recType: "@(recType)",
             formLevel: 1,
@@ -70,7 +70,7 @@
         });
     });
 
-    var messageDialog = $("#messageDialog").dialog({
+    var duplicatesDialog = $("#duplicatesDialog").dialog({
         autoOpen: false,
         height: 400,
         width: 650,
@@ -78,7 +78,14 @@
         closeOnEscape: false,
         buttons: {
             "Cancel": function () { $(this).dialog("close"); },
-            "Save": function () { $(this).dialog("close"); saveEmployer(); }
+            "Save": {
+                text: @(Machete.Web.Resources.Employers.editsubmit),
+                id: 'duplicateSaveBtn',
+                click: function () {
+                    $(this).dialog("close");
+                    saveEmployer();
+                }
+            }
         }
     });
 
@@ -134,8 +141,8 @@
     function onSuccessFindEmployerDuplicate(result) {
         if (result.duplicates.length > 1) {
 
-            messageDialog.dialog("open");
-            messageDialog.html(CreateHtmlText(result.duplicates));
+            duplicatesDialog.dialog("open");
+            duplicatesDialog.html(CreateHtmlText(result.duplicates));
         }
         else {
             saveEmployer();

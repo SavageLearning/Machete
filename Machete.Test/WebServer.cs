@@ -71,7 +71,7 @@ namespace Machete.Test
         }
         public static void StopIis()
         {
-            if (_iisProcess != null)
+            if (_iisProcess != null && _iisProcess.HasExited != true)
             {
                 _iisProcess.CloseMainWindow(); _iisProcess.Dispose();
             }
