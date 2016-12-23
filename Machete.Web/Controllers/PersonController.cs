@@ -24,8 +24,8 @@
 using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
+using DTO = Machete.Service.DTO;
 using Machete.Web.Helpers;
-using Machete.Web.Resources;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -54,7 +54,7 @@ namespace Machete.Web.Controllers
             this.lcache = _lcache;
             this.map = map;
             this.def = def;
-            ViewBag.genderlist = def.getSelectList(Machete.Domain.LCategory.gender);
+            //ViewBag.genderlist = def.getSelectList(Machete.Domain.LCategory.gender);
         }
 
         protected override void Initialize(RequestContext requestContext)
@@ -77,25 +77,28 @@ namespace Machete.Web.Controllers
             //Get all the records            
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI = CI;
-            dataTableResult<Person> list = personService.GetIndexView(vo); 
-
-            var result = from p in list.query select new
-            {
-                tabref = "/Person/Edit/" + Convert.ToString(p.ID),
-                tablabel = p.firstname1 + ' ' + p.lastname1,
-                dwccardnum = p.Worker == null ? "" : p.Worker.dwccardnum.ToString(),
-                active = p.active ? Shared.True : Shared.False,
-                status = p.active,
-                workerStatus = p.Worker == null ? "Not a worker" : lcache.textByID(p.Worker.memberStatus, CI.TwoLetterISOLanguageName),
-                firstname1 = p.firstname1,
-                firstname2 = p.firstname2,
-                lastname1 = p.lastname1,
-                lastname2 = p.lastname2,
-                phone = p.phone,
-                dateupdated = Convert.ToString(p.dateupdated),
-                updatedby = p.updatedby,
-                recordid = Convert.ToString(p.ID)
-            };
+            dataTableResult<DTO.PersonList> list = personService.GetIndexView(vo);
+            var result = list.query
+                .Select(
+                    e => map.Map<DTO.PersonList, ViewModel.PersonList>(e)
+                ).AsEnumerable();
+            //var result = from p in list.query select new
+            //{
+            //    tabref = "/Person/Edit/" + Convert.ToString(p.ID),
+            //    tablabel = p.firstname1 + ' ' + p.lastname1,
+            //    dwccardnum = p.Worker == null ? "" : p.Worker.dwccardnum.ToString(),
+            //    active = p.active ? Shared.True : Shared.False,
+            //    status = p.active,
+            //    workerStatus = p.Worker == null ? "Not a worker" : lcache.textByID(p.Worker.memberStatus, CI.TwoLetterISOLanguageName),
+            //    firstname1 = p.firstname1,
+            //    firstname2 = p.firstname2,
+            //    lastname1 = p.lastname1,
+            //    lastname2 = p.lastname2,
+            //    phone = p.phone,
+            //    dateupdated = Convert.ToString(p.dateupdated),
+            //    updatedby = p.updatedby,
+            //    recordid = Convert.ToString(p.ID)
+            //};
             return Json(new
             {
                 sEcho = param.sEcho,
@@ -112,10 +115,13 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Teacher, PhoneDesk")] 
         public ActionResult Create()
         {
-            var _model = new Person();
-            _model.gender = def.getDefaultID(LCategory.gender);
-            _model.active = true;
-            return PartialView(_model);
+            var p = map.Map<Domain.Person, ViewModel.Person>(new Domain.Person()
+            {
+                gender = def.getDefaultID(LCategory.gender),
+                active = true
+            });
+            p.def = def;
+            return PartialView("Create", p);
         }
         /// <summary>
         /// 
@@ -128,29 +134,28 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Teacher, PhoneDesk")]
         public ActionResult Create(Person person, string userName)
         {
-            Person newperson = null;
             UpdateModel(person);
-            newperson = personService.Create(person, userName);
-            
+            var newperson = personService.Create(person, userName);
+            var result = map.Map<Domain.Person, ViewModel.Person>(newperson);
             return Json(new
             {
-                sNewRef = _getTabRef(newperson),
-                sNewLabel = _getTabLabel(newperson),
-                iNewID = (newperson == null ? 0 : newperson.ID)
+                sNewRef = result.tabref,
+                sNewLabel = result.tablabel,
+                iNewID = result.ID
             },
             JsonRequestBehavior.AllowGet);
         }
-        private string _getTabRef(Person per)
-        {
-            if (per != null) return "/Person/Edit/" + Convert.ToString(per.ID);           
-            else return null;            
-        }
-        private string _getTabLabel(Person per)
-        {
-            //if (per != null) return per.fullName();
-            //else return null;
-            return null;
-        }
+        //private string _getTabRef(Person per)
+        //{
+        //    if (per != null) return "/Person/Edit/" + Convert.ToString(per.ID);           
+        //    else return null;            
+        //}
+        //private string _getTabLabel(Person per)
+        //{
+        //    //if (per != null) return per.fullName();
+        //    //else return null;
+        //    return null;
+        //}
         /// <summary>
         /// 
         /// </summary>
@@ -159,8 +164,10 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Teacher, PhoneDesk")] 
         public ActionResult Edit(int id)
         {
-            Person person = personService.Get(id);
-            return PartialView(person);
+            var p = personService.Get(id);
+            var m = map.Map<Domain.Person, ViewModel.Person>(p);
+            m.def = def;
+            return PartialView("Edit", m);
         }
         /// <summary>
         /// 

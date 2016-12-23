@@ -32,6 +32,7 @@ using Machete.Data.Infrastructure;
 using Machete.Service;
 using Machete.Domain;
 using Machete.Test;
+using AutoMapper;
 
 namespace Machete.Test.Unit.Service
 {
@@ -48,6 +49,7 @@ namespace Machete.Test.Unit.Service
         Mock<IWorkAssignmentRepository> _waRepo;
         Mock<IWorkOrderRepository> _woRepo;
         Mock<IPersonRepository> _pRepo;
+        Mock<IMapper> _map;
         public WorkerTests()
         {
         }
@@ -100,7 +102,8 @@ namespace Machete.Test.Unit.Service
             _waRepo = new Mock<IWorkAssignmentRepository>();
             _woRepo = new Mock<IWorkOrderRepository>();
             _pRepo = new Mock<IPersonRepository>();
-            _serv = new WorkerService(_repo.Object, _wcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object);
+            _map = new Mock<IMapper>();
+            _serv = new WorkerService(_repo.Object, _wcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object, _map.Object);
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Workers)]
         public void GetWorkers_returns_Enumerable()
@@ -163,12 +166,13 @@ namespace Machete.Test.Unit.Service
             _repo = new Mock<IWorkerRepository>();
             _uow = new Mock<IUnitOfWork>();
             _wcache = new Mock<IWorkerCache>();
+            _map = new Mock<IMapper>();
             string user = "UnitTest";
             int id = 1;
             Worker dp = new Worker();
             _repo.Setup(r => r.Delete(It.IsAny<Worker>())).Callback((Worker p) => { dp = p; });
             _repo.Setup(r => r.GetById(id)).Returns(Records.worker);
-            var _serv = new WorkerService(_repo.Object, _wcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object);
+            var _serv = new WorkerService(_repo.Object, _wcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object, _map.Object);
             //
             //Act
             _serv.Delete(id, user);
@@ -185,10 +189,11 @@ namespace Machete.Test.Unit.Service
             _repo = new Mock<IWorkerRepository>();
             _wcache = new Mock<IWorkerCache>();
             _uow = new Mock<IUnitOfWork>();
+            _map = new Mock<IMapper>();
             string user = "UnitTest";
             Records.worker.datecreated = DateTime.MinValue;
             Records.worker.dateupdated = DateTime.MinValue;
-            var _serv = new WorkerService(_repo.Object, _wcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object);
+            var _serv = new WorkerService(_repo.Object, _wcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object, _map.Object);
             //
             //Act
             _serv.Save(Records.worker, user);

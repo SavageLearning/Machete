@@ -21,6 +21,8 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
@@ -33,7 +35,7 @@ namespace Machete.Service
     {
         Worker GetWorkerByNum(int dwccardnum);
         int GetNextWorkerNum();
-        dataTableResult<Worker> GetIndexView(viewOptions o);
+        dataTableResult<DTO.WorkerList> GetIndexView(viewOptions o);
         // IQueryable<Worker> GetPriorEmployees(int employerId);
     }
     public class WorkerService : ServiceBase<Worker>, IWorkerService
@@ -42,8 +44,15 @@ namespace Machete.Service
         private readonly IWorkAssignmentRepository waRepo;
         private readonly IWorkOrderRepository woRepo;
         private readonly IPersonRepository pRepo;
+        private readonly IMapper map;
 
-        public WorkerService(IWorkerRepository wRepo, IWorkerCache wc, IUnitOfWork uow, IWorkAssignmentRepository waRepo, IWorkOrderRepository woRepo, IPersonRepository pRepo)
+        public WorkerService(IWorkerRepository wRepo, 
+            IWorkerCache wc, 
+            IUnitOfWork uow, 
+            IWorkAssignmentRepository waRepo, 
+            IWorkOrderRepository woRepo, 
+            IPersonRepository pRepo,
+            IMapper map)
             : base(wRepo, uow)
         {
             this.wcache = wc;
@@ -51,6 +60,7 @@ namespace Machete.Service
             this.waRepo = waRepo;
             this.woRepo = woRepo;
             this.pRepo = pRepo;
+            this.map = map;
         }
 
         public Worker GetWorkerByNum(int dwccardnum)
@@ -111,9 +121,9 @@ namespace Machete.Service
             base.Delete(id, user);
             wcache.Refresh();
         }
-        public dataTableResult<Worker> GetIndexView(viewOptions o)
+        public dataTableResult<DTO.WorkerList> GetIndexView(viewOptions o)
         {
-            var result = new dataTableResult<Worker>();
+            var result = new dataTableResult<DTO.WorkerList>();
             //Get all the records
             IQueryable<Worker> q = repo.GetAllQ();
             result.totalCount = q.Count();
@@ -123,7 +133,10 @@ namespace Machete.Service
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
             //Limit results to the display length and offset
             result.filteredCount = q.Count();
-            result.query = q.Skip(o.displayStart).Take(o.displayLength);
+            result.query = q.ProjectTo<DTO.WorkerList>(map.ConfigurationProvider)
+                .Skip(o.displayStart)
+                .Take(o.displayLength)
+                .AsEnumerable();
             return result;
         }
     }

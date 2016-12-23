@@ -25,6 +25,7 @@ using AutoMapper;
 using Machete.Data;
 using Machete.Domain;
 using Machete.Service;
+using DTO = Machete.Service.DTO;
 using Machete.Web.Helpers;
 using System;
 using System.Linq;
@@ -81,23 +82,26 @@ namespace Machete.Web.Controllers
         {
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI = CI;
-            dataTableResult<Worker> list = serv.GetIndexView(vo);
-            var result = from p in list.query select new
-            { 
-                tabref = "/Worker/Edit/" + Convert.ToString(p.ID),
-                tablabel =  p.Person.firstname1 + ' ' + p.Person.lastname1,
-                WID =    p.ID.ToString(),
-                recordid = p.ID.ToString(),
-                dwccardnum =  Convert.ToString(p.dwccardnum),
-                active =  Convert.ToString(p.active),
-                wkrStatus = _getStatus(p),
-                firstname1 = p.Person.firstname1, 
-                firstname2 = p.Person.firstname2, 
-                lastname1 = p.Person.lastname1, 
-                lastname2 = p.Person.lastname2, 
-                memberexpirationdate = Convert.ToString(p.memberexpirationdate)
-            };
-
+            dataTableResult<DTO.WorkerList> list = serv.GetIndexView(vo);
+            //var result = from p in list.query select new
+            //{ 
+            //    tabref = "/Worker/Edit/" + Convert.ToString(p.ID),
+            //    tablabel =  p.Person.firstname1 + ' ' + p.Person.lastname1,
+            //    WID =    p.ID.ToString(),
+            //    recordid = p.ID.ToString(),
+            //    dwccardnum =  Convert.ToString(p.dwccardnum),
+            //    active =  Convert.ToString(p.active),
+            //    wkrStatus = _getStatus(p),
+            //    firstname1 = p.Person.firstname1, 
+            //    firstname2 = p.Person.firstname2, 
+            //    lastname1 = p.Person.lastname1, 
+            //    lastname2 = p.Person.lastname2, 
+            //    memberexpirationdate = Convert.ToString(p.memberexpirationdate)
+            //};
+            var result = list.query
+            .Select(
+                e => map.Map<DTO.WorkerList, ViewModel.WorkerList>(e)
+            ).AsEnumerable();
             return Json(new
             {
                 sEcho = param.sEcho,
@@ -112,20 +116,20 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="wkr"></param>
         /// <returns></returns>
-        string _getStatus(Worker wkr)
-        {
-            if (wkr.memberStatus == Worker.iActive) // blue
-                return "active";
-            if (wkr.memberStatus == Worker.iInactive) // blue
-                return "inactive";
-            if (wkr.memberStatus == Worker.iExpired) // blue
-                return "expired";
-            if (wkr.memberStatus == Worker.iSanctioned) // blue
-                return "sanctioned";
-            if (wkr.memberStatus == Worker.iExpelled) // blue
-                return "expelled";
-            return null;
-        }
+        //string _getStatus(Worker wkr)
+        //{
+        //    if (wkr.memberStatus == Worker.iActive) 
+        //        return "active";
+        //    if (wkr.memberStatus == Worker.iInactive) 
+        //        return "inactive";
+        //    if (wkr.memberStatus == Worker.iExpired)
+        //        return "expired";
+        //    if (wkr.memberStatus == Worker.iSanctioned)
+        //        return "sanctioned";
+        //    if (wkr.memberStatus == Worker.iExpelled)
+        //        return "expelled";
+        //    return null;
+        //}
         /// <summary>
         /// 
         /// </summary>
@@ -134,17 +138,14 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "PhoneDesk, Manager, Teacher, Administrator")] 
         public ActionResult Create(int ID)
         {
-            var _model = new Worker();
-            _model.ID = ID;
-            try
+            // TODO handle exception of next worker number
+            var nextnum = serv.GetNextWorkerNum();
+            var w = map.Map<Domain.Worker, ViewModel.Worker>(new Domain.Worker()
             {
-                _model.dwccardnum = serv.GetNextWorkerNum();
-            }
-            catch (ArgumentOutOfRangeException ex)
-            {
-                ViewBag.OrganizeMe = ex.Message;
-            }
-            return PartialView(_model);
+                dwccardnum = nextnum
+            });
+            w.def = def;
+            return PartialView("Create", w);
         }
         /// <summary>
         /// 
@@ -155,17 +156,17 @@ namespace Machete.Web.Controllers
         /// <returns></returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "PhoneDesk, Manager, Teacher, Administrator")]
-        public ActionResult Create(Worker worker, string userName, HttpPostedFileBase imagefile)
+        public ActionResult Create(Domain.Worker worker, string userName, HttpPostedFileBase imagefile)
         {
             UpdateModel(worker);
             if (imagefile != null) updateImage(worker, imagefile);
             Worker newWorker = serv.Create(worker, userName);
+            var result = map.Map<Domain.Worker, ViewModel.Worker>(newWorker);
             return Json(new
             {
-                //sNewRef = _getTabRef(newWorker),
-                //sNewLabel = _getTabLabel(newWorker),
-                iNewID = newWorker.ID,
-                jobSuccess = true
+                sNewRef = result.tabref,
+                sNewLabel = result.tablabel,
+                iNewID = result.ID
             },
             JsonRequestBehavior.AllowGet);
         }
@@ -177,8 +178,10 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "PhoneDesk, Manager, Teacher, Administrator")] 
         public ActionResult Edit(int id)
         {
-            Worker _worker = serv.Get(id);
-            return PartialView(_worker);
+            Worker w = serv.Get(id);
+            var m = map.Map<Domain.Worker, ViewModel.Worker>(w);
+            m.def = def;
+            return PartialView(m);
         }
         /// <summary>
         /// 

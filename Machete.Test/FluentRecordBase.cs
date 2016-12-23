@@ -467,7 +467,9 @@ namespace Machete.Test
             if (_repoP == null) AddRepoPerson();
             if (_uow == null) AddUOW();
             if (_lcache == null) AddLookupCache();
-            _servP = new PersonService(_repoP, _uow, _lcache);
+            if (_map == null) AddMapper();
+
+            _servP = new PersonService(_repoP, _uow, _lcache, _map);
             return this;
         }
 
@@ -535,8 +537,8 @@ namespace Machete.Test
             if (_repoW == null) AddRepoWorker();
             if (_uow == null) AddUOW();
             if (_wcache == null) AddWorkerCache();
-
-            _servW = new WorkerService(_repoW, _wcache, _uow, _repoWA, _repoWO, _repoP);
+            if (_map == null) AddMapper();
+            _servW = new WorkerService(_repoW, _wcache, _uow, _repoWA, _repoWO, _repoP, _map);
             return this;
         }
 
