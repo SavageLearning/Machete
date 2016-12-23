@@ -83,21 +83,6 @@ namespace Machete.Web.Controllers
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI = CI;
             dataTableResult<DTO.WorkerList> list = serv.GetIndexView(vo);
-            //var result = from p in list.query select new
-            //{ 
-            //    tabref = "/Worker/Edit/" + Convert.ToString(p.ID),
-            //    tablabel =  p.Person.firstname1 + ' ' + p.Person.lastname1,
-            //    WID =    p.ID.ToString(),
-            //    recordid = p.ID.ToString(),
-            //    dwccardnum =  Convert.ToString(p.dwccardnum),
-            //    active =  Convert.ToString(p.active),
-            //    wkrStatus = _getStatus(p),
-            //    firstname1 = p.Person.firstname1, 
-            //    firstname2 = p.Person.firstname2, 
-            //    lastname1 = p.Person.lastname1, 
-            //    lastname2 = p.Person.lastname2, 
-            //    memberexpirationdate = Convert.ToString(p.memberexpirationdate)
-            //};
             var result = list.query
             .Select(
                 e => map.Map<DTO.WorkerList, ViewModel.WorkerList>(e)
@@ -116,20 +101,6 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="wkr"></param>
         /// <returns></returns>
-        //string _getStatus(Worker wkr)
-        //{
-        //    if (wkr.memberStatus == Worker.iActive) 
-        //        return "active";
-        //    if (wkr.memberStatus == Worker.iInactive) 
-        //        return "inactive";
-        //    if (wkr.memberStatus == Worker.iExpired)
-        //        return "expired";
-        //    if (wkr.memberStatus == Worker.iSanctioned)
-        //        return "sanctioned";
-        //    if (wkr.memberStatus == Worker.iExpelled)
-        //        return "expelled";
-        //    return null;
-        //}
         /// <summary>
         /// 
         /// </summary>

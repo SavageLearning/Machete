@@ -54,7 +54,6 @@ namespace Machete.Web.Controllers
             this.lcache = _lcache;
             this.map = map;
             this.def = def;
-            //ViewBag.genderlist = def.getSelectList(Machete.Domain.LCategory.gender);
         }
 
         protected override void Initialize(RequestContext requestContext)
@@ -82,23 +81,6 @@ namespace Machete.Web.Controllers
                 .Select(
                     e => map.Map<DTO.PersonList, ViewModel.PersonList>(e)
                 ).AsEnumerable();
-            //var result = from p in list.query select new
-            //{
-            //    tabref = "/Person/Edit/" + Convert.ToString(p.ID),
-            //    tablabel = p.firstname1 + ' ' + p.lastname1,
-            //    dwccardnum = p.Worker == null ? "" : p.Worker.dwccardnum.ToString(),
-            //    active = p.active ? Shared.True : Shared.False,
-            //    status = p.active,
-            //    workerStatus = p.Worker == null ? "Not a worker" : lcache.textByID(p.Worker.memberStatus, CI.TwoLetterISOLanguageName),
-            //    firstname1 = p.firstname1,
-            //    firstname2 = p.firstname2,
-            //    lastname1 = p.lastname1,
-            //    lastname2 = p.lastname2,
-            //    phone = p.phone,
-            //    dateupdated = Convert.ToString(p.dateupdated),
-            //    updatedby = p.updatedby,
-            //    recordid = Convert.ToString(p.ID)
-            //};
             return Json(new
             {
                 sEcho = param.sEcho,
@@ -145,17 +127,6 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
-        //private string _getTabRef(Person per)
-        //{
-        //    if (per != null) return "/Person/Edit/" + Convert.ToString(per.ID);           
-        //    else return null;            
-        //}
-        //private string _getTabLabel(Person per)
-        //{
-        //    //if (per != null) return per.fullName();
-        //    //else return null;
-        //    return null;
-        //}
         /// <summary>
         /// 
         /// </summary>

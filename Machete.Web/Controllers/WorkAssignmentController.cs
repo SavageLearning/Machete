@@ -93,36 +93,6 @@ namespace Machete.Web.Controllers
             .Select(
                 e => map.Map<Service.DTO.WorkAssignmentList, ViewModel.WorkAssignmentList>(e)
             ).AsEnumerable();
-            //var result = from p in was.query select new { 
-            //                tabref = _getTabRef(p),
-            //                tablabel = _getTabLabel(p),
-            //                WOID = Convert.ToString(p.workOrderID),
-            //                WAID = Convert.ToString(p.ID),
-            //                recordid = Convert.ToString(p.ID),
-            //                pWAID = p.getFullPseudoID(), 
-            //                employername = p.workOrder.Employer.name,
-            //                englishlevel = Convert.ToString(p.englishLevelID),
-            //                skill =  lcache.textByID(p.skillID, CI.TwoLetterISOLanguageName),
-            //                hourlywage = System.String.Format("${0:f2}", p.hourlyWage),
-            //                hours = Convert.ToString(p.hours),
-            //                hourRange = p.hourRange > 0 ? Convert.ToString(p.hourRange) : "",
-            //                days = Convert.ToString(p.days),
-            //                description = p.description, // WA description now matches WO description unless they change it, see Create method
-            //                datecreated = Convert.ToString(p.datecreated),
-            //                dateupdated = Convert.ToString(p.dateupdated), 
-            //                updatedby = p.updatedby,
-            //                dateTimeofWork = p.workOrder.dateTimeofWork.AddHours(Convert.ToDouble(WebConfigurationManager.AppSettings["TimeZoneDifferenceFromPacific"])).ToString(),
-            //                timeofwork = p.workOrder.dateTimeofWork.AddHours(Convert.ToDouble(WebConfigurationManager.AppSettings["TimeZoneDifferenceFromPacific"])).ToShortTimeString(),
-            //                status = p.workOrder.status.ToString(),
-            //                earnings = System.String.Format("${0:f2}",p.getMinEarnings),
-            //                maxEarnings = System.String.Format("${0:f2}", p.getMaxEarnings),
-            //                WSIID = p.workerSigninID ?? 0,
-            //                WID = p.workerAssignedID ?? 0,
-            //                assignedWorker = p.workerAssigned != null ? p.workerAssigned.dwccardnum + " " + p.workerAssigned.Person.fullName() : "",
-            //                //requestedList = p.workOrder.workerRequests.Select(a => a.fullNameAndID).ToArray(),
-            //                asmtStatus = _getStatus(p)
-            //    };
-
             return Json(new
             {
                 sEcho = param.sEcho,
@@ -131,38 +101,7 @@ namespace Machete.Web.Controllers
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);
-        }
-        //
-        // _getStatus
-        //private string _getStatus(Domain.WorkAssignment asmt)
-        //{
-        //    if (asmt.workerAssignedID > 0 && asmt.workerSigninID > 0) // green
-        //        return "completed";
-        //    if (asmt.workerAssignedID == null && asmt.workOrder.status == Domain.WorkOrder.iCompleted)
-        //        return "incomplete";
-        //    if (asmt.workerAssignedID > 0 && asmt.workerSigninID == null && asmt.workOrder.status == Domain.WorkOrder.iCompleted)
-        //        return "orphaned";
-        //    if (asmt.workOrder.status == Domain.WorkOrder.iCancelled)
-        //        return "cancelled";
-        //    if (asmt.workOrder.status == Domain.WorkOrder.iActive) // blue
-        //        return "active";
-        //    return null;
-        //}
-        //
-        // _getTabRef
-        //
-        //private string _getTabRef(Domain.WorkAssignment wa)
-        //{
-        //    return "/WorkAssignment/Edit/" + Convert.ToString(wa.ID);
-        //}
-
-        //
-        // _getTabLabel
-        //
-        //private string _getTabLabel(Domain.WorkAssignment wa)
-        //{
-        //    return Machete.Web.Resources.WorkAssignments.tabprefix + wa.getFullPseudoID();
-        //}            
+        }          
         //
         // GET: /WorkAssignment/Create
         //
@@ -194,9 +133,7 @@ namespace Machete.Web.Controllers
             UpdateModel(assignment);
             assignment.workOrder = woServ.Get(assignment.workOrderID);
             assignment.incrPseudoID();
-            //assignment.workOrder.waPseudoIDCounter++;
-            //assignment.pseudoID = assignment.workOrder.waPseudoIDCounter;
-            Domain.WorkAssignment newAssignment = waServ.Create(assignment, userName);
+            var newAssignment = waServ.Create(assignment, userName);
             var result = map.Map<Domain.WorkAssignment, ViewModel.WorkAssignment>(newAssignment);
             return Json(new
             {
