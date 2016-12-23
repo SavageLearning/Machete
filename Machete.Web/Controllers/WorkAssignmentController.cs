@@ -74,10 +74,10 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk, Check-in")]
         public ActionResult Index()
         {
-            WorkAssignmentIndex _model = new WorkAssignmentIndex();
-            //_model.todaysdate = DateTime.Today.ToShortDateString();
-            _model.todaysdate = System.String.Format("{0:MM/dd/yyyy}", DateTime.Today);
-            return View(_model);
+            WorkAssignmentIndex wai = new WorkAssignmentIndex();
+            wai.todaysdate = System.String.Format("{0:MM/dd/yyyy}", DateTime.Today);
+            wai.def = def;
+            return View(wai);
         }
 
         #endregion

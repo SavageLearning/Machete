@@ -42,7 +42,6 @@
                     }
                 } 
             </select>
-            @*@Html.DropDownListFor(model => model.skillID, new SelectList(Lookups.skill(), "Value", "Text", Model.skillID), @Machete.Web.Resources.Shared.choose)*@
             @Html.ValidationMessageFor(model => model.skillID)
         </div>
         @Html.mUITableLabelAndTextBoxFor(model => model.pseudoID, new { tabindex = "31", style = "width: 2em", @readonly = "readonly", @id = idPrefix + "pseudoID" })
@@ -63,7 +62,6 @@
             @Html.ValidationMessageFor(model => model.hours)
         </div>
 
-       @* @Html.mUIDropDownListFor(model => model.hours, new SelectList(Lookups.hours(), "Value", "Text", Model.hours), new { tabindex = "1", @id = idPrefix + "hours", @class = "earnings-part" })*@
         @Html.mUITableLabelFor(model => model.hourRange)
         @Html.mUIDropDownListFor(model => model.hourRange, new SelectList(Model.def.hours(), "Value", "Text", Model.hourRange), new { tabindex = "27", @id = idPrefix + "hourRange", @class = "earnings-part" })
     </div>

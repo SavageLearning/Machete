@@ -22,6 +22,7 @@
 // 
 #endregion
 using Machete.Domain;
+using Machete.Web.Helpers;
 
 namespace Machete.Web.ViewModel
 {
@@ -39,5 +40,6 @@ namespace Machete.Web.ViewModel
         public bool signin_visible { get; set; }
         public bool requestedWorkers_visible { get; set; }
         public WorkerSignin _wsi { get; set; }
+        public IDefaults def;
     }
 }

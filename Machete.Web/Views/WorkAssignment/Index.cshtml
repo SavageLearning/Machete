@@ -31,7 +31,7 @@
             <label for="todaysdate">@WorkAssignments.todaysdate</label>
             @Html.TextBoxFor(m => m.todaysdate, new { @class = "ui-datepicker", @style = "width: 15em;" })
             @Html.DropDownList("TypeOfWorkList",
-                        new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.worktype),
+                        new SelectList(Model.def.getSelectList(Machete.Domain.LCategory.worktype),
                         "Value", "Text"), Shared.All, new { id = "TypeOfWorkList" })
 
         </div>
