@@ -31,7 +31,6 @@ namespace Machete.Web.ViewModel
         public new string paypalFee { get; set; }
         public new string permanentPlacement { get; set; }
         //public new string status { get; set; }
-        public new string timeFlexible { get; set; }
         public new string transportFee { get; set; }
         public new string transportFeeExtra { get; set; }
         public new string transportMethodID { get; set; }

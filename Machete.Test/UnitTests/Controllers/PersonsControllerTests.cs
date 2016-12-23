@@ -87,10 +87,13 @@ namespace Machete.Test.Unit.Controller
         public void create_get_returns_person()
         {
             //Arrange
+            var p = new Machete.Web.ViewModel.Person();
+            map.Setup(x => x.Map<Domain.Person, Machete.Web.ViewModel.Person>(It.IsAny<Domain.Person>()))
+                .Returns(p);
             //Act
             var result = (PartialViewResult)_ctrlr.Create();
             //Assert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Person));
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Web.ViewModel.Person));
         }
         [Ignore]
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Persons)]
@@ -132,6 +135,9 @@ namespace Machete.Test.Unit.Controller
         public void edit_get_returns_person()
         {
             //Arrange
+            var pp = new Machete.Web.ViewModel.Person();
+            map.Setup(x => x.Map<Domain.Person, Machete.Web.ViewModel.Person>(It.IsAny<Domain.Person>()))
+                .Returns(pp);
             _serv = new Mock<IPersonService>();
             int testid = 4242;
             Person fakeperson = new Person();

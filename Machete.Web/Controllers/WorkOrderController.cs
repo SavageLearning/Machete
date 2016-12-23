@@ -324,9 +324,8 @@ namespace Machete.Web.Controllers
         public ActionResult View(int id)
         {
             Domain.WorkOrder workOrder = woServ.Get(id);
-            ViewBag.lunchsupplied = def.getBool(workOrder.lunchSupplied);
-            ViewBag.transportmethod = def.byID(workOrder.transportMethodID);
-
+            var m = map.Map<Domain.WorkOrder, ViewModel.WorkOrder>(workOrder);
+            m.def = def;
             return View(workOrder);
         }
 

@@ -117,9 +117,12 @@ namespace Machete.Test.Unit.Controller
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Workers)]
-        public void create_get_returns_person()
+        public void create_get_returns_worker()
         {
             //Arrange
+            var p = new Machete.Web.ViewModel.Worker();
+            map.Setup(x => x.Map<Domain.Worker, Machete.Web.ViewModel.Worker>(It.IsAny<Domain.Worker>()))
+                .Returns(p);
             //Act
             var result = (PartialViewResult)_ctrlr.Create(0);
             //Assert
@@ -130,6 +133,11 @@ namespace Machete.Test.Unit.Controller
         public void WorkerController_create_post_valid_returns_json()
         {
             //Arrange
+            var w = new Machete.Web.ViewModel.Worker() {
+                ID = 12345
+            };
+            map.Setup(x => x.Map<Domain.Worker, Machete.Web.ViewModel.Worker>(It.IsAny<Domain.Worker>()))
+                .Returns(w);
             var _worker = new Domain.Worker();
             var _person = new Domain.Person();
             //
@@ -139,7 +147,7 @@ namespace Machete.Test.Unit.Controller
             //Act
             var result = _ctrlr.Create(_worker, "UnitTest", null) as JsonResult;
             Assert.IsInstanceOfType(result, typeof(JsonResult));
-            Assert.AreEqual("{ iNewID = 12345, jobSuccess = True }",
+            Assert.AreEqual("{ sNewRef = , sNewLabel = , iNewID = 12345, jobSuccess = True }",
                             result.Data.ToString());
         }
         // Commented otu because worker form is now (almost) entirely optional
@@ -166,6 +174,9 @@ namespace Machete.Test.Unit.Controller
         public void edit_get_returns_worker()
         {
             //Arrange
+            var ww = new Machete.Web.ViewModel.Worker();
+            map.Setup(x => x.Map<Domain.Worker, Machete.Web.ViewModel.Worker>(It.IsAny<Domain.Worker>()))
+                .Returns(ww);
             var _worker = new Domain.Worker();
             var _person = new Domain.Person();
             int testid = 4242;

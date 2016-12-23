@@ -137,7 +137,8 @@ namespace Machete.Web.Controllers
             {
                 sNewRef = result.tabref,
                 sNewLabel = result.tablabel,
-                iNewID = result.ID
+                iNewID = result.ID,
+                jobSuccess = true
             },
             JsonRequestBehavior.AllowGet);
         }
