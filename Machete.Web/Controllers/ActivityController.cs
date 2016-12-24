@@ -74,7 +74,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Teacher")]
         public ActionResult Index()
         {
-            var model = new ActivityViewModel();
+            var model = new ActivityIndex();
             if (User.IsInRole("Administrator") || User.IsInRole("Manager"))
                 model.authenticated = 1;
             else model.authenticated = 0;

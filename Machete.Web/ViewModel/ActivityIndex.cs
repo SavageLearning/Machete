@@ -6,7 +6,7 @@ using System.Web;
 
 namespace Machete.Web.ViewModel
 {
-    public class ActivityViewModel
+    public class ActivityIndex
     {
         public CultureInfo CI { get; set; }
         public int authenticated { get; set; }
