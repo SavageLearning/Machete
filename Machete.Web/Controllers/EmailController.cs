@@ -59,7 +59,7 @@ namespace Machete.Web.Controllers
             //Get all the records
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI = CI;
-            dataTableResult<Email> list = serv.GetIndexView(vo);
+            dataTableResult<Domain.Email> list = serv.GetIndexView(vo);
             return Json(new
             {
                 sEcho = param.sEcho,
@@ -86,12 +86,12 @@ namespace Machete.Web.Controllers
             JsonRequestBehavior.AllowGet);
         }
 
-        private string _getTabRef(Email email)
+        private string _getTabRef(Domain.Email email)
         {
             if (email == null) return null;
             return "/Email/Edit/" + Convert.ToString(email.ID);
         }
-        private string _getTabLabel(Email email)
+        private string _getTabLabel(Domain.Email email)
         {
             if (email == null) return null;
             return email.subject;
@@ -103,8 +103,8 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Create()
         {
-            var e = new Email();
-            var ev = map.Map<Email, EmailView>(e);
+            var e = new Domain.Email();
+            var ev = map.Map<Domain.Email, EmailView>(e);
             ev.status = def.byID(e.statusID);
             ev.templates = def.getEmailTemplates();
             ViewBag.EmailStatuses = def.getSelectList(Machete.Domain.LCategory.emailstatus);
@@ -121,9 +121,9 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Teacher")]
         public JsonResult Create(EmailView emailview, string userName)
         {
-            Email newEmail;
+            Domain.Email newEmail;
             UpdateModel(emailview);
-            var email = map.Map<EmailView, Email>(emailview);
+            var email = map.Map<EmailView, Domain.Email>(emailview);
             if (emailview.attachment != null)
             {
                 email.attachment = Server.HtmlDecode(emailview.attachment);
@@ -152,7 +152,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public ActionResult Duplicate(int id, int? woid, string userName)
         {
-            Email duplicate = serv.Duplicate(id, woid, userName);
+            Domain.Email duplicate = serv.Duplicate(id, woid, userName);
             return Json(new
             {
                 sNewRef = _getTabRef(duplicate),
@@ -175,7 +175,7 @@ namespace Machete.Web.Controllers
             EmailView ev;
             string pvType;
             // lock on read for fail
-            Email email = serv.GetExclusive(id, userName);
+            Domain.Email email = serv.GetExclusive(id, userName);
             if (email != null)
             {
                 pvType = "Edit";
@@ -185,7 +185,7 @@ namespace Machete.Web.Controllers
                 pvType = "View";
                 email = serv.Get(id);
             }
-            ev = map.Map<Email, EmailView>(email);
+            ev = map.Map<Domain.Email, EmailView>(email);
 
             ev.status = def.byID(email.statusID);
             ev.templates = def.getEmailTemplates();
@@ -205,7 +205,7 @@ namespace Machete.Web.Controllers
         {
             //UpdateModel(emailview);
             var email = serv.Get(emailview.ID);
-            var newemail = map.Map<EmailView, Email>(emailview, email);
+            var newemail = map.Map<EmailView, Domain.Email>(emailview, email);
             if (emailview.attachment != null)
             {
                 newemail.attachment = Server.HtmlDecode(emailview.attachment);
@@ -246,7 +246,7 @@ namespace Machete.Web.Controllers
             var email = serv.GetLatestConfirmEmailBy(woid);
             if (email == null)
             {
-                var ev = map.Map<Email, EmailView>(new Email());
+                var ev = map.Map<Domain.Email, EmailView>(new Domain.Email());
                 var wo = serv.GetAssociatedWorkOrderFor(woid);
                 ev.status = def.byID(email.statusID);
                 ev.templates = def.getEmailTemplates();
@@ -266,14 +266,14 @@ namespace Machete.Web.Controllers
                 var  lockedemail = serv.GetExclusive(email.ID, userName);
                 if (lockedemail != null)
                 {
-                    ev = map.Map<Email, EmailView>(lockedemail);
+                    ev = map.Map<Domain.Email, EmailView>(lockedemail);
                     ev.status = def.byID(email.statusID);
                     ev.templates = def.getEmailTemplates();
                     ev.woid = woid;
                     return PartialView("EditDialog", ev);
                 }
                 lockedemail = serv.Get(email.ID);
-                ev = map.Map<Email, EmailView>(lockedemail);
+                ev = map.Map<Domain.Email, EmailView>(lockedemail);
                 ev.status = def.byID(email.statusID);
                 ev.templates = def.getEmailTemplates();
                 ev.woid = woid;

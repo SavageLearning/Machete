@@ -50,9 +50,9 @@ namespace Machete.Web
                     .ForMember(wo => wo.wo_phone, opt => opt.MapFrom(e => e.phone))
                     .ForMember(wo => wo.wo_zipcode, opt => opt.MapFrom(e => e.zipcode));
                 #endregion
-                c.CreateMap<Email, EmailView>()
+                c.CreateMap<Domain.Email, EmailView>()
                     .ForMember(ev => ev.statusID, opt => opt.MapFrom(e => e.statusID));
-                c.CreateMap<EmailView, Email>()
+                c.CreateMap<EmailView, Domain.Email>()
                     .ForMember(e => e.updatedby, opt => opt.Ignore())
                     .ForMember(e => e.createdby, opt => opt.Ignore())
                     .ForMember(e => e.datecreated, opt => opt.Ignore())
@@ -92,8 +92,8 @@ namespace Machete.Web
                     .ForMember(v => v.recordid, opt => opt.MapFrom(d => Convert.ToString(d.ID)));
                 c.CreateMap<Domain.WorkOrder, DTO.WorkOrderList>()
                     .ForMember(v => v.WAcount, opt => opt.MapFrom(d => d.workAssignments.Count()))
-                    .ForMember(v => v.emailSentCount, opt => opt.MapFrom(d => d.Emails.Where(e => e.statusID == Email.iSent || e.statusID == Email.iReadyToSend).Count()))
-                    .ForMember(v => v.emailErrorCount, opt => opt.MapFrom(d => d.Emails.Where(e => e.statusID == Email.iTransmitError).Count()))
+                    .ForMember(v => v.emailSentCount, opt => opt.MapFrom(d => d.Emails.Where(e => e.statusID == Domain.Email.iSent || e.statusID == Domain.Email.iReadyToSend).Count()))
+                    .ForMember(v => v.emailErrorCount, opt => opt.MapFrom(d => d.Emails.Where(e => e.statusID == Domain.Email.iTransmitError).Count()))
                 ;
                 c.CreateMap<DTO.WorkOrderList, ViewModel.WorkOrderList>()
                     .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/WorkOrder/Edit/" + Convert.ToString(d.ID)))

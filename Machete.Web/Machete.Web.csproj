@@ -257,7 +257,12 @@
     <Compile Include="Helpers\PayPal\PaypalExpressCheckout.cs" />
     <Compile Include="Helpers\workerRequestBinder.cs" />
     <Compile Include="ViewModel\AccountViewModels.cs" />
+    <Compile Include="ViewModel\Activity.cs" />
     <Compile Include="ViewModel\ActivityIndex.cs" />
+    <Compile Include="ViewModel\ActivitySignin.cs" />
+    <Compile Include="ViewModel\Config.cs" />
+    <Compile Include="ViewModel\Email.cs" />
+    <Compile Include="ViewModel\Event.cs" />
     <Compile Include="ViewModel\IdentityModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Activities.Designer.cs">

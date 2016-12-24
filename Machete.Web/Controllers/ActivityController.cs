@@ -94,7 +94,7 @@ namespace Machete.Web.Controllers
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI = CI;
             if (!User.Identity.IsAuthenticated) vo.authenticated = false;
-            dataTableResult<Activity> list = serv.GetIndexView(vo);
+            dataTableResult<Domain.Activity> list = serv.GetIndexView(vo);
             return Json(new
             {
                 sEcho = param.sEcho,
@@ -105,7 +105,7 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
-        private object dtResponse( Activity p)
+        private object dtResponse( Domain.Activity p)
         {
             return new
             {
@@ -123,24 +123,24 @@ namespace Machete.Web.Controllers
                 updatedby = p.updatedby
             };
         }
-        private string EditTabRef(Activity act)
+        private string EditTabRef(Domain.Activity act)
         {
             if (act == null) return null;
             return "/Activity/Edit/" + Convert.ToString(act.ID);
         }
-        private string EditTabLabel(Activity act)
+        private string EditTabLabel(Domain.Activity act)
         {
             if (act == null) return null;
             return lcache.textByID(act.name, CI.TwoLetterISOLanguageName) + " with " +
                     act.teacher;
         }
 
-        private string CreateManyTabRef(Activity act)
+        private string CreateManyTabRef(Domain.Activity act)
         {
             if (act == null) return null;
             return "/Activity/CreateMany/" + Convert.ToString(act.ID);
         }
-        private string CreateManyTabLabel(Activity act)
+        private string CreateManyTabLabel(Domain.Activity act)
         {
             if (act == null) return null;
             return "Recurring Event with " + act.teacher;
@@ -153,7 +153,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Teacher")]
         public ActionResult Create()
         {
-            var _model = new Activity();
+            var _model = new Domain.Activity();
             _model.dateStart = DateTime.Now;
             _model.dateEnd = DateTime.Now.AddHours(1);
             return PartialView("Create", _model);
@@ -166,7 +166,7 @@ namespace Machete.Web.Controllers
         /// <returns></returns>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Administrator, Manager, Teacher")]
-        public JsonResult Create(Activity activ, string userName)
+        public JsonResult Create(Domain.Activity activ, string userName)
         {
             UpdateModel(activ);
             activ.firstID = activ.ID;
@@ -185,7 +185,7 @@ namespace Machete.Web.Controllers
                 return Json(new { jobSuccess = false, rtnMessage = "End date must be greater than start date." });
             else if (activ.recurring == true)
             {
-                Activity firstAct = serv.Create(activ, userName);
+                Domain.Activity firstAct = serv.Create(activ, userName);
 
                 return Json(new
                 {
@@ -195,8 +195,8 @@ namespace Machete.Web.Controllers
                     jobSuccess = true
                 });
             }
-            else { 
-                Activity newActivity = serv.Create(activ, userName);
+            else {
+                Domain.Activity newActivity = serv.Create(activ, userName);
 
                 return Json(new
                 {
@@ -212,7 +212,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult CreateMany(int id)
         {
-            Activity firstAct = serv.Get(id);
+            Domain.Activity firstAct = serv.Get(id);
             var _model = new ActivitySchedule(firstAct);
             return PartialView("CreateMany", _model);
         }
@@ -222,7 +222,7 @@ namespace Machete.Web.Controllers
         public JsonResult CreateMany(ActivitySchedule actSched, string userName)
         {
             UpdateModel(actSched); // copy values from form to object. why this is necessary if the object is being passed as arg, I don't know.
-            Activity firstActivity = serv.Get(actSched.firstID);
+            Domain.Activity firstActivity = serv.Get(actSched.firstID);
             var instances = actSched.stopDate.Subtract(actSched.dateStart).Days;
             var length = actSched.dateEnd.Subtract(actSched.dateStart).TotalMinutes;
 
@@ -240,7 +240,7 @@ namespace Machete.Web.Controllers
                 else if (day == 6 && !actSched.saturday) break;
                 else
                 {
-                    var activ = new Activity();
+                    var activ = new Domain.Activity();
                     activ.name = actSched.name;
                     activ.type = actSched.type;
                     activ.dateStart = date;
@@ -250,7 +250,7 @@ namespace Machete.Web.Controllers
                     activ.teacher = actSched.teacher;
                     activ.notes = actSched.notes;
 
-                    Activity act = serv.Create(activ, userName);
+                    Domain.Activity act = serv.Create(activ, userName);
                 }
             }
             
@@ -272,7 +272,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Teacher")]
         public ActionResult Edit(int id)
         {
-            Activity activity = serv.Get(id);
+            Domain.Activity activity = serv.Get(id);
             return PartialView("Edit", activity);
         }
         /// <summary>
@@ -286,7 +286,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Teacher")]
         public JsonResult Edit(int id, FormCollection collection, string userName)
         {
-            Activity activity = serv.Get(id);
+            Domain.Activity activity = serv.Get(id);
             UpdateModel(activity);
             serv.Save(activity, userName);
             return Json(new
@@ -319,11 +319,11 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public JsonResult DeleteMany(int id, string userName)
         {
-            Activity firstToDelete = serv.Get(id);
-            IEnumerable<Activity> allToDelete = serv.GetAll()
+            Domain.Activity firstToDelete = serv.Get(id);
+            IEnumerable<Domain.Activity> allToDelete = serv.GetAll()
                 .Where(w => w.firstID == firstToDelete.firstID && w.dateStart >= firstToDelete.dateStart);
 
-            foreach (Activity toDelete in allToDelete)
+            foreach (Domain.Activity toDelete in allToDelete)
             {
                 serv.Delete(toDelete.ID, userName);
             }
