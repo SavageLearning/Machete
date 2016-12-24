@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Configuration;
+using Machete.Web.Maps;
 
 namespace Machete.Web
 {
@@ -50,203 +51,20 @@ namespace Machete.Web
                     .ForMember(wo => wo.wo_phone, opt => opt.MapFrom(e => e.phone))
                     .ForMember(wo => wo.wo_zipcode, opt => opt.MapFrom(e => e.zipcode));
                 #endregion
-                c.CreateMap<Domain.Email, EmailView>()
-                    .ForMember(ev => ev.statusID, opt => opt.MapFrom(e => e.statusID));
-                c.CreateMap<EmailView, Domain.Email>()
-                    .ForMember(e => e.updatedby, opt => opt.Ignore())
-                    .ForMember(e => e.createdby, opt => opt.Ignore())
-                    .ForMember(e => e.datecreated, opt => opt.Ignore())
-                    .ForMember(e => e.dateupdated, opt => opt.Ignore());
-                //
-                // Employer
-                c.CreateMap<Domain.Employer, ViewModel.Employer>()
-                    .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/Employer/Edit/" + Convert.ToString(d.ID)))
-                    .ForMember(v => v.tablabel, opt => opt.MapFrom(d => d.name))
-                    .ForMember(v => v.active, opt => opt.MapFrom(d => Convert.ToString(d.active)))
-                    //.ForMember(v => v.EID, opt => opt.MapFrom(d => Convert.ToString(d.ID)))
-                    //.ForMember(v => v.recordid, opt => opt.MapFrom(d => Convert.ToString(d.ID)))
-                    .ForMember(v => v.dateupdated, opt => opt.MapFrom(d => Convert.ToString(d.dateupdated)))
-                    .ForMember(v => v.onlineSource, opt => opt.MapFrom(d => d.onlineSource.ToString()));
-                c.CreateMap<Domain.Employer, DTO.EmployerList>();
-                c.CreateMap<DTO.EmployerList, ViewModel.EmployerList>()
-                    .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/Employer/Edit/" + Convert.ToString(d.ID)))
-                    .ForMember(v => v.tablabel, opt => opt.MapFrom(d => d.name))
-                    .ForMember(v => v.active, opt => opt.MapFrom(d => Convert.ToString(d.active)))
-                    .ForMember(v => v.EID, opt => opt.MapFrom(d => Convert.ToString(d.ID)))
-                    .ForMember(v => v.recordid, opt => opt.MapFrom(d => Convert.ToString(d.ID)))
-                    .ForMember(v => v.dateupdated, opt => opt.MapFrom(d => Convert.ToString(d.dateupdated)))
-                    .ForMember(v => v.onlineSource, opt => opt.MapFrom(d => d.onlineSource.ToString()));
-                //
-                // WorkOrder
-                c.CreateMap<Domain.WorkOrder, ViewModel.WorkOrder>()
-                    .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/WorkOrder/Edit/" + Convert.ToString(d.ID)))
-                    .ForMember(v => v.tablabel, opt => opt.MapFrom(d =>
-                        Machete.Web.Resources.WorkOrders.tabprefix +
-                        Convert.ToString(d.paperOrderNum) +
-                        " @ " + d.workSiteAddress1))
-                    .ForMember(v => v.EID, opt => opt.MapFrom(d => Convert.ToString(d.EmployerID)))
-                    .ForMember(v => v.WOID, opt => opt.MapFrom(d => System.String.Format("{0,5:D5}", d.paperOrderNum)))
-                    .ForMember(v => v.dateTimeofWork, opt => opt.MapFrom(d => Convert.ToString(d.dateTimeofWork)))
-                    .ForMember(v => v.dateupdatedstring, opt => opt.MapFrom(d => System.String.Format("{0:MM/dd/yyyy HH:mm:ss}", d.dateupdated)))
-                    .ForMember(v => v.onlineSource, opt => opt.MapFrom(d => d.onlineSource ? Shared.True : Shared.False))
-                    .ForMember(v => v.recordid, opt => opt.MapFrom(d => Convert.ToString(d.ID)));
-                c.CreateMap<Domain.WorkOrder, DTO.WorkOrderList>()
-                    .ForMember(v => v.WAcount, opt => opt.MapFrom(d => d.workAssignments.Count()))
-                    .ForMember(v => v.emailSentCount, opt => opt.MapFrom(d => d.Emails.Where(e => e.statusID == Domain.Email.iSent || e.statusID == Domain.Email.iReadyToSend).Count()))
-                    .ForMember(v => v.emailErrorCount, opt => opt.MapFrom(d => d.Emails.Where(e => e.statusID == Domain.Email.iTransmitError).Count()))
-                ;
-                c.CreateMap<DTO.WorkOrderList, ViewModel.WorkOrderList>()
-                    .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/WorkOrder/Edit/" + Convert.ToString(d.ID)))
-                    .ForMember(v => v.tablabel, opt => opt.MapFrom(d => 
-                        Machete.Web.Resources.WorkOrders.tabprefix +
-                        Convert.ToString(d.paperOrderNum) +
-                        " @ " + d.workSiteAddress1))
-                    .ForMember(v => v.EID, opt => opt.MapFrom(d => Convert.ToString(d.EmployerID)))
-                    .ForMember(v => v.WOID, opt => opt.MapFrom(d => System.String.Format("{0,5:D5}", d.paperOrderNum)))
-                    .ForMember(v => v.dateTimeofWork, opt => opt.MapFrom(d => Convert.ToString(d.dateTimeofWork)))
-                    .ForMember(v => v.dateupdated, opt => opt.MapFrom(d => Convert.ToString(d.dateupdated)))
-                    ;
-                //
-                // WorkAssignment
-                c.CreateMap<Domain.WorkAssignment, ViewModel.WorkAssignment>()
-                    .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/WorkAssignment/Edit/" + Convert.ToString(d.ID)))
-                    .ForMember(v => v.tablabel, opt => opt.MapFrom(d => 
-                        Resources.WorkAssignments.tabprefix + 
-                        System.String.Format("{0,5:D5}", d.workOrder == null ? 0 : d.workOrder.paperOrderNum) +
-                        "-" + System.String.Format("{0,2:D2}", d.pseudoID)))
-                ;
-                c.CreateMap<Domain.WorkAssignment, DTO.WorkAssignmentList>()
-                     .ForMember(v => v.employername, opt => opt.MapFrom(d => d.workOrder.Employer.name))
-                     .ForMember(v => v.earnings, opt => opt.MapFrom(d => (d.days * d.surcharge) + (d.hourlyWage * d.hours * d.days)))
-                     .ForMember(v => v.maxEarnings, opt => opt.MapFrom(d =>
-                        d.hourRange == null ? 0 : (d.days * d.surcharge) + (d.hourlyWage * (int)d.hourRange * d.days)))
-                    .ForMember(v => v.paperOrderNum, opt => opt.MapFrom(d => d.workOrder.paperOrderNum))
-                     //.ForMember(v => v.assignedWorker, opt => opt.MapFrom(d =>
-                     //   d.workerAssigned == null ? "" :
-                     //   Convert.ToString(d.workerAssigned.dwccardnum))) // + " " + PersonFullName(d.workerAssigned.Person))) //TODO:2016: replace person full name
-                ;
-                c.CreateMap<DTO.WorkAssignmentList, ViewModel.WorkAssignmentList>()
-                    .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/WorkAssignment/Edit/" + Convert.ToString(d.ID)))
-                    .ForMember(v => v.tablabel, opt => opt.MapFrom(d =>
-                        Resources.WorkAssignments.tabprefix +
-                        System.String.Format("{0,5:D5}", d.paperOrderNum) +
-                        "-" + System.String.Format("{0,2:D2}", d.pseudoID)))
-                    .ForMember(v => v.WOID, opt => opt.MapFrom(d => d.workOrderID))
-                    .ForMember(v => v.WAID, opt => opt.MapFrom(d => d.ID))
-                    .ForMember(v => v.WID, opt => opt.MapFrom(d => d.workerAssignedID))
-                    .ForMember(v => v.pWAID, opt => opt.MapFrom(d => System.String.Format("{0,5:D5}", d.paperOrderNum) +
-                        "-" + System.String.Format("{0,2:D2}", d.pseudoID)))
-                    .ForMember(v => v.englishlevel, opt => opt.MapFrom(d => Convert.ToString(d.englishLevelID)))
-                    .ForMember(v => v.skill, opt => opt.MapFrom(d => Convert.ToString(d.skillID)))
-                    .ForMember(v => v.hourlywage, opt => opt.MapFrom(d => System.String.Format("${0:f2}", d.hourlyWage)))
-                    .ForMember(v => v.hours, opt => opt.MapFrom(d => Convert.ToString(d.hours)))
-                    .ForMember(v => v.hourRange, opt => opt.MapFrom(d => Convert.ToString(d.hourRange)))
-                    .ForMember(v => v.days, opt => opt.MapFrom(d => Convert.ToString(d.days)))
-                    .ForMember(v => v.dateupdated, opt => opt.MapFrom(d => Convert.ToString(d.dateupdated)))
-                    .ForMember(v => v.dateTimeofWork, opt => opt.MapFrom(d => Convert.ToString(
-                        d.dateTimeofWork.AddHours(
-                            Convert.ToDouble(WebConfigurationManager.AppSettings["TimeZoneDifferenceFromPacific"])))))
-                    .ForMember(v => v.timeofwork, opt => opt.MapFrom(d =>
-                        d.dateTimeofWork.AddHours(
-                            Convert.ToDouble(WebConfigurationManager.AppSettings["TimeZoneDifferenceFromPacific"])).ToShortTimeString()))
-                    .ForMember(v => v.earnings, opt => opt.MapFrom(d => System.String.Format("${0:f2}", d.earnings)))
-                    .ForMember(v => v.asmtStatus, opt => opt.MapFrom(d => AssignmentStatus(d)))
-                ;
-                //
-                // WorkerSignin
-                c.CreateMap<Domain.WorkerSignin, DTO.WorkerSigninList>()
-                    .ForMember(v => v.lotterySequence, opt => opt.MapFrom(d => d.lottery_sequence))
-                    .ForMember(v => v.englishlevel, opt => opt.MapFrom(d => d == null ? 0 : d.worker.englishlevelID))
-                    .ForMember(v => v.waid, opt => opt.MapFrom(d => d.WorkAssignmentID))
-                    .ForMember(v => v.skill1, opt => opt.MapFrom(d => d == null ? null : d.worker.skill1))
-                    .ForMember(v => v.skill2, opt => opt.MapFrom(d => d == null ? null : d.worker.skill2))
-                    .ForMember(v => v.skill3, opt => opt.MapFrom(d => d == null ? null : d.worker.skill3))
-                    .ForMember(v => v.fullname, opt => opt.MapFrom(d => 
-                        d.worker.Person.firstname1 + " " +
-                        d.worker.Person.firstname2 + " " +
-                        d.worker.Person.lastname1 + " " +
-                        d.worker.Person.lastname2 ))
-                ;
-                c.CreateMap<Domain.WorkerSignin, ViewModel.WorkerSignin>()
-                ;
-                c.CreateMap<DTO.WorkerSigninList, ViewModel.WorkerSigninList>()
-                ;
-                //
-                // Person
-                c.CreateMap<Domain.Person, DTO.PersonList>()
-                ;
-                c.CreateMap<Domain.Person, ViewModel.Person>();
-                c.CreateMap<DTO.PersonList, ViewModel.PersonList>()
-                    .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/Person/Edit/" + Convert.ToString(d.ID)))
-                    .ForMember(v => v.tablabel, opt => opt.MapFrom(d => d.firstname1 + ' ' + d.lastname1))
-                    .ForMember(v => v.dwccardnum, opt => opt.MapFrom(d => Convert.ToString(d.dwccardnum)))
-                    .ForMember(v => v.active, opt => opt.MapFrom(d => d.active ? Shared.True : Shared.False))
-                    .ForMember(v => v.status, opt => opt.MapFrom(d => d.active))
-                    .ForMember(v => v.recordid, opt => opt.MapFrom(d => Convert.ToString(d.ID)))
-                    .ForMember(v => v.dateupdated, opt => opt.MapFrom(d => Convert.ToString(d.dateupdated)))
-                    ;
-                //
-                // Worker
-                c.CreateMap<Domain.Worker, DTO.WorkerList>()
-                     .ForMember(v => v.firstname1, opt => opt.MapFrom(d => d.Person.firstname1))
-                     .ForMember(v => v.firstname2, opt => opt.MapFrom(d => d.Person.firstname2))
-                     .ForMember(v => v.lastname1, opt => opt.MapFrom(d => d.Person.lastname1))
-                     .ForMember(v => v.lastname2, opt => opt.MapFrom(d => d.Person.lastname2))
-                ;
-                c.CreateMap<Domain.Worker, ViewModel.Worker>();
-                c.CreateMap<DTO.WorkerList, ViewModel.WorkerList>()
-                    .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/Worker/Edit/" + Convert.ToString(d.ID)))
-                    .ForMember(v => v.tablabel, opt => opt.MapFrom(d => d.firstname1 + ' ' + d.lastname1))
-                    .ForMember(v => v.WID, opt => opt.MapFrom(d => Convert.ToString(d.ID)))
-                    .ForMember(v => v.recordid, opt => opt.MapFrom(d => Convert.ToString(d.ID)))
-                    .ForMember(v => v.dwccardnum, opt => opt.MapFrom(d => Convert.ToString(d.dwccardnum)))
-                    .ForMember(v => v.active, opt => opt.MapFrom(d => d.active ? Shared.True : Shared.False))
-                    .ForMember(v => v.wkrStatus, opt => opt.MapFrom(d => WorkerStatus(d)))
-                    .ForMember(v => v.memberexpirationdate, opt => opt.MapFrom(d => Convert.ToString(d.memberexpirationdate)))
-                    ;
+
+                c.AddProfile<EmailProfile>();
+                c.AddProfile<EmployerProfile>();
+                c.AddProfile<WorkOrderProfile>();
+                c.AddProfile<WorkAssignmentProfile>();
+                c.AddProfile<WorkerSigninProfile>();
+                c.AddProfile<PersonProfile>();
+                c.AddProfile<WorkerProfile>();
             });
         }
-
-        public static string WorkerStatus(DTO.WorkerList wkr)
-        {
-            if (wkr.memberStatus == Domain.Worker.iActive) return "active";
-            if (wkr.memberStatus == Domain.Worker.iInactive) return "inactive";
-            if (wkr.memberStatus == Domain.Worker.iExpired) return "expired";
-            if (wkr.memberStatus == Domain.Worker.iSanctioned) return "sanctioned";
-            if (wkr.memberStatus == Domain.Worker.iExpelled) return "expelled";
-            return null;
-        }
-
-        public static string AssignmentStatus(DTO.WorkAssignmentList d)
-        {
-            if (d.workerAssignedID > 0 && d.workerSigninID > 0) // green
-                return "completed";
-            if (d.workerAssignedID == null && d.WOstatus == Domain.WorkOrder.iCompleted)
-                return "incomplete";
-            if (d.workerAssignedID > 0 && d.workerSigninID == null && d.WOstatus == Domain.WorkOrder.iCompleted)
-                return "orphaned";
-            if (d.WOstatus == Domain.WorkOrder.iCancelled)
-                return "cancelled";
-            if (d.WOstatus == Domain.WorkOrder.iActive) // blue
-                return "active";
-            return null;
-        }
-
-        public static string PersonFullName(Domain.Person p)
-        {
-            var rtnstr = p.firstname1 + " ";
-            if (p.firstname2 != null) rtnstr = rtnstr + p.firstname2 + " ";
-            rtnstr = rtnstr + p.lastname1;
-            if (p.lastname2 != null) rtnstr = rtnstr + " " + p.lastname2;
-            return rtnstr;
-        }
-
 
         public IMapper getMapper()
         {
             return map ?? (map = new Mapper(cfg));
         }
-
-
     }
 }

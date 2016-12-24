@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Machete.Service.DTO
 {
-    class ConfigList
+    public class ConfigList
     {
     }
 }
