@@ -11,8 +11,12 @@ namespace Machete.Web.Maps
     {
         public PersonProfile()
         {
-            CreateMap<Domain.Person, Service.DTO.PersonList>();
-            CreateMap<Domain.Person, ViewModel.Person>();
+            CreateMap<Domain.Person, Service.DTO.PersonList>()
+                ;
+            CreateMap<Domain.Person, ViewModel.Person>()
+                .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/Person/Edit/" + Convert.ToString(d.ID)))
+                .ForMember(v => v.tablabel, opt => opt.MapFrom(d => d.firstname1 + ' ' + d.lastname1))
+                ;
             CreateMap<Service.DTO.PersonList, ViewModel.PersonList>()
                 .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/Person/Edit/" + Convert.ToString(d.ID)))
                 .ForMember(v => v.tablabel, opt => opt.MapFrom(d => d.firstname1 + ' ' + d.lastname1))

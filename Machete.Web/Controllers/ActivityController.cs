@@ -24,6 +24,7 @@
 using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
+using DTO = Machete.Service.DTO;
 using Machete.Web.Helpers;
 using Machete.Web.ViewModel;
 using System;
@@ -94,56 +95,19 @@ namespace Machete.Web.Controllers
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI = CI;
             if (!User.Identity.IsAuthenticated) vo.authenticated = false;
-            dataTableResult<Domain.Activity> list = serv.GetIndexView(vo);
+            dataTableResult<DTO.ActivityList> list = serv.GetIndexView(vo);
+            var result = list.query
+                .Select(
+                    e => map.Map<DTO.ActivityList, ViewModel.ActivityList>(e)
+                ).AsEnumerable();
             return Json(new
             {
                 sEcho = param.sEcho,
                 iTotalRecords = list.totalCount,
                 iTotalDisplayRecords = list.filteredCount,
-                aaData = from p in list.query
-                         select dtResponse( p)
+                aaData = result
             },
             JsonRequestBehavior.AllowGet);
-        }
-        private object dtResponse( Domain.Activity p)
-        {
-            return new
-            {
-                tabref = EditTabRef(p),
-                tablabel = EditTabLabel(p),
-                name = lcache.textByID(p.name, CI.TwoLetterISOLanguageName),
-                type = lcache.textByID(p.type, CI.TwoLetterISOLanguageName),
-                count = p.Signins.Count(),
-                teacher = p.teacher,
-                dateStart = p.dateStart.ToString(),
-                dateEnd = p.dateEnd.ToString(),
-                AID = Convert.ToString(p.ID),
-                recordid = Convert.ToString(p.ID),
-                dateupdated = Convert.ToString(p.dateupdated),
-                updatedby = p.updatedby
-            };
-        }
-        private string EditTabRef(Domain.Activity act)
-        {
-            if (act == null) return null;
-            return "/Activity/Edit/" + Convert.ToString(act.ID);
-        }
-        private string EditTabLabel(Domain.Activity act)
-        {
-            if (act == null) return null;
-            return lcache.textByID(act.name, CI.TwoLetterISOLanguageName) + " with " +
-                    act.teacher;
-        }
-
-        private string CreateManyTabRef(Domain.Activity act)
-        {
-            if (act == null) return null;
-            return "/Activity/CreateMany/" + Convert.ToString(act.ID);
-        }
-        private string CreateManyTabLabel(Domain.Activity act)
-        {
-            if (act == null) return null;
-            return "Recurring Event with " + act.teacher;
         }
 
         /// <summary>
@@ -171,42 +135,29 @@ namespace Machete.Web.Controllers
             UpdateModel(activ);
             activ.firstID = activ.ID;
 
-            if (activ.name == 0)
+            if (activ.nameID == 0)
             {
-                if (activ.type == lcache.getByKeys(LCategory.activityType, LActType.Assembly))
-                    activ.name = lcache.getByKeys(LCategory.activityName, LActName.Assembly);
-                else if (activ.type == lcache.getByKeys(LCategory.activityType, LActType.OrgMtg))
-                    activ.name = lcache.getByKeys(LCategory.activityName, LActName.OrgMtg);
+                if (activ.typeID == lcache.getByKeys(LCategory.activityType, LActType.Assembly))
+                    activ.nameID = lcache.getByKeys(LCategory.activityName, LActName.Assembly);
+                else if (activ.typeID == lcache.getByKeys(LCategory.activityType, LActType.OrgMtg))
+                    activ.nameID = lcache.getByKeys(LCategory.activityName, LActName.OrgMtg);
                 else
                     throw new MacheteIntegrityException("Something went wrong with Activity Types.");
             }
 
             if (activ.dateEnd < activ.dateStart)
                 return Json(new { jobSuccess = false, rtnMessage = "End date must be greater than start date." });
-            else if (activ.recurring == true)
+
+            Domain.Activity firstAct = serv.Create(activ, userName);
+            var result = map.Map<Domain.Activity, ViewModel.Activity>(firstAct);
+            return Json(new
             {
-                Domain.Activity firstAct = serv.Create(activ, userName);
-
-                return Json(new
-                {
-                    sNewRef = CreateManyTabRef(firstAct),
-                    sNewLabel = CreateManyTabLabel(firstAct),
-                    iNewID = activ.ID,
-                    jobSuccess = true
-                });
-            }
-            else {
-                Domain.Activity newActivity = serv.Create(activ, userName);
-
-                return Json(new
-                {
-                    sNewRef = EditTabRef(newActivity),
-                    sNewLabel = EditTabLabel(newActivity),
-                    iNewID = newActivity.ID,
-                    jobSuccess = true
-                },
-                JsonRequestBehavior.AllowGet);
-            }
+                sNewRef = result.tabref,
+                sNewLabel = result.tablabel,
+                iNewID = result.ID,
+                jobSuccess = true
+            });
+           
         }
 
         [Authorize(Roles = "Administrator, Manager")]
@@ -241,8 +192,8 @@ namespace Machete.Web.Controllers
                 else
                 {
                     var activ = new Domain.Activity();
-                    activ.name = actSched.name;
-                    activ.type = actSched.type;
+                    activ.nameID = actSched.name;
+                    activ.typeID = actSched.type;
                     activ.dateStart = date;
                     activ.dateEnd = date.AddMinutes(length);
                     activ.recurring = true;
@@ -256,8 +207,8 @@ namespace Machete.Web.Controllers
             
             return Json(new
             {
-                sNewRef = EditTabRef(firstActivity),
-                sNewLabel = EditTabLabel(firstActivity),
+                sNewRef = "", //EditTabRef(firstActivity),
+                sNewLabel = "", //EditTabLabel(firstActivity),
                 iNewID = firstActivity.ID,
                 jobSuccess = true
             },

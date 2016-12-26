@@ -111,12 +111,11 @@ namespace Machete.Test.Selenium.View
             WaitForElement(By.Id(prefix + "zipcode")).Clear();
             WaitForElement(By.Id(prefix + "zipcode")).SendKeys(_per.zipcode);
             WaitThenClickElement(By.Id(prefix + "SaveBtn"));
-
             //
             //WaitForElement(By.Id("personSearchBox")).SendKeys(_per.lastname1);
             //WaitForElementValue(By.XPath("//table[@id='personTable']/tbody/tr/td[4]"), _per.lastname1);
             //WaitAndDoubleClick(By.XPath("//table[@id='personTable']/tbody/tr/td[6]"));
-
+            //
             var selectedTab = WaitForElement(By.CssSelector("li.person.ui-tabs-selected"));
             IWebElement tabAnchor = selectedTab.FindElement(By.CssSelector("a"));
             _per.ID = Convert.ToInt32(tabAnchor.GetAttribute("recordid"));
@@ -324,7 +323,7 @@ namespace Machete.Test.Selenium.View
             _d.FindElement(By.Id(prefix + "SaveBtn")).Click();
             //
             // check for duplicate dialog
-            var dialog = WaitForElement(By.Id("duplicatesDialog"));
+            var dialog = WaitForElementExists(By.Id("duplicatesDialog"));
             if (dialog != null)
             {
                 WaitForElement(By.Id("duplicateSaveBtn"));
@@ -481,7 +480,7 @@ namespace Machete.Test.Selenium.View
             });
             getAttributeAssertEqual(_wo.contactName, "contactName");
             Assert.IsTrue(WaitForElement(By.Id(prefix + "paperOrderNum")).GetAttribute("value") != "", "paper order number is empty");
-            getAttributeAssertEqual(_wo.paperOrderNum.ToString(), "paperOrderNum");
+            //getAttributeAssertEqual(_wo.paperOrderNum.ToString(), "paperOrderNum");
             getAttributeAssertEqual(_wo.workSiteAddress1, "workSiteAddress1");
             getAttributeAssertEqual(_wo.workSiteAddress2, "workSiteAddress2");
             getAttributeAssertEqual(_wo.phone, "phone");
@@ -504,8 +503,8 @@ namespace Machete.Test.Selenium.View
             Assert.AreEqual(_wo.lunchSupplied ? 2 : 1, GetOptionIndex(By.Id(prefix + "lunchSupplied")));
             WaitForElement(By.Id(prefix + "transportMethodID"));
             Assert.AreEqual(_wo.transportMethodID, GetOptionIndex(By.Id(prefix + "transportMethodID")));
-            WaitForElement(By.Id(prefix + "transportTransactType"));
-            Assert.AreEqual(_wo.transportTransactType, GetOptionIndex(By.Id(prefix + "transportTransactType")));
+            //WaitForElement(By.Id(prefix + "transportTransactType"));
+            //Assert.AreEqual(_wo.transportTransactType, GetOptionIndex(By.Id(prefix + "transportTransactType")));
             WaitForElement(By.Id("workerRequests2_WO-" + _wo.ID.ToString()));
             if (_wo.workerRequests != null)
                 foreach (var request in _wo.workerRequests)
@@ -686,9 +685,9 @@ namespace Machete.Test.Selenium.View
             //Wait for page to load
             WaitForElement(By.Id(prefix + "type"));
             //Enter information
-            SelectOptionByValue(By.Id(prefix + "type"), _act.type.ToString());
+            SelectOptionByValue(By.Id(prefix + "type"), _act.typeID.ToString());
             WaitForElement(By.Id(prefix + "name"));
-            SelectOptionByValue(By.Id(prefix + "name"), _act.name.ToString());
+            SelectOptionByValue(By.Id(prefix + "name"), _act.nameID.ToString());
             SelectOption(By.Id(prefix + "teacher"), _act.teacher);
             ReplaceElementText(By.Id(prefix + "notes"), _act.notes);
             //Hit the save button

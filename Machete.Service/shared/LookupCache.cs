@@ -69,7 +69,7 @@ namespace Machete.Service
         {
             IEnumerable<Lookup> lookups = DB.Get().Lookups.ToList();
             var teacherID = DB.Get().Roles.First(r => r.Name == "Teacher").Id;
-            IEnumerable<string> teachers = DB.Get().Users.Where(u => u.Roles.All(r => r.RoleId == teacherID))
+            IEnumerable<string> teachers = DB.Get().Users.Where(u => u.Roles.Any(r => r.RoleId == teacherID))
                 .Select(x => x.UserName).Distinct().ToList();
             CacheItemPolicy policy = new CacheItemPolicy();
             //TODO: Put LookupCache expire time in config file

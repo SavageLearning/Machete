@@ -12,17 +12,17 @@
 @Html.HiddenFor(model => model.firstID, new { @class = "hiddenRecID", id = Model.firstID.ToString() + "isFirstID" })
 <div class="tb-table" style="float: left;">
     <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.type)
-        @Html.mUIDropDownListFor(model => model.type,
+        @Html.mUITableLabelFor(model => model.typeID)
+        @Html.mUIDropDownListFor(model => model.typeID,
                 new SelectList(ViewBag.activitytype,
-                                                    "Value", "Text", Model.type),
+                                                    "Value", "Text", Model.typeID),
                 new { tabindex = "1", id = idPrefix + "type" })
     </div>
     <div class="tb-row" id="className">
-        @Html.mUITableLabelFor(model => model.name)
-        @Html.mUIDropDownListFor(model => model.name,
+        @Html.mUITableLabelFor(model => model.nameID)
+        @Html.mUIDropDownListFor(model => model.nameID,
                 new SelectList(ViewBag.activityname,
-                                            "Value", "Text", Model.name),
+                                            "Value", "Text", Model.nameID),
                 new { tabindex = "1", id = idPrefix + "name" })
     </div>
     <div class="tb-row">
@@ -84,7 +84,10 @@
     $(document).ready(function () {
         $('#@(idPrefix)type').change(
             function () {
-                if ($('#@(idPrefix)type option:selected').val() == @(ViewBag.activitytype_assembly) || $('#@(idPrefix)type option:selected').val() == @(ViewBag.activitytype_orgmtg))
+                if (
+                    $('#@(idPrefix)type option:selected').val() == "@(ViewBag.activitytype_assembly)" || 
+                    $('#@(idPrefix)type option:selected').val() == "@(ViewBag.activitytype_orgmtg)"
+                   )
                 {
                     $('#@(idPrefix)name').attr('disabled', 'disabled');
                     $('#className').hide();

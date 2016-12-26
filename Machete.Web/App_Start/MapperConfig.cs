@@ -59,6 +59,7 @@ namespace Machete.Web
                 c.AddProfile<WorkerSigninProfile>();
                 c.AddProfile<PersonProfile>();
                 c.AddProfile<WorkerProfile>();
+                c.AddProfile<ActivityProfile>();
             });
         }
 

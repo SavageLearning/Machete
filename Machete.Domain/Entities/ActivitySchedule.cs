@@ -33,8 +33,8 @@ namespace Machete.Domain
         {
             idString = "activity";
             this.firstID = firstAct.ID;
-            this.name = firstAct.name;
-            this.type = firstAct.type;
+            this.name = firstAct.nameID;
+            this.type = firstAct.typeID;
             this.dateStart = firstAct.dateStart;
             this.dateEnd = firstAct.dateEnd;
             this.teacher = firstAct.teacher;

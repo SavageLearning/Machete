@@ -113,6 +113,7 @@ namespace Machete.Web.Controllers
             var nextnum = serv.GetNextWorkerNum();
             var w = map.Map<Domain.Worker, ViewModel.Worker>(new Domain.Worker()
             {
+                ID = ID,
                 dwccardnum = nextnum
             });
             w.def = def;

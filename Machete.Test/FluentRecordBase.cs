@@ -802,7 +802,8 @@ namespace Machete.Test
             if (_servAS == null) AddServActivitySignin();
             if (_lcache == null) AddLookupCache();
             if (_uow == null) AddUOW();
-            _servA = new ActivityService(_repoA, _servAS, _lcache, _uow);
+            if (_map == null) AddMapper();
+            _servA = new ActivityService(_repoA, _servAS, _lcache, _uow, _map);
             return this;
         }
 

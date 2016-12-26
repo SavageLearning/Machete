@@ -529,15 +529,29 @@ namespace Machete.Service
         /// <param name="o"></param>
         /// <param name="q"></param>
         /// <param name="lRepo"></param>
-        public static void search(viewOptions o, ref IEnumerable<Activity> q, LookupCache lcache)
+        public static void search(viewOptions o, ref IQueryable<Activity> q)
         {
-            q = q //LookupCache will be slow and needs to be converted to IQueryable
-                .Where(p => lcache.textByID(p.name, o.CI.TwoLetterISOLanguageName).ContainsOIC(o.sSearch) ||
-                            p.notes.ContainsOIC(o.sSearch) ||
-                            p.teacher.ContainsOIC(o.sSearch) ||
-                            lcache.textByID(p.type, o.CI.TwoLetterISOLanguageName).ContainsOIC(o.sSearch) ||
-                            p.dateStart.ToString().ContainsOIC(o.sSearch) ||
-                            p.dateEnd.ToString().ContainsOIC(o.sSearch));
+            switch(o.CI.TwoLetterISOLanguageName.ToUpperInvariant())
+            {
+                case "ES":
+                    q = q.Where(p => p.notes.ContainsOIC(o.sSearch) ||
+                        p.teacher.ContainsOIC(o.sSearch) ||
+                        p.dateStart.ToString().ContainsOIC(o.sSearch) ||
+                        p.nameES.ToString().ContainsOIC(o.sSearch) ||
+                        p.typeES.ToString().ContainsOIC(o.sSearch) ||
+                        p.dateEnd.ToString().ContainsOIC(o.sSearch));
+                    break;
+                case "EN":
+                default:
+                    q = q.Where(p => p.notes.ContainsOIC(o.sSearch) ||
+                        p.teacher.ContainsOIC(o.sSearch) ||
+                        p.dateStart.ToString().ContainsOIC(o.sSearch) ||
+                        p.nameEN.ToString().ContainsOIC(o.sSearch) ||
+                        p.typeEN.ToString().ContainsOIC(o.sSearch) ||
+                        p.dateEnd.ToString().ContainsOIC(o.sSearch));
+                        break;
+            }
+
         }
         /// <summary>
         /// 
@@ -546,20 +560,10 @@ namespace Machete.Service
         /// <param name="descending"></param>
         /// <param name="isoLandCode"></param>
         /// <param name="q"></param>
-        public static void sortOnColName(string name, bool descending, string isoLandCode, ref IEnumerable<Activity> q, LookupCache lc)
+        public static void sortOnColName(string name, bool descending, ref IQueryable<Activity> q)
         {
             switch (name)
             {
-                case "name":
-                    q = descending ?
-                        q.OrderByDescending(p => lc.textByID(p.name, isoLandCode)) :
-                        q.OrderBy(p => lc.textByID(p.name, isoLandCode));
-                    break;
-                case "type":
-                    q = descending ?
-                        q.OrderByDescending(p => lc.textByID(p.type, isoLandCode)) :
-                        q.OrderBy(p => lc.textByID(p.type, isoLandCode));
-                    break;
                 case "count":
                     q = descending ?
                         q.OrderByDescending(p => p.Signins.Count()) :
