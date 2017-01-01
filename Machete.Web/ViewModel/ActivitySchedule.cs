@@ -21,25 +21,30 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+using Machete.Domain;
+using Machete.Web;
+using Machete.Web.Helpers;
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Machete.Domain
+namespace Machete.Web.ViewModel
 {
     public class ActivitySchedule : Record
     {
         public ActivitySchedule() { }
-        public ActivitySchedule(Activity firstAct)
-        {
-            idString = "activity";
-            this.firstID = firstAct.ID;
-            this.name = firstAct.nameID;
-            this.type = firstAct.typeID;
-            this.dateStart = firstAct.dateStart;
-            this.dateEnd = firstAct.dateEnd;
-            this.teacher = firstAct.teacher;
-            this.notes = firstAct.notes;
-        }
+        public IDefaults def;
+
+        //public ActivitySchedule(Domain.Activity firstAct)
+        //{
+        //    idString = "activity";
+        //    this.firstID = firstAct.ID;
+        //    this.name = firstAct.nameID;
+        //    this.type = firstAct.typeID;
+        //    this.dateStart = firstAct.dateStart;
+        //    this.dateEnd = firstAct.dateEnd;
+        //    this.teacher = firstAct.teacher;
+        //    this.notes = firstAct.notes;
+        //}
 
         public string idChild
         {
@@ -58,10 +63,11 @@ namespace Machete.Domain
         [LocalizedDisplayName("type", NameResourceType = typeof(Resources.ActivitySchedule))]
         [Required(ErrorMessageResourceName = "typerequired", ErrorMessageResourceType = typeof(Resources.ActivitySchedule))]
         public int type { get; set; }
+
         [LocalizedDisplayName("dateStart", NameResourceType = typeof(Resources.ActivitySchedule))]
         [Required(ErrorMessageResourceName = "dateStartrequired", ErrorMessageResourceType = typeof(Resources.ActivitySchedule))]
-
         public DateTime dateStart { get; set; }
+
         [LocalizedDisplayName("dateEnd", NameResourceType = typeof(Resources.ActivitySchedule))]
         [Required(ErrorMessageResourceName = "dateEndrequired", ErrorMessageResourceType = typeof(Resources.ActivitySchedule))]
         public DateTime dateEnd { get; set; }
@@ -98,17 +104,5 @@ namespace Machete.Domain
         [LocalizedDisplayName("stopDate", NameResourceType = typeof(Resources.ActivitySchedule))]
         [Required(ErrorMessageResourceName = "dateEndrequired", ErrorMessageResourceType = typeof(Resources.ActivitySchedule))]
         public DateTime stopDate { get; set; }
-    }
-
-    public class ActivityScheduleSignin: Signin
-    {
-        public ActivityScheduleSignin()
-        {
-            idString = "asi";
-        }
-        public virtual Activity Activity { get; set; }
-        public int activityID { get; set; }
-        public int? personID { get; set; }
-        public virtual Person person {get; set;}
     }
 }

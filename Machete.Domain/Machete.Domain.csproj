@@ -248,7 +248,6 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Entities\Activity.cs" />
-    <Compile Include="Entities\ActivitySchedule.cs" />
     <Compile Include="Entities\Email.cs" />
     <Compile Include="Entities\Event.cs" />
     <Compile Include="Entities\Exceptions.cs" />
@@ -268,11 +267,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Activity.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\ActivitySchedule.Designer.cs">
-      <DependentUpon>ActivitySchedule.resx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Resources\Employer.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -354,11 +348,6 @@
     <EmbeddedResource Include="Resources\Activity.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Activity.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\ActivitySchedule.es.resx" />
-    <EmbeddedResource Include="Resources\ActivitySchedule.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ActivitySchedule.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Employer.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

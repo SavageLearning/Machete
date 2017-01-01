@@ -59,6 +59,7 @@ namespace Machete.Web.Helpers
         SelectList hours();
         SelectList skillLevels();
         List<SelectListItem> yesnoSelectList();
+        IEnumerable<string> getTeachers();
     }
 
     public class Defaults : IDefaults
@@ -148,7 +149,6 @@ namespace Machete.Web.Helpers
             if (getCIString() == "ES") return yesnoES;
             return yesnoEN;  //defaults to English
         }
-
         //
         // Get the Id string for a given lookup number
         public string byID(int ID)
@@ -237,6 +237,10 @@ namespace Machete.Web.Helpers
             return hours;
         }
 
+        public IEnumerable<string> getTeachers()
+        {
+            return lcache.getTeachers();
+        }
         /// <summary>
         /// Get the SelectList for the group
         /// </summary>

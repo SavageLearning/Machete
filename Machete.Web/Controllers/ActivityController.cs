@@ -56,17 +56,11 @@ namespace Machete.Web.Controllers
             this.serv = aServ;
             this.map = map;
             this.def = def;
-            ViewBag.activitytype = def.getSelectList(LCategory.activityType);
-            ViewBag.activitytype_assembly = def.byKeys(LCategory.activityType, LActType.Assembly);
-            ViewBag.activitytype_orgmtg = def.byKeys(LCategory.activityType, LActType.OrgMtg);
-            ViewBag.activityname = def.getSelectList(LCategory.activityName);
         }
         protected override void Initialize(RequestContext requestContext)
         {
             base.Initialize(requestContext);
             CI = (CultureInfo)Session["Culture"];
-            ViewBag.teachers = lcache.getTeachers();
-
         }
         /// <summary>
         /// 
@@ -117,10 +111,13 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Teacher")]
         public ActionResult Create()
         {
-            var _model = new Domain.Activity();
-            _model.dateStart = DateTime.Now;
-            _model.dateEnd = DateTime.Now.AddHours(1);
-            return PartialView("Create", _model);
+            var m = map.Map<Domain.Activity, ViewModel.Activity>(new Domain.Activity()
+            {
+                dateStart = DateTime.Now,
+                dateEnd = DateTime.Now.AddHours(1)
+            });
+            m.def = def;
+            return PartialView("Create", m);
         }
         /// <summary>
         /// POST: /Activity/Create
@@ -164,8 +161,9 @@ namespace Machete.Web.Controllers
         public ActionResult CreateMany(int id)
         {
             Domain.Activity firstAct = serv.Get(id);
-            var _model = new ActivitySchedule(firstAct);
-            return PartialView("CreateMany", _model);
+            var m = map.Map<Domain.Activity, ViewModel.ActivitySchedule>(firstAct);
+            m.def = def;
+            return PartialView("CreateMany", m);
         }
 
         [HttpPost, UserNameFilter]
@@ -223,8 +221,9 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager, Teacher")]
         public ActionResult Edit(int id)
         {
-            Domain.Activity activity = serv.Get(id);
-            return PartialView("Edit", activity);
+            var m = map.Map<Domain.Activity, ViewModel.Activity>(serv.Get(id));
+            m.def = def;
+            return PartialView("Edit", m);
         }
         /// <summary>
         /// POST: /Activity/Edit/5

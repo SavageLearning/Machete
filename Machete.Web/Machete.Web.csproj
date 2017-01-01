@@ -246,7 +246,6 @@
     <Compile Include="Controllers\HirerWorkOrderController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImageController.cs" />
-    <Compile Include="Controllers\OldAccountController.cs" />
     <Compile Include="Controllers\PersonController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\WorkAssignmentController.cs" />
@@ -267,9 +266,15 @@
     <Compile Include="Helpers\mUIExtensions.cs" />
     <Compile Include="Helpers\PayPal\PaypalExpressCheckout.cs" />
     <Compile Include="Helpers\workerRequestBinder.cs" />
+    <Compile Include="Resources\ActivitySchedule.Designer.cs">
+      <DependentUpon>ActivitySchedule.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="ViewModel\AccountViewModels.cs" />
     <Compile Include="ViewModel\Activity.cs" />
     <Compile Include="ViewModel\ActivityIndex.cs" />
+    <Compile Include="ViewModel\ActivitySchedule.cs" />
     <Compile Include="ViewModel\ActivitySignin.cs" />
     <Compile Include="ViewModel\Config.cs" />
     <Compile Include="ViewModel\Email.cs" />
@@ -637,6 +642,13 @@
     <EmbeddedResource Include="Resources\Activities.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Activities.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\ActivitySchedule.es.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\ActivitySchedule.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ActivitySchedule.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Configs.es.resx" />
     <EmbeddedResource Include="Resources\Configs.resx">

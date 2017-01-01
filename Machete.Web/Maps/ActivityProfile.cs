@@ -39,6 +39,12 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.dateEnd, opt => opt.MapFrom(d => Convert.ToString(d.dateEnd)))
                 .ForMember(v => v.dateupdated, opt => opt.MapFrom(d => Convert.ToString(d.dateupdated)))
                 ;
+            CreateMap<Domain.Activity, ViewModel.ActivitySchedule>()
+                .ForMember(v => v.firstID, opt => opt.MapFrom(d => d.ID))
+                .ForMember(v => v.name, opt => opt.MapFrom(d => d.nameID))
+                .ForMember(v => v.type, opt => opt.MapFrom(d => d.typeID))
+                .ForMember(v => v.idString, opt => opt.UseValue("activity"))
+                ;
         }
         //private object dtResponse( Domain.Activity p)
         //{

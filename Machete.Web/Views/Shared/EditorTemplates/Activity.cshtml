@@ -1,4 +1,4 @@
-﻿@model Machete.Domain.Activity
+﻿@model Machete.Web.ViewModel.Activity
 @using Machete.Domain
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
@@ -13,16 +13,12 @@
 <div class="tb-table" style="float: left;">
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.typeID)
-        @Html.mUIDropDownListFor(model => model.typeID,
-                new SelectList(ViewBag.activitytype,
-                                                    "Value", "Text", Model.typeID),
+        @Html.mUIDropDownListFor(model => model.typeID, Model.def.getSelectList(LCategory.activityType),
                 new { tabindex = "1", id = idPrefix + "type" })
     </div>
     <div class="tb-row" id="className">
         @Html.mUITableLabelFor(model => model.nameID)
-        @Html.mUIDropDownListFor(model => model.nameID,
-                new SelectList(ViewBag.activityname,
-                                            "Value", "Text", Model.nameID),
+        @Html.mUIDropDownListFor(model => model.nameID, Model.def.getSelectList(LCategory.activityName),
                 new { tabindex = "1", id = idPrefix + "name" })
     </div>
     <div class="tb-row">
@@ -60,7 +56,7 @@
         @Html.mUITableLabelFor(model => model.teacher)
         <div class="tb-field">
             @Html.DropDownListFor(model => model.teacher,
-                    new SelectList(ViewBag.teachers, Model.teacher),
+                    new SelectList(Model.def.getTeachers(), Model.teacher),
                     @Machete.Web.Resources.Shared.choose,
                     new { tabindex = "1", id = idPrefix + "teacher" })
         </div>
@@ -85,8 +81,8 @@
         $('#@(idPrefix)type').change(
             function () {
                 if (
-                    $('#@(idPrefix)type option:selected').val() == "@(ViewBag.activitytype_assembly)" || 
-                    $('#@(idPrefix)type option:selected').val() == "@(ViewBag.activitytype_orgmtg)"
+                    $('#@(idPrefix)type option:selected').val() == "@(Model.def.byKeys(LCategory.activityType, LActType.Assembly))" || 
+                    $('#@(idPrefix)type option:selected').val() == "@(Model.def.byKeys(LCategory.activityType, LActType.OrgMtg))"
                    )
                 {
                     $('#@(idPrefix)name').attr('disabled', 'disabled');
