@@ -455,6 +455,7 @@ namespace Machete.Service
             switch (name)
             {
                 case "active": q = descending ? q.OrderByDescending(p => p.active) : q.OrderBy(p => p.active); break;
+                case "dwccardnum": q = descending ? q.OrderByDescending(p => p.Worker.dwccardnum) : q.OrderBy(p => p.Worker.dwccardnum); break;
                 case "firstname1": q = descending ? q.OrderByDescending(p => p.firstname1) : q.OrderBy(p => p.firstname1); break;
                 case "firstname2": q = descending ? q.OrderByDescending(p => p.firstname2) : q.OrderBy(p => p.firstname2); break;
                 case "lastname1": q = descending ? q.OrderByDescending(p => p.lastname1) : q.OrderBy(p => p.lastname1); break;
@@ -534,21 +535,21 @@ namespace Machete.Service
             switch(o.CI.TwoLetterISOLanguageName.ToUpperInvariant())
             {
                 case "ES":
-                    q = q.Where(p => p.notes.ContainsOIC(o.sSearch) ||
-                        p.teacher.ContainsOIC(o.sSearch) ||
-                        p.dateStart.ToString().ContainsOIC(o.sSearch) ||
-                        p.nameES.ToString().ContainsOIC(o.sSearch) ||
-                        p.typeES.ToString().ContainsOIC(o.sSearch) ||
-                        p.dateEnd.ToString().ContainsOIC(o.sSearch));
+                    q = q.Where(p => p.notes.Contains(o.sSearch) ||
+                        p.teacher.Contains(o.sSearch) ||
+                        p.dateStart.ToString().Contains(o.sSearch) ||
+                        p.nameES.ToString().Contains(o.sSearch) ||
+                        p.typeES.ToString().Contains(o.sSearch) ||
+                        p.dateEnd.ToString().Contains(o.sSearch));
                     break;
                 case "EN":
                 default:
-                    q = q.Where(p => p.notes.ContainsOIC(o.sSearch) ||
-                        p.teacher.ContainsOIC(o.sSearch) ||
-                        p.dateStart.ToString().ContainsOIC(o.sSearch) ||
-                        p.nameEN.ToString().ContainsOIC(o.sSearch) ||
-                        p.typeEN.ToString().ContainsOIC(o.sSearch) ||
-                        p.dateEnd.ToString().ContainsOIC(o.sSearch));
+                    q = q.Where(p => p.notes.Contains(o.sSearch) ||
+                        p.teacher.Contains(o.sSearch) ||
+                        p.dateStart.ToString().Contains(o.sSearch) ||
+                        p.nameEN.ToString().Contains(o.sSearch) ||
+                        p.typeEN.ToString().Contains(o.sSearch) ||
+                        p.dateEnd.ToString().Contains(o.sSearch));
                         break;
             }
 
