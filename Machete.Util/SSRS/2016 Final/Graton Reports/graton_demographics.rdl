@@ -5,8 +5,7 @@
     <DataSource Name="MacheteGraton">
       <ConnectionProperties>
         <DataProvider>SQLAZURE</DataProvider>
-        <ConnectString></ConnectString>
-        <Prompt>Specify a user name and password for data source MacheteGraton:</Prompt>
+        <ConnectString>Server=tcp:o68f62alva.database.windows.net,1433;Initial Catalog=machete_graton;Persist Security Info=False;User ID=ndlonmachete;Password=P0m3gr@n@t3;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;</ConnectString>
       </ConnectionProperties>
       <rd:SecurityType>DataBase</rd:SecurityType>
       <rd:DataSourceID>2eca228a-8613-4896-923f-ba8011ca8cc9</rd:DataSourceID>
