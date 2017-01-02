@@ -106,30 +106,7 @@ namespace Machete.Domain
         }
         public signinView() { }
     }
-    /// <summary>
-    /// 
-    /// </summary>
-    public class wsiView : signinView
-    {
-        public int? lotterySequence { get; set; }
-        public int? skill1 { get; set; }
-        public int? skill2 { get; set; }
-        public int? skill3 { get; set; }
-        public int? waid { get; set; }
-        public int englishlevel { get; set; }
-        public int typeOfWorkID { get; set; }
-        public wsiView(Person per, WorkerSignin sign)
-            : base(per, sign)
-        {
-            lotterySequence = sign.lottery_sequence;
-            englishlevel = p == null ? 0 : p.Worker.englishlevelID;
-            waid = sign.WorkAssignmentID;
-            skill1 = p == null ? null : p.Worker.skill1;
-            skill2 = p == null ? null : p.Worker.skill2;
-            skill3 = p == null ? null : p.Worker.skill3;
-            typeOfWorkID = p == null ? 0 : p.Worker.typeOfWorkID;
-        }
-    }
+
     public class asiView : signinView
     {
         public asiView(Person per, ActivitySignin sign)
