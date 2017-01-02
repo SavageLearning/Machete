@@ -82,7 +82,7 @@ namespace Machete.Web.Controllers
             // The card just swiped
             _signin.dwccardnum = dwccardnum;
             _signin.dateforsignin = new DateTime(dateforsignin.Year, dateforsignin.Month, dateforsignin.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-            _signin.memberStatus = worker.memberStatus;
+            _signin.memberStatus = worker.memberStatusID;
 
             if (_signin.lottery_timestamp == null)
             {

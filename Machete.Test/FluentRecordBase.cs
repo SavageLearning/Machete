@@ -538,7 +538,8 @@ namespace Machete.Test
             if (_uow == null) AddUOW();
             if (_wcache == null) AddWorkerCache();
             if (_map == null) AddMapper();
-            _servW = new WorkerService(_repoW, _wcache, _uow, _repoWA, _repoWO, _repoP, _map);
+            if (_lcache == null) AddLookupCache();
+            _servW = new WorkerService(_repoW, _wcache, _lcache, _uow, _repoWA, _repoWO, _repoP, _map);
             return this;
         }
 
@@ -570,7 +571,7 @@ namespace Machete.Test
             if (skill1 != null) _w.skill1 = skill1;
             if (skill2 != null) _w.skill2 = skill2;
             if (skill3 != null) _w.skill3 = skill3;
-            if (status != null) _w.memberStatus = (int)status;
+            if (status != null) _w.memberStatusID = (int)status;
             if (datecreated != null) _w.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _w.dateupdated = (DateTime)dateupdated;
             if (memberexpirationdate != null) _w.memberexpirationdate = (DateTime)memberexpirationdate;

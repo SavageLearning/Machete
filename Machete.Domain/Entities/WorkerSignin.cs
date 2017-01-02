@@ -101,7 +101,7 @@ namespace Machete.Domain
             updatedby = s.updatedby;
             imageID = p == null ? null : p.Worker.ImageID;
             expirationDate = p == null ? DateTime.MinValue : p.Worker.memberexpirationdate;
-            memberStatus = p == null ? 0 : p.Worker.memberStatus;
+            memberStatus = p == null ? 0 : p.Worker.memberStatusID;
 
         }
         public signinView() { }

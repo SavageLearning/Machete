@@ -1,13 +1,19 @@
 ﻿using AutoMapper;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Web;
 
 namespace Machete.Web.Maps
 {
     public class ActivityProfile : Profile
     {
+        public string getCI()
+        {
+            return Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant();
+        }
         public ActivityProfile()
         {
             CreateMap<Domain.Activity, ViewModel.Activity>()
@@ -17,8 +23,6 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.tablabel, opt => opt.MapFrom(d => d.recurring ?
                     "Recurring Event with " + d.teacher :
                     d.nameEN + " with " + d.teacher)) // hardcoded english; skipping for now
-                    
-
                 ;
             CreateMap<Domain.Activity, Service.DTO.ActivityList>()
                 .ForMember(v => v.count, opt => opt.MapFrom(d => d.Signins.Count()))
@@ -32,8 +36,8 @@ namespace Machete.Web.Maps
                     d.nameEN + " with " + d.teacher)) // hardcoded english; skipping for now
                 .ForMember(v => v.AID, opt => opt.MapFrom(d => d.ID.ToString()))  
                 .ForMember(v => v.recordid, opt => opt.MapFrom(d => d.ID.ToString()))  
-                .ForMember(v => v.name, opt => opt.MapFrom(d => d.nameEN))
-                .ForMember(v => v.type, opt => opt.MapFrom(d => d.typeEN))
+                .ForMember(v => v.name, opt => opt.MapFrom(d => getCI() == "ES" ? d.nameES : d.nameEN))
+                .ForMember(v => v.type, opt => opt.MapFrom(d => getCI() == "ES" ? d.typeES : d.typeEN))
                 .ForMember(v => v.count, opt => opt.MapFrom(d => d.count.ToString()))
                 .ForMember(v => v.dateStart, opt => opt.MapFrom(d => Convert.ToString(d.dateStart)))
                 .ForMember(v => v.dateEnd, opt => opt.MapFrom(d => Convert.ToString(d.dateEnd)))

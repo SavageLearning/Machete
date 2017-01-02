@@ -11,8 +11,10 @@ namespace Machete.Service.DTO
         public int ID { get; set; }
         public int nameID { get; set; }
         public string nameEN { get; set; }
+        public string nameES { get; set; }
         public int typeID { get; set; }
         public string typeEN { get; set; }
+        public string typeES { get; set; }
         public int count { get; set; }
         public string teacher { get; set; }
         public DateTime dateStart { get; set; }

@@ -479,7 +479,7 @@ namespace Machete.Service
 
         public static void getExpiredWorkers(viewOptions o, int exp, ref IQueryable<Person> q)
         {
-            q = q.Where(x => x.Worker.memberStatus == exp);
+            q = q.Where(x => x.Worker.memberStatusID == exp);
         }
 
         /// <summary>
@@ -489,7 +489,7 @@ namespace Machete.Service
         /// <param name="q"></param>
         public static void getSExWorkers(viewOptions o, int s, int Ex, ref IQueryable<Person> q)
         {
-            q = q.Where(x => x.Worker.memberStatus == s || x.Worker.memberStatus == Ex);
+            q = q.Where(x => x.Worker.memberStatusID == s || x.Worker.memberStatusID == Ex);
         }
 
         public static void search(viewOptions o, ref IQueryable<Worker> q)
@@ -507,7 +507,7 @@ namespace Machete.Service
             switch (name)
             {
                 case "dwccardnum": q = descending ? q.OrderByDescending(p => p.dwccardnum) : q.OrderBy(p => p.dwccardnum); break;
-                case "wkrStatus": q = descending ? q.OrderByDescending(p => p.memberStatus) : q.OrderBy(p => p.memberStatus); break;
+                case "wkrStatus": q = descending ? q.OrderByDescending(p => p.memberStatusID) : q.OrderBy(p => p.memberStatusID); break;
                 case "firstname1": q = descending ? q.OrderByDescending(p => p.Person.firstname1) : q.OrderBy(p => p.Person.firstname1); break;
                 case "firstname2": q = descending ? q.OrderByDescending(p => p.Person.firstname2) : q.OrderBy(p => p.Person.firstname2); break;
                 case "lastname1": q = descending ? q.OrderByDescending(p => p.Person.lastname1) : q.OrderBy(p => p.Person.lastname1); break;

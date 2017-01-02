@@ -45,9 +45,11 @@ namespace Machete.Service
         private readonly IWorkOrderRepository woRepo;
         private readonly IPersonRepository pRepo;
         private readonly IMapper map;
+        private readonly ILookupCache lcache;
 
         public WorkerService(IWorkerRepository wRepo, 
             IWorkerCache wc, 
+            ILookupCache lcache,
             IUnitOfWork uow, 
             IWorkAssignmentRepository waRepo, 
             IWorkOrderRepository woRepo, 
@@ -61,6 +63,7 @@ namespace Machete.Service
             this.woRepo = woRepo;
             this.pRepo = pRepo;
             this.map = map;
+            this.lcache = lcache;
         }
 
         public Worker GetWorkerByNum(int dwccardnum)
@@ -92,19 +95,10 @@ namespace Machete.Service
             }
         }
 
-        /*
-        public IQueryable<Worker> GetPriorEmployees(int employerId)
-        {
-//            IRepository<WorkAssignment> wa = 
-//            repo.Get(az => az.activityID == actID && az.personID == perID);
-//            IQueryable<Worker> all = repo.GetAllQ();
-            //IQueryable<Worker> all = repo.Get(w => w.ID);
-            return all;
-        }
-         * */
-
         public override Worker Create(Worker record, string user)
         {
+            record.memberStatusEN = lcache.textByID(record.memberStatusID, "EN");
+            record.memberStatusES = lcache.textByID(record.memberStatusID, "ES");
             var result = base.Create(record, user);
             wcache.Refresh();
             return result;
@@ -112,6 +106,8 @@ namespace Machete.Service
 
         public override void Save(Worker record, string user)
         {
+            record.memberStatusEN = lcache.textByID(record.memberStatusID, "EN");
+            record.memberStatusES = lcache.textByID(record.memberStatusID, "ES");
             base.Save(record, user);
             wcache.Refresh();
         }

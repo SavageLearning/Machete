@@ -50,7 +50,9 @@ namespace Machete.Domain
         public int nameID { get; set; }
         // This is the simplest hack i can come up with to keep search on these two Lookups (previously implement in the app)
         // but push it to the database. 
+        [StringLength(50)]
         public string nameEN { get; set; }
+        [StringLength(50)]
         public string nameES { get; set; }
 
         //
@@ -58,7 +60,9 @@ namespace Machete.Domain
         [Required(ErrorMessageResourceName = "typerequired", ErrorMessageResourceType = typeof(Resources.Activity))]
         [Column("type")]
         public int typeID { get; set; }
+        [StringLength(50)]
         public string typeEN { get; set; }
+        [StringLength(50)]
         public string typeES { get; set; }
 
         //

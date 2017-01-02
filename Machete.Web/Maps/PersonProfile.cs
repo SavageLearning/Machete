@@ -13,7 +13,7 @@ namespace Machete.Web.Maps
         {
             CreateMap<Domain.Person, Service.DTO.PersonList>()
                 .ForMember(v => v.dwccardnum, opt => opt.MapFrom(d => d.Worker.dwccardnum))
-                .ForMember(v => v.workerStatus, opt => opt.MapFrom(d => d.Worker.memberStatus))
+                .ForMember(v => v.workerStatus, opt => opt.MapFrom(d => d.Worker.memberStatusID))
 
                 ;
             CreateMap<Domain.Person, ViewModel.Person>()

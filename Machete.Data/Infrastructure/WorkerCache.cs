@@ -108,13 +108,13 @@ namespace Machete.Data
             bool rtn = false;
             IQueryable<Worker> list = GetDB().Workers
                 .Where(w => w.memberexpirationdate < DateTime.Now && 
-                    w.memberStatus == Worker.iActive);
+                    w.memberStatusID == Worker.iActive);
             //
             if (list.Count() > 0) rtn = true;
             //
             foreach (Worker wkr in list)
             {
-                wkr.memberStatus = Worker.iExpired;                
+                wkr.memberStatusID = Worker.iExpired;                
             }
             GetDB().SaveChanges();
             return rtn;
@@ -130,13 +130,13 @@ namespace Machete.Data
             IQueryable<Worker> list = GetDB().Workers
                 .Where(w => w.memberReactivateDate != null &&
                     w.memberReactivateDate < DateTime.Now &&
-                    w.memberStatus == Worker.iSanctioned);
+                    w.memberStatusID == Worker.iSanctioned);
             //
             if (list.Count() > 0) rtn = true;
             //
             foreach (Worker wkr in list)
             {
-                wkr.memberStatus = Worker.iActive;
+                wkr.memberStatusID = Worker.iActive;
             }
             try
             {

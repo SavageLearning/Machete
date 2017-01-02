@@ -22,9 +22,9 @@
                 new { @tabindex = "4", @class = "ui-datepicker workerEditor", id = idPrefix + "dateOfMembership" })
         </div>
         <div class="tb-row">
-            @Html.mUITableLabelFor(model => model.memberStatus)
-            @Html.mUITableDropDownListFor(model => model.memberStatus, Model.def.getSelectList(Machete.Domain.LCategory.memberstatus),
-                new { tabindex = "2", @class = "workerEditor", id = idPrefix + "memberStatus" })
+            @Html.mUITableLabelFor(model => model.memberStatusID)
+            @Html.mUITableDropDownListFor(model => model.memberStatusID, Model.def.getSelectList(Machete.Domain.LCategory.memberstatus),
+                new { tabindex = "2", @class = "workerEditor", id = idPrefix + "memberStatusID" })
             @Html.mUITableLabelFor(model => model.memberexpirationdate)
             @Html.mUITableDateTextBoxFor(m => m.memberexpirationdate,
                 new { tabindex = "5", @class = "ui-datepicker workerEditor",  id = idPrefix + "memberexpirationdate" })

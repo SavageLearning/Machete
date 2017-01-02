@@ -338,9 +338,9 @@
     <Compile Include="Migrations\201611211803005_Identity_upgrade.Designer.cs">
       <DependentUpon>201611211803005_Identity_upgrade.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201612270623502_activity_lookup_strings.cs" />
-    <Compile Include="Migrations\201612270623502_activity_lookup_strings.Designer.cs">
-      <DependentUpon>201612270623502_activity_lookup_strings.cs</DependentUpon>
+    <Compile Include="Migrations\201701012337232_denormalize_lookup_columns.cs" />
+    <Compile Include="Migrations\201701012337232_denormalize_lookup_columns.Designer.cs">
+      <DependentUpon>201701012337232_denormalize_lookup_columns.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AllRepositories.cs" />
@@ -412,8 +412,8 @@
     <EmbeddedResource Include="Migrations\201611211803005_Identity_upgrade.resx">
       <DependentUpon>201611211803005_Identity_upgrade.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201612270623502_activity_lookup_strings.resx">
-      <DependentUpon>201612270623502_activity_lookup_strings.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201701012337232_denormalize_lookup_columns.resx">
+      <DependentUpon>201701012337232_denormalize_lookup_columns.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

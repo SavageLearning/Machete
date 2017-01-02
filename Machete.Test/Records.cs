@@ -99,7 +99,7 @@ namespace Machete.Test
             updatedby = "initialization script",
             dateOfBirth = DateTime.Now,
             dateOfMembership = DateTime.Now,
-            memberStatus = MacheteLookup.cache.First(x => x.category == "memberstatus" && x.text_EN == "Active").ID
+            memberStatusID = MacheteLookup.cache.First(x => x.category == "memberstatus" && x.text_EN == "Active").ID
         };
 
         public static Person person = new Person

@@ -322,7 +322,7 @@ namespace Machete.Service
                 // The card don't need no swipe
                 dupadedoo.dwccardnum = wsi.dwccardnum;
                 dupadedoo.dateforsignin = new DateTime(date.Year, date.Month, date.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                dupadedoo.memberStatus = oompaLoompa.memberStatus;
+                dupadedoo.memberStatus = oompaLoompa.memberStatusID;
                 try
                 {
                     // Let CreateSignin do the rest
