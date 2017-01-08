@@ -164,7 +164,7 @@ namespace Machete.Test.Selenium.View
             _d.FindElement(By.Id(prefix + "dwccardnum")).Clear();
             _d.FindElement(By.Id(prefix + "dwccardnum")).SendKeys(_wkr.dwccardnum.ToString());
 
-            SelectOption(By.Id(prefix + "memberStatus"), "Active");
+            SelectOption(By.Id(prefix + "memberStatusID"), "Active");
             SelectOption(By.Id(prefix + "neighborhoodID"), "Primary City");
             SelectOption(By.Id(prefix + "typeOfWorkID"), @"Day Worker Center");
             SelectOption(By.Id(prefix + "englishlevelID"), "2");
@@ -201,7 +201,7 @@ namespace Machete.Test.Selenium.View
             Assert.AreEqual(_wkr.height, WaitForElement(By.Id(prefix + "height")).GetAttribute("value"));
             Assert.AreEqual(_wkr.weight, WaitForElement(By.Id(prefix + "weight")).GetAttribute("value"));
             Assert.AreEqual(_wkr.dwccardnum.ToString(), WaitForElement(By.Id(prefix + "dwccardnum")).GetAttribute("value"));
-            Assert.AreEqual("Active", GetOptionText(WaitForElement(By.Id(prefix + "memberStatus"))));
+            Assert.AreEqual("Active", GetOptionText(WaitForElement(By.Id(prefix + "memberStatusID"))));
             Assert.AreEqual("Primary City", GetOptionText(WaitForElement(By.Id(prefix + "neighborhoodID"))));
             Assert.AreEqual(@"Day Worker Center", GetOptionText(WaitForElement(By.Id(prefix + "typeOfWorkID"))));
             Assert.AreEqual("2", GetOptionText(WaitForElement(By.Id(prefix + "englishlevelID"))));

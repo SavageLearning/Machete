@@ -8,12 +8,8 @@ using System.Web;
 
 namespace Machete.Web.Maps
 {
-    public class ActivityProfile : Profile
+    public class ActivityProfile : MacheteProfile
     {
-        public string getCI()
-        {
-            return Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant();
-        }
         public ActivityProfile()
         {
             CreateMap<Domain.Activity, ViewModel.Activity>()

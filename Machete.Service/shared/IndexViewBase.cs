@@ -121,8 +121,9 @@ namespace Machete.Service
                 case "dateforsigninstring": q = descending ? q.OrderByDescending(p => p.dateforsignin) : q.OrderBy(p => p.dateforsignin); break;
                 case "expirationDate": q = descending ? q.OrderByDescending(p => p.worker.memberexpirationdate) : q.OrderBy(p => p.worker.memberexpirationdate); break;
                 case "lotterySequence":
-                    q = descending ? q.OrderByDescending(p => p.lottery_sequence != null).ThenByDescending(p => p.lottery_sequence) :
-                    q.OrderBy(p => p.lottery_sequence == null).ThenBy(p => p.lottery_sequence);
+                    q = descending ? 
+                        q.OrderByDescending(p => p.lottery_sequence != null).ThenByDescending(p => p.lottery_sequence) :
+                        q.OrderBy(p => p.lottery_sequence == null).ThenBy(p => p.lottery_sequence);
                     break;
                 default: q = descending ? q.OrderByDescending(p => p.dateforsignin) : q.OrderBy(p => p.dateforsignin); break;
             }
@@ -554,6 +555,15 @@ namespace Machete.Service
             }
 
         }
+        public static void search(viewOptions o, ref IQueryable<ActivitySignin> q)
+        {
+            q = q.Where(asi => SqlFunctions.StringConvert((decimal)asi.dwccardnum).Contains(o.sSearch) ||
+                            asi.person.firstname1.Contains(o.sSearch) ||
+                            asi.person.firstname2.Contains(o.sSearch) ||
+                            asi.person.lastname1.Contains(o.sSearch) ||
+                            asi.person.lastname2.Contains(o.sSearch) 
+                            );
+        }
         /// <summary>
         /// 
         /// </summary>
@@ -596,19 +606,19 @@ namespace Machete.Service
                     break;
             }
         }
-        public static void sortOnColName(string name, bool descending, string isoLandCode, ref IEnumerable<asiView> e)
+        public static void sortOnColName(string name, bool descending, ref IQueryable<ActivitySignin> q)
         {
             switch (name)
             {
-                case "dwccardnum": e = descending ? e.OrderByDescending(p => p.dwccardnum) : e.OrderBy(p => p.dwccardnum); break;
-                case "firstname1": e = descending ? e.OrderByDescending(p => p.firstname1) : e.OrderBy(p => p.firstname1); break;
-                case "firstname2": e = descending ? e.OrderByDescending(p => p.firstname2) : e.OrderBy(p => p.firstname2); break;
-                case "lastname1": e = descending ? e.OrderByDescending(p => p.lastname1) : e.OrderBy(p => p.lastname1); break;
-                case "lastname2": e = descending ? e.OrderByDescending(p => p.lastname2) : e.OrderBy(p => p.lastname2); break;
-                case "dateupdated": e = descending ? e.OrderByDescending(p => p.dateupdated) : e.OrderBy(p => p.dateupdated); break;
-                case "dateforsigninstring": e = descending ? e.OrderByDescending(p => p.dateforsignin) : e.OrderBy(p => p.dateforsignin); break;
-                case "expirationDate": e = descending ? e.OrderByDescending(p => p.expirationDate) : e.OrderBy(p => p.expirationDate); break;
-                default: e = descending ? e.OrderByDescending(p => p.dateforsignin) : e.OrderBy(p => p.dateforsignin); break;
+                case "dwccardnum": q = descending ? q.OrderByDescending(p => p.dwccardnum) : q.OrderBy(p => p.dwccardnum); break;
+                case "firstname1": q = descending ? q.OrderByDescending(p => p.person.firstname1) : q.OrderBy(p => p.person.firstname1); break;
+                case "firstname2": q = descending ? q.OrderByDescending(p => p.person.firstname2) : q.OrderBy(p => p.person.firstname2); break;
+                case "lastname1": q = descending ? q.OrderByDescending(p => p.person.lastname1) : q.OrderBy(p => p.person.lastname1); break;
+                case "lastname2": q = descending ? q.OrderByDescending(p => p.person.lastname2) : q.OrderBy(p => p.person.lastname2); break;
+                case "dateupdated": q = descending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated); break;
+                case "dateforsigninstring": q = descending ? q.OrderByDescending(p => p.dateforsignin) : q.OrderBy(p => p.dateforsignin); break;
+                case "expirationDate": q = descending ? q.OrderByDescending(p => p.person.Worker.memberexpirationdate) : q.OrderBy(p => p.person.Worker.memberexpirationdate); break;
+                default: q = descending ? q.OrderByDescending(p => p.dateforsignin) : q.OrderBy(p => p.dateforsignin); break;
             }
         }
         /// <summary>

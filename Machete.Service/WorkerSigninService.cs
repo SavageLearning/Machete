@@ -343,13 +343,12 @@ namespace Machete.Service
         /// This method returns the view data for the Worker Signin class.
         /// </summary>
         /// <param name="o">View options from DataTables</param>
-        /// <returns>dataTableResult wsiView</returns>
+        /// <returns>dataTableResult WorkerSigninList</returns>
         public dataTableResult<WorkerSigninList> GetIndexView(viewOptions o)
         {
             //
             var result = new dataTableResult<DTO.WorkerSigninList>();
             IQueryable<WorkerSignin> q = repo.GetAllQ();
-            IEnumerable<WorkerSignin> e;
             //
             if (o.date != null) IndexViewBase.diffDays(o, ref q);                
             if (o.typeofwork_grouping != null) IndexViewBase.typeOfWork(o, ref q);

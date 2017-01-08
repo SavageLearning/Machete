@@ -223,6 +223,7 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\MapperConfig.cs" />
     <Compile Include="Maps\EventProfile.cs" />
+    <Compile Include="Maps\MacheteProfile.cs" />
     <Compile Include="Maps\PersonProfile.cs" />
     <Compile Include="Maps\WorkAssignmentProfile.cs" />
     <Compile Include="Maps\WorkerProfile.cs" />
