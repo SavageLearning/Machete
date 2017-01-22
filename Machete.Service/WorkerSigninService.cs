@@ -294,7 +294,7 @@ namespace Machete.Service
             DateTime yesterday = date.AddDays(-1);
             IEnumerable<WorkerSignin> todayListSignins;
             IEnumerable<WorkerSignin> yesterdaySignins;
-            StringBuilder iWasNotSignedIn = new StringBuilder();
+            StringBuilder errorList = new StringBuilder();
 
             // Get today's signins. If anyone has already been signed in, this feature will hold those records.
             todayListSignins = repo.GetAllQ()
@@ -316,25 +316,24 @@ namespace Machete.Service
                 //then, create signins for all of them.
             foreach (WorkerSignin wsi in yesterdaySignins)
             {
-                //we're going to need some objects
-                Worker oompaLoompa = wRepo.GetAllQ().FirstOrDefault(s => s.dwccardnum == wsi.dwccardnum);
-                WorkerSignin dupadedoo = new WorkerSignin();
+                Worker w = wRepo.GetAllQ().FirstOrDefault(s => s.dwccardnum == wsi.dwccardnum);
+                WorkerSignin newWSI = new WorkerSignin();
                 // The card don't need no swipe
-                dupadedoo.dwccardnum = wsi.dwccardnum;
-                dupadedoo.dateforsignin = new DateTime(date.Year, date.Month, date.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                dupadedoo.memberStatus = oompaLoompa.memberStatusID;
+                newWSI.dwccardnum = wsi.dwccardnum;
+                newWSI.dateforsignin = new DateTime(date.Year, date.Month, date.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+                newWSI.memberStatusID = w.memberStatusID;
                 try
                 {
                     // Let CreateSignin do the rest
-                    CreateSignin(dupadedoo, user);
+                    CreateSignin(newWSI, user);
                 }
-                catch (InvalidOperationException eek)
+                catch (InvalidOperationException e)
                 {
-                    string addMeToTheList = oompaLoompa.dwccardnum.ToString() + " " + eek.Message + "\n";
-                    iWasNotSignedIn.Append(addMeToTheList);
+                    string invalidSignin = w.dwccardnum.ToString() + " " + e.Message + "\n";
+                    errorList.Append(invalidSignin);
                 }
             }
-            if (iWasNotSignedIn.Length > 0) return iWasNotSignedIn.ToString();
+            if (errorList.Length > 0) return errorList.ToString();
             else return "Success!";
         }
 

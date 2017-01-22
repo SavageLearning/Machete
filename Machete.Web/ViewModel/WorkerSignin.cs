@@ -24,6 +24,7 @@ namespace Machete.Web.ViewModel
         public string firstname2 { get; set; }
         public string lastname1 { get; set; }
         public string lastname2 { get; set; }
+        public int dwccardnum { get; set; }
         public DateTime dateforsignin { get; set; }
         public string dateforsigninstring { get; set; }
         public int WAID { get; set; }

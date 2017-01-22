@@ -149,7 +149,7 @@ namespace Machete.Service
             {
                 throw new MacheteIntegrityException("Unable to find Lookup record " + ID);
             }
-            if (locale == "es")
+            if (locale == "es" || locale == "ES")
             {
                 return record.text_ES;
             }
