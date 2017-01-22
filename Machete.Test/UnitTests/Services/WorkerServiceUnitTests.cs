@@ -45,7 +45,6 @@ namespace Machete.Test.Unit.Service
         Mock<IWorkerRepository> _repo;
         Mock<IUnitOfWork> _uow;
         Mock<ILookupCache> _lcache;
-        Mock<IWorkerCache> _wcache;
         WorkerService _serv;
         Mock<IWorkAssignmentRepository> _waRepo;
         Mock<IWorkOrderRepository> _woRepo;
@@ -99,13 +98,12 @@ namespace Machete.Test.Unit.Service
         {
             _repo = new Mock<IWorkerRepository>();
             _uow = new Mock<IUnitOfWork>();
-            _wcache = new Mock<IWorkerCache>();
             _waRepo = new Mock<IWorkAssignmentRepository>();
             _woRepo = new Mock<IWorkOrderRepository>();
             _pRepo = new Mock<IPersonRepository>();
             _map = new Mock<IMapper>();
             _lcache = new Mock<ILookupCache>();
-            _serv = new WorkerService(_repo.Object, _wcache.Object, _lcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object, _map.Object);
+            _serv = new WorkerService(_repo.Object, _lcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object, _map.Object);
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Workers)]
         public void GetWorkers_returns_Enumerable()
@@ -167,7 +165,6 @@ namespace Machete.Test.Unit.Service
             //Arrange
             _repo = new Mock<IWorkerRepository>();
             _uow = new Mock<IUnitOfWork>();
-            _wcache = new Mock<IWorkerCache>();
             _map = new Mock<IMapper>();
             _lcache = new Mock<ILookupCache>();
             string user = "UnitTest";
@@ -175,7 +172,7 @@ namespace Machete.Test.Unit.Service
             Worker dp = new Worker();
             _repo.Setup(r => r.Delete(It.IsAny<Worker>())).Callback((Worker p) => { dp = p; });
             _repo.Setup(r => r.GetById(id)).Returns(Records.worker);
-            var _serv = new WorkerService(_repo.Object, _wcache.Object, _lcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object, _map.Object);
+            var _serv = new WorkerService(_repo.Object, _lcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object, _map.Object);
             //
             //Act
             _serv.Delete(id, user);
@@ -190,14 +187,13 @@ namespace Machete.Test.Unit.Service
             //
             //Arrange
             _repo = new Mock<IWorkerRepository>();
-            _wcache = new Mock<IWorkerCache>();
             _uow = new Mock<IUnitOfWork>();
             _map = new Mock<IMapper>();
             _lcache = new Mock<ILookupCache>();
             string user = "UnitTest";
             Records.worker.datecreated = DateTime.MinValue;
             Records.worker.dateupdated = DateTime.MinValue;
-            var _serv = new WorkerService(_repo.Object, _wcache.Object, _lcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object, _map.Object);
+            var _serv = new WorkerService(_repo.Object, _lcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object, _map.Object);
             //
             //Act
             _serv.Save(Records.worker, user);

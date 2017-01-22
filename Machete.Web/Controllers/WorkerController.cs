@@ -40,7 +40,6 @@ namespace Machete.Web.Controllers
     {
         private readonly IWorkerService serv;
         private readonly IImageService imageServ;
-        private readonly IWorkerCache wcache;
         private readonly IMapper map;
         private readonly IDefaults def;
         System.Globalization.CultureInfo CI;
@@ -48,11 +47,9 @@ namespace Machete.Web.Controllers
         public WorkerController(IWorkerService workerService, 
                                 IPersonService personService,
                                 IImageService  imageServ,
-                                IWorkerCache wc,
             IDefaults def,
             IMapper map)
         {
-            this.wcache = wc;
             this.serv = workerService;
             this.imageServ = imageServ;
             this.map = map;
@@ -195,16 +192,6 @@ namespace Machete.Web.Controllers
             {
                 status = "OK",
                 deletedID = id
-            },
-            JsonRequestBehavior.AllowGet);
-        }
-        [Authorize(Roles = "Administrator, Manager")]
-        public ActionResult RefreshCache()
-        {
-            wcache.Refresh();
-            return Json(new
-            {
-                status = "OK"
             },
             JsonRequestBehavior.AllowGet);
         }

@@ -79,7 +79,6 @@ namespace Machete.Test.Integration.Service
             frb.AddWorker(skill1:61).AddWorkerSignin();
             var w = frb.ToWorker();
             var wsi = frb.ToWorkerSignin();
-            frb.ToWorkerCache().Refresh(); // gets worker info from cache
             //
             //Act
             _dOptions.dwccardnum = w.dwccardnum;

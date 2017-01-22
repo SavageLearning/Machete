@@ -38,6 +38,7 @@ namespace Machete.Service
     {
         T Get(int id);
         IEnumerable<T> GetAll();
+        IEnumerable<T> GetMany(Func<T, bool> where);
         T Create(T record, string user);
         void Delete(int id, string user);
         void Save(T record, string user);
@@ -79,6 +80,11 @@ namespace Machete.Service
         public IEnumerable<T> GetAll() 
         {
             return repo.GetAll();
+        }
+
+        public IEnumerable<T> GetMany(Func<T, bool> where)
+        {
+            return repo.GetMany(where);
         }
         /// <summary>
         /// 

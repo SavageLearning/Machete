@@ -47,7 +47,6 @@ namespace Machete.Test.Unit.Service
         Mock<IWorkerRequestRepository> _wrRepo;
         Mock<IUnitOfWork> _uow;
         Mock<IImageRepository> _iRepo;
-        Mock<IWorkerCache> _wcache;
         Mock<IMapper> _map;
         List<WorkerSignin> _signins;
         List<Worker> _workers;
@@ -114,7 +113,6 @@ namespace Machete.Test.Unit.Service
 
             _iRepo = new Mock<IImageRepository>();
             _uow = new Mock<IUnitOfWork>();
-            _wcache = new Mock<IWorkerCache>();
             _map = new Mock<IMapper>();
         }
 
@@ -123,7 +121,7 @@ namespace Machete.Test.Unit.Service
         {
             //
             //Arrange
-            var _serv = new WorkerSigninService(_wsiRepo.Object, _wRepo.Object, _iRepo.Object, _wrRepo.Object, _wcache.Object, _uow.Object, _map.Object);
+            var _serv = new WorkerSigninService(_wsiRepo.Object, _wRepo.Object, _iRepo.Object, _wrRepo.Object, _uow.Object, _map.Object);
             var _signin = new WorkerSignin() { dwccardnum = 66666, dateforsignin = DateTime.Today };
             WorkerSignin _cbsignin = new WorkerSignin();
             _wsiRepo.Setup(s => s.Add(It.IsAny<WorkerSignin>())).Callback((WorkerSignin s) => { _cbsignin = s; });
@@ -141,7 +139,7 @@ namespace Machete.Test.Unit.Service
             //
             //Arrange
             int fakeid = 66666;
-            var _serv = new WorkerSigninService(_wsiRepo.Object, _wRepo.Object, _iRepo.Object, _wrRepo.Object,_wcache.Object, _uow.Object, _map.Object);
+            var _serv = new WorkerSigninService(_wsiRepo.Object, _wRepo.Object, _iRepo.Object, _wrRepo.Object, _uow.Object, _map.Object);
             var _signin = new WorkerSignin() { dwccardnum = fakeid, dateforsignin = DateTime.Today };
             WorkerSignin _cbsignin = new WorkerSignin();
             _wsiRepo.Setup(s => s.Add(It.IsAny<WorkerSignin>())).Callback((WorkerSignin s) => { _cbsignin = s; });
@@ -164,7 +162,7 @@ namespace Machete.Test.Unit.Service
             IQueryable<WorkerSignin> wsiList = new WorkerSignin[] { 
                 new WorkerSignin() {dwccardnum = 12345, dateforsignin = DateTime.Today} 
             }.AsQueryable();
-            var _serv = new WorkerSigninService(_wsiRepo.Object, _wRepo.Object, _iRepo.Object, _wrRepo.Object, _wcache.Object, _uow.Object, _map.Object);
+            var _serv = new WorkerSigninService(_wsiRepo.Object, _wRepo.Object, _iRepo.Object, _wrRepo.Object, _uow.Object, _map.Object);
             var _signin = new WorkerSignin() { dwccardnum = fakeid, dateforsignin = DateTime.Today };
             WorkerSignin _cbsignin = null;
             _wsiRepo.Setup(s => s.Add(It.IsAny<WorkerSignin>())).Callback((WorkerSignin s) => { _cbsignin = s; });

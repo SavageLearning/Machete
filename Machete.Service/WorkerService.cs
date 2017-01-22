@@ -40,7 +40,6 @@ namespace Machete.Service
     }
     public class WorkerService : ServiceBase<Worker>, IWorkerService
     {
-        private IWorkerCache wcache;
         private readonly IWorkAssignmentRepository waRepo;
         private readonly IWorkOrderRepository woRepo;
         private readonly IPersonRepository pRepo;
@@ -48,7 +47,6 @@ namespace Machete.Service
         private readonly ILookupCache lcache;
 
         public WorkerService(IWorkerRepository wRepo, 
-            IWorkerCache wc, 
             ILookupCache lcache,
             IUnitOfWork uow, 
             IWorkAssignmentRepository waRepo, 
@@ -57,7 +55,6 @@ namespace Machete.Service
             IMapper map)
             : base(wRepo, uow)
         {
-            this.wcache = wc;
             this.logPrefix = "Worker";
             this.waRepo = waRepo;
             this.woRepo = woRepo;
@@ -100,7 +97,6 @@ namespace Machete.Service
             record.memberStatusEN = lcache.textByID(record.memberStatusID, "EN");
             record.memberStatusES = lcache.textByID(record.memberStatusID, "ES");
             var result = base.Create(record, user);
-            wcache.Refresh();
             return result;
         }
 
@@ -109,13 +105,11 @@ namespace Machete.Service
             record.memberStatusEN = lcache.textByID(record.memberStatusID, "EN");
             record.memberStatusES = lcache.textByID(record.memberStatusID, "ES");
             base.Save(record, user);
-            wcache.Refresh();
         }
 
         public override void Delete(int id, string user)
         {
             base.Delete(id, user);
-            wcache.Refresh();
         }
         public dataTableResult<DTO.WorkerList> GetIndexView(viewOptions o)
         {
@@ -134,6 +128,52 @@ namespace Machete.Service
                 .Take(o.displayLength)
                 .AsEnumerable();
             return result;
+        }
+
+        /// <summary>
+        /// Expires active workers based on expiration date
+        /// </summary>
+        /// <param name="db"></param>
+        /// <returns>true if at least one record expired</returns>
+        public bool ExpireMembers()
+        {
+            bool rtn = false;
+            var list = GetMany(w =>
+                    w.memberexpirationdate < DateTime.Now &&
+                    w.memberStatusID == Worker.iActive);
+            //
+            if (list.Count() > 0) rtn = true;
+            //
+            foreach (Worker wkr in list)
+            {
+                wkr.memberStatusID = Worker.iExpired;
+                Save(wkr, "ExpirationBot");
+            }
+
+            return rtn;
+        }
+        /// <summary>
+        /// Reactivates sanctioned workers based on reactivation date
+        /// </summary>
+        /// <param name="db"></param>
+        /// <returns>true if at least one record reactivated</returns>
+        public bool ReactivateMembers()
+        {
+            bool rtn = false;
+            var list = GetMany(w =>
+                    w.memberReactivateDate != null &&
+                    w.memberReactivateDate < DateTime.Now &&
+                    w.memberStatusID == Worker.iSanctioned);
+            //
+            if (list.Count() > 0) rtn = true;
+            //
+            foreach (Worker wkr in list)
+            {
+                wkr.memberStatusID = Worker.iActive;
+                Save(wkr, "ReactivationBot");
+            }
+
+            return rtn;
         }
     }
 }

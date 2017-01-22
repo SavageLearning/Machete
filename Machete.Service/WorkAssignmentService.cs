@@ -51,7 +51,6 @@ namespace Machete.Service
         private readonly IUnitOfWork unitOfWork;
         private readonly ILookupRepository lRepo;
         private readonly ILookupCache lcache;
-        private readonly IWorkerCache wcache;
         private readonly IMapper map;
         //
         //
@@ -60,7 +59,6 @@ namespace Machete.Service
             IWorkerRepository wRepo, 
             ILookupRepository lRepo, 
             IWorkerSigninRepository wsiRepo,
-            IWorkerCache wc,
             ILookupCache lc,
             IUnitOfWork unitOfWork,
             IMapper map
@@ -72,7 +70,6 @@ namespace Machete.Service
             this.lRepo = lRepo;
             this.wsiRepo = wsiRepo;
             this.lcache = lc;
-            this.wcache = wc;
             this.map = map;
             this.logPrefix = "WorkAssignment";
         }

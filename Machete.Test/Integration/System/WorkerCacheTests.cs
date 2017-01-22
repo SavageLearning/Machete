@@ -42,6 +42,7 @@ namespace Machete.Test.Integration.System
         public void TestInitialize()
         {
             frb = new FluentRecordBase();
+            frb.AddLookupCache(); 
             dOptions = new viewOptions
             {
                 CI = new CultureInfo("en-US", false),
@@ -64,11 +65,12 @@ namespace Machete.Test.Integration.System
             frb.AddWorker(status: Worker.iActive, skill1: 62, memberexpirationdate: DateTime.Now.AddDays(-1));
             var _w = frb.ToWorker();
             //Act
-            frb.ToWorkerCache().ExpireMembers();
+            frb.ToServWorker().ExpireMembers();
             IEnumerable<Worker> result = frb.ToRepoWorker().GetAll().AsEnumerable()
                 .Where(p => p.memberStatusID == Worker.iExpired && p.dwccardnum == _w.dwccardnum);
             //Assert
             Assert.AreEqual(1, result.Count(), "Failed to expire members");
+            Assert.AreEqual("Expired", result.First().memberStatusEN, "Failed to set expiration text");
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Workers)]
@@ -79,7 +81,7 @@ namespace Machete.Test.Integration.System
             frb.AddWorker(status: Worker.iInactive, skill1: 62, memberexpirationdate: DateTime.Now.AddDays(-1));
             var _w = frb.ToWorker();
             //Act
-            frb.ToWorkerCache().ExpireMembers();
+            frb.ToServWorker().ExpireMembers();
             IEnumerable<Worker> result = frb.ToRepoWorker().GetAll().AsEnumerable()
                 .Where(p => p.memberStatusID == Worker.iExpired && p.dwccardnum == _w.dwccardnum);
             //Assert
@@ -96,7 +98,7 @@ namespace Machete.Test.Integration.System
                 memberexpirationdate: DateTime.Now.AddDays(1));
             var _w = frb.ToWorker();
             //Act
-            frb.ToWorkerCache().ReactivateMembers();
+            frb.ToServWorker().ReactivateMembers();
             IEnumerable<Worker> result = frb.ToRepoWorker().GetAll().AsEnumerable()
                 .Where(p => p.memberStatusID == Worker.iActive && p.dwccardnum == _w.dwccardnum);
             //Assert
@@ -112,7 +114,7 @@ namespace Machete.Test.Integration.System
                 memberexpirationdate: DateTime.Now.AddDays(1));
             var _w = frb.ToWorker();
             //Act
-            frb.ToWorkerCache().ReactivateMembers();
+            frb.ToServWorker().ReactivateMembers();
             IEnumerable<Worker> result = frb.ToRepoWorker().GetAll().AsEnumerable()
                 .Where(p => p.memberStatusID == Worker.iSanctioned && p.dwccardnum == _w.dwccardnum);
             //Assert
@@ -128,7 +130,7 @@ namespace Machete.Test.Integration.System
                     memberexpirationdate: DateTime.Now.AddDays(1));
             var _w = frb.ToWorker();
             //Act
-            frb.ToWorkerCache().ReactivateMembers();
+            frb.ToServWorker().ReactivateMembers();
             IEnumerable<Worker> result = frb.ToRepoWorker().GetAll().AsEnumerable()
                 .Where(p => p.memberStatusID == Worker.iSanctioned && p.dwccardnum == _w.dwccardnum);
             //Assert

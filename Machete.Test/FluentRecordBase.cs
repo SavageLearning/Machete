@@ -54,7 +54,6 @@ namespace Machete.Test
         private EventRepository _repoEV;
         private DatabaseFactory _dbFactory;
         private LookupCache _lcache;
-        private WorkerCache _wcache;
         private WorkerSigninService _servWSI;
         private WorkerService _servW;
         private PersonService _servP;
@@ -132,19 +131,6 @@ namespace Machete.Test
         {
             if (_lcache == null) AddLookupCache();
             return _lcache;
-        }
-
-        public FluentRecordBase AddWorkerCache()
-        {
-            if (_dbFactory == null) AddDBFactory();
-            _wcache = new WorkerCache(() => _dbFactory);
-            return this;
-        }
-
-        public WorkerCache ToWorkerCache()
-        {
-            if (_wcache == null) AddWorkerCache();
-            return _wcache;
         }
 
         #region Employers
@@ -321,10 +307,9 @@ namespace Machete.Test
             if (_repoL == null) AddRepoLookup();
             if (_repoWSI == null) AddRepoWorkerSignin();
             if (_lcache == null) AddLookupCache();
-            if (_wcache == null) AddWorkerCache();
             if (_uow == null) AddUOW();
             if (_map == null) AddMapper();
-            _servWA = new WorkAssignmentService(_repoWA, _repoW, _repoL, _repoWSI, _wcache, _lcache, _uow, _map);
+            _servWA = new WorkAssignmentService(_repoWA, _repoW, _repoL, _repoWSI, _lcache, _uow, _map);
             return this;
         }
 
@@ -402,10 +387,9 @@ namespace Machete.Test
             if (_repoW == null) AddRepoWorker();
             if (_repoL == null) AddRepoImage();
             if (_repoWR == null) AddRepoWorkerRequest();
-            if (_wcache == null) AddWorkerCache();
             if (_uow == null) AddUOW();
             if (_map == null) AddMapper();
-            _servWSI = new WorkerSigninService(_repoWSI, _repoW, _repoI, _repoWR, _wcache, _uow, _map);
+            _servWSI = new WorkerSigninService(_repoWSI, _repoW, _repoI, _repoWR, _uow, _map);
             return this;
         }
 
@@ -481,7 +465,8 @@ namespace Machete.Test
 
         public FluentRecordBase AddPerson(
             DateTime? datecreated = null,
-            DateTime? dateupdated = null
+            DateTime? dateupdated = null,
+            string testID = null
         )
         {
             //
@@ -492,6 +477,7 @@ namespace Machete.Test
             _p = (Person)Records.person.Clone();
             if (datecreated != null) _p.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _p.dateupdated = (DateTime)dateupdated;
+            if (testID != null) _p.firstname2 = testID;
             //
             // ACT
             _servP.Create(_p, _user);
@@ -536,10 +522,9 @@ namespace Machete.Test
             // DEPENDENCIES
             if (_repoW == null) AddRepoWorker();
             if (_uow == null) AddUOW();
-            if (_wcache == null) AddWorkerCache();
             if (_map == null) AddMapper();
             if (_lcache == null) AddLookupCache();
-            _servW = new WorkerService(_repoW, _wcache, _lcache, _uow, _repoWA, _repoWO, _repoP, _map);
+            _servW = new WorkerService(_repoW, _lcache, _uow, _repoWA, _repoWO, _repoP, _map);
             return this;
         }
 
@@ -557,7 +542,8 @@ namespace Machete.Test
             DateTime? datecreated = null,
             DateTime? dateupdated = null,
             DateTime? memberexpirationdate = null,
-            DateTime? memberReactivateDate = null
+            DateTime? memberReactivateDate = null,
+            string testID = null
         )
         {
             //
@@ -576,6 +562,7 @@ namespace Machete.Test
             if (dateupdated != null) _w.dateupdated = (DateTime)dateupdated;
             if (memberexpirationdate != null) _w.memberexpirationdate = (DateTime)memberexpirationdate;
             if (memberReactivateDate != null) _w.memberReactivateDate = (DateTime)memberReactivateDate;
+            if (testID != null) _w.Person.firstname2 = testID;
             // kludge
             _w.dwccardnum = Records.GetNextMemberID(_dbFactory.Get().Workers);
             //
@@ -871,10 +858,9 @@ namespace Machete.Test
             if (_repoW == null) AddRepoWorker();
             if (_repoL == null) AddRepoImage();
             if (_repoAS == null) AddRepoWorkerRequest();
-            if (_wcache == null) AddWorkerCache();
             if (_uow == null) AddUOW();
             if (_map == null) AddMapper();
-            _servAS = new ActivitySigninService(_repoAS, _repoW, _repoP, _repoI, _repoWR, _wcache, _uow, _map);
+            _servAS = new ActivitySigninService(_repoAS, _repoW, _repoP, _repoI, _repoWR, _uow, _map);
             return this;
         }
 

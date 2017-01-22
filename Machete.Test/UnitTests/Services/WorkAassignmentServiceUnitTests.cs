@@ -50,7 +50,6 @@ namespace Machete.Test.Unit.Service
         WorkAssignmentService waServ;
         Mock<IWorkerRequestRepository> wrRepo;
         Mock<ILookupCache> lcache;
-        Mock<IWorkerCache> _wcache;
         Mock<IMapper> _map;
 
         public WorkAssignmentTests()
@@ -106,9 +105,8 @@ namespace Machete.Test.Unit.Service
             wsiRepo = new Mock<IWorkerSigninRepository>();
             wrRepo = new Mock<IWorkerRequestRepository>();
             lcache = new Mock<ILookupCache>();
-            _wcache = new Mock<IWorkerCache>();
             _map = new Mock<IMapper>();
-            waServ = new WorkAssignmentService(waRepo.Object, wRepo.Object, lRepo.Object, wsiRepo.Object, _wcache.Object, lcache.Object, uow.Object, _map.Object);
+            waServ = new WorkAssignmentService(waRepo.Object, wRepo.Object, lRepo.Object, wsiRepo.Object, lcache.Object, uow.Object, _map.Object);
             
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WAs)]
