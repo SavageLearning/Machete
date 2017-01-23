@@ -38,6 +38,8 @@ namespace Machete.Service
         int GetNextWorkerNum();
         dataTableResult<DTO.WorkerList> GetIndexView(viewOptions o);
         // IQueryable<Worker> GetPriorEmployees(int employerId);
+        bool ExpireMembers();
+        bool ReactivateMembers();
     }
     public class WorkerService : ServiceBase<Worker>, IWorkerService
     {

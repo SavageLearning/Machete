@@ -58,7 +58,10 @@ namespace Machete.Web.Controllers
         protected override void Initialize(RequestContext requestContext)
         {
             base.Initialize(requestContext);
-            CI = (System.Globalization.CultureInfo)Session["Culture"];            
+            CI = (System.Globalization.CultureInfo)Session["Culture"];
+            // TODO this needs to be scheduled elsewhere
+            serv.ExpireMembers();
+            serv.ReactivateMembers();
         }
         /// <summary>
         /// 

@@ -20,7 +20,7 @@ namespace Machete.Test.Selenium.View
     {
         public IWebDriver _d;
         string _url;
-        public int maxwait = 4; // seconds
+        public int maxwait = 10; // seconds
         int sleepFor = 1000; //milliseconds
         IMapper map;
 
@@ -180,9 +180,9 @@ namespace Machete.Test.Selenium.View
         public bool workerSanction(Worker _wkr)
         {
             WaitThenClickElement(By.Id("workerCreateTab"));
-            WaitForElement(By.Id(_wkr.idPrefix + "memberStatus"));
-            WaitThenClickElement(By.Id(_wkr.idPrefix + "memberStatus"));
-            SelectOption(By.Id(_wkr.idPrefix + "memberStatus"), "Sanctioned");
+            WaitForElement(By.Id(_wkr.idPrefix + "memberStatusID"));
+            WaitThenClickElement(By.Id(_wkr.idPrefix + "memberStatusID"));
+            SelectOption(By.Id(_wkr.idPrefix + "memberStatusID"), "Sanctioned");
             WaitThenClickElement(By.Id(_wkr.idPrefix + "SaveButton"));
             _d.FindElement(By.Id("workerCreateTab")).Click();  
             return true;
