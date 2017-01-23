@@ -45,7 +45,7 @@ namespace Machete.Web.Maps
             CreateMap<Service.DTO.WorkerSigninList, ViewModel.WorkerSigninList>()
                 .ForMember(v => v.expirationDate, opt => opt.MapFrom(d => d.expirationDate.ToShortDateString()))
                 .ForMember(v => v.memberStatus, opt => opt.MapFrom(d => getCI() == "ES" ? d.memberStatusES : d.memberStatusEN))
-                .ForMember(v => v.dateforsigninstring, opt => opt.MapFrom(d => d.dateforsignin.ToShortDateString()))
+                .ForMember(v => v.dateforsigninstring, opt => opt.MapFrom(d => d.dateforsignin.ToShortTimeString()))
             ;
         }
     }
