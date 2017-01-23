@@ -164,11 +164,11 @@ namespace Machete.Service
         }
         public static void status(viewOptions o, ref IQueryable<WorkAssignment> q)
         {
-            q = q.Where(p => p.workOrder.status == o.status);
+            q = q.Where(p => p.workOrder.statusID == o.status);
         }
         public static void filterPending(viewOptions o, ref IQueryable<WorkAssignment> q)
         {
-            q = q.Where(p => p.workOrder.status != WorkOrder.iPending);
+            q = q.Where(p => p.workOrder.statusID != WorkOrder.iPending);
         }
         public static void waGrouping(viewOptions o, ref IQueryable<WorkAssignment> q, ILookupRepository lRepo)
         {
@@ -176,14 +176,14 @@ namespace Machete.Service
             switch (o.wa_grouping)
             {
                 case "open": q = q.Where(p => p.workerAssignedID == null 
-                                           && p.workOrder.status == WorkOrder.iActive);
+                                           && p.workOrder.statusID == WorkOrder.iActive);
                     break;
                 case "assigned": q = q.Where(p => p.workerAssignedID != null 
-                                               && p.workOrder.status == WorkOrder.iActive); break;
+                                               && p.workOrder.statusID == WorkOrder.iActive); break;
                 case "requested":
                     q = q.Where(p => p.workerAssignedID == null 
                                   && p.workOrder.workerRequests.Any() == true 
-                                  && p.workOrder.status == WorkOrder.iActive);
+                                  && p.workOrder.statusID == WorkOrder.iActive);
 
                     break;
                 case "skilled": q = q.Join(lRepo.GetAllQ(),
@@ -192,11 +192,11 @@ namespace Machete.Service
                                     (wa, sk) => new { wa, sk })
                              .Where(jj => jj.sk.speciality == true 
                                        && jj.wa.workerAssigned == null 
-                                       && jj.wa.workOrder.status == WorkOrder.iActive)
+                                       && jj.wa.workOrder.statusID == WorkOrder.iActive)
                              .Select(jj => jj.wa);
                     break;
                 case "completed":
-                    q = q.Where(wa => wa.workOrder.status == WorkOrder.iCompleted);
+                    q = q.Where(wa => wa.workOrder.statusID == WorkOrder.iCompleted);
                     break;
             }
         }
@@ -364,7 +364,7 @@ namespace Machete.Service
         }
         public static void filterStatus(viewOptions o, ref IQueryable<WorkOrder> q)
         {
-            q = q.Where(p => p.status.Equals((int)o.status));
+            q = q.Where(p => p.statusID.Equals((int)o.status));
         }
         public static void filterOnlineSource(viewOptions o, ref IQueryable<WorkOrder> q)
         {
@@ -397,7 +397,7 @@ namespace Machete.Service
             switch (name)
             {
                 //case "WOID": orderedWO = orderDescending ? q.OrderByDescending(p => p.dateTimeofWork) : q.OrderBy(p => p.dateTimeofWork); break;
-                case "status": q = descending ? q.OrderByDescending(p => p.status) : q.OrderBy(p => p.status); break;
+                case "status": q = descending ? q.OrderByDescending(p => p.statusID) : q.OrderBy(p => p.statusID); break;
                 case "transportMethod": q = descending ? q.OrderByDescending(p => p.transportMethodID) : q.OrderBy(p => p.transportMethodID); break;
                 case "WAcount": q = descending ? q.OrderByDescending(p => p.workAssignments.Count) : q.OrderBy(p => p.workAssignments.Count); break;
                 case "contactName": q = descending ? q.OrderByDescending(p => p.contactName) : q.OrderBy(p => p.contactName); break;

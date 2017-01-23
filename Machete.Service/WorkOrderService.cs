@@ -91,7 +91,7 @@ namespace Machete.Service
         public IEnumerable<WorkOrder> GetActiveOrders(DateTime date, bool assignedOnly)
         {
             IQueryable<WorkOrder> query = repo.GetAllQ();
-                            query = query.Where(wo => wo.status == WorkOrder.iActive && 
+                            query = query.Where(wo => wo.statusID == WorkOrder.iActive && 
                                            DbFunctions.DiffDays(wo.dateTimeofWork, date) == 0 ? true : false)
                                     .AsQueryable();
             List<WorkOrder> list = query.ToList();
@@ -130,7 +130,7 @@ namespace Machete.Service
             foreach (WorkOrder wo in list)
             {
                 var order = this.Get(wo.ID);
-                order.status = WorkOrder.iCompleted;
+                order.statusID = WorkOrder.iCompleted;
                 this.Save(order, user);
                 count++;
             }
@@ -186,7 +186,7 @@ namespace Machete.Service
             var group_query = from wo in query
                             group wo by new { 
                                 dateSoW = DbFunctions.TruncateTime(wo.dateTimeofWork),                                              
-                                wo.status
+                                wo.statusID
                             } into dayGroup
                             select new WorkOrderSummary()
                             {

@@ -156,7 +156,7 @@ namespace Machete.Web.Controllers
             //update domain
             Domain.Employer newEmployer = serv.Create(mappedEmployer, userName);
             mappedWO.EmployerID = newEmployer.ID;
-            mappedWO.status = Domain.WorkOrder.iPending;
+            mappedWO.statusID = Domain.WorkOrder.iPending;
             Domain.WorkOrder newWO = woServ.Create(mappedWO, userName);
             // return 
             return Json(new

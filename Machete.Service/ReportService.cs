@@ -152,7 +152,7 @@ namespace Machete.Service
 
 
             query = woQ.Where(whr => DbFunctions.TruncateTime(whr.dateTimeofWork) == beginDate
-                                  && whr.status == WorkOrder.iCancelled)
+                                  && whr.statusID == WorkOrder.iCancelled)
                 .GroupBy(gb => DbFunctions.TruncateTime(gb.dateTimeofWork))
                 .Select(g => new ReportUnit
                 {

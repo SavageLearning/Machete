@@ -151,7 +151,7 @@ namespace Machete.Service
                             {
                                 dateSoW = DbFunctions
                                 .TruncateTime(wa.workOrder.dateTimeofWork),                               
-                                wa.workOrder.status
+                                wa.workOrder.statusID
                             } into dayGroup
                             select new WorkAssignmentSummary()
                             {

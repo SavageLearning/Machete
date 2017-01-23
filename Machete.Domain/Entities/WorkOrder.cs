@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Machete.Domain
 {
@@ -73,7 +74,8 @@ namespace Machete.Domain
         // Work order status
         [LocalizedDisplayName("status", NameResourceType = typeof(Resources.WorkOrder))]
         [Required(ErrorMessageResourceName = "statusrequired", ErrorMessageResourceType = typeof(Resources.WorkOrder))]
-        public int status { get; set; }
+        [Column("status")]
+        public int statusID { get; set; }
 
         // Work site address, 1
         [LocalizedDisplayName("workSiteAddress1", NameResourceType = typeof(Resources.WorkOrder))]

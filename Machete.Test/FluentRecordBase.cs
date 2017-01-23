@@ -254,7 +254,7 @@ namespace Machete.Test
             if (dateupdated != null) _wo.dateupdated = (DateTime)dateupdated;
             if (paperordernum != null) _wo.paperOrderNum = paperordernum;
             if (dateTimeOfWork != null) _wo.dateTimeofWork = (DateTime)dateTimeOfWork;
-            if (status != null) _wo.status = (int)status;
+            if (status != null) _wo.statusID = (int)status;
             //
             // ACT
             _servWO.Create(_wo, _user);

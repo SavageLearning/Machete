@@ -492,7 +492,7 @@ namespace Machete.Test.Selenium.View
 
             WaitForElement(By.Id(prefix + "status"));
             string optionText = GetOptionText(By.Id(prefix + "status"));
-            Assert.AreEqual(_wo.status, MacheteLookup.cache.First(c => c.category == "orderstatus" && c.text_EN == optionText).ID);
+            Assert.AreEqual(_wo.statusID, MacheteLookup.cache.First(c => c.category == "orderstatus" && c.text_EN == optionText).ID);
             WaitForElement(By.Id(prefix + "timeFlexible"));
             Assert.AreEqual(_wo.timeFlexible ? 2:1, GetOptionIndex(By.Id(prefix + "timeFlexible")));
             WaitForElement(By.Id(prefix + "permanentPlacement"));
@@ -565,7 +565,7 @@ namespace Machete.Test.Selenium.View
             Thread.Sleep(1000);
             WaitThenClickElement(By.Id("activateWorkOrderButton-" + _wo.ID));
             // todo: find a way to change this hard-coded value assignment
-            _wo.status = 40; // changing test object to reflect activate status from previous action
+            _wo.statusID = 40; // changing test object to reflect activate status from previous action
             return true;
         }
 

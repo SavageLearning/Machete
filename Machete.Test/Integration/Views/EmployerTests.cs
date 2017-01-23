@@ -87,7 +87,7 @@ namespace Machete.Test.Selenium.View
             //Arrange
             Employer _emp = frb.CloneEmployer();
             WorkOrder _wo = frb.CloneWorkOrder();
-            _wo.status = frb.ToLookupCache().getByKeys(LCategory.orderstatus, LOrderStatus.Pending); // start work order off as pending
+            _wo.statusID = frb.ToLookupCache().getByKeys(LCategory.orderstatus, LOrderStatus.Pending); // start work order off as pending
             //Act
             ui.employerCreate(_emp);
             ui.workOrderCreate(_emp, _wo);
@@ -119,7 +119,7 @@ namespace Machete.Test.Selenium.View
             _wo.zipcode = _emp.zipcode;
             _wo.phone = _emp.phone;
             _wo.description = "";
-            _wo.status = frb.ToLookupCache().getByKeys(LCategory.orderstatus, LOrderStatus.Pending);
+            _wo.statusID = frb.ToLookupCache().getByKeys(LCategory.orderstatus, LOrderStatus.Pending);
 
             //Assert
             ui.workOrderValidate(_wo);
@@ -132,7 +132,7 @@ namespace Machete.Test.Selenium.View
             WorkOrder _wo = frb.CloneWorkOrder();
             WorkAssignment _wa1 = frb.CloneWorkAssignment();
             _wo.contactName = ui.RandomString(10);
-            _wo.status = frb.ToLookupCache().getByKeys(LCategory.orderstatus, LOrderStatus.Pending); // status = pending
+            _wo.statusID = frb.ToLookupCache().getByKeys(LCategory.orderstatus, LOrderStatus.Pending); // status = pending
             //
             // Create employer
             ui.employerCreate(_employer1);

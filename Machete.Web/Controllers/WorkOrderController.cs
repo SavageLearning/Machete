@@ -197,7 +197,7 @@ namespace Machete.Web.Controllers
                 dateTimeofWork = DateTime.Today,
                 transportMethodID = def.getDefaultID(LCategory.transportmethod),
                 typeOfWorkID = def.getDefaultID(LCategory.worktype),
-                status = def.getDefaultID(LCategory.orderstatus),
+                statusID = def.getDefaultID(LCategory.orderstatus),
                 timeFlexible = true
             });
             wo.def = def;
@@ -414,7 +414,7 @@ namespace Machete.Web.Controllers
         {
             var workOrder = woServ.Get(id);
             // lookup int value for status active
-            workOrder.status = Domain.WorkOrder.iActive;
+            workOrder.statusID = Domain.WorkOrder.iActive;
             woServ.Save(workOrder, userName);         
             return Json(new
             {

@@ -227,9 +227,9 @@ namespace Machete.Web.Controllers
         /// <returns>status string</returns>
         private string _getDisplayState(WorkOrder wo)
         {
-            string status = lcache.textByID(wo.status, "en");
+            string status = lcache.textByID(wo.statusID, "en");
 
-            if (wo.status == WorkOrder.iCompleted)
+            if (wo.statusID == WorkOrder.iCompleted)
             {
                 // If WO is completed, but 1 (or more) WA aren't assigned - the WO is still Unassigned
                 if (wo.workAssignments.Count(wa => wa.workerAssignedID == null) > 0)
@@ -284,7 +284,7 @@ namespace Machete.Web.Controllers
             wo.dateTimeofWork = DateTime.Today.AddHours(9).AddDays(3); // Set default work time to 9am three days from now
             wo.transportMethodID = def.getDefaultID(LCategory.transportmethod);
             wo.typeOfWorkID = def.getDefaultID(LCategory.worktype);
-            wo.status = def.getDefaultID(LCategory.orderstatus);
+            wo.statusID = def.getDefaultID(LCategory.orderstatus);
             wo.timeFlexible = true;
             wo.onlineSource = true;
             wo.disclosureAgreement = false;

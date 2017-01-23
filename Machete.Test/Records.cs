@@ -186,7 +186,7 @@ namespace Machete.Test
             contactName = "Oompa Loompa",
             workSiteAddress1 = "2400 Main Ave E",
             workSiteAddress2 = "Apt 207",
-            status = 42,
+            statusID = 42,
             city = "Seattle",
             state = "WA",
             zipcode = "12345",
