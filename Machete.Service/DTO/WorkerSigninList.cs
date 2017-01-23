@@ -28,5 +28,9 @@ namespace Machete.Service.DTO
         public int? memberStatusID { get; set; }
         public string memberStatusEN { get; set; }
         public string memberStatusES { get; set; }
+        public bool memberInactive { get; set; }
+        public bool memberSanctioned { get; set; }
+        public bool memberExpired { get; set; }
+        public bool memberExpelled { get; set; }
     }
 }

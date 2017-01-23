@@ -252,7 +252,7 @@ namespace Machete.Domain
 
         [LocalizedDisplayName("lgbtq", NameResourceType = typeof(Resources.Worker))]
         public bool? lgbtq { get; set; }
-
+        // TODO2017: these should be in automapper profiles
         public bool isActive 
         {
             get { return this.memberStatusID == iActive ? true : false; }

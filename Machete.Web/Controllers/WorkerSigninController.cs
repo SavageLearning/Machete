@@ -114,6 +114,7 @@ namespace Machete.Web.Controllers
 
             return Json(new
             {
+                // TODO2017: replace this with viewmodel 
                 memberExpired = worker.isExpired,
                 memberInactive = worker.isInactive,
                 memberSanctioned = worker.isSanctioned,

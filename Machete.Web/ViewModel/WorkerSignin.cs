@@ -11,7 +11,10 @@ namespace Machete.Web.ViewModel
         public string tabref { get; set; }
         public string tablabel { get; set; }
         public IDefaults def { get; set; }
-
+        public bool memberInactive { get; set; }
+        public bool memberSanctioned { get; set; }
+        public bool memberExpired { get; set; }
+        public bool memberExpelled { get; set; }
     }
 
     public class WorkerSigninList
