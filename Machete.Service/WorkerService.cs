@@ -27,6 +27,7 @@ using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Machete.Service
@@ -138,9 +139,10 @@ namespace Machete.Service
         public bool ExpireMembers()
         {
             bool rtn = false;
-            var list = GetMany(w =>
+            IList<Worker> list = GetMany(w =>
                     w.memberexpirationdate < DateTime.Now &&
-                    w.memberStatusID == Worker.iActive);
+                    w.memberStatusID == Worker.iActive)
+                    .ToList();
             //
             if (list.Count() > 0) rtn = true;
             //
@@ -160,10 +162,11 @@ namespace Machete.Service
         public bool ReactivateMembers()
         {
             bool rtn = false;
-            var list = GetMany(w =>
+            IList<Worker> list = GetMany(w =>
                     w.memberReactivateDate != null &&
                     w.memberReactivateDate < DateTime.Now &&
-                    w.memberStatusID == Worker.iSanctioned);
+                    w.memberStatusID == Worker.iSanctioned)
+                    .ToList();
             //
             if (list.Count() > 0) rtn = true;
             //

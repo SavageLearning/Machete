@@ -54,19 +54,7 @@ namespace Machete.Data.Infrastructure
 
         public void Commit()
         {
-            try
-            {
-                DataContext.Commit();
-            }
-            catch(DbEntityValidationException e)
-            {
-                StringBuilder str = new StringBuilder();
-                var foo = (from eve in e.EntityValidationErrors
-                   from error in eve.ValidationErrors
-                   select error.ErrorMessage).Aggregate<string>((c, n) => c + ", [" + n + "]");
-
-                throw new Exception(foo, e);
-            }
-        }
+            DataContext.Commit();
+        } 
     }
 }
