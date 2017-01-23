@@ -98,4 +98,60 @@ namespace Machete.Web.Maps
     //    return rtnstr;
     //}
 
+
+    //public class signinView : Record
+    //{
+    //    public int dwccardnum { get; set; }
+    //    public string firstname1 { get; set; }
+    //    public string firstname2 { get; set; }
+    //    public string lastname1 { get; set; }
+    //    public string lastname2 { get; set; }
+    //    public string fullname
+    //    {
+    //        get
+    //        {
+    //            return firstname1 + " " +
+    //                    firstname2 + " " +
+    //                    lastname1 + " " +
+    //                    lastname2;
+    //        }
+    //        set{}
+    //    }
+    //    public int signinID { get; set; }
+    //    public DateTime dateforsignin { get; set; }
+    //    public int? imageID { get; set; }
+    //    public DateTime expirationDate { get; set; }
+    //    public int memberStatus { get; set; }
+    //    public Person p { get; set; }
+    //    public Worker w { get; set; }
+    //    public Signin s { get; set; }
+    //    /// <summary>
+    //    /// 
+    //    /// </summary>
+    //    /// <param name="per"></param>
+    //    /// <param name="sign"></param>
+    //    public signinView(Person per, Signin sign)
+    //    {
+    //        p = per;
+    //        w = p.Worker;
+    //        s = sign;
+    //        ID = s.ID;
+    //        firstname1 = p == null ? null : p.firstname1;
+    //        firstname2 = p == null ? null : p.firstname2;
+    //        lastname1 = p == null ? null : p.lastname1;
+    //        lastname2 = p == null ? null : p.lastname2;
+    //        dateforsignin = s.dateforsignin;
+    //        dwccardnum = s.dwccardnum;
+    //        signinID = s.ID;
+    //        dateupdated = s.dateupdated;
+    //        datecreated = s.datecreated;
+    //        createdby = s.createdby;
+    //        updatedby = s.updatedby;
+    //        imageID = p == null ? null : p.Worker.ImageID;
+    //        expirationDate = p == null ? DateTime.MinValue : p.Worker.memberexpirationdate;
+    //        memberStatus = p == null ? 0 : p.Worker.memberStatusID;
+
+    //    }
+    //    public signinView() { }
+    //}
 }
