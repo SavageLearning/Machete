@@ -44,6 +44,7 @@ namespace Machete.Test.Unit.Service
     {
         Mock<IWorkOrderRepository> _repo;
         Mock<IWorkAssignmentService> _waServ;
+        Mock<ILookupCache> _lcache;
         Mock<IUnitOfWork> _uow;
         Mock<IMapper> _map;
         WorkOrderService _serv;
@@ -98,7 +99,8 @@ namespace Machete.Test.Unit.Service
             _uow = new Mock<IUnitOfWork>();
             _waServ = new Mock<IWorkAssignmentService>();
             _map = new Mock<IMapper>();
-            _serv = new WorkOrderService(_repo.Object, _waServ.Object, _uow.Object, _map.Object );
+            _lcache = new Mock<ILookupCache>();
+            _serv = new WorkOrderService(_repo.Object, _waServ.Object, _lcache.Object, _uow.Object, _map.Object );
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
         public void GetWorkOrders_returns_Enumerable()
@@ -132,13 +134,14 @@ namespace Machete.Test.Unit.Service
             //Arrange
             _repo = new Mock<IWorkOrderRepository>();
             _uow = new Mock<IUnitOfWork>();
+            _lcache = new Mock<ILookupCache>();
             var _wo = (WorkOrder)Records.order.Clone();
             string user = "UnitTest";
             _wo.datecreated = DateTime.MinValue;
             _wo.dateupdated = DateTime.MinValue;
             _repo.Setup(r => r.Add(_wo)).Returns(_wo);
             _waServ = new Mock<IWorkAssignmentService>();
-            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _uow.Object, _map.Object);
+            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _lcache.Object, _uow.Object, _map.Object);
             //
             //Act
             var result = _serv.Create(_wo, user);
@@ -158,6 +161,7 @@ namespace Machete.Test.Unit.Service
             //Arrange
             _repo = new Mock<IWorkOrderRepository>();
             _uow = new Mock<IUnitOfWork>();
+            _lcache = new Mock<ILookupCache>();
             var _wo = (WorkOrder)Records.order.Clone();
             string user = "UnitTest";
             int id = 1;
@@ -165,7 +169,7 @@ namespace Machete.Test.Unit.Service
             _repo.Setup(r => r.Delete(It.IsAny<WorkOrder>())).Callback((WorkOrder p) => { dp = p; });
             _repo.Setup(r => r.GetById(id)).Returns(_wo);
             _waServ = new Mock<IWorkAssignmentService>();
-            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _uow.Object, _map.Object);
+            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _lcache.Object, _uow.Object, _map.Object);
             //
             //Act
             _serv.Delete(id, user);
@@ -181,12 +185,13 @@ namespace Machete.Test.Unit.Service
             //Arrange
             _repo = new Mock<IWorkOrderRepository>();
             _uow = new Mock<IUnitOfWork>();
+            _lcache = new Mock<ILookupCache>();
             string user = "UnitTest";
             var _wo = (WorkOrder)Records.order.Clone();
             _wo.datecreated = DateTime.MinValue;
             _wo.dateupdated = DateTime.MinValue;
             _waServ = new Mock<IWorkAssignmentService>();
-            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _uow.Object, _map.Object);
+            var _serv = new WorkOrderService(_repo.Object, _waServ.Object, _lcache.Object, _uow.Object, _map.Object);
             //
             //Act
             _serv.Save(_wo, user);

@@ -156,7 +156,7 @@ namespace Machete.Service
                             select new WorkAssignmentSummary()
                             {
                                 date = dayGroup.Key.dateSoW,
-                                status = dayGroup.Key.status,
+                                status = dayGroup.Key.statusID,
                                 count = dayGroup.Count()
                             };
 

@@ -55,19 +55,22 @@ namespace Machete.Service
     {
         private readonly IWorkAssignmentService waServ;
         private readonly IMapper map;
+        private readonly ILookupCache lc;
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="repo"></param>
         /// <param name="waServ">Work Assignment service</param>
-        /// <param name="unitOfWork">Unit of Work</param>
+        /// <param name="uow">Unit of Work</param>
         public WorkOrderService(IWorkOrderRepository repo, 
                                 IWorkAssignmentService waServ,
-                                IUnitOfWork unitOfWork,
-                                IMapper map) : base(repo, unitOfWork)
+                                ILookupCache lc,
+                                IUnitOfWork uow,
+                                IMapper map) : base(repo, uow)
         {
             this.waServ = waServ;
             this.map = map;
+            this.lc = lc;
             this.logPrefix = "WorkOrder";
         }
 
@@ -191,7 +194,7 @@ namespace Machete.Service
                             select new WorkOrderSummary()
                             {
                                 date = dayGroup.Key.dateSoW,
-                                status = dayGroup.Key.status,
+                                status = dayGroup.Key.statusID,
                                 count = dayGroup.Count()
                             };
 
@@ -206,6 +209,8 @@ namespace Machete.Service
         public override WorkOrder Create(WorkOrder workOrder, string user)
         {
             WorkOrder wo;
+            workOrder.statusES = lc.textByID(workOrder.statusID, "ES");
+            workOrder.statusEN = lc.textByID(workOrder.statusID, "EN");
             workOrder.createdByUser(user);
             wo = repo.Add(workOrder);
             // TODO: investigate why worker requests collection is added to wo - there is a similar collection of wa added to wo
@@ -216,14 +221,6 @@ namespace Machete.Service
             _log(workOrder.ID, user, "WorkOrder created");
             return wo;
         }
-        //private void _log(int ID, string user, string msg)
-        //{
-        //    levent.Level = LogLevel.Info;
-        //    levent.Message = msg;
-        //    levent.Properties["RecordID"] = ID; //magic string maps to NLog config
-        //    levent.Properties["username"] = user;
-        //    nlog.Log(levent);
-        //}
         /// <summary>
         /// Provide combined summary of WO/WA status
         /// </summary>

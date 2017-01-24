@@ -223,9 +223,10 @@ namespace Machete.Test
             // DEPENDENCIES
             if (_repoWO == null) AddRepoWorkOrder();
             if (_servWA == null) AddServWorkAssignment();
+            if (_lcache == null) AddLookupCache();
             if (_uow == null) AddUOW();
             if (_map == null) AddMapper();
-            _servWO = new WorkOrderService(_repoWO, _servWA, _uow, _map);
+            _servWO = new WorkOrderService(_repoWO, _servWA, _lcache, _uow, _map);
             return this;
         }
 

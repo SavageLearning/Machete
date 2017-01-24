@@ -76,6 +76,10 @@ namespace Machete.Domain
         [Required(ErrorMessageResourceName = "statusrequired", ErrorMessageResourceType = typeof(Resources.WorkOrder))]
         [Column("status")]
         public int statusID { get; set; }
+        [StringLength(50)]
+        public string statusEN { get; set; }
+        [StringLength(50)]
+        public string statusES { get; set; }
 
         // Work site address, 1
         [LocalizedDisplayName("workSiteAddress1", NameResourceType = typeof(Resources.WorkOrder))]
