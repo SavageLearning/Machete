@@ -12,7 +12,9 @@ namespace Machete.Service.DTO
         public int EmployerID { get; set; }
         public DateTime dateTimeofWork { get; set; }
         public int? paperOrderNum { get; set; }
-        public int status { get; set; }
+        public int statusID { get; set; }
+        public string statusEN { get; set; }
+        public string statusES { get; set; }
         public int transportMethodID { get; set; }
         public string contactName { get; set; }
         public string workSiteAddress1 { get; set; }
@@ -23,5 +25,7 @@ namespace Machete.Service.DTO
         public int WAcount { get; set; }
         public int emailSentCount { get; set; }
         public int emailErrorCount { get; set; }
+        public int WAUnassignedCount { get; set; }
+        public int WAOrphanedCount { get; set; }
     }
 }

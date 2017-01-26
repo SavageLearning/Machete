@@ -16,9 +16,10 @@ namespace Machete.Service.DTO
         public int dwccardnum { get; set; }
         public bool active { get; set; }
         public DateTime memberexpirationdate { get; set; }
-        public string wkrStatus { get; set; }
+        public string memberStatusEN { get; set; }
+        public string memberStatusES { get; set; }
         public DateTime dateupdated { get; set; }
-        public int memberStatus { get; set; }
+        public int memberStatusID { get; set; }
 
     }
 }

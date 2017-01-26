@@ -508,7 +508,7 @@ namespace Machete.Service
             switch (name)
             {
                 case "dwccardnum": q = descending ? q.OrderByDescending(p => p.dwccardnum) : q.OrderBy(p => p.dwccardnum); break;
-                case "wkrStatus": q = descending ? q.OrderByDescending(p => p.memberStatusID) : q.OrderBy(p => p.memberStatusID); break;
+                case "memberStatus": q = descending ? q.OrderByDescending(p => p.memberStatusID) : q.OrderBy(p => p.memberStatusID); break;
                 case "firstname1": q = descending ? q.OrderByDescending(p => p.Person.firstname1) : q.OrderBy(p => p.Person.firstname1); break;
                 case "firstname2": q = descending ? q.OrderByDescending(p => p.Person.firstname2) : q.OrderBy(p => p.Person.firstname2); break;
                 case "lastname1": q = descending ? q.OrderByDescending(p => p.Person.lastname1) : q.OrderBy(p => p.Person.lastname1); break;

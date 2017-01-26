@@ -7,28 +7,30 @@ using System.Web;
 
 namespace Machete.Web.Maps
 {
-    public class WorkOrderProfile : Profile
+    public class WorkOrderProfile : MacheteProfile
     {
         public WorkOrderProfile()
         {
             CreateMap<Domain.WorkOrder, ViewModel.WorkOrder>()
-                .ForMember(v => v.tabref,            opt => opt.MapFrom(d => "/WorkOrder/Edit/" + Convert.ToString(d.ID)))
-                .ForMember(v => v.tablabel,          opt => opt.MapFrom(d =>
+                .ForMember(v => v.tabref,               opt => opt.MapFrom(d => "/WorkOrder/Edit/" + Convert.ToString(d.ID)))
+                .ForMember(v => v.tablabel,             opt => opt.MapFrom(d =>
                                                             Machete.Web.Resources.WorkOrders.tabprefix +
                                                             Convert.ToString(d.paperOrderNum.HasValue ? d.paperOrderNum : d.ID) +
                                                             " @ " + d.workSiteAddress1))
-                .ForMember(v => v.EID,               opt => opt.MapFrom(d => Convert.ToString(d.EmployerID)))
-                .ForMember(v => v.WOID,              opt => opt.MapFrom(d => System.String.Format("{0,5:D5}", d.paperOrderNum.HasValue ? d.paperOrderNum : d.ID)))
-                .ForMember(v => v.dateTimeofWork,    opt => opt.MapFrom(d => Convert.ToString(d.dateTimeofWork)))
-                .ForMember(v => v.dateupdatedstring, opt => opt.MapFrom(d => System.String.Format("{0:MM/dd/yyyy HH:mm:ss}", d.dateupdated)))
-                .ForMember(v => v.onlineSource,      opt => opt.MapFrom(d => d.onlineSource ? Shared.True : Shared.False))
-                .ForMember(v => v.recordid,          opt => opt.MapFrom(d => Convert.ToString(d.ID)));
+                .ForMember(v => v.EID,                  opt => opt.MapFrom(d => Convert.ToString(d.EmployerID)))
+                .ForMember(v => v.WOID,                 opt => opt.MapFrom(d => System.String.Format("{0,5:D5}", d.paperOrderNum.HasValue ? d.paperOrderNum : d.ID)))
+                .ForMember(v => v.dateTimeofWork,       opt => opt.MapFrom(d => Convert.ToString(d.dateTimeofWork)))
+                .ForMember(v => v.dateupdatedstring,    opt => opt.MapFrom(d => System.String.Format("{0:MM/dd/yyyy HH:mm:ss}", d.dateupdated)))
+                .ForMember(v => v.onlineSource,         opt => opt.MapFrom(d => d.onlineSource ? Shared.True : Shared.False))
+                .ForMember(v => v.recordid,             opt => opt.MapFrom(d => Convert.ToString(d.ID)));
             //
             //
             CreateMap<Domain.WorkOrder, Service.DTO.WorkOrderList>()
-                .ForMember(v => v.WAcount,           opt => opt.MapFrom(d => d.workAssignments.Count()))
-                .ForMember(v => v.emailSentCount,    opt => opt.MapFrom(d => d.Emails.Where(e => e.statusID == Domain.Email.iSent || e.statusID == Domain.Email.iReadyToSend).Count()))
-                .ForMember(v => v.emailErrorCount,   opt => opt.MapFrom(d => d.Emails.Where(e => e.statusID == Domain.Email.iTransmitError).Count()))
+                .ForMember(v => v.WAcount,              opt => opt.MapFrom(d => d.workAssignments.Count()))
+                .ForMember(v => v.WAUnassignedCount,    opt => opt.MapFrom(d => d.workAssignments.Count(wa => wa.workerAssignedID == null)))
+                .ForMember(v => v.WAOrphanedCount,      opt => opt.MapFrom(d => d.workAssignments.Count(wa => wa.workerAssignedID != null && wa.workerSigninID == null)))
+                .ForMember(v => v.emailSentCount,       opt => opt.MapFrom(d => d.Emails.Where(e => e.statusID == Domain.Email.iSent || e.statusID == Domain.Email.iReadyToSend).Count()))
+                .ForMember(v => v.emailErrorCount,      opt => opt.MapFrom(d => d.Emails.Where(e => e.statusID == Domain.Email.iTransmitError).Count()))
             ;
             //
             //
@@ -42,8 +44,27 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.WOID,              opt => opt.MapFrom(d => System.String.Format("{0,5:D5}", d.paperOrderNum.HasValue ? d.paperOrderNum : d.ID)))
                 .ForMember(v => v.dateTimeofWork,    opt => opt.MapFrom(d => Convert.ToString(d.dateTimeofWork)))
                 .ForMember(v => v.dateupdated,       opt => opt.MapFrom(d => Convert.ToString(d.dateupdated)))
+                .ForMember(v => v.status,            opt => opt.MapFrom(d => getCI() == "ES" ? d.statusES : d.statusEN))
+                .ForMember(v => v.displayState,      opt => opt.MapFrom(d => computeOrderStatus(d)))
                 ;
 
+        }
+        public string computeOrderStatus(Service.DTO.WorkOrderList d)
+        {
+            if (d.statusID == Domain.WorkOrder.iActive) return Domain.LOrderStatus.Active;
+            if (d.statusID == Domain.WorkOrder.iCancelled) return Domain.LOrderStatus.Cancelled;
+            if (d.statusID == Domain.WorkOrder.iExpired) return Domain.LOrderStatus.Expired;
+            if (d.statusID == Domain.WorkOrder.iPending) return Domain.LOrderStatus.Pending;
+            if (d.statusID == Domain.WorkOrder.iCompleted)
+            {
+                // if wo is completed, but 1 (or more) wa aren't assigned - the wo is still unassigned
+                if (d.WAUnassignedCount > 0) return Domain.LOrderStatus.Unassigned;
+                // if wo is completed, but 1 (or more) assigned worker(s) never signed in, then the wo has been orphaned
+                if (d.WAUnassignedCount > 0) return Domain.LOrderStatus.Orphaned;
+                return Domain.LOrderStatus.Completed;
+            }
+            else
+                return "unknown";
         }
         //tabref = wo.getTabRef(),
         //tablabel = Machete.Web.Resources.WorkOrders.tabprefix + wo.getTabLabel(),

@@ -221,6 +221,13 @@ namespace Machete.Service
             _log(workOrder.ID, user, "WorkOrder created");
             return wo;
         }
+
+        public override void Save(WorkOrder workOrder, string user)
+        {
+            workOrder.statusES = lc.textByID(workOrder.statusID, "ES");
+            workOrder.statusEN = lc.textByID(workOrder.statusID, "EN");
+            base.Save(workOrder, user);
+        }
         /// <summary>
         /// Provide combined summary of WO/WA status
         /// </summary>

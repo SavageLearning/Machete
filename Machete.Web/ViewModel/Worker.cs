@@ -22,7 +22,8 @@ namespace Machete.Web.ViewModel
         public string recordid { get; set; }
         public string dwccardnum { get; set; }
         public string active { get; set; }
-        public string wkrStatus { get; set; }
+        public string memberStatus { get; set; }
+        public int memberStatusID { get; set; }
         public string firstname1 { get; set; }
         public string firstname2 { get; set; }
         public string lastname1 { get; set; }

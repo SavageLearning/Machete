@@ -47,6 +47,8 @@ namespace Machete.Web.ViewModel
         public string WOID { get; set; }
         public string dateTimeofWork { get; set; }
         public string status { get; set; }
+        public int statusID { get; set; }
+        public string displayState { get; set; }
         public string transportMethod { get; set; }
         public string WAcount { get; set; }
         public string contactName { get; set; }

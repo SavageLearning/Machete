@@ -32,7 +32,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         jqrfyTable({
-        table: $('#workerTable'), 
+        table: $('#workerTable'),
         tab: $('#workerTabs'),
         options: {
             "bPaginate": true,
@@ -43,7 +43,7 @@
             "bInfo": true,
             "bAutoWidth": false,
             "bServerSide": true,
-            "sAjaxSource": "Worker/AjaxHandler", 
+            "sAjaxSource": "Worker/AjaxHandler",
             "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
             "bProcessing": true,
             "aoColumns": [
@@ -51,28 +51,27 @@
                 { "mDataProp": "tablabel","bSearchable": false, "bSortable": false, "bVisible": false },
                 { "mDataProp": "WID","bSearchable": false, "bSortable": false, "bVisible": false },
                 { "mDataProp": "dwccardnum" },
-                { "mDataProp": "wkrStatus" },
+                { "mDataProp": "memberStatus" },
                 { "mDataProp": "firstname1" },
                 { "mDataProp": "firstname2" },
                 { "mDataProp": "lastname1" },
                 { "mDataProp": "lastname2" },
                 { "mDataProp": "memberexpirationdate" }
             ],
-            // callback populates html attr with row data from JSON            
+            // callback populates html attr with row data from JSON
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $(nRow).attr('recordid', aData['WID']);
-                switch (aData['wkrStatus'])
+                switch (aData['memberStatusID'])
                 {
-                    // magic strings in WorkAssignmentController
-                    case "active": $(nRow).addClass('statusBlue'); break;
-                    case "inactive": $(nRow).addClass('statusYellow'); break;
-                    case "expired": $(nRow).addClass('statusYellow'); break;
-                    case "sanctioned": $(nRow).addClass('statusRed'); break;
-                    case "expelled": $(nRow).addClass('statusRed'); break;
+                    case "@(Machete.Domain.Worker.iActive)": $(nRow).addClass('statusBlue'); break;
+                    case "@(Machete.Domain.Worker.iInactive)": $(nRow).addClass('statusYellow'); break;
+                    case "@(Machete.Domain.Worker.iExpired)": $(nRow).addClass('statusYellow'); break;
+                    case "@(Machete.Domain.Worker.iSanctioned)": $(nRow).addClass('statusRed'); break;
+                    case "@(Machete.Domain.Worker.iExpelled)": $(nRow).addClass('statusRed'); break;
                     default: $(nRow).addClass('statusBlue');
-                }                 
+                }
                 return nRow;
-            }        
+            }
         },
         dblClickEvent: null,
         tabLabel: null
@@ -83,5 +82,5 @@
             changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
             changeTitle:   "@(Machete.Web.Resources.Shared.changeTitle)"
         });
-    });  
+    });
 </script>

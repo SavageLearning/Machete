@@ -7,7 +7,7 @@ using System.Web;
 
 namespace Machete.Web.Maps
 {
-    public class WorkerProfile : Profile
+    public class WorkerProfile : MacheteProfile
     {
         public WorkerProfile()
         {
@@ -25,18 +25,9 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.recordid, opt => opt.MapFrom(d => Convert.ToString(d.ID)))
                 .ForMember(v => v.dwccardnum, opt => opt.MapFrom(d => Convert.ToString(d.dwccardnum)))
                 .ForMember(v => v.active, opt => opt.MapFrom(d => d.active ? Shared.True : Shared.False))
-                .ForMember(v => v.wkrStatus, opt => opt.MapFrom(d => WorkerStatus(d)))
+                .ForMember(v => v.memberStatus, opt => opt.MapFrom(d => getCI() == "ES" ? d.memberStatusES : d.memberStatusEN))
                 .ForMember(v => v.memberexpirationdate, opt => opt.MapFrom(d => Convert.ToString(d.memberexpirationdate)))
                 ;
-        }
-        public static string WorkerStatus(Service.DTO.WorkerList wkr)
-        {
-            if (wkr.memberStatus == Domain.Worker.iActive) return "active";
-            if (wkr.memberStatus == Domain.Worker.iInactive) return "inactive";
-            if (wkr.memberStatus == Domain.Worker.iExpired) return "expired";
-            if (wkr.memberStatus == Domain.Worker.iSanctioned) return "sanctioned";
-            if (wkr.memberStatus == Domain.Worker.iExpelled) return "expelled";
-            return null;
         }
     }
 }
