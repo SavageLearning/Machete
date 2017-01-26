@@ -1,4 +1,4 @@
-﻿@model Machete.Domain.ActivitySchedule
+﻿@model Machete.Web.ViewModel.ActivitySchedule
 
 @{
     ViewBag.Title = "CreateMany";
@@ -28,7 +28,7 @@
         activityCreateManyForm.mUI('tabFormSubmit', {
             recType: "@(recType)", //for add_rectab
             create: true,
-            pleaseDontFindMe: true, //HELLO!?!?
+            pleaseDontFindMe: true, 
             formLevel: 1
         });
         //

@@ -21,9 +21,11 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+using AutoMapper;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
 using Machete.Service;
+using Machete.Web;
 using Machete.Web.Controllers;
 using Machete.Web.Helpers;
 using Machete.Web.ViewModel;
@@ -45,6 +47,8 @@ namespace Machete.Test.Unit.Controller
         Mock<IWorkOrderService> woServ;
         Mock<ILookupCache> lcache;
         Mock<IDatabaseFactory> dbfactory;
+        IMapper map;
+        Mock<IDefaults> def;
         EmployerController ctrlr;
         FormCollection form;
         const int Testid = 4242;
@@ -52,13 +56,16 @@ namespace Machete.Test.Unit.Controller
         [TestInitialize]
         public void TestInitialize()
         {
-            WorkOrder.iPending = 123;
+            Domain.WorkOrder.iPending = 123;
             serv = new Mock<IEmployerService>();
             woServ = new Mock<IWorkOrderService>();
             lcache = new Mock<ILookupCache>();
             dbfactory = new Mock<IDatabaseFactory>();
+            def = new Mock<IDefaults>();
+            map = new MapperConfig().getMapper();
+           
 
-            ctrlr = new EmployerController(serv.Object, woServ.Object);
+            ctrlr = new EmployerController(serv.Object, woServ.Object, def.Object, map);
             ctrlr.SetFakeControllerContext();
             form = new FormCollection
                        {
@@ -70,8 +77,6 @@ namespace Machete.Test.Unit.Controller
                            {"phone", "123-456-7890"},
                            {"zipcode", "1234567890"}
                        };
-            Lookups.Initialize(lcache.Object);
-            MacheteMapper.Initialize();
         }
         //
         //   Testing /Index functionality
@@ -96,14 +101,14 @@ namespace Machete.Test.Unit.Controller
             //Act
             var result = (PartialViewResult)ctrlr.Create();
             //Assert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Employer));
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Domain.Employer));
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
         public void create_valid_post_returns_json()
         {
             //Arrange
-            var employer = new Employer {ID = 4242, name = "unit test"};
+            var employer = new Domain.Employer {ID = 4242, name = "unit test"};
             serv.Setup(p => p.Create(employer, "UnitTest")).Returns(employer);
             ctrlr.ValueProvider = form.ToValueProvider();
             //Act
@@ -119,10 +124,10 @@ namespace Machete.Test.Unit.Controller
         {
             //Arrange
             var combined = new EmployerWoCombined { name = "unit test" };
-            var employer = new Employer { ID = 4242 };
-            var wo = new WorkOrder { ID= 4243, EmployerID = 4242 };
-            serv.Setup(p => p.Create(It.IsAny<Employer>(), "UnitTest")).Returns(employer);
-            woServ.Setup(p => p.Create(It.IsAny<WorkOrder>(), "UnitTest")).Returns(wo);
+            var employer = new Domain.Employer { ID = 4242 };
+            var wo = new Domain.WorkOrder { ID= 4243, EmployerID = 4242 };
+            serv.Setup(p => p.Create(It.IsAny<Domain.Employer>(), "UnitTest")).Returns(employer);
+            woServ.Setup(p => p.Create(It.IsAny<Domain.WorkOrder>(), "UnitTest")).Returns(wo);
             ctrlr.ValueProvider = form.ToValueProvider();
             //Act
             var result = ctrlr.CreateCombined(combined, "UnitTest");
@@ -138,13 +143,13 @@ namespace Machete.Test.Unit.Controller
         public void create_post_invalid_throws_exception()
         {
             //Arrange
-            var employer = new Employer();
+            var employer = new Domain.Employer();
             form.Remove("name");
 
             serv = new Mock<IEmployerService>();
             serv.Setup(p => p.Create(employer, "UnitTest")).Returns(employer);
             woServ = new Mock<IWorkOrderService>();
-            ctrlr = new EmployerController(serv.Object, woServ.Object);
+            ctrlr = new EmployerController(serv.Object, woServ.Object, def.Object, map);
             ctrlr.SetFakeControllerContext();
             ctrlr.ValueProvider = form.ToValueProvider();
             JsonResult result = ctrlr.Create(employer, "UnitTest");
@@ -161,15 +166,15 @@ namespace Machete.Test.Unit.Controller
         {
             //Arrange
             serv = new Mock<IEmployerService>();
-            var fakeemployer = new Employer();
+            var fakeemployer = new Domain.Employer();
             serv.Setup(p => p.Get(Testid)).Returns(fakeemployer);
             woServ = new Mock<IWorkOrderService>();
-            ctrlr = new EmployerController(serv.Object, woServ.Object);
+            ctrlr = new EmployerController(serv.Object, woServ.Object, def.Object, map);
             //Act
             var result = ctrlr.Edit(Testid) as PartialViewResult;
             //Assert
             Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Employer));
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Domain.Employer));
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
@@ -177,12 +182,12 @@ namespace Machete.Test.Unit.Controller
         {
             //Arrange
             const int testid = 4242;
-            var fakeemployer = new Employer();
-            var savedemployer = new Employer();
+            var fakeemployer = new Domain.Employer();
+            var savedemployer = new Domain.Employer();
             serv.Setup(p => p.Get(testid)).Returns(fakeemployer);
-            serv.Setup(x => x.Save(It.IsAny<Employer>(),
+            serv.Setup(x => x.Save(It.IsAny<Domain.Employer>(),
                                           It.IsAny<string>())
-                                         ).Callback((Employer p, string str) =>
+                                         ).Callback((Domain.Employer p, string str) =>
                                          {
                                              savedemployer = p;
                                          });
@@ -205,7 +210,7 @@ namespace Machete.Test.Unit.Controller
         public void EmployerController_edit_post_invalid_throws_exception()
         {
             //Arrange
-            var employer = new Employer();
+            var employer = new Domain.Employer();
             //
             // Mock service and setup SaveEmployer mock
             serv.Setup(p => p.Save(employer, "UnitTest"));
@@ -231,7 +236,7 @@ namespace Machete.Test.Unit.Controller
             serv = new Mock<IEmployerService>();
             var fakeform = new FormCollection();
             woServ = new Mock<IWorkOrderService>();
-            ctrlr = new EmployerController(serv.Object, woServ.Object);
+            ctrlr = new EmployerController(serv.Object, woServ.Object, def.Object, map);
             ctrlr.SetFakeControllerContext();
             ctrlr.ValueProvider = fakeform.ToValueProvider();
             //Act

@@ -1,7 +1,6 @@
-﻿@model Machete.Domain.WorkAssignment
+﻿@model Machete.Web.ViewModel.WorkAssignment
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
-@using Machete.Domain.Resources
 @Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID" })
 @Html.HiddenFor(model => model.workOrderID)
 @{
@@ -14,7 +13,7 @@
 
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.englishLevelID)
-        @Html.mUIDropDownListFor(model => model.englishLevelID, Lookups.skillLevels(), new {tabindex = "23", @id = idPrefix + "englishLevelID"})
+        @Html.mUIDropDownListFor(model => model.englishLevelID, Model.def.skillLevels(), new {tabindex = "23", @id = idPrefix + "englishLevelID"})
         @Html.mUITableLabelFor(model => model.skillID)
         <div class="tb-field">
             <select name="skillID" id=@(idPrefix + "skillID") 
@@ -23,7 +22,7 @@
                     data-val="true"
                     tabindex="1"
                     class="valid"><option value="">@Shared.choose</option>
-                @foreach (var item in Lookups.getSkill(specializedOnly: false))
+                @foreach (var item in Model.def.getSkill(specializedOnly: false))
                 {
                     @*kludgy way to print selected or not. couldn't get other syntax to work*@
                     if (Model.skillID == Convert.ToInt16(item.Value))
@@ -43,12 +42,11 @@
                     }
                 } 
             </select>
-            @*@Html.DropDownListFor(model => model.skillID, new SelectList(Lookups.skill(), "Value", "Text", Model.skillID), @Machete.Web.Resources.Shared.choose)*@
             @Html.ValidationMessageFor(model => model.skillID)
         </div>
         @Html.mUITableLabelAndTextBoxFor(model => model.pseudoID, new { tabindex = "31", style = "width: 2em", @readonly = "readonly", @id = idPrefix + "pseudoID" })
         @Html.mUITableLabelFor(model => model.weightLifted)
-        @Html.mUIDropDownYesNoFor(model => model.weightLifted, new { tabindex = "35", id = idPrefix + "weightLifted" })
+        @Html.mUIDropDownYesNoFor(model => model.weightLifted, Model.def.yesnoSelectList(), new { tabindex = "35", id = idPrefix + "weightLifted" })
     </div>
 </div>
 <div class="tb-table">
@@ -64,13 +62,12 @@
             @Html.ValidationMessageFor(model => model.hours)
         </div>
 
-       @* @Html.mUIDropDownListFor(model => model.hours, new SelectList(Lookups.hours(), "Value", "Text", Model.hours), new { tabindex = "1", @id = idPrefix + "hours", @class = "earnings-part" })*@
         @Html.mUITableLabelFor(model => model.hourRange)
-        @Html.mUIDropDownListFor(model => model.hourRange, new SelectList(Lookups.hours(), "Value", "Text", Model.hourRange), new { tabindex = "27", @id = idPrefix + "hourRange", @class = "earnings-part" })
+        @Html.mUIDropDownListFor(model => model.hourRange, new SelectList(Model.def.hours(), "Value", "Text", Model.hourRange), new { tabindex = "27", @id = idPrefix + "hourRange", @class = "earnings-part" })
     </div>
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.days)
-        @Html.mUIDropDownListFor(model => model.days, new SelectList(Lookups.days(), "Value", "Text", Model.days), new { tabindex = "28", @id = idPrefix + "days", @class = "earnings-part" })
+        @Html.mUIDropDownListFor(model => model.days, new SelectList(Model.def.days(), "Value", "Text", Model.days), new { tabindex = "28", @id = idPrefix + "days", @class = "earnings-part" })
         <div class="tb-label">
             @Html.Label("total", @Machete.Web.Resources.WorkAssignments.total)
         </div>
@@ -117,8 +114,7 @@
                 @{                    
                     if (Model.workerAssigned != null)
                     {
-                        myStr = Model.workerAssigned.dwccardnum + " " +
-                                        Model.workerAssigned.Person.fullName();
+                        myStr = Model.workerAssigned.dwccardnum.ToString();
                     }
                 }
                 @Html.TextBox("workerAssignedDisplay", 
@@ -143,7 +139,7 @@
 }
 
 @Html.Partial("ManagerInfo")
-@Html.Partial("AdministratorInfo")
+
 <script type="text/javascript">
     $(document).ready(function () {
         $('#changeAssigned-@(Model.ID)').click(function () {

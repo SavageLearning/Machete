@@ -1,4 +1,4 @@
-﻿@model Machete.Domain.WorkOrder
+﻿@model Machete.Web.ViewModel.WorkOrder
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
 @using Machete.Domain.Resources
@@ -18,27 +18,16 @@
     </div>
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.status)
-        @*if (Html.IsInRole(Html.Role_AMP()))
-        {*@
-            @Html.mUIDropDownListFor(model => model.status,
-                        new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.orderstatus), "Value", "Text", Model.status),
-                        new { tabindex = "2", id = idPrefix + "status" })
-                
-        @*}
-        else
-        {
-            <div class="tb-header">
-            @Lookups.byID(Model.status)
-            @Html.HiddenFor(model => model.status, new { tabindex = "2", id = idPrefix + "status" })
-            </div>
-        }*@
+        @Html.mUIDropDownListFor(model => model.status,
+                    new SelectList(ViewBag.orderstatuses, "Value", "Text", Model.status),
+                    new { tabindex = "2", id = idPrefix + "status" })                
         @Html.mUITableLabelFor(model => model.timeFlexible)
-        @Html.mUIDropDownYesNoFor(model => model.timeFlexible, new { tabindex = "12", id = idPrefix + "timeFlexible" }) 
+        @Html.mUIDropDownYesNoFor(model => model.timeFlexible, Model.def.yesnoSelectList(), new { tabindex = "12", id = idPrefix + "timeFlexible" }) 
     </div>
     <div class="tb-row">
         @Html.mUITableLabelAndTextBoxFor(model => model.contactName, new { tabindex = "3", id = idPrefix + "contactName" })
         @Html.mUITableLabelFor(model => model.permanentPlacement)
-        @Html.mUIDropDownYesNoFor(model => model.permanentPlacement, new { tabindex = "13", id = idPrefix + "permanentPlacement" })
+        @Html.mUIDropDownYesNoFor(model => model.permanentPlacement, Model.def.yesnoSelectList(), new { tabindex = "13", id = idPrefix + "permanentPlacement" })
     </div>
     <div class="tb-row">
         @Html.mUITableLabelAndTextBoxFor(model => model.workSiteAddress1, new { tabindex = "4", id = idPrefix + "workSiteAddress1" })
@@ -46,19 +35,19 @@
             @Html.LabelFor(model => model.englishRequired)
         </div>
         <div class="tb-field englishRequired_@(Model.ID)">
-            @Html.mUIDropDownYesNoFor(model => model.englishRequired, new { tabindex = "14", id = idPrefix + "englishRequired" })
+            @Html.mUIDropDownYesNoFor(model => model.englishRequired, Model.def.yesnoSelectList(), new { tabindex = "14", id = idPrefix + "englishRequired" })
         </div>
     </div>
     <div class="tb-row">
         @Html.mUITableLabelAndTextBoxFor(model => model.workSiteAddress2, new { tabindex = "5", id = idPrefix + "workSiteAddress2" })
         @Html.mUITableLabelFor(model => model.lunchSupplied)
-        @Html.mUIDropDownYesNoFor(model => model.lunchSupplied, new { tabindex = "15", id = idPrefix + "lunchSupplied" })
+        @Html.mUIDropDownYesNoFor(model => model.lunchSupplied, Model.def.yesnoSelectList(), new { tabindex = "15", id = idPrefix + "lunchSupplied" })
     </div>
     <div class="tb-row">
         @Html.mUITableLabelAndTextBoxFor(model => model.city, new { tabindex = "6", id = idPrefix + "city" })
         @Html.mUITableLabelFor(model => model.transportMethodID)
         @Html.mUIDropDownListFor(model => model.transportMethodID,
-                        new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.transportmethod), "Value", "Text", Model.transportMethodID),
+                        new SelectList(ViewBag.transportmethod, "Value", "Text", Model.transportMethodID),
                         new { tabindex = "16", id = idPrefix + "transportMethodID" })
     </div>
     <div class="tb-row">
@@ -73,12 +62,12 @@
         @Html.mUITableLabelAndTextBoxFor(model => model.phone, new { tabindex = "9", id = idPrefix + "phone" })
         @Html.mUITableLabelFor(model => model.transportTransactType)
         @Html.mUIDropDownListFor(model => model.transportTransactType,
-                        new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.transportTransactType), "Value", "Text", Model.transportTransactType),
+                        new SelectList(ViewBag.transporttransacttype, "Value", "Text", Model.transportTransactType),
                         new { tabindex = "19", id = idPrefix + "transportTransactType" })
     </div>
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.onlineSource)
-        @Html.mUIDropDownYesNoFor(model => model.onlineSource, new { tabindex = "10", id = idPrefix + "onlineSource" })
+        @Html.mUIDropDownYesNoFor(model => model.onlineSource, Model.def.yesnoSelectList(), new { tabindex = "10", id = idPrefix + "onlineSource" })
         @Html.mUITableLabelAndTextBoxFor(model => model.transportTransactID, new { tabindex = "20", id = idPrefix + "transportTransactID" })
     </div>
 </div><!--tb-table main workorder table-->
@@ -116,7 +105,7 @@
 <!-- LOAD MANAGER INFO PARTIAL FORM -->
 @Html.Partial("ManagerInfo")
 <!-- LOAD ADMINISTRATOR INFO PARTIAL FORM -->
-@Html.Partial("AdministratorInfo")
+
 
 <div id="workerDialog-@(Model.ID)" title="@Machete.Domain.Resources.WorkOrder.requestTitle">
     <table id="workerTable-@(Model.ID)" class="display" style="display: none">

@@ -24,8 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
-
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Machete.Domain
 {
@@ -59,7 +58,12 @@ namespace Machete.Domain
 
         [Required(ErrorMessageResourceName = "memberStatus", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("memberStatus", NameResourceType = typeof(Resources.Worker))]
-        public int memberStatus { get; set; }
+        [Column("memberStatus")]
+        public int memberStatusID { get; set; }
+        [StringLength(50)]
+        public string memberStatusEN { get; set; }
+        [StringLength(50)]
+        public string memberStatusES { get; set; }
         //
         [LocalizedDisplayName("memberReactivateDate", NameResourceType = typeof(Resources.Worker))]
         public DateTime? memberReactivateDate { get; set; }
@@ -248,26 +252,26 @@ namespace Machete.Domain
 
         [LocalizedDisplayName("lgbtq", NameResourceType = typeof(Resources.Worker))]
         public bool? lgbtq { get; set; }
-
+        // TODO2017: these should be in automapper profiles
         public bool isActive 
         {
-            get { return this.memberStatus == iActive ? true : false; }
+            get { return this.memberStatusID == iActive ? true : false; }
         }
         public bool isInactive
         {
-            get { return this.memberStatus == iInactive ? true : false; }
+            get { return this.memberStatusID == iInactive ? true : false; }
         }
         public bool isSanctioned
         {
-            get { return this.memberStatus == iSanctioned ? true : false; }
+            get { return this.memberStatusID == iSanctioned ? true : false; }
         }
         public bool isExpired
         {
-            get { return this.memberStatus == iExpired ? true : false; }
+            get { return this.memberStatusID == iExpired ? true : false; }
         }
         public bool isExpelled
         {
-            get { return this.memberStatus == iExpelled ? true : false; }
+            get { return this.memberStatusID == iExpelled ? true : false; }
         }
     }
 }

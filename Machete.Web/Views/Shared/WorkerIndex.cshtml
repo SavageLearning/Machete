@@ -13,8 +13,9 @@
                 <th>EDITREF</th>
                 <th>LABEL</th>
                 <th>ID</th>
+                <th>memberStatusID</th>
                 <th>@Worker.dwccardnum</th>
-                <th>@Worker.active</th>
+                <th>@Worker.memberStatus</th>
                 <th>@Person.firstname1</th>
                 <th>@Person.firstname2</th>
                 <th>@Person.lastname1</th>
@@ -37,43 +38,43 @@
             "iDeferLoading": true,
             "bAutoWidth": false,
             "bServerSide": true,
-            "sAjaxSource": "/Worker/AjaxHandler", 
+            "sAjaxSource": "/Worker/AjaxHandler",
             "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
             "bProcessing": true,
             "aoColumns": [
                 { "mDataProp": "tabref","bSearchable": false, "bSortable": false, "bVisible": false },
                 { "mDataProp": "tablabel","bSearchable": false, "bSortable": false, "bVisible": false },
-                { "mDataProp": "WID","bSearchable": false, "bSortable": false, "bVisible": false },
+                { "mDataProp": "WID", "bSearchable": false, "bSortable": false, "bVisible": false },
+                { "mDataProp": "memberStatusID", "bSearchable": false, "bSortable": false, "bVisible": false },
                 { "mDataProp": "dwccardnum" },
-                { "mDataProp": "wkrStatus" },
+                { "mDataProp": "memberStatus" },
                 { "mDataProp": "firstname1" },
                 { "mDataProp": "firstname2" },
                 { "mDataProp": "lastname1" },
                 { "mDataProp": "lastname2" },
                 { "mDataProp": "memberexpirationdate" }
             ],
-            // callback populates html attr with row data from JSON            
+            // callback populates html attr with row data from JSON
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $(nRow).attr('recordid', aData['WID']);
-                switch (aData['wkrStatus'])
+                switch (aData['memberStatusID'])
                 {
-                    // magic strings in WorkAssignmentController
-                    case "active": $(nRow).addClass('statusBlue'); break;
-                    case "inactive": $(nRow).addClass('statusYellow'); break;
-                    case "expired": $(nRow).addClass('statusYellow'); break;
-                    case "sanctioned": $(nRow).addClass('statusRed'); break;
-                    case "expelled": $(nRow).addClass('statusRed'); break;
+                    case "@(Machete.Domain.Worker.iActive)": $(nRow).addClass('statusBlue'); break;
+                    case "@(Machete.Domain.Worker.iInactive)": $(nRow).addClass('statusYellow'); break;
+                    case "@(Machete.Domain.Worker.iExpired)": $(nRow).addClass('statusYellow'); break;
+                    case "@(Machete.Domain.Worker.iSanctioned)": $(nRow).addClass('statusRed'); break;
+                    case "@(Machete.Domain.Worker.iExpelled)": $(nRow).addClass('statusRed'); break;
                     default: $(nRow).addClass('statusBlue');
-                }                 
+                }
                 return nRow;
-            }         
+            }
         }).fnSetFilteringDelay(250);
         //
         // workRequest Dialog -doubleclick on row to select
         // create event to handle worker selection from dialog
-        $('#workerTable').find('tbody').dblclick(function (event) {            
+        $('#workerTable').find('tbody').dblclick(function (event) {
             var myTr = event.target.parentNode;
-            var myID = $(myTr).attr('recordid');  
+            var myID = $(myTr).attr('recordid');
             var myLabel =  $(myTr).find('td:eq(0)') //get card num
                                 .text() + ' '+
                                 $(myTr).find('td:eq(2)').text() + ' '+ //get first name

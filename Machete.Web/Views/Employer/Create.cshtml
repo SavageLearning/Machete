@@ -1,4 +1,4 @@
-﻿@model Machete.Domain.Employer
+﻿@model Machete.Web.ViewModel.Employer
 
 @using Machete.Web.Resources
 
@@ -20,7 +20,7 @@
     @Html.EditorForModel()
 }
 
-<div id="messageDialog" title="@(Machete.Web.Resources.Shared.DuplicateEmployerTitle)">
+<div id="duplicatesDialog" title="@(Machete.Web.Resources.Shared.DuplicateEmployerTitle)">
 </div>
 
 <script type="text/javascript">
@@ -92,7 +92,7 @@
 
     }
 
-    var messageDialog = $("#messageDialog").dialog({
+    var duplicatesDialog = $("#duplicatesDialog").dialog({
         autoOpen: false,
         height: 400,
         width: 650,
@@ -100,7 +100,15 @@
         closeOnEscape: false,
         buttons: {
             "Cancel": function () { $(this).dialog("close"); },
-            "Save": function () { $(this).dialog("close"); saveEmployer(); }
+            "Save": {
+                text: "@(Machete.Web.Resources.Employers.createsubmit)",
+                id: 'duplicateSaveBtn',
+                click: function () {
+                    $(this).dialog("close");
+                    saveEmployer();
+                }
+            }
+
         }
     });
 
@@ -156,8 +164,8 @@
     function onSuccessFindEmployerDuplicate(result) {
         if (result.duplicates.length > 0) {
 
-            messageDialog.dialog("open");
-            messageDialog.html(CreateHtmlText(result.duplicates));
+            duplicatesDialog.dialog("open");
+            duplicatesDialog.html(CreateHtmlText(result.duplicates));
         }
         else {
             saveEmployer();

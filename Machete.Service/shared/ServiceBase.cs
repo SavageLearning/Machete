@@ -38,6 +38,7 @@ namespace Machete.Service
     {
         T Get(int id);
         IEnumerable<T> GetAll();
+        IEnumerable<T> GetMany(Func<T, bool> where);
         T Create(T record, string user);
         void Delete(int id, string user);
         void Save(T record, string user);
@@ -80,6 +81,11 @@ namespace Machete.Service
         {
             return repo.GetAll();
         }
+
+        public IEnumerable<T> GetMany(Func<T, bool> where)
+        {
+            return repo.GetMany(where);
+        }
         /// <summary>
         /// 
         /// </summary>
@@ -97,7 +103,7 @@ namespace Machete.Service
         /// <returns></returns>
         public virtual T Create(T record, string user)
         {
-            record.createdby(user);
+            record.createdByUser(user);
             T created = repo.Add(record);
             uow.Commit();
             log(record.ID, user, logPrefix + " created");
@@ -122,7 +128,7 @@ namespace Machete.Service
         /// <param name="user"></param>
         public virtual void Save(T record, string user)
         {
-            record.updatedby(user);
+            record.updatedByUser(user);
             log(record.ID, user, logPrefix + " edited");
             uow.Commit();
         }

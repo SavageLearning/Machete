@@ -3,7 +3,6 @@ using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Infrastructure.Interception;
-using System.Data.Entity.SqlServer;
 
 namespace Machete.Data
 {
@@ -11,10 +10,10 @@ namespace Machete.Data
     {
         public AzureConfiguration()
         {
-            SetExecutionStrategy(
-                "System.Data.SqlClient", 
-                () => new SqlAzureExecutionStrategy());
-            DbInterception.Add(new MacheteInterceptorLogging());
+            //SetExecutionStrategy(
+            //    "System.Data.SqlClient", 
+            //    () => new SqlAzureExecutionStrategy());
+            //DbInterception.Add(new MacheteInterceptorLogging());
         }
     }
 }

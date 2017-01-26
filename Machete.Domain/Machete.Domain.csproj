@@ -241,37 +241,13 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer">
-      <HintPath>..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="PayPalCoreSDK">
-      <HintPath>..\packages\PayPalCoreSDK.1.6.2\lib\net45\PayPalCoreSDK.dll</HintPath>
-    </Reference>
-    <Reference Include="PayPalMerchantSDK">
-      <HintPath>..\packages\PayPalMerchantSDK.2.15.117\lib\net20\PayPalMerchantSDK.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Security" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Entities\Activity.cs" />
-    <Compile Include="Entities\ActivitySchedule.cs" />
     <Compile Include="Entities\Email.cs" />
     <Compile Include="Entities\Event.cs" />
     <Compile Include="Entities\Exceptions.cs" />
@@ -291,11 +267,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Activity.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\ActivitySchedule.Designer.cs">
-      <DependentUpon>ActivitySchedule.resx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Resources\Employer.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -377,11 +348,6 @@
     <EmbeddedResource Include="Resources\Activity.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Activity.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\ActivitySchedule.es.resx" />
-    <EmbeddedResource Include="Resources\ActivitySchedule.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ActivitySchedule.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Employer.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

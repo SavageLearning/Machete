@@ -24,6 +24,7 @@
 using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
+using DTO = Machete.Service.DTO;
 using Machete.Web.Helpers;
 using System;
 using System.Linq;
@@ -39,14 +40,20 @@ namespace Machete.Web.Controllers
         private readonly IWorkerSigninService _serv;
         private readonly IWorkerService _wServ;
         private readonly LookupCache lcache;
+        private readonly IMapper map;
+        private readonly IDefaults def;
         private System.Globalization.CultureInfo CI;        
         public WorkerSigninController(IWorkerSigninService workerSigninService, 
                                       IWorkerService workerService, 
-                                      LookupCache lc)
+                                      LookupCache lc,
+            IDefaults def,
+            IMapper map)
         {
             this._serv = workerSigninService;
             this._wServ = workerService;
             this.lcache = lc;
+            this.map = map;
+            this.def = def;
         }
 
         protected override void Initialize(RequestContext requestContext)
@@ -75,7 +82,7 @@ namespace Machete.Web.Controllers
             // The card just swiped
             _signin.dwccardnum = dwccardnum;
             _signin.dateforsignin = new DateTime(dateforsignin.Year, dateforsignin.Month, dateforsignin.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-            _signin.memberStatus = worker.memberStatus;
+            _signin.memberStatusID = worker.memberStatusID;
 
             if (_signin.lottery_timestamp == null)
             {
@@ -107,6 +114,7 @@ namespace Machete.Web.Controllers
 
             return Json(new
             {
+                // TODO2017: replace this with viewmodel 
                 memberExpired = worker.isExpired,
                 memberInactive = worker.isInactive,
                 memberSanctioned = worker.isSanctioned,
@@ -117,7 +125,6 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
-
         //
         // Lottery post
         //
@@ -276,38 +283,16 @@ namespace Machete.Web.Controllers
             }
         }
 
-
         [Authorize(Roles = "Administrator, Manager, Check-in")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
-            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
+            var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI = CI;
-            dataTableResult<wsiView> was = _serv.GetIndexView(vo);
-            //return what's left to datatables
-            var result = from p in was.query select new 
-            {  
-                WSIID = p.ID,
-                recordid = p.ID.ToString(),
-                dwccardnum = p.dwccardnum,
-                fullname = p.fullname,
-                firstname1 = p.firstname1,
-                firstname2 = p.firstname2,
-                lastname1 = p.lastname1,
-                lastname2 = p.lastname2, 
-                dateforsignin = p.dateforsignin.AddHours(Convert.ToDouble(WebConfigurationManager.AppSettings["TimeZoneDifferenceFromPacific"])).ToString(),
-                dateforsigninstring = p.dateforsignin.AddHours(Convert.ToDouble(WebConfigurationManager.AppSettings["TimeZoneDifferenceFromPacific"])).ToShortTimeString(),
-                WAID = p.waid ?? 0,
-                memberStatus = lcache.textByID(p.memberStatus, CI.TwoLetterISOLanguageName),
-                memberInactive = p.w.isInactive,
-                memberSanctioned = p.w.isSanctioned,
-                memberExpired = p.w.isExpired,
-                memberExpelled = p.w.isExpelled,
-                imageID = p.imageID,
-                lotterySequence = p.lotterySequence,
-                expirationDate = p.expirationDate.ToShortDateString(),
-                skills = _getSkillCodes(p.englishlevel, p.skill1, p.skill2, p.skill3),
-                program = lcache.getByID(p.typeOfWorkID).ltrCode
-                };
+            dataTableResult<Service.DTO.WorkerSigninList> was = _serv.GetIndexView(vo);
+            var result = was.query
+                .Select(
+                    e => map.Map<DTO.WorkerSigninList, ViewModel.WorkerSigninList>(e)
+                ).AsEnumerable();
             return Json(new
             {
                 sEcho = param.sEcho,
@@ -319,26 +304,27 @@ namespace Machete.Web.Controllers
         }
 
         //TODO: rework into model 
-        private string _getSkillCodes(int eng, int? sk1, int? sk2, int? sk3)
-        {
-            string rtnstr = "E" + eng + " ";
-            if (sk1 != null)
-            {
-                var lookup = lcache.getByID((int)sk1);
-                rtnstr = rtnstr + lookup.ltrCode + lookup.level + " ";
-            }
-            if (sk2 != null)
-            {
-                var lookup = lcache.getByID((int)sk2);
-                rtnstr = rtnstr + lookup.ltrCode + lookup.level + " ";
-            }
-            if (sk3 != null)
-            {
-                var lookup = lcache.getByID((int)sk3);
-                rtnstr = rtnstr + lookup.ltrCode + lookup.level;
-            }
-            return rtnstr;
-        }
+        //private string _getSkillCodes(int eng, int? sk1, int? sk2, int? sk3)
+        //{
+        //    string rtnstr = "E" + eng + " ";
+        //    if (sk1 != null)
+        //    {
+        //        var lookup = lcache.getByID((int)sk1);
+        //        rtnstr = rtnstr + lookup.ltrCode + lookup.level + " ";
+        //    }
 
+        //    if (sk2 != null)
+        //    {
+        //        var lookup = lcache.getByID((int)sk2);
+        //        rtnstr = rtnstr + lookup.ltrCode + lookup.level + " ";
+        //    }
+
+        //    if (sk3 != null)
+        //    {
+        //        var lookup = lcache.getByID((int)sk3);
+        //        rtnstr = rtnstr + lookup.ltrCode + lookup.level;
+        //    }
+        //    return rtnstr;
+        //}
     }
 }

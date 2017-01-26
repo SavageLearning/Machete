@@ -44,20 +44,13 @@ namespace Machete.Web.ViewModel
         {
             get
             {
-                if (statusID == Email.iPending
-                    || statusID == Email.iReadyToSend
-                    || statusID == Email.iTransmitError)
+                if (statusID == Domain.Email.iPending
+                    || statusID == Domain.Email.iReadyToSend
+                    || statusID == Domain.Email.iTransmitError)
                 {
                     return true;
                 }
                 return false;
-            }
-        }
-        public SelectList EmailStatuses
-        {
-            get 
-            {
-                return Lookups.getSelectList(Machete.Domain.LCategory.emailstatus);
             }
         }
     }

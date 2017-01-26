@@ -32,6 +32,7 @@ using Machete.Data.Infrastructure;
 using Machete.Service;
 using Machete.Domain;
 using Machete.Test;
+using AutoMapper;
 
 namespace Machete.Test.Unit.Service
 {
@@ -43,11 +44,12 @@ namespace Machete.Test.Unit.Service
     {
         Mock<IWorkerRepository> _repo;
         Mock<IUnitOfWork> _uow;
-        Mock<IWorkerCache> _wcache;
+        Mock<ILookupCache> _lcache;
         WorkerService _serv;
         Mock<IWorkAssignmentRepository> _waRepo;
         Mock<IWorkOrderRepository> _woRepo;
         Mock<IPersonRepository> _pRepo;
+        Mock<IMapper> _map;
         public WorkerTests()
         {
         }
@@ -96,11 +98,12 @@ namespace Machete.Test.Unit.Service
         {
             _repo = new Mock<IWorkerRepository>();
             _uow = new Mock<IUnitOfWork>();
-            _wcache = new Mock<IWorkerCache>();
             _waRepo = new Mock<IWorkAssignmentRepository>();
             _woRepo = new Mock<IWorkOrderRepository>();
             _pRepo = new Mock<IPersonRepository>();
-            _serv = new WorkerService(_repo.Object, _wcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object);
+            _map = new Mock<IMapper>();
+            _lcache = new Mock<ILookupCache>();
+            _serv = new WorkerService(_repo.Object, _lcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object, _map.Object);
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Workers)]
         public void GetWorkers_returns_Enumerable()
@@ -147,8 +150,8 @@ namespace Machete.Test.Unit.Service
             //
             //Assert
             Assert.IsInstanceOfType(result, typeof(Worker));
-            Assert.IsTrue(result.Createdby == user);
-            Assert.IsTrue(result.Updatedby == user);
+            Assert.IsTrue(result.createdby == user);
+            Assert.IsTrue(result.updatedby == user);
             Assert.IsTrue(result.datecreated > DateTime.MinValue);
             Assert.IsTrue(result.dateupdated > DateTime.MinValue);
             Assert.IsTrue(result.Person.datecreated == DateTime.MinValue);
@@ -162,13 +165,14 @@ namespace Machete.Test.Unit.Service
             //Arrange
             _repo = new Mock<IWorkerRepository>();
             _uow = new Mock<IUnitOfWork>();
-            _wcache = new Mock<IWorkerCache>();
+            _map = new Mock<IMapper>();
+            _lcache = new Mock<ILookupCache>();
             string user = "UnitTest";
             int id = 1;
             Worker dp = new Worker();
             _repo.Setup(r => r.Delete(It.IsAny<Worker>())).Callback((Worker p) => { dp = p; });
             _repo.Setup(r => r.GetById(id)).Returns(Records.worker);
-            var _serv = new WorkerService(_repo.Object, _wcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object);
+            var _serv = new WorkerService(_repo.Object, _lcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object, _map.Object);
             //
             //Act
             _serv.Delete(id, user);
@@ -183,18 +187,19 @@ namespace Machete.Test.Unit.Service
             //
             //Arrange
             _repo = new Mock<IWorkerRepository>();
-            _wcache = new Mock<IWorkerCache>();
             _uow = new Mock<IUnitOfWork>();
+            _map = new Mock<IMapper>();
+            _lcache = new Mock<ILookupCache>();
             string user = "UnitTest";
             Records.worker.datecreated = DateTime.MinValue;
             Records.worker.dateupdated = DateTime.MinValue;
-            var _serv = new WorkerService(_repo.Object, _wcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object);
+            var _serv = new WorkerService(_repo.Object, _lcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object, _map.Object);
             //
             //Act
             _serv.Save(Records.worker, user);
             //
             //Assert
-            Assert.IsTrue(Records.worker.Updatedby == user);
+            Assert.IsTrue(Records.worker.updatedby == user);
             Assert.IsTrue(Records.worker.dateupdated > DateTime.MinValue);
         }
     }

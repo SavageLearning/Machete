@@ -126,7 +126,7 @@ namespace Machete.Service
                 e.statusID = Email.iPending;
             }
             // transmit errors will remain as error re-sent
-            e.updatedby(user);
+            e.updatedByUser(user);
             log(e.ID, user, logPrefix + " get exclusive for email");
             uow.Commit();
             return e;

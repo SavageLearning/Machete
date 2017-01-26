@@ -1,4 +1,5 @@
-﻿using Machete.Domain;
+﻿using AutoMapper;
+using Machete.Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -17,9 +18,14 @@ namespace Machete.Test.Selenium.View
         private string baseURL;
         private sharedUI ui;
         private FluentRecordBase frb;
+        private static IMapper map;
 
         [ClassInitialize]
-        public static void ClassInitialize(TestContext testContext) { WebServer.StartIis();  }
+        public static void ClassInitialize(TestContext testContext)
+        {
+            WebServer.StartIis();
+            map = new Machete.Web.MapperConfig().getMapper();
+        }
 
         [TestInitialize]
         public void SetupTest()
@@ -27,7 +33,7 @@ namespace Machete.Test.Selenium.View
             frb = new FluentRecordBase();
             driver = new ChromeDriver(ConfigurationManager.AppSettings["CHROMEDRIVERPATH"]);
             baseURL = "http://localhost:4213/";
-            ui = new sharedUI(driver, baseURL);
+            ui = new sharedUI(driver, baseURL, map);
             verificationErrors = new StringBuilder();
             ui.login();
         }
@@ -81,7 +87,7 @@ namespace Machete.Test.Selenium.View
             //Arrange
             Employer _emp = frb.CloneEmployer();
             WorkOrder _wo = frb.CloneWorkOrder();
-            _wo.status = frb.ToLookupCache().getByKeys(LCategory.orderstatus, LOrderStatus.Pending); // start work order off as pending
+            _wo.statusID = frb.ToLookupCache().getByKeys(LCategory.orderstatus, LOrderStatus.Pending); // start work order off as pending
             //Act
             ui.employerCreate(_emp);
             ui.workOrderCreate(_emp, _wo);
@@ -113,7 +119,7 @@ namespace Machete.Test.Selenium.View
             _wo.zipcode = _emp.zipcode;
             _wo.phone = _emp.phone;
             _wo.description = "";
-            _wo.status = frb.ToLookupCache().getByKeys(LCategory.orderstatus, LOrderStatus.Pending);
+            _wo.statusID = frb.ToLookupCache().getByKeys(LCategory.orderstatus, LOrderStatus.Pending);
 
             //Assert
             ui.workOrderValidate(_wo);
@@ -126,7 +132,7 @@ namespace Machete.Test.Selenium.View
             WorkOrder _wo = frb.CloneWorkOrder();
             WorkAssignment _wa1 = frb.CloneWorkAssignment();
             _wo.contactName = ui.RandomString(10);
-            _wo.status = frb.ToLookupCache().getByKeys(LCategory.orderstatus, LOrderStatus.Pending); // status = pending
+            _wo.statusID = frb.ToLookupCache().getByKeys(LCategory.orderstatus, LOrderStatus.Pending); // status = pending
             //
             // Create employer
             ui.employerCreate(_employer1);

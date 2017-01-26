@@ -1,4 +1,4 @@
-﻿@model Machete.Domain.Person
+﻿@model Machete.Web.ViewModel.Person
 @using Machete.Web.Resources
 @using Machete.Web.Helpers
 @{
@@ -62,7 +62,7 @@
     }
 </div>
 
-<div id="messageDialog" title="@(Machete.Web.Resources.Shared.DuplicatePersonsTitle)">
+<div id="duplicatesDialog" title="@(Machete.Web.Resources.Shared.DuplicatePersonsTitle)">
 </div>
 
 <script type="text/javascript">
@@ -112,7 +112,7 @@
     });
 
 
-    var messageDialog = $("#messageDialog").dialog({
+    var duplicatesDialog = $("#duplicatesDialog").dialog({
         autoOpen: false,
         height: 400,
         width: 400,
@@ -174,8 +174,8 @@
     function onSuccessFindPersonDuplicate(result) {
         if (result.duplicates.length > 1) {
 
-            messageDialog.dialog("open");
-            messageDialog.html(CreateHtmlText(result.duplicates));
+            duplicatesDialog.dialog("open");
+            duplicatesDialog.html(CreateHtmlText(result.duplicates));
         }
         else {
             saveEditedPerson();

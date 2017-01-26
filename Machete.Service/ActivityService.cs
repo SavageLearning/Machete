@@ -21,6 +21,8 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
@@ -32,7 +34,7 @@ namespace Machete.Service
 {
     public interface IActivityService : IService<Activity>
     {
-        dataTableResult<Activity> GetIndexView(viewOptions o);
+        dataTableResult<DTO.ActivityList> GetIndexView(viewOptions o);
         void AssignList(int personID, List<int> actList, string user);
         void UnassignList(int personID, List<int> actList, string user);
     }
@@ -43,21 +45,41 @@ namespace Machete.Service
     {
         private IActivitySigninService asServ;
         private LookupCache lcache;
+        private readonly IMapper map;
         public ActivityService(IActivityRepository repo,
             IActivitySigninService asServ,
             LookupCache lc,
-            IUnitOfWork uow) : base(repo, uow)
+            IUnitOfWork uow,
+            IMapper map) : base(repo, uow)
         {
             this.logPrefix = "Activity";
             this.lcache = lc;
+            this.map = map;
             this.asServ = asServ;
         }
 
-        public dataTableResult<Activity> GetIndexView(viewOptions o)
+        public override Activity Create(Activity record, string user)
         {
-            var result = new dataTableResult<Activity>();
+            record.nameEN = lcache.textByID(record.nameID, "EN");
+            record.nameES = lcache.textByID(record.nameID, "ES");
+            record.typeEN = lcache.textByID(record.typeID, "EN");
+            record.typeES = lcache.textByID(record.typeID, "ES");
+            return base.Create(record, user);
+        }
+
+        public override void Save(Activity record, string user)
+        {
+            record.nameEN = lcache.textByID(record.nameID, "EN");
+            record.nameES = lcache.textByID(record.nameID, "ES");
+            record.typeEN = lcache.textByID(record.typeID, "EN");
+            record.typeES = lcache.textByID(record.typeID, "ES");
+            base.Save(record, user);
+        }
+
+        public dataTableResult<DTO.ActivityList> GetIndexView(viewOptions o)
+        {
+            var result = new dataTableResult<DTO.ActivityList>();
             IQueryable<Activity> q = repo.GetAllQ();
-            IEnumerable<Activity> e;
             var asRepo = (IActivitySigninRepository)asServ.GetRepo();
 
             if (o.personID > 0 && o.attendedActivities == false)
@@ -70,18 +92,15 @@ namespace Machete.Service
                 IndexViewBase.unauthenticatedView((DateTime)o.date, ref q);
             }
 
-            e = q.AsEnumerable();
-            if (!string.IsNullOrEmpty(o.sSearch))
-                IndexViewBase.search(o, ref e, lcache);
+            if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
 
-            IndexViewBase.sortOnColName(o.sortColName, 
-                                        o.orderDescending, 
-                                        o.CI.TwoLetterISOLanguageName, 
-                                        ref e,
-                                        lcache);
-            result.filteredCount = e.Count();
+            IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
+            result.filteredCount = q.Count();
             result.totalCount = repo.GetAllQ().Count();
-            result.query = e.Skip(o.displayStart).Take(o.displayLength);
+            result.query = q.ProjectTo<DTO.ActivityList>(map.ConfigurationProvider)
+                .Skip(o.displayStart)
+                .Take(o.displayLength)
+                .AsEnumerable();
             return result;
         }
 

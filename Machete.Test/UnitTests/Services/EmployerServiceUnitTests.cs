@@ -21,6 +21,7 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+using AutoMapper;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
@@ -41,6 +42,7 @@ namespace Machete.Test.Unit.Service
         Mock<IEmployerRepository> _repo;
         Mock<IUnitOfWork> _uow;
         Mock<IWorkOrderService> _woServ;
+        Mock<IMapper> _map;
         EmployerService _serv;
 
         public EmployerTests()
@@ -48,7 +50,8 @@ namespace Machete.Test.Unit.Service
             _repo = new Mock<IEmployerRepository>();
             _uow = new Mock<IUnitOfWork>();
             _woServ = new Mock<IWorkOrderService>();
-            _serv = new EmployerService(_repo.Object, _woServ.Object, _uow.Object);
+            _map = new Mock<IMapper>();
+            _serv = new EmployerService(_repo.Object, _woServ.Object, _uow.Object, _map.Object);
 
         }
 
@@ -105,20 +108,21 @@ namespace Machete.Test.Unit.Service
             _repo = new Mock<IEmployerRepository>();
             _uow = new Mock<IUnitOfWork>();
             _woServ = new Mock<IWorkOrderService>();
+            _map = new Mock<IMapper>();
             string user = "UnitTest";
             var _e = (Employer)Records.employer.Clone();
             _e.datecreated = DateTime.MinValue;
             _e.dateupdated = DateTime.MinValue;
             _repo.Setup(r => r.Add(_e)).Returns(_e);
-            var _serv = new EmployerService(_repo.Object, _woServ.Object, _uow.Object);
+            var _serv = new EmployerService(_repo.Object, _woServ.Object, _uow.Object, _map.Object);
             //
             //Act
             var result = _serv.Create(_e, user);
             //
             //Assert
             Assert.IsInstanceOfType(result, typeof(Employer));
-            Assert.IsTrue(result.Createdby == user);
-            Assert.IsTrue(result.Updatedby == user);
+            Assert.IsTrue(result.createdby == user);
+            Assert.IsTrue(result.updatedby == user);
             Assert.IsTrue(result.datecreated > DateTime.MinValue);
             Assert.IsTrue(result.dateupdated > DateTime.MinValue);
         }
@@ -131,6 +135,8 @@ namespace Machete.Test.Unit.Service
             _repo = new Mock<IEmployerRepository>();
             _uow = new Mock<IUnitOfWork>();
             _woServ = new Mock<IWorkOrderService>();
+            _map = new Mock<IMapper>();
+
             var _e = (Employer)Records.employer.Clone();
 
             string user = "UnitTest";
@@ -138,7 +144,7 @@ namespace Machete.Test.Unit.Service
             Employer dp = new Employer();
             _repo.Setup(r => r.Delete(It.IsAny<Employer>())).Callback((Employer p) => { dp = p; });
             _repo.Setup(r => r.GetById(id)).Returns(_e);
-            var _serv = new EmployerService(_repo.Object, _woServ.Object, _uow.Object);
+            var _serv = new EmployerService(_repo.Object, _woServ.Object, _uow.Object, _map.Object);
             //
             //Act
             _serv.Delete(id, user);
@@ -155,18 +161,20 @@ namespace Machete.Test.Unit.Service
             _repo = new Mock<IEmployerRepository>();
             _uow = new Mock<IUnitOfWork>(); 
             _woServ = new Mock<IWorkOrderService>();
+            _map = new Mock<IMapper>();
+
             var _e = (Employer)Records.employer.Clone();
 
             string user = "UnitTest";
             _e.datecreated = DateTime.MinValue;
             _e.dateupdated = DateTime.MinValue;
-            var _serv = new EmployerService(_repo.Object, _woServ.Object, _uow.Object);
+            var _serv = new EmployerService(_repo.Object, _woServ.Object, _uow.Object, _map.Object);
             //
             //Act
             _serv.Save(_e, user);
             //
             //Assert
-            Assert.IsTrue(_e.Updatedby == user);
+            Assert.IsTrue(_e.updatedby == user);
             Assert.IsTrue(_e.dateupdated > DateTime.MinValue);
         }
     }

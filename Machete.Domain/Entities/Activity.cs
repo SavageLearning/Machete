@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Machete.Domain
 {
@@ -45,11 +46,25 @@ namespace Machete.Domain
         //
         [LocalizedDisplayName("name", NameResourceType = typeof(Resources.Activity))]
         [Required(ErrorMessageResourceName = "namerequired", ErrorMessageResourceType = typeof(Resources.Activity))]
-        public int name { get; set; } // lookup
+        [Column("name")]
+        public int nameID { get; set; }
+        // This is the simplest hack i can come up with to keep search on these two Lookups (previously implement in the app)
+        // but push it to the database. 
+        [StringLength(50)]
+        public string nameEN { get; set; }
+        [StringLength(50)]
+        public string nameES { get; set; }
+
         //
         [LocalizedDisplayName("type", NameResourceType = typeof(Resources.Activity))]
         [Required(ErrorMessageResourceName = "typerequired", ErrorMessageResourceType = typeof(Resources.Activity))]
-        public int type { get; set; }
+        [Column("type")]
+        public int typeID { get; set; }
+        [StringLength(50)]
+        public string typeEN { get; set; }
+        [StringLength(50)]
+        public string typeES { get; set; }
+
         //
         [LocalizedDisplayName("dateStart", NameResourceType = typeof(Resources.Activity))]
         [Required(ErrorMessageResourceName = "dateStartrequired", ErrorMessageResourceType = typeof(Resources.Activity))]

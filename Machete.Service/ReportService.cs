@@ -2,7 +2,6 @@
 using Machete.Domain;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.Linq;
 
@@ -153,7 +152,7 @@ namespace Machete.Service
 
 
             query = woQ.Where(whr => DbFunctions.TruncateTime(whr.dateTimeofWork) == beginDate
-                                  && whr.status == WorkOrder.iCancelled)
+                                  && whr.statusID == WorkOrder.iCancelled)
                 .GroupBy(gb => DbFunctions.TruncateTime(gb.dateTimeofWork))
                 .Select(g => new ReportUnit
                 {
@@ -427,12 +426,12 @@ namespace Machete.Service
             var lQ = lookRepo.GetAllQ();
 
             query = asQ.Join(lQ,
-                    aj => aj.Activity.name,
+                    aj => aj.Activity.nameID,
                     lj => lj.ID,
                     (aj, lj) => new
                     {
                         name = lj.text_EN,
-                        type = aj.Activity.type,
+                        type = aj.Activity.typeID,
                         person = aj.person,
                         date = DbFunctions.TruncateTime(aj.Activity.dateStart)
                     })
@@ -475,7 +474,7 @@ namespace Machete.Service
 
             query = asQ
                 .Join(lQ,
-                asi => asi.Activity.name,
+                asi => asi.Activity.nameID,
                 look => look.ID,
                 (asi, look) => new
                 {
