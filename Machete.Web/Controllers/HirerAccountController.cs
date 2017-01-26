@@ -2,7 +2,7 @@
 using Machete.Data.Infrastructure;
 using Machete.Service;
 using Machete.Web.Helpers;
-using Machete.Web.Models;
+using Machete.Web.ViewModel;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;

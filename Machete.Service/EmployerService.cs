@@ -21,6 +21,8 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
@@ -32,19 +34,21 @@ namespace Machete.Service
     public interface IEmployerService : IService<Employer>
     {
         IEnumerable<WorkOrder> GetOrders(int id);
-        dataTableResult<Employer> GetIndexView(viewOptions o);
+        dataTableResult<DTO.EmployerList> GetIndexView(viewOptions o);
     }
 
     public class EmployerService : ServiceBase<Employer>, IEmployerService
     {
         private readonly IWorkOrderService woServ;
-
+        private readonly IMapper map;
         public EmployerService(IEmployerRepository repo, 
                                IWorkOrderService woServ,
-                               IUnitOfWork unitOfWork)
+                               IUnitOfWork unitOfWork,
+                               IMapper map)
                 : base(repo, unitOfWork)
         {
             this.woServ = woServ;
+            this.map = map;
             this.logPrefix = "Employer";
         }
         public IEnumerable<WorkOrder> GetOrders(int id)
@@ -56,9 +60,9 @@ namespace Machete.Service
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public dataTableResult<Employer> GetIndexView(viewOptions o)
+        public dataTableResult<DTO.EmployerList> GetIndexView(viewOptions o)
         {
-            var result = new dataTableResult<Employer>();
+            var result = new dataTableResult<DTO.EmployerList>();
             //Get all the records
             IQueryable<Employer> q = repo.GetAllQ();
             //Search based on search-bar string 
@@ -70,7 +74,10 @@ namespace Machete.Service
             //Limit results to the display length and offset
             result.filteredCount = q.Count();
             result.totalCount = repo.GetAllQ().Count();
-            result.query = q.Skip(o.displayStart).Take(o.displayLength);
+            result.query = q.ProjectTo<DTO.EmployerList>(map.ConfigurationProvider)
+                .Skip(o.displayStart)
+                .Take(o.displayLength)
+                .AsEnumerable();
             return result;            
         }
     }

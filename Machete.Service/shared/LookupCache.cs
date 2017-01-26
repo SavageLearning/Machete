@@ -67,7 +67,9 @@ namespace Machete.Service
         private void FillCache()
         {
             IEnumerable<Lookup> lookups = DB.Get().Lookups.ToList();
-            IEnumerable<string> teachers = DB.Get().Users.Where(y => y.Roles.Any(role => role.Role.Name == "Teacher")).Select(x => x.UserName).Distinct().ToList();
+            var teacherID = DB.Get().Roles.First(r => r.Name == "Teacher").Id;
+            IEnumerable<string> teachers = DB.Get().Users.Where(u => u.Roles.Any(r => r.RoleId == teacherID))
+                .Select(x => x.UserName).Distinct().ToList();
             CacheItemPolicy policy = new CacheItemPolicy();
             //TODO: Put LookupCache expire time in config file
             policy.AbsoluteExpiration = new DateTimeOffset(DateTime.Now.AddMinutes(5));
@@ -146,7 +148,7 @@ namespace Machete.Service
             {
                 throw new MacheteIntegrityException("Unable to find Lookup record " + ID);
             }
-            if (locale == "es")
+            if (locale == "es" || locale == "ES")
             {
                 return record.text_ES;
             }

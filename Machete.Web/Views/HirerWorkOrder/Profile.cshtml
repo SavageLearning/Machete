@@ -81,7 +81,7 @@
                 </div>
                 <div class="tb-field referredby_@(Model.ID)">
                     @Html.mUIDropDownListFor(model => model.referredby,
-                                new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.emplrreference), "Value", "Text"),
+                                new SelectList(ViewBag.employerReferenceList, "Value", "Text"),
                                 new { tabindex = "12", id = "referredby" })
                 </div>
             </div>

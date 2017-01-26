@@ -21,10 +21,13 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Machete.Service
@@ -33,24 +36,34 @@ namespace Machete.Service
     {
         Worker GetWorkerByNum(int dwccardnum);
         int GetNextWorkerNum();
-        dataTableResult<Worker> GetIndexView(viewOptions o);
+        dataTableResult<DTO.WorkerList> GetIndexView(viewOptions o);
         // IQueryable<Worker> GetPriorEmployees(int employerId);
+        bool ExpireMembers();
+        bool ReactivateMembers();
     }
     public class WorkerService : ServiceBase<Worker>, IWorkerService
     {
-        private IWorkerCache wcache;
         private readonly IWorkAssignmentRepository waRepo;
         private readonly IWorkOrderRepository woRepo;
         private readonly IPersonRepository pRepo;
+        private readonly IMapper map;
+        private readonly ILookupCache lcache;
 
-        public WorkerService(IWorkerRepository wRepo, IWorkerCache wc, IUnitOfWork uow, IWorkAssignmentRepository waRepo, IWorkOrderRepository woRepo, IPersonRepository pRepo)
+        public WorkerService(IWorkerRepository wRepo, 
+            ILookupCache lcache,
+            IUnitOfWork uow, 
+            IWorkAssignmentRepository waRepo, 
+            IWorkOrderRepository woRepo, 
+            IPersonRepository pRepo,
+            IMapper map)
             : base(wRepo, uow)
         {
-            this.wcache = wc;
             this.logPrefix = "Worker";
             this.waRepo = waRepo;
             this.woRepo = woRepo;
             this.pRepo = pRepo;
+            this.map = map;
+            this.lcache = lcache;
         }
 
         public Worker GetWorkerByNum(int dwccardnum)
@@ -82,38 +95,28 @@ namespace Machete.Service
             }
         }
 
-        /*
-        public IQueryable<Worker> GetPriorEmployees(int employerId)
-        {
-//            IRepository<WorkAssignment> wa = 
-//            repo.Get(az => az.activityID == actID && az.personID == perID);
-//            IQueryable<Worker> all = repo.GetAllQ();
-            //IQueryable<Worker> all = repo.Get(w => w.ID);
-            return all;
-        }
-         * */
-
         public override Worker Create(Worker record, string user)
         {
+            record.memberStatusEN = lcache.textByID(record.memberStatusID, "EN");
+            record.memberStatusES = lcache.textByID(record.memberStatusID, "ES");
             var result = base.Create(record, user);
-            wcache.Refresh();
             return result;
         }
 
         public override void Save(Worker record, string user)
         {
+            record.memberStatusEN = lcache.textByID(record.memberStatusID, "EN");
+            record.memberStatusES = lcache.textByID(record.memberStatusID, "ES");
             base.Save(record, user);
-            wcache.Refresh();
         }
 
         public override void Delete(int id, string user)
         {
             base.Delete(id, user);
-            wcache.Refresh();
         }
-        public dataTableResult<Worker> GetIndexView(viewOptions o)
+        public dataTableResult<DTO.WorkerList> GetIndexView(viewOptions o)
         {
-            var result = new dataTableResult<Worker>();
+            var result = new dataTableResult<DTO.WorkerList>();
             //Get all the records
             IQueryable<Worker> q = repo.GetAllQ();
             result.totalCount = q.Count();
@@ -123,8 +126,59 @@ namespace Machete.Service
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
             //Limit results to the display length and offset
             result.filteredCount = q.Count();
-            result.query = q.Skip(o.displayStart).Take(o.displayLength);
+            result.query = q.ProjectTo<DTO.WorkerList>(map.ConfigurationProvider)
+                .Skip(o.displayStart)
+                .Take(o.displayLength)
+                .AsEnumerable();
             return result;
+        }
+
+        /// <summary>
+        /// Expires active workers based on expiration date
+        /// </summary>
+        /// <param name="db"></param>
+        /// <returns>true if at least one record expired</returns>
+        public bool ExpireMembers()
+        {
+            bool rtn = false;
+            IList<Worker> list = GetMany(w =>
+                    w.memberexpirationdate < DateTime.Now &&
+                    w.memberStatusID == Worker.iActive)
+                    .ToList();
+            //
+            if (list.Count() > 0) rtn = true;
+            //
+            foreach (Worker wkr in list)
+            {
+                wkr.memberStatusID = Worker.iExpired;
+                Save(wkr, "ExpirationBot");
+            }
+
+            return rtn;
+        }
+        /// <summary>
+        /// Reactivates sanctioned workers based on reactivation date
+        /// </summary>
+        /// <param name="db"></param>
+        /// <returns>true if at least one record reactivated</returns>
+        public bool ReactivateMembers()
+        {
+            bool rtn = false;
+            IList<Worker> list = GetMany(w =>
+                    w.memberReactivateDate != null &&
+                    w.memberReactivateDate < DateTime.Now &&
+                    w.memberStatusID == Worker.iSanctioned)
+                    .ToList();
+            //
+            if (list.Count() > 0) rtn = true;
+            //
+            foreach (Worker wkr in list)
+            {
+                wkr.memberStatusID = Worker.iActive;
+                Save(wkr, "ReactivationBot");
+            }
+
+            return rtn;
         }
     }
 }

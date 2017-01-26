@@ -2,6 +2,7 @@
 using Machete.Data.Infrastructure;
 using Machete.Domain;
 using Machete.Service;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -21,6 +22,7 @@ namespace Machete.Test.Unit.Service
         Mock<MacheteContext> _ctxt;
         Mock<DbSet<Lookup>> _set;
         Mock<DbSet<ApplicationUser>> _users;
+        Mock<DbSet<IdentityRole>> _roles;
         //Mock<DbQuery<Lookup>> _q;
         LookupCache _serv;
         public LookupCacheTests()
@@ -65,6 +67,12 @@ namespace Machete.Test.Unit.Service
             {
                 new ApplicationUser { UserName = "random name" }
             }.AsQueryable();
+
+            var roles = new List<IdentityRole>
+            {
+                new IdentityRole { Name = "Teacher" }
+            }.AsQueryable();
+
             _users = new Mock<DbSet<ApplicationUser>>();
             _users.As<IQueryable<ApplicationUser>>().Setup(m => m.Provider).Returns(teachers.Provider);
             _users.As<IQueryable<ApplicationUser>>().Setup(m => m.Expression).Returns(teachers.Expression);
@@ -72,8 +80,15 @@ namespace Machete.Test.Unit.Service
             _users.As<IQueryable<ApplicationUser>>().Setup(m => m.GetEnumerator()).Returns(teachers.GetEnumerator());
             _users.Setup(r => r.AsNoTracking()).Returns(_users.Object);
 
+            _roles = new Mock<DbSet<IdentityRole>>();
+            _roles.As<IQueryable<IdentityRole>>().Setup(m => m.Provider).Returns(roles.Provider);
+            _roles.As<IQueryable<IdentityRole>>().Setup(m => m.Expression).Returns(roles.Expression);
+            _roles.As<IQueryable<IdentityRole>>().Setup(m => m.ElementType).Returns(roles.ElementType);
+            _roles.As<IQueryable<IdentityRole>>().Setup(m => m.GetEnumerator()).Returns(roles.GetEnumerator());
+
             _ctxt.Setup(r => r.Lookups).Returns(_set.Object);
             _ctxt.Setup(r => r.Users).Returns(_users.Object);
+            _ctxt.Setup(r => r.Roles).Returns(_roles.Object);
             _db.Setup(r => r.Get()).Returns(_ctxt.Object);
             _serv = new LookupCache(_db.Object);
 

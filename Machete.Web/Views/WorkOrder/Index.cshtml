@@ -60,7 +60,6 @@
                     <th>@WorkOrders.onlineSource</th>                  
                     <th>@Emails.emailsSent</th>                  
                     <th>@Emails.errorCount</th>  
-                    @*<th>@Record.dateupdated</th>*@
                     <th>@Record.updatedby</th>                
                 </tr>
             </thead>
@@ -97,33 +96,21 @@
                             { "mDataProp": "onlineSource", "bSearchable": false, "bSortable": true, "bVisible": true },
                             { "mDataProp": "emailSentCount", "bSearchable": false, "bSortable": true, "bVisible": true },
                             { "mDataProp": "emailErrorCount", "bSearchable": false, "bSortable": true, "bVisible": true },
-                            @*{ "mDataProp": "dateupdated" },*@
                             { "mDataProp": "updatedby" }
                         ],
             "aoSearchCols" :  [null, null, null, null, null, null, null, null, null, null, null, null],
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                         $(nRow).attr("edittabref", aData["tabref"]);
                         $(nRow).attr("edittablabel", aData["tablabel"]);
-                        if (aData['displayState'] == "Pending") {
-                            $(nRow).addClass('statusGrey');
-                        } 
-                        if (aData['displayState'] == "Active") {
-                            $(nRow).addClass('statusBlue');
-                        } 
-                        if (aData['displayState'] == "Completed") {
-                            $(nRow).addClass('statusGreen');
-                        } 
-                        if (aData['displayState'] == "Cancelled") {
-                            $(nRow).addClass('statusRed');
-                        } 
-                        if (aData['displayState'] == "Expired") {
-                            $(nRow).addClass('statusExpired');
-                        }
-                        if (aData['displayState'] == "Orphaned") {
-                            $(nRow).addClass('statusYellow');
-                        }
-                        if (aData['displayState'] == "Unassigned") {
-                            $(nRow).addClass('statusOrange');
+                        switch (aData['displayState']) {
+                            case "@(Machete.Domain.LOrderStatus.Pending)": $(nRow).addClass('statusGrey'); break;
+                            case "@(Machete.Domain.LOrderStatus.Active)": $(nRow).addClass('statusBlue'); break;
+                            case "@(Machete.Domain.LOrderStatus.Completed)": $(nRow).addClass('statusGreen'); break;
+                            case "@(Machete.Domain.LOrderStatus.Cancelled)": $(nRow).addClass('statusRed'); break;
+                            case "@(Machete.Domain.LOrderStatus.Expired)": $(nRow).addClass('statusRed'); break;
+                            case "@(Machete.Domain.LOrderStatus.Orphaned)": $(nRow).addClass('statusYellow'); break;
+                            case "@(Machete.Domain.LOrderStatus.Unassigned)": $(nRow).addClass('statusOrange'); break;
+                            default: break;
                         }
                         return nRow;
             }
@@ -138,7 +125,7 @@
     summaryDefs["iDisplayLength"] = 25;
     summaryDefs["aLengthMenu"] = [[25, 50, 100], [25, 50, 100]];
         orderDefs["iDisplayLength"] = 15;
-    orderDefs["aLengthMenu"] = [[15, 50, 100], [15, 50, 100]];      
+    orderDefs["aLengthMenu"] = [[15, 50, 100], [15, 50, 100]];
     //////////////////////////////////////////////
     //
     //
@@ -150,7 +137,7 @@
         //
         $('.formButton').button();
         $('#woDispatchTabs').mUI('createTabs', {
-            prefix: "ui-tabs-dispatch-", 
+            prefix: "ui-tabs-dispatch-",
             formLevel: 1,
             changeConfirm: "@(Machete.Web.Resources.Shared.changeConfirm)",
             changeTitle: "@(Machete.Web.Resources.Shared.changeTitle)",
@@ -161,18 +148,18 @@
         // Setup workorder Table
         //
         var oTable = jqrfyTable({
-            table: $('#orderTable'), 
-            tab: $('#woDispatchTabs'), 
-            options: orderDefs, 
+            table: $('#orderTable'),
+            tab: $('#woDispatchTabs'),
+            options: orderDefs,
             dblClickEvent: false,
             tabLabel: null
             });
 
         var woSumTable = jqrfyTable({
-            table: $('#orderSummaryTable'), 
-            tab: $('#woDispatchTabs'), 
-            options: summaryDefs, 
-            dblClickEvent: function (event) {            
+            table: $('#orderSummaryTable'),
+            tab: $('#woDispatchTabs'),
+            options: summaryDefs,
+            dblClickEvent: function (event) {
                 var myTr = event.target.parentNode;
                 $('#orderTable').dataTable().fnFilter($(myTr).find('td:eq(0)').text());
                 $('#woDispatchTabs').tabs('select',0);
@@ -189,19 +176,19 @@
         //
         // filtering buttons on details page
         //
-        $('#pendingOrdersBtn').click(function() {            
+        $('#pendingOrdersBtn').click(function() {
             oTable.dataTable().fnResetAllFilters(false);
             oTable.dataTable().fnFilter('@Machete.Domain.WorkOrder.iPending', 5); //sync with DT array above
         });
-        $('#activeOrdersBtn').click(function() {            
+        $('#activeOrdersBtn').click(function() {
             oTable.dataTable().fnResetAllFilters(false);
             oTable.dataTable().fnFilter('@Machete.Domain.WorkOrder.iActive', 5); //sync with DT array above
         });
-        $('#completedOrdersBtn').click(function() {            
+        $('#completedOrdersBtn').click(function() {
             oTable.dataTable().fnResetAllFilters(false);
             oTable.dataTable().fnFilter('@Machete.Domain.WorkOrder.iCompleted', 5); //sync with DT array above
         });
-        $('#expiredOrdersBtn').click(function() {            
+        $('#expiredOrdersBtn').click(function() {
             oTable.dataTable().fnResetAllFilters(false);
             oTable.dataTable().fnFilter('@Machete.Domain.WorkOrder.iExpired', 5); //sync with DT array above
         });
@@ -220,15 +207,15 @@
         ////////////////////////////////////////////////////////////////
         //
         // print and complete buttons from summary page
-        //  
+        //
         $('#printActiveBtn').click(function() {
             window.open('/WorkOrder/GroupView?assignedOnly=false&date='+$('#activeDate').val());
         });
         $('#printActiveAssignedBtn').click(function() {
             window.open('/WorkOrder/GroupView?assignedOnly=true&date='+$('#activeDate').val());
-        });     
+        });
         $('#completeActiveBtn').click(function() {
-            $.post("/WorkOrder/CompleteOrders", 
+            $.post("/WorkOrder/CompleteOrders",
                 {
                     date: $('#activeDate').val()
                 },

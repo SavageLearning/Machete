@@ -35,22 +35,24 @@ namespace Machete.Domain
         public DateTime datecreated { get; set; }
         public DateTime dateupdated { get; set; }
         [StringLength(30)]
-        public string Createdby { get; set; }
+        [Column("Createdby")] // the legacy of 2011 inconsistency
+        public string createdby { get; set; }
         [StringLength(30)]
-        public string Updatedby { get; set; }
+        [Column("Updatedby")] // the legacy of 2011 inconsistency
+        public string updatedby { get; set; }
 
         public Record() {}
 
-        public void updatedby(string user)
+        public void updatedByUser(string user)
         {            
             dateupdated = DateTime.Now;  
-            Updatedby = user;
+            updatedby = user;
         }
-        public void createdby(string user)
+        public void createdByUser(string user)
         {
             datecreated = DateTime.Now;
-            Createdby = user;
-            updatedby(user);
+            createdby = user;
+            updatedByUser(user);
         }
         public object Clone()
         {

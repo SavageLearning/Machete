@@ -36,6 +36,7 @@ using Machete.Domain;
 using Machete.Test;
 using Machete.Web.ViewModel;
 using System.Web;
+using AutoMapper;
 using Machete.Web.Helpers;
 
 namespace Machete.Test.Unit.Controller
@@ -48,7 +49,8 @@ namespace Machete.Test.Unit.Controller
         Mock<ILookupCache> lcache;
         Mock<IDatabaseFactory> dbfactory;
         Mock<IImageService> _iserv;
-        Mock<IWorkerCache> _wcache;
+        Mock<IDefaults> def;
+        Mock<IMapper> map;
         WorkerController _ctrlr;
         FormCollection fakeform;
         [TestInitialize]
@@ -57,10 +59,11 @@ namespace Machete.Test.Unit.Controller
             _wserv = new Mock<IWorkerService>();
             _pserv = new Mock<IPersonService>();
             _iserv = new Mock<IImageService>();
-            _wcache = new Mock<IWorkerCache>();
             lcache = new Mock<ILookupCache>();
+            def = new Mock<IDefaults>();
+            map = new Mock<IMapper>();
             dbfactory = new Mock<IDatabaseFactory>();
-            _ctrlr = new WorkerController(_wserv.Object, _pserv.Object, _iserv.Object, _wcache.Object);
+            _ctrlr = new WorkerController(_wserv.Object, _pserv.Object, _iserv.Object, def.Object, map.Object);
             _ctrlr.SetFakeControllerContext();
             fakeform = new FormCollection();
             fakeform.Add("ID", "12345");
@@ -97,7 +100,6 @@ namespace Machete.Test.Unit.Controller
             fakeform.Add("dateOfMembership", "1/1/2000");
             //fakeform.Add("", "");
             // TODO: Include Lookups in Dependency Injection, remove initialize statements
-            Lookups.Initialize(lcache.Object);
         }
         //
         //   Testing /Index functionality
@@ -113,21 +115,29 @@ namespace Machete.Test.Unit.Controller
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Workers)]
-        public void create_get_returns_person()
+        public void create_get_returns_worker()
         {
             //Arrange
+            var p = new Machete.Web.ViewModel.Worker();
+            map.Setup(x => x.Map<Domain.Worker, Machete.Web.ViewModel.Worker>(It.IsAny<Domain.Worker>()))
+                .Returns(p);
             //Act
             var result = (PartialViewResult)_ctrlr.Create(0);
             //Assert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Worker));
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Domain.Worker));
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Workers)]
         public void WorkerController_create_post_valid_returns_json()
         {
             //Arrange
-            var _worker = new Worker();
-            var _person = new Person();
+            var w = new Machete.Web.ViewModel.Worker() {
+                ID = 12345
+            };
+            map.Setup(x => x.Map<Domain.Worker, Machete.Web.ViewModel.Worker>(It.IsAny<Domain.Worker>()))
+                .Returns(w);
+            var _worker = new Domain.Worker();
+            var _person = new Domain.Person();
             //
             _wserv.Setup(p => p.Create(_worker, "UnitTest")).Returns(_worker);
             _pserv.Setup(p => p.Create(_person, "UnitTest")).Returns(_person);
@@ -135,7 +145,7 @@ namespace Machete.Test.Unit.Controller
             //Act
             var result = _ctrlr.Create(_worker, "UnitTest", null) as JsonResult;
             Assert.IsInstanceOfType(result, typeof(JsonResult));
-            Assert.AreEqual("{ iNewID = 12345, jobSuccess = True }",
+            Assert.AreEqual("{ sNewRef = , sNewLabel = , iNewID = 12345, jobSuccess = True }",
                             result.Data.ToString());
         }
         // Commented otu because worker form is now (almost) entirely optional
@@ -162,15 +172,18 @@ namespace Machete.Test.Unit.Controller
         public void edit_get_returns_worker()
         {
             //Arrange
-            var _worker = new Worker();
-            var _person = new Person();
+            var ww = new Machete.Web.ViewModel.Worker();
+            map.Setup(x => x.Map<Domain.Worker, Machete.Web.ViewModel.Worker>(It.IsAny<Domain.Worker>()))
+                .Returns(ww);
+            var _worker = new Domain.Worker();
+            var _person = new Domain.Person();
             int testid = 4242;
-            Person fakeperson = new Person();
+            Domain.Person fakeperson = new Domain.Person();
             _wserv.Setup(p => p.Get(testid)).Returns(_worker);
             //Act
             var result = (PartialViewResult)_ctrlr.Edit(testid);
             //Assert
-            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Worker));
+            Assert.IsInstanceOfType(result.ViewData.Model, typeof(Domain.Worker));
         }
 
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Workers)]
@@ -182,17 +195,17 @@ namespace Machete.Test.Unit.Controller
             Mock<HttpPostedFileBase> image = new Mock<HttpPostedFileBase>();
             FormCollection fakeform = _fakeCollection(testid);
 
-            Worker fakeworker = new Worker();
-            Worker savedworker = new Worker();
-            Person fakeperson = new Person();
+            Domain.Worker fakeworker = new Domain.Worker();
+            Domain.Worker savedworker = new Domain.Worker();
+            Domain.Person fakeperson = new Domain.Person();
             fakeworker.Person = fakeperson;
 
             string user = "TestUser";
             _wserv.Setup(p => p.Get(testid)).Returns(fakeworker);
             _pserv.Setup(p => p.Get(testid)).Returns(fakeperson);
-            _wserv.Setup(x => x.Save(It.IsAny<Worker>(),
+            _wserv.Setup(x => x.Save(It.IsAny<Domain.Worker>(),
                                           It.IsAny<string>())
-                                         ).Callback((Worker p, string str) =>
+                                         ).Callback((Domain.Worker p, string str) =>
                                          {
                                              savedworker = p;
                                              user = str;

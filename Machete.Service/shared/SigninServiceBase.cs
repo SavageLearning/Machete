@@ -21,6 +21,7 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+using AutoMapper;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
@@ -37,7 +38,7 @@ namespace Machete.Service
         protected readonly IWorkerRepository wRepo;
         protected readonly IWorkerRequestRepository wrRepo;
         protected readonly IImageRepository iRepo;
-        protected readonly IWorkerCache wcache;
+        protected readonly IMapper map;
         //
         //
         protected SigninServiceBase(
@@ -45,14 +46,14 @@ namespace Machete.Service
             IWorkerRepository wRepo,
             IImageRepository iRepo,
             IWorkerRequestRepository wrRepo,
-            IWorkerCache wc,
-            IUnitOfWork uow)
+            IUnitOfWork uow,
+            IMapper map)
             : base(repo, uow)
         {
             this.wRepo = wRepo;
             this.wrRepo = wrRepo;
             this.iRepo = iRepo;
-            this.wcache = wc;
+            this.map = map;
             this.logPrefix = "SigninServiceBase";
         }
 

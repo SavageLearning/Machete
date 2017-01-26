@@ -1,4 +1,5 @@
-﻿using Machete.Domain;
+﻿using AutoMapper;
+using Machete.Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -20,11 +21,14 @@ namespace Machete.Test.Selenium.View
         static string baseURL;
         private sharedUI ui;
         FluentRecordBase frb;
+        static IMapper map;
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext)
         {
             WebServer.StartIis();
+            map = new Machete.Web.MapperConfig().getMapper();
+
         }
 
         [TestInitialize]
@@ -33,7 +37,7 @@ namespace Machete.Test.Selenium.View
             frb = new FluentRecordBase();
             driver = new ChromeDriver(ConfigurationManager.AppSettings["CHROMEDRIVERPATH"]);
             baseURL = "http://localhost:4213/";
-            ui = new sharedUI(driver, baseURL);
+            ui = new sharedUI(driver, baseURL, map);
             verificationErrors = new StringBuilder();
             ui.login();
         }

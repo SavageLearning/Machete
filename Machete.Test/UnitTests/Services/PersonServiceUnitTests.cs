@@ -21,6 +21,7 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+using AutoMapper;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
@@ -41,6 +42,7 @@ namespace Machete.Test.Unit.Service
         Mock<IPersonRepository> _repo;
         Mock<IUnitOfWork> _uow;
         Mock<ILookupCache> _lcache;
+        Mock<IMapper> _map;
         PersonService _serv;
         public PersonTests()
         {
@@ -92,7 +94,8 @@ namespace Machete.Test.Unit.Service
             _repo = new Mock<IPersonRepository>();
             _uow = new Mock<IUnitOfWork>();
             _lcache = new Mock<ILookupCache>();
-            _serv = new PersonService(_repo.Object, _uow.Object, _lcache.Object);
+            _map = new Mock<IMapper>();
+            _serv = new PersonService(_repo.Object, _uow.Object, _lcache.Object, _map.Object);
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Persons)]
         public void GetPersons_returns_Enumerable()
@@ -134,8 +137,8 @@ namespace Machete.Test.Unit.Service
             //
             //Assert
             Assert.IsInstanceOfType(result, typeof(Person));
-            Assert.IsTrue(result.Createdby == user);
-            Assert.IsTrue(result.Updatedby == user);
+            Assert.IsTrue(result.createdby == user);
+            Assert.IsTrue(result.updatedby == user);
             Assert.IsTrue(result.datecreated > DateTime.MinValue);
             Assert.IsTrue(result.dateupdated >  DateTime.MinValue);
         }
@@ -154,7 +157,7 @@ namespace Machete.Test.Unit.Service
             Person dp = new Person();
             _repo.Setup(r => r.Delete(It.IsAny<Person>())).Callback((Person p) => { dp = p;  });
             _repo.Setup(r => r.GetById(id)).Returns(_p);
-            var _serv = new PersonService(_repo.Object, _uow.Object, _lcache.Object);
+            var _serv = new PersonService(_repo.Object, _uow.Object, _lcache.Object, _map.Object);
             //
             //Act
             _serv.Delete(id, user);
@@ -172,16 +175,17 @@ namespace Machete.Test.Unit.Service
             _repo = new Mock<IPersonRepository>();
             _uow = new Mock<IUnitOfWork>();
             _lcache = new Mock<ILookupCache>();
+            _map = new Mock<IMapper>();
             string user = "UnitTest";
             _p.datecreated = DateTime.MinValue;
             _p.dateupdated = DateTime.MinValue;
-            var _serv = new PersonService(_repo.Object, _uow.Object, _lcache.Object);
+            var _serv = new PersonService(_repo.Object, _uow.Object, _lcache.Object, _map.Object);
             //
             //Act
             _serv.Save(_p, user);
             //
             //Assert
-            Assert.IsTrue(_p.Updatedby == user);
+            Assert.IsTrue(_p.updatedby == user);
             Assert.IsTrue(_p.dateupdated > DateTime.MinValue);
         }
     }

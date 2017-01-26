@@ -1,4 +1,4 @@
-﻿@model Machete.Domain.Person
+﻿@model Machete.Web.ViewModel.Person
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
 @{
@@ -100,7 +100,9 @@
             @Html.LabelFor(model => model.gender)
         </div>
         <div class="tb-field">
-            @Html.DropDownListFor(model => model.gender, new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.gender), "Value", "Text", Model.gender), @Machete.Web.Resources.Shared.choose, new { tabindex = "14", @id=idPrefix + "gender" })
+            @Html.DropDownListFor(model => model.gender, 
+                Model.def.getSelectList(Machete.Domain.LCategory.gender), 
+                Shared.choose, new { tabindex = "14", @id=idPrefix + "gender" })
             @Html.ValidationMessageFor(model => model.gender)
         </div>
     </div>
@@ -138,7 +140,7 @@
     </div>
 </div>
 @Html.Partial("ManagerInfo")
-@Html.Partial("AdministratorInfo")
+
 
 @*<script type="text/javascript">
     $().ready(function () {

@@ -50,21 +50,21 @@ namespace Machete.Test
         public void FluentRecordBase_AddRepoPerson()
         {
             var frb = new FluentRecordBase();
-            var result = frb.ToPerson();
+            var result = frb.AddPerson(testID: "FluentRecordBase_AddRepoPerson").ToPerson();
             Assert.IsInstanceOfType(result, typeof(Person));
         }
         [TestMethod, TestCategory(TC.Fluent), TestCategory(TC.IT), TestCategory(TC.Workers)]
         public void FluentRecordBase_AddRepoWorker()
         {
             var frb = new FluentRecordBase();
-            var result = frb.ToWorker();
+            var result = frb.AddPerson(testID: "FluentRecordBase_AddRepoWorker").ToWorker();
             Assert.IsInstanceOfType(result, typeof(Worker));
         }
         [TestMethod, TestCategory(TC.Fluent), TestCategory(TC.IT), TestCategory(TC.Activities)]
         public void FluentRecordBase_AddRepoActivity()
         {
             var frb = new FluentRecordBase();
-            var result = frb.ToActivity();
+            var result = frb.AddPerson(testID: "FluentRecordBase_AddRepoActivity").ToActivity();
             Assert.IsInstanceOfType(result, typeof(Activity));
         }
         [TestMethod, TestCategory(TC.Fluent), TestCategory(TC.IT), TestCategory(TC.Activities)]

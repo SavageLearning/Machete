@@ -52,6 +52,8 @@ namespace Machete.Web.Controllers
         private readonly IWorkerRequestService wrServ;
         private readonly IWorkAssignmentService waServ;
         private readonly ILookupCache lcache;
+        private readonly IMapper map;
+        private readonly IDefaults def;
         CultureInfo CI;
         Logger log = LogManager.GetCurrentClassLogger();
         LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "HirerWorkOrderController", "");
@@ -70,7 +72,10 @@ namespace Machete.Web.Controllers
                                    IEmployerService eServ,
                                    IWorkerService wServ,
                                    IWorkerRequestService wrServ,
-                                   ILookupCache lcache)
+                                   ILookupCache lcache,
+                                   IDefaults def,
+                                   IMapper map
+            )
         {
             this.woServ = woServ;
             this.eServ = eServ;
@@ -78,6 +83,9 @@ namespace Machete.Web.Controllers
             this.waServ = waServ;
             this.wrServ = wrServ;
             this.lcache = lcache;
+            this.map = map;
+            this.def = def;
+            ViewBag.employerReferenceList = def.getSelectList(Machete.Domain.LCategory.emplrreference);
         }
 
         /// <summary>
@@ -104,12 +112,12 @@ namespace Machete.Web.Controllers
             // Retrieve employer ID of signed in Employer
             string employerID = HttpContext.User.Identity.GetUserId();
 
-            Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == employerID).FirstOrDefault();
+            Domain.Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == employerID).FirstOrDefault();
             if (employer != null)
             {
                 ViewBag.employerId = employer.ID;
             }
-             
+
             return View("Index");
         }
 
@@ -136,41 +144,41 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="param">contains parameters for filtering</param>
         /// <returns>JsonResult for DataTables consumption</returns>
-        [Authorize(Roles = "Hirer")]
-        public ActionResult AjaxHandler(jQueryDataTableParam param)
-        {
-            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
-            vo.CI = this.CI;
+        //[Authorize(Roles = "Hirer")]
+        //public ActionResult AjaxHandler(jQueryDataTableParam param)
+        //{
+        //    var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
+        //    vo.CI = this.CI;
 
-            // Retrieve employer ID of signed in Employer
-            string employerID = HttpContext.User.Identity.GetUserId();
+        //    // Retrieve employer ID of signed in Employer
+        //    string employerID = HttpContext.User.Identity.GetUserId();
 
-            Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == employerID).FirstOrDefault();
-            if (employer != null)
-            {
-                vo.EmployerID = employer.ID;
-            }
-            else
-            {
-                // TODO: add error processing.
-            }
+        //    Domain.Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == employerID).FirstOrDefault();
+        //    if (employer != null)
+        //    {
+        //        vo.EmployerID = employer.ID;
+        //    }
+        //    else
+        //    {
+        //        // TODO: add error processing.
+        //    }
 
-            //Get all the records
-            dataTableResult<WorkOrder> dtr = woServ.GetIndexView(vo);
+        //    //Get all the records
+        //    dataTableResult<WorkOrder> dtr = woServ.GetIndexView(vo);
 
-            // TODO: investigate this
-            param.showOrdersWorkers = true;
+        //    // TODO: investigate this
+        //    param.showOrdersWorkers = true;
 
-            return Json(new
-            {
-                sEcho = param.sEcho,
-                iTotalRecords = dtr.totalCount,
-                iTotalDisplayRecords = dtr.filteredCount,
-                aaData = from p in dtr.query
-                         select dtResponse (p, param.showOrdersWorkers)
-            },
-            JsonRequestBehavior.AllowGet);
-        }
+        //    return Json(new
+        //    {
+        //        sEcho = param.sEcho,
+        //        iTotalRecords = dtr.totalCount,
+        //        iTotalDisplayRecords = dtr.filteredCount,
+        //        aaData = from p in dtr.query
+        //                 select dtResponse(p, param.showOrdersWorkers)
+        //    },
+        //    JsonRequestBehavior.AllowGet);
+        //}
 
         /// <summary>
         /// Returns Work Order object to AjaxHandler - presented on the WorkOrder Details tab
@@ -178,35 +186,35 @@ namespace Machete.Web.Controllers
         /// <param name="wo">WorkOrder</param>
         /// <param name="showWorkers">bool flag determining whether the workers associated with the WorkOrder should be retrieved</param>
         /// <returns>Work Order </returns>
-        public object dtResponse( WorkOrder wo, bool showWorkers)
+        public object dtResponse(WorkOrder wo, bool showWorkers)
         {
             // tabref = "/HirerWorkOrder/Edit" + Convert.ToString(wo.ID),
             int ID = wo.ID;
             return new
             {
-                tabref = "/HirerWorkOrder/View/" + Convert.ToString(wo.ID),
-                tablabel = Machete.Web.Resources.WorkOrders.tabprefix + wo.getTabLabel(),
-                EID = Convert.ToString(wo.EmployerID),
-                WOID = System.String.Format("{0,5:D5}", wo.paperOrderNum), // Note: paperOrderNum defaults to the value of the WO when a paperOrderNum is not provided
-                dateTimeofWork = wo.dateTimeofWork.ToString(),
-                status = lcache.textByID(wo.status, CI.TwoLetterISOLanguageName),
-                WAcount = wo.workAssignments.Count(a => a.workOrderID == ID).ToString(),
-                contactName = wo.contactName,
-                workSiteAddress1 = wo.workSiteAddress1,
-                zipcode = wo.zipcode,
-                transportMethod = lcache.textByID(wo.transportMethodID, CI.TwoLetterISOLanguageName),
-                displayState = _getDisplayState(wo), // State is used to provide color highlighting to records based on state
-                onlineSource = wo.onlineSource ? Shared.True : Shared.False,
-                workers = showWorkers ? // Workers is only loaded when showWorkers parameter set to TRUE
-                        from w in wo.workAssignments
-                        select new
-                        {
-                            WID = w.workerAssigned != null ? (int?)w.workerAssigned.dwccardnum : null,
-                            name = w.workerAssigned != null ? w.workerAssigned.Person.firstname1 : null, // Note: hirers should only have access to the workers first name
-                            skill = lcache.textByID(w.skillID, CI.TwoLetterISOLanguageName),
-                            hours = w.hours,
-                            wage = w.hourlyWage
-                        } : null
+                //tabref = "/HirerWorkOrder/View/" + Convert.ToString(wo.ID),
+                //tablabel = Machete.Web.Resources.WorkOrders.tabprefix + wo.getTabLabel(),
+                //EID = Convert.ToString(wo.EmployerID),
+                //WOID = System.String.Format("{0,5:D5}", wo.paperOrderNum), // Note: paperOrderNum defaults to the value of the WO when a paperOrderNum is not provided
+                //dateTimeofWork = wo.dateTimeofWork.ToString(),
+                //status = lcache.textByID(wo.status, CI.TwoLetterISOLanguageName),
+                //WAcount = wo.workAssignments.Count(a => a.workOrderID == ID).ToString(),
+                //contactName = wo.contactName,
+                //workSiteAddress1 = wo.workSiteAddress1,
+                //zipcode = wo.zipcode,
+                //transportMethod = lcache.textByID(wo.transportMethodID, CI.TwoLetterISOLanguageName),
+                //displayState = _getDisplayState(wo), // State is used to provide color highlighting to records based on state
+                //onlineSource = wo.onlineSource ? Shared.True : Shared.False,
+                //workers = showWorkers ? // Workers is only loaded when showWorkers parameter set to TRUE
+                //        from w in wo.workAssignments
+                //        select new
+                //        {
+                //            WID = w.workerAssigned != null ? (int?)w.workerAssigned.dwccardnum : null,
+                //            name = w.workerAssigned != null ? w.workerAssigned.Person.firstname1 : null, // Note: hirers should only have access to the workers first name
+                //            skill = lcache.textByID(w.skillID, CI.TwoLetterISOLanguageName),
+                //            hours = w.hours,
+                //            wage = w.hourlyWage
+                //        } : null
 
             };
         }
@@ -219,9 +227,9 @@ namespace Machete.Web.Controllers
         /// <returns>status string</returns>
         private string _getDisplayState(WorkOrder wo)
         {
-            string status = lcache.textByID(wo.status, "en");
+            string status = lcache.textByID(wo.statusID, "en");
 
-            if (wo.status == WorkOrder.iCompleted)
+            if (wo.statusID == WorkOrder.iCompleted)
             {
                 // If WO is completed, but 1 (or more) WA aren't assigned - the WO is still Unassigned
                 if (wo.workAssignments.Count(wa => wa.workerAssignedID == null) > 0)
@@ -249,12 +257,12 @@ namespace Machete.Web.Controllers
         public ActionResult Create()
         {
             WorkOrder wo = new WorkOrder();
-            
+
             // Retrieve user ID of signed in Employer
             string userID = HttpContext.User.Identity.GetUserId();
 
             // Retrieve Employer record
-            Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == userID).FirstOrDefault();
+            Domain.Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == userID).FirstOrDefault();
             if (employer != null)
             {
                 // Employer has created profile or work order already
@@ -274,9 +282,9 @@ namespace Machete.Web.Controllers
 
             // Set default values
             wo.dateTimeofWork = DateTime.Today.AddHours(9).AddDays(3); // Set default work time to 9am three days from now
-            wo.transportMethodID = Lookups.getDefaultID(LCategory.transportmethod);
-            wo.typeOfWorkID = Lookups.getDefaultID(LCategory.worktype);
-            wo.status = Lookups.getDefaultID(LCategory.orderstatus);
+            wo.transportMethodID = def.getDefaultID(LCategory.transportmethod);
+            wo.typeOfWorkID = def.getDefaultID(LCategory.worktype);
+            wo.statusID = def.getDefaultID(LCategory.orderstatus);
             wo.timeFlexible = true;
             wo.onlineSource = true;
             wo.disclosureAgreement = false;
@@ -294,7 +302,7 @@ namespace Machete.Web.Controllers
 
 
             //IEnumerable<Lookup> lookup = lcache.getCache();
-            List<SelectListEmployerSkills> lookup = Lookups.getOnlineEmployerSkill();
+            List<SelectListEmployerSkills> lookup = def.getOnlineEmployerSkill();
 
             int counter = 0;
 
@@ -335,7 +343,7 @@ namespace Machete.Web.Controllers
             string userID = HttpContext.User.Identity.GetUserId();
 
             // Retrieve Employer record
-            Employer onlineEmployer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == userID).FirstOrDefault();
+            Domain.Employer onlineEmployer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == userID).FirstOrDefault();
             if (onlineEmployer != null)
             {
                 // Employer has created profile or work order already
@@ -346,7 +354,7 @@ namespace Machete.Web.Controllers
             else
             {
                 // Employer has NOT created profile or work order yet
-                Employer employer = new Employer();
+                Domain.Employer employer = new Domain.Employer();
 
                 // Set up default values from WO
                 employer.name = wo.contactName;
@@ -369,7 +377,7 @@ namespace Machete.Web.Controllers
                 employer.receiveUpdates = true;
                 employer.business = false;
 
-                Employer newEmployer = eServ.Create(employer, userName);
+                Domain.Employer newEmployer = eServ.Create(employer, userName);
                 if (newEmployer != null)
                 {
                     wo.EmployerID = newEmployer.ID;
@@ -464,14 +472,14 @@ namespace Machete.Web.Controllers
             string userID = HttpContext.User.Identity.GetUserId();
 
             // Retrieve Employer record
-            Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == userID).FirstOrDefault();
+            Domain.Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == userID).FirstOrDefault();
             if (employer != null)
             {
                 // Employer has created profile or work order already
             }
             else
             {
-                employer = new Employer();
+                employer = new Domain.Employer();
             }
 
             // Set default values
@@ -495,7 +503,7 @@ namespace Machete.Web.Controllers
         /// <param name="userName">User performing action</param>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Hirer")]
-        public ActionResult HirerProfile(Employer e, string userName)
+        public ActionResult HirerProfile(Domain.Employer e, string userName)
         {
             UpdateModel(e);
 
@@ -503,11 +511,11 @@ namespace Machete.Web.Controllers
             string userID = HttpContext.User.Identity.GetUserId();
 
             // Retrieve Employer record
-            Employer onlineEmp = eServ.GetRepo().GetAllQ().Where(emp => emp.onlineSigninID == userID).FirstOrDefault();
+            Domain.Employer onlineEmp = eServ.GetRepo().GetAllQ().Where(emp => emp.onlineSigninID == userID).FirstOrDefault();
 
             if (onlineEmp != null)
             {
-                Employer onlineEmployer = eServ.Get(onlineEmp.ID);
+                Domain.Employer onlineEmployer = eServ.Get(onlineEmp.ID);
                 //e.ID = onlineEmployer.ID;
                 onlineEmployer.active = true;
                 onlineEmployer.address1 = e.address1;
@@ -535,7 +543,7 @@ namespace Machete.Web.Controllers
             else
             {
                 // Create Employer record
-                Employer newEmployer = eServ.Create(e, userName);
+                Domain.Employer newEmployer = eServ.Create(e, userName);
                 return View("Index");
             }
         }
@@ -626,7 +634,7 @@ namespace Machete.Web.Controllers
 
                     // Save work order updates
                     woServ.Save(workOrder, userName);
-                    
+
                     object paypalConfigSection = null;
                     try
                     {
@@ -644,7 +652,7 @@ namespace Machete.Web.Controllers
                     }
 
                     NameValueConfigurationCollection paypalSettings = (NameValueConfigurationCollection)paypalConfigSection.GetType().GetProperty("Settings").GetValue(paypalConfigSection, null);
-                    
+
                     var paypalUrl = paypalSettings["paypalUrl"].Value;
                     var redirectUrl = paypalUrl + "_express-checkout&token=" + response.Token;
 
@@ -773,7 +781,7 @@ namespace Machete.Web.Controllers
             }
 
             return View("IndexPostPaypal", workOrder);
-            
+
         }
 
         /// <summary>

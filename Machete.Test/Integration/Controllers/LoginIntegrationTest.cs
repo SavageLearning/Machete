@@ -1,5 +1,5 @@
 ﻿using Machete.Data.Infrastructure;
-using Machete.Web.Models;
+using Machete.Web.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
 
@@ -10,7 +10,7 @@ namespace Machete.Test.Integration.Controller
     {
         IDatabaseFactory idb;
         string conString;
-        Machete.Web.Models.MyUserManager userManager;
+        Machete.Web.ViewModel.MyUserManager userManager;
 
         [TestInitialize]
         public void Initialize()

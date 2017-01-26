@@ -196,8 +196,8 @@ namespace Machete.Data
             _cache.ForEach(u => {
                 u.datecreated = DateTime.Now;
                 u.dateupdated = DateTime.Now;
-                u.Createdby = "Init T. Script";
-                u.Updatedby = "Init T. Script";
+                u.createdby = "Init T. Script";
+                u.updatedby = "Init T. Script";
                 context.Lookups.Add(u); 
             });
             context.Commit();

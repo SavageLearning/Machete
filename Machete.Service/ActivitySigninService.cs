@@ -21,6 +21,8 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
@@ -35,7 +37,7 @@ namespace Machete.Service
     /// </summary>
     public interface IActivitySigninService : ISigninService<ActivitySignin>
     {
-        dataTableResult<asiView> GetIndexView(viewOptions o);
+        dataTableResult<DTO.ActivitySigninList> GetIndexView(viewOptions o);
         Worker CreateSignin(ActivitySignin signin, string user);
         IQueryable<ActivitySignin> GetManyByPersonID(int actID, int perID);
         ActivitySignin GetByPersonID(int actID, int perID);
@@ -61,9 +63,9 @@ namespace Machete.Service
             IPersonRepository pRepo,
             IImageRepository iRepo,
             IWorkerRequestRepository wrRepo,
-            IWorkerCache wc, 
-            IUnitOfWork uow)
-            : base(repo, wRepo, iRepo, wrRepo, wc, uow)
+            IUnitOfWork uow,
+            IMapper map)
+            : base(repo, wRepo, iRepo, wrRepo, uow, map)
         {
             this.logPrefix = "ActivitySignin";
             this.pRepo = pRepo;
@@ -73,38 +75,24 @@ namespace Machete.Service
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public dataTableResult<asiView> GetIndexView(viewOptions o)
+        public dataTableResult<DTO.ActivitySigninList> GetIndexView(viewOptions o)
         {
-            var result = new dataTableResult<asiView>();
+            var result = new dataTableResult<DTO.ActivitySigninList>();
             IQueryable<ActivitySignin> q = repo.GetAllQ();
-            IEnumerable<ActivitySignin> e;
-            IEnumerable<asiView> eSIV;
             //
             if (o.date != null) IndexViewBase.diffDays(o, ref q);
-            // WHERE on activityID
-            if (o.personID > 0)
-                IndexViewBase.GetAssociated(o.personID, ref q);
-            if (o.activityID != null)
-                q = q.Where(p => p.activityID == o.activityID);
+            if (o.personID > 0) IndexViewBase.GetAssociated(o.personID, ref q);
+            if (o.activityID != null) q = q.Where(p => p.activityID == o.activityID);
             //            
-            e = q.ToList();
-            if (!string.IsNullOrEmpty(o.sSearch))
-                IndexViewBase.search(o, ref e, wcache.GetCache());
+            if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
 
-            eSIV = e.Join(wcache.GetCache(),
-                            s => s.dwccardnum,
-                            w => w.dwccardnum,
-                            (s, w) => new { s, w }
-                            )
-                    .Select(z => new asiView(z.w.Person, z.s));
-
-            IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, o.CI.TwoLetterISOLanguageName, ref eSIV);
-            result.filteredCount = eSIV.Count();
+            IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
+            result.filteredCount = q.Count();
             result.totalCount = repo.GetAllQ().Count();
-            if ((int)o.displayLength >= 0)
-                result.query = eSIV.Skip((int)o.displayStart).Take((int)o.displayLength);
-            else
-                result.query = eSIV;           
+            result.query = q.ProjectTo<DTO.ActivitySigninList>(map.ConfigurationProvider)
+                .Skip(o.displayStart)
+                .Take(o.displayLength)
+                .AsEnumerable();
             return result;
         }
         /// <summary>

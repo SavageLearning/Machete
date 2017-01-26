@@ -140,8 +140,8 @@ namespace Machete.Test.Unit.Service
             //
             //Assert
             Assert.IsInstanceOfType(result, typeof(Image));
-            Assert.IsTrue(result.Createdby == user);
-            Assert.IsTrue(result.Updatedby == user);
+            Assert.IsTrue(result.createdby == user);
+            Assert.IsTrue(result.updatedby == user);
             Assert.IsTrue(result.datecreated > DateTime.MinValue);
             Assert.IsTrue(result.dateupdated > DateTime.MinValue);
         }
@@ -185,7 +185,7 @@ namespace Machete.Test.Unit.Service
             _serv.Save(_rtrn_img, user);
             //
             //Assert
-            Assert.IsTrue(_rtrn_img.Updatedby == user);
+            Assert.IsTrue(_rtrn_img.updatedby == user);
             Assert.IsTrue(_rtrn_img.dateupdated > DateTime.MinValue);
         }
     }
