@@ -18,7 +18,7 @@ namespace Machete.Service.DTO
         public DateTime dateforsignin { get; set; }
         public DateTime dateupdated { get; set; }
         public DateTime expirationDate { get; set; }
-        public int memberStatusID { get; set; }
+        public int? memberStatusID { get; set; }
         public string memberStatusEN { get; set; }
         public string memberStatusES { get; set; }
 

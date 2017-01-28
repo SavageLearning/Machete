@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Machete.Domain
 {
@@ -40,7 +41,12 @@ namespace Machete.Domain
         //
         [Required(ErrorMessageResourceName = "eventTyperequired", ErrorMessageResourceType = typeof(Resources.Event))]
         [LocalizedDisplayName("eventType", NameResourceType = typeof(Resources.Event))]
-        public int eventType { get; set; }
+        [Column("eventType")]
+        public int eventTypeID { get; set; }
+        [StringLength(50)]
+        public string eventTypeEN { get; set; }
+        [StringLength(50)]
+        public string eventTypeES { get; set; }
         //
         [LocalizedDisplayName("dateFrom", NameResourceType = typeof(Resources.Event))]
         [Required(ErrorMessageResourceName = "dateFromrequired", ErrorMessageResourceType = typeof(Resources.Event))]

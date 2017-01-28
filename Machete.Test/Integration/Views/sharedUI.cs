@@ -31,12 +31,6 @@ namespace Machete.Test.Selenium.View
             this.map = map;
         }
 
-        public bool refreshCache()
-        {
-            _d.Navigate().GoToUrl("http://localhost:4213/worker/refreshcache");
-            return true;
-        }
-
         public bool gotoMachete()
         {
             _d.Navigate().GoToUrl(_url);
@@ -252,7 +246,7 @@ namespace Machete.Test.Selenium.View
             string prefix = "event"+ _ev.ID +"-";
             WaitThenClickElement(By.Id("eventCreateTab"));
             WaitForElement(By.Id(prefix + "eventType"));
-            SelectOptionByValue(By.Id(prefix + "eventType"), _ev.eventType.ToString());
+            SelectOptionByValue(By.Id(prefix + "eventType"), _ev.eventTypeID.ToString());
             WaitForElement(By.Id(prefix + "dateFrom")).Clear();
             WaitForElement(By.Id(prefix + "dateFrom")).SendKeys(_ev.dateFrom.ToShortDateString());
             if (_ev.dateTo != null)
@@ -272,7 +266,7 @@ namespace Machete.Test.Selenium.View
         {
             string prefix = "event" + _ev.ID + "-";
             WaitForElement(By.Id(prefix + "eventType"));
-            Assert.AreEqual(_ev.eventType.ToString(), GetOptionValue(By.Id(prefix + "eventType")));
+            Assert.AreEqual(_ev.eventTypeID.ToString(), GetOptionValue(By.Id(prefix + "eventType")));
             Assert.AreEqual(_ev.dateFrom.ToShortDateString(), WaitForElement(By.Id(prefix + "dateFrom")).GetAttribute("value"));
             if (_ev.dateTo != null)
                 Assert.AreEqual(((DateTime)_ev.dateTo).ToShortDateString(), WaitForElement(By.Id(prefix + "dateTo")).GetAttribute("value"));

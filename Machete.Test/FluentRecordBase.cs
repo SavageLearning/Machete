@@ -1029,8 +1029,10 @@ namespace Machete.Test
             //
             // DEPENDENCIES
             if (_repoEV == null) AddRepoEvent();
+            if (_map == null) AddMapper();
+            if (_lcache == null) AddLookupCache();
             if (_uow == null) AddUOW();
-            _servEV = new EventService(_repoEV, _uow);
+            _servEV = new EventService(_repoEV, _uow, _lcache, _map);
             return this;
         }
 

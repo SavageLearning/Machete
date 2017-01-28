@@ -24,6 +24,7 @@
 using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
+using DTO = Machete.Service.DTO;
 using Machete.Web.Helpers;
 using System;
 using System.Linq;
@@ -45,7 +46,9 @@ namespace Machete.Web.Controllers
         System.Globalization.CultureInfo CI;
         //
         //
-        public EventController(IEventService eventService, IImageService imageServ, LookupCache lc,
+        public EventController(IEventService eventService, 
+            IImageService imageServ, 
+            LookupCache lc,
             IDefaults def,
             IMapper map)
         {
@@ -67,21 +70,12 @@ namespace Machete.Web.Controllers
             //Get all the records
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI = CI;
-            dataTableResult<Event> list = _serv.GetIndexView(vo);
+            dataTableResult<DTO.EventList> list = _serv.GetIndexView(vo);
             //return what's left to datatables
-            var result = from p in list.query select new
-            {
-                tabref = _getTabRef(p),
-                tablabel = _getTabLabel(p, CI.TwoLetterISOLanguageName),
-                recordid = p.ID,
-                notes = p.notes,
-                datefrom = p.dateFrom.ToShortDateString(),
-                dateto = p.dateTo == null ? "" : ((DateTime)p.dateTo).ToShortDateString(),
-                fileCount = p.JoinEventImages.Count(),
-                type = lcache.textByID(p.eventType, CI.TwoLetterISOLanguageName),
-                dateupdated = Convert.ToString(p.dateupdated),
-                updatedby = p.updatedby
-            };
+            var result = list.query
+                .Select(
+                    e => map.Map<DTO.EventList, ViewModel.EventList>(e)
+                ).AsEnumerable();
             return Json(new
             {
                 sEcho = param.sEcho,
@@ -92,27 +86,19 @@ namespace Machete.Web.Controllers
             JsonRequestBehavior.AllowGet);
         }
         //
-        //
-        private string _getTabRef(Event evnt)
-        {
-            return "/Event/Edit/" + Convert.ToString(evnt.ID);
-        }
-        //
-        //
-        private string _getTabLabel(Event evnt, string locale)
-        {
-            return evnt.dateFrom.ToShortDateString() + " " + lcache.textByID(evnt.eventType, locale);
-        }
-        //
         // GET: /Event/Create
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Create(int PersonID)
         {
-            Event eventobj = new Event();
-            eventobj.dateFrom = DateTime.Today;
-            eventobj.dateTo = DateTime.Today;
-            eventobj.PersonID = PersonID;
-            return PartialView(eventobj);
+            Event ev = new Event();
+            var m = map.Map<Domain.Event, ViewModel.Event>(new Event()
+            {
+                dateFrom = DateTime.Today,
+                dateTo = DateTime.Today,
+                PersonID = PersonID
+            });
+            m.def = def;
+            return PartialView("Create", m);
         }
 
         //
@@ -122,12 +108,13 @@ namespace Machete.Web.Controllers
         {
             UpdateModel(evnt);
             Event newEvent = _serv.Create(evnt, userName);
-
+            var result = map.Map<Domain.Event, ViewModel.Event>(newEvent);
             return Json(new
             {
-                sNewRef = _getTabRef(newEvent),
-                sNewLabel = _getTabLabel(newEvent, CI.TwoLetterISOLanguageName),
-                iNewID = newEvent.ID
+                sNewRef = result.tabref,
+                sNewLabel = result.tablabel,
+                iNewID = newEvent.ID,
+                jobSuccess = true
             },
             JsonRequestBehavior.AllowGet);
         }
@@ -137,8 +124,9 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Edit(int id)
         {
-            var evnt = _serv.Get(id);
-            return PartialView("Edit", evnt);
+            var m = map.Map<Domain.Event, ViewModel.Event>(_serv.Get(id));
+            m.def = def;
+            return PartialView("Edit", m);
         }
 
         //

@@ -128,7 +128,7 @@ namespace Machete.Test
             dateupdated = DateTime.Now,
             dateFrom = DateTime.Now,
             dateTo = DateTime.Now + TimeSpan.FromDays(30),
-            eventType = MacheteLookup.cache.First(x => x.category == "eventtype" && x.text_EN == "Complaint").ID,
+            eventTypeID = MacheteLookup.cache.First(x => x.category == "eventtype" && x.text_EN == "Complaint").ID,
             notes = "Event note"
         };
 
