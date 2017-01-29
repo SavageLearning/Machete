@@ -107,5 +107,9 @@ namespace Machete.Web.Maps
         //    }
         //    return status;
         //}
+        //public string getPseudoWOID()
+        //{
+        //    return this.paperOrderNum.HasValue ? System.String.Format("{0,5:D5}", this.paperOrderNum) : System.String.Format("{0,5:D5}", this.ID);
+        //}
     }
 }

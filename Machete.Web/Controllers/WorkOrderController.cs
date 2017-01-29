@@ -86,9 +86,6 @@ namespace Machete.Web.Controllers
         {
             base.Initialize(requestContext);
             this.CI = (CultureInfo)Session["Culture"];
-            ViewBag.orderstatuses = def.getSelectList(LCategory.orderstatus);
-            ViewBag.transportmethod = def.getSelectList(LCategory.transportmethod);
-            ViewBag.transporttransacttype = def.getSelectList(LCategory.transportTransactType);
         }
 
         #region Index
@@ -326,7 +323,7 @@ namespace Machete.Web.Controllers
             Domain.WorkOrder workOrder = woServ.Get(id);
             var m = map.Map<Domain.WorkOrder, ViewModel.WorkOrder>(workOrder);
             m.def = def;
-            return View(workOrder);
+            return View(m);
         }
 
         /// <summary>
@@ -338,10 +335,9 @@ namespace Machete.Web.Controllers
         public ActionResult ViewForEmail(int id)
         {
             Domain.WorkOrder workOrder = woServ.Get(id);
-            ViewBag.lunchsupplied = def.getBool(workOrder.lunchSupplied);
-            ViewBag.transportmethod = def.byID(workOrder.transportMethodID);
-
-            return PartialView(workOrder);
+            var m = map.Map<Domain.WorkOrder, ViewModel.WorkOrder>(workOrder);
+            m.def = def;
+            return PartialView(m);
         }
         /// <summary>
         /// Creates the view to print all orders for a given day

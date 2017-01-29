@@ -1,4 +1,4 @@
-﻿@model Machete.Domain.WorkOrder
+﻿@model Machete.Web.ViewModel.WorkOrder
 @using Machete.Domain.Resources
 @using Machete.Web.Resources
 @using Machete.Web.Helpers
@@ -12,8 +12,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>@String.Format(Emails.emailAttachmentTitle, Model.getPseudoWOID())</title>
-    <link href="@*@Url.Content("~/Content/siteforemail.css")*@" rel="stylesheet" type="text/css" />
+    <title>@String.Format(Emails.emailAttachmentTitle, Model.WOID)</title>
+    <link href="@Url.Content("~/Content/siteforemail.css")" rel="stylesheet" type="text/css" />
     <style type="text/css">
         input::-webkit-input-placeholder {
     color: red;

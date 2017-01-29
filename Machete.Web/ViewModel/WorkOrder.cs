@@ -24,7 +24,7 @@ namespace Machete.Web.ViewModel
 
         //public new string dateTimeofWork { get; set; }
         public new string disclosureAgreement { get; set; }
-        public new string englishRequired { get; set; }
+        public new bool englishRequired { get; set; }
         public new string lunchSupplied { get; set; }
         public new string onlineSource { get; set; }
         public new string paperOrderNum { get; set; }
