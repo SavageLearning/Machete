@@ -15,7 +15,7 @@
     </ul>
     <div id="configList">
         @Html.Label("Category")
-        @Html.DropDownList("category", ViewBag.configCategories)
+        @Html.DropDownList("category", (SelectList)ViewBag.configCategories)
         <table id="configTable" class="display">
             <thead>
                 <tr>

@@ -729,8 +729,9 @@ namespace Machete.Test
             //
             // DEPENDENCIES
             if (_repoL == null) AddRepoLookup();
+            if (_map == null) AddMapper();
             if (_uow == null) AddUOW();
-            _servL = new LookupService(_repoL, _uow);
+            _servL = new LookupService(_repoL, _map, _uow);
             return this;
         }
 

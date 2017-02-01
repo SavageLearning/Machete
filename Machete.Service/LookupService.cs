@@ -21,6 +21,8 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
@@ -31,7 +33,7 @@ namespace Machete.Service
 {
     public interface ILookupService : IService<Lookup>
     {
-        IEnumerable<Lookup> GetIndexView(viewOptions o);
+        IEnumerable<DTO.ConfigList> GetIndexView(viewOptions o);
     }
 
     // Business logic for Lookup record management
@@ -39,15 +41,18 @@ namespace Machete.Service
     public class LookupService : ServiceBase<Lookup>, ILookupService
     {
         private readonly ILookupRepository lrepo;
+        private readonly IMapper map;
         public LookupService(ILookupRepository lRepo,
+                             IMapper map,
                              IUnitOfWork unitOfWork)
             : base(lRepo, unitOfWork)
         {
             this.lrepo = lRepo;
+            this.map = map;
             this.logPrefix = "Lookup";
         }
 
-        public IEnumerable<Lookup> GetIndexView(viewOptions o)
+        public IEnumerable<DTO.ConfigList> GetIndexView(viewOptions o)
         {
             //Get all the records
             IQueryable<Lookup> q = repo.GetAllQ();
@@ -57,8 +62,10 @@ namespace Machete.Service
             if (!string.IsNullOrEmpty(o.category)) IndexViewBase.byCategory(o, ref q);
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
 
-            q = q.Skip<Lookup>(o.displayStart).Take(o.displayLength);
-            return q;
+            return q.ProjectTo<DTO.ConfigList>(map.ConfigurationProvider)
+                .Skip(o.displayStart)
+                .Take(o.displayLength)
+                .AsEnumerable();
         }
         public override Lookup Create(Lookup record, string user)
         {

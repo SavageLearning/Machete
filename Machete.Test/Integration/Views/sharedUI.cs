@@ -318,7 +318,7 @@ namespace Machete.Test.Selenium.View
             //
             // check for duplicate dialog
             var dialog = WaitForElementExists(By.Id("duplicatesDialog"));
-            if (dialog != null)
+            if (dialog)
             {
                 WaitForElement(By.Id("duplicateSaveBtn"));
                 _d.FindElement(By.Id("duplicateSaveBtn")).Click();

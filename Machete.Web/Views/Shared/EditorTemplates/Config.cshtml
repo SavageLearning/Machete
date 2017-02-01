@@ -1,4 +1,4 @@
-﻿@model Machete.Domain.Lookup
+﻿@model Machete.Web.ViewModel.Config
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
 @{
@@ -13,10 +13,10 @@
     <div>
         <div class="tb-row">
             @Html.mUITableLabelFor(model => model.category)
-            @Html.mUITableDropDownListFor(model => model.category, Lookups.configCategories(),
+            @Html.mUITableDropDownListFor(model => model.category, Model.def.configCategories(),
                             new { @tabindex = "1", @class = "configEditor", @id = idPrefix + "category" })
             @Html.mUITableLabelFor(model => model.selected)
-            @Html.mUIDropDownYesNoFor(m => m.selected,
+            @Html.mUIDropDownYesNoFor(m => m.selected, Model.def.yesnoSelectList(),
                                     new { @tabindex = "3", @class = "configEditor", id = idPrefix + "selected" })
         </div>
         <div class="tb-row">
@@ -34,7 +34,7 @@
             @Html.mUITableTextBoxFor(model => model.subcategory,
                                     new { @tabindex = "10", @class = "configEditor skillConfig", @id = idPrefix + "subcategory" })
             @Html.mUITableLabelFor(model => model.level)
-            @Html.mUITableDropDownListFor(m => m.level, Lookups.skillLevels(),
+            @Html.mUITableDropDownListFor(m => m.level, Model.def.skillLevels(),
                                     new { @tabindex = "15", @class = "configEditor skillConfig", id = idPrefix + "level" })
         </div>
         <div class="tb-row">
@@ -42,23 +42,23 @@
             @Html.mUITableTextBoxFor(model => model.wage,
                                              new { @tabindex = "11", @class = "configEditor skillConfig", @id = idPrefix + "wage" })
             @Html.mUITableLabelFor(model => model.minHour)
-            @Html.mUITableDropDownListFor(m => m.minHour, Lookups.hours(),
+            @Html.mUITableDropDownListFor(m => m.minHour, Model.def.hours(),
                                              new { @tabindex = "16", @class = "configEditor skillConfig", id = idPrefix + "minHour" })
         </div>
         <div class="tb-row">
             @Html.mUITableLabelFor(model => model.fixedJob)
-            @Html.mUIDropDownYesNoFor(model => model.fixedJob,
+            @Html.mUIDropDownYesNoFor(model => model.fixedJob, Model.def.yesnoSelectList(),
                          new { @tabindex = "12", @class = "configEditor skillConfig", @id = idPrefix + "fixedJob" })
             @Html.mUITableLabelFor(model => model.sortorder)
-            @Html.mUITableDropDownListFor(m => m.sortorder, Lookups.hours(),
+            @Html.mUITableDropDownListFor(m => m.sortorder, Model.def.hours(),
                          new { @tabindex = "17", @class = "configEditor skillConfig", id = idPrefix + "sortorder" })
         </div>
         <div class="tb-row">
             @Html.mUITableLabelFor(model => model.typeOfWorkID)
-            @Html.mUITableDropDownListFor(model => model.typeOfWorkID, Lookups.getSelectList(Machete.Domain.LCategory.worktype),
+            @Html.mUITableDropDownListFor(model => model.typeOfWorkID, Model.def.getSelectList(Machete.Domain.LCategory.worktype),
                          new { @tabindex = "13", @class = "configEditor skillConfig", @id = idPrefix + "typeOfWorkID" })
             @Html.mUITableLabelFor(model => model.speciality)
-            @Html.mUIDropDownYesNoFor(m => m.speciality,
+            @Html.mUIDropDownYesNoFor(m => m.speciality, Model.def.yesnoSelectList(),
                          new { @tabindex = "18", @class = "configEditor skillConfig", id = idPrefix + "speciality" })
         </div>
         <div class="tb-row">
