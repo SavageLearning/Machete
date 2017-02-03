@@ -10,7 +10,7 @@
 @Html.HiddenFor(model => model.ID, new { @class = "hiddenRecID" })
 @Html.HiddenFor(model => model.EmployerID, new { @id = idPrefix + "EmployerID" })
 @Html.HiddenFor(model => model.onlineSource)
-@Html.HiddenFor(model => model.status)
+@Html.HiddenFor(model => model.statusID)
 @Html.HiddenFor(model => model.typeOfWorkID)
 @Html.HiddenFor(model => model.timeFlexible)
 @Html.HiddenFor(model => model.waPseudoIDCounter)
@@ -106,7 +106,7 @@
     <div class="tb-row">
         <a href="#" id="transportationMethodModal2">@Html.mUITableLabelFor(model => model.transportMethodID)</a>
         @Html.mUIDropDownListFor(model => model.transportMethodID,
-                        new SelectList(Lookups.getTransportationMethodList(), "Value", "Text", Model.transportMethodID),
+                        (SelectList)ViewBag.TransportMethodList,
                         new { tabindex = "8", id = idPrefix + "transportMethodID" })
     </div>
     <div class="tb-row desc-field">
@@ -137,7 +137,8 @@
             @Html.LabelFor(model => model.englishRequired)
         </div>
         <div class="tb-field englishRequired_@(Model.ID)">
-            @Html.mUIDropDownYesNoFor(model => model.englishRequired, new { tabindex = "27", id = idPrefix + "englishRequired" })
+            @Html.mUIDropDownYesNoFor(model => model.englishRequired, (List<SelectListItem>)ViewBag.YesNoSelectList,
+           new { tabindex = "27", id = idPrefix + "englishRequired" })
         </div>
     </div>
     <!-- Note: Field only appears in table when englishRequired = TRUE -->
@@ -218,7 +219,7 @@
             </td>
             <td>
                 @Html.DropDownList("skillsList",
-                new SelectList(Lookups.getOnlineEmployerSkill(),
+                new SelectList(ViewBag.OnlineEmployerSkill,
                     "Value",
                     "Text"),
                              @Machete.Web.Resources.Shared.choose, new { tabindex = "40" })
