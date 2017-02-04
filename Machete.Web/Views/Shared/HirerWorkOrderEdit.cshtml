@@ -45,7 +45,7 @@
     </div>
 </table>
     <p class="paypalWarning">@Machete.Web.Resources.WorkOrders.payPalNotice</p>
-    <p class="paypalWarning">To see an available Casa Latina van drop-off time, please click on <a href="#" id="transportationCalendarModal">Drop Off Calendar</a></p>
+    <p class="zWarning">To see an available Casa Latina van drop-off time, please click on <a href="#" id="transportationCalendarModal">Drop Off Calendar</a></p>
 
     <!-- Form errors -->
     <!-- TODO: make sure all error sections are set - consider moving these next to the fields that they apply to -->
@@ -731,7 +731,7 @@
 
         function validateZipcodes() {
             // Check that required fields are set
-            if (($("#@(idPrefix)transportMethodID").val() == "") || ($("#@(idPrefix)zipcode"))) {
+            if (($("#@(idPrefix)transportMethodID").val() == "") || ($("#@(idPrefix)zipcode").val() == "")) {
                 console.log("empty string");
                 return;
             }
