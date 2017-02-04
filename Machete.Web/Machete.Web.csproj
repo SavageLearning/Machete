@@ -1033,7 +1033,6 @@
     <Content Include="Views\HirerWorkOrder\Index.cshtml" />
     <Content Include="Views\Shared\HirerWorkOrderEdit.cshtml" />
     <Content Include="Views\HirerAccount\Edit.cshtml" />
-    <Content Include="Views\HirerWorkOrder\View.cshtml" />
     <Content Include="Views\HirerWorkOrder\IndexPrePaypal.cshtml" />
     <Content Include="Views\HirerWorkOrder\IndexPostPaypal.cshtml" />
     <Content Include="Views\HirerWorkOrder\IndexCancel.cshtml" />

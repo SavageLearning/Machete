@@ -415,7 +415,7 @@ else
 {
     <tr>
         <td class="tb-field-fixed">@item.pseudoID</td>
-        <td class="tb-field-fixed">@Lookups.byID(item.skillID)</td>
+        <td class="tb-field-fixed">@Model.def.byID(item.skillID)</td>
         <td class="tb-field-fixed">@System.String.Format("{0:C}", item.hourlyWage)</td>
         <td class="tb-field-fixed">@Html.DisplayFor(modelItem => item.hours)</td>
         @if (item.hourRange > 0)
