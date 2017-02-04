@@ -493,19 +493,6 @@ namespace Machete.Web.Controllers
         #region View
 
         /// <summary>
-        /// GET: /HirerWorkOrder/PaymentPre
-        /// </summary>
-        /// <param name="id">WorkOrder ID</param>
-        /// <returns>MVC Action Result</returns>
-        [UserNameFilter]
-        [Authorize(Roles = "Hirer")]
-        public ActionResult PaymentPre(int id)
-        {
-            WorkOrder workOrder = woServ.Get(id);
-
-            return View("IndexPrePaypal", workOrder);
-        }
-        /// <summary>
         /// GET: /HirerWorkOrder/PaymentPost
         /// </summary>
         /// <param name="token">PayPal token</param>
