@@ -20,7 +20,7 @@ namespace Machete.Web.ViewModel
     public class WorkerSigninList
     {
         public int ID { get; set; }
-        public int WSIID { get { return ID;  } }
+        public int WSIID { get; set; }
         public string recordid { get; set; }
         public string fullname { get; set; }
         public string firstname1 { get; set; }
@@ -41,8 +41,5 @@ namespace Machete.Web.ViewModel
         public string expirationDate { get; set; }
         public string skills { get; set; }
         public string program { get; set; }
-
-
-
     }
 }

@@ -8,6 +8,7 @@ namespace Machete.Service.DTO
 {
     public class WorkerSigninList
     {
+        public int ID { get; set; }
         public int? lotterySequence { get; set; }
         public int? skill1 { get; set; }
         public int? skill2 { get; set; }

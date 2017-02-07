@@ -40,6 +40,7 @@ namespace Machete.Web.Maps
                     "-" + System.String.Format("{0,2:D2}", d.pseudoID)))
                 .ForMember(v => v.WOID, opt => opt.MapFrom(d => d.workOrderID))
                 .ForMember(v => v.WAID, opt => opt.MapFrom(d => d.ID))
+                .ForMember(v => v.recordid, opt => opt.MapFrom(d => d.ID))
                 .ForMember(v => v.WID, opt => opt.MapFrom(d => d.workerAssignedID))
                 .ForMember(v => v.pWAID, opt => opt.MapFrom(d => System.String.Format("{0,5:D5}", d.paperOrderNum) +
                     "-" + System.String.Format("{0,2:D2}", d.pseudoID)))

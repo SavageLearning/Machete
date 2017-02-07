@@ -42,9 +42,11 @@ namespace Machete.Api.Controllers
         }
 
         // GET api/values/5
-        public string Get(int id)
+        public IHttpActionResult Get(int id)
         {
-            return "value";
+            var m = map.Map<Domain.Employer, Web.ViewModel.Employer>(serv.Get(id));
+            m.def = def;
+            return Ok(m);
         }
 
         // POST api/values

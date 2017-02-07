@@ -18,8 +18,9 @@ namespace Machete.Web.ViewModel
     {
         public string tabref { get; set; }          // SharedWAI
         public string tablabel { get; set; }        // SharedWAI
-        public string WOID { get; set; }            // SharedWAI, Dispatch
-        public string WAID { get; set; }            // Dispatch
+        public int WOID { get; set; }            // SharedWAI, Dispatch
+        public int WAID { get; set; }            // Dispatch
+        public string recordid { get; set; }
         public string WID { get; set; }             // WorkerWAI
         public string pWAID { get; set; }           // SharedWAI
         public string employername { get; set; }    // WorkerWAI, Dispatch
