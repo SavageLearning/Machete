@@ -74,6 +74,7 @@ namespace Machete.Domain
     public struct LKey
     {
         public const string Default = "default";
+        public const string Skill = "skill";
     }
     public struct LWorkType
     {

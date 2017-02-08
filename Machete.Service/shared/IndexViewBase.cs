@@ -251,7 +251,8 @@ namespace Machete.Service
         public static IEnumerable<WorkAssignment> filterOnSkill(
             viewOptions o, 
             IQueryable<WorkAssignment> q,
-            ILookupCache lc, IEnumerable<Worker> wcache)
+            ILookupCache lc,
+            Worker worker)
         {
             //  "Machete --A series of good intentions, marinated in panic."
             //
@@ -269,7 +270,7 @@ namespace Machete.Service
             IEnumerable<WorkAssignment> filteredWA = q.AsEnumerable();
             Stack<int> primeskills = new Stack<int>();
             Stack<int> skills = new Stack<int>();
-            Worker worker = wcache.FirstOrDefault(w => w.dwccardnum == o.dwccardnum);
+            //Worker worker = wcache.FirstOrDefault(w => w.dwccardnum == o.dwccardnum);
             if (worker != null)
             {
                 if (worker.skill1 != null) primeskills.Push((int)worker.skill1);

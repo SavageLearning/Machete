@@ -202,35 +202,37 @@ namespace Machete.Test.Selenium.View
 
         }
 
-        [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Activities)]
-        public void SeActivity_unauth_exposed_actions()
-        {
-            //Arrange
-            ui.activityMenuLink(); //Find Activity menu link and click
+        //[TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Activities)]
+        //public void SeActivity_unauth_exposed_actions()
+        //{
+        //    //Arrange
+        //    ui.activityMenuLink(); //Find Activity menu link and click
             
-            // creates one activity within the hour
-            AddActivity(startTime: DateTime.Now, endTime: DateTime.Now.AddHours(1));
+        //    // creates one activity within the hour
+        //    var a = AddActivity(startTime: DateTime.Now, endTime: DateTime.Now.AddHours(1)).ToActivity();
+        //    var w = AddWorker(testID: "SeActivity_unauth_exposed_actions").ToWorker();
+        //    var asi = AddActivitySignin(worker: w).ToActivitySignin();
 
-            //selects top activity on the list
-            var activityRecord = ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr[1]"));
-            var activityRecordID = activityRecord.GetAttribute("recordid");
+        //    //selects top activity on the list
+        //    var activityRecord = ui.WaitForElement(By.XPath("//table[@id='activityTable']/tbody/tr[1]"));
+        //    var activityRecordID = activityRecord.GetAttribute("recordid");
 
-            //Act
-            // Open activity tab
-            ui.WaitAndDoubleClick(By.XPath("//table[@id='activityTable']/tbody/tr[1]"));
+        //    //Act
+        //    // Open activity tab
+        //    ui.WaitAndDoubleClick(By.XPath("//table[@id='activityTable']/tbody/tr[1]"));
 
-            // Look for edit and delete features on the page
+        //    // Look for edit and delete features on the page
 
-            var formExists = ui.elementExists(By.CssSelector("#ActivityTab-" + activityRecordID));
-            //var activityEditForm = ui.WaitForElement(By.CssSelector("#ActivityTab-" + activityRecordID));
-            var linkExists = ui.elementExists(By.CssSelector(".confirm_delete"));
-            //var activityDeleteLink = ui.WaitForElement(By.CssSelector(".confirm_delete"));
+        //    var formExists = ui.elementExists(By.CssSelector("#ActivityTab-" + activityRecordID));
+        //    //var activityEditForm = ui.WaitForElement(By.CssSelector("#ActivityTab-" + activityRecordID));
+        //    var linkExists = ui.elementExists(By.CssSelector(".confirm_delete"));
+        //    //var activityDeleteLink = ui.WaitForElement(By.CssSelector(".confirm_delete"));
 
-            //Assert
-            Assert.IsFalse(formExists, "Activity Edit form is displaying for unauthorized users");
-            Assert.IsFalse(linkExists, "Activity registration table is showing registration delete option to unauthorized users");
+        //    //Assert
+        //    Assert.IsFalse(formExists, "Activity Edit form is displaying for unauthorized users");
+        //    Assert.IsFalse(linkExists, "Activity registration table is showing registration delete option to unauthorized users");
 
-        }
+        //}
 
     }
 }

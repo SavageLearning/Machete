@@ -1431,9 +1431,9 @@
             // Note: this is logic that is specific to Casa Latina only
             console.log("Worker center: ", workerCenter);
             var workerCenter = "" + $("#workerCenter").val() + "";
-            if (workerCenter == "Casa Latina") {
+            if (workerCenter == "Casa Latina") { // TODO2017 hardcoded casa latina only functionality
                 console.log("Worker center: ", lSkillID[i]);
-                if (lSkillID[i] == "67")
+                if (lSkillID[i] == "67") // TODO2017 hardcoded casa latina skill 'Deep and/or Move in/out Cleaning'
                 {
                     $("#domesticWorkerDialog").show();
                 } else {

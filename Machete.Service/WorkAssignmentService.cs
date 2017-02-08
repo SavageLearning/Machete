@@ -100,6 +100,11 @@ namespace Machete.Service
             if (o.showPending == false) IndexViewBase.filterPending(o, ref q);
             if (!string.IsNullOrEmpty(o.wa_grouping)) IndexViewBase.waGrouping(o, ref q, lRepo);
             if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q, lRepo);
+            if (o.dwccardnum > 0)
+            {
+                var worker = wRepo.GetById((int)o.dwccardnum);
+                IndexViewBase.filterOnSkill(o, q, lcache, worker);
+            }
             //
             // filter on member ID, showing only assignments available to the member based on their skills
             // TODO:2016: replace filter on skill and getting worker data

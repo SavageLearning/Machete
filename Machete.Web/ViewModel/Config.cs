@@ -28,5 +28,6 @@ namespace Machete.Web.ViewModel
         public string dateupdated { get; set; }
         public string updatedby { get; set; }
         public string recordid { get; set; }    
+        public bool active {get; set; }
     }
 }

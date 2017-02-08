@@ -40,16 +40,16 @@ namespace Machete.Test.Selenium.View
         /// 
         /// </summary>
         /// <returns></returns>
-        public bool login()
+        public bool login(string user = "jadmin", string password = "ChangeMe")
         {
             _d.Navigate().GoToUrl(_url);
 
             //_d.FindElement(By.LinkText("Logon")).Click();
             WaitForText("Account Information", maxwait);
             _d.FindElement(By.Id("UserName")).Clear();
-            _d.FindElement(By.Id("UserName")).SendKeys("jadmin");
+            _d.FindElement(By.Id("UserName")).SendKeys(user);
             _d.FindElement(By.Id("Password")).Clear();
-            _d.FindElement(By.Id("Password")).SendKeys("ChangeMe");
+            _d.FindElement(By.Id("Password")).SendKeys(password);
             _d.FindElement(By.Name("logonB")).Click();
             WaitForText("Welcome", maxwait);
             return true;

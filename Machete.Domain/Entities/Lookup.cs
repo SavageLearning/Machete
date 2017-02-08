@@ -31,6 +31,7 @@ namespace Machete.Domain
                 public Lookup()
         {
             idString = "lookup";
+            active = true; // defaulting to true
         }
         //public int ID { get; set; }
         [LocalizedDisplayName("category", NameResourceType = typeof(Resources.Lookup))]

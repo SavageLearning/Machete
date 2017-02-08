@@ -22,16 +22,23 @@ namespace Machete.Data
 
             var um = new UserManager<ApplicationUser>(
                 new UserStore<ApplicationUser>(DB));
-            var user = new ApplicationUser()
+            var admin = new ApplicationUser()
             {
                 UserName = "jadmin",
                 IsApproved = true,
                 Email = "here@there.org"
             };
-
+            var user = new ApplicationUser()
+            {
+                UserName = "juser",
+                IsApproved = true,
+                Email = "user@there.org"
+            };
+            ir = um.Create(admin, "ChangeMe");
+            ir = um.AddToRole(admin.Id, "Administrator"); //Default Administrator, edit to change
+            ir = um.AddToRole(admin.Id, "Teacher"); //Required to make tests work
             ir = um.Create(user, "ChangeMe");
-            ir = um.AddToRole(user.Id, "Administrator"); //Default Administrator, edit to change
-            ir = um.AddToRole(user.Id, "Teacher"); //Required to make tests work
+            ir = um.AddToRole(admin.Id, "User"); //Default Administrator, edit to change
             DB.Commit();
         }
 

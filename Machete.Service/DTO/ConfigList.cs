@@ -21,5 +21,6 @@ namespace Machete.Service.DTO
         public DateTime dateupdated { get; set; }
         public string updatedby { get; set; }
         public string recordid { get; set; }
+        public bool active { get; set; }
     }
 }

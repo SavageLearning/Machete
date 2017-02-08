@@ -22,7 +22,7 @@
                     data-val="true"
                     tabindex="1"
                     class="valid"><option value="">@Shared.choose</option>
-                @foreach (var item in Model.def.getSkill(specializedOnly: false))
+                @foreach (SelectListItemEx item in Model.def.getSkill(specializedOnly: false))
                 {
                     @*kludgy way to print selected or not. couldn't get other syntax to work*@
                     if (Model.skillID == Convert.ToInt16(item.Value))

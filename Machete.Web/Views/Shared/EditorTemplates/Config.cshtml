@@ -12,6 +12,12 @@
 <div class="tb-table">
     <div>
         <div class="tb-row">
+            @Html.mUITableLabelFor(model => model.active)
+            @Html.mUIDropDownYesNoFor(m => m.active, Model.def.yesnoSelectList(),
+                                    new { @tabindex = "0", @class = "configEditor", id = idPrefix + "active" })
+        </div>
+    <div>
+        <div class="tb-row">
             @Html.mUITableLabelFor(model => model.category)
             @Html.mUITableDropDownListFor(model => model.category, Model.def.configCategories(),
                             new { @tabindex = "1", @class = "configEditor", @id = idPrefix + "category" })
