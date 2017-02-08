@@ -324,7 +324,6 @@
     <Compile Include="UnitTests\Services\WorkAassignmentServiceUnitTests.cs" />
     <Compile Include="UnitTests\Services\WorkerServiceUnitTests.cs" />
     <Compile Include="UnitTests\Services\WorkerSigninServiceUnitTest.cs" />
-    <Compile Include="UnitTests\Controllers\WorkerSigninControllerTests.cs" />
     <Compile Include="Integration\Data\DatabaseTests.cs" />
     <Compile Include="Integration\Domain\LINQ.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

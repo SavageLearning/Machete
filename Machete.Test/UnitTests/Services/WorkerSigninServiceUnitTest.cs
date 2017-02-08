@@ -153,34 +153,35 @@ namespace Machete.Test.Unit.Service
             Assert.AreEqual(_signin.dwccardnum, fakeid);
         }
 
-        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
-        public void Create_WSI_deduplicate_succeeds()
-        {
-            //
-            //Arrange
-            int fakeid = 12345;
-            IQueryable<WorkerSignin> wsiList = new WorkerSignin[] { 
-                new WorkerSignin() {dwccardnum = 12345, dateforsignin = DateTime.Today} 
-            }.AsQueryable();
-            var _serv = new WorkerSigninService(_wsiRepo.Object, _wRepo.Object, _iRepo.Object, _wrRepo.Object, _uow.Object, _map.Object);
-            var _signin = new WorkerSignin() { dwccardnum = fakeid, dateforsignin = DateTime.Today };
-            WorkerSignin _cbsignin = null;
-            _wsiRepo.Setup(s => s.Add(It.IsAny<WorkerSignin>())).Callback((WorkerSignin s) => { _cbsignin = s; });
-            _wsiRepo.Setup(s => s.GetAllQ()).Returns(wsiList);
-            //
-            //Act
-            try
-            {
-                _serv.CreateSignin(_signin, "UnitTest");
-            }
-            catch(InvalidOperationException ex)
-            {
-                Console.WriteLine(fakeid.ToString() + ex.Message);
-            }
-            //
-            //Assert
-            Assert.IsNull(_cbsignin);
-            Assert.IsNull(_signin.createdby);
-        }
+        // TODO2017: Doesn't need to be a unit test; testing use of LINQ mostly
+        //[TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
+        //public void Create_WSI_deduplicate_succeeds()
+        //{
+        //    //
+        //    //Arrange
+        //    int fakeid = 12345;
+        //    IQueryable<WorkerSignin> wsiList = new WorkerSignin[] { 
+        //        new WorkerSignin() {dwccardnum = 12345, dateforsignin = DateTime.Today} 
+        //    }.AsQueryable();
+        //    var _serv = new WorkerSigninService(_wsiRepo.Object, _wRepo.Object, _iRepo.Object, _wrRepo.Object, _uow.Object, _map.Object);
+        //    var _signin = new WorkerSignin() { dwccardnum = fakeid, dateforsignin = DateTime.Today };
+        //    WorkerSignin _cbsignin = null;
+        //    _wsiRepo.Setup(s => s.Add(It.IsAny<WorkerSignin>())).Callback((WorkerSignin s) => { _cbsignin = s; });
+        //    _wsiRepo.Setup(s => s.GetAllQ()).Returns(wsiList);
+        //    //
+        //    //Act
+        //    try
+        //    {
+        //        _serv.CreateSignin(_signin, "UnitTest");
+        //    }
+        //    catch(InvalidOperationException ex)
+        //    {
+        //        Console.WriteLine(fakeid.ToString() + ex.Message);
+        //    }
+        //    //
+        //    //Assert
+        //    Assert.IsNull(_cbsignin);
+        //    Assert.IsNull(_signin.createdby);
+        //}
     }
 }
