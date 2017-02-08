@@ -50,6 +50,26 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.dateforsigninstring, opt => opt.MapFrom(d => d.dateforsignin.ToShortTimeString()))
             ;
         }
+        //public string _getSkillCodes(int eng, int? sk1, int? sk2, int? sk3)
+        //{
+        //    string rtnstr = "E" + eng + " ";
+        //    if (sk1 != null)
+        //    {
+        //        var lookup = lcache.getByID((int)sk1);
+        //        rtnstr = rtnstr + lookup.ltrCode + lookup.level + " ";
+        //    }
+        //    if (sk2 != null)
+        //    {
+        //        var lookup = lcache.getByID((int)sk2);
+        //        rtnstr = rtnstr + lookup.ltrCode + lookup.level + " ";
+        //    }
+        //    if (sk3 != null)
+        //    {
+        //        var lookup = lcache.getByID((int)sk3);
+        //        rtnstr = rtnstr + lookup.ltrCode + lookup.level;
+        //    }
+        //    return rtnstr;
+        //}
     }
 
     //return what's left to datatables
@@ -79,26 +99,7 @@ namespace Machete.Web.Maps
     //};
 
     //TODO: rework into model 
-    //private string _getSkillCodes(int eng, int? sk1, int? sk2, int? sk3)
-    //{
-    //    string rtnstr = "E" + eng + " ";
-    //    if (sk1 != null)
-    //    {
-    //        var lookup = lcache.getByID((int)sk1);
-    //        rtnstr = rtnstr + lookup.ltrCode + lookup.level + " ";
-    //    }
-    //    if (sk2 != null)
-    //    {
-    //        var lookup = lcache.getByID((int)sk2);
-    //        rtnstr = rtnstr + lookup.ltrCode + lookup.level + " ";
-    //    }
-    //    if (sk3 != null)
-    //    {
-    //        var lookup = lcache.getByID((int)sk3);
-    //        rtnstr = rtnstr + lookup.ltrCode + lookup.level;
-    //    }
-    //    return rtnstr;
-    //}
+
 
 
     //public class signinView : Record
