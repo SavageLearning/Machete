@@ -102,6 +102,9 @@ namespace Machete.Domain
         /// </summary>
         [StringLength(30, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Lookup))]
         public string key { get; set; }
+
+        [LocalizedDisplayName("active", NameResourceType = typeof(Resources.Lookup))]
+        public bool active { get; set; }
     }
 
 

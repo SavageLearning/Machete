@@ -7,13 +7,13 @@ namespace Machete.Data
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class denormalize_lookup_columns : IMigrationMetadata
+    public sealed partial class api_refactor : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(denormalize_lookup_columns));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(api_refactor));
         
         string IMigrationMetadata.Id
         {
-            get { return "201701012337232_denormalize_lookup_columns"; }
+            get { return "201702082045545_api_refactor"; }
         }
         
         string IMigrationMetadata.Source

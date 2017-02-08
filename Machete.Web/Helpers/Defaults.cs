@@ -370,18 +370,18 @@ namespace Machete.Web.Helpers
         /// <returns>List of skills</returns>
         public List<SelectListEmployerSkills> getOnlineEmployerSkill()
         {
-            var locale = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant();
-            IEnumerable<Lookup> prelist = lcache.getCache()
-                                                     .Where(s => s.category == LCategory.skill);
             Func<Lookup, string> textFunc; //anon function
-            if (prelist == null) throw new ArgumentNullException("No skills returned");
+            var locale = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant();
 
             //TODO: Selection of ES/EN not scalable on i18n. Kludge.
             textFunc = (ll => (locale == "es" ? ll.text_ES : ll.text_EN));
             Func<Lookup, string> sortFunc = (ll => locale == "es" ? ll.text_ES : ll.text_EN); //created new sortFunc to sort only by skill text and not by concatenated ltrCode + skills 
-            // Note: the following are the Skills that should appear in the Employer online ordering site for Casa Latina - this is hard-coded for now (Lookups table should be updated to identify which should be exposed to the Employer)
-            // Casa Latina List: (s.ID == 60 || s.ID == 61 || s.ID == 62 || s.ID == 63 || s.ID == 64 || s.ID == 65 || s.ID == 66 || s.ID == 67 || s.ID == 68 || s.ID == 69 || s.ID == 77 || s.ID == 83 || s.ID == 88 || s.ID == 89 ||  s.ID == 118 || s.ID == 120 || s.ID == 122 || s.ID == 128 || s.ID == 131 || s.ID == 132 || s.ID == 133 || s.ID == 183)
-            prelist = prelist.Where(s => s.ID == 60 || s.ID == 61 || s.ID == 62 || s.ID == 63 || s.ID == 64 || s.ID == 65 || s.ID == 66 || s.ID == 67 || s.ID == 68 || s.ID == 69 || s.ID == 77 || s.ID == 83 || s.ID == 88 || s.ID == 89 || s.ID == 118 || s.ID == 120 || s.ID == 122 || s.ID == 128 || s.ID == 131 || s.ID == 132 || s.ID == 133 || s.ID == 183).OrderBy(s => sortFunc(s)); //LINQ & FUNC
+
+            IEnumerable<Lookup> prelist = lcache.getCache()
+                                                .Where(s => s.category == LCategory.skill && s.active == true)
+                                                .OrderBy(s => sortFunc(s)); //LINQ & FUNC
+            if (prelist == null) throw new ArgumentNullException("No skills returned");
+
             return new List<SelectListEmployerSkills>(prelist
                     .Select(x => new SelectListEmployerSkills
                     {
