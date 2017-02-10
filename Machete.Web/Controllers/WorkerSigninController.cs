@@ -75,31 +75,17 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Manager, Administrator, Check-in")]
         public ActionResult Index(int dwccardnum, DateTime dateforsignin, string userName)
         {
-            Worker worker = _wServ.GetWorkerByNum(dwccardnum);
-            if (worker == null) throw new NullReferenceException("Card ID doesn't match a worker!");
-            var _signin = new WorkerSignin();
-            string result = "";
+            var w = _wServ.GetWorkerByNum(dwccardnum);
+            if (w == null) throw new NullReferenceException("Card ID doesn't match a worker!");
+            var wsi = new WorkerSignin();
             // The card just swiped
-            _signin.dwccardnum = dwccardnum;
-            _signin.dateforsignin = new DateTime(dateforsignin.Year, dateforsignin.Month, dateforsignin.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-            _signin.memberStatusID = worker.memberStatusID;
-
-            if (_signin.lottery_timestamp == null)
-            {
-                _signin.lottery_sequence = _serv.GetNextLotterySequence(dateforsignin);
-                _signin.lottery_timestamp = DateTime.Now;
-                _serv.Save(_signin, userName);
-            }  
-            //
-            //
-            try
-            {
-                _serv.CreateSignin(_signin, this.User.Identity.Name);
-            }
-            catch(InvalidOperationException eek)
-            {
-                result = dwccardnum.ToString() + " " + eek.Message;
-            }
+            wsi.dwccardnum = dwccardnum;
+            wsi.dateforsignin = new DateTime(dateforsignin.Year, dateforsignin.Month, dateforsignin.Day, 
+                                                    DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+            wsi.memberStatusID = w.memberStatusID;
+            wsi.lottery_sequence = _serv.GetNextLotterySequence(dateforsignin);
+            wsi.lottery_timestamp = DateTime.Now;
+            _serv.CreateSignin(wsi, this.User.Identity.Name);
 
             //Get picture from checkin, show with next view
             Image checkin_image = _serv.getImage(dwccardnum);           
@@ -109,22 +95,16 @@ namespace Machete.Web.Controllers
                 imageRef = "/Image/GetImage/" + checkin_image.ID;
             }
 
-            if (result.Length == 0)
-                result = "Success!";
-
             return Json(new
             {
                 // TODO2017: replace this with viewmodel 
-                memberExpired = worker.isExpired,
-                memberInactive = worker.isInactive,
-                memberSanctioned = worker.isSanctioned,
-                memberExpelled = worker.isExpelled,
-                message = result,
+                memberExpired = w.isExpired,
+                memberInactive = w.isInactive,
+                memberSanctioned = w.isSanctioned,
+                memberExpelled = w.isExpelled,
+                message = "success",
                 imageRef = imageRef,
-                expirationDate = worker.memberexpirationdate
-            },
-            JsonRequestBehavior.AllowGet);
-        }
+                expirationDate = w.memberexpirationdate
             },
             JsonRequestBehavior.AllowGet);
         }

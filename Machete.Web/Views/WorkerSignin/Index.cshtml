@@ -176,7 +176,7 @@
                         $('#wsiImage').attr('src', data.imageRef); //reload image
                         $('#wsiTable').dataTable().fnDraw(); //reload datatable
 
-                        if (data.message != "Success!") {
+                        if (data.message != "success") {
                             alert(data.message);
                         }
                         if (data.memberSanctioned || data.memberExpelled) {
