@@ -112,20 +112,6 @@ namespace Machete.Test.Integration.Service
             List<DTO.WorkerSigninList> tolist = result.query.ToList();
             Assert.AreEqual(61, tolist[0].skill1);
             Assert.AreEqual(1, result.query.Count());
-        }
-
-        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
-        public void list_duplicates()
-        {
-            //
-            // Arrange
-            //
-            //Act
-            var result = frb.ToServWorkerSignin().listDuplicate(DateTime.Parse("10/4/2013"), "Chaim");
-            //
-            //Assert
-            Assert.IsNotNull(result);
-        }
-    
+        }    
     }
 }
