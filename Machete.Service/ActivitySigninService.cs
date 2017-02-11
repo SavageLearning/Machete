@@ -56,19 +56,19 @@ namespace Machete.Service
         /// <param name="iRepo"></param>
         /// <param name="wrRepo"></param>
         /// <param name="uow"></param>
-        private readonly IPersonRepository pRepo;
+        private readonly IPersonService pServ;
         public ActivitySigninService(
             IActivitySigninRepository repo,
-            IWorkerRepository wRepo,
-            IPersonRepository pRepo,
-            IImageRepository iRepo,
-            IWorkerRequestRepository wrRepo,
+            IWorkerService wServ,
+            IPersonService pServ,
+            IImageService iServ,
+            IWorkerRequestService wrServ,
             IUnitOfWork uow,
             IMapper map)
-            : base(repo, wRepo, iRepo, wrRepo, uow, map)
+            : base(repo, wServ, iServ, wrServ, uow, map)
         {
             this.logPrefix = "ActivitySignin";
-            this.pRepo = pRepo;
+            this.pServ = pServ;
         }
         /// <summary>
         /// 
@@ -116,7 +116,7 @@ namespace Machete.Service
 
             if (s.personID > 0)
             {
-                p = pRepo.GetById((int)s.personID);
+                p = pServ.Get((int)s.personID);
                 w = p.Worker;
                 if (w == null) throw new NullReferenceException("Worker object is null. A Worker record must exist to assign a person to activities.");
                 if (w.dwccardnum == 0) throw new ArgumentOutOfRangeException("Membership ID in Worker record is zero.");
@@ -126,7 +126,7 @@ namespace Machete.Service
             {
                 //
                 //TODO: GENERALIZE away from 5 digit dwccardnum
-                w = wRepo.Get(ww => ww.dwccardnum == s.dwccardnum);
+                w = wServ.GetWorkerByNum(s.dwccardnum);
                 if (w == null) throw new NullReferenceException("card ID doesn't match a worker");
                 p = w.Person;
                 

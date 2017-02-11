@@ -89,12 +89,7 @@ namespace Machete.Web.Controllers
             //
             Worker w = serv.CreateSignin(_asi, this.User.Identity.Name);
             //Get picture from checkin, show with next view
-            Image checkin_image = serv.getImage(dwccardnum);
-            string imageRef = "/Content/images/NO-IMAGE-AVAILABLE.jpg";
-            if (checkin_image != null)
-            {
-                imageRef = "/Image/GetImage/" + checkin_image.ID;
-            }
+            string imageRef = serv.getImageRef(dwccardnum);
 
             return Json(new
             {

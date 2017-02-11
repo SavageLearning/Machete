@@ -36,7 +36,7 @@ using AutoMapper;
 
 namespace Machete.Test
 {
-    public class FluentRecordBase
+    public class FluentRecordBase :IDisposable
     {
         #region internal fields
         private ActivityRepository _repoA;
@@ -111,6 +111,12 @@ namespace Machete.Test
 
             AddLookupCache();
             return this;
+        }
+
+        public void Dispose()
+        {
+            if (_dbFactory == null) AddDBFactory();
+            _dbFactory.Dispose();
         }
 
         public DatabaseFactory ToFactory()
@@ -385,12 +391,12 @@ namespace Machete.Test
             //
             // DEPENDENCIES
             if (_repoWSI == null) AddRepoWorkerSignin();
-            if (_repoW == null) AddRepoWorker();
-            if (_repoL == null) AddRepoImage();
-            if (_repoWR == null) AddRepoWorkerRequest();
+            if (_servW == null) AddServWorker();
+            if (_servL == null) AddServImage();
+            if (_servAS == null) AddServWorkerRequest();
             if (_uow == null) AddUOW();
             if (_map == null) AddMapper();
-            _servWSI = new WorkerSigninService(_repoWSI, _repoW, _repoI, _repoWR, _uow, _map);
+            _servWSI = new WorkerSigninService(_repoWSI, _servW, _servI, _servWR, _uow, _map);
             return this;
         }
 
@@ -401,23 +407,22 @@ namespace Machete.Test
         }
 
         public FluentRecordBase AddWorkerSignin(
-            DateTime? datecreated = null,
-            DateTime? dateupdated = null
+            Worker worker = null
+            //DateTime? datecreated = null,
+            //DateTime? dateupdated = null
         )
         {
             //
             // DEPENDENCIES
             if (_servWSI == null) AddServWorkerSignin();
+            if (worker != null) _w = worker;
             if (_w == null) AddWorker();
             //
             // ARRANGE
-            _wsi = (WorkerSignin)Records.signin.Clone();
-            if (datecreated != null) _wsi.datecreated = (DateTime)datecreated;
-            if (dateupdated != null) _wsi.dateupdated = (DateTime)dateupdated;
-            _wsi.dwccardnum = _w.dwccardnum;
+
             //
             // ACT
-            _servWSI.CreateSignin(_wsi, _user);
+            _wsi = _servWSI.CreateSignin(_w.dwccardnum, DateTime.Now, _user);
             return this;
         }
 
@@ -857,12 +862,12 @@ namespace Machete.Test
             //
             // DEPENDENCIES
             if (_repoAS == null) AddRepoActivitySignin();
-            if (_repoW == null) AddRepoWorker();
-            if (_repoL == null) AddRepoImage();
-            if (_repoAS == null) AddRepoWorkerRequest();
+            if (_servW == null) AddServWorker();
+            if (_servL == null) AddServImage();
+            if (_servAS == null) AddServWorkerRequest();
             if (_uow == null) AddUOW();
             if (_map == null) AddMapper();
-            _servAS = new ActivitySigninService(_repoAS, _repoW, _repoP, _repoI, _repoWR, _uow, _map);
+            _servAS = new ActivitySigninService(_repoAS, _servW, _servP, _servI, _servWR, _uow, _map);
             return this;
         }
 

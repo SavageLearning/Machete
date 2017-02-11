@@ -76,7 +76,7 @@ namespace Machete.Service
             q = q.Where(wsi => wsi.worker.typeOfWorkID == o.typeofwork_grouping)
                  .Select(wsi => wsi);
         }
-        public static void waGrouping(viewOptions o, ref IQueryable<WorkerSignin> q, IWorkerRequestRepository wrRepo)
+        public static void waGrouping(viewOptions o, ref IQueryable<WorkerSignin> q, IWorkerRequestService wrServ)
         {
             switch (o.wa_grouping)
             {
@@ -93,7 +93,7 @@ namespace Machete.Service
                 case "requested":
                     if (o.date == null) throw new MacheteIntegrityException("Date cannot be null for Requested filter");
                     q = q.Where(p => p.WorkAssignmentID == null);
-                    q = q.Join(wrRepo.GetAllQ(), //LINQ
+                    q = q.Join(wrServ.GetAll(), //LINQ
                                 wsi => new
                                 {
                                     K1 = (int)wsi.WorkerID,

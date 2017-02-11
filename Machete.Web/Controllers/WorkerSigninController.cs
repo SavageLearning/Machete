@@ -75,40 +75,20 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Manager, Administrator, Check-in")]
         public ActionResult Index(int dwccardnum, DateTime dateforsignin, string userName)
         {
-            var w = _wServ.GetWorkerByNum(dwccardnum);
-            if (w == null) throw new NullReferenceException("Card ID doesn't match a worker!");
-            var wsi = new WorkerSignin();
-            // The card just swiped
-            wsi.dwccardnum = dwccardnum;
-            wsi.dateforsignin = new DateTime(dateforsignin.Year, dateforsignin.Month, dateforsignin.Day, 
-                                                    DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-            wsi.memberStatusID = w.memberStatusID;
-            wsi.lottery_sequence = _serv.GetNextLotterySequence(dateforsignin);
-            wsi.lottery_timestamp = DateTime.Now;
-            _serv.CreateSignin(wsi, this.User.Identity.Name);
-
-            //Get picture from checkin, show with next view
-            Image checkin_image = _serv.getImage(dwccardnum);           
-            string imageRef = "/Content/images/NO-IMAGE-AVAILABLE.jpg";
-            if (checkin_image != null)
-            {
-                imageRef = "/Image/GetImage/" + checkin_image.ID;
-            }
-
-            return Json(new
-            {
-                // TODO2017: replace this with viewmodel 
-                memberExpired = w.isExpired,
-                memberInactive = w.isInactive,
-                memberSanctioned = w.isSanctioned,
-                memberExpelled = w.isExpelled,
-                message = "success",
-                imageRef = imageRef,
-                expirationDate = w.memberexpirationdate
-            },
-            JsonRequestBehavior.AllowGet);
+            var result = _serv.CreateSignin(dwccardnum, dateforsignin, this.User.Identity.Name);
+            return Json(result, JsonRequestBehavior.AllowGet);
+            //    new
+            //{
+            //    // TODO2017: replace this with viewmodel 
+            //    memberExpired = w.isExpired,
+            //    memberInactive = w.isInactive,
+            //    memberSanctioned = w.isSanctioned,
+            //    memberExpelled = w.isExpelled,
+            //    message = "success",
+            //    imageRef = imageRef,
+            //    expirationDate = w.memberexpirationdate
+            //},
         }
-
         /// <summary>
         /// This method invokes IWorkerSigninService.moveDown,
         /// which moves a worker down in numerical order in the daily 
@@ -167,12 +147,12 @@ namespace Machete.Web.Controllers
         public JsonResult Delete(int id, string userName)
         {
             var record = _serv.Get(id);
-            if (record.lottery_sequence != null)
+            if (record.WorkAssignmentID != null)
             {
                 return Json(new
                     {
                         jobSuccess = false,
-                        rtnMessage = "You cannot delete a signin that has already been added to the daily list. Remove the signin from the daily list and try again."
+                        rtnMessage = "You cannot delete a signin that has been associated with an Assignment. Disassociate the sigin with the assignment first."
                     },
                     JsonRequestBehavior.AllowGet);
             }
@@ -208,29 +188,5 @@ namespace Machete.Web.Controllers
             },
             JsonRequestBehavior.AllowGet);
         }
-
-        //TODO: rework into model 
-        //private string _getSkillCodes(int eng, int? sk1, int? sk2, int? sk3)
-        //{
-        //    string rtnstr = "E" + eng + " ";
-        //    if (sk1 != null)
-        //    {
-        //        var lookup = lcache.getByID((int)sk1);
-        //        rtnstr = rtnstr + lookup.ltrCode + lookup.level + " ";
-        //    }
-
-        //    if (sk2 != null)
-        //    {
-        //        var lookup = lcache.getByID((int)sk2);
-        //        rtnstr = rtnstr + lookup.ltrCode + lookup.level + " ";
-        //    }
-
-        //    if (sk3 != null)
-        //    {
-        //        var lookup = lcache.getByID((int)sk3);
-        //        rtnstr = rtnstr + lookup.ltrCode + lookup.level;
-        //    }
-        //    return rtnstr;
-        //}
     }
 }
