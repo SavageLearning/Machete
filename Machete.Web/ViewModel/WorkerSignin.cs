@@ -39,7 +39,7 @@ namespace Machete.Web.ViewModel
         public int? imageID { get; set; }
         public int? lotterySequence { get; set; }
         public string expirationDate { get; set; }
-        public string skills { get; set; }
+        public string skillCodes { get; set; }
         public string program { get; set; }
     }
 }

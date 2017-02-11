@@ -13,9 +13,11 @@ namespace Machete.Service.DTO
         public int? skill1 { get; set; }
         public int? skill2 { get; set; }
         public int? skill3 { get; set; }
+        public string skillCodes { get; set; }
         public int? waid { get; set; }
         public int englishlevel { get; set; }
         public int typeOfWorkID { get; set; }
+        public string program { get; set; }
         public int dwccardnum { get; set; }
         public string firstname1 { get; set; }
         public string firstname2 { get; set; }

@@ -16,6 +16,7 @@ namespace Machete.Web.Maps
                  .ForMember(v => v.firstname2, opt => opt.MapFrom(d => d.Person.firstname2))
                  .ForMember(v => v.lastname1, opt => opt.MapFrom(d => d.Person.lastname1))
                  .ForMember(v => v.lastname2, opt => opt.MapFrom(d => d.Person.lastname2))
+
             ;
             CreateMap<Domain.Worker, ViewModel.Worker>();
             CreateMap<Service.DTO.WorkerList, ViewModel.WorkerList>()

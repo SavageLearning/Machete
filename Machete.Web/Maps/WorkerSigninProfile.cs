@@ -17,6 +17,9 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.skill1, opt => opt.MapFrom(d => d == null ? null : d.worker.skill1))
                 .ForMember(v => v.skill2, opt => opt.MapFrom(d => d == null ? null : d.worker.skill2))
                 .ForMember(v => v.skill3, opt => opt.MapFrom(d => d == null ? null : d.worker.skill3))
+                .ForMember(v => v.program, opt => opt.MapFrom(d => d.worker.typeOfWork))
+                .ForMember(v => v.skillCodes, opt => opt.MapFrom(d => d.worker.skillCodes))
+                .ForMember(v => v.lotterySequence, opt => opt.MapFrom(d => d.lottery_sequence))
                 .ForMember(v => v.fullname, opt => opt.MapFrom(d =>
                     d.worker.Person.firstname1 + " " +
                     d.worker.Person.firstname2 + " " +

@@ -57,6 +57,8 @@ namespace Machete.Domain
         [LocalizedDisplayName("skillID", NameResourceType = typeof(Resources.WorkAssignment))]
         [Required(ErrorMessageResourceName = "skillIDRequired", ErrorMessageResourceType = typeof(Resources.WorkAssignment))]
         public int skillID { get; set; }       
+        public string skillEN { get; set; }
+        public string skillES { get; set; }
         //
         [LocalizedDisplayName("surcharge", NameResourceType = typeof(Resources.WorkAssignment))]
         [DisplayFormat(DataFormatString = "{0:c}", ApplyFormatInEditMode = true)]

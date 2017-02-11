@@ -138,12 +138,14 @@ namespace Machete.Test.Unit.Service
             //Arrange
             string user = "UnitTest";
             Worker _w = (Worker)Records.worker.Clone();
+            Lookup _l = (Lookup)Records.lookup.Clone();
             _w.Person = (Person)Records.person.Clone();
             _w.Person.datecreated = DateTime.MinValue;
             _w.Person.dateupdated = DateTime.MinValue;
             //Records._worker1.datecreated = DateTime.MinValue;
             //Records._worker1.dateupdated = DateTime.MinValue;
             _repo.Setup(r => r.Add(_w)).Returns(_w);
+            _lcache.Setup(r => r.getByID(_w.typeOfWorkID)).Returns(_l);
             //
             //Act
             var result = _serv.Create(_w, user);
@@ -190,17 +192,22 @@ namespace Machete.Test.Unit.Service
             _uow = new Mock<IUnitOfWork>();
             _map = new Mock<IMapper>();
             _lcache = new Mock<ILookupCache>();
+            Worker _w = (Worker)Records.worker.Clone();
+            Lookup _l = (Lookup)Records.lookup.Clone();
+            _w.Person = (Person)Records.person.Clone();
+            _w.Person.datecreated = DateTime.MinValue;
+            _w.Person.dateupdated = DateTime.MinValue;
+            _repo.Setup(r => r.Add(_w)).Returns(_w);
+            _lcache.Setup(r => r.getByID(_w.typeOfWorkID)).Returns(_l);
             string user = "UnitTest";
-            Records.worker.datecreated = DateTime.MinValue;
-            Records.worker.dateupdated = DateTime.MinValue;
             var _serv = new WorkerService(_repo.Object, _lcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object, _map.Object);
             //
             //Act
-            _serv.Save(Records.worker, user);
+            _serv.Save(_w, user);
             //
             //Assert
-            Assert.IsTrue(Records.worker.updatedby == user);
-            Assert.IsTrue(Records.worker.dateupdated > DateTime.MinValue);
+            Assert.IsTrue(_w.updatedby == user);
+            Assert.IsTrue(_w.dateupdated > DateTime.MinValue);
         }
     }
 }

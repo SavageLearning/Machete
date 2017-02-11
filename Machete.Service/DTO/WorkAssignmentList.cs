@@ -13,6 +13,8 @@ namespace Machete.Service.DTO
         public string employername { get; set; }
         public int englishLevelID { get; set; }
         public int? skillID { get; set; }
+        public string skillEN { get; set; }
+        public string skillES { get; set; }
         public double hourlyWage { get; set; }
         public double hours { get; set; }
         public int? hourRange { get; set; }

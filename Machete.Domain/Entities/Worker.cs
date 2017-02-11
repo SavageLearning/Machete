@@ -48,6 +48,9 @@ namespace Machete.Domain
         [Required(ErrorMessageResourceName = "typeOfWorkID", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("typeOfWorkID", NameResourceType = typeof(Resources.Worker))]
         public int typeOfWorkID { get; set; }
+        // typeOfWork is really 'program'; as in, what program at the Center does the worker belong to
+        // Program is the letter code displayed instead of the full program name
+        public string typeOfWork { get; set; }
         //
         [Required(ErrorMessageResourceName = "dateOfMembership", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("dateOfMembership", NameResourceType = typeof(Resources.Worker))]
@@ -246,6 +249,8 @@ namespace Machete.Domain
         //
         [LocalizedDisplayName("skill3", NameResourceType = typeof(Resources.Worker))]
         public int? skill3 { get; set; }
+
+        public string skillCodes { get; set; }
         //
         [LocalizedDisplayName("workerRating", NameResourceType = typeof(Resources.Worker))]
         public float? workerRating { get; set; }

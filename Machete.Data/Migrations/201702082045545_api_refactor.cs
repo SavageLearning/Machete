@@ -18,10 +18,18 @@ namespace Machete.Data
             AddColumn("dbo.WorkOrders", "statusEN", c => c.String(maxLength: 50));
             AddColumn("dbo.WorkOrders", "statusES", c => c.String(maxLength: 50));
             AddColumn("dbo.Lookups", "active", c => c.Boolean(nullable: false, defaultValue: true));
+            AddColumn("dbo.Workers", "typeOfWork", c => c.String());
+            AddColumn("dbo.Workers", "skillCodes", c => c.String());
+            AddColumn("dbo.WorkAssignments", "skillEN", c => c.String());
+            AddColumn("dbo.WorkAssignments", "skillES", c => c.String());
         }
         
         public override void Down()
         {
+            DropColumn("dbo.WorkAssignments", "skillES");
+            DropColumn("dbo.WorkAssignments", "skillEN");
+            DropColumn("dbo.Workers", "skillCodes");
+            DropColumn("dbo.Workers", "typeOfWork");
             DropColumn("dbo.Lookups", "active");
             DropColumn("dbo.WorkOrders", "statusES");
             DropColumn("dbo.WorkOrders", "statusEN");

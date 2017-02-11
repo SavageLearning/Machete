@@ -408,6 +408,12 @@ namespace Machete.Service
             unitOfWork.Commit();
             log(asmt.ID, user, "WSIID:" + signin.ID + " Unassign successful");
         }
+        public override WorkAssignment Create(WorkAssignment record, string user)
+        {
+            updateLookupStrings(ref record);
+            return base.Create(record, user);
+        }
+
         public override void Save(WorkAssignment wa, string user)
         {
             //4.5.12-Moved down from Controller; solving WSI/WA integrity
@@ -416,8 +422,15 @@ namespace Machete.Service
                 wa.workerAssigned = wRepo.GetById((int)wa.workerAssignedID);
             }
             wa.updatedByUser(user);
+            updateLookupStrings(ref wa);
             log(wa.ID, user, "WorkAssignment edited");
             unitOfWork.Commit();
+        }
+
+        private void updateLookupStrings(ref WorkAssignment record)
+        {
+            record.skillEN = lcache.textByID(record.skillID, "EN");
+            record.skillES = lcache.textByID(record.skillID, "ES");
         }
     }
 }

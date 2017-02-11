@@ -97,17 +97,44 @@ namespace Machete.Service
 
         public override Worker Create(Worker record, string user)
         {
-            record.memberStatusEN = lcache.textByID(record.memberStatusID, "EN");
-            record.memberStatusES = lcache.textByID(record.memberStatusID, "ES");
+            updateLookupStrings(ref record);
             var result = base.Create(record, user);
             return result;
         }
 
         public override void Save(Worker record, string user)
         {
+            updateLookupStrings(ref record);
+            base.Save(record, user);
+        }
+
+        private void updateLookupStrings(ref Worker record)
+        {
             record.memberStatusEN = lcache.textByID(record.memberStatusID, "EN");
             record.memberStatusES = lcache.textByID(record.memberStatusID, "ES");
-            base.Save(record, user);
+            record.typeOfWork = lcache.getByID(record.typeOfWorkID).ltrCode;
+            record.skillCodes = getSkillCodes(record);
+        }
+
+        public string getSkillCodes(Worker w)
+        {
+            string rtnstr = "E" + w.englishlevelID + " ";
+            if (w.skill1 != null)
+            {
+                var lookup = lcache.getByID((int)w.skill1);
+                rtnstr = rtnstr + lookup.ltrCode + lookup.level + " ";
+            }
+            if (w.skill2 != null)
+            {
+                var lookup = lcache.getByID((int)w.skill2);
+                rtnstr = rtnstr + lookup.ltrCode + lookup.level + " ";
+            }
+            if (w.skill3 != null)
+            {
+                var lookup = lcache.getByID((int)w.skill3);
+                rtnstr = rtnstr + lookup.ltrCode + lookup.level;
+            }
+            return rtnstr;
         }
 
         public override void Delete(int id, string user)
