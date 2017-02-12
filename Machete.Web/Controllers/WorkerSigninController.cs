@@ -75,19 +75,10 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Manager, Administrator, Check-in")]
         public ActionResult Index(int dwccardnum, DateTime dateforsignin, string userName)
         {
-            var result = _serv.CreateSignin(dwccardnum, dateforsignin, this.User.Identity.Name);
+            var wsi = _serv.CreateSignin(dwccardnum, dateforsignin, this.User.Identity.Name);
+            var result = map.Map<WorkerSignin, ViewModel.WorkerSignin>(wsi);
             return Json(result, JsonRequestBehavior.AllowGet);
-            //    new
-            //{
-            //    // TODO2017: replace this with viewmodel 
-            //    memberExpired = w.isExpired,
-            //    memberInactive = w.isInactive,
-            //    memberSanctioned = w.isSanctioned,
-            //    memberExpelled = w.isExpelled,
-            //    message = "success",
-            //    imageRef = imageRef,
-            //    expirationDate = w.memberexpirationdate
-            //},
+
         }
         /// <summary>
         /// This method invokes IWorkerSigninService.moveDown,

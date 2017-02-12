@@ -44,13 +44,11 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.memberInactive, opt => opt.MapFrom(d => d.worker.memberStatusID == Domain.Worker.iInactive ? true : false))
                 .ForMember(v => v.memberSanctioned, opt => opt.MapFrom(d => d.worker.memberStatusID == Domain.Worker.iSanctioned ? true : false))
                 .ForMember(v => v.memberExpelled, opt => opt.MapFrom(d => d.worker.memberStatusID == Domain.Worker.iExpelled ? true : false))
+                .ForMember(v => v.imageRef, opt => opt.MapFrom(d => d.worker.ImageID == null ? "/Content/images/NO-IMAGE-AVAILABLE.jpg" : "/Image/GetImage/" + d.worker.ImageID))
+                .ForMember(v => v.message, opt => opt.UseValue("success"))
+                .ForMember(v => v.worker, opt => opt.Ignore())
             ;
-            CreateMap<Domain.WorkerSignin, DTO.WorkerSignin>()
-                .ForMember(v => v.memberExpired, opt => opt.MapFrom(d => d.worker.memberStatusID == Domain.Worker.iExpired ? true : false))
-                .ForMember(v => v.memberInactive, opt => opt.MapFrom(d => d.worker.memberStatusID == Domain.Worker.iInactive ? true : false))
-                .ForMember(v => v.memberSanctioned, opt => opt.MapFrom(d => d.worker.memberStatusID == Domain.Worker.iSanctioned ? true : false))
-                .ForMember(v => v.memberExpelled, opt => opt.MapFrom(d => d.worker.memberStatusID == Domain.Worker.iExpelled ? true : false))
-            ;
+
             CreateMap<Service.DTO.WorkerSigninList, ViewModel.WorkerSigninList>()
                 .ForMember(v => v.recordid, opt => opt.MapFrom(d => d.ID))
                 .ForMember(v => v.WSIID, opt => opt.MapFrom(d => d.ID))
@@ -59,26 +57,6 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.dateforsigninstring, opt => opt.MapFrom(d => d.dateforsignin.ToShortTimeString()))
             ;
         }
-        //public string _getSkillCodes(int eng, int? sk1, int? sk2, int? sk3)
-        //{
-        //    string rtnstr = "E" + eng + " ";
-        //    if (sk1 != null)
-        //    {
-        //        var lookup = lcache.getByID((int)sk1);
-        //        rtnstr = rtnstr + lookup.ltrCode + lookup.level + " ";
-        //    }
-        //    if (sk2 != null)
-        //    {
-        //        var lookup = lcache.getByID((int)sk2);
-        //        rtnstr = rtnstr + lookup.ltrCode + lookup.level + " ";
-        //    }
-        //    if (sk3 != null)
-        //    {
-        //        var lookup = lcache.getByID((int)sk3);
-        //        rtnstr = rtnstr + lookup.ltrCode + lookup.level;
-        //    }
-        //    return rtnstr;
-        //}
     }
 
     //return what's left to datatables

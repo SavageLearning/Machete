@@ -26,7 +26,6 @@ using AutoMapper.QueryableExtensions;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
-using Machete.Service.DTO;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -41,8 +40,8 @@ namespace Machete.Service
         int GetNextLotterySequence(DateTime date);
         bool moveDown(int id, string user);
         bool moveUp(int id, string user);
-        dataTableResult<WorkerSigninList> GetIndexView(viewOptions o);
-        DTO.WorkerSignin CreateSignin(int dwccardnum, DateTime dateforsignin, string user);
+        dataTableResult<DTO.WorkerSigninList> GetIndexView(viewOptions o);
+        Domain.WorkerSignin CreateSignin(int dwccardnum, DateTime dateforsignin, string user);
     }
 
     public class WorkerSigninService : SigninServiceBase<Domain.WorkerSignin>, IWorkerSigninService
@@ -164,7 +163,7 @@ namespace Machete.Service
         /// </summary>
         /// <param name="o">View options from DataTables</param>
         /// <returns>dataTableResult WorkerSigninList</returns>
-        public dataTableResult<WorkerSigninList> GetIndexView(viewOptions o)
+        public dataTableResult<DTO.WorkerSigninList> GetIndexView(viewOptions o)
         {
             //
             var result = new dataTableResult<DTO.WorkerSigninList>();
@@ -179,10 +178,18 @@ namespace Machete.Service
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
             result.filteredCount = q.Count();
             result.totalCount = repo.GetAllQ().Count();
-            result.query = q.ProjectTo<DTO.WorkerSigninList>(map.ConfigurationProvider)
-                .Skip(o.displayStart)
-                .Take(o.displayLength)
-                .AsEnumerable();
+            if (o.displayLength > 0)
+            {
+                result.query = q.ProjectTo<DTO.WorkerSigninList>(map.ConfigurationProvider)
+                    .Skip(o.displayStart)
+                    .Take(o.displayLength)
+                    .AsEnumerable();
+            }
+            else
+            {
+                result.query = q.ProjectTo<DTO.WorkerSigninList>(map.ConfigurationProvider)
+                    .AsEnumerable();
+            }
             return result;
 
         }
@@ -191,7 +198,7 @@ namespace Machete.Service
         /// </summary>
         /// <param name="signin"></param>
         /// <param name="user"></param>
-        public virtual DTO.WorkerSignin CreateSignin(int dwccardnum, DateTime dateforsignin, string user)
+        public virtual Domain.WorkerSignin CreateSignin(int dwccardnum, DateTime dateforsignin, string user)
         {
             //Search for worker with matching card number
             Worker wfound = wServ.GetMany(d => d.dwccardnum == dwccardnum).FirstOrDefault();
@@ -206,15 +213,7 @@ namespace Machete.Service
             signin.memberStatusID = wfound.memberStatusID;
             signin.lottery_sequence = GetNextLotterySequence(dateforsignin);
             signin.lottery_timestamp = DateTime.Now;
-            var new_signin = Create(signin, user);
-            //Get picture from checkin, show with next view
-            var result = map.Map<Domain.WorkerSignin, DTO.WorkerSignin>(new_signin);
-            result.imageRef = getImageRef(dwccardnum);
-            return result;
-        }
-        public override Domain.WorkerSignin Create(Domain.WorkerSignin record, string user)
-        {
-            return base.Create(record, user);
+            return Create(signin, user);
         }
 
         public Domain.WorkerSignin IsSignedIn(int dwccardnum, DateTime dateforsignin)

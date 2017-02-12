@@ -15,6 +15,8 @@ namespace Machete.Web.ViewModel
         public bool memberSanctioned { get; set; }
         public bool memberExpired { get; set; }
         public bool memberExpelled { get; set; }
+        public string imageRef { get; set; }
+        public string message { get; set; }
     }
 
     public class WorkerSigninList

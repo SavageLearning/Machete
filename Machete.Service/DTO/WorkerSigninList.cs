@@ -6,16 +6,6 @@ using System.Threading.Tasks;
 
 namespace Machete.Service.DTO
 {
-    public class WorkerSignin : Domain.WorkerSignin
-    {
-        public string imageRef { get; set; }
-        public string message { get; set; }
-        public bool memberInactive { get; set; }
-        public bool memberSanctioned { get; set; }
-        public bool memberExpired { get; set; }
-        public bool memberExpelled { get; set; }
-    }
-
     public class WorkerSigninList
     {
         public int ID { get; set; }
