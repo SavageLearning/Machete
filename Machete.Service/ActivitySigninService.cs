@@ -89,10 +89,18 @@ namespace Machete.Service
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
             result.filteredCount = q.Count();
             result.totalCount = repo.GetAllQ().Count();
-            result.query = q.ProjectTo<DTO.ActivitySigninList>(map.ConfigurationProvider)
-                .Skip(o.displayStart)
-                .Take(o.displayLength)
-                .AsEnumerable();
+            if (o.displayLength > 0)
+            {
+                result.query = q.ProjectTo<DTO.ActivitySigninList>(map.ConfigurationProvider)
+                    .Skip(o.displayStart)
+                    .Take(o.displayLength)
+                    .AsEnumerable();
+            }
+            else
+            {
+                result.query = q.ProjectTo<DTO.ActivitySigninList>(map.ConfigurationProvider)
+                    .AsEnumerable();
+            }
             return result;
         }
         /// <summary>

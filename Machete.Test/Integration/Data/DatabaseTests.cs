@@ -86,7 +86,7 @@ namespace Machete.Test.Integration.Data
         /// <summary>
         /// Used with SQL profiler to see what SQL is produced
         /// </summary>
-        [TestMethod]
+        [Ignore, TestMethod]
         public void Integration_Enumerable_test()
         {
             // Arrange - load test records

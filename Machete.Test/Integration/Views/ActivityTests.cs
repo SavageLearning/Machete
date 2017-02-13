@@ -75,7 +75,7 @@ namespace Machete.Test.Selenium.View
             ui.activityValidate(_act);
         }
 
-        [TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Activities)]
+        [Ignore, TestMethod, TestCategory(TC.SE), TestCategory(TC.View), TestCategory(TC.Activities)]
         public void SeActivity_Create_ManySignins()
         {
             //Arrange
