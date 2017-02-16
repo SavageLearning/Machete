@@ -105,38 +105,22 @@ namespace Machete.Service
                 var worker = wRepo.GetById((int)o.dwccardnum);
                 IndexViewBase.filterOnSkill(o, q, lcache, worker);
             }
-            //
-            // filter on member ID, showing only assignments available to the member based on their skills
-            // TODO:2016: replace filter on skill and getting worker data
-            //if (o.dwccardnum > 0)
-            //    e = IndexViewBase.filterOnSkill(o, q, lcache, wcache.GetCache());
-            // else
-            //    e = q.AsEnumerable();
-            ////
-            //// getting worker info from cache, joining to Work Assignments
-            //e = e.GroupJoin(wcache.GetCache(),  //LINQ
-            //                    wa => wa.workerAssignedID, 
-            //                    wc => wc.ID, 
-            //                    (wa, wc) => new { wa, wc }
-            //                )
-            //                .SelectMany(jj => jj.wc.DefaultIfEmpty(
-            //                        new Worker { 
-            //                                     ID = 0, 
-            //                                     dwccardnum = 0
-            //                                   }
-            //                            ),
-            //                        (jj, row) => jj.wa
-            //                );
-            //
             //Sort the Persons based on column selection
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
             //e = e.ToList();
             result.filteredCount = q.Count();
-            result.query = q.ProjectTo<DTO.WorkAssignmentList>(map.ConfigurationProvider)
-            .Skip(o.displayStart)
-            .Take(o.displayLength)
-            .AsEnumerable();
-
+            if (o.displayLength > 0)
+            {
+                result.query = q.ProjectTo<DTO.WorkAssignmentList>(map.ConfigurationProvider)
+                .Skip(o.displayStart)
+                .Take(o.displayLength)
+                .AsEnumerable();
+            }
+            else
+            {
+                result.query = q.ProjectTo<DTO.WorkAssignmentList>(map.ConfigurationProvider)
+                .AsEnumerable();
+            }
             result.totalCount = waRepo.GetAllQ().Count();
            return result;
       }
@@ -410,7 +394,11 @@ namespace Machete.Service
         }
         public override WorkAssignment Create(WorkAssignment record, string user)
         {
-            updateLookupStrings(ref record);
+
+            if (record.workOrder == null) throw new ArgumentNullException("workOrder object is null");
+            record.workOrder.waPseudoIDCounter++;
+            record.pseudoID = record.workOrder.waPseudoIDCounter;
+            updateComputedValues(ref record);
             return base.Create(record, user);
         }
 
@@ -422,15 +410,27 @@ namespace Machete.Service
                 wa.workerAssigned = wRepo.GetById((int)wa.workerAssignedID);
             }
             wa.updatedByUser(user);
-            updateLookupStrings(ref wa);
+            updateComputedValues(ref wa);
             log(wa.ID, user, "WorkAssignment edited");
             unitOfWork.Commit();
         }
 
-        private void updateLookupStrings(ref WorkAssignment record)
+        private void updateComputedValues(ref WorkAssignment record)
         {
             record.skillEN = lcache.textByID(record.skillID, "EN");
             record.skillES = lcache.textByID(record.skillID, "ES");
+            record.minEarnings = (record.days * record.surcharge) + (record.hourlyWage * record.hours * record.days);
+            record.maxEarnings = record.hourRange == null ? 0 : (record.days * record.surcharge) + (record.hourlyWage * (int)record.hourRange * record.days);
+            int WONum;
+            if (record.workOrder == null) WONum = 0;
+            else if (record.workOrder.paperOrderNum.HasValue) WONum = (int)record.workOrder.paperOrderNum;
+            else WONum = record.workOrderID;
+
+            record.fullWAID=  System.String.Format("{0,5:D5}", WONum)
+                                            + "-" + (record.pseudoID.HasValue ?
+                                                System.String.Format("{0,2:D2}", record.pseudoID) :
+                                                System.String.Format("{0,5:D5}", record.ID));
+
         }
     }
 }

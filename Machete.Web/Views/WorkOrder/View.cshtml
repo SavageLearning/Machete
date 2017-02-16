@@ -77,10 +77,10 @@
                 }
                 <td class="tb-field-fixed">@Html.DisplayFor(modelItem => item.days)</td>
                 <td class="tb-field-fixed">@System.String.Format("{0:C}", item.surcharge)</td>
-                <td class="tb-field-fixed">@System.String.Format("{0:C}", item.getMinEarnings)</td>
+                <td class="tb-field-fixed">@System.String.Format("{0:C}", item.minEarnings)</td>
                 @if (item.hourRange > 0)
                 {
-                    <td class="tb-field-fixed">@System.String.Format("{0:C}", item.getMaxEarnings)</td>
+                    <td class="tb-field-fixed">@System.String.Format("{0:C}", item.maxEarnings)</td>
                 }
                 else
                 {
@@ -98,7 +98,7 @@
                             <div class="tb-field">
                                 @if (item.workerAssigned != null)
                                 {
-                                    <p>@Html.Encode(item.workerAssigned.Person.fullName())</p>
+                                    <p>@Html.Encode(item.workerAssigned.Person.fullName)</p>
                                 }
                                 else
                                 {

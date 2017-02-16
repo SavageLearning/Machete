@@ -132,7 +132,6 @@ namespace Machete.Web.Controllers
         {
             UpdateModel(assignment);
             assignment.workOrder = woServ.Get(assignment.workOrderID);
-            assignment.incrPseudoID();
             var newAssignment = waServ.Create(assignment, userName);
             var result = map.Map<Domain.WorkAssignment, ViewModel.WorkAssignment>(newAssignment);
             return Json(new
@@ -157,9 +156,6 @@ namespace Machete.Web.Controllers
             // TODO: Move duplication functionality to the service layer
             Domain.WorkAssignment _assignment = waServ.Get(id);
             Domain.WorkAssignment duplicate = _assignment;
-            duplicate.incrPseudoID();
-            //duplicate.workOrder.waPseudoIDCounter++;
-            //duplicate.pseudoID = duplicate.workOrder.waPseudoIDCounter;
             duplicate.workerAssigned = null;
             duplicate.workerAssignedID = null;
             duplicate.workerSiginin = null;

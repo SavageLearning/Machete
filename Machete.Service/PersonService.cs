@@ -28,6 +28,7 @@ using Machete.Data.Infrastructure;
 using Machete.Domain;
 using Machete.Service.DTO;
 using System.Linq;
+using System.Text;
 
 namespace Machete.Service
 {
@@ -42,16 +43,16 @@ namespace Machete.Service
     {
         private readonly ILookupCache lcache;
         private readonly IMapper map;
-        public PersonService(IPersonRepository pRepo, 
+        public PersonService(IPersonRepository pRepo,
                              IUnitOfWork unitOfWork,
                              ILookupCache _lcache,
                              IMapper map
-                             ) : base(pRepo, unitOfWork) 
+                             ) : base(pRepo, unitOfWork)
         {
             this.logPrefix = "Person";
             this.lcache = _lcache;
             this.map = map;
-        }  
+        }
 
         public dataTableResult<DTO.PersonList> GetIndexView(viewOptions o)
         {
@@ -75,6 +76,27 @@ namespace Machete.Service
                 .Take(o.displayLength)
                 .AsEnumerable();
             return result;
+        }
+
+        public override Person Create(Person record, string user)
+        {
+            updateComputedValues(ref record);
+            return base.Create(record, user);
+        }
+
+        public override void Save(Person record, string user)
+        {
+            updateComputedValues(ref record);
+            base.Save(record, user);
+        }
+
+        private void updateComputedValues(ref Person r)
+        {
+            var name = new StringBuilder(r.firstname1).Append(" ");
+            if (r.firstname2 != null) name.Append(r.firstname2).Append(" ");
+            name.Append(r.lastname1);
+            if (r.lastname2 != null) name.Append(" ").Append(r.lastname2);
+            r.fullName = name.ToString();
         }
     }
 }

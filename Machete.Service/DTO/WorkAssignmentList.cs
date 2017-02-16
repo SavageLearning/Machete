@@ -33,5 +33,6 @@ namespace Machete.Service.DTO
         public int? workerAssignedDWCCardnum { get; set; }
         public string assignedWorker { get; set; }
         public int? pseudoID { get; set; }
+        public string fullWAID { get; set; }
     }
 }

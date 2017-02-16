@@ -42,8 +42,7 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.WAID, opt => opt.MapFrom(d => d.ID))
                 .ForMember(v => v.recordid, opt => opt.MapFrom(d => d.ID))
                 .ForMember(v => v.WID, opt => opt.MapFrom(d => d.workerAssignedID))
-                .ForMember(v => v.pWAID, opt => opt.MapFrom(d => System.String.Format("{0,5:D5}", d.paperOrderNum) +
-                    "-" + System.String.Format("{0,2:D2}", d.pseudoID)))
+                .ForMember(v => v.pWAID, opt => opt.MapFrom(d => d.fullWAID))
                 .ForMember(v => v.englishlevel, opt => opt.MapFrom(d => Convert.ToString(d.englishLevelID)))
                 .ForMember(v => v.skill, opt => opt.MapFrom(d => getCI() == "ES" ? d.skillES : d.skillEN))
                 .ForMember(v => v.hourlywage, opt => opt.MapFrom(d => System.String.Format("${0:f2}", d.hourlyWage)))

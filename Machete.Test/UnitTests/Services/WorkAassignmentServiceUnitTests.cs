@@ -144,6 +144,7 @@ namespace Machete.Test.Unit.Service
             var _wa = (WorkAssignment)Records.assignment.Clone();
             _wa.datecreated = DateTime.MinValue;
             _wa.dateupdated = DateTime.MinValue;
+            _wa.workOrder = (WorkOrder)Records.order.Clone();
             waRepo.Setup(r => r.Add(_wa)).Returns(_wa);
             //
             //Act

@@ -143,7 +143,8 @@ namespace Machete.Test.Selenium.View
             //Get WA ID and arrange pseudoID information
             _wa1.workOrder = _wo;
             _wa1.workOrderID = _wo.ID;
-            _wa1.incrPseudoID();
+            // pseudoID needs to be updated; created on save above
+            _wa1.pseudoID = frb.ToServWorkAssignment().Get(_wa1.ID).pseudoID;
             // Activate assignment
             ui.workAssignmentActivate(_employer1, _wo, _wa1);
             //
