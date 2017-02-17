@@ -107,6 +107,7 @@ namespace Machete.Web.Controllers
             var ev = map.Map<Domain.Email, EmailView>(e);
             ev.status = def.byID(e.statusID);
             ev.templates = def.getEmailTemplates();
+            ev.def = def;
             ViewBag.EmailStatuses = def.getSelectList(Machete.Domain.LCategory.emailstatus);
             return PartialView("Create", ev);
         }
@@ -186,7 +187,7 @@ namespace Machete.Web.Controllers
                 email = serv.Get(id);
             }
             ev = map.Map<Domain.Email, EmailView>(email);
-
+            ev.def = def;
             ev.status = def.byID(email.statusID);
             ev.templates = def.getEmailTemplates();
             return PartialView(pvType, ev);
@@ -247,8 +248,9 @@ namespace Machete.Web.Controllers
             if (email == null)
             {
                 var ev = map.Map<Domain.Email, EmailView>(new Domain.Email());
+                ev.def = def;
                 var wo = serv.GetAssociatedWorkOrderFor(woid);
-                ev.status = def.byID(email.statusID);
+                ev.status = def.byID(ev.statusID);
                 ev.templates = def.getEmailTemplates();
                 ev.woid = woid;
                 ev.emailTo = wo.Employer.email;
@@ -267,6 +269,7 @@ namespace Machete.Web.Controllers
                 if (lockedemail != null)
                 {
                     ev = map.Map<Domain.Email, EmailView>(lockedemail);
+                    ev.def = def;
                     ev.status = def.byID(email.statusID);
                     ev.templates = def.getEmailTemplates();
                     ev.woid = woid;

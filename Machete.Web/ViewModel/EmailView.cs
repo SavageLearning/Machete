@@ -35,6 +35,7 @@ namespace Machete.Web.ViewModel
         public int statusID { get; set; }
         public DateTime? lastAttempt { get; set; }
         public int? woid { get; set; }
+        public IDefaults def { get; set;  }
         //
         // view-only fields
         //
