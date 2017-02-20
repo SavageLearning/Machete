@@ -145,6 +145,7 @@ namespace Machete.Test.Unit.Service
             _wa.datecreated = DateTime.MinValue;
             _wa.dateupdated = DateTime.MinValue;
             _wa.workOrder = (WorkOrder)Records.order.Clone();
+            _wa.workOrder.paperOrderNum = _wa.workOrder.ID;
             waRepo.Setup(r => r.Add(_wa)).Returns(_wa);
             //
             //Act
@@ -186,6 +187,9 @@ namespace Machete.Test.Unit.Service
             string user = "UnitTest";
             _wa.datecreated = DateTime.MinValue;
             _wa.dateupdated = DateTime.MinValue;
+            _wa.workOrder = (WorkOrder)Records.order.Clone();
+            _wa.workOrder.paperOrderNum = _wa.workOrder.ID;
+            _wa.pseudoID = 1;
             //
             //Act
             waServ.Save(_wa, user);

@@ -209,24 +209,37 @@ namespace Machete.Service
         public override WorkOrder Create(WorkOrder workOrder, string user)
         {
             WorkOrder wo;
-            workOrder.statusES = lc.textByID(workOrder.statusID, "ES");
-            workOrder.statusEN = lc.textByID(workOrder.statusID, "EN");
+            updateComputedValues(ref workOrder);
             workOrder.createdByUser(user);
             wo = repo.Add(workOrder);
             // TODO: investigate why worker requests collection is added to wo - there is a similar collection of wa added to wo
             wo.workerRequests = new Collection<WorkerRequest>();
             uow.Commit();
-            if (wo.paperOrderNum == null) wo.paperOrderNum = wo.ID;
+            if (wo.paperOrderNum == null)
+            {
+                wo.paperOrderNum = wo.ID;
                 uow.Commit();
+            }
             _log(workOrder.ID, user, "WorkOrder created");
             return wo;
         }
-
+        private void updateComputedValues(ref WorkOrder record)
+        {
+            record.statusES = lc.textByID(record.statusID, "ES");
+            record.statusEN = lc.textByID(record.statusID, "EN");
+            record.transportMethodEN = lc.textByID(record.transportMethodID, "EN");
+            record.transportMethodES = lc.textByID(record.transportMethodID, "ES");
+        }
         public override void Save(WorkOrder workOrder, string user)
         {
-            workOrder.statusES = lc.textByID(workOrder.statusID, "ES");
-            workOrder.statusEN = lc.textByID(workOrder.statusID, "EN");
+            updateComputedValues(ref workOrder);
             base.Save(workOrder, user);
+            if (workOrder.paperOrderNum == null)
+            {
+                workOrder.paperOrderNum = workOrder.ID;
+                uow.Commit();
+            }
+            
         }
         /// <summary>
         /// Provide combined summary of WO/WA status

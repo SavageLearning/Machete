@@ -144,7 +144,8 @@ namespace Machete.Domain
         [LocalizedDisplayName("transportMethodID", NameResourceType = typeof(Resources.WorkOrder))]
         [Required(ErrorMessageResourceName = "transportMethodIDrequired", ErrorMessageResourceType = typeof(Resources.WorkOrder))]
         public int transportMethodID { get; set; }
-
+        public string transportMethodEN { get; set; }
+        public string transportMethodES { get; set; }
         // Transportation fee charged for worker transportation 
         [LocalizedDisplayName("transportFee", NameResourceType = typeof(Resources.WorkOrder))]
         [Required(ErrorMessageResourceName = "transportFeeRequired", ErrorMessageResourceType = typeof(Resources.WorkOrder))]

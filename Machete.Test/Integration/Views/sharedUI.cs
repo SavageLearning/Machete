@@ -445,6 +445,7 @@ namespace Machete.Test.Selenium.View
             // WO object
 
             _wo.ID = getSelectedTabRecordID("WO");
+            _wo.paperOrderNum = _wo.ID;
             var v = map.Map<Domain.WorkOrder, Web.ViewModel.WorkOrder>(_wo);
             Assert.IsTrue(_d.FindElement(By.CssSelector("li.WO.ui-tabs-selected > a"))
                                             .Text == v.tablabel, 

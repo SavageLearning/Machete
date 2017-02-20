@@ -15,29 +15,19 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/WorkAssignment/Edit/" + Convert.ToString(d.ID)))
                 .ForMember(v => v.tablabel, opt => opt.MapFrom(d =>
                     Resources.WorkAssignments.tabprefix +
-                    System.String.Format("{0,5:D5}", 
-                    d.workOrder == null ? 0 :                   
-                        d.workOrder.paperOrderNum.HasValue ? d.workOrder.paperOrderNum : d.workOrder.ID
-                    ) +
-                    "-" + System.String.Format("{0,2:D2}", d.pseudoID)))
+                    System.String.Format("{0,5:D5}-{1,2:D2}", d.workOrder.paperOrderNum, d.pseudoID)))
             ;
             CreateMap<Domain.WorkAssignment, Service.DTO.WorkAssignmentList>()
                  .ForMember(v => v.employername, opt => opt.MapFrom(d => d.workOrder.Employer.name))
-                 .ForMember(v => v.earnings, opt => opt.MapFrom(d => (d.days * d.surcharge) + (d.hourlyWage * d.hours * d.days)))
-                 .ForMember(v => v.maxEarnings, opt => opt.MapFrom(d =>
-                    d.hourRange == null ? 0 : (d.days * d.surcharge) + (d.hourlyWage * (int)d.hourRange * d.days)))
-                .ForMember(v => v.paperOrderNum, opt => opt.MapFrom(d => d.workOrder == null ? 0 :
-                        d.workOrder.paperOrderNum.HasValue ? d.workOrder.paperOrderNum : d.workOrder.ID))
-            //.ForMember(v => v.assignedWorker, opt => opt.MapFrom(d =>
-            //   d.workerAssigned == null ? "" :
-            //   Convert.ToString(d.workerAssigned.dwccardnum))) // + " " + PersonFullName(d.workerAssigned.Person))) //TODO:2016: replace person full name
+                 .ForMember(v => v.earnings, opt => opt.MapFrom(d => d.minEarnings))
+                 .ForMember(v => v.maxEarnings, opt => opt.MapFrom(d => d.maxEarnings))
+                 .ForMember(v => v.paperOrderNum, opt => opt.MapFrom(d => d.workOrder.paperOrderNum))
             ;
             CreateMap<Service.DTO.WorkAssignmentList, ViewModel.WorkAssignmentList>()
                 .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/WorkAssignment/Edit/" + Convert.ToString(d.ID)))
                 .ForMember(v => v.tablabel, opt => opt.MapFrom(d =>
                     Resources.WorkAssignments.tabprefix +
-                    System.String.Format("{0,5:D5}", d.paperOrderNum) +
-                    "-" + System.String.Format("{0,2:D2}", d.pseudoID)))
+                    System.String.Format("{0,5:D5}-{1,2:D2}", d.paperOrderNum, d.pseudoID)))
                 .ForMember(v => v.WOID, opt => opt.MapFrom(d => d.workOrderID))
                 .ForMember(v => v.WAID, opt => opt.MapFrom(d => d.ID))
                 .ForMember(v => v.recordid, opt => opt.MapFrom(d => d.ID))

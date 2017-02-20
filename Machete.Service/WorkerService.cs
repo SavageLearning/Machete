@@ -97,18 +97,18 @@ namespace Machete.Service
 
         public override Worker Create(Worker record, string user)
         {
-            updateLookupStrings(ref record);
+            updateComputedFields(ref record);
             var result = base.Create(record, user);
             return result;
         }
 
         public override void Save(Worker record, string user)
         {
-            updateLookupStrings(ref record);
+            updateComputedFields(ref record);
             base.Save(record, user);
         }
 
-        private void updateLookupStrings(ref Worker record)
+        private void updateComputedFields(ref Worker record)
         {
             record.memberStatusEN = lcache.textByID(record.memberStatusID, "EN");
             record.memberStatusES = lcache.textByID(record.memberStatusID, "ES");

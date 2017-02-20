@@ -421,15 +421,10 @@ namespace Machete.Service
             record.skillES = lcache.textByID(record.skillID, "ES");
             record.minEarnings = (record.days * record.surcharge) + (record.hourlyWage * record.hours * record.days);
             record.maxEarnings = record.hourRange == null ? 0 : (record.days * record.surcharge) + (record.hourlyWage * (int)record.hourRange * record.days);
-            int WONum;
-            if (record.workOrder == null) WONum = 0;
-            else if (record.workOrder.paperOrderNum.HasValue) WONum = (int)record.workOrder.paperOrderNum;
-            else WONum = record.workOrderID;
+            record.fullWAID = System.String.Format("{0,5:D5}-{1,2:D2}",
+                                                    (int)record.workOrder.paperOrderNum,
+                                                    (int)record.pseudoID);
 
-            record.fullWAID=  System.String.Format("{0,5:D5}", WONum)
-                                            + "-" + (record.pseudoID.HasValue ?
-                                                System.String.Format("{0,2:D2}", record.pseudoID) :
-                                                System.String.Format("{0,5:D5}", record.ID));
 
         }
     }
