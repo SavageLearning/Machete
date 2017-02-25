@@ -186,7 +186,7 @@ namespace Machete.Web.Controllers
         /// <param name="user"></param>
         /// <returns></returns>
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager")]
+        [Authorize(Roles = "Administrator")]
         public ActionResult Delete(int id, string user)
         {            
             serv.Delete(id, user);
