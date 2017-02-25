@@ -581,6 +581,7 @@
     <Content Include="Scripts\jquery-1.7.1.js" />
     <None Include="Properties\PublishProfiles\local_selenium.pubxml" />
     <None Include="Properties\PublishProfiles\selenium_publish.pubxml" />
+    <None Include="Properties\PublishProfiles\test.machetessl.org.pubxml" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
     <Content Include="Scripts\jquery-3.1.1.min.js" />
