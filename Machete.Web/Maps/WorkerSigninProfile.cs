@@ -38,6 +38,8 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.memberInactive, opt => opt.MapFrom(d => d.worker.memberStatusID == Domain.Worker.iInactive ? true : false))
                 .ForMember(v => v.memberSanctioned, opt => opt.MapFrom(d => d.worker.memberStatusID == Domain.Worker.iSanctioned ? true : false))
                 .ForMember(v => v.memberExpelled, opt => opt.MapFrom(d => d.worker.memberStatusID == Domain.Worker.iExpelled ? true : false))
+                .ForMember(v => v.imageRef, opt => opt.MapFrom(d => d.worker.ImageID == null ? "/Content/images/NO-IMAGE-AVAILABLE.jpg" : "/Image/GetImage/" + d.worker.ImageID))
+                .ForMember(v => v.imageID, opt => opt.MapFrom(d => d.worker.ImageID))
             ;
             CreateMap<Domain.WorkerSignin, ViewModel.WorkerSignin>()
                 .ForMember(v => v.memberExpired, opt => opt.MapFrom(d => d.worker.memberStatusID == Domain.Worker.iExpired ? true : false))

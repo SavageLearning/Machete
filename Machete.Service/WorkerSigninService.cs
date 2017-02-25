@@ -42,6 +42,7 @@ namespace Machete.Service
         bool moveUp(int id, string user);
         dataTableResult<DTO.WorkerSigninList> GetIndexView(viewOptions o);
         Domain.WorkerSignin CreateSignin(int dwccardnum, DateTime dateforsignin, string user);
+        Domain.WorkerSignin IsSignedIn(int dwccardnum, DateTime dateforsignin);
     }
 
     public class WorkerSigninService : SigninServiceBase<Domain.WorkerSignin>, IWorkerSigninService
@@ -203,7 +204,9 @@ namespace Machete.Service
             //Search for worker with matching card number
             Worker wfound = wServ.GetMany(d => d.dwccardnum == dwccardnum).FirstOrDefault();
             if (wfound == null) throw new NullReferenceException("Card ID doesn't match a worker!");
-            if (IsSignedIn(dwccardnum, dateforsignin) != null) throw new InvalidOperationException("has already been signed in!");
+
+            var wsi = IsSignedIn(dwccardnum, dateforsignin);
+            if (wsi != null) return wsi;
 
             var signin = new Domain.WorkerSignin();
             signin.WorkerID = wfound.ID;
@@ -219,9 +222,10 @@ namespace Machete.Service
         public Domain.WorkerSignin IsSignedIn(int dwccardnum, DateTime dateforsignin)
         {
             // get uses FirstOrDefault(), which returns null for default
-            return repo.Get(t =>
+            var result = repo.Get(t =>
                             t.dateforsignin.Date == dateforsignin.Date &&
                             t.dwccardnum == dwccardnum);
+            return result;
         }
     }
 }

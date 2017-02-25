@@ -43,5 +43,7 @@ namespace Machete.Web.ViewModel
         public string expirationDate { get; set; }
         public string skillCodes { get; set; }
         public string program { get; set; }
+        public string imageRef { get; set; }
+
     }
 }
