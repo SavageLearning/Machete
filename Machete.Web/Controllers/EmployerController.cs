@@ -78,6 +78,7 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
         public JsonResult AjaxHandler(jQueryDataTableParam param)
         {
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
