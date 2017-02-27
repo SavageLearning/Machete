@@ -208,13 +208,13 @@ namespace Machete.Web.Helpers
             double wage = 0.0;
             int count = lcache.getCache()
                 .Where(s => s.selected == true &&
-                            s.category == LCategory.skill)
+                            s.category == LCategory.skill && s.active == true)
                 .Count();
             if (count > 0)
             {
                 return lcache.getCache()
                             .Where(s => s.selected == true &&
-                                        s.category == LCategory.skill)
+                                        s.category == LCategory.skill && s.active == true)
                             .FirstOrDefault().wage ?? 0.0;
             }
             return wage;
@@ -225,13 +225,13 @@ namespace Machete.Web.Helpers
             int hours = 0;
             int count = lcache.getCache()
                 .Where(s => s.selected == true &&
-                            s.category == LCategory.skill)
+                            s.category == LCategory.skill && s.active == true)
                 .Count();
             if (count > 0)
             {
                 return lcache.getCache()
                             .Where(s => s.selected == true &&
-                                        s.category == LCategory.skill)
+                                        s.category == LCategory.skill && s.active == true)
                             .FirstOrDefault().minHour ?? 0;
             }
             return hours;
@@ -307,7 +307,7 @@ namespace Machete.Web.Helpers
         {
             var locale = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant();
             IEnumerable<Lookup> prelist = lcache.getCache()
-                                                     .Where(s => s.category == LCategory.skill);
+                                                     .Where(s => s.category == LCategory.skill && s.active == true);
             Func<Lookup, string> textFunc; //anon function
             if (prelist == null) throw new ArgumentNullException("No skills returned");
             if (specializedOnly)
@@ -342,7 +342,7 @@ namespace Machete.Web.Helpers
         {
             var locale = Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName.ToUpperInvariant();
             IEnumerable<Lookup> prelist = lcache.getCache()
-                                                     .Where(s => s.category == LCategory.skill);
+                                                     .Where(s => s.category == LCategory.skill && s.active == true);
             Func<Lookup, string> textFunc; //anon function
             if (prelist == null) throw new ArgumentNullException("No skills returned");
  
