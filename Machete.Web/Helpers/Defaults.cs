@@ -253,7 +253,7 @@ namespace Machete.Web.Helpers
             SelectList list;
             if (locale == "ES") field = "text_ES";
             else field = "text_EN";
-            list = new SelectList(lcache.getCache().Where(s => s.category == type),
+            list = new SelectList(lcache.getCache().Where(s => s.category == type && s.active == true),
                                     "ID",
                                     field,
                                     getDefaultID(type));
@@ -274,7 +274,7 @@ namespace Machete.Web.Helpers
             if (locale == "ES") field = "text_ES";
             else field = "text_EN";
             // NOTE: transportation methods hard-coded to support Casa Latina
-            list = new SelectList(lcache.getCache().Where(s => s.category == "transportmethod" && (s.ID == 29 || s.ID == 31 || s.ID == 32)),
+            list = new SelectList(lcache.getCache().Where(s => s.category == "transportmethod" && s.active == true),
                                     "ID",
                                     field,
                                     getDefaultID("transportmethod"));
