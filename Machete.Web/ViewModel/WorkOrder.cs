@@ -59,5 +59,26 @@ namespace Machete.Web.ViewModel
         public string emailErrorCount { get; set; }
         public string updatedby { get; set; }
         public string dateupdated { get; set; }
+        public IEnumerable<WorkerAssignedList> workers { get; set; }
     }
+
+    public class WorkerAssignedList
+    {
+        public int WID { get; set; }
+        public string name { get; set; }
+        public string skill { get; set; }
+        public double hours { get; set; }
+        public double wage { get; set; }
+    }
+
+    //workers = showWorkers? // Note: Workers appears to not be used
+    //    from w in wo.workAssignments
+    //    select new
+    //                    {
+    //                        WID = w.workerAssigned != null ? (int?)w.workerAssigned.dwccardnum : null,
+    //                        name = w.workerAssigned != null ? w.workerAssigned.Person.fullName() : null,
+    //                        skill = lcache.textByID(w.skillID, CI.TwoLetterISOLanguageName),
+    //                        hours = w.hours,
+    //                        wage = w.hourlyWage
+    //} : null
 }

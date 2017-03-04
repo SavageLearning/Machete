@@ -29,5 +29,17 @@ namespace Machete.Service.DTO
         public int emailErrorCount { get; set; }
         public int WAUnassignedCount { get; set; }
         public int WAOrphanedCount { get; set; }
+        public IEnumerable<WorkerAssignedList> workers { get; set; }
+    }
+
+
+    public class WorkerAssignedList
+    {
+        public int WID { get; set; }
+        public string name { get; set; }
+        public string skillEN { get; set; }
+        public string skillES { get; set; }
+        public double hours { get; set; }
+        public double wage { get; set; }
     }
 }

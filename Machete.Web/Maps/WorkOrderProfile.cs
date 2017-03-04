@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using DTO = Machete.Service.DTO;
 
 namespace Machete.Web.Maps
 {
@@ -31,6 +32,7 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.WAOrphanedCount,      opt => opt.MapFrom(d => d.workAssignments.Count(wa => wa.workerAssignedID != null && wa.workerSigninID == null)))
                 .ForMember(v => v.emailSentCount,       opt => opt.MapFrom(d => d.Emails.Where(e => e.statusID == Domain.Email.iSent || e.statusID == Domain.Email.iReadyToSend).Count()))
                 .ForMember(v => v.emailErrorCount,      opt => opt.MapFrom(d => d.Emails.Where(e => e.statusID == Domain.Email.iTransmitError).Count()))
+                .ForMember(v => v.workers,              opt => opt.MapFrom(d => d.workAssignments))
             ;
             //
             //
@@ -47,8 +49,17 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.status,            opt => opt.MapFrom(d => getCI() == "ES" ? d.statusES : d.statusEN))
                 .ForMember(v => v.transportMethod, opt => opt.MapFrom(d => getCI() == "ES" ? d.transportMethodES : d.transportMethodEN))
                 .ForMember(v => v.displayState,      opt => opt.MapFrom(d => computeOrderStatus(d)))
+                .ForMember(v => v.workers, opt => opt.MapFrom(d => d.workers))
                 ;
 
+            CreateMap<Domain.WorkAssignment, DTO.WorkerAssignedList>()
+                .ForMember(v => v.WID, opt => opt.MapFrom(d => d.workerAssigned.dwccardnum))
+                .ForMember(v => v.name, opt => opt.MapFrom(d => d.workerAssigned.Person.fullName))
+                ;
+
+            CreateMap<DTO.WorkerAssignedList, ViewModel.WorkerAssignedList>()
+                .ForMember(v => v.skill, opt => opt.MapFrom(d => getCI() == "ES" ? d.skillES : d.skillEN))
+                ;
         }
         public string computeOrderStatus(Service.DTO.WorkOrderList d)
         {
