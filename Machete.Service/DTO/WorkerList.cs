@@ -14,7 +14,7 @@ namespace Machete.Service.DTO
         public string lastname1 { get; set; }
         public string lastname2 { get; set; }
         public int dwccardnum { get; set; }
-        public bool active { get; set; }
+        public bool? active { get; set; }
         public DateTime memberexpirationdate { get; set; }
         public string memberStatusEN { get; set; }
         public string memberStatusES { get; set; }

@@ -25,7 +25,7 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.WID, opt => opt.MapFrom(d => Convert.ToString(d.ID)))
                 .ForMember(v => v.recordid, opt => opt.MapFrom(d => Convert.ToString(d.ID)))
                 .ForMember(v => v.dwccardnum, opt => opt.MapFrom(d => Convert.ToString(d.dwccardnum)))
-                .ForMember(v => v.active, opt => opt.MapFrom(d => d.active ? Shared.True : Shared.False))
+                .ForMember(v => v.active, opt => opt.MapFrom(d => d.active ?? false ? Shared.True : Shared.False))
                 .ForMember(v => v.memberStatus, opt => opt.MapFrom(d => getCI() == "ES" ? d.memberStatusES : d.memberStatusEN))
                 .ForMember(v => v.memberexpirationdate, opt => opt.MapFrom(d => Convert.ToString(d.memberexpirationdate)))
                 ;
