@@ -222,9 +222,12 @@ namespace Machete.Service
         public Domain.WorkerSignin IsSignedIn(int dwccardnum, DateTime dateforsignin)
         {
             // get uses FirstOrDefault(), which returns null for default
-            var result = repo.Get(t =>
-                            t.dateforsignin.Date == dateforsignin.Date &&
-                            t.dwccardnum == dwccardnum);
+            // the GetAllQ is necessary to access the IQueryable object;
+            // the IQueryable is necessary to use the DbFunctions, which 
+            // sends the date comparison to the DB
+            var result = repo.GetAllQ().Where(t =>
+                             DbFunctions.TruncateTime(t.dateforsignin) == dateforsignin.Date &&
+                            t.dwccardnum == dwccardnum).FirstOrDefault();
             return result;
         }
     }

@@ -11,6 +11,7 @@ Machete.Api/
 [Rr]elease/
 [Pp]ackages/
 obj/*
+build/
 
 log.txt*
 #Visual Studio files
