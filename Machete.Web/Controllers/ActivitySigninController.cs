@@ -65,7 +65,7 @@ namespace Machete.Web.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        //[Authorize(Roles = "Manager, Administrator, Check-in")]
+        [Authorize(Roles = "Manager, Administrator, Check-in, Teacher")]
         public ActionResult Index()
         {
             return View();
@@ -77,7 +77,7 @@ namespace Machete.Web.Controllers
         /// <param name="activityID"></param>
         /// <returns></returns>
         [HttpPost]
-        //[Authorize(Roles = "Manager, Administrator, Check-in")]
+        [Authorize(Roles = "Manager, Administrator, Check-in, Teacher")]
         public ActionResult Index(int dwccardnum, int activityID)
         {
             var _asi = new ActivitySignin();
@@ -109,7 +109,7 @@ namespace Machete.Web.Controllers
         /// <param name="userName"></param>
         /// <returns></returns>
         [UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager, Check-in")]
+        [Authorize(Roles = "Administrator, Manager, Check-in, Teacher")]
         public ActionResult Delete(int id, string userName)
         {
             serv.Delete(id, userName);
@@ -126,12 +126,11 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
-        //[Authorize(Roles = "Administrator, Manager, Check-in")]
+        [Authorize(Roles = "Administrator, Manager, Check-in, Teacher")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI = CI;
-            //dataTableResult<asiView> list = serv.GetIndexView(vo);
             dataTableResult<DTO.ActivitySigninList> list = serv.GetIndexView(vo);
             var result = list.query
                 .Select(

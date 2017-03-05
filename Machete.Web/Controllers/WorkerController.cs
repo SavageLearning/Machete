@@ -203,6 +203,7 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="worker"></param>
         /// <param name="imagefile"></param>
+        [Authorize(Roles = "PhoneDesk, Manager, Teacher, Administrator")]
         private void updateImage(Worker worker, HttpPostedFileBase imagefile)
         {
             // TODO: Move this to the business layer

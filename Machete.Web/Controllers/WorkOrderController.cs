@@ -384,7 +384,7 @@ namespace Machete.Web.Controllers
         /// <param name="user">User performing action</param>
         /// <returns>MVC Action Result</returns>
         [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager, PhoneDesk")]
+        [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Delete(int id, string user)
         {
             woServ.Delete(id, user);

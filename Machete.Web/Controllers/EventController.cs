@@ -65,6 +65,8 @@ namespace Machete.Web.Controllers
         }
         //
         //
+        [Authorize(Roles = "Manager, Administrator")]
+
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {            
             //Get all the records
@@ -104,6 +106,7 @@ namespace Machete.Web.Controllers
         //
         // POST: /Event/Create
         [HttpPost, UserNameFilter]
+        [Authorize(Roles = "Manager, Administrator")]
         public ActionResult Create(Event evnt, string userName)
         {
             UpdateModel(evnt);
