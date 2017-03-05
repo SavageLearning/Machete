@@ -330,6 +330,7 @@ namespace Machete.Web.Controllers
 
                     // Create WA from Employer data
                     wa.workOrderID = neworder.ID;
+                    wa.workOrder = neworder;
                     wa.skillID = parsedWorkerRequests["assignments"][i].skillId;
                     wa.hours = parsedWorkerRequests["assignments"][i].hours;
                     wa.weightLifted = parsedWorkerRequests["assignments"][i].weight;
