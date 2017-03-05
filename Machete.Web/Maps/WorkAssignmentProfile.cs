@@ -22,6 +22,7 @@ namespace Machete.Web.Maps
                  .ForMember(v => v.earnings, opt => opt.MapFrom(d => d.minEarnings))
                  .ForMember(v => v.maxEarnings, opt => opt.MapFrom(d => d.maxEarnings))
                  .ForMember(v => v.paperOrderNum, opt => opt.MapFrom(d => d.workOrder.paperOrderNum))
+                 .ForMember(v => v.assignedWorker, opt => opt.MapFrom(d => d.workerAssigned == null ? null : d.workerAssigned.Person.fullName))
             ;
             CreateMap<Service.DTO.WorkAssignmentList, ViewModel.WorkAssignmentList>()
                 .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/WorkAssignment/Edit/" + Convert.ToString(d.ID)))
