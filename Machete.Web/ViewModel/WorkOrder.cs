@@ -50,7 +50,7 @@ namespace Machete.Web.ViewModel
         public int statusID { get; set; }
         public string displayState { get; set; }
         public string transportMethod { get; set; }
-        public string WAcount { get; set; }
+        public int WAcount { get; set; }
         public string contactName { get; set; }
         public string workSiteAddress1 { get; set; }
         public string zipcode { get; set; }

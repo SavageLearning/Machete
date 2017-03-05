@@ -2,6 +2,7 @@
 using Machete.Web.Resources;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Web;
 using DTO = Machete.Service.DTO;
@@ -27,12 +28,12 @@ namespace Machete.Web.Maps
             //
             //
             CreateMap<Domain.WorkOrder, Service.DTO.WorkOrderList>()
-                .ForMember(v => v.WAcount,              opt => opt.MapFrom(d => d.workAssignments.Count()))
+                .ForMember(v => v.WAcount,              opt => opt.MapFrom(d => d.workAssignments.Where(wa => wa.workerAssigned != null).Count()))
                 .ForMember(v => v.WAUnassignedCount,    opt => opt.MapFrom(d => d.workAssignments.Count(wa => wa.workerAssignedID == null)))
                 .ForMember(v => v.WAOrphanedCount,      opt => opt.MapFrom(d => d.workAssignments.Count(wa => wa.workerAssignedID != null && wa.workerSigninID == null)))
                 .ForMember(v => v.emailSentCount,       opt => opt.MapFrom(d => d.Emails.Where(e => e.statusID == Domain.Email.iSent || e.statusID == Domain.Email.iReadyToSend).Count()))
                 .ForMember(v => v.emailErrorCount,      opt => opt.MapFrom(d => d.Emails.Where(e => e.statusID == Domain.Email.iTransmitError).Count()))
-                .ForMember(v => v.workers,              opt => opt.MapFrom(d => d.workAssignments))
+                .ForMember(v => v.workers,              opt => opt.MapFrom(d => d.workAssignments.Where(wa => wa.workerAssigned != null )))
             ;
             //
             //
@@ -49,7 +50,6 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.status,            opt => opt.MapFrom(d => getCI() == "ES" ? d.statusES : d.statusEN))
                 .ForMember(v => v.transportMethod, opt => opt.MapFrom(d => getCI() == "ES" ? d.transportMethodES : d.transportMethodEN))
                 .ForMember(v => v.displayState,      opt => opt.MapFrom(d => computeOrderStatus(d)))
-                .ForMember(v => v.workers, opt => opt.MapFrom(d => d.workers))
                 ;
 
             CreateMap<Domain.WorkAssignment, DTO.WorkerAssignedList>()
