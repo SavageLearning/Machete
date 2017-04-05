@@ -263,6 +263,8 @@
     <Compile Include="DTO\EmployerList.cs" />
     <Compile Include="DTO\EventList.cs" />
     <Compile Include="DTO\PersonList.cs" />
+    <Compile Include="DTO\Reports\SimpleDataRow.cs" />
+    <Compile Include="DTO\SearchOptions.cs" />
     <Compile Include="DTO\WorkAssignmentList.cs" />
     <Compile Include="DTO\WorkerList.cs" />
     <Compile Include="DTO\WorkerSigninList.cs" />
@@ -273,6 +275,7 @@
     <Compile Include="EmployerService.cs" />
     <Compile Include="EventService.cs" />
     <Compile Include="LookupService.cs" />
+    <Compile Include="ReportsV2Service.cs" />
     <Compile Include="shared\Exceptions.cs" />
     <Compile Include="ImageService.cs" />
     <Compile Include="shared\IndexViewBase.cs" />
@@ -303,6 +306,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -248,7 +248,9 @@
       <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Moq, Version=4.5.28.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.5.28\lib\net45\Moq.dll</HintPath>
       <Private>True</Private>
@@ -296,6 +298,7 @@
     <Compile Include="Integration\Services\IndexViewBaseServiceTest.cs" />
     <Compile Include="Integration\Services\EmailServiceTests.cs" />
     <Compile Include="Integration\Services\EventServiceTests.cs" />
+    <Compile Include="Integration\Services\ReportsV2ServiceTests.cs" />
     <Compile Include="Integration\Services\WorkAssignmentServiceTest.cs" />
     <Compile Include="Integration\Services\WorkerSigninServiceTest.cs" />
     <Compile Include="Integration\Services\WorkOrderServiceTest.cs" />

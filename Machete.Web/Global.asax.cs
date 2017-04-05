@@ -141,6 +141,7 @@ namespace Machete.Web
             .RegisterType<IWorkAssignmentService, WorkAssignmentService>(new PerResolveLifetimeManager())
             .RegisterType<IImageService, ImageService>(new PerResolveLifetimeManager())
             .RegisterType<IReportService, ReportService>(new PerResolveLifetimeManager())
+            .RegisterType<IReportsV2Service, ReportsV2Service>(new PerResolveLifetimeManager())
             // 
             .RegisterType<ILookupCache, LookupCache>(new ContainerControlledLifetimeManager())
             .RegisterType<IDefaults, Defaults>(new ContainerControlledLifetimeManager());

@@ -64,6 +64,7 @@ namespace Machete.Test
         private ActivityService _servA;
         private ActivitySigninService _servAS;
         private ReportService _servR;
+        private ReportsV2Service _servRV2;
         private EmployerService _servE;
         private EmailService _servEM;
         private EventService _servEV;
@@ -933,6 +934,22 @@ namespace Machete.Test
         {
             if (_servR == null) AddServReports();
             return _servR;
+        }
+
+        public FluentRecordBase AddServReportsV2()
+        {
+            // DEPENDENCIES
+            if (_repoWO == null) AddRepoWorkOrder();
+            if (_repoWA == null) AddRepoWorkAssignment();
+            if (_repoW == null) AddRepoWorker();
+            _servRV2 = new ReportsV2Service(_repoWO, _repoWA, _repoW);
+            return this;
+        }
+
+        public ReportsV2Service ToServReportsV2()
+        {
+            if (_servRV2 == null) AddServReportsV2();
+            return _servRV2;
         }
 
         #endregion
