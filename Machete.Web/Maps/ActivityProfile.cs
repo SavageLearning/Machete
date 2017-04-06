@@ -13,9 +13,7 @@ namespace Machete.Web.Maps
         public ActivityProfile()
         {
             CreateMap<Domain.Activity, ViewModel.Activity>()
-                .ForMember(v => v.tabref, opt => opt.MapFrom(d => d.recurring ?
-                    "/Activity/CreateMany/" + Convert.ToString(d.ID) :
-                    "/Activity/Edit/" + Convert.ToString(d.ID)))
+                .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/Activity/Edit/" + Convert.ToString(d.ID)))
                 .ForMember(v => v.tablabel, opt => opt.MapFrom(d => d.recurring ?
                     "Recurring Event with " + d.teacher :
                     d.nameEN + " with " + d.teacher)) // hardcoded english; skipping for now
@@ -24,9 +22,7 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.count, opt => opt.MapFrom(d => d.Signins.Count()))
                 ;
             CreateMap<Service.DTO.ActivityList, ViewModel.ActivityList>()
-                .ForMember(v => v.tabref, opt => opt.MapFrom(d => d.recurring ?
-                    "/Activity/CreateMany/" + Convert.ToString(d.ID) :
-                    "/Activity/Edit/" + Convert.ToString(d.ID)))
+                .ForMember(v => v.tabref, opt => opt.MapFrom(d => "/Activity/Edit/" + Convert.ToString(d.ID)))
                 .ForMember(v => v.tablabel, opt => opt.MapFrom(d => d.recurring ?
                     "Recurring Event with " + d.teacher :
                     d.nameEN + " with " + d.teacher)) // hardcoded english; skipping for now

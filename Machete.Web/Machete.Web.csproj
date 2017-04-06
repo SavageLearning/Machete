@@ -652,6 +652,7 @@
     <Content Include="Content\bundles\vendor.bundle.js.map">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Properties\PublishProfiles\local_publish.pubxml" />
     <None Include="Properties\PublishProfiles\local_selenium.pubxml" />
     <None Include="Properties\PublishProfiles\selenium_publish.pubxml" />
     <None Include="Properties\PublishProfiles\test.machetessl.org.pubxml" />

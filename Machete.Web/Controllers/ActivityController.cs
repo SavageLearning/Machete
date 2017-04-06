@@ -147,6 +147,14 @@ namespace Machete.Web.Controllers
 
             Domain.Activity firstAct = serv.Create(activ, userName);
             var result = map.Map<Domain.Activity, ViewModel.Activity>(firstAct);
+
+            if (activ.recurring == true)
+            {
+                result.tablabel = "Recurring event with " + firstAct.teacher;
+                result.tabref = "/Activity/CreateMany/" + Convert.ToString(firstAct.ID);
+            }
+
+
             return Json(new
             {
                 sNewRef = result.tabref,
@@ -180,13 +188,13 @@ namespace Machete.Web.Controllers
                 var date = actSched.dateStart.AddDays(i);
                 var day = (int)date.DayOfWeek;
 
-                if (day == 0 && !actSched.sunday) break;
-                else if (day == 1 && !actSched.monday) break;
-                else if (day == 2 && !actSched.tuesday) break;
-                else if (day == 3 && !actSched.wednesday) break;
-                else if (day == 4 && !actSched.thursday) break;
-                else if (day == 5 && !actSched.friday) break;
-                else if (day == 6 && !actSched.saturday) break;
+                if (day == 0 && !actSched.sunday) continue;
+                else if (day == 1 && !actSched.monday) continue;
+                else if (day == 2 && !actSched.tuesday) continue;
+                else if (day == 3 && !actSched.wednesday) continue;
+                else if (day == 4 && !actSched.thursday) continue;
+                else if (day == 5 && !actSched.friday) continue;
+                else if (day == 6 && !actSched.saturday) continue;
                 else
                 {
                     var activ = new Domain.Activity();
@@ -202,11 +210,11 @@ namespace Machete.Web.Controllers
                     Domain.Activity act = serv.Create(activ, userName);
                 }
             }
-            
+            var result = map.Map<Domain.Activity, ViewModel.Activity>(firstActivity);
             return Json(new
             {
-                sNewRef = "", //EditTabRef(firstActivity),
-                sNewLabel = "", //EditTabLabel(firstActivity),
+                sNewRef = result.tabref,
+                sNewLabel = result.tablabel,
                 iNewID = firstActivity.ID,
                 jobSuccess = true
             },
