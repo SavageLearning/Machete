@@ -21,6 +21,7 @@ namespace Machete.Service.DTO
         public int? memberStatusID { get; set; }
         public string memberStatusEN { get; set; }
         public string memberStatusES { get; set; }
+        public int? imageID { get; set; }
 
     }
 }

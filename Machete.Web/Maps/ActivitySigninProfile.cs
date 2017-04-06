@@ -20,9 +20,12 @@ namespace Machete.Web.Maps
                     d.person.firstname1 + " " + d.person.firstname2 + " " +
                     d.person.lastname1 + " " + d.person.lastname2))
                 .ForMember(v => v.expirationDate, opt => opt.MapFrom(d => d.person.Worker.memberexpirationdate))
+                .ForMember(v => v.imageID, opt => opt.MapFrom(d => d.person.Worker.ImageID))
                 ;
             CreateMap<Service.DTO.ActivitySigninList, ViewModel.ActivitySigninList>()
                 .ForMember(v => v.WSIID, opt => opt.MapFrom(d => d.ID))
+                .ForMember(v => v.recordid, opt => opt.MapFrom(d => d.ID.ToString()))
+                .ForMember(v => v.imageID, opt => opt.MapFrom(d => d.imageID))
                 .ForMember(v => v.dwccardnum, opt => opt.MapFrom(d => Convert.ToString(d.dwccardnum)))
                 .ForMember(v => v.expirationDate, opt => opt.MapFrom(d=> d.expirationDate.ToShortDateString()))
                 .ForMember(v => v.memberStatus, opt => opt.MapFrom(d => getCI() == "ES" ? d.memberStatusES : d.memberStatusEN))
