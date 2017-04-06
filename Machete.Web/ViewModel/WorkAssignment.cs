@@ -38,6 +38,7 @@ namespace Machete.Web.ViewModel
         public string assignedWorker { get; set; }  // Dispatch
         public string timeofwork { get; set; }      // Dispatch
         public string asmtStatus { get; set; }      // SharedWAI, WorkerWAI, Dispatch
+        public string[] requestedList { get; set; } // Dispatch 
 
 
 

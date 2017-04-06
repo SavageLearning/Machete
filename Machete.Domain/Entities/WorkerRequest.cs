@@ -29,46 +29,13 @@ namespace Machete.Domain
     {
         public WorkerRequest()
         {
-            idString = "wkrFOOBARRequest";
+            idString = "wkrRequest";
         }
-        //public int ID { get; set; }
-        public int WorkOrderID { get; set; }
 
+        public int WorkOrderID { get; set; }
         public virtual WorkOrder workOrder { get; set; }
-        //[System.ComponentModel.DataAnnotations.NotMapped]
-        //public int dwccardnum { get; set; }
         public int WorkerID { get; set; }
         public virtual Worker workerRequested { get; set; }
-        public string fullName
-        {
-            get {
-                Person p = this.workerRequested.Person;
-                    return p.firstname1 + " " +
-                         p.firstname2 + " " +
-                         p.lastname1 + " " +
-                         p.lastname2;
-                }
-        }
-        public string fullNameAndID
-        {
-            get
-            {
-                Person p = this.workerRequested.Person;
-                return this.workerRequested.dwccardnum + " " + 
-                     p.firstname1 + " " +
-                     p.firstname2 + " " +
-                     p.lastname1 + " " +
-                     p.lastname2;
-            }
-        }
-        public string firstNameOnly
-        {
-            get
-            {
-                Person p = this.workerRequested.Person;
-                return p.firstname1;
-            }
-        }
     }
     public class WorkerRequestComparer : IEqualityComparer<WorkerRequest>
     {

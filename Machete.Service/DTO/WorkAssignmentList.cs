@@ -34,5 +34,6 @@ namespace Machete.Service.DTO
         public string assignedWorker { get; set; }
         public int? pseudoID { get; set; }
         public string fullWAID { get; set; }
+        public List<string> requestedList { get; set; }
     }
 }

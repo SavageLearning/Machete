@@ -139,6 +139,11 @@ namespace Machete.Data
     public class WorkerRequestRepository : RepositoryBase<WorkerRequest>, IWorkerRequestRepository
     {
         public WorkerRequestRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
+
+        override public IQueryable<WorkerRequest> GetAllQ()
+        {
+            return dbset.Include(a => a.workerRequested).AsNoTracking().AsQueryable();
+        }
     }
     /// <summary>
     /// 

@@ -45,6 +45,9 @@ namespace Machete.Domain
         public virtual ICollection<WorkerSignin> workersignins { get; set; }
         public virtual ICollection<WorkAssignment> workAssignments { get; set; }
         //
+        [StringLength(100)]
+        public string fullNameAndID { get; set; }
+
         [Required(ErrorMessageResourceName = "typeOfWorkID", ErrorMessageResourceType = typeof(Resources.Worker))]
         [LocalizedDisplayName("typeOfWorkID", NameResourceType = typeof(Resources.Worker))]
         public int typeOfWorkID { get; set; }

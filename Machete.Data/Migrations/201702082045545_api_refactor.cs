@@ -44,6 +44,7 @@ namespace Machete.Data
             AddColumn("dbo.Workers", "typeOfWork", c => c.String());
             AddColumn("dbo.Workers", "memberStatusEN", c => c.String(maxLength: 50));
             AddColumn("dbo.Workers", "memberStatusES", c => c.String(maxLength: 50));
+            AddColumn("dbo.Workers", "fullNameAndID", c => c.String(maxLength: 100));
             AddColumn("dbo.Workers", "skillCodes", c => c.String());
             Sql(@"update workers 
                     set
@@ -70,6 +71,11 @@ namespace Machete.Data
                     from 
                       workers w
                       join lookups l on l.id = w.typeOfWorkID");
+            Sql(@"update workers
+                    set workers.fullNameAndID = 
+                    convert(varchar(5), w.dwccardnum) + ' ' + p.fullName
+                    FROM dbo.Workers w
+                    join dbo.Persons p on p.id = w.id");
             // WorkOrders; needs to execute before WorkAssignments
             AddColumn("dbo.WorkOrders", "statusEN", c => c.String(maxLength: 50));
             AddColumn("dbo.WorkOrders", "statusES", c => c.String(maxLength: 50));
@@ -133,6 +139,7 @@ namespace Machete.Data
             DropColumn("dbo.Workers", "memberStatusES");
             DropColumn("dbo.Workers", "memberStatusEN");
             DropColumn("dbo.Workers", "typeOfWork");
+            DropColumn("dbo.Workers", "fullNameAndID");
             DropColumn("dbo.Events", "eventTypeES");
             DropColumn("dbo.Events", "eventTypeEN");
             DropColumn("dbo.Persons", "fullName");

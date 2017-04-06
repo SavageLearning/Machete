@@ -114,6 +114,7 @@ namespace Machete.Service
             record.memberStatusES = lcache.textByID(record.memberStatusID, "ES");
             record.typeOfWork = lcache.getByID(record.typeOfWorkID).ltrCode;
             record.skillCodes = getSkillCodes(record);
+            record.fullNameAndID = record.dwccardnum + " " + record.Person.fullName;
         }
 
         public string getSkillCodes(Worker w)

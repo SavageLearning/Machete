@@ -504,7 +504,7 @@ namespace Machete.Test.Selenium.View
             if (_wo.workerRequests != null)
                 foreach (var request in _wo.workerRequests)
                 {
-                    WaitForElementValue(By.XPath("//*[@id='workerRequests2_WO-" + _wo.ID + "']/option"), request.fullNameAndID);
+                    WaitForElementValue(By.XPath("//*[@id='workerRequests2_WO-" + _wo.ID + "']/option"), request.workerRequested.fullNameAndID);
                 }
             return true;
         }
