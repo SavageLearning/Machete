@@ -26,7 +26,8 @@ namespace Machete.Api.Controllers
         {
             return Get(DateTime.MinValue, DateTime.MaxValue);
         }
-        public IHttpActionResult Get(DateTime beginDate, DateTime endDate)
+
+        public IHttpActionResult Get(DateTime? beginDate, DateTime? endDate)
         {
             var result = serv.getJobsDispatchedCount(new Service.DTO.SearchOptions {
                 endDate = endDate,

@@ -8,8 +8,8 @@ namespace Machete.Service.DTO
 {
     public class SearchOptions
     {
-        public DateTime beginDate { get; set; }
-        public DateTime endDate { get; set; }
+        public DateTime? beginDate { get; set; }
+        public DateTime? endDate { get; set; }
 
     }
 }
