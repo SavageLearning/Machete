@@ -278,12 +278,13 @@ namespace Machete.Web.Controllers
         public JsonResult DeleteMany(int id, string userName)
         {
             Domain.Activity firstToDelete = serv.Get(id);
-            IEnumerable<Domain.Activity> allToDelete = serv.GetAll()
-                .Where(w => w.firstID == firstToDelete.firstID && w.dateStart >= firstToDelete.dateStart);
+            List<int> allToDelete = serv.GetAll()
+                .Where(w => w.firstID == firstToDelete.firstID && w.dateStart >= firstToDelete.dateStart)
+                .Select(s => s.ID).ToList();
 
-            foreach (Domain.Activity toDelete in allToDelete)
+            foreach (int toDelete in allToDelete)
             {
-                serv.Delete(toDelete.ID, userName);
+                serv.Delete(toDelete, userName);
             }
 
             return Json(new

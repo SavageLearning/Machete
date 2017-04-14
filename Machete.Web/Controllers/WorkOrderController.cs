@@ -349,11 +349,13 @@ namespace Machete.Web.Controllers
         public ActionResult GroupView(DateTime date, bool? assignedOnly)
         {
             WorkOrderGroupPrintView view = new WorkOrderGroupPrintView();
-            IEnumerable<Domain.WorkOrder> v;
-            if (assignedOnly == true) v = woServ.GetActiveOrders(date, true );
-            else v = woServ.GetActiveOrders(date, false);
-
-            // TODO2016: map v into view.orders
+            var v = woServ.GetActiveOrders(date, assignedOnly ?? false);
+            view.orders = v.Select(e => map.Map<Domain.WorkOrder, ViewModel.WorkOrder>(e)).ToList();
+            foreach (var i in view.orders) // inelegant, but functional
+            {
+                i.def = def;
+            }
+            
             return View(view);
         }
         #endregion

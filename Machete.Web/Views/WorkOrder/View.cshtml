@@ -41,7 +41,7 @@
     <div class="tb-field">
         @foreach (var req in Model.workerRequests)
         {
-            @System.String.Format(req.workerRequested.dwccardnum + "--" + req.fullName) <br />
+            @System.String.Format(req.workerRequested.dwccardnum + "--" + req.workerRequested.Person.fullName) <br />
         }
     </div>
     <h4>@WorkOrders.listOfPositions</h4>

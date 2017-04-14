@@ -41,7 +41,7 @@ namespace Machete.Service
                 {
                     id = DbFunctions.TruncateTime(o.beginDate) + "-" + DbFunctions.TruncateTime(o.endDate) + "-" + g.Key.skillID,
                     label = g.Key.skillEN,
-                    value = g.Count().ToString()
+                    value = g.Count()
                 }).ToList();
         }
     }

@@ -10,6 +10,6 @@ namespace Machete.Service.DTO.Reports
     {
         public string id { get; set; }
         public string label { get; set; }
-        public string value { get; set; }
+        public int value { get; set; }
     }
 }
