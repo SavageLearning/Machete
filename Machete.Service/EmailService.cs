@@ -18,7 +18,7 @@ namespace Machete.Service
         Email Duplicate(int id, int? woid, string userName);
         WorkOrder GetAssociatedWorkOrderFor(Email email);
         WorkOrder GetAssociatedWorkOrderFor(int woid);
-        IEnumerable<Email> GetMany(Func<Email, bool> predicate);
+        new IEnumerable<Email> GetMany(Func<Email, bool> predicate);
         IEnumerable<Email> GetEmailsToSend();
         dataTableResult<Email> GetIndexView(viewOptions o);
     }
@@ -126,13 +126,13 @@ namespace Machete.Service
                 e.statusID = Email.iPending;
             }
             // transmit errors will remain as error re-sent
-            e.updatedby(user);
+            e.updatedByUser(user);
             log(e.ID, user, logPrefix + " get exclusive for email");
             uow.Commit();
             return e;
         }
 
-        public IEnumerable<Email> GetMany(Func<Email, bool> predicate)
+        new public IEnumerable<Email> GetMany(Func<Email, bool> predicate)
         {
             return repo.GetMany(predicate);
         }

@@ -29,6 +29,7 @@ namespace Machete.Web.Controllers
     [ElmahHandleError]
     public class HomeController : Controller
     {
+        [AllowAnonymous]
         public ActionResult Index()
         {
             if (User.Identity.IsAuthenticated)
@@ -73,6 +74,11 @@ namespace Machete.Web.Controllers
         public ActionResult Docs()
         {
             return PartialView();
-        }      
+        }
+        [Authorize(Roles = "Manager, Administrator, PhoneDesk, User, Teacher, Check-in")]
+        public ActionResult Reports()
+        {
+            return PartialView();
+        }
     }   
 }

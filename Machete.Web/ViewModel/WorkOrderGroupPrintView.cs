@@ -28,6 +28,6 @@ namespace Machete.Web.ViewModel
 {
     public class WorkOrderGroupPrintView
     {
-        public IEnumerable<WorkOrder> orders { get; set; }
+        public IEnumerable<ViewModel.WorkOrder> orders { get; set; }
     }
 }

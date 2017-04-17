@@ -21,6 +21,7 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+using AutoMapper;
 using Machete.Data;
 using Machete.Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -48,6 +49,7 @@ namespace Machete.Test.Selenium.View
         private static DbSet<Worker> wSet;
         private static DbSet<WorkerSignin> wsiSet;
         private static DbSet<Person> pSet;
+        static IMapper map;
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext)
@@ -57,9 +59,11 @@ namespace Machete.Test.Selenium.View
             string solutionDirectory = sharedUI.SolutionDirectory();
             //testdir = solutionDirectory + "\\Machete.test\\";
             testimagefile = solutionDirectory + "\\jimmy_machete.jpg";
+            map = new Machete.Web.MapperConfig().getMapper();
+
             driver = new ChromeDriver(ConfigurationManager.AppSettings["CHROMEDRIVERPATH"]);
             baseURL = "http://localhost:4213/";
-            ui = new sharedUI(driver, baseURL);
+            ui = new sharedUI(driver, baseURL, map);
             DB = new MacheteContext();
             wsiSet = DB.Set<WorkerSignin>();
             wSet = DB.Set<Worker>();

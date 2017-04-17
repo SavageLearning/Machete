@@ -32,10 +32,11 @@ using Machete.Web.Helpers;
 using System.Data.Entity;
 using Machete.Domain;
 using System.IO;
+using AutoMapper;
 
 namespace Machete.Test
 {
-    public class FluentRecordBase
+    public class FluentRecordBase :IDisposable
     {
         #region internal fields
         private ActivityRepository _repoA;
@@ -53,7 +54,6 @@ namespace Machete.Test
         private EventRepository _repoEV;
         private DatabaseFactory _dbFactory;
         private LookupCache _lcache;
-        private WorkerCache _wcache;
         private WorkerSigninService _servWSI;
         private WorkerService _servW;
         private PersonService _servP;
@@ -64,12 +64,14 @@ namespace Machete.Test
         private ActivityService _servA;
         private ActivitySigninService _servAS;
         private ReportService _servR;
+        private ReportsV2Service _servRV2;
         private EmployerService _servE;
         private EmailService _servEM;
         private EventService _servEV;
         private LookupService _servL;
         private IUnitOfWork _uow;
-        private IEmailConfig _emCfg;        private Employer _emp;
+        private IEmailConfig _emCfg;
+        private Domain.Employer _emp;
         private Email _email;
         private Event _event;
         private WorkOrder _wo;
@@ -85,6 +87,7 @@ namespace Machete.Test
         private Image _i;
         private string _user = "FluentRecordBase";
         private System.Random _random = new System.Random((int)DateTime.Now.Ticks);
+        private IMapper _map;
 
         #endregion
 
@@ -111,6 +114,12 @@ namespace Machete.Test
             return this;
         }
 
+        public void Dispose()
+        {
+            if (_dbFactory == null) AddDBFactory();
+            _dbFactory.Dispose();
+        }
+
         public DatabaseFactory ToFactory()
         {
             if (_dbFactory == null) AddDBFactory();
@@ -129,19 +138,6 @@ namespace Machete.Test
         {
             if (_lcache == null) AddLookupCache();
             return _lcache;
-        }
-
-        public FluentRecordBase AddWorkerCache()
-        {
-            if (_dbFactory == null) AddDBFactory();
-            _wcache = new WorkerCache(() => _dbFactory);
-            return this;
-        }
-
-        public WorkerCache ToWorkerCache()
-        {
-            if (_wcache == null) AddWorkerCache();
-            return _wcache;
         }
 
         #region Employers
@@ -166,7 +162,8 @@ namespace Machete.Test
             if (_repoE == null) AddRepoEmployer();
             if (_servWO == null) AddServWorkOrder();
             if (_uow == null) AddUOW();
-            _servE = new EmployerService(_repoE, _servWO, _uow);
+            if (_map == null) AddMapper();
+            _servE = new EmployerService(_repoE, _servWO, _uow, _map);
             return this;
         }
 
@@ -186,7 +183,7 @@ namespace Machete.Test
             if (_servE == null) AddServEmployer();
             //
             // ARRANGE
-            _emp = (Employer)Records.employer.Clone();
+            _emp = (Domain.Employer)Records.employer.Clone();
             if (datecreated != null) _emp.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _emp.dateupdated = (DateTime)dateupdated;
             //
@@ -195,15 +192,15 @@ namespace Machete.Test
             return this;
         }
 
-        public Employer ToEmployer()
+        public Domain.Employer ToEmployer()
         {
             if (_emp == null) AddEmployer();
             return _emp;
         }
 
-        public Employer CloneEmployer()
+        public Domain.Employer CloneEmployer()
         {
-            var e = (Employer)Records.employer.Clone();
+            var e = (Domain.Employer)Records.employer.Clone();
             e.name = RandomString(10);
             e.email = "changeme@gmail.com";
             return e;
@@ -233,8 +230,10 @@ namespace Machete.Test
             // DEPENDENCIES
             if (_repoWO == null) AddRepoWorkOrder();
             if (_servWA == null) AddServWorkAssignment();
+            if (_lcache == null) AddLookupCache();
             if (_uow == null) AddUOW();
-            _servWO = new WorkOrderService(_repoWO, _servWA, _uow);
+            if (_map == null) AddMapper();
+            _servWO = new WorkOrderService(_repoWO, _servWA, _lcache, _uow, _map);
             return this;
         }
 
@@ -263,7 +262,7 @@ namespace Machete.Test
             if (dateupdated != null) _wo.dateupdated = (DateTime)dateupdated;
             if (paperordernum != null) _wo.paperOrderNum = paperordernum;
             if (dateTimeOfWork != null) _wo.dateTimeofWork = (DateTime)dateTimeOfWork;
-            if (status != null) _wo.status = (int)status;
+            if (status != null) _wo.statusID = (int)status;
             //
             // ACT
             _servWO.Create(_wo, _user);
@@ -316,9 +315,9 @@ namespace Machete.Test
             if (_repoL == null) AddRepoLookup();
             if (_repoWSI == null) AddRepoWorkerSignin();
             if (_lcache == null) AddLookupCache();
-            if (_wcache == null) AddWorkerCache();
             if (_uow == null) AddUOW();
-            _servWA = new WorkAssignmentService(_repoWA, _repoW, _repoL, _repoWSI, _wcache, _lcache, _uow);
+            if (_map == null) AddMapper();
+            _servWA = new WorkAssignmentService(_repoWA, _repoW, _repoL, _repoWSI, _lcache, _uow, _map);
             return this;
         }
 
@@ -393,12 +392,12 @@ namespace Machete.Test
             //
             // DEPENDENCIES
             if (_repoWSI == null) AddRepoWorkerSignin();
-            if (_repoW == null) AddRepoWorker();
-            if (_repoL == null) AddRepoImage();
-            if (_repoWR == null) AddRepoWorkerRequest();
-            if (_wcache == null) AddWorkerCache();
+            if (_servW == null) AddServWorker();
+            if (_servL == null) AddServImage();
+            if (_servAS == null) AddServWorkerRequest();
             if (_uow == null) AddUOW();
-            _servWSI = new WorkerSigninService(_repoWSI, _repoW, _repoI, _repoWR, _wcache, _uow);
+            if (_map == null) AddMapper();
+            _servWSI = new WorkerSigninService(_repoWSI, _servW, _servI, _servWR, _uow, _map);
             return this;
         }
 
@@ -409,23 +408,22 @@ namespace Machete.Test
         }
 
         public FluentRecordBase AddWorkerSignin(
-            DateTime? datecreated = null,
-            DateTime? dateupdated = null
+            Worker worker = null
+            //DateTime? datecreated = null,
+            //DateTime? dateupdated = null
         )
         {
             //
             // DEPENDENCIES
             if (_servWSI == null) AddServWorkerSignin();
+            if (worker != null) _w = worker;
             if (_w == null) AddWorker();
             //
             // ARRANGE
-            _wsi = (WorkerSignin)Records.signin.Clone();
-            if (datecreated != null) _wsi.datecreated = (DateTime)datecreated;
-            if (dateupdated != null) _wsi.dateupdated = (DateTime)dateupdated;
-            _wsi.dwccardnum = _w.dwccardnum;
+
             //
             // ACT
-            _servWSI.CreateSignin(_wsi, _user);
+            _wsi = _servWSI.CreateSignin(_w.dwccardnum, DateTime.Now, _user);
             return this;
         }
 
@@ -460,7 +458,9 @@ namespace Machete.Test
             if (_repoP == null) AddRepoPerson();
             if (_uow == null) AddUOW();
             if (_lcache == null) AddLookupCache();
-            _servP = new PersonService(_repoP, _uow, _lcache);
+            if (_map == null) AddMapper();
+
+            _servP = new PersonService(_repoP, _uow, _lcache, _map);
             return this;
         }
 
@@ -472,7 +472,8 @@ namespace Machete.Test
 
         public FluentRecordBase AddPerson(
             DateTime? datecreated = null,
-            DateTime? dateupdated = null
+            DateTime? dateupdated = null,
+            string testID = null
         )
         {
             //
@@ -483,6 +484,7 @@ namespace Machete.Test
             _p = (Person)Records.person.Clone();
             if (datecreated != null) _p.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _p.dateupdated = (DateTime)dateupdated;
+            if (testID != null) _p.firstname2 = testID;
             //
             // ACT
             _servP.Create(_p, _user);
@@ -527,9 +529,9 @@ namespace Machete.Test
             // DEPENDENCIES
             if (_repoW == null) AddRepoWorker();
             if (_uow == null) AddUOW();
-            if (_wcache == null) AddWorkerCache();
-
-            _servW = new WorkerService(_repoW, _wcache, _uow, _repoWA, _repoWO, _repoP);
+            if (_map == null) AddMapper();
+            if (_lcache == null) AddLookupCache();
+            _servW = new WorkerService(_repoW, _lcache, _uow, _repoWA, _repoWO, _repoP, _map);
             return this;
         }
 
@@ -547,7 +549,8 @@ namespace Machete.Test
             DateTime? datecreated = null,
             DateTime? dateupdated = null,
             DateTime? memberexpirationdate = null,
-            DateTime? memberReactivateDate = null
+            DateTime? memberReactivateDate = null,
+            string testID = null
         )
         {
             //
@@ -561,11 +564,12 @@ namespace Machete.Test
             if (skill1 != null) _w.skill1 = skill1;
             if (skill2 != null) _w.skill2 = skill2;
             if (skill3 != null) _w.skill3 = skill3;
-            if (status != null) _w.memberStatus = (int)status;
+            if (status != null) _w.memberStatusID = (int)status;
             if (datecreated != null) _w.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _w.dateupdated = (DateTime)dateupdated;
             if (memberexpirationdate != null) _w.memberexpirationdate = (DateTime)memberexpirationdate;
             if (memberReactivateDate != null) _w.memberReactivateDate = (DateTime)memberReactivateDate;
+            if (testID != null) _w.Person.firstname2 = testID;
             // kludge
             _w.dwccardnum = Records.GetNextMemberID(_dbFactory.Get().Workers);
             //
@@ -731,8 +735,9 @@ namespace Machete.Test
             //
             // DEPENDENCIES
             if (_repoL == null) AddRepoLookup();
+            if (_map == null) AddMapper();
             if (_uow == null) AddUOW();
-            _servL = new LookupService(_repoL, _uow);
+            _servL = new LookupService(_repoL, _map, _uow);
             return this;
         }
 
@@ -793,7 +798,8 @@ namespace Machete.Test
             if (_servAS == null) AddServActivitySignin();
             if (_lcache == null) AddLookupCache();
             if (_uow == null) AddUOW();
-            _servA = new ActivityService(_repoA, _servAS, _lcache, _uow);
+            if (_map == null) AddMapper();
+            _servA = new ActivityService(_repoA, _servAS, _lcache, _uow, _map);
             return this;
         }
 
@@ -857,12 +863,12 @@ namespace Machete.Test
             //
             // DEPENDENCIES
             if (_repoAS == null) AddRepoActivitySignin();
-            if (_repoW == null) AddRepoWorker();
-            if (_repoL == null) AddRepoImage();
-            if (_repoAS == null) AddRepoWorkerRequest();
-            if (_wcache == null) AddWorkerCache();
+            if (_servW == null) AddServWorker();
+            if (_servL == null) AddServImage();
+            if (_servAS == null) AddServWorkerRequest();
             if (_uow == null) AddUOW();
-            _servAS = new ActivitySigninService(_repoAS, _repoW, _repoP, _repoI, _repoWR,_wcache, _uow);
+            if (_map == null) AddMapper();
+            _servAS = new ActivitySigninService(_repoAS, _servW, _servP, _servI, _servWR, _uow, _map);
             return this;
         }
 
@@ -930,7 +936,24 @@ namespace Machete.Test
             return _servR;
         }
 
+        public FluentRecordBase AddServReportsV2()
+        {
+            // DEPENDENCIES
+            if (_repoWO == null) AddRepoWorkOrder();
+            if (_repoWA == null) AddRepoWorkAssignment();
+            if (_repoW == null) AddRepoWorker();
+            _servRV2 = new ReportsV2Service(_repoWO, _repoWA, _repoW);
+            return this;
+        }
+
+        public ReportsV2Service ToServReportsV2()
+        {
+            if (_servRV2 == null) AddServReportsV2();
+            return _servRV2;
+        }
+
         #endregion
+
         #region Emails
 
         public FluentRecordBase AddRepoEmail()
@@ -1029,8 +1052,10 @@ namespace Machete.Test
             //
             // DEPENDENCIES
             if (_repoEV == null) AddRepoEvent();
+            if (_map == null) AddMapper();
+            if (_lcache == null) AddLookupCache();
             if (_uow == null) AddUOW();
-            _servEV = new EventService(_repoEV, _uow);
+            _servEV = new EventService(_repoEV, _uow, _lcache, _map);
             return this;
         }
 
@@ -1055,8 +1080,8 @@ namespace Machete.Test
             _event.PersonID = _p.ID;
             if (datecreated != null) _event.datecreated = (DateTime)datecreated;
             if (dateupdated != null) _event.dateupdated = (DateTime)dateupdated;
-            _event.Updatedby = _user;
-            _event.Createdby = _user;
+            _event.updatedby = _user;
+            _event.createdby = _user;
             //
             // ACT
             _servEV.Create(_event, _user);
@@ -1069,6 +1094,17 @@ namespace Machete.Test
             return _event;
         }
         #endregion
+
+        public FluentRecordBase AddMapper()
+        {
+            _map = new Machete.Web.MapperConfig().getMapper();
+            return this;
+        }
+
+        public IMapper ToMapper()
+        {
+            return _map;
+        }
 
         public FluentRecordBase AddUOW()
         {

@@ -35,6 +35,7 @@ namespace Machete.Web.ViewModel
         public int statusID { get; set; }
         public DateTime? lastAttempt { get; set; }
         public int? woid { get; set; }
+        public IDefaults def { get; set;  }
         //
         // view-only fields
         //
@@ -44,20 +45,13 @@ namespace Machete.Web.ViewModel
         {
             get
             {
-                if (statusID == Email.iPending
-                    || statusID == Email.iReadyToSend
-                    || statusID == Email.iTransmitError)
+                if (statusID == Domain.Email.iPending
+                    || statusID == Domain.Email.iReadyToSend
+                    || statusID == Domain.Email.iTransmitError)
                 {
                     return true;
                 }
                 return false;
-            }
-        }
-        public SelectList EmailStatuses
-        {
-            get 
-            {
-                return Lookups.getSelectList(Machete.Domain.LCategory.emailstatus);
             }
         }
     }

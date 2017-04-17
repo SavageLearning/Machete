@@ -31,9 +31,6 @@
                     <div class="tb-field">            
                         <input type="submit" value="@WorkerSignins.indexsubmit" class="formButton report-button" />
                     </div>
-                    <div class="tb-field">
-                        <input type="button" value="@WorkAssignments.wkListDupe" id="listDuplicate" class="formButton report-button" />
-                    </div>
                 </div>
             </div>
         }
@@ -73,12 +70,6 @@
         var True = true;
         var False = false;
         //
-        $('#listDuplicate').hide();
-        if (@Boolean.Parse(System.Web.Configuration.WebConfigurationManager.AppSettings["CenterUsesDuplicateSigninList"]))
-        {
-            $('#listDuplicate').show();
-        }
-
         //
         $('.ui-datepicker').datepicker({
             dateFormat: 'mm/dd/yy',
@@ -185,9 +176,7 @@
                         $('#wsiImage').attr('src', data.imageRef); //reload image
                         $('#wsiTable').dataTable().fnDraw(); //reload datatable
 
-                        if (data.message != "Success!") {
-                            alert(data.message);
-                        }
+    
                         if (data.memberSanctioned || data.memberExpelled) {
                             $("#wsiRedImage").attr('src', data.imageRef);
                             $('#signin-red-dialog').dialog({ 
@@ -217,19 +206,6 @@
                         $('#dwccardnum').focus();
                     });
             }    
-        });
-
-        $('#listDuplicate').live('click', function (event) {
-            event.preventDefault();
-            var url = "/WorkerSignin/SigninDuplicate";
-            $.post(url, { todaysdate: $('#dateforsignin').val() }, function (data) {
-                $('#wsiTable').dataTable().fnDraw();
-                $('#dwccardnum').focus();
-                alert(data.message);
-                if (!data.jobSuccess) { alert(data.rtnMessage); }
-            });
-            $('#dwccardnum').focus();
-            return false;
         });
     });
 </script>

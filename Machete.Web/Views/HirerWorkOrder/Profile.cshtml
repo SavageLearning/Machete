@@ -35,7 +35,7 @@
                     @Html.Label(Machete.Web.Resources.WorkOrders.isBusiness)
                 </div>
                 <div class="tb-field business_@(Model.ID)">
-                    @Html.mUIDropDownYesNoFor(model => model.business, new { tabindex = "1", id = "business" }) 
+                    @Html.mUIDropDownYesNoFor(model => model.business, (List<SelectListItem>)ViewBag.YesNoSelectList, new { tabindex = "1", id = "business" }) 
                 </div>
             </div>
             <!-- Note: Field only appears in table when englishRequired = FALSE -->
@@ -81,7 +81,7 @@
                 </div>
                 <div class="tb-field referredby_@(Model.ID)">
                     @Html.mUIDropDownListFor(model => model.referredby,
-                                new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.emplrreference), "Value", "Text"),
+                                new SelectList(ViewBag.employerReferenceList, "Value", "Text"),
                                 new { tabindex = "12", id = "referredby" })
                 </div>
             </div>
@@ -99,7 +99,7 @@
                         @Html.Label(System.Web.Configuration.WebConfigurationManager.AppSettings["PreviouslyHired_ES"])
                     }
                 </div>
-                @Html.mUIDropDownYesNoFor(model => model.returnCustomer, new { tabindex = "14", id = "returnCustomer" }) 
+                @Html.mUIDropDownYesNoFor(model => model.returnCustomer, (List<SelectListItem>)ViewBag.YesNoSelectList, new { tabindex = "14", id = "returnCustomer" }) 
             </div>
             <div class="tb-row">
                 <!-- Display Receive Updates information - worker center specific -->
@@ -110,7 +110,7 @@
                         @Html.Label(System.Web.Configuration.WebConfigurationManager.AppSettings["ReceiveUpdates_ES"])
                     }
                 </div>
-                @Html.mUIDropDownYesNoFor(model => model.receiveUpdates, new { tabindex = "15", id = "receiveUpdates" }) 
+                @Html.mUIDropDownYesNoFor(model => model.receiveUpdates, (List<SelectListItem>)ViewBag.YesNoSelectList, new { tabindex = "15", id = "receiveUpdates" }) 
             </div>
         </div>
         <br />

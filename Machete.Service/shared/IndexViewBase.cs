@@ -47,6 +47,15 @@ namespace Machete.Service
         {
             q = q.Where(p => DbFunctions.DiffDays(p.dateforsignin, o.date) == 0 ? true : false);
         }
+        public static void search(viewOptions o, ref IQueryable<WorkerSignin> q)
+        {
+            q = q.Where(wsi => SqlFunctions.StringConvert((decimal)wsi.dwccardnum).Contains(o.sSearch) ||
+                            wsi.worker.Person.firstname1.Contains(o.sSearch) ||
+                            wsi.worker.Person.firstname2.Contains(o.sSearch) ||
+                            wsi.worker.Person.lastname1.Contains(o.sSearch) ||
+                            wsi.worker.Person.lastname2.Contains(o.sSearch) //||
+                            );
+        }
         public static void search<T>(viewOptions o, ref IEnumerable<T> e, IEnumerable<Worker> wcache) where T : Signin
         {
             e = e.Join(wcache, s => s.dwccardnum, w => w.dwccardnum, (s, w) => new { s, w })
@@ -67,7 +76,7 @@ namespace Machete.Service
             q = q.Where(wsi => wsi.worker.typeOfWorkID == o.typeofwork_grouping)
                  .Select(wsi => wsi);
         }
-        public static void waGrouping(viewOptions o, ref IQueryable<WorkerSignin> q, IWorkerRequestRepository wrRepo)
+        public static void waGrouping(viewOptions o, ref IQueryable<WorkerSignin> q, IWorkerRequestService wrServ)
         {
             switch (o.wa_grouping)
             {
@@ -84,7 +93,7 @@ namespace Machete.Service
                 case "requested":
                     if (o.date == null) throw new MacheteIntegrityException("Date cannot be null for Requested filter");
                     q = q.Where(p => p.WorkAssignmentID == null);
-                    q = q.Join(wrRepo.GetAllQ(), //LINQ
+                    q = q.Join(wrServ.GetAll(), //LINQ
                                 wsi => new
                                 {
                                     K1 = (int)wsi.WorkerID,
@@ -99,23 +108,24 @@ namespace Machete.Service
                     break;
             }
         }
-        public static void sortOnColName(string name, bool descending, ref IEnumerable<wsiView> e)
+        public static void sortOnColName(string name, bool descending, ref IQueryable<WorkerSignin> q)
         {
             switch (name)
             {
-                case "dwccardnum": e = descending ? e.OrderByDescending(p => p.dwccardnum) : e.OrderBy(p => p.dwccardnum); break;
-                case "firstname1": e = descending ? e.OrderByDescending(p => p.firstname1) : e.OrderBy(p => p.firstname1); break;
-                case "firstname2": e = descending ? e.OrderByDescending(p => p.firstname2) : e.OrderBy(p => p.firstname2); break;
-                case "lastname1": e = descending ? e.OrderByDescending(p => p.lastname1) : e.OrderBy(p => p.lastname1); break;
-                case "lastname2": e = descending ? e.OrderByDescending(p => p.lastname2) : e.OrderBy(p => p.lastname2); break;
-                case "dateupdated": e = descending ? e.OrderByDescending(p => p.dateupdated) : e.OrderBy(p => p.dateupdated); break;
-                case "dateforsigninstring": e = descending ? e.OrderByDescending(p => p.dateforsignin) : e.OrderBy(p => p.dateforsignin); break;
-                case "expirationDate": e = descending ? e.OrderByDescending(p => p.expirationDate) : e.OrderBy(p => p.expirationDate); break;
+                case "dwccardnum": q = descending ? q.OrderByDescending(p => p.dwccardnum) : q.OrderBy(p => p.dwccardnum); break;
+                case "firstname1": q = descending ? q.OrderByDescending(p => p.worker.Person.firstname1) : q.OrderBy(p => p.worker.Person.firstname1); break;
+                case "firstname2": q = descending ? q.OrderByDescending(p => p.worker.Person.firstname2) : q.OrderBy(p => p.worker.Person.firstname2); break;
+                case "lastname1": q = descending ? q.OrderByDescending(p => p.worker.Person.lastname1) : q.OrderBy(p => p.worker.Person.lastname1); break;
+                case "lastname2": q = descending ? q.OrderByDescending(p => p.worker.Person.lastname2) : q.OrderBy(p => p.worker.Person.lastname2); break;
+                case "dateupdated": q = descending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated); break;
+                case "dateforsigninstring": q = descending ? q.OrderByDescending(p => p.dateforsignin) : q.OrderBy(p => p.dateforsignin); break;
+                case "expirationDate": q = descending ? q.OrderByDescending(p => p.worker.memberexpirationdate) : q.OrderBy(p => p.worker.memberexpirationdate); break;
                 case "lotterySequence":
-                    e = descending ? e.OrderByDescending(p => p.lotterySequence != null).ThenByDescending(p => p.lotterySequence) :
-                    e.OrderBy(p => p.lotterySequence == null).ThenBy(p => p.lotterySequence);
+                    q = descending ? 
+                        q.OrderByDescending(p => p.lottery_sequence != null).ThenByDescending(p => p.lottery_sequence) :
+                        q.OrderBy(p => p.lottery_sequence == null).ThenBy(p => p.lottery_sequence);
                     break;
-                default: e = descending ? e.OrderByDescending(p => p.dateforsignin) : e.OrderBy(p => p.dateforsignin); break;
+                default: q = descending ? q.OrderByDescending(p => p.dateforsignin) : q.OrderBy(p => p.dateforsignin); break;
             }
         }
         #endregion
@@ -154,11 +164,11 @@ namespace Machete.Service
         }
         public static void status(viewOptions o, ref IQueryable<WorkAssignment> q)
         {
-            q = q.Where(p => p.workOrder.status == o.status);
+            q = q.Where(p => p.workOrder.statusID == o.status);
         }
         public static void filterPending(viewOptions o, ref IQueryable<WorkAssignment> q)
         {
-            q = q.Where(p => p.workOrder.status != WorkOrder.iPending);
+            q = q.Where(p => p.workOrder.statusID != WorkOrder.iPending);
         }
         public static void waGrouping(viewOptions o, ref IQueryable<WorkAssignment> q, ILookupRepository lRepo)
         {
@@ -166,14 +176,14 @@ namespace Machete.Service
             switch (o.wa_grouping)
             {
                 case "open": q = q.Where(p => p.workerAssignedID == null 
-                                           && p.workOrder.status == WorkOrder.iActive);
+                                           && p.workOrder.statusID == WorkOrder.iActive);
                     break;
                 case "assigned": q = q.Where(p => p.workerAssignedID != null 
-                                               && p.workOrder.status == WorkOrder.iActive); break;
+                                               && p.workOrder.statusID == WorkOrder.iActive); break;
                 case "requested":
                     q = q.Where(p => p.workerAssignedID == null 
                                   && p.workOrder.workerRequests.Any() == true 
-                                  && p.workOrder.status == WorkOrder.iActive);
+                                  && p.workOrder.statusID == WorkOrder.iActive);
 
                     break;
                 case "skilled": q = q.Join(lRepo.GetAllQ(),
@@ -182,11 +192,11 @@ namespace Machete.Service
                                     (wa, sk) => new { wa, sk })
                              .Where(jj => jj.sk.speciality == true 
                                        && jj.wa.workerAssigned == null 
-                                       && jj.wa.workOrder.status == WorkOrder.iActive)
+                                       && jj.wa.workOrder.statusID == WorkOrder.iActive)
                              .Select(jj => jj.wa);
                     break;
                 case "completed":
-                    q = q.Where(wa => wa.workOrder.status == WorkOrder.iCompleted);
+                    q = q.Where(wa => wa.workOrder.statusID == WorkOrder.iCompleted);
                     break;
             }
         }
@@ -235,13 +245,14 @@ namespace Machete.Service
                         p.wa.workOrder.contactName.Contains(o.sSearch) ||
                         p.wa.workOrder.Employer.name.Contains(o.sSearch) ||
                         //p.dateupdated.ToString().ContainsOIC(param.sSearch) ||
-                        p.wa.Updatedby.Contains(o.sSearch)).Select(p => p.wa);
+                        p.wa.updatedby.Contains(o.sSearch)).Select(p => p.wa);
             }
         }
         public static IEnumerable<WorkAssignment> filterOnSkill(
             viewOptions o, 
             IQueryable<WorkAssignment> q,
-            ILookupCache lc, IEnumerable<Worker> wcache)
+            ILookupCache lc,
+            Worker worker)
         {
             //  "Machete --A series of good intentions, marinated in panic."
             //
@@ -259,7 +270,7 @@ namespace Machete.Service
             IEnumerable<WorkAssignment> filteredWA = q.AsEnumerable();
             Stack<int> primeskills = new Stack<int>();
             Stack<int> skills = new Stack<int>();
-            Worker worker = wcache.FirstOrDefault(w => w.dwccardnum == o.dwccardnum);
+            //Worker worker = wcache.FirstOrDefault(w => w.dwccardnum == o.dwccardnum);
             if (worker != null)
             {
                 if (worker.skill1 != null) primeskills.Push((int)worker.skill1);
@@ -304,7 +315,7 @@ namespace Machete.Service
 
             return filteredWA;
         }
-        public static void sortOnColName(string name, bool descending, ref IEnumerable<WorkAssignment> q)
+        public static void sortOnColName(string name, bool descending, ref IQueryable<WorkAssignment> q)
         {
             switch (name)
             {
@@ -317,7 +328,7 @@ namespace Machete.Service
                 case "WOID": q = descending ? q.OrderByDescending(p => p.workOrderID) : q.OrderBy(p => p.workOrderID); break;
                 case "WAID": q = descending ? q.OrderByDescending(p => p.ID) : q.OrderBy(p => p.ID); break;
                 case "description": q = descending ? q.OrderByDescending(p => p.description) : q.OrderBy(p => p.description); break;
-                case "updatedby": q = descending ? q.OrderByDescending(p => p.Updatedby) : q.OrderBy(p => p.Updatedby); break;
+                case "updatedby": q = descending ? q.OrderByDescending(p => p.updatedby) : q.OrderBy(p => p.updatedby); break;
                 case "dateupdated": q = descending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated); break;
                 case "assignedWorker": q = descending ? q.OrderByDescending(p => p.workerAssigned == null ? 0 : p.workerAssigned.dwccardnum) : q.OrderBy(p => p.workerAssigned == null ? 0 : p.workerAssigned.dwccardnum); break;
                 default: q = descending ? q.OrderByDescending(p => p.workOrder.dateTimeofWork) : q.OrderBy(p => p.workOrder.dateTimeofWork); break;
@@ -345,7 +356,7 @@ namespace Machete.Service
                                 SqlFunctions.StringConvert((decimal)p.paperOrderNum).Contains(o.sSearch) ||
                                 p.contactName.Contains(o.sSearch) ||
                                 p.workSiteAddress1.Contains(o.sSearch) ||
-                                p.Updatedby.Contains(o.sSearch));
+                                p.updatedby.Contains(o.sSearch));
             }
         }
         public static void filterEmployer(viewOptions o, ref IQueryable<WorkOrder> q)
@@ -354,7 +365,7 @@ namespace Machete.Service
         }
         public static void filterStatus(viewOptions o, ref IQueryable<WorkOrder> q)
         {
-            q = q.Where(p => p.status.Equals((int)o.status));
+            q = q.Where(p => p.statusID.Equals((int)o.status));
         }
         public static void filterOnlineSource(viewOptions o, ref IQueryable<WorkOrder> q)
         {
@@ -387,12 +398,12 @@ namespace Machete.Service
             switch (name)
             {
                 //case "WOID": orderedWO = orderDescending ? q.OrderByDescending(p => p.dateTimeofWork) : q.OrderBy(p => p.dateTimeofWork); break;
-                case "status": q = descending ? q.OrderByDescending(p => p.status) : q.OrderBy(p => p.status); break;
+                case "status": q = descending ? q.OrderByDescending(p => p.statusID) : q.OrderBy(p => p.statusID); break;
                 case "transportMethod": q = descending ? q.OrderByDescending(p => p.transportMethodID) : q.OrderBy(p => p.transportMethodID); break;
                 case "WAcount": q = descending ? q.OrderByDescending(p => p.workAssignments.Count) : q.OrderBy(p => p.workAssignments.Count); break;
                 case "contactName": q = descending ? q.OrderByDescending(p => p.contactName) : q.OrderBy(p => p.contactName); break;
                 case "workSiteAddress1": q = descending ? q.OrderByDescending(p => p.workSiteAddress1) : q.OrderBy(p => p.workSiteAddress1); break;
-                case "updatedby": q = descending ? q.OrderByDescending(p => p.Updatedby) : q.OrderBy(p => p.Updatedby); break;
+                case "updatedby": q = descending ? q.OrderByDescending(p => p.updatedby) : q.OrderBy(p => p.updatedby); break;
                 case "onlineSource": q = descending ? q.OrderByDescending(p => p.onlineSource) : q.OrderBy(p => p.onlineSource); break;
                 case "emailSentCount": q = descending ? q.OrderByDescending(p => p.Emails.Count()) : q.OrderBy(p => p.Emails.Count()); break;
                 case "emailErrorCount": q = descending ? q.OrderByDescending(p => p.Emails.Count()) : q.OrderBy(p => p.Emails.Count()); break;
@@ -446,6 +457,7 @@ namespace Machete.Service
             switch (name)
             {
                 case "active": q = descending ? q.OrderByDescending(p => p.active) : q.OrderBy(p => p.active); break;
+                case "dwccardnum": q = descending ? q.OrderByDescending(p => p.Worker.dwccardnum) : q.OrderBy(p => p.Worker.dwccardnum); break;
                 case "firstname1": q = descending ? q.OrderByDescending(p => p.firstname1) : q.OrderBy(p => p.firstname1); break;
                 case "firstname2": q = descending ? q.OrderByDescending(p => p.firstname2) : q.OrderBy(p => p.firstname2); break;
                 case "lastname1": q = descending ? q.OrderByDescending(p => p.lastname1) : q.OrderBy(p => p.lastname1); break;
@@ -469,7 +481,7 @@ namespace Machete.Service
 
         public static void getExpiredWorkers(viewOptions o, int exp, ref IQueryable<Person> q)
         {
-            q = q.Where(x => x.Worker.memberStatus == exp);
+            q = q.Where(x => x.Worker.memberStatusID == exp);
         }
 
         /// <summary>
@@ -479,7 +491,7 @@ namespace Machete.Service
         /// <param name="q"></param>
         public static void getSExWorkers(viewOptions o, int s, int Ex, ref IQueryable<Person> q)
         {
-            q = q.Where(x => x.Worker.memberStatus == s || x.Worker.memberStatus == Ex);
+            q = q.Where(x => x.Worker.memberStatusID == s || x.Worker.memberStatusID == Ex);
         }
 
         public static void search(viewOptions o, ref IQueryable<Worker> q)
@@ -497,7 +509,7 @@ namespace Machete.Service
             switch (name)
             {
                 case "dwccardnum": q = descending ? q.OrderByDescending(p => p.dwccardnum) : q.OrderBy(p => p.dwccardnum); break;
-                case "wkrStatus": q = descending ? q.OrderByDescending(p => p.memberStatus) : q.OrderBy(p => p.memberStatus); break;
+                case "memberStatus": q = descending ? q.OrderByDescending(p => p.memberStatusID) : q.OrderBy(p => p.memberStatusID); break;
                 case "firstname1": q = descending ? q.OrderByDescending(p => p.Person.firstname1) : q.OrderBy(p => p.Person.firstname1); break;
                 case "firstname2": q = descending ? q.OrderByDescending(p => p.Person.firstname2) : q.OrderBy(p => p.Person.firstname2); break;
                 case "lastname1": q = descending ? q.OrderByDescending(p => p.Person.lastname1) : q.OrderBy(p => p.Person.lastname1); break;
@@ -520,15 +532,38 @@ namespace Machete.Service
         /// <param name="o"></param>
         /// <param name="q"></param>
         /// <param name="lRepo"></param>
-        public static void search(viewOptions o, ref IEnumerable<Activity> q, LookupCache lcache)
+        public static void search(viewOptions o, ref IQueryable<Activity> q)
         {
-            q = q //LookupCache will be slow and needs to be converted to IQueryable
-                .Where(p => lcache.textByID(p.name, o.CI.TwoLetterISOLanguageName).ContainsOIC(o.sSearch) ||
-                            p.notes.ContainsOIC(o.sSearch) ||
-                            p.teacher.ContainsOIC(o.sSearch) ||
-                            lcache.textByID(p.type, o.CI.TwoLetterISOLanguageName).ContainsOIC(o.sSearch) ||
-                            p.dateStart.ToString().ContainsOIC(o.sSearch) ||
-                            p.dateEnd.ToString().ContainsOIC(o.sSearch));
+            switch(o.CI.TwoLetterISOLanguageName.ToUpperInvariant())
+            {
+                case "ES":
+                    q = q.Where(p => p.notes.Contains(o.sSearch) ||
+                        p.teacher.Contains(o.sSearch) ||
+                        p.dateStart.ToString().Contains(o.sSearch) ||
+                        p.nameES.ToString().Contains(o.sSearch) ||
+                        p.typeES.ToString().Contains(o.sSearch) ||
+                        p.dateEnd.ToString().Contains(o.sSearch));
+                    break;
+                case "EN":
+                default:
+                    q = q.Where(p => p.notes.Contains(o.sSearch) ||
+                        p.teacher.Contains(o.sSearch) ||
+                        p.dateStart.ToString().Contains(o.sSearch) ||
+                        p.nameEN.ToString().Contains(o.sSearch) ||
+                        p.typeEN.ToString().Contains(o.sSearch) ||
+                        p.dateEnd.ToString().Contains(o.sSearch));
+                        break;
+            }
+
+        }
+        public static void search(viewOptions o, ref IQueryable<ActivitySignin> q)
+        {
+            q = q.Where(asi => SqlFunctions.StringConvert((decimal)asi.dwccardnum).Contains(o.sSearch) ||
+                            asi.person.firstname1.Contains(o.sSearch) ||
+                            asi.person.firstname2.Contains(o.sSearch) ||
+                            asi.person.lastname1.Contains(o.sSearch) ||
+                            asi.person.lastname2.Contains(o.sSearch) 
+                            );
         }
         /// <summary>
         /// 
@@ -537,20 +572,10 @@ namespace Machete.Service
         /// <param name="descending"></param>
         /// <param name="isoLandCode"></param>
         /// <param name="q"></param>
-        public static void sortOnColName(string name, bool descending, string isoLandCode, ref IEnumerable<Activity> q, LookupCache lc)
+        public static void sortOnColName(string name, bool descending, ref IQueryable<Activity> q)
         {
             switch (name)
             {
-                case "name":
-                    q = descending ?
-                        q.OrderByDescending(p => lc.textByID(p.name, isoLandCode)) :
-                        q.OrderBy(p => lc.textByID(p.name, isoLandCode));
-                    break;
-                case "type":
-                    q = descending ?
-                        q.OrderByDescending(p => lc.textByID(p.type, isoLandCode)) :
-                        q.OrderBy(p => lc.textByID(p.type, isoLandCode));
-                    break;
                 case "count":
                     q = descending ?
                         q.OrderByDescending(p => p.Signins.Count()) :
@@ -582,19 +607,19 @@ namespace Machete.Service
                     break;
             }
         }
-        public static void sortOnColName(string name, bool descending, string isoLandCode, ref IEnumerable<asiView> e)
+        public static void sortOnColName(string name, bool descending, ref IQueryable<ActivitySignin> q)
         {
             switch (name)
             {
-                case "dwccardnum": e = descending ? e.OrderByDescending(p => p.dwccardnum) : e.OrderBy(p => p.dwccardnum); break;
-                case "firstname1": e = descending ? e.OrderByDescending(p => p.firstname1) : e.OrderBy(p => p.firstname1); break;
-                case "firstname2": e = descending ? e.OrderByDescending(p => p.firstname2) : e.OrderBy(p => p.firstname2); break;
-                case "lastname1": e = descending ? e.OrderByDescending(p => p.lastname1) : e.OrderBy(p => p.lastname1); break;
-                case "lastname2": e = descending ? e.OrderByDescending(p => p.lastname2) : e.OrderBy(p => p.lastname2); break;
-                case "dateupdated": e = descending ? e.OrderByDescending(p => p.dateupdated) : e.OrderBy(p => p.dateupdated); break;
-                case "dateforsigninstring": e = descending ? e.OrderByDescending(p => p.dateforsignin) : e.OrderBy(p => p.dateforsignin); break;
-                case "expirationDate": e = descending ? e.OrderByDescending(p => p.expirationDate) : e.OrderBy(p => p.expirationDate); break;
-                default: e = descending ? e.OrderByDescending(p => p.dateforsignin) : e.OrderBy(p => p.dateforsignin); break;
+                case "dwccardnum": q = descending ? q.OrderByDescending(p => p.dwccardnum) : q.OrderBy(p => p.dwccardnum); break;
+                case "firstname1": q = descending ? q.OrderByDescending(p => p.person.firstname1) : q.OrderBy(p => p.person.firstname1); break;
+                case "firstname2": q = descending ? q.OrderByDescending(p => p.person.firstname2) : q.OrderBy(p => p.person.firstname2); break;
+                case "lastname1": q = descending ? q.OrderByDescending(p => p.person.lastname1) : q.OrderBy(p => p.person.lastname1); break;
+                case "lastname2": q = descending ? q.OrderByDescending(p => p.person.lastname2) : q.OrderBy(p => p.person.lastname2); break;
+                case "dateupdated": q = descending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated); break;
+                case "dateforsigninstring": q = descending ? q.OrderByDescending(p => p.dateforsignin) : q.OrderBy(p => p.dateforsignin); break;
+                case "expirationDate": q = descending ? q.OrderByDescending(p => p.person.Worker.memberexpirationdate) : q.OrderBy(p => p.person.Worker.memberexpirationdate); break;
+                default: q = descending ? q.OrderByDescending(p => p.dateforsignin) : q.OrderBy(p => p.dateforsignin); break;
             }
         }
         /// <summary>
@@ -696,7 +721,7 @@ namespace Machete.Service
             q = q.Where(p => //p.active.ToString().Contains(o.sSearch) ||
                             p.subject.Contains(o.sSearch) ||
                             p.emailTo.Contains(o.sSearch) ||
-                            p.Updatedby.Contains(o.sSearch));
+                            p.updatedby.Contains(o.sSearch));
         }
 
         public static void filterOnID(viewOptions o, ref IQueryable<Email> q)

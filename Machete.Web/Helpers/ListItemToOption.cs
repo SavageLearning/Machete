@@ -61,63 +61,23 @@ namespace System.Web.Mvc
     /// </summary>
     public class SelectListItemEx : SelectListItem
     {
-        public string wage
-        {
-            get;
-            set;
-        }
-        public string minHour
-        {
-            get;
-            set;
-        }
-        public string fixedJob
-        {
-            get;
-            set;
-        }
+        public string wage { get; set; }
+        public string minHour { get; set; }
+        public string fixedJob { get; set; }
     }
 
     public class SelectListEmployerSkills : SelectListItem
     {
-        public double wage
-        {
-            get;
-            set;
-        }
-        public int minHour
-        {
-            get;
-            set;
-        }
-        public int ID
-        {
-            get;
-            set;
-        }
-        public int typeOfWorkID
-        {
-            get;
-            set;
-        }
-        public string skillDescriptionEs
-        {
-            get;
-            set;
-        }
-        public string skillDescriptionEn
-        {
-            get;
-            set;
-        }
+        public double wage { get; set; }
+        public int minHour { get; set; }
+        public int ID { get; set; }
+        public int typeOfWorkID { get; set; }
+        public string skillDescriptionEs { get; set; }
+        public string skillDescriptionEn { get; set; }
     }
 
     public class SelectListItemEmail : SelectListItem
     {
-        public string template
-        {
-            get;
-            set;
-        }
+        public string template { get; set; }
     }
 }

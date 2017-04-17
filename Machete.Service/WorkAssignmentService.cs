@@ -21,6 +21,8 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
@@ -36,7 +38,7 @@ namespace Machete.Service
         IQueryable<WorkAssignmentSummary> GetSummary(string search);
         bool Assign(WorkAssignment assignment, WorkerSignin signin, string user);
         bool Unassign(int? wsiid, int? waid, string user);
-        dataTableResult<WorkAssignment> GetIndexView(viewOptions o);
+        dataTableResult<DTO.WorkAssignmentList> GetIndexView(viewOptions o);
     }
 
     // Business logic for WorkAssignment record management
@@ -49,7 +51,7 @@ namespace Machete.Service
         private readonly IUnitOfWork unitOfWork;
         private readonly ILookupRepository lRepo;
         private readonly ILookupCache lcache;
-        private readonly IWorkerCache wcache;
+        private readonly IMapper map;
         //
         //
         public WorkAssignmentService(
@@ -57,9 +59,10 @@ namespace Machete.Service
             IWorkerRepository wRepo, 
             ILookupRepository lRepo, 
             IWorkerSigninRepository wsiRepo,
-            IWorkerCache wc,
             ILookupCache lc,
-            IUnitOfWork unitOfWork) : base(waRepo, unitOfWork)
+            IUnitOfWork unitOfWork,
+            IMapper map
+            ) : base(waRepo, unitOfWork)
         {
             this.waRepo = waRepo;
             this.unitOfWork = unitOfWork;
@@ -67,7 +70,7 @@ namespace Machete.Service
             this.lRepo = lRepo;
             this.wsiRepo = wsiRepo;
             this.lcache = lc;
-            this.wcache = wc;
+            this.map = map;
             this.logPrefix = "WorkAssignment";
         }
         /// <summary>
@@ -83,14 +86,13 @@ namespace Machete.Service
             }         
             return wa;
         }
-        public dataTableResult<WorkAssignment> GetIndexView(viewOptions o)
+        public dataTableResult<DTO.WorkAssignmentList> GetIndexView(viewOptions o)
         {
-            var result = new dataTableResult<WorkAssignment>();
+            var result = new dataTableResult<DTO.WorkAssignmentList>();
             IQueryable<WorkAssignment> q = waRepo.GetAllQ();
-            IEnumerable<WorkAssignment> e;
             //
             // 
-            if (o.date != null) IndexViewBase.diffDays(o, ref q); 
+            if (o.date != null) IndexViewBase.diffDays(o, ref q);
             if (o.typeofwork_grouping > 0) IndexViewBase.typeOfWork(o, ref q, lRepo);
             if (o.woid > 0) IndexViewBase.WOID(o, ref q);
             if (o.personID > 0) IndexViewBase.WID(o, ref q);
@@ -98,43 +100,27 @@ namespace Machete.Service
             if (o.showPending == false) IndexViewBase.filterPending(o, ref q);
             if (!string.IsNullOrEmpty(o.wa_grouping)) IndexViewBase.waGrouping(o, ref q, lRepo);
             if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q, lRepo);
-            //
-            // filter on member ID, showing only assignments available to the member based on their skills
             if (o.dwccardnum > 0)
-                e = IndexViewBase.filterOnSkill(o, q, lcache, wcache.GetCache());
-             else
-                e = q.AsEnumerable();
-            //
-            // getting worker info from cache, joining to Work Assignments
-            e = e.GroupJoin(wcache.GetCache(),  //LINQ
-                                wa => wa.workerAssignedID, 
-                                wc => wc.ID, 
-                                (wa, wc) => new { wa, wc }
-                            )
-                            .SelectMany(jj => jj.wc.DefaultIfEmpty(
-                                    new Worker { 
-                                                 ID = 0, 
-                                                 dwccardnum = 0
-                                               }
-                                        ),
-                                    (jj, row) => jj.wa
-                            );
-            //
-            //Sort the Persons based on column selection
-            IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref e);
-            e = e.ToList();
-            result.filteredCount = e.Count();
-            //
-            //Limit results to the display length and offset
-            if (o.displayLength >= 0)
             {
-                result.query = e.Skip(o.displayStart).Take(o.displayLength);
+                var worker = wRepo.GetById((int)o.dwccardnum);
+                IndexViewBase.filterOnSkill(o, q, lcache, worker);
+            }
+            //Sort the Persons based on column selection
+            IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
+            //e = e.ToList();
+            result.filteredCount = q.Count();
+            if (o.displayLength > 0)
+            {
+                result.query = q.ProjectTo<DTO.WorkAssignmentList>(map.ConfigurationProvider)
+                .Skip(o.displayStart)
+                .Take(o.displayLength)
+                .AsEnumerable();
             }
             else
             {
-                result.query = e;
-            } 
-
+                result.query = q.ProjectTo<DTO.WorkAssignmentList>(map.ConfigurationProvider)
+                .AsEnumerable();
+            }
             result.totalCount = waRepo.GetAllQ().Count();
            return result;
       }
@@ -154,12 +140,12 @@ namespace Machete.Service
                             {
                                 dateSoW = DbFunctions
                                 .TruncateTime(wa.workOrder.dateTimeofWork),                               
-                                wa.workOrder.status
+                                wa.workOrder.statusID
                             } into dayGroup
                             select new WorkAssignmentSummary()
                             {
                                 date = dayGroup.Key.dateSoW,
-                                status = dayGroup.Key.status,
+                                status = dayGroup.Key.statusID,
                                 count = dayGroup.Count()
                             };
 
@@ -191,8 +177,8 @@ namespace Machete.Service
             asmt.workerAssignedID = wid;
             //
             // update timestamps and save
-            asmt.updatedby(user);
-            signin.updatedby(user);
+            asmt.updatedByUser(user);
+            signin.updatedByUser(user);
             unitOfWork.Commit();
             log(asmt.ID, user, "WSIID:" + signin.ID + " Assign successful");
             return true;
@@ -401,11 +387,21 @@ namespace Machete.Service
             signin.WorkAssignmentID = null;
             asmt.workerSigninID = null;
             asmt.workerAssignedID = null;
-            asmt.updatedby(user);
-            signin.updatedby(user);
+            asmt.updatedByUser(user);
+            signin.updatedByUser(user);
             unitOfWork.Commit();
             log(asmt.ID, user, "WSIID:" + signin.ID + " Unassign successful");
         }
+        public override WorkAssignment Create(WorkAssignment record, string user)
+        {
+
+            if (record.workOrder == null) throw new ArgumentNullException("workOrder object is null");
+            record.workOrder.waPseudoIDCounter++;
+            record.pseudoID = record.workOrder.waPseudoIDCounter;
+            updateComputedValues(ref record);
+            return base.Create(record, user);
+        }
+
         public override void Save(WorkAssignment wa, string user)
         {
             //4.5.12-Moved down from Controller; solving WSI/WA integrity
@@ -413,9 +409,23 @@ namespace Machete.Service
             {
                 wa.workerAssigned = wRepo.GetById((int)wa.workerAssignedID);
             }
-            wa.updatedby(user);
+            wa.updatedByUser(user);
+            updateComputedValues(ref wa);
             log(wa.ID, user, "WorkAssignment edited");
             unitOfWork.Commit();
+        }
+
+        private void updateComputedValues(ref WorkAssignment record)
+        {
+            record.skillEN = lcache.textByID(record.skillID, "EN");
+            record.skillES = lcache.textByID(record.skillID, "ES");
+            record.minEarnings = (record.days * record.surcharge) + (record.hourlyWage * record.hours * record.days);
+            record.maxEarnings = record.hourRange == null ? 0 : (record.days * record.surcharge) + (record.hourlyWage * (int)record.hourRange * record.days);
+            record.fullWAID = System.String.Format("{0,5:D5}-{1,2:D2}",
+                                                    (int)record.workOrder.paperOrderNum,
+                                                    (int)record.pseudoID);
+
+
         }
     }
 }

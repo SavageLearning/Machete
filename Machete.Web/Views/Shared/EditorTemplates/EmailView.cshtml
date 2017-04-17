@@ -23,7 +23,7 @@
         </div>
         @if (Html.IsInRole(Html.Role_AM()) && Model.editable)
         {
-            @Html.mUIDropDownListFor(model => model.statusID, Model.EmailStatuses, new { @id = Model.idPrefix + "status" })
+            @Html.mUIDropDownListFor(model => model.statusID, Model.def.getSelectList(LCategory.emailstatus), new { @id = Model.idPrefix + "status" })
         }
         else
         { 
@@ -70,7 +70,7 @@
 
 <div style="clear: left;"></div>
 @Html.Partial("ManagerInfo", Model)
-@Html.Partial("AdministratorInfo", Model)
+
 
 <script type="text/javascript">
     $(document).ready(function () {

@@ -21,16 +21,20 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
+using Machete.Service.DTO;
 using System.Linq;
+using System.Text;
 
 namespace Machete.Service
 {
     public interface IPersonService : IService<Person>
     {
-        dataTableResult<Person> GetIndexView(viewOptions o);
+        dataTableResult<PersonList> GetIndexView(viewOptions o);
     }
 
     // Business logic for Person record management
@@ -38,18 +42,21 @@ namespace Machete.Service
     public class PersonService : ServiceBase<Person>, IPersonService
     {
         private readonly ILookupCache lcache;
-
-        public PersonService(IPersonRepository pRepo, 
+        private readonly IMapper map;
+        public PersonService(IPersonRepository pRepo,
                              IUnitOfWork unitOfWork,
-                             ILookupCache _lcache) : base(pRepo, unitOfWork) 
+                             ILookupCache _lcache,
+                             IMapper map
+                             ) : base(pRepo, unitOfWork)
         {
             this.logPrefix = "Person";
             this.lcache = _lcache;
-        }  
+            this.map = map;
+        }
 
-        public dataTableResult<Person> GetIndexView(viewOptions o)
+        public dataTableResult<DTO.PersonList> GetIndexView(viewOptions o)
         {
-            var result = new dataTableResult<Person>();
+            var result = new dataTableResult<DTO.PersonList>();
             //Get all the records
             IQueryable<Person> q = repo.GetAllQ();
             result.totalCount = q.Count();
@@ -61,12 +68,35 @@ namespace Machete.Service
             if (o.showExpiredWorkers == true) IndexViewBase.getExpiredWorkers(o, lcache.getByKeys(LCategory.memberstatus, LMemberStatus.Expired), ref q);
             if (o.showSExWorkers == true) IndexViewBase.getSExWorkers(o, lcache.getByKeys(LCategory.memberstatus, LMemberStatus.Sanctioned), lcache.getByKeys(LCategory.memberstatus, LMemberStatus.Expelled), ref q);
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
+
             result.filteredCount = q.Count();
-            if ((int)o.displayLength >= 0)
-                result.query = q.Skip<Person>(o.displayStart).Take(o.displayLength);
-            else
-                result.query = q;
+            result.totalCount = repo.GetAllQ().Count();
+            result.query = q.ProjectTo<DTO.PersonList>(map.ConfigurationProvider)
+                .Skip(o.displayStart)
+                .Take(o.displayLength)
+                .AsEnumerable();
             return result;
+        }
+
+        public override Person Create(Person record, string user)
+        {
+            updateComputedValues(ref record);
+            return base.Create(record, user);
+        }
+
+        public override void Save(Person record, string user)
+        {
+            updateComputedValues(ref record);
+            base.Save(record, user);
+        }
+
+        private void updateComputedValues(ref Person r)
+        {
+            var name = new StringBuilder(r.firstname1).Append(" ");
+            if (r.firstname2 != null) name.Append(r.firstname2).Append(" ");
+            name.Append(r.lastname1);
+            if (r.lastname2 != null) name.Append(" ").Append(r.lastname2);
+            r.fullName = name.ToString();
         }
     }
 }

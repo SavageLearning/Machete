@@ -32,6 +32,7 @@ using Machete.Data.Infrastructure;
 using Machete.Service;
 using Machete.Domain;
 using Machete.Test;
+using AutoMapper;
 
 namespace Machete.Test.Unit.Service
 {
@@ -49,7 +50,7 @@ namespace Machete.Test.Unit.Service
         WorkAssignmentService waServ;
         Mock<IWorkerRequestRepository> wrRepo;
         Mock<ILookupCache> lcache;
-        Mock<IWorkerCache> _wcache;
+        Mock<IMapper> _map;
 
         public WorkAssignmentTests()
         {
@@ -104,8 +105,8 @@ namespace Machete.Test.Unit.Service
             wsiRepo = new Mock<IWorkerSigninRepository>();
             wrRepo = new Mock<IWorkerRequestRepository>();
             lcache = new Mock<ILookupCache>();
-            _wcache = new Mock<IWorkerCache>();
-            waServ = new WorkAssignmentService(waRepo.Object, wRepo.Object, lRepo.Object, wsiRepo.Object, _wcache.Object, lcache.Object, uow.Object);
+            _map = new Mock<IMapper>();
+            waServ = new WorkAssignmentService(waRepo.Object, wRepo.Object, lRepo.Object, wsiRepo.Object, lcache.Object, uow.Object, _map.Object);
             
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WAs)]
@@ -143,6 +144,8 @@ namespace Machete.Test.Unit.Service
             var _wa = (WorkAssignment)Records.assignment.Clone();
             _wa.datecreated = DateTime.MinValue;
             _wa.dateupdated = DateTime.MinValue;
+            _wa.workOrder = (WorkOrder)Records.order.Clone();
+            _wa.workOrder.paperOrderNum = _wa.workOrder.ID;
             waRepo.Setup(r => r.Add(_wa)).Returns(_wa);
             //
             //Act
@@ -150,8 +153,8 @@ namespace Machete.Test.Unit.Service
             //
             //Assert
             Assert.IsInstanceOfType(result, typeof(WorkAssignment));
-            Assert.IsTrue(result.Createdby == user);
-            Assert.IsTrue(result.Updatedby == user);
+            Assert.IsTrue(result.createdby == user);
+            Assert.IsTrue(result.updatedby == user);
             Assert.IsTrue(result.datecreated > DateTime.MinValue);
             Assert.IsTrue(result.dateupdated > DateTime.MinValue);
         }
@@ -184,12 +187,15 @@ namespace Machete.Test.Unit.Service
             string user = "UnitTest";
             _wa.datecreated = DateTime.MinValue;
             _wa.dateupdated = DateTime.MinValue;
+            _wa.workOrder = (WorkOrder)Records.order.Clone();
+            _wa.workOrder.paperOrderNum = _wa.workOrder.ID;
+            _wa.pseudoID = 1;
             //
             //Act
             waServ.Save(_wa, user);
             //
             //Assert
-            Assert.IsTrue(_wa.Updatedby == user);
+            Assert.IsTrue(_wa.updatedby == user);
             Assert.IsTrue(_wa.dateupdated > DateTime.MinValue);
         }
     }

@@ -1,4 +1,4 @@
-﻿@model Machete.Domain.WorkOrder
+﻿@model Machete.Web.ViewModel.WorkOrder
 @using Machete.Domain.Resources
 @using Machete.Web.Resources
 @using Machete.Web.Helpers
@@ -23,18 +23,16 @@
         }
     </div>
     <br />
-    @if (Model.paperOrderNum.HasValue)
-    {
-        <h2>@WorkOrders.boxlegend No. @Model.paperOrderNum</h2>
-    }
-    else
+    @if (Model.paperOrderNum.IsEmpty())
     {
         <h2>@WorkOrders.boxlegend No. @Model.ID</h2>
     }
+    else
+    {
+        <h2>@WorkOrders.boxlegend No. @Model.paperOrderNum</h2>
+    }
     <h3>@Employers.boxlegend: @Model.Employer.name</h3>
     <div class="recordButtons print-off">
-        @*<input type="button" id="printOrder" class="formButton" value="@WorkOrders.printWorkOrder" />
-            <input type="button" id="printMap" class="formButton" value="@Shared.printGoogleMap" />*@
     </div>
     @Html.DisplayForModel()
     <div class="tb-label">
@@ -43,7 +41,7 @@
     <div class="tb-field">
         @foreach (var req in Model.workerRequests)
         {
-            @System.String.Format(req.workerRequested.dwccardnum + "--" + req.fullName) <br />
+            @System.String.Format(req.workerRequested.dwccardnum + "--" + req.workerRequested.Person.fullName) <br />
         }
     </div>
     <h4>@WorkOrders.listOfPositions</h4>
@@ -66,7 +64,7 @@
         {
             <tr>
                 <td class="tb-field-fixed">@item.pseudoID</td>
-                <td class="tb-field-fixed">@Lookups.byID(item.skillID)</td>
+                <td class="tb-field-fixed">@Model.def.byID(item.skillID)</td>
                 <td class="tb-field-fixed">@System.String.Format("{0:C}", item.hourlyWage)</td>
                 <td class="tb-field-fixed">@Html.DisplayFor(modelItem => item.hours)</td>
                 @if (item.hourRange > 0)
@@ -79,10 +77,10 @@
                 }
                 <td class="tb-field-fixed">@Html.DisplayFor(modelItem => item.days)</td>
                 <td class="tb-field-fixed">@System.String.Format("{0:C}", item.surcharge)</td>
-                <td class="tb-field-fixed">@System.String.Format("{0:C}", item.getMinEarnings)</td>
+                <td class="tb-field-fixed">@System.String.Format("{0:C}", item.minEarnings)</td>
                 @if (item.hourRange > 0)
                 {
-                    <td class="tb-field-fixed">@System.String.Format("{0:C}", item.getMaxEarnings)</td>
+                    <td class="tb-field-fixed">@System.String.Format("{0:C}", item.maxEarnings)</td>
                 }
                 else
                 {
@@ -100,7 +98,7 @@
                             <div class="tb-field">
                                 @if (item.workerAssigned != null)
                                 {
-                                    <p>@Html.Encode(item.workerAssigned.Person.fullName())</p>
+                                    <p>@Html.Encode(item.workerAssigned.Person.fullName)</p>
                                 }
                                 else
                                 {
@@ -134,13 +132,13 @@
     <table>
         <tr>
             <td>
-                @Html.LabelFor(model => model.Createdby)
+                @Html.LabelFor(model => model.createdby)
             </td>
             <td>
                 @Html.LabelFor(model => model.datecreated)
             </td>
             <td>
-                @Html.LabelFor(model => model.Updatedby)
+                @Html.LabelFor(model => model.updatedby)
             </td>
             <td>
                 @Html.LabelFor(model => model.dateupdated)
@@ -148,13 +146,13 @@
         </tr>
         <tr>
             <td>
-                @Html.DisplayFor(model => model.Createdby)
+                @Html.DisplayFor(model => model.createdby)
             </td>
             <td>
                 @Html.DisplayFor(model => model.datecreated)
             </td>
             <td>
-                @Html.DisplayFor(model => model.Updatedby)
+                @Html.DisplayFor(model => model.updatedby)
             </td>
             <td>
                 @Html.DisplayFor(model => model.dateupdated)

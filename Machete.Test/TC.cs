@@ -31,5 +31,6 @@ namespace Machete.Test
         public const string Images = "Area-Images";
         public const string Reports = "Area-Reports";
         public const string Lookups = "Area-Lookups";
+        public const string Configs = "Area-Configs";
     }
 }

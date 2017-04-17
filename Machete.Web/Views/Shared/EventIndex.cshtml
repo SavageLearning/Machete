@@ -1,4 +1,4 @@
-﻿@model Machete.Domain.Person
+﻿@model Machete.Web.ViewModel.Person
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
 @using Machete.Domain.Resources
@@ -52,7 +52,7 @@
                     {"mDataProp": "dateto" },
                     {"mDataProp": "fileCount" },
                     {"mDataProp": "dateupdated" },
-                    { "mDataProp": "Updatedby", "bSortable": false }
+                    { "mDataProp": "updatedby", "bSortable": false }
                 ],
                 "fnServerDataExtra": function () { return [{ "name": "personID", "value": $('#personID').val() }] },
             },

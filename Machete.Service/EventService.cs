@@ -21,6 +21,8 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
@@ -31,16 +33,26 @@ namespace Machete.Service
     public interface IEventService : IService<Event>
     {
         IQueryable<Event> GetEvents(int? PID);
-        dataTableResult<Event> GetIndexView(viewOptions o);
+        dataTableResult<DTO.EventList> GetIndexView(viewOptions o);
     }
 
     // Business logic for Event record management
     // Ïf I made a non-web app, would I still need the code? If yes, put in here.
     public class EventService : ServiceBase<Event>, IEventService
     {
+        private readonly IMapper map;
+        private readonly ILookupCache lc;
         //
-        public EventService(IEventRepository repo, IUnitOfWork unitOfWork) : base(repo, unitOfWork)
-        {}
+        public EventService(IEventRepository repo,
+                            IUnitOfWork unitOfWork,
+                            ILookupCache lc,
+                            IMapper map) 
+                : base(repo, unitOfWork)
+        {
+            this.map = map;
+            this.lc = lc;
+            this.logPrefix = "Event";
+        }
         /// <summary>
         /// 
         /// </summary>
@@ -62,9 +74,9 @@ namespace Machete.Service
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public dataTableResult<Event> GetIndexView(viewOptions o)
+        public dataTableResult<DTO.EventList> GetIndexView(viewOptions o)
         {
-            var result = new dataTableResult<Event>();
+            var result = new dataTableResult<DTO.EventList>();
             //Get all the records
             IQueryable<Event> q = GetEvents(o.personID);
             result.totalCount = q.Count();
@@ -84,8 +96,25 @@ namespace Machete.Service
 
             //Limit results to the display length and offset
             result.filteredCount = q.Count();            
-            result.query = q.Skip(o.displayStart).Take(o.displayLength);
+            result.query = q.ProjectTo<DTO.EventList>(map.ConfigurationProvider)
+                .Skip(o.displayStart)
+                .Take(o.displayLength)
+                .AsEnumerable();
             return result;
+        }
+
+        public override Event Create(Event record, string user)
+        {
+            record.eventTypeES = lc.textByID(record.eventTypeID, "ES");
+            record.eventTypeEN = lc.textByID(record.eventTypeID, "EN");
+            return base.Create(record, user);
+        }
+
+        public override void Save(Event record, string user)
+        {
+            record.eventTypeES = lc.textByID(record.eventTypeID, "ES");
+            record.eventTypeEN = lc.textByID(record.eventTypeID, "EN");
+            base.Save(record, user);
         }
     }
 }

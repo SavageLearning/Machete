@@ -17,7 +17,7 @@ function add_rectab(opt) {
     var exclusive = opt.exclusive;
     var recID = opt.recordID;
     var recType = opt.recType;
-    var maxTabs = opt.maxTabs;
+    var maxTabs = opt.maxTabs || 2;
     var pleaseDontFindMe = opt.pleaseDontFindMe;
     //
     //search for tab label--if it's already open, select instead of adding duplicate (datatables error)    

@@ -24,6 +24,7 @@
 using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
+using DTO = Machete.Service.DTO;
 using Machete.Web.Helpers;
 using System;
 using System.Collections.Generic;
@@ -37,10 +38,17 @@ namespace Machete.Web.Controllers
     public class ConfigController : MacheteController
     {
         private readonly ILookupService serv;
+        private readonly IMapper map;
+        private readonly IDefaults def;
         System.Globalization.CultureInfo CI;
-        public ConfigController(ILookupService serv)
+        public ConfigController(ILookupService serv,
+            IDefaults def,
+            IMapper map)
         {
             this.serv = serv;
+            this.map = map;
+            this.def = def;
+            ViewBag.configCategories = def.configCategories();
         }
         protected override void Initialize(RequestContext requestContext)
         {
@@ -60,31 +68,13 @@ namespace Machete.Web.Controllers
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
             //Get all the records
-            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
+            var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI = CI;
-            IEnumerable<Lookup> list = serv.GetIndexView(vo);
-            var result = from p in list
-                         select new
-                         {
-                             tabref = "/Config/Edit/" + Convert.ToString(p.ID),
-                             tablabel = p.category + ' ' + p.text_EN,
-                             category = p.category,
-                             selected = p.selected,
-                             text_EN = p.text_EN,
-                             text_ES = p.text_ES,
-                             subcategory = p.subcategory,
-                             level = p.level,
-                             //wage = p.wage,
-                             //minHour = p.minHour,
-                             //fixedJob = p.fixedJob,
-                             //sortorder = p.sortorder,
-                             //typeOfWorkID = p.typeOfWorkID,
-                             //specialtiy = p.speciality,
-                             ltrCode = p.ltrCode,
-                             dateupdated = Convert.ToString(p.dateupdated),
-                             Updatedby = p.Updatedby,
-                             recordid = Convert.ToString(p.ID)
-                         };
+            IEnumerable<DTO.ConfigList> list = serv.GetIndexView(vo);
+            var result = list
+                .Select(
+                    e => map.Map<DTO.ConfigList, ViewModel.ConfigList>(e)
+                ).AsEnumerable();
             return Json(new
             {
                 sEcho = param.sEcho,
@@ -101,8 +91,9 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Create()
         {
-            var _model = new Lookup();
-            return PartialView(_model);
+            var m = map.Map<Domain.Lookup, ViewModel.Config>(new Lookup());
+            m.def = def;
+            return PartialView(m);
         }
         /// <summary>
         /// 
@@ -117,25 +108,17 @@ namespace Machete.Web.Controllers
             //Lookup lookup = null;
             UpdateModel(lookup);
             lookup = serv.Create(lookup, userName);
-
+            var result = map.Map<Domain.Lookup, ViewModel.Config>(lookup);
             return Json(new
             {
-                sNewRef = _getTabRef(lookup),
-                sNewLabel = _getTabLabel(lookup),
-                iNewID = (lookup == null ? 0 : lookup.ID)
+                sNewRef = result.tabref,
+                sNewLabel = result.tablabel,
+                iNewID = result.ID,
+                jobSuccess = true
             },
             JsonRequestBehavior.AllowGet);
         }
-        private string _getTabRef(Lookup per)
-        {
-            if (per != null) return "/Config/Edit/" + Convert.ToString(per.ID);
-            else return null;
-        }
-        private string _getTabLabel(Lookup per)
-        {
-            if (per != null) return per.text_EN;
-            else return null;
-        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -144,8 +127,9 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Edit(int id)
         {
-            Lookup lookup = serv.Get(id);
-            return PartialView(lookup);
+            var m = map.Map<Domain.Lookup, ViewModel.Config>(serv.Get(id));
+            m.def = def;
+            return PartialView("Edit", m);
         }
         /// <summary>
         /// 
@@ -174,8 +158,9 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult View(int id)
         {
-            Lookup lookup = serv.Get(id);
-            return View(lookup);
+            var m = map.Map<Domain.Lookup, ViewModel.Config>(serv.Get(id));
+            m.def = def;
+            return PartialView("Edit", m);
         }
         /// <summary>
         /// 

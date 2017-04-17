@@ -24,6 +24,7 @@
 using AutoMapper;
 using Machete.Domain;
 using Machete.Service;
+using DTO = Machete.Service.DTO;
 using Machete.Web.Helpers;
 using System;
 using System.Linq;
@@ -38,15 +39,21 @@ namespace Machete.Web.Controllers
         private readonly IActivitySigninService serv;
         private readonly IWorkerService wServ;
         private readonly LookupCache lcache;
+        private readonly IMapper map;
+        private readonly IDefaults def;
         private System.Globalization.CultureInfo CI;
 
         public ActivitySigninController(IActivitySigninService serv, 
                                  IWorkerService wServ,
-                                 LookupCache lc)
+                                 LookupCache lc,
+            IDefaults def,
+            IMapper map)
         {
             this.serv = serv;
             this.wServ = wServ;
             this.lcache = lc;
+            this.map = map;
+            this.def = def;
         }
 
         protected override void Initialize(RequestContext requestContext)
@@ -58,7 +65,7 @@ namespace Machete.Web.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        //[Authorize(Roles = "Manager, Administrator, Check-in")]
+        [Authorize(Roles = "Manager, Administrator, Check-in, Teacher")]
         public ActionResult Index()
         {
             return View();
@@ -70,7 +77,7 @@ namespace Machete.Web.Controllers
         /// <param name="activityID"></param>
         /// <returns></returns>
         [HttpPost]
-        //[Authorize(Roles = "Manager, Administrator, Check-in")]
+        [Authorize(Roles = "Manager, Administrator, Check-in, Teacher")]
         public ActionResult Index(int dwccardnum, int activityID)
         {
             var _asi = new ActivitySignin();
@@ -82,12 +89,7 @@ namespace Machete.Web.Controllers
             //
             Worker w = serv.CreateSignin(_asi, this.User.Identity.Name);
             //Get picture from checkin, show with next view
-            Image checkin_image = serv.getImage(dwccardnum);
-            string imageRef = "/Content/images/NO-IMAGE-AVAILABLE.jpg";
-            if (checkin_image != null)
-            {
-                imageRef = "/Image/GetImage/" + checkin_image.ID;
-            }
+            string imageRef = serv.getImageRef(dwccardnum);
 
             return Json(new
             {
@@ -107,7 +109,7 @@ namespace Machete.Web.Controllers
         /// <param name="userName"></param>
         /// <returns></returns>
         [UserNameFilter]
-        [Authorize(Roles = "Administrator, Manager, Check-in")]
+        [Authorize(Roles = "Administrator, Manager, Check-in, Teacher")]
         public ActionResult Delete(int id, string userName)
         {
             serv.Delete(id, userName);
@@ -124,40 +126,21 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
-        //[Authorize(Roles = "Administrator, Manager, Check-in")]
+        [Authorize(Roles = "Administrator, Manager, Check-in, Teacher")]
         public ActionResult AjaxHandler(jQueryDataTableParam param)
         {
-            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
+            var vo = map.Map<jQueryDataTableParam, viewOptions>(param);
             vo.CI = CI;
-            dataTableResult<asiView> was = serv.GetIndexView(vo);
-
-            //return what's left to datatables
-            var result = from p in was.query
-                         select new
-                         {
-                             WSIID = p.ID,
-                             recordid = p.ID.ToString(),
-                             dwccardnum = p.dwccardnum,
-                             fullname = p.fullname,
-                             firstname1 = p.firstname1,
-                             firstname2 = p.firstname2,
-                             lastname1 = p.lastname1,
-                             lastname2 = p.lastname2,
-                             dateforsignin = p.dateforsignin,
-                             dateforsigninstring = p.dateforsignin.ToShortDateString(),
-                             memberStatus = lcache.textByID(p.memberStatus, CI.TwoLetterISOLanguageName),
-                             memberInactive = p.w.isInactive,
-                             memberSanctioned = p.w.isSanctioned,
-                             memberExpired = p.w.isExpired,
-                             memberExpelled = p.w.isExpelled,
-                             imageID = p.imageID,
-                             expirationDate = p.expirationDate.ToShortDateString(),
-                         };
+            dataTableResult<DTO.ActivitySigninList> list = serv.GetIndexView(vo);
+            var result = list.query
+                .Select(
+                    e => map.Map<DTO.ActivitySigninList, ViewModel.ActivitySigninList>(e)
+                ).AsEnumerable();
             return Json(new
             {
                 sEcho = param.sEcho,
-                iTotalRecords = was.totalCount,
-                iTotalDisplayRecords = was.filteredCount,
+                iTotalRecords = list.totalCount,
+                iTotalDisplayRecords = list.filteredCount,
                 aaData = result
             },
             JsonRequestBehavior.AllowGet);

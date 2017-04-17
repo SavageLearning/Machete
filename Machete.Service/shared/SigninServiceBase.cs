@@ -21,6 +21,7 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+using AutoMapper;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
@@ -30,29 +31,29 @@ namespace Machete.Service
 {
     public interface ISigninService<T> : IService<T> where T : Signin
     {
-        Image getImage(int dwccardnum);        
+        string getImageRef(int dwccardnum);        
     }
     public abstract class SigninServiceBase<T> : ServiceBase<T> where T : Signin
     {
-        protected readonly IWorkerRepository wRepo;
-        protected readonly IWorkerRequestRepository wrRepo;
-        protected readonly IImageRepository iRepo;
-        protected readonly IWorkerCache wcache;
+        protected readonly IWorkerService wServ;
+        protected readonly IWorkerRequestService wrServ;
+        protected readonly IImageService iServ;
+        protected readonly IMapper map;
         //
         //
         protected SigninServiceBase(
             IRepository<T> repo,
-            IWorkerRepository wRepo,
-            IImageRepository iRepo,
-            IWorkerRequestRepository wrRepo,
-            IWorkerCache wc,
-            IUnitOfWork uow)
+            IWorkerService wServ,
+            IImageService iServ,
+            IWorkerRequestService wrServ,
+            IUnitOfWork uow,
+            IMapper map)
             : base(repo, uow)
         {
-            this.wRepo = wRepo;
-            this.wrRepo = wrRepo;
-            this.iRepo = iRepo;
-            this.wcache = wc;
+            this.wServ = wServ;
+            this.wrServ = wrServ;
+            this.iServ = iServ;
+            this.map = map;
             this.logPrefix = "SigninServiceBase";
         }
 
@@ -61,15 +62,17 @@ namespace Machete.Service
         /// </summary>
         /// <param name="cardrequest"></param>
         /// <returns></returns>
-        public Image getImage(int cardrequest)
+        public string getImageRef(int cardrequest)
         {
-            Worker w_query = wRepo.GetAllQ().Where(w => w.dwccardnum == cardrequest).AsEnumerable().FirstOrDefault();
-            if (w_query == null) return null;
+            // TODO2017: Make no-image-available.jpg configurable form the web UI
+            string imageRef = "/Content/images/NO-IMAGE-AVAILABLE.jpg";
+            Worker w_query = wServ.GetAll().Where(w => w.dwccardnum == cardrequest).FirstOrDefault();
+            if (w_query == null) return imageRef;
             if (w_query.ImageID != null)
             {
-                return iRepo.Get(i => i.ID == w_query.ImageID);
+                imageRef = "/Image/GetImage/" + w_query.ImageID;
             }
-            return null;
+            return imageRef;
         } 
     }
 }

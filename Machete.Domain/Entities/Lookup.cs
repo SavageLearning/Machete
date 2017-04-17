@@ -31,6 +31,7 @@ namespace Machete.Domain
                 public Lookup()
         {
             idString = "lookup";
+            active = true; // defaulting to true
         }
         //public int ID { get; set; }
         [LocalizedDisplayName("category", NameResourceType = typeof(Resources.Lookup))]
@@ -102,6 +103,9 @@ namespace Machete.Domain
         /// </summary>
         [StringLength(30, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Lookup))]
         public string key { get; set; }
+
+        [LocalizedDisplayName("active", NameResourceType = typeof(Resources.Lookup))]
+        public bool active { get; set; }
     }
 
 

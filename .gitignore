@@ -3,7 +3,7 @@
 *.DS_Store
 *.cache
 Machete.suo
-
+Machete.Api/
 *.Web.Publish.xml
 */Properties/PublishProfiles/*
 # Build results
@@ -11,6 +11,7 @@ Machete.suo
 [Rr]elease/
 [Pp]ackages/
 obj/*
+build/
 
 log.txt*
 #Visual Studio files
@@ -90,3 +91,6 @@ Machete.Test/BeanShell Sampler.jmx
 
 #SSRS
 *.connectionString
+
+#bundler
+Machete.Web/Content/bundles/

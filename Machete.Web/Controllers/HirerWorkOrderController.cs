@@ -52,6 +52,8 @@ namespace Machete.Web.Controllers
         private readonly IWorkerRequestService wrServ;
         private readonly IWorkAssignmentService waServ;
         private readonly ILookupCache lcache;
+        private readonly IMapper map;
+        private readonly IDefaults def;
         CultureInfo CI;
         Logger log = LogManager.GetCurrentClassLogger();
         LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "HirerWorkOrderController", "");
@@ -70,7 +72,10 @@ namespace Machete.Web.Controllers
                                    IEmployerService eServ,
                                    IWorkerService wServ,
                                    IWorkerRequestService wrServ,
-                                   ILookupCache lcache)
+                                   ILookupCache lcache,
+                                   IDefaults def,
+                                   IMapper map
+            )
         {
             this.woServ = woServ;
             this.eServ = eServ;
@@ -78,6 +83,12 @@ namespace Machete.Web.Controllers
             this.waServ = waServ;
             this.wrServ = wrServ;
             this.lcache = lcache;
+            this.map = map;
+            this.def = def;
+            ViewBag.employerReferenceList = def.getSelectList(Machete.Domain.LCategory.emplrreference);
+            ViewBag.OnlineEmployerSkill = def.getOnlineEmployerSkill();
+            ViewBag.YesNoSelectList = def.yesnoSelectList();
+            ViewBag.TransportMethodList = def.getTransportationMethodList();
         }
 
         /// <summary>
@@ -104,12 +115,12 @@ namespace Machete.Web.Controllers
             // Retrieve employer ID of signed in Employer
             string employerID = HttpContext.User.Identity.GetUserId();
 
-            Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == employerID).FirstOrDefault();
+            Domain.Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == employerID).FirstOrDefault();
             if (employer != null)
             {
                 ViewBag.employerId = employer.ID;
             }
-             
+
             return View("Index");
         }
 
@@ -130,87 +141,6 @@ namespace Machete.Web.Controllers
         #endregion
 
         #region Ajaxhandler
-
-        /// <summary>
-        /// Provides json grid of work orders -- used with the hirerworkorders/index view
-        /// </summary>
-        /// <param name="param">contains parameters for filtering</param>
-        /// <returns>JsonResult for DataTables consumption</returns>
-        [Authorize(Roles = "Hirer")]
-        public ActionResult AjaxHandler(jQueryDataTableParam param)
-        {
-            var vo = Mapper.Map<jQueryDataTableParam, viewOptions>(param);
-            vo.CI = this.CI;
-
-            // Retrieve employer ID of signed in Employer
-            string employerID = HttpContext.User.Identity.GetUserId();
-
-            Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == employerID).FirstOrDefault();
-            if (employer != null)
-            {
-                vo.EmployerID = employer.ID;
-            }
-            else
-            {
-                // TODO: add error processing.
-            }
-
-            //Get all the records
-            dataTableResult<WorkOrder> dtr = woServ.GetIndexView(vo);
-
-            // TODO: investigate this
-            param.showOrdersWorkers = true;
-
-            return Json(new
-            {
-                sEcho = param.sEcho,
-                iTotalRecords = dtr.totalCount,
-                iTotalDisplayRecords = dtr.filteredCount,
-                aaData = from p in dtr.query
-                         select dtResponse (p, param.showOrdersWorkers)
-            },
-            JsonRequestBehavior.AllowGet);
-        }
-
-        /// <summary>
-        /// Returns Work Order object to AjaxHandler - presented on the WorkOrder Details tab
-        /// </summary>
-        /// <param name="wo">WorkOrder</param>
-        /// <param name="showWorkers">bool flag determining whether the workers associated with the WorkOrder should be retrieved</param>
-        /// <returns>Work Order </returns>
-        public object dtResponse( WorkOrder wo, bool showWorkers)
-        {
-            // tabref = "/HirerWorkOrder/Edit" + Convert.ToString(wo.ID),
-            int ID = wo.ID;
-            return new
-            {
-                tabref = "/HirerWorkOrder/View/" + Convert.ToString(wo.ID),
-                tablabel = Machete.Web.Resources.WorkOrders.tabprefix + wo.getTabLabel(),
-                EID = Convert.ToString(wo.EmployerID),
-                WOID = System.String.Format("{0,5:D5}", wo.paperOrderNum), // Note: paperOrderNum defaults to the value of the WO when a paperOrderNum is not provided
-                dateTimeofWork = wo.dateTimeofWork.ToString(),
-                status = lcache.textByID(wo.status, CI.TwoLetterISOLanguageName),
-                WAcount = wo.workAssignments.Count(a => a.workOrderID == ID).ToString(),
-                contactName = wo.contactName,
-                workSiteAddress1 = wo.workSiteAddress1,
-                zipcode = wo.zipcode,
-                transportMethod = lcache.textByID(wo.transportMethodID, CI.TwoLetterISOLanguageName),
-                displayState = _getDisplayState(wo), // State is used to provide color highlighting to records based on state
-                onlineSource = wo.onlineSource ? Shared.True : Shared.False,
-                workers = showWorkers ? // Workers is only loaded when showWorkers parameter set to TRUE
-                        from w in wo.workAssignments
-                        select new
-                        {
-                            WID = w.workerAssigned != null ? (int?)w.workerAssigned.dwccardnum : null,
-                            name = w.workerAssigned != null ? w.workerAssigned.Person.firstname1 : null, // Note: hirers should only have access to the workers first name
-                            skill = lcache.textByID(w.skillID, CI.TwoLetterISOLanguageName),
-                            hours = w.hours,
-                            wage = w.hourlyWage
-                        } : null
-
-            };
-        }
-
         /// <summary>
         /// Determines displayState value in WorkOrder/AjaxHandler. Display state is used to provide color highlighting to records based on state.
         /// The displayState is not presented to the user, so don't have to provide internationalization text.
@@ -219,9 +149,9 @@ namespace Machete.Web.Controllers
         /// <returns>status string</returns>
         private string _getDisplayState(WorkOrder wo)
         {
-            string status = lcache.textByID(wo.status, "en");
+            string status = lcache.textByID(wo.statusID, "en");
 
-            if (wo.status == WorkOrder.iCompleted)
+            if (wo.statusID == WorkOrder.iCompleted)
             {
                 // If WO is completed, but 1 (or more) WA aren't assigned - the WO is still Unassigned
                 if (wo.workAssignments.Count(wa => wa.workerAssignedID == null) > 0)
@@ -249,12 +179,12 @@ namespace Machete.Web.Controllers
         public ActionResult Create()
         {
             WorkOrder wo = new WorkOrder();
-            
+
             // Retrieve user ID of signed in Employer
             string userID = HttpContext.User.Identity.GetUserId();
 
             // Retrieve Employer record
-            Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == userID).FirstOrDefault();
+            Domain.Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == userID).FirstOrDefault();
             if (employer != null)
             {
                 // Employer has created profile or work order already
@@ -274,9 +204,9 @@ namespace Machete.Web.Controllers
 
             // Set default values
             wo.dateTimeofWork = DateTime.Today.AddHours(9).AddDays(3); // Set default work time to 9am three days from now
-            wo.transportMethodID = Lookups.getDefaultID(LCategory.transportmethod);
-            wo.typeOfWorkID = Lookups.getDefaultID(LCategory.worktype);
-            wo.status = Lookups.getDefaultID(LCategory.orderstatus);
+            wo.transportMethodID = def.getDefaultID(LCategory.transportmethod);
+            wo.typeOfWorkID = def.getDefaultID(LCategory.worktype);
+            wo.statusID = def.getDefaultID(LCategory.orderstatus);
             wo.timeFlexible = true;
             wo.onlineSource = true;
             wo.disclosureAgreement = false;
@@ -294,25 +224,21 @@ namespace Machete.Web.Controllers
 
 
             //IEnumerable<Lookup> lookup = lcache.getCache();
-            List<SelectListEmployerSkills> lookup = Lookups.getOnlineEmployerSkill();
+            List<SelectListEmployerSkills> lookup = def.getOnlineEmployerSkill();
 
             int counter = 0;
 
             for (int i = 0; i < lookup.Count(); i++)
             {
                 SelectListEmployerSkills lup = lookup.ElementAt(i);
-                //Lookup lup = lookup.ElementAt(i);
-                //if (lup.ID == 60 || lup.ID == 61 || lup.ID == 62 || lup.ID == 63 || lup.ID == 64 || lup.ID == 65 || lup.ID == 66 || lup.ID == 67 || lup.ID == 68 || lup.ID == 69 || lup.ID == 77 || lup.ID == 83 || lup.ID == 88 || lup.ID == 89 || lup.ID == 118 || lup.ID == 120 || lup.ID == 122 || lup.ID == 128 || lup.ID == 131 || lup.ID == 132 || lup.ID == 133 || lup.ID == 183)
-                if (lup.ID == 60 || lup.ID == 61 || lup.ID == 62 || lup.ID == 63 || lup.ID == 64 || lup.ID == 65 || lup.ID == 66 || lup.ID == 67 || lup.ID == 68 || lup.ID == 69 || lup.ID == 77 || lup.ID == 83 || lup.ID == 88 || lup.ID == 89 || lup.ID == 118 || lup.ID == 120 || lup.ID == 122 || lup.ID == 128 || lup.ID == 131 || lup.ID == 132 || lup.ID == 133 || lup.ID == 183)
-                {
-                    ViewBag.ID[counter] = lup.ID;
-                    ViewBag.wage[counter] = lup.wage;
-                    ViewBag.minHour[counter] = lup.minHour;
-                    ViewBag.workType[counter] = lup.typeOfWorkID;
-                    ViewBag.text_EN[counter] = lup.skillDescriptionEn;
-                    ViewBag.text_ES[counter] = lup.skillDescriptionEs;
-                    counter++;
-                }
+                // removed hard-coded list of casa's active skill integers. relying on getOnlineEmployerSkill & active flag
+                ViewBag.ID[counter] = lup.ID;
+                ViewBag.wage[counter] = lup.wage;
+                ViewBag.minHour[counter] = lup.minHour;
+                ViewBag.workType[counter] = lup.typeOfWorkID;
+                ViewBag.text_EN[counter] = lup.skillDescriptionEn;
+                ViewBag.text_ES[counter] = lup.skillDescriptionEs;
+                counter++;              
             }
 
             return PartialView("Create", wo);
@@ -335,7 +261,7 @@ namespace Machete.Web.Controllers
             string userID = HttpContext.User.Identity.GetUserId();
 
             // Retrieve Employer record
-            Employer onlineEmployer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == userID).FirstOrDefault();
+            Domain.Employer onlineEmployer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == userID).FirstOrDefault();
             if (onlineEmployer != null)
             {
                 // Employer has created profile or work order already
@@ -346,7 +272,7 @@ namespace Machete.Web.Controllers
             else
             {
                 // Employer has NOT created profile or work order yet
-                Employer employer = new Employer();
+                Domain.Employer employer = new Domain.Employer();
 
                 // Set up default values from WO
                 employer.name = wo.contactName;
@@ -369,7 +295,7 @@ namespace Machete.Web.Controllers
                 employer.receiveUpdates = true;
                 employer.business = false;
 
-                Employer newEmployer = eServ.Create(employer, userName);
+                Domain.Employer newEmployer = eServ.Create(employer, userName);
                 if (newEmployer != null)
                 {
                     wo.EmployerID = newEmployer.ID;
@@ -404,6 +330,7 @@ namespace Machete.Web.Controllers
 
                     // Create WA from Employer data
                     wa.workOrderID = neworder.ID;
+                    wa.workOrder = neworder;
                     wa.skillID = parsedWorkerRequests["assignments"][i].skillId;
                     wa.hours = parsedWorkerRequests["assignments"][i].hours;
                     wa.weightLifted = parsedWorkerRequests["assignments"][i].weight;
@@ -464,14 +391,14 @@ namespace Machete.Web.Controllers
             string userID = HttpContext.User.Identity.GetUserId();
 
             // Retrieve Employer record
-            Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == userID).FirstOrDefault();
+            Domain.Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == userID).FirstOrDefault();
             if (employer != null)
             {
                 // Employer has created profile or work order already
             }
             else
             {
-                employer = new Employer();
+                employer = new Domain.Employer();
             }
 
             // Set default values
@@ -495,7 +422,7 @@ namespace Machete.Web.Controllers
         /// <param name="userName">User performing action</param>
         [HttpPost, UserNameFilter]
         [Authorize(Roles = "Hirer")]
-        public ActionResult HirerProfile(Employer e, string userName)
+        public ActionResult HirerProfile(Domain.Employer e, string userName)
         {
             UpdateModel(e);
 
@@ -503,11 +430,11 @@ namespace Machete.Web.Controllers
             string userID = HttpContext.User.Identity.GetUserId();
 
             // Retrieve Employer record
-            Employer onlineEmp = eServ.GetRepo().GetAllQ().Where(emp => emp.onlineSigninID == userID).FirstOrDefault();
+            Domain.Employer onlineEmp = eServ.GetRepo().GetAllQ().Where(emp => emp.onlineSigninID == userID).FirstOrDefault();
 
             if (onlineEmp != null)
             {
-                Employer onlineEmployer = eServ.Get(onlineEmp.ID);
+                Domain.Employer onlineEmployer = eServ.Get(onlineEmp.ID);
                 //e.ID = onlineEmployer.ID;
                 onlineEmployer.active = true;
                 onlineEmployer.address1 = e.address1;
@@ -535,7 +462,7 @@ namespace Machete.Web.Controllers
             else
             {
                 // Create Employer record
-                Employer newEmployer = eServ.Create(e, userName);
+                Domain.Employer newEmployer = eServ.Create(e, userName);
                 return View("Index");
             }
         }
@@ -561,124 +488,6 @@ namespace Machete.Web.Controllers
         #endregion
 
         #region View
-
-        /// <summary>
-        /// GET: /HirerWorkOrder/PaymentPre
-        /// </summary>
-        /// <param name="id">WorkOrder ID</param>
-        /// <returns>MVC Action Result</returns>
-        [UserNameFilter]
-        [Authorize(Roles = "Hirer")]
-        public ActionResult PaymentPre(int id)
-        {
-            WorkOrder workOrder = woServ.Get(id);
-
-            return View("IndexPrePaypal", workOrder);
-        }
-
-        /// <summary>
-        /// POST: /HirerWorkOrder/PaymentPre
-        /// </summary>
-        /// <param name="id">WorkOrder ID</param>
-        /// <param name="userName">User performing action</param>
-        /// <returns>MVC Action Result</returns>
-        [HttpPost, UserNameFilter]
-        [Authorize(Roles = "Hirer")]
-        public ActionResult PaymentPre(string orderId, string userName)
-        {
-            // Retrieve Work Order
-            WorkOrder workOrder = woServ.Get(Convert.ToInt32(orderId));
-
-            if (workOrder == null)
-            {
-                levent.Level = LogLevel.Error;
-                levent.Message = "WorkOrder ID not valid Work Order. WO#:" + orderId;
-                log.Log(levent);
-                return View("IndexError", workOrder);
-            }
-
-            double payment = workOrder.transportFee;
-            if (payment <= 0.0)
-            {
-                levent.Level = LogLevel.Error;
-                levent.Message = "There is no transportation fee associated with this work order - there is no PayPal transaction required. WO#:" + orderId;
-                log.Log(levent);
-                return View("IndexError", workOrder);
-            }
-
-            PaypalExpressCheckout paypal = new PaypalExpressCheckout();
-
-            SetExpressCheckoutResponseType response = paypal.SetExpressCheckout(payment.ToString());
-            if (response != null)
-            {
-                // # Success values
-                if (response.Ack.ToString().Trim().ToUpper().Equals("SUCCESS"))
-                {
-                    // # Redirecting to PayPal for authorization
-                    // Once you get the "Success" response, needs to authorise the
-                    // transaction by making buyer to login into PayPal. For that,
-                    // need to construct redirect url using EC token from response.
-                    // For example,
-                    // `redirectURL="https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=" + setExpressCheckoutResponse.Token;`
-
-                    // Save PayPal token
-                    workOrder.paypalToken = response.Token;
-
-                    // Save work order updates
-                    woServ.Save(workOrder, userName);
-                    
-                    object paypalConfigSection = null;
-                    try
-                    {
-                        paypalConfigSection = System.Web.Configuration.WebConfigurationManager.GetSection("paypal");
-                    }
-                    catch (System.Exception ex)
-                    {
-                        throw new ConfigException("Unable to load 'paypal' section from *.config: " + ex.Message);
-                    }
-
-                    if (paypalConfigSection == null)
-                    {
-                        throw new ConfigException(
-                            "Cannot parse *.Config file. Ensure you have configured the 'paypal' section correctly.");
-                    }
-
-                    NameValueConfigurationCollection paypalSettings = (NameValueConfigurationCollection)paypalConfigSection.GetType().GetProperty("Settings").GetValue(paypalConfigSection, null);
-                    
-                    var paypalUrl = paypalSettings["paypalUrl"].Value;
-                    var redirectUrl = paypalUrl + "_express-checkout&token=" + response.Token;
-
-                    return new RedirectResult(redirectUrl, false);
-
-                }
-                // # Error Values
-                else
-                {
-                    List<ErrorType> errorMessages = response.Errors;
-                    foreach (ErrorType error in errorMessages)
-                    {
-                        levent.Level = LogLevel.Error;
-                        levent.Message += error.LongMessage;
-                        log.Log(levent);
-
-                        workOrder.paypalErrors += error.ShortMessage;
-                    }
-
-                    // Save work order updates
-                    woServ.Save(workOrder, userName);
-
-                    return View("IndexError", workOrder);
-                }
-            }
-            else
-            {
-                levent.Level = LogLevel.Error;
-                levent.Message = "The response from PayPal SetExpressCheckoutResponseType API was null. WO#:" + orderId;
-                log.Log(levent);
-                return View("IndexError", workOrder);
-            }
-
-        }
 
         /// <summary>
         /// GET: /HirerWorkOrder/PaymentPost
@@ -773,7 +582,7 @@ namespace Machete.Web.Controllers
             }
 
             return View("IndexPostPaypal", workOrder);
-            
+
         }
 
         /// <summary>
@@ -784,26 +593,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Hirer")]
         public ActionResult PaymentCancel(string token, string orderID)
         {
-            /*
-            WorkOrder woAll;
-            WorkOrder workOrder;
-            if (string.IsNullOrEmpty(token) && orderID != null)
-            {
-                workOrder = woServ.Get(Convert.ToInt32(orderID));
-            }
-            else
-            {
-                woAll = woServ.GetRepo().GetAllQ().Where(wo => wo.paypalToken == token).FirstOrDefault();
-                workOrder = woServ.Get(woAll.ID);
-            }
-            if (workOrder == null)
-            {
-                levent.Level = LogLevel.Error;
-                levent.Message = "WorkOrder ID not valid Work Order. WO#:" + workOrder.ID;
-                log.Log(levent);
-                return View("IndexError", workOrder);
-            }
-            */
+
             return View("IndexCancel");
         }
 
@@ -840,210 +630,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Hirer")]
         public ActionResult PaymentComplete(string userName)
         {
-            /*
-            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(payerId)) 
-            {
-                return View("IndexCompleteEmpty");
-            }
-
-            WorkOrder woAll = woServ.GetRepo().GetAllQ().Where(wo => wo.paypalToken == token).FirstOrDefault();
-            WorkOrder workOrder = woServ.Get(woAll.ID);
-            if (workOrder != null)
-            {
-                if (workOrder.transportFee <= 0.0)
-                {
-                    levent.Level = LogLevel.Error;
-                    levent.Message = "There is no transportation fee associated with this work order - there is no PayPal transaction required. WO#:" + workOrder.ID;
-                    log.Log(levent);
-                    return View("IndexError", workOrder);
-                }
-                else
-                {
-                    payment = workOrder.transportFee;
-                }
-            }
-            else
-            {
-                levent.Level = LogLevel.Error;
-                levent.Message = "WorkOrder ID not valid Work Order. WO#:" + workOrder.ID;
-                log.Log(levent);
-                return View("IndexError", workOrder);
-            }
-            */
             return View("IndexCompleteEmpty");
-            /*
-            // TODO: store payerID in WO table - not being stored for some reason?!
-            double payment = 0.0;
-
-            // TODO: There was an issue with the WO returned by the first query below - the work order
-            // can't be saved unless the work order is retrieved with the woServ.Get() call
-            WorkOrder woAll = woServ.GetRepo().GetAllQ().Where(wo => wo.paypalToken == token).FirstOrDefault();
-            WorkOrder workOrder = woServ.Get(woAll.ID);
-            if (workOrder != null)
-            {
-                if (workOrder.transportFee <= 0.0)
-                {
-                    levent.Level = LogLevel.Error;
-                    levent.Message = "There is no transportation fee associated with this work order - there is no PayPal transaction required. WO#:" + workOrder.ID;
-                    log.Log(levent);
-                    return View("IndexError", workOrder);
-                }
-                else
-                {
-                    payment = workOrder.transportFee;
-                }
-            }
-            else
-            {
-                levent.Level = LogLevel.Error;
-                levent.Message = "WorkOrder ID not valid Work Order. WO#:" + workOrder.ID;
-                log.Log(levent);
-                return View("IndexError", workOrder);
-            }
-
-            if (workOrder.paypalTransactID != null)
-            {
-                // Error - an attempt is being made to make a second payment request on token
-                levent.Level = LogLevel.Error;
-                levent.Message = "An attempt is being made to make a second payment request on token. WO# " + workOrder.ID;
-                log.Log(levent);
-                return View("IndexError", workOrder);
-            }
-            else
-            {
-                // PayPal call to authorize payment
-                PaypalExpressCheckout paypal = new PaypalExpressCheckout();
-                if (paypal == null)
-                {
-                    // Error - an attempt is being made to make a second payment request on token
-                    levent.Level = LogLevel.Error;
-                    levent.Message = "PayPal ExpressCheckout call failed for: " + workOrder.ID;
-                    log.Log(levent);
-                    return View("IndexError", workOrder);
-                }
-
-                DoExpressCheckoutPaymentResponseType paymentResponse = paypal.DoExpressCheckoutPayment(token, payerId, payment.ToString());
-                if (paymentResponse != null)
-                {
-                    // # Success values
-                    if (paymentResponse.Ack != null && paymentResponse.Ack.ToString().Trim().ToUpper().Equals("SUCCESS"))
-                    {
-                        if (paymentResponse.DoExpressCheckoutPaymentResponseDetails == null)
-                        {
-                            levent.Level = LogLevel.Error;
-                            levent.Message = "DoExpressCheckoutPaymentResponseDetails is null. WO# " + workOrder.ID;
-                            log.Log(levent);
-                            return View("IndexError", workOrder);
-                        }
-
-                        if (paymentResponse.DoExpressCheckoutPaymentResponseDetails.Token != token)
-                        {
-                            // Retrieved token doesn't match stored token
-                            // Log error & continue - payment already made
-                            levent.Level = LogLevel.Error;
-                            levent.Message = "Retrieved token doesn't match stored token - payment accepted for token. WO# " + workOrder.ID + "Token# " + token;
-                            log.Log(levent);
-                        }
-
-                        if (paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo != null)
-                        {
-                            // Note: Only one payment should be sent
-                            if (paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo.Count != 1)
-                            {
-                                // Number of payments different from expected payments
-                                // Log error & continue - payment already made
-                                levent.Level = LogLevel.Error;
-                                levent.Message = "Number of payments different from expected payments. WO# " + workOrder.ID + "Payment Count: " + paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo.Count;
-                                log.Log(levent);
-                            }
-
-                            if (paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0] == null || 
-                                paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].GrossAmount == null || 
-                                Convert.ToDouble(paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].GrossAmount.value) != workOrder.transportFee)
-                            {
-                                // PayPal charge different from expected charge
-                                // Log error & continue - payment already made
-                                levent.Level = LogLevel.Error;
-                                levent.Message = "PayPal charge different from expected charge. WO# " + workOrder.ID;
-                                log.Log(levent);
-                            }
-                            else if (paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].FeeAmount == null)
-                            {
-                                levent.Level = LogLevel.Error;
-                                levent.Message = "PayPal fee not charged. WO# " + workOrder.ID;
-                                log.Log(levent);
-                            }
-                            else
-                            {
-                                // Note: PayPal charges for online payment service
-                                workOrder.paypalFee = Convert.ToDouble(paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].FeeAmount.value);
-                            }
-                        }
-                        else
-                        {
-                            // PayPal information not provided
-                            // Log error & continue - payment already made
-                            levent.Level = LogLevel.Error;
-                            levent.Message = "PayPal return information not provided (internal error). WO# " + workOrder.ID;
-                            log.Log(levent);
-                        }
-
-                        // TODO: This value is hard-coded in for PayPal - should do a lookup instead
-                        workOrder.transportTransactType = 256;
-
-                        if (paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0] != null)
-                        {
-                            // Store transactID in hidden field for comparisons
-                            workOrder.paypalTransactID = paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].TransactionID;
-
-                            // Transaction identification number of the transaction that was created. This field is only 
-                            // returned after a successful transaction for DoExpressCheckout has occurred.
-                            // Note: truncated string to ensure it fits in database
-                            workOrder.transportTransactID = ("ID: " + paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].TransactionID +
-                                "|| Date: " + paymentResponse.DoExpressCheckoutPaymentResponseDetails.PaymentInfo[0].PaymentDate + workOrder.transportTransactID).Substring(0, 50);
-                        }
-
-                        woServ.Save(workOrder, userName);
-
-                        // Pass Data to view
-                        ViewBag.payment = "$" + workOrder.transportFee.ToString();
-                    }
-                    // # Error Values
-                    else
-                    {
-                        List<ErrorType> errorMessages = paymentResponse.Errors;
-                        if (errorMessages != null)
-                        {
-                            foreach (ErrorType error in errorMessages)
-                            {
-                                levent.Level = LogLevel.Error;
-                                levent.Message += error.LongMessage;
-                                log.Log(levent);
-
-                                workOrder.paypalErrors += error.ShortMessage;
-                            }
-
-                            // Save work order updates
-                            woServ.Save(workOrder, userName);
-                        }
-                        else
-                        {
-                            levent.Level = LogLevel.Error;
-                            levent.Message = "Retrieved error list is null for token. WO# " + workOrder.ID + "Token# " + token;
-                            log.Log(levent);
-                        }
-                        return View("IndexError", workOrder);
-                    }
-                }
-                else
-                {
-                    levent.Level = LogLevel.Error;
-                    levent.Message = "The response from PayPal GetExpressCheckoutDetailsResponseType API was null. WO#:" + workOrder.ID;
-                    log.Log(levent);
-                    return View("IndexError", workOrder);
-                }
-            }
-            */
         }
 
         #endregion

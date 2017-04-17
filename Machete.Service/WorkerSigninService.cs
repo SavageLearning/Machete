@@ -21,6 +21,8 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
@@ -32,31 +34,28 @@ using System.Text;
 
 namespace Machete.Service
 {
-    public interface IWorkerSigninService : ISigninService<WorkerSignin>
+    public interface IWorkerSigninService : ISigninService<Domain.WorkerSignin>
     {
-        WorkerSignin GetSignin(int dwccardnum, DateTime date);
+        Domain.WorkerSignin GetSignin(int dwccardnum, DateTime date);
         int GetNextLotterySequence(DateTime date);
-        bool clearLottery(int id, string user);
         bool moveDown(int id, string user);
         bool moveUp(int id, string user);
-        bool sequenceLottery(DateTime date, string user);
-        bool listDuplicate(DateTime date, string user);
-        string signinDuplicate(DateTime date, string user);
-        dataTableResult<wsiView> GetIndexView(viewOptions o);
-        void CreateSignin(WorkerSignin signin, string user);
+        dataTableResult<DTO.WorkerSigninList> GetIndexView(viewOptions o);
+        Domain.WorkerSignin CreateSignin(int dwccardnum, DateTime dateforsignin, string user);
+        Domain.WorkerSignin IsSignedIn(int dwccardnum, DateTime dateforsignin);
     }
 
-    public class WorkerSigninService : SigninServiceBase<WorkerSignin>, IWorkerSigninService
+    public class WorkerSigninService : SigninServiceBase<Domain.WorkerSignin>, IWorkerSigninService
     {
         //
         public WorkerSigninService(
             IWorkerSigninRepository repo, 
-            IWorkerRepository wRepo,
-            IImageRepository iRepo,
-            IWorkerRequestRepository wrRepo,
-            IWorkerCache wc, 
-            IUnitOfWork uow)
-            : base(repo, wRepo, iRepo, wrRepo, wc, uow)
+            IWorkerService wServ,
+            IImageService iServ,
+            IWorkerRequestService wrServ,
+            IUnitOfWork uow,
+            IMapper map)
+            : base(repo, wServ, iServ, wrServ, uow, map)
         {
             this.logPrefix = "WorkerSignin";
         }
@@ -66,7 +65,7 @@ namespace Machete.Service
         /// <param name="dwccardnum"></param>
         /// <param name="date"></param>
         /// <returns>WorkerSignin</returns>
-        public WorkerSignin GetSignin(int dwccardnum, DateTime date)
+        public Domain.WorkerSignin GetSignin(int dwccardnum, DateTime date)
         {
             return repo.GetManyQ().FirstOrDefault(r => r.dwccardnum == dwccardnum &&
                             DbFunctions.DiffDays(r.dateforsignin, date) == 0 ? true : false);
@@ -93,7 +92,7 @@ namespace Machete.Service
         /// <returns>bool</returns>
         public bool moveDown(int id, string user)
         {
-            WorkerSignin wsiDown = repo.GetById(id); // 4
+            Domain.WorkerSignin wsiDown = repo.GetById(id); // 4
             DateTime date = wsiDown.dateforsignin;
 
             int nextID = (wsiDown.lottery_sequence ?? 0) + 1; // 5
@@ -102,7 +101,7 @@ namespace Machete.Service
                 return false;
             //this can't happen with current GUI settings (10/10/2013)
 
-            WorkerSignin wsiUp = repo.GetById(
+            Domain.WorkerSignin wsiUp = repo.GetById(
                                     repo.GetAllQ()
                                         .Where(up => up.lottery_sequence == nextID
                                                   && DbFunctions.DiffDays(up.dateforsignin, date) == 0)
@@ -132,7 +131,7 @@ namespace Machete.Service
         /// <returns>bool</returns>
         public bool moveUp(int id, string user)
         {
-            WorkerSignin wsiUp = repo.GetById(id); // 4
+            Domain.WorkerSignin wsiUp = repo.GetById(id); // 4
             DateTime date = wsiUp.dateforsignin;
 
             int prevID = (wsiUp.lottery_sequence ?? 0) - 1; // 3
@@ -140,7 +139,7 @@ namespace Machete.Service
             if (prevID < 1)
                 return false;
 
-            WorkerSignin wsiDown = repo.GetById(
+            Domain.WorkerSignin wsiDown = repo.GetById(
                                     repo.GetAllQ()
                                         .Where(up => up.lottery_sequence == prevID
                                                   && DbFunctions.DiffDays(up.dateforsignin, date) == 0)
@@ -159,223 +158,39 @@ namespace Machete.Service
 
             return true;
         }
-
-        /// <summary>
-        /// This method clears an entry from the daily ('lottery') list
-        /// along with the timestamp and then resequences the list.
-        /// </summary>
-        /// <param name="id">The worker ID of the worker to be cleared from the lottery.</param>
-        /// <param name="user">The usename of the user making the request.</param>
-        /// <returns>bool</returns>
-        public bool clearLottery(int id, string user)
-        {
-            WorkerSignin wsi = repo.GetById(id);
-            DateTime date = wsi.dateforsignin;
-            wsi.lottery_sequence = null;
-            wsi.lottery_timestamp = null;
-            Save(wsi, user);
-            if (date != null)
-                sequenceLottery(date, user);
-            return true;
-        }
-        /// <summary>
-        /// A method that resequences the ordinal lottery numbers.
-        /// </summary>
-        /// <param name="date">Date to resequence numbers</param>
-        /// <param name="user">Username of the user making the request.</param>
-        /// <returns>bool</returns>
-        public bool sequenceLottery(DateTime date, string user)
-        {
-            IEnumerable<WorkerSignin> signins;
-            int i = 0;
-            // select and sort by timestamp
-            signins = repo.GetManyQ().Where(p => p.lottery_timestamp != null &&
-                                           DbFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
-                                    .OrderBy(p => p.lottery_timestamp)
-                                    .AsEnumerable();
-            // reset sequence number
-            foreach (WorkerSignin wsi in signins)
-            {
-                i++;
-                wsi.lottery_sequence = i;                
-            }
-            // no username logging as of now
-            uow.Commit();
-            return true;
-        }
-
-        /// <summary>
-        /// This method Duplicates the Daily ('lottery') list for the previous day, 
-        /// minus workers who did not sign in for the current day and 
-        /// workers who were assigned to a job for the previous day
-        /// </summary>
-        /// <param name="date">The date for which the list should be duplicated.</param>
-        /// <param name="user">The username of the user making the request.</param>
-        /// <returns>bool</returns>
-        public bool listDuplicate(DateTime date, string user)
-        {
-            int i = 0;
-            DateTime yesterday = new DateTime(date.Year, date.Month, (date.Day - 1), date.Hour, date.Minute, date.Second);
-            IEnumerable<WorkerSignin> todayListSignins;
-            IEnumerable<WorkerSignin> yesterdaySignins;
-            IEnumerable<WorkerSignin> todayDupeSignins;
-            IEnumerable<WorkerSignin> dupes;
-
-            // Get today's signins. Make sure that anyone who already has been assigned a lottery number
-            // gets a new one in the same order.
-            todayListSignins = repo.GetAllQ()
-                .Where(p => p.lottery_sequence != null
-                         && DbFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
-                .OrderBy(p => p.lottery_sequence)
-                .AsEnumerable();
-            // reset sequence number
-            foreach (WorkerSignin wsi in todayListSignins)
-            {
-                i++;
-                wsi.lottery_sequence = i;
-                wsi.lottery_timestamp = DateTime.Now;
-                wsi.Updatedby = user;
-            }
-
-            //get yesterday's lottery/list members, 
-            //as long as they weren't dispatched
-            yesterdaySignins = repo.GetAllQ()
-                .Where(p => p.lottery_sequence != null 
-                         && p.WorkAssignmentID == null
-                         && DbFunctions.DiffDays(p.dateforsignin, yesterday) == 0 ? true : false)
-                .OrderBy(p => p.lottery_sequence)
-                .AsEnumerable();
-
-            //gets any signin for today that "should" be on the duplicate lottery/list
-            //i.e., they are not currently on the list, were on the list yesterday,
-            //were not dispatched yesterday and have not been dispatched today
-            todayDupeSignins = repo.GetManyQ() //with tracing
-                .Where(p => p.WorkAssignmentID == null
-                         && p.lottery_sequence == null
-                         && DbFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
-                .OrderBy(o => o.dateforsignin)
-                .AsEnumerable();
-
-            //thank you Jimmy
-            dupes = todayDupeSignins
-                .Join(yesterdaySignins, to => to.WorkerID, ye => ye.WorkerID, (to, ye) => new { to, seq = ye.lottery_sequence })
-                .Select(g => g.to )
-                .OrderBy(o => o.lottery_sequence);
-
-            //good god that works
-            foreach (WorkerSignin wsi in dupes)
-            {
-                i++;
-                wsi.lottery_sequence = i;
-                wsi.lottery_timestamp = DateTime.Now;
-                wsi.Updatedby = user;
-                Save(wsi, user);
-            }
-            
-            //uow.Commit();
-            return true;
-        }
-
-
-        /// <summary>
-        /// This method Duplicates the Daily ('lottery') list for the previous day, 
-        /// minus workers who did not sign in for the current day and 
-        /// workers who were assigned to a job for the previous day
-        /// </summary>
-        /// <param name="date">The date for which the list should be duplicated.</param>
-        /// <param name="user">The username of the user making the request.</param>
-        /// <returns>string</returns>
-        public string signinDuplicate(DateTime date, string user)
-        {
-            DateTime yesterday = date.AddDays(-1);
-            IEnumerable<WorkerSignin> todayListSignins;
-            IEnumerable<WorkerSignin> yesterdaySignins;
-            StringBuilder iWasNotSignedIn = new StringBuilder();
-
-            // Get today's signins. If anyone has already been signed in, this feature will hold those records.
-            todayListSignins = repo.GetAllQ()
-                .Where(p => DbFunctions.DiffDays(p.dateforsignin, date) == 0 ? true : false)
-                .OrderBy(p => p.dateforsignin)
-                .AsEnumerable();
-
-            //get yesterday's signins, 
-            //as long as they weren't dispatched
-            //and haven't already been signed in
-            yesterdaySignins = repo.GetManyQ()
-                .Where(p => p.WorkAssignmentID == null
-                         && DbFunctions.DiffDays(p.dateforsignin, yesterday) == 0 ? true : false
-                         && !todayListSignins.Select(t => t.WorkerID).Contains(p.WorkerID))
-                .OrderBy(p => p.dateforsignin)
-                .AsEnumerable()
-                .ToList();
-
-                //then, create signins for all of them.
-            foreach (WorkerSignin wsi in yesterdaySignins)
-            {
-                //we're going to need some objects
-                Worker oompaLoompa = wRepo.GetAllQ().FirstOrDefault(s => s.dwccardnum == wsi.dwccardnum);
-                WorkerSignin dupadedoo = new WorkerSignin();
-                // The card don't need no swipe
-                dupadedoo.dwccardnum = wsi.dwccardnum;
-                dupadedoo.dateforsignin = new DateTime(date.Year, date.Month, date.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-                dupadedoo.memberStatus = oompaLoompa.memberStatus;
-                try
-                {
-                    // Let CreateSignin do the rest
-                    CreateSignin(dupadedoo, user);
-                }
-                catch (InvalidOperationException eek)
-                {
-                    string addMeToTheList = oompaLoompa.dwccardnum.ToString() + " " + eek.Message + "\n";
-                    iWasNotSignedIn.Append(addMeToTheList);
-                }
-            }
-            if (iWasNotSignedIn.Length > 0) return iWasNotSignedIn.ToString();
-            else return "Success!";
-        }
-
-
+       
         /// <summary>
         /// This method returns the view data for the Worker Signin class.
         /// </summary>
         /// <param name="o">View options from DataTables</param>
-        /// <returns>dataTableResult wsiView</returns>
-        public dataTableResult<wsiView> GetIndexView(viewOptions o)
+        /// <returns>dataTableResult WorkerSigninList</returns>
+        public dataTableResult<DTO.WorkerSigninList> GetIndexView(viewOptions o)
         {
             //
-            var result = new dataTableResult<wsiView>();
-            IQueryable<WorkerSignin> q = repo.GetAllQ();
-            IEnumerable<WorkerSignin> e;
-            IEnumerable<wsiView> eSIV;
+            var result = new dataTableResult<DTO.WorkerSigninList>();
+            IQueryable<Domain.WorkerSignin> q = repo.GetAllQ();
             //
             if (o.date != null) IndexViewBase.diffDays(o, ref q);                
-            //
-            if (o.typeofwork_grouping != null)
-                IndexViewBase.typeOfWork(o, ref q);
-            // 
-            // wa_grouping
-            IndexViewBase.waGrouping(o, ref q, wrRepo);
-            //
-            // dwccardnum populated
+            if (o.typeofwork_grouping != null) IndexViewBase.typeOfWork(o, ref q);
+            IndexViewBase.waGrouping(o, ref q, wrServ);
             if (o.dwccardnum > 0) IndexViewBase.dwccardnum(o, ref q);
-            e = q.ToList();
-            if (!string.IsNullOrEmpty(o.sSearch))
-                IndexViewBase.search(o, ref e, wcache.GetCache());
-            var cache = wcache.GetCache();
-            eSIV = e.Join(cache, 
-                            s => s.dwccardnum, 
-                            w => w.dwccardnum, 
-                            (s, w) => new { s, w }
-                            )
-                    .Select(z => new wsiView( z.w.Person, z.s ));
+            if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
 
-            IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref eSIV);
-            result.filteredCount = eSIV.Count();
+            IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
+            result.filteredCount = q.Count();
             result.totalCount = repo.GetAllQ().Count();
-            if ((int)o.displayLength >= 0)
-                result.query = eSIV.Skip((int)o.displayStart).Take((int)o.displayLength);
+            if (o.displayLength > 0)
+            {
+                result.query = q.ProjectTo<DTO.WorkerSigninList>(map.ConfigurationProvider)
+                    .Skip(o.displayStart)
+                    .Take(o.displayLength)
+                    .AsEnumerable();
+            }
             else
-                result.query = eSIV;
+            {
+                result.query = q.ProjectTo<DTO.WorkerSigninList>(map.ConfigurationProvider)
+                    .AsEnumerable();
+            }
             return result;
 
         }
@@ -384,40 +199,36 @@ namespace Machete.Service
         /// </summary>
         /// <param name="signin"></param>
         /// <param name="user"></param>
-        public virtual void CreateSignin(WorkerSignin signin, string user)
+        public virtual Domain.WorkerSignin CreateSignin(int dwccardnum, DateTime dateforsignin, string user)
         {
             //Search for worker with matching card number
-            Worker wfound;
-            wfound = wRepo.GetAllQ().FirstOrDefault(s => s.dwccardnum == signin.dwccardnum);
-            if (wfound != null)
-            {
-                signin.WorkerID = wfound.ID;
-            }
-            //Search for duplicate signin for the same day
-            int sfound = 0;
-            var srepo = repo.GetAllQ();
-            
-            try 
-            { 
-            sfound = srepo
-                .Select(s => new { s.dwccardnum, s.dateforsignin })
-                .Where(t => DbFunctions.TruncateTime(t.dateforsignin) == signin.dateforsignin.Date
-                    && t.dwccardnum == signin.dwccardnum)
-                .Count();
-            }
-            catch(NotSupportedException _nse)
-            {
-                Console.WriteLine(_nse.Message);
-                // Must use the following in a Mocking environment:
-                sfound = srepo
-                    .Select(s => new { s.dwccardnum, s.dateforsignin })
-                    .Where(t => t.dateforsignin.Date == signin.dateforsignin.Date
-                        && t.dwccardnum == signin.dwccardnum)
-                    .Count();
-            }
+            Worker wfound = wServ.GetMany(d => d.dwccardnum == dwccardnum).FirstOrDefault();
+            if (wfound == null) throw new NullReferenceException("Card ID doesn't match a worker!");
 
-            if (sfound == 0) Create(signin, user);
-            else throw new InvalidOperationException("has already been signed in!");
+            var wsi = IsSignedIn(dwccardnum, dateforsignin);
+            if (wsi != null) return wsi;
+
+            var signin = new Domain.WorkerSignin();
+            signin.WorkerID = wfound.ID;
+            signin.dwccardnum = dwccardnum;
+            signin.dateforsignin = new DateTime(dateforsignin.Year, dateforsignin.Month, dateforsignin.Day,
+                                        DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+            signin.memberStatusID = wfound.memberStatusID;
+            signin.lottery_sequence = GetNextLotterySequence(dateforsignin);
+            signin.lottery_timestamp = DateTime.Now;
+            return Create(signin, user);
+        }
+
+        public Domain.WorkerSignin IsSignedIn(int dwccardnum, DateTime dateforsignin)
+        {
+            // get uses FirstOrDefault(), which returns null for default
+            // the GetAllQ is necessary to access the IQueryable object;
+            // the IQueryable is necessary to use the DbFunctions, which 
+            // sends the date comparison to the DB
+            var result = repo.GetAllQ().Where(t =>
+                             DbFunctions.TruncateTime(t.dateforsignin) == dateforsignin.Date &&
+                            t.dwccardnum == dwccardnum).FirstOrDefault();
+            return result;
         }
     }
 }

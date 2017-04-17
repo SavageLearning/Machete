@@ -23,6 +23,7 @@
 #endregion
 using Machete.Domain;
 using Machete.Service;
+using DTO = Machete.Service.DTO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -68,39 +69,6 @@ namespace Machete.Test.Integration.Service
             Assert.AreEqual(wsi.dateforsignin, result.dateforsignin);
         }
         /// <summary>
-        /// 
-        /// </summary>
-        //[TestMethod]
-        //public void Integration_WorkerSignin_GetView()
-        //{
-        //    DateTime date = DateTime.Today;
-        //    IEnumerable<wsiView> filteredWSI = _wsiServ.getView(date);
-        //    IEnumerable<wsiView> result = filteredWSI.ToList();
-        //    Assert.IsNotNull(filteredWSI, "WorkerSignin getView return is Null");
-        //    Assert.IsNotNull(result, "WorkerSignin getview.ToList() is Null");
-        //}
-        /// <summary>
-        /// Submit an unknown dwccardnum, verify it is recorded and returned by GetIndexView
-        /// </summary>
-        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
-        public void GetIndexView_record_unknown_worker()
-        {
-            //TODO Enable test
-            ////            
-            //WorkerSignin _signin = new WorkerSignin();
-            //int cardnum = 30040;
-            //Worker _w = _wServ.GetWorkerByNum(cardnum);
-            //_signin.dwccardnum = cardnum;
-            //_signin.dateforsignin = DateTime.Today;
-            //_wsiServ.CreateWorkerSignin(_signin, "TestUser");            
-            //_dOptions.search = _w.dwccardnum.ToString();
-            ////            
-            //IEnumerable<wsiView> result = _wsiServ.GetIndexView(_dOptions);
-            //List<wsiView> tolist = result.query.ToList();
-            ////
-            //Assert.AreEqual(1, result.filteredCount);
-        }
-        /// <summary>
         /// Filters WSI IndexView based on dwccardnum option. should return all records.
         /// </summary>
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
@@ -111,14 +79,13 @@ namespace Machete.Test.Integration.Service
             frb.AddWorker(skill1:61).AddWorkerSignin();
             var w = frb.ToWorker();
             var wsi = frb.ToWorkerSignin();
-            frb.ToWorkerCache().Refresh(); // gets worker info from cache
             //
             //Act
             _dOptions.dwccardnum = w.dwccardnum;
-            dataTableResult<wsiView> result = frb.ToServWorkerSignin().GetIndexView(_dOptions);
+            dataTableResult<DTO.WorkerSigninList> result = frb.ToServWorkerSignin().GetIndexView(_dOptions);
             //
             //Assert
-            List<wsiView> tolist = result.query.ToList();
+            List<DTO.WorkerSigninList> tolist = result.query.ToList();
             Assert.AreEqual(1, result.query.Count());
             Assert.AreEqual(61, tolist[0].skill1);
         }
@@ -139,26 +106,12 @@ namespace Machete.Test.Integration.Service
             _dOptions.dwccardnum = w.dwccardnum;
             _dOptions.wa_grouping = "requested";
             var wsi = frb.ToServWorkerSignin();
-            dataTableResult<wsiView> result = wsi.GetIndexView(_dOptions);
+            dataTableResult<DTO.WorkerSigninList> result = wsi.GetIndexView(_dOptions);
             //
             //Assert
-            List<wsiView> tolist = result.query.ToList();
+            List<DTO.WorkerSigninList> tolist = result.query.ToList();
             Assert.AreEqual(61, tolist[0].skill1);
             Assert.AreEqual(1, result.query.Count());
-        }
-
-        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WSIs)]
-        public void list_duplicates()
-        {
-            //
-            // Arrange
-            //
-            //Act
-            var result = frb.ToServWorkerSignin().listDuplicate(DateTime.Parse("10/4/2013"), "Chaim");
-            //
-            //Assert
-            Assert.IsNotNull(result);
-        }
-    
+        }    
     }
 }

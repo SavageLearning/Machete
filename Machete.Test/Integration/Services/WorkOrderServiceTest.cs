@@ -23,6 +23,7 @@
 #endregion
 using Machete.Domain;
 using Machete.Service;
+using DTO = Machete.Service.DTO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -134,6 +135,7 @@ namespace Machete.Test.Integration.Service
         {
             //
             //Arrange
+            // get find latest workorder, get date from it, and add a day (make sure we're only records for this test)
             var Date = frb.ToServWorkOrder().GetSummary().OrderByDescending(a => a.date).First().date.Value.AddDays(1);
 
             frb.AddWorkOrder(dateTimeOfWork: Date).AddWorkOrder(dateTimeOfWork: Date).AddWorkOrder(dateTimeOfWork: Date);
@@ -149,14 +151,62 @@ namespace Machete.Test.Integration.Service
             o.sortColName = "WOID";
             //
             //Act
-            dataTableResult<WorkOrder> result = frb.ToServWorkOrder().GetIndexView(o);
+            dataTableResult<DTO.WorkOrderList> result = frb.ToServWorkOrder().GetIndexView(o);
             //
             //Assert
-            IEnumerable<WorkOrder> query = result.query.ToList();
+            IEnumerable<DTO.WorkOrderList> query = result.query.ToList();
             Assert.IsNotNull(result, "IEnumerable is Null");
             Assert.IsNotNull(query, "IEnumerable.query is null");
             Assert.AreEqual(6, query.Count(), "Expected 6, but GetIndexView returned {0} records", query.Count());
 
+        }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
+        public void AutoMapper_WorkOrder()
+        {
+            //
+            //Arrange
+            var wo = frb.ToWorkOrder();
+            var map = frb.ToMapper();
+            //
+            //Act
+            var dto_wolist = map.Map<Machete.Domain.WorkOrder, Machete.Service.DTO.WorkOrderList>(wo);
+            //
+            //Assert
+            Assert.IsNotNull(dto_wolist, "DTO.WorkOrderList is Null");
+            Assert.AreEqual(dto_wolist.workers.Count(), 0, "Found assigned workers when not expecting them");
+        }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
+        public void AutoMapper_WorkOrder_WorkAssignment_Unassigned()
+        {
+            //
+            //Arrange
+            var wo = frb.AddWorkAssignment(assignWorker: false).ToWorkOrder();
+            var map = frb.ToMapper();
+            //
+            //Act
+            var dto_wolist = map.Map<Machete.Domain.WorkOrder, Machete.Service.DTO.WorkOrderList>(wo);
+            //
+            //Assert
+            Assert.IsNotNull(dto_wolist, "DTO.WorkOrderList is Null");
+            Assert.AreEqual(dto_wolist.workers.Count(), 0, "Found assigned workers when not expecting them");
+        }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
+        public void AutoMapper_WorkOrder_WorkAssignment_Assigned()
+        {
+            //
+            //Arrange
+            var wo = frb.AddWorkAssignment(assignWorker: true).ToWorkOrder();
+            var map = frb.ToMapper();
+            //
+            //Act
+            var dto_wolist = map.Map<Machete.Domain.WorkOrder, Machete.Service.DTO.WorkOrderList>(wo);
+            //
+            //Assert
+            Assert.IsNotNull(dto_wolist, "DTO.WorkOrderList is Null");
+            Assert.AreEqual(dto_wolist.workers.Count(), 1, "Unexpected number of assigned workers");
         }
     }
 }

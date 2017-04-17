@@ -22,6 +22,11 @@
 // 
 #endregion
 
+using System;
+using System.Data.Entity.Validation;
+using System.Linq;
+using System.Text;
+
 namespace Machete.Data.Infrastructure
 {
     //
@@ -50,6 +55,6 @@ namespace Machete.Data.Infrastructure
         public void Commit()
         {
             DataContext.Commit();
-        }
+        } 
     }
 }

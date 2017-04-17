@@ -23,6 +23,7 @@
 #endregion
 using Machete.Domain;
 using Machete.Service;
+using DTO = Machete.Service.DTO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -75,8 +76,8 @@ namespace Machete.Test.Integration.Service
             DateTime today = DateTime.Today.AddDays(-rand.Next(40));
             a.dateStart = today.AddHours(7 + rand.Next(5));
             a.dateEnd = a.dateStart.AddHours(1.5);
-            a.name = classlist.ElementAt(rand.Next(classlist.Count()));
-            a.type = 101; //type==class
+            a.nameID = classlist.ElementAt(rand.Next(classlist.Count()));
+            a.typeID = 101; //type==class
             a.teacher = "UnitTest script";
             a.notes = "From Integration_Activity_Service";
             frb.ToServActivity().Create(a, "TestScript");
@@ -102,8 +103,8 @@ namespace Machete.Test.Integration.Service
             DateTime today = DateTime.Now;
             a.dateStart = today;
             a.dateEnd = a.dateStart.AddHours(1.5);
-            a.name = classlist.ElementAt(rand.Next(classlist.Count()));
-            a.type = 101; //type==class
+            a.nameID = classlist.ElementAt(rand.Next(classlist.Count()));
+            a.typeID = 101; //type==class
             a.teacher = "UnitTest script";
             a.notes = "From Integration_Activity_Service";
             frb.ToServActivity().Create(a, "TestScript");
@@ -125,10 +126,10 @@ namespace Machete.Test.Integration.Service
             dOptions.sSearch = teacher;
             //
             //Act
-            dataTableResult<Activity> result = frb.ToServActivity().GetIndexView(dOptions);
+            dataTableResult<DTO.ActivityList> result = frb.ToServActivity().GetIndexView(dOptions);
             //
             //Assert
-            IEnumerable<Activity> query = result.query.ToList();
+            IEnumerable<DTO.ActivityList> query = result.query.ToList();
             Assert.IsNotNull(result, "IEnumerable is Null");
             Assert.AreEqual(1, query.Count());
         }
@@ -150,10 +151,10 @@ namespace Machete.Test.Integration.Service
 
             //
             //Act
-            dataTableResult<Activity> result = frb.ToServActivity().GetIndexView(dOptions);
+            dataTableResult<DTO.ActivityList> result = frb.ToServActivity().GetIndexView(dOptions);
             //
             //Assert
-            IEnumerable<Activity> query = result.query.ToList();
+            IEnumerable<DTO.ActivityList> query = result.query.ToList();
             Assert.IsNotNull(result, "IEnumerable is Null");
             Assert.AreEqual(1, query.Count());
         }

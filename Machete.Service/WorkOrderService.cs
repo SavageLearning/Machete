@@ -21,6 +21,8 @@
 // http://www.github.com/jcii/machete/
 // 
 #endregion
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
@@ -44,7 +46,7 @@ namespace Machete.Service
             bool orderDescending,
             int displayStart,
             int displayLength);
-        dataTableResult<WorkOrder> GetIndexView(viewOptions opt);
+        dataTableResult<DTO.WorkOrderList> GetIndexView(viewOptions opt);
     }
 
     // Business logic for WorkOrder record management
@@ -52,17 +54,23 @@ namespace Machete.Service
     public class WorkOrderService : ServiceBase<WorkOrder>, IWorkOrderService
     {
         private readonly IWorkAssignmentService waServ;
+        private readonly IMapper map;
+        private readonly ILookupCache lc;
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="repo"></param>
         /// <param name="waServ">Work Assignment service</param>
-        /// <param name="unitOfWork">Unit of Work</param>
+        /// <param name="uow">Unit of Work</param>
         public WorkOrderService(IWorkOrderRepository repo, 
                                 IWorkAssignmentService waServ,
-                                IUnitOfWork unitOfWork) : base(repo, unitOfWork)
+                                ILookupCache lc,
+                                IUnitOfWork uow,
+                                IMapper map) : base(repo, uow)
         {
             this.waServ = waServ;
+            this.map = map;
+            this.lc = lc;
             this.logPrefix = "WorkOrder";
         }
 
@@ -86,7 +94,7 @@ namespace Machete.Service
         public IEnumerable<WorkOrder> GetActiveOrders(DateTime date, bool assignedOnly)
         {
             IQueryable<WorkOrder> query = repo.GetAllQ();
-                            query = query.Where(wo => wo.status == WorkOrder.iActive && 
+                            query = query.Where(wo => wo.statusID == WorkOrder.iActive && 
                                            DbFunctions.DiffDays(wo.dateTimeofWork, date) == 0 ? true : false)
                                     .AsQueryable();
             List<WorkOrder> list = query.ToList();
@@ -125,7 +133,7 @@ namespace Machete.Service
             foreach (WorkOrder wo in list)
             {
                 var order = this.Get(wo.ID);
-                order.status = WorkOrder.iCompleted;
+                order.statusID = WorkOrder.iCompleted;
                 this.Save(order, user);
                 count++;
             }
@@ -136,20 +144,25 @@ namespace Machete.Service
         /// </summary>
         /// <param name="vo">viewOptions object</param>
         /// <returns>Table of work orders</returns>
-        public dataTableResult<WorkOrder> GetIndexView(viewOptions o)
+        public dataTableResult<DTO.WorkOrderList> GetIndexView(viewOptions o)
         {
             //Get all the records
-            var result = new dataTableResult<WorkOrder>();
+            var result = new dataTableResult<DTO.WorkOrderList>();
             IQueryable<WorkOrder> q = repo.GetAllQ();
             //
             if (o.EmployerID != null) IndexViewBase.filterEmployer(o, ref q);
             if (o.status != null) IndexViewBase.filterStatus(o, ref q);
             if (o.onlineSource == true) IndexViewBase.filterOnlineSource(o, ref q);
             if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
+            //
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
             //
             result.filteredCount = q.Count();
-            result.query = q.Skip<WorkOrder>((int)o.displayStart).Take((int)o.displayLength);
+            result.query = q.ProjectTo<DTO.WorkOrderList>(map.ConfigurationProvider)
+            .Skip(o.displayStart)
+            .Take(o.displayLength)
+            .AsEnumerable();
+                
             result.totalCount = repo.GetAllQ().Count();
             return result;
         }
@@ -176,12 +189,12 @@ namespace Machete.Service
             var group_query = from wo in query
                             group wo by new { 
                                 dateSoW = DbFunctions.TruncateTime(wo.dateTimeofWork),                                              
-                                wo.status
+                                wo.statusID
                             } into dayGroup
                             select new WorkOrderSummary()
                             {
                                 date = dayGroup.Key.dateSoW,
-                                status = dayGroup.Key.status,
+                                status = dayGroup.Key.statusID,
                                 count = dayGroup.Count()
                             };
 
@@ -196,24 +209,38 @@ namespace Machete.Service
         public override WorkOrder Create(WorkOrder workOrder, string user)
         {
             WorkOrder wo;
-            workOrder.createdby(user);
+            updateComputedValues(ref workOrder);
+            workOrder.createdByUser(user);
             wo = repo.Add(workOrder);
             // TODO: investigate why worker requests collection is added to wo - there is a similar collection of wa added to wo
             wo.workerRequests = new Collection<WorkerRequest>();
             uow.Commit();
-            if (wo.paperOrderNum == null) wo.paperOrderNum = wo.ID;
+            if (wo.paperOrderNum == null)
+            {
+                wo.paperOrderNum = wo.ID;
                 uow.Commit();
+            }
             _log(workOrder.ID, user, "WorkOrder created");
             return wo;
         }
-        //private void _log(int ID, string user, string msg)
-        //{
-        //    levent.Level = LogLevel.Info;
-        //    levent.Message = msg;
-        //    levent.Properties["RecordID"] = ID; //magic string maps to NLog config
-        //    levent.Properties["username"] = user;
-        //    nlog.Log(levent);
-        //}
+        private void updateComputedValues(ref WorkOrder record)
+        {
+            record.statusES = lc.textByID(record.statusID, "ES");
+            record.statusEN = lc.textByID(record.statusID, "EN");
+            record.transportMethodEN = lc.textByID(record.transportMethodID, "EN");
+            record.transportMethodES = lc.textByID(record.transportMethodID, "ES");
+        }
+        public override void Save(WorkOrder workOrder, string user)
+        {
+            updateComputedValues(ref workOrder);
+            base.Save(workOrder, user);
+            if (workOrder.paperOrderNum == null)
+            {
+                workOrder.paperOrderNum = workOrder.ID;
+                uow.Commit();
+            }
+            
+        }
         /// <summary>
         /// Provide combined summary of WO/WA status
         /// </summary>

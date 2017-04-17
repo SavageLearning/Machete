@@ -114,13 +114,6 @@ namespace Machete.Domain
         [StringLength(20, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.Person))]
         public string genderother { get; set; }
 
-        public string fullName()
-        {
-            var rtnstr = firstname1 + " ";
-            if (firstname2 != null) rtnstr = rtnstr + firstname2 + " ";
-            rtnstr = rtnstr + lastname1;
-            if (lastname2 != null) rtnstr = rtnstr + " " + lastname2;
-            return rtnstr;
-        }
+        public string fullName { get;  set;}
     }
 }

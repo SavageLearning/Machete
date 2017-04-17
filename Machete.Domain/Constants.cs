@@ -56,6 +56,11 @@ namespace Machete.Domain
         public const string Completed= "Completed";
         public const string Cancelled= "Cancelled";
         public const string Expired = "Expired";
+        // Adding orphaned and unassigned here, but not in Lookups
+        // These status options shouldn't be selectable by the user; they're 
+        // the result of an expression that detects incomplete records
+        public const string Orphaned = "Orphaned";
+        public const string Unassigned = "Unassigned";
     }
     public struct LEmailStatus
     {
@@ -64,11 +69,12 @@ namespace Machete.Domain
         public const string Sending = "sending";
         public const string Sent = "sent";
         public const string TransmitError = "transmiterror";
-
     }
+
     public struct LKey
     {
         public const string Default = "default";
+        public const string Skill = "skill";
     }
     public struct LWorkType
     {

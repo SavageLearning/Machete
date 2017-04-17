@@ -1,4 +1,4 @@
-﻿@model ActivitySchedule
+﻿@model Machete.Web.ViewModel.ActivitySchedule
 @using Machete.Domain
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
@@ -12,36 +12,38 @@
 @Html.HiddenFor(model => model.firstID, new { @class="hiddenRecID", id=idPrefix + "isFirstID"})
 <div class="tb-table" style="float: left;">
     <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.type): @(Lookups.byID(Model.type))
+        @Html.mUITableLabelFor(model => model.type): @(Model.def.byID(Model.type))
         @Html.HiddenFor(model => model.type)
     </div>
-    @if(Model.type == Lookups.byKeys(LCategory.activityType, LActType.Assembly) ||
-        Model.type == Lookups.byKeys(LCategory.activityType, LActType.OrgMtg))
+    @if(Model.type == Model.def.byKeys(LCategory.activityType, LActType.Assembly) ||
+        Model.type == Model.def.byKeys(LCategory.activityType, LActType.OrgMtg))
     {
         @Html.HiddenFor(model => model.name)
     }
     else
     {
     <div class="tb-row">
-        @Html.mUITableLabelFor(model => model.name): @(Lookups.byID(Model.name))
+        @Html.mUITableLabelFor(model => model.name): @(Model.def.byID(Model.name))
         @Html.HiddenFor(model => model.name)
     </div>
     }
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.dateStart)
         <div class="tb-field">
-            @Html.TextBox("dateStart", Html.Encode(System.String.Format("{0:g}",
-                                                                        Model.dateStart)),
-                                                     new { @id = idPrefix + "dateStart" })
+            @Html.TextBox("dateStart", 
+                Html.Encode(System.String.Format("{0:g}",
+                Model.dateStart)),
+                new { @id = idPrefix + "dateStart" })
             @Html.ValidationMessageFor(model => model.dateStart)
         </div>
     </div>
     <div class="tb-row">
         @Html.mUITableLabelFor(model => model.dateEnd)
         <div class="tb-field">
-            @Html.TextBox("dateEnd", Html.Encode(System.String.Format("{0:g}",
-                                                                                 Model.dateEnd)),
-                                                     new { @id = idPrefix + "dateEnd" })
+            @Html.TextBox("dateEnd", 
+                Html.Encode(System.String.Format("{0:g}",
+                Model.dateEnd)),
+                new { @id = idPrefix + "dateEnd" })
             @Html.ValidationMessageFor(model => model.dateEnd)
         </div>
     </div>
@@ -49,14 +51,10 @@
         @Html.mUITableLabelFor(model => model.teacher)
         <div class="tb-field">
             @Html.DropDownListFor(model => model.teacher, 
-                    new SelectList(Lookups.getTeachers(), Model.teacher),
-                    @Machete.Web.Resources.Shared.choose,
-                    new { tabindex = "1", id = idPrefix + "teacher" })
+                new SelectList(Model.def.getTeachers(), Model.teacher),
+                @Machete.Web.Resources.Shared.choose,
+                new { tabindex = "1", id = idPrefix + "teacher" })
         </div>
-@*        <div class="tb-label">
-        </div>
-        <div class="tb-field">
-        </div>*@
     </div>
 </div>
 <div class="tb-table" style="float: left; padding-left:2em;">
@@ -70,52 +68,24 @@
             <table>
                 <thead>
                     <tr>
-                        <th>
-                            @Html.LabelFor(model => model.sunday)
-                        </th>
-                        <th>
-                            @Html.LabelFor(model => model.monday)
-                        </th>
-                        <th>
-                            @Html.LabelFor(model => model.tuesday)
-                        </th>
-                        <th>
-                            @Html.LabelFor(model => model.wednesday)
-                        </th>
-                        <th>
-                            @Html.LabelFor(model => model.thursday)
-                        </th>
-                        <th>
-                            @Html.LabelFor(model => model.friday)
-                        </th>
-                        <th>
-                            @Html.LabelFor(model => model.saturday)
-                        </th>
+                        <th>@Html.LabelFor(model => model.sunday)</th>
+                        <th>@Html.LabelFor(model => model.monday)</th>
+                        <th>@Html.LabelFor(model => model.tuesday)</th>
+                        <th>@Html.LabelFor(model => model.wednesday)</th>
+                        <th>@Html.LabelFor(model => model.thursday)</th>
+                        <th>@Html.LabelFor(model => model.friday)</th>
+                        <th>@Html.LabelFor(model => model.saturday)</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>
-                            @Html.CheckBox("sunday")
-                        </td>
-                        <td>
-                            @Html.CheckBox("monday")
-                        </td>
-                        <td>
-                            @Html.CheckBox("tuesday")
-                        </td>
-                        <td>
-                            @Html.CheckBox("wednesday")
-                        </td>
-                        <td>
-                            @Html.CheckBox("thursday")
-                        </td>
-                        <td>
-                            @Html.CheckBox("friday")
-                        </td>
-                        <td>
-                            @Html.CheckBox("saturday")
-                        </td>
+                        <td>@Html.CheckBox("sunday")</td>
+                        <td>@Html.CheckBox("monday")</td>
+                        <td>@Html.CheckBox("tuesday")</td>
+                        <td>@Html.CheckBox("wednesday")</td>
+                        <td>@Html.CheckBox("thursday")</td>
+                        <td>@Html.CheckBox("friday")</td>
+                        <td>@Html.CheckBox("saturday")</td>
                     </tr>
                 </tbody>
             </table>
@@ -124,9 +94,10 @@
     <div class="tb-row" style="float:left;">
         @Html.mUITableLabelFor(model => model.stopDate)
         <div class="tb-field">
-            @Html.TextBox("stopDate", Html.Encode(System.String.Format("{0:g}",
-                                                                                 Model.dateEnd)),
-                                                     new { @id = idPrefix + "stopDate" })
+            @Html.TextBox("stopDate", 
+                Html.Encode(System.String.Format("{0:g}",
+                Model.dateEnd)),
+                new { @id = idPrefix + "stopDate" })
             @Html.ValidationMessageFor(model => model.stopDate)
         </div>
     </div>

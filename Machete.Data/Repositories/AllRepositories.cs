@@ -72,8 +72,7 @@ namespace Machete.Data
         public WorkerSigninRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
         override public IQueryable<WorkerSignin> GetAllQ()
         {
-            //return dbset.Include(a => a.worker).AsQueryable();
-            return dbset.AsNoTracking().AsQueryable();
+            return dbset.Include(a => a.worker).AsNoTracking().AsQueryable();
         }
     }
     public class ActivitySigninRepository : RepositoryBase<ActivitySignin>, IActivitySigninRepository
@@ -140,6 +139,11 @@ namespace Machete.Data
     public class WorkerRequestRepository : RepositoryBase<WorkerRequest>, IWorkerRequestRepository
     {
         public WorkerRequestRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
+
+        override public IQueryable<WorkerRequest> GetAllQ()
+        {
+            return dbset.Include(a => a.workerRequested).AsNoTracking().AsQueryable();
+        }
     }
     /// <summary>
     /// 
@@ -162,7 +166,7 @@ namespace Machete.Data
 
         override public IQueryable<WorkAssignment> GetAllQ()
         {
-            return dbset.Include(a => a.workOrder).Include(b => b.workOrder.Employer).AsNoTracking().AsQueryable();
+            return dbset.Include(a => a.workOrder).Include(b => b.workOrder.Employer).Include(b => b.workerAssigned).AsNoTracking().AsQueryable();
         }
     }
     /// <summary>

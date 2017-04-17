@@ -51,6 +51,8 @@ namespace Machete.Web.Controllers
         /// </summary>
         /// <param name="ID"></param>
         /// <returns></returns>
+        [Authorize(Roles = "PhoneDesk, Manager, Teacher, Administrator, Check-in")]
+        /// 
         public FileContentResult GetImage(int ID)
         {
             if (ID != 0)

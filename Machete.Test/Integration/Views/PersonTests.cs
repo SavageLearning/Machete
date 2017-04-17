@@ -1,4 +1,5 @@
-﻿using Machete.Data;
+﻿using AutoMapper;
+using Machete.Data;
 using Machete.Domain;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
@@ -20,12 +21,15 @@ namespace Machete.Test.Selenium.View
         //private static string testdir;
         private static string testimagefile;
         FluentRecordBase frb;
+        static IMapper map;
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext testContext) {
             string solutionDirectory = sharedUI.SolutionDirectory();
             //testdir = solutionDirectory + "\\Machete.test\\";
             testimagefile = solutionDirectory + "\\jimmy_machete.jpg";
+            map = new Machete.Web.MapperConfig().getMapper();
+
             WebServer.StartIis();
         }
 
@@ -35,7 +39,7 @@ namespace Machete.Test.Selenium.View
             frb = new FluentRecordBase();
             driver = new ChromeDriver(ConfigurationManager.AppSettings["CHROMEDRIVERPATH"]);
             baseURL = "http://localhost:4213/";
-            ui = new sharedUI(driver, baseURL);
+            ui = new sharedUI(driver, baseURL, map);
             verificationErrors = new StringBuilder();
             ui.login();
         }
@@ -133,7 +137,7 @@ namespace Machete.Test.Selenium.View
             _wkr.dwccardnum = sharedUI.nextAvailableDwccardnum(frb.ToFactory().Get());
             Event _san = (Event)Records.event1.Clone();
             _san.Person = _per;
-            _san.eventType = MacheteLookup.cache.First(x => x.category == "eventtype" && x.text_EN == "Sanction").ID;
+            _san.eventTypeID = MacheteLookup.cache.First(x => x.category == "eventtype" && x.text_EN == "Sanction").ID;
             Activity _act = (Activity)Records.activity.Clone();
 
             //Act

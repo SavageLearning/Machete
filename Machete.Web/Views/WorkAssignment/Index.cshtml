@@ -31,7 +31,7 @@
             <label for="todaysdate">@WorkAssignments.todaysdate</label>
             @Html.TextBoxFor(m => m.todaysdate, new { @class = "ui-datepicker", @style = "width: 15em;" })
             @Html.DropDownList("TypeOfWorkList",
-                        new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.worktype),
+                        new SelectList(Model.def.getSelectList(Machete.Domain.LCategory.worktype),
                         "Value", "Text"), Shared.All, new { id = "TypeOfWorkList" })
 
         </div>
@@ -91,8 +91,8 @@
                     <table id="availAssignTable" class="display">
                         <thead>
                             <tr>
-                                @*<th>assigned Worker</th>
-                                <th>requested Workers</th>*@
+                                <th>assigned Worker</th>
+                                <th>requested Workers</th>
                                 <th>@Machete.Web.Resources.WorkAssignments.WAID</th>
                                 <th>@WorkOrder.workorderID</th>
                                 <th>@WorkOrder.dateTimeofWork</th>
@@ -114,29 +114,6 @@
     </div>
 
     <div id="lotteryList" class="dialogPopup font-larger">
-        @using (Html.BeginForm("lotterySignin", "WorkerSignin", FormMethod.Post,
-                            new { @class = "edittab-form", @id = "lotterySigninForm" }))
-        {
-            @Html.ValidationSummary(true)
-            <div class="tb-table">
-                <div class="tb-row">
-                    <div class="tb-field">
-                        @Html.TextBox("lotterycardnum", "", new { style = "width: 100px;" })
-
-                    </div>
-                    <div class="tb-field">
-                        @Html.TextBox("lotterysignindate", "", new { @readonly = "readonly" })
-
-                    </div>
-                    <div class="tb-field">
-                        <input type="submit" value="@WorkerSignins.indexsubmit" id="lotterySubmit" />
-                    </div>
-                    <div class="tb-field">
-                        <input type="button" value="@WorkAssignments.wkListDupe" id="listDuplicate" />
-                    </div>
-                </div>
-            </div>
-        }
         <table id="lotteryTable" class="display">
             <thead>
                 <tr>
@@ -152,15 +129,8 @@
 <script type="text/javascript">
     //@@ sourceURL=WorkAssignment_inline.js
 $(document).ready(function () {
-    $('#listDuplicate').hide();
     var True = true;
     var False = false;
-
-    if (@Boolean.Parse(System.Web.Configuration.WebConfigurationManager.AppSettings["CenterUsesDuplicateDailyList"]))
-    {
-        $('#listDuplicate').show();
-    }
-
     assignTableCount = 0;
     DatePicker();
     $( ".radio" ).buttonset();
@@ -222,8 +192,6 @@ $(document).ready(function () {
                     + aData['recordid'] + '"><img src="/Content/images/arrow-down-2.png" /></a>');
                 lotteryField.append('<a class="moveup_Lottery" title="Move Up" href="/WorkerSignin/moveUp/'
                     + aData['recordid'] + '"><img src="/Content/images/arrow-up-2.png" /></a>');
-                lotteryField.append('<a class="confirm_clearLottery wa-table-image-right" title="Erase/Borrar" href="/WorkerSignin/clearLottery/'
-                    + aData['recordid'] + '"><img src="/Content/images/application-exit-2.png" /></a>');
             }
             if (aData['WAID'] > 0) { // green -- WA record associated with WSI record
                 $(nRow).addClass('statusGreen');
@@ -287,7 +255,7 @@ $(document).ready(function () {
             "bProcessing": true,
             "aoColumns": [
                 {"mDataProp": "dwccardnum"},
-                {"mDataProp": "skills"},
+                {"mDataProp": "skillCodes"},
                 {"mDataProp": "lotterySequence"},
                 {"mDataProp": "program"},
                 {"mDataProp": "fullname"},
@@ -329,9 +297,9 @@ $(document).ready(function () {
             "oLanguage": datatable_lang_@(CI.TwoLetterISOLanguageName),
             "bProcessing": true,
             "aoColumns": [
-                            //{ "mDataProp": "assignedWorker", "bVisible": false, "bSortable": true},
-                            //{ "mDataProp": "requestedList", "bVisible": false, "bSortable": false},
-                            { "mDataProp": "WAID", "bVisible": true, "bSortable": true },
+                            { "mDataProp": "assignedWorker", "bVisible": false, "bSortable": true},
+                            { "mDataProp": "requestedList", "bVisible": false, "bSortable": false},
+                            { "mDataProp": "WAID", "bVisible": false, "bSortable": false },
                             { "mDataProp": "WOID", "bVisible": true, "bSortable": true },
                             { "mDataProp": "timeofwork"},
                             { "mDataProp": "englishlevel"},
@@ -379,7 +347,7 @@ $(document).ready(function () {
             e.preventDefault();
             var assignRow = $('#availAssignTable').find('tbody').find('tr.row_selected').attr('recordid');
             var signinRow = $('#signinTable').find('tbody').find('tr.row_selected').attr('recordid');
-
+            console.log('entering bAssign.clock');
             $.post("/WorkAssignment/Assign",
                 {
                     waid: assignRow,
@@ -527,18 +495,6 @@ $(document).ready(function () {
                     }
                     $('#lotterycardnum').focus();
                 });
-            $('#lotterycardnum').focus();
-            return false;
-        });
-
-        $('#listDuplicate').live('click', function (event) {
-            event.preventDefault();
-            var url = "/WorkerSignin/ListDuplicate";
-            $.post(url, { todaysdate: $('#todaysdate').val() }, function (data) {
-                $('#lotteryTable').dataTable().fnDraw();
-                $('#lotterycardnum').focus();
-                if (!data.jobSuccess) { alert(data.rtnMessage); }
-            });
             $('#lotterycardnum').focus();
             return false;
         });

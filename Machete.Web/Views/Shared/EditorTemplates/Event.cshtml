@@ -1,4 +1,4 @@
-﻿@model Machete.Domain.Event
+﻿@model Machete.Web.ViewModel.Event
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
 @using Machete.Domain.Resources
@@ -15,17 +15,12 @@
 <div class="tb-table">
     <div class="tb-row">
         <div class="mui-event-edit-label tb-label">
-            @Html.LabelFor(model => model.eventType)
+            @Html.LabelFor(model => model.eventTypeID)
         </div>
         <div class="mui-event-edit-field tb-field">
-            @Html.DropDownListFor(model => model.eventType, 
-                                  new SelectList(Lookups.getSelectList(Machete.Domain.LCategory.eventtype), 
-                                                 "Value", 
-                                                 "Text",
-                                                 Model.eventType), 
-                                                 @Machete.Web.Resources.Shared.choose,
+            @Html.mUIDropDownListFor(model => model.eventTypeID, Model.def.getSelectList(LCategory.eventtype),
                                   new { tabindex = "2", id = idPrefix + "eventType" })
-            @Html.ValidationMessageFor(model => model.eventType)
+            @Html.ValidationMessageFor(model => model.eventTypeID)
         </div>
         <div class="mui-event-edit-label tb-label">
             @Html.LabelFor(model => model.dateFrom)
@@ -94,10 +89,10 @@
                 </div>
                 <div class="tb-row">
                     <div class="mui-event-image-text-row-label tb-label">
-                        @Html.Label("Createdby", "Createdby")
+                        @Html.Label("createdby", "createdby")
                     </div>
                     <div class="mui-event-image-text-row-field tb-field">
-                        @Html.TextBox("Createdby", jevi.Image.Createdby, new { disabled="disabled"})
+                        @Html.TextBox("createdby", jevi.Image.createdby, new { disabled="disabled"})
                     </div>
                 </div>
                 <div class="tb-row">
@@ -116,7 +111,7 @@
 }
 <div style="clear: left;">
 @Html.Partial("ManagerInfo")
-@Html.Partial("AdministratorInfo")
+
 </div>    
 <script type="text/javascript">
     $(document).ready(function () {

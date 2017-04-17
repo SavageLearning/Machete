@@ -1,4 +1,4 @@
-﻿@model Machete.Domain.WorkOrder
+﻿@model Machete.Web.ViewModel.WorkOrder
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
 @using Machete.Service
@@ -57,7 +57,7 @@
     }
 }
 
-@if (Machete.Domain.WorkOrder.iPending == Model.status)
+@if (Machete.Domain.WorkOrder.iPending == Model.statusID)
 {
     <div class="completeOrderContainer">
         <input type="button" value="@WorkOrders.activatesubmit" class="formButton completeOrderButton" id="activateWorkOrderButton-@(Model.ID)"/>
