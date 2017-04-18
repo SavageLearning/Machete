@@ -423,8 +423,8 @@ namespace Machete.Service
                 case "address1": q = descending ? q.OrderByDescending(p => p.address1) : q.OrderBy(p => p.address1); break;
                 case "city": q = descending ? q.OrderByDescending(p => p.city) : q.OrderBy(p => p.city); break;
                 case "phone": q = descending ? q.OrderByDescending(p => p.phone) : q.OrderBy(p => p.phone); break;
-                case "zipcode": q = descending ? q.OrderByDescending(p => p.phone) : q.OrderBy(p => p.zipcode); break;
-                case "cellphone": q = descending ? q.OrderByDescending(p => p.phone) : q.OrderBy(p => p.cellphone); break;
+                case "zipcode": q = descending ? q.OrderByDescending(p => p.zipcode) : q.OrderBy(p => p.zipcode); break;
+                case "cellphone": q = descending ? q.OrderByDescending(p => p.cellphone) : q.OrderBy(p => p.cellphone); break;
                 case "onlineSource": q = descending ? q.OrderByDescending(p => p.onlineSource) : q.OrderBy(p => p.onlineSource); break;
                 case "dateupdated": q = descending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated); break;
                 default: q = descending ? q.OrderByDescending(p => p.dateupdated) : q.OrderBy(p => p.dateupdated); break;
