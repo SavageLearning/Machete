@@ -24,7 +24,7 @@ namespace Machete.Api.Controllers
         // GET api/<controller>
         public IHttpActionResult Get()
         {
-            return Get(DateTime.MinValue, DateTime.MaxValue);
+            return Get(new DateTime(1753,1,1), DateTime.MaxValue);
         }
 
         public IHttpActionResult Get(DateTime? beginDate, DateTime? endDate)

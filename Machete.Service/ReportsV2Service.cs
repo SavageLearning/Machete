@@ -12,37 +12,22 @@ namespace Machete.Service
 {
     public interface IReportsV2Service
     {
-        List<SimpleDataRow> getJobsDispatchedCount(DTO.SearchOptions o);
+        List<Data.SimpleDataRow> getJobsDispatchedCount(DTO.SearchOptions o);
     }
 
     public class ReportsV2Service : IReportsV2Service
     {
-        protected readonly IWorkOrderRepository woRepo;
-        protected readonly IWorkAssignmentRepository waRepo;
-        protected readonly IWorkerRepository wRepo;
+        protected readonly IReportsRepository repo;
 
-        public ReportsV2Service(IWorkOrderRepository woRepo,
-                             IWorkAssignmentRepository waRepo,
-                             IWorkerRepository wRepo
-                             )
+        public ReportsV2Service(IReportsRepository repo)
         {
-            this.woRepo = woRepo;
-            this.waRepo = waRepo;
-            this.wRepo = wRepo;
+            this.repo = repo;
         }
 
-        public List<SimpleDataRow> getJobsDispatchedCount(DTO.SearchOptions o)
+        public List<Data.SimpleDataRow> getJobsDispatchedCount(DTO.SearchOptions o)
         {
-            return waRepo.GetAllQ()
-                .Where(wa => DbFunctions.TruncateTime(wa.workOrder.dateTimeofWork) >= o.beginDate
-                          && DbFunctions.TruncateTime(wa.workOrder.dateTimeofWork) < o.endDate)
-                .GroupBy(wa =>  new { wa.skillEN, wa.skillID } )
-                .Select(g => new SimpleDataRow
-                {
-                    id = DbFunctions.TruncateTime(o.beginDate) + "-" + DbFunctions.TruncateTime(o.endDate) + "-" + g.Key.skillID,
-                    label = g.Key.skillEN,
-                    value = g.Count()
-                }).ToList();
+            return repo.getJobsDispatchedCount(o.beginDate ?? new DateTime(1753,1,1),
+                o.endDate ?? DateTime.MaxValue);
         }
     }
 }

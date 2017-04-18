@@ -28,16 +28,15 @@ namespace Machete.Test.Integration.Service
         public void Get_JobsDispatchedCount_IsNotNull()
         {
             // Arrange
-            var skill = frb.ToLookup();
             frb.AddWorkOrder(dateTimeOfWork: DateTime.Parse("1/2/2013"))
-               .AddWorkAssignment(skill: 61);
+               .AddWorkAssignment(skill: 61); // known skill ID from machete lookup initializer
             o = new DTO.SearchOptions
             {
                 beginDate = DateTime.Parse("1/1/2013"),
                 endDate = DateTime.Parse("1/1/2014")
             };
             // Act
-            List<SimpleDataRow> result = frb.ToServReportsV2().getJobsDispatchedCount(o);
+            List<Machete.Data.SimpleDataRow> result = frb.ToServReportsV2().getJobsDispatchedCount(o);
             // Assert
             Assert.IsNotNull(result);
             Assert.AreNotEqual(0, result.Count);

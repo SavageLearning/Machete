@@ -69,18 +69,18 @@ namespace Machete.Data.Infrastructure
         //                  Access limited to this class or classes derived from this class
         protected RepositoryBase(IDatabaseFactory databaseFactory)
         {
-            DatabaseFactory = databaseFactory;
+            db = databaseFactory;
             dbset = DataContext.Set<T>();
         }
 
-        protected IDatabaseFactory DatabaseFactory
+        protected IDatabaseFactory db
         {
             get; private set;
         }
 
         protected MacheteContext DataContext
         {
-            get { return dataContext ?? (dataContext = DatabaseFactory.Get()); }
+            get { return dataContext ?? (dataContext = db.Get()); }
         }
         // virtual -- [ method-modifier ] 
         //              runtime type of the instance determines implementation to invoke

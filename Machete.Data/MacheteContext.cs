@@ -52,6 +52,7 @@ namespace Machete.Data
         public DbSet<Event> Events {get; set;}
         public DbSet<Activity> Activities { get; set; }
         public DbSet<ActivitySignin> ActivitySignins { get; set; }
+        public DbSet<ReportDefinition> ReportDefinitions { get; set; }
         //public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         public virtual void Commit()
@@ -88,6 +89,7 @@ namespace Machete.Data
             modelBuilder.Entity<Employer>().ToTable("Employers");
             modelBuilder.Entity<WorkOrder>().ToTable("WorkOrders");
             modelBuilder.Entity<WorkAssignment>().ToTable("WorkAssignments");
+            modelBuilder.Configurations.Add(new ReportDefinitionBuilder());
         }
     }
 
@@ -112,6 +114,14 @@ namespace Machete.Data
             HasMany(a => a.workAssignments)
                 .WithOptional(a => a.workerAssigned)
                 .HasForeignKey(a => a.workerAssignedID);
+        }
+    }
+
+    public class ReportDefinitionBuilder : EntityTypeConfiguration<ReportDefinition>
+    {
+        public ReportDefinitionBuilder()
+        {
+            HasKey(k => k.ID);
         }
     }
 

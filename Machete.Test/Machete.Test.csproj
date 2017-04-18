@@ -292,6 +292,7 @@
     <Compile Include="FluentRecordBase.cs" />
     <Compile Include="FluentRecordTests.cs" />
     <Compile Include="Integration\Controllers\LoginIntegrationTest.cs" />
+    <Compile Include="Integration\Data\ReportsRepositoryTests.cs" />
     <Compile Include="Integration\Services\ActivityServiceTests.cs" />
     <Compile Include="Integration\Services\ConfigServiceTests.cs" />
     <Compile Include="Integration\Services\ReportServiceTest.cs" />
