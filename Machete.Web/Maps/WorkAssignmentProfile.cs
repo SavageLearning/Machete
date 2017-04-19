@@ -25,6 +25,8 @@ namespace Machete.Web.Maps
                  .ForMember(v => v.assignedWorker, opt => opt.MapFrom(d => d.workerAssigned == null ? null : d.workerAssigned.Person.fullName))
                  .ForMember(v => v.requestedList, opt => opt.MapFrom(d => 
                     d.workOrder.workerRequests.Select( a=> a.workerRequested.fullNameAndID)))
+                 .ForMember(v => v.dateTimeofWork, opt => opt.MapFrom(d => d.workOrder.dateTimeofWork))
+                 .ForMember(v => v.WOstatus, opt => opt.MapFrom(d => d.workOrder.statusID))
 
             ;
             CreateMap<Service.DTO.WorkAssignmentList, ViewModel.WorkAssignmentList>()
