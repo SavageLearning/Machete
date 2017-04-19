@@ -23,7 +23,7 @@
         }
     </div>
     <br />
-    @if (Model.paperOrderNum.IsEmpty())
+    @if (Model.paperOrderNum == null || Model.paperOrderNum == 0)
     {
         <h2>@WorkOrders.boxlegend No. @Model.ID</h2>
     }
