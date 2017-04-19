@@ -40,6 +40,7 @@ namespace Machete.Web.ViewModel
         public string emailErrorCount { get; set; }
         public string updatedby { get; set; }
         public string dateupdated { get; set; }
+        public string recordid { get; set; }
         public IEnumerable<WorkerAssignedList> workers { get; set; }
     }
 
