@@ -34,6 +34,7 @@ namespace Machete.Web.ViewModel
         public new string transportFee { get; set; }
         public new string transportFeeExtra { get; set; }
         public new string transportMethodID { get; set; }
+        public string transportMethod { get; set; }
         public new string transportTransactType { get; set; }
         public new string typeOfWorkID { get; set; }
         public new string waPseudoIDCounter { get; set; }
