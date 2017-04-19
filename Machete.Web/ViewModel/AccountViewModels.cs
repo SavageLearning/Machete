@@ -287,7 +287,6 @@ namespace Machete.Web.ViewModel
 
             // Set the Selected property to true for those roles for 
             // which the current user is a member:
-            //TODO:2016 fix this with Identity v2 roles (linq many to many join)
             foreach (IdentityUserRole userRole in user.Roles)
             {
                 SelectRoleEditorViewModel checkUserRole =
