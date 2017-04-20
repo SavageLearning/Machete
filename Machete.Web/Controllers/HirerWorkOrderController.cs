@@ -213,22 +213,22 @@ namespace Machete.Web.Controllers
             ViewBag.workerRequests = new List<SelectListItem> { };
 
             // Build Skill lookups
-            ViewBag.ID = new int[22];
-            ViewBag.text_EN = new string[22];
-            ViewBag.text_ES = new string[22];
-            ViewBag.wage = new double[22];
-            ViewBag.minHour = new int[22];
-            ViewBag.workType = new int[22];
-            ViewBag.desc_ES = new string[22];
-            ViewBag.desc_EN = new string[22];
-
-
-            //IEnumerable<Lookup> lookup = lcache.getCache();
             List<SelectListEmployerSkills> lookup = def.getOnlineEmployerSkill();
+            var numOfSkills = lookup.Count();
+            // bandaid until i remove all of this
+            ViewBag.ID = new int[numOfSkills];
+            ViewBag.text_EN = new string[numOfSkills];
+            ViewBag.text_ES = new string[numOfSkills];
+            ViewBag.wage = new double[numOfSkills];
+            ViewBag.minHour = new int[numOfSkills];
+            ViewBag.workType = new int[numOfSkills];
+            ViewBag.desc_ES = new string[numOfSkills];
+            ViewBag.desc_EN = new string[numOfSkills];
+
 
             int counter = 0;
 
-            for (int i = 0; i < lookup.Count(); i++)
+            for (int i = 0; i <  numOfSkills; i++)
             {
                 SelectListEmployerSkills lup = lookup.ElementAt(i);
                 // removed hard-coded list of casa's active skill integers. relying on getOnlineEmployerSkill & active flag
