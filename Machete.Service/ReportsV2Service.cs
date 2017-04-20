@@ -1,4 +1,5 @@
 ﻿using Machete.Data;
+using Machete.Domain;
 using Machete.Service.DTO.Reports;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,8 @@ namespace Machete.Service
 {
     public interface IReportsV2Service
     {
-        List<Data.SimpleDataRow> getJobsDispatchedCount(DTO.SearchOptions o);
+        List<Data.SimpleDataRow> getSimpleAggregate(DTO.SearchOptions o);
+        List<ReportDefinition> getList();
     }
 
     public class ReportsV2Service : IReportsV2Service
@@ -24,10 +26,16 @@ namespace Machete.Service
             this.repo = repo;
         }
 
-        public List<Data.SimpleDataRow> getJobsDispatchedCount(DTO.SearchOptions o)
+        public List<Data.SimpleDataRow> getSimpleAggregate(DTO.SearchOptions o)
         {
-            return repo.getJobsDispatchedCount(o.beginDate ?? new DateTime(1753,1,1),
+            return repo.getSimpleAggregate(o.reportName, 
+                o.beginDate ?? new DateTime(1753,1,1),
                 o.endDate ?? DateTime.MaxValue);
+        }
+
+        public List<ReportDefinition> getList()
+        {
+            return repo.getList();
         }
     }
 }

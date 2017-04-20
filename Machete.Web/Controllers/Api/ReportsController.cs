@@ -24,15 +24,22 @@ namespace Machete.Api.Controllers
         // GET api/<controller>
         public IHttpActionResult Get()
         {
-            return Get(new DateTime(1753,1,1), DateTime.MaxValue);
+            var result = serv.getList();
+            return Ok( new { data = result } );
         }
 
         public IHttpActionResult Get(DateTime? beginDate, DateTime? endDate)
         {
-            var result = serv.getJobsDispatchedCount(new Service.DTO.SearchOptions {
-                endDate = endDate,
-                beginDate = beginDate
-            });
+            return Get("JobsDispatched", beginDate, endDate);
+        }
+        public IHttpActionResult Get(string reportName, DateTime? beginDate, DateTime? endDate)
+        {
+            var result = serv.getSimpleAggregate(
+                new Service.DTO.SearchOptions {
+                    reportName = reportName,
+                    endDate = endDate,
+                    beginDate = beginDate
+                });
             return Ok(new { data = result });
         }
 

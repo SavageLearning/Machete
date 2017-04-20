@@ -10,6 +10,7 @@ namespace Machete.Service.DTO
     {
         public DateTime? beginDate { get; set; }
         public DateTime? endDate { get; set; }
+        public string reportName { get; set; }
 
     }
 }

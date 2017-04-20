@@ -25,11 +25,35 @@ namespace Machete.Test.Integration.Data
 
             // act
             var result = frb.ToRepoReports()
-                .getJobsDispatchedCount(DateTime.Parse("2013/1/1"), 
+                .getSimpleAggregate("JobsDispatched", DateTime.Parse("2013/1/1"), 
                                         DateTime.Parse("2014/1/1"));
             // assert
             Assert.IsNotNull(result);
             Assert.AreNotEqual(0, result.Count);
+        }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Data), TestCategory(TC.Reports)]
+        public void getDefaultURL()
+        {
+            // arrange
+            // act
+            var result = frb.ToRepoReports()
+                .getList();
+            // assert
+            Assert.IsNotNull(result);
+            Assert.AreNotEqual(0, result.Count);
+
+        }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Data), TestCategory(TC.Reports)]
+        public void getFoo()
+        {
+            // arrange
+
+            // act
+
+            // assert
+
         }
     }
 }

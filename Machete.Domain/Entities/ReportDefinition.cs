@@ -15,6 +15,8 @@ namespace Machete.Domain
         public string name          { get; set; }
         public string description   { get; set; }
         public string sqlquery      { get; set; }
+        public string category { get; set; }
+        public string subcategory { get; set; }
 
     }
 }

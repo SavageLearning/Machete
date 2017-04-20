@@ -250,6 +250,12 @@
     <Content Include="sql\machete_migrate_source_to_target.sql" />
     <Content Include="sql\migrate_machete_records.sql" />
     <Content Include="sql\Query_SP_cache.sql" />
+    <Content Include="sql\ReportsDev2017\aggrange_CityReport.sql" />
+    <Content Include="sql\ReportsDev2017\aggrange_count_of_completed_assignments_by_month.sql" />
+    <Content Include="sql\ReportsDev2017\aggrange_disinct_workers_serviced_at_center.sql" />
+    <Content Include="sql\ReportsDev2017\aggrange_ESLreport-english_class_hours.sql" />
+    <Content Include="sql\ReportsDev2017\aggrange_GWEP_gender.sql" />
+    <Content Include="sql\ReportsDev2017\aggrange_jobsdispatched.sql" />
     <Content Include="sql\status_summary_combined_EN.sql" />
     <Content Include="sql\employers_EN.sql" />
     <Content Include="sql\status_summary_workAssignments_EN.sql" />
