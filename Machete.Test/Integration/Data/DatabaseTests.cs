@@ -44,7 +44,7 @@ namespace Machete.Test.Integration.Data
         /// <summary>
         /// Used with SQL Profiler to see what SQL is produced
         /// </summary>
-        [TestMethod, TestCategory(TC.Fluent)]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Data), TestCategory(TC.Configs)]
         public void Integration_Queryable_test()
         {
             // Arrange - load test records
@@ -61,23 +61,21 @@ namespace Machete.Test.Integration.Data
             Assert.AreEqual(result.dwccardnum, worker.dwccardnum);
         }
         /// <summary>
-        /// Used with SQL profiler to see what SQL is produced
+        /// Truncate ReportDefinitions and recreate
         /// </summary>
-        [Ignore, TestMethod]
-        public void Integration_Enumerable_test()
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Data), TestCategory(TC.Configs)]
+        public void MacheteReportDefinitions_Initialize_counts_match()
         {
             // Arrange - load test records
-            var worker = frb.AddWorkerSignin().ToWorker();
-            var signin = frb.ToWorkerSignin();
-            IEnumerable<WorkerSignin> e = frb.ToRepoWorkerSignin().GetAll().AsEnumerable();
+            var context = frb.ToFactory().Get();
+            context.Database.ExecuteSqlCommand("TRUNCATE TABLE ReportDefinitions");
+            var cache = Machete.Data.MacheteReportDefinitions.cache;
+            var count = cache.Count();
             // Act
-            e = e.Where(r => r.dwccardnum == signin.dwccardnum 
-                          && DateTime.Compare(r.dateforsignin.Date, signin.dateforsignin) == 0 ? true : false);
-            WorkerSignin result = e.FirstOrDefault();
+            Machete.Data.MacheteReportDefinitions.Initialize(context);
+            var result = frb.ToRepoReports().GetAll().Count();
             // Assert
-            Assert.IsNotNull(result.ID);
-            Assert.AreEqual(result.WorkerID, worker.ID);
-            Assert.AreEqual(result.dwccardnum, worker.dwccardnum);
+            Assert.AreEqual(count, result, "static cache and DB report definitions' count not equal");
         }
     }
 }
