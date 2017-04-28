@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Web.Http;
 
 namespace Machete.Api.Controllers
@@ -40,7 +41,7 @@ namespace Machete.Api.Controllers
                     endDate = endDate,
                     beginDate = beginDate
                 });
-            return Ok(new { data = result });
+            return Json(new { data = result });
         }
 
         // POST api/values
