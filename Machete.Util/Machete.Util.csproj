@@ -256,6 +256,7 @@
     <Content Include="sql\ReportsDev2017\aggrange_ESLreport-english_class_hours.sql" />
     <Content Include="sql\ReportsDev2017\aggrange_GWEP_gender.sql" />
     <Content Include="sql\ReportsDev2017\aggrange_jobsdispatched.sql" />
+    <Content Include="sql\ReportsDev2017\aggrange_UnitedWayRevised.sql" />
     <Content Include="sql\status_summary_combined_EN.sql" />
     <Content Include="sql\employers_EN.sql" />
     <Content Include="sql\status_summary_workAssignments_EN.sql" />
