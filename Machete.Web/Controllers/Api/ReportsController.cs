@@ -26,18 +26,21 @@ namespace Machete.Api.Controllers
         public IHttpActionResult Get()
         {
             var result = serv.getList();
-            return Ok( new { data = result } );
+            return Json( new { data = result } );
         }
 
-        public IHttpActionResult Get(DateTime? beginDate, DateTime? endDate)
+        public IHttpActionResult Get(string id)
         {
-            return Get("JobsDispatched", beginDate, endDate);
+
+            var result = serv.Get(id);
+            return Json(new { data = result });
         }
-        public IHttpActionResult Get(string reportName, DateTime? beginDate, DateTime? endDate)
+
+        public IHttpActionResult Get(string id, DateTime? beginDate, DateTime? endDate)
         {
             var result = serv.getSimpleAggregate(
                 new Service.DTO.SearchOptions {
-                    reportName = reportName,
+                    idOrName = id,
                     endDate = endDate,
                     beginDate = beginDate
                 });

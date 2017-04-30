@@ -12,7 +12,7 @@ namespace Machete.Data
 {
     public interface IReportsRepository : IRepository<ReportDefinition>
     {
-        List<SimpleDataRow> getSimpleAggregate(string name, DateTime beginDate, DateTime endDate);
+        List<SimpleDataRow> getSimpleAggregate(int id, DateTime beginDate, DateTime endDate);
         List<ReportDefinition> getList();
     }
     public class ReportsRepository : RepositoryBase<ReportDefinition>, IReportsRepository
@@ -22,9 +22,11 @@ namespace Machete.Data
         public ReportsRepository(IDatabaseFactory dbFactory) : base(dbFactory)
         {}
 
-        public List<SimpleDataRow> getSimpleAggregate(string name, DateTime beginDate, DateTime endDate)
+        public List<SimpleDataRow> getSimpleAggregate(int id, DateTime beginDate, DateTime endDate)
         {
-            var rdef = dbset.First(w => w.name == name);
+
+
+            var rdef = dbset.Single(a => a.ID == id);
             return db.Get().Database.SqlQuery<SimpleDataRow>(rdef.sqlquery,
                 new SqlParameter { ParameterName = "startDate", Value = beginDate },
                 new SqlParameter { ParameterName = "endDate", Value = endDate })

@@ -25,7 +25,7 @@ namespace Machete.Test.Integration.Data
 
             // act
             var result = frb.ToRepoReports()
-                .getSimpleAggregate("JobsDispatched", DateTime.Parse("2013/1/1"), 
+                .getSimpleAggregate(1, DateTime.Parse("2013/1/1"), 
                                         DateTime.Parse("2014/1/1"));
             // assert
             Assert.IsNotNull(result);
