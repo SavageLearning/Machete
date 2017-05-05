@@ -358,7 +358,7 @@ html[xmlns] .clearfix {
 </head>
 
 <body>
-<h1 class="emailview">@ConfigurationManager.AppSettings["OrganizationName"]</h1>
+<h1 class="emailview">@Model.def.getConfig("OrganizationName")</h1>
 <div id="main">
 <div class="dateNeeded">
     <div class="neededText">@WorkOrders.dateneeded</div>

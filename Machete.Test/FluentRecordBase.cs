@@ -42,6 +42,7 @@ namespace Machete.Test
         private ActivityRepository _repoA;
         private ActivitySigninRepository _repoAS;
         private WorkerSigninRepository _repoWSI;
+        private ConfigRepository _repoC;
         private WorkerRepository _repoW;
         private PersonRepository _repoP;
         private WorkOrderRepository _repoWO;
@@ -59,6 +60,7 @@ namespace Machete.Test
         private WorkerService _servW;
         private PersonService _servP;
         private ImageService _servI;
+        private ConfigService _servC;
         private WorkerRequestService _servWR;
         private WorkOrderService _servWO;
         private WorkAssignmentService _servWA;
@@ -75,6 +77,7 @@ namespace Machete.Test
         private Domain.Employer _emp;
         private Email _email;
         private Event _event;
+        private Config _config;
         private WorkOrder _wo;
         private WorkAssignment _wa;
         private Person _p;
@@ -234,7 +237,8 @@ namespace Machete.Test
             if (_lcache == null) AddLookupCache();
             if (_uow == null) AddUOW();
             if (_map == null) AddMapper();
-            _servWO = new WorkOrderService(_repoWO, _servWA, _lcache, _uow, _map);
+            if (_servC == null) AddServConfig();
+            _servWO = new WorkOrderService(_repoWO, _servWA, _lcache, _uow, _map, _servC);
             return this;
         }
 
@@ -398,7 +402,8 @@ namespace Machete.Test
             if (_servAS == null) AddServWorkerRequest();
             if (_uow == null) AddUOW();
             if (_map == null) AddMapper();
-            _servWSI = new WorkerSigninService(_repoWSI, _servW, _servI, _servWR, _uow, _map);
+            if (_servC == null) AddServConfig();
+            _servWSI = new WorkerSigninService(_repoWSI, _servW, _servI, _servWR, _uow, _map, _servC);
             return this;
         }
 
@@ -488,7 +493,7 @@ namespace Machete.Test
             if (testID != null) _p.firstname2 = testID;
             //
             // ACT
-            _servP.Create(_p, _user);
+            var result = _servP.Create(_p, _user);
             return this;
         }
 
@@ -529,6 +534,9 @@ namespace Machete.Test
             //
             // DEPENDENCIES
             if (_repoW == null) AddRepoWorker();
+            if (_repoWO == null) AddRepoWorkOrder();
+            if (_repoP == null) AddRepoPerson();
+
             if (_uow == null) AddUOW();
             if (_map == null) AddMapper();
             if (_lcache == null) AddLookupCache();
@@ -562,6 +570,7 @@ namespace Machete.Test
             // ARRANGE
             _w = (Worker)Records.worker.Clone();
             _w.Person = _p;
+            _w.ID = _p.ID; // mimics MVC UI behavior. the POST to create worker includes the person record's ID
             if (skill1 != null) _w.skill1 = skill1;
             if (skill2 != null) _w.skill2 = skill2;
             if (skill3 != null) _w.skill3 = skill3;
@@ -869,7 +878,9 @@ namespace Machete.Test
             if (_servAS == null) AddServWorkerRequest();
             if (_uow == null) AddUOW();
             if (_map == null) AddMapper();
-            _servAS = new ActivitySigninService(_repoAS, _servW, _servP, _servI, _servWR, _uow, _map);
+            if (_servC == null) AddServConfig();
+
+            _servAS = new ActivitySigninService(_repoAS, _servW, _servP, _servI, _servWR, _uow, _map, _servC);
             return this;
         }
 
@@ -1115,6 +1126,64 @@ namespace Machete.Test
         }
         #endregion
 
+        #region Configs
+
+
+        public FluentRecordBase AddRepoConfig()
+        {
+            if (_dbFactory == null) AddDBFactory();
+
+            _repoC = new ConfigRepository(_dbFactory);
+            return this;
+        }
+
+        public ConfigRepository ToRepoConfig()
+        {
+            if (_repoC == null) AddRepoConfig();
+            return _repoC;
+        }
+
+        public FluentRecordBase AddServConfig()
+        {
+            //
+            // DEPENDENCIES
+            if (_repoC == null) AddRepoConfig();
+            if (_map == null) AddMapper();
+            if (_uow == null) AddUOW();
+            _servC = new ConfigService(_repoC, _uow, _map);
+            return this;
+        }
+
+        public ConfigService ToServConfig()
+        {
+            if (_servC == null) AddServConfig();
+            return _servC;
+        }
+
+        public FluentRecordBase AddConfig()
+        {
+            //
+            // DEPENDENCIES
+            if (_servC == null) AddServConfig();
+
+            //
+            // ARRANGE
+            _config.updatedby = _user;
+            _config.createdby = _user;
+            //
+            // ACT
+            _servC.Create(_config, _user);
+            return this;
+        }
+
+        public Event ToConfig()
+        {
+            if (_event == null) AddConfig();
+            return _event;
+        }
+
+        #endregion
+
         public FluentRecordBase AddMapper()
         {
             _map = new Machete.Web.MapperConfig().getMapper();
@@ -1141,7 +1210,8 @@ namespace Machete.Test
 
         public FluentRecordBase AddEmailConfig()
         {
-            _emCfg = new EmailConfig();
+            if (_servC == null) AddServConfig();
+            _emCfg = new EmailConfig(_servC);
             return this;
         }
 

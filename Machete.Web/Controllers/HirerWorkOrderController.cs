@@ -240,8 +240,9 @@ namespace Machete.Web.Controllers
                 ViewBag.text_ES[counter] = lup.skillDescriptionEs;
                 counter++;              
             }
-
-            return PartialView("Create", wo);
+            var m = map.Map<Domain.WorkOrder, ViewModel.WorkOrder>(wo);
+            m.def = def;
+            return PartialView("Create", m);
         }
 
         /// <summary>
@@ -256,7 +257,7 @@ namespace Machete.Web.Controllers
         public ActionResult Create(WorkOrder wo, string userName, string workerAssignments)
         {
             UpdateModel(wo);
-
+            ViewBag.def = def;
             // Retrieve user ID of signed in Employer
             string userID = HttpContext.User.Identity.GetUserId();
 
@@ -365,7 +366,7 @@ namespace Machete.Web.Controllers
                     WorkerRequest newWr = wrServ.Create(wr, userName);
                 }
             }
-
+            ViewBag.def = def;
             if (neworder.transportFee > 0)
             {
                 return View("IndexPrePaypal", neworder);
@@ -389,7 +390,7 @@ namespace Machete.Web.Controllers
         {
             // Retrieve user ID of signed in Employer
             string userID = HttpContext.User.Identity.GetUserId();
-
+            ViewBag.def = def;
             // Retrieve Employer record
             Domain.Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == userID).FirstOrDefault();
             if (employer != null)
@@ -501,7 +502,7 @@ namespace Machete.Web.Controllers
         public ActionResult PaymentPost(string token, string payerId, string userName)
         {
             double payment = 0.0;
-
+            ViewBag.def = def;
             // TODO: There was an issue with the WO returned by the first query below - the work order
             // can't be saved unless the work order is retrieved with the woServ.Get() call
             WorkOrder woAll = woServ.GetRepo().GetAllQ().Where(wo => wo.paypalToken == token).FirstOrDefault();
@@ -529,7 +530,7 @@ namespace Machete.Web.Controllers
             }
 
             // PayPal call to get buyer details
-            PaypalExpressCheckout paypal = new PaypalExpressCheckout();
+            PaypalExpressCheckout paypal = new PaypalExpressCheckout(def);
             GetExpressCheckoutDetailsResponseType detailsResponse = paypal.GetExpressCheckoutDetails(token);
 
             if (detailsResponse != null)
@@ -593,7 +594,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Hirer")]
         public ActionResult PaymentCancel(string token, string orderID)
         {
-
+            ViewBag.def = def;
             return View("IndexCancel");
         }
 
@@ -615,7 +616,7 @@ namespace Machete.Web.Controllers
                 log.Log(levent);
                 return View("IndexError", workOrder);
             }
-
+            ViewBag.def = def;
             return View("IndexCancel", workOrder);
         }
 

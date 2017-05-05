@@ -56,6 +56,7 @@ namespace Machete.Service
         private readonly IWorkAssignmentService waServ;
         private readonly IMapper map;
         private readonly ILookupCache lc;
+        private readonly IConfigService cfg;
         /// <summary>
         /// Constructor
         /// </summary>
@@ -66,11 +67,13 @@ namespace Machete.Service
                                 IWorkAssignmentService waServ,
                                 ILookupCache lc,
                                 IUnitOfWork uow,
-                                IMapper map) : base(repo, uow)
+                                IMapper map,
+                                IConfigService cfg) : base(repo, uow)
         {
             this.waServ = waServ;
             this.map = map;
             this.lc = lc;
+            this.cfg = cfg;
             this.logPrefix = "WorkOrder";
         }
 
@@ -209,6 +212,7 @@ namespace Machete.Service
         public override WorkOrder Create(WorkOrder workOrder, string user)
         {
             WorkOrder wo;
+            workOrder.timeZoneOffset = Convert.ToDouble(cfg.getConfig("TimeZoneDifferenceFromPacific"));
             updateComputedValues(ref workOrder);
             workOrder.createdByUser(user);
             wo = repo.Add(workOrder);

@@ -35,5 +35,6 @@ namespace Machete.Service.DTO
         public int? pseudoID { get; set; }
         public string fullWAID { get; set; }
         public List<string> requestedList { get; set; }
+        public double timeZoneOffset { get; set; }
     }
 }

@@ -47,6 +47,7 @@ namespace Machete.Test.Unit.Service
         Mock<IWorkerRequestService> _wrServ;
         Mock<IUnitOfWork> _uow;
         Mock<IImageService> _iServ;
+        Mock<IConfigService> _cServ;
         Mock<IMapper> _map;
         List<WorkerSignin> _signins;
         List<Worker> _workers;
@@ -121,7 +122,7 @@ namespace Machete.Test.Unit.Service
         {
             //
             //Arrange
-            var _serv = new WorkerSigninService(_wsiRepo.Object, _wServ.Object, _iServ.Object, _wrServ.Object, _uow.Object, _map.Object);
+            var _serv = new WorkerSigninService(_wsiRepo.Object, _wServ.Object, _iServ.Object, _wrServ.Object, _uow.Object, _map.Object, _cServ.Object);
             var _signin = new WorkerSignin() { dwccardnum = 66666, dateforsignin = DateTime.Today };
             WorkerSignin _cbsignin = new WorkerSignin();
             _wsiRepo.Setup(s => s.Add(It.IsAny<WorkerSignin>())).Callback((WorkerSignin s) => { _cbsignin = s; });
@@ -139,7 +140,7 @@ namespace Machete.Test.Unit.Service
             //
             //Arrange
             int fakeid = 66666;
-            var _serv = new WorkerSigninService(_wsiRepo.Object, _wServ.Object, _iServ.Object, _wrServ.Object, _uow.Object, _map.Object);
+            var _serv = new WorkerSigninService(_wsiRepo.Object, _wServ.Object, _iServ.Object, _wrServ.Object, _uow.Object, _map.Object, _cServ.Object);
             var _signin = new WorkerSignin() { dwccardnum = fakeid, dateforsignin = DateTime.Today };
             WorkerSignin _cbsignin = new WorkerSignin();
             _wsiRepo.Setup(s => s.Add(It.IsAny<WorkerSignin>())).Callback((WorkerSignin s) => { _cbsignin = s; });
