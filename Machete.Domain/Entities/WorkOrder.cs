@@ -52,6 +52,7 @@ namespace Machete.Domain
             idString = "WO";
             this.waPseudoIDCounter = 0;
         }
+        public Double timeZoneOffset { get; set; }
 
         // Flag identifying if source of work order was online web form
         [LocalizedDisplayName("onlineSource", NameResourceType = typeof(Resources.WorkOrder))]

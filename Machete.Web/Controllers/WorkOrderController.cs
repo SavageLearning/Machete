@@ -337,6 +337,7 @@ namespace Machete.Web.Controllers
             Domain.WorkOrder workOrder = woServ.Get(id);
             var m = map.Map<Domain.WorkOrder, ViewModel.WorkOrder>(workOrder);
             m.def = def;
+            ViewBag.OrganizationName = def.getConfig("OrganizationName");
             return PartialView(m);
         }
         /// <summary>

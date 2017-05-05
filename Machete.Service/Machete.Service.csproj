@@ -256,6 +256,7 @@
   <ItemGroup>
     <Compile Include="ActivityService.cs" />
     <Compile Include="ActivitySigninService.cs" />
+    <Compile Include="ConfigService.cs" />
     <Compile Include="DTO\ActivityList.cs" />
     <Compile Include="DTO\ActivitySigninList.cs" />
     <Compile Include="DTO\ConfigList.cs" />

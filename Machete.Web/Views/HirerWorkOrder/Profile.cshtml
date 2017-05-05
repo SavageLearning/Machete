@@ -94,9 +94,9 @@
                 <!-- Display Previously hired information - worker center specific -->
                 <div class="tb-label">
                     @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
-                        @Html.Label(System.Web.Configuration.WebConfigurationManager.AppSettings["PreviouslyHired_EN"])
+                        @Html.Label((string)ViewBag.def.getConfig("PreviouslyHired_EN"))
                     } else {
-                        @Html.Label(System.Web.Configuration.WebConfigurationManager.AppSettings["PreviouslyHired_ES"])
+                        @Html.Label((string)ViewBag.def.getConfig("PreviouslyHired_ES"))
                     }
                 </div>
                 @Html.mUIDropDownYesNoFor(model => model.returnCustomer, (List<SelectListItem>)ViewBag.YesNoSelectList, new { tabindex = "14", id = "returnCustomer" }) 
@@ -105,9 +105,9 @@
                 <!-- Display Receive Updates information - worker center specific -->
                 <div class="tb-label">
                     @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
-                        @Html.Label(System.Web.Configuration.WebConfigurationManager.AppSettings["ReceiveUpdates_EN"])
+                        @Html.Label((string)ViewBag.def.getConfig("ReceiveUpdates_EN"))
                     } else {
-                        @Html.Label(System.Web.Configuration.WebConfigurationManager.AppSettings["ReceiveUpdates_ES"])
+                        @Html.Label((string)ViewBag.def.getConfig("ReceiveUpdates_ES"))
                     }
                 </div>
                 @Html.mUIDropDownYesNoFor(model => model.receiveUpdates, (List<SelectListItem>)ViewBag.YesNoSelectList, new { tabindex = "15", id = "receiveUpdates" }) 

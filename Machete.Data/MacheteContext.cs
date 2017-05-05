@@ -52,6 +52,7 @@ namespace Machete.Data
         public DbSet<Event> Events {get; set;}
         public DbSet<Activity> Activities { get; set; }
         public DbSet<ActivitySignin> ActivitySignins { get; set; }
+        public DbSet<Config> Configs { get; set; }
         //public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         public virtual void Commit()
@@ -88,6 +89,15 @@ namespace Machete.Data
             modelBuilder.Entity<Employer>().ToTable("Employers");
             modelBuilder.Entity<WorkOrder>().ToTable("WorkOrders");
             modelBuilder.Entity<WorkAssignment>().ToTable("WorkAssignments");
+        }
+    }
+
+    public class ConfigBuilder : EntityTypeConfiguration<Config>
+    {
+        public ConfigBuilder()
+        {
+            ToTable("Configs");
+            HasKey(k => k.ID);
         }
     }
 

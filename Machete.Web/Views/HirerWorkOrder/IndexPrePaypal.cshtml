@@ -14,9 +14,9 @@
     <div>
         <h1>Transportation Fees</h1>
         @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
-            @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["PayPalPayment_EN"])
+            @Html.Raw(ViewBag.def.getConfig("PayPalPayment_EN"))
         } else {
-            @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["PayPalPayment_ES"])
+            @Html.Raw(ViewBag.def.getConfig("PayPalPayment_ES"))
         }
         <p>@Machete.Web.Resources.WorkOrders.workOrderNumber @(Model.ID)</p>
         <p>@Machete.Web.Resources.WorkOrders.transportationFee $@(Model.transportFee).00</p>
@@ -71,9 +71,9 @@
     <p>Please call 206.956.0779 x3 during <a href="#" id="businessHoursModal">business hours</a> if you have any questions/issues.</p>
     <div id="businessHoursDialog" title="@Machete.Web.Resources.WorkOrders.businessHoursModal" class="display" style="display: none">
         @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
-            @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["BusinessHours_EN"])
+            @Html.Raw(ViewBag.def.getConfig("BusinessHours_EN"))
         } else {
-            @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["BusinessHours_ES"])
+            @Html.Raw(ViewBag.def.getConfig("BusinessHours_ES"))
         }
     </div>    
 </div>

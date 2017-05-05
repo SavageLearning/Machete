@@ -49,5 +49,6 @@ namespace Machete.Domain
         [Column("memberStatus")]
         public int? memberStatusID { get; set; }
         public DateTime dateforsignin { get; set; }
+        public Double timeZoneOffset { get; set; }
     }
 }
