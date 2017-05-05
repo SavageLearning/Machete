@@ -82,7 +82,7 @@ namespace Machete.Data
             new ConfigMap { old ="PayPalPayment_EN", cur = "PayPalPayment_EN", cat = "PayPal" },
             new ConfigMap { old ="PayPalPayment_ES", cur = "PayPalPayment_ES", cat = "PayPal" },
             new ConfigMap { old ="PayPalAccountID", cur = "PayPalAccountID", cat = "PayPal" },
-            new ConfigMap { old ="HostingEndpoint", cur = "PayPalHostingEndpoint", cat = "PayPal" },
+            new ConfigMap { old ="HostingEndpoint", cur = "HostingEndpoint", cat = "PayPal" },
             new ConfigMap { old ="PaypalDescription", cur = "PaypalDescription", cat = "PayPal" }
         };
 
