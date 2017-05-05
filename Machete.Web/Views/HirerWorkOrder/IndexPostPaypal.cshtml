@@ -28,9 +28,9 @@
     </div>
     <div id="businessHoursDialog" title="@Machete.Web.Resources.WorkOrders.businessHoursModal" class="display" style="display: none">
         @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
-            @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["BusinessHours_EN"])
+            @Html.Raw(ViewBag.def.getConfig("BusinessHours_EN"))
         } else {
-            @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["BusinessHours_ES"])
+            @Html.Raw(ViewBag.def.getConfig("BusinessHours_ES"))
         }
     </div>    
 }

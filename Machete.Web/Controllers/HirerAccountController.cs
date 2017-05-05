@@ -30,11 +30,14 @@ namespace Machete.Web.Controllers
         public IMyUserManager<ApplicationUser> UserManager { get; private set; }
         private readonly IDatabaseFactory DatabaseFactory;
         private CultureInfo CI;
+        private IDefaults def;
 
-        public HirerAccountController(IMyUserManager<ApplicationUser> userManager, IDatabaseFactory databaseFactory)
+        public HirerAccountController(IMyUserManager<ApplicationUser> userManager, 
+            IDatabaseFactory databaseFactory, IDefaults def)
         {
             UserManager = userManager;
             DatabaseFactory = databaseFactory;
+            this.def = def;
         }
 
         protected override void Initialize(RequestContext requestContext)
@@ -77,6 +80,7 @@ namespace Machete.Web.Controllers
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
+            ViewBag.def = def;
             HirerLoginViewModel model = new HirerLoginViewModel();
             model.Action = "ExternalLogin";
             model.ReturnUrl = returnUrl;
@@ -116,6 +120,7 @@ namespace Machete.Web.Controllers
         public ActionResult Register()
         {
             HirerRegisterViewModel model = new HirerRegisterViewModel();
+            ViewBag.def = def;
             return View(model);
         }
 

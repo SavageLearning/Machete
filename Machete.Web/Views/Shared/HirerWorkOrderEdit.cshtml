@@ -1,4 +1,4 @@
-﻿@model Machete.Domain.WorkOrder
+﻿@model Machete.Web.ViewModel.WorkOrder
 @using Machete.Web.Helpers
 @using Machete.Web.Resources
 @using Machete.Domain.Resources
@@ -21,14 +21,14 @@
 <!-- Note: there are really weird quirks in the way the JS & Razor interact with these key/value pairs, so to have logic in JS that is worker center -->
 <!-- specific, this config key value MUST be a unique worker center name -->
 <!-- JS can't read string values from the config file, so passing the string value into a hidden field that it can interpret -->
-<input type="hidden" name="workerCenter" id="workerCenter" value='@System.Web.Configuration.WebConfigurationManager.AppSettings["OrganizationName"]'>
+<input type="hidden" name="workerCenter" id="workerCenter" value='@Model.def.getConfig("OrganizationName")'>
 <!-- MAIN WORK ORDER FORM -->
 <div>
     <!-- Display Header information - worker center specific -->
     @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
-        @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["CreateWOHeader_EN"])
+        @Html.Raw(Model.def.getConfig("CreateWOHeader_EN"))
     } else {
-        @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["CreateWOHeader_ES"])
+        @Html.Raw(Model.def.getConfig("CreateWOHeader_ES"))
     }
 </div>
 <!-- TODO: Remove console.log statements -->
@@ -182,18 +182,18 @@
 
     <!-- Display Disclaimer information - worker center specific -->
     @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
-        @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["Disclaimer_EN"])
+        @Html.Raw(Model.def.getConfig("Disclaimer_EN"))
     } else {
-        @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["Disclaimer_ES"])
+        @Html.Raw(Model.def.getConfig("Disclaimer_ES"))
     }
 </div>
 
 <div>
     <!-- Display Submission information - worker center specific -->
     @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
-        @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["Submission_EN"])
+        @Html.Raw(Model.def.getConfig("Submission_EN"))
     } else {
-        @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["Submission_ES"])
+        @Html.Raw(Model.def.getConfig("Submission_ES"))
     }
 </div>
 
@@ -287,9 +287,9 @@
         <br />
 
         @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
-            @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["WeightLifted_EN"])
+            @Html.Raw(Model.def.getConfig("WeightLifted_EN"))
         } else {
-            @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["WeightLifted_ES"])
+            @Html.Raw(Model.def.getConfig("WeightLifted_ES"))
         }
     </div>
     <!-- Display Weight Lift Requirement pop-up - worker center specific -->
@@ -316,9 +316,9 @@
 <!-- Display Business Hours pop-up - worker center specific -->
 <div id="businessHoursDialog" title="@Machete.Web.Resources.WorkOrders.businessHoursModal" class="display" style="display: none">
     @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
-        @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["BusinessHours_EN"])
+        @Html.Raw(Model.def.getConfig("BusinessHours_EN"))
     } else {
-        @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["BusinessHours_ES"])
+        @Html.Raw(Model.def.getConfig("BusinessHours_ES"))
     }
 </div>
 <!-- Display Work Site address pop-up -->
@@ -363,9 +363,9 @@
 </div>
 <div id="transportationCalendarDialog" title="Transportation Calendar" class="display" style="display: none">
     @if (CI.TwoLetterISOLanguageName.ToUpperInvariant() == "EN") {
-        @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["TransportationCalendar_EN"])
+        @Html.Raw(Model.def.getConfig("TransportationCalendar_EN"))
     } else {
-        @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["TransportationCalendar_ES"])
+        @Html.Raw(Model.def.getConfig("TransportationCalendar_ES"))
     }
 </div>
 <!-- Display Work Description pop-up -->
@@ -672,33 +672,33 @@
             var latestHour;
 
             if (dayOfWeek == 0) { // Sunday
-                advanceHours = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineAdvanceHoursSunday"]);
-                earliestHour = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineEarliestHoursSunday"]);
-                latestHour = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineLatestHoursSunday"]);
+                advanceHours = parseInt(@Model.def.getConfig("OnlineAdvanceHoursSunday"));
+                earliestHour = parseInt(@Model.def.getConfig("OnlineEarliestHoursSunday"));
+                latestHour = parseInt(@Model.def.getConfig("OnlineLatestHoursSunday"));
             } else if (dayOfWeek == 1) { // Monday
-                advanceHours = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineAdvanceHoursMonday"]);
-                earliestHour = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineEarliestHoursMonday"]);
-                latestHour = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineLatestHoursMonday"]);
+                advanceHours = parseInt(@Model.def.getConfig("OnlineAdvanceHoursMonday"));
+                earliestHour = parseInt(@Model.def.getConfig("OnlineEarliestHoursMonday"));
+                latestHour = parseInt(@Model.def.getConfig("OnlineLatestHoursMonday"));
             } else if (dayOfWeek == 2) { // Tuesday
-                advanceHours = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineAdvanceHoursTuesday"]);
-                earliestHour = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineEarliestHoursTuesday"]);
-                latestHour = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineLatestHoursTuesday"]);
+                advanceHours = parseInt(@Model.def.getConfig("OnlineAdvanceHoursTuesday"));
+                earliestHour = parseInt(@Model.def.getConfig("OnlineEarliestHoursTuesday"));
+                latestHour = parseInt(@Model.def.getConfig("OnlineLatestHoursTuesday"));
             } else if (dayOfWeek == 3) { // Wednesday
-                advanceHours = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineAdvanceHoursWednesday"]);
-                earliestHour = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineEarliestHoursWednesday"]);
-                latestHour = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineLatestHoursWednesday"]);
+                advanceHours = parseInt(@Model.def.getConfig("OnlineAdvanceHoursWednesday"));
+                earliestHour = parseInt(@Model.def.getConfig("OnlineEarliestHoursWednesday"));
+                latestHour = parseInt(@Model.def.getConfig("OnlineLatestHoursWednesday"));
             } else if (dayOfWeek == 4) { // Thursday
-                advanceHours = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineAdvanceHoursThursday"]);
-                earliestHour = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineEarliestHoursThursday"]);
-                latestHour = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineLatestHoursThursday"]);
+                advanceHours = parseInt(@Model.def.getConfig("OnlineAdvanceHoursThursday"));
+                earliestHour = parseInt(@Model.def.getConfig("OnlineEarliestHoursThursday"));
+                latestHour = parseInt(@Model.def.getConfig("OnlineLatestHoursThursday"));
             } else if (dayOfWeek == 5) { // Friday
-                advanceHours = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineAdvanceHoursFriday"]);
-                earliestHour = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineEarliestHoursFriday"]);
-                latestHour = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineLatestHoursFriday"]);
+                advanceHours = parseInt(@Model.def.getConfig("OnlineAdvanceHoursFriday"));
+                earliestHour = parseInt(@Model.def.getConfig("OnlineEarliestHoursFriday"));
+                latestHour = parseInt(@Model.def.getConfig("OnlineLatestHoursFriday"));
             } else if (dayOfWeek == 6) { // Saturday
-                advanceHours = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineAdvanceHoursSaturday"]);
-                earliestHour = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineEarliestHoursSaturday"]);
-                latestHour = parseInt(@System.Web.Configuration.WebConfigurationManager.AppSettings["OnlineLatestHoursSaturday"]);
+                advanceHours = parseInt(@Model.def.getConfig("OnlineAdvanceHoursSaturday"));
+                earliestHour = parseInt(@Model.def.getConfig("OnlineEarliestHoursSaturday"));
+                latestHour = parseInt(@Model.def.getConfig("OnlineLatestHoursSaturday"));
             }
 
             if (isNaN(advanceHours)) { // In case valid value not set in configuration file, set default
@@ -740,8 +740,8 @@
             var transportMethod = $("#@(idPrefix)transportMethodID").val();
 
             if (transportMethod == 29) { // Worker buses = 29
-                var insideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportBusInsideZone"];
-                var outsideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportBusOutsideZone"];
+                var insideZipCodes = @Model.def.getConfig("ServiceableZipcodesTransportBusInsideZone");
+                var outsideZipCodes = @Model.def.getConfig("ServiceableZipcodesTransportBusOutsideZone");
 
                 if (insideZipCodes == "" || outsideZipCodes == "") {
                     $("#invalidZipcode").hide();
@@ -762,8 +762,8 @@
                 }
 
             } else if (transportMethod == 32) { // Van service = 32
-                var insideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportVanInsideZone"];
-                var outsideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportVanOutsideZone"];
+                var insideZipCodes = @Model.def.getConfig("ServiceableZipcodesTransportVanInsideZone");
+                var outsideZipCodes = @Model.def.getConfig("ServiceableZipcodesTransportVanOutsideZone");
 
                 if (insideZipCodes == "" || outsideZipCodes == "") {
                     $("#invalidZipcode").hide();
@@ -800,8 +800,8 @@
                 return;
             }
 
-            var insideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportBusInsideZone"];
-            var outsideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportBusOutsideZone"];
+            var insideZipCodes = @Model.def.getConfig("ServiceableZipcodesTransportBusInsideZone");
+            var outsideZipCodes = @Model.def.getConfig("ServiceableZipcodesTransportBusOutsideZone");
             if (insideZipCodes != "" && outsideZipCodes != "") {
                 // If zipcode not serviceable by bus - set default to pick up (31)
                 if (insideZipCodes.indexOf(parseInt(zipcode)) == -1 && outsideZipCodes.indexOf(parseInt(zipcode)) == -1) {
@@ -834,22 +834,22 @@
             var isTransportFeeSet = false;
 
             if (transportMethod == 29) { // Worker buses = 29
-                var insideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportBusInsideZone"];
+                var insideZipCodes = @Model.def.getConfig("ServiceableZipcodesTransportBusInsideZone");
                 if (insideZipCodes != "") {
                     if (insideZipCodes.indexOf(parseInt(zipcode)) != -1) {
                         // Zipcode is in the allowable list of zipcodes within zone
-                        transportFee = @System.Web.Configuration.WebConfigurationManager.AppSettings["TransportBusInsideZoneCost"];
+                        transportFee = @Model.def.getConfig("TransportBusInsideZoneCost");
                         if (transportFee != "") {
                             isTransportFeeSet = true;
                         }
                     } 
                 }
-                var outsideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportBusOutsideZone"];
+                var outsideZipCodes = @Model.def.getConfig("ServiceableZipcodesTransportBusOutsideZone");
                 if (outsideZipCodes != "") {
                     console.log(outsideZipCodes);
                     if (outsideZipCodes.indexOf(parseInt(zipcode)) != -1) {
                         // Zipcode is in the allowable list of zipcodes outside zone
-                        transportFee = @System.Web.Configuration.WebConfigurationManager.AppSettings["TransportBusOutsideZoneCost"];
+                        transportFee = @Model.def.getConfig("TransportBusOutsideZoneCost");
                         if (transportFee != "") {
                             isTransportFeeSet = true;
                         }
@@ -857,29 +857,29 @@
                 }
 
             } else if (transportMethod == 32) { // Van service = 32
-                var insideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportVanInsideZone"];
+                var insideZipCodes = @Model.def.getConfig("ServiceableZipcodesTransportVanInsideZone");
                 if (insideZipCodes != "") {
                     if (insideZipCodes.indexOf(parseInt(zipcode)) != -1) {
                         // Zipcode is in the allowable list of zipcodes within zone
                         if (numWorkers <= 1) {
                             // Note: defaulting the bus cost for just one worker before any workers are assigned & only changing value if more than one worker is assigned
-                            transportFee = @System.Web.Configuration.WebConfigurationManager.AppSettings["TransportVanInsideZoneCostOneWorker"];
+                            transportFee = @Model.def.getConfig("TransportVanInsideZoneCostOneWorker");
                             if (transportFee != "") {
                                 isTransportFeeSet = true;
                             }
                         } else if (numWorkers > 1) {
-                            transportFee = @System.Web.Configuration.WebConfigurationManager.AppSettings["TransportVanInsideZoneCostMultipleWorkers"];
+                            transportFee = @Model.def.getConfig("TransportVanInsideZoneCostMultipleWorkers");
                             if (transportFee != "") {
                                 isTransportFeeSet = true;
                             }
                         }
                     }
                 } 
-                var outsideZipCodes = @System.Web.Configuration.WebConfigurationManager.AppSettings["ServiceableZipcodesTransportVanOutsideZone"];
+                var outsideZipCodes = @Model.def.getConfig("ServiceableZipcodesTransportVanOutsideZone");
                 if (outsideZipCodes != "") {
                     if (outsideZipCodes.indexOf(parseInt(zipcode)) != -1) {
                         // Zipcode is in the allowable list of zipcodes outside zone
-                        transportFee = @System.Web.Configuration.WebConfigurationManager.AppSettings["TransportVanOutsideZoneCost"];
+                        transportFee = @Model.def.getConfig("TransportVanOutsideZoneCost");
                         if (transportFee != "") {
                             isTransportFeeSet = true;
                         }

@@ -4,8 +4,8 @@
 }
 <div class="account-background">
     <h2>@Machete.Web.Resources.ValidationStrings.HirerRegister</h2>
-    @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["HirerRegisterInstructions_EN"]) @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.signIn, "Login") @Machete.Web.Resources.ValidationStrings.haveAccount
-    @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["WorkCenterDescription_EN"]) 
+    @Html.Raw(ViewBag.def.getConfig("HirerRegisterInstructions_EN")) @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.signIn, "Login") @Machete.Web.Resources.ValidationStrings.haveAccount
+    @Html.Raw(ViewBag.def.getConfig("WorkCenterDescription_EN")) 
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()

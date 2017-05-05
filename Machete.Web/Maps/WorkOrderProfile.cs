@@ -58,6 +58,7 @@ namespace Machete.Web.Maps
             CreateMap<Domain.WorkAssignment, DTO.WorkerAssignedList>()
                 .ForMember(v => v.WID, opt => opt.MapFrom(d => d.workerAssigned.dwccardnum))
                 .ForMember(v => v.name, opt => opt.MapFrom(d => d.workerAssigned.Person.fullName))
+                .ForMember(v => v.wage, opt => opt.MapFrom(d => d.hourlyWage))
                 ;
 
             CreateMap<DTO.WorkerAssignedList, ViewModel.WorkerAssignedList>()

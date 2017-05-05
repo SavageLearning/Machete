@@ -9,7 +9,12 @@ namespace Machete.Web.Helpers.PayPal
     {
         Logger log = LogManager.GetCurrentClassLogger();
         LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "PaypalExpressCheckout", "");
+        private IDefaults def;
 
+        public PaypalExpressCheckout(IDefaults def)
+        {
+            this.def = def;
+        }
         // # SetExpressCheckout API Operation
         // The SetExpressCheckout API operation initiates an Express Checkout transaction. 
         public SetExpressCheckoutResponseType SetExpressCheckout(string payment)
@@ -28,7 +33,7 @@ namespace Machete.Web.Helpers.PayPal
                 // `Note:
                 // PayPal recommends that the value be the final review page on which
                 // the buyer confirms the order and payment or billing agreement.`
-                setExpressCheckoutRequestDetails.ReturnURL = System.Web.Configuration.WebConfigurationManager.AppSettings["HostingEndpoint"] + "/HirerWorkOrder/PaymentPost";
+                setExpressCheckoutRequestDetails.ReturnURL = def.getConfig("HostingEndpoint") + "/HirerWorkOrder/PaymentPost";
 
                 // URL to which the buyer is returned if the buyer does not approve the
                 // use of PayPal to pay you. For digital goods, you must add JavaScript
@@ -36,7 +41,7 @@ namespace Machete.Web.Helpers.PayPal
                 // `Note:
                 // PayPal recommends that the value be the original page on which the
                 // buyer chose to pay with PayPal or establish a billing agreement.`
-                setExpressCheckoutRequestDetails.CancelURL = System.Web.Configuration.WebConfigurationManager.AppSettings["HostingEndpoint"] + "/HirerWorkOrder/PaymentCancel";
+                setExpressCheckoutRequestDetails.CancelURL = def.getConfig("HostingEndpoint") + "/HirerWorkOrder/PaymentCancel";
 
                 // # Payment Information
                 // list of information about the payment
@@ -61,7 +66,7 @@ namespace Machete.Web.Helpers.PayPal
                 // * `Amount`
                 BasicAmountType orderTotal1 = new BasicAmountType(CurrencyCodeType.USD, payment);
                 paymentDetails1.OrderTotal = orderTotal1;
-                paymentDetails1.OrderDescription = System.Web.Configuration.WebConfigurationManager.AppSettings["PaypalDescription"];
+                paymentDetails1.OrderDescription = def.getConfig("PaypalDescription");
 
                 // How you want to obtain payment. When implementing parallel payments,
                 // this field is required and must be set to `Order`. When implementing
@@ -87,7 +92,7 @@ namespace Machete.Web.Helpers.PayPal
                 // is required and must contain the Payer Id or the email address of the
                 // merchant.
                 SellerDetailsType sellerDetails1 = new SellerDetailsType();
-                sellerDetails1.PayPalAccountID = System.Web.Configuration.WebConfigurationManager.AppSettings["PayPalAccountID"];
+                sellerDetails1.PayPalAccountID = def.getConfig("PayPalAccountID");
                 paymentDetails1.SellerDetails = sellerDetails1;
 
                 // A unique identifier of the specific payment request, which is
@@ -203,7 +208,7 @@ namespace Machete.Web.Helpers.PayPal
                 // * `Amount`
                 BasicAmountType orderTotal1 = new BasicAmountType(CurrencyCodeType.USD, payment);
                 paymentDetails1.OrderTotal = orderTotal1;
-                paymentDetails1.OrderDescription = System.Web.Configuration.WebConfigurationManager.AppSettings["PaypalDescription"];
+                paymentDetails1.OrderDescription = def.getConfig("PaypalDescription");
 
                 // How you want to obtain payment. When implementing parallel payments,
                 // this field is required and must be set to `Order`. When implementing
@@ -229,7 +234,7 @@ namespace Machete.Web.Helpers.PayPal
                 // is required and must contain the Payer Id or the email address of the
                 // merchant.
                 SellerDetailsType sellerDetails1 = new SellerDetailsType();
-                sellerDetails1.PayPalAccountID = System.Web.Configuration.WebConfigurationManager.AppSettings["PayPalAccountID"];
+                sellerDetails1.PayPalAccountID = def.getConfig("PayPalAccountID");
                 paymentDetails1.SellerDetails = sellerDetails1;
 
                 // A unique identifier of the specific payment request, which is

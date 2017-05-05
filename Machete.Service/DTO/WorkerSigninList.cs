@@ -36,5 +36,6 @@ namespace Machete.Service.DTO
         public bool memberExpired { get; set; }
         public bool memberExpelled { get; set; }
         public string imageRef { get; set; } 
+        public Double timeZoneOffset { get; set; }
     }
 }
