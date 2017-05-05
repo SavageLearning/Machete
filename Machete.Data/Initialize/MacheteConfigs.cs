@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
 using Machete.Domain;
+using System.Data.SqlClient;
 
 namespace Machete.Data
 {
@@ -89,7 +90,8 @@ namespace Machete.Data
 
         public static void Initialize(MacheteContext context)
         {
-            list.ForEach(u => {
+            list.ForEach(u =>
+            {
                 var o = new Config
                 {
                     key = u.cur,
@@ -104,7 +106,13 @@ namespace Machete.Data
             });
             context.Commit();
             var offset = ConfigurationManager.AppSettings["TimeZoneDifferenceFromPacific"];
-            //context.Database.SqlQuery(@"", offset);
+            context.Database.ExecuteSqlCommand(@"update dbo.workersignins set timeZoneOffset = @timezone", 
+                new SqlParameter { ParameterName = "timezone", Value = offset });
+            context.Database.ExecuteSqlCommand(@"update dbo.activitysignins set timeZoneOffset = @timezone",
+                new SqlParameter { ParameterName = "timezone", Value = offset });
+            context.Database.ExecuteSqlCommand(@"update dbo.workorders set timeZoneOffset = @timezone",
+                new SqlParameter { ParameterName = "timezone", Value = offset });
+
         }
 
     }
