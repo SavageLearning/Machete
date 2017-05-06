@@ -25,88 +25,30 @@ namespace Machete.Web.Helpers.PayPal
             try
             {
                 // # SetExpressCheckoutReq
-                SetExpressCheckoutRequestDetailsType setExpressCheckoutRequestDetails = new SetExpressCheckoutRequestDetailsType();
+                var checkoutRequestDetails = new SetExpressCheckoutRequestDetailsType();
 
-                // URL to which the buyer's browser is returned after choosing to pay
-                // with PayPal. For digital goods, you must add JavaScript to this page
-                // to close the in-context experience.
-                // `Note:
-                // PayPal recommends that the value be the final review page on which
-                // the buyer confirms the order and payment or billing agreement.`
-                setExpressCheckoutRequestDetails.ReturnURL = def.getConfig("HostingEndpoint") + "/HirerWorkOrder/PaymentPost";
-
-                // URL to which the buyer is returned if the buyer does not approve the
-                // use of PayPal to pay you. For digital goods, you must add JavaScript
-                // to this page to close the in-context experience.
-                // `Note:
-                // PayPal recommends that the value be the original page on which the
-                // buyer chose to pay with PayPal or establish a billing agreement.`
-                setExpressCheckoutRequestDetails.CancelURL = def.getConfig("HostingEndpoint") + "/HirerWorkOrder/PaymentCancel";
+                checkoutRequestDetails.ReturnURL = def.getConfig("HostingEndpoint") + "/HirerWorkOrder/PaymentPost";
+                checkoutRequestDetails.CancelURL = def.getConfig("HostingEndpoint") + "/HirerWorkOrder/PaymentCancel";
 
                 // # Payment Information
                 // list of information about the payment
                 List<PaymentDetailsType> paymentDetailsList = new List<PaymentDetailsType>();
 
                 // information about the first payment
-                PaymentDetailsType paymentDetails1 = new PaymentDetailsType();
-
-                // Total cost of the transaction to the buyer. If shipping cost and tax
-                // charges are known, include them in this value. If not, this value
-                // should be the current sub-total of the order.
-                //
-                // If the transaction includes one or more one-time purchases, this field must be equal to
-                // the sum of the purchases. Set this field to 0 if the transaction does
-                // not include a one-time purchase such as when you set up a billing
-                // agreement for a recurring payment that is not immediately charged.
-                // When the field is set to 0, purchase-specific fields are ignored.
-                //
-                // * `Currency Code` - You must set the currencyID attribute to one of the
-                // 3-character currency codes for any of the supported PayPal
-                // currencies.
-                // * `Amount`
-                BasicAmountType orderTotal1 = new BasicAmountType(CurrencyCodeType.USD, payment);
-                paymentDetails1.OrderTotal = orderTotal1;
-                paymentDetails1.OrderDescription = def.getConfig("PaypalDescription");
-
-                // How you want to obtain payment. When implementing parallel payments,
-                // this field is required and must be set to `Order`. When implementing
-                // digital goods, this field is required and must be set to `Sale`. If the
-                // transaction does not include a one-time purchase, this field is
-                // ignored. It is one of the following values:
-                //
-                // * `Sale` - This is a final sale for which you are requesting payment
-                // (default).
-                // * `Authorization` - This payment is a basic authorization subject to
-                // settlement with PayPal Authorization and Capture.
-                // * `Order` - This payment is an order authorization subject to
-                // settlement with PayPal Authorization and Capture.
-                // `Note:
-                // You cannot set this field to Sale in SetExpressCheckout request and
-                // then change the value to Authorization or Order in the
-                // DoExpressCheckoutPayment request. If you set the field to
-                // Authorization or Order in SetExpressCheckout, you may set the field
-                // to Sale.`
-                paymentDetails1.PaymentAction = PaymentActionCodeType.SALE;
-
-                // Unique identifier for the merchant. For parallel payments, this field
-                // is required and must contain the Payer Id or the email address of the
-                // merchant.
-                SellerDetailsType sellerDetails1 = new SellerDetailsType();
-                sellerDetails1.PayPalAccountID = def.getConfig("PayPalAccountID");
-                paymentDetails1.SellerDetails = sellerDetails1;
-
-                // A unique identifier of the specific payment request, which is
-                // required for parallel payments.
-                paymentDetails1.PaymentRequestID = "PaymentRequest1";
+                PaymentDetailsType paymentDetails1 = new PaymentDetailsType() {
+                    OrderTotal = new BasicAmountType(CurrencyCodeType.USD, payment),
+                    OrderDescription = def.getConfig("PaypalDescription"),
+                    PaymentAction = PaymentActionCodeType.SALE,
+                    SellerDetails = new SellerDetailsType() { PayPalAccountID = def.getConfig("PayPalAccountID") },
+                    PaymentRequestID = "PaymentRequest1"
+                };
 
                 paymentDetailsList.Add(paymentDetails1);
+                checkoutRequestDetails.PaymentDetails = paymentDetailsList;
 
-                setExpressCheckoutRequestDetails.PaymentDetails = paymentDetailsList;
-
-                SetExpressCheckoutReq setExpressCheckout = new SetExpressCheckoutReq();
-                SetExpressCheckoutRequestType setExpressCheckoutRequest = new SetExpressCheckoutRequestType(setExpressCheckoutRequestDetails);
-
-                setExpressCheckout.SetExpressCheckoutRequest = setExpressCheckoutRequest;
+                SetExpressCheckoutReq setExpressCheckout = new SetExpressCheckoutReq() {
+                    SetExpressCheckoutRequest = new SetExpressCheckoutRequestType(checkoutRequestDetails)
+                };
 
                 // Create the service wrapper object to make the API call
                 PayPalAPIInterfaceServiceService service = new PayPalAPIInterfaceServiceService();
@@ -172,77 +114,23 @@ namespace Machete.Web.Helpers.PayPal
             try
             {
                 // Create the DoExpressCheckoutPaymentReq object
-                DoExpressCheckoutPaymentReq doExpressCheckoutPayment = new DoExpressCheckoutPaymentReq();
+                var doExpressCheckoutPayment = new DoExpressCheckoutPaymentReq();
+                var doExpressCheckoutPaymentRequestDetails = new DoExpressCheckoutPaymentRequestDetailsType() {
+                    Token = token,
+                    PayerID = payerId
+                };
 
-                DoExpressCheckoutPaymentRequestDetailsType doExpressCheckoutPaymentRequestDetails = new DoExpressCheckoutPaymentRequestDetailsType();
-
-                // The timestamped token value that was returned in the
-                // `SetExpressCheckout` response and passed in the
-                // `GetExpressCheckoutDetails` request.
-                doExpressCheckoutPaymentRequestDetails.Token = token;
-
-                // Unique paypal buyer account identification number as returned in
-                // `GetExpressCheckoutDetails` Response
-                doExpressCheckoutPaymentRequestDetails.PayerID = payerId;
-
-                // # Payment Information
-                // list of information about the payment
-                List<PaymentDetailsType> paymentDetailsList = new List<PaymentDetailsType>();
+                var paymentDetailsList = new List<PaymentDetailsType>();
 
                 // information about the first payment
-                PaymentDetailsType paymentDetails1 = new PaymentDetailsType();
+                var paymentDetails1 = new PaymentDetailsType() {
+                    OrderTotal = new BasicAmountType(CurrencyCodeType.USD, payment),
+                    OrderDescription = def.getConfig("PaypalDescription"),
+                    PaymentAction = PaymentActionCodeType.SALE,
+                    SellerDetails = new SellerDetailsType() { PayPalAccountID = def.getConfig("PayPalAccountID") },
+                    PaymentRequestID = "PaymentRequest1",
+                };
 
-                // Total cost of the transaction to the buyer. If shipping cost and tax
-                // charges are known, include them in this value. If not, this value
-                // should be the current sub-total of the order.
-                //
-                // If the transaction includes one or more one-time purchases, this field must be equal to
-                // the sum of the purchases. Set this field to 0 if the transaction does
-                // not include a one-time purchase such as when you set up a billing
-                // agreement for a recurring payment that is not immediately charged.
-                // When the field is set to 0, purchase-specific fields are ignored.
-                //
-                // * `Currency Code` - You must set the currencyID attribute to one of the
-                // 3-character currency codes for any of the supported PayPal
-                // currencies.
-                // * `Amount`
-                BasicAmountType orderTotal1 = new BasicAmountType(CurrencyCodeType.USD, payment);
-                paymentDetails1.OrderTotal = orderTotal1;
-                paymentDetails1.OrderDescription = def.getConfig("PaypalDescription");
-
-                // How you want to obtain payment. When implementing parallel payments,
-                // this field is required and must be set to `Order`. When implementing
-                // digital goods, this field is required and must be set to `Sale`. If the
-                // transaction does not include a one-time purchase, this field is
-                // ignored. It is one of the following values:
-                //
-                // * `Sale` - This is a final sale for which you are requesting payment
-                // (default).
-                // * `Authorization` - This payment is a basic authorization subject to
-                // settlement with PayPal Authorization and Capture.
-                // * `Order` - This payment is an order authorization subject to
-                // settlement with PayPal Authorization and Capture.
-                // Note:
-                // You cannot set this field to Sale in SetExpressCheckout request and
-                // then change the value to Authorization or Order in the
-                // DoExpressCheckoutPayment request. If you set the field to
-                // Authorization or Order in SetExpressCheckout, you may set the field
-                // to Sale.
-                paymentDetails1.PaymentAction = PaymentActionCodeType.SALE;
-
-                // Unique identifier for the merchant. For parallel payments, this field
-                // is required and must contain the Payer Id or the email address of the
-                // merchant.
-                SellerDetailsType sellerDetails1 = new SellerDetailsType();
-                sellerDetails1.PayPalAccountID = def.getConfig("PayPalAccountID");
-                paymentDetails1.SellerDetails = sellerDetails1;
-
-                // A unique identifier of the specific payment request, which is
-                // required for parallel payments.
-                paymentDetails1.PaymentRequestID = "PaymentRequest1";
-
-                // A unique identifier of the specific payment request, which is
-                // required for parallel payments.
                 paymentDetailsList.Add(paymentDetails1);
                 doExpressCheckoutPaymentRequestDetails.PaymentDetails = paymentDetailsList;
 
