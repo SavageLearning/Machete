@@ -1,439 +1,446 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{A9F879BC-CA11-4470-A655-8541B5DA41A1}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Machete.Data</RootNamespace>
-    <AssemblyName>Machete.Data</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <OutputPath>bin\Dev\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'StageProd|AnyCPU'">
-    <OutputPath>bin\StageProd\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'StageTest|AnyCPU'">
-    <OutputPath>bin\StageTest\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CasaLatina|AnyCPU'">
-    <OutputPath>bin\CasaLatina\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WorkersJustice|AnyCPU'">
-    <OutputPath>bin\WorkersJustice\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'PortlandVoz|AnyCPU'">
-    <OutputPath>bin\PortlandVoz\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Southside|AnyCPU'">
-    <OutputPath>bin\Southside\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DonBosco|AnyCPU'">
-    <OutputPath>bin\DonBosco\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CentroHumanitario|AnyCPU'">
-    <OutputPath>bin\CentroHumanitario\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'SantaCruz|AnyCPU'">
-    <OutputPath>bin\SantaCruz\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'SanFrancisco|AnyCPU'">
-    <OutputPath>bin\SanFrancisco\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Pomona|AnyCPU'">
-    <OutputPath>bin\Pomona\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Pasadena|AnyCPU'">
-    <OutputPath>bin\Pasadena\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Nice|AnyCPU'">
-    <OutputPath>bin\Nice\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MountainView|AnyCPU'">
-    <OutputPath>bin\MountainView\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Hayward|AnyCPU'">
-    <OutputPath>bin\Hayward\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Graton|AnyCPU'">
-    <OutputPath>bin\Graton\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ElCentro|AnyCPU'">
-    <OutputPath>bin\ElCentro\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Concord|AnyCPU'">
-    <OutputPath>bin\Concord\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Congreso|AnyCPU'">
-    <OutputPath>bin\Congreso\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Alabama|AnyCPU'">
-    <OutputPath>bin\Alabama\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WindofSpirit|AnyCPU'">
-    <OutputPath>bin\WindofSpirit\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Cel|AnyCPU'">
-    <OutputPath>bin\Cel\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'localIIS|AnyCPU'">
-    <OutputPath>bin\localIIS\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Runtime.Caching" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="ApplicationUser.cs" />
-    <Compile Include="AzureConfiguration.cs" />
-    <Compile Include="Infrastructure\DatabaseFactory.cs" />
-    <Compile Include="Infrastructure\Disposable.cs" />
-    <Compile Include="Initialize\MacheteConfigs.cs" />
-    <Compile Include="Initialize\MacheteInitializer.cs" />
-    <Compile Include="Infrastructure\RepositoryBase.cs" />
-    <Compile Include="Infrastructure\UnitOfWork.cs" />
-    <Compile Include="Initialize\MacheteLookups.cs" />
-    <Compile Include="Initialize\MacheteReportDefinitions.cs" />
-    <Compile Include="Initialize\MacheteUsers.cs" />
-    <Compile Include="Logging\ILogger.cs" />
-    <Compile Include="Logging\MacheteIntercepterTransientErrors.cs" />
-    <Compile Include="Logging\MacheteInterceptorLogging.cs" />
-    <Compile Include="Logging\Logger.cs" />
-    <Compile Include="MacheteContext.cs" />
-    <Compile Include="Migrations\201404020109307_InitialMigration.cs" />
-    <Compile Include="Migrations\201404020109307_InitialMigration.Designer.cs">
-      <DependentUpon>201404020109307_InitialMigration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201404020143565_BusinessName.cs" />
-    <Compile Include="Migrations\201404020143565_BusinessName.Designer.cs">
-      <DependentUpon>201404020143565_BusinessName.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201404090418125_EmployerLicenseMigration.cs" />
-    <Compile Include="Migrations\201404090418125_EmployerLicenseMigration.Designer.cs">
-      <DependentUpon>201404090418125_EmployerLicenseMigration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201412032229104_AlterHoursTypeIntegerToFloat.cs" />
-    <Compile Include="Migrations\201412032229104_AlterHoursTypeIntegerToFloat.Designer.cs">
-      <DependentUpon>201412032229104_AlterHoursTypeIntegerToFloat.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201412212342567_AddTransportTransactionData.cs" />
-    <Compile Include="Migrations\201412212342567_AddTransportTransactionData.Designer.cs">
-      <DependentUpon>201412212342567_AddTransportTransactionData.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201503040553297_OnlineOrdering.cs" />
-    <Compile Include="Migrations\201503040553297_OnlineOrdering.Designer.cs">
-      <DependentUpon>201503040553297_OnlineOrdering.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201503080128563_OnlineOrdering-Additional.cs" />
-    <Compile Include="Migrations\201503080128563_OnlineOrdering-Additional.Designer.cs">
-      <DependentUpon>201503080128563_OnlineOrdering-Additional.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201505032121507_PayPal.cs" />
-    <Compile Include="Migrations\201505032121507_PayPal.Designer.cs">
-      <DependentUpon>201505032121507_PayPal.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201505041853148_WorkDemographics.cs" />
-    <Compile Include="Migrations\201505041853148_WorkDemographics.Designer.cs">
-      <DependentUpon>201505041853148_WorkDemographics.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201505062122096_PaypalTransactID.cs" />
-    <Compile Include="Migrations\201505062122096_PaypalTransactID.Designer.cs">
-      <DependentUpon>201505062122096_PaypalTransactID.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201611211803005_Identity_upgrade.cs" />
-    <Compile Include="Migrations\201611211803005_Identity_upgrade.Designer.cs">
-      <DependentUpon>201611211803005_Identity_upgrade.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201702082045545_api_refactor.cs" />
-    <Compile Include="Migrations\201702082045545_api_refactor.Designer.cs">
-      <DependentUpon>201702082045545_api_refactor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201705032057544_v1_11_3_InApp_Config.cs" />
-    <Compile Include="Migrations\201705032057544_v1_11_3_InApp_Config.Designer.cs">
-      <DependentUpon>201705032057544_v1_11_3_InApp_Config.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\AllRepositories.cs" />
-    <Compile Include="Repositories\ConfigRepository.cs" />
-    <Compile Include="Repositories\ReportsRepository.cs" />
-    <Compile Include="Repositories\SimpleDataRow.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Machete.Domain\Machete.Domain.csproj">
-      <Project>{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}</Project>
-      <Name>Machete.Domain</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_Readme\Elmah.txt" />
-    <Content Include="Migrations\migration_commands.txt" />
-    <Content Include="SQL\AddActivityConstants.sql" />
-    <Content Include="SQL\CreateElmahTable.sql" />
-    <Content Include="SQL\CreateNLogTable.sql" />
-    <Content Include="SQL\Legacy\201211112024571_AddOnlineSourceBit.sql" />
-    <Content Include="SQL\Legacy\20121225_date_reset_cleanup.sql" />
-    <Content Include="SQL\Legacy\201304160508212_AddSurchargeField.sql" />
-    <Content Include="SQL\Legacy\201305050151353_AddEmailTable.sql" />
-    <Content Include="SQL\Legacy\201312300649350_MergeMacheteContextAndIdentityDbContext.sql" />
-    <Content Include="SQL\Legacy\201402170001333_AddRecurringBool.sql" />
-    <Content Include="SQL\Legacy\anUpdateThatWorks.sql" />
-    <Content Include="SQL\Legacy\create_migration_table.sql" />
-    <Content Include="SQL\Legacy\null_in_lookups.sql" />
-    <Content Include="SQL\Legacy\apply_EmployerEmail_schema_changes_to_multiple_macheteDBs.sql" />
-    <Content Include="SQL\Legacy\switchToAspnetIdentity.sql" />
-    <Content Include="SQL\Legacy\update_Casa_Prod_to_v1.5-RC1.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201404020109307_InitialMigration.resx">
-      <DependentUpon>201404020109307_InitialMigration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201404020143565_BusinessName.resx">
-      <DependentUpon>201404020143565_BusinessName.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201404090418125_EmployerLicenseMigration.resx">
-      <DependentUpon>201404090418125_EmployerLicenseMigration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201412032229104_AlterHoursTypeIntegerToFloat.resx">
-      <DependentUpon>201412032229104_AlterHoursTypeIntegerToFloat.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201412212342567_AddTransportTransactionData.resx">
-      <DependentUpon>201412212342567_AddTransportTransactionData.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503040553297_OnlineOrdering.resx">
-      <DependentUpon>201503040553297_OnlineOrdering.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503080128563_OnlineOrdering-Additional.resx">
-      <DependentUpon>201503080128563_OnlineOrdering-Additional.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201505032121507_PayPal.resx">
-      <DependentUpon>201505032121507_PayPal.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201505041853148_WorkDemographics.resx">
-      <DependentUpon>201505041853148_WorkDemographics.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201505062122096_PaypalTransactID.resx">
-      <DependentUpon>201505062122096_PaypalTransactID.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611211803005_Identity_upgrade.resx">
-      <DependentUpon>201611211803005_Identity_upgrade.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201702082045545_api_refactor.resx">
-      <DependentUpon>201702082045545_api_refactor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201705032057544_v1_11_3_InApp_Config.resx">
-      <DependentUpon>201705032057544_v1_11_3_InApp_Config.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A9F879BC-CA11-4470-A655-8541B5DA41A1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Machete.Data</RootNamespace>
+    <AssemblyName>Machete.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <OutputPath>bin\Dev\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'StageProd|AnyCPU'">
+    <OutputPath>bin\StageProd\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'StageTest|AnyCPU'">
+    <OutputPath>bin\StageTest\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CasaLatina|AnyCPU'">
+    <OutputPath>bin\CasaLatina\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WorkersJustice|AnyCPU'">
+    <OutputPath>bin\WorkersJustice\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'PortlandVoz|AnyCPU'">
+    <OutputPath>bin\PortlandVoz\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Southside|AnyCPU'">
+    <OutputPath>bin\Southside\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DonBosco|AnyCPU'">
+    <OutputPath>bin\DonBosco\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CentroHumanitario|AnyCPU'">
+    <OutputPath>bin\CentroHumanitario\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'SantaCruz|AnyCPU'">
+    <OutputPath>bin\SantaCruz\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'SanFrancisco|AnyCPU'">
+    <OutputPath>bin\SanFrancisco\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Pomona|AnyCPU'">
+    <OutputPath>bin\Pomona\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Pasadena|AnyCPU'">
+    <OutputPath>bin\Pasadena\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Nice|AnyCPU'">
+    <OutputPath>bin\Nice\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MountainView|AnyCPU'">
+    <OutputPath>bin\MountainView\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Hayward|AnyCPU'">
+    <OutputPath>bin\Hayward\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Graton|AnyCPU'">
+    <OutputPath>bin\Graton\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ElCentro|AnyCPU'">
+    <OutputPath>bin\ElCentro\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Concord|AnyCPU'">
+    <OutputPath>bin\Concord\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Congreso|AnyCPU'">
+    <OutputPath>bin\Congreso\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Alabama|AnyCPU'">
+    <OutputPath>bin\Alabama\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'WindofSpirit|AnyCPU'">
+    <OutputPath>bin\WindofSpirit\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Cel|AnyCPU'">
+    <OutputPath>bin\Cel\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'localIIS|AnyCPU'">
+    <OutputPath>bin\localIIS\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Caching" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApplicationUser.cs" />
+    <Compile Include="AzureConfiguration.cs" />
+    <Compile Include="Infrastructure\DatabaseFactory.cs" />
+    <Compile Include="Infrastructure\Disposable.cs" />
+    <Compile Include="Initialize\MacheteConfigs.cs" />
+    <Compile Include="Initialize\MacheteInitializer.cs" />
+    <Compile Include="Infrastructure\RepositoryBase.cs" />
+    <Compile Include="Infrastructure\UnitOfWork.cs" />
+    <Compile Include="Initialize\MacheteLookups.cs" />
+    <Compile Include="Initialize\MacheteReportDefinitions.cs" />
+    <Compile Include="Initialize\MacheteUsers.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\MacheteIntercepterTransientErrors.cs" />
+    <Compile Include="Logging\MacheteInterceptorLogging.cs" />
+    <Compile Include="Logging\Logger.cs" />
+    <Compile Include="MacheteContext.cs" />
+    <Compile Include="Migrations\201404020109307_InitialMigration.cs" />
+    <Compile Include="Migrations\201404020109307_InitialMigration.Designer.cs">
+      <DependentUpon>201404020109307_InitialMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201404020143565_BusinessName.cs" />
+    <Compile Include="Migrations\201404020143565_BusinessName.Designer.cs">
+      <DependentUpon>201404020143565_BusinessName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201404090418125_EmployerLicenseMigration.cs" />
+    <Compile Include="Migrations\201404090418125_EmployerLicenseMigration.Designer.cs">
+      <DependentUpon>201404090418125_EmployerLicenseMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201412032229104_AlterHoursTypeIntegerToFloat.cs" />
+    <Compile Include="Migrations\201412032229104_AlterHoursTypeIntegerToFloat.Designer.cs">
+      <DependentUpon>201412032229104_AlterHoursTypeIntegerToFloat.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201412212342567_AddTransportTransactionData.cs" />
+    <Compile Include="Migrations\201412212342567_AddTransportTransactionData.Designer.cs">
+      <DependentUpon>201412212342567_AddTransportTransactionData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503040553297_OnlineOrdering.cs" />
+    <Compile Include="Migrations\201503040553297_OnlineOrdering.Designer.cs">
+      <DependentUpon>201503040553297_OnlineOrdering.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201503080128563_OnlineOrdering-Additional.cs" />
+    <Compile Include="Migrations\201503080128563_OnlineOrdering-Additional.Designer.cs">
+      <DependentUpon>201503080128563_OnlineOrdering-Additional.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201505032121507_PayPal.cs" />
+    <Compile Include="Migrations\201505032121507_PayPal.Designer.cs">
+      <DependentUpon>201505032121507_PayPal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201505041853148_WorkDemographics.cs" />
+    <Compile Include="Migrations\201505041853148_WorkDemographics.Designer.cs">
+      <DependentUpon>201505041853148_WorkDemographics.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201505062122096_PaypalTransactID.cs" />
+    <Compile Include="Migrations\201505062122096_PaypalTransactID.Designer.cs">
+      <DependentUpon>201505062122096_PaypalTransactID.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611211803005_Identity_upgrade.cs" />
+    <Compile Include="Migrations\201611211803005_Identity_upgrade.Designer.cs">
+      <DependentUpon>201611211803005_Identity_upgrade.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702082045545_api_refactor.cs" />
+    <Compile Include="Migrations\201702082045545_api_refactor.Designer.cs">
+      <DependentUpon>201702082045545_api_refactor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705032057544_v1_11_3_InApp_Config.cs" />
+    <Compile Include="Migrations\201705032057544_v1_11_3_InApp_Config.Designer.cs">
+      <DependentUpon>201705032057544_v1_11_3_InApp_Config.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705070423149_v1_12_0_reports.cs" />
+    <Compile Include="Migrations\201705070423149_v1_12_0_reports.Designer.cs">
+      <DependentUpon>201705070423149_v1_12_0_reports.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\AllRepositories.cs" />
+    <Compile Include="Repositories\ConfigRepository.cs" />
+    <Compile Include="Repositories\ReportsRepository.cs" />
+    <Compile Include="Repositories\SimpleDataRow.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Machete.Domain\Machete.Domain.csproj">
+      <Project>{48F672E8-4513-4F7E-A296-C0CCC87F9AA1}</Project>
+      <Name>Machete.Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Readme\Elmah.txt" />
+    <Content Include="Migrations\migration_commands.txt" />
+    <Content Include="SQL\AddActivityConstants.sql" />
+    <Content Include="SQL\CreateElmahTable.sql" />
+    <Content Include="SQL\CreateNLogTable.sql" />
+    <Content Include="SQL\Legacy\201211112024571_AddOnlineSourceBit.sql" />
+    <Content Include="SQL\Legacy\20121225_date_reset_cleanup.sql" />
+    <Content Include="SQL\Legacy\201304160508212_AddSurchargeField.sql" />
+    <Content Include="SQL\Legacy\201305050151353_AddEmailTable.sql" />
+    <Content Include="SQL\Legacy\201312300649350_MergeMacheteContextAndIdentityDbContext.sql" />
+    <Content Include="SQL\Legacy\201402170001333_AddRecurringBool.sql" />
+    <Content Include="SQL\Legacy\anUpdateThatWorks.sql" />
+    <Content Include="SQL\Legacy\create_migration_table.sql" />
+    <Content Include="SQL\Legacy\null_in_lookups.sql" />
+    <Content Include="SQL\Legacy\apply_EmployerEmail_schema_changes_to_multiple_macheteDBs.sql" />
+    <Content Include="SQL\Legacy\switchToAspnetIdentity.sql" />
+    <Content Include="SQL\Legacy\update_Casa_Prod_to_v1.5-RC1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201404020109307_InitialMigration.resx">
+      <DependentUpon>201404020109307_InitialMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201404020143565_BusinessName.resx">
+      <DependentUpon>201404020143565_BusinessName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201404090418125_EmployerLicenseMigration.resx">
+      <DependentUpon>201404090418125_EmployerLicenseMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201412032229104_AlterHoursTypeIntegerToFloat.resx">
+      <DependentUpon>201412032229104_AlterHoursTypeIntegerToFloat.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201412212342567_AddTransportTransactionData.resx">
+      <DependentUpon>201412212342567_AddTransportTransactionData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503040553297_OnlineOrdering.resx">
+      <DependentUpon>201503040553297_OnlineOrdering.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503080128563_OnlineOrdering-Additional.resx">
+      <DependentUpon>201503080128563_OnlineOrdering-Additional.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505032121507_PayPal.resx">
+      <DependentUpon>201505032121507_PayPal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505041853148_WorkDemographics.resx">
+      <DependentUpon>201505041853148_WorkDemographics.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505062122096_PaypalTransactID.resx">
+      <DependentUpon>201505062122096_PaypalTransactID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611211803005_Identity_upgrade.resx">
+      <DependentUpon>201611211803005_Identity_upgrade.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702082045545_api_refactor.resx">
+      <DependentUpon>201702082045545_api_refactor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705032057544_v1_11_3_InApp_Config.resx">
+      <DependentUpon>201705032057544_v1_11_3_InApp_Config.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705070423149_v1_12_0_reports.resx">
+      <DependentUpon>201705070423149_v1_12_0_reports.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
   <Target Name="AfterBuild">
   </Target>
-  -->
+  -->
 </Project>
