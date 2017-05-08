@@ -748,11 +748,11 @@
                     return;
                 }
 
-                if (insideZipCodes.indexOf(parseInt($("#@(idPrefix)zipcode"))) != -1) {
+                if (insideZipCodes.indexOf(parseInt($("#@(idPrefix)zipcode").val())) != -1) {
                     console.log("Within bus inside zone");
                     // Zipcode is in the allowable list of zipcodes within zone
                     allowableZipcode = true;
-                } else if (outsideZipCodes.indexOf(parseInt($("#@(idPrefix)zipcode"))) != -1) {
+                } else if (outsideZipCodes.indexOf(parseInt($("#@(idPrefix)zipcode").val())) != -1) {
                     console.log("Within bus outside zone");
                     // Zipcode is in the allowable list of zipcodes outside zone
                     allowableZipcode = true;
@@ -770,11 +770,11 @@
                     return;
                 }
 
-                if (insideZipCodes.indexOf(parseInt($("#@(idPrefix)zipcode"))) != -1) {
+                if (insideZipCodes.indexOf(parseInt($("#@(idPrefix)zipcode").val())) != -1) {
                     console.log("Within van inside zone");
                     // Zipcode is in the allowable list of zipcodes within zone
                     allowableZipcode = true;
-                } else if (outsideZipCodes.indexOf(parseInt($("#@(idPrefix)zipcode"))) != -1) {
+                } else if (outsideZipCodes.indexOf(parseInt($("#@(idPrefix)zipcode").val())) != -1) {
                     console.log("Within van outside zone");
                     // Zipcode is in the allowable list of zipcodes outside zone
                     allowableZipcode = true;

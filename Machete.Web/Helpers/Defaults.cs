@@ -127,7 +127,8 @@ namespace Machete.Web.Helpers
                     LCategory.usBornChildren,
                     LCategory.educationLevel,
                     LCategory.farmLabor,
-                    LCategory.training
+                    LCategory.training,
+                    LCategory.income
                 }
                 .Select(x => new SelectListItem { Value = x, Text = x}),
                 "Value", "Text", LCategory.activityName);

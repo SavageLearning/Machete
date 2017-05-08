@@ -697,7 +697,9 @@
     <None Include="Properties\PublishProfiles\local_publish.pubxml" />
     <None Include="Properties\PublishProfiles\local_selenium.pubxml" />
     <None Include="Properties\PublishProfiles\selenium_publish.pubxml" />
-    <None Include="Properties\PublishProfiles\test.machetessl.org.pubxml" />
+    <None Include="Properties\PublishProfiles\test.machetessl.org.pubxml">
+      <SubType>Designer</SubType>
+    </None>
     <Content Include="Scripts\jquery-ui-1.8.11.js" />
     <Content Include="Scripts\jquery.alerts.js" />
     <Content Include="Scripts\jquery.dataTables-1.9.0.js" />
@@ -726,6 +728,7 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Views\Web.config" />
   </ItemGroup>
@@ -1150,74 +1153,7 @@
     <Content Include="Views\Home\Reports.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Web.Alabama.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.CasaLatina.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.Cel.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.CentroHumanitario.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.Concord.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.Congreso.config">
-      <SubType>Designer</SubType>
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
     <None Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.DonBosco.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.ElCentro.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.Graton.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.Hayward.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.localIIS.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.MountainView.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.Nice.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.Pasadena.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.Pomona.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.PortlandVoz.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.SanFrancisco.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.SantaCruz.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.Southside.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.Test.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.WindofSpirit.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.WorkersJustice.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
