@@ -90,12 +90,23 @@ namespace Machete.Data
 
         public static void Initialize(MacheteContext context)
         {
+            string cfgValue;
+
             list.ForEach(u =>
             {
+                try
+                {
+                    cfgValue = ConfigurationManager.AppSettings[u.old];
+                }
+                catch
+                {
+                    cfgValue = "NULL";
+                }
+
                 var o = new Config
                 {
                     key = u.cur,
-                    value = ConfigurationManager.AppSettings[u.old],
+                    value = cfgValue ?? "NULL",  // <--- offending line
                     category = u.cat,
                     datecreated = DateTime.Now,
                     dateupdated = DateTime.Now,
@@ -103,10 +114,12 @@ namespace Machete.Data
                     updatedby = "Init T. Script"
                 };
                 context.Configs.Add(o);
+                context.Commit();
+
             });
-            context.Commit();
             var offset = ConfigurationManager.AppSettings["TimeZoneDifferenceFromPacific"];
-            context.Database.ExecuteSqlCommand(@"update dbo.workersignins set timeZoneOffset = @timezone", 
+            if (offset == null) offset = "0";
+            context.Database.ExecuteSqlCommand(@"update dbo.workersignins set timeZoneOffset = @timezone",
                 new SqlParameter { ParameterName = "timezone", Value = offset });
             context.Database.ExecuteSqlCommand(@"update dbo.activitysignins set timeZoneOffset = @timezone",
                 new SqlParameter { ParameterName = "timezone", Value = offset });
