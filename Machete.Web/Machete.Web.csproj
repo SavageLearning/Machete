@@ -218,6 +218,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\Api\ReportsController.cs" />
+    <Compile Include="Controllers\ReportsV2Controller.cs" />
     <Compile Include="Maps\ActivityProfile.cs" />
     <Compile Include="Maps\ActivitySigninProfile.cs" />
     <Compile Include="Maps\ConfigProfile.cs" />
@@ -694,12 +695,6 @@
     <Content Include="Content\bundles\vendor.bundle.js.map">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Properties\PublishProfiles\local_publish.pubxml" />
-    <None Include="Properties\PublishProfiles\local_selenium.pubxml" />
-    <None Include="Properties\PublishProfiles\selenium_publish.pubxml" />
-    <None Include="Properties\PublishProfiles\test.machetessl.org.pubxml">
-      <SubType>Designer</SubType>
-    </None>
     <Content Include="Scripts\jquery-ui-1.8.11.js" />
     <Content Include="Scripts\jquery.alerts.js" />
     <Content Include="Scripts\jquery.dataTables-1.9.0.js" />
@@ -734,6 +729,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\bundles\assets\" />
+    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
@@ -1147,10 +1143,7 @@
     <Content Include="Views\HirerWorkOrder\IndexError.cshtml" />
     <Content Include="Views\HirerWorkOrder\IndexCompleteEmpty.cshtml" />
     <Content Include="Views\HirerWorkOrder\Profile.cshtml" />
-    <None Include="Properties\PublishProfiles\casa.machetessl.org.pubxml" />
-    <None Include="Properties\PublishProfiles\Machete-Casa - Web Deploy.pubxml" />
-    <None Include="Properties\PublishProfiles\Test.pubxml" />
-    <Content Include="Views\Home\Reports.cshtml">
+    <Content Include="Views\ReportsV2\Index.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Web.Debug.config">
