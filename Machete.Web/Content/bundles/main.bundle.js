@@ -578,7 +578,7 @@ exports = module.exports = __webpack_require__(23)(false);
 
 
 // module
-exports.push([module.i, "", ""]);
+exports.push([module.i, ".removeBgImage {\r\n  background-image: none !important;\r\n}\r\n", ""]);
 
 // exports
 
@@ -598,7 +598,7 @@ module.exports = "<h1>\r\n  {{title}}\r\n</h1>\r\n<app-reports>loading reports..
 /***/ 249:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"ui-g\">\r\n      <div>\r\n        <div>\r\n          <p-dropdown [options]=\"reports\" (click)=\"getList()\" [(ngModel)]=\"selectedReport\" [filter]=\"true\" [style]=\"{'width':'20em'}\"></p-dropdown>\r\n          <p-calendar  placeholder=\"Start date\" [(ngModel)]=\"o.beginDate\" [showIcon]=\"true\" dataType=\"string\"></p-calendar>\r\n          <p-calendar placeholder=\"End date\" [(ngModel)]=\"o.endDate\" [showIcon]=\"true\" dataType=\"string\"></p-calendar>\r\n          <button pButton type=\"button\" (click)=\"getView()\" label=\"Search\"></button>\r\n        </div>\r\n      </div>\r\n      <p-dataTable\r\n        [value]=\"data\"\r\n        sortField=\"value\"\r\n        sortOrder=\"-1\"\r\n        sortMode=\"single\">\r\n        <p-column field=\"label\" header=\"Type of Job\" [sortable]=\"true\"></p-column>\r\n        <p-column field=\"value\" header=\"Count\" [sortable]=\"true\"></p-column>\r\n      </p-dataTable>\r\n</div>\r\n"
+module.exports = "<div class=\"ui-g\">\r\n        <div class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n          <p-dropdown [options]=\"reports\" (click)=\"getList()\" [(ngModel)]=\"selectedReport\" [filter]=\"true\" ></p-dropdown>\r\n        </div>\r\n        <div  class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n          <button pButton type=\"button\" (click)=\"getView()\" label=\"Search\"></button>\r\n        </div>\r\n        <div class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n          <p-calendar  placeholder=\"Start date\" [(ngModel)]=\"o.beginDate\" [showIcon]=\"true\" dataType=\"string\"></p-calendar>\r\n        </div>\r\n        <div class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n          <p-calendar placeholder=\"End date\" [(ngModel)]=\"o.endDate\" [showIcon]=\"true\" dataType=\"string\"></p-calendar>\r\n        </div>\r\n      <p-dataTable\r\n        [value]=\"data\"\r\n        sortField=\"value\"\r\n        sortOrder=\"-1\"\r\n        sortMode=\"single\">\r\n        <p-column field=\"label\" header=\"Type of Job\" [sortable]=\"true\" class=\"removeBgImage\"></p-column>\r\n        <p-column field=\"value\" header=\"Count\" [sortable]=\"true\" class=\"removeBgImage\"></p-column>\r\n      </p-dataTable>\r\n</div>\r\n"
 
 /***/ }),
 

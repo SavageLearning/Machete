@@ -25,16 +25,16 @@ namespace Machete.Api.Controllers
         // GET api/<controller>
         public IHttpActionResult Get()
         {
-            var result = serv.getList();
-            var result2 = result.Select(a => new {
+            var result = serv.getList().Select(a => new {
                 id = a.ID,
                 name = a.name,
                 description = a.description,
+                sqlquery = a.sqlquery,
                 category = a.category,
                 subcategory = a.subcategory,
-                columnLbaelsJson = a.columnLabelsJson
+                columnLabelsJson = a.columnLabelsJson
             });
-            return Json( new { data = result2 } );
+            return Json( new { data = result } );
         }
 
         public IHttpActionResult Get(string id)
