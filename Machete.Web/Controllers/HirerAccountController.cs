@@ -44,6 +44,7 @@ namespace Machete.Web.Controllers
         {
             base.Initialize(requestContext);
             CI = (CultureInfo)Session["Culture"];
+            ViewBag.def = this.def;
         }
 
         // TODO: Consider implementing this functionality - currently there is no admin account page to manage Employer user accounts

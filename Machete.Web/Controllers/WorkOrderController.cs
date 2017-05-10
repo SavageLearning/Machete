@@ -86,6 +86,7 @@ namespace Machete.Web.Controllers
         {
             base.Initialize(requestContext);
             this.CI = (CultureInfo)Session["Culture"];
+            ViewBag.def = def; //TDODO kludge
         }
 
         #region Index
