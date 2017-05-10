@@ -76,7 +76,7 @@ AppComponent = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_forms__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_http__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_http__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__reports_reports_module__ = __webpack_require__(118);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__app_component__ = __webpack_require__(113);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_angular_in_memory_web_api__ = __webpack_require__(121);
@@ -145,9 +145,7 @@ function getBackend(injector, browser, xsrf, options) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_http__ = __webpack_require__(25);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return InMemoryDataService; });
-
 var InMemoryDataService = (function () {
     function InMemoryDataService() {
     }
@@ -315,9 +313,9 @@ var InMemoryDataService = (function () {
     // intercept response from the default HTTP method handlers
     InMemoryDataService.prototype.responseInterceptor = function (response, reqInfo) {
         // response.body = (<SimpleAggregateRow[]>response.body); // matches web api controller
-        var method = __WEBPACK_IMPORTED_MODULE_0__angular_http__["j" /* RequestMethod */][reqInfo.req.method].toUpperCase();
-        var body = JSON.stringify(response.body);
-        console.log("responseInterceptor: " + method + " " + reqInfo.req.url + ": \n" + body);
+        // const method = RequestMethod[reqInfo.req.method].toUpperCase();
+        // const body = JSON.stringify(response.body);
+        // console.log(`responseInterceptor: ${method} ${reqInfo.req.url}: \n${body}`);
         if (typeof reqInfo.query === 'object') {
             // if query parameters present, replace object w/ data key's value.
             // useful for testing; matches API behavior
@@ -425,7 +423,7 @@ var _a;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__reports_component__ = __webpack_require__(117);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_forms__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_http__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_http__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_platform_browser_animations__ = __webpack_require__(112);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_primeng_primeng__ = __webpack_require__(246);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_primeng_primeng___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_primeng_primeng__);
@@ -483,7 +481,7 @@ ReportsModule = __decorate([
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_toPromise__ = __webpack_require__(257);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_toPromise__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__ = __webpack_require__(256);
@@ -578,7 +576,7 @@ exports = module.exports = __webpack_require__(23)(false);
 
 
 // module
-exports.push([module.i, ".removeBgImage {\r\n  background-image: none !important;\r\n}\r\n", ""]);
+exports.push([module.i, "", ""]);
 
 // exports
 
@@ -598,7 +596,7 @@ module.exports = "<h1>\r\n  {{title}}\r\n</h1>\r\n<app-reports>loading reports..
 /***/ 249:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"ui-g\">\r\n        <div class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n          <p-dropdown [options]=\"reports\" (click)=\"getList()\" [(ngModel)]=\"selectedReport\" [filter]=\"true\" ></p-dropdown>\r\n        </div>\r\n        <div  class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n          <button pButton type=\"button\" (click)=\"getView()\" label=\"Search\"></button>\r\n        </div>\r\n        <div class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n          <p-calendar  placeholder=\"Start date\" [(ngModel)]=\"o.beginDate\" [showIcon]=\"true\" dataType=\"string\"></p-calendar>\r\n        </div>\r\n        <div class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n          <p-calendar placeholder=\"End date\" [(ngModel)]=\"o.endDate\" [showIcon]=\"true\" dataType=\"string\"></p-calendar>\r\n        </div>\r\n      <p-dataTable\r\n        [value]=\"data\"\r\n        sortField=\"value\"\r\n        sortOrder=\"-1\"\r\n        sortMode=\"single\">\r\n        <p-column field=\"label\" header=\"Type of Job\" [sortable]=\"true\" class=\"removeBgImage\"></p-column>\r\n        <p-column field=\"value\" header=\"Count\" [sortable]=\"true\" class=\"removeBgImage\"></p-column>\r\n      </p-dataTable>\r\n</div>\r\n"
+module.exports = "<div class=\"ui-g\">\r\n        <div class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n          <p-dropdown [options]=\"reports\" (click)=\"getList()\" (onChange)=\"getView()\" [(ngModel)]=\"selectedReport\" [filter]=\"true\" ></p-dropdown>\r\n        </div>\r\n        <div  class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n          <button pButton type=\"button\" (click)=\"getView()\" label=\"Search\"></button>\r\n        </div>\r\n        <div class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n          <p-calendar  placeholder=\"Start date\" (onSelect)=\"getView()\" [(ngModel)]=\"o.beginDate\" [showIcon]=\"true\" dataType=\"string\"></p-calendar>\r\n        </div>\r\n        <div class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n          <p-calendar placeholder=\"End date\" (onSelect)=\"getView()\" [(ngModel)]=\"o.endDate\" [showIcon]=\"true\" dataType=\"string\"></p-calendar>\r\n        </div>\r\n      <p-dataTable\r\n        [value]=\"data\"\r\n        sortField=\"value\"\r\n        sortOrder=\"-1\"\r\n        sortMode=\"single\">\r\n        <p-column field=\"label\" header=\"Type of Job\" [sortable]=\"true\" class=\"removeBgImage\"></p-column>\r\n        <p-column field=\"value\" header=\"Count\" [sortable]=\"true\" class=\"removeBgImage\"></p-column>\r\n      </p-dataTable>\r\n</div>\r\n"
 
 /***/ }),
 
