@@ -403,8 +403,10 @@ var ReportsComponent = (function () {
     ReportsComponent.prototype.getView = function () {
         var _this = this;
         this.reportsService.getReport(this.selectedReportID.toString(), this.o)
-            .subscribe(function (data) { return _this.viewData = data; }, function (error) { return _this.errorMessage = error; }, function () { return console.log('getView onCompleted'); });
-        this.updateDialog();
+            .subscribe(function (data) {
+            _this.viewData = data;
+            _this.updateDialog();
+        }, function (error) { return _this.errorMessage = error; }, function () { return console.log('getView onCompleted'); });
     };
     ReportsComponent.prototype.getList = function () {
         this.reportsService.getList();

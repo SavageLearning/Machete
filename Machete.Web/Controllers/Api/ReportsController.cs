@@ -28,6 +28,8 @@ namespace Machete.Api.Controllers
             var result = serv.getList().Select(a => new {
                 id = a.ID,
                 name = a.name,
+                title = a.title,
+                commonName = a.commonName,
                 description = a.description,
                 sqlquery = a.sqlquery,
                 category = a.category,
