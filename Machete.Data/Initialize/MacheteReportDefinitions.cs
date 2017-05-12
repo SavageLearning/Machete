@@ -33,7 +33,7 @@ WHERE wo.dateTimeOfWork < (@endDate)
 and wo.dateTimeOfWork > (@startDate)
 and lstatus.text_en = 'Completed'
 group by lskill.text_en",
-                columnLabelsJson = "{ 'label': 'Job type', 'value': = 'Count'}"
+                columnLabelsJson = "{ \"label\": \"Job type\", \"value\": = \"Count\"}"
             },
             // DispatchesByMonth
             new ReportDefinition {
@@ -53,7 +53,7 @@ and datetimeofwork < @endDate
 and l.text_en = 'Completed'
 and wa.workerassignedid is not null
 group by month(wo.datetimeofwork)",
-                columnLabelsJson = "{ 'label': 'Month', 'value': = 'Count'}"
+                columnLabelsJson = "{ \"label\": \"Month\", \"value\": = \"Count\"}"
             },
 
 
@@ -65,7 +65,7 @@ group by month(wo.datetimeofwork)",
                 commonName = "Workers by income",
                 description = "A count of workers by income level who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
-                columnLabelsJson = "{ 'label': 'Income range', 'value': = 'Count' }",
+                columnLabelsJson = "{ \"label\": \"Income range\", \"value\": = \"Count\" }",
                 sqlquery = 
 @"select L.text_EN as label, count(*) as value
 FROM (
@@ -97,7 +97,7 @@ from (
                 commonName = "Workers by disability",
                 description = "A count of workers by disability status who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
-                columnLabelsJson = "{ 'label': 'Disability status', 'value': = 'Count' }",
+                columnLabelsJson = "{ \"label\": \"Disability status\", \"value\": = \"Count\" }",
                 sqlquery =
 @"select 
 convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + min(disabled) as id,
@@ -124,7 +124,7 @@ group by disabled"
                 commonName = "Workers by living situation",
                 description = "A count of workers by homeless status who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
-                columnLabelsJson = "{ 'label': 'Homeless status', 'value': = 'Count' }",
+                columnLabelsJson = "{ \"label\": \"Homeless status\", \"value\": = \"Count\" }",
                 sqlquery =
 @"select 
 convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + min(homeless) as id,
@@ -151,7 +151,7 @@ group by homeless"
                 commonName = "Workers by household composition",
                 description = "A count of workers by household composition who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
-                columnLabelsJson = "{ 'label': 'Composition', 'value': = 'Count' }",
+                columnLabelsJson = "{ \"label\": \"Composition\", \"value\": = \"Count\" }",
                 sqlquery =
 @"select 
 id + '-' + myid as id, label, count(*) as value
@@ -181,7 +181,7 @@ group by ID, label, myid"
                 commonName = "Workers by arrival status",
                 description = "A count of workers by immigrant/refugee/new arrival status who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
-                columnLabelsJson = "{ 'label': 'Immigrant / refugee / new arrival', 'value': = 'Count' }",
+                columnLabelsJson = "{ \"label\": \"Immigrant / refugee / new arrival\", \"value\": = \"Count\" }",
                 sqlquery =
 @"select 
 convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + min(immigrantrefugee) as id,
@@ -208,7 +208,7 @@ group by immigrantrefugee"
                 commonName = "Workers by limited English status",
                 description = "A count of workers by limited english ability who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
-                columnLabelsJson = "{ 'label': 'Limited English?', 'value': = 'Count' }",
+                columnLabelsJson = "{ \"label\": \"Limited English?\", \"value\": = \"Count\" }",
                 sqlquery =
 @"select 
 convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + min(immigrantrefugee) as id,
@@ -235,7 +235,7 @@ group by immigrantrefugee"
                 commonName = "Workers by zipcode",
                 description = "A count of workers by zipcodey who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
-                columnLabelsJson = "{ 'label': 'Zipcode', 'value': = 'Count' }",
+                columnLabelsJson = "{ \"label\": \"Zipcode\", \"value\": = \"Count\" }",
                 sqlquery =
 @"select 
 convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + min(zipcode) as id,
@@ -257,7 +257,7 @@ group by zipcode"
                 commonName = "Workers by latino status",
                 description = "A count of workers by ethnicity (Spanish/Hispanic/Latino) who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
-                columnLabelsJson = "{ 'label': 'Spanish/Hispanic/Latino?', 'value': = 'Count' }",
+                columnLabelsJson = "{ \"label\": \"Spanish/Hispanic/Latino?\", \"value\": = \"Count\" }",
                 sqlquery =
 @"select 
 convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + min(raceID) as id,
@@ -284,7 +284,7 @@ group by raceID"
                 commonName = "Workersr by ethnic group",
                 description = "A count of workers by ethnic group who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
-                columnLabelsJson = "{ 'label': 'Ethnic group', 'value': = 'Count' }",
+                columnLabelsJson = "{ \"label\": \"Ethnic group\", \"value\": = \"Count\" }",
                 sqlquery =
 @"select 
 convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + convert(varchar(5), min(WW.raceID)) as id,
@@ -322,7 +322,7 @@ from (
                 commonName = "Workers by gender",
                 description = "A count of workers by gender who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
-                columnLabelsJson = "{ 'label': 'Gender', 'value': = 'Count' }",
+                columnLabelsJson = "{ \"label\": \"Gender\", \"value\": = \"Count\" }",
                 sqlquery =
 @"select 
 convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + convert(varchar(5), min(WW.gender)) as id,
@@ -363,7 +363,7 @@ from (
 @"The count of workers who have signed in at least one during the search period,
 grouped by the age, in 10-year groupings",
                 category = "Demographics",
-                columnLabelsJson = "{ 'label': 'Age Group', 'value': = 'Count' }",
+                columnLabelsJson = "{ \"label\": \"Age Group\", \"value\": = \"Count\" }",
                 sqlquery =
 @"
 with demos_age (age_range, ordinal)
@@ -421,7 +421,7 @@ order by ordinal
 @"The count of workers who have signed in at least one during the search period,
 grouped by the age, in United Way's reporting groups",
                 category = "Demographics",
-                columnLabelsJson = "{ 'label': 'Age Group', 'value': = 'Count' }",
+                columnLabelsJson = "{ \"label\": \"Age Group\", \"value\": = \"Count\" }",
                 sqlquery =
 @"
 with demos_age (age_range, ordinal)
