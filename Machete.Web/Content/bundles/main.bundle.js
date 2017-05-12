@@ -1,6 +1,6 @@
 webpackJsonp([2,4],{
 
-/***/ 105:
+/***/ 106:
 /***/ (function(module, exports) {
 
 function webpackEmptyContext(req) {
@@ -9,21 +9,21 @@ function webpackEmptyContext(req) {
 webpackEmptyContext.keys = function() { return []; };
 webpackEmptyContext.resolve = webpackEmptyContext;
 module.exports = webpackEmptyContext;
-webpackEmptyContext.id = 105;
+webpackEmptyContext.id = 106;
 
 
 /***/ }),
 
-/***/ 106:
+/***/ 107:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__ = __webpack_require__(111);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app_app_module__ = __webpack_require__(114);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__ = __webpack_require__(112);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app_app_module__ = __webpack_require__(115);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__environments_environment__ = __webpack_require__(73);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_chart_js_dist_Chart_bundle_min_js__ = __webpack_require__(122);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_chart_js_dist_Chart_bundle_min_js__ = __webpack_require__(123);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_chart_js_dist_Chart_bundle_min_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_chart_js_dist_Chart_bundle_min_js__);
 
 
@@ -38,7 +38,7 @@ __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dyna
 
 /***/ }),
 
-/***/ 113:
+/***/ 114:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -60,8 +60,8 @@ var AppComponent = (function () {
 AppComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
         selector: 'app-root',
-        template: __webpack_require__(248),
-        styles: [__webpack_require__(179)]
+        template: __webpack_require__(249),
+        styles: [__webpack_require__(180)]
     })
 ], AppComponent);
 
@@ -69,7 +69,7 @@ AppComponent = __decorate([
 
 /***/ }),
 
-/***/ 114:
+/***/ 115:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -77,10 +77,10 @@ AppComponent = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_forms__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_http__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__reports_reports_module__ = __webpack_require__(118);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__app_component__ = __webpack_require__(113);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_angular_in_memory_web_api__ = __webpack_require__(121);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__in_memory_data_service__ = __webpack_require__(115);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__reports_reports_module__ = __webpack_require__(119);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__app_component__ = __webpack_require__(114);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_angular_in_memory_web_api__ = __webpack_require__(122);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__in_memory_data_service__ = __webpack_require__(116);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__environments_environment__ = __webpack_require__(73);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
 /* unused harmony export getBackend */
@@ -141,7 +141,7 @@ function getBackend(injector, browser, xsrf, options) {
 
 /***/ }),
 
-/***/ 115:
+/***/ 116:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -330,7 +330,7 @@ var InMemoryDataService = (function () {
 
 /***/ }),
 
-/***/ 116:
+/***/ 117:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -345,13 +345,13 @@ var SearchOptions = (function () {
 
 /***/ }),
 
-/***/ 117:
+/***/ 118:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__reports_service__ = __webpack_require__(119);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_search_options__ = __webpack_require__(116);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__reports_service__ = __webpack_require__(120);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_search_options__ = __webpack_require__(117);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ReportsComponent; });
 /* unused harmony export MySelectItem */
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -369,34 +369,62 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var ReportsComponent = (function () {
     function ReportsComponent(reportsService) {
         this.reportsService = reportsService;
+        this.display = false;
         this.o = new __WEBPACK_IMPORTED_MODULE_2__models_search_options__["a" /* SearchOptions */]();
-        this.selectedReport = '1';
-        this.o.beginDate = '1/1/2017';
-        this.o.endDate = '3/1/2017';
-        this.reports = [];
-        this.reports.push({ label: 'Select Report', value: null });
+        this.selectedReportID = '1';
+        this.o.beginDate = '1/1/2016';
+        this.o.endDate = '1/1/2017';
+        this.reportsDropDown = [];
+        this.reportsDropDown.push({ label: 'Select Report', value: null });
     }
+    ReportsComponent.prototype.showDialog = function () {
+        this.updateDialog();
+        this.display = true;
+    };
+    ReportsComponent.prototype.updateDialog = function () {
+        var _this = this;
+        this.selectedReport = this.reportsService.listData.filter(function (x) { return x.id === Number(_this.selectedReportID); });
+        // TODO throw exception
+        this.description = this.selectedReport[0].description;
+        this.title = this.selectedReport[0].name;
+    };
     ReportsComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.reports$ = this.reportsService.subscribeToDataService();
+        this.reports$.subscribe(function (listData) { return _this.reportsDropDown = listData.map(function (r) { return new MySelectItem(r.name, r.id.toString()); }); }, function (error) { return _this.errorMessage = error; }, function () { return console.log('ngOnInit onCompleted'); });
         // this.getList();
-        // this.getView();
+        this.getView();
     };
     ReportsComponent.prototype.getView = function () {
         var _this = this;
-        this.reportsService.getReport(this.selectedReport, this.o)
-            .subscribe(function (data) { return _this.data = data; }, function (error) { return _this.errorMessage = error; });
+        this.reportsService.getReport(this.selectedReportID.toString(), this.o)
+            .subscribe(function (data) { return _this.viewData = data; }, function (error) { return _this.errorMessage = error; }, function () { return console.log('getView onCompleted'); });
+        this.updateDialog();
     };
     ReportsComponent.prototype.getList = function () {
-        var _this = this;
-        this.reportsService.getList()
-            .subscribe(function (data) { return _this.reports = data.map(function (r) { return new MySelectItem(r.name, r.id.toString()); }); }, function (error) { return _this.errorMessage = error; });
+        this.reportsService.getList();
+        console.log('getList called');
+        // .subscribe(
+        //   data => this.reports = data,
+        //   // data => this.reportsDropDown = data.map(r => new MySelectItem(r.name, r.id.toString()) as SelectItem),
+        //   error => this.errorMessage = <any>error,
+        //   () => console.log('getList onCompleted'));
+        // this.reportsService.getList()
+        //   .subscribe(
+        //     data => this.reports = data,
+        //     error => this.errorMessage = <any>error,
+        //     () => console.log('getList onCompleted')
+        //   );
+    };
+    ReportsComponent.prototype.showDetails = function () {
     };
     return ReportsComponent;
 }());
 ReportsComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
         selector: 'app-reports',
-        template: __webpack_require__(249),
-        styles: [__webpack_require__(180)],
+        template: __webpack_require__(250),
+        styles: [__webpack_require__(181)],
         providers: [__WEBPACK_IMPORTED_MODULE_1__reports_service__["a" /* ReportsService */]]
     }),
     __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__reports_service__["a" /* ReportsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__reports_service__["a" /* ReportsService */]) === "function" && _a || Object])
@@ -415,17 +443,17 @@ var _a;
 
 /***/ }),
 
-/***/ 118:
+/***/ 119:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__reports_component__ = __webpack_require__(117);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__reports_component__ = __webpack_require__(118);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_forms__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_http__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_platform_browser_animations__ = __webpack_require__(112);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_primeng_primeng__ = __webpack_require__(246);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_platform_browser_animations__ = __webpack_require__(113);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_primeng_primeng__ = __webpack_require__(247);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_primeng_primeng___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_primeng_primeng__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ReportsModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -463,6 +491,7 @@ ReportsModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_4__angular_http__["l" /* JsonpModule */],
             __WEBPACK_IMPORTED_MODULE_6_primeng_primeng__["ButtonModule"],
             __WEBPACK_IMPORTED_MODULE_6_primeng_primeng__["DropdownModule"],
+            __WEBPACK_IMPORTED_MODULE_6_primeng_primeng__["DialogModule"],
             __WEBPACK_IMPORTED_MODULE_5__angular_platform_browser_animations__["a" /* BrowserAnimationsModule */]
         ],
         exports: [
@@ -476,7 +505,7 @@ ReportsModule = __decorate([
 
 /***/ }),
 
-/***/ 119:
+/***/ 120:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -488,6 +517,8 @@ ReportsModule = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_catch__ = __webpack_require__(254);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_catch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_catch__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject__ = __webpack_require__(90);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ReportsService; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -503,10 +534,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var ReportsService = (function () {
     function ReportsService(http) {
         this.http = http;
+        this.listData = new Array();
+        this.initializeDataService();
     }
+    ReportsService.prototype.initializeDataService = function () {
+        if (!this.listData$) {
+            this.listData$ = new __WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject__["BehaviorSubject"](new Array());
+            this.getList();
+        }
+    };
+    ReportsService.prototype.subscribeToDataService = function () {
+        return this.listData$.asObservable();
+    };
     ReportsService.prototype.getReport = function (report, o) {
         // TODO throw exception if report is not populated
         var params = this.encodeData(o);
@@ -517,17 +560,22 @@ var ReportsService = (function () {
         if (report && params) {
             uri = uri + '?' + params;
         }
-        console.log(uri);
+        console.log('reportsService.getReport: ' + uri);
         return this.http.get(uri)
             .map(function (res) { return res.json().data; })
             .catch(this.handleError);
     };
     ReportsService.prototype.getList = function () {
+        var _this = this;
         var uri = '/api/reports';
-        console.log(uri);
-        return this.http.get(uri)
+        console.log('reportsService.getList: ' + uri);
+        this.http.get(uri)
             .map(function (res) { return res.json().data; })
-            .catch(this.handleError);
+            .catch(this.handleError)
+            .subscribe(function (data) {
+            _this.listData = data;
+            _this.listData$.next(data);
+        }, function (error) { return console.log('Error subscribing to DataService: ' + error); });
     };
     ReportsService.prototype.handleError = function (error) {
         console.error('ERROR', error);
@@ -550,24 +598,6 @@ var _a;
 
 /***/ }),
 
-/***/ 179:
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(23)(false);
-// imports
-
-
-// module
-exports.push([module.i, "", ""]);
-
-// exports
-
-
-/*** EXPORTS FROM exports-loader ***/
-module.exports = module.exports.toString();
-
-/***/ }),
-
 /***/ 180:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -586,24 +616,42 @@ module.exports = module.exports.toString();
 
 /***/ }),
 
-/***/ 248:
-/***/ (function(module, exports) {
+/***/ 181:
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = "<h1>\r\n  {{title}}\r\n</h1>\r\n<app-reports>loading reports...</app-reports>\r\n"
+exports = module.exports = __webpack_require__(23)(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
 
 /***/ }),
 
 /***/ 249:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"ui-g\">\r\n        <div class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n          <p-dropdown [options]=\"reports\" (click)=\"getList()\" (onChange)=\"getView()\" [(ngModel)]=\"selectedReport\" [filter]=\"true\" ></p-dropdown>\r\n        </div>\r\n        <div  class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n          <button pButton type=\"button\" (click)=\"getView()\" label=\"Search\"></button>\r\n        </div>\r\n        <div class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n          <p-calendar  placeholder=\"Start date\" (onSelect)=\"getView()\" [(ngModel)]=\"o.beginDate\" [showIcon]=\"true\" dataType=\"string\"></p-calendar>\r\n        </div>\r\n        <div class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n          <p-calendar placeholder=\"End date\" (onSelect)=\"getView()\" [(ngModel)]=\"o.endDate\" [showIcon]=\"true\" dataType=\"string\"></p-calendar>\r\n        </div>\r\n      <p-dataTable\r\n        [value]=\"data\"\r\n        sortField=\"value\"\r\n        sortOrder=\"-1\"\r\n        sortMode=\"single\">\r\n        <p-column field=\"label\" header=\"Type of Job\" [sortable]=\"true\" class=\"removeBgImage\"></p-column>\r\n        <p-column field=\"value\" header=\"Count\" [sortable]=\"true\" class=\"removeBgImage\"></p-column>\r\n      </p-dataTable>\r\n</div>\r\n"
+module.exports = "<h1>\r\n  {{title}}\r\n</h1>\r\n<app-reports>loading reports...</app-reports>\r\n"
+
+/***/ }),
+
+/***/ 250:
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"ui-g\">\r\n  <div class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n    <p-dropdown [options]=\"reportsDropDown\" (onChange)=\"getView()\" [(ngModel)]=\"selectedReportID\" [filter]=\"true\" [style]=\"{'width':'10em'}\"></p-dropdown>\r\n    <button pButton type=\"button\" icon=\"fa-refresh\" (click)=\"getList()\" iconPos=\"left\"></button>\r\n    <button pButton type=\"button\" icon=\"fa-question\" (click)=\"showDialog()\" iconPos=\"left\"></button>\r\n  </div>\r\n  <div  class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n    <button pButton type=\"button\" (click)=\"getView()\" label=\"Search\"></button>\r\n  </div>\r\n  <div class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n    <p-calendar  placeholder=\"Start date\" (onSelect)=\"getView()\" [(ngModel)]=\"o.beginDate\" [showIcon]=\"true\" dataType=\"string\"></p-calendar>\r\n  </div>\r\n  <div class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n    <p-calendar placeholder=\"End date\" (onSelect)=\"getView()\" [(ngModel)]=\"o.endDate\" [showIcon]=\"true\" dataType=\"string\"></p-calendar>\r\n  </div>\r\n    <p-dialog header=\"{{title}}\" [(visible)]=\"display\">\r\n      {{description}}\r\n    </p-dialog>\r\n  <div>\r\n\r\n  </div>\r\n<p-dataTable\r\n  [value]=\"viewData\"\r\n  sortField=\"value\"\r\n  sortOrder=\"-1\"\r\n  sortMode=\"single\">\r\n  <p-column field=\"label\" header=\"Type of Job\" [sortable]=\"true\" class=\"removeBgImage\"></p-column>\r\n  <p-column field=\"value\" header=\"Count\" [sortable]=\"true\" class=\"removeBgImage\"></p-column>\r\n</p-dataTable>\r\n</div>\r\n"
 
 /***/ }),
 
 /***/ 299:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(106);
+module.exports = __webpack_require__(107);
 
 
 /***/ }),
