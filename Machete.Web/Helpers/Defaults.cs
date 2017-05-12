@@ -398,10 +398,10 @@ namespace Machete.Web.Helpers
                         Selected = x.selected,
                         Value = Convert.ToString(x.ID),
                         Text = textFunc(x),
-                        wage = x.wage.Value,
-                        minHour = x.minHour.Value,
+                        wage = x.wage == null ? 15 : x.wage.Value,
+                        minHour = x.minHour == null ? 1 : x.minHour.Value,
                         ID = x.ID,
-                        typeOfWorkID = x.typeOfWorkID.Value,
+                        typeOfWorkID = x.typeOfWorkID == null ? 0 : x.typeOfWorkID.Value,
                         skillDescriptionEs = x.skillDescriptionEs,
                         skillDescriptionEn = x.skillDescriptionEn
                     }));
