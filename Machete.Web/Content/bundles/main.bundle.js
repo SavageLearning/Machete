@@ -279,6 +279,7 @@ var InMemoryDataService = (function () {
         var reports = [
             {
                 'name': 'DispatchesByJob',
+                'commonName': 'Dispatches by job, with some other text',
                 'description': 'The number of completed dispatches, grouped by job (skill ID)',
                 'sqlquery': 'SELECT\r\nconvert(varchar(24), @startDate, 126) + \'-\' + convert(varchar(23), @endDate, 126) + \'-\' + convert(varchar(5), min(wa.skillid)) as id,\r\nlskill.text_en  AS label,\r\ncount(lskill.text_en) value\r\nFROM [dbo].WorkAssignments as WA \r\njoin [dbo].lookups as lskill on (wa.skillid = lskill.id)\r\njoin [dbo].WorkOrders as WO ON (WO.ID = WA.workorderID)\r\njoin [dbo].lookups as lstatus on (WO.status = lstatus.id) \r\nWHERE wo.dateTimeOfWork < (@endDate) \r\nand wo.dateTimeOfWork > (@startDate)\r\nand lstatus.text_en = \'Completed\'\r\ngroup by lskill.text_en',
                 'category': 'Dispatches',
@@ -294,6 +295,8 @@ var InMemoryDataService = (function () {
             },
             {
                 'name': 'DispatchesByMonth',
+                'title': 'A different title for Dispatches by Month',
+                'commonName': 'Dispatches by Month, (weee!)',
                 'description': 'The number of completed dispatches, grouped by month',
                 'sqlquery': 'SELECT\r\nconvert(varchar(23), @startDate, 126) + \'-\' + convert(varchar(23), @endDate, 126) + \'-\' + convert(varchar(5), month(min(wo.datetimeofwork))) as id,\r\nconvert(varchar(7), min(wo.datetimeofwork), 126)  AS label,\r\ncount(*) value\r\nfrom workassignments wa\r\njoin workorders wo on wo.id = wa.workorderid\r\njoin lookups l on wo.status = l.id\r\nwhere  datetimeofwork >= @startDate\r\nand datetimeofwork < @endDate\r\nand l.text_en = \'Completed\'\r\nand wa.workerassignedid is not null\r\ngroup by month(wo.datetimeofwork)',
                 'category': 'Dispatches',
@@ -372,6 +375,8 @@ var ReportsComponent = (function () {
         this.display = false;
         this.o = new __WEBPACK_IMPORTED_MODULE_2__models_search_options__["a" /* SearchOptions */]();
         this.selectedReportID = '1';
+        this.title = 'loading';
+        this.description = 'loading...';
         this.o.beginDate = '1/1/2016';
         this.o.endDate = '1/1/2017';
         this.reportsDropDown = [];
@@ -384,14 +389,14 @@ var ReportsComponent = (function () {
     ReportsComponent.prototype.updateDialog = function () {
         var _this = this;
         this.selectedReport = this.reportsService.listData.filter(function (x) { return x.id === Number(_this.selectedReportID); });
-        // TODO throw exception
+        // TODO catch exception if not found
         this.description = this.selectedReport[0].description;
-        this.title = this.selectedReport[0].name;
+        this.title = this.selectedReport[0].title || this.selectedReport[0].commonName;
     };
     ReportsComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.reports$ = this.reportsService.subscribeToDataService();
-        this.reports$.subscribe(function (listData) { return _this.reportsDropDown = listData.map(function (r) { return new MySelectItem(r.name, r.id.toString()); }); }, function (error) { return _this.errorMessage = error; }, function () { return console.log('ngOnInit onCompleted'); });
+        this.reports$.subscribe(function (listData) { return _this.reportsDropDown = listData.map(function (r) { return new MySelectItem(r.commonName, r.id.toString()); }); }, function (error) { return _this.errorMessage = error; }, function () { return console.log('ngOnInit onCompleted'); });
         // this.getList();
         this.getView();
     };
@@ -644,7 +649,7 @@ module.exports = "<h1>\r\n  {{title}}\r\n</h1>\r\n<app-reports>loading reports..
 /***/ 250:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"ui-g\">\r\n  <div class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n    <p-dropdown [options]=\"reportsDropDown\" (onChange)=\"getView()\" [(ngModel)]=\"selectedReportID\" [filter]=\"true\" [style]=\"{'width':'10em'}\"></p-dropdown>\r\n    <button pButton type=\"button\" icon=\"fa-refresh\" (click)=\"getList()\" iconPos=\"left\"></button>\r\n    <button pButton type=\"button\" icon=\"fa-question\" (click)=\"showDialog()\" iconPos=\"left\"></button>\r\n  </div>\r\n  <div  class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n    <button pButton type=\"button\" (click)=\"getView()\" label=\"Search\"></button>\r\n  </div>\r\n  <div class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n    <p-calendar  placeholder=\"Start date\" (onSelect)=\"getView()\" [(ngModel)]=\"o.beginDate\" [showIcon]=\"true\" dataType=\"string\"></p-calendar>\r\n  </div>\r\n  <div class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n    <p-calendar placeholder=\"End date\" (onSelect)=\"getView()\" [(ngModel)]=\"o.endDate\" [showIcon]=\"true\" dataType=\"string\"></p-calendar>\r\n  </div>\r\n    <p-dialog header=\"{{title}}\" [(visible)]=\"display\">\r\n      {{description}}\r\n    </p-dialog>\r\n  <div>\r\n\r\n  </div>\r\n<p-dataTable\r\n  [value]=\"viewData\"\r\n  sortField=\"value\"\r\n  sortOrder=\"-1\"\r\n  sortMode=\"single\">\r\n  <p-column field=\"label\" header=\"Type of Job\" [sortable]=\"true\" class=\"removeBgImage\"></p-column>\r\n  <p-column field=\"value\" header=\"Count\" [sortable]=\"true\" class=\"removeBgImage\"></p-column>\r\n</p-dataTable>\r\n</div>\r\n"
+module.exports = "<div class=\"ui-g\">\r\n  <div class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n    <p-dropdown [options]=\"reportsDropDown\" (onChange)=\"getView()\" [(ngModel)]=\"selectedReportID\" [filter]=\"true\" [style]=\"{'width':'15em'}\"></p-dropdown>\r\n    <!--<button pButton type=\"button\" icon=\"fa-refresh\" (click)=\"getList()\" iconPos=\"left\"></button>-->\r\n    <button pButton type=\"button\" icon=\"fa-question\" (click)=\"showDialog()\" iconPos=\"left\"></button>\r\n  </div>\r\n  <div  class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n    <!--<button pButton type=\"button\" (click)=\"getView()\" label=\"Search\"></button>-->\r\n  </div>\r\n  <div class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n    <p-calendar  placeholder=\"Start date\" (onSelect)=\"getView()\" (onBlur)=\"getView()\" [(ngModel)]=\"o.beginDate\" [showIcon]=\"true\" dataType=\"string\"></p-calendar>\r\n  </div>\r\n  <div class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n    <p-calendar placeholder=\"End date\" (onSelect)=\"getView()\" (onBlur)=\"getView()\" [(ngModel)]=\"o.endDate\" [showIcon]=\"true\" dataType=\"string\"></p-calendar>\r\n  </div>\r\n    <p-dialog header=\"{{title}}\" [(visible)]=\"display\">\r\n      {{description}}\r\n    </p-dialog>\r\n  <div>\r\n\r\n  </div>\r\n<p-dataTable\r\n  [value]=\"viewData\"\r\n  sortField=\"value\"\r\n  sortOrder=\"-1\"\r\n  sortMode=\"single\">\r\n  <p-column field=\"label\" header=\"Type of Job\" [sortable]=\"true\" class=\"removeBgImage\"></p-column>\r\n  <p-column field=\"value\" header=\"Count\" [sortable]=\"true\" class=\"removeBgImage\"></p-column>\r\n</p-dataTable>\r\n</div>\r\n"
 
 /***/ }),
 

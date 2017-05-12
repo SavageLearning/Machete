@@ -18,6 +18,7 @@ namespace Machete.Data
             // DispatchesByJob
             new ReportDefinition {
                 name = "DispatchesByJob",
+                commonName = "Dispatches by job",
                 category = "Dispatches",
                 description = "The number of completed dispatches, grouped by job (skill ID)",
                 sqlquery = @"SELECT
@@ -37,6 +38,7 @@ group by lskill.text_en",
             // DispatchesByMonth
             new ReportDefinition {
                 name = "DispatchesByMonth",
+                commonName = "Dispatches by month",
                 description = "The number of completed dispatches, grouped by month",
                 category = "Dispatches",
                 sqlquery = @"SELECT
@@ -53,10 +55,14 @@ and wa.workerassignedid is not null
 group by month(wo.datetimeofwork)",
                 columnLabelsJson = "{ 'label': 'Month', 'value': = 'Count'}"
             },
+
+
+
             // WorkersByIncome
             new ReportDefinition
             {
                 name = "WorkersByIncome",
+                commonName = "Workers by income",
                 description = "A count of workers by income level who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
                 columnLabelsJson = "{ 'label': 'Income range', 'value': = 'Count' }",
@@ -88,6 +94,7 @@ from (
             new ReportDefinition
             {
                 name = "WorkersByDisability",
+                commonName = "Workers by disability",
                 description = "A count of workers by disability status who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
                 columnLabelsJson = "{ 'label': 'Disability status', 'value': = 'Count' }",
@@ -114,6 +121,7 @@ group by disabled"
             new ReportDefinition
             {
                 name = "WorkersByLivingSituation",
+                commonName = "Workers by living situation",
                 description = "A count of workers by homeless status who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
                 columnLabelsJson = "{ 'label': 'Homeless status', 'value': = 'Count' }",
@@ -140,6 +148,7 @@ group by homeless"
             new ReportDefinition
             {
                 name = "WorkersByHouseholdComposition",
+                commonName = "Workers by household composition",
                 description = "A count of workers by household composition who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
                 columnLabelsJson = "{ 'label': 'Composition', 'value': = 'Count' }",
@@ -169,6 +178,7 @@ group by ID, label, myid"
             new ReportDefinition
             {
                 name = "WorkersByArrivalStatus",
+                commonName = "Workers by arrival status",
                 description = "A count of workers by immigrant/refugee/new arrival status who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
                 columnLabelsJson = "{ 'label': 'Immigrant / refugee / new arrival', 'value': = 'Count' }",
@@ -195,6 +205,7 @@ group by immigrantrefugee"
             new ReportDefinition
             {
                 name = "WorkersByLimitedEnglish",
+                commonName = "Workers by limited English status",
                 description = "A count of workers by limited english ability who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
                 columnLabelsJson = "{ 'label': 'Limited English?', 'value': = 'Count' }",
@@ -221,6 +232,7 @@ group by immigrantrefugee"
             new ReportDefinition
             {
                 name = "WorkersByZipcode",
+                commonName = "Workers by zipcode",
                 description = "A count of workers by zipcodey who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
                 columnLabelsJson = "{ 'label': 'Zipcode', 'value': = 'Count' }",
@@ -242,6 +254,7 @@ group by zipcode"
             new ReportDefinition
             {
                 name = "WorkersByLatinoStatus",
+                commonName = "Workers by latino status",
                 description = "A count of workers by ethnicity (Spanish/Hispanic/Latino) who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
                 columnLabelsJson = "{ 'label': 'Spanish/Hispanic/Latino?', 'value': = 'Count' }",
@@ -268,6 +281,7 @@ group by raceID"
             new ReportDefinition
             {
                 name = "WorkersByEthnicGroup",
+                commonName = "Workersr by ethnic group",
                 description = "A count of workers by ethnic group who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
                 columnLabelsJson = "{ 'label': 'Ethnic group', 'value': = 'Count' }",
@@ -305,6 +319,7 @@ from (
             new ReportDefinition
             {
                 name = "WorkersByGender",
+                commonName = "Workers by gender",
                 description = "A count of workers by gender who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
                 columnLabelsJson = "{ 'label': 'Gender', 'value': = 'Count' }",
@@ -343,6 +358,7 @@ from (
             new ReportDefinition 
             {
                 name = "WorkersByAgeGroupBase10",
+                commonName = "Workers by age group, 10 year groupings",
                 description = 
 @"The count of workers who have signed in at least one during the search period,
 grouped by the age, in 10-year groupings",
@@ -396,10 +412,11 @@ group by age_range, ordinal
 order by ordinal
 "
             },
-            // WorkersByAgeGroupUnitedWay
+            // WorkersByAgeGroupUnitedWay'
             new ReportDefinition
             {
                 name = "WorkersByAgeGroupUnitedWay",
+                commonName = "Workers by age group (United Way)",
                 description =
 @"The count of workers who have signed in at least one during the search period,
 grouped by the age, in United Way's reporting groups",

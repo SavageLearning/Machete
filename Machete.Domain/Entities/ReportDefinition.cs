@@ -12,11 +12,13 @@ namespace Machete.Domain
         {
             idString = "reportdef";
         }
-        public string name          { get; set; }
+        public string name          { get; set; } // used in URLs, needs to be url-friendly, no spaces
+        public string commonName    { get; set; } // used for dropdowns and titles
+        public string title         { get; set; } // if null use commonName
         public string description   { get; set; }
         public string sqlquery      { get; set; }
-        public string category { get; set; }
-        public string subcategory { get; set; }
+        public string category      { get; set; }
+        public string subcategory   { get; set; }
         public string columnLabelsJson { get; set; }
         //public bool softdelete { get; set; }
         //public string labelTextEN { get; set; }
