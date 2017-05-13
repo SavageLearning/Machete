@@ -34,7 +34,7 @@ namespace Machete.Api.Controllers
                 sqlquery = a.sqlquery,
                 category = a.category,
                 subcategory = a.subcategory,
-                columnLabelsJson = a.columnLabelsJson
+                columnLabelsJson = a.columnsJson
             });
             return Json( new { data = result } );
         }

@@ -19,7 +19,7 @@ namespace Machete.Domain
         public string sqlquery      { get; set; }
         public string category      { get; set; }
         public string subcategory   { get; set; }
-        public string columnLabelsJson { get; set; }
+        public string columnsJson { get; set; } // must match order in sqlquery
         //public bool softdelete { get; set; }
         //public string labelTextEN { get; set; }
     }
