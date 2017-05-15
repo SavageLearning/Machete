@@ -86,8 +86,6 @@ namespace Machete.Data
             new ConfigMap { old ="PaypalDescription", cur = "PaypalDescription", cat = "PayPal" }
         };
 
-
-
         public static void Initialize(MacheteContext context)
         {
             string cfgValue;
