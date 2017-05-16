@@ -1,6 +1,7 @@
 ﻿using Machete.Service;
 using Machete.Service.DTO.Reports;
 using Machete.Web.Helpers;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +35,7 @@ namespace Machete.Api.Controllers
                 sqlquery = a.sqlquery,
                 category = a.category,
                 subcategory = a.subcategory,
-                columnLabelsJson = a.columnsJson
+                columns = JsonConvert.DeserializeObject(a.columnsJson)
             });
             return Json( new { data = result } );
         }
@@ -43,12 +44,13 @@ namespace Machete.Api.Controllers
         {
 
             var result = serv.Get(id);
+            // TODO Use Automapper to return column deserialized
             return Json(new { data = result });
         }
 
         public IHttpActionResult Get(string id, DateTime? beginDate, DateTime? endDate)
         {
-            var result = serv.getSimpleAggregate(
+            var result = serv.getQuery(
                 new Service.DTO.SearchOptions {
                     idOrName = id,
                     endDate = endDate,

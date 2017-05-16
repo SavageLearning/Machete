@@ -14,7 +14,7 @@ namespace Machete.Service
 {
     public interface IReportsV2Service : IService<ReportDefinition>
     {
-        List<Data.SimpleDataRow> getSimpleAggregate(DTO.SearchOptions o);
+        List<dynamic> getQuery(DTO.SearchOptions o);
         List<ReportDefinition> getList();
         ReportDefinition Get(string idOrName);
     }
@@ -28,14 +28,14 @@ namespace Machete.Service
             this.repo = repo;
         }
 
-        public List<Data.SimpleDataRow> getSimpleAggregate(DTO.SearchOptions o)
+        public List<dynamic> getQuery(DTO.SearchOptions o)
         {
             int id = 0;
             if (!Int32.TryParse(o.idOrName, out id))
             {
                 id = repo.GetMany(r => string.Equals(r.name, o.idOrName, StringComparison.OrdinalIgnoreCase)).First().ID;
             }
-            return repo.getSimpleAggregate(id, 
+            return repo.getDynamicQuery(id, 
                 o.beginDate ?? new DateTime(1753,1,1),
                 o.endDate ?? DateTime.MaxValue);
         }

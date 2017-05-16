@@ -292,7 +292,23 @@ var InMemoryDataService = (function () {
                 'createdby': 'Init T. Script',
                 'updatedby': 'Init T. Script',
                 'idPrefix': 'reportdef1-',
-                'columnLabelsJson': '{ "label": "Job types", "value": "Count of jobs"}'
+                'columns': [
+                    {
+                        'field': 'id',
+                        'header': 'id',
+                        'visible': false
+                    },
+                    {
+                        'field': 'label',
+                        'header': 'label',
+                        'visible': true
+                    },
+                    {
+                        'field': 'value',
+                        'header': 'value',
+                        'visible': true
+                    }
+                ]
             },
             {
                 'name': 'DispatchesByMonth',
@@ -310,7 +326,23 @@ var InMemoryDataService = (function () {
                 'createdby': 'Init T. Script',
                 'updatedby': 'Init T. Script',
                 'idPrefix': 'reportdef2-',
-                'columnLabelsJson': '{ "label": "Month", "value": "Count of jobs"}'
+                'columns': [
+                    {
+                        'field': 'id',
+                        'header': 'id',
+                        'visible': false
+                    },
+                    {
+                        'field': 'label',
+                        'header': 'label',
+                        'visible': true
+                    },
+                    {
+                        'field': 'value',
+                        'header': 'value',
+                        'visible': true
+                    }
+                ]
             }
         ];
         return { reports: reports };
@@ -379,12 +411,15 @@ var ReportsComponent = (function () {
         this.selectedReportID = '1';
         this.title = 'loading';
         this.description = 'loading...';
-        this.headerLabel = 'loading...';
-        this.headerValue = 'loading...';
         this.o.beginDate = '1/1/2016';
         this.o.endDate = '1/1/2017';
         this.reportsDropDown = [];
         this.reportsDropDown.push({ label: 'Select Report', value: null });
+        this.cols = [
+            { field: 'foo1', header: 'loading' },
+            { field: 'foo2', header: 'loading' },
+            { field: 'foo3', header: 'loading' }
+        ];
     }
     ReportsComponent.prototype.showDialog = function () {
         this.updateDialog();
@@ -396,10 +431,8 @@ var ReportsComponent = (function () {
         // TODO catch exception if not found
         this.description = this.selectedReport[0].description;
         this.title = this.selectedReport[0].title || this.selectedReport[0].commonName;
-        var foo = JSON.parse(this.selectedReport[0].columnLabelsJson);
-        this.headerLabel = foo.label;
-        this.headerValue = foo.value;
         this.name = this.selectedReport[0].name;
+        this.cols = this.selectedReport[0].columns.filter(function (a) { return a.visible === true; });
     };
     ReportsComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -418,17 +451,6 @@ var ReportsComponent = (function () {
     ReportsComponent.prototype.getList = function () {
         this.reportsService.getList();
         console.log('getList called');
-        // .subscribe(
-        //   data => this.reports = data,
-        //   // data => this.reportsDropDown = data.map(r => new MySelectItem(r.name, r.id.toString()) as SelectItem),
-        //   error => this.errorMessage = <any>error,
-        //   () => console.log('getList onCompleted'));
-        // this.reportsService.getList()
-        //   .subscribe(
-        //     data => this.reports = data,
-        //     error => this.errorMessage = <any>error,
-        //     () => console.log('getList onCompleted')
-        //   );
     };
     ReportsComponent.prototype.getExport = function (dt) {
         dt.exportFilename = this.name + '_' + this.o.beginDate.toString() + '_to_' + this.o.endDate.toString();
@@ -660,7 +682,7 @@ module.exports = "<h1>\r\n  {{title}}\r\n</h1>\r\n<app-reports>loading reports..
 /***/ 250:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"ui-g\">\r\n  <div class=\"ui-g-12 ui-md-6\">\r\n    <p-dropdown [options]=\"reportsDropDown\" (onChange)=\"getView()\" [(ngModel)]=\"selectedReportID\" [filter]=\"true\" [style]=\"{'width':'20em'}\"></p-dropdown>\r\n    <!--<button pButton type=\"button\" icon=\"fa-refresh\" (click)=\"getList()\" iconPos=\"left\"></button>-->\r\n  </div>\r\n\r\n  <div class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n    <p-calendar  placeholder=\"Start date\" (onSelect)=\"getView()\" (onBlur)=\"getView()\" [(ngModel)]=\"o.beginDate\" [showIcon]=\"true\" dataType=\"string\"></p-calendar>\r\n  </div>\r\n  <div class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n    <p-calendar placeholder=\"End date\" (onSelect)=\"getView()\" (onBlur)=\"getView()\" [(ngModel)]=\"o.endDate\" [showIcon]=\"true\" dataType=\"string\"></p-calendar>\r\n  </div>\r\n\r\n</div>\r\n<p-dialog header=\"{{title}}\" [(visible)]=\"display\">\r\n  {{description}}\r\n</p-dialog>\r\n<div>\r\n<p-dataTable\r\n  #dt\r\n  [value]=\"viewData\"\r\n  sortField=\"value\"\r\n  sortOrder=\"-1\"\r\n  sortMode=\"single\">\r\n  <p-header>\r\n    <div class=\"ui-helper-clearfix\">\r\n      <button type=\"button\" pButton icon=\"fa-download\" iconPos=\"left\" label=\"CSV\" (click)=\"getExport(dt)\" style=\"float:left\"></button>\r\n      <button pButton type=\"button\" icon=\"fa-question\" (click)=\"showDialog()\" iconPos=\"left\" style=\"float:right\"></button>\r\n    </div>\r\n  </p-header>\r\n  <p-column field=\"label\" header=\"{{headerLabel}}\" [sortable]=\"true\" class=\"removeBgImage\"></p-column>\r\n  <p-column field=\"value\" header=\"{{headerValue}}\" [sortable]=\"true\" class=\"removeBgImage\"></p-column>\r\n</p-dataTable>\r\n</div>\r\n"
+module.exports = "<div class=\"ui-g\">\r\n  <div class=\"ui-g-12 ui-md-6\">\r\n    <p-dropdown [options]=\"reportsDropDown\" (onChange)=\"getView()\" [(ngModel)]=\"selectedReportID\" [filter]=\"true\" [style]=\"{'width':'20em'}\"></p-dropdown>\r\n    <!--<button pButton type=\"button\" icon=\"fa-refresh\" (click)=\"getList()\" iconPos=\"left\"></button>-->\r\n  </div>\r\n\r\n  <div class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n    <p-calendar  placeholder=\"Start date\" (onSelect)=\"getView()\" (onBlur)=\"getView()\" [(ngModel)]=\"o.beginDate\" [showIcon]=\"true\" dataType=\"string\"></p-calendar>\r\n  </div>\r\n  <div class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n    <p-calendar placeholder=\"End date\" (onSelect)=\"getView()\" (onBlur)=\"getView()\" [(ngModel)]=\"o.endDate\" [showIcon]=\"true\" dataType=\"string\"></p-calendar>\r\n  </div>\r\n\r\n</div>\r\n<p-dialog header=\"{{title}}\" [(visible)]=\"display\">\r\n  {{description}}\r\n</p-dialog>\r\n<div>\r\n<p-dataTable\r\n  #dt\r\n  [value]=\"viewData\"\r\n  sortField=\"value\"\r\n  sortOrder=\"-1\"\r\n  sortMode=\"single\">\r\n  <p-header>\r\n    <div class=\"ui-helper-clearfix\">\r\n      <button type=\"button\" pButton icon=\"fa-download\" iconPos=\"left\" label=\"CSV\" (click)=\"getExport(dt)\" style=\"float:left\"></button>\r\n      <button pButton type=\"button\" icon=\"fa-question\" (click)=\"showDialog()\" iconPos=\"left\" style=\"float:right\"></button>\r\n    </div>\r\n  </p-header>\r\n  <p-column *ngFor=\"let col of cols\" [field]=\"col.field\" [header]=\"col.header\"></p-column>\r\n</p-dataTable>\r\n</div>\r\n"
 
 /***/ }),
 

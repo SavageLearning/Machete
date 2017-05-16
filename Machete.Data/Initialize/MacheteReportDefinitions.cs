@@ -1,4 +1,5 @@
-﻿using Machete.Domain;
+﻿using Machete.Data.Helpers;
+using Machete.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,8 +33,7 @@ join [dbo].lookups as lstatus on (WO.status = lstatus.id)
 WHERE wo.dateTimeOfWork < (@endDate) 
 and wo.dateTimeOfWork > (@startDate)
 and lstatus.text_en = 'Completed'
-group by lskill.text_en",
-                columnsJson = "[\"Job type\", \"Count\"]"
+group by lskill.text_en"
             },
             // DispatchesByMonth
             new ReportDefinition {
@@ -52,12 +52,8 @@ where  datetimeofwork >= @startDate
 and datetimeofwork < @endDate
 and l.text_en = 'Completed'
 and wa.workerassignedid is not null
-group by month(wo.datetimeofwork)",
-                columnsJson = "[\"Month\", \"Count\"]"
+group by month(wo.datetimeofwork)"
             },
-
-
-
             // WorkersByIncome
             new ReportDefinition
             {
@@ -65,7 +61,6 @@ group by month(wo.datetimeofwork)",
                 commonName = "Workers by income",
                 description = "A count of workers by income level who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
-                columnsJson = "[\"Income range\", \"Count\"]",
                 sqlquery = 
 @"select L.text_EN as label, count(*) as value
 FROM (
@@ -97,7 +92,6 @@ from (
                 commonName = "Workers by disability",
                 description = "A count of workers by disability status who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
-                columnsJson = "[\"Disability status\", \"Count\"]",
                 sqlquery =
 @"select 
 convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + min(disabled) as id,
@@ -124,7 +118,6 @@ group by disabled"
                 commonName = "Workers by living situation",
                 description = "A count of workers by homeless status who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
-                columnsJson = "[\"Homeless status\", \"Count\"]",
                 sqlquery =
 @"select 
 convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + min(homeless) as id,
@@ -151,7 +144,6 @@ group by homeless"
                 commonName = "Workers by household composition",
                 description = "A count of workers by household composition who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
-                columnsJson = "[\"Composition\", \"Count\"]",
                 sqlquery =
 @"select 
 id + '-' + myid as id, label, count(*) as value
@@ -181,7 +173,6 @@ group by ID, label, myid"
                 commonName = "Workers by arrival status",
                 description = "A count of workers by immigrant/refugee/new arrival status who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
-                columnsJson = "[\"Immigrant / refugee / new arrival\", \"Count\"]",
                 sqlquery =
 @"select 
 convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + min(immigrantrefugee) as id,
@@ -208,7 +199,6 @@ group by immigrantrefugee"
                 commonName = "Workers by limited English status",
                 description = "A count of workers by limited english ability who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
-                columnsJson = "[\"Limited English?\", \"Count\"]",
                 sqlquery =
 @"select 
 convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + min(immigrantrefugee) as id,
@@ -235,7 +225,6 @@ group by immigrantrefugee"
                 commonName = "Workers by zipcode",
                 description = "A count of workers by zipcodey who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
-                columnsJson = "[\"Zipcode\", \"Count\"]",
                 sqlquery =
 @"select 
 convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + min(zipcode) as id,
@@ -257,7 +246,6 @@ group by zipcode"
                 commonName = "Workers by latino status",
                 description = "A count of workers by ethnicity (Spanish/Hispanic/Latino) who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
-                columnsJson = "[\"Spanish/Hispanic/Latino?\", \"Count\"]",
                 sqlquery =
 @"select 
 convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + min(raceID) as id,
@@ -284,7 +272,6 @@ group by raceID"
                 commonName = "Workersr by ethnic group",
                 description = "A count of workers by ethnic group who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
-                columnsJson = "[\"Ethnic group\", \"Count\"]",
                 sqlquery =
 @"select 
 convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + convert(varchar(5), min(WW.raceID)) as id,
@@ -322,7 +309,6 @@ from (
                 commonName = "Workers by gender",
                 description = "A count of workers by gender who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
-                columnsJson = "[\"Gender\", \"Count\"]",
                 sqlquery =
 @"select 
 convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + convert(varchar(5), min(WW.gender)) as id,
@@ -363,7 +349,6 @@ from (
 @"The count of workers who have signed in at least one during the search period,
 grouped by the age, in 10-year groupings",
                 category = "Demographics",
-                columnsJson = "[\"Age Group\", \"Count\"]",
                 sqlquery =
 @"
 with demos_age (age_range, ordinal)
@@ -421,7 +406,6 @@ order by ordinal
 @"The count of workers who have signed in at least one during the search period,
 grouped by the age, in United Way's reporting groups",
                 category = "Demographics",
-                columnsJson = "[\"Age Group\", \"Count\"]",
                 sqlquery =
 @"
 with demos_age (age_range, ordinal)
@@ -473,20 +457,272 @@ from demos_age
 group by age_range, ordinal
 order by ordinal
 "
-            }
-            //, new ReportDefinition
+            },
+            new ReportDefinition
+            {
+                name = "TransportationFeeDetails",
+                commonName = "Transportation Fees (detail list)",
+                description = "A detailed list of transportation fees by date range",
+                category = "Transportation",
+                sqlquery = @"select
+   WOs.dateTimeofWork AS workStartTime,
+   WOs.paperOrderNum as wonum,
+   text_EN as typeOfWork,
+   name as employerName,
+   COUNT(COALESCE(firstname1,'') + ' ' + COALESCE(firstname2,'') + ' ' + COALESCE(lastname1,'') + ' ' + COALESCE(lastname2,'')) as wkrCount,
+   transportFee as transFee,
+   transportFeeExtra as exFee
+from dbo.Lookups Ls
+join dbo.WorkOrders WOs on Ls.ID = WOs.transportMethodID
+join dbo.Employers Es on WOs.EmployerID = Es.ID
+join dbo.WorkAssignments WAs on WOs.ID = WAs.workOrderID
+join dbo.Persons Ps on WAs.workerAssignedID = Ps.ID
+where category like 'transportmethod' 
+	and (transportFee + transportFeeExtra) > 0
+    and WOs.dateTimeofWork > @startDate
+	and WOs.dateTimeofWork < @endDate
+	and WAs.workerAssignedID IS NOT NULL
+group by WOs.dateTimeofWork, WOs.paperOrderNum, text_EN, name, transportFee, transportFeeExtra"
+            },
+
+            new ReportDefinition
+            {
+                name = "TransportationFeeMonthly",
+                commonName = "Transportation Fees (monthly totals)",
+                description = "The monthly totals of transportation fees by date range",
+                category = "Transportation",
+                sqlquery =
+@"
+select 
+CONVERT(VARCHAR(7), workStartTime, 102) as Month,
+count (wonum) as [Order count],
+sum(wkrcount) as [Worker count],
+sum(transfee) as [Transport fee],
+sum(exfee) as [Extra fee]
+from
+(
+	select
+	   WOs.dateTimeofWork AS workStartTime,
+	   WOs.paperOrderNum as wonum,
+	   text_EN as typeOfWork,
+	   name as employerName,
+	   COUNT(COALESCE(firstname1,'') + ' ' + COALESCE(firstname2,'') + ' ' + COALESCE(lastname1,'') + ' ' + COALESCE(lastname2,'')) as wkrCount,
+	   transportFee as transFee,
+	   transportFeeExtra as exFee
+	from dbo.Lookups Ls
+	join dbo.WorkOrders WOs on Ls.ID = WOs.transportMethodID
+	join dbo.Employers Es on WOs.EmployerID = Es.ID
+	join dbo.WorkAssignments WAs on WOs.ID = WAs.workOrderID
+	join dbo.Persons Ps on WAs.workerAssignedID = Ps.ID
+	where category like 'transportmethod' 
+		and (transportFee + transportFeeExtra) > 0
+		and WOs.dateTimeofWork > @startDate
+		and WOs.dateTimeofWork < @endDate
+		and WAs.workerAssignedID IS NOT NULL
+	group by WOs.dateTimeofWork, WOs.paperOrderNum, text_EN, name, transportFee, transportFeeExtra
+) as foo
+group by CONVERT(VARCHAR(7), workStartTime, 102)"
+            },
+
+            new ReportDefinition
+            {
+                name = "ActivitiesESLAttendance",
+                commonName = "ESL class attendance",
+                description = @"A list of members' English class attendance by date range. Within the time period,
+the report identifies if the member met the 12-hour or 24-hour threshold.",
+                category = "Activities",
+                sqlquery =
+@"select 
+    convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + convert(varchar(10), min(member)) as id,	
+	member as [Member ID], 
+	sum(minutes) as [Total minutes],
+	min([12hrTier]) as [12 hr completion],
+	min([24hrTier]) as [24+ hr completion]
+from
+(
+	SELECT COUNT(Acts.ID) as ActID,
+	dwccardnum as Member,
+	'English Class' as ClassName,
+	SUM ( DATEDIFF( minute, dateStart, dateEnd )) as Minutes,
+	CASE WHEN SUM ( DATEDIFF ( minute, dateStart, dateEnd )) >= 1440 THEN 1
+	ELSE 0
+	END AS [24hrTier],
+	CASE WHEN SUM ( DATEDIFF ( minute, dateStart, dateEnd )) >= 720 AND SUM ( DATEDIFF ( minute, dateStart, dateEnd )) <= 1439 THEN 1
+	ELSE 0
+	END AS [12hrTier]
+	from dbo.Activities Acts
+
+	JOIN dbo.Lookups Ls ON Acts.name = Ls.ID
+	JOIN dbo.ActivitySignins ASIs ON Acts.ID = ASIs.ActivityID
+	WHERE text_en LIKE 'English%'
+	AND dateStart >= @startDate AND dateend <= @enddate
+
+	GROUP BY dwccardnum
+) as foo 
+group by member"
+            },
+
+            new ReportDefinition
+            {
+                name = "DispatchesByMonthYearToYear",
+                commonName = "Dispatches by month (pivot on year)",
+                description = "The count of completed dispatches by month, pivoted on year",
+                category = "Dispatches",
+                sqlquery =
+@"select year, 
+	[1] as 'Jan', [2] as 'Feb', [3] as 'Mar', [4] as 'Apr',
+	[5] as 'May', [6] as 'Jun', [7] as 'Jul', [8] as 'Aug',
+	[9] as 'Sep', [10] as 'Oct', [11] as 'Nov', [12] as 'Dec'
+from
+(
+	SELECT COUNT(WAs.[ID]) as jobDisp
+	--,CONVERT(DECIMAL(10,2),AVG([hourlyWage])) AS avgWage
+	,year([dateTimeOfWork]) AS year
+	,month([dateTimeOfWork]) as month
+	FROM [dbo].[WorkAssignments] WAs
+	JOIN [dbo].[WorkOrders] WOs ON WAs.workOrderID = WOs.ID
+	join [dbo].[Lookups] l on wos.status = l.id
+	WHERE [workerAssignedID] IS NOT NULL
+	AND [dateTimeOfWork] >= @startdate
+	AND [dateTimeOfWork] <= @enddate
+	and l.text_en = 'Completed'
+	GROUP BY year([dateTimeOfWork]), month([dateTimeOfWork])
+) as foo
+PIVOT  
+(  
+sum (jobdisp)  
+FOR month IN  
+( [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12] )  
+) AS pvt"
+            },
+            new ReportDefinition
+            {
+                name = "AverageWageByMonthYearToYear",
+                commonName = "Average wage by month (pivot on year)",
+                description = "The average hourly rate (wage) by month of completed jobs, pivoted on year",
+                category = "Dispatches",
+                sqlquery =
+@"select year, 
+	cast([1] as float) as 'Jan', 
+	cast([2] as float) as 'Feb', 
+	cast([3] as float) as 'Mar', 
+	cast([4] as float) as 'Apr',
+	cast([5] as float) as 'May', 
+	cast([6] as float) as 'Jun', 
+	cast([7] as float) as 'Jul', 
+    cast([8] as float) as 'Aug',
+	cast([9] as float) as 'Sep', 
+	cast([10] as float) as 'Oct',
+	cast([11] as float) as 'Nov', 
+	cast([12] as float) as 'Dec'
+from
+(
+
+	SELECT CONVERT(DECIMAL(10,2),AVG([hourlyWage])) AS avgWage
+	,year([dateTimeOfWork]) AS year
+	,month([dateTimeOfWork]) as month
+	FROM [dbo].[WorkAssignments] WAs
+	JOIN [dbo].[WorkOrders] WOs ON WAs.workOrderID = WOs.ID
+	join [dbo].[Lookups] l on wos.status = l.id
+	WHERE [workerAssignedID] IS NOT NULL
+	AND [dateTimeOfWork] >= @startdate
+	AND [dateTimeOfWork] <= @enddate
+	and l.text_en = 'Completed'
+	GROUP BY year([dateTimeOfWork]), month([dateTimeOfWork])
+) as foo
+PIVOT  
+(  
+sum (avgWage)  
+FOR month IN  
+( [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12] )  
+) AS pvt "
+            },
+            new ReportDefinition
+            {
+                name = "DispatchesByProgramYearToYear",
+                commonName = "Dispatches by month (pivot on year and program)",
+                description = "The count of completed dispatches by month, pivoted on year and program",
+                category = "Dispatches",
+                sqlquery =
+@"select year_program, 
+	[1] as 'Jan', [2] as 'Feb', [3] as 'Mar', [4] as 'Apr',
+	[5] as 'May', [6] as 'Jun', [7] as 'Jul', [8] as 'Aug',
+	[9] as 'Sep', [10] as 'Oct', [11] as 'Nov', [12] as 'Dec'
+from
+(
+	SELECT
+	count(wa.workerAssignedID) JobCount
+	,convert(varchar(4), year(wo.dateTimeofWork)) + '-' + convert(varchar(3), l.[key])  AS year_program
+	,month(wo.dateTimeofWork) as month
+	FROM
+	WorkAssignments wa
+	INNER JOIN Workers w ON wa.workerAssignedID = w.ID
+	INNER JOIN WorkOrders wo ON wa.workOrderID = wo.ID
+	inner join lookups l on w.typeOfWorkID = l.ID
+	inner join lookups ll on wo.status = ll.id
+	where [dateTimeOfWork] >= @startdate
+	AND [dateTimeOfWork] <= @enddate
+	and ll.text_en = 'Completed'
+	group by l.Text_EN, l.[key], year(wo.dateTimeofWork), month(wo.dateTimeofWork)
+) as foo
+PIVOT  
+(  
+sum (JobCOunt)  
+FOR month IN  
+( [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12] )  
+) AS pvt
+"
+            },
+
+            //new ReportDefinition
             //{
             //    name = "",
+            //    commonName = "",
             //    description = "",
             //    category = "",
-            //    columnLabelsJson = "",
             //    sqlquery = @""
-            //}
+            //},
+
+            //new ReportDefinition
+            //{
+            //    name = "",
+            //    commonName = "",
+            //    description = "",
+            //    category = "",
+            //    sqlquery = @""
+            //},
+
+            //new ReportDefinition
+            //{
+            //    name = "",
+            //    commonName = "",
+            //    description = "",
+            //    category = "",
+            //    sqlquery = @""
+            //},
+
+            //new ReportDefinition
+            //{
+            //    name = "",
+            //    commonName = "",
+            //    description = "",
+            //    category = "",
+            //    sqlquery = @""
+            //},
+
+            //new ReportDefinition
+            //{
+            //    name = "",
+            //    commonName = "",
+            //    description = "",
+            //    category = "",
+            //    sqlquery = @""
+            //},
+
             #endregion  
         };
         public static void Initialize(MacheteContext context)
         {
-
             _cache.ForEach(u => {
                 try
                 {
@@ -498,6 +734,7 @@ order by ordinal
                     u.dateupdated = DateTime.Now;
                     u.createdby = "Init T. Script";
                     u.updatedby = "Init T. Script";
+                    u.columnsJson = SqlServerUtils.getColumnJson(context, u.sqlquery);
                     context.ReportDefinitions.Add(u);
                 }
             });

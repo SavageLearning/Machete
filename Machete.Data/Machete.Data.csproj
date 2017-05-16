@@ -273,6 +273,7 @@
       <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
@@ -282,6 +283,7 @@
   <ItemGroup>
     <Compile Include="ApplicationUser.cs" />
     <Compile Include="AzureConfiguration.cs" />
+    <Compile Include="Helpers\SqlServerUtils.cs" />
     <Compile Include="Infrastructure\DatabaseFactory.cs" />
     <Compile Include="Infrastructure\Disposable.cs" />
     <Compile Include="Initialize\MacheteConfigs.cs" />

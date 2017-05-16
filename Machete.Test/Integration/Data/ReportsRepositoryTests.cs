@@ -1,6 +1,8 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using Machete.Domain;
+using Machete.Data.Helpers;
 
 namespace Machete.Test.Integration.Data
 {
@@ -17,11 +19,11 @@ namespace Machete.Test.Integration.Data
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Data), TestCategory(TC.Reports)]
-        public void getJobDispatchedCount_returns_list()
+        public void getSimpleAggregate_returns_list()
         {
             // arrange
             frb.AddWorkOrder(dateTimeOfWork: DateTime.Parse("1/2/2013"))
-                .AddWorkAssignment(skill: 61); // known skill ID from machete lookup initializer
+                .AddWorkAssignment(skill: 63); // known skill ID from machete lookup initializer
 
             // act
             var result = frb.ToRepoReports()
@@ -30,6 +32,20 @@ namespace Machete.Test.Integration.Data
             // assert
             Assert.IsNotNull(result);
             Assert.AreNotEqual(0, result.Count);
+        }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Data), TestCategory(TC.Reports)]
+        public void getDynamicQuery_returns_list()
+        {
+            // arrange
+            frb.AddWorkOrder(dateTimeOfWork: DateTime.Parse("1/2/2013"), status: 42)
+                .AddWorkAssignment(skill: 63); // known skill ID from machete lookup initializer
+            var result = frb.ToRepoReports()
+                .getDynamicQuery(1, DateTime.Parse("2013/1/1"),
+                                        DateTime.Parse("2013/3/1"));
+            // act
+            // assert
+            Assert.AreEqual("general labor", result[0].label);
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Data), TestCategory(TC.Reports)]
@@ -46,13 +62,16 @@ namespace Machete.Test.Integration.Data
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Data), TestCategory(TC.Reports)]
-        public void getFoo()
+        public void Analyze_columns()
         {
-            // arrange
-
-            // act
-
-            // assert
+            var repo = frb.ToRepoReports();
+            var ctxt = frb.ToFactory().Get();
+            var list = repo.GetAll();
+            foreach (var l in list)
+            {
+                l.columnsJson = SqlServerUtils.getColumnJson(ctxt, l.sqlquery);
+            }
+            frb.ToFactory().Get().Commit();
 
         }
     }

@@ -30,7 +30,7 @@ namespace Machete.Test.Integration.Service
         {
             // Arrange
             frb.AddWorkOrder(dateTimeOfWork: DateTime.Parse("1/2/2013"))
-               .AddWorkAssignment(skill: 61); // known skill ID from machete lookup initializer
+               .AddWorkAssignment(skill: 63); // known skill ID from machete lookup initializer
             o = new DTO.SearchOptions
             {
                 idOrName = "DispatchesByJob",
@@ -38,7 +38,7 @@ namespace Machete.Test.Integration.Service
                 endDate = DateTime.Parse("1/1/2014")
             };
             // Act
-            List<Machete.Data.SimpleDataRow> result = frb.ToServReportsV2().getSimpleAggregate(o);
+            List<dynamic> result = frb.ToServReportsV2().getQuery(o);
             // Assert
             Assert.IsNotNull(result);
             Assert.AreNotEqual(0, result.Count);
@@ -49,7 +49,7 @@ namespace Machete.Test.Integration.Service
         {
             // Arrange
             frb.AddWorkOrder(dateTimeOfWork: DateTime.Parse("1/2/2013"))
-               .AddWorkAssignment(skill: 61); // known skill ID from machete lookup initializer
+               .AddWorkAssignment(skill: 63); // known skill ID from machete lookup initializer
             o = new DTO.SearchOptions
             {
                 idOrName = "1",
@@ -57,7 +57,7 @@ namespace Machete.Test.Integration.Service
                 endDate = DateTime.Parse("1/1/2014")
             };
             // Act
-            List<Machete.Data.SimpleDataRow> result = frb.ToServReportsV2().getSimpleAggregate(o);
+            List<dynamic> result = frb.ToServReportsV2().getQuery(o);
             // Assert
             Assert.IsNotNull(result);
             Assert.AreNotEqual(0, result.Count);
@@ -68,7 +68,7 @@ namespace Machete.Test.Integration.Service
         {
             // Arrange
             frb.AddWorkOrder(dateTimeOfWork: DateTime.Parse("1/2/2013"))
-               .AddWorkAssignment(skill: 61); // known skill ID from machete lookup initializer
+               .AddWorkAssignment(skill: 63); // known skill ID from machete lookup initializer
             o = new DTO.SearchOptions
             {
                 idOrName = "dispatchesbyjob",
@@ -76,10 +76,11 @@ namespace Machete.Test.Integration.Service
                 endDate = DateTime.Parse("1/1/2014")
             };
             // Act
-            List<Machete.Data.SimpleDataRow> result = frb.ToServReportsV2().getSimpleAggregate(o);
+            List<dynamic> result = frb.ToServReportsV2().getQuery(o);
             // Assert
             Assert.IsNotNull(result);
-            Assert.AreNotEqual(0, result.Count);
+            Assert.AreEqual("2013-01-01T00:00:00-2014-01-01T00:00:00-63", result[0].id);
+            Assert.AreEqual("general labor", result[0].label);
         }
         [ExpectedException(typeof(InvalidOperationException),  "Exception not thrown on bad query.")]
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
@@ -87,7 +88,7 @@ namespace Machete.Test.Integration.Service
         {
             // Arrange
             frb.AddWorkOrder(dateTimeOfWork: DateTime.Parse("1/2/2013"))
-               .AddWorkAssignment(skill: 61); // known skill ID from machete lookup initializer
+               .AddWorkAssignment(skill: 63); // known skill ID from machete lookup initializer
             o = new DTO.SearchOptions
             {
                 idOrName = "blah",
@@ -95,7 +96,7 @@ namespace Machete.Test.Integration.Service
                 endDate = DateTime.Parse("1/1/2014")
             };
             // Act
-            List<Machete.Data.SimpleDataRow> result = frb.ToServReportsV2().getSimpleAggregate(o);
+            List<dynamic> result = frb.ToServReportsV2().getQuery(o);
             // Assert
 
         }
@@ -109,7 +110,7 @@ namespace Machete.Test.Integration.Service
                 .getList();
             // assert
             Assert.IsNotNull(result);
-            Assert.AreEqual(1, result.Where(a => a.name == "JobsDispatched").Count());
+            Assert.AreEqual(1, result.Where(a => a.name == "DispatchesByJob").Count());
 
         }
 
