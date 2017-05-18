@@ -47,6 +47,7 @@ namespace Machete.Data
                 rdef.sqlquery,
                 new SqlParameter { ParameterName = "startDate", Value = beginDate },
                 new SqlParameter { ParameterName = "endDate", Value = endDate }).ToListAsync();
+            // TODO catch exception and handle here
             raw.Wait();
             var results = raw.Result;
             return results;

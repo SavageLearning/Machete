@@ -22,10 +22,11 @@ namespace Machete.Data
                 commonName = "Dispatches by job",
                 category = "Dispatches",
                 description = "The number of completed dispatches, grouped by job (skill ID)",
-                sqlquery = @"SELECT
-convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + convert(varchar(5), min(wa.skillid)) as id,
-lskill.text_en  AS label,
-count(lskill.text_en) value
+                sqlquery =
+@"SELECT
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByJob-' + convert(varchar(5), min(wa.skillid)) as id,
+lskill.text_en  AS [Job type (skill)],
+count(lskill.text_en) [Count]
 FROM [dbo].WorkAssignments as WA 
 join [dbo].lookups as lskill on (wa.skillid = lskill.id)
 join [dbo].WorkOrders as WO ON (WO.ID = WA.workorderID)
@@ -33,7 +34,18 @@ join [dbo].lookups as lstatus on (WO.status = lstatus.id)
 WHERE wo.dateTimeOfWork < (@endDate) 
 and wo.dateTimeOfWork > (@startDate)
 and lstatus.text_en = 'Completed'
-group by lskill.text_en"
+group by lskill.text_en
+union 
+SELECT
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByJob-TOTAL' as id,
+'Total' AS [Job type (skill)],
+count(*) [Count]
+FROM [dbo].WorkAssignments as WA 
+join [dbo].WorkOrders as WO ON (WO.ID = WA.workorderID)
+join [dbo].lookups as lstatus on (WO.status = lstatus.id) 
+WHERE wo.dateTimeOfWork < (@endDate) 
+and wo.dateTimeOfWork > (@startDate)
+and lstatus.text_en = 'Completed'"
             },
             // DispatchesByMonth
             new ReportDefinition {
@@ -41,18 +53,32 @@ group by lskill.text_en"
                 commonName = "Dispatches by month",
                 description = "The number of completed dispatches, grouped by month",
                 category = "Dispatches",
-                sqlquery = @"SELECT
-convert(varchar(23), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + convert(varchar(5), month(min(wo.datetimeofwork))) as id,
-convert(varchar(7), min(wo.datetimeofwork), 126)  AS label,
-count(*) value
+                sqlquery =
+@"SELECT
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByMonth-' + convert(varchar(5), month(min(wo.datetimeofwork))) as id,
+convert(varchar(7), min(wo.datetimeofwork), 126)  AS [Month],
+count(*) [Count]
 from workassignments wa
 join workorders wo on wo.id = wa.workorderid
 join lookups l on wo.status = l.id
 where  datetimeofwork >= @startDate
 and datetimeofwork < @endDate
 and l.text_en = 'Completed'
-and wa.workerassignedid is not null
-group by month(wo.datetimeofwork)"
+
+group by month(wo.datetimeofwork)
+
+union 
+
+SELECT
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByMonth-TOTAL' as id,
+'Total'  AS [Month],
+count(*) [Count]
+from workassignments wa
+join workorders wo on wo.id = wa.workorderid
+join lookups l on wo.status = l.id
+where  datetimeofwork >= @startDate
+and datetimeofwork < @endDate
+and l.text_en = 'Completed'"
             },
             // WorkersByIncome
             new ReportDefinition
@@ -61,8 +87,11 @@ group by month(wo.datetimeofwork)"
                 commonName = "Workers by income",
                 description = "A count of workers by income level who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
-                sqlquery = 
-@"select L.text_EN as label, count(*) as value
+                sqlquery =
+@"select 
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByIncome-' + convert(varchar(3), min(l.id)) as id,
+L.text_EN as [Income range], 
+count(*) as [Count]
 FROM (
   select W.ID, W.incomeID
   from Workers W
@@ -75,13 +104,32 @@ group by L.text_EN
 
 union 
 
-select 'NULL' as label, count(*) as value
+select 
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByIncome-NULL'  as id,
+
+'NULL' as [Income range], 
+count(*) as [Count]
 from (
    select W.ID, min(dateforsignin) firstsignin
    from workers W
    JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
    WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
    and W.incomeID is null
+   group by W.ID
+) as WWW
+
+union 
+
+select 
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByIncome-TOTAL'  as id,
+
+'Total' as [Income range], 
+count(*) as [Count]
+from (
+   select W.ID, min(dateforsignin) firstsignin
+   from workers W
+   JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
+   WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
    group by W.ID
 ) as WWW"
             },
@@ -94,9 +142,9 @@ from (
                 category = "Demographics",
                 sqlquery =
 @"select 
-convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + min(disabled) as id,
-disabled as label, 
-count(*) as value
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByDisability-' + min(disabled) as id,
+disabled as [Disabled?], 
+count(*) as [Count]
 FROM (
   select W.ID, 
   CASE 
@@ -109,7 +157,15 @@ FROM (
   WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
   group by W.ID, W.disabled
 ) as WW
-group by disabled"
+group by disabled
+union 
+select 
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByDisability-TOTAL' as id,
+'Total' as [Disabled?], 
+count(distinct(w.id)) as [Count]
+from Workers W
+JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
+WHERE dateforsignin >= @startDate and dateforsignin <= @endDate"
             },
             // WorkersByLivingSituation
             new ReportDefinition
@@ -120,9 +176,9 @@ group by disabled"
                 category = "Demographics",
                 sqlquery =
 @"select 
-convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + min(homeless) as id,
-homeless as label, 
-count(*) as value
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByLivingSituation-' + min(homeless) as id,
+homeless as [Homeless?], 
+count(*) as [Count]
 FROM (
   select W.ID, 
   CASE 
@@ -135,7 +191,19 @@ FROM (
   WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
   group by W.ID, W.homeless
 ) as WW
-group by homeless"
+group by homeless
+union
+select 
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByLivingSituation-TOTAL'  as id,
+'Total' as [Homeless?], 
+count(*) as [Count]
+from (
+   select W.ID, min(dateforsignin) firstsignin
+   from workers W
+   JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
+   WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+   group by W.ID
+) as WWW"
             },
             // WorkersByHouseholdComposition
             new ReportDefinition
@@ -146,9 +214,12 @@ group by homeless"
                 category = "Demographics",
                 sqlquery =
 @"select 
-id + '-' + myid as id, label, count(*) as value
-FROM (
-  select convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) as id,
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByHouseholdComposition-' + myid as id, 
+label as [Household], 
+count(*) as [Count]
+FROM 
+(
+  select  
   CASE 
 	WHEN W.livewithchildren = 1 then 'Households with minors - details unknown'
 	when W.livealone = 1 then 'Single person household - details unknown'
@@ -164,7 +235,19 @@ FROM (
   WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
   group by W.ID, W.livewithchildren, W.livealone
 ) as WW
-group by ID, label, myid"
+group by label, myid
+union 
+select 
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByHouseholdComposition-TOTAL'  as id,
+'Total' as [Household], 
+count(*) as [Count]
+from (
+   select W.ID, min(dateforsignin) firstsignin
+   from workers W
+   JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
+   WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+   group by W.ID
+) as WWW"
             },
             // WorkersByArrivalStatus
             new ReportDefinition
@@ -174,10 +257,11 @@ group by ID, label, myid"
                 description = "A count of workers by immigrant/refugee/new arrival status who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
                 sqlquery =
-@"select 
-convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + min(immigrantrefugee) as id,
-immigrantrefugee as label, 
-count(*) as value
+@"
+select 
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByArrivalStatus-' + min(immigrantrefugee) as id,
+immigrantrefugee as [Immigrant / Refugee?], 
+count(*) as [count]
 FROM (
   select W.ID, 
   CASE 
@@ -190,7 +274,19 @@ FROM (
   WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
   group by W.ID, W.immigrantrefugee
 ) as WW
-group by immigrantrefugee"
+group by immigrantrefugee
+union 
+select 
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByArrivalStatus-TOTAL'  as id,
+'Total' as [Immigrant / Refugee?], 
+count(*) as [Count]
+from (
+   select W.ID, min(dateforsignin) firstsignin
+   from workers W
+   JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
+   WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+   group by W.ID
+) as WWW"
             },
             // WorkersByLimitedEnglish
             new ReportDefinition
@@ -201,22 +297,35 @@ group by immigrantrefugee"
                 category = "Demographics",
                 sqlquery =
 @"select 
-convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + min(immigrantrefugee) as id,
-immigrantrefugee as label, 
-count(*) as value
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByLimitedEnglish-' + min(limitedEnglish) as id,
+limitedEnglish as [Limited English?], 
+count(*) as [Count]
 FROM (
   select W.ID, 
   CASE 
-	WHEN W.immigrantrefugee = 1 then 'yes'
-	when W.immigrantrefugee = 0 then 'no'
-	when W.immigrantrefugee is null then 'NULL'
-  END as immigrantrefugee
+	WHEN W.englishlevelID < 3 then 'yes'
+	when W.englishlevelID >= 3 then 'no'
+	when W.englishlevelID is null then 'NULL'
+  END as limitedEnglish
   from Workers W
   JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
   WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
-  group by W.ID, W.immigrantrefugee
+  group by W.ID, W.Englishlevelid
 ) as WW
-group by immigrantrefugee"
+group by limitedEnglish
+
+union 
+select 
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByLimitedEnglish-TOTAL'  as id,
+'Total' as [Limited English], 
+count(*) as [Count]
+from (
+   select W.ID, min(dateforsignin) firstsignin
+   from workers W
+   JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
+   WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+   group by W.ID
+) as WWW"
             },
             // WorkersByZipcode
             new ReportDefinition
@@ -227,17 +336,29 @@ group by immigrantrefugee"
                 category = "Demographics",
                 sqlquery =
 @"select 
-convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + min(zipcode) as id,
-zipcode as label, 
-count(*) as value
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByZipcode-' + min(zipcode) as id,
+zipcode as Zipcode, 
+count(*) as [Count]
 FROM (
-  select W.ID, w.zipcode
+  select W.ID, isnull(w.zipcode, 'NULL') as zipcode
   from Persons W
   JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
   WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
   group by W.ID, W.zipcode
 ) as WW
-group by zipcode"
+group by zipcode
+union
+select 
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByZipcode-TOTAL'  as id,
+'Total' as [Zipcode], 
+count(*) as [Count]
+from (
+   select W.ID, min(dateforsignin) firstsignin
+   from workers W
+   JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
+   WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+   group by W.ID
+) as WWW"
             },
             // WorkersByLatinoStatus
             new ReportDefinition
@@ -248,9 +369,9 @@ group by zipcode"
                 category = "Demographics",
                 sqlquery =
 @"select 
-convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + min(raceID) as id,
-raceID as label, 
-count(*) as value
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByLatinoStatus-' + min(raceID) as id,
+raceID as [Latino status], 
+count(*) as [Count]
 FROM (
   select W.ID, 
   CASE 
@@ -263,7 +384,19 @@ FROM (
   WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
   group by W.ID, W.raceID
 ) as WW
-group by raceID"
+group by raceID
+union
+select 
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByLatinoStatus-TOTAL'  as id,
+'Total' as [Latino status], 
+count(*) as [Count]
+from (
+   select W.ID, min(dateforsignin) firstsignin
+   from workers W
+   JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
+   WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+   group by W.ID
+) as WWW"
             },
             // WorkersByEthnicGroup
             new ReportDefinition
@@ -274,9 +407,9 @@ group by raceID"
                 category = "Demographics",
                 sqlquery =
 @"select 
-convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + convert(varchar(5), min(WW.raceID)) as id,
-L.text_EN as label, 
-count(*) as value
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByEthnicGroup-' + convert(varchar(5), min(WW.raceID)) as id,
+L.text_EN as [Ethnic group], 
+count(*) as [Count]
 FROM (
   select W.ID, W.raceID
   from Workers W
@@ -290,15 +423,28 @@ group by L.text_EN
 union 
 
 select 
-convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-NULL' as id,
-'NULL' as label, 
-count(*) as value
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByEthnicGroup-NULL' as id,
+'NULL' as [Ethnic group], 
+count(*) as [Count]
 from (
    select W.ID, min(dateforsignin) firstsignin
    from workers W
    JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
    WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
    and W.raceID is null
+   group by W.ID
+) as WWW
+
+union
+select 
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByEthnicGroup-TOTAL'  as id,
+'Total' as [Ethnic group], 
+count(*) as [Count]
+from (
+   select W.ID, min(dateforsignin) firstsignin
+   from workers W
+   JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
+   WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
    group by W.ID
 ) as WWW"
             },
@@ -310,10 +456,11 @@ from (
                 description = "A count of workers by gender who signed in looking for work at least once within the given time range.",
                 category = "Demographics",
                 sqlquery =
-@"select 
-convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + convert(varchar(5), min(WW.gender)) as id,
-L.text_EN as label, 
-count(*) as value
+@"
+select 
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByGender-' + convert(varchar(5), min(WW.gender)) as id,
+L.text_EN as [Gender], 
+count(*) as [Count]
 FROM (
   select W.ID, W.gender
   from persons W
@@ -327,9 +474,9 @@ group by L.text_EN
 union 
 
 select 
-convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-NULL' as id,
-'NULL' as label, 
-count(*) as value
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByGender-NULL' as id,
+'NULL' as [Gender], 
+count(*) as [Count]
 from (
    select W.ID, min(dateforsignin) firstsignin
    from persons W
@@ -338,7 +485,19 @@ from (
    and W.gender is null
    group by W.ID
 ) as WWW
-"
+
+union
+select 
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByGender-TOTAL'  as id,
+'Total' as [Gender], 
+count(*) as [Count]
+from (
+   select W.ID, min(dateforsignin) firstsignin
+   from workers W
+   JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
+   WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+   group by W.ID
+) as WWW"
             },
             // WorkersByAgeGroupBase10
             new ReportDefinition 
@@ -350,8 +509,7 @@ from (
 grouped by the age, in 10-year groupings",
                 category = "Demographics",
                 sqlquery =
-@"
-with demos_age (age_range, ordinal)
+@"with demos_age (age_range, ordinal)
 as 
 (
 	SELECT
@@ -389,13 +547,12 @@ as
 	) as a
 )
 select 
-	convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + convert(varchar(10), min(age_range)) as id,	
-	age_range as label, 
-	count(*) as value
+	convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByAgeGroupBase10-' + convert(varchar(10), min(age_range)) as id,	
+	age_range as [Age range], 
+	count(*) as [Count]
 from demos_age 
 group by age_range, ordinal
-order by ordinal
-"
+order by ordinal"
             },
             // WorkersByAgeGroupUnitedWay'
             new ReportDefinition
@@ -407,8 +564,7 @@ order by ordinal
 grouped by the age, in United Way's reporting groups",
                 category = "Demographics",
                 sqlquery =
-@"
-with demos_age (age_range, ordinal)
+@"with demos_age (age_range, ordinal)
 as 
 (
 	SELECT
@@ -450,28 +606,30 @@ as
 	) as a
 )
 select 
-	convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + convert(varchar(10), min(age_range)) as id,	
-	age_range as label, 
-	count(*) as value
+	convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByAgeGroupUnitedWay-' + convert(varchar(10), min(age_range)) as id,	
+	age_range as [Age range], 
+	count(*) as [Count]
 from demos_age 
 group by age_range, ordinal
-order by ordinal
-"
+order by ordinal"
             },
+            // TransportationFeeDetails
             new ReportDefinition
             {
                 name = "TransportationFeeDetails",
                 commonName = "Transportation Fees (detail list)",
                 description = "A detailed list of transportation fees by date range",
                 category = "Transportation",
-                sqlquery = @"select
-   WOs.dateTimeofWork AS workStartTime,
-   WOs.paperOrderNum as wonum,
-   text_EN as typeOfWork,
-   name as employerName,
-   COUNT(COALESCE(firstname1,'') + ' ' + COALESCE(firstname2,'') + ' ' + COALESCE(lastname1,'') + ' ' + COALESCE(lastname2,'')) as wkrCount,
-   transportFee as transFee,
-   transportFeeExtra as exFee
+                sqlquery =
+@"select 
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-TransportationFeeDetails-' + convert(varchar(6), min(WOs.paperOrderNum)) as id,
+   WOs.dateTimeofWork AS [Work start time],
+   WOs.paperOrderNum as [WO number],
+   text_EN as [Transport type],
+   name as [Employer name],
+   COUNT(COALESCE(firstname1,'') + ' ' + COALESCE(firstname2,'') + ' ' + COALESCE(lastname1,'') + ' ' + COALESCE(lastname2,'')) as [Wkr count],
+   transportFee as [Transport fee],
+   transportFeeExtra as [Extra fee]
 from dbo.Lookups Ls
 join dbo.WorkOrders WOs on Ls.ID = WOs.transportMethodID
 join dbo.Employers Es on WOs.EmployerID = Es.ID
@@ -484,7 +642,7 @@ where category like 'transportmethod'
 	and WAs.workerAssignedID IS NOT NULL
 group by WOs.dateTimeofWork, WOs.paperOrderNum, text_EN, name, transportFee, transportFeeExtra"
             },
-
+            // TransportationFeeMonthly
             new ReportDefinition
             {
                 name = "TransportationFeeMonthly",
@@ -494,6 +652,7 @@ group by WOs.dateTimeofWork, WOs.paperOrderNum, text_EN, name, transportFee, tra
                 sqlquery =
 @"
 select 
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-TransportationFeeMonthly-' + CONVERT(VARCHAR(7), workStartTime, 102)as id,
 CONVERT(VARCHAR(7), workStartTime, 102) as Month,
 count (wonum) as [Order count],
 sum(wkrcount) as [Worker count],
@@ -523,7 +682,7 @@ from
 ) as foo
 group by CONVERT(VARCHAR(7), workStartTime, 102)"
             },
-
+            // ActivitiesESLAttendance
             new ReportDefinition
             {
                 name = "ActivitiesESLAttendance",
@@ -533,7 +692,7 @@ the report identifies if the member met the 12-hour or 24-hour threshold.",
                 category = "Activities",
                 sqlquery =
 @"select 
-    convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + convert(varchar(10), min(member)) as id,	
+    convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-' + convert(varchar(10), min(member)) as id,	
 	member as [Member ID], 
 	sum(minutes) as [Total minutes],
 	min([12hrTier]) as [12 hr completion],
@@ -561,7 +720,7 @@ from
 ) as foo 
 group by member"
             },
-
+            // DispatchesByMonthYearToYear
             new ReportDefinition
             {
                 name = "DispatchesByMonthYearToYear",
@@ -569,14 +728,16 @@ group by member"
                 description = "The count of completed dispatches by month, pivoted on year",
                 category = "Dispatches",
                 sqlquery =
-@"select year, 
+@"select 
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByMonthYearToYear-' + convert(varchar(4), [year])  as id,
+year, 
 	[1] as 'Jan', [2] as 'Feb', [3] as 'Mar', [4] as 'Apr',
 	[5] as 'May', [6] as 'Jun', [7] as 'Jul', [8] as 'Aug',
 	[9] as 'Sep', [10] as 'Oct', [11] as 'Nov', [12] as 'Dec'
 from
 (
 	SELECT COUNT(WAs.[ID]) as jobDisp
-	--,CONVERT(DECIMAL(10,2),AVG([hourlyWage])) AS avgWage
+
 	,year([dateTimeOfWork]) AS year
 	,month([dateTimeOfWork]) as month
 	FROM [dbo].[WorkAssignments] WAs
@@ -593,8 +754,11 @@ PIVOT
 sum (jobdisp)  
 FOR month IN  
 ( [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12] )  
-) AS pvt"
+) AS pvt
+ 
+ORDER BY pvt.year"
             },
+            // AverageWageByMonthYearToYear
             new ReportDefinition
             {
                 name = "AverageWageByMonthYearToYear",
@@ -602,7 +766,9 @@ FOR month IN
                 description = "The average hourly rate (wage) by month of completed jobs, pivoted on year",
                 category = "Dispatches",
                 sqlquery =
-@"select year, 
+@"select 
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-AverageWageByMonthYearToYear-' + convert(varchar(4), [year])  as id,
+year, 
 	cast([1] as float) as 'Jan', 
 	cast([2] as float) as 'Feb', 
 	cast([3] as float) as 'Mar', 
@@ -617,7 +783,6 @@ FOR month IN
 	cast([12] as float) as 'Dec'
 from
 (
-
 	SELECT CONVERT(DECIMAL(10,2),AVG([hourlyWage])) AS avgWage
 	,year([dateTimeOfWork]) AS year
 	,month([dateTimeOfWork]) as month
@@ -635,8 +800,10 @@ PIVOT
 sum (avgWage)  
 FOR month IN  
 ( [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12] )  
-) AS pvt "
+) AS pvt 
+"
             },
+            // DispatchesByProgramYearToYear
             new ReportDefinition
             {
                 name = "DispatchesByProgramYearToYear",
@@ -644,15 +811,26 @@ FOR month IN
                 description = "The count of completed dispatches by month, pivoted on year and program",
                 category = "Dispatches",
                 sqlquery =
-@"select year_program, 
-	[1] as 'Jan', [2] as 'Feb', [3] as 'Mar', [4] as 'Apr',
-	[5] as 'May', [6] as 'Jun', [7] as 'Jul', [8] as 'Aug',
-	[9] as 'Sep', [10] as 'Oct', [11] as 'Nov', [12] as 'Dec'
+@"select
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByProgramYearToYear-' + year_program as id, 
+year_program, 
+	isnull([1],0) as 'Jan', 
+	isnull([2],0) as 'Feb', 
+	isnull([3],0) as 'Mar', 
+	isnull([4],0) as 'Apr',
+	isnull([5],0) as 'May', 
+	isnull([6],0) as 'Jun', 
+	isnull([7],0) as 'Jul', 
+	isnull([8],0) as 'Aug',
+	isnull([9],0) as 'Sep', 
+	isnull([10],0) as 'Oct', 
+	isnull([11],0) as 'Nov', 
+	isnull([12],0) as 'Dec'
 from
 (
 	SELECT
 	count(wa.workerAssignedID) JobCount
-	,convert(varchar(4), year(wo.dateTimeofWork)) + '-' + convert(varchar(3), l.[key])  AS year_program
+	,convert(varchar(4), year(wo.dateTimeofWork)) + '-' + convert(varchar(3), isnull(l.[key], 'NUL'))  AS year_program
 	,month(wo.dateTimeofWork) as month
 	FROM
 	WorkAssignments wa
@@ -670,8 +848,399 @@ PIVOT
 sum (JobCOunt)  
 FOR month IN  
 ( [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12] )  
+) AS pvt"
+            },
+            // SeattleCityReport
+            new ReportDefinition
+            {
+                name = "SeattleCityReport",
+                commonName = "Seattle City report",
+                description = "Casa Latina's monthly numbers for the City of Seattle",
+                category = "site-specific",
+                sqlquery =
+@"select
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-CityReport-NewEnrolls-' + convert(varchar(4), [year]) as id, 
+    'Newly enrolled in program (within time range)' as label, 
+    cast(year as int) as year, 
+	cast([1] as int) as 'Jan', 
+	cast([2] as int) as 'Feb', 
+	cast([3] as int) as 'Mar', 
+	cast([4] as int) as 'Apr',
+	cast([5] as int) as 'May', 
+	cast([6] as int) as 'Jun', 
+	cast([7] as int) as 'Jul', 
+	cast([8] as int) as 'Aug',
+	cast([9] as int) as 'Sep', 
+	cast([10] as int) as 'Oct', 
+	cast([11] as int) as 'Nov', 
+	cast([12] as int) as 'Dec'
+from
+(
+	select min(year(signindate)) as year, min(month(signindate)) as month, cardnum
+	from 
+	(
+		SELECT MIN(dateforsignin) AS signindate, dwccardnum as cardnum
+		FROM dbo.WorkerSignins
+		WHERE dateforsignin >= @startdate AND
+		dateforsignin < @EnDdate
+		GROUP BY dwccardnum
+
+		union 
+
+		select min(dateforsignin) as singindate, dwccardnum as cardnum
+		from activitysignins asi
+		where dateforsignin >= @startdate
+		and dateforsignin < @enddate
+		group by dwccardnum
+	) 
+	as result_set
+	group by  cardnum
+) as foo
+PIVOT  
+(  
+count (cardnum)  
+FOR month IN  
+( [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12] )  
+) AS pvt 
+
+union 
+
+select
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-CityReport-FinEd-' + convert(varchar(4), [year]) as id, 
+    'Counts of members who accessed finanacial literacy' as label, 
+    cast(year as int) as year, 
+	cast([1] as int) as 'Jan', 
+	cast([2] as int) as 'Feb', 
+	cast([3] as int) as 'Mar', 
+	cast([4] as int) as 'Apr',
+	cast([5] as int) as 'May', 
+	cast([6] as int) as 'Jun', 
+	cast([7] as int) as 'Jul', 
+	cast([8] as int) as 'Aug',
+	cast([9] as int) as 'Sep', 
+	cast([10] as int) as 'Oct', 
+	cast([11] as int) as 'Nov', 
+	cast([12] as int) as 'Dec'
+from
+(
+	select min(year(signindate)) as year, min(month(signindate)) as month, cardnum
+	from 
+	(
+		SELECT ASIs.dwccardnum as cardnum, MIN(dateStart) as signindate
+		FROM dbo.Activities Acts
+		JOIN dbo.ActivitySignins ASIs ON Acts.ID = ASIs.ActivityID
+		JOIN dbo.Lookups Ls ON Acts.name = Ls.ID
+		WHERE Ls.ID = 179 AND dateStart >= @startDate AND dateStart <= @endDate
+
+		GROUP BY ASIs.dwccardnum
+	) 
+	as result_set
+	group by  cardnum
+) as foo
+PIVOT  
+(  
+count (cardnum)  
+FOR month IN  
+( [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12] )  
+) AS pvt 
+
+union 
+
+select
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-CityReport-Training-' + convert(varchar(4), [year]) as id, 
+    'Counts of members who participated in job skill training or workshops' as label, 
+    cast(year as int) as year, 
+	cast([1] as int) as 'Jan', 
+	cast([2] as int) as 'Feb', 
+	cast([3] as int) as 'Mar', 
+	cast([4] as int) as 'Apr',
+	cast([5] as int) as 'May', 
+	cast([6] as int) as 'Jun', 
+	cast([7] as int) as 'Jul', 
+	cast([8] as int) as 'Aug',
+	cast([9] as int) as 'Sep', 
+	cast([10] as int) as 'Oct', 
+	cast([11] as int) as 'Nov', 
+	cast([12] as int) as 'Dec'
+from
+(
+	select min(year(signindate)) as year, min(month(signindate)) as month, cardnum
+	from 
+	(
+		SELECT ASIs.dwccardnum as cardnum, MIN(dateStart) as signindate
+		FROM dbo.Activities Acts
+		JOIN dbo.ActivitySignins ASIs ON Acts.ID = ASIs.ActivityID
+		JOIN dbo.Lookups Ls ON Acts.name = Ls.ID
+		WHERE dateStart >= @startdate AND dateStart <= @enddate AND
+		(Ls.ID = 182 OR Ls.ID = 181 OR Ls.ID = 180
+		OR Ls.ID = 179 OR Ls.ID = 178 OR Ls.ID = 134
+		OR Ls.ID = 168 OR Ls.ID = 156 OR Ls.ID = 152
+		OR Ls.ID = 145 OR Ls.ID = 135 OR Ls.ID = 104)
+
+GROUP BY dwccardnum
+	) 
+	as result_set
+	group by  cardnum
+) as foo
+PIVOT  
+(  
+count (cardnum)  
+FOR month IN  
+( [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12] )  
+) AS pvt 
+
+union 
+
+select
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-CityReport-ESL-' + convert(varchar(4), [year]) as id, 
+    'Counts of members who accessed at least 12 hours of ESL classes' as label, 
+    cast(year as int) as year, 
+	cast([1] as int) as 'Jan', 
+	cast([2] as int) as 'Feb', 
+	cast([3] as int) as 'Mar', 
+	cast([4] as int) as 'Apr',
+	cast([5] as int) as 'May', 
+	cast([6] as int) as 'Jun', 
+	cast([7] as int) as 'Jul', 
+	cast([8] as int) as 'Aug',
+	cast([9] as int) as 'Sep', 
+	cast([10] as int) as 'Oct', 
+	cast([11] as int) as 'Nov', 
+	cast([12] as int) as 'Dec'
+from
+(
+	select year, month, cardnum
+	from 
+	(
+			SELECT  year(dateStart) as year, month(datestart) as month, dwccardnum as cardnum,
+			sum(DATEDIFF( minute, dateStart, dateEnd )) as Minutes
+			from dbo.Activities Acts
+
+			JOIN dbo.Lookups Ls ON Acts.name = Ls.ID
+			JOIN dbo.ActivitySignins ASIs ON Acts.ID = ASIs.ActivityID
+			WHERE text_en LIKE '%English%'
+			AND dateStart >= @startdate AND dateend <= @EnDdate
+			group by year(datestart), month(datestart), dwccardnum
+	) as foo
+	where foo.minutes >= 720
+
+) as foo
+PIVOT  
+(  
+count (cardnum)  
+FOR month IN  
+( [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12] )  
 ) AS pvt
-"
+
+union 
+
+select
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-CityReport-UndupCount-' + convert(varchar(4), [year]) as id, 
+
+    'A2H1-0 count of unduplicated individuals securing day labor employment this month' as label, 
+    cast(year as int) as year, 
+	cast([1] as int) as 'Jan', 
+	cast([2] as int) as 'Feb', 
+	cast([3] as int) as 'Mar', 
+	cast([4] as int) as 'Apr',
+	cast([5] as int) as 'May', 
+	cast([6] as int) as 'Jun', 
+	cast([7] as int) as 'Jul', 
+	cast([8] as int) as 'Aug',
+	cast([9] as int) as 'Sep', 
+	cast([10] as int) as 'Oct', 
+	cast([11] as int) as 'Nov', 
+	cast([12] as int) as 'Dec'
+from
+(
+	SELECT count(distinct(dwccardnum)) AS cardnum, year(dateTimeofWork) as year, month(dateTimeofWork) AS month
+	from dbo.WorkAssignments WAs
+	JOIN dbo.WorkOrders WOs ON WAs.workOrderID = WOs.ID
+	JOIN dbo.Workers Ws on WAs.workerAssignedID = Ws.ID
+	join dbo.lookups l on l.id = wos.status
+	WHERE dateTimeofWork >= @startdate 
+	and dateTimeofWork <= @EnDdate
+	and l.text_EN = 'Completed'
+	group by year(dateTimeofWork), month(dateTimeofWork)
+
+) as foo
+PIVOT  
+(  
+sum (cardnum)  
+FOR month IN  
+( [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12] )  
+) AS pvt"
+            },
+            // NewEmployersByType
+            new ReportDefinition
+            {
+                name = "NewEmployersByType",
+                commonName = "New employers by type",
+                description = "A count of new employers by type (business/individual) for the given tiem range",
+                category = "Employers",
+                sqlquery =
+@"select 
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-' + convert(varchar(5), business) as id,
+case
+  when business = 0 then 'Individual'
+  when business = 1 then 'Business'
+end as [Business type], 
+[count] as [Count]
+FROM (
+SELECT
+business, count(*) as [count]
+FROM dbo.Employers Es
+WHERE Es.datecreated >= @startdate AND Es.datecreated <= @EnDdate
+group by business
+) as WW"
+            },
+            // DispatchSummary
+            new ReportDefinition
+            {
+                name = "DispatchSummary",
+                commonName = "Dispatch summary",
+                description = "A count of distinct members dispatched and a count of total dispatches in the given time range",
+                category = "Dispatches",
+                sqlquery =
+@"SELECT
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-total' as id,
+COUNT(DISTINCT(dwccardnum)) AS [Unduplicated dispatches], 
+COUNT(WAs.ID) AS [Total dispatches]
+FROM dbo.WorkAssignments WAs
+JOIN dbo.WorkOrders WOs on WAs.WorkOrderID = WOs.ID
+JOIN dbo.Workers Ws on WAs.WorkerAssignedID = Ws.ID
+join dbo.lookups l on wos.status = l.id
+WHERE WOs.dateTimeOfWork >= @startdate 
+AND WOs.dateTimeOfWork <= @enddate
+and l.text_en = 'Completed'"
+            },
+            // DispatchesByZipCodeAndCatecory
+            new ReportDefinition
+            {
+                name = "DispatchesByZipCodeAndCatecory",
+                commonName = "Dispatches by zipcode and category",
+                description = "Counts of dispatches by zip code, grouped by catgory. The categories are defined in teh SQL and are based on the skill needed",
+                category = "Dispatches",
+                sqlquery =
+@"
+select 
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByZipCodeAndCatecory-' + isnull(zipcode, 'Total') as id,
+isnull(zipcode, 'Total') as zipcode,
+sum(
+	isnull([cl],0)+
+	isnull([yw],0)+
+	isnull([gl],0)+
+	isnull([gd],0)+
+	isnull([mv],0)+
+	isnull([pt],0)+
+	isnull([hl],0)+
+	isnull([dg],0)+
+	isnull([ld],0)+
+	isnull([dm],0)+
+	isnull([ot],0)
+) as Total,
+sum(isnull([cl],0)) as 'Cleaning',
+sum(isnull([yw],0)) as 'Yardwork',
+sum(isnull([gl],0)) as 'General labor',
+sum(isnull([gd],0)) as 'Gardening',
+sum(isnull([mv],0)) as 'Moving',
+sum(isnull([pt],0)) as 'Painting',
+sum(isnull([hl],0)) as 'Hauling',
+sum(isnull([dg],0)) as 'Digging',
+sum(isnull([ld],0)) as 'Landscaping',
+sum(isnull([dm],0)) as 'Demolition',
+sum(isnull([ot],0)) as 'Other'
+from
+(
+	select zipcode, 
+	worktype,
+	count(worktype) as [count]
+	from
+	(
+		select isnull(wos.zipcode,0) as zipcode, 
+		was.id as [waid], 
+		case
+			WHEN LOs.text_en like '%cleaning%' then 'CL'
+			WHEN LOs.text_en like '%yardwork%' then 'YW'
+			WHEN LOs.text_en like '%general%labor%' then 'GL'
+			WHEN LOs.text_en like '%gardening%' then 'GD'
+			WHEN LOs.text_en like '%moving%' then 'MV'
+			WHEN LOs.text_en like '%painting%' then 'PT'
+			WHEN LOs.text_en like '%hauling%' then 'HL'
+			WHEN LOs.text_en like '%digging%' then 'DG'
+			WHEN LOs.text_en like '%landscaping%' then 'LD'
+			WHEN LOs.text_en like '%demolition%' then 'DM'
+			else 'OT'
+		end as worktype
+		from workorders wos 
+		JOIN dbo.WorkAssignments WAs ON WOs.ID = WAs.workOrderID
+		JOIN dbo.Lookups LOs ON WAs.skillID = LOs.ID
+		join dbo.lookups l on WOs.status = l.id
+		where [dateTimeOfWork] >= @startdate
+		AND [dateTimeOfWork] <= @enddate
+		and l.text_en = 'Completed'
+
+	) as foo
+	group by foo.zipcode, foo.worktype
+) as goo
+PIVOT  
+(  
+sum ([count])  
+FOR worktype IN  
+( [cl], [yw], [gl], [gd], [mv], [pt], [hl], [dg], [ld], [dm], [ot] )  
+) AS pvt
+group by rollup (pvt.zipcode)
+order by total desc"
+            },
+            // DispatchesByZipCodeAndEmployerType
+            new ReportDefinition
+            {
+                name = "DispatchesByZipCodeAndEmployerType",
+                commonName = "Dispatches by zipcode and employer type",
+                description = "Counts of dispatches by zip code, grouped by employer type, which is either individual or business",
+                category = "Dispatches",
+                sqlquery =
+@"select 
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByZipCodeAndEmployerType-' + isnull(zipcode, 'Total') as id,
+isnull(zipcode, 'Total') as zipcode,
+sum(
+	isnull([I],0)+
+	isnull([B],0)
+) as Total,
+sum(isnull([I],0)) as 'Individual',
+sum(isnull([B],0)) as 'Business'
+from
+(
+	select zipcode, 
+	employertype,
+	count(employertype) as [count]
+	from
+	(
+		select isnull(wos.zipcode,0) as zipcode, 
+		was.id as [waid], 
+		case
+			WHEN e.business = 1  then 'B'
+			else 'I'
+		end as employertype
+		from workorders wos 
+		join employers e on wos.employerid = e.id
+		JOIN dbo.WorkAssignments WAs ON WOs.ID = WAs.workOrderID
+		join dbo.lookups l on WOs.status = l.id
+		where [dateTimeOfWork] >= @startdate
+		AND [dateTimeOfWork] <= @enddate
+		and l.text_en = 'Completed'
+
+	) as foo
+	group by foo.zipcode, foo.employertype
+) as goo
+PIVOT  
+(  
+sum ([count])  
+FOR employertype IN  
+( [I],[B] )  
+) AS pvt
+group by rollup (pvt.zipcode)
+order by total desc"
             },
 
             //new ReportDefinition
@@ -682,43 +1251,6 @@ FOR month IN
             //    category = "",
             //    sqlquery = @""
             //},
-
-            //new ReportDefinition
-            //{
-            //    name = "",
-            //    commonName = "",
-            //    description = "",
-            //    category = "",
-            //    sqlquery = @""
-            //},
-
-            //new ReportDefinition
-            //{
-            //    name = "",
-            //    commonName = "",
-            //    description = "",
-            //    category = "",
-            //    sqlquery = @""
-            //},
-
-            //new ReportDefinition
-            //{
-            //    name = "",
-            //    commonName = "",
-            //    description = "",
-            //    category = "",
-            //    sqlquery = @""
-            //},
-
-            //new ReportDefinition
-            //{
-            //    name = "",
-            //    commonName = "",
-            //    description = "",
-            //    category = "",
-            //    sqlquery = @""
-            //},
-
             #endregion  
         };
         public static void Initialize(MacheteContext context)

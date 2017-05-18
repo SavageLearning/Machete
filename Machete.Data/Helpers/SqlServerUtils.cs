@@ -17,7 +17,7 @@ namespace Machete.Data.Helpers
             try
             {
                 escapedQuery = Regex.Replace(query,
-                      @"@\w+Date",
+                      @"@\w+[Dd]ate",
                       "'1/1/2016'", RegexOptions.None);
             }
             catch (RegexMatchTimeoutException)

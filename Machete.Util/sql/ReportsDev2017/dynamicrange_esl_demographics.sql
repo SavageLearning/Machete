@@ -29,6 +29,3 @@ from
 	GROUP BY dwccardnum
 ) as foo 
 group by member
-
-
-truncate table reportdefinitions

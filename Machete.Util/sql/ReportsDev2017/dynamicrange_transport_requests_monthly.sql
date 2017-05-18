@@ -2,6 +2,7 @@ declare @startDate DateTime = '1/1/2016'
 declare @endDate DateTime = '1/1/2017'
 
 select 
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-TransportationFeeMonthly-' + CONVERT(VARCHAR(7), workStartTime, 102)as id,
 CONVERT(VARCHAR(7), workStartTime, 102) as Month,
 count (wonum) as [Order count],
 sum(wkrcount) as [Worker count],

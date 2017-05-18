@@ -39,9 +39,9 @@ as
 	) as a
 )
 select 
-	convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + convert(varchar(10), min(age_range)) as id,	
-	age_range as label, 
-	count(*) as value
+	convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByAgeGroupBase10-' + convert(varchar(10), min(age_range)) as id,	
+	age_range as [Age range], 
+	count(*) as [Count]
 from demos_age 
 group by age_range, ordinal
 order by ordinal
