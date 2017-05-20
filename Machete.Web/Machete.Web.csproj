@@ -219,6 +219,7 @@
   <ItemGroup>
     <Compile Include="Controllers\Api\ReportsController.cs" />
     <Compile Include="Controllers\ReportsV2Controller.cs" />
+    <Compile Include="Controllers\V2Controller.cs" />
     <Compile Include="Maps\ActivityProfile.cs" />
     <Compile Include="Maps\ActivitySigninProfile.cs" />
     <Compile Include="Maps\ConfigProfile.cs" />
@@ -429,10 +430,48 @@
     <Content Include="Content\back_enabled_hover.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\bundles\favicon.ico">
+    <Content Include="Content\bundles\0.chunk.js" />
+    <Content Include="Content\bundles\1.chunk.js" />
+    <Content Include="Content\bundles\assets\layout\css\layout-dark-blue.css" />
+    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-300.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\bundles\fontawesome-webfont.912ec66d7572ff821749.svg">
+    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-700.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-regular.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\bundles\assets\layout\images\401.svg" />
+    <Content Include="Content\bundles\assets\layout\images\404.svg" />
+    <Content Include="Content\bundles\assets\layout\images\avatar.png" />
+    <Content Include="Content\bundles\assets\layout\images\dark-user-bg.png" />
+    <Content Include="Content\bundles\assets\layout\images\dark-user-bg2x.png" />
+    <Content Include="Content\bundles\assets\layout\images\error.svg" />
+    <Content Include="Content\bundles\assets\layout\images\favicon.png" />
+    <Content Include="Content\bundles\assets\layout\images\landing\landing-header.png" />
+    <Content Include="Content\bundles\assets\layout\images\landing\promotion.png" />
+    <Content Include="Content\bundles\assets\layout\images\login\login.png" />
+    <Content Include="Content\bundles\assets\layout\images\login\login2x.png" />
+    <Content Include="Content\bundles\assets\layout\images\logo-ultima.svg" />
+    <Content Include="Content\bundles\assets\layout\images\logo.png" />
+    <Content Include="Content\bundles\assets\layout\images\logo2x.png" />
+    <Content Include="Content\bundles\assets\layout\images\preloader.gif" />
+    <Content Include="Content\bundles\assets\layout\images\profile-bg-dark.png" />
+    <Content Include="Content\bundles\assets\layout\images\profile-bg.png" />
+    <Content Include="Content\bundles\assets\layout\images\profile-bg.svg" />
+    <Content Include="Content\bundles\assets\layout\images\user-bg.png" />
+    <Content Include="Content\bundles\assets\layout\images\user-bg2x.png" />
+    <Content Include="Content\bundles\assets\layout\js\ripple.js" />
+    <Content Include="Content\bundles\assets\pages\404.html" />
+    <Content Include="Content\bundles\assets\pages\access.html" />
+    <Content Include="Content\bundles\assets\pages\error.html" />
+    <Content Include="Content\bundles\assets\pages\jquery.js" />
+    <Content Include="Content\bundles\assets\pages\landing.html" />
+    <Content Include="Content\bundles\assets\pages\login.html" />
+    <Content Include="Content\bundles\assets\pages\primeng.min.css" />
+    <Content Include="Content\bundles\assets\theme\theme-dark-blue.css" />
+    <Content Include="Content\bundles\favicon.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\bundles\index.html">
@@ -450,7 +489,7 @@
     <Content Include="Content\bundles\polyfills.bundle.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\bundles\roboto-v15-latin-regular.3d3a53586bd78d1069ae.svg">
+    <Content Include="Content\bundles\scripts.bundle.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\bundles\styles.bundle.js">
@@ -656,18 +695,6 @@
     <Content Include="Scripts\jqplot.pieRenderer.js" />
     <Content Include="Scripts\jqplot.pieRenderer.min.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
-    <Content Include="Content\bundles\fontawesome-webfont.674f50d287a8c48dc19b.eot">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\bundles\fontawesome-webfont.af7ae505a9eed503f8b8.woff2">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\bundles\fontawesome-webfont.b06871f281fee6b241d6.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\bundles\fontawesome-webfont.fee66e712a8a08eef580.woff">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Content\bundles\inline.bundle.js.map">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -675,18 +702,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\bundles\polyfills.bundle.js.map">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\bundles\roboto-v15-latin-regular.16e1d930cf13fb7a9563.woff">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\bundles\roboto-v15-latin-regular.38861cba61c66739c145.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\bundles\roboto-v15-latin-regular.7e367be02cd17a96d513.woff2">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\bundles\roboto-v15-latin-regular.9f916e330c478bbfa2a0.eot">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\bundles\styles.bundle.js.map">
@@ -706,6 +721,83 @@
     <Content Include="Scripts\jquery.lightbox-0.5.js" />
     <Content Include="Scripts\jquery.macheteUI-0.1.js" />
     <Content Include="Scripts\jquery.ui.datepicker.js" />
+    <Content Include="Content\bundles\0.chunk.js.map" />
+    <Content Include="Content\bundles\1.chunk.js.map" />
+    <Content Include="Content\bundles\assets\layout\css\layout-dark-blue.scss" />
+    <Content Include="Content\bundles\assets\layout\fonts\MaterialIcons-Regular.eot">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\bundles\assets\layout\fonts\MaterialIcons-Regular.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\bundles\assets\layout\fonts\MaterialIcons-Regular.woff">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\bundles\assets\layout\fonts\MaterialIcons-Regular.woff2">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-300.eot">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-300.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-300.woff">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-300.woff2">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-700.eot">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-700.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-700.woff">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-700.woff2">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-regular.eot">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-regular.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-regular.woff">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\bundles\assets\layout\fonts\roboto-v15-latin-regular.woff2">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\bundles\assets\sass\layout\_compact.scss" />
+    <Content Include="Content\bundles\assets\sass\layout\_dashboard.scss" />
+    <Content Include="Content\bundles\assets\sass\layout\_exception.scss" />
+    <Content Include="Content\bundles\assets\sass\layout\_landing.scss" />
+    <Content Include="Content\bundles\assets\sass\layout\_layout.scss" />
+    <Content Include="Content\bundles\assets\sass\layout\_login.scss" />
+    <Content Include="Content\bundles\assets\sass\layout\_main.scss" />
+    <Content Include="Content\bundles\assets\sass\layout\_splash.scss" />
+    <Content Include="Content\bundles\assets\sass\layout\_utils.scss" />
+    <Content Include="Content\bundles\assets\sass\theme\_common.scss" />
+    <Content Include="Content\bundles\assets\sass\theme\_data.scss" />
+    <Content Include="Content\bundles\assets\sass\theme\_forms.scss" />
+    <Content Include="Content\bundles\assets\sass\theme\_icons.scss" />
+    <Content Include="Content\bundles\assets\sass\theme\_menu.scss" />
+    <Content Include="Content\bundles\assets\sass\theme\_message.scss" />
+    <Content Include="Content\bundles\assets\sass\theme\_misc.scss" />
+    <Content Include="Content\bundles\assets\sass\theme\_overlay.scss" />
+    <Content Include="Content\bundles\assets\sass\theme\_panel.scss" />
+    <Content Include="Content\bundles\assets\sass\theme\_theme.scss" />
+    <Content Include="Content\bundles\assets\sass\_fonts.scss" />
+    <Content Include="Content\bundles\assets\sass\_mixins.scss" />
+    <Content Include="Content\bundles\assets\sass\_variables.scss" />
+    <Content Include="Content\bundles\assets\theme\theme-dark-blue.scss" />
+    <Content Include="Content\bundles\scripts.bundle.js.map">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -728,7 +820,6 @@
     <Content Include="Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Content\bundles\assets\" />
     <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>
@@ -1146,6 +1237,8 @@
     <Content Include="Views\ReportsV2\Index.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\Shared\_angularLayout.cshtml" />
+    <Content Include="Views\V2\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

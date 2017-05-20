@@ -1,29 +1,44 @@
-webpackJsonp([2,4],{
+webpackJsonp([4,7],{
 
-/***/ 106:
-/***/ (function(module, exports) {
+/***/ 107:
+/***/ (function(module, exports, __webpack_require__) {
 
-function webpackEmptyContext(req) {
-	throw new Error("Cannot find module '" + req + "'.");
-}
-webpackEmptyContext.keys = function() { return []; };
-webpackEmptyContext.resolve = webpackEmptyContext;
-module.exports = webpackEmptyContext;
-webpackEmptyContext.id = 106;
+var map = {
+	"app/employers/employers.module": [
+		310,
+		1
+	],
+	"app/reports/reports.module": [
+		311,
+		0
+	]
+};
+function webpackAsyncContext(req) {
+	var ids = map[req];	if(!ids)
+		return Promise.reject(new Error("Cannot find module '" + req + "'."));
+	return __webpack_require__.e(ids[1]).then(function() {
+		return __webpack_require__(ids[0]);
+	});
+};
+webpackAsyncContext.keys = function webpackAsyncContextKeys() {
+	return Object.keys(map);
+};
+module.exports = webpackAsyncContext;
+webpackAsyncContext.id = 107;
 
 
 /***/ }),
 
-/***/ 107:
+/***/ 108:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__ = __webpack_require__(112);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app_app_module__ = __webpack_require__(115);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__environments_environment__ = __webpack_require__(73);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_chart_js_dist_Chart_bundle_min_js__ = __webpack_require__(123);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__ = __webpack_require__(127);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app_app_module__ = __webpack_require__(132);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__environments_environment__ = __webpack_require__(76);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_chart_js_dist_Chart_bundle_min_js__ = __webpack_require__(141);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_chart_js_dist_Chart_bundle_min_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_chart_js_dist_Chart_bundle_min_js__);
 
 
@@ -38,12 +53,15 @@ __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dyna
 
 /***/ }),
 
-/***/ 114:
+/***/ 129:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__can_deactivate_guard_service__ = __webpack_require__(135);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__selective_preloading_strategy__ = __webpack_require__(138);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppRoutingModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -51,37 +69,256 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 
-var AppComponent = (function () {
-    function AppComponent() {
-        this.title = 'Reports 2.0';
-    }
-    return AppComponent;
-}());
-AppComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
-        selector: 'app-root',
-        template: __webpack_require__(249),
-        styles: [__webpack_require__(180)]
-    })
-], AppComponent);
 
-//# sourceMappingURL=app.component.js.map
+
+
+var appRoutes = [
+    {
+        path: 'employers',
+        loadChildren: 'app/employers/employers.module#EmployersModule'
+    },
+    {
+        path: 'reports',
+        loadChildren: 'app/reports/reports.module#ReportsModule'
+    },
+    //{ path: '**', component: PageNotFoundComponent }
+    { path: '**', redirectTo: '/reports' }
+];
+var AppRoutingModule = (function () {
+    function AppRoutingModule() {
+    }
+    return AppRoutingModule;
+}());
+AppRoutingModule = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["NgModule"])({
+        imports: [
+            __WEBPACK_IMPORTED_MODULE_1__angular_router__["RouterModule"].forRoot(appRoutes, { preloadingStrategy: __WEBPACK_IMPORTED_MODULE_3__selective_preloading_strategy__["a" /* SelectivePreloadingStrategy */] })
+        ],
+        exports: [
+            __WEBPACK_IMPORTED_MODULE_1__angular_router__["RouterModule"]
+        ],
+        providers: [
+            __WEBPACK_IMPORTED_MODULE_2__can_deactivate_guard_service__["a" /* CanDeactivateGuard */],
+            __WEBPACK_IMPORTED_MODULE_3__selective_preloading_strategy__["a" /* SelectivePreloadingStrategy */]
+        ]
+    })
+], AppRoutingModule);
+
+//# sourceMappingURL=app-routing.module.js.map
 
 /***/ }),
 
-/***/ 115:
+/***/ 130:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_forms__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_http__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__reports_reports_module__ = __webpack_require__(119);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__app_component__ = __webpack_require__(114);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_angular_in_memory_web_api__ = __webpack_require__(122);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__in_memory_data_service__ = __webpack_require__(116);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__environments_environment__ = __webpack_require__(73);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppFooter; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+var AppFooter = (function () {
+    function AppFooter() {
+    }
+    return AppFooter;
+}());
+AppFooter = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+        selector: 'app-footer',
+        template: "\n        <div class=\"footer\">\n            <div class=\"card clearfix\">\n                <span class=\"footer-text-left\">Machete</span>\n                <span class=\"footer-text-right\"><span class=\"ui-icon ui-icon-copyright\"></span>  <span>All Rights Reserved</span></span>\n            </div>\n        </div>\n    "
+    })
+], AppFooter);
+
+//# sourceMappingURL=app.footer.component.js.map
+
+/***/ }),
+
+/***/ 131:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_animations__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_common__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_router__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_primeng_primeng__ = __webpack_require__(122);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_primeng_primeng___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_primeng_primeng__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__app_component__ = __webpack_require__(45);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppMenuComponent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return AppSubMenu; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+
+
+
+
+
+
+var AppMenuComponent = (function () {
+    function AppMenuComponent(app) {
+        this.app = app;
+    }
+    AppMenuComponent.prototype.ngOnInit = function () {
+        this.model = [
+            { label: 'Employers', icon: 'business', url: ['/Employer'] },
+            { label: 'Work Orders', icon: 'work', url: ['/Workorder'] },
+            { label: 'Dispatch', icon: 'today', url: ['/dispatch'] },
+            { label: 'People', icon: 'people', url: ['/people'] },
+            { label: 'Activities', icon: 'local_activity', url: ['/Activity'] },
+            { label: 'Sign-ins', icon: 'track_changes', url: ['/workersignin'] },
+            { label: 'Emails', icon: 'email', url: ['/email'] },
+            { label: 'Reports', icon: 'subtitles', routerLink: ['/reports'] }
+        ];
+    };
+    return AppMenuComponent;
+}());
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(),
+    __metadata("design:type", Boolean)
+], AppMenuComponent.prototype, "reset", void 0);
+AppMenuComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+        selector: 'app-menu',
+        template: "\n        <ul app-submenu [item]=\"model\" root=\"true\" class=\"ultima-menu ultima-main-menu clearfix\" [reset]=\"reset\" visible=\"true\"></ul>\n    "
+    }),
+    __param(0, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Inject"])(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["forwardRef"])(function () { return __WEBPACK_IMPORTED_MODULE_5__app_component__["a" /* AppComponent */]; }))),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_5__app_component__["a" /* AppComponent */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__app_component__["a" /* AppComponent */]) === "function" && _a || Object])
+], AppMenuComponent);
+
+var AppSubMenu = (function () {
+    function AppSubMenu(app, router, location) {
+        this.app = app;
+        this.router = router;
+        this.location = location;
+    }
+    AppSubMenu.prototype.itemClick = function (event, item, index) {
+        //avoid processing disabled items
+        if (item.disabled) {
+            event.preventDefault();
+            return true;
+        }
+        //activate current item and deactivate active sibling if any
+        this.activeIndex = (this.activeIndex === index) ? null : index;
+        //execute command
+        if (item.command) {
+            if (!item.eventEmitter) {
+                item.eventEmitter = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["EventEmitter"]();
+                item.eventEmitter.subscribe(item.command);
+            }
+            item.eventEmitter.emit({
+                originalEvent: event,
+                item: item
+            });
+        }
+        //prevent hash change
+        if (item.items || (!item.url && !item.routerLink)) {
+            event.preventDefault();
+        }
+        //hide menu
+        if (!item.items) {
+            if (this.app.isHorizontal())
+                this.app.resetMenu = true;
+            else
+                this.app.resetMenu = false;
+            this.app.overlayMenuActive = false;
+            this.app.staticMenuMobileActive = false;
+        }
+    };
+    AppSubMenu.prototype.isActive = function (index) {
+        return this.activeIndex === index;
+    };
+    Object.defineProperty(AppSubMenu.prototype, "reset", {
+        get: function () {
+            return this._reset;
+        },
+        set: function (val) {
+            this._reset = val;
+            if (this._reset && this.app.isHorizontal()) {
+                this.activeIndex = null;
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return AppSubMenu;
+}());
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(),
+    __metadata("design:type", typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_4_primeng_primeng__["MenuItem"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4_primeng_primeng__["MenuItem"]) === "function" && _b || Object)
+], AppSubMenu.prototype, "item", void 0);
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(),
+    __metadata("design:type", Boolean)
+], AppSubMenu.prototype, "root", void 0);
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(),
+    __metadata("design:type", Boolean)
+], AppSubMenu.prototype, "visible", void 0);
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(),
+    __metadata("design:type", Boolean),
+    __metadata("design:paramtypes", [Boolean])
+], AppSubMenu.prototype, "reset", null);
+AppSubMenu = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+        selector: '[app-submenu]',
+        template: "\n        <ng-template ngFor let-child let-i=\"index\" [ngForOf]=\"(root ? item : item.items)\">\n            <li [ngClass]=\"{'active-menuitem': isActive(i)}\" *ngIf=\"child.visible === false ? false : true\">\n                <a [href]=\"child.url||'#'\" (click)=\"itemClick($event,child,i)\" class=\"ripplelink\" *ngIf=\"!child.routerLink\" [attr.tabindex]=\"!visible ? '-1' : null\" [attr.target]=\"child.target\">\n                    <i class=\"material-icons\">{{child.icon}}</i>\n                    <span>{{child.label}}</span>\n                    <i class=\"material-icons\" *ngIf=\"child.items\">keyboard_arrow_down</i>\n                </a>\n\n                <a (click)=\"itemClick($event,child,i)\" class=\"ripplelink\" *ngIf=\"child.routerLink\"\n                    [routerLink]=\"child.routerLink\" routerLinkActive=\"active-menuitem-routerlink\" [routerLinkActiveOptions]=\"{exact: true}\" [attr.tabindex]=\"!visible ? '-1' : null\" [attr.target]=\"child.target\">\n                    <i class=\"material-icons\">{{child.icon}}</i>\n                    <span>{{child.label}}</span>\n                    <i class=\"material-icons\" *ngIf=\"child.items\">keyboard_arrow_down</i>\n                </a>\n                <ul app-submenu [item]=\"child\" *ngIf=\"child.items\" [@children]=\"isActive(i) ? 'visible' : 'hidden'\" [visible]=\"isActive(i)\" [reset]=\"reset\"></ul>\n            </li>\n        </ng-template>\n    ",
+        animations: [
+            __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_animations__["trigger"])('children', [
+                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_animations__["state"])('hidden', __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_animations__["style"])({
+                    height: '0px'
+                })),
+                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_animations__["state"])('visible', __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_animations__["style"])({
+                    height: '*'
+                })),
+                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_animations__["transition"])('visible => hidden', __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_animations__["animate"])('400ms cubic-bezier(0.86, 0, 0.07, 1)')),
+                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_animations__["transition"])('hidden => visible', __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_animations__["animate"])('400ms cubic-bezier(0.86, 0, 0.07, 1)'))
+            ])
+        ]
+    }),
+    __param(0, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Inject"])(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["forwardRef"])(function () { return __WEBPACK_IMPORTED_MODULE_5__app_component__["a" /* AppComponent */]; }))),
+    __metadata("design:paramtypes", [typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_5__app_component__["a" /* AppComponent */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__app_component__["a" /* AppComponent */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["Router"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["Router"]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_2__angular_common__["Location"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_common__["Location"]) === "function" && _e || Object])
+], AppSubMenu);
+
+var _a, _b, _c, _d, _e;
+//# sourceMappingURL=app.menu.component.js.map
+
+/***/ }),
+
+/***/ 132:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_animations__ = __webpack_require__(128);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app_routing_module__ = __webpack_require__(129);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_forms__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_http__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__app_component__ = __webpack_require__(45);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__app_menu_component__ = __webpack_require__(131);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__app_topbar_component__ = __webpack_require__(134);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__app_footer_component__ = __webpack_require__(130);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__app_profile_component__ = __webpack_require__(133);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__not_found_component__ = __webpack_require__(137);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__angular_router__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13_angular_in_memory_web_api__ = __webpack_require__(140);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__in_memory_data_service__ = __webpack_require__(136);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__environments_environment__ = __webpack_require__(76);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppModule; });
 /* unused harmony export getBackend */
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -90,6 +327,16 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+
+
 
 
 
@@ -100,48 +347,174 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 var AppModule = (function () {
-    function AppModule() {
+    // Diagnostic only: inspect router configuration
+    function AppModule(router) {
+        console.log('Routes: ', JSON.stringify(router.config, undefined, 2));
     }
     return AppModule;
 }());
 AppModule = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_core__["NgModule"])({
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__angular_core__["NgModule"])({
         declarations: [
-            __WEBPACK_IMPORTED_MODULE_5__app_component__["a" /* AppComponent */]
+            __WEBPACK_IMPORTED_MODULE_6__app_component__["a" /* AppComponent */],
+            __WEBPACK_IMPORTED_MODULE_7__app_menu_component__["a" /* AppMenuComponent */],
+            __WEBPACK_IMPORTED_MODULE_7__app_menu_component__["b" /* AppSubMenu */],
+            __WEBPACK_IMPORTED_MODULE_8__app_topbar_component__["a" /* AppTopBar */],
+            __WEBPACK_IMPORTED_MODULE_9__app_footer_component__["a" /* AppFooter */],
+            __WEBPACK_IMPORTED_MODULE_10__app_profile_component__["a" /* InlineProfileComponent */],
+            __WEBPACK_IMPORTED_MODULE_11__not_found_component__["a" /* PageNotFoundComponent */]
         ],
         imports: [
             __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["BrowserModule"],
-            __WEBPACK_IMPORTED_MODULE_2__angular_forms__["FormsModule"],
-            __WEBPACK_IMPORTED_MODULE_3__angular_http__["a" /* HttpModule */],
-            __WEBPACK_IMPORTED_MODULE_4__reports_reports_module__["a" /* ReportsModule */],
-            __WEBPACK_IMPORTED_MODULE_6_angular_in_memory_web_api__["a" /* InMemoryWebApiModule */].forRoot(__WEBPACK_IMPORTED_MODULE_7__in_memory_data_service__["a" /* InMemoryDataService */])
+            __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_animations__["a" /* BrowserAnimationsModule */],
+            __WEBPACK_IMPORTED_MODULE_2__app_routing_module__["a" /* AppRoutingModule */],
+            __WEBPACK_IMPORTED_MODULE_4__angular_forms__["FormsModule"],
+            __WEBPACK_IMPORTED_MODULE_5__angular_http__["a" /* HttpModule */],
+            __WEBPACK_IMPORTED_MODULE_13_angular_in_memory_web_api__["a" /* InMemoryWebApiModule */].forRoot(__WEBPACK_IMPORTED_MODULE_14__in_memory_data_service__["a" /* InMemoryDataService */])
         ],
         providers: [
             {
-                provide: __WEBPACK_IMPORTED_MODULE_3__angular_http__["b" /* XHRBackend */],
+                provide: __WEBPACK_IMPORTED_MODULE_5__angular_http__["b" /* XHRBackend */],
                 useFactory: getBackend,
-                deps: [__WEBPACK_IMPORTED_MODULE_1__angular_core__["Injector"], __WEBPACK_IMPORTED_MODULE_3__angular_http__["c" /* BrowserXhr */], __WEBPACK_IMPORTED_MODULE_3__angular_http__["d" /* XSRFStrategy */], __WEBPACK_IMPORTED_MODULE_3__angular_http__["e" /* ResponseOptions */]]
+                deps: [__WEBPACK_IMPORTED_MODULE_3__angular_core__["Injector"], __WEBPACK_IMPORTED_MODULE_5__angular_http__["c" /* BrowserXhr */], __WEBPACK_IMPORTED_MODULE_5__angular_http__["d" /* XSRFStrategy */], __WEBPACK_IMPORTED_MODULE_5__angular_http__["e" /* ResponseOptions */]]
             }
         ],
-        bootstrap: [__WEBPACK_IMPORTED_MODULE_5__app_component__["a" /* AppComponent */]]
-    })
+        bootstrap: [__WEBPACK_IMPORTED_MODULE_6__app_component__["a" /* AppComponent */]]
+    }),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_12__angular_router__["Router"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_12__angular_router__["Router"]) === "function" && _a || Object])
 ], AppModule);
 
 function getBackend(injector, browser, xsrf, options) {
     {
-        if (__WEBPACK_IMPORTED_MODULE_8__environments_environment__["a" /* environment */].production) {
-            return new __WEBPACK_IMPORTED_MODULE_3__angular_http__["b" /* XHRBackend */](browser, options, xsrf);
+        if (__WEBPACK_IMPORTED_MODULE_15__environments_environment__["a" /* environment */].production) {
+            return new __WEBPACK_IMPORTED_MODULE_5__angular_http__["b" /* XHRBackend */](browser, options, xsrf);
         }
         else {
-            return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_6_angular_in_memory_web_api__["b" /* inMemoryBackendServiceFactory */])(injector, new __WEBPACK_IMPORTED_MODULE_7__in_memory_data_service__["a" /* InMemoryDataService */](), {});
+            return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_13_angular_in_memory_web_api__["b" /* inMemoryBackendServiceFactory */])(injector, new __WEBPACK_IMPORTED_MODULE_14__in_memory_data_service__["a" /* InMemoryDataService */](), {});
         }
     }
 }
+var _a;
 //# sourceMappingURL=app.module.js.map
 
 /***/ }),
 
-/***/ 116:
+/***/ 133:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return InlineProfileComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+var InlineProfileComponent = (function () {
+    function InlineProfileComponent() {
+    }
+    InlineProfileComponent.prototype.onClick = function (event) {
+        this.active = !this.active;
+        event.preventDefault();
+    };
+    return InlineProfileComponent;
+}());
+InlineProfileComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+        selector: 'inline-profile',
+        template: "\n        <div class=\"profile\" [ngClass]=\"{'profile-expanded':active}\">\n            <div class=\"profile-image\"></div>\n            <a href=\"#\" (click)=\"onClick($event)\">\n                <span class=\"profile-name\">Jimmy Carter</span>\n                <i class=\"material-icons\">keyboard_arrow_down</i>\n            </a>\n        </div>\n\n        <ul class=\"ultima-menu profile-menu\" [@menu]=\"active ? 'visible' : 'hidden'\">\n            <li role=\"menuitem\">\n                <a href=\"#\" class=\"ripplelink\" [attr.tabindex]=\"!active ? '-1' : null\">\n                    <i class=\"material-icons\">person</i>\n                    <span>Profile</span>\n                </a>\n            </li>\n            <li role=\"menuitem\">\n                <a href=\"#\" class=\"ripplelink\" [attr.tabindex]=\"!active ? '-1' : null\">\n                    <i class=\"material-icons\">power_settings_new</i>\n                    <span>Logout</span>\n                </a>\n            </li>\n        </ul>\n    ",
+        animations: [
+            __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["trigger"])('menu', [
+                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["state"])('hidden', __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["style"])({
+                    height: '0px'
+                })),
+                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["state"])('visible', __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["style"])({
+                    height: '*'
+                })),
+                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["transition"])('visible => hidden', __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["animate"])('400ms cubic-bezier(0.86, 0, 0.07, 1)')),
+                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["transition"])('hidden => visible', __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["animate"])('400ms cubic-bezier(0.86, 0, 0.07, 1)'))
+            ])
+        ]
+    })
+], InlineProfileComponent);
+
+//# sourceMappingURL=app.profile.component.js.map
+
+/***/ }),
+
+/***/ 134:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__app_component__ = __webpack_require__(45);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppTopBar; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+
+
+var AppTopBar = (function () {
+    function AppTopBar(app) {
+        this.app = app;
+    }
+    return AppTopBar;
+}());
+AppTopBar = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+        selector: 'app-topbar',
+        template: "\n        <div class=\"topbar clearfix\">\n            <div class=\"topbar-left\">            \n                <div class=\"logo\"></div>\n            </div>\n\n            <div class=\"topbar-right\">\n                <a id=\"menu-button\" href=\"#\" (click)=\"app.onMenuButtonClick($event)\">\n                    <i></i>\n                </a>\n            </div>\n        </div>\n    "
+    }),
+    __param(0, __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Inject"])(__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["forwardRef"])(function () { return __WEBPACK_IMPORTED_MODULE_1__app_component__["a" /* AppComponent */]; }))),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__app_component__["a" /* AppComponent */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__app_component__["a" /* AppComponent */]) === "function" && _a || Object])
+], AppTopBar);
+
+var _a;
+//# sourceMappingURL=app.topbar.component.js.map
+
+/***/ }),
+
+/***/ 135:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CanDeactivateGuard; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+var CanDeactivateGuard = (function () {
+    function CanDeactivateGuard() {
+    }
+    CanDeactivateGuard.prototype.canDeactivate = function (component) {
+        return component.canDeactivate ? component.canDeactivate() : true;
+    };
+    return CanDeactivateGuard;
+}());
+CanDeactivateGuard = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])()
+], CanDeactivateGuard);
+
+//# sourceMappingURL=can-deactivate-guard.service.js.map
+
+/***/ }),
+
+/***/ 136:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -276,6 +649,93 @@ var InMemoryDataService = (function () {
                 'value': 35
             }
         ];
+        var SeattleCityReport = [
+            {
+                'id': '20160101-20170101-CityReport-ESL-2016',
+                'label': 'Counts of members who accessed at least 12 hours of ESL classes',
+                'year': 2016,
+                'Jan': 10,
+                'Feb': 10,
+                'Mar': 8,
+                'Apr': 19,
+                'May': 14,
+                'Jun': 10,
+                'Jul': 10,
+                'Aug': 8,
+                'Sep': 2,
+                'Oct': 10,
+                'Nov': 14,
+                'Dec': 5
+            },
+            {
+                'id': '20160101-20170101-CityReport-FinEd-2016',
+                'label': 'Counts of members who accessed finanacial literacy',
+                'year': 2016,
+                'Jan': 0,
+                'Feb': 23,
+                'Mar': 0,
+                'Apr': 0,
+                'May': 0,
+                'Jun': 0,
+                'Jul': 0,
+                'Aug': 0,
+                'Sep': 0,
+                'Oct': 0,
+                'Nov': 25,
+                'Dec': 0
+            },
+            {
+                'id': '20160101-20170101-CityReport-NewEnrolls-2016',
+                'label': 'Newly enrolled in program (within time range)',
+                'year': 2016,
+                'Jan': 178,
+                'Feb': 47,
+                'Mar': 50,
+                'Apr': 75,
+                'May': 56,
+                'Jun': 51,
+                'Jul': 26,
+                'Aug': 22,
+                'Sep': 25,
+                'Oct': 30,
+                'Nov': 21,
+                'Dec': 23
+            },
+            {
+                'id': '20160101-20170101-CityReport-Training-2016',
+                'label': 'Counts of members who participated in job skill training or workshops',
+                'year': 2016,
+                'Jan': 13,
+                'Feb': 33,
+                'Mar': 15,
+                'Apr': 25,
+                'May': 12,
+                'Jun': 13,
+                'Jul': 2,
+                'Aug': 16,
+                'Sep': 10,
+                'Oct': 11,
+                'Nov': 22,
+                'Dec': 3
+            },
+            {
+                'id': '20160101-20170101-CityReport-UndupCount-2016',
+                'label': 'A2H1-0 count of unduplicated individuals securing day labor employment this month',
+                'year': 2016,
+                'Jan': 92,
+                'Feb': 114,
+                'Mar': 138,
+                'Apr': 157,
+                'May': 155,
+                'Jun': 157,
+                'Jul': 161,
+                'Aug': 146,
+                'Sep': 136,
+                'Oct': 125,
+                'Nov': 121,
+                'Dec': 103
+            }
+        ];
         var reports = [
             {
                 'name': 'DispatchesByJob',
@@ -343,6 +803,94 @@ var InMemoryDataService = (function () {
                         'visible': true
                     }
                 ]
+            },
+            {
+                'id': 21,
+                'name': 'SeattleCityReport',
+                'title': null,
+                'commonName': 'Seattle City report',
+                'description': 'Casa Latina\'s monthly numbers for the City of Seattle',
+                'sqlquery': 'select\r\nconvert(varchar(8), @startDate, 112) + \'-\' + convert(varchar(8), @endDate, 112) + \'-CityReport-NewEnrolls-\' + convert(varchar(4), [year]) as id, \r\n    \'Newly enrolled in program (within time range)\' as label, \r\n    cast(year as int) as year, \r\n\tcast([1] as int) as \'Jan\', \r\n\tcast([2] as int) as \'Feb\', \r\n\tcast([3] as int) as \'Mar\', \r\n\tcast([4] as int) as \'Apr\',\r\n\tcast([5] as int) as \'May\', \r\n\tcast([6] as int) as \'Jun\', \r\n\tcast([7] as int) as \'Jul\', \r\n\tcast([8] as int) as \'Aug\',\r\n\tcast([9] as int) as \'Sep\', \r\n\tcast([10] as int) as \'Oct\', \r\n\tcast([11] as int) as \'Nov\', \r\n\tcast([12] as int) as \'Dec\'\r\nfrom\r\n(\r\n\tselect min(year(signindate)) as year, min(month(signindate)) as month, cardnum\r\n\tfrom \r\n\t(\r\n\t\tSELECT MIN(dateforsignin) AS signindate, dwccardnum as cardnum\r\n\t\tFROM dbo.WorkerSignins\r\n\t\tWHERE dateforsignin >= @startdate AND\r\n\t\tdateforsignin < @EnDdate\r\n\t\tGROUP BY dwccardnum\r\n\r\n\t\tunion \r\n\r\n\t\tselect min(dateforsignin) as singindate, dwccardnum as cardnum\r\n\t\tfrom activitysignins asi\r\n\t\twhere dateforsignin >= @startdate\r\n\t\tand dateforsignin < @enddate\r\n\t\tgroup by dwccardnum\r\n\t) \r\n\tas result_set\r\n\tgroup by  cardnum\r\n) as foo\r\nPIVOT  \r\n(  \r\ncount (cardnum)  \r\nFOR month IN  \r\n( [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12] )  \r\n) AS pvt \r\n\r\nunion \r\n\r\nselect\r\nconvert(varchar(8), @startDate, 112) + \'-\' + convert(varchar(8), @endDate, 112) + \'-CityReport-FinEd-\' + convert(varchar(4), [year]) as id, \r\n    \'Counts of members who accessed finanacial literacy\' as label, \r\n    cast(year as int) as year, \r\n\tcast([1] as int) as \'Jan\', \r\n\tcast([2] as int) as \'Feb\', \r\n\tcast([3] as int) as \'Mar\', \r\n\tcast([4] as int) as \'Apr\',\r\n\tcast([5] as int) as \'May\', \r\n\tcast([6] as int) as \'Jun\', \r\n\tcast([7] as int) as \'Jul\', \r\n\tcast([8] as int) as \'Aug\',\r\n\tcast([9] as int) as \'Sep\', \r\n\tcast([10] as int) as \'Oct\', \r\n\tcast([11] as int) as \'Nov\', \r\n\tcast([12] as int) as \'Dec\'\r\nfrom\r\n(\r\n\tselect min(year(signindate)) as year, min(month(signindate)) as month, cardnum\r\n\tfrom \r\n\t(\r\n\t\tSELECT ASIs.dwccardnum as cardnum, MIN(dateStart) as signindate\r\n\t\tFROM dbo.Activities Acts\r\n\t\tJOIN dbo.ActivitySignins ASIs ON Acts.ID = ASIs.ActivityID\r\n\t\tJOIN dbo.Lookups Ls ON Acts.name = Ls.ID\r\n\t\tWHERE Ls.ID = 179 AND dateStart >= @startDate AND dateStart <= @endDate\r\n\r\n\t\tGROUP BY ASIs.dwccardnum\r\n\t) \r\n\tas result_set\r\n\tgroup by  cardnum\r\n) as foo\r\nPIVOT  \r\n(  \r\ncount (cardnum)  \r\nFOR month IN  \r\n( [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12] )  \r\n) AS pvt \r\n\r\nunion \r\n\r\nselect\r\nconvert(varchar(8), @startDate, 112) + \'-\' + convert(varchar(8), @endDate, 112) + \'-CityReport-Training-\' + convert(varchar(4), [year]) as id, \r\n    \'Counts of members who participated in job skill training or workshops\' as label, \r\n    cast(year as int) as year, \r\n\tcast([1] as int) as \'Jan\', \r\n\tcast([2] as int) as \'Feb\', \r\n\tcast([3] as int) as \'Mar\', \r\n\tcast([4] as int) as \'Apr\',\r\n\tcast([5] as int) as \'May\', \r\n\tcast([6] as int) as \'Jun\', \r\n\tcast([7] as int) as \'Jul\', \r\n\tcast([8] as int) as \'Aug\',\r\n\tcast([9] as int) as \'Sep\', \r\n\tcast([10] as int) as \'Oct\', \r\n\tcast([11] as int) as \'Nov\', \r\n\tcast([12] as int) as \'Dec\'\r\nfrom\r\n(\r\n\tselect min(year(signindate)) as year, min(month(signindate)) as month, cardnum\r\n\tfrom \r\n\t(\r\n\t\tSELECT ASIs.dwccardnum as cardnum, MIN(dateStart) as signindate\r\n\t\tFROM dbo.Activities Acts\r\n\t\tJOIN dbo.ActivitySignins ASIs ON Acts.ID = ASIs.ActivityID\r\n\t\tJOIN dbo.Lookups Ls ON Acts.name = Ls.ID\r\n\t\tWHERE dateStart >= @startdate AND dateStart <= @enddate AND\r\n\t\t(Ls.ID = 182 OR Ls.ID = 181 OR Ls.ID = 180\r\n\t\tOR Ls.ID = 179 OR Ls.ID = 178 OR Ls.ID = 134\r\n\t\tOR Ls.ID = 168 OR Ls.ID = 156 OR Ls.ID = 152\r\n\t\tOR Ls.ID = 145 OR Ls.ID = 135 OR Ls.ID = 104)\r\n\r\nGROUP BY dwccardnum\r\n\t) \r\n\tas result_set\r\n\tgroup by  cardnum\r\n) as foo\r\nPIVOT  \r\n(  \r\ncount (cardnum)  \r\nFOR month IN  \r\n( [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12] )  \r\n) AS pvt \r\n\r\nunion \r\n\r\nselect\r\nconvert(varchar(8), @startDate, 112) + \'-\' + convert(varchar(8), @endDate, 112) + \'-CityReport-ESL-\' + convert(varchar(4), [year]) as id, \r\n    \'Counts of members who accessed at least 12 hours of ESL classes\' as label, \r\n    cast(year as int) as year, \r\n\tcast([1] as int) as \'Jan\', \r\n\tcast([2] as int) as \'Feb\', \r\n\tcast([3] as int) as \'Mar\', \r\n\tcast([4] as int) as \'Apr\',\r\n\tcast([5] as int) as \'May\', \r\n\tcast([6] as int) as \'Jun\', \r\n\tcast([7] as int) as \'Jul\', \r\n\tcast([8] as int) as \'Aug\',\r\n\tcast([9] as int) as \'Sep\', \r\n\tcast([10] as int) as \'Oct\', \r\n\tcast([11] as int) as \'Nov\', \r\n\tcast([12] as int) as \'Dec\'\r\nfrom\r\n(\r\n\tselect year, month, cardnum\r\n\tfrom \r\n\t(\r\n\t\t\tSELECT  year(dateStart) as year, month(datestart) as month, dwccardnum as cardnum,\r\n\t\t\tsum(DATEDIFF( minute, dateStart, dateEnd )) as Minutes\r\n\t\t\tfrom dbo.Activities Acts\r\n\r\n\t\t\tJOIN dbo.Lookups Ls ON Acts.name = Ls.ID\r\n\t\t\tJOIN dbo.ActivitySignins ASIs ON Acts.ID = ASIs.ActivityID\r\n\t\t\tWHERE text_en LIKE \'%English%\'\r\n\t\t\tAND dateStart >= @startdate AND dateend <= @EnDdate\r\n\t\t\tgroup by year(datestart), month(datestart), dwccardnum\r\n\t) as foo\r\n\twhere foo.minutes >= 720\r\n\r\n) as foo\r\nPIVOT  \r\n(  \r\ncount (cardnum)  \r\nFOR month IN  \r\n( [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12] )  \r\n) AS pvt\r\n\r\nunion \r\n\r\nselect\r\nconvert(varchar(8), @startDate, 112) + \'-\' + convert(varchar(8), @endDate, 112) + \'-CityReport-UndupCount-\' + convert(varchar(4), [year]) as id, \r\n\r\n    \'A2H1-0 count of unduplicated individuals securing day labor employment this month\' as label, \r\n    cast(year as int) as year, \r\n\tcast([1] as int) as \'Jan\', \r\n\tcast([2] as int) as \'Feb\', \r\n\tcast([3] as int) as \'Mar\', \r\n\tcast([4] as int) as \'Apr\',\r\n\tcast([5] as int) as \'May\', \r\n\tcast([6] as int) as \'Jun\', \r\n\tcast([7] as int) as \'Jul\', \r\n\tcast([8] as int) as \'Aug\',\r\n\tcast([9] as int) as \'Sep\', \r\n\tcast([10] as int) as \'Oct\', \r\n\tcast([11] as int) as \'Nov\', \r\n\tcast([12] as int) as \'Dec\'\r\nfrom\r\n(\r\n\tSELECT count(distinct(dwccardnum)) AS cardnum, year(dateTimeofWork) as year, month(dateTimeofWork) AS month\r\n\tfrom dbo.WorkAssignments WAs\r\n\tJOIN dbo.WorkOrders WOs ON WAs.workOrderID = WOs.ID\r\n\tJOIN dbo.Workers Ws on WAs.workerAssignedID = Ws.ID\r\n\tjoin dbo.lookups l on l.id = wos.status\r\n\tWHERE dateTimeofWork >= @startdate \r\n\tand dateTimeofWork <= @EnDdate\r\n\tand l.text_EN = \'Completed\'\r\n\tgroup by year(dateTimeofWork), month(dateTimeofWork)\r\n\r\n) as foo\r\nPIVOT  \r\n(  \r\nsum (cardnum)  \r\nFOR month IN  \r\n( [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12] )  \r\n) AS pvt',
+                'category': 'site-specific',
+                'subcategory': null,
+                'data': SeattleCityReport,
+                'columns': [
+                    {
+                        'field': 'id',
+                        'header': 'id',
+                        'visible': false
+                    },
+                    {
+                        'field': 'label',
+                        'header': 'label',
+                        'visible': true
+                    },
+                    {
+                        'field': 'year',
+                        'header': 'year',
+                        'visible': true
+                    },
+                    {
+                        'field': 'Jan',
+                        'header': 'Jan',
+                        'visible': true
+                    },
+                    {
+                        'field': 'Feb',
+                        'header': 'Feb',
+                        'visible': true
+                    },
+                    {
+                        'field': 'Mar',
+                        'header': 'Mar',
+                        'visible': true
+                    },
+                    {
+                        'field': 'Apr',
+                        'header': 'Apr',
+                        'visible': true
+                    },
+                    {
+                        'field': 'May',
+                        'header': 'May',
+                        'visible': true
+                    },
+                    {
+                        'field': 'Jun',
+                        'header': 'Jun',
+                        'visible': true
+                    },
+                    {
+                        'field': 'Jul',
+                        'header': 'Jul',
+                        'visible': true
+                    },
+                    {
+                        'field': 'Aug',
+                        'header': 'Aug',
+                        'visible': true
+                    },
+                    {
+                        'field': 'Sep',
+                        'header': 'Sep',
+                        'visible': true
+                    },
+                    {
+                        'field': 'Oct',
+                        'header': 'Oct',
+                        'visible': true
+                    },
+                    {
+                        'field': 'Nov',
+                        'header': 'Nov',
+                        'visible': true
+                    },
+                    {
+                        'field': 'Dec',
+                        'header': 'Dec',
+                        'visible': true
+                    }
+                ]
             }
         ];
         return { reports: reports };
@@ -367,133 +915,44 @@ var InMemoryDataService = (function () {
 
 /***/ }),
 
-/***/ 117:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SearchOptions; });
-var SearchOptions = (function () {
-    function SearchOptions() {
-    }
-    return SearchOptions;
-}());
-
-//# sourceMappingURL=search-options.js.map
-
-/***/ }),
-
-/***/ 118:
+/***/ 137:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__reports_service__ = __webpack_require__(120);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_search_options__ = __webpack_require__(117);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ReportsComponent; });
-/* unused harmony export MySelectItem */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PageNotFoundComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
 
-
-
-var ReportsComponent = (function () {
-    function ReportsComponent(reportsService) {
-        this.reportsService = reportsService;
-        this.display = false;
-        this.o = new __WEBPACK_IMPORTED_MODULE_2__models_search_options__["a" /* SearchOptions */]();
-        this.selectedReportID = '1';
-        this.title = 'loading';
-        this.description = 'loading...';
-        this.o.beginDate = '1/1/2016';
-        this.o.endDate = '1/1/2017';
-        this.reportsDropDown = [];
-        this.reportsDropDown.push({ label: 'Select Report', value: null });
-        this.cols = [
-            { field: 'foo1', header: 'loading' },
-            { field: 'foo2', header: 'loading' },
-            { field: 'foo3', header: 'loading' }
-        ];
+var PageNotFoundComponent = (function () {
+    function PageNotFoundComponent() {
     }
-    ReportsComponent.prototype.showDialog = function () {
-        this.updateDialog();
-        this.display = true;
-    };
-    ReportsComponent.prototype.updateDialog = function () {
-        var _this = this;
-        this.selectedReport = this.reportsService.listData.filter(function (x) { return x.id === Number(_this.selectedReportID); });
-        // TODO catch exception if not found
-        this.description = this.selectedReport[0].description;
-        this.title = this.selectedReport[0].title || this.selectedReport[0].commonName;
-        this.name = this.selectedReport[0].name;
-        this.cols = this.selectedReport[0].columns.filter(function (a) { return a.visible === true; });
-    };
-    ReportsComponent.prototype.ngOnInit = function () {
-        var _this = this;
-        this.reports$ = this.reportsService.subscribeToDataService();
-        this.reports$.subscribe(function (listData) { return _this.reportsDropDown = listData.map(function (r) { return new MySelectItem(r.commonName, r.id.toString()); }); }, function (error) { return _this.errorMessage = error; }, function () { return console.log('ngOnInit onCompleted'); });
-        this.getView();
-    };
-    ReportsComponent.prototype.getView = function () {
-        var _this = this;
-        this.reportsService.getReport(this.selectedReportID.toString(), this.o)
-            .subscribe(function (data) {
-            _this.viewData = data;
-            _this.updateDialog();
-        }, function (error) { return _this.errorMessage = error; }, function () { return console.log('getView onCompleted'); });
-    };
-    ReportsComponent.prototype.getList = function () {
-        this.reportsService.getList();
-        console.log('getList called');
-    };
-    ReportsComponent.prototype.getExport = function (dt) {
-        dt.exportFilename = this.name + '_' + this.o.beginDate.toString() + '_to_' + this.o.endDate.toString();
-        dt.exportCSV();
-    };
-    return ReportsComponent;
+    return PageNotFoundComponent;
 }());
-ReportsComponent = __decorate([
+PageNotFoundComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
-        selector: 'app-reports',
-        template: __webpack_require__(250),
-        styles: [__webpack_require__(181)],
-        providers: [__WEBPACK_IMPORTED_MODULE_1__reports_service__["a" /* ReportsService */]]
-    }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__reports_service__["a" /* ReportsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__reports_service__["a" /* ReportsService */]) === "function" && _a || Object])
-], ReportsComponent);
+        template: '<h2>Page not found</h2>'
+    })
+], PageNotFoundComponent);
 
-var MySelectItem = (function () {
-    function MySelectItem(label, value) {
-        this.label = label;
-        this.value = value;
-    }
-    return MySelectItem;
-}());
-
-var _a;
-//# sourceMappingURL=reports.component.js.map
+//# sourceMappingURL=not-found.component.js.map
 
 /***/ }),
 
-/***/ 119:
+/***/ 138:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__reports_component__ = __webpack_require__(118);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_forms__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_http__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_platform_browser_animations__ = __webpack_require__(113);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_primeng_primeng__ = __webpack_require__(247);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_primeng_primeng___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_primeng_primeng__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ReportsModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_rxjs_add_observable_of__ = __webpack_require__(273);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_rxjs_add_observable_of___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_rxjs_add_observable_of__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SelectivePreloadingStrategy; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -503,61 +962,71 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
-
-
-
-
-var ReportsModule = (function () {
-    function ReportsModule() {
+var SelectivePreloadingStrategy = (function () {
+    function SelectivePreloadingStrategy() {
+        this.preloadedModules = [];
     }
-    return ReportsModule;
+    SelectivePreloadingStrategy.prototype.preload = function (route, load) {
+        if (route.data && route.data['preload']) {
+            // add the route path to the preloaded module array
+            this.preloadedModules.push(route.path);
+            // log the route path to the console
+            console.log('Preloaded: ' + route.path);
+            return load();
+        }
+        else {
+            return __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__["Observable"].of(null);
+        }
+    };
+    return SelectivePreloadingStrategy;
 }());
-ReportsModule = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["NgModule"])({
-        declarations: [
-            __WEBPACK_IMPORTED_MODULE_2__reports_component__["a" /* ReportsComponent */]
-        ],
-        imports: [
-            __WEBPACK_IMPORTED_MODULE_1__angular_common__["CommonModule"],
-            __WEBPACK_IMPORTED_MODULE_6_primeng_primeng__["TabViewModule"],
-            __WEBPACK_IMPORTED_MODULE_6_primeng_primeng__["ChartModule"],
-            __WEBPACK_IMPORTED_MODULE_6_primeng_primeng__["DataTableModule"],
-            __WEBPACK_IMPORTED_MODULE_6_primeng_primeng__["SharedModule"],
-            __WEBPACK_IMPORTED_MODULE_6_primeng_primeng__["CalendarModule"],
-            __WEBPACK_IMPORTED_MODULE_3__angular_forms__["FormsModule"],
-            __WEBPACK_IMPORTED_MODULE_4__angular_http__["a" /* HttpModule */],
-            __WEBPACK_IMPORTED_MODULE_4__angular_http__["l" /* JsonpModule */],
-            __WEBPACK_IMPORTED_MODULE_6_primeng_primeng__["ButtonModule"],
-            __WEBPACK_IMPORTED_MODULE_6_primeng_primeng__["DropdownModule"],
-            __WEBPACK_IMPORTED_MODULE_6_primeng_primeng__["DialogModule"],
-            __WEBPACK_IMPORTED_MODULE_5__angular_platform_browser_animations__["a" /* BrowserAnimationsModule */]
-        ],
-        exports: [
-            __WEBPACK_IMPORTED_MODULE_2__reports_component__["a" /* ReportsComponent */]
-        ],
-        bootstrap: [__WEBPACK_IMPORTED_MODULE_2__reports_component__["a" /* ReportsComponent */]]
-    })
-], ReportsModule);
+SelectivePreloadingStrategy = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__angular_core__["Injectable"])()
+], SelectivePreloadingStrategy);
 
-//# sourceMappingURL=reports.module.js.map
+//# sourceMappingURL=selective-preloading-strategy.js.map
 
 /***/ }),
 
-/***/ 120:
+/***/ 199:
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(20)(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ 269:
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"layout-wrapper\" [ngClass]=\"{'layout-compact':layoutCompact}\">\r\n\r\n    <div #layoutContainer class=\"layout-container\" \r\n            [ngClass]=\"{'menu-layout-static': !isOverlay(),\r\n            'menu-layout-overlay': isOverlay(),\r\n            'layout-menu-overlay-active': overlayMenuActive,\r\n            'menu-layout-horizontal': isHorizontal(),\r\n            'layout-menu-static-inactive': staticMenuDesktopInactive,\r\n            'layout-menu-static-active': staticMenuMobileActive}\">\r\n\r\n        <app-topbar></app-topbar>\r\n\r\n        <div class=\"layout-menu\" [ngClass]=\"{'layout-menu-dark':darkMenu}\" (click)=\"onMenuClick($event)\">\r\n            <div #layoutMenuScroller class=\"nano\">\r\n                <div class=\"nano-content menu-scroll-content\">\r\n                    <inline-profile *ngIf=\"profileMode=='inline'&&!isHorizontal()\"></inline-profile>\r\n                    <app-menu [reset]=\"resetMenu\"></app-menu>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        \r\n        <div class=\"layout-main\">\r\n            <router-outlet></router-outlet>\r\n            \r\n            <app-footer></app-footer>\r\n        </div>\r\n        \r\n        <div class=\"layout-mask\"></div>\r\n    </div>\r\n\r\n</div>"
+
+/***/ }),
+
+/***/ 307:
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(108);
+
+
+/***/ }),
+
+/***/ 45:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_toPromise__ = __webpack_require__(257);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_toPromise__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__ = __webpack_require__(256);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_catch__ = __webpack_require__(254);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_catch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_catch__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject__ = __webpack_require__(90);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ReportsService; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -568,133 +1037,139 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
-
-
-
-
-
-var ReportsService = (function () {
-    function ReportsService(http) {
-        this.http = http;
-        this.listData = new Array();
-        this.initializeDataService();
+var MenuOrientation;
+(function (MenuOrientation) {
+    MenuOrientation[MenuOrientation["STATIC"] = 0] = "STATIC";
+    MenuOrientation[MenuOrientation["OVERLAY"] = 1] = "OVERLAY";
+    MenuOrientation[MenuOrientation["HORIZONTAL"] = 2] = "HORIZONTAL";
+})(MenuOrientation || (MenuOrientation = {}));
+;
+var AppComponent = (function () {
+    function AppComponent(renderer) {
+        this.renderer = renderer;
+        this.layoutCompact = false;
+        this.layoutMode = MenuOrientation.STATIC;
+        this.darkMenu = true;
+        this.profileMode = 'inline';
     }
-    ReportsService.prototype.initializeDataService = function () {
-        if (!this.listData$) {
-            this.listData$ = new __WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject__["BehaviorSubject"](new Array());
-            this.getList();
-        }
-    };
-    ReportsService.prototype.subscribeToDataService = function () {
-        return this.listData$.asObservable();
-    };
-    ReportsService.prototype.getReport = function (report, o) {
-        // TODO throw exception if report is not populated
-        var params = this.encodeData(o);
-        var uri = '/api/reports';
-        if (report) {
-            uri = uri + '/' + report;
-        }
-        if (report && params) {
-            uri = uri + '?' + params;
-        }
-        console.log('reportsService.getReport: ' + uri);
-        return this.http.get(uri)
-            .map(function (res) { return res.json().data; })
-            .catch(this.handleError);
-    };
-    ReportsService.prototype.getList = function () {
+    AppComponent.prototype.ngAfterViewInit = function () {
         var _this = this;
-        var uri = '/api/reports';
-        console.log('reportsService.getList: ' + uri);
-        this.http.get(uri)
-            .map(function (res) { return res.json().data; })
-            .catch(this.handleError)
-            .subscribe(function (data) {
-            _this.listData = data;
-            _this.listData$.next(data);
-        }, function (error) { return console.log('Error subscribing to DataService: ' + error); });
+        this.layoutContainer = this.layourContainerViewChild.nativeElement;
+        this.layoutMenuScroller = this.layoutMenuScrollerViewChild.nativeElement;
+        //hides the horizontal submenus or top menu if outside is clicked
+        this.documentClickListener = this.renderer.listenGlobal('body', 'click', function (event) {
+            if (!_this.topbarItemClick) {
+                _this.activeTopbarItem = null;
+                _this.topbarMenuActive = false;
+            }
+            if (!_this.menuClick && _this.isHorizontal()) {
+                _this.resetMenu = true;
+            }
+            _this.topbarItemClick = false;
+            _this.menuClick = false;
+        });
+        setTimeout(function () {
+            jQuery(_this.layoutMenuScroller).nanoScroller({ flash: true });
+        }, 10);
     };
-    ReportsService.prototype.handleError = function (error) {
-        console.error('ERROR', error);
-        return Promise.reject(error.message || error);
+    AppComponent.prototype.onMenuButtonClick = function (event) {
+        this.rotateMenuButton = !this.rotateMenuButton;
+        this.topbarMenuActive = false;
+        if (this.layoutMode === MenuOrientation.OVERLAY) {
+            this.overlayMenuActive = !this.overlayMenuActive;
+        }
+        else {
+            if (this.isDesktop())
+                this.staticMenuDesktopInactive = !this.staticMenuDesktopInactive;
+            else
+                this.staticMenuMobileActive = !this.staticMenuMobileActive;
+        }
+        event.preventDefault();
     };
-    ReportsService.prototype.encodeData = function (data) {
-        return Object.keys(data).map(function (key) {
-            return [key, data[key]].map(encodeURIComponent).join('=');
-        }).join('&');
+    AppComponent.prototype.onMenuClick = function ($event) {
+        var _this = this;
+        this.menuClick = true;
+        this.resetMenu = false;
+        if (!this.isHorizontal()) {
+            setTimeout(function () {
+                jQuery(_this.layoutMenuScroller).nanoScroller();
+            }, 500);
+        }
     };
-    return ReportsService;
+    AppComponent.prototype.onTopbarMenuButtonClick = function (event) {
+        this.topbarItemClick = true;
+        this.topbarMenuActive = !this.topbarMenuActive;
+        if (this.overlayMenuActive || this.staticMenuMobileActive) {
+            this.rotateMenuButton = false;
+            this.overlayMenuActive = false;
+            this.staticMenuMobileActive = false;
+        }
+        event.preventDefault();
+    };
+    AppComponent.prototype.onTopbarItemClick = function (event, item) {
+        this.topbarItemClick = true;
+        if (this.activeTopbarItem === item)
+            this.activeTopbarItem = null;
+        else
+            this.activeTopbarItem = item;
+        event.preventDefault();
+    };
+    AppComponent.prototype.isTablet = function () {
+        var width = window.innerWidth;
+        return width <= 1024 && width > 640;
+    };
+    AppComponent.prototype.isDesktop = function () {
+        return window.innerWidth > 1024;
+    };
+    AppComponent.prototype.isMobile = function () {
+        return window.innerWidth <= 640;
+    };
+    AppComponent.prototype.isOverlay = function () {
+        return this.layoutMode === MenuOrientation.OVERLAY;
+    };
+    AppComponent.prototype.isHorizontal = function () {
+        return this.layoutMode === MenuOrientation.HORIZONTAL;
+    };
+    AppComponent.prototype.changeToStaticMenu = function () {
+        this.layoutMode = MenuOrientation.STATIC;
+    };
+    AppComponent.prototype.changeToOverlayMenu = function () {
+        this.layoutMode = MenuOrientation.OVERLAY;
+    };
+    AppComponent.prototype.changeToHorizontalMenu = function () {
+        this.layoutMode = MenuOrientation.HORIZONTAL;
+    };
+    AppComponent.prototype.ngOnDestroy = function () {
+        if (this.documentClickListener) {
+            this.documentClickListener();
+        }
+        jQuery(this.layoutMenuScroller).nanoScroller({ flash: true });
+    };
+    return AppComponent;
 }());
-ReportsService = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["m" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["m" /* Http */]) === "function" && _a || Object])
-], ReportsService);
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["ViewChild"])('layoutContainer'),
+    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["ElementRef"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["ElementRef"]) === "function" && _a || Object)
+], AppComponent.prototype, "layourContainerViewChild", void 0);
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["ViewChild"])('layoutMenuScroller'),
+    __metadata("design:type", typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["ElementRef"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["ElementRef"]) === "function" && _b || Object)
+], AppComponent.prototype, "layoutMenuScrollerViewChild", void 0);
+AppComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+        selector: 'app-root',
+        template: __webpack_require__(269),
+        styles: [__webpack_require__(199)]
+    }),
+    __metadata("design:paramtypes", [typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["Renderer"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["Renderer"]) === "function" && _c || Object])
+], AppComponent);
 
-var _a;
-//# sourceMappingURL=reports.service.js.map
-
-/***/ }),
-
-/***/ 180:
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(23)(false);
-// imports
-
-
-// module
-exports.push([module.i, "", ""]);
-
-// exports
-
-
-/*** EXPORTS FROM exports-loader ***/
-module.exports = module.exports.toString();
+var _a, _b, _c;
+//# sourceMappingURL=app.component.js.map
 
 /***/ }),
 
-/***/ 181:
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(23)(false);
-// imports
-
-
-// module
-exports.push([module.i, "", ""]);
-
-// exports
-
-
-/*** EXPORTS FROM exports-loader ***/
-module.exports = module.exports.toString();
-
-/***/ }),
-
-/***/ 249:
-/***/ (function(module, exports) {
-
-module.exports = "<h1>\r\n  {{title}}\r\n</h1>\r\n<app-reports>loading reports...</app-reports>\r\n"
-
-/***/ }),
-
-/***/ 250:
-/***/ (function(module, exports) {
-
-module.exports = "<div class=\"ui-g\">\r\n  <div class=\"ui-g-12 ui-md-6\">\r\n    <p-dropdown [options]=\"reportsDropDown\" (onChange)=\"getView()\" [(ngModel)]=\"selectedReportID\" [filter]=\"true\" [style]=\"{'width':'20em'}\"></p-dropdown>\r\n    <!--<button pButton type=\"button\" icon=\"fa-refresh\" (click)=\"getList()\" iconPos=\"left\"></button>-->\r\n  </div>\r\n\r\n  <div class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n    <p-calendar  placeholder=\"Start date\" (onSelect)=\"getView()\" (onBlur)=\"getView()\" [(ngModel)]=\"o.beginDate\" [showIcon]=\"true\" dataType=\"string\"></p-calendar>\r\n  </div>\r\n  <div class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n    <p-calendar placeholder=\"End date\" (onSelect)=\"getView()\" (onBlur)=\"getView()\" [(ngModel)]=\"o.endDate\" [showIcon]=\"true\" dataType=\"string\"></p-calendar>\r\n  </div>\r\n\r\n</div>\r\n<p-dialog header=\"{{title}}\" [(visible)]=\"display\">\r\n  {{description}}\r\n</p-dialog>\r\n<div>\r\n<p-dataTable\r\n  #dt\r\n  [value]=\"viewData\"\r\n  sortField=\"value\"\r\n  sortOrder=\"-1\"\r\n  sortMode=\"single\">\r\n  <p-header>\r\n    <div class=\"ui-helper-clearfix\">\r\n      <button type=\"button\" pButton icon=\"fa-download\" iconPos=\"left\" label=\"CSV\" (click)=\"getExport(dt)\" style=\"float:left\"></button>\r\n      <button pButton type=\"button\" icon=\"fa-question\" (click)=\"showDialog()\" iconPos=\"left\" style=\"float:right\"></button>\r\n    </div>\r\n  </p-header>\r\n  <p-column *ngFor=\"let col of cols\" [field]=\"col.field\" [header]=\"col.header\"></p-column>\r\n</p-dataTable>\r\n</div>\r\n"
-
-/***/ }),
-
-/***/ 299:
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(107);
-
-
-/***/ }),
-
-/***/ 73:
+/***/ 76:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -706,5 +1181,5 @@ var environment = {
 
 /***/ })
 
-},[299]);
+},[307]);
 //# sourceMappingURL=main.bundle.js.map

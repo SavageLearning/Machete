@@ -35,7 +35,7 @@
                     <li></li>
                     @if (Html.IsInRole(Html.Role_AM()))
                     {
-                        <li>@Html.ActionLink(@Machete.Web.Resources.Shared.reportstab + " v2", "Index", "ReportsV2", null, new { id = "menulinkreportsv2" })</li>
+                        <li>@Html.ActionLink("V2", "Index", "V2", null, new { id = "menulinkV2" })</li>
                         <li>@Html.ActionLink(@Machete.Web.Resources.Shared.reportstab, "Index", "Reports", null, new { id = "menulinkreports" })</li>
                         <li>@Html.ActionLink(@Machete.Web.Resources.Shared.emailstab, "Index", "Email", null, new { id = "menulinkemails" })</li>
                     }

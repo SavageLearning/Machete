@@ -1,0 +1,468 @@
+.landing-wrapper {
+    
+    .ui-button {   
+        @include border-radius(3px);
+             
+        &:hover {
+            background-color: $accentDarkColor;
+        }
+    }
+        
+    #header {
+        width: 100%;
+        min-height: 400px;
+        background:  url("../images/landing/landing-header.png") top left no-repeat #f7f7f7;
+        background-size: 100% auto;
+        
+        .header-top {
+            width: 960px;
+            margin: 0 auto;
+            padding: 30px 0px;
+            
+            .logo {
+                display: inline-block;
+                vertical-align: middle;
+                width: 200px;
+                height: 30px;
+                background: url("../images/logo.png") top left no-repeat;
+            }
+            
+            #menu {
+                float: right;
+                list-style: none;
+                margin: 0;
+                padding: 0;
+                
+                li {
+                    float: left;
+                    display: block;
+                    margin-left: 30px;
+                    
+                    a {
+                        color: #ffffff;
+                    }
+                    
+                    i {
+                        display: none;
+                    }
+                }
+                
+                &.lmenu-active {
+                    display: block;
+                }
+            }
+            
+            #menu-button {
+                height: 36px;
+                margin-top: -2px;
+                float: right;
+                color: #ffffff;
+                display: none;
+                
+                i {
+                    font-size: 36px;
+                }
+            }
+        }
+        
+        .header-content {
+            width: 960px;
+            margin: 0 auto;
+            text-align: center;
+            
+            h1 {
+                margin: 75px 0px 50px 0px;
+                font-weight: 400;
+                color: #ffffff;
+                line-height: 36px;
+            }
+        }
+    }
+    
+    #features {
+        width: 960px;
+        margin: 0 auto;
+        padding: 50px 0px;
+        text-align: center;
+        
+        h2 {
+            font-weight: 400;
+            line-height: 28px;
+        }
+        
+        h3 {
+            font-weight: 400;
+        }
+        
+        p {
+            color: $textSecondaryColor;
+        }
+        
+        .ui-g-12 {
+            padding: 2em .5em;
+        }
+        
+        .feature-icon {
+            display: inline-block;
+            @include border-radius(50%);
+            background-color: #f4f8fc;
+            box-sizing: border-box;
+            width: 100px;
+            height: 100px;
+            text-align: center;
+            @include transition(background-color .3s);
+            
+            i {
+                margin-top: 30px;
+                font-size: 36px;
+            }
+            
+            &:hover {
+                background-color: #e91e63;
+                
+                i {
+                    color: #ffffff;
+                }
+            }
+        }
+    }
+    
+    #promotion {
+        background: url("../images/landing/promotion.png") top left no-repeat;
+        background-size: 100% auto;
+        
+        .ui-lg-8 {
+            padding: 150px 0 0 150px;
+            h1 {
+                font-weight: 48px;
+                color: #ffffff;
+                font-weight: 400;
+            }
+        }
+
+        .ui-lg-4 {
+            margin: -50px 0 -50px 0;
+            .card {
+                -webkit-box-shadow: 0 0 27px 4.5px rgba(13, 36, 62, 0.1);
+                -moz-box-shadow: 0 0 27px 4.5px rgba(13, 36, 62, 0.1);
+            	box-shadow: 0 0 27px 4.5px rgba(13, 36, 62, 0.1);
+                margin-bottom: 20px;
+                
+                h3 {
+                    font-weight: 400;
+                }
+                
+                p {
+                    color: $textSecondaryColor;
+                }
+                
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+    
+    #pricing {
+        width: 960px;
+        margin: 0 auto;
+        padding: 50px 0px;
+        text-align: center;
+                
+        h2 {
+            font-weight: 400;
+        }
+        
+        p {
+            color: $textSecondaryColor;
+        }
+        
+        .pricing-box {
+            .card {
+                height: 100%; 
+                padding: 0;  
+            }
+            
+            .pricing-header {
+                padding: 40px 0;
+                color: #ffffff;
+                
+                span {
+                    display: block;
+                    line-height: 48px;
+                    
+                    &.name {
+                        font-weight: 300;
+                        font-size: 24px;
+                    }
+                    
+                    &.fee {
+                        font-size: 48px;
+                        font-weight: 700;
+                    }
+                    
+                    &.type {
+                        font-weight: 300;
+                        font-size: 16px;
+                    }
+                }
+            }
+            
+            .pricing-content {
+                ul {
+                    margin: 0;
+                    padding: 30px 20px;
+                    list-style-type: none;
+                    
+                    li {
+                        font-size: 18px;
+                        text-align: left;
+                        padding: 10px 14px;
+                        
+                        i {
+                            margin-right: 20px;
+                            vertical-align: middle;
+                        }
+                        
+                        span {
+                            vertical-align: middle;
+                        }
+                    }
+                }
+            }
+            
+            &.pricing-basic {
+                .pricing-header {
+                    background-color: #3f51b5;
+                }
+                
+                i {
+                    color: #3f51b5;
+                }
+            }
+            
+            &.pricing-standard {
+                .pricing-header {
+                    background-color: #e91e63;
+                }
+                
+                i {
+                    color: #e91e63;
+                }
+            }
+            
+            &.pricing-professional {
+                .pricing-header {
+                    background-color: #607d8b;
+                }
+                
+                i {
+                    color: #607d8b;
+                }
+            }
+        }
+    }
+    
+    #video {
+        background-color: #f7f7f7;
+        min-width: 400px;
+        
+        .video-content {
+            width: 960px;
+            margin: 0 auto;
+            padding: 50px 0px;
+            text-align: center;
+            
+                    
+            h2 {
+                font-weight: 400;
+            }
+            
+            p {
+                color: $textSecondaryColor;
+            }
+        }
+    }
+    
+    .footer {
+        background-color: #f7f7f7;
+        border-top: 1px solid #dddddd;
+        
+        .footer-content {
+            width: 960px;
+            margin: 0 auto;
+            padding: 30px 0px 50px 0px;
+            
+            ul {
+                float: right;
+                list-style-type: none;
+                
+                li {
+                    a {
+                        color: $textSecondaryColor;
+                        @include transition(color .3s);
+                        
+                        &:hover {
+                            color: $textColor;
+                        }
+                    }
+                }
+            }
+            
+        }
+        
+        
+    }
+}
+
+@media (max-width: 1024px) {
+    
+    .landing-wrapper {
+        #header {
+            min-height: 200px;
+            background-size: cover;
+            
+            .header-top {
+                z-index: 100;
+                position: fixed;
+                top: 0;
+                background: #424242;
+                background-size: 100% auto;
+                padding: 30px;
+                width: 100%;
+                box-sizing: border-box;
+                -webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,0.26);
+                -moz-box-shadow: 0 2px 5px 0 rgba(0,0,0,0.26);
+                box-shadow: 0 2px 5px 0 rgba(0,0,0,0.26);
+                
+                #menu-button {
+                    display: inline-block;
+                }
+                
+                #menu {
+                    z-index: 100;
+                    position: fixed;
+                    top: 86px;
+                    right: 30px;
+                    float: none;
+                    display: none;
+                    margin: 0;
+                    padding: 0;
+                    width: 225px;
+                    list-style: none;
+                    background-color: #ffffff;
+                    -webkit-box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19), 0 8px 17px 0 rgba(0, 0, 0, 0.2);
+                    -moz-box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19), 0 8px 17px 0 rgba(0, 0, 0, 0.2);
+                    box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19), 0 8px 17px 0 rgba(0, 0, 0, 0.2);
+                    -webkit-animation-duration: .5s;
+                    -moz-animation-duration: .5s;
+                    animation-duration: .5s;
+                        
+                    li {
+                        float: none;
+                        margin-left: 0;
+                        
+                        a {
+                            font-size: 16px;
+                            display: block;
+                            padding: 10px 16px;
+                            color: $textColor;
+                            width: 100%;
+                            box-sizing: border-box;
+                            @include transition(background-color .3s);
+                            overflow: hidden;
+                            
+                            i {
+                                color: #757575;
+                                display: inline-block;
+                                vertical-align: middle;
+                                margin-right: 12px;
+                                font-size: 24px;
+                            }
+                                                        
+                            &:hover {
+                                background-color: #e8e8e8;
+                            }
+                            
+                            span {
+                                display: inline-block;
+                                vertical-align: middle;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            .header-content {
+                width: 100%;
+                padding: 100px 30px 60px 30px;
+                box-sizing: border-box;
+                
+                h1 {
+                    margin: 75px 0px 50px 0px;
+                    font-weight: 400;
+                }
+            }
+        }  
+        
+        #features, #promotion, #pricing, #video, .footer .footer-content {
+            width: 100%;
+            padding-right: 30px;
+            padding-left: 30px;
+            box-sizing: border-box;
+        } 
+        
+        #promotion {
+
+            .ui-lg-8 {
+                padding: 100px 0 30px;
+                text-align: center;
+                
+                h1 {
+                    margin-top: -30px;
+                    font-weight: 48px;
+                    color: #ffffff;
+                    font-weight: 400;
+                }
+            }
+        }
+        
+        #video {           
+           .video-content {
+               width: 100%;
+               
+               .video-container {
+                   iframe {
+                       width: 350px;
+                       height: 220px;
+                   }
+               }
+           }
+       }
+       
+       .footer  {
+           .footer-content {
+               text-align: center;
+               
+               ul {
+                   float: none;
+                   margin: 0;
+                   padding: 0;
+               }
+           }
+       }
+    }
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) { 
+    .landing-wrapper {
+        .header {
+            .header-top {
+                .logo {
+                    background: url("../images/logo2x.png") top left no-repeat;
+                    background-size: 200px 30px;
+                }
+            }
+        }
+    }
+}
