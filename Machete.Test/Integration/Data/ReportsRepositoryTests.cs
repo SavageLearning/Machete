@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using Machete.Domain;
 using Machete.Data.Helpers;
+using Machete.Data.DTO;
 
 namespace Machete.Test.Integration.Data
 {
@@ -41,11 +42,30 @@ namespace Machete.Test.Integration.Data
             frb.AddWorkOrder(dateTimeOfWork: DateTime.Parse("1/2/2013"), status: 42)
                 .AddWorkAssignment(skill: 63); // known skill ID from machete lookup initializer
             var result = frb.ToRepoReports()
-                .getDynamicQuery(1, DateTime.Parse("2013/1/1"),
-                                        DateTime.Parse("2013/3/1"));
+                .getDynamicQuery(1, new SearchOptions {
+                    beginDate = DateTime.Parse("2013/1/1"),
+                    endDate = DateTime.Parse("2013/3/1"),
+                    dwccardnum = 0
+                });
             // act
             // assert
-            Assert.AreEqual("general labor", result[0].label);
+            Assert.AreEqual("20130101-20130301-DispatchesByJob-63", result[0].id);
+        }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Data), TestCategory(TC.Reports)]
+        public void getDynamicQuery_test_all_metadata()
+        {
+            // arrange
+            var context = frb.ToFactory().Get();
+            var reports = frb.ToRepoReports().GetAll();
+
+            foreach (var r in reports)
+            {
+                var result = SqlServerUtils.getMetadata(context, r.sqlquery);
+                Assert.IsTrue(result.Count > 2);
+            }
+            // act
+            // assert
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Data), TestCategory(TC.Reports)]

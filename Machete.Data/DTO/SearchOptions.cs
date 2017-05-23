@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Machete.Service.DTO
+namespace Machete.Data.DTO
 {
     public class SearchOptions
     {
@@ -12,5 +12,6 @@ namespace Machete.Service.DTO
         public DateTime? endDate { get; set; }
         public string idOrName { get; set; }
         public int? dwccardnum { get; set; }
+
     }
 }

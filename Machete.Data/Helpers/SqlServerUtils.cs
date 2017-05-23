@@ -14,11 +14,15 @@ namespace Machete.Data.Helpers
         public static string escapeQueryText(string query)
         {
             string escapedQuery;
+            string removedDates;
             try
             {
-                escapedQuery = Regex.Replace(query,
+                removedDates = Regex.Replace(query,
                       @"@\w+[Dd]ate",
                       "'1/1/2016'", RegexOptions.None);
+                escapedQuery = Regex.Replace(removedDates,
+                      @"@dwccardnum",
+                      "0", RegexOptions.None);
             }
             catch (RegexMatchTimeoutException)
             {

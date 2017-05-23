@@ -1,5 +1,6 @@
 ﻿using Machete.Data.Helpers;
 using Machete.Domain;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -1242,7 +1243,151 @@ FOR employertype IN
 group by rollup (pvt.zipcode)
 order by total desc"
             },
+            // Worker details -- events
+            new ReportDefinition
+            {
+                name = "WorkerDetailsEvents",
+                commonName = "Worker Details, events (rap sheet)",
+                description = "A list of events, which are complaints, recommendatiosn, sanctions, etc. for a given worker",
+                category = "WorkerDetail",
+                sqlquery =
+@"SELECT     
+l.text_en AS eventType, 
+CONVERT(VARCHAR(11), dateFrom, 100) AS evDateFrom, 
+CONVERT(VARCHAR(11), dateTo, 100) AS evDateTo, 
+notes, 
+ev.datecreated AS evDateCreated, 
+ev.dateupdated AS evDateUpdated, 
+ev.Createdby AS evCreatedby, 
+ev.Updatedby AS evUpdatedby
+FROM         Events AS ev
+join workers w on (ev.PersonID = w.id)
+join lookups l on (ev.eventType = l.id)
+WHERE     (w.dwccardnum = @dwccardnum)",
+                inputsJson = "{\"beginDate\":false,\"endDate\":false,\"memberNumber\":true}"
+            },
+            // Worker details -- jobs summary
+            new ReportDefinition
+            {
+                name = "WorkerDetailsJobsSummary",
+                commonName = "Worker Details, monthly summary within time range",
+                description = "",
+                category = "WorkerDetail",
+                inputsJson = "{\"beginDate\":true,\"endDate\":true,\"memberNumber\":true}",
+                sqlquery =
+@"select 
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkerDetailsJobsSummary-' + convert(varchar(6), @dwccardnum) + '-' + CONVERT(VARCHAR(7), dateTimeofWork, 102)as id,
+CONVERT(VARCHAR(7), dateTimeofWork, 102) as Month,
+count(*) as [Job Count],
+sum(hours) as [Hours worked],
+sum(income) as [Monthly income]
+from
+(
+	SELECT      
+	wa.hours, 
+	CONVERT(money, wa.hours * wa.hourlyWage) AS income, 
+	wo.dateTimeofWork AS dateTimeofWork
+	FROM         
+	WorkAssignments AS wa INNER JOIN
+	WorkOrders AS wo ON wa.workOrderID = wo.ID
+	inner join workers as w on (w.id = wa.workerassignedID)
+	WHERE w.dwccardnum = @dwccardnum
+		and WO.dateTimeofWork > @startDate
+		and WO.dateTimeofWork < @endDate
+) as foo
+group by
+ CONVERT(VARCHAR(7), dateTimeofWork, 102)"
+            },
+            // Worker details -- jobs itemized
+            new ReportDefinition
+            {
+                name = "WorkerDetailsJobsItemized",
+                commonName = "Worker details, itemized jobs within time range",
+                description = "",
+                category = "WorkerDetail",
+                inputsJson = "{\"beginDate\":true,\"endDate\":true,\"memberNumber\":true}",
+                sqlquery =
+@"SELECT   
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkerDetailsJobsItemized-' + convert(varchar(6), @dwccardnum) + '-' + CONVERT(VARCHAR(7), wa.id)as id, 
+l.text_en AS skill, 
+wa.hours, 
+CONVERT(money, wa.hourlyWage) AS hourlyWage, 
+CONVERT(money, wa.hours * wa.hourlyWage) AS income, 
+RIGHT('00000' + CAST(wo.paperOrderNum AS varchar(5)), 5) + '-' + RIGHT('00' + CAST(wa.pseudoID AS varchar(2)), 2) AS compositeOrderNum, 
+CONVERT(VARCHAR(16), wo.dateTimeofWork, 120) AS dateTimeofWork, 
+wo.contactName
+FROM         
+WorkAssignments AS wa 
+INNER JOIN WorkOrders AS wo ON wa.workOrderID = wo.ID
+inner join workers as w on (w.id = wa.workerassignedID)
+inner join Lookups l on (l.id = wa.skillID)
+WHERE     (w.dwccardnum = @dwccardnum)
+		and WO.dateTimeofWork > @startDate
+		and WO.dateTimeofWork < @endDate"
+            },
+            // Worker details -- signin summary
+            new ReportDefinition
+            {
+                name = "WorkerDetailsSigninSummary",
+                commonName = "Worker details, signin summary",
+                description = "",
+                category = "WorkerDetail",
+                inputsJson = "{\"beginDate\":true,\"endDate\":true,\"memberNumber\":true}",
+                sqlquery =
+@"select
+	convert(varchar(7), signindate, 102) as YearMonth,
+	case when (sum(cast([1] as int))) > 0 then 'X' else '' end as '1',
+	case when (sum(cast([2] as int))) > 0 then 'X' else '' end as '2',
+	case when (sum(cast([3] as int))) > 0 then 'X' else '' end as '3',
+	case when (sum(cast([4] as int))) > 0 then 'X' else '' end as '4',
+	case when (sum(cast([5] as int))) > 0 then 'X' else '' end as '5',
+	case when (sum(cast([6] as int))) > 0 then 'X' else '' end as '6',
+	case when (sum(cast([7] as int))) > 0 then 'X' else '' end as '7',
+	case when (sum(cast([8] as int))) > 0 then 'X' else '' end as '8',
+	case when (sum(cast([9] as int))) > 0 then 'X' else '' end as '9',
+	case when (sum(cast([10] as int))) > 0 then 'X' else '' end as '10',
+	case when (sum(cast([11] as int))) > 0 then 'X' else '' end as '11',
+	case when (sum(cast([12] as int))) > 0 then 'X' else '' end as '12',
+	case when (sum(cast([13] as int))) > 0 then 'X' else '' end as '13',
+	case when (sum(cast([14] as int))) > 0 then 'X' else '' end as '14',
+	case when (sum(cast([15] as int))) > 0 then 'X' else '' end as '15',
+	case when (sum(cast([16] as int))) > 0 then 'X' else '' end as '16',
+	case when (sum(cast([17] as int))) > 0 then 'X' else '' end as '17',
+	case when (sum(cast([18] as int))) > 0 then 'X' else '' end as '18',
+	case when (sum(cast([19] as int))) > 0 then 'X' else '' end as '19',
+	case when (sum(cast([20] as int))) > 0 then 'X' else '' end as '20',
+	case when (sum(cast([21] as int))) > 0 then 'X' else '' end as '21',
+	case when (sum(cast([22] as int))) > 0 then 'X' else '' end as '22',
+	case when (sum(cast([23] as int))) > 0 then 'X' else '' end as '23',
+	case when (sum(cast([24] as int))) > 0 then 'X' else '' end as '24',
+	case when (sum(cast([25] as int))) > 0 then 'X' else '' end as '25',
+	case when (sum(cast([26] as int))) > 0 then 'X' else '' end as '26',
+	case when (sum(cast([27] as int))) > 0 then 'X' else '' end as '27',
+	case when (sum(cast([28] as int))) > 0 then 'X' else '' end as '28',
+	case when (sum(cast([29] as int))) > 0 then 'X' else '' end as '29',
+	case when (sum(cast([30] as int))) > 0 then 'X' else '' end as '30',
+	case when (sum(cast([31] as int))) > 0 then 'X' else '' end as '31'
+from
+(
+	SELECT
+	  wsi.WorkerID as workerID
+	  ,wsi.dateforsignin as signindate
+	  ,day(wsi.dateforsignin) as [day]
+	FROM
+	  WorkerSignins wsi
+	where dwccardnum = @dwccardnum
+	and wsi.dateforsignin >= @startDate
+	and wsi.dateforsignin <= @endDate
+) as foo
+pivot
+(
+count (workerID)
+for [day] in 
 
+( [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12], [13], [14], [15], [16], [17], [18], [19], [20], [21], [22], [23], [24], [25], [26], [27], [28], [29], [30], [31] )
+) as pvt
+group by convert(varchar(7), signindate, 102)"
+            },            
             //new ReportDefinition
             //{
             //    name = "",
@@ -1251,10 +1396,35 @@ order by total desc"
             //    category = "",
             //    sqlquery = @""
             //},
+            //new ReportDefinition
+            //{
+            //    name = "",
+            //    commonName = "",
+            //    description = "",
+            //    category = "",
+            //    sqlquery = @""
+            //},            
+            //new ReportDefinition
+            //{
+            //    name = "",
+            //    commonName = "",
+            //    description = "",
+            //    category = "",
+            //    sqlquery = @""
+            //},            
             #endregion  
         };
         public static void Initialize(MacheteContext context)
         {
+            var inputsStub = new
+            {
+                // TODO make model class
+                beginDate = true,
+                beginDateDefault = DateTime.Parse("1/1/2016"),
+                endDate = true,
+                endDateDefault = DateTime.Parse("1/1/2017"),
+                memberNumber = false
+            };
             _cache.ForEach(u => {
                 try
                 {
@@ -1267,6 +1437,10 @@ order by total desc"
                     u.createdby = "Init T. Script";
                     u.updatedby = "Init T. Script";
                     u.columnsJson = SqlServerUtils.getColumnJson(context, u.sqlquery);
+                    if (u.inputsJson == null)
+                    {
+                        u.inputsJson = JsonConvert.SerializeObject(inputsStub);
+                    }
                     context.ReportDefinitions.Add(u);
                 }
             });

@@ -956,8 +956,9 @@ namespace Machete.Test
             if (_repoW == null) AddRepoWorker();
             if (_repoR == null) AddRepoReports();
             if (_uow == null) AddUOW();
+            if (_map == null) AddMapper();
 
-            _servRV2 = new ReportsV2Service(_repoR, _uow);
+            _servRV2 = new ReportsV2Service(_repoR, _uow, _map);
             return this;
         }
 

@@ -11,5 +11,6 @@ namespace Machete.Web.ViewModel
         public IDefaults def { get; set; }
         public int id { get; set; }
         public object columns { get; set; }
+        public object inputs { get; set; }
     }
 }

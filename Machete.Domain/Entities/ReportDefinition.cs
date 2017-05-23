@@ -19,6 +19,7 @@ namespace Machete.Domain
         public string sqlquery      { get; set; }
         public string category      { get; set; }
         public string subcategory   { get; set; }
+        public string inputsJson { get; set; } // Which search inputs to display for this report
         public string columnsJson { get; set; } // must match order in sqlquery
         //public bool softdelete { get; set; }
         //public string labelTextEN { get; set; }

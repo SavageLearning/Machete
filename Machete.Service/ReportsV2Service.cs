@@ -1,4 +1,5 @@
-﻿using Machete.Data;
+﻿using AutoMapper;
+using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
 using Machete.Service.DTO.Reports;
@@ -21,23 +22,25 @@ namespace Machete.Service
 
     public class ReportsV2Service : ServiceBase<ReportDefinition>, IReportsV2Service
     {
-        protected readonly IReportsRepository repo;
-
-        public ReportsV2Service(IReportsRepository repo, IUnitOfWork unitOfWork) : base(repo, unitOfWork)
+        private readonly IReportsRepository repo;
+        private readonly IMapper map;
+        public ReportsV2Service(IReportsRepository repo, IUnitOfWork unitOfWork, IMapper map) : base(repo, unitOfWork)
         {
             this.repo = repo;
+            this.map = map;
         }
 
         public List<dynamic> getQuery(DTO.SearchOptions o)
         {
+            // if name, get id for report definition
             int id = 0;
             if (!Int32.TryParse(o.idOrName, out id))
             {
                 id = repo.GetMany(r => string.Equals(r.name, o.idOrName, StringComparison.OrdinalIgnoreCase)).First().ID;
             }
-            return repo.getDynamicQuery(id, 
-                o.beginDate ?? new DateTime(1753,1,1),
-                o.endDate ?? DateTime.MaxValue);
+
+            var oo = map.Map<DTO.SearchOptions, Data.DTO.SearchOptions>(o);
+            return repo.getDynamicQuery(id, oo);
         }
 
         public List<ReportDefinition> getList()

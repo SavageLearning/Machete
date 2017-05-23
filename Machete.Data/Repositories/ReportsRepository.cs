@@ -18,7 +18,7 @@ namespace Machete.Data
     public interface IReportsRepository : IRepository<ReportDefinition>
     {
         List<SimpleDataRow> getSimpleAggregate(int id, DateTime beginDate, DateTime endDate);
-        List<dynamic> getDynamicQuery(int id, DateTime beginDate, DateTime endDate);
+        List<dynamic> getDynamicQuery(int id, DTO.SearchOptions o);
         List<ReportDefinition> getList();
     }
     public class ReportsRepository : RepositoryBase<ReportDefinition>, IReportsRepository
@@ -37,7 +37,7 @@ namespace Machete.Data
                 .ToList();
         }
 
-        public List<dynamic> getDynamicQuery(int id, DateTime beginDate, DateTime endDate)
+        public List<dynamic> getDynamicQuery(int id, DTO.SearchOptions o)
         {
             var rdef = dbset.Single(a => a.ID == id);
             var meta = SqlServerUtils.getMetadata(DataContext, rdef.sqlquery);
@@ -45,8 +45,10 @@ namespace Machete.Data
             Task<List<object>> raw = db.Get().Database.SqlQuery(
                 queryType, 
                 rdef.sqlquery,
-                new SqlParameter { ParameterName = "startDate", Value = beginDate },
-                new SqlParameter { ParameterName = "endDate", Value = endDate }).ToListAsync();
+                new SqlParameter { ParameterName = "startDate", Value = o.beginDate },
+                new SqlParameter { ParameterName = "endDate", Value = o.endDate },
+                new SqlParameter { ParameterName = "dwccardnum", Value = o.dwccardnum }).ToListAsync();
+
             // TODO catch exception and handle here
             raw.Wait();
             var results = raw.Result;
@@ -75,6 +77,7 @@ namespace Machete.Data
             if (sqlType.ToUpper().Substring(0, 3) == "NVA") return typeof(string);
             if (sqlType.ToUpper().Substring(0, 3) == "REA") return typeof(Single);
             if (sqlType.ToUpper().Substring(0, 4) == "VARC") return typeof(string);
+            if (sqlType.ToUpper().Substring(0, 3) == "MON") return typeof(decimal);
             if (sqlType.ToUpper().Substring(0, 4) == "NULL") return null;
 
             if (sqlType.ToUpper().Substring(0, 4) == "VARB") return null; // not implementing varbinary
