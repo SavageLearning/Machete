@@ -89,7 +89,7 @@ namespace Machete.Test.Integration.Data
             var list = repo.GetAll();
             foreach (var l in list)
             {
-                l.columnsJson = SqlServerUtils.getColumnJson(ctxt, l.sqlquery);
+                l.columnsJson = SqlServerUtils.getUIColumnsJson(ctxt, l.sqlquery);
             }
             frb.ToFactory().Get().Commit();
 

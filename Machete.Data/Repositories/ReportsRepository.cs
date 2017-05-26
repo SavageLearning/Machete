@@ -4,6 +4,7 @@ using Machete.Domain;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
@@ -20,6 +21,8 @@ namespace Machete.Data
         List<SimpleDataRow> getSimpleAggregate(int id, DateTime beginDate, DateTime endDate);
         List<dynamic> getDynamicQuery(int id, DTO.SearchOptions o);
         List<ReportDefinition> getList();
+        List<QueryMetadata> getColumns(string tableName);
+        DataTable getDataTable(string query, DTO.SearchOptions o);
     }
     public class ReportsRepository : RepositoryBase<ReportDefinition>, IReportsRepository
     {
@@ -41,7 +44,7 @@ namespace Machete.Data
         {
             var rdef = dbset.Single(a => a.ID == id);
             var meta = SqlServerUtils.getMetadata(DataContext, rdef.sqlquery);
-            var queryType = getQueryType(meta);
+            var queryType = buildQueryType(meta);
             Task<List<object>> raw = db.Get().Database.SqlQuery(
                 queryType, 
                 rdef.sqlquery,
@@ -56,12 +59,24 @@ namespace Machete.Data
 
         }
 
-        public Type getQueryType(List<QueryMetadata> columns)
+        public DataTable getDataTable(string query, DTO.SearchOptions o)
+        {
+            DataTable dt = new DataTable();
+            var cnxn = DataContext.Database.Connection.ConnectionString;
+            using (SqlDataAdapter adapter = new SqlDataAdapter(query, cnxn))
+            {
+                adapter.Fill(dt);
+            }
+            return dt;
+        }
+
+        public Type buildQueryType(List<QueryMetadata> columns)
         {
             TypeBuilder builder = CreateTypeBuilder(
                 "MyDynamicAssembly", "MyModule", "dynamicQueryType");
             foreach (var c in columns)
             {
+                if (c.system_type_name == null) throw new ArgumentNullException("getQueryTyped received null for column name");
                 var ttype = getTypeof(c.system_type_name);
                 CreateAutoImplementedProperty(builder, c.name, ttype);
             }
@@ -85,14 +100,16 @@ namespace Machete.Data
             return null;
         }
 
-
-
         public List<ReportDefinition> getList()
         {
             return db.Get().ReportDefinitions.AsEnumerable().ToList();
         }
 
-
+        public List<QueryMetadata> getColumns(string tableName)
+        {
+            if (tableName == null) throw new ArgumentNullException("tableName can't be null");
+            return SqlServerUtils.getMetadata(DataContext, "select top 0 * from " + tableName);
+        }
 
         #region IL voodoo
 
@@ -124,7 +141,7 @@ namespace Machete.Data
 
             // Generate the property
             PropertyBuilder propertyBuilder = builder.DefineProperty(
-                propertyName, PropertyAttributes.HasDefault, propertyType, null);
+                propertyName, System.Reflection.PropertyAttributes.HasDefault, propertyType, null);
 
             // Property getter and setter attributes.
             MethodAttributes propertyMethodAttributes =
@@ -172,6 +189,7 @@ namespace Machete.Data
         public string name { get; set; }
         public bool? is_nullable { get; set; }
         public string system_type_name { get; set; }
+        public bool include { get; set; } /// default value for the UI
     }
   
 }

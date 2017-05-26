@@ -1,14 +1,8 @@
 ﻿using AutoMapper;
 using Machete.Service;
-using Machete.Service.DTO.Reports;
 using Machete.Web.Helpers;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Text;
 using System.Web.Http;
 
 namespace Machete.Api.Controllers

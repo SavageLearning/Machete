@@ -1,4 +1,4 @@
-webpackJsonp([6,7],[
+webpackJsonp([7,8],[
 /* 0 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -37901,311 +37901,7 @@ function flattenUnsubscriptionErrors(errors) {
 
 /***/ }),
 /* 35 */,
-/* 36 */,
-/* 37 */,
-/* 38 */,
-/* 39 */,
-/* 40 */,
-/* 41 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = __webpack_require__(0);
-var common_1 = __webpack_require__(1);
-var Paginator = (function () {
-    function Paginator() {
-        this.pageLinkSize = 5;
-        this.onPageChange = new core_1.EventEmitter();
-        this._totalRecords = 0;
-        this._first = 0;
-        this._rows = 0;
-    }
-    Object.defineProperty(Paginator.prototype, "totalRecords", {
-        get: function () {
-            return this._totalRecords;
-        },
-        set: function (val) {
-            this._totalRecords = val;
-            this.updatePageLinks();
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Paginator.prototype, "first", {
-        get: function () {
-            return this._first;
-        },
-        set: function (val) {
-            this._first = val;
-            this.updatePageLinks();
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Paginator.prototype, "rows", {
-        get: function () {
-            return this._rows;
-        },
-        set: function (val) {
-            this._rows = val;
-            this.updatePageLinks();
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Paginator.prototype.isFirstPage = function () {
-        return this.getPage() === 0;
-    };
-    Paginator.prototype.isLastPage = function () {
-        return this.getPage() === this.getPageCount() - 1;
-    };
-    Paginator.prototype.getPageCount = function () {
-        return Math.ceil(this.totalRecords / this.rows) || 1;
-    };
-    Paginator.prototype.calculatePageLinkBoundaries = function () {
-        var numberOfPages = this.getPageCount(), visiblePages = Math.min(this.pageLinkSize, numberOfPages);
-        //calculate range, keep current in middle if necessary
-        var start = Math.max(0, Math.ceil(this.getPage() - ((visiblePages) / 2))), end = Math.min(numberOfPages - 1, start + visiblePages - 1);
-        //check when approaching to last page
-        var delta = this.pageLinkSize - (end - start + 1);
-        start = Math.max(0, start - delta);
-        return [start, end];
-    };
-    Paginator.prototype.updatePageLinks = function () {
-        this.pageLinks = [];
-        var boundaries = this.calculatePageLinkBoundaries(), start = boundaries[0], end = boundaries[1];
-        for (var i = start; i <= end; i++) {
-            this.pageLinks.push(i + 1);
-        }
-    };
-    Paginator.prototype.changePage = function (p, event) {
-        var pc = this.getPageCount();
-        if (p >= 0 && p < pc) {
-            this.first = this.rows * p;
-            var state = {
-                page: p,
-                first: this.first,
-                rows: this.rows,
-                pageCount: pc
-            };
-            this.updatePageLinks();
-            this.onPageChange.emit(state);
-        }
-        if (event) {
-            event.preventDefault();
-        }
-    };
-    Paginator.prototype.getPage = function () {
-        return Math.floor(this.first / this.rows);
-    };
-    Paginator.prototype.changePageToFirst = function (event) {
-        this.changePage(0, event);
-    };
-    Paginator.prototype.changePageToPrev = function (event) {
-        this.changePage(this.getPage() - 1, event);
-    };
-    Paginator.prototype.changePageToNext = function (event) {
-        this.changePage(this.getPage() + 1, event);
-    };
-    Paginator.prototype.changePageToLast = function (event) {
-        this.changePage(this.getPageCount() - 1, event);
-    };
-    Paginator.prototype.onRppChange = function (event) {
-        this.rows = this.rowsPerPageOptions[event.target.selectedIndex];
-        this.changePageToFirst(event);
-    };
-    return Paginator;
-}());
-__decorate([
-    core_1.Input(),
-    __metadata("design:type", Number)
-], Paginator.prototype, "pageLinkSize", void 0);
-__decorate([
-    core_1.Output(),
-    __metadata("design:type", core_1.EventEmitter)
-], Paginator.prototype, "onPageChange", void 0);
-__decorate([
-    core_1.Input(),
-    __metadata("design:type", Object)
-], Paginator.prototype, "style", void 0);
-__decorate([
-    core_1.Input(),
-    __metadata("design:type", String)
-], Paginator.prototype, "styleClass", void 0);
-__decorate([
-    core_1.Input(),
-    __metadata("design:type", Array)
-], Paginator.prototype, "rowsPerPageOptions", void 0);
-__decorate([
-    core_1.Input(),
-    __metadata("design:type", Number),
-    __metadata("design:paramtypes", [Number])
-], Paginator.prototype, "totalRecords", null);
-__decorate([
-    core_1.Input(),
-    __metadata("design:type", Number),
-    __metadata("design:paramtypes", [Number])
-], Paginator.prototype, "first", null);
-__decorate([
-    core_1.Input(),
-    __metadata("design:type", Number),
-    __metadata("design:paramtypes", [Number])
-], Paginator.prototype, "rows", null);
-Paginator = __decorate([
-    core_1.Component({
-        selector: 'p-paginator',
-        template: "\n        <div [class]=\"styleClass\" [ngStyle]=\"style\" [ngClass]=\"'ui-paginator ui-widget ui-widget-header ui-unselectable-text'\">\n            <a href=\"#\" class=\"ui-paginator-first ui-paginator-element ui-state-default ui-corner-all\"\n                    (click)=\"changePageToFirst($event)\" [ngClass]=\"{'ui-state-disabled':isFirstPage()}\" [tabindex]=\"isFirstPage() ? -1 : null\">\n                <span class=\"fa fa-step-backward\"></span>\n            </a>\n            <a href=\"#\" class=\"ui-paginator-prev ui-paginator-element ui-state-default ui-corner-all\"\n                    (click)=\"changePageToPrev($event)\" [ngClass]=\"{'ui-state-disabled':isFirstPage()}\" [tabindex]=\"isFirstPage() ? -1 : null\">\n                <span class=\"fa fa-backward\"></span>\n            </a>\n            <span class=\"ui-paginator-pages\">\n                <a href=\"#\" *ngFor=\"let pageLink of pageLinks\" class=\"ui-paginator-page ui-paginator-element ui-state-default ui-corner-all\"\n                    (click)=\"changePage(pageLink - 1, $event)\" [ngClass]=\"{'ui-state-active': (pageLink-1 == getPage())}\">{{pageLink}}</a>\n            </span>\n            <a href=\"#\" class=\"ui-paginator-next ui-paginator-element ui-state-default ui-corner-all\"\n                    (click)=\"changePageToNext($event)\" [ngClass]=\"{'ui-state-disabled':isLastPage()}\" [tabindex]=\"isLastPage() ? -1 : null\">\n                <span class=\"fa fa-forward\"></span>\n            </a>\n            <a href=\"#\" class=\"ui-paginator-last ui-paginator-element ui-state-default ui-corner-all\"\n                    (click)=\"changePageToLast($event)\" [ngClass]=\"{'ui-state-disabled':isLastPage()}\" [tabindex]=\"isLastPage() ? -1 : null\">\n                <span class=\"fa fa-step-forward\"></span>\n            </a>\n            <select class=\"ui-paginator-rpp-options ui-widget ui-state-default\" *ngIf=\"rowsPerPageOptions\" (change)=\"onRppChange($event)\">\n                <option *ngFor=\"let opt of rowsPerPageOptions\" [value]=\"opt\" [selected]=\"rows == opt\">{{opt}}</option>\n            </select>\n        </div>\n    "
-    })
-], Paginator);
-exports.Paginator = Paginator;
-var PaginatorModule = (function () {
-    function PaginatorModule() {
-    }
-    return PaginatorModule;
-}());
-PaginatorModule = __decorate([
-    core_1.NgModule({
-        imports: [common_1.CommonModule],
-        exports: [Paginator],
-        declarations: [Paginator]
-    })
-], PaginatorModule);
-exports.PaginatorModule = PaginatorModule;
-//# sourceMappingURL=paginator.js.map
-
-/***/ }),
-/* 42 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var Subscriber_1 = __webpack_require__(10);
-/**
- * We need this JSDoc comment for affecting ESDoc.
- * @ignore
- * @extends {Ignored}
- */
-var OuterSubscriber = (function (_super) {
-    __extends(OuterSubscriber, _super);
-    function OuterSubscriber() {
-        _super.apply(this, arguments);
-    }
-    OuterSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
-        this.destination.next(innerValue);
-    };
-    OuterSubscriber.prototype.notifyError = function (error, innerSub) {
-        this.destination.error(error);
-    };
-    OuterSubscriber.prototype.notifyComplete = function (innerSub) {
-        this.destination.complete();
-    };
-    return OuterSubscriber;
-}(Subscriber_1.Subscriber));
-exports.OuterSubscriber = OuterSubscriber;
-//# sourceMappingURL=OuterSubscriber.js.map
-
-/***/ }),
-/* 43 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var root_1 = __webpack_require__(17);
-var isArrayLike_1 = __webpack_require__(101);
-var isPromise_1 = __webpack_require__(104);
-var isObject_1 = __webpack_require__(103);
-var Observable_1 = __webpack_require__(5);
-var iterator_1 = __webpack_require__(70);
-var InnerSubscriber_1 = __webpack_require__(270);
-var observable_1 = __webpack_require__(71);
-function subscribeToResult(outerSubscriber, result, outerValue, outerIndex) {
-    var destination = new InnerSubscriber_1.InnerSubscriber(outerSubscriber, outerValue, outerIndex);
-    if (destination.closed) {
-        return null;
-    }
-    if (result instanceof Observable_1.Observable) {
-        if (result._isScalar) {
-            destination.next(result.value);
-            destination.complete();
-            return null;
-        }
-        else {
-            return result.subscribe(destination);
-        }
-    }
-    else if (isArrayLike_1.isArrayLike(result)) {
-        for (var i = 0, len = result.length; i < len && !destination.closed; i++) {
-            destination.next(result[i]);
-        }
-        if (!destination.closed) {
-            destination.complete();
-        }
-    }
-    else if (isPromise_1.isPromise(result)) {
-        result.then(function (value) {
-            if (!destination.closed) {
-                destination.next(value);
-                destination.complete();
-            }
-        }, function (err) { return destination.error(err); })
-            .then(null, function (err) {
-            // Escaping the Promise trap: globally throw unhandled errors
-            root_1.root.setTimeout(function () { throw err; });
-        });
-        return destination;
-    }
-    else if (result && typeof result[iterator_1.iterator] === 'function') {
-        var iterator = result[iterator_1.iterator]();
-        do {
-            var item = iterator.next();
-            if (item.done) {
-                destination.complete();
-                break;
-            }
-            destination.next(item.value);
-            if (destination.closed) {
-                break;
-            }
-        } while (true);
-    }
-    else if (result && typeof result[observable_1.observable] === 'function') {
-        var obs = result[observable_1.observable]();
-        if (typeof obs.subscribe !== 'function') {
-            destination.error(new TypeError('Provided object does not correctly implement Symbol.observable'));
-        }
-        else {
-            return obs.subscribe(new InnerSubscriber_1.InnerSubscriber(outerSubscriber, outerValue, outerIndex));
-        }
-    }
-    else {
-        var value = isObject_1.isObject(result) ? 'an invalid object' : "'" + result + "'";
-        var msg = ("You provided " + value + " where a stream was expected.")
-            + ' You can provide an Observable, Promise, Array, or Iterable.';
-        destination.error(new TypeError(msg));
-    }
-    return null;
-}
-exports.subscribeToResult = subscribeToResult;
-//# sourceMappingURL=subscribeToResult.js.map
-
-/***/ }),
-/* 44 */
+/* 36 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -38220,15 +37916,15 @@ exports.subscribeToResult = subscribeToResult;
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return XHRBackend; });
 /* unused harmony export XHRConnection */
 /* unused harmony export BaseRequestOptions */
-/* unused harmony export RequestOptions */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "m", function() { return RequestOptions; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return BaseResponseOptions; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return ResponseOptions; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return ReadyState; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return RequestMethod; });
-/* unused harmony export ResponseContentType */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "n", function() { return ResponseContentType; });
 /* unused harmony export ResponseType */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return Headers; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "m", function() { return Http; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "o", function() { return Http; });
 /* unused harmony export Jsonp */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HttpModule; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "l", function() { return JsonpModule; });
@@ -40384,6 +40080,310 @@ var VERSION = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["Version"]('4.1.1'
 
 //# sourceMappingURL=http.es5.js.map
 
+
+/***/ }),
+/* 37 */,
+/* 38 */,
+/* 39 */,
+/* 40 */,
+/* 41 */,
+/* 42 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var core_1 = __webpack_require__(0);
+var common_1 = __webpack_require__(1);
+var Paginator = (function () {
+    function Paginator() {
+        this.pageLinkSize = 5;
+        this.onPageChange = new core_1.EventEmitter();
+        this._totalRecords = 0;
+        this._first = 0;
+        this._rows = 0;
+    }
+    Object.defineProperty(Paginator.prototype, "totalRecords", {
+        get: function () {
+            return this._totalRecords;
+        },
+        set: function (val) {
+            this._totalRecords = val;
+            this.updatePageLinks();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Paginator.prototype, "first", {
+        get: function () {
+            return this._first;
+        },
+        set: function (val) {
+            this._first = val;
+            this.updatePageLinks();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Paginator.prototype, "rows", {
+        get: function () {
+            return this._rows;
+        },
+        set: function (val) {
+            this._rows = val;
+            this.updatePageLinks();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Paginator.prototype.isFirstPage = function () {
+        return this.getPage() === 0;
+    };
+    Paginator.prototype.isLastPage = function () {
+        return this.getPage() === this.getPageCount() - 1;
+    };
+    Paginator.prototype.getPageCount = function () {
+        return Math.ceil(this.totalRecords / this.rows) || 1;
+    };
+    Paginator.prototype.calculatePageLinkBoundaries = function () {
+        var numberOfPages = this.getPageCount(), visiblePages = Math.min(this.pageLinkSize, numberOfPages);
+        //calculate range, keep current in middle if necessary
+        var start = Math.max(0, Math.ceil(this.getPage() - ((visiblePages) / 2))), end = Math.min(numberOfPages - 1, start + visiblePages - 1);
+        //check when approaching to last page
+        var delta = this.pageLinkSize - (end - start + 1);
+        start = Math.max(0, start - delta);
+        return [start, end];
+    };
+    Paginator.prototype.updatePageLinks = function () {
+        this.pageLinks = [];
+        var boundaries = this.calculatePageLinkBoundaries(), start = boundaries[0], end = boundaries[1];
+        for (var i = start; i <= end; i++) {
+            this.pageLinks.push(i + 1);
+        }
+    };
+    Paginator.prototype.changePage = function (p, event) {
+        var pc = this.getPageCount();
+        if (p >= 0 && p < pc) {
+            this.first = this.rows * p;
+            var state = {
+                page: p,
+                first: this.first,
+                rows: this.rows,
+                pageCount: pc
+            };
+            this.updatePageLinks();
+            this.onPageChange.emit(state);
+        }
+        if (event) {
+            event.preventDefault();
+        }
+    };
+    Paginator.prototype.getPage = function () {
+        return Math.floor(this.first / this.rows);
+    };
+    Paginator.prototype.changePageToFirst = function (event) {
+        this.changePage(0, event);
+    };
+    Paginator.prototype.changePageToPrev = function (event) {
+        this.changePage(this.getPage() - 1, event);
+    };
+    Paginator.prototype.changePageToNext = function (event) {
+        this.changePage(this.getPage() + 1, event);
+    };
+    Paginator.prototype.changePageToLast = function (event) {
+        this.changePage(this.getPageCount() - 1, event);
+    };
+    Paginator.prototype.onRppChange = function (event) {
+        this.rows = this.rowsPerPageOptions[event.target.selectedIndex];
+        this.changePageToFirst(event);
+    };
+    return Paginator;
+}());
+__decorate([
+    core_1.Input(),
+    __metadata("design:type", Number)
+], Paginator.prototype, "pageLinkSize", void 0);
+__decorate([
+    core_1.Output(),
+    __metadata("design:type", core_1.EventEmitter)
+], Paginator.prototype, "onPageChange", void 0);
+__decorate([
+    core_1.Input(),
+    __metadata("design:type", Object)
+], Paginator.prototype, "style", void 0);
+__decorate([
+    core_1.Input(),
+    __metadata("design:type", String)
+], Paginator.prototype, "styleClass", void 0);
+__decorate([
+    core_1.Input(),
+    __metadata("design:type", Array)
+], Paginator.prototype, "rowsPerPageOptions", void 0);
+__decorate([
+    core_1.Input(),
+    __metadata("design:type", Number),
+    __metadata("design:paramtypes", [Number])
+], Paginator.prototype, "totalRecords", null);
+__decorate([
+    core_1.Input(),
+    __metadata("design:type", Number),
+    __metadata("design:paramtypes", [Number])
+], Paginator.prototype, "first", null);
+__decorate([
+    core_1.Input(),
+    __metadata("design:type", Number),
+    __metadata("design:paramtypes", [Number])
+], Paginator.prototype, "rows", null);
+Paginator = __decorate([
+    core_1.Component({
+        selector: 'p-paginator',
+        template: "\n        <div [class]=\"styleClass\" [ngStyle]=\"style\" [ngClass]=\"'ui-paginator ui-widget ui-widget-header ui-unselectable-text'\">\n            <a href=\"#\" class=\"ui-paginator-first ui-paginator-element ui-state-default ui-corner-all\"\n                    (click)=\"changePageToFirst($event)\" [ngClass]=\"{'ui-state-disabled':isFirstPage()}\" [tabindex]=\"isFirstPage() ? -1 : null\">\n                <span class=\"fa fa-step-backward\"></span>\n            </a>\n            <a href=\"#\" class=\"ui-paginator-prev ui-paginator-element ui-state-default ui-corner-all\"\n                    (click)=\"changePageToPrev($event)\" [ngClass]=\"{'ui-state-disabled':isFirstPage()}\" [tabindex]=\"isFirstPage() ? -1 : null\">\n                <span class=\"fa fa-backward\"></span>\n            </a>\n            <span class=\"ui-paginator-pages\">\n                <a href=\"#\" *ngFor=\"let pageLink of pageLinks\" class=\"ui-paginator-page ui-paginator-element ui-state-default ui-corner-all\"\n                    (click)=\"changePage(pageLink - 1, $event)\" [ngClass]=\"{'ui-state-active': (pageLink-1 == getPage())}\">{{pageLink}}</a>\n            </span>\n            <a href=\"#\" class=\"ui-paginator-next ui-paginator-element ui-state-default ui-corner-all\"\n                    (click)=\"changePageToNext($event)\" [ngClass]=\"{'ui-state-disabled':isLastPage()}\" [tabindex]=\"isLastPage() ? -1 : null\">\n                <span class=\"fa fa-forward\"></span>\n            </a>\n            <a href=\"#\" class=\"ui-paginator-last ui-paginator-element ui-state-default ui-corner-all\"\n                    (click)=\"changePageToLast($event)\" [ngClass]=\"{'ui-state-disabled':isLastPage()}\" [tabindex]=\"isLastPage() ? -1 : null\">\n                <span class=\"fa fa-step-forward\"></span>\n            </a>\n            <select class=\"ui-paginator-rpp-options ui-widget ui-state-default\" *ngIf=\"rowsPerPageOptions\" (change)=\"onRppChange($event)\">\n                <option *ngFor=\"let opt of rowsPerPageOptions\" [value]=\"opt\" [selected]=\"rows == opt\">{{opt}}</option>\n            </select>\n        </div>\n    "
+    })
+], Paginator);
+exports.Paginator = Paginator;
+var PaginatorModule = (function () {
+    function PaginatorModule() {
+    }
+    return PaginatorModule;
+}());
+PaginatorModule = __decorate([
+    core_1.NgModule({
+        imports: [common_1.CommonModule],
+        exports: [Paginator],
+        declarations: [Paginator]
+    })
+], PaginatorModule);
+exports.PaginatorModule = PaginatorModule;
+//# sourceMappingURL=paginator.js.map
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var Subscriber_1 = __webpack_require__(10);
+/**
+ * We need this JSDoc comment for affecting ESDoc.
+ * @ignore
+ * @extends {Ignored}
+ */
+var OuterSubscriber = (function (_super) {
+    __extends(OuterSubscriber, _super);
+    function OuterSubscriber() {
+        _super.apply(this, arguments);
+    }
+    OuterSubscriber.prototype.notifyNext = function (outerValue, innerValue, outerIndex, innerIndex, innerSub) {
+        this.destination.next(innerValue);
+    };
+    OuterSubscriber.prototype.notifyError = function (error, innerSub) {
+        this.destination.error(error);
+    };
+    OuterSubscriber.prototype.notifyComplete = function (innerSub) {
+        this.destination.complete();
+    };
+    return OuterSubscriber;
+}(Subscriber_1.Subscriber));
+exports.OuterSubscriber = OuterSubscriber;
+//# sourceMappingURL=OuterSubscriber.js.map
+
+/***/ }),
+/* 44 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var root_1 = __webpack_require__(17);
+var isArrayLike_1 = __webpack_require__(101);
+var isPromise_1 = __webpack_require__(104);
+var isObject_1 = __webpack_require__(103);
+var Observable_1 = __webpack_require__(5);
+var iterator_1 = __webpack_require__(70);
+var InnerSubscriber_1 = __webpack_require__(270);
+var observable_1 = __webpack_require__(71);
+function subscribeToResult(outerSubscriber, result, outerValue, outerIndex) {
+    var destination = new InnerSubscriber_1.InnerSubscriber(outerSubscriber, outerValue, outerIndex);
+    if (destination.closed) {
+        return null;
+    }
+    if (result instanceof Observable_1.Observable) {
+        if (result._isScalar) {
+            destination.next(result.value);
+            destination.complete();
+            return null;
+        }
+        else {
+            return result.subscribe(destination);
+        }
+    }
+    else if (isArrayLike_1.isArrayLike(result)) {
+        for (var i = 0, len = result.length; i < len && !destination.closed; i++) {
+            destination.next(result[i]);
+        }
+        if (!destination.closed) {
+            destination.complete();
+        }
+    }
+    else if (isPromise_1.isPromise(result)) {
+        result.then(function (value) {
+            if (!destination.closed) {
+                destination.next(value);
+                destination.complete();
+            }
+        }, function (err) { return destination.error(err); })
+            .then(null, function (err) {
+            // Escaping the Promise trap: globally throw unhandled errors
+            root_1.root.setTimeout(function () { throw err; });
+        });
+        return destination;
+    }
+    else if (result && typeof result[iterator_1.iterator] === 'function') {
+        var iterator = result[iterator_1.iterator]();
+        do {
+            var item = iterator.next();
+            if (item.done) {
+                destination.complete();
+                break;
+            }
+            destination.next(item.value);
+            if (destination.closed) {
+                break;
+            }
+        } while (true);
+    }
+    else if (result && typeof result[observable_1.observable] === 'function') {
+        var obs = result[observable_1.observable]();
+        if (typeof obs.subscribe !== 'function') {
+            destination.error(new TypeError('Provided object does not correctly implement Symbol.observable'));
+        }
+        else {
+            return obs.subscribe(new InnerSubscriber_1.InnerSubscriber(outerSubscriber, outerValue, outerIndex));
+        }
+    }
+    else {
+        var value = isObject_1.isObject(result) ? 'an invalid object' : "'" + result + "'";
+        var msg = ("You provided " + value + " where a stream was expected.")
+            + ' You can provide an Observable, Promise, Array, or Iterable.';
+        destination.error(new TypeError(msg));
+    }
+    return null;
+}
+exports.subscribeToResult = subscribeToResult;
+//# sourceMappingURL=subscribeToResult.js.map
 
 /***/ }),
 /* 45 */,
@@ -42705,8 +42705,8 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-var OuterSubscriber_1 = __webpack_require__(42);
-var subscribeToResult_1 = __webpack_require__(43);
+var OuterSubscriber_1 = __webpack_require__(43);
+var subscribeToResult_1 = __webpack_require__(44);
 /**
  * Converts a higher-order Observable into a first-order Observable which
  * concurrently delivers all values that are emitted on the inner Observables.
@@ -43508,7 +43508,7 @@ var STATUS_CODE_INFO = {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(36);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_delay__ = __webpack_require__(274);
@@ -44673,8 +44673,8 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-var subscribeToResult_1 = __webpack_require__(43);
-var OuterSubscriber_1 = __webpack_require__(42);
+var subscribeToResult_1 = __webpack_require__(44);
+var OuterSubscriber_1 = __webpack_require__(43);
 /* tslint:enable:max-line-length */
 /**
  * Projects each source value to an Observable which is merged in the output
@@ -45008,7 +45008,7 @@ __export(__webpack_require__(90));
 __export(__webpack_require__(235));
 __export(__webpack_require__(236));
 __export(__webpack_require__(237));
-__export(__webpack_require__(41));
+__export(__webpack_require__(42));
 __export(__webpack_require__(238));
 __export(__webpack_require__(239));
 __export(__webpack_require__(240));
@@ -45101,8 +45101,8 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-var OuterSubscriber_1 = __webpack_require__(42);
-var subscribeToResult_1 = __webpack_require__(43);
+var OuterSubscriber_1 = __webpack_require__(43);
+var subscribeToResult_1 = __webpack_require__(44);
 /**
  * Catches errors on the observable to be handled by returning a new observable or throwing an error.
  *
@@ -75053,7 +75053,7 @@ NoopAnimationsModule.ctorParameters = function () { return []; };
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(36);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__in_memory_backend_service__ = __webpack_require__(78);
 /* harmony export (immutable) */ __webpack_exports__["b"] = inMemoryBackendServiceFactory;
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return InMemoryWebApiModule; });
@@ -78736,7 +78736,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = __webpack_require__(0);
 var common_1 = __webpack_require__(1);
 var shared_1 = __webpack_require__(4);
-var paginator_1 = __webpack_require__(41);
+var paginator_1 = __webpack_require__(42);
 var DataGrid = (function () {
     function DataGrid(el) {
         this.el = el;
@@ -78945,7 +78945,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = __webpack_require__(0);
 var common_1 = __webpack_require__(1);
 var shared_1 = __webpack_require__(4);
-var paginator_1 = __webpack_require__(41);
+var paginator_1 = __webpack_require__(42);
 var DataList = (function () {
     function DataList(el) {
         this.el = el;
@@ -79382,7 +79382,7 @@ var core_1 = __webpack_require__(0);
 var common_1 = __webpack_require__(1);
 var forms_1 = __webpack_require__(6);
 var shared_1 = __webpack_require__(4);
-var paginator_1 = __webpack_require__(41);
+var paginator_1 = __webpack_require__(42);
 var shared_2 = __webpack_require__(4);
 var domhandler_1 = __webpack_require__(2);
 var ObjectUtils_1 = __webpack_require__(33);
@@ -91839,8 +91839,8 @@ var __extends = (this && this.__extends) || function (d, b) {
 var Observable_1 = __webpack_require__(5);
 var EmptyObservable_1 = __webpack_require__(68);
 var isArray_1 = __webpack_require__(74);
-var subscribeToResult_1 = __webpack_require__(43);
-var OuterSubscriber_1 = __webpack_require__(42);
+var subscribeToResult_1 = __webpack_require__(44);
+var OuterSubscriber_1 = __webpack_require__(43);
 /**
  * We need this JSDoc comment for affecting ESDoc.
  * @extends {Ignored}

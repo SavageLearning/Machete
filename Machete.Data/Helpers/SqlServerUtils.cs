@@ -45,8 +45,8 @@ namespace Machete.Data.Helpers
                 param);
             return queryResult.ToList();
         }
-
-        public static string getColumnJson(MacheteContext context, string query)
+        // used for report initialization
+        public static string getUIColumnsJson(MacheteContext context, string query)
         {
             var cols = SqlServerUtils.getMetadata(context, query);
             var result = cols.Select(a => 

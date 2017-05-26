@@ -770,18 +770,18 @@ ORDER BY pvt.year"
 @"select 
 convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-AverageWageByMonthYearToYear-' + convert(varchar(4), [year])  as id,
 year, 
-	cast([1] as float) as 'Jan', 
-	cast([2] as float) as 'Feb', 
-	cast([3] as float) as 'Mar', 
-	cast([4] as float) as 'Apr',
-	cast([5] as float) as 'May', 
-	cast([6] as float) as 'Jun', 
-	cast([7] as float) as 'Jul', 
-    cast([8] as float) as 'Aug',
-	cast([9] as float) as 'Sep', 
-	cast([10] as float) as 'Oct',
-	cast([11] as float) as 'Nov', 
-	cast([12] as float) as 'Dec'
+	cast(isnull([1],0) as float) as 'Jan', 
+	cast(isnull([2],0) as float) as 'Feb', 
+	cast(isnull([3],0) as float) as 'Mar', 
+	cast(isnull([4],0) as float) as 'Apr',
+	cast(isnull([5],0) as float) as 'May', 
+	cast(isnull([6],0) as float) as 'Jun', 
+	cast(isnull([7],0) as float) as 'Jul', 
+    cast(isnull([8],0) as float) as 'Aug',
+	cast(isnull([9],0) as float) as 'Sep', 
+	cast(isnull([10],0) as float) as 'Oct',
+	cast(isnull([11],0) as float) as 'Nov', 
+	cast(isnull([12],0) as float) as 'Dec'
 from
 (
 	SELECT CONVERT(DECIMAL(10,2),AVG([hourlyWage])) AS avgWage
@@ -1038,39 +1038,44 @@ union
 select
 convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-CityReport-UndupCount-' + convert(varchar(4), [year]) as id, 
 
-    'A2H1-0 count of unduplicated individuals securing day labor employment this month' as label, 
+    'A2H1-0 count of unduplicated individuals securing day labor employment this period' as label, 
     cast(year as int) as year, 
-	cast([1] as int) as 'Jan', 
-	cast([2] as int) as 'Feb', 
-	cast([3] as int) as 'Mar', 
-	cast([4] as int) as 'Apr',
-	cast([5] as int) as 'May', 
-	cast([6] as int) as 'Jun', 
-	cast([7] as int) as 'Jul', 
-	cast([8] as int) as 'Aug',
-	cast([9] as int) as 'Sep', 
-	cast([10] as int) as 'Oct', 
-	cast([11] as int) as 'Nov', 
-	cast([12] as int) as 'Dec'
+	cast(isnull([1],0) as int) as 'Jan', 
+	cast(isnull([2],0) as int) as 'Feb', 
+	cast(isnull([3],0) as int) as 'Mar', 
+	cast(isnull([4],0) as int) as 'Apr',
+	cast(isnull([5],0) as int) as 'May', 
+	cast(isnull([6],0) as int) as 'Jun', 
+	cast(isnull([7],0) as int) as 'Jul', 
+	cast(isnull([8],0) as int) as 'Aug',
+	cast(isnull([9],0) as int) as 'Sep', 
+	cast(isnull([10],0) as int) as 'Oct', 
+	cast(isnull([11],0) as int) as 'Nov', 
+	cast(isnull([12],0) as int) as 'Dec'
 from
 (
-	SELECT count(distinct(dwccardnum)) AS cardnum, year(dateTimeofWork) as year, month(dateTimeofWork) AS month
-	from dbo.WorkAssignments WAs
-	JOIN dbo.WorkOrders WOs ON WAs.workOrderID = WOs.ID
-	JOIN dbo.Workers Ws on WAs.workerAssignedID = Ws.ID
-	join dbo.lookups l on l.id = wos.status
-	WHERE dateTimeofWork >= @startdate 
-	and dateTimeofWork <= @EnDdate
-	and l.text_EN = 'Completed'
-	group by year(dateTimeofWork), month(dateTimeofWork)
-
+	select count(cardnum) [cardnum], year(time) [year], month(time) [month]
+	from 
+	(
+		SELECT dwccardnum AS cardnum, min(dateTimeofWork) time
+		from dbo.WorkAssignments WAs
+		JOIN dbo.WorkOrders WOs ON WAs.workOrderID = WOs.ID
+		JOIN dbo.Workers Ws on WAs.workerAssignedID = Ws.ID
+		join dbo.lookups l on l.id = wos.status
+		WHERE dateTimeofWork >= @startdate 
+		and dateTimeofWork <= @EnDdate
+		and l.text_EN = 'Completed'
+		group by dwccardnum
+	) as meh
+	group by year(time), month(time)
 ) as foo
 PIVOT  
 (  
 sum (cardnum)  
 FOR month IN  
 ( [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12] )  
-) AS pvt"
+) AS pvt
+"
             },
             // NewEmployersByType
             new ReportDefinition
@@ -1387,23 +1392,59 @@ for [day] in
 ( [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12], [13], [14], [15], [16], [17], [18], [19], [20], [21], [22], [23], [24], [25], [26], [27], [28], [29], [30], [31] )
 ) as pvt
 group by convert(varchar(7), signindate, 102)"
+            },
+            // Activity ttendance by activity
+            new ReportDefinition
+            {
+                name = "ActivityAttendance",
+                commonName = "Activity attendance by activity",
+                description = "",
+                category = "Activities",
+                sqlquery = @"SELECT
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-ActivityAttendanceByType-' + convert(varchar(5), min(a.name)) as id,
+l.text_en [Activity], 
+count(*) [Count],
+count(distinct(asi.dwccardnum)) [Unique workers]
+from
+activities a
+join activitysignins asi on a.id = asi.activityid
+join lookups l on l.id = a.name
+where a.datestart > @startdate
+and a.datestart < @enddate
+group by l.text_en
+
+union
+SELECT
+convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-ActivityAttendanceByType-TOTAL' as id,
+'Total' as [Activity], 
+count(*) [Count],
+count(distinct(asi.dwccardnum)) [Unique workers]
+from
+activities a
+join activitysignins asi on a.id = asi.activityid
+join lookups l on l.id = a.name
+where a.datestart > @startdate
+and a.datestart < @enddate
+order by count desc"
+            },
+            new ReportDefinition
+            {
+                name = "UniqueDispatchedWorkers",
+                commonName = "Unique dispatched workers",
+                description = "A list of unique workers within the given time period. Job count included.",
+                category = "Dispatches",
+                sqlquery = @"SELECT distinct(dwccardnum) AS [Member number], min(fullname) as [Name], count(*) as [Job count]
+	from dbo.WorkAssignments WAs
+	JOIN dbo.WorkOrders WOs ON WAs.workOrderID = WOs.ID
+	JOIN dbo.Workers Ws on WAs.workerAssignedID = Ws.ID
+	join dbo.lookups l on l.id = wos.status
+	join dbo.persons p on p.id = ws.id
+	WHERE dateTimeofWork >= @startdate 
+	and dateTimeofWork <= @EnDdate
+	and l.text_EN = 'Completed'
+	group by dwccardnum, fullname
+	order by [Job count] desc"
             },            
-            //new ReportDefinition
-            //{
-            //    name = "",
-            //    commonName = "",
-            //    description = "",
-            //    category = "",
-            //    sqlquery = @""
-            //},
-            //new ReportDefinition
-            //{
-            //    name = "",
-            //    commonName = "",
-            //    description = "",
-            //    category = "",
-            //    sqlquery = @""
-            //},            
             //new ReportDefinition
             //{
             //    name = "",
@@ -1436,7 +1477,7 @@ group by convert(varchar(7), signindate, 102)"
                     u.dateupdated = DateTime.Now;
                     u.createdby = "Init T. Script";
                     u.updatedby = "Init T. Script";
-                    u.columnsJson = SqlServerUtils.getColumnJson(context, u.sqlquery);
+                    u.columnsJson = SqlServerUtils.getUIColumnsJson(context, u.sqlquery);
                     if (u.inputsJson == null)
                     {
                         u.inputsJson = JsonConvert.SerializeObject(inputsStub);

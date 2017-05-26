@@ -125,5 +125,75 @@ namespace Machete.Test.Integration.Service
             // assumes data from ReportDefinitionsInitializer
             Assert.AreEqual("DispatchesByJob", result.name);
         }
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
+        public void get_XlsxFile_noParams_succeeds()
+        {
+            // arrange
+            var dict = new Dictionary<string, string>();
+            dict.Add("ID", "true");
+            dict.Add("dwccardnum", "true");
+            dict.Add("datecreated", "true");
+            byte[] result = null;
+            var o = new DTO.SearchOptions {
+                name = "Workers",
+                beginDate = null,
+                endDate = null,
+                exportFilterField = null,
+                exportIncludeOptions = dict
+            };
+            // act
+            frb.ToServReportsV2()
+                .getXlsxFile(o, ref result);
+            // assert
+            Assert.IsNotNull(result);
+        }
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
+        public void get_XlsxFile_beginDate_succeeds()
+        {
+            // arrange
+            var dict = new Dictionary<string, string>();
+            dict.Add("ID", "true");
+            dict.Add("dwccardnum", "true");
+            dict.Add("datecreated", "true");
+            byte[] result = null;
+            var o = new DTO.SearchOptions
+            {
+                name = "Workers",
+                beginDate = DateTime.Now,
+                endDate = null,
+                exportFilterField = "datecreated",
+                exportIncludeOptions = dict
+            };
+            // act
+            frb.ToServReportsV2()
+                .getXlsxFile(o, ref result);
+            // assert
+            Assert.IsNotNull(result);
+        }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
+        public void get_XlsxFile_beginAndEndDate_succeeds()
+        {
+            // arrange
+            var dict = new Dictionary<string, string>();
+            dict.Add("ID", "true");
+            dict.Add("dwccardnum", "true");
+            dict.Add("datecreated", "true");
+            byte[] result = null;
+            var o = new DTO.SearchOptions
+            {
+                name = "Workers",
+                beginDate = DateTime.Now,
+                endDate = DateTime.Now.AddDays(1),
+                exportFilterField = "datecreated",
+                exportIncludeOptions = dict
+            };
+            // act
+            frb.ToServReportsV2()
+                .getXlsxFile(o, ref result);
+            // assert
+            Assert.IsNotNull(result);
+        }
     }
+
 }

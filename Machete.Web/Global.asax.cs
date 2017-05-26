@@ -99,6 +99,7 @@ namespace Machete.Web
             initializer.InitializeDatabase(db.Get());
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
             GlobalConfiguration.Configuration.DependencyResolver = new Unity.WebApi.UnityDependencyResolver(container);
+            GlobalConfiguration.Configuration.EnsureInitialized();
         }
 
         private IUnityContainer GetUnityContainer()

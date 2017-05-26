@@ -1,4 +1,4 @@
-webpackJsonp([4,7],{
+webpackJsonp([5,8],{
 
 /***/ 107:
 /***/ (function(module, exports, __webpack_require__) {
@@ -6,11 +6,15 @@ webpackJsonp([4,7],{
 var map = {
 	"app/employers/employers.module": [
 		310,
-		1
+		2
 	],
-	"app/reports/reports.module": [
+	"app/exports/exports.module": [
 		311,
 		0
+	],
+	"app/reports/reports.module": [
+		312,
+		1
 	]
 };
 function webpackAsyncContext(req) {
@@ -80,6 +84,10 @@ var appRoutes = [
     {
         path: 'reports',
         loadChildren: 'app/reports/reports.module#ReportsModule'
+    },
+    {
+        path: 'exports',
+        loadChildren: 'app/exports/exports.module#ExportsModule'
     },
     //{ path: '**', component: PageNotFoundComponent }
     { path: '**', redirectTo: '/reports' }
@@ -181,7 +189,8 @@ var AppMenuComponent = (function () {
             { label: 'Activities', icon: 'local_activity', url: ['/Activity'] },
             { label: 'Sign-ins', icon: 'track_changes', url: ['/workersignin'] },
             { label: 'Emails', icon: 'email', url: ['/email'] },
-            { label: 'Reports', icon: 'subtitles', routerLink: ['/reports'] }
+            { label: 'Reports', icon: 'subtitles', routerLink: ['/reports'] },
+            { label: 'Exports', icon: 'file_download', routerLink: ['/exports'] }
         ];
     };
     return AppMenuComponent;
@@ -308,7 +317,7 @@ var _a, _b, _c, _d, _e;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app_routing_module__ = __webpack_require__(129);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_forms__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_http__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__angular_http__ = __webpack_require__(36);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__app_component__ = __webpack_require__(45);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__app_menu_component__ = __webpack_require__(131);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__app_topbar_component__ = __webpack_require__(134);
@@ -518,7 +527,9 @@ CanDeactivateGuard = __decorate([
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_http__ = __webpack_require__(36);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return InMemoryDataService; });
+
 var InMemoryDataService = (function () {
     function InMemoryDataService() {
     }
@@ -815,8 +826,8 @@ var InMemoryDataService = (function () {
                 ]
             },
             {
-                'id': 21,
                 'name': 'SeattleCityReport',
+                'id': 21,
                 'title': null,
                 'commonName': 'Seattle City report',
                 'description': 'Casa Latina\'s monthly numbers for the City of Seattle',
@@ -908,21 +919,490 @@ var InMemoryDataService = (function () {
                 ]
             }
         ];
-        return { reports: reports };
+        var Activities = [
+            {
+                'name': 'ID',
+                'is_nullable': false,
+                'system_type_name': 'int',
+                'include': true
+            },
+            {
+                'name': 'name',
+                'is_nullable': false,
+                'system_type_name': 'int',
+                'include': true
+            },
+            {
+                'name': 'type',
+                'is_nullable': false,
+                'system_type_name': 'int',
+                'include': true
+            },
+            {
+                'name': 'dateStart',
+                'is_nullable': false,
+                'system_type_name': 'datetime',
+                'include': true
+            },
+            {
+                'name': 'dateEnd',
+                'is_nullable': false,
+                'system_type_name': 'datetime',
+                'include': true
+            },
+            {
+                'name': 'teacher',
+                'is_nullable': false,
+                'system_type_name': 'nvarchar(max)',
+                'include': true
+            },
+            {
+                'name': 'notes',
+                'is_nullable': true,
+                'system_type_name': 'nvarchar(4000)',
+                'include': true
+            },
+            {
+                'name': 'datecreated',
+                'is_nullable': false,
+                'system_type_name': 'datetime',
+                'include': true
+            },
+            {
+                'name': 'dateupdated',
+                'is_nullable': false,
+                'system_type_name': 'datetime',
+                'include': true
+            },
+            {
+                'name': 'Createdby',
+                'is_nullable': true,
+                'system_type_name': 'nvarchar(30)',
+                'include': true
+            },
+            {
+                'name': 'Updatedby',
+                'is_nullable': true,
+                'system_type_name': 'nvarchar(30)',
+                'include': true
+            },
+            {
+                'name': 'recurring',
+                'is_nullable': false,
+                'system_type_name': 'bit',
+                'include': true
+            },
+            {
+                'name': 'firstID',
+                'is_nullable': false,
+                'system_type_name': 'int',
+                'include': true
+            },
+            {
+                'name': 'nameEN',
+                'is_nullable': true,
+                'system_type_name': 'nvarchar(50)',
+                'include': true
+            },
+            {
+                'name': 'nameES',
+                'is_nullable': true,
+                'system_type_name': 'nvarchar(50)',
+                'include': true
+            },
+            {
+                'name': 'typeEN',
+                'is_nullable': true,
+                'system_type_name': 'nvarchar(50)',
+                'include': true
+            },
+            {
+                'name': 'typeES',
+                'is_nullable': true,
+                'system_type_name': 'nvarchar(50)',
+                'include': true
+            }
+        ];
+        var ActivitySignins = [
+            {
+                'name': 'ID',
+                'is_nullable': false,
+                'system_type_name': 'int',
+                'include': true
+            }, {
+                'name': 'ActivityID',
+                'is_nullable': false,
+                'system_type_name': 'int',
+                'include': true
+            }, {
+                'name': 'dwccardnum',
+                'is_nullable': false,
+                'system_type_name': 'int',
+                'include': true
+            }, {
+                'name': 'memberStatus',
+                'is_nullable': true,
+                'system_type_name': 'int',
+                'include': true
+            }, {
+                'name': 'dateforsignin',
+                'is_nullable': false,
+                'system_type_name': 'datetime',
+                'include': true
+            }, {
+                'name': 'datecreated',
+                'is_nullable': false,
+                'system_type_name': 'datetime',
+                'include': true
+            }, {
+                'name': 'dateupdated',
+                'is_nullable': false,
+                'system_type_name': 'datetime',
+                'include': true
+            }, {
+                'name': 'Createdby',
+                'is_nullable': true,
+                'system_type_name': 'nvarchar(30)',
+                'include': true
+            }, {
+                'name': 'Updatedby',
+                'is_nullable': true,
+                'system_type_name': 'nvarchar(30)',
+                'include': true
+            }, {
+                'name': 'personID',
+                'is_nullable': true,
+                'system_type_name': 'int',
+                'include': true
+            }, {
+                'name': 'timeZoneOffset',
+                'is_nullable': false,
+                'system_type_name': 'float',
+                'include': true
+            }
+        ];
+        var Workers = [
+            {
+                'name': 'ID', 'is_nullable': false, 'system_type_name': 'int', 'include': true
+            }, {
+                'name': 'typeOfWorkID',
+                'is_nullable': false,
+                'system_type_name': 'int',
+                'include': true
+            }, {
+                'name': 'dateOfMembership', 'is_nullable': false, 'system_type_name': 'datetime', 'include': true
+            }, {
+                'name': 'dateOfBirth',
+                'is_nullable': true,
+                'system_type_name': 'datetime',
+                'include': true
+            }, {
+                'name': 'memberStatus', 'is_nullable': false, 'system_type_name': 'int', 'include': true
+            }, {
+                'name': 'memberReactivateDate',
+                'is_nullable': true,
+                'system_type_name': 'datetime',
+                'include': true
+            }, {
+                'name': 'active', 'is_nullable': true, 'system_type_name': 'bit', 'include': true
+            }, {
+                'name': 'RaceID',
+                'is_nullable': true,
+                'system_type_name': 'int',
+                'include': true
+            }, {
+                'name': 'raceother', 'is_nullable': true, 'system_type_name': 'nvarchar(20)', 'include': true
+            }, {
+                'name': 'height',
+                'is_nullable': true,
+                'system_type_name': 'nvarchar(50)',
+                'include': true
+            }, {
+                'name': 'weight', 'is_nullable': true, 'system_type_name': 'nvarchar(10)', 'include': true
+            }, {
+                'name': 'englishlevelID',
+                'is_nullable': false,
+                'system_type_name': 'int',
+                'include': true
+            }, {
+                'name': 'recentarrival', 'is_nullable': true, 'system_type_name': 'bit', 'include': true
+            }, {
+                'name': 'dateinUSA',
+                'is_nullable': true,
+                'system_type_name': 'datetime',
+                'include': true
+            }, {
+                'name': 'dateinseattle', 'is_nullable': true, 'system_type_name': 'datetime', 'include': true
+            }, {
+                'name': 'disabled',
+                'is_nullable': true,
+                'system_type_name': 'bit',
+                'include': true
+            }, {
+                'name': 'disabilitydesc', 'is_nullable': true, 'system_type_name': 'nvarchar(50)', 'include': true
+            }, {
+                'name': 'maritalstatus',
+                'is_nullable': true,
+                'system_type_name': 'int',
+                'include': true
+            }, {
+                'name': 'livewithchildren', 'is_nullable': true, 'system_type_name': 'bit', 'include': true
+            }, {
+                'name': 'numofchildren',
+                'is_nullable': true,
+                'system_type_name': 'int',
+                'include': true
+            }, {
+                'name': 'incomeID', 'is_nullable': true, 'system_type_name': 'int', 'include': true
+            }, {
+                'name': 'livealone',
+                'is_nullable': true,
+                'system_type_name': 'bit',
+                'include': true
+            }, {
+                'name': 'emcontUSAname', 'is_nullable': true, 'system_type_name': 'nvarchar(50)', 'include': true
+            }, {
+                'name': 'emcontUSArelation',
+                'is_nullable': true,
+                'system_type_name': 'nvarchar(30)',
+                'include': true
+            }, {
+                'name': 'emcontUSAphone', 'is_nullable': true, 'system_type_name': 'nvarchar(14)', 'include': true
+            }, {
+                'name': 'dwccardnum',
+                'is_nullable': false,
+                'system_type_name': 'int',
+                'include': true
+            }, {
+                'name': 'neighborhoodID', 'is_nullable': true, 'system_type_name': 'int', 'include': true
+            }, {
+                'name': 'immigrantrefugee',
+                'is_nullable': true,
+                'system_type_name': 'bit',
+                'include': true
+            }, {
+                'name': 'countryoforiginID', 'is_nullable': true, 'system_type_name': 'int', 'include': true
+            }, {
+                'name': 'emcontoriginname',
+                'is_nullable': true,
+                'system_type_name': 'nvarchar(50)',
+                'include': true
+            }, {
+                'name': 'emcontoriginrelation',
+                'is_nullable': true,
+                'system_type_name': 'nvarchar(30)',
+                'include': true
+            }, {
+                'name': 'emcontoriginphone',
+                'is_nullable': true,
+                'system_type_name': 'nvarchar(14)',
+                'include': true
+            }, {
+                'name': 'memberexpirationdate', 'is_nullable': false, 'system_type_name': 'datetime', 'include': true
+            }, {
+                'name': 'driverslicense',
+                'is_nullable': true,
+                'system_type_name': 'bit',
+                'include': true
+            }, {
+                'name': 'licenseexpirationdate', 'is_nullable': true, 'system_type_name': 'datetime', 'include': true
+            }, {
+                'name': 'carinsurance',
+                'is_nullable': true,
+                'system_type_name': 'bit',
+                'include': true
+            }, {
+                'name': 'insuranceexpiration', 'is_nullable': true, 'system_type_name': 'datetime', 'include': true
+            }, {
+                'name': 'ImageID',
+                'is_nullable': true,
+                'system_type_name': 'int',
+                'include': true
+            }, {
+                'name': 'skill1', 'is_nullable': true, 'system_type_name': 'int', 'include': true
+            }, {
+                'name': 'skill2',
+                'is_nullable': true,
+                'system_type_name': 'int',
+                'include': true
+            }, {
+                'name': 'skill3', 'is_nullable': true, 'system_type_name': 'int', 'include': true
+            }, {
+                'name': 'datecreated',
+                'is_nullable': false,
+                'system_type_name': 'datetime',
+                'include': true
+            }, {
+                'name': 'dateupdated', 'is_nullable': false, 'system_type_name': 'datetime', 'include': true
+            }, {
+                'name': 'Createdby',
+                'is_nullable': true,
+                'system_type_name': 'nvarchar(30)',
+                'include': true
+            }, {
+                'name': 'Updatedby', 'is_nullable': true, 'system_type_name': 'nvarchar(30)', 'include': true
+            }, {
+                'name': 'homeless',
+                'is_nullable': true,
+                'system_type_name': 'bit',
+                'include': true
+            }, {
+                'name': 'workerRating', 'is_nullable': true, 'system_type_name': 'real', 'include': true
+            }, {
+                'name': 'housingType',
+                'is_nullable': true,
+                'system_type_name': 'int',
+                'include': true
+            }, {
+                'name': 'liveWithSpouse', 'is_nullable': true, 'system_type_name': 'bit', 'include': true
+            }, {
+                'name': 'liveWithDescription',
+                'is_nullable': true,
+                'system_type_name': 'nvarchar(1000)',
+                'include': true
+            }, {
+                'name': 'americanBornChildren', 'is_nullable': true, 'system_type_name': 'int', 'include': true
+            }, {
+                'name': 'numChildrenUnder18',
+                'is_nullable': true,
+                'system_type_name': 'int',
+                'include': true
+            }, {
+                'name': 'educationLevel', 'is_nullable': true, 'system_type_name': 'int', 'include': true
+            }, {
+                'name': 'farmLaborCharacteristics',
+                'is_nullable': true,
+                'system_type_name': 'int',
+                'include': true
+            }, {
+                'name': 'wageTheftVictim', 'is_nullable': true, 'system_type_name': 'bit', 'include': true
+            }, {
+                'name': 'wageTheftRecoveryAmount',
+                'is_nullable': true,
+                'system_type_name': 'float',
+                'include': true
+            }, {
+                'name': 'lastPaymentDate', 'is_nullable': true, 'system_type_name': 'datetime', 'include': true
+            }, {
+                'name': 'lastPaymentAmount',
+                'is_nullable': true,
+                'system_type_name': 'float',
+                'include': true
+            }, {
+                'name': 'ownTools', 'is_nullable': true, 'system_type_name': 'bit', 'include': true
+            }, {
+                'name': 'healthInsurance',
+                'is_nullable': true,
+                'system_type_name': 'bit',
+                'include': true
+            }, {
+                'name': 'usVeteran', 'is_nullable': true, 'system_type_name': 'bit', 'include': true
+            }, {
+                'name': 'healthInsuranceDate',
+                'is_nullable': true,
+                'system_type_name': 'datetime',
+                'include': true
+            }, {
+                'name': 'vehicleTypeID', 'is_nullable': true, 'system_type_name': 'int', 'include': true
+            }, {
+                'name': 'incomeSourceID',
+                'is_nullable': true,
+                'system_type_name': 'int',
+                'include': true
+            }, {
+                'name': 'introToCenter', 'is_nullable': true, 'system_type_name': 'nvarchar(1000)', 'include': true
+            }, {
+                'name': 'lgbtq',
+                'is_nullable': true,
+                'system_type_name': 'bit',
+                'include': true
+            }, {
+                'name': 'typeOfWork', 'is_nullable': true, 'system_type_name': 'nvarchar(max)', 'include': true
+            }, {
+                'name': 'memberStatusEN',
+                'is_nullable': true,
+                'system_type_name': 'nvarchar(50)',
+                'include': true
+            }, {
+                'name': 'memberStatusES', 'is_nullable': true, 'system_type_name': 'nvarchar(50)', 'include': true
+            }, {
+                'name': 'fullNameAndID',
+                'is_nullable': true,
+                'system_type_name': 'nvarchar(100)',
+                'include': true
+            }, {
+                'name': 'skillCodes', 'is_nullable': true, 'system_type_name': 'nvarchar(max)', 'include': true
+            }
+        ];
+        var exports = [
+            {
+                'id': 'activities',
+                'name': 'Activities',
+                'data': Activities
+            },
+            {
+                'id': 'activitysignins',
+                'name': 'ActivitySignins',
+                'data': ActivitySignins
+            },
+            {
+                id: 'workers',
+                name: 'Workers',
+                data: Workers
+            }
+        ];
+        return { exports: exports, reports: reports };
     };
     // intercept response from the default HTTP method handlers
     InMemoryDataService.prototype.responseInterceptor = function (response, reqInfo) {
-        // response.body = (<SimpleAggregateRow[]>response.body); // matches web api controller
-        // const method = RequestMethod[reqInfo.req.method].toUpperCase();
-        // const body = JSON.stringify(response.body);
+        response.body = response.body; // matches web api controller
+        var method = __WEBPACK_IMPORTED_MODULE_0__angular_http__["j" /* RequestMethod */][reqInfo.req.method].toUpperCase();
+        var body = JSON.stringify(response.body);
         // console.log(`responseInterceptor: ${method} ${reqInfo.req.url}: \n${body}`);
+        console.log("responseInterceptor: " + method + " " + reqInfo.req.url);
         if (typeof reqInfo.query === 'object') {
             // if query parameters present, replace object w/ data key's value.
             // useful for testing; matches API behavior
             response.body = response.body.data;
         }
+        if (reqInfo.req.url === '/api/exports/activities' ||
+            reqInfo.req.url === '/api/exports/activitysignins' ||
+            reqInfo.req.url === '/api/exports/workers') {
+            response.body = response.body.data;
+        }
         return response;
     };
+    InMemoryDataService.prototype.parseUrl = function (url) {
+        try {
+            var loc = this.getLocation(url);
+            var drop = 0;
+            var urlRoot = '';
+            if (loc.host !== undefined) {
+                // url for a server on a different host!
+                // assume it's collection is actually here too.
+                drop = 1; // the leading slash
+                urlRoot = loc.protocol + '//' + loc.host + '/';
+            }
+            var path = loc.pathname.substring(drop);
+            var _a = path.split('/'), base = _a[0], collectionName = _a[1], id = _a[2];
+            var resourceUrl = urlRoot + base + '/' + collectionName + '/';
+            collectionName = collectionName.split('.')[0]; // ignore anything after the '.', e.g., '.json'
+            var query = loc.search && new __WEBPACK_IMPORTED_MODULE_0__angular_http__["k" /* URLSearchParams */](loc.search.substr(1));
+            var result = { base: base, collectionName: collectionName, id: id, query: query, resourceUrl: resourceUrl };
+            console.log('parsedUrl: ' + JSON.stringify(result));
+            return result;
+        }
+        catch (err) {
+            var msg = "unable to parse url '" + url + "'; original error: " + err.message;
+            throw new Error(msg);
+        }
+    };
+    InMemoryDataService.prototype.getLocation = function (href) {
+        var l = document.createElement('a');
+        l.href = href;
+        return l;
+    };
+    ;
     return InMemoryDataService;
 }());
 
