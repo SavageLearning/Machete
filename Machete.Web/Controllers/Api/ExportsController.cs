@@ -59,9 +59,10 @@ namespace Machete.Web.Controllers.Api
         }
 
         [Authorize(Roles = "Administrator")]
-        //public HttpResponseMessage Get(string id, string filterField, DateTime? beginDate, DateTime? endDate, [FromBody]string value)
-        [Route("{ZZtablename}/execute")]
-        [HttpGet]
+        // https://stackoverflow.com/questions/36274985/how-to-map-webapi-routes-correctly
+        // http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api#restful
+        // https://docs.microsoft.com/en-us/aspnet/web-api/overview/formats-and-model-binding/parameter-binding-in-aspnet-web-api
+        [HttpGet, Route("{ZZtablename}/execute")]
         public HttpResponseMessage Execute(string ZZtablename, string filterField, DateTime? beginDate, DateTime? endDate)
         {
             var includeOptions = this.Request.GetQueryNameValuePairs()
@@ -73,12 +74,13 @@ namespace Machete.Web.Controllers.Api
             var o = new SearchOptions
             {
                 name = ZZtablename,
-                exportFilterField = filterField,
+                exportFilterField = filterField == "undefined" ? null : filterField,
                 beginDate = beginDate,
                 endDate = endDate,
                 exportIncludeOptions = includeOptions
             };
-
+            // http://epplus.codeplex.com/wikipage?title=WebapplicationExample
+            // https://stackoverflow.com/questions/30570336/export-to-excel-as-a-response-in-web-api
             byte[] bytes = null;
             serv.getXlsxFile(o, ref bytes);
             HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);

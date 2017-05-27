@@ -61,6 +61,7 @@ namespace Machete.Data
 
         public DataTable getDataTable(string query, DTO.SearchOptions o)
         {
+            // https://stackoverflow.com/documentation/epplus/8223/filling-the-document-with-data
             DataTable dt = new DataTable();
             var cnxn = DataContext.Database.Connection.ConnectionString;
             using (SqlDataAdapter adapter = new SqlDataAdapter(query, cnxn))

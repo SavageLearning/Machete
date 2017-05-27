@@ -71,8 +71,8 @@ var EmployersComponent = (function () {
 EmployersComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
         selector: 'app-employers',
-        template: __webpack_require__(334),
-        styles: [__webpack_require__(331)]
+        template: __webpack_require__(337),
+        styles: [__webpack_require__(332)]
     }),
     __metadata("design:paramtypes", [])
 ], EmployersComponent);
@@ -125,7 +125,7 @@ EmployersRoutingModule = __decorate([
 
 /***/ }),
 
-/***/ 331:
+/***/ 332:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(20)(false);
@@ -143,7 +143,7 @@ module.exports = module.exports.toString();
 
 /***/ }),
 
-/***/ 334:
+/***/ 337:
 /***/ (function(module, exports) {
 
 module.exports = "<p>\r\n  employers works!\r\n</p>\r\n"

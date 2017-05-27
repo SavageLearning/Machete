@@ -95,13 +95,14 @@ namespace Machete.Service
             {
                 if (d.Value == "false") continue;
                 if (!firstSelect) query.Append(", ");
-                query.Append(d.Key);
+                query.Append(sanitizeColumnName(d.Key));
                 firstSelect = false;
             }
             //
             query.Append(" FROM ").Append(o.name);
             //
-            if (o.exportFilterField != null &&
+            if (o.exportFilterField != null
+                &&
                     (o.beginDate != null ||
                      o.endDate != null
                     ))
@@ -133,6 +134,12 @@ namespace Machete.Service
                 bytes = pck.GetAsByteArray();
             }
         }
+
+        public string sanitizeColumnName(string col)
+        {
+            return "[" + col + "]";
+        }
+
 
     }
 }
