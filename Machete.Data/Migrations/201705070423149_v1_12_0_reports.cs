@@ -19,6 +19,7 @@ namespace Machete.Data
                         sqlquery = c.String(),
                         category = c.String(),
                         subcategory = c.String(),
+                        inputsJson = c.String(),
                         columnsJson = c.String(),
                         datecreated = c.DateTime(nullable: false),
                         dateupdated = c.DateTime(nullable: false),
