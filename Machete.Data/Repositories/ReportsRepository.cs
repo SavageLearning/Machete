@@ -35,7 +35,7 @@ namespace Machete.Data
         {
             var rdef = dbset.Single(a => a.ID == id);
             return db.Get().Database.SqlQuery<SimpleDataRow>(rdef.sqlquery,
-                new SqlParameter { ParameterName = "startDate", Value = beginDate },
+                new SqlParameter { ParameterName = "beginDate", Value = beginDate },
                 new SqlParameter { ParameterName = "endDate", Value = endDate })
                 .ToList();
         }
@@ -48,7 +48,7 @@ namespace Machete.Data
             Task<List<object>> raw = db.Get().Database.SqlQuery(
                 queryType, 
                 rdef.sqlquery,
-                new SqlParameter { ParameterName = "startDate", Value = o.beginDate },
+                new SqlParameter { ParameterName = "beginDate", Value = o.beginDate },
                 new SqlParameter { ParameterName = "endDate", Value = o.endDate },
                 new SqlParameter { ParameterName = "dwccardnum", Value = o.dwccardnum }).ToListAsync();
 

@@ -25,7 +25,7 @@ namespace Machete.Data
                 description = "The number of completed dispatches, grouped by job (skill ID)",
                 sqlquery =
 @"SELECT
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByJob-' + convert(varchar(5), min(wa.skillid)) as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByJob-' + convert(varchar(5), min(wa.skillid)) as id,
 lskill.text_en  AS [Job type (skill)],
 count(lskill.text_en) [Count]
 FROM [dbo].WorkAssignments as WA 
@@ -33,19 +33,19 @@ join [dbo].lookups as lskill on (wa.skillid = lskill.id)
 join [dbo].WorkOrders as WO ON (WO.ID = WA.workorderID)
 join [dbo].lookups as lstatus on (WO.status = lstatus.id) 
 WHERE wo.dateTimeOfWork < (@endDate) 
-and wo.dateTimeOfWork > (@startDate)
+and wo.dateTimeOfWork > (@beginDate)
 and lstatus.text_en = 'Completed'
 group by lskill.text_en
 union 
 SELECT
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByJob-TOTAL' as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByJob-TOTAL' as id,
 'Total' AS [Job type (skill)],
 count(*) [Count]
 FROM [dbo].WorkAssignments as WA 
 join [dbo].WorkOrders as WO ON (WO.ID = WA.workorderID)
 join [dbo].lookups as lstatus on (WO.status = lstatus.id) 
 WHERE wo.dateTimeOfWork < (@endDate) 
-and wo.dateTimeOfWork > (@startDate)
+and wo.dateTimeOfWork > (@beginDate)
 and lstatus.text_en = 'Completed'"
             },
             // DispatchesByMonth
@@ -56,13 +56,13 @@ and lstatus.text_en = 'Completed'"
                 category = "Dispatches",
                 sqlquery =
 @"SELECT
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByMonth-' + convert(varchar(5), month(min(wo.datetimeofwork))) as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByMonth-' + convert(varchar(5), month(min(wo.datetimeofwork))) as id,
 convert(varchar(7), min(wo.datetimeofwork), 126)  AS [Month],
 count(*) [Count]
 from workassignments wa
 join workorders wo on wo.id = wa.workorderid
 join lookups l on wo.status = l.id
-where  datetimeofwork >= @startDate
+where  datetimeofwork >= @beginDate
 and datetimeofwork < @endDate
 and l.text_en = 'Completed'
 
@@ -71,13 +71,13 @@ group by month(wo.datetimeofwork)
 union 
 
 SELECT
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByMonth-TOTAL' as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByMonth-TOTAL' as id,
 'Total'  AS [Month],
 count(*) [Count]
 from workassignments wa
 join workorders wo on wo.id = wa.workorderid
 join lookups l on wo.status = l.id
-where  datetimeofwork >= @startDate
+where  datetimeofwork >= @beginDate
 and datetimeofwork < @endDate
 and l.text_en = 'Completed'"
             },
@@ -90,14 +90,14 @@ and l.text_en = 'Completed'"
                 category = "Demographics",
                 sqlquery =
 @"select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByIncome-' + convert(varchar(3), min(l.id)) as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByIncome-' + convert(varchar(3), min(l.id)) as id,
 L.text_EN as [Income range], 
 count(*) as [Count]
 FROM (
   select W.ID, W.incomeID
   from Workers W
   JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
-  WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+  WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
   group by W.ID, W.incomeID
 ) as WW
 JOIN dbo.Lookups L ON L.ID = WW.incomeID
@@ -106,7 +106,7 @@ group by L.text_EN
 union 
 
 select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByIncome-NULL'  as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByIncome-NULL'  as id,
 
 'NULL' as [Income range], 
 count(*) as [Count]
@@ -114,7 +114,7 @@ from (
    select W.ID, min(dateforsignin) firstsignin
    from workers W
    JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
-   WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+   WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
    and W.incomeID is null
    group by W.ID
 ) as WWW
@@ -122,7 +122,7 @@ from (
 union 
 
 select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByIncome-TOTAL'  as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByIncome-TOTAL'  as id,
 
 'Total' as [Income range], 
 count(*) as [Count]
@@ -130,7 +130,7 @@ from (
    select W.ID, min(dateforsignin) firstsignin
    from workers W
    JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
-   WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+   WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
    group by W.ID
 ) as WWW"
             },
@@ -143,7 +143,7 @@ from (
                 category = "Demographics",
                 sqlquery =
 @"select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByDisability-' + min(disabled) as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByDisability-' + min(disabled) as id,
 disabled as [Disabled?], 
 count(*) as [Count]
 FROM (
@@ -155,18 +155,18 @@ FROM (
   END as disabled
   from Workers W
   JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
-  WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+  WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
   group by W.ID, W.disabled
 ) as WW
 group by disabled
 union 
 select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByDisability-TOTAL' as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByDisability-TOTAL' as id,
 'Total' as [Disabled?], 
 count(distinct(w.id)) as [Count]
 from Workers W
 JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
-WHERE dateforsignin >= @startDate and dateforsignin <= @endDate"
+WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate"
             },
             // WorkersByLivingSituation
             new ReportDefinition
@@ -177,7 +177,7 @@ WHERE dateforsignin >= @startDate and dateforsignin <= @endDate"
                 category = "Demographics",
                 sqlquery =
 @"select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByLivingSituation-' + min(homeless) as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByLivingSituation-' + min(homeless) as id,
 homeless as [Homeless?], 
 count(*) as [Count]
 FROM (
@@ -189,20 +189,20 @@ FROM (
   END as homeless
   from Workers W
   JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
-  WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+  WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
   group by W.ID, W.homeless
 ) as WW
 group by homeless
 union
 select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByLivingSituation-TOTAL'  as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByLivingSituation-TOTAL'  as id,
 'Total' as [Homeless?], 
 count(*) as [Count]
 from (
    select W.ID, min(dateforsignin) firstsignin
    from workers W
    JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
-   WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+   WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
    group by W.ID
 ) as WWW"
             },
@@ -215,7 +215,7 @@ from (
                 category = "Demographics",
                 sqlquery =
 @"select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByHouseholdComposition-' + myid as id, 
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByHouseholdComposition-' + myid as id, 
 label as [Household], 
 count(*) as [Count]
 FROM 
@@ -233,20 +233,20 @@ FROM
   END as myid
   from Workers W
   JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
-  WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+  WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
   group by W.ID, W.livewithchildren, W.livealone
 ) as WW
 group by label, myid
 union 
 select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByHouseholdComposition-TOTAL'  as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByHouseholdComposition-TOTAL'  as id,
 'Total' as [Household], 
 count(*) as [Count]
 from (
    select W.ID, min(dateforsignin) firstsignin
    from workers W
    JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
-   WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+   WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
    group by W.ID
 ) as WWW"
             },
@@ -260,7 +260,7 @@ from (
                 sqlquery =
 @"
 select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByArrivalStatus-' + min(immigrantrefugee) as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByArrivalStatus-' + min(immigrantrefugee) as id,
 immigrantrefugee as [Immigrant / Refugee?], 
 count(*) as [count]
 FROM (
@@ -272,20 +272,20 @@ FROM (
   END as immigrantrefugee
   from Workers W
   JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
-  WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+  WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
   group by W.ID, W.immigrantrefugee
 ) as WW
 group by immigrantrefugee
 union 
 select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByArrivalStatus-TOTAL'  as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByArrivalStatus-TOTAL'  as id,
 'Total' as [Immigrant / Refugee?], 
 count(*) as [Count]
 from (
    select W.ID, min(dateforsignin) firstsignin
    from workers W
    JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
-   WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+   WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
    group by W.ID
 ) as WWW"
             },
@@ -298,7 +298,7 @@ from (
                 category = "Demographics",
                 sqlquery =
 @"select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByLimitedEnglish-' + min(limitedEnglish) as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByLimitedEnglish-' + min(limitedEnglish) as id,
 limitedEnglish as [Limited English?], 
 count(*) as [Count]
 FROM (
@@ -310,21 +310,21 @@ FROM (
   END as limitedEnglish
   from Workers W
   JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
-  WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+  WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
   group by W.ID, W.Englishlevelid
 ) as WW
 group by limitedEnglish
 
 union 
 select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByLimitedEnglish-TOTAL'  as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByLimitedEnglish-TOTAL'  as id,
 'Total' as [Limited English], 
 count(*) as [Count]
 from (
    select W.ID, min(dateforsignin) firstsignin
    from workers W
    JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
-   WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+   WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
    group by W.ID
 ) as WWW"
             },
@@ -337,27 +337,27 @@ from (
                 category = "Demographics",
                 sqlquery =
 @"select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByZipcode-' + min(zipcode) as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByZipcode-' + min(zipcode) as id,
 zipcode as Zipcode, 
 count(*) as [Count]
 FROM (
   select W.ID, isnull(w.zipcode, 'NULL') as zipcode
   from Persons W
   JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
-  WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+  WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
   group by W.ID, W.zipcode
 ) as WW
 group by zipcode
 union
 select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByZipcode-TOTAL'  as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByZipcode-TOTAL'  as id,
 'Total' as [Zipcode], 
 count(*) as [Count]
 from (
    select W.ID, min(dateforsignin) firstsignin
    from workers W
    JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
-   WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+   WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
    group by W.ID
 ) as WWW"
             },
@@ -370,7 +370,7 @@ from (
                 category = "Demographics",
                 sqlquery =
 @"select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByLatinoStatus-' + min(raceID) as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByLatinoStatus-' + min(raceID) as id,
 raceID as [Latino status], 
 count(*) as [Count]
 FROM (
@@ -382,20 +382,20 @@ FROM (
   END as raceID
   from Workers W
   JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
-  WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+  WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
   group by W.ID, W.raceID
 ) as WW
 group by raceID
 union
 select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByLatinoStatus-TOTAL'  as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByLatinoStatus-TOTAL'  as id,
 'Total' as [Latino status], 
 count(*) as [Count]
 from (
    select W.ID, min(dateforsignin) firstsignin
    from workers W
    JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
-   WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+   WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
    group by W.ID
 ) as WWW"
             },
@@ -408,14 +408,14 @@ from (
                 category = "Demographics",
                 sqlquery =
 @"select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByEthnicGroup-' + convert(varchar(5), min(WW.raceID)) as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByEthnicGroup-' + convert(varchar(5), min(WW.raceID)) as id,
 L.text_EN as [Ethnic group], 
 count(*) as [Count]
 FROM (
   select W.ID, W.raceID
   from Workers W
   JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
-  WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+  WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
   group by W.ID, W.raceID
 ) as WW
 JOIN dbo.Lookups L ON L.ID = WW.raceID
@@ -424,28 +424,28 @@ group by L.text_EN
 union 
 
 select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByEthnicGroup-NULL' as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByEthnicGroup-NULL' as id,
 'NULL' as [Ethnic group], 
 count(*) as [Count]
 from (
    select W.ID, min(dateforsignin) firstsignin
    from workers W
    JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
-   WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+   WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
    and W.raceID is null
    group by W.ID
 ) as WWW
 
 union
 select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByEthnicGroup-TOTAL'  as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByEthnicGroup-TOTAL'  as id,
 'Total' as [Ethnic group], 
 count(*) as [Count]
 from (
    select W.ID, min(dateforsignin) firstsignin
    from workers W
    JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
-   WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+   WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
    group by W.ID
 ) as WWW"
             },
@@ -459,14 +459,14 @@ from (
                 sqlquery =
 @"
 select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByGender-' + convert(varchar(5), min(WW.gender)) as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByGender-' + convert(varchar(5), min(WW.gender)) as id,
 L.text_EN as [Gender], 
 count(*) as [Count]
 FROM (
   select W.ID, W.gender
   from persons W
   JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
-  WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+  WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
   group by W.ID, W.gender
 ) as WW
 JOIN dbo.Lookups L ON L.ID = WW.gender
@@ -475,28 +475,28 @@ group by L.text_EN
 union 
 
 select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByGender-NULL' as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByGender-NULL' as id,
 'NULL' as [Gender], 
 count(*) as [Count]
 from (
    select W.ID, min(dateforsignin) firstsignin
    from persons W
    JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
-   WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+   WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
    and W.gender is null
    group by W.ID
 ) as WWW
 
 union
 select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByGender-TOTAL'  as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByGender-TOTAL'  as id,
 'Total' as [Gender], 
 count(*) as [Count]
 from (
    select W.ID, min(dateforsignin) firstsignin
    from workers W
    JOIN dbo.WorkerSignins WSI ON W.ID = WSI.WorkerID
-   WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+   WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
    group by W.ID
 ) as WWW"
             },
@@ -543,12 +543,12 @@ as
 			from Workers
 		) as W
 		join workersignins wsi on wsi.workerID = W.ID
-		WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+		WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
 		group by w.id, w.age, w.dateofbirth
 	) as a
 )
 select 
-	convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByAgeGroupBase10-' + convert(varchar(10), min(age_range)) as id,	
+	convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByAgeGroupBase10-' + convert(varchar(10), min(age_range)) as id,	
 	age_range as [Age range], 
 	count(*) as [Count]
 from demos_age 
@@ -602,12 +602,12 @@ as
 			from Workers
 		) as W
 		join workersignins wsi on wsi.workerID = W.ID
-		WHERE dateforsignin >= @startDate and dateforsignin <= @endDate
+		WHERE dateforsignin >= @beginDate and dateforsignin <= @endDate
 		group by w.id, w.age, w.dateofbirth
 	) as a
 )
 select 
-	convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByAgeGroupUnitedWay-' + convert(varchar(10), min(age_range)) as id,	
+	convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkersByAgeGroupUnitedWay-' + convert(varchar(10), min(age_range)) as id,	
 	age_range as [Age range], 
 	count(*) as [Count]
 from demos_age 
@@ -623,7 +623,7 @@ order by ordinal"
                 category = "Transportation",
                 sqlquery =
 @"select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-TransportationFeeDetails-' + convert(varchar(6), min(WOs.paperOrderNum)) as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-TransportationFeeDetails-' + convert(varchar(6), min(WOs.paperOrderNum)) as id,
    WOs.dateTimeofWork AS [Work start time],
    WOs.paperOrderNum as [WO number],
    text_EN as [Transport type],
@@ -638,7 +638,7 @@ join dbo.WorkAssignments WAs on WOs.ID = WAs.workOrderID
 join dbo.Persons Ps on WAs.workerAssignedID = Ps.ID
 where category like 'transportmethod' 
 	and (transportFee + transportFeeExtra) > 0
-    and WOs.dateTimeofWork > @startDate
+    and WOs.dateTimeofWork > @beginDate
 	and WOs.dateTimeofWork < @endDate
 	and WAs.workerAssignedID IS NOT NULL
 group by WOs.dateTimeofWork, WOs.paperOrderNum, text_EN, name, transportFee, transportFeeExtra"
@@ -653,7 +653,7 @@ group by WOs.dateTimeofWork, WOs.paperOrderNum, text_EN, name, transportFee, tra
                 sqlquery =
 @"
 select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-TransportationFeeMonthly-' + CONVERT(VARCHAR(7), workStartTime, 102)as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-TransportationFeeMonthly-' + CONVERT(VARCHAR(7), workStartTime, 102)as id,
 CONVERT(VARCHAR(7), workStartTime, 102) as Month,
 count (wonum) as [Order count],
 sum(wkrcount) as [Worker count],
@@ -676,7 +676,7 @@ from
 	join dbo.Persons Ps on WAs.workerAssignedID = Ps.ID
 	where category like 'transportmethod' 
 		and (transportFee + transportFeeExtra) > 0
-		and WOs.dateTimeofWork > @startDate
+		and WOs.dateTimeofWork > @beginDate
 		and WOs.dateTimeofWork < @endDate
 		and WAs.workerAssignedID IS NOT NULL
 	group by WOs.dateTimeofWork, WOs.paperOrderNum, text_EN, name, transportFee, transportFeeExtra
@@ -693,7 +693,7 @@ the report identifies if the member met the 12-hour or 24-hour threshold.",
                 category = "Activities",
                 sqlquery =
 @"select 
-    convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-' + convert(varchar(10), min(member)) as id,	
+    convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-' + convert(varchar(10), min(member)) as id,	
 	member as [Member ID], 
 	sum(minutes) as [Total minutes],
 	min([12hrTier]) as [12 hr completion],
@@ -715,7 +715,7 @@ from
 	JOIN dbo.Lookups Ls ON Acts.name = Ls.ID
 	JOIN dbo.ActivitySignins ASIs ON Acts.ID = ASIs.ActivityID
 	WHERE text_en LIKE 'English%'
-	AND dateStart >= @startDate AND dateend <= @enddate
+	AND dateStart >= @beginDate AND dateend <= @enddate
 
 	GROUP BY dwccardnum
 ) as foo 
@@ -730,7 +730,7 @@ group by member"
                 category = "Dispatches",
                 sqlquery =
 @"select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByMonthYearToYear-' + convert(varchar(4), [year])  as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByMonthYearToYear-' + convert(varchar(4), [year])  as id,
 year, 
 	[1] as 'Jan', [2] as 'Feb', [3] as 'Mar', [4] as 'Apr',
 	[5] as 'May', [6] as 'Jun', [7] as 'Jul', [8] as 'Aug',
@@ -745,7 +745,7 @@ from
 	JOIN [dbo].[WorkOrders] WOs ON WAs.workOrderID = WOs.ID
 	join [dbo].[Lookups] l on wos.status = l.id
 	WHERE [workerAssignedID] IS NOT NULL
-	AND [dateTimeOfWork] >= @startdate
+	AND [dateTimeOfWork] >= @beginDate
 	AND [dateTimeOfWork] <= @enddate
 	and l.text_en = 'Completed'
 	GROUP BY year([dateTimeOfWork]), month([dateTimeOfWork])
@@ -768,7 +768,7 @@ ORDER BY pvt.year"
                 category = "Dispatches",
                 sqlquery =
 @"select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-AverageWageByMonthYearToYear-' + convert(varchar(4), [year])  as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-AverageWageByMonthYearToYear-' + convert(varchar(4), [year])  as id,
 year, 
 	cast(isnull([1],0) as float) as 'Jan', 
 	cast(isnull([2],0) as float) as 'Feb', 
@@ -791,7 +791,7 @@ from
 	JOIN [dbo].[WorkOrders] WOs ON WAs.workOrderID = WOs.ID
 	join [dbo].[Lookups] l on wos.status = l.id
 	WHERE [workerAssignedID] IS NOT NULL
-	AND [dateTimeOfWork] >= @startdate
+	AND [dateTimeOfWork] >= @beginDate
 	AND [dateTimeOfWork] <= @enddate
 	and l.text_en = 'Completed'
 	GROUP BY year([dateTimeOfWork]), month([dateTimeOfWork])
@@ -813,7 +813,7 @@ FOR month IN
                 category = "Dispatches",
                 sqlquery =
 @"select
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByProgramYearToYear-' + year_program as id, 
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByProgramYearToYear-' + year_program as id, 
 year_program, 
 	isnull([1],0) as 'Jan', 
 	isnull([2],0) as 'Feb', 
@@ -839,7 +839,7 @@ from
 	INNER JOIN WorkOrders wo ON wa.workOrderID = wo.ID
 	inner join lookups l on w.typeOfWorkID = l.ID
 	inner join lookups ll on wo.status = ll.id
-	where [dateTimeOfWork] >= @startdate
+	where [dateTimeOfWork] >= @beginDate
 	AND [dateTimeOfWork] <= @enddate
 	and ll.text_en = 'Completed'
 	group by l.Text_EN, l.[key], year(wo.dateTimeofWork), month(wo.dateTimeofWork)
@@ -860,7 +860,7 @@ FOR month IN
                 category = "site-specific",
                 sqlquery =
 @"select
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-CityReport-NewEnrolls-' + convert(varchar(4), [year]) as id, 
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-CityReport-NewEnrolls-' + convert(varchar(4), [year]) as id, 
     'Newly enrolled in program (within time range)' as label, 
     cast(year as int) as year, 
 	cast([1] as int) as 'Jan', 
@@ -882,7 +882,7 @@ from
 	(
 		SELECT MIN(dateforsignin) AS signindate, dwccardnum as cardnum
 		FROM dbo.WorkerSignins
-		WHERE dateforsignin >= @startdate AND
+		WHERE dateforsignin >= @beginDate AND
 		dateforsignin < @EnDdate
 		GROUP BY dwccardnum
 
@@ -890,7 +890,7 @@ from
 
 		select min(dateforsignin) as singindate, dwccardnum as cardnum
 		from activitysignins asi
-		where dateforsignin >= @startdate
+		where dateforsignin >= @beginDate
 		and dateforsignin < @enddate
 		group by dwccardnum
 	) 
@@ -907,7 +907,7 @@ FOR month IN
 union 
 
 select
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-CityReport-FinEd-' + convert(varchar(4), [year]) as id, 
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-CityReport-FinEd-' + convert(varchar(4), [year]) as id, 
     'Counts of members who accessed finanacial literacy' as label, 
     cast(year as int) as year, 
 	cast([1] as int) as 'Jan', 
@@ -931,7 +931,7 @@ from
 		FROM dbo.Activities Acts
 		JOIN dbo.ActivitySignins ASIs ON Acts.ID = ASIs.ActivityID
 		JOIN dbo.Lookups Ls ON Acts.name = Ls.ID
-		WHERE Ls.ID = 179 AND dateStart >= @startDate AND dateStart <= @endDate
+		WHERE Ls.ID = 179 AND dateStart >= @beginDate AND dateStart <= @endDate
 
 		GROUP BY ASIs.dwccardnum
 	) 
@@ -948,7 +948,7 @@ FOR month IN
 union 
 
 select
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-CityReport-Training-' + convert(varchar(4), [year]) as id, 
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-CityReport-Training-' + convert(varchar(4), [year]) as id, 
     'Counts of members who participated in job skill training or workshops' as label, 
     cast(year as int) as year, 
 	cast([1] as int) as 'Jan', 
@@ -972,7 +972,7 @@ from
 		FROM dbo.Activities Acts
 		JOIN dbo.ActivitySignins ASIs ON Acts.ID = ASIs.ActivityID
 		JOIN dbo.Lookups Ls ON Acts.name = Ls.ID
-		WHERE dateStart >= @startdate AND dateStart <= @enddate AND
+		WHERE dateStart >= @beginDate AND dateStart <= @enddate AND
 		(Ls.ID = 182 OR Ls.ID = 181 OR Ls.ID = 180
 		OR Ls.ID = 179 OR Ls.ID = 178 OR Ls.ID = 134
 		OR Ls.ID = 168 OR Ls.ID = 156 OR Ls.ID = 152
@@ -993,7 +993,7 @@ FOR month IN
 union 
 
 select
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-CityReport-ESL-' + convert(varchar(4), [year]) as id, 
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-CityReport-ESL-' + convert(varchar(4), [year]) as id, 
     'Counts of members who accessed at least 12 hours of ESL classes' as label, 
     cast(year as int) as year, 
 	cast([1] as int) as 'Jan', 
@@ -1020,7 +1020,7 @@ from
 			JOIN dbo.Lookups Ls ON Acts.name = Ls.ID
 			JOIN dbo.ActivitySignins ASIs ON Acts.ID = ASIs.ActivityID
 			WHERE text_en LIKE '%English%'
-			AND dateStart >= @startdate AND dateend <= @EnDdate
+			AND dateStart >= @beginDate AND dateend <= @EnDdate
 			group by year(datestart), month(datestart), dwccardnum
 	) as foo
 	where foo.minutes >= 720
@@ -1036,7 +1036,7 @@ FOR month IN
 union 
 
 select
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-CityReport-UndupCount-' + convert(varchar(4), [year]) as id, 
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-CityReport-UndupCount-' + convert(varchar(4), [year]) as id, 
 
     'A2H1-0 count of unduplicated individuals securing day labor employment this period' as label, 
     cast(year as int) as year, 
@@ -1062,7 +1062,7 @@ from
 		JOIN dbo.WorkOrders WOs ON WAs.workOrderID = WOs.ID
 		JOIN dbo.Workers Ws on WAs.workerAssignedID = Ws.ID
 		join dbo.lookups l on l.id = wos.status
-		WHERE dateTimeofWork >= @startdate 
+		WHERE dateTimeofWork >= @beginDate 
 		and dateTimeofWork <= @EnDdate
 		and l.text_EN = 'Completed'
 		group by dwccardnum
@@ -1086,7 +1086,7 @@ FOR month IN
                 category = "Employers",
                 sqlquery =
 @"select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-' + convert(varchar(5), business) as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-' + convert(varchar(5), business) as id,
 case
   when business = 0 then 'Individual'
   when business = 1 then 'Business'
@@ -1096,7 +1096,7 @@ FROM (
 SELECT
 business, count(*) as [count]
 FROM dbo.Employers Es
-WHERE Es.datecreated >= @startdate AND Es.datecreated <= @EnDdate
+WHERE Es.datecreated >= @beginDate AND Es.datecreated <= @EnDdate
 group by business
 ) as WW"
             },
@@ -1109,14 +1109,14 @@ group by business
                 category = "Dispatches",
                 sqlquery =
 @"SELECT
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-total' as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-total' as id,
 COUNT(DISTINCT(dwccardnum)) AS [Unduplicated dispatches], 
 COUNT(WAs.ID) AS [Total dispatches]
 FROM dbo.WorkAssignments WAs
 JOIN dbo.WorkOrders WOs on WAs.WorkOrderID = WOs.ID
 JOIN dbo.Workers Ws on WAs.WorkerAssignedID = Ws.ID
 join dbo.lookups l on wos.status = l.id
-WHERE WOs.dateTimeOfWork >= @startdate 
+WHERE WOs.dateTimeOfWork >= @beginDate 
 AND WOs.dateTimeOfWork <= @enddate
 and l.text_en = 'Completed'"
             },
@@ -1130,7 +1130,7 @@ and l.text_en = 'Completed'"
                 sqlquery =
 @"
 select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByZipCodeAndCatecory-' + isnull(zipcode, 'Total') as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByZipCodeAndCatecory-' + isnull(zipcode, 'Total') as id,
 isnull(zipcode, 'Total') as zipcode,
 sum(
 	isnull([cl],0)+
@@ -1182,7 +1182,7 @@ from
 		JOIN dbo.WorkAssignments WAs ON WOs.ID = WAs.workOrderID
 		JOIN dbo.Lookups LOs ON WAs.skillID = LOs.ID
 		join dbo.lookups l on WOs.status = l.id
-		where [dateTimeOfWork] >= @startdate
+		where [dateTimeOfWork] >= @beginDate
 		AND [dateTimeOfWork] <= @enddate
 		and l.text_en = 'Completed'
 
@@ -1207,7 +1207,7 @@ order by total desc"
                 category = "Dispatches",
                 sqlquery =
 @"select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByZipCodeAndEmployerType-' + isnull(zipcode, 'Total') as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-DispatchesByZipCodeAndEmployerType-' + isnull(zipcode, 'Total') as id,
 isnull(zipcode, 'Total') as zipcode,
 sum(
 	isnull([I],0)+
@@ -1232,7 +1232,7 @@ from
 		join employers e on wos.employerid = e.id
 		JOIN dbo.WorkAssignments WAs ON WOs.ID = WAs.workOrderID
 		join dbo.lookups l on WOs.status = l.id
-		where [dateTimeOfWork] >= @startdate
+		where [dateTimeOfWork] >= @beginDate
 		AND [dateTimeOfWork] <= @enddate
 		and l.text_en = 'Completed'
 
@@ -1281,7 +1281,7 @@ WHERE     (w.dwccardnum = @dwccardnum)",
                 inputsJson = "{\"beginDate\":true,\"endDate\":true,\"memberNumber\":true}",
                 sqlquery =
 @"select 
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkerDetailsJobsSummary-' + convert(varchar(6), @dwccardnum) + '-' + CONVERT(VARCHAR(7), dateTimeofWork, 102)as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkerDetailsJobsSummary-' + convert(varchar(6), @dwccardnum) + '-' + CONVERT(VARCHAR(7), dateTimeofWork, 102)as id,
 CONVERT(VARCHAR(7), dateTimeofWork, 102) as Month,
 count(*) as [Job Count],
 sum(hours) as [Hours worked],
@@ -1297,7 +1297,7 @@ from
 	WorkOrders AS wo ON wa.workOrderID = wo.ID
 	inner join workers as w on (w.id = wa.workerassignedID)
 	WHERE w.dwccardnum = @dwccardnum
-		and WO.dateTimeofWork > @startDate
+		and WO.dateTimeofWork > @beginDate
 		and WO.dateTimeofWork < @endDate
 ) as foo
 group by
@@ -1313,7 +1313,7 @@ group by
                 inputsJson = "{\"beginDate\":true,\"endDate\":true,\"memberNumber\":true}",
                 sqlquery =
 @"SELECT   
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkerDetailsJobsItemized-' + convert(varchar(6), @dwccardnum) + '-' + CONVERT(VARCHAR(7), wa.id)as id, 
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-WorkerDetailsJobsItemized-' + convert(varchar(6), @dwccardnum) + '-' + CONVERT(VARCHAR(7), wa.id)as id, 
 l.text_en AS skill, 
 wa.hours, 
 CONVERT(money, wa.hourlyWage) AS hourlyWage, 
@@ -1327,7 +1327,7 @@ INNER JOIN WorkOrders AS wo ON wa.workOrderID = wo.ID
 inner join workers as w on (w.id = wa.workerassignedID)
 inner join Lookups l on (l.id = wa.skillID)
 WHERE     (w.dwccardnum = @dwccardnum)
-		and WO.dateTimeofWork > @startDate
+		and WO.dateTimeofWork > @beginDate
 		and WO.dateTimeofWork < @endDate"
             },
             // Worker details -- signin summary
@@ -1381,7 +1381,7 @@ from
 	FROM
 	  WorkerSignins wsi
 	where dwccardnum = @dwccardnum
-	and wsi.dateforsignin >= @startDate
+	and wsi.dateforsignin >= @beginDate
 	and wsi.dateforsignin <= @endDate
 ) as foo
 pivot
@@ -1401,7 +1401,7 @@ group by convert(varchar(7), signindate, 102)"
                 description = "",
                 category = "Activities",
                 sqlquery = @"SELECT
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-ActivityAttendanceByType-' + convert(varchar(5), min(a.name)) as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-ActivityAttendanceByType-' + convert(varchar(5), min(a.name)) as id,
 l.text_en [Activity], 
 count(*) [Count],
 count(distinct(asi.dwccardnum)) [Unique workers]
@@ -1409,13 +1409,13 @@ from
 activities a
 join activitysignins asi on a.id = asi.activityid
 join lookups l on l.id = a.name
-where a.datestart > @startdate
+where a.datestart > @beginDate
 and a.datestart < @enddate
 group by l.text_en
 
 union
 SELECT
-convert(varchar(8), @startDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-ActivityAttendanceByType-TOTAL' as id,
+convert(varchar(8), @beginDate, 112) + '-' + convert(varchar(8), @endDate, 112) + '-ActivityAttendanceByType-TOTAL' as id,
 'Total' as [Activity], 
 count(*) [Count],
 count(distinct(asi.dwccardnum)) [Unique workers]
@@ -1423,7 +1423,7 @@ from
 activities a
 join activitysignins asi on a.id = asi.activityid
 join lookups l on l.id = a.name
-where a.datestart > @startdate
+where a.datestart > @beginDate
 and a.datestart < @enddate
 order by count desc"
             },
@@ -1439,7 +1439,7 @@ order by count desc"
 	JOIN dbo.Workers Ws on WAs.workerAssignedID = Ws.ID
 	join dbo.lookups l on l.id = wos.status
 	join dbo.persons p on p.id = ws.id
-	WHERE dateTimeofWork >= @startdate 
+	WHERE dateTimeofWork >= @beginDate 
 	and dateTimeofWork <= @EnDdate
 	and l.text_EN = 'Completed'
 	group by dwccardnum, fullname
