@@ -100,8 +100,9 @@ namespace Machete.Web.Controllers
                 if (user != null)
                 {
                     await SignInAsync(user, false);
-
-                    return RedirectToAction("/", "HirerWorkOrder");
+                    return RedirectToLocal("/V2/Employers"); //  RedirectToAction("Index", "HirerWorkOrder");
+                    
+                    //return RedirectToAction("/", "HirerWorkOrder");
                 }
                 else
                 {

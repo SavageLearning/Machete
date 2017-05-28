@@ -11,14 +11,14 @@ namespace Machete.Api.Controllers
 {
     [ElmahHandleError]
     [Authorize]
-    public class EmployerController : ApiController
+    public class EmployersController : ApiController
     {
         private readonly IEmployerService serv;
         private readonly IWorkOrderService woServ;
         private readonly IMapper map;
         private readonly IDefaults def;
 
-        public EmployerController(IEmployerService employerService, IWorkOrderService workorderService,
+        public EmployersController(IEmployerService employerService, IWorkOrderService workorderService,
             IDefaults def,
             IMapper map)
         {
@@ -28,17 +28,17 @@ namespace Machete.Api.Controllers
             this.def = def;
         }
         // GET api/values
-        public IEnumerable<Web.ViewModel.Employer> Get()
+        public IHttpActionResult Get()
         {
             var vo = new viewOptions();
             vo.displayLength = 10;
             vo.displayStart = 0;
-            dataTableResult<DTO.EmployerList> list = serv.GetIndexView(vo);
+            dataTableResult<DTO.EmployersList> list = serv.GetIndexView(vo);
             var result = list.query
                 .Select(
-                    e => map.Map<DTO.EmployerList, Web.ViewModel.Employer>(e)
+                    e => map.Map<DTO.EmployersList, Web.ViewModel.Employer>(e)
                 ).AsEnumerable();
-            return result;
+            return Json(new { data =  result });
         }
 
         // GET api/values/5

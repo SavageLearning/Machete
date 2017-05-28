@@ -265,7 +265,7 @@
     <Compile Include="DTO\ActivitySigninList.cs" />
     <Compile Include="DTO\ConfigList.cs" />
     <Compile Include="DTO\EmailList.cs" />
-    <Compile Include="DTO\EmployerList.cs" />
+    <Compile Include="DTO\EmployersList.cs" />
     <Compile Include="DTO\EventList.cs" />
     <Compile Include="DTO\PersonList.cs" />
     <Compile Include="DTO\Reports\SimpleDataRow.cs" />
