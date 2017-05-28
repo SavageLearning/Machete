@@ -42,6 +42,7 @@ using System.Web.Routing;
 using System.Web.Http;
 using Unity.Mvc4;
 using AutoMapper;
+using Newtonsoft.Json;
 
 namespace Machete.Web
 {
@@ -82,6 +83,7 @@ namespace Machete.Web
 
         protected void Application_Start()
         {
+            GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.Re‌​ferenceLoopHandling = ReferenceLoopHandling.Ignore;
             //HibernatingRhinos.Profiler.Appender.EntityFramework.EntityFrameworkProfiler.Initialize();
             AreaRegistration.RegisterAllAreas();
             // from MVC 4 template

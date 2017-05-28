@@ -11,14 +11,14 @@ namespace Machete.Api.Controllers
 {
     [ElmahHandleError]
     [Authorize]
-    public class EmployersController : ApiController
+    public class WorkAssignmentsController : ApiController
     {
-        private readonly IEmployerService serv;
+        private readonly IWorkAssignmentService serv;
         private readonly IWorkOrderService woServ;
         private readonly IMapper map;
         private readonly IDefaults def;
 
-        public EmployersController(IEmployerService employerService, IWorkOrderService workorderService,
+        public WorkAssignmentsController(IWorkAssignmentService employerService, IWorkOrderService workorderService,
             IDefaults def,
             IMapper map)
         {
@@ -33,10 +33,10 @@ namespace Machete.Api.Controllers
             var vo = new viewOptions();
             vo.displayLength = 10;
             vo.displayStart = 0;
-            dataTableResult<DTO.EmployersList> list = serv.GetIndexView(vo);
+            dataTableResult<DTO.WorkAssignmentsList> list = serv.GetIndexView(vo);
             var result = list.query
                 .Select(
-                    e => map.Map<DTO.EmployersList, Web.ViewModel.Api.Employer>(e)
+                    e => map.Map<DTO.WorkAssignmentsList, Web.ViewModel.Api.WorkAssignment>(e)
                 ).AsEnumerable();
             return Json(new { data =  result });
         }
@@ -44,8 +44,8 @@ namespace Machete.Api.Controllers
         // GET api/values/5
         public IHttpActionResult Get(int id)
         {
-            var m = map.Map<Domain.Employer, Web.ViewModel.Api.Employer>(serv.Get(id));
-            return Ok(m);
+            var result = map.Map<Domain.WorkAssignment, Web.ViewModel.Api.WorkAssignment>(serv.Get(id));
+            return Json(new { data = result });
         }
 
         // POST api/values

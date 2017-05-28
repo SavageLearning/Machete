@@ -220,13 +220,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\Api\WorkAssignmentsController.cs" />
+    <Compile Include="Controllers\Api\WorkOrdersController.cs" />
     <Compile Include="Controllers\Api\ExportsController.cs" />
     <Compile Include="Controllers\Api\ReportsController.cs" />
     <Compile Include="Controllers\ReportsV2Controller.cs" />
     <Compile Include="Controllers\V2Controller.cs" />
     <Compile Include="Maps\ActivityProfile.cs" />
     <Compile Include="Maps\ActivitySigninProfile.cs" />
-    <Compile Include="Maps\Api\ReportDefinitionProfile.cs" />
+    <Compile Include="Maps\Api\EmployersMap.cs" />
+    <Compile Include="Maps\Api\WorkAssignmentsMap.cs" />
+    <Compile Include="Maps\Api\WorkOrdersMap.cs" />
+    <Compile Include="Maps\Api\ReportDefinitionsMap.cs" />
     <Compile Include="Maps\ConfigProfile.cs" />
     <Compile Include="Maps\EmailProfile.cs" />
     <Compile Include="Maps\EmployerProfile.cs" />
@@ -289,7 +294,10 @@
     <Compile Include="ViewModel\ActivityIndex.cs" />
     <Compile Include="ViewModel\ActivitySchedule.cs" />
     <Compile Include="ViewModel\ActivitySignin.cs" />
+    <Compile Include="ViewModel\Api\Employer.cs" />
     <Compile Include="ViewModel\Api\ReportDefinition.cs" />
+    <Compile Include="ViewModel\Api\WorkAssignment.cs" />
+    <Compile Include="ViewModel\Api\WorkOrder.cs" />
     <Compile Include="ViewModel\Config.cs" />
     <Compile Include="ViewModel\Email.cs" />
     <Compile Include="ViewModel\Event.cs" />

@@ -7,11 +7,11 @@ using Newtonsoft.Json;
 
 namespace Machete.Web.Maps
 {
-    public class ReportDefinitionProfile : MacheteProfile
+    public class ReportDefinitionsMap : MacheteProfile
     {
-        public ReportDefinitionProfile()
+        public ReportDefinitionsMap()
         {
-            CreateMap<Domain.ReportDefinition, ViewModel.ReportDefinition>()
+            CreateMap<Domain.ReportDefinition, ViewModel.Api.ReportDefinition>()
                 .ForMember(v => v.id, opt => opt.MapFrom(d => d.ID))
                 .ForMember(v => v.columns, opt => opt.MapFrom(d => JsonConvert.DeserializeObject(d.columnsJson)))
                 .ForMember(v => v.inputs, opt => opt.MapFrom(d => JsonConvert.DeserializeObject(d.inputsJson)))

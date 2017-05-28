@@ -20,7 +20,7 @@ namespace Machete.Web.ViewModel
         public string transportMethod { get; set; }
     }
 
-    public class WorkOrderList
+    public class WorkOrdersList
     {
         public string tabref { get; set; }
         public string tablabel { get; set; }

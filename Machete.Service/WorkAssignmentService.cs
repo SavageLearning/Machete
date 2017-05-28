@@ -38,7 +38,7 @@ namespace Machete.Service
         IQueryable<WorkAssignmentSummary> GetSummary(string search);
         bool Assign(WorkAssignment assignment, WorkerSignin signin, string user);
         bool Unassign(int? wsiid, int? waid, string user);
-        dataTableResult<DTO.WorkAssignmentList> GetIndexView(viewOptions o);
+        dataTableResult<DTO.WorkAssignmentsList> GetIndexView(viewOptions o);
     }
 
     // Business logic for WorkAssignment record management
@@ -86,9 +86,9 @@ namespace Machete.Service
             }         
             return wa;
         }
-        public dataTableResult<DTO.WorkAssignmentList> GetIndexView(viewOptions o)
+        public dataTableResult<DTO.WorkAssignmentsList> GetIndexView(viewOptions o)
         {
-            var result = new dataTableResult<DTO.WorkAssignmentList>();
+            var result = new dataTableResult<DTO.WorkAssignmentsList>();
             IQueryable<WorkAssignment> q = waRepo.GetAllQ();
             //
             // 
@@ -111,14 +111,14 @@ namespace Machete.Service
             result.filteredCount = q.Count();
             if (o.displayLength > 0)
             {
-                result.query = q.ProjectTo<DTO.WorkAssignmentList>(map.ConfigurationProvider)
+                result.query = q.ProjectTo<DTO.WorkAssignmentsList>(map.ConfigurationProvider)
                 .Skip(o.displayStart)
                 .Take(o.displayLength)
                 .AsEnumerable();
             }
             else
             {
-                result.query = q.ProjectTo<DTO.WorkAssignmentList>(map.ConfigurationProvider)
+                result.query = q.ProjectTo<DTO.WorkAssignmentsList>(map.ConfigurationProvider)
                 .AsEnumerable();
             }
             result.totalCount = waRepo.GetAllQ().Count();

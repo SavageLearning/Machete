@@ -81,7 +81,7 @@ namespace Machete.Test.Integration.Service
             //Assert
             var tolist = result.query.ToList();
             Assert.IsNotNull(result, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(dataTableResult<Machete.Service.DTO.WorkAssignmentList>));
+            Assert.IsInstanceOfType(result, typeof(dataTableResult<Machete.Service.DTO.WorkAssignmentsList>));
             Assert.AreEqual(8, result.query.Count()); //pending excluded
         }
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
@@ -94,7 +94,7 @@ namespace Machete.Test.Integration.Service
             var result = frb.ToServWorkAssignment().GetIndexView(dOptions);
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(dataTableResult<Machete.Service.DTO.WorkAssignmentList>));
+            Assert.IsInstanceOfType(result, typeof(dataTableResult<Machete.Service.DTO.WorkAssignmentsList>));
             Assert.AreEqual(1, result.query.Count()); //pending excluded
         }
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
@@ -113,7 +113,7 @@ namespace Machete.Test.Integration.Service
             //Assert
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(dataTableResult<Machete.Service.DTO.WorkAssignmentList>));
+            Assert.IsInstanceOfType(result, typeof(dataTableResult<Machete.Service.DTO.WorkAssignmentsList>));
             Assert.AreEqual(3, result.query.Count());
         }
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
@@ -132,7 +132,7 @@ namespace Machete.Test.Integration.Service
             //Assert
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(dataTableResult<Machete.Service.DTO.WorkAssignmentList>));
+            Assert.IsInstanceOfType(result, typeof(dataTableResult<Machete.Service.DTO.WorkAssignmentsList>));
             Assert.AreEqual(ordernum, tolist[0].paperOrderNum);
             Assert.AreEqual(2, result.query.Count());
         }
@@ -153,7 +153,7 @@ namespace Machete.Test.Integration.Service
             //Assert
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(dataTableResult<Machete.Service.DTO.WorkAssignmentList>));
+            Assert.IsInstanceOfType(result, typeof(dataTableResult<Machete.Service.DTO.WorkAssignmentsList>));
             Assert.AreEqual(description, tolist[0].description);
             Assert.AreEqual(1, result.query.Count());
         }
@@ -171,7 +171,7 @@ namespace Machete.Test.Integration.Service
             //Assert
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(dataTableResult<Machete.Service.DTO.WorkAssignmentList>));
+            Assert.IsInstanceOfType(result, typeof(dataTableResult<Machete.Service.DTO.WorkAssignmentsList>));
             Assert.AreEqual(updatedby, tolist[0].updatedby);
             Assert.AreEqual(1, result.query.Count());
         }
@@ -189,7 +189,7 @@ namespace Machete.Test.Integration.Service
             //Assert
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(dataTableResult<Machete.Service.DTO.WorkAssignmentList>));
+            Assert.IsInstanceOfType(result, typeof(dataTableResult<Machete.Service.DTO.WorkAssignmentsList>));
             Assert.AreEqual(71, tolist[0].skillID); //ID=71 is masonry
             Assert.AreEqual(1, result.query.Count());
         }
@@ -209,7 +209,7 @@ namespace Machete.Test.Integration.Service
             //Assert
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(dataTableResult<Machete.Service.DTO.WorkAssignmentList>));
+            Assert.IsInstanceOfType(result, typeof(dataTableResult<Machete.Service.DTO.WorkAssignmentsList>));
             Assert.AreEqual(1, result.query.Count());
         }
         //
@@ -231,7 +231,7 @@ namespace Machete.Test.Integration.Service
             //Assert
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(dataTableResult<Machete.Service.DTO.WorkAssignmentList>));
+            Assert.IsInstanceOfType(result, typeof(dataTableResult<Machete.Service.DTO.WorkAssignmentsList>));
             Assert.AreEqual(1, result.query.Count());
         }
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]
@@ -251,7 +251,7 @@ namespace Machete.Test.Integration.Service
             //Assert
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
-            Assert.IsInstanceOfType(result, typeof(dataTableResult<Machete.Service.DTO.WorkAssignmentList>));
+            Assert.IsInstanceOfType(result, typeof(dataTableResult<Machete.Service.DTO.WorkAssignmentsList>));
             //Assert.AreEqual(63, tolist[0].skillID);
             Assert.AreEqual(1, result.query.Count());
         }

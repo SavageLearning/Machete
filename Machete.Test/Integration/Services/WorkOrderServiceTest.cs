@@ -151,10 +151,10 @@ namespace Machete.Test.Integration.Service
             o.sortColName = "WOID";
             //
             //Act
-            dataTableResult<DTO.WorkOrderList> result = frb.ToServWorkOrder().GetIndexView(o);
+            dataTableResult<DTO.WorkOrdersList> result = frb.ToServWorkOrder().GetIndexView(o);
             //
             //Assert
-            IEnumerable<DTO.WorkOrderList> query = result.query.ToList();
+            IEnumerable<DTO.WorkOrdersList> query = result.query.ToList();
             Assert.IsNotNull(result, "IEnumerable is Null");
             Assert.IsNotNull(query, "IEnumerable.query is null");
             Assert.AreEqual(6, query.Count(), "Expected 6, but GetIndexView returned {0} records", query.Count());
@@ -170,7 +170,7 @@ namespace Machete.Test.Integration.Service
             var map = frb.ToMapper();
             //
             //Act
-            var dto_wolist = map.Map<Machete.Domain.WorkOrder, Machete.Service.DTO.WorkOrderList>(wo);
+            var dto_wolist = map.Map<Machete.Domain.WorkOrder, Machete.Service.DTO.WorkOrdersList>(wo);
             //
             //Assert
             Assert.IsNotNull(dto_wolist, "DTO.WorkOrderList is Null");
@@ -186,7 +186,7 @@ namespace Machete.Test.Integration.Service
             var map = frb.ToMapper();
             //
             //Act
-            var dto_wolist = map.Map<Machete.Domain.WorkOrder, Machete.Service.DTO.WorkOrderList>(wo);
+            var dto_wolist = map.Map<Machete.Domain.WorkOrder, Machete.Service.DTO.WorkOrdersList>(wo);
             //
             //Assert
             Assert.IsNotNull(dto_wolist, "DTO.WorkOrderList is Null");
@@ -202,7 +202,7 @@ namespace Machete.Test.Integration.Service
             var map = frb.ToMapper();
             //
             //Act
-            var dto_wolist = map.Map<Machete.Domain.WorkOrder, Machete.Service.DTO.WorkOrderList>(wo);
+            var dto_wolist = map.Map<Machete.Domain.WorkOrder, Machete.Service.DTO.WorkOrdersList>(wo);
             //
             //Assert
             Assert.IsNotNull(dto_wolist, "DTO.WorkOrderList is Null");

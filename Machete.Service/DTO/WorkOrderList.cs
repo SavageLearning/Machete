@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Machete.Service.DTO
 {
-    public class WorkOrderList
+    public class WorkOrdersList
     {
         public int ID { get; set; }
         public int EmployerID { get; set; }

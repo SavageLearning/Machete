@@ -6,24 +6,25 @@ using Machete.Web.Helpers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using Newtonsoft.Json;
 
 namespace Machete.Api.Controllers
 {
     [ElmahHandleError]
     [Authorize]
-    public class EmployersController : ApiController
+    public class WorkOrdersController : ApiController
     {
-        private readonly IEmployerService serv;
-        private readonly IWorkOrderService woServ;
+        private readonly IWorkOrderService serv;
+        private readonly IWorkAssignmentService waServ;
         private readonly IMapper map;
         private readonly IDefaults def;
 
-        public EmployersController(IEmployerService employerService, IWorkOrderService workorderService,
+        public WorkOrdersController(IWorkOrderService workOrderService, IWorkAssignmentService workAssignmentService,
             IDefaults def,
             IMapper map)
         {
-            this.serv = employerService;
-            this.woServ = workorderService;
+            this.serv = workOrderService;
+            this.waServ = workAssignmentService;
             this.map = map;
             this.def = def;
         }
@@ -33,19 +34,19 @@ namespace Machete.Api.Controllers
             var vo = new viewOptions();
             vo.displayLength = 10;
             vo.displayStart = 0;
-            dataTableResult<DTO.EmployersList> list = serv.GetIndexView(vo);
+            dataTableResult<DTO.WorkOrdersList> list = serv.GetIndexView(vo);
             var result = list.query
                 .Select(
-                    e => map.Map<DTO.EmployersList, Web.ViewModel.Api.Employer>(e)
-                ).AsEnumerable();
+                    e => map.Map<DTO.WorkOrdersList, Web.ViewModel.Api.WorkOrder>(e)
+                ).AsEnumerable();            
             return Json(new { data =  result });
         }
 
         // GET api/values/5
         public IHttpActionResult Get(int id)
         {
-            var m = map.Map<Domain.Employer, Web.ViewModel.Api.Employer>(serv.Get(id));
-            return Ok(m);
+            var result = map.Map<Domain.WorkOrder, Web.ViewModel.Api.WorkOrder>(serv.Get(id));
+            return Json(new { data = result });
         }
 
         // POST api/values

@@ -24,7 +24,7 @@ namespace Machete.Api.Controllers
         public IHttpActionResult Get()
         {
             var result = serv.getList()
-                .Select(a => map.Map<Domain.ReportDefinition, Web.ViewModel.ReportDefinition>(a));
+                .Select(a => map.Map<Domain.ReportDefinition, Web.ViewModel.Api.ReportDefinition>(a));
 
             return Json( new { data = result } );
         }

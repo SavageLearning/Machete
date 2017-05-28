@@ -13,6 +13,7 @@ namespace Machete.Web.Maps
     {
         public WorkOrderProfile()
         {
+
             CreateMap<Domain.WorkOrder, ViewModel.WorkOrder>()
                 .ForMember(v => v.tabref,               opt => opt.MapFrom(d => "/WorkOrder/Edit/" + Convert.ToString(d.ID)))
                 .ForMember(v => v.tablabel,             opt => opt.MapFrom(d =>
@@ -29,7 +30,7 @@ namespace Machete.Web.Maps
                 ;
             //
             //
-            CreateMap<Domain.WorkOrder, Service.DTO.WorkOrderList>()
+            CreateMap<Domain.WorkOrder, Service.DTO.WorkOrdersList>()
                 .ForMember(v => v.WAcount,              opt => opt.MapFrom(d => d.workAssignments.Count()))
                 .ForMember(v => v.WAUnassignedCount,    opt => opt.MapFrom(d => d.workAssignments.Count(wa => wa.workerAssignedID == null)))
                 .ForMember(v => v.WAOrphanedCount,      opt => opt.MapFrom(d => d.workAssignments.Count(wa => wa.workerAssignedID != null && wa.workerSigninID == null)))
@@ -39,7 +40,7 @@ namespace Machete.Web.Maps
             ;
             //
             //
-            CreateMap<Service.DTO.WorkOrderList, ViewModel.WorkOrderList>()
+            CreateMap<Service.DTO.WorkOrdersList, ViewModel.WorkOrdersList>()
                 .ForMember(v => v.tabref,            opt => opt.MapFrom(d => "/WorkOrder/Edit/" + Convert.ToString(d.ID)))
                 .ForMember(v => v.tablabel,          opt => opt.MapFrom(d =>
                                                             Machete.Web.Resources.WorkOrders.tabprefix +
@@ -54,7 +55,9 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.displayState,      opt => opt.MapFrom(d => computeOrderStatus(d)))
                 .ForMember(v => v.recordid, opt => opt.MapFrom(d => d.ID.ToString()))
                 ;
-
+            //
+            //
+            //
             CreateMap<Domain.WorkAssignment, DTO.WorkerAssignedList>()
                 .ForMember(v => v.WID, opt => opt.MapFrom(d => d.workerAssigned.dwccardnum))
                 .ForMember(v => v.name, opt => opt.MapFrom(d => d.workerAssigned.Person.fullName))
@@ -65,7 +68,7 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.skill, opt => opt.MapFrom(d => getCI() == "ES" ? d.skillES : d.skillEN))
                 ;
         }
-        public string computeOrderStatus(Service.DTO.WorkOrderList d)
+        public string computeOrderStatus(Service.DTO.WorkOrdersList d)
         {
             if (d.statusID == Domain.WorkOrder.iActive) return Domain.LOrderStatus.Active;
             if (d.statusID == Domain.WorkOrder.iCancelled) return Domain.LOrderStatus.Cancelled;
