@@ -90,7 +90,7 @@ var appRoutes = [
         loadChildren: 'app/exports/exports.module#ExportsModule'
     },
     //{ path: '**', component: PageNotFoundComponent }
-    { path: '**', redirectTo: '/reports' }
+    { path: '**', redirectTo: '/exports' }
 ];
 var AppRoutingModule = (function () {
     function AppRoutingModule() {

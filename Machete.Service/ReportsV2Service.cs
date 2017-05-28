@@ -86,6 +86,19 @@ namespace Machete.Service
 
         public void getXlsxFile(DTO.SearchOptions o, ref byte[] bytes)
         {
+            var oo = map.Map<DTO.SearchOptions, Data.DTO.SearchOptions>(o);
+            var tbl = repo.getDataTable(buildExportQuery(o), oo);
+
+            using (ExcelPackage pck = new ExcelPackage())
+            {
+                ExcelWorksheet ws = pck.Workbook.Worksheets.Add(o.name);
+                ws.Cells["A1"].LoadFromDataTable(tbl, true);
+                bytes = pck.GetAsByteArray();
+            }
+        }
+
+        public string buildExportQuery(DTO.SearchOptions o)
+        {
             bool firstSelect = true;
             bool firstWhere = true;
             StringBuilder query = new StringBuilder();
@@ -111,28 +124,21 @@ namespace Machete.Service
                 if (o.beginDate != null)
                 {
                     query.Append(o.exportFilterField)
-                        .Append(" > ")
-                        .Append(((DateTime)o.beginDate).ToShortDateString());
+                        .Append(" > '")
+                        .Append(((DateTime)o.beginDate).ToShortDateString())
+                        .Append("' ");
                     firstWhere = false;
                 }
                 if (o.endDate != null)
                 {
                     if (!firstWhere) { query.Append(" AND "); }
                     query.Append(o.exportFilterField)
-                        .Append(" < ")
-                        .Append(((DateTime)o.endDate).ToShortDateString());
+                        .Append(" < '")
+                        .Append(((DateTime)o.endDate).ToShortDateString())
+                        .Append("' "); ;
                 }
             }
-            var oo = map.Map<DTO.SearchOptions, Data.DTO.SearchOptions>(o);
-            var tbl = repo.getDataTable(query.ToString(), oo);
-
-
-            using (ExcelPackage pck = new ExcelPackage())
-            {
-                ExcelWorksheet ws = pck.Workbook.Worksheets.Add(o.name);
-                ws.Cells["A1"].LoadFromDataTable(tbl, true);
-                bytes = pck.GetAsByteArray();
-            }
+            return query.ToString();
         }
 
         public string sanitizeColumnName(string col)
