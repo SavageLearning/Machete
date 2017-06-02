@@ -62,6 +62,9 @@ namespace Machete.Web.Controllers.Api
         // https://stackoverflow.com/questions/36274985/how-to-map-webapi-routes-correctly
         // http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api#restful
         // https://docs.microsoft.com/en-us/aspnet/web-api/overview/formats-and-model-binding/parameter-binding-in-aspnet-web-api
+        //
+        // The ZZtablename is a more unique namespace than ID; an ID is getting sent from the domain, which this method
+        // has to comply with. ZZTablename is less likely to cause a collison.
         [HttpGet, Route("{ZZtablename}/execute")]
         public HttpResponseMessage Execute(string ZZtablename, string filterField, DateTime? beginDate, DateTime? endDate)
         {

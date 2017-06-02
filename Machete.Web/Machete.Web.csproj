@@ -223,6 +223,7 @@
     <Compile Include="Controllers\Api\WorkAssignmentsController.cs" />
     <Compile Include="Controllers\Api\WorkOrdersController.cs" />
     <Compile Include="Controllers\Api\ExportsController.cs" />
+    <Compile Include="Controllers\Api\LookupsController.cs" />
     <Compile Include="Controllers\Api\ReportsController.cs" />
     <Compile Include="Controllers\ReportsV2Controller.cs" />
     <Compile Include="Controllers\V2Controller.cs" />
