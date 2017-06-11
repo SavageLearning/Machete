@@ -1,220 +1,29 @@
-webpackJsonp([0,8],{
+webpackJsonp([0,9],{
 
-/***/ 123:
-/***/ (function(module, exports) {
-
-// shim for using process in browser
-var process = module.exports = {};
-
-// cached from whatever global is present so that test runners that stub it
-// don't break things.  But we need to wrap it in a try catch in case it is
-// wrapped in strict mode code which doesn't define any globals.  It's inside a
-// function because try/catches deoptimize in certain engines.
-
-var cachedSetTimeout;
-var cachedClearTimeout;
-
-function defaultSetTimout() {
-    throw new Error('setTimeout has not been defined');
-}
-function defaultClearTimeout () {
-    throw new Error('clearTimeout has not been defined');
-}
-(function () {
-    try {
-        if (typeof setTimeout === 'function') {
-            cachedSetTimeout = setTimeout;
-        } else {
-            cachedSetTimeout = defaultSetTimout;
-        }
-    } catch (e) {
-        cachedSetTimeout = defaultSetTimout;
-    }
-    try {
-        if (typeof clearTimeout === 'function') {
-            cachedClearTimeout = clearTimeout;
-        } else {
-            cachedClearTimeout = defaultClearTimeout;
-        }
-    } catch (e) {
-        cachedClearTimeout = defaultClearTimeout;
-    }
-} ())
-function runTimeout(fun) {
-    if (cachedSetTimeout === setTimeout) {
-        //normal enviroments in sane situations
-        return setTimeout(fun, 0);
-    }
-    // if setTimeout wasn't available but was latter defined
-    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-        cachedSetTimeout = setTimeout;
-        return setTimeout(fun, 0);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedSetTimeout(fun, 0);
-    } catch(e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-            return cachedSetTimeout.call(null, fun, 0);
-        } catch(e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-            return cachedSetTimeout.call(this, fun, 0);
-        }
-    }
-
-
-}
-function runClearTimeout(marker) {
-    if (cachedClearTimeout === clearTimeout) {
-        //normal enviroments in sane situations
-        return clearTimeout(marker);
-    }
-    // if clearTimeout wasn't available but was latter defined
-    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-        cachedClearTimeout = clearTimeout;
-        return clearTimeout(marker);
-    }
-    try {
-        // when when somebody has screwed with setTimeout but no I.E. maddness
-        return cachedClearTimeout(marker);
-    } catch (e){
-        try {
-            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-            return cachedClearTimeout.call(null, marker);
-        } catch (e){
-            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-            return cachedClearTimeout.call(this, marker);
-        }
-    }
-
-
-
-}
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-    if (!draining || !currentQueue) {
-        return;
-    }
-    draining = false;
-    if (currentQueue.length) {
-        queue = currentQueue.concat(queue);
-    } else {
-        queueIndex = -1;
-    }
-    if (queue.length) {
-        drainQueue();
-    }
-}
-
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    var timeout = runTimeout(cleanUpNextTick);
-    draining = true;
-
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        while (++queueIndex < len) {
-            if (currentQueue) {
-                currentQueue[queueIndex].run();
-            }
-        }
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    runClearTimeout(timeout);
-}
-
-process.nextTick = function (fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) {
-        for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-        }
-    }
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) {
-        runTimeout(drainQueue);
-    }
-};
-
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-process.versions = {};
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-process.prependListener = noop;
-process.prependOnceListener = noop;
-
-process.listeners = function (name) { return [] }
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-};
-
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-process.umask = function() { return 0; };
-
-
-/***/ }),
-
-/***/ 311:
+/***/ 312:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__exports_component__ = __webpack_require__(325);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_forms__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_http__ = __webpack_require__(36);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__exports_routing_module__ = __webpack_require__(328);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_primeng_primeng__ = __webpack_require__(122);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_primeng_primeng___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_primeng_primeng__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__exports_options_component__ = __webpack_require__(327);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ExportsModule", function() { return ExportsModule; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__introduction_introduction_component__ = __webpack_require__(330);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__online_orders_component__ = __webpack_require__(331);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__intro_confirm_intro_confirm_component__ = __webpack_require__(329);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__work_order_work_order_component__ = __webpack_require__(334);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__work_assignments_work_assignments_component__ = __webpack_require__(333);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__final_confirm_final_confirm_component__ = __webpack_require__(328);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__online_orders_routing_module__ = __webpack_require__(340);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_primeng_primeng__ = __webpack_require__(122);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_primeng_primeng___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9_primeng_primeng__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__angular_forms__ = __webpack_require__(6);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "OnlineOrdersModule", function() { return OnlineOrdersModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
 
 
 
@@ -223,49 +32,52 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var ExportsModule = (function () {
-    function ExportsModule() {
-        console.log('ExportsModule-ctor');
+
+
+
+var OnlineOrdersModule = (function () {
+    function OnlineOrdersModule() {
     }
-    return ExportsModule;
+    return OnlineOrdersModule;
 }());
-ExportsModule = __decorate([
+OnlineOrdersModule = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["NgModule"])({
         imports: [
             __WEBPACK_IMPORTED_MODULE_1__angular_common__["CommonModule"],
-            __WEBPACK_IMPORTED_MODULE_3__angular_forms__["FormsModule"],
-            __WEBPACK_IMPORTED_MODULE_3__angular_forms__["ReactiveFormsModule"],
-            __WEBPACK_IMPORTED_MODULE_4__angular_http__["l" /* JsonpModule */],
-            __WEBPACK_IMPORTED_MODULE_6_primeng_primeng__["TabViewModule"],
-            __WEBPACK_IMPORTED_MODULE_6_primeng_primeng__["ChartModule"],
-            __WEBPACK_IMPORTED_MODULE_6_primeng_primeng__["DataTableModule"],
-            __WEBPACK_IMPORTED_MODULE_6_primeng_primeng__["SharedModule"],
-            __WEBPACK_IMPORTED_MODULE_6_primeng_primeng__["CalendarModule"],
-            __WEBPACK_IMPORTED_MODULE_6_primeng_primeng__["ButtonModule"],
-            __WEBPACK_IMPORTED_MODULE_6_primeng_primeng__["DropdownModule"],
-            __WEBPACK_IMPORTED_MODULE_6_primeng_primeng__["DialogModule"],
-            __WEBPACK_IMPORTED_MODULE_6_primeng_primeng__["InputSwitchModule"],
-            __WEBPACK_IMPORTED_MODULE_6_primeng_primeng__["InputTextareaModule"],
-            __WEBPACK_IMPORTED_MODULE_5__exports_routing_module__["a" /* ExportsRoutingModule */]
+            __WEBPACK_IMPORTED_MODULE_9_primeng_primeng__["StepsModule"],
+            __WEBPACK_IMPORTED_MODULE_9_primeng_primeng__["DropdownModule"],
+            __WEBPACK_IMPORTED_MODULE_9_primeng_primeng__["CalendarModule"],
+            __WEBPACK_IMPORTED_MODULE_10__angular_forms__["FormsModule"],
+            __WEBPACK_IMPORTED_MODULE_10__angular_forms__["ReactiveFormsModule"],
+            __WEBPACK_IMPORTED_MODULE_9_primeng_primeng__["DataTableModule"],
+            __WEBPACK_IMPORTED_MODULE_9_primeng_primeng__["InputSwitchModule"],
+            __WEBPACK_IMPORTED_MODULE_9_primeng_primeng__["MessagesModule"],
+            __WEBPACK_IMPORTED_MODULE_8__online_orders_routing_module__["a" /* OnlineOrdersRoutingModule */]
         ],
-        declarations: [__WEBPACK_IMPORTED_MODULE_2__exports_component__["a" /* ExportsComponent */], __WEBPACK_IMPORTED_MODULE_7__exports_options_component__["a" /* ExportsOptionsComponent */]]
-    }),
-    __metadata("design:paramtypes", [])
-], ExportsModule);
+        declarations: [
+            __WEBPACK_IMPORTED_MODULE_2__introduction_introduction_component__["a" /* IntroductionComponent */],
+            __WEBPACK_IMPORTED_MODULE_3__online_orders_component__["a" /* OnlineOrdersComponent */],
+            __WEBPACK_IMPORTED_MODULE_4__intro_confirm_intro_confirm_component__["a" /* IntroConfirmComponent */],
+            __WEBPACK_IMPORTED_MODULE_5__work_order_work_order_component__["a" /* WorkOrderComponent */],
+            __WEBPACK_IMPORTED_MODULE_6__work_assignments_work_assignments_component__["a" /* WorkAssignmentsComponent */],
+            __WEBPACK_IMPORTED_MODULE_7__final_confirm_final_confirm_component__["a" /* FinalConfirmComponent */]
+        ]
+    })
+], OnlineOrdersModule);
 
-//# sourceMappingURL=exports.module.js.map
+//# sourceMappingURL=online-orders.module.js.map
 
 /***/ }),
 
-/***/ 313:
+/***/ 314:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__reports_service__ = __webpack_require__(320);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_search_options__ = __webpack_require__(319);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_report__ = __webpack_require__(317);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_search_inputs__ = __webpack_require__(318);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__reports_service__ = __webpack_require__(321);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_search_options__ = __webpack_require__(320);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_report__ = __webpack_require__(318);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__models_search_inputs__ = __webpack_require__(319);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return ReportsComponent; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MySelectItem; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -289,7 +101,7 @@ var ReportsComponent = (function () {
         this.displayDialog = false;
         this.o = new __WEBPACK_IMPORTED_MODULE_2__models_search_options__["a" /* SearchOptions */]();
         this.selectedReport = new __WEBPACK_IMPORTED_MODULE_3__models_report__["a" /* Report */]();
-        this.selectedReportID = '1';
+        this.selectedReportID = 'DispatchesByJob';
         // this.title = 'loading';
         // this.description = 'loading...';
         this.o.beginDate = '1/1/2016';
@@ -304,7 +116,7 @@ var ReportsComponent = (function () {
     };
     ReportsComponent.prototype.updateDescription = function () {
         var _this = this;
-        this.selectedReport = this.reportsService.reportList.filter(function (x) { return x.id === Number(_this.selectedReportID); })[0];
+        this.selectedReport = this.reportsService.reportList.filter(function (x) { return x.name === _this.selectedReportID; })[0];
         // TODO catch exception if not found
         this.description = this.selectedReport.description;
         this.title = this.selectedReport.title || this.selectedReport.commonName;
@@ -316,7 +128,7 @@ var ReportsComponent = (function () {
         var _this = this;
         this.reports$ = this.reportsService.subscribeToDataService();
         this.reports$.subscribe(function (listData) {
-            _this.reportsDropDown = listData.map(function (r) { return new MySelectItem(r.commonName, r.id.toString()); });
+            _this.reportsDropDown = listData.map(function (r) { return new MySelectItem(r.commonName, r.name); });
             _this.getView();
         }, function (error) { return _this.errorMessage = error; }, function () { return console.log('ngOnInit onCompleted'); });
     };
@@ -341,8 +153,8 @@ var ReportsComponent = (function () {
 ReportsComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
         selector: 'app-reports',
-        template: __webpack_require__(322),
-        styles: [__webpack_require__(321)],
+        template: __webpack_require__(323),
+        styles: [__webpack_require__(322)],
         providers: [__WEBPACK_IMPORTED_MODULE_1__reports_service__["a" /* ReportsService */]]
     }),
     __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__reports_service__["a" /* ReportsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__reports_service__["a" /* ReportsService */]) === "function" && _a || Object])
@@ -361,20 +173,20 @@ var _a;
 
 /***/ }),
 
-/***/ 314:
+/***/ 315:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 var Observable_1 = __webpack_require__(5);
-var catch_1 = __webpack_require__(125);
+var catch_1 = __webpack_require__(124);
 Observable_1.Observable.prototype.catch = catch_1._catch;
 Observable_1.Observable.prototype._catch = catch_1._catch;
 //# sourceMappingURL=catch.js.map
 
 /***/ }),
 
-/***/ 315:
+/***/ 316:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -386,19 +198,19 @@ Observable_1.Observable.prototype.map = map_1.map;
 
 /***/ }),
 
-/***/ 316:
+/***/ 317:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 var Observable_1 = __webpack_require__(5);
-var toPromise_1 = __webpack_require__(323);
+var toPromise_1 = __webpack_require__(324);
 Observable_1.Observable.prototype.toPromise = toPromise_1.toPromise;
 //# sourceMappingURL=toPromise.js.map
 
 /***/ }),
 
-/***/ 317:
+/***/ 318:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -416,7 +228,7 @@ var Report = (function () {
 
 /***/ }),
 
-/***/ 318:
+/***/ 319:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -434,7 +246,7 @@ var SearchInputs = (function () {
 
 /***/ }),
 
-/***/ 319:
+/***/ 320:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -449,19 +261,19 @@ var SearchOptions = (function () {
 
 /***/ }),
 
-/***/ 320:
+/***/ 321:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(36);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_toPromise__ = __webpack_require__(316);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_toPromise__ = __webpack_require__(317);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_toPromise__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__ = __webpack_require__(315);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__ = __webpack_require__(316);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_map__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_catch__ = __webpack_require__(314);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_catch__ = __webpack_require__(315);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_catch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_add_operator_catch__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject__ = __webpack_require__(124);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject__ = __webpack_require__(123);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ReportsService; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -544,7 +356,7 @@ var _a;
 
 /***/ }),
 
-/***/ 321:
+/***/ 322:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(20)(false);
@@ -562,14 +374,14 @@ module.exports = module.exports.toString();
 
 /***/ }),
 
-/***/ 322:
+/***/ 323:
 /***/ (function(module, exports) {
 
 module.exports = "<div class=\"ui-g\">\r\n  <div class=\"ui-g-12 ui-md-6\">\r\n    <p-dropdown [options]=\"reportsDropDown\" (onChange)=\"getView()\" [(ngModel)]=\"selectedReportID\" [filter]=\"true\" [style]=\"{'width':'20em'}\"></p-dropdown>\r\n    <button pButton type=\"button\" icon=\"ui-icon-sync\" (click)=\"getView()\" iconPos=\"left\"></button>\r\n    <button pButton type=\"button\" icon=\"ui-icon-edit\" (click)=\"displayDialog=true\" iconPos=\"left\"></button>\r\n  </div>\r\n  <div *ngIf=\"inputs.memberNumber === true\" class=\"ui-g-12 ui-md-6\">\r\n    <label for=\"memberNumber\">Membr number</label>\r\n    <input id=\"memberNumber\" type=\"text\" pInputText [(ngModel)]=\"o.memberNumber\" (onBlur)=\"getView()\" dataType=\"number\"/>\r\n  </div>\r\n  <div *ngIf=\"inputs.beginDate === true\" class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n    <p-calendar  placeholder=\"Start date\" (onSelect)=\"getView()\" (onBlur)=\"getView()\" [(ngModel)]=\"o.beginDate\" [showIcon]=\"true\" dataType=\"string\"></p-calendar>\r\n  </div>\r\n  <div *ngIf=\"inputs.endDate === true\" class=\"ui-g-12 ui-md-6 ui-lg-3\">\r\n    <p-calendar placeholder=\"End date\" (onSelect)=\"getView()\" (onBlur)=\"getView()\" [(ngModel)]=\"o.endDate\" [showIcon]=\"true\" dataType=\"string\"></p-calendar>\r\n  </div>\r\n</div>\r\n<p-dialog header=\"{{title}}\" [(visible)]=\"displayDescription\">\r\n  {{description}}\r\n</p-dialog>\r\n<div>\r\n<p-dataTable\r\n  #dt\r\n  [value]=\"viewData\"\r\n  sortField=\"value\"\r\n  sortOrder=\"-1\"\r\n  sortMode=\"single\"\r\n  [globalFilter]=\"gb\"\r\n  [responsive]=\"true\"\r\n  >\r\n  <p-header>\r\n    <div class=\"ui-helper-clearfix\">\r\n      <button type=\"button\" pButton icon=\"ui-icon-file-download\" iconPos=\"left\" label=\"CSV\" (click)=\"getExport(dt)\" style=\"float:left\"></button>\r\n      <input #gb type=\"text\" placeholder=\"Global search\" width=\"200\">\r\n\r\n      <button pButton type=\"button\" icon=\"ui-icon-help-outline\" (click)=\"showDescription()\" iconPos=\"left\" style=\"float:right\"></button>\r\n    </div>\r\n  </p-header>\r\n  <p-column *ngFor=\"let col of cols\" [field]=\"col.field\" [header]=\"col.header\" [sortable]=\"true\"></p-column>\r\n</p-dataTable>\r\n  <p-dialog\r\n    header=\"Report Details\"\r\n    [(visible)]=\"displayDialog\"\r\n    [responsive]=\"true\"\r\n    showEffect=\"fade\"\r\n    [modal]=\"false\"\r\n    resizable=\"true\"\r\n    width=\"1000\"\r\n  >\r\n    <div>\r\n      <div class=\"ui-g\" style=\"display:flex\">\r\n        <div class=\"ui-sm-4 ui-md-3 ui-lg-3\" style=\"flex: 0\"><label for=\"name\">Name</label></div>\r\n        <div class=\"ui-sm-8 ui-md-9 ui-lg-9\" style=\"flex: 1\"><input pInputText id=\"name\" [(ngModel)]=\"name\" style=\"width: 100%;\"/></div>\r\n      </div>\r\n      <div class=\"ui-g\" style=\"display:flex\">\r\n        <div class=\"ui-sm-4 ui-md-3 ui-lg-3\" style=\"flex: 0\"><label for=\"commonName\">Common name</label></div>\r\n        <div class=\"ui-sm-8 ui-md-9 ui-lg-9\" style=\"flex: 1\"><input pInputText id=\"commonName\" style=\"width: 100%;\" [(ngModel)]=\"selectedReport.commonName\" /></div>\r\n      </div>\r\n      <!--<div class=\"ui-g\">-->\r\n        <!--<div class=\"ui-sm-4 ui-md-3 ui-lg-2\"><label for=\"title\">Title</label></div>-->\r\n        <!--<div class=\"ui-sm-8 ui-md-9 ui-lg-10\"><input pInputText id=\"title\" [(ngModel)]=\"selectedReport.title\" /></div>-->\r\n      <!--</div>-->\r\n      <div class=\"ui-g\">\r\n        <div class=\"ui-sm-4 ui-md-3 ui-lg-3\" style=\"flex: 0\"><label for=\"description\">Description</label></div>\r\n        <div class=\"ui-sm-8 ui-md-9 ui-lg-9\" style=\"flex: 1\"><input pInputText id=\"description\" style=\"width: 100%;\" [(ngModel)]=\"selectedReport.description\" /></div>\r\n      </div>\r\n      <div class=\"ui-g\" style=\"display:flex\">\r\n        <div class=\"ui-sm-4 ui-md-3 ui-lg-3\" style=\"flex: 0\"><label for=\"sqlquery\">SQL Query</label></div>\r\n        <div class=\"ui-sm-8 ui-md-9 ui-lg-9\" style=\"flex: 1\">\r\n              <textarea pInputTextarea id=\"sqlquery\" rows=\"20\" style=\"width: 100%;\" [(ngModel)]=\"selectedReport.sqlquery\" autoResize=\"true\"></textarea>\r\n        </div>\r\n      </div>\r\n    </div>\r\n    <p-footer>\r\n      <div class=\"ui-dialog-buttonpane ui-widget-content ui-helper-clearfix\">\r\n        <!--<button type=\"button\" pButton icon=\"fa-close\" (click)=\"delete()\" label=\"Delete\"></button>-->\r\n        <!--<button type=\"button\" pButton icon=\"fa-check\" (click)=\"save()\" label=\"Save\"></button>-->\r\n      </div>\r\n    </p-footer>\r\n  </p-dialog>\r\n</div>\r\n"
 
 /***/ }),
 
-/***/ 323:
+/***/ 324:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -648,112 +460,14 @@ exports.toPromise = toPromise;
 
 /***/ }),
 
-/***/ 325:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__exports_service__ = __webpack_require__(329);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__reports_reports_component__ = __webpack_require__(313);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_file_saver__ = __webpack_require__(335);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_file_saver___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_file_saver__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_forms__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_content_disposition__ = __webpack_require__(331);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_content_disposition___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_content_disposition__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ExportsComponent; });
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-
-
-var ExportsComponent = (function () {
-    function ExportsComponent(exportsService, _fb) {
-        this.exportsService = exportsService;
-        this._fb = _fb;
-        this.form = new __WEBPACK_IMPORTED_MODULE_4__angular_forms__["FormGroup"]({});
-    }
-    ExportsComponent.prototype.ngOnInit = function () {
-        var _this = this;
-        this.exportsService.getExportsList()
-            .subscribe(function (listData) {
-            _this.exports = listData;
-            _this.exportsDropDown = listData.map(function (r) {
-                return new __WEBPACK_IMPORTED_MODULE_2__reports_reports_component__["a" /* MySelectItem */](r.name, r.name);
-            });
-        }, function (error) { return _this.errorMessage = error; }, function () { return console.log('exports.component: ngOnInit onCompleted'); });
-    };
-    ExportsComponent.prototype.getColumns = function () {
-        var _this = this;
-        this.exportsService.getColumns(this.selectedExportName)
-            .subscribe(function (data) {
-            _this.selectedColumns = data;
-            _this.dateFilterDropDown = data.filter(function (f) { return f.system_type_name === 'datetime'; })
-                .map(function (r) {
-                return new __WEBPACK_IMPORTED_MODULE_2__reports_reports_component__["a" /* MySelectItem */](r.name, r.name);
-            });
-            var group = {};
-            data.forEach(function (col) {
-                group[col.name] = new __WEBPACK_IMPORTED_MODULE_4__angular_forms__["FormControl"](true);
-            });
-            _this.form = new __WEBPACK_IMPORTED_MODULE_4__angular_forms__["FormGroup"](group);
-        }, function (error) { return _this.errorMessage = error; }, function () { return console.log('exportsService.getColumns completed'); });
-    };
-    ExportsComponent.prototype.onSubmit = function () {
-        var _this = this;
-        var data = Object.assign({
-            beginDate: this.selectedStartDate,
-            endDate: this.selectedEndDate,
-            filterField: this.selectedDateFilter
-        }, this.form.value);
-        console.log(this.form.value);
-        this.exportsService.getExport(this.selectedExportName, data)
-            .subscribe(function (res) {
-            _this.downloadFile(res['_body'], _this.getFilename(res.headers.get('content-disposition')), res['_body'].type);
-        }),
-            function (error) { return _this.errorMessage = error; },
-            function () { return console.log('exportsService.getColumns completed'); };
-    };
-    ExportsComponent.prototype.downloadFile = function (data, fileName, ttype) {
-        var blob = new Blob([data], { type: ttype });
-        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3_file_saver__["saveAs"])(blob, fileName);
-    };
-    ExportsComponent.prototype.getFilename = function (content) {
-        return __WEBPACK_IMPORTED_MODULE_5_content_disposition__["parse"](content).parameters['filename'];
-    };
-    return ExportsComponent;
-}());
-ExportsComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
-        selector: 'app-exports',
-        template: __webpack_require__(339),
-        styles: [__webpack_require__(334)],
-        providers: [__WEBPACK_IMPORTED_MODULE_1__exports_service__["a" /* ExportsService */]]
-    }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__exports_service__["a" /* ExportsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__exports_service__["a" /* ExportsService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_4__angular_forms__["FormBuilder"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__angular_forms__["FormBuilder"]) === "function" && _b || Object])
-], ExportsComponent);
-
-var _a, _b;
-//# sourceMappingURL=exports.component.js.map
-
-/***/ }),
-
 /***/ 327:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_forms__ = __webpack_require__(6);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ExportsOptionsComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(36);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__shared_handle_error__ = __webpack_require__(344);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LookupsService; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -765,33 +479,31 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
-var ExportsOptionsComponent = (function () {
-    function ExportsOptionsComponent() {
-        this.columns = [];
+
+var LookupsService = (function () {
+    function LookupsService(http) {
+        this.http = http;
+        this.uriBase = '/api/lookups';
     }
-    ExportsOptionsComponent.prototype.ngOnInit = function () {
+    LookupsService.prototype.getLookups = function (category) {
+        var uri = this.uriBase;
+        if (category) {
+            uri = uri + '?category=' + category;
+        }
+        console.log('lookupsService.getLookups: ' + uri);
+        return this.http.get(uri)
+            .map(function (res) { return res.json().data; })
+            .catch(__WEBPACK_IMPORTED_MODULE_2__shared_handle_error__["a" /* HandleError */].error);
     };
-    return ExportsOptionsComponent;
+    return LookupsService;
 }());
-__decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(),
-    __metadata("design:type", Array)
-], ExportsOptionsComponent.prototype, "columns", void 0);
-__decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(),
-    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_forms__["FormGroup"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_forms__["FormGroup"]) === "function" && _a || Object)
-], ExportsOptionsComponent.prototype, "form", void 0);
-ExportsOptionsComponent = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
-        selector: 'exports-options',
-        template: __webpack_require__(338),
-        styles: [__webpack_require__(333)]
-    }),
-    __metadata("design:paramtypes", [])
-], ExportsOptionsComponent);
+LookupsService = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_http__["o" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_http__["o" /* Http */]) === "function" && _a || Object])
+], LookupsService);
 
 var _a;
-//# sourceMappingURL=exports-options.component.js.map
+//# sourceMappingURL=lookups.service.js.map
 
 /***/ }),
 
@@ -800,42 +512,34 @@ var _a;
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__exports_component__ = __webpack_require__(325);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ExportsRoutingModule; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FinalConfirmComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 
-
-
-var exportsRoutes = [
-    {
-        path: '',
-        component: __WEBPACK_IMPORTED_MODULE_2__exports_component__["a" /* ExportsComponent */]
+var FinalConfirmComponent = (function () {
+    function FinalConfirmComponent() {
     }
-];
-var ExportsRoutingModule = (function () {
-    function ExportsRoutingModule() {
-    }
-    return ExportsRoutingModule;
+    FinalConfirmComponent.prototype.ngOnInit = function () {
+    };
+    return FinalConfirmComponent;
 }());
-ExportsRoutingModule = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["NgModule"])({
-        imports: [
-            __WEBPACK_IMPORTED_MODULE_1__angular_router__["RouterModule"].forChild(exportsRoutes)
-        ],
-        exports: [
-            __WEBPACK_IMPORTED_MODULE_1__angular_router__["RouterModule"]
-        ],
-        providers: []
-    })
-], ExportsRoutingModule);
+FinalConfirmComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+        selector: 'app-final-confirm',
+        template: __webpack_require__(360),
+        styles: [__webpack_require__(349)]
+    }),
+    __metadata("design:paramtypes", [])
+], FinalConfirmComponent);
 
-//# sourceMappingURL=exports-routing.module.js.map
+//# sourceMappingURL=final-confirm.component.js.map
 
 /***/ }),
 
@@ -844,14 +548,182 @@ ExportsRoutingModule = __decorate([
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_toPromise__ = __webpack_require__(316);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_toPromise___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs_add_operator_toPromise__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__(315);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_catch__ = __webpack_require__(314);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_catch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_catch__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_http__ = __webpack_require__(36);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ExportsService; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return IntroConfirmComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var IntroConfirmComponent = (function () {
+    function IntroConfirmComponent() {
+    }
+    IntroConfirmComponent.prototype.ngOnInit = function () {
+    };
+    return IntroConfirmComponent;
+}());
+IntroConfirmComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+        selector: 'app-intro-confirm',
+        template: __webpack_require__(361),
+        styles: [__webpack_require__(350)]
+    }),
+    __metadata("design:paramtypes", [])
+], IntroConfirmComponent);
+
+//# sourceMappingURL=intro-confirm.component.js.map
+
+/***/ }),
+
+/***/ 330:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return IntroductionComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var IntroductionComponent = (function () {
+    function IntroductionComponent() {
+    }
+    IntroductionComponent.prototype.ngOnInit = function () {
+    };
+    return IntroductionComponent;
+}());
+IntroductionComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+        selector: 'app-introduction',
+        template: __webpack_require__(362),
+        styles: [__webpack_require__(351)]
+    }),
+    __metadata("design:paramtypes", [])
+], IntroductionComponent);
+
+//# sourceMappingURL=introduction.component.js.map
+
+/***/ }),
+
+/***/ 331:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lookups_lookups_service__ = __webpack_require__(327);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__online_orders_service__ = __webpack_require__(332);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_forms__ = __webpack_require__(6);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return OnlineOrdersComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+var OnlineOrdersComponent = (function () {
+    function OnlineOrdersComponent() {
+        this.activeIndex = 0;
+    }
+    OnlineOrdersComponent.prototype.ngOnInit = function () {
+        this.items = [
+            { label: 'Introduction', routerLink: ['online-orders/introduction'] },
+            { label: 'Confirm', routerLink: ['online-orders/intro-confirm'] },
+            { label: 'work site details', routerLink: ['online-orders/work-order'] },
+            { label: 'worker details', routerLink: ['online-orders/work-assignments'] },
+            { label: 'finalize', routerLink: ['online-orders/final-confirm'] }
+        ];
+    };
+    return OnlineOrdersComponent;
+}());
+OnlineOrdersComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+        selector: 'app-online-orders',
+        template: __webpack_require__(363),
+        styles: [__webpack_require__(352)],
+        providers: [__WEBPACK_IMPORTED_MODULE_1__lookups_lookups_service__["a" /* LookupsService */], __WEBPACK_IMPORTED_MODULE_2__online_orders_service__["a" /* OnlineOrdersService */], __WEBPACK_IMPORTED_MODULE_3__angular_forms__["FormBuilder"]]
+    }),
+    __metadata("design:paramtypes", [])
+], OnlineOrdersComponent);
+
+//# sourceMappingURL=online-orders.component.js.map
+
+/***/ }),
+
+/***/ 332:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return OnlineOrdersService; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var OnlineOrdersService = (function () {
+    function OnlineOrdersService() {
+        this.requests = new Array();
+        console.log('online-orders.service: ' + JSON.stringify(this.getRequests()));
+    }
+    OnlineOrdersService.prototype.getRequests = function () {
+        return this.requests;
+    };
+    OnlineOrdersService.prototype.createRequest = function (request) {
+        this.requests.push(request);
+    };
+    OnlineOrdersService.prototype.saveRequest = function (request) {
+        this.requests[this.findSelectedRequestIndex(request)] = request;
+    };
+    OnlineOrdersService.prototype.deleteRequest = function () { };
+    OnlineOrdersService.prototype.clearRequests = function () { };
+    OnlineOrdersService.prototype.findSelectedRequestIndex = function (request) {
+        return this.requests.indexOf(request);
+    };
+    return OnlineOrdersService;
+}());
+OnlineOrdersService = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
+    __metadata("design:paramtypes", [])
+], OnlineOrdersService);
+
+//# sourceMappingURL=online-orders.service.js.map
+
+/***/ }),
+
+/***/ 333:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_forms__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__reports_reports_component__ = __webpack_require__(314);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__models_worker_request__ = __webpack_require__(341);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__lookups_lookups_service__ = __webpack_require__(327);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__lookups_models_lookup__ = __webpack_require__(339);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__online_orders_service__ = __webpack_require__(332);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return WorkAssignmentsComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -866,533 +738,345 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var ExportsService = (function () {
-    function ExportsService(http) {
-        this.http = http;
-        this.uriBase = '/api/exports';
+
+
+var WorkAssignmentsComponent = (function () {
+    function WorkAssignmentsComponent(lookupsService, ordersService, fb) {
+        this.lookupsService = lookupsService;
+        this.ordersService = ordersService;
+        this.fb = fb;
+        this.selectedSkill = new __WEBPACK_IMPORTED_MODULE_5__lookups_models_lookup__["a" /* Lookup */]();
+        this.requestList = new Array(); // list built by user in UI
+        this.request = new __WEBPACK_IMPORTED_MODULE_3__models_worker_request__["a" /* WorkerRequest */](); // composed by UI to make/edit a request
+        this.newRequest = true;
+        this.showErrors = false;
+        this.formErrors = {
+            'skillId': '',
+            'skill': '',
+            'hours': '',
+            'description': '',
+            'requiresHeavyLifting': '',
+            'wage': ''
+        };
+        this.validationMessages = {
+            'skillId': { 'required': 'Please select the type of work to be performed.' },
+            'skill': { 'required': 'skill is required.' },
+            'hours': { 'required': 'Please enter the number of hours needed.' },
+            'description': { 'required': 'description is required.' },
+            'requiresHeavyLifting': { 'required': 'requiresHeavyLifting is required.' },
+            'wage': { 'required': 'wage is required.' },
+        };
+        console.log('work-assignments.component: ' + JSON.stringify(ordersService.getRequests()));
     }
-    ExportsService.prototype.getExportsList = function () {
-        console.log('exportsService.getExportList: ' + this.uriBase);
-        return this.http.get(this.uriBase)
-            .map(function (res) { return res.json().data; })
-            .catch(this.handleError);
+    WorkAssignmentsComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.lookupsService.getLookups('skill')
+            .subscribe(function (listData) {
+            _this.skills = listData;
+            _this.skillsDropDown = listData.map(function (l) {
+                return new __WEBPACK_IMPORTED_MODULE_2__reports_reports_component__["a" /* MySelectItem */](l.text_EN, String(l.id));
+            });
+        }, function (error) { return _this.errorMessage = error; }, function () { return console.log('exports.component: ngOnInit onCompleted'); });
+        this.requestList = this.ordersService.getRequests();
+        this.buildForm();
     };
-    ExportsService.prototype.getColumns = function (tableName) {
-        var uri = this.uriBase + '/' + tableName.toLowerCase();
-        console.log('exportsService.getColumns ' + uri);
-        return this.http.get(uri)
-            .map(function (res) { return res.json().data; })
-            .catch(this.handleError);
-    };
-    ExportsService.prototype.getExport = function (tableName, o) {
-        var headers = new __WEBPACK_IMPORTED_MODULE_4__angular_http__["f" /* Headers */]({ 'Content-Type': 'application/text' });
-        var options = new __WEBPACK_IMPORTED_MODULE_4__angular_http__["m" /* RequestOptions */]({
-            headers: headers,
-            responseType: __WEBPACK_IMPORTED_MODULE_4__angular_http__["n" /* ResponseContentType */].Blob
+    WorkAssignmentsComponent.prototype.buildForm = function () {
+        var _this = this;
+        this.requestForm = this.fb.group({
+            'skillId': [this.request.skillId, __WEBPACK_IMPORTED_MODULE_1__angular_forms__["Validators"].required],
+            'skill': [this.request.skill],
+            'hours': [this.request.hours, __WEBPACK_IMPORTED_MODULE_1__angular_forms__["Validators"].required],
+            'description': [this.request.description],
+            'requiresHeavyLifting': [this.request.requiresHeavyLifting],
+            'wage': [this.request.wage]
         });
-        var params = this.encodeData(o);
-        console.log('exportsService.getExport: ' + JSON.stringify(params));
-        //const uri = this.uriBase + '/' + tableName.toLowerCase();
-        var uri = this.uriBase + '/' + tableName + '/execute?' + params;
-        return this.http.get(uri, options)
-            .map(function (res) {
-            return res;
-        });
+        this.requestForm.valueChanges
+            .subscribe(function (data) { return _this.onValueChanged(data); });
+        this.onValueChanged();
     };
-    ExportsService.prototype.handleError = function (error) {
-        console.error('ERROR', error);
-        return Promise.reject(error.message || error);
+    WorkAssignmentsComponent.prototype.onValueChanged = function (data) {
+        var form = this.requestForm;
+        for (var field in this.formErrors) {
+            // clear previous error message (if any)
+            this.formErrors[field] = '';
+            var control = form.get(field);
+            if (control && !control.valid) {
+                var messages = this.validationMessages[field];
+                for (var key in control.errors) {
+                    this.formErrors[field] += messages[key] + ' ';
+                }
+            }
+        }
     };
-    ExportsService.prototype.encodeData = function (data) {
-        return Object.keys(data).map(function (key) {
-            return [key, data[key]].map(encodeURIComponent).join('=');
-        }).join('&');
+    WorkAssignmentsComponent.prototype.selectSkill = function (skillId) {
+        var skill = this.skills.filter(function (f) { return f.id === Number(skillId); }).shift();
+        if (skill === null) {
+            throw new Error('Can\'t find selected skill in component\'s list');
+        }
+        this.selectedSkill = skill;
+        this.requestForm.controls['skill'].setValue(skill.text_EN);
+        this.requestForm.controls['wage'].setValue(skill.wage);
     };
-    return ExportsService;
+    WorkAssignmentsComponent.prototype.editRequest = function (request) {
+    };
+    WorkAssignmentsComponent.prototype.deleteRequest = function (request) {
+    };
+    WorkAssignmentsComponent.prototype.saveRequest = function () {
+        this.onValueChanged();
+        if (this.requestForm.status === 'INVALID') {
+            this.showErrors = true;
+            return;
+        }
+        this.showErrors = false;
+        var formModel = this.requestForm.value;
+        var saveRequest = {
+            skillId: formModel.skillId,
+            skill: formModel.skill,
+            hours: formModel.hours,
+            description: formModel.description,
+            requiresHeavyLifting: formModel.requiresHeavyLifting,
+            wage: formModel.wage
+        };
+        if (this.newRequest) {
+            this.ordersService.createRequest(saveRequest);
+        }
+        else {
+            this.ordersService.saveRequest(saveRequest);
+        }
+        this.requestList = this.ordersService.getRequests().slice();
+        this.requestForm.reset();
+        this.newRequest = true;
+    };
+    WorkAssignmentsComponent.prototype.onRowSelect = function (event) {
+        this.newRequest = false;
+        this.request = this.cloneRequest(event.data);
+    };
+    WorkAssignmentsComponent.prototype.cloneRequest = function (c) {
+        var request = new __WEBPACK_IMPORTED_MODULE_3__models_worker_request__["a" /* WorkerRequest */]();
+        for (var prop in c) {
+            request[prop] = c[prop];
+        }
+        return request;
+    };
+    return WorkAssignmentsComponent;
 }());
-ExportsService = __decorate([
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4__angular_http__["o" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__angular_http__["o" /* Http */]) === "function" && _a || Object])
-], ExportsService);
-
-var _a;
-//# sourceMappingURL=exports.service.js.map
-
-/***/ }),
-
-/***/ 331:
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(Buffer) {/*!
- * content-disposition
- * Copyright(c) 2014 Douglas Christopher Wilson
- * MIT Licensed
- */
-
-
-
-/**
- * Module exports.
- */
-
-module.exports = contentDisposition
-module.exports.parse = parse
-
-/**
- * Module dependencies.
- */
-
-var basename = __webpack_require__(336).basename
-
-/**
- * RegExp to match non attr-char, *after* encodeURIComponent (i.e. not including "%")
- */
-
-var ENCODE_URL_ATTR_CHAR_REGEXP = /[\x00-\x20"'()*,/:;<=>?@[\\\]{}\x7f]/g // eslint-disable-line no-control-regex
-
-/**
- * RegExp to match percent encoding escape.
- */
-
-var HEX_ESCAPE_REGEXP = /%[0-9A-Fa-f]{2}/
-var HEX_ESCAPE_REPLACE_REGEXP = /%([0-9A-Fa-f]{2})/g
-
-/**
- * RegExp to match non-latin1 characters.
- */
-
-var NON_LATIN1_REGEXP = /[^\x20-\x7e\xa0-\xff]/g
-
-/**
- * RegExp to match quoted-pair in RFC 2616
- *
- * quoted-pair = "\" CHAR
- * CHAR        = <any US-ASCII character (octets 0 - 127)>
- */
-
-var QESC_REGEXP = /\\([\u0000-\u007f])/g
-
-/**
- * RegExp to match chars that must be quoted-pair in RFC 2616
- */
-
-var QUOTE_REGEXP = /([\\"])/g
-
-/**
- * RegExp for various RFC 2616 grammar
- *
- * parameter     = token "=" ( token | quoted-string )
- * token         = 1*<any CHAR except CTLs or separators>
- * separators    = "(" | ")" | "<" | ">" | "@"
- *               | "," | ";" | ":" | "\" | <">
- *               | "/" | "[" | "]" | "?" | "="
- *               | "{" | "}" | SP | HT
- * quoted-string = ( <"> *(qdtext | quoted-pair ) <"> )
- * qdtext        = <any TEXT except <">>
- * quoted-pair   = "\" CHAR
- * CHAR          = <any US-ASCII character (octets 0 - 127)>
- * TEXT          = <any OCTET except CTLs, but including LWS>
- * LWS           = [CRLF] 1*( SP | HT )
- * CRLF          = CR LF
- * CR            = <US-ASCII CR, carriage return (13)>
- * LF            = <US-ASCII LF, linefeed (10)>
- * SP            = <US-ASCII SP, space (32)>
- * HT            = <US-ASCII HT, horizontal-tab (9)>
- * CTL           = <any US-ASCII control character (octets 0 - 31) and DEL (127)>
- * OCTET         = <any 8-bit sequence of data>
- */
-
-var PARAM_REGEXP = /;[\x09\x20]*([!#$%&'*+.0-9A-Z^_`a-z|~-]+)[\x09\x20]*=[\x09\x20]*("(?:[\x20!\x23-\x5b\x5d-\x7e\x80-\xff]|\\[\x20-\x7e])*"|[!#$%&'*+.0-9A-Z^_`a-z|~-]+)[\x09\x20]*/g // eslint-disable-line no-control-regex
-var TEXT_REGEXP = /^[\x20-\x7e\x80-\xff]+$/
-var TOKEN_REGEXP = /^[!#$%&'*+.0-9A-Z^_`a-z|~-]+$/
-
-/**
- * RegExp for various RFC 5987 grammar
- *
- * ext-value     = charset  "'" [ language ] "'" value-chars
- * charset       = "UTF-8" / "ISO-8859-1" / mime-charset
- * mime-charset  = 1*mime-charsetc
- * mime-charsetc = ALPHA / DIGIT
- *               / "!" / "#" / "$" / "%" / "&"
- *               / "+" / "-" / "^" / "_" / "`"
- *               / "{" / "}" / "~"
- * language      = ( 2*3ALPHA [ extlang ] )
- *               / 4ALPHA
- *               / 5*8ALPHA
- * extlang       = *3( "-" 3ALPHA )
- * value-chars   = *( pct-encoded / attr-char )
- * pct-encoded   = "%" HEXDIG HEXDIG
- * attr-char     = ALPHA / DIGIT
- *               / "!" / "#" / "$" / "&" / "+" / "-" / "."
- *               / "^" / "_" / "`" / "|" / "~"
- */
-
-var EXT_VALUE_REGEXP = /^([A-Za-z0-9!#$%&+\-^_`{}~]+)'(?:[A-Za-z]{2,3}(?:-[A-Za-z]{3}){0,3}|[A-Za-z]{4,8}|)'((?:%[0-9A-Fa-f]{2}|[A-Za-z0-9!#$&+.^_`|~-])+)$/
-
-/**
- * RegExp for various RFC 6266 grammar
- *
- * disposition-type = "inline" | "attachment" | disp-ext-type
- * disp-ext-type    = token
- * disposition-parm = filename-parm | disp-ext-parm
- * filename-parm    = "filename" "=" value
- *                  | "filename*" "=" ext-value
- * disp-ext-parm    = token "=" value
- *                  | ext-token "=" ext-value
- * ext-token        = <the characters in token, followed by "*">
- */
-
-var DISPOSITION_TYPE_REGEXP = /^([!#$%&'*+.0-9A-Z^_`a-z|~-]+)[\x09\x20]*(?:$|;)/ // eslint-disable-line no-control-regex
-
-/**
- * Create an attachment Content-Disposition header.
- *
- * @param {string} [filename]
- * @param {object} [options]
- * @param {string} [options.type=attachment]
- * @param {string|boolean} [options.fallback=true]
- * @return {string}
- * @api public
- */
-
-function contentDisposition (filename, options) {
-  var opts = options || {}
-
-  // get type
-  var type = opts.type || 'attachment'
-
-  // get parameters
-  var params = createparams(filename, opts.fallback)
-
-  // format into string
-  return format(new ContentDisposition(type, params))
-}
-
-/**
- * Create parameters object from filename and fallback.
- *
- * @param {string} [filename]
- * @param {string|boolean} [fallback=true]
- * @return {object}
- * @api private
- */
-
-function createparams (filename, fallback) {
-  if (filename === undefined) {
-    return
-  }
-
-  var params = {}
-
-  if (typeof filename !== 'string') {
-    throw new TypeError('filename must be a string')
-  }
-
-  // fallback defaults to true
-  if (fallback === undefined) {
-    fallback = true
-  }
-
-  if (typeof fallback !== 'string' && typeof fallback !== 'boolean') {
-    throw new TypeError('fallback must be a string or boolean')
-  }
-
-  if (typeof fallback === 'string' && NON_LATIN1_REGEXP.test(fallback)) {
-    throw new TypeError('fallback must be ISO-8859-1 string')
-  }
-
-  // restrict to file base name
-  var name = basename(filename)
-
-  // determine if name is suitable for quoted string
-  var isQuotedString = TEXT_REGEXP.test(name)
-
-  // generate fallback name
-  var fallbackName = typeof fallback !== 'string'
-    ? fallback && getlatin1(name)
-    : basename(fallback)
-  var hasFallback = typeof fallbackName === 'string' && fallbackName !== name
-
-  // set extended filename parameter
-  if (hasFallback || !isQuotedString || HEX_ESCAPE_REGEXP.test(name)) {
-    params['filename*'] = name
-  }
-
-  // set filename parameter
-  if (isQuotedString || hasFallback) {
-    params.filename = hasFallback
-      ? fallbackName
-      : name
-  }
-
-  return params
-}
-
-/**
- * Format object to Content-Disposition header.
- *
- * @param {object} obj
- * @param {string} obj.type
- * @param {object} [obj.parameters]
- * @return {string}
- * @api private
- */
-
-function format (obj) {
-  var parameters = obj.parameters
-  var type = obj.type
-
-  if (!type || typeof type !== 'string' || !TOKEN_REGEXP.test(type)) {
-    throw new TypeError('invalid type')
-  }
-
-  // start with normalized type
-  var string = String(type).toLowerCase()
-
-  // append parameters
-  if (parameters && typeof parameters === 'object') {
-    var param
-    var params = Object.keys(parameters).sort()
-
-    for (var i = 0; i < params.length; i++) {
-      param = params[i]
-
-      var val = param.substr(-1) === '*'
-        ? ustring(parameters[param])
-        : qstring(parameters[param])
-
-      string += '; ' + param + '=' + val
-    }
-  }
-
-  return string
-}
-
-/**
- * Decode a RFC 6987 field value (gracefully).
- *
- * @param {string} str
- * @return {string}
- * @api private
- */
-
-function decodefield (str) {
-  var match = EXT_VALUE_REGEXP.exec(str)
-
-  if (!match) {
-    throw new TypeError('invalid extended field value')
-  }
-
-  var charset = match[1].toLowerCase()
-  var encoded = match[2]
-  var value
-
-  // to binary string
-  var binary = encoded.replace(HEX_ESCAPE_REPLACE_REGEXP, pdecode)
-
-  switch (charset) {
-    case 'iso-8859-1':
-      value = getlatin1(binary)
-      break
-    case 'utf-8':
-      value = new Buffer(binary, 'binary').toString('utf8')
-      break
-    default:
-      throw new TypeError('unsupported charset in extended field')
-  }
-
-  return value
-}
-
-/**
- * Get ISO-8859-1 version of string.
- *
- * @param {string} val
- * @return {string}
- * @api private
- */
-
-function getlatin1 (val) {
-  // simple Unicode -> ISO-8859-1 transformation
-  return String(val).replace(NON_LATIN1_REGEXP, '?')
-}
-
-/**
- * Parse Content-Disposition header string.
- *
- * @param {string} string
- * @return {object}
- * @api private
- */
-
-function parse (string) {
-  if (!string || typeof string !== 'string') {
-    throw new TypeError('argument string is required')
-  }
-
-  var match = DISPOSITION_TYPE_REGEXP.exec(string)
-
-  if (!match) {
-    throw new TypeError('invalid type format')
-  }
-
-  // normalize type
-  var index = match[0].length
-  var type = match[1].toLowerCase()
-
-  var key
-  var names = []
-  var params = {}
-  var value
-
-  // calculate index to start at
-  index = PARAM_REGEXP.lastIndex = match[0].substr(-1) === ';'
-    ? index - 1
-    : index
-
-  // match parameters
-  while ((match = PARAM_REGEXP.exec(string))) {
-    if (match.index !== index) {
-      throw new TypeError('invalid parameter format')
-    }
-
-    index += match[0].length
-    key = match[1].toLowerCase()
-    value = match[2]
-
-    if (names.indexOf(key) !== -1) {
-      throw new TypeError('invalid duplicate parameter')
-    }
-
-    names.push(key)
-
-    if (key.indexOf('*') + 1 === key.length) {
-      // decode extended value
-      key = key.slice(0, -1)
-      value = decodefield(value)
-
-      // overwrite existing value
-      params[key] = value
-      continue
-    }
-
-    if (typeof params[key] === 'string') {
-      continue
-    }
-
-    if (value[0] === '"') {
-      // remove quotes and escapes
-      value = value
-        .substr(1, value.length - 2)
-        .replace(QESC_REGEXP, '$1')
-    }
-
-    params[key] = value
-  }
-
-  if (index !== -1 && index !== string.length) {
-    throw new TypeError('invalid parameter format')
-  }
-
-  return new ContentDisposition(type, params)
-}
-
-/**
- * Percent decode a single character.
- *
- * @param {string} str
- * @param {string} hex
- * @return {string}
- * @api private
- */
-
-function pdecode (str, hex) {
-  return String.fromCharCode(parseInt(hex, 16))
-}
-
-/**
- * Percent encode a single character.
- *
- * @param {string} char
- * @return {string}
- * @api private
- */
-
-function pencode (char) {
-  var hex = String(char)
-    .charCodeAt(0)
-    .toString(16)
-    .toUpperCase()
-  return hex.length === 1
-    ? '%0' + hex
-    : '%' + hex
-}
-
-/**
- * Quote a string for HTTP.
- *
- * @param {string} val
- * @return {string}
- * @api private
- */
-
-function qstring (val) {
-  var str = String(val)
-
-  return '"' + str.replace(QUOTE_REGEXP, '\\$1') + '"'
-}
-
-/**
- * Encode a Unicode string for HTTP (RFC 5987).
- *
- * @param {string} val
- * @return {string}
- * @api private
- */
-
-function ustring (val) {
-  var str = String(val)
-
-  // percent encode as UTF-8
-  var encoded = encodeURIComponent(str)
-    .replace(ENCODE_URL_ATTR_CHAR_REGEXP, pencode)
-
-  return 'UTF-8\'\'' + encoded
-}
-
-/**
- * Class for parsed Content-Disposition header for v8 optimization
- */
-
-function ContentDisposition (type, parameters) {
-  this.type = type
-  this.parameters = parameters
-}
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(45).Buffer))
-
-/***/ }),
-
-/***/ 333:
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(20)(false);
-// imports
-
-
-// module
-exports.push([module.i, "", ""]);
-
-// exports
-
-
-/*** EXPORTS FROM exports-loader ***/
-module.exports = module.exports.toString();
+WorkAssignmentsComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+        selector: 'app-work-assignments',
+        template: __webpack_require__(364),
+        styles: [__webpack_require__(353)]
+    }),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4__lookups_lookups_service__["a" /* LookupsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__lookups_lookups_service__["a" /* LookupsService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_6__online_orders_service__["a" /* OnlineOrdersService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__online_orders_service__["a" /* OnlineOrdersService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1__angular_forms__["FormBuilder"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_forms__["FormBuilder"]) === "function" && _c || Object])
+], WorkAssignmentsComponent);
+
+var _a, _b, _c;
+//# sourceMappingURL=work-assignments.component.js.map
 
 /***/ }),
 
 /***/ 334:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_forms__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_work_order__ = __webpack_require__(342);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return WorkOrderComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var WorkOrderComponent = (function () {
+    function WorkOrderComponent(fb) {
+        this.fb = fb;
+        this.order = new __WEBPACK_IMPORTED_MODULE_2__models_work_order__["a" /* WorkOrder */]();
+    }
+    WorkOrderComponent.prototype.ngOnInit = function () {
+        this.buildForm();
+    };
+    WorkOrderComponent.prototype.buildForm = function () {
+        this.orderForm = this.fb.group({
+            'selectedTransportMethod': [this.order.transportMethodID]
+        });
+    };
+    return WorkOrderComponent;
+}());
+WorkOrderComponent = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+        selector: 'app-work-order',
+        template: __webpack_require__(365),
+        styles: [__webpack_require__(354)]
+    }),
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_forms__["FormBuilder"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_forms__["FormBuilder"]) === "function" && _a || Object])
+], WorkOrderComponent);
+
+var _a;
+//# sourceMappingURL=work-order.component.js.map
+
+/***/ }),
+
+/***/ 339:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Lookup; });
+/**
+ * Created by jcii on 6/2/17.
+ */
+var Lookup = (function () {
+    function Lookup() {
+    }
+    return Lookup;
+}());
+
+//# sourceMappingURL=lookup.js.map
+
+/***/ }),
+
+/***/ 340:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__online_orders_component__ = __webpack_require__(331);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__introduction_introduction_component__ = __webpack_require__(330);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__intro_confirm_intro_confirm_component__ = __webpack_require__(329);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__work_order_work_order_component__ = __webpack_require__(334);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__work_assignments_work_assignments_component__ = __webpack_require__(333);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__final_confirm_final_confirm_component__ = __webpack_require__(328);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return OnlineOrdersRoutingModule; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+
+
+
+
+
+
+
+var onlineOrderRoutes = [
+    {
+        path: '',
+        component: __WEBPACK_IMPORTED_MODULE_2__online_orders_component__["a" /* OnlineOrdersComponent */],
+        children: [
+            {
+                path: 'introduction',
+                component: __WEBPACK_IMPORTED_MODULE_3__introduction_introduction_component__["a" /* IntroductionComponent */]
+            },
+            {
+                path: 'intro-confirm',
+                component: __WEBPACK_IMPORTED_MODULE_4__intro_confirm_intro_confirm_component__["a" /* IntroConfirmComponent */]
+            },
+            {
+                path: 'work-order',
+                component: __WEBPACK_IMPORTED_MODULE_5__work_order_work_order_component__["a" /* WorkOrderComponent */]
+            },
+            {
+                path: 'work-assignments',
+                component: __WEBPACK_IMPORTED_MODULE_6__work_assignments_work_assignments_component__["a" /* WorkAssignmentsComponent */]
+            },
+            {
+                path: 'final-confirm',
+                component: __WEBPACK_IMPORTED_MODULE_7__final_confirm_final_confirm_component__["a" /* FinalConfirmComponent */]
+            }
+        ]
+    },
+];
+var OnlineOrdersRoutingModule = (function () {
+    function OnlineOrdersRoutingModule() {
+    }
+    return OnlineOrdersRoutingModule;
+}());
+OnlineOrdersRoutingModule = __decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["NgModule"])({
+        imports: [
+            __WEBPACK_IMPORTED_MODULE_1__angular_router__["RouterModule"].forChild(onlineOrderRoutes)
+        ],
+        exports: [
+            __WEBPACK_IMPORTED_MODULE_1__angular_router__["RouterModule"]
+        ],
+        providers: []
+    })
+], OnlineOrdersRoutingModule);
+
+//# sourceMappingURL=online-orders-routing.module.js.map
+
+/***/ }),
+
+/***/ 341:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return WorkerRequest; });
+/**
+ * Created by jcii on 5/31/17.
+ */
+var WorkerRequest = (function () {
+    function WorkerRequest() {
+        this.requiresHeavyLifting = false;
+    }
+    return WorkerRequest;
+}());
+
+//# sourceMappingURL=worker-request.js.map
+
+/***/ }),
+
+/***/ 342:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return WorkOrder; });
+/**
+ * Created by jcii on 6/10/17.
+ */
+var WorkOrder = (function () {
+    function WorkOrder() {
+    }
+    return WorkOrder;
+}());
+
+//# sourceMappingURL=work-order.js.map
+
+/***/ }),
+
+/***/ 344:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return HandleError; });
+/**
+ * Created by jcii on 6/2/17.
+ */
+var HandleError = (function () {
+    function HandleError() {
+    }
+    HandleError.error = function (error) {
+        console.error('ERROR', error);
+        return Promise.reject(error.message || error);
+    };
+    return HandleError;
+}());
+
+//# sourceMappingURL=handle-error.js.map
+
+/***/ }),
+
+/***/ 349:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(20)(false);
@@ -1410,465 +1094,135 @@ module.exports = module.exports.toString();
 
 /***/ }),
 
-/***/ 335:
+/***/ 350:
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_RESULT__;/* FileSaver.js
- * A saveAs() FileSaver implementation.
- * 1.3.2
- * 2016-06-16 18:25:19
- *
- * By Eli Grey, http://eligrey.com
- * License: MIT
- *   See https://github.com/eligrey/FileSaver.js/blob/master/LICENSE.md
- */
+exports = module.exports = __webpack_require__(20)(false);
+// imports
 
-/*global self */
-/*jslint bitwise: true, indent: 4, laxbreak: true, laxcomma: true, smarttabs: true, plusplus: true */
 
-/*! @source http://purl.eligrey.com/github/FileSaver.js/blob/master/FileSaver.js */
+// module
+exports.push([module.i, "", ""]);
 
-var saveAs = saveAs || (function(view) {
-	"use strict";
-	// IE <10 is explicitly unsupported
-	if (typeof view === "undefined" || typeof navigator !== "undefined" && /MSIE [1-9]\./.test(navigator.userAgent)) {
-		return;
-	}
-	var
-		  doc = view.document
-		  // only get URL when necessary in case Blob.js hasn't overridden it yet
-		, get_URL = function() {
-			return view.URL || view.webkitURL || view;
-		}
-		, save_link = doc.createElementNS("http://www.w3.org/1999/xhtml", "a")
-		, can_use_save_link = "download" in save_link
-		, click = function(node) {
-			var event = new MouseEvent("click");
-			node.dispatchEvent(event);
-		}
-		, is_safari = /constructor/i.test(view.HTMLElement) || view.safari
-		, is_chrome_ios =/CriOS\/[\d]+/.test(navigator.userAgent)
-		, throw_outside = function(ex) {
-			(view.setImmediate || view.setTimeout)(function() {
-				throw ex;
-			}, 0);
-		}
-		, force_saveable_type = "application/octet-stream"
-		// the Blob API is fundamentally broken as there is no "downloadfinished" event to subscribe to
-		, arbitrary_revoke_timeout = 1000 * 40 // in ms
-		, revoke = function(file) {
-			var revoker = function() {
-				if (typeof file === "string") { // file is an object URL
-					get_URL().revokeObjectURL(file);
-				} else { // file is a File
-					file.remove();
-				}
-			};
-			setTimeout(revoker, arbitrary_revoke_timeout);
-		}
-		, dispatch = function(filesaver, event_types, event) {
-			event_types = [].concat(event_types);
-			var i = event_types.length;
-			while (i--) {
-				var listener = filesaver["on" + event_types[i]];
-				if (typeof listener === "function") {
-					try {
-						listener.call(filesaver, event || filesaver);
-					} catch (ex) {
-						throw_outside(ex);
-					}
-				}
-			}
-		}
-		, auto_bom = function(blob) {
-			// prepend BOM for UTF-8 XML and text/* types (including HTML)
-			// note: your browser will automatically convert UTF-16 U+FEFF to EF BB BF
-			if (/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(blob.type)) {
-				return new Blob([String.fromCharCode(0xFEFF), blob], {type: blob.type});
-			}
-			return blob;
-		}
-		, FileSaver = function(blob, name, no_auto_bom) {
-			if (!no_auto_bom) {
-				blob = auto_bom(blob);
-			}
-			// First try a.download, then web filesystem, then object URLs
-			var
-				  filesaver = this
-				, type = blob.type
-				, force = type === force_saveable_type
-				, object_url
-				, dispatch_all = function() {
-					dispatch(filesaver, "writestart progress write writeend".split(" "));
-				}
-				// on any filesys errors revert to saving with object URLs
-				, fs_error = function() {
-					if ((is_chrome_ios || (force && is_safari)) && view.FileReader) {
-						// Safari doesn't allow downloading of blob urls
-						var reader = new FileReader();
-						reader.onloadend = function() {
-							var url = is_chrome_ios ? reader.result : reader.result.replace(/^data:[^;]*;/, 'data:attachment/file;');
-							var popup = view.open(url, '_blank');
-							if(!popup) view.location.href = url;
-							url=undefined; // release reference before dispatching
-							filesaver.readyState = filesaver.DONE;
-							dispatch_all();
-						};
-						reader.readAsDataURL(blob);
-						filesaver.readyState = filesaver.INIT;
-						return;
-					}
-					// don't create more object URLs than needed
-					if (!object_url) {
-						object_url = get_URL().createObjectURL(blob);
-					}
-					if (force) {
-						view.location.href = object_url;
-					} else {
-						var opened = view.open(object_url, "_blank");
-						if (!opened) {
-							// Apple does not allow window.open, see https://developer.apple.com/library/safari/documentation/Tools/Conceptual/SafariExtensionGuide/WorkingwithWindowsandTabs/WorkingwithWindowsandTabs.html
-							view.location.href = object_url;
-						}
-					}
-					filesaver.readyState = filesaver.DONE;
-					dispatch_all();
-					revoke(object_url);
-				}
-			;
-			filesaver.readyState = filesaver.INIT;
+// exports
 
-			if (can_use_save_link) {
-				object_url = get_URL().createObjectURL(blob);
-				setTimeout(function() {
-					save_link.href = object_url;
-					save_link.download = name;
-					click(save_link);
-					dispatch_all();
-					revoke(object_url);
-					filesaver.readyState = filesaver.DONE;
-				});
-				return;
-			}
 
-			fs_error();
-		}
-		, FS_proto = FileSaver.prototype
-		, saveAs = function(blob, name, no_auto_bom) {
-			return new FileSaver(blob, name || blob.name || "download", no_auto_bom);
-		}
-	;
-	// IE 10+ (native saveAs)
-	if (typeof navigator !== "undefined" && navigator.msSaveOrOpenBlob) {
-		return function(blob, name, no_auto_bom) {
-			name = name || blob.name || "download";
-
-			if (!no_auto_bom) {
-				blob = auto_bom(blob);
-			}
-			return navigator.msSaveOrOpenBlob(blob, name);
-		};
-	}
-
-	FS_proto.abort = function(){};
-	FS_proto.readyState = FS_proto.INIT = 0;
-	FS_proto.WRITING = 1;
-	FS_proto.DONE = 2;
-
-	FS_proto.error =
-	FS_proto.onwritestart =
-	FS_proto.onprogress =
-	FS_proto.onwrite =
-	FS_proto.onabort =
-	FS_proto.onerror =
-	FS_proto.onwriteend =
-		null;
-
-	return saveAs;
-}(
-	   typeof self !== "undefined" && self
-	|| typeof window !== "undefined" && window
-	|| this.content
-));
-// `self` is undefined in Firefox for Android content script context
-// while `this` is nsIContentFrameMessageManager
-// with an attribute `content` that corresponds to the window
-
-if (typeof module !== "undefined" && module.exports) {
-  module.exports.saveAs = saveAs;
-} else if (("function" !== "undefined" && __webpack_require__(340) !== null) && (__webpack_require__(341) !== null)) {
-  !(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
-    return saveAs;
-  }.call(exports, __webpack_require__, exports, module),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-}
-
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
 
 /***/ }),
 
-/***/ 336:
+/***/ 351:
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(process) {// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-// resolves . and .. elements in a path array with directory names there
-// must be no slashes, empty elements, or device names (c:\) in the array
-// (so also no leading and trailing slashes - it does not distinguish
-// relative and absolute paths)
-function normalizeArray(parts, allowAboveRoot) {
-  // if the path tries to go above the root, `up` ends up > 0
-  var up = 0;
-  for (var i = parts.length - 1; i >= 0; i--) {
-    var last = parts[i];
-    if (last === '.') {
-      parts.splice(i, 1);
-    } else if (last === '..') {
-      parts.splice(i, 1);
-      up++;
-    } else if (up) {
-      parts.splice(i, 1);
-      up--;
-    }
-  }
-
-  // if the path is allowed to go above the root, restore leading ..s
-  if (allowAboveRoot) {
-    for (; up--; up) {
-      parts.unshift('..');
-    }
-  }
-
-  return parts;
-}
-
-// Split a filename into [root, dir, basename, ext], unix version
-// 'root' is just a slash, or nothing.
-var splitPathRe =
-    /^(\/?|)([\s\S]*?)((?:\.{1,2}|[^\/]+?|)(\.[^.\/]*|))(?:[\/]*)$/;
-var splitPath = function(filename) {
-  return splitPathRe.exec(filename).slice(1);
-};
-
-// path.resolve([from ...], to)
-// posix version
-exports.resolve = function() {
-  var resolvedPath = '',
-      resolvedAbsolute = false;
-
-  for (var i = arguments.length - 1; i >= -1 && !resolvedAbsolute; i--) {
-    var path = (i >= 0) ? arguments[i] : process.cwd();
-
-    // Skip empty and invalid entries
-    if (typeof path !== 'string') {
-      throw new TypeError('Arguments to path.resolve must be strings');
-    } else if (!path) {
-      continue;
-    }
-
-    resolvedPath = path + '/' + resolvedPath;
-    resolvedAbsolute = path.charAt(0) === '/';
-  }
-
-  // At this point the path should be resolved to a full absolute path, but
-  // handle relative paths to be safe (might happen when process.cwd() fails)
-
-  // Normalize the path
-  resolvedPath = normalizeArray(filter(resolvedPath.split('/'), function(p) {
-    return !!p;
-  }), !resolvedAbsolute).join('/');
-
-  return ((resolvedAbsolute ? '/' : '') + resolvedPath) || '.';
-};
-
-// path.normalize(path)
-// posix version
-exports.normalize = function(path) {
-  var isAbsolute = exports.isAbsolute(path),
-      trailingSlash = substr(path, -1) === '/';
-
-  // Normalize the path
-  path = normalizeArray(filter(path.split('/'), function(p) {
-    return !!p;
-  }), !isAbsolute).join('/');
-
-  if (!path && !isAbsolute) {
-    path = '.';
-  }
-  if (path && trailingSlash) {
-    path += '/';
-  }
-
-  return (isAbsolute ? '/' : '') + path;
-};
-
-// posix version
-exports.isAbsolute = function(path) {
-  return path.charAt(0) === '/';
-};
-
-// posix version
-exports.join = function() {
-  var paths = Array.prototype.slice.call(arguments, 0);
-  return exports.normalize(filter(paths, function(p, index) {
-    if (typeof p !== 'string') {
-      throw new TypeError('Arguments to path.join must be strings');
-    }
-    return p;
-  }).join('/'));
-};
+exports = module.exports = __webpack_require__(20)(false);
+// imports
 
 
-// path.relative(from, to)
-// posix version
-exports.relative = function(from, to) {
-  from = exports.resolve(from).substr(1);
-  to = exports.resolve(to).substr(1);
+// module
+exports.push([module.i, "", ""]);
 
-  function trim(arr) {
-    var start = 0;
-    for (; start < arr.length; start++) {
-      if (arr[start] !== '') break;
-    }
-
-    var end = arr.length - 1;
-    for (; end >= 0; end--) {
-      if (arr[end] !== '') break;
-    }
-
-    if (start > end) return [];
-    return arr.slice(start, end - start + 1);
-  }
-
-  var fromParts = trim(from.split('/'));
-  var toParts = trim(to.split('/'));
-
-  var length = Math.min(fromParts.length, toParts.length);
-  var samePartsLength = length;
-  for (var i = 0; i < length; i++) {
-    if (fromParts[i] !== toParts[i]) {
-      samePartsLength = i;
-      break;
-    }
-  }
-
-  var outputParts = [];
-  for (var i = samePartsLength; i < fromParts.length; i++) {
-    outputParts.push('..');
-  }
-
-  outputParts = outputParts.concat(toParts.slice(samePartsLength));
-
-  return outputParts.join('/');
-};
-
-exports.sep = '/';
-exports.delimiter = ':';
-
-exports.dirname = function(path) {
-  var result = splitPath(path),
-      root = result[0],
-      dir = result[1];
-
-  if (!root && !dir) {
-    // No dirname whatsoever
-    return '.';
-  }
-
-  if (dir) {
-    // It has a dirname, strip trailing slash
-    dir = dir.substr(0, dir.length - 1);
-  }
-
-  return root + dir;
-};
+// exports
 
 
-exports.basename = function(path, ext) {
-  var f = splitPath(path)[2];
-  // TODO: make this comparison case-insensitive on windows?
-  if (ext && f.substr(-1 * ext.length) === ext) {
-    f = f.substr(0, f.length - ext.length);
-  }
-  return f;
-};
-
-
-exports.extname = function(path) {
-  return splitPath(path)[3];
-};
-
-function filter (xs, f) {
-    if (xs.filter) return xs.filter(f);
-    var res = [];
-    for (var i = 0; i < xs.length; i++) {
-        if (f(xs[i], i, xs)) res.push(xs[i]);
-    }
-    return res;
-}
-
-// String.prototype.substr - negative index don't work in IE8
-var substr = 'ab'.substr(-1) === 'b'
-    ? function (str, start, len) { return str.substr(start, len) }
-    : function (str, start, len) {
-        if (start < 0) start = str.length + start;
-        return str.substr(start, len);
-    }
-;
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(123)))
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
 
 /***/ }),
 
-/***/ 338:
-/***/ (function(module, exports) {
+/***/ 352:
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = "<div [formGroup]=\"form\">\r\n  <p-dataTable  [value]=\"columns\" [responsive]=\"true\">\r\n    <p-column field=\"name\" header=\"Column name\"></p-column>\r\n    <p-column field=\"is_nullable\" header=\"Contains nulls?\"></p-column>\r\n    <p-column field=\"system_type_name\" header=\"Data type\"></p-column>\r\n    <p-column header=\"Include in export\">\r\n      <ng-template let-foo=\"rowData\" pTemplate=\"body\">\r\n        <p-inputSwitch onLabel=\"Yes\" offLabel=\"No\" [(ngModel)]=\"foo.include\" [formControlName]=\"foo.name\"></p-inputSwitch>\r\n      </ng-template>\r\n    </p-column>\r\n  </p-dataTable>\r\n</div>\r\n"
+exports = module.exports = __webpack_require__(20)(false);
+// imports
 
-/***/ }),
 
-/***/ 339:
-/***/ (function(module, exports) {
+// module
+exports.push([module.i, "", ""]);
 
-module.exports = "<h1>Exports</h1>\r\n<div class=\"ui-g\" >\r\n  <div class=\"ui-g-12 ui-md-6\">\r\n    <p-dropdown\r\n      id=\"exportsDD\"\r\n      placeholder=\"Select a table\"\r\n      [options]=\"exportsDropDown\"\r\n      (onChange)=\"getColumns()\"\r\n      [(ngModel)]=\"selectedExportName\"\r\n      [filter]=\"true\"\r\n      [style]=\"{'width':'10em'}\"></p-dropdown>\r\n  </div>\r\n  <div class=\"ui-g-12 ui-md-6\">\r\n    <p-dropdown\r\n      placeholder=\"date field for filter\"\r\n      [options]=\"dateFilterDropDown\"\r\n      [(ngModel)]=\"selectedDateFilter\"\r\n      [style]=\"{'width':'10em'}\"></p-dropdown>\r\n  </div>\r\n  <div class=\"ui-g-12 ui-md-4 ui-lg-3\">\r\n    <p-calendar\r\n      placeholder=\"Start date\"\r\n      [showIcon]=\"true\"\r\n      [(ngModel)]=\"selectedStartDate\"\r\n      dataType=\"string\"></p-calendar>\r\n  </div>\r\n  <div class=\"ui-g-12 ui-md-4 ui-lg-3\">\r\n    <p-calendar\r\n      placeholder=\"End date\"\r\n      [showIcon]=\"true\"\r\n      [(ngModel)]=\"selectedEndDate\"\r\n      dataType=\"string\"></p-calendar>\r\n  </div>\r\n  <div class=\"ui-g-12 ui-md-4 ui-lg-3\">\r\n    <button pButton type=\"submit\" label=\"Export\" (click)=\"onSubmit()\"></button>\r\n  </div>\r\n</div>\r\n<div>\r\n    <exports-options [columns]=\"selectedColumns\" [form]=\"form\"></exports-options>\r\n\r\n</div>\r\n"
+// exports
 
-/***/ }),
 
-/***/ 340:
-/***/ (function(module, exports) {
-
-module.exports = function() {
-	throw new Error("define cannot be used indirect");
-};
-
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
 
 /***/ }),
 
-/***/ 341:
+/***/ 353:
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(20)(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ 354:
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(20)(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ 360:
 /***/ (function(module, exports) {
 
-/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
-module.exports = __webpack_amd_options__;
+module.exports = "<p>\r\n  final-confirm works!\r\n</p>\r\n"
 
-/* WEBPACK VAR INJECTION */}.call(exports, {}))
+/***/ }),
+
+/***/ 361:
+/***/ (function(module, exports) {
+
+module.exports = "<strong>Please note:</strong>\r\n<ol>\r\n  <li>This order is not complete until you receive a confirmation email from Casa Latina.\r\n    If you do not hear from us or if you need a worker with 48 hours please call 206.956.0779 x3 during our\r\n    <a href=\"#\" id=\"businessHoursModal\">Business Hours</a>.\r\n  </li>\r\n  <li>Please allow a one hour window for worker(s) to arrive. This will account for transportation\r\n    routes with multiple stops and for traffic. There is no transportation fee to hire a Casa Latina\r\n    worker when you pick them up from our office. To have your worker(s) arrive at your door,\r\n    there is a <a href=\"#\" id=\"transportationMethodModal\">small fee</a> payable through this form.\r\n  </li>\r\n  <li>Casa Latina workers are not contractors. You will need to provide all tools, materials, and\r\n    safety equipment necessary for the job you wish to have done.\r\n  </li>\r\n</ol>\r\n"
+
+/***/ }),
+
+/***/ 362:
+/***/ (function(module, exports) {
+
+module.exports = "\r\n<p>\r\n  Casa Latina connects Latino immigrant workers with individuals and businesses looking for temporary labor. Our workers are skilled and dependable. From landscaping to dry walling to catering and housecleaning, if you can dream the project our workers can do it! For more information about our program please read these Frequently Asked Questions\r\n</p>\r\n<p>\r\n  If you are ready to hire a worker, please fill out the following form.\r\n</p>\r\n<p>\r\n  If you still have questions about hiring a worker, please call us at 206.956.0779 x3.\r\n</p>\r\n\r\n"
+
+/***/ }),
+
+/***/ 363:
+/***/ (function(module, exports) {
+
+module.exports = "<h1>\r\n  Hire a Worker Online Order Form\r\n</h1>\r\n<p-steps [model]=\"items\" [readonly]=\"false\" [(activeIndex)]=\"activeIndex\" ></p-steps>\r\n<router-outlet></router-outlet>\r\n"
+
+/***/ }),
+
+/***/ 364:
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"ui-fluid\">\r\n  <div class=\"card\">\r\n    <form [formGroup]=\"requestForm\"  (ngSubmit)=\"saveRequest()\" class=\"ui-g form-group\">\r\n      <div class=\"ui-g-12 ui-md-6\">\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n            <label for=\"skillsList\">Skill needed</label>\r\n          </div>\r\n          <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n            <p-dropdown id=\"skillsList\"\r\n                        [options]=\"skillsDropDown\"\r\n                        formControlName=\"skillId\"\r\n                        [(ngModel)]=\"request.skillId\"\r\n                        (onChange)=\"selectSkill(request.skillId)\"\r\n                        [autoWidth]=\"false\"\r\n                        placeholder=\"Select a skill\"></p-dropdown>\r\n\r\n          </div>\r\n        </div>\r\n        <div class=\"ui-g-12 ui-g-nopad\">\r\n          <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!requestForm.controls['skillId'].valid && showErrors\">\r\n            {{formErrors.skillId}}\r\n          </div>\r\n        </div>\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n            <label for=\"hours\">Hours needed</label>\r\n          </div>\r\n          <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n            <input class=\"ui-inputtext\" formControlName=\"hours\" id=\"hours\" type=\"text\" pInputText/>\r\n          </div>\r\n        </div>\r\n        <div class=\"ui-g-12 ui-g-nopad\">\r\n          <div class=\"ui-message ui-messages-error ui-corner-all\" *ngIf=\"!requestForm.controls['hours'].valid && showErrors\">\r\n            {{formErrors.hours}}\r\n          </div>\r\n        </div>\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n            <label for=\"requiresHeavyLifting\">Requires heavy lifting?</label>\r\n          </div>\r\n          <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n            <p-inputSwitch id=\"requiresHeavyLifting\" formControlName=\"requiresHeavyLifting\"></p-inputSwitch>\r\n          </div>\r\n        </div>\r\n\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n            <label for=\"description\">Additional info about job</label>\r\n          </div>\r\n          <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n            <textarea rows=\"3\" class=\"ui-inputtext\" formControlName=\"description\" id=\"description\" type=\"text\" pInputText></textarea>\r\n          </div>\r\n        </div>\r\n      </div>\r\n      <div class=\"ui-g-12 ui-md-6\">\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n            Skill description\r\n          </div>\r\n          <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n            {{this.selectedSkill.skillDescriptionEn}}\r\n          </div>\r\n        </div>\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n            Hourly rate\r\n          </div>\r\n          <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n            {{this.selectedSkill.wage}}\r\n          </div>\r\n        </div>\r\n        <div class=\"ui-g-12\">\r\n          <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n            Minimum time\r\n          </div>\r\n          <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n            {{this.selectedSkill.minHour}}\r\n          </div>\r\n        </div>\r\n      </div>\r\n      <div class=\"ui-g-12\">\r\n        <button pButton type=\"submit\" label=\"Save\"></button>\r\n      </div>\r\n    </form>\r\n\r\n    <p-dataTable [value]=\"requestList\" [(selection)]=\"selectedRequest\" (onRowSelect)=\"onRowSelect($event)\" [responsive]=\"true\">\r\n      <p-column field=\"skill\" header=\"Skill needed\"></p-column>\r\n      <p-column field=\"hours\" header=\"hours requested\"></p-column>\r\n      <p-column field=\"description\" header=\"notes\"></p-column>\r\n      <p-column field=\"requiresHeavyLifting\" header=\"Heavy lifting?\"></p-column>\r\n      <p-column field=\"wage\" header=\"Hourly wage\"></p-column>\r\n\r\n      <p-column styleClass=\"col-button\">\r\n        <ng-template pTemplate=\"header\">\r\n          Actions\r\n        </ng-template>\r\n        <ng-template let-request=\"rowData\" pTemplate=\"body\">\r\n          <button type=\"button\" pButton (click)=\"editRequest(request)\" icon=\"ui-icon-edit\"></button>\r\n          <button type=\"button\" pButton (click)=\"deleteRequest(request)\" icon=\"ui-icon-delete\"></button>\r\n        </ng-template>\r\n      </p-column>\r\n    </p-dataTable>\r\n  </div>\r\n</div>\r\n"
+
+/***/ }),
+
+/***/ 365:
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"ui-fluid\">Seattle Family Biking\r\n      <div class=\"card\">\r\n        <form [formGroup]=\"orderForm\" class=\"ui-g form-group\">\r\n          <div class=\"ui-g-12 ui-md-6\">\r\n            <div class=\"ui-g-12\">\r\n              <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n                <label for=\"dateTimeofWork\">Time needed</label>\r\n              </div>\r\n              <div class=\"ui-g-12 ui-md-8  ui-g-nopad\">\r\n                <p-calendar id=\"dateTimeofWork\"></p-calendar>\r\n              </div>\r\n            </div>\r\n            <div class=\"ui-g-12\">\r\n              <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n                <label for=\"contactName\">Contact name</label>\r\n              </div>\r\n              <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n                <input class=\"ui-inputtext\" id=\"contactName\" type=\"text\" pInputText/>\r\n              </div>\r\n            </div>\r\n            <div class=\"ui-g-12\">\r\n              <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n                <label for=\"worksiteAddress1\">Address (1)</label>\r\n              </div>\r\n              <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n                <input class=\"ui-inputtext\" id=\"worksiteAddress1\" type=\"text\" pInputText/>\r\n              </div>\r\n            </div>\r\n            <div class=\"ui-g-12\">\r\n              <div class=\"ui-g-12 ui-md-4  ui-g-nopad\">\r\n                <label for=\"worksiteAddress2\">Address (2)</label>\r\n              </div>\r\n              <div class=\"ui-g-12  ui-md-8 ui-g-nopad\">\r\n                <input class=\"ui-inputtext\" id=\"worksiteAddress2\" type=\"text\" pInputText/>\r\n              </div>\r\n            </div>\r\n            <div class=\"ui-g-12\">\r\n              <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n                <label for=\"city\">City</label>\r\n              </div>\r\n              <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n                <input class=\"ui-inputtext\" id=\"city\" type=\"text\" pInputText/>\r\n              </div>\r\n            </div>\r\n            <div class=\"ui-g-12\">\r\n              <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n                <label for=\"state\">State</label>\r\n              </div>\r\n              <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n                <input class=\"ui-inputtext\" id=\"state\" type=\"text\" pInputText/>\r\n              </div>\r\n            </div>\r\n            <div class=\"ui-g-12\">\r\n              <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n                <label for=\"zipcode\">Zipcode</label>\r\n              </div>\r\n              <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n                <input class=\"ui-inputtext\" id=\"zipcode\" type=\"text\" pInputText/>\r\n              </div>\r\n            </div>\r\n            <div class=\"ui-g-12\">\r\n              <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n                <label for=\"phone\">Phone</label>\r\n              </div>\r\n              <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n                <input class=\"ui-inputtext\" id=\"phone\" type=\"text\" pInputText/>\r\n              </div>\r\n            </div>\r\n          </div>\r\n          <div class=\"ui-g-12 ui-md-6\">\r\n            <div class=\"ui-g-12\">\r\n              <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n                <label for=\"description\">Work Description</label>\r\n              </div>\r\n              <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n                <textarea rows=\"5\" pInputTextarea autoResize=\"autoResize\" class=\"ui-inputtextarea\" id=\"description\" type=\"text\" ></textarea>\r\n              </div>\r\n            </div>\r\n            <div class=\"ui-g-12\">\r\n              <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n                <label for=\"additionalNotes\">Additional notes to dispatcher</label>\r\n              </div>\r\n              <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n                <textarea rows=\"5\" pInputTextarea autoResize=\"autoResize\" class=\"ui-inputtextarea\" id=\"additionalNotes\" type=\"text\" ></textarea>\r\n              </div>\r\n            </div>\r\n            <div class=\"ui-g-12\">\r\n              <div class=\"ui-g-12 ui-md-4 ui-g-nopad\">\r\n                <label for=\"transportMethodID\">Transport method</label>\r\n              </div>\r\n              <div class=\"ui-g-12 ui-md-8 ui-g-nopad\">\r\n                <p-dropdown id=\"transportMethodID\" [options]=\"transportMethods\" formControlName=\"selectedTransportMethod\" [autoWidth]=\"false\"></p-dropdown>\r\n              </div>\r\n            </div>\r\n          </div>\r\n        </form>\r\n      </div>\r\n</div>\r\n"
 
 /***/ })
 

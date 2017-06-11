@@ -1,4 +1,4 @@
-webpackJsonp([5,8],{
+webpackJsonp([6,9],{
 
 /***/ 107:
 /***/ (function(module, exports, __webpack_require__) {
@@ -6,15 +6,19 @@ webpackJsonp([5,8],{
 var map = {
 	"app/employers/employers.module": [
 		310,
-		2
+		3
 	],
 	"app/exports/exports.module": [
 		311,
+		1
+	],
+	"app/online-orders/online-orders.module": [
+		312,
 		0
 	],
 	"app/reports/reports.module": [
-		312,
-		1
+		313,
+		2
 	]
 };
 function webpackAsyncContext(req) {
@@ -82,6 +86,10 @@ var appRoutes = [
         loadChildren: 'app/employers/employers.module#EmployersModule'
     },
     {
+        path: 'online-orders',
+        loadChildren: 'app/online-orders/online-orders.module#OnlineOrdersModule'
+    },
+    {
         path: 'reports',
         loadChildren: 'app/reports/reports.module#ReportsModule'
     },
@@ -90,7 +98,7 @@ var appRoutes = [
         loadChildren: 'app/exports/exports.module#ExportsModule'
     },
     //{ path: '**', component: PageNotFoundComponent }
-    { path: '**', redirectTo: '/exports' }
+    { path: '**', redirectTo: '/online-orders/work-order' }
 ];
 var AppRoutingModule = (function () {
     function AppRoutingModule() {
@@ -182,7 +190,8 @@ var AppMenuComponent = (function () {
     }
     AppMenuComponent.prototype.ngOnInit = function () {
         this.model = [
-            { label: 'Employers', icon: 'business', url: ['/Employer'] },
+            { label: 'Place an order', icon: 'business', routerLink: ['/online-orders'] },
+            { label: 'Employers', icon: 'business', routerLink: ['/employers'] },
             { label: 'Work Orders', icon: 'work', url: ['/Workorder'] },
             { label: 'Dispatch', icon: 'today', url: ['/dispatch'] },
             { label: 'People', icon: 'people', url: ['/people'] },
@@ -919,6 +928,7 @@ var InMemoryDataService = (function () {
                 ]
             }
         ];
+        // Exports: Activities
         var Activities = [
             {
                 'name': 'ID',
@@ -1023,6 +1033,7 @@ var InMemoryDataService = (function () {
                 'include': true
             }
         ];
+        // Exports: ActivitySignins
         var ActivitySignins = [
             {
                 'name': 'ID',
@@ -1081,6 +1092,7 @@ var InMemoryDataService = (function () {
                 'include': true
             }
         ];
+        // Exports: Workers
         var Workers = [
             {
                 'name': 'ID', 'is_nullable': false, 'system_type_name': 'int', 'include': true
@@ -1334,6 +1346,7 @@ var InMemoryDataService = (function () {
                 'name': 'skillCodes', 'is_nullable': true, 'system_type_name': 'nvarchar(max)', 'include': true
             }
         ];
+        // Exports
         var exports = [
             {
                 'id': 'activities',
@@ -1351,7 +1364,403 @@ var InMemoryDataService = (function () {
                 data: Workers
             }
         ];
-        return { exports: exports, reports: reports };
+        // lookups
+        var lookups = [
+            {
+                'category': 'skill',
+                'text_EN': 'general labor',
+                'text_ES': 'trabajo general',
+                'selected': true,
+                'subcategory': null,
+                'level': null,
+                'wage': 15,
+                'minHour': 1,
+                'fixedJob': null,
+                'sortorder': 2,
+                'typeOfWorkID': 20,
+                'speciality': false,
+                'ltrCode': '',
+                'emailTemplate': null,
+                'skillDescriptionEn': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                'skillDescriptionEs': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                'minimumCost': null,
+                'key': 'default',
+                'active': true,
+                'idString': 'lookup',
+                'id': 63,
+                'datecreated': '2017-05-22T15:20:44.767',
+                'dateupdated': '2017-05-22T15:20:44.767',
+                'createdby': 'Init T. Script',
+                'updatedby': 'Init T. Script',
+                'idPrefix': 'lookup63-'
+            },
+            {
+                'category': 'skill',
+                'text_EN': 'housecleaning',
+                'text_ES': 'trabajo domÃ©stico',
+                'selected': false,
+                'subcategory': null,
+                'level': null,
+                'wage': 15,
+                'minHour': 1,
+                'fixedJob': null,
+                'sortorder': 2,
+                'typeOfWorkID': 21,
+                'speciality': false,
+                'ltrCode': '',
+                'emailTemplate': null,
+                'skillDescriptionEn': null,
+                'skillDescriptionEs': null,
+                'minimumCost': null,
+                'key': null,
+                'active': true,
+                'idString': 'lookup',
+                'id': 64,
+                'datecreated': '2017-05-22T15:20:44.767',
+                'dateupdated': '2017-05-22T15:20:44.767',
+                'createdby': 'Init T. Script',
+                'updatedby': 'Init T. Script',
+                'idPrefix': 'lookup64-'
+            },
+            {
+                'category': 'skill',
+                'text_EN': 'painter (rollerbrush)',
+                'text_ES': 'pintor (cepillo)',
+                'selected': false,
+                'subcategory': 'paint',
+                'level': 1,
+                'wage': 15,
+                'minHour': 1,
+                'fixedJob': null,
+                'sortorder': 5,
+                'typeOfWorkID': 20,
+                'speciality': true,
+                'ltrCode': 'P',
+                'emailTemplate': null,
+                'skillDescriptionEn': 'ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                'skillDescriptionEs': 'ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                'minimumCost': null,
+                'key': null,
+                'active': true,
+                'idString': 'lookup',
+                'id': 65,
+                'datecreated': '2017-05-22T15:20:44.767',
+                'dateupdated': '2017-05-22T15:20:44.767',
+                'createdby': 'Init T. Script',
+                'updatedby': 'Init T. Script',
+                'idPrefix': 'lookup65-'
+            },
+            {
+                'category': 'skill',
+                'text_EN': 'painter (spray)',
+                'text_ES': 'pintor (mÃ¡quina)',
+                'selected': false,
+                'subcategory': 'paint',
+                'level': 2,
+                'wage': 15,
+                'minHour': 1,
+                'fixedJob': null,
+                'sortorder': 5,
+                'typeOfWorkID': 20,
+                'speciality': true,
+                'ltrCode': 'P',
+                'emailTemplate': null,
+                'skillDescriptionEn': 'dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                'skillDescriptionEs': 'dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                'minimumCost': null,
+                'key': null,
+                'active': true,
+                'idString': 'lookup',
+                'id': 66,
+                'datecreated': '2017-05-22T15:20:44.767',
+                'dateupdated': '2017-05-22T15:20:44.767',
+                'createdby': 'Init T. Script',
+                'updatedby': 'Init T. Script',
+                'idPrefix': 'lookup66-'
+            },
+            {
+                'category': 'skill',
+                'text_EN': 'drywall (patch/tape)',
+                'text_ES': 'yeso (arreglar o poner cinta)',
+                'selected': false,
+                'subcategory': 'build',
+                'level': 1,
+                'wage': 15,
+                'minHour': 1,
+                'fixedJob': null,
+                'sortorder': 9,
+                'typeOfWorkID': 20,
+                'speciality': true,
+                'ltrCode': 'B',
+                'emailTemplate': null,
+                'skillDescriptionEn': 'sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                'skillDescriptionEs': 'sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                'minimumCost': null,
+                'key': null,
+                'active': true,
+                'idString': 'lookup',
+                'id': 67,
+                'datecreated': '2017-05-22T15:20:44.767',
+                'dateupdated': '2017-05-22T15:20:44.767',
+                'createdby': 'Init T. Script',
+                'updatedby': 'Init T. Script',
+                'idPrefix': 'lookup67-'
+            },
+            {
+                'category': 'skill',
+                'text_EN': 'drywall (hang)',
+                'text_ES': 'yeso (colgar)',
+                'selected': false,
+                'subcategory': 'build',
+                'level': 2,
+                'wage': 15,
+                'minHour': 1,
+                'fixedJob': null,
+                'sortorder': 9,
+                'typeOfWorkID': 20,
+                'speciality': true,
+                'ltrCode': 'B',
+                'emailTemplate': null,
+                'skillDescriptionEn': 'consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                'skillDescriptionEs': 'consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                'minimumCost': null,
+                'key': null,
+                'active': true,
+                'idString': 'lookup',
+                'id': 68,
+                'datecreated': '2017-05-22T15:20:44.767',
+                'dateupdated': '2017-05-22T15:20:44.767',
+                'createdby': 'Init T. Script',
+                'updatedby': 'Init T. Script',
+                'idPrefix': 'lookup68-'
+            },
+            {
+                'category': 'skill',
+                'text_EN': 'insulation',
+                'text_ES': 'aislamiento',
+                'selected': false,
+                'subcategory': 'build',
+                'level': 3,
+                'wage': 15,
+                'minHour': 1,
+                'fixedJob': null,
+                'sortorder': 9,
+                'typeOfWorkID': 20,
+                'speciality': true,
+                'ltrCode': 'B',
+                'emailTemplate': null,
+                'skillDescriptionEn': 'adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                'skillDescriptionEs': 'adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                'minimumCost': null,
+                'key': null,
+                'active': true,
+                'idString': 'lookup',
+                'id': 69,
+                'datecreated': '2017-05-22T15:20:44.767',
+                'dateupdated': '2017-05-22T15:20:44.767',
+                'createdby': 'Init T. Script',
+                'updatedby': 'Init T. Script',
+                'idPrefix': 'lookup69-'
+            },
+            {
+                'category': 'skill',
+                'text_EN': 'carpentry (siding / framing)',
+                'text_ES': 'carpinterÃ­a (revestimiento / encuadre)',
+                'selected': false,
+                'subcategory': 'carpentry',
+                'level': 1,
+                'wage': 15,
+                'minHour': 1,
+                'fixedJob': null,
+                'sortorder': 9,
+                'typeOfWorkID': 20,
+                'speciality': true,
+                'ltrCode': 'C',
+                'emailTemplate': null,
+                'skillDescriptionEn': null,
+                'skillDescriptionEs': null,
+                'minimumCost': null,
+                'key': null,
+                'active': true,
+                'idString': 'lookup',
+                'id': 70,
+                'datecreated': '2017-05-22T15:20:44.767',
+                'dateupdated': '2017-05-22T15:20:44.767',
+                'createdby': 'Init T. Script',
+                'updatedby': 'Init T. Script',
+                'idPrefix': 'lookup70-'
+            },
+            {
+                'category': 'skill',
+                'text_EN': 'masonry',
+                'text_ES': 'ladrillo y ajuste de baldosas',
+                'selected': false,
+                'subcategory': 'carpentry',
+                'level': 2,
+                'wage': 15,
+                'minHour': 1,
+                'fixedJob': null,
+                'sortorder': 9,
+                'typeOfWorkID': 20,
+                'speciality': true,
+                'ltrCode': 'C',
+                'emailTemplate': null,
+                'skillDescriptionEn': null,
+                'skillDescriptionEs': null,
+                'minimumCost': null,
+                'key': null,
+                'active': true,
+                'idString': 'lookup',
+                'id': 71,
+                'datecreated': '2017-05-22T15:20:44.767',
+                'dateupdated': '2017-05-22T15:20:44.767',
+                'createdby': 'Init T. Script',
+                'updatedby': 'Init T. Script',
+                'idPrefix': 'lookup71-'
+            },
+            {
+                'category': 'skill',
+                'text_EN': 'Moving',
+                'text_ES': 'Mudanza',
+                'selected': false,
+                'subcategory': null,
+                'level': null,
+                'wage': 15,
+                'minHour': 1,
+                'fixedJob': null,
+                'sortorder': 5,
+                'typeOfWorkID': 20,
+                'speciality': false,
+                'ltrCode': '',
+                'emailTemplate': null,
+                'skillDescriptionEn': null,
+                'skillDescriptionEs': null,
+                'minimumCost': null,
+                'key': null,
+                'active': true,
+                'idString': 'lookup',
+                'id': 72,
+                'datecreated': '2017-05-22T15:20:44.767',
+                'dateupdated': '2017-05-22T15:20:44.767',
+                'createdby': 'Init T. Script',
+                'updatedby': 'Init T. Script',
+                'idPrefix': 'lookup72-'
+            },
+            {
+                'category': 'skill',
+                'text_EN': 'Gardening',
+                'text_ES': 'JardinerÃ­a avanzada',
+                'selected': false,
+                'subcategory': 'garden',
+                'level': 2,
+                'wage': 15,
+                'minHour': 1,
+                'fixedJob': null,
+                'sortorder': 4,
+                'typeOfWorkID': 20,
+                'speciality': false,
+                'ltrCode': 'G',
+                'emailTemplate': null,
+                'skillDescriptionEn': null,
+                'skillDescriptionEs': null,
+                'minimumCost': null,
+                'key': null,
+                'active': true,
+                'idString': 'lookup',
+                'id': 73,
+                'datecreated': '2017-05-22T15:20:44.767',
+                'dateupdated': '2017-05-22T15:20:44.767',
+                'createdby': 'Init T. Script',
+                'updatedby': 'Init T. Script',
+                'idPrefix': 'lookup73-'
+            },
+            {
+                'category': 'skill',
+                'text_EN': 'Yardwork',
+                'text_ES': 'trabajar en el jardÃ­n',
+                'selected': false,
+                'subcategory': 'garden',
+                'level': 2,
+                'wage': 15,
+                'minHour': 1,
+                'fixedJob': null,
+                'sortorder': 1,
+                'typeOfWorkID': 20,
+                'speciality': false,
+                'ltrCode': 'G',
+                'emailTemplate': null,
+                'skillDescriptionEn': null,
+                'skillDescriptionEs': null,
+                'minimumCost': null,
+                'key': null,
+                'active': true,
+                'idString': 'lookup',
+                'id': 74,
+                'datecreated': '2017-05-22T15:20:44.767',
+                'dateupdated': '2017-05-22T15:20:44.767',
+                'createdby': 'Init T. Script',
+                'updatedby': 'Init T. Script',
+                'idPrefix': 'lookup74-'
+            },
+            {
+                'category': 'skill',
+                'text_EN': 'Landscaping',
+                'text_ES': 'Paisajismo',
+                'selected': false,
+                'subcategory': 'garden',
+                'level': 3,
+                'wage': 15,
+                'minHour': 1,
+                'fixedJob': false,
+                'sortorder': 9,
+                'typeOfWorkID': 20,
+                'speciality': true,
+                'ltrCode': 'G',
+                'emailTemplate': null,
+                'skillDescriptionEn': null,
+                'skillDescriptionEs': null,
+                'minimumCost': null,
+                'key': null,
+                'active': true,
+                'idString': 'lookup',
+                'id': 75,
+                'datecreated': '2017-05-22T15:20:44.767',
+                'dateupdated': '2017-05-22T15:20:44.767',
+                'createdby': 'Init T. Script',
+                'updatedby': 'Init T. Script',
+                'idPrefix': 'lookup75-'
+            },
+            {
+                'category': 'skill',
+                'text_EN': 'Roofing',
+                'text_ES': 'Techado',
+                'selected': false,
+                'subcategory': 'roof',
+                'level': 1,
+                'wage': 15,
+                'minHour': 1,
+                'fixedJob': false,
+                'sortorder': 9,
+                'typeOfWorkID': 20,
+                'speciality': true,
+                'ltrCode': 'R',
+                'emailTemplate': null,
+                'skillDescriptionEn': null,
+                'skillDescriptionEs': null,
+                'minimumCost': null,
+                'key': null,
+                'active': true,
+                'idString': 'lookup',
+                'id': 76,
+                'datecreated': '2017-05-22T15:20:44.767',
+                'dateupdated': '2017-05-22T15:20:44.767',
+                'createdby': 'Init T. Script',
+                'updatedby': 'Init T. Script',
+                'idPrefix': 'lookup76-'
+            }
+        ];
+        //
+        return { exports: exports, reports: reports, lookups: lookups, DispatchesByMonth: DispatchesByMonth, DispatchesByJob: DispatchesByJob, SeattleCityReport: SeattleCityReport };
     };
     // intercept response from the default HTTP method handlers
     InMemoryDataService.prototype.responseInterceptor = function (response, reqInfo) {
@@ -1360,11 +1769,11 @@ var InMemoryDataService = (function () {
         var body = JSON.stringify(response.body);
         // console.log(`responseInterceptor: ${method} ${reqInfo.req.url}: \n${body}`);
         console.log("responseInterceptor: " + method + " " + reqInfo.req.url);
-        if (typeof reqInfo.query === 'object') {
-            // if query parameters present, replace object w/ data key's value.
-            // useful for testing; matches API behavior
-            response.body = response.body.data;
-        }
+        // if (typeof reqInfo.query === 'object') {
+        //   // if query parameters present, replace object w/ data key's value.
+        //   // useful for testing; matches API behavior
+        //   response.body = (<any>response.body).data;
+        // }
         if (reqInfo.req.url === '/api/exports/Activities' ||
             reqInfo.req.url === '/api/exports/activities' ||
             reqInfo.req.url === '/api/exports/activitysignins' ||
@@ -1385,10 +1794,27 @@ var InMemoryDataService = (function () {
                 urlRoot = loc.protocol + '//' + loc.host + '/';
             }
             var path = loc.pathname.substring(drop);
-            var _a = path.split('/'), base = _a[0], collectionName = _a[1], id = _a[2];
-            var resourceUrl = urlRoot + base + '/' + collectionName + '/';
+            var regexDefault = new RegExp('^((?:[A-Za-z0-9_\-]+\/)+)([A-Za-z0-9_\-]*)'); //
+            var regexExports = new RegExp('(api\/)(exports)\/([A-Za-z0-9_\-]+)'); //
+            var regexExportsExecute = new RegExp('(api\/exports\/)([A-Za-z0-9_\-]+)(?:\/(execute))'); //
+            var base = void 0;
+            var collectionName = void 0;
+            var id = void 0;
+            var matched = void 0;
+            if (matched = regexExportsExecute.exec(path)) { }
+            else if (matched = regexExports.exec(path)) { }
+            else if (matched = regexDefault.exec(path)) { }
+            if (matched === null) {
+                throw new Error('in-memory-parsedUrl regex error on: ' + path);
+            }
+            //
+            base = matched[1];
+            collectionName = matched[2];
+            id = matched[3] || null;
+            // [base, collectionName, id] = path.split('/');
+            var resourceUrl = urlRoot + base + collectionName + '/';
             collectionName = collectionName.split('.')[0]; // ignore anything after the '.', e.g., '.json'
-            var query = loc.search && new __WEBPACK_IMPORTED_MODULE_0__angular_http__["k" /* URLSearchParams */](loc.search.substr(1));
+            var query = null; // loc.search && new URLSearchParams(loc.search.substr(1));
             var result = { base: base, collectionName: collectionName, id: id, query: query, resourceUrl: resourceUrl };
             console.log('parsedUrl: ' + JSON.stringify(result));
             return result;
