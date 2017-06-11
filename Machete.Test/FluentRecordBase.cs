@@ -48,6 +48,7 @@ namespace Machete.Test
         private WorkOrderRepository _repoWO;
         private WorkAssignmentRepository _repoWA;
         private WorkerRequestRepository _repoWR;
+        private ReportsRepository _repoR;
         private LookupRepository _repoL;
         private ImageRepository _repoI;
         private EmployerRepository _repoE;
@@ -953,8 +954,26 @@ namespace Machete.Test
             if (_repoWO == null) AddRepoWorkOrder();
             if (_repoWA == null) AddRepoWorkAssignment();
             if (_repoW == null) AddRepoWorker();
-            _servRV2 = new ReportsV2Service(_repoWO, _repoWA, _repoW);
+            if (_repoR == null) AddRepoReports();
+            if (_uow == null) AddUOW();
+            if (_map == null) AddMapper();
+
+            _servRV2 = new ReportsV2Service(_repoR, _uow, _map);
             return this;
+        }
+
+        public FluentRecordBase AddRepoReports()
+        {
+            if (_dbFactory == null) AddDBFactory();
+
+            _repoR = new ReportsRepository(_dbFactory);
+            return this;
+        }
+
+        public ReportsRepository ToRepoReports()
+        {
+            if (_repoR == null) AddRepoReports();
+            return _repoR;
         }
 
         public ReportsV2Service ToServReportsV2()
@@ -962,6 +981,8 @@ namespace Machete.Test
             if (_servRV2 == null) AddServReportsV2();
             return _servRV2;
         }
+
+
 
         #endregion
 

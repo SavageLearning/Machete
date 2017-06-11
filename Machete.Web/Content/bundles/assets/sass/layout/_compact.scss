@@ -1,0 +1,70 @@
+body {
+    .layout-wrapper.layout-compact {
+        font-size: $c-fontSize;
+        line-height: $c-lineHeight;
+        
+        .layout-container {
+            .ultima-menu {
+                li {
+                    a {
+                        i:last-child {
+                            font-size: $c-fontSize + 4;
+                        }
+                    }
+                    
+                    ul {
+                        li {
+                            a {
+                                span {
+                                    font-size: $c-fontSize;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        .ui-radiobutton {
+            .ui-radiobutton-box {
+                width: 18px;
+                height: 18px;
+            }
+        }
+        
+        .ui-datepicker {
+            tbody td a, body .ui-datepicker tbody td span {
+                padding-top: .25em;
+            }
+        } 
+    }
+}
+
+@media (min-width: 1025px) {
+    
+    .layout-wrapper.layout-compact {
+        .layout-container {
+            &.menu-layout-horizontal {
+                .layout-menu {                            
+                    ul.ultima-menu {                    
+                        > li {
+                            > ul {
+                                top: 35px;
+                                
+                                li {
+                                    span {
+                                        font-size: $c-fontSize;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                .layout-main {
+                    padding-top: 130px;
+                }
+            }
+        }
+    }
+}

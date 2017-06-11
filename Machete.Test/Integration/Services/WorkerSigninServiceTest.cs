@@ -76,7 +76,7 @@ namespace Machete.Test.Integration.Service
         {
             //
             // Arrange
-            frb.AddWorker(skill1:61).AddWorkerSignin();
+            frb.AddWorker(skill1:63).AddWorkerSignin();
             var w = frb.ToWorker();
             var wsi = frb.ToWorkerSignin();
             //
@@ -87,7 +87,7 @@ namespace Machete.Test.Integration.Service
             //Assert
             List<DTO.WorkerSigninList> tolist = result.query.ToList();
             Assert.AreEqual(1, result.query.Count());
-            Assert.AreEqual(61, tolist[0].skill1);
+            Assert.AreEqual(63, tolist[0].skill1);
         }
         /// <summary>
         /// Filter on requested grouping
@@ -97,7 +97,7 @@ namespace Machete.Test.Integration.Service
         {
             //
             // Arrange
-            frb.AddWorker(skill1: 61);
+            frb.AddWorker(skill1: 63);
             frb.AddWorkerSignin();
             frb.AddWorkerRequest();
             var w = frb.ToWorker();
@@ -110,7 +110,7 @@ namespace Machete.Test.Integration.Service
             //
             //Assert
             List<DTO.WorkerSigninList> tolist = result.query.ToList();
-            Assert.AreEqual(61, tolist[0].skill1);
+            Assert.AreEqual(63, tolist[0].skill1);
             Assert.AreEqual(1, result.query.Count());
         }    
     }

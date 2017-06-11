@@ -273,6 +273,9 @@
       <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
@@ -282,6 +285,8 @@
   <ItemGroup>
     <Compile Include="ApplicationUser.cs" />
     <Compile Include="AzureConfiguration.cs" />
+    <Compile Include="DTO\SearchOptions.cs" />
+    <Compile Include="Helpers\SqlServerUtils.cs" />
     <Compile Include="Infrastructure\DatabaseFactory.cs" />
     <Compile Include="Infrastructure\Disposable.cs" />
     <Compile Include="Initialize\MacheteConfigs.cs" />
@@ -289,6 +294,7 @@
     <Compile Include="Infrastructure\RepositoryBase.cs" />
     <Compile Include="Infrastructure\UnitOfWork.cs" />
     <Compile Include="Initialize\MacheteLookups.cs" />
+    <Compile Include="Initialize\MacheteReportDefinitions.cs" />
     <Compile Include="Initialize\MacheteUsers.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\MacheteIntercepterTransientErrors.cs" />
@@ -347,9 +353,15 @@
     <Compile Include="Migrations\201705032057544_v1_11_3_InApp_Config.Designer.cs">
       <DependentUpon>201705032057544_v1_11_3_InApp_Config.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201705070423149_v1_12_0_reports.cs" />
+    <Compile Include="Migrations\201705070423149_v1_12_0_reports.Designer.cs">
+      <DependentUpon>201705070423149_v1_12_0_reports.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AllRepositories.cs" />
     <Compile Include="Repositories\ConfigRepository.cs" />
+    <Compile Include="Repositories\ReportsRepository.cs" />
+    <Compile Include="Repositories\SimpleDataRow.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Machete.Domain\Machete.Domain.csproj">
@@ -424,13 +436,16 @@
     <EmbeddedResource Include="Migrations\201705032057544_v1_11_3_InApp_Config.resx">
       <DependentUpon>201705032057544_v1_11_3_InApp_Config.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705070423149_v1_12_0_reports.resx">
+      <DependentUpon>201705070423149_v1_12_0_reports.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
   -->
 </Project>

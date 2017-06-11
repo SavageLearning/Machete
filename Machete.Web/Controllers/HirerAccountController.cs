@@ -32,7 +32,7 @@ namespace Machete.Web.Controllers
         private CultureInfo CI;
         private IDefaults def;
 
-        public HirerAccountController(IMyUserManager<ApplicationUser> userManager, 
+        public HirerAccountController(IMyUserManager<ApplicationUser> userManager,
             IDatabaseFactory databaseFactory, IDefaults def)
         {
             UserManager = userManager;
@@ -133,7 +133,14 @@ namespace Machete.Web.Controllers
             if (ModelState.IsValid)
             {
                 // Initialize user object
-                ApplicationUser user = new ApplicationUser() { UserName = model.Email.ToLower().Trim(), LoweredUserName = model.Email.Trim().ToLower(), ApplicationId = GetApplicationID(), Email = model.Email.Trim(), LoweredEmail = model.Email.Trim().ToLower() };
+                ApplicationUser user = new ApplicationUser()
+                {
+                    UserName = model.Email.ToLower().Trim(),
+                    LoweredUserName = model.Email.Trim().ToLower(),
+                    ApplicationId = GetApplicationID(),
+                    Email = model.Email.Trim(),
+                    LoweredEmail = model.Email.Trim().ToLower()
+                };
 
                 MacheteContext Db = DatabaseFactory.Get();
 

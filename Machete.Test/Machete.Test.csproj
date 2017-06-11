@@ -248,6 +248,7 @@
       <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
@@ -292,6 +293,7 @@
     <Compile Include="FluentRecordBase.cs" />
     <Compile Include="FluentRecordTests.cs" />
     <Compile Include="Integration\Controllers\LoginIntegrationTest.cs" />
+    <Compile Include="Integration\Data\ReportsRepositoryTests.cs" />
     <Compile Include="Integration\Services\ActivityServiceTests.cs" />
     <Compile Include="Integration\Services\ConfigServiceTests.cs" />
     <Compile Include="Integration\Services\ReportServiceTest.cs" />

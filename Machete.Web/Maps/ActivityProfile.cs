@@ -42,46 +42,5 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.idString, opt => opt.UseValue("activity"))
                 ;
         }
-        //private object dtResponse( Domain.Activity p)
-        //{
-        //    return new
-        //    {
-        //        tabref = EditTabRef(p),
-        //        tablabel = EditTabLabel(p),
-        //        name = lcache.textByID(p.name, CI.TwoLetterISOLanguageName),
-        //        type = lcache.textByID(p.type, CI.TwoLetterISOLanguageName),
-        //        count = p.Signins.Count(),
-        //        teacher = p.teacher,
-        //        dateStart = p.dateStart.ToString(),
-        //        dateEnd = p.dateEnd.ToString(),
-        //        AID = Convert.ToString(p.ID),
-        //        recordid = Convert.ToString(p.ID),
-        //        dateupdated = Convert.ToString(p.dateupdated),
-        //        updatedby = p.updatedby
-        //    };
-        //}
-        //private string EditTabRef(Domain.Activity act)
-        //{
-        //    if (act == null) return null;
-        //    return "/Activity/Edit/" + Convert.ToString(act.ID);
-        //}
-        //private string EditTabLabel(Domain.Activity act)
-        //{
-        //    if (act == null) return null;
-        //    return lcache.textByID(act.name, CI.TwoLetterISOLanguageName) + " with " +
-        //            act.teacher;
-        //}
-
-
-        //private string CreateManyTabRef(Domain.Activity act)
-        //{
-        //    if (act == null) return null;
-        //    return "/Activity/CreateMany/" + Convert.ToString(act.ID);
-        //}
-        //private string CreateManyTabLabel(Domain.Activity act)
-        //{
-        //    if (act == null) return null;
-        //    return "Recurring Event with " + act.teacher;
-        //}
     }
 }

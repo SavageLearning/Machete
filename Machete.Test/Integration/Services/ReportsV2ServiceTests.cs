@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DTO = Machete.Service.DTO;
 using Machete.Service.DTO.Reports;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Machete.Test.Integration.Service
 {
@@ -25,23 +26,174 @@ namespace Machete.Test.Integration.Service
         }
 
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
-        public void Get_JobsDispatchedCount_IsNotNull()
+        public void GetSimpleAggregate_IsNotNull()
         {
             // Arrange
-            var skill = frb.ToLookup();
             frb.AddWorkOrder(dateTimeOfWork: DateTime.Parse("1/2/2013"))
-               .AddWorkAssignment(skill: 61);
+               .AddWorkAssignment(skill: 63); // known skill ID from machete lookup initializer
             o = new DTO.SearchOptions
             {
+                idOrName = "DispatchesByJob",
                 beginDate = DateTime.Parse("1/1/2013"),
                 endDate = DateTime.Parse("1/1/2014")
             };
             // Act
-            List<SimpleDataRow> result = frb.ToServReportsV2().getJobsDispatchedCount(o);
+            List<dynamic> result = frb.ToServReportsV2().getQuery(o);
             // Assert
             Assert.IsNotNull(result);
             Assert.AreNotEqual(0, result.Count);
+        }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
+        public void GetSimpleAggregate_IdGetSucceeds()
+        {
+            // Arrange
+            frb.AddWorkOrder(dateTimeOfWork: DateTime.Parse("1/2/2013"))
+               .AddWorkAssignment(skill: 63); // known skill ID from machete lookup initializer
+            o = new DTO.SearchOptions
+            {
+                idOrName = "1",
+                beginDate = DateTime.Parse("1/1/2013"),
+                endDate = DateTime.Parse("1/1/2014")
+            };
+            // Act
+            List<dynamic> result = frb.ToServReportsV2().getQuery(o);
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreNotEqual(0, result.Count);
+        }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
+        public void GetSimpleAggregate_IsCaseInsensitive()
+        {
+            // Arrange
+            frb.AddWorkOrder(dateTimeOfWork: DateTime.Parse("1/2/2013"))
+               .AddWorkAssignment(skill: 63); // known skill ID from machete lookup initializer
+            o = new DTO.SearchOptions
+            {
+                idOrName = "dispatchesbyjob",
+                beginDate = DateTime.Parse("1/1/2013"),
+                endDate = DateTime.Parse("1/1/2014")
+            };
+            // Act
+            List<dynamic> result = frb.ToServReportsV2().getQuery(o);
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual("2013-01-01T00:00:00-2014-01-01T00:00:00-63", result[0].id);
+            Assert.AreEqual("general labor", result[0].label);
+        }
+        [ExpectedException(typeof(InvalidOperationException),  "Exception not thrown on bad query.")]
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
+        public void GetSimpleAggregate_MissingDefThrowsException()
+        {
+            // Arrange
+            frb.AddWorkOrder(dateTimeOfWork: DateTime.Parse("1/2/2013"))
+               .AddWorkAssignment(skill: 63); // known skill ID from machete lookup initializer
+            o = new DTO.SearchOptions
+            {
+                idOrName = "blah",
+                beginDate = DateTime.Parse("1/1/2013"),
+                endDate = DateTime.Parse("1/1/2014")
+            };
+            // Act
+            List<dynamic> result = frb.ToServReportsV2().getQuery(o);
+            // Assert
 
         }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
+        public void getDefaultURL()
+        {
+            // arrange
+            // act
+            var result = frb.ToServReportsV2()
+                .getList();
+            // assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.Where(a => a.name == "DispatchesByJob").Count());
+
+        }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
+        public void Get_Int_succeeds()
+        {
+            // Arrange
+            // Act
+            var result = frb.ToServReportsV2().Get(1);
+            // Assert
+            Assert.IsNotNull(result);
+            // assumes data from ReportDefinitionsInitializer
+            Assert.AreEqual("DispatchesByJob", result.name);
+        }
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
+        public void get_XlsxFile_noParams_succeeds()
+        {
+            // arrange
+            var dict = new Dictionary<string, string>();
+            dict.Add("ID", "true");
+            dict.Add("dwccardnum", "true");
+            dict.Add("datecreated", "true");
+            byte[] result = null;
+            var o = new DTO.SearchOptions {
+                name = "Workers",
+                beginDate = null,
+                endDate = null,
+                exportFilterField = null,
+                exportIncludeOptions = dict
+            };
+            // act
+            frb.ToServReportsV2()
+                .getXlsxFile(o, ref result);
+            // assert
+            Assert.IsNotNull(result);
+        }
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
+        public void get_XlsxFile_beginDate_succeeds()
+        {
+            // arrange
+            var dict = new Dictionary<string, string>();
+            dict.Add("ID", "true");
+            dict.Add("dwccardnum", "true");
+            dict.Add("datecreated", "true");
+            byte[] result = null;
+            var o = new DTO.SearchOptions
+            {
+                name = "Workers",
+                beginDate = DateTime.Now,
+                endDate = null,
+                exportFilterField = "datecreated",
+                exportIncludeOptions = dict
+            };
+            // act
+            frb.ToServReportsV2()
+                .getXlsxFile(o, ref result);
+            // assert
+            Assert.IsNotNull(result);
+        }
+
+        [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.Reports)]
+        public void get_XlsxFile_beginAndEndDate_succeeds()
+        {
+            // arrange
+            var dict = new Dictionary<string, string>();
+            dict.Add("ID", "true");
+            dict.Add("dwccardnum", "true");
+            dict.Add("datecreated", "true");
+            byte[] result = null;
+            var o = new DTO.SearchOptions
+            {
+                name = "Workers",
+                beginDate = DateTime.Now,
+                endDate = DateTime.Now.AddDays(1),
+                exportFilterField = "datecreated",
+                exportIncludeOptions = dict
+            };
+            // act
+            frb.ToServReportsV2()
+                .getXlsxFile(o, ref result);
+            // assert
+            Assert.IsNotNull(result);
+        }
     }
+
 }
