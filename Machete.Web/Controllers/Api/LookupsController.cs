@@ -32,7 +32,9 @@ namespace Machete.Web.Controllers.Api
 
         public IHttpActionResult Get(string category)
         {
-            var result = serv.GetMany(w => w.category == category);
+            var result = serv.GetMany(w => w.category == category)
+                .Select(e => map.Map<Domain.Lookup, Web.ViewModel.Api.Lookup>(e))
+                .AsEnumerable();
             return Json(new { data = result });
         }
 

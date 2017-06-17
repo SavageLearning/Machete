@@ -694,12 +694,36 @@ var OnlineOrdersService = (function () {
         this.requests.push(request);
     };
     OnlineOrdersService.prototype.saveRequest = function (request) {
-        this.requests[this.findSelectedRequestIndex(request)] = request;
+        var index = this.findSelectedRequestIndex(request);
+        this.requests[index] = request;
     };
-    OnlineOrdersService.prototype.deleteRequest = function () { };
+    OnlineOrdersService.prototype.getNextRequestId = function () {
+        var sorted = this.requests.sort(this.sortRequests);
+        if (sorted.length === 0) {
+            return 1;
+        }
+        else {
+            return sorted[sorted.length].id + 1;
+        }
+    };
+    OnlineOrdersService.prototype.sortRequests = function (a, b) {
+        if (a.id < b.id) {
+            return -1;
+        }
+        if (a.id > b.id) {
+            return 1;
+        }
+        return 0;
+    };
+    OnlineOrdersService.prototype.deleteRequest = function (request) {
+        var index = this.requests.indexOf(request);
+        if (index > -1) {
+            this.requests.splice(index, 1);
+        }
+    };
     OnlineOrdersService.prototype.clearRequests = function () { };
     OnlineOrdersService.prototype.findSelectedRequestIndex = function (request) {
-        return this.requests.indexOf(request);
+        return this.requests.findIndex(function (a) { return a.id === request.id; });
     };
     return OnlineOrdersService;
 }());
@@ -783,12 +807,13 @@ var WorkAssignmentsComponent = (function () {
     WorkAssignmentsComponent.prototype.buildForm = function () {
         var _this = this;
         this.requestForm = this.fb.group({
-            'skillId': [this.request.skillId, __WEBPACK_IMPORTED_MODULE_1__angular_forms__["Validators"].required],
-            'skill': [this.request.skill],
-            'hours': [this.request.hours, __WEBPACK_IMPORTED_MODULE_1__angular_forms__["Validators"].required],
-            'description': [this.request.description],
-            'requiresHeavyLifting': [this.request.requiresHeavyLifting],
-            'wage': [this.request.wage]
+            'id': '',
+            'skillId': ['', __WEBPACK_IMPORTED_MODULE_1__angular_forms__["Validators"].required],
+            'skill': [''],
+            'hours': ['', __WEBPACK_IMPORTED_MODULE_1__angular_forms__["Validators"].required],
+            'description': [''],
+            'requiresHeavyLifting': [''],
+            'wage': ['', __WEBPACK_IMPORTED_MODULE_1__angular_forms__["Validators"].required]
         });
         this.requestForm.valueChanges
             .subscribe(function (data) { return _this.onValueChanged(data); });
@@ -818,8 +843,20 @@ var WorkAssignmentsComponent = (function () {
         this.requestForm.controls['wage'].setValue(skill.wage);
     };
     WorkAssignmentsComponent.prototype.editRequest = function (request) {
+        this.requestForm.controls['id'].setValue(request.id);
+        this.requestForm.controls['skillId'].setValue(request.skillId);
+        this.requestForm.controls['skill'].setValue(request.skill);
+        this.requestForm.controls['hours'].setValue(request.hours);
+        this.requestForm.controls['description'].setValue(request.description);
+        this.requestForm.controls['requiresHeavyLifting'].setValue(request.requiresHeavyLifting);
+        this.requestForm.controls['wage'].setValue(request.wage);
+        this.newRequest = false;
     };
     WorkAssignmentsComponent.prototype.deleteRequest = function (request) {
+        this.ordersService.deleteRequest(request);
+        this.requestList = this.ordersService.getRequests().slice();
+        this.requestForm.reset();
+        this.newRequest = true;
     };
     WorkAssignmentsComponent.prototype.saveRequest = function () {
         this.onValueChanged();
@@ -830,6 +867,7 @@ var WorkAssignmentsComponent = (function () {
         this.showErrors = false;
         var formModel = this.requestForm.value;
         var saveRequest = {
+            id: formModel.id || this.ordersService.getNextRequestId(),
             skillId: formModel.skillId,
             skill: formModel.skill,
             hours: formModel.hours,

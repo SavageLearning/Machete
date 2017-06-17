@@ -230,6 +230,7 @@
     <Compile Include="Maps\ActivityProfile.cs" />
     <Compile Include="Maps\ActivitySigninProfile.cs" />
     <Compile Include="Maps\Api\EmployersMap.cs" />
+    <Compile Include="Maps\Api\LookupsMap.cs" />
     <Compile Include="Maps\Api\WorkAssignmentsMap.cs" />
     <Compile Include="Maps\Api\WorkOrdersMap.cs" />
     <Compile Include="Maps\Api\ReportDefinitionsMap.cs" />
@@ -296,6 +297,7 @@
     <Compile Include="ViewModel\ActivitySchedule.cs" />
     <Compile Include="ViewModel\ActivitySignin.cs" />
     <Compile Include="ViewModel\Api\Employer.cs" />
+    <Compile Include="ViewModel\Api\Lookup.cs" />
     <Compile Include="ViewModel\Api\ReportDefinition.cs" />
     <Compile Include="ViewModel\Api\WorkAssignment.cs" />
     <Compile Include="ViewModel\Api\WorkOrder.cs" />
@@ -454,6 +456,7 @@
     <Content Include="Content\bundles\2.chunk.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\bundles\3.chunk.js" />
     <Content Include="Content\bundles\assets\layout\css\layout-dark-blue.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -935,6 +938,7 @@
     <Content Include="Content\bundles\2.chunk.js.map">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\bundles\3.chunk.js.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
