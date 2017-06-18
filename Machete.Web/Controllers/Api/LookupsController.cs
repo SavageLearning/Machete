@@ -8,7 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 
-namespace Machete.Web.Controllers.Api
+namespace Machete.Api.Controllers
 {
     [ElmahHandleError]
     [Authorize]

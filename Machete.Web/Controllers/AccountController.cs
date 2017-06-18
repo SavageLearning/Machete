@@ -25,12 +25,12 @@ namespace Machete.Web.Controllers
     {
         Logger log = LogManager.GetCurrentClassLogger();
         LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "AccountController", "");
-        public IMyUserManager<ApplicationUser> UserManager { get; private set; }
+        public IMacheteUserManager<MacheteUser> UserManager { get; private set; }
         private readonly IDatabaseFactory DatabaseFactory;
         private CultureInfo CI;
         private const int PASSWORD_EXPIRATION_IN_MONTHS = 6; // this constant represents number of months where users passwords expire 
 
-        public AccountController(IMyUserManager<ApplicationUser> userManager, IDatabaseFactory databaseFactory)
+        public AccountController(IMacheteUserManager<MacheteUser> userManager, IDatabaseFactory databaseFactory)
         {
             UserManager = userManager;
             DatabaseFactory = databaseFactory;
@@ -50,7 +50,7 @@ namespace Machete.Web.Controllers
             // Retrieve users 
             // Note: Hirer accounts use email addresses as username, so the list filters out usernames that are email addresses
             // This display is only to modify internal Machete user accounts (not to modify employer accounts)
-            IDbSet<ApplicationUser> users = DatabaseFactory.Get().Users;
+            IDbSet<MacheteUser> users = DatabaseFactory.Get().Users;
             if (users == null)
             {
                 // TODO: throw alert
@@ -205,7 +205,7 @@ namespace Machete.Web.Controllers
             if (ModelState.IsValid)
             {
                 string newUserName = model.FirstName.Trim() + "." + model.LastName.Trim();
-                ApplicationUser user = new ApplicationUser() { UserName = newUserName, LoweredUserName = newUserName.ToLower(), ApplicationId = GetApplicationID(), Email = model.Email.Trim(), LoweredEmail = model.Email.Trim() };
+                MacheteUser user = new MacheteUser() { UserName = newUserName, LoweredUserName = newUserName.ToLower(), ApplicationId = GetApplicationID(), Email = model.Email.Trim(), LoweredEmail = model.Email.Trim() };
                 IdentityResult result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -343,7 +343,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Edit(string id, ManageMessageId? Message = null)
         {
-            ApplicationUser user = DatabaseFactory.Get().Users.First(u => u.Id == id);
+            MacheteUser user = DatabaseFactory.Get().Users.First(u => u.Id == id);
             if (user == null)
             {
                 return HttpNotFound();
@@ -590,7 +590,7 @@ namespace Machete.Web.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser() { UserName = model.FirstName + "." + model.LastName };
+                var user = new MacheteUser() { UserName = model.FirstName + "." + model.LastName };
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
@@ -683,7 +683,7 @@ namespace Machete.Web.Controllers
             }
         }
 
-        private async Task SignInAsync(ApplicationUser user, bool isPersistent)
+        private async Task SignInAsync(MacheteUser user, bool isPersistent)
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
             var identity = await UserManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
@@ -698,13 +698,13 @@ namespace Machete.Web.Controllers
             }
         }
 
-        private bool IsInternalUser(ApplicationUser user)
+        private bool IsInternalUser(MacheteUser user)
         {
             // Return whether user has a password hash
             return (user.UserName.Contains("@"));
         }
 
-        private bool HasPassword(ApplicationUser user)
+        private bool HasPassword(MacheteUser user)
         {
             // Return whether user has a password hash
             return (user.PasswordHash != null);

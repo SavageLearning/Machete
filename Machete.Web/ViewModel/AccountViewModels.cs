@@ -141,9 +141,9 @@ namespace Machete.Web.ViewModel
         public string Email { get; set; }
         
         // Return a pre-populated instance of ApplicationUser:
-        public ApplicationUser GetUser()
+        public MacheteUser GetUser()
         {
-            var user = new ApplicationUser()
+            var user = new MacheteUser()
             {
                 UserName = this.FirstName.Trim() + "." + this.LastName.Trim(),
                 Email = this.Email.Trim(),
@@ -174,9 +174,9 @@ namespace Machete.Web.ViewModel
         public string Email { get; set; }
 
         // Return a pre-populated instance of ApplicationUser:
-        public ApplicationUser GetUser()
+        public MacheteUser GetUser()
         {
-            var user = new ApplicationUser()
+            var user = new MacheteUser()
             {
                 UserName = this.Email,
                 Email = this.Email,
@@ -192,7 +192,7 @@ namespace Machete.Web.ViewModel
         public EditUserViewModel() { }
 
         // Allow Initialization with an instance of ApplicationUser:
-        public EditUserViewModel(ApplicationUser user)
+        public EditUserViewModel(MacheteUser user)
         {
             // TODO: add logic here to only retrieve first/last name if not hirer
             this.UserName = user.UserName;
@@ -259,7 +259,7 @@ namespace Machete.Web.ViewModel
         }
 
         // Enable initialization with an instance of ApplicationUser:
-        public SelectUserRolesViewModel(ApplicationUser user, IDatabaseFactory dbFactory)
+        public SelectUserRolesViewModel(MacheteUser user, IDatabaseFactory dbFactory)
             : this()
         {
             this.UserName = user.UserName;

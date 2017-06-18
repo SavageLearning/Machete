@@ -21,7 +21,7 @@ namespace Machete.Test.Unit.Service
         Mock<IDatabaseFactory> _db;
         Mock<MacheteContext> _ctxt;
         Mock<DbSet<Lookup>> _set;
-        Mock<DbSet<ApplicationUser>> _users;
+        Mock<DbSet<MacheteUser>> _users;
         Mock<DbSet<IdentityRole>> _roles;
         //Mock<DbQuery<Lookup>> _q;
         LookupCache _serv;
@@ -63,9 +63,9 @@ namespace Machete.Test.Unit.Service
             _set.Setup(r => r.AsNoTracking()).Returns(_set.Object);
             //
             // teacherCache
-            var teachers = new List<ApplicationUser>
+            var teachers = new List<MacheteUser>
             {
-                new ApplicationUser { UserName = "random name" }
+                new MacheteUser { UserName = "random name" }
             }.AsQueryable();
 
             var roles = new List<IdentityRole>
@@ -73,11 +73,11 @@ namespace Machete.Test.Unit.Service
                 new IdentityRole { Name = "Teacher" }
             }.AsQueryable();
 
-            _users = new Mock<DbSet<ApplicationUser>>();
-            _users.As<IQueryable<ApplicationUser>>().Setup(m => m.Provider).Returns(teachers.Provider);
-            _users.As<IQueryable<ApplicationUser>>().Setup(m => m.Expression).Returns(teachers.Expression);
-            _users.As<IQueryable<ApplicationUser>>().Setup(m => m.ElementType).Returns(teachers.ElementType);
-            _users.As<IQueryable<ApplicationUser>>().Setup(m => m.GetEnumerator()).Returns(teachers.GetEnumerator());
+            _users = new Mock<DbSet<MacheteUser>>();
+            _users.As<IQueryable<MacheteUser>>().Setup(m => m.Provider).Returns(teachers.Provider);
+            _users.As<IQueryable<MacheteUser>>().Setup(m => m.Expression).Returns(teachers.Expression);
+            _users.As<IQueryable<MacheteUser>>().Setup(m => m.ElementType).Returns(teachers.ElementType);
+            _users.As<IQueryable<MacheteUser>>().Setup(m => m.GetEnumerator()).Returns(teachers.GetEnumerator());
             _users.Setup(r => r.AsNoTracking()).Returns(_users.Object);
 
             _roles = new Mock<DbSet<IdentityRole>>();

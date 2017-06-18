@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Machete.Data
 {
-    public class ApplicationUser : IdentityUser
+    public class MacheteUser : IdentityUser
     {
-        public ApplicationUser()
+        public MacheteUser()
         {
             CreateDate = DateTime.Now;
             IsApproved = false;

@@ -27,12 +27,12 @@ namespace Machete.Web.Controllers
     {
         Logger log = LogManager.GetCurrentClassLogger();
         LogEventInfo levent = new LogEventInfo(LogLevel.Debug, "HirerAccountController", "");
-        public IMyUserManager<ApplicationUser> UserManager { get; private set; }
+        public IMacheteUserManager<MacheteUser> UserManager { get; private set; }
         private readonly IDatabaseFactory DatabaseFactory;
         private CultureInfo CI;
         private IDefaults def;
 
-        public HirerAccountController(IMyUserManager<ApplicationUser> userManager,
+        public HirerAccountController(IMacheteUserManager<MacheteUser> userManager,
             IDatabaseFactory databaseFactory, IDefaults def)
         {
             UserManager = userManager;
@@ -53,7 +53,7 @@ namespace Machete.Web.Controllers
         {
             // Retrieve hirers
             // Note: Hirer accounts use email addresses as username, so the list filters for usernames that are email addresses
-            IDbSet<ApplicationUser> users = DatabaseFactory.Get().Users;
+            IDbSet<MacheteUser> users = DatabaseFactory.Get().Users;
             if (users == null)
             {
                 // TODO: throw alert
@@ -96,7 +96,7 @@ namespace Machete.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                ApplicationUser user = await UserManager.FindAsync(model.UserName, model.Password);
+                MacheteUser user = await UserManager.FindAsync(model.UserName, model.Password);
                 if (user != null)
                 {
                     await SignInAsync(user, false);
@@ -134,7 +134,7 @@ namespace Machete.Web.Controllers
             if (ModelState.IsValid)
             {
                 // Initialize user object
-                ApplicationUser user = new ApplicationUser()
+                MacheteUser user = new MacheteUser()
                 {
                     UserName = model.Email.ToLower().Trim(),
                     LoweredUserName = model.Email.Trim().ToLower(),
@@ -150,7 +150,7 @@ namespace Machete.Web.Controllers
                 if (result.Succeeded)
                 {
                     // Retrieve newly created user record to retrieve userId
-                    ApplicationUser newUser = await UserManager.FindAsync(user.UserName, model.Password);
+                    MacheteUser newUser = await UserManager.FindAsync(user.UserName, model.Password);
                     if (newUser != null)
                     {
                         result = await UserManager.AddToRoleAsync(newUser.Id, "Hirer");
@@ -225,7 +225,7 @@ namespace Machete.Web.Controllers
                 : "";
 
             // Retrieve user record
-            ApplicationUser user = Db.Users.First(x => x.Id == currentUserId);
+            MacheteUser user = Db.Users.First(x => x.Id == currentUserId);
 
             ViewBag.HasLocalPassword = HasPassword(user);
             ViewBag.ReturnUrl = Url.Action("Manage");
@@ -258,7 +258,7 @@ namespace Machete.Web.Controllers
             MacheteContext Db = DatabaseFactory.Get();
             string currentUserId = User.Identity.GetUserId();
             // Retrieve signed-in user record
-            ApplicationUser user = Db.Users.First(x => x.Id == currentUserId);
+            MacheteUser user = Db.Users.First(x => x.Id == currentUserId);
 
             bool hasPassword = HasPassword(user);
             ViewBag.HasLocalPassword = hasPassword;
@@ -311,7 +311,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Edit(string id, ManageMessageId? Message = null)
         {
-            ApplicationUser user = DatabaseFactory.Get().Users.First(u => u.Id == id);
+            MacheteUser user = DatabaseFactory.Get().Users.First(u => u.Id == id);
             if (user == null)
             {
                 return HttpNotFound();
@@ -331,7 +331,7 @@ namespace Machete.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                ApplicationUser user = Db.Users.First(u => u.Id == model.Id);
+                MacheteUser user = Db.Users.First(u => u.Id == model.Id);
                 string name = model.FirstName.Trim() + "." + model.LastName.Trim();
                 // Update the user data:
                 user.UserName = name;
@@ -389,7 +389,7 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Administrator, Manager")]
         public ActionResult Delete(string id = null)
         {
-            ApplicationUser user = DatabaseFactory.Get().Users.First(u => u.Id == id);
+            MacheteUser user = DatabaseFactory.Get().Users.First(u => u.Id == id);
             EditUserViewModel model = new EditUserViewModel(user);
             if (user == null)
             {
@@ -406,7 +406,7 @@ namespace Machete.Web.Controllers
             MacheteContext Db = DatabaseFactory.Get();
 
             // Retrieve user
-            ApplicationUser user = Db.Users.First(u => u.Id == id);
+            MacheteUser user = Db.Users.First(u => u.Id == id);
 
             // Delete user
             Db.Users.Remove(user);
@@ -444,7 +444,7 @@ namespace Machete.Web.Controllers
             }
 
             // Sign in the user with this external login provider if the user already has a login
-            ApplicationUser user = await UserManager.FindAsync(loginInfo.Login);
+            MacheteUser user = await UserManager.FindAsync(loginInfo.Login);
             if (user != null)
             {
                 await SignInAsync(user, isPersistent: false);
@@ -501,7 +501,7 @@ namespace Machete.Web.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                ApplicationUser user = new ApplicationUser() { UserName = model.FirstName + "." + model.LastName };
+                MacheteUser user = new MacheteUser() { UserName = model.FirstName + "." + model.LastName };
                 IdentityResult result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
@@ -536,7 +536,7 @@ namespace Machete.Web.Controllers
         public ActionResult RemoveAccountList()
         {
             string id = User.Identity.GetUserId();
-            ApplicationUser user = DatabaseFactory.Get().Users.First(x => x.Id == id);
+            MacheteUser user = DatabaseFactory.Get().Users.First(x => x.Id == id);
             ICollection<UserLoginInfo> linkedAccounts = new Collection<UserLoginInfo>
                 (
                     user.Logins
@@ -573,7 +573,7 @@ namespace Machete.Web.Controllers
             }
         }
 
-        private async Task SignInAsync(ApplicationUser user, bool isPersistent)
+        private async Task SignInAsync(MacheteUser user, bool isPersistent)
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
             ClaimsIdentity identity = await UserManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
@@ -588,13 +588,13 @@ namespace Machete.Web.Controllers
             }
         }
 
-        private bool IsInternalUser(ApplicationUser user)
+        private bool IsInternalUser(MacheteUser user)
         {
             // Return whether user has a password hash
             return (user.UserName.Contains("@"));
         }
 
-        private bool HasPassword(ApplicationUser user)
+        private bool HasPassword(MacheteUser user)
         {
             // Return whether user has a password hash
             return (user.PasswordHash != null);

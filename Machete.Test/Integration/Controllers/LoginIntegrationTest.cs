@@ -10,14 +10,14 @@ namespace Machete.Test.Integration.Controller
     {
         IDatabaseFactory idb;
         string conString;
-        Machete.Web.ViewModel.MyUserManager userManager;
+        Machete.Web.ViewModel.MacheteUserManager userManager;
 
         [TestInitialize]
         public void Initialize()
         {
             conString = "MacheteConnection";
             idb = new DatabaseFactory(conString);
-            userManager = new MyUserManager(idb);
+            userManager = new MacheteUserManager(idb);
         }
 
         [TestCleanup]

@@ -11,7 +11,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web.Http;
 
-namespace Machete.Web.Controllers.Api
+namespace Machete.Api.Controllers
 {
     [ElmahHandleError]
     [Authorize]
