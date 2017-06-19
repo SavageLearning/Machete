@@ -25,18 +25,18 @@ namespace Machete.Service
         public bool enableSimpleEmail { get; set; }
         public string fromAddress { get; set; }
 
-        public EmailConfig()
+        public EmailConfig(IConfigService cfg)
         {
             port = 0;
             enableSSL = false;
             enableSimpleEmail = false;
-            host = ConfigurationManager.AppSettings["EmailServerHostName"];
-            port = Convert.ToInt16(ConfigurationManager.AppSettings["EmailServerPort"]);
-            enableSSL = Convert.ToBoolean(ConfigurationManager.AppSettings["EmailEnableSSL"]);
-            userName = ConfigurationManager.AppSettings["SmtpUser"];
-            password = ConfigurationManager.AppSettings["SmtpPassword"];
-            enableSimpleEmail = Convert.ToBoolean(ConfigurationManager.AppSettings[""]);
-            fromAddress = ConfigurationManager.AppSettings["EmailFromAddress"];
+            host = cfg.getConfig("EmailServerHostName");
+            port = Convert.ToInt16(cfg.getConfig("EmailServerPort"));
+            enableSSL = Convert.ToBoolean(cfg.getConfig("EmailEnableSSL"));
+            userName = cfg.getConfig("SmtpUser");
+            password = cfg.getConfig("SmtpPassword");
+            //enableSimpleEmail = Convert.ToBoolean(ConfigurationManager.AppSettings[""]);
+            fromAddress = cfg.getConfig("EmailFromAddress");
         }
 
         public bool IsComplete

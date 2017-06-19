@@ -248,6 +248,7 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Entities\Activity.cs" />
+    <Compile Include="Entities\Config.cs" />
     <Compile Include="Entities\Email.cs" />
     <Compile Include="Entities\Event.cs" />
     <Compile Include="Entities\Exceptions.cs" />
@@ -256,6 +257,7 @@
     <Compile Include="Entities\Employer.cs" />
     <Compile Include="Entities\Person.cs" />
     <Compile Include="Entities\Record.cs" />
+    <Compile Include="Entities\ReportDefinition.cs" />
     <Compile Include="Entities\WorkAssignment.cs" />
     <Compile Include="Entities\Worker.cs" />
     <Compile Include="Entities\WorkerRequest.cs" />

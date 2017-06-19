@@ -25,6 +25,9 @@ namespace Machete.Web.Maps
                  .ForMember(v => v.assignedWorker, opt => opt.MapFrom(d => d.workerAssigned == null ? null : d.workerAssigned.Person.fullName))
                  .ForMember(v => v.requestedList, opt => opt.MapFrom(d => 
                     d.workOrder.workerRequests.Select( a=> a.workerRequested.fullNameAndID)))
+                 .ForMember(v => v.dateTimeofWork, opt => opt.MapFrom(d => d.workOrder.dateTimeofWork))
+                 .ForMember(v => v.WOstatus, opt => opt.MapFrom(d => d.workOrder.statusID))
+                 .ForMember(v => v.timeZoneOffset, opt => opt.MapFrom(d => d.workOrder.timeZoneOffset))
 
             ;
             CreateMap<Service.DTO.WorkAssignmentList, ViewModel.WorkAssignmentList>()
@@ -44,12 +47,8 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.hourRange, opt => opt.MapFrom(d => Convert.ToString(d.hourRange)))
                 .ForMember(v => v.days, opt => opt.MapFrom(d => Convert.ToString(d.days)))
                 .ForMember(v => v.dateupdated, opt => opt.MapFrom(d => Convert.ToString(d.dateupdated)))
-                .ForMember(v => v.dateTimeofWork, opt => opt.MapFrom(d => Convert.ToString(
-                    d.dateTimeofWork.AddHours(
-                        Convert.ToDouble(WebConfigurationManager.AppSettings["TimeZoneDifferenceFromPacific"])))))
-                .ForMember(v => v.timeofwork, opt => opt.MapFrom(d =>
-                    d.dateTimeofWork.AddHours(
-                        Convert.ToDouble(WebConfigurationManager.AppSettings["TimeZoneDifferenceFromPacific"])).ToShortTimeString()))
+                .ForMember(v => v.dateTimeofWork, opt => opt.MapFrom(d => Convert.ToString(d.dateTimeofWork.AddHours(d.timeZoneOffset))))
+                .ForMember(v => v.timeofwork, opt => opt.MapFrom(d => d.dateTimeofWork.AddHours(d.timeZoneOffset).ToShortTimeString()))
                 .ForMember(v => v.earnings, opt => opt.MapFrom(d => System.String.Format("${0:f2}", d.earnings)))
                 .ForMember(v => v.asmtStatus, opt => opt.MapFrom(d => AssignmentStatus(d)))
             ;

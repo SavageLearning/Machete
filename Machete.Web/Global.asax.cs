@@ -99,6 +99,7 @@ namespace Machete.Web
             initializer.InitializeDatabase(db.Get());
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
             GlobalConfiguration.Configuration.DependencyResolver = new Unity.WebApi.UnityDependencyResolver(container);
+            GlobalConfiguration.Configuration.EnsureInitialized();
         }
 
         private IUnityContainer GetUnityContainer()
@@ -110,7 +111,7 @@ namespace Machete.Web
             .RegisterType<IMyUserManager<ApplicationUser>, MyUserManager>(new PerResolveLifetimeManager())//HttpContextLifetimeManager<IMyUserManager<ApplicationUser>>())
             .RegisterType<IDatabaseFactory, DatabaseFactory>(new PerResolveLifetimeManager(), new InjectionConstructor("macheteConnection"))
             .RegisterType<IUnitOfWork, UnitOfWork>(new PerResolveLifetimeManager())
-            .RegisterInstance<IEmailConfig>(new EmailConfig())
+            .RegisterType<IEmailConfig, EmailConfig>(new PerResolveLifetimeManager())
             .RegisterInstance<IMapper>(new MapperConfig().getMapper())
             // 
             .RegisterType<IPersonRepository, PersonRepository>(new PerResolveLifetimeManager())
@@ -123,10 +124,14 @@ namespace Machete.Web
             .RegisterType<IWorkOrderRepository, WorkOrderRepository>(new PerResolveLifetimeManager())
             .RegisterType<IWorkAssignmentRepository, WorkAssignmentRepository>(new PerResolveLifetimeManager())
             .RegisterType<ILookupRepository, LookupRepository>(new PerResolveLifetimeManager())
+            .RegisterType<IReportsRepository, ReportsRepository>(new PerResolveLifetimeManager())
             .RegisterType<IEventRepository, EventRepository>(new PerResolveLifetimeManager())
             .RegisterType<IActivityRepository, ActivityRepository>(new PerResolveLifetimeManager())
+            .RegisterType<IConfigRepository, ConfigRepository>(new PerResolveLifetimeManager())
             .RegisterType<IActivitySigninRepository, ActivitySigninRepository>(new PerResolveLifetimeManager())
+
             // 
+            .RegisterType<IConfigService, ConfigService>(new PerResolveLifetimeManager())
             .RegisterType<ILookupService, LookupService>(new PerResolveLifetimeManager())
             .RegisterType<IActivitySigninService, ActivitySigninService>(new PerResolveLifetimeManager())
             .RegisterType<IActivityService, ActivityService>(new PerResolveLifetimeManager())

@@ -114,7 +114,8 @@
                 @{                    
                     if (Model.workerAssigned != null)
                     {
-                        myStr = Model.workerAssigned.dwccardnum.ToString();
+                        myStr = Model.workerAssigned.dwccardnum.ToString() + " " +
+                                        Model.workerAssigned.Person.fullName;
                     }
                 }
                 @Html.TextBox("workerAssignedDisplay", 

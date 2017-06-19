@@ -54,8 +54,9 @@ namespace Machete.Service
             IImageService iServ,
             IWorkerRequestService wrServ,
             IUnitOfWork uow,
-            IMapper map)
-            : base(repo, wServ, iServ, wrServ, uow, map)
+            IMapper map,
+            IConfigService cfg)
+            : base(repo, wServ, iServ, wrServ, uow, map, cfg)
         {
             this.logPrefix = "WorkerSignin";
         }
@@ -216,6 +217,7 @@ namespace Machete.Service
             signin.memberStatusID = wfound.memberStatusID;
             signin.lottery_sequence = GetNextLotterySequence(dateforsignin);
             signin.lottery_timestamp = DateTime.Now;
+            signin.timeZoneOffset = Convert.ToDouble(cfg.getConfig("TimeZoneDifferenceFromPacific"));
             return Create(signin, user);
         }
 

@@ -139,12 +139,14 @@ namespace Machete.Test.Unit.Service
             string user = "UnitTest";
             Worker _w = (Worker)Records.worker.Clone();
             Lookup _l = (Lookup)Records.lookup.Clone();
-            _w.Person = (Person)Records.person.Clone();
+            Person _p = (Person)Records.person.Clone();
+            _w.Person = _p;
             _w.Person.datecreated = DateTime.MinValue;
             _w.Person.dateupdated = DateTime.MinValue;
             //Records._worker1.datecreated = DateTime.MinValue;
             //Records._worker1.dateupdated = DateTime.MinValue;
             _repo.Setup(r => r.Add(_w)).Returns(_w);
+            _pRepo.Setup(r => r.Get(It.IsAny<Func<Person, bool>>())).Returns(_p);
             _lcache.Setup(r => r.getByID(_w.typeOfWorkID)).Returns(_l);
             //
             //Act

@@ -287,13 +287,12 @@ namespace Machete.Web.ViewModel
 
             // Set the Selected property to true for those roles for 
             // which the current user is a member:
-            //TODO:2016 fix this with Identity v2 roles (linq many to many join)
-            //foreach (IdentityUserRole userRole in user.Roles)
-            //{
-            //    SelectRoleEditorViewModel checkUserRole =
-            //        this.Roles.Find(r => r.RoleName == userRole.Role.Name);
-            //    checkUserRole.Selected = true;
-            //}
+            foreach (IdentityUserRole userRole in user.Roles)
+            {
+                SelectRoleEditorViewModel checkUserRole =
+                    this.Roles.Find(r => r.RoleId == userRole.RoleId);
+                checkUserRole.Selected = true;
+            }
         }
 
         [LocalizedDisplayName("username", NameResourceType = typeof(Resources.ValidationStrings))]
@@ -317,11 +316,13 @@ namespace Machete.Web.ViewModel
         public SelectRoleEditorViewModel(IdentityRole role)
         {
             this.RoleName = role.Name;
+            this.RoleId = role.Id;
         }
 
         public bool Selected { get; set; }
 
         [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
         public string RoleName { get; set; }
+        public string RoleId { get; set; }
     }
 }

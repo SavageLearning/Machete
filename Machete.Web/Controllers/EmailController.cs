@@ -254,7 +254,7 @@ namespace Machete.Web.Controllers
                 ev.templates = def.getEmailTemplates();
                 ev.woid = woid;
                 ev.emailTo = wo.Employer.email;
-                ev.subject = string.Format(Resources.Emails.defaultSubject, ConfigurationManager.AppSettings["OrganizationName"],wo.paperOrderNum);
+                ev.subject = string.Format(Resources.Emails.defaultSubject, def.getConfig("OrganizationName"),wo.paperOrderNum);
                 return PartialView("CreateDialog", ev);
             }
             else

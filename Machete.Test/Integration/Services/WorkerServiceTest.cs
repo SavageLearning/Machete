@@ -75,24 +75,21 @@ namespace Machete.Test.Integration.Service
         {
             //
             //Arrange
-            Worker _w = (Worker)Records.worker.Clone();
-            Person _p = (Person)Records.person.Clone();
+            Person _p = frb.ToPerson();
+            Worker _w = frb.ToWorker(); ;
             _p.firstname2 = "WorkerService_Intergation_CreateWorker";
             _w.height = "tall";
-            _w.Person = _p;
+            //_w.Person = _p;
             _w.dwccardnum = frb.GetNextMemberID();
+            _w.height = "short"; //EF should keep _w and result the same
             //
             //Act
-            Worker result = frb.ToServWorker().Create(_w, "UnitTest");
-            result.height = "short"; //EF should keep _w and result the same
-            frb.ToServWorker().Save(result, "UnitTest");
+            frb.ToServWorker().Save(_w, "UnitTest");
             //
             //Assert
             Assert.IsNotNull(_w.ID, "Worker.ID is Null");
-            Assert.IsNotNull(result.ID, "(worker) result.ID is Null");
             Assert.IsTrue(_w.ID == _p.ID, "Worker.ID doesn't match Person.ID");
             Assert.IsTrue(_w.height == "short", "SaveWorker failed to save property change");
-            Assert.AreSame(_w, result, "CreateWorker did not return the expected object");
         }
     }
 }

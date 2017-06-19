@@ -39,6 +39,7 @@ namespace Machete.Service
         protected readonly IWorkerRequestService wrServ;
         protected readonly IImageService iServ;
         protected readonly IMapper map;
+        protected readonly IConfigService cfg;
         //
         //
         protected SigninServiceBase(
@@ -47,7 +48,8 @@ namespace Machete.Service
             IImageService iServ,
             IWorkerRequestService wrServ,
             IUnitOfWork uow,
-            IMapper map)
+            IMapper map,
+            IConfigService cfg)
             : base(repo, uow)
         {
             this.wServ = wServ;
@@ -55,6 +57,7 @@ namespace Machete.Service
             this.iServ = iServ;
             this.map = map;
             this.logPrefix = "SigninServiceBase";
+            this.cfg = cfg;
         }
 
         /// <summary>

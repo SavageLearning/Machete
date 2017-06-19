@@ -27,7 +27,9 @@
                     <th>@Employer.name</th>
                     <th>@Employer.address1</th>
                     <th>@Employer.city</th>
+                    <th>@Employer.zipcode</th>
                     <th>@Employer.phone</th>
+                    <th>@Employer.cellphone</th>
                     <th>@Record.dateupdated</th>
                     <th>@Record.updatedby</th>
                     <th>@Employer.onlineSource</th>
@@ -46,7 +48,9 @@
                 <th>@Machete.Domain.Resources.Employer.name</th>
                 <th>@Machete.Domain.Resources.Employer.address1</th>
                 <th>@Machete.Domain.Resources.Employer.city</th>
+                <th>@Machete.Domain.Resources.Employer.zipcode</th>
                 <th>@Machete.Domain.Resources.Employer.phone</th>
+                <th>@Machete.Domain.Resources.Employer.cellphone</th>
                 <th>@Machete.Domain.Resources.Record.dateupdated</th>
                 <th>@Machete.Domain.Resources.Record.updatedby</th>
             </tr>
@@ -69,7 +73,7 @@
                 //"iDisplaylength": 15,
                 "bPaginate": true,
                 "bLengthChange": true,
-                "aaSorting": [[7, 'desc']],
+                "aaSorting": [[9, 'desc']],
                 "bFilter": true,
                 "bSort": true,
                 "bInfo": true,
@@ -84,8 +88,10 @@
                                 {"mDataProp": "active" },
                                 {"mDataProp": "name" },
                                 {"mDataProp": "address1" },
-                                {"mDataProp": "city" },
-                                {"mDataProp": "phone" },
+                                { "mDataProp": "city" },
+                                { "mDataProp": "zipcode" },
+                                { "mDataProp": "phone" },
+                                { "mDataProp": "cellphone" },
                                 {"mDataProp": "dateupdated" },
                                 { "mDataProp": "updatedby", "bSortable": false },
                                 { "mDataProp": "onlineSource", "bSearchable": false, "bSortable": true, "bVisible": true }
@@ -142,8 +148,10 @@
                             {"mDataProp": "active" },
                             {"mDataProp": "name" },
                             {"mDataProp": "address1" },
-                            {"mDataProp": "city" },
-                            {"mDataProp": "phone" },
+                            { "mDataProp": "city" },
+                            { "mDataProp": "zipcode" },
+                            { "mDataProp": "phone" },
+                            { "mDataProp": "cellphone" },
                             {"mDataProp": "dateupdated" },
                             {"mDataProp": "updatedby", "bSortable": false }
             ],

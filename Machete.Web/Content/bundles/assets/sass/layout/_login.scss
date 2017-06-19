@@ -1,0 +1,98 @@
+.login-body {
+    background:  url("../images/login/login.png") top left no-repeat #f7f7f7;
+    background-size: 100% auto;
+    height: auto;
+}
+
+.login-panel {
+    text-align: center;
+    width: 350px;
+    min-height: 440px;
+    padding: 50px 20px;
+    margin: 100px auto 0 auto;
+    
+    .ui-g {
+        .ui-g-12 {
+            padding: 25px 40px;
+            
+            .ui-button {
+                margin-bottom: 20px;
+            }
+        }
+    }
+    
+    .ui-button {
+        &:hover {
+            background-color: $primaryDarkColor;   
+        }
+        
+        &:focus {
+            outline: 0 none;
+            background-color: lighten($primaryColor,10%);
+        }
+        
+        &.secondary {
+            &:hover {
+                background-color: $accentDarkColor;   
+            }
+            
+            &:focus {
+                outline: 0 none;
+                background-color: lighten($accentColor,10%);
+            }
+        }
+    }
+    
+    .ui-inputtext {
+        &:focus {
+            border-width: 0 0 2px 0;
+            border-color: $primaryColor;  
+            padding-bottom: 0px;
+        }
+    }
+}
+
+.login-footer {
+    position: absolute;
+    bottom: 10px;
+    font-size: 16px;
+    width: 100%;
+    text-align: center;
+    color: $textSecondaryColor;
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) { 
+    .login-body {
+        background: url("../images/login/login2x.png") top left no-repeat #f7f7f7; 
+        background-size: 100% auto;
+    }
+}
+
+@media (max-width: 1024px) {
+    .login-panel {
+        text-align: center;
+        min-height: 440px;
+        margin: 100px auto 0 auto;
+
+    }
+}
+
+@media (max-width: 640px) {
+    .login-panel {
+        text-align: center;
+        width: 300px;
+        min-height: 440px;
+        padding: 40px 20px;
+        margin: 75px auto 0 auto;
+        
+        .ui-g {
+            .ui-g-12 {
+                padding: 20px 20px;
+                
+                .ui-button {
+                    margin-top: 30px
+                }
+            }
+        }
+    }
+}

@@ -358,7 +358,7 @@ html[xmlns] .clearfix {
 </head>
 
 <body>
-<h1 class="emailview">@ConfigurationManager.AppSettings["OrganizationName"]</h1>
+<h1 class="emailview">@Model.def.getConfig("OrganizationName")</h1>
 <div id="main">
 <div class="dateNeeded">
     <div class="neededText">@WorkOrders.dateneeded</div>
@@ -392,7 +392,7 @@ else
 <div class="tb-field">
     @foreach (var req in Model.workerRequests)
     {
-        @System.String.Format(req.workerRequested.dwccardnum + "--" + req.fullName) <br />
+        @System.String.Format(req.workerRequested.dwccardnum + "--" + req.workerRequested.Person.fullName) <br />
     }
 </div>
 <h4>@WorkOrders.listOfPositions</h4>
@@ -449,7 +449,7 @@ else
                 <div class="tb-field">
                     @if (item.workerAssigned != null)
                     {
-                        <h3>@Html.Encode(item.workerAssigned.Person.fullName())</h3>
+                        <h3>@Html.Encode(item.workerAssigned.Person.fullName)</h3>
                     }
                     else
                     {

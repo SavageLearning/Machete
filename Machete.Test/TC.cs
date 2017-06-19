@@ -17,6 +17,7 @@ namespace Machete.Test
         public const string Controller = "Layer-Controller";
         public const string View = "Layer-View";
         public const string MWS = "Layer-MWS";
+        public const string Data = "Layer-Data";
         //
         //
         public const string WorkOrders = "Area-WorkOrders";

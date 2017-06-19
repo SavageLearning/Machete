@@ -97,8 +97,10 @@ namespace Machete.Service
 
         public override Worker Create(Worker record, string user)
         {
-            updateComputedFields(ref record);
+            record.Person = pRepo.Get(p => p.ID == record.ID);
             var result = base.Create(record, user);
+            updateComputedFields(ref result);
+            uow.Commit();
             return result;
         }
 

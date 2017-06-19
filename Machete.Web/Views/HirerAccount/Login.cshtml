@@ -4,11 +4,11 @@
     ViewBag.Title = @Machete.Web.Resources.ValidationStrings.LogOnTitle;
 }
 <div class="account-background">
-    <h2>@System.Web.Configuration.WebConfigurationManager.AppSettings["LogOnTitle_EN"]</h2>
+    <h2>@ViewBag.def.getConfig("LogOnTitle_EN")</h2>
     <p>
         @Machete.Web.Resources.ValidationStrings.HirerLogOnRegisterString1 @Html.ActionLink(@Machete.Web.Resources.ValidationStrings.HirerCreateAccount, "Register") @Machete.Web.Resources.ValidationStrings.HirerLogOnRegisterString2
     </p>
-    @Html.Raw(System.Web.Configuration.WebConfigurationManager.AppSettings["WorkCenterDescription_EN"]) 
+    @Html.Raw(ViewBag.def.getConfig("WorkCenterDescription_EN")) 
 
     @Html.ValidationSummary(true, @Machete.Web.Resources.ValidationStrings.LogOnUnsuccessful)
 

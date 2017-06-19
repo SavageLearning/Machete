@@ -252,7 +252,7 @@ namespace Machete.Test.Integration.Service
             var tolist = result.query.ToList();
             Assert.IsNotNull(tolist, "return value is null");
             Assert.IsInstanceOfType(result, typeof(dataTableResult<Machete.Service.DTO.WorkAssignmentList>));
-            //Assert.AreEqual(61, tolist[0].skillID);
+            //Assert.AreEqual(63, tolist[0].skillID);
             Assert.AreEqual(1, result.query.Count());
         }
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WAs), TestCategory(TC.Fluent)]

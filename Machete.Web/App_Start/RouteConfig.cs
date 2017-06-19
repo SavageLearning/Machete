@@ -18,9 +18,32 @@ namespace Machete.Web
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
+                constraints: new
+                {
+                    serverRoute = new ServerRouteConstraint(url =>
+                    {
+                        return !url.PathAndQuery.StartsWith("/V2",
+                            StringComparison.InvariantCultureIgnoreCase);
+                    })
+                }
             );
-            routes.MapRoute("Error", "{*url}", new { controller = "Error", action = "Http404" });
+            routes.MapRoute("angular", "{*url}", new { controller = "V2", action = "index" });
+        }
+    }
+    public class ServerRouteConstraint : IRouteConstraint
+    {
+        private readonly Func<Uri, bool> _predicate;
+
+        public ServerRouteConstraint(Func<Uri, bool> predicate)
+        {
+            this._predicate = predicate;
+        }
+
+        public bool Match(HttpContextBase httpContext, Route route, string parameterName,
+            RouteValueDictionary values, RouteDirection routeDirection)
+        {
+            return this._predicate(httpContext.Request.Url);
         }
     }
 }

@@ -24,7 +24,9 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.dateTimeofWork,       opt => opt.MapFrom(d => Convert.ToString(d.dateTimeofWork)))
                 .ForMember(v => v.dateupdatedstring,    opt => opt.MapFrom(d => System.String.Format("{0:MM/dd/yyyy HH:mm:ss}", d.dateupdated)))
                 .ForMember(v => v.onlineSource,         opt => opt.MapFrom(d => d.onlineSource ? Shared.True : Shared.False))
-                .ForMember(v => v.recordid,             opt => opt.MapFrom(d => Convert.ToString(d.ID)));
+                .ForMember(v => v.recordid,             opt => opt.MapFrom(d => Convert.ToString(d.ID)))
+                .ForMember(v => v.transportMethod,      opt => opt.MapFrom(d => getCI() == "ES" ? d.transportMethodES : d.transportMethodEN))
+                ;
             //
             //
             CreateMap<Domain.WorkOrder, Service.DTO.WorkOrderList>()
@@ -50,11 +52,13 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.status,            opt => opt.MapFrom(d => getCI() == "ES" ? d.statusES : d.statusEN))
                 .ForMember(v => v.transportMethod, opt => opt.MapFrom(d => getCI() == "ES" ? d.transportMethodES : d.transportMethodEN))
                 .ForMember(v => v.displayState,      opt => opt.MapFrom(d => computeOrderStatus(d)))
+                .ForMember(v => v.recordid, opt => opt.MapFrom(d => d.ID.ToString()))
                 ;
 
             CreateMap<Domain.WorkAssignment, DTO.WorkerAssignedList>()
                 .ForMember(v => v.WID, opt => opt.MapFrom(d => d.workerAssigned.dwccardnum))
                 .ForMember(v => v.name, opt => opt.MapFrom(d => d.workerAssigned.Person.fullName))
+                .ForMember(v => v.wage, opt => opt.MapFrom(d => d.hourlyWage))
                 ;
 
             CreateMap<DTO.WorkerAssignedList, ViewModel.WorkerAssignedList>()

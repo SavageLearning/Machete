@@ -30,17 +30,21 @@ namespace Machete.Web.Controllers
         public IMyUserManager<ApplicationUser> UserManager { get; private set; }
         private readonly IDatabaseFactory DatabaseFactory;
         private CultureInfo CI;
+        private IDefaults def;
 
-        public HirerAccountController(IMyUserManager<ApplicationUser> userManager, IDatabaseFactory databaseFactory)
+        public HirerAccountController(IMyUserManager<ApplicationUser> userManager,
+            IDatabaseFactory databaseFactory, IDefaults def)
         {
             UserManager = userManager;
             DatabaseFactory = databaseFactory;
+            this.def = def;
         }
 
         protected override void Initialize(RequestContext requestContext)
         {
             base.Initialize(requestContext);
             CI = (CultureInfo)Session["Culture"];
+            ViewBag.def = this.def;
         }
 
         // TODO: Consider implementing this functionality - currently there is no admin account page to manage Employer user accounts
@@ -77,6 +81,7 @@ namespace Machete.Web.Controllers
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
+            ViewBag.def = def;
             HirerLoginViewModel model = new HirerLoginViewModel();
             model.Action = "ExternalLogin";
             model.ReturnUrl = returnUrl;
@@ -116,6 +121,7 @@ namespace Machete.Web.Controllers
         public ActionResult Register()
         {
             HirerRegisterViewModel model = new HirerRegisterViewModel();
+            ViewBag.def = def;
             return View(model);
         }
 
@@ -127,7 +133,14 @@ namespace Machete.Web.Controllers
             if (ModelState.IsValid)
             {
                 // Initialize user object
-                ApplicationUser user = new ApplicationUser() { UserName = model.Email.ToLower().Trim(), LoweredUserName = model.Email.Trim().ToLower(), ApplicationId = GetApplicationID(), Email = model.Email.Trim(), LoweredEmail = model.Email.Trim().ToLower() };
+                ApplicationUser user = new ApplicationUser()
+                {
+                    UserName = model.Email.ToLower().Trim(),
+                    LoweredUserName = model.Email.Trim().ToLower(),
+                    ApplicationId = GetApplicationID(),
+                    Email = model.Email.Trim(),
+                    LoweredEmail = model.Email.Trim().ToLower()
+                };
 
                 MacheteContext Db = DatabaseFactory.Get();
 

@@ -60,6 +60,8 @@ namespace Machete.Web.Helpers
         SelectList skillLevels();
         List<SelectListItem> yesnoSelectList();
         IEnumerable<string> getTeachers();
+        string getConfig(string key);
+
     }
 
     public class Defaults : IDefaults
@@ -80,11 +82,13 @@ namespace Machete.Web.Helpers
         private List<SelectListItem> yesnoEN { get; set; }
         private List<SelectListItem> yesnoES { get; set; }
         private ILookupCache lcache;
+        private IConfigService cfgServ;
         //
         // Initialize once to prevent re-querying DB
         //
-        public Defaults(ILookupCache lc)
+        public Defaults(ILookupCache lc, IConfigService cfg)
         {
+            cfgServ = cfg;
             lcache = lc;
             hoursNum = new SelectList(new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16" }
                 .Select(x => new LookupNumber { Value = x, Text = x }),
@@ -123,7 +127,8 @@ namespace Machete.Web.Helpers
                     LCategory.usBornChildren,
                     LCategory.educationLevel,
                     LCategory.farmLabor,
-                    LCategory.training
+                    LCategory.training,
+                    LCategory.income
                 }
                 .Select(x => new SelectListItem { Value = x, Text = x}),
                 "Value", "Text", LCategory.activityName);
@@ -235,6 +240,11 @@ namespace Machete.Web.Helpers
                             .FirstOrDefault().minHour ?? 0;
             }
             return hours;
+        }
+
+        public string getConfig(string key)
+        {
+            return cfgServ.getConfig(key);
         }
 
         public IEnumerable<string> getTeachers()
@@ -388,10 +398,10 @@ namespace Machete.Web.Helpers
                         Selected = x.selected,
                         Value = Convert.ToString(x.ID),
                         Text = textFunc(x),
-                        wage = x.wage.Value,
-                        minHour = x.minHour.Value,
+                        wage = x.wage == null ? 15 : x.wage.Value,
+                        minHour = x.minHour == null ? 1 : x.minHour.Value,
                         ID = x.ID,
-                        typeOfWorkID = x.typeOfWorkID.Value,
+                        typeOfWorkID = x.typeOfWorkID == null ? 0 : x.typeOfWorkID.Value,
                         skillDescriptionEs = x.skillDescriptionEs,
                         skillDescriptionEn = x.skillDescriptionEn
                     }));

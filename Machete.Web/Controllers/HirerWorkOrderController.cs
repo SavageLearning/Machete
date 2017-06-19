@@ -99,6 +99,8 @@ namespace Machete.Web.Controllers
         {
             base.Initialize(requestContext);
             this.CI = (CultureInfo)Session["Culture"];
+            ViewBag.def = def;
+
         }
 
         #region Index
@@ -213,22 +215,22 @@ namespace Machete.Web.Controllers
             ViewBag.workerRequests = new List<SelectListItem> { };
 
             // Build Skill lookups
-            ViewBag.ID = new int[22];
-            ViewBag.text_EN = new string[22];
-            ViewBag.text_ES = new string[22];
-            ViewBag.wage = new double[22];
-            ViewBag.minHour = new int[22];
-            ViewBag.workType = new int[22];
-            ViewBag.desc_ES = new string[22];
-            ViewBag.desc_EN = new string[22];
-
-
-            //IEnumerable<Lookup> lookup = lcache.getCache();
             List<SelectListEmployerSkills> lookup = def.getOnlineEmployerSkill();
+            var numOfSkills = lookup.Count();
+            // bandaid until i remove all of this
+            ViewBag.ID = new int[numOfSkills];
+            ViewBag.text_EN = new string[numOfSkills];
+            ViewBag.text_ES = new string[numOfSkills];
+            ViewBag.wage = new double[numOfSkills];
+            ViewBag.minHour = new int[numOfSkills];
+            ViewBag.workType = new int[numOfSkills];
+            ViewBag.desc_ES = new string[numOfSkills];
+            ViewBag.desc_EN = new string[numOfSkills];
+
 
             int counter = 0;
 
-            for (int i = 0; i < lookup.Count(); i++)
+            for (int i = 0; i <  numOfSkills; i++)
             {
                 SelectListEmployerSkills lup = lookup.ElementAt(i);
                 // removed hard-coded list of casa's active skill integers. relying on getOnlineEmployerSkill & active flag
@@ -240,8 +242,9 @@ namespace Machete.Web.Controllers
                 ViewBag.text_ES[counter] = lup.skillDescriptionEs;
                 counter++;              
             }
-
-            return PartialView("Create", wo);
+            var m = map.Map<Domain.WorkOrder, ViewModel.WorkOrder>(wo);
+            m.def = def;
+            return PartialView("Create", m);
         }
 
         /// <summary>
@@ -256,7 +259,6 @@ namespace Machete.Web.Controllers
         public ActionResult Create(WorkOrder wo, string userName, string workerAssignments)
         {
             UpdateModel(wo);
-
             // Retrieve user ID of signed in Employer
             string userID = HttpContext.User.Identity.GetUserId();
 
@@ -365,7 +367,6 @@ namespace Machete.Web.Controllers
                     WorkerRequest newWr = wrServ.Create(wr, userName);
                 }
             }
-
             if (neworder.transportFee > 0)
             {
                 return View("IndexPrePaypal", neworder);
@@ -389,7 +390,6 @@ namespace Machete.Web.Controllers
         {
             // Retrieve user ID of signed in Employer
             string userID = HttpContext.User.Identity.GetUserId();
-
             // Retrieve Employer record
             Domain.Employer employer = eServ.GetRepo().GetAllQ().Where(e => e.onlineSigninID == userID).FirstOrDefault();
             if (employer != null)
@@ -501,7 +501,6 @@ namespace Machete.Web.Controllers
         public ActionResult PaymentPost(string token, string payerId, string userName)
         {
             double payment = 0.0;
-
             // TODO: There was an issue with the WO returned by the first query below - the work order
             // can't be saved unless the work order is retrieved with the woServ.Get() call
             WorkOrder woAll = woServ.GetRepo().GetAllQ().Where(wo => wo.paypalToken == token).FirstOrDefault();
@@ -529,7 +528,7 @@ namespace Machete.Web.Controllers
             }
 
             // PayPal call to get buyer details
-            PaypalExpressCheckout paypal = new PaypalExpressCheckout();
+            PaypalExpressCheckout paypal = new PaypalExpressCheckout(def);
             GetExpressCheckoutDetailsResponseType detailsResponse = paypal.GetExpressCheckoutDetails(token);
 
             if (detailsResponse != null)
@@ -593,7 +592,6 @@ namespace Machete.Web.Controllers
         [Authorize(Roles = "Hirer")]
         public ActionResult PaymentCancel(string token, string orderID)
         {
-
             return View("IndexCancel");
         }
 
@@ -608,6 +606,7 @@ namespace Machete.Web.Controllers
         {
             WorkOrder woAll = woServ.GetRepo().GetAllQ().Where(wo => wo.paypalToken == token2).FirstOrDefault();
             WorkOrder workOrder = woServ.Get(woAll.ID);
+
             if (workOrder == null)
             {
                 levent.Level = LogLevel.Error;
@@ -615,7 +614,6 @@ namespace Machete.Web.Controllers
                 log.Log(levent);
                 return View("IndexError", workOrder);
             }
-
             return View("IndexCancel", workOrder);
         }
 

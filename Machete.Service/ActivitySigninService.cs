@@ -64,8 +64,9 @@ namespace Machete.Service
             IImageService iServ,
             IWorkerRequestService wrServ,
             IUnitOfWork uow,
-            IMapper map)
-            : base(repo, wServ, iServ, wrServ, uow, map)
+            IMapper map, 
+            IConfigService cfg)
+            : base(repo, wServ, iServ, wrServ, uow, map, cfg)
         {
             this.logPrefix = "ActivitySignin";
             this.pServ = pServ;
@@ -148,7 +149,11 @@ namespace Machete.Service
             //Search for duplicate signin for the same day
             count = repo.GetAllQ().Count(q => q.activityID == s.activityID &&
                                               q.personID == p.ID);
-            if (count == 0) Create(s, user);
+            if (count == 0)
+            {
+                s.timeZoneOffset = Convert.ToDouble(cfg.getConfig("TimeZoneDifferenceFromPacific"));
+                Create(s, user);
+            }
             return w;
         }
 

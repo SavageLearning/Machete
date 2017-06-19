@@ -14,29 +14,10 @@ namespace Machete.Web.ViewModel
         public string tablabel { get; set; }
         public string EID { get; set; }
         public string WOID { get; set; }
-
         public string recordid { get; set; }
-
         public string dateupdatedstring { get; set; }
         public string datecreatedstring { get; set; }
-        //public string updatedby { get; set; }
-        //public string createdby { get; set; }
-
-        //public new string dateTimeofWork { get; set; }
-        public new string disclosureAgreement { get; set; }
-        public new bool englishRequired { get; set; }
-        public new string lunchSupplied { get; set; }
-        public new string onlineSource { get; set; }
-        public new string paperOrderNum { get; set; }
-        public new string paypalFee { get; set; }
-        public new string permanentPlacement { get; set; }
-        //public new string status { get; set; }
-        public new string transportFee { get; set; }
-        public new string transportFeeExtra { get; set; }
-        public new string transportMethodID { get; set; }
-        public new string transportTransactType { get; set; }
-        public new string typeOfWorkID { get; set; }
-        public new string waPseudoIDCounter { get; set; }
+        public string transportMethod { get; set; }
     }
 
     public class WorkOrderList
@@ -59,6 +40,7 @@ namespace Machete.Web.ViewModel
         public string emailErrorCount { get; set; }
         public string updatedby { get; set; }
         public string dateupdated { get; set; }
+        public string recordid { get; set; }
         public IEnumerable<WorkerAssignedList> workers { get; set; }
     }
 
