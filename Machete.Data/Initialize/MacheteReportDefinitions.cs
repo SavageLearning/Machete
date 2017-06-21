@@ -1427,6 +1427,7 @@ where a.datestart > @beginDate
 and a.datestart < @enddate
 order by count desc"
             },
+            // 
             new ReportDefinition
             {
                 name = "UniqueDispatchedWorkers",
@@ -1444,15 +1445,73 @@ order by count desc"
 	and l.text_EN = 'Completed'
 	group by dwccardnum, fullname
 	order by [Job count] desc"
-            },            
-            //new ReportDefinition
-            //{
-            //    name = "",
-            //    commonName = "",
-            //    description = "",
-            //    category = "",
-            //    sqlquery = @""
-            //},            
+            },
+            new ReportDefinition
+            {
+                name = "MemberAttendanceMetrics",
+                commonName = "Member Attendance metrics",
+                description = "A list of unique members within a given time period, with counts of dispatches, activities, and ESL classes for the period.",
+                category = "Attendance",
+                sqlquery =
+@"with jobs (dwccardnum, Jobcount)
+as
+(
+	SELECT dwccardnum, count(*) as [Jobcount]
+	from dbo.WorkAssignments WAs
+	JOIN dbo.WorkOrders WOs ON WAs.workOrderID = WOs.ID
+	JOIN dbo.Workers Ws on WAs.workerAssignedID = Ws.ID
+	join dbo.lookups l on l.id = wos.status
+	WHERE dateTimeofWork >= @begindate 
+	and dateTimeofWork <= @EnDdate
+	and l.text_EN = 'Completed'
+	group by dwccardnum
+),
+act (dwccardnum, actcount)
+as
+(
+	select dwccardnum, count(*) as [actcount]
+	from activitysignins asi
+	where dateforsignin >= @begindate
+	and dateforsignin <= @enddate
+	group by dwccardnum
+),
+esl (dwccardnum, eslcount)
+as
+(
+	select asi1.dwccardnum, count(*) as [eslcount]
+	from activitysignins asi1
+	join activities aa on aa.ID = asi1.activityid
+
+	where aa.nameen in ('English Class 1', 'English Class 2', 'Somos Vecinos')
+	and asi1.dateforsignin >= @begindate
+	and asi1.dateforsignin <= @enddate
+	group by asi1.dwccardnum
+),
+cardnums (dwccardnum)
+as
+(
+	 select dwccardnum from jobs 
+	  union 
+	  select dwccardnum from act
+	  union
+	  select dwccardnum from esl
+	
+)
+select distinct(cn.dwccardnum) [Member number]
+, p.fullname [Member name]
+, cast(isnull([jobcount],0) as int) as  [Dispatches]
+, cast(isnull([actcount],0) as int) as [Activities]
+, cast(isnull([eslcount],0) as int) as [ESL]
+from cardnums cn 
+join workers w on cn.dwccardnum = w.dwccardnum
+join persons p on w.id = p.id
+left join jobs on cn.dwccardnum = jobs.dwccardnum
+left join act on jobs.dwccardnum = act.dwccardnum
+left join esl on esl.dwccardnum = jobs.dwccardnum
+
+where jobcount is not null or actcount is not null or eslcount is not null
+"
+            }           
             #endregion  
         };
         public static void Initialize(MacheteContext context)
