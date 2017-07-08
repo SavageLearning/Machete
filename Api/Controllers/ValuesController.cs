@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Web.Http;
 using Thinktecture.IdentityModel.Mvc;
 
-namespace Api
+namespace Machete.Api
 {
     [Route("values")]
     public class ValuesController : ApiController
@@ -13,7 +13,7 @@ namespace Api
         public IEnumerable<string> Get()
         {
             var random = new Random();
-
+            throw new Exception("err-ror");
             return new[]
             {
                 _random.Next(0, 10).ToString(),

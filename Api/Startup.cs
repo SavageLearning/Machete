@@ -1,4 +1,5 @@
-﻿using IdentityServer3.AccessTokenValidation;
+﻿using Elmah.Contrib.WebApi;
+using IdentityServer3.AccessTokenValidation;
 using Machete.Data;
 using Machete.Data.Infrastructure;
 using Microsoft.Owin.Cors;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.ExceptionHandling;
 
 namespace Api
 {
@@ -30,11 +32,18 @@ namespace Api
             });
 
             // Wire Web API
-            var httpConfiguration = new HttpConfiguration();
-            httpConfiguration.MapHttpAttributeRoutes();
-            httpConfiguration.Filters.Add(new AuthorizeAttribute());
-
-            app.UseWebApi(httpConfiguration);
+            var config = new HttpConfiguration();
+            config.MapHttpAttributeRoutes();
+            // catch all route mapped to ErrorController so 404 errors
+            // can be logged in elmah
+            config.Routes.MapHttpRoute(
+                name: "NotFound",
+                routeTemplate: "{*path}",
+                defaults: new { controller = "Error", action = "NotFound" }
+            );
+            config.Filters.Add(new AuthorizeAttribute());
+            config.Services.Add(typeof(IExceptionLogger), new ElmahExceptionLogger());
+            app.UseWebApi(config);
         }
     }
 }
