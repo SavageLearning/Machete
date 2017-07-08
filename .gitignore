@@ -12,6 +12,7 @@ Machete.Api/
 [Pp]ackages/
 obj/*
 build/
+node_modules/
 
 log.txt*
 #Visual Studio files
