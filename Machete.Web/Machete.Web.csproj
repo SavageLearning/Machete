@@ -158,6 +158,7 @@
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
       <Private>True</Private>
@@ -223,20 +224,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\Api\WorkAssignmentsController.cs" />
-    <Compile Include="Controllers\Api\WorkOrdersController.cs" />
-    <Compile Include="Controllers\Api\ExportsController.cs" />
-    <Compile Include="Controllers\Api\LookupsController.cs" />
-    <Compile Include="Controllers\Api\ReportsController.cs" />
     <Compile Include="Controllers\ReportsV2Controller.cs" />
     <Compile Include="Controllers\V2Controller.cs" />
     <Compile Include="Maps\ActivityProfile.cs" />
     <Compile Include="Maps\ActivitySigninProfile.cs" />
-    <Compile Include="Maps\Api\EmployersMap.cs" />
-    <Compile Include="Maps\Api\LookupsMap.cs" />
-    <Compile Include="Maps\Api\WorkAssignmentsMap.cs" />
-    <Compile Include="Maps\Api\WorkOrdersMap.cs" />
-    <Compile Include="Maps\Api\ReportDefinitionsMap.cs" />
     <Compile Include="Maps\ConfigProfile.cs" />
     <Compile Include="Maps\EmailProfile.cs" />
     <Compile Include="Maps\EmployerProfile.cs" />
@@ -259,7 +250,6 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ActivityController.cs" />
     <Compile Include="Controllers\ActivitySigninController.cs" />
-    <Compile Include="Controllers\Api\EmployersController.cs" />
     <Compile Include="Controllers\ConfigController.cs" />
     <Compile Include="Controllers\EmailController.cs" />
     <Compile Include="Controllers\EmployerController.cs" />
@@ -299,11 +289,6 @@
     <Compile Include="ViewModel\ActivityIndex.cs" />
     <Compile Include="ViewModel\ActivitySchedule.cs" />
     <Compile Include="ViewModel\ActivitySignin.cs" />
-    <Compile Include="ViewModel\Api\Employer.cs" />
-    <Compile Include="ViewModel\Api\Lookup.cs" />
-    <Compile Include="ViewModel\Api\ReportDefinition.cs" />
-    <Compile Include="ViewModel\Api\WorkAssignment.cs" />
-    <Compile Include="ViewModel\Api\WorkOrder.cs" />
     <Compile Include="ViewModel\Config.cs" />
     <Compile Include="ViewModel\Email.cs" />
     <Compile Include="ViewModel\Event.cs" />

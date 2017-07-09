@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Machete.Web.ViewModel;
+using Machete.Api.ViewModel;
 using Newtonsoft.Json;
 
-namespace Machete.Web.Maps
+namespace Machete.Api.Maps
 {
     public class WorkOrdersMap : MacheteProfile
     {
         public WorkOrdersMap()
         {
-            CreateMap<Service.DTO.WorkOrdersList, ViewModel.Api.WorkOrder>();
-            CreateMap<Domain.WorkOrder, ViewModel.Api.WorkOrder>();
+            CreateMap<Service.DTO.WorkOrdersList, WorkOrder>();
+            CreateMap<Domain.WorkOrder, WorkOrder>();
         }
 
     }

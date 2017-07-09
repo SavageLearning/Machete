@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Machete.Web.ViewModel;
+using Machete.Api.ViewModel;
 using Newtonsoft.Json;
 
-namespace Machete.Web.Maps
+namespace Machete.Api.Maps
 {
     public class WorkAssignmentsMap : MacheteProfile
     {
         public WorkAssignmentsMap()
         {
-            CreateMap<Service.DTO.WorkAssignmentsList, ViewModel.Api.WorkAssignment>();
-            CreateMap<Domain.WorkAssignment, ViewModel.Api.WorkAssignment>();
+            CreateMap<Service.DTO.WorkAssignmentsList, WorkAssignment>();
+            CreateMap<Domain.WorkAssignment, WorkAssignment>();
         }
 
     }

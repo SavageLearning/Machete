@@ -1,13 +1,11 @@
 ﻿using AutoMapper;
 using Machete.Service;
-using Machete.Web.Helpers;
 using System;
 using System.Linq;
 using System.Web.Http;
 
 namespace Machete.Api.Controllers
 {
-    [ElmahHandleError]
     [Authorize]
     public class ReportsController : ApiController
     {
@@ -24,7 +22,7 @@ namespace Machete.Api.Controllers
         public IHttpActionResult Get()
         {
             var result = serv.getList()
-                .Select(a => map.Map<Domain.ReportDefinition, Web.ViewModel.Api.ReportDefinition>(a));
+                .Select(a => map.Map<Domain.ReportDefinition, ReportDefinition>(a));
 
             return Json( new { data = result } );
         }

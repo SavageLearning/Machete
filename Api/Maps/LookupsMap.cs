@@ -1,15 +1,16 @@
-﻿using System;
+﻿using Machete.Api.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Machete.Web.Maps
+namespace Machete.Api.Maps
 {
     public class LookupsMap : MacheteProfile
     {
         public LookupsMap()
         {
-            CreateMap<Domain.Lookup, ViewModel.Api.Lookup>();
+            CreateMap<Domain.Lookup, Lookup>();
         }
     }
 }

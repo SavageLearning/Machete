@@ -63,12 +63,6 @@ namespace Machete.Web
                 c.AddProfile<ActivitySigninProfile>();
                 c.AddProfile<EventProfile>();
                 c.AddProfile<ConfigProfile>();
-                // The API versions end in Maps. The MVC versions end in Profile.
-                c.AddProfile<ReportDefinitionsMap>();
-                c.AddProfile<EmployersMap>();
-                c.AddProfile<WorkOrdersMap>();
-                c.AddProfile<WorkAssignmentsMap>();
-                c.AddProfile<LookupsMap>();
             });
         }
 
