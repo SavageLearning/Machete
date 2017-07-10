@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using Machete.Api.ViewModel;
 using Machete.Service;
-using Machete.Web.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +10,6 @@ using System.Web.Http;
 
 namespace Machete.Api.Controllers
 {
-    [ElmahHandleError]
-    [Authorize]
     public class LookupsController : ApiController
     {
         private readonly ILookupService serv;
@@ -33,7 +31,7 @@ namespace Machete.Api.Controllers
         public IHttpActionResult Get(string category)
         {
             var result = serv.GetMany(w => w.category == category)
-                .Select(e => map.Map<Domain.Lookup, Web.ViewModel.Api.Lookup>(e))
+                .Select(e => map.Map<Domain.Lookup, Lookup>(e))
                 .AsEnumerable();
             return Json(new { data = result });
         }

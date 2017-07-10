@@ -6,7 +6,6 @@ using System.Web.Http;
 
 namespace Machete.Api.Controllers
 {
-    [Authorize]
     public class ReportsController : ApiController
     {
         private readonly IReportsV2Service serv;
@@ -18,7 +17,9 @@ namespace Machete.Api.Controllers
         }
 
         // GET api/<controller>
-        [Authorize(Roles = "Administrator, Manager")]
+        //[Authorize(Roles = "Administrator, Manager")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
+
         public IHttpActionResult Get()
         {
             var result = serv.getList()
@@ -26,7 +27,7 @@ namespace Machete.Api.Controllers
 
             return Json( new { data = result } );
         }
-        [Authorize(Roles = "Administrator, Manager")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
         public IHttpActionResult Get(string id)
         {
 
@@ -34,26 +35,26 @@ namespace Machete.Api.Controllers
             // TODO Use Automapper to return column deserialized
             return Json(new { data = result });
         }
-
-        [Authorize(Roles = "Administrator, Manager")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
         public IHttpActionResult Get(string id, DateTime? beginDate, DateTime? endDate)
         {
             return Get(id, beginDate, endDate, null);
         }
 
-        [Authorize(Roles = "Administrator, Manager")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
         public IHttpActionResult Get(string id, DateTime? beginDate)
         {
             return Get(id, beginDate, null, null);
         }
 
-        [Authorize(Roles = "Administrator, Manager")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
+
         public IHttpActionResult Get(string id, int? memberNumber)
         {
             return Get(id, null, null, memberNumber);
         }
 
-        [Authorize(Roles = "Administrator, Manager")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
         public IHttpActionResult Get(string id, DateTime? beginDate, DateTime? endDate, int? memberNumber)
         {
             var result = serv.getQuery(
@@ -67,19 +68,19 @@ namespace Machete.Api.Controllers
         }
 
         // POST api/values
-        [Authorize(Roles = "Administrator")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
         public void Post([FromBody]string value)
         {
         }
 
         // PUT api/values/5
-        [Authorize(Roles = "Administrator")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
         public void Put(int id, [FromBody]string value)
         {
         }
 
         // DELETE api/values/5
-        [Authorize(Roles = "Administrator")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
         public void Delete(int id)
         {
         }

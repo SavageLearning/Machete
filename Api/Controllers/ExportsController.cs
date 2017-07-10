@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Machete.Service;
 using Machete.Service.DTO;
-using Machete.Web.Helpers;
 using OfficeOpenXml;
 using System;
 using System.IO;
@@ -13,9 +12,6 @@ using System.Web.Http;
 
 namespace Machete.Api.Controllers
 {
-    [ElmahHandleError]
-    [Authorize]
-    [RoutePrefix("api/exports")]
     public class ExportsController : ApiController
     {
         private readonly IReportsV2Service serv;
@@ -26,8 +22,9 @@ namespace Machete.Api.Controllers
             this.map = map;
         }
 
-       //  GET api/<controller>
-        [Authorize(Roles = "Administrator, Manager")]
+        //  GET api/<controller>
+        // [Authorize(Roles = "Administrator, Manager")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
         public IHttpActionResult Get()
         {
             var tables = new string[] {
@@ -49,7 +46,8 @@ namespace Machete.Api.Controllers
 
             return Json(new { data = result });
         }
-        [Authorize(Roles = "Administrator, Manager")]
+        //[Authorize(Roles = "Administrator, Manager")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
         public IHttpActionResult Get(string id)
         {
 
@@ -58,7 +56,8 @@ namespace Machete.Api.Controllers
             return Json(new { data = result });
         }
 
-        [Authorize(Roles = "Administrator")]
+        //[Authorize(Roles = "Administrator")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
         // https://stackoverflow.com/questions/36274985/how-to-map-webapi-routes-correctly
         // http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api#restful
         // https://docs.microsoft.com/en-us/aspnet/web-api/overview/formats-and-model-binding/parameter-binding-in-aspnet-web-api
@@ -97,13 +96,15 @@ namespace Machete.Api.Controllers
         }
 
         // PUT api/values/5
-        [Authorize(Roles = "Administrator")]
+        //[Authorize(Roles = "Administrator")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
         public void Put(int id, [FromBody]string value)
         {
         }
 
         // DELETE api/values/5
-        [Authorize(Roles = "Administrator")]
+        //[Authorize(Roles = "Administrator")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
         public void Delete(int id)
         {
         }
