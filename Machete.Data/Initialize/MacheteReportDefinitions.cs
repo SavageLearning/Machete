@@ -714,7 +714,12 @@ from
 
 	JOIN dbo.Lookups Ls ON Acts.name = Ls.ID
 	JOIN dbo.ActivitySignins ASIs ON Acts.ID = ASIs.ActivityID
-	WHERE text_en LIKE 'English%'
+	WHERE 
+	(
+	  Ls.[key] = 'SomosVecinos' OR
+	  Ls.[key] = 'EnglishClass1' OR
+	  Ls.[key] = 'EnglishClass2' 
+	)
 	AND dateStart >= @beginDate AND dateend <= @enddate
 
 	GROUP BY dwccardnum
@@ -973,10 +978,19 @@ from
 		JOIN dbo.ActivitySignins ASIs ON Acts.ID = ASIs.ActivityID
 		JOIN dbo.Lookups Ls ON Acts.name = Ls.ID
 		WHERE dateStart >= @beginDate AND dateStart <= @enddate AND
-		(Ls.ID = 182 OR Ls.ID = 181 OR Ls.ID = 180
-		OR Ls.ID = 179 OR Ls.ID = 178 OR Ls.ID = 134
-		OR Ls.ID = 168 OR Ls.ID = 156 OR Ls.ID = 152
-		OR Ls.ID = 145 OR Ls.ID = 135 OR Ls.ID = 104)
+		(
+			Ls.[key] = 'Yardwork' OR
+			Ls.[key] = 'SafetyLaborRights' OR
+			Ls.[key] = 'RenewErgonomic' OR
+			Ls.[key] = 'Moving' OR
+			Ls.[key] = 'HomecareErgonomic' OR
+			Ls.[key] = 'GreenClean' OR
+			Ls.[key] = 'Gardening' OR
+			Ls.[key] = 'Ergonomic' OR
+			Ls.[key] = 'ElectricalHazards' OR
+			Ls.[key] = 'ChemicalHazards' OR
+			Ls.[key] = 'CaregiversClass'
+		)
 
 GROUP BY dwccardnum
 	) 
