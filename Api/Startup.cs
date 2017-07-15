@@ -3,6 +3,7 @@ using IdentityServer3.AccessTokenValidation;
 using Microsoft.Owin;
 using Microsoft.Owin.Cors;
 using Owin;
+using System.Configuration;
 using System.Web.Http;
 using System.Web.Http.Dependencies;
 using System.Web.Http.ExceptionHandling;
@@ -19,11 +20,11 @@ namespace Machete.Api
             // Wire token validation
             app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
             {
-                Authority = "https://localhost:44379/id",
+                Authority = ConfigurationManager.AppSettings["IdentityProvider"], 
 
                 // For access to the introspection endpoint
-                ClientId = "api",
-                ClientSecret = "api-secret",
+                ClientId = ConfigurationManager.AppSettings["IdentityClientId"],
+                ClientSecret = ConfigurationManager.AppSettings["IdentityClientSecret"],
 
                 RequiredScopes = new[] { "api" }
             });
