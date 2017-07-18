@@ -77,17 +77,25 @@ namespace Machete.Identity
                 RedirectUris = new List<string>
                 {
                     "http://localhost:4200/auth.html",
-                    // The new page is a valid redirect page after login
-                    "http://localhost:4200/silent-renewal.html"
+                    "http://localhost:4200/authorize",
+                    "http://localhost:4200/silent-renewal.html",
+                    "http://localhost:4200/silent-renewal",
+                    "http://localhost:4200/V2/auth.html",
+                    "http://localhost:4200/V2/authorize",
+                    "http://localhost:4200/V2/silent-renewal.html",
+                    "http://localhost:4200/V2/silent-renewal"
+
                 },
                 // Valid URLs after logging out
                 PostLogoutRedirectUris = new List<string>
                 {
-                    "http://localhost:4200/logout"
+                    "http://localhost:4200/logout",
+                    "http://localhost:4200/V2/logout"
                 },
                 AllowedCorsOrigins = new List<string>
                 {
-                    "http://localhost:4200"
+                    "http://localhost:4200",
+                    "http://localhost:4200/V2"
                 },
 
                 AllowAccessToAllScopes = true,
