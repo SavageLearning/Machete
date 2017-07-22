@@ -273,6 +273,7 @@
     <Compile Include="DTO\WorkerSigninList.cs" />
     <Compile Include="DTO\WorkOrderList.cs" />
     <Compile Include="EmailConfig.cs" />
+    <Compile Include="OnlineOrdersService.cs" />
     <Compile Include="ReportService.cs" />
     <Compile Include="EmailService.cs" />
     <Compile Include="EmployerService.cs" />

@@ -50,7 +50,6 @@ namespace Machete.Service
         private readonly IWorkerSigninRepository wsiRepo;
         private readonly IUnitOfWork unitOfWork;
         private readonly ILookupRepository lRepo;
-        private readonly ILookupCache lcache;
         private readonly IMapper map;
         //
         //
@@ -59,7 +58,6 @@ namespace Machete.Service
             IWorkerRepository wRepo, 
             ILookupRepository lRepo, 
             IWorkerSigninRepository wsiRepo,
-            ILookupCache lc,
             IUnitOfWork unitOfWork,
             IMapper map
             ) : base(waRepo, unitOfWork)
@@ -69,7 +67,6 @@ namespace Machete.Service
             this.wRepo = wRepo;
             this.lRepo = lRepo;
             this.wsiRepo = wsiRepo;
-            this.lcache = lc;
             this.map = map;
             this.logPrefix = "WorkAssignment";
         }
@@ -103,7 +100,7 @@ namespace Machete.Service
             if (o.dwccardnum > 0)
             {
                 var worker = wRepo.GetById((int)o.dwccardnum);
-                IndexViewBase.filterOnSkill(o, q, lcache, worker);
+                IndexViewBase.filterOnSkill(o, q, lRepo, worker);
             }
             //Sort the Persons based on column selection
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);

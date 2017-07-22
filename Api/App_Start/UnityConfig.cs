@@ -60,7 +60,9 @@ namespace Machete.Api
             .RegisterType<IWorkAssignmentService, WorkAssignmentService>(new HierarchicalLifetimeManager())
             .RegisterType<IImageService, ImageService>(new HierarchicalLifetimeManager())
             .RegisterType<IReportService, ReportService>(new HierarchicalLifetimeManager())
-            .RegisterType<IReportsV2Service, ReportsV2Service>(new HierarchicalLifetimeManager());
+            .RegisterType<IReportsV2Service, ReportsV2Service>(new HierarchicalLifetimeManager())
+            .RegisterType<IOnlineOrdersService, OnlineOrdersService>(new HierarchicalLifetimeManager())
+            ;
         }
     }
 }
