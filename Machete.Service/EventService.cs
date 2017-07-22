@@ -41,11 +41,11 @@ namespace Machete.Service
     public class EventService : ServiceBase<Event>, IEventService
     {
         private readonly IMapper map;
-        private readonly ILookupCache lc;
+        private readonly ILookupRepository lc;
         //
         public EventService(IEventRepository repo,
                             IUnitOfWork unitOfWork,
-                            ILookupCache lc,
+                            ILookupRepository lc,
                             IMapper map) 
                 : base(repo, unitOfWork)
         {
@@ -105,15 +105,15 @@ namespace Machete.Service
 
         public override Event Create(Event record, string user)
         {
-            record.eventTypeES = lc.textByID(record.eventTypeID, "ES");
-            record.eventTypeEN = lc.textByID(record.eventTypeID, "EN");
+            record.eventTypeES = lc.GetById(record.eventTypeID).text_ES;
+            record.eventTypeEN = lc.GetById(record.eventTypeID).text_EN;
             return base.Create(record, user);
         }
 
         public override void Save(Event record, string user)
         {
-            record.eventTypeES = lc.textByID(record.eventTypeID, "ES");
-            record.eventTypeEN = lc.textByID(record.eventTypeID, "EN");
+            record.eventTypeES = lc.GetById(record.eventTypeID).text_ES;
+            record.eventTypeEN = lc.GetById(record.eventTypeID).text_EN;
             base.Save(record, user);
         }
     }

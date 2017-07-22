@@ -41,11 +41,11 @@ namespace Machete.Service
     // Ïf I made a non-web app, would I still need the code? If yes, put in here.
     public class PersonService : ServiceBase<Person>, IPersonService
     {
-        private readonly ILookupCache lcache;
+        private readonly ILookupRepository lcache;
         private readonly IMapper map;
         public PersonService(IPersonRepository pRepo,
                              IUnitOfWork unitOfWork,
-                             ILookupCache _lcache,
+                             ILookupRepository _lcache,
                              IMapper map
                              ) : base(pRepo, unitOfWork)
         {
@@ -65,8 +65,22 @@ namespace Machete.Service
             if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
             if (o.showWorkers == true) IndexViewBase.getWorkers(o, ref q);
             if (o.showNotWorkers == true) IndexViewBase.getNotWorkers(o, ref q);
-            if (o.showExpiredWorkers == true) IndexViewBase.getExpiredWorkers(o, lcache.getByKeys(LCategory.memberstatus, LMemberStatus.Expired), ref q);
-            if (o.showSExWorkers == true) IndexViewBase.getSExWorkers(o, lcache.getByKeys(LCategory.memberstatus, LMemberStatus.Sanctioned), lcache.getByKeys(LCategory.memberstatus, LMemberStatus.Expelled), ref q);
+            if (o.showExpiredWorkers == true) {
+                IndexViewBase.getExpiredWorkers(o, 
+                    lcache.Get(s => s.category == LCategory.memberstatus && 
+                                    s.key == LMemberStatus.Expired
+                               ).ID,
+                    ref q);
+            }
+            if (o.showSExWorkers == true) {
+                IndexViewBase.getSExWorkers(o, 
+                    lcache.Get(s => s.category == LCategory.memberstatus &&
+                                    s.key == LMemberStatus.Sanctioned).ID, 
+                    lcache.Get(s => s.category == LCategory.memberstatus &&
+                                    s.key == LMemberStatus.Expelled).ID, 
+                    ref q);
+
+            }
             IndexViewBase.sortOnColName(o.sortColName, o.orderDescending, ref q);
 
             result.filteredCount = q.Count();

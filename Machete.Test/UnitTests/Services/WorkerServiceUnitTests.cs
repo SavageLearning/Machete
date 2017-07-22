@@ -44,7 +44,7 @@ namespace Machete.Test.Unit.Service
     {
         Mock<IWorkerRepository> _repo;
         Mock<IUnitOfWork> _uow;
-        Mock<ILookupCache> _lcache;
+        Mock<ILookupRepository> _lcache;
         WorkerService _serv;
         Mock<IWorkAssignmentRepository> _waRepo;
         Mock<IWorkOrderRepository> _woRepo;
@@ -102,7 +102,7 @@ namespace Machete.Test.Unit.Service
             _woRepo = new Mock<IWorkOrderRepository>();
             _pRepo = new Mock<IPersonRepository>();
             _map = new Mock<IMapper>();
-            _lcache = new Mock<ILookupCache>();
+            _lcache = new Mock<ILookupRepository>();
             _serv = new WorkerService(_repo.Object, _lcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object, _map.Object);
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.Workers)]
@@ -147,7 +147,7 @@ namespace Machete.Test.Unit.Service
             //Records._worker1.dateupdated = DateTime.MinValue;
             _repo.Setup(r => r.Add(_w)).Returns(_w);
             _pRepo.Setup(r => r.Get(It.IsAny<Func<Person, bool>>())).Returns(_p);
-            _lcache.Setup(r => r.getByID(_w.typeOfWorkID)).Returns(_l);
+            _lcache.Setup(r => r.GetById(_w.typeOfWorkID)).Returns(_l);
             //
             //Act
             var result = _serv.Create(_w, user);
@@ -170,7 +170,7 @@ namespace Machete.Test.Unit.Service
             _repo = new Mock<IWorkerRepository>();
             _uow = new Mock<IUnitOfWork>();
             _map = new Mock<IMapper>();
-            _lcache = new Mock<ILookupCache>();
+            _lcache = new Mock<ILookupRepository>();
             string user = "UnitTest";
             int id = 1;
             Worker dp = new Worker();
@@ -193,14 +193,14 @@ namespace Machete.Test.Unit.Service
             _repo = new Mock<IWorkerRepository>();
             _uow = new Mock<IUnitOfWork>();
             _map = new Mock<IMapper>();
-            _lcache = new Mock<ILookupCache>();
+            _lcache = new Mock<ILookupRepository>();
             Worker _w = (Worker)Records.worker.Clone();
             Lookup _l = (Lookup)Records.lookup.Clone();
             _w.Person = (Person)Records.person.Clone();
             _w.Person.datecreated = DateTime.MinValue;
             _w.Person.dateupdated = DateTime.MinValue;
             _repo.Setup(r => r.Add(_w)).Returns(_w);
-            _lcache.Setup(r => r.getByID(_w.typeOfWorkID)).Returns(_l);
+            _lcache.Setup(r => r.GetById(_w.typeOfWorkID)).Returns(_l);
             string user = "UnitTest";
             var _serv = new WorkerService(_repo.Object, _lcache.Object, _uow.Object, _waRepo.Object, _woRepo.Object, _pRepo.Object, _map.Object);
             //

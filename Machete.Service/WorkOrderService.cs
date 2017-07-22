@@ -55,7 +55,7 @@ namespace Machete.Service
     {
         private readonly IWorkAssignmentService waServ;
         private readonly IMapper map;
-        private readonly ILookupCache lc;
+        private readonly ILookupRepository lc;
         private readonly IConfigService cfg;
         /// <summary>
         /// Constructor
@@ -65,7 +65,7 @@ namespace Machete.Service
         /// <param name="uow">Unit of Work</param>
         public WorkOrderService(IWorkOrderRepository repo, 
                                 IWorkAssignmentService waServ,
-                                ILookupCache lc,
+                                ILookupRepository lc,
                                 IUnitOfWork uow,
                                 IMapper map,
                                 IConfigService cfg) : base(repo, uow)
@@ -229,10 +229,10 @@ namespace Machete.Service
         }
         private void updateComputedValues(ref WorkOrder record)
         {
-            record.statusES = lc.textByID(record.statusID, "ES");
-            record.statusEN = lc.textByID(record.statusID, "EN");
-            record.transportMethodEN = lc.textByID(record.transportMethodID, "EN");
-            record.transportMethodES = lc.textByID(record.transportMethodID, "ES");
+            record.statusES = lc.GetById(record.statusID).text_ES;
+            record.statusEN = lc.GetById(record.statusID).text_EN;
+            record.transportMethodEN = lc.GetById(record.transportMethodID).text_EN;
+            record.transportMethodES = lc.GetById(record.transportMethodID).text_ES;
         }
         public override void Save(WorkOrder workOrder, string user)
         {

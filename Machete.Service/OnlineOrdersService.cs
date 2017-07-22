@@ -24,7 +24,7 @@ namespace Machete.Service
 
         public OnlineOrdersService(
             //IEmployerService eServ,
-            //IWorkOrderService woServ,
+            IWorkOrderService woServ,
             IWorkAssignmentService waServ,
             IUnitOfWork uow, 
             IMapper map)

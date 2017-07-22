@@ -234,11 +234,11 @@ namespace Machete.Test
             // DEPENDENCIES
             if (_repoWO == null) AddRepoWorkOrder();
             if (_servWA == null) AddServWorkAssignment();
-            if (_lcache == null) AddLookupCache();
+            if (_repoL == null) AddRepoLookup();
             if (_uow == null) AddUOW();
             if (_map == null) AddMapper();
             if (_servC == null) AddServConfig();
-            _servWO = new WorkOrderService(_repoWO, _servWA, _lcache, _uow, _map, _servC);
+            _servWO = new WorkOrderService(_repoWO, _servWA, _repoL, _uow, _map, _servC);
             return this;
         }
 
@@ -319,10 +319,9 @@ namespace Machete.Test
             if (_repoW == null) AddRepoWorker();
             if (_repoL == null) AddRepoLookup();
             if (_repoWSI == null) AddRepoWorkerSignin();
-            if (_lcache == null) AddLookupCache();
             if (_uow == null) AddUOW();
             if (_map == null) AddMapper();
-            _servWA = new WorkAssignmentService(_repoWA, _repoW, _repoL, _repoWSI, _lcache, _uow, _map);
+            _servWA = new WorkAssignmentService(_repoWA, _repoW, _repoL, _repoWSI, _uow, _map);
             return this;
         }
 
@@ -463,10 +462,10 @@ namespace Machete.Test
             // DEPENDENCIES
             if (_repoP == null) AddRepoPerson();
             if (_uow == null) AddUOW();
-            if (_lcache == null) AddLookupCache();
+            if (_repoL == null) AddRepoLookup();
             if (_map == null) AddMapper();
 
-            _servP = new PersonService(_repoP, _uow, _lcache, _map);
+            _servP = new PersonService(_repoP, _uow, _repoL, _map);
             return this;
         }
 
@@ -539,8 +538,8 @@ namespace Machete.Test
 
             if (_uow == null) AddUOW();
             if (_map == null) AddMapper();
-            if (_lcache == null) AddLookupCache();
-            _servW = new WorkerService(_repoW, _lcache, _uow, _repoWA, _repoWO, _repoP, _map);
+            if (_repoL == null) AddRepoLookup();
+            _servW = new WorkerService(_repoW, _repoL, _uow, _repoWA, _repoWO, _repoP, _map);
             return this;
         }
 
@@ -936,9 +935,8 @@ namespace Machete.Test
             if (_repoWSI == null) AddRepoWorkerSignin();
             if (_repoWR == null) AddRepoWorkerRequest();
             if (_repoL == null) AddRepoLookup();
-            if (_lcache == null) AddRepoLookup();
             if (_repoAS == null) AddRepoActivitySignin();
-            _servR = new ReportService(_repoWO, _repoWA, _repoW, _repoWSI, _repoWR, _repoL, _lcache, _repoE, _repoAS);
+            _servR = new ReportService(_repoWO, _repoWA, _repoW, _repoWSI, _repoWR, _repoL, _repoE, _repoAS);
             return this;
         }
 
@@ -1085,9 +1083,9 @@ namespace Machete.Test
             // DEPENDENCIES
             if (_repoEV == null) AddRepoEvent();
             if (_map == null) AddMapper();
-            if (_lcache == null) AddLookupCache();
+            if (_repoL == null) AddRepoLookup();
             if (_uow == null) AddUOW();
-            _servEV = new EventService(_repoEV, _uow, _lcache, _map);
+            _servEV = new EventService(_repoEV, _uow, _repoL, _map);
             return this;
         }
 

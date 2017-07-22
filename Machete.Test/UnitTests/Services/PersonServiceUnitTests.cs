@@ -41,7 +41,7 @@ namespace Machete.Test.Unit.Service
     {
         Mock<IPersonRepository> _repo;
         Mock<IUnitOfWork> _uow;
-        Mock<ILookupCache> _lcache;
+        Mock<ILookupRepository> _lcache;
         Mock<IMapper> _map;
         PersonService _serv;
         public PersonTests()
@@ -93,7 +93,7 @@ namespace Machete.Test.Unit.Service
         {
             _repo = new Mock<IPersonRepository>();
             _uow = new Mock<IUnitOfWork>();
-            _lcache = new Mock<ILookupCache>();
+            _lcache = new Mock<ILookupRepository>();
             _map = new Mock<IMapper>();
             _serv = new PersonService(_repo.Object, _uow.Object, _lcache.Object, _map.Object);
         }
@@ -151,7 +151,7 @@ namespace Machete.Test.Unit.Service
             Person _p = (Person)Records.person.Clone();
             _repo = new Mock<IPersonRepository>();
             _uow = new Mock<IUnitOfWork>();
-            _lcache = new Mock<ILookupCache>();
+            _lcache = new Mock<ILookupRepository>();
             string user = "UnitTest";
             int id = 1;
             Person dp = new Person();
@@ -174,7 +174,7 @@ namespace Machete.Test.Unit.Service
             Person _p = (Person)Records.person.Clone();
             _repo = new Mock<IPersonRepository>();
             _uow = new Mock<IUnitOfWork>();
-            _lcache = new Mock<ILookupCache>();
+            _lcache = new Mock<ILookupRepository>();
             _map = new Mock<IMapper>();
             string user = "UnitTest";
             _p.datecreated = DateTime.MinValue;

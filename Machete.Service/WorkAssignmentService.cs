@@ -414,8 +414,8 @@ namespace Machete.Service
 
         private void updateComputedValues(ref WorkAssignment record)
         {
-            record.skillEN = lcache.textByID(record.skillID, "EN");
-            record.skillES = lcache.textByID(record.skillID, "ES");
+            record.skillEN = lRepo.GetById(record.skillID).text_EN;
+            record.skillES = lRepo.GetById(record.skillID).text_ES;
             record.minEarnings = (record.days * record.surcharge) + (record.hourlyWage * record.hours * record.days);
             record.maxEarnings = record.hourRange == null ? 0 : (record.days * record.surcharge) + (record.hourlyWage * (int)record.hourRange * record.days);
             record.fullWAID = System.String.Format("{0,5:D5}-{1,2:D2}",

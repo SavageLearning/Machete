@@ -28,7 +28,6 @@ namespace Machete.Service
         protected readonly IWorkerSigninRepository wsiRepo;
         protected readonly IWorkerRequestRepository wrRepo;
         protected readonly ILookupRepository lookRepo;
-        protected readonly ILookupCache lookCache;
         protected readonly IEmployerRepository eRepo;
         protected readonly IActivitySigninRepository asRepo;
 
@@ -38,7 +37,6 @@ namespace Machete.Service
                              IWorkerSigninRepository wsiRepo,
                              IWorkerRequestRepository wrRepo,
                              ILookupRepository lookRepo,
-                             ILookupCache lookCache,
                              IEmployerRepository eRepo,
                              IActivitySigninRepository asRepo)
         {
@@ -48,7 +46,6 @@ namespace Machete.Service
             this.wsiRepo = wsiRepo;
             this.wrRepo = wrRepo;
             this.lookRepo = lookRepo;
-            this.lookCache = lookCache;
             this.eRepo = eRepo;
             this.asRepo = asRepo;
         }
@@ -176,8 +173,8 @@ namespace Machete.Service
 
             var waQ = waRepo.GetAllQ();
             var wrQ = wrRepo.GetAllQ();
-            var loD = lookCache.getByKeys("worktype", "DWC");
-            var loH = lookCache.getByKeys("worktype", "HHH");
+            var loD = lookRepo.Get(s => s.category == "worktype" && s.key == "DWC").ID;
+            var loH = lookRepo.Get(s => s.category == "worktype" && s.key == "HHH").ID;
 
 
             query = waQ

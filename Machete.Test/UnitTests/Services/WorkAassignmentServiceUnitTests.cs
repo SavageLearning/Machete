@@ -106,7 +106,7 @@ namespace Machete.Test.Unit.Service
             wrRepo = new Mock<IWorkerRequestRepository>();
             lcache = new Mock<ILookupCache>();
             _map = new Mock<IMapper>();
-            waServ = new WorkAssignmentService(waRepo.Object, wRepo.Object, lRepo.Object, wsiRepo.Object, lcache.Object, uow.Object, _map.Object);
+            waServ = new WorkAssignmentService(waRepo.Object, wRepo.Object, lRepo.Object, wsiRepo.Object, uow.Object, _map.Object);
             
         }
         [TestMethod, TestCategory(TC.UT), TestCategory(TC.Service), TestCategory(TC.WAs)]
