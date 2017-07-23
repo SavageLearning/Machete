@@ -25,6 +25,8 @@ namespace Machete.Api.Controllers
             this.map = map;
         }
         // GET api/values
+        // TODO Add real permissions
+        //[ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
         public IHttpActionResult Get()
         {
             var vo = new viewOptions();
@@ -41,8 +43,16 @@ namespace Machete.Api.Controllers
         // GET api/values/5
         public IHttpActionResult Get(int id)
         {
-            var m = map.Map<Domain.Employer, Employer>(serv.Get(id));
-            return Ok(m);
+            var result = map.Map<Domain.Employer, Employer>(serv.Get(id));
+            return Json(new { data = result });
+        }
+
+        // TODO: If employer/hirer, only get my own employer record
+        public IHttpActionResult Get(string sub)
+        {
+
+            var result = map.Map<Domain.Employer, Employer>(serv.Get(sub));
+            return Json(new { data = result });
         }
 
         // POST api/values
