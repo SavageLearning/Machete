@@ -11,6 +11,9 @@ namespace Machete.Service
 {
     public interface IOnlineOrdersService
     {
+        //WorkOrder Get(int id);
+        IEnumerable<WorkOrder> GetAll();
+        IEnumerable<WorkOrder> GetMany(Func<WorkOrder, bool> where);
         string Create(WorkOrder order);
     }
 
@@ -23,17 +26,27 @@ namespace Machete.Service
         protected readonly IUnitOfWork uow;
 
         public OnlineOrdersService(
-            //IEmployerService eServ,
+            IEmployerService eServ,
             IWorkOrderService woServ,
             IWorkAssignmentService waServ,
             IUnitOfWork uow, 
             IMapper map)
         {
             this.map = map;
-            //this.eserv = eServ;
-            //this.woserv = woServ;
-            //this.waserv = waServ;
-            //this.uow = uow;
+            this.eserv = eServ;
+            this.woserv = woServ;
+            this.waserv = waServ;
+            this.uow = uow;
+        }
+
+        public IEnumerable<WorkOrder> GetAll()
+        {
+            return woserv.GetAll();
+        }
+
+        public IEnumerable<WorkOrder> GetMany(Func<WorkOrder, bool> where)
+        {
+            return woserv.GetMany(where);
         }
 
         public string Create(WorkOrder order)

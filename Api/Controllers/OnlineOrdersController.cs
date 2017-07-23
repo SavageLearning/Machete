@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using Machete.Api.ViewModel;
 using Machete.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Web.Http;
 
 namespace Machete.Api.Controllers
@@ -12,17 +14,22 @@ namespace Machete.Api.Controllers
     [AllowAnonymous]
     public class OnlineOrdersController : ApiController
     {
-        private readonly IWorkOrderService serv;
+        private readonly IOnlineOrdersService serv;
         private readonly IMapper map;
         public OnlineOrdersController(IOnlineOrdersService serv, IMapper map)
         {
-           // this.serv = serv;
+            this.serv = serv;
             this.map = map;
         }
         // GET: api/OnlineOrders
-        public IEnumerable<string> Get()
+        public IHttpActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            var principal = RequestContext.Principal as ClaimsPrincipal;
+            var user = principal.FindFirst(CAType.nameidentifier).Value;
+            var result = serv.GetMany(a => a.Employer.onlineSigninID == user)
+                .Select(a => map.Map<Domain.WorkOrder, WorkOrder>(a));
+
+            return Json(new { data = result });
         }
 
         // GET: api/OnlineOrders/5
