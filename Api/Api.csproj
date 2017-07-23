@@ -204,6 +204,7 @@
     <Compile Include="Controllers\LookupsController.cs" />
     <Compile Include="Controllers\OnlineOrdersController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
+    <Compile Include="Controllers\WorkOrdersController.cs" />
     <Compile Include="Maps\EmployersMap.cs" />
     <Compile Include="Maps\LookupsMap.cs" />
     <Compile Include="Maps\MacheteProfile.cs" />

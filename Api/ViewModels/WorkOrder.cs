@@ -21,8 +21,6 @@ namespace Machete.Api.ViewModel
         public DateTime dateTimeofWork { get; set; }
         public string description { get; set; }
         public bool? disclosureAgreement { get; set; }
-        //public ICollection<Email> Emails { get; set; }
-        //public Employer Employer { get; set; }
         public int EmployerID { get; set; }
         public bool englishRequired { get; set; }
         public string englishRequiredNote { get; set; }
@@ -51,8 +49,6 @@ namespace Machete.Api.ViewModel
         public int? transportTransactType { get; set; }
         public int typeOfWorkID { get; set; }
         public int waPseudoIDCounter { get; set; }
-        //public ICollection<WorkAssignment> workAssignments { get; set; }
-        //public ICollection<WorkerRequest> workerRequests { get; set; }
         public string workSiteAddress1 { get; set; }
         public string workSiteAddress2 { get; set; }
         public string zipcode { get; set; }

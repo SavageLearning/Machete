@@ -63,6 +63,8 @@ namespace Machete.Web
                 c.AddProfile<ActivitySigninProfile>();
                 c.AddProfile<EventProfile>();
                 c.AddProfile<ConfigProfile>();
+                c.AddProfile<Service.WorkOrderMap>();
+
             });
         }
 

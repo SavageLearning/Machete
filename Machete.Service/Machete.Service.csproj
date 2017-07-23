@@ -273,6 +273,7 @@
     <Compile Include="DTO\WorkerSigninList.cs" />
     <Compile Include="DTO\WorkOrderList.cs" />
     <Compile Include="EmailConfig.cs" />
+    <Compile Include="Maps\WorkOrderProfile.cs" />
     <Compile Include="OnlineOrdersService.cs" />
     <Compile Include="ReportService.cs" />
     <Compile Include="EmailService.cs" />
@@ -310,9 +311,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Maps\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

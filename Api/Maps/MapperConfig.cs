@@ -20,6 +20,7 @@ namespace Machete.Api
                 c.AddProfile<ReportDefinitionsMap>();
                 c.AddProfile<WorkAssignmentsMap>();
                 c.AddProfile<WorkOrdersMap>();
+                c.AddProfile<Service.WorkOrderMap>();
             });
         }
         public IMapper getMapper()
