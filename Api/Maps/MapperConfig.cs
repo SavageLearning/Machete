@@ -21,6 +21,7 @@ namespace Machete.Api
                 c.AddProfile<WorkAssignmentsMap>();
                 c.AddProfile<WorkOrdersMap>();
                 c.AddProfile<Service.WorkOrderMap>();
+                c.AddProfile<Service.EmployersMap>();
             });
         }
         public IMapper getMapper()

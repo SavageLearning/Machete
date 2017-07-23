@@ -1,31 +1,28 @@
 ﻿using AutoMapper;
-using Machete.Domain;
+using Machete.Api.ViewModel;
 using Machete.Service;
 using DTO = Machete.Service.DTO;
-using Machete.Web.Helpers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 
 namespace Machete.Api.Controllers
 {
-    [ElmahHandleError]
-    [Authorize]
-    public class EmployersController : ApiController
+    [AllowAnonymous]
+    public class EmployersController : MacheteApiController
     {
         private readonly IEmployerService serv;
         private readonly IWorkOrderService woServ;
         private readonly IMapper map;
-        private readonly IDefaults def;
 
-        public EmployersController(IEmployerService employerService, IWorkOrderService workorderService,
-            IDefaults def,
+        public EmployersController(
+            IEmployerService employerService, 
+            IWorkOrderService workorderService,
             IMapper map)
         {
             this.serv = employerService;
             this.woServ = workorderService;
             this.map = map;
-            this.def = def;
         }
         // GET api/values
         public IHttpActionResult Get()
@@ -36,7 +33,7 @@ namespace Machete.Api.Controllers
             dataTableResult<DTO.EmployersList> list = serv.GetIndexView(vo);
             var result = list.query
                 .Select(
-                    e => map.Map<DTO.EmployersList, Web.ViewModel.Api.Employer>(e)
+                    e => map.Map<DTO.EmployersList, Employer>(e)
                 ).AsEnumerable();
             return Json(new { data =  result });
         }
@@ -44,7 +41,7 @@ namespace Machete.Api.Controllers
         // GET api/values/5
         public IHttpActionResult Get(int id)
         {
-            var m = map.Map<Domain.Employer, Web.ViewModel.Api.Employer>(serv.Get(id));
+            var m = map.Map<Domain.Employer, Employer>(serv.Get(id));
             return Ok(m);
         }
 

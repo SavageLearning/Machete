@@ -6,7 +6,7 @@ using System.Web.Http;
 
 namespace Machete.Api.Controllers
 {
-    public class ReportsController : ApiController
+    public class ReportsController : MacheteApiController
     {
         private readonly IReportsV2Service serv;
         private readonly IMapper map;

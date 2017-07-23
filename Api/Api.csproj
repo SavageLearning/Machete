@@ -200,6 +200,7 @@
     <Compile Include="ClaimsAuthorizationAttribute.cs" />
     <Compile Include="ClaimsAuthorizationTypes.cs" />
     <Compile Include="Controllers\ConfigsController.cs" />
+    <Compile Include="Controllers\EmployersController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\ExportsController.cs" />
     <Compile Include="Controllers\LookupsController.cs" />

@@ -30,16 +30,6 @@ namespace Machete.Web.Maps
                 ;
             //
             //
-            CreateMap<Domain.WorkOrder, Service.DTO.WorkOrdersList>()
-                .ForMember(v => v.WAcount,              opt => opt.MapFrom(d => d.workAssignments.Count()))
-                .ForMember(v => v.WAUnassignedCount,    opt => opt.MapFrom(d => d.workAssignments.Count(wa => wa.workerAssignedID == null)))
-                .ForMember(v => v.WAOrphanedCount,      opt => opt.MapFrom(d => d.workAssignments.Count(wa => wa.workerAssignedID != null && wa.workerSigninID == null)))
-                .ForMember(v => v.emailSentCount,       opt => opt.MapFrom(d => d.Emails.Where(e => e.statusID == Domain.Email.iSent || e.statusID == Domain.Email.iReadyToSend).Count()))
-                .ForMember(v => v.emailErrorCount,      opt => opt.MapFrom(d => d.Emails.Where(e => e.statusID == Domain.Email.iTransmitError).Count()))
-                .ForMember(v => v.workers,              opt => opt.MapFrom(d => d.workAssignments.Where(wa => wa.workerAssigned != null )))
-            ;
-            //
-            //
             CreateMap<Service.DTO.WorkOrdersList, ViewModel.WorkOrdersList>()
                 .ForMember(v => v.tabref,            opt => opt.MapFrom(d => "/WorkOrder/Edit/" + Convert.ToString(d.ID)))
                 .ForMember(v => v.tablabel,          opt => opt.MapFrom(d =>
@@ -55,15 +45,6 @@ namespace Machete.Web.Maps
                 .ForMember(v => v.displayState,      opt => opt.MapFrom(d => computeOrderStatus(d)))
                 .ForMember(v => v.recordid, opt => opt.MapFrom(d => d.ID.ToString()))
                 ;
-            //
-            //
-            //
-            CreateMap<Domain.WorkAssignment, DTO.WorkerAssignedList>()
-                .ForMember(v => v.WID, opt => opt.MapFrom(d => d.workerAssigned.dwccardnum))
-                .ForMember(v => v.name, opt => opt.MapFrom(d => d.workerAssigned.Person.fullName))
-                .ForMember(v => v.wage, opt => opt.MapFrom(d => d.hourlyWage))
-                ;
-
             CreateMap<DTO.WorkerAssignedList, ViewModel.WorkerAssignedList>()
                 .ForMember(v => v.skill, opt => opt.MapFrom(d => getCI() == "ES" ? d.skillES : d.skillEN))
                 ;

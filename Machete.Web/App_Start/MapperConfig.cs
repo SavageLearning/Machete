@@ -64,6 +64,7 @@ namespace Machete.Web
                 c.AddProfile<EventProfile>();
                 c.AddProfile<ConfigProfile>();
                 c.AddProfile<Service.WorkOrderMap>();
+                c.AddProfile<Service.EmployersMap>();
 
             });
         }
