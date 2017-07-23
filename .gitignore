@@ -91,6 +91,7 @@ Machete.Test/BeanShell Sampler.jmx
 
 #SSRS
 *.connectionString
+*/node_modules/*
 
 #bundler
 Machete.Web/Content/bundles/

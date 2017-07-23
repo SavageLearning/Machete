@@ -1,11 +1,11 @@
-declare @startDate DateTime = '4/16/2017 11:41:11 AM';
-declare @endDate DateTime = '5/16/2017 11:41:11 AM';
+declare @beginDate DateTime = '1/1/2016';
+declare @endDate DateTime = '1/1/2017';
 
-with demos_esl(id, [Member ID], [minutes], [12 hr completion], [24+ hr completion])
+with demos_esl(id, [Member ID], [ClassMinutes], [12 hr completion], [24+ hr completion])
 as
 (
 	select 
-		convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + convert(varchar(10), min(member)) as id,	
+		convert(varchar(24), @begindate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-' + convert(varchar(10), min(member)) as id,	
 		cast(member as varchar) as [Member ID], 
 		sum(minutes) as [Total minutes],
 		min([12hrTier]) as [12 hr completion],
@@ -14,7 +14,7 @@ as
 	(
 		SELECT COUNT(Acts.ID) as ActID,
 		dwccardnum as Member,
-		'English Class' as ClassName,
+		--'English Class' as ClassName,
 		SUM ( DATEDIFF( minute, dateStart, dateEnd )) as Minutes,
 		CASE WHEN SUM ( DATEDIFF ( minute, dateStart, dateEnd )) >= 1440 THEN 1
 		ELSE 0
@@ -26,8 +26,13 @@ as
 
 		JOIN dbo.Lookups Ls ON Acts.name = Ls.ID
 		JOIN dbo.ActivitySignins ASIs ON Acts.ID = ASIs.ActivityID
-		WHERE text_en LIKE 'English%'
-		AND dateStart >= @startDate AND dateend <= @enddate
+		WHERE 
+			(
+	  Ls.[key] = 'SomosVecinos' OR
+	  Ls.[key] = 'EnglishClass1' OR
+	  Ls.[key] = 'EnglishClass2' 
+	)
+		AND dateStart >= @begindate AND dateend <= @enddate
 
 		GROUP BY dwccardnum
 	) as foo 
@@ -36,9 +41,9 @@ as
 select * from demos_esl
 union 
 select 
-	convert(varchar(24), @startDate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-TOTAL' as id,	
+	convert(varchar(24), @begindate, 126) + '-' + convert(varchar(23), @endDate, 126) + '-TOTAL' as id,	
 	'Totals: ' + convert(varchar(5), count(*)) as [Member ID],
-	sum([minutes]) as [minutes],
+	sum([ClassMinutes]) as [ClassMinutes],
 	sum([12 hr completion]),
 	sum([24+ hr completion])
 from demos_esl
