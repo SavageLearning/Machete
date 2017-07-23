@@ -358,6 +358,11 @@ namespace Machete.Service
                                 p.updatedby.Contains(o.sSearch));
             }
         }
+        public static void filterEmployerByGuid(viewOptions o, ref IQueryable<WorkOrder> q)
+        {
+            q = q.Where(p => p.Employer.onlineSigninID.Equals((string)o.employerGuid)); //EmployerID for WorkOrderIndex view
+        }
+
         public static void filterEmployer(viewOptions o, ref IQueryable<WorkOrder> q)
         {
             q = q.Where(p => p.EmployerID.Equals((int)o.EmployerID)); //EmployerID for WorkOrderIndex view

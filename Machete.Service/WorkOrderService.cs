@@ -154,6 +154,7 @@ namespace Machete.Service
             IQueryable<WorkOrder> q = repo.GetAllQ();
             //
             if (o.EmployerID != null) IndexViewBase.filterEmployer(o, ref q);
+            if (o.employerGuid != null) IndexViewBase.filterEmployerByGuid(o, ref q);
             if (o.status != null) IndexViewBase.filterStatus(o, ref q);
             if (o.onlineSource == true) IndexViewBase.filterOnlineSource(o, ref q);
             if (!string.IsNullOrEmpty(o.sSearch)) IndexViewBase.search(o, ref q);
