@@ -88,5 +88,10 @@ Machete.Test/randomized_names.csv
 Machete.Test/randomized_nums.csv
 Machete.Test/BeanShell Sampler.jmx
 .vscode/
+
+#SSRS
+*.connectionString
 */node_modules/*
 
+#bundler
+Machete.Web/Content/bundles/

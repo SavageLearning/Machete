@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SharedDataSet xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition">
+  <DataSet Name="">
+    <Query>
+      <DataSourceReference>AzureSQL</DataSourceReference>
+      <CommandText>SELECT m.ConnectionString FROM dbo.MacheteConMapping  m WHERE m.UserLogin = '';</CommandText>
+	  <!-- The username has been removed from this document -->
+    </Query>
+    <Fields>
+      <Field Name="ConnectionString">
+        <DataField>ConnectionString</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+    </Fields>
+  </DataSet>
+</SharedDataSet>

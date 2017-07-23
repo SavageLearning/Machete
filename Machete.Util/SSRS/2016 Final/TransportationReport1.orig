@@ -1,0 +1,68 @@
+  <DataSets>
+    <DataSet Name="transRepQuery">
+      <Query>
+        <DataSourceName>AzureSQLDatabase</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@beginning">
+            <Value>=Parameters!beginning.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ending">
+            <Value>=Parameters!ending.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>declare @startDate as datetime = @beginning
+declare @endDate as datetime = @ending
+
+select
+   WOs.dateTimeofWork AS ttime,
+   WOs.paperOrderNum as wonum,
+   text_EN as type,
+   name as empName,
+   COUNT(COALESCE(firstname1,'') + ' ' + COALESCE(firstname2,'') + ' ' + COALESCE(lastname1,'') + ' ' + COALESCE(lastname2,'')) as wkName,
+   transportFee as transFee,
+   transportFeeExtra as exFee
+from dbo.Lookups Ls
+join dbo.WorkOrders WOs on Ls.ID = WOs.transportMethodID
+join dbo.Employers Es on WOs.EmployerID = Es.ID
+join dbo.WorkAssignments WAs on WOs.ID = WAs.workOrderID
+join dbo.Persons Ps on WAs.workerAssignedID = Ps.ID
+where category like 'transportmethod' 
+	and (transportFee + transportFeeExtra) &gt; 0
+    and WOs.dateTimeofWork &gt; @startDate
+	and WOs.dateTimeofWork &lt; @endDate
+	and WAs.workerAssignedID IS NOT NULL
+group by WOs.dateTimeofWork, WOs.paperOrderNum, text_EN, name, transportFee, transportFeeExtra</CommandText>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="ttime">
+          <DataField>ttime</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="type">
+          <DataField>type</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="wonum">
+          <DataField>wonum</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="empName">
+          <DataField>empName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="wkName">
+          <DataField>wkName</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="transFee">
+          <DataField>transFee</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="exFee">
+          <DataField>exFee</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+  </DataSets>
