@@ -10,7 +10,6 @@ using System.Security.Claims;
 
 namespace Machete.Api.Controllers
 {
-    [AllowAnonymous]
     public class WorkOrdersController : MacheteApiController
     {
         private readonly IWorkOrderService serv;
@@ -26,8 +25,9 @@ namespace Machete.Api.Controllers
             this.map = map;
         }
 
-        
+
         // GET api/values
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
         public IHttpActionResult Get()
         {
             var vo = new viewOptions();
@@ -43,6 +43,7 @@ namespace Machete.Api.Controllers
         }
 
         // GET api/values/5
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
         public IHttpActionResult Get(int id)
         {
             var result = map.Map<Domain.WorkOrder, WorkOrder>(serv.Get(id));
@@ -50,16 +51,25 @@ namespace Machete.Api.Controllers
         }
 
         // POST api/values
-        public void Post([FromBody]string value)
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
+        public void Post([FromBody]WorkOrder order)
         {
+            var domain = map.Map<WorkOrder, Domain.WorkOrder>(order);
+            serv.Save(domain, User.Identity.Name);
         }
 
         // PUT api/values/5
-        public void Put(int id, [FromBody]string value)
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
+        public void Put(int id, [FromBody]WorkOrder order)
         {
+            var domain = serv.Get(order.id);
+            // TODO employers must only be able to edit their record
+            map.Map<WorkOrder, Domain.WorkOrder>(order, domain);
+            serv.Save(domain, User.Identity.Name);
         }
 
         // DELETE api/values/5
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
         public void Delete(int id)
         {
         }

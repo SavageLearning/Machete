@@ -10,7 +10,7 @@ namespace Machete.Api.ViewModel
         public string createdby { get; set; }
         public DateTime datecreated { get; set; }
         public DateTime dateupdated { get; set; }
-        public int ID { get; set; }
+        public int id { get; set; }
         public string idPrefix { get; }
         public string idString { get; set; }
         public string updatedby { get; set; }

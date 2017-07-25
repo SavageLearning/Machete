@@ -11,7 +11,6 @@ using System.Web.Http;
 
 namespace Machete.Api.Controllers
 {
-    [AllowAnonymous]
     public class OnlineOrdersController : ApiController
     {
         private readonly IOnlineOrdersService serv;
@@ -22,6 +21,8 @@ namespace Machete.Api.Controllers
             this.map = map;
         }
         // GET: api/OnlineOrders
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
+
         public IHttpActionResult Get()
         {
             var principal = RequestContext.Principal as ClaimsPrincipal;
@@ -33,24 +34,18 @@ namespace Machete.Api.Controllers
         }
 
         // GET: api/OnlineOrders/5
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
+
         public string Get(int id)
         {
             return "value";
         }
 
         // POST: api/OnlineOrders
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
         public void Post([FromBody]string value)
         {
         }
 
-        // PUT: api/OnlineOrders/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE: api/OnlineOrders/5
-        public void Delete(int id)
-        {
-        }
     }
 }
