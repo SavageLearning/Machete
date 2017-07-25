@@ -8,7 +8,6 @@ using System.Web.Http;
 
 namespace Machete.Api.Controllers
 {
-    [AllowAnonymous]
     public class EmployersController : MacheteApiController
     {
         private readonly IEmployerService serv;
@@ -26,7 +25,7 @@ namespace Machete.Api.Controllers
         }
         // GET api/values
         // TODO Add real permissions
-        //[ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
         public IHttpActionResult Get()
         {
             var vo = new viewOptions();
@@ -41,6 +40,7 @@ namespace Machete.Api.Controllers
         }
 
         // GET api/values/5
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
         public IHttpActionResult Get(int id)
         {
             var result = map.Map<Domain.Employer, Employer>(serv.Get(id));
@@ -48,6 +48,7 @@ namespace Machete.Api.Controllers
         }
 
         // TODO: If employer/hirer, only get my own employer record
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
         public IHttpActionResult Get(string sub)
         {
 
@@ -56,16 +57,25 @@ namespace Machete.Api.Controllers
         }
 
         // POST api/values
-        public void Post([FromBody]string value)
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
+        public void Post([FromBody]Employer employer)
         {
+            var domain = map.Map<Employer, Domain.Employer>(employer);
+            serv.Save(domain, User.Identity.Name);
         }
 
         // PUT api/values/5
-        public void Put(int id, [FromBody]string value)
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
+        public void Put(int id, [FromBody]Employer employer)
         {
+            var domain = serv.Get(employer.id);
+            // TODO employers must only be able to edit their record
+            map.Map<Employer, Domain.Employer>(employer, domain);
+            serv.Save(domain, User.Identity.Name);
         }
 
         // DELETE api/values/5
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
         public void Delete(int id)
         {
         }
