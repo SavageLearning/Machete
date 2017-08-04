@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace Machete.Web.Controllers
 {
-    [Authorize]
+    [AllowAnonymous]
     public class V2Controller : Controller
     {
         // GET: V2

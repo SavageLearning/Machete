@@ -432,16 +432,6 @@
     <Content Include="Content\back_enabled_hover.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\bundles\0.chunk.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\bundles\1.chunk.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\bundles\2.chunk.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\bundles\3.chunk.js" />
     <Content Include="Content\bundles\assets\layout\css\layout-dark-blue.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -791,12 +781,6 @@
     <Content Include="Scripts\jquery.lightbox-0.5.js" />
     <Content Include="Scripts\jquery.macheteUI-0.1.js" />
     <Content Include="Scripts\jquery.ui.datepicker.js" />
-    <Content Include="Content\bundles\0.chunk.js.map">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\bundles\1.chunk.js.map">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Content\bundles\assets\layout\css\layout-dark-blue.scss">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -920,10 +904,6 @@
     <Content Include="Content\bundles\scripts.bundle.js.map">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\bundles\2.chunk.js.map">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\bundles\3.chunk.js.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
