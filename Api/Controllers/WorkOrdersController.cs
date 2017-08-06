@@ -33,7 +33,7 @@ namespace Machete.Api.Controllers
             var vo = new viewOptions();
             vo.displayLength = 10;
             vo.displayStart = 0;
-            vo.employerGuid = subjectFromUser();
+            vo.employerGuid = userSubject;
             dataTableResult<DTO.WorkOrdersList> list = serv.GetIndexView(vo);
             var result = list.query
                 .Select(

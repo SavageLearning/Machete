@@ -14,7 +14,7 @@ namespace Machete.Service
         //WorkOrder Get(int id);
         IEnumerable<WorkOrder> GetAll();
         IEnumerable<WorkOrder> GetMany(Func<WorkOrder, bool> where);
-        string Create(WorkOrder order);
+        WorkOrder Create(WorkOrder order, string user);
     }
 
     public class OnlineOrdersService : IOnlineOrdersService
@@ -49,9 +49,9 @@ namespace Machete.Service
             return woserv.GetMany(where);
         }
 
-        public string Create(WorkOrder order)
+        public WorkOrder Create(WorkOrder order, string user)
         {
-            return "result";
+            return woserv.Create(order, user);
         }
     }
 }

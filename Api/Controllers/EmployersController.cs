@@ -5,6 +5,7 @@ using DTO = Machete.Service.DTO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Http.Controllers;
 
 namespace Machete.Api.Controllers
 {
@@ -23,6 +24,7 @@ namespace Machete.Api.Controllers
             this.woServ = workorderService;
             this.map = map;
         }
+
         // GET api/values
         // TODO Add real permissions
         [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]

@@ -104,6 +104,62 @@ namespace Machete.Identity
             new Client
             {
                 Enabled = true,
+                ClientName = "Machete UI (local-embedded)",
+                ClientId = "machete-ui-local-embedded",
+                Flow = Flows.Implicit,
+                RequireConsent = false,
+                RedirectUris = new List<string>
+                {
+                    "http://localhost:4213/V2/auth.html",
+                    "http://localhost:4213/V2/authorize",
+                    "http://localhost:4213/V2/silent-renewal.html",
+                    "http://localhost:4213/V2/silent-renewal"
+
+                },
+                // Valid URLs after logging out
+                PostLogoutRedirectUris = new List<string>
+                {
+                    "http://localhost:4213/V2/logout"
+                },
+                AllowedCorsOrigins = new List<string>
+                {
+                    "http://localhost:4213/V2"
+                },
+
+                AllowAccessToAllScopes = true,
+                AccessTokenLifetime = 3600
+            },
+            new Client
+            {
+                Enabled = true,
+                ClientName = "Machete UI (cloud-test)",
+                ClientId = "machete-ui-cloud-test",
+                Flow = Flows.Implicit,
+                RequireConsent = false,
+                RedirectUris = new List<string>
+                {
+                    "https://test.machetessl.org/V2/auth.html",
+                    "https://test.machetessl.org/V2/authorize",
+                    "https://test.machetessl.org/V2/silent-renewal.html",
+                    "https://test.machetessl.org/V2/silent-renewal"
+
+                },
+                // Valid URLs after logging out
+                PostLogoutRedirectUris = new List<string>
+                {
+                    "https://test.machetessl.org/V2/logout"
+                },
+                AllowedCorsOrigins = new List<string>
+                {
+                    "https://test.machetessl.org/V2"
+                },
+
+                AllowAccessToAllScopes = true,
+                AccessTokenLifetime = 3600
+            },
+            new Client
+            {
+                Enabled = true,
                 ClientName = "postman",
                 ClientId = "postman",
                 ClientSecrets = new List<Secret>()

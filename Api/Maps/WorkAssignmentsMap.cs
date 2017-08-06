@@ -13,6 +13,7 @@ namespace Machete.Api.Maps
         {
             CreateMap<Service.DTO.WorkAssignmentsList, WorkAssignment>();
             CreateMap<Domain.WorkAssignment, WorkAssignment>();
+            CreateMap<WorkAssignment, Domain.WorkAssignment>();
         }
 
     }
