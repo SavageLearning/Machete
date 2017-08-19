@@ -34,5 +34,6 @@ namespace Machete.Api.ViewModel
         public string text_ES { get; set; }
         public int? typeOfWorkID { get; set; }
         public double? wage { get; set; }
+        public string clientRules { get; set; }
     }
 }
