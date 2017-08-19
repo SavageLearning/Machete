@@ -357,6 +357,10 @@
     <Compile Include="Migrations\201705070423149_v1_12_0_reports.Designer.cs">
       <DependentUpon>201705070423149_v1_12_0_reports.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201708192241128_v1_13_0-online_orders.cs" />
+    <Compile Include="Migrations\201708192241128_v1_13_0-online_orders.Designer.cs">
+      <DependentUpon>201708192241128_v1_13_0-online_orders.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AllRepositories.cs" />
     <Compile Include="Repositories\ConfigRepository.cs" />
@@ -436,6 +440,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201705070423149_v1_12_0_reports.resx">
       <DependentUpon>201705070423149_v1_12_0_reports.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708192241128_v1_13_0-online_orders.resx">
+      <DependentUpon>201708192241128_v1_13_0-online_orders.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

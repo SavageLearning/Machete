@@ -30,7 +30,7 @@ namespace Machete.Api.Controllers
 
         public IHttpActionResult Get(string category)
         {
-            var result = serv.GetMany(w => w.category == category)
+            var result = serv.GetMany(w => w.category == category && w.active == true)
                 .Select(e => map.Map<Domain.Lookup, Lookup>(e))
                 .AsEnumerable();
             return Json(new { data = result });
