@@ -20,10 +20,10 @@ namespace Machete.Api.Controllers
             this.serv = serv;
             this.map = map;
         }
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
+        //[ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
         public IHttpActionResult Get()
         {
-            var result = serv.GetAll();
+            var result = serv.GetMany(c => c.publicConfig == true);
             return Json(new { data = result });
         }
 

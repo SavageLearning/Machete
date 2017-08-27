@@ -51,7 +51,16 @@ namespace Machete.Service
 
         public WorkOrder Create(WorkOrder order, string user)
         {
-            return woserv.Create(order, user);
+            var assignments = order.workAssignments;
+            order.workAssignments = null;
+            var entity = woserv.Create(order, user);
+            foreach (var a in assignments)
+            {
+                a.workOrderID = entity.ID;
+                a.workOrder = entity;
+                waserv.Create(a, user);
+            }
+            return woserv.Get(entity.ID);
         }
     }
 }

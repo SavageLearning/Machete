@@ -10,7 +10,9 @@ namespace Machete.Api.Maps
     {
         public LookupsMap()
         {
-            CreateMap<Domain.Lookup, Lookup>();
+            CreateMap<Domain.Lookup, Lookup>()
+                .ForMember(v => v.id, opt => opt.MapFrom(d => d.ID))
+                ;
         }
     }
 }

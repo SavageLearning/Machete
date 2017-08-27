@@ -13,12 +13,12 @@ namespace Machete.Data
         
         string IMigrationMetadata.Id
         {
-            get { return "201708192241128_v1_13_0-online_orders"; }
+            get { return "201708200456007_v1_13_0-online_orders"; }
         }
         
         string IMigrationMetadata.Source
         {
-            get { return Resources.GetString("Source"); }
+            get { return null; }
         }
         
         string IMigrationMetadata.Target

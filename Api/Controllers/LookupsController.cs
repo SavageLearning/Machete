@@ -24,7 +24,9 @@ namespace Machete.Api.Controllers
         // GET: api/Lookups
         public IHttpActionResult Get()
         {
-            var result = serv.GetAll();
+            var result = serv.GetMany(l => l.active == true)
+                .Select(e => map.Map<Domain.Lookup, Lookup>(e))
+                .AsEnumerable();
             return Json(new { data = result });
         }
 
