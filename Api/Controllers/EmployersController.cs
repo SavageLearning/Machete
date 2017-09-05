@@ -27,7 +27,7 @@ namespace Machete.Api.Controllers
 
         // GET api/values
         // TODO Add real permissions
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
         public IHttpActionResult Get()
         {
             var vo = new viewOptions();
@@ -42,7 +42,7 @@ namespace Machete.Api.Controllers
         }
 
         // GET api/values/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
         public IHttpActionResult Get(int id)
         {
             var result = map.Map<Domain.Employer, Employer>(serv.Get(id));
@@ -50,7 +50,7 @@ namespace Machete.Api.Controllers
         }
 
         // TODO: If employer/hirer, only get my own employer record
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
         public IHttpActionResult Get(string sub)
         {
 
@@ -59,7 +59,7 @@ namespace Machete.Api.Controllers
         }
 
         // POST api/values
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
         public void Post([FromBody]Employer employer)
         {
             var domain = map.Map<Employer, Domain.Employer>(employer);
@@ -67,7 +67,7 @@ namespace Machete.Api.Controllers
         }
 
         // PUT api/values/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
         public void Put(int id, [FromBody]Employer employer)
         {
             var domain = serv.Get(employer.id);
@@ -77,7 +77,7 @@ namespace Machete.Api.Controllers
         }
 
         // DELETE api/values/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
         public void Delete(int id)
         {
         }

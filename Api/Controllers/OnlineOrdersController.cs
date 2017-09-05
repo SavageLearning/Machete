@@ -27,7 +27,7 @@ namespace Machete.Api.Controllers
             this.map = map;
         }
         // GET: api/OnlineOrders
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
 
         public IHttpActionResult Get()
         {
@@ -40,7 +40,7 @@ namespace Machete.Api.Controllers
         }
 
         // GET: api/OnlineOrders/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
 
         public string Get(int id)
         {
@@ -48,7 +48,7 @@ namespace Machete.Api.Controllers
         }
 
         // POST: api/OnlineOrders
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
         public void Post([FromBody]WorkOrder order)
         {
             var employer = eServ.Get(guid: userSubject);

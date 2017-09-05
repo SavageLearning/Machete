@@ -20,7 +20,7 @@ namespace Machete.Api.Controllers
             this.serv = serv;
             this.map = map;
         }
-        //[ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
+        //[ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
         public IHttpActionResult Get()
         {
             var result = serv.GetMany(c => c.publicConfig == true);
@@ -28,7 +28,7 @@ namespace Machete.Api.Controllers
         }
 
         // GET: api/Configs/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
         public IHttpActionResult Get(int id)
         {
             var result = serv.Get(id);
@@ -36,19 +36,19 @@ namespace Machete.Api.Controllers
         }
 
         // POST: api/Configs
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
         public void Post([FromBody]string value)
         {
         }
 
         // PUT: api/Configs/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
         public void Put(int id, [FromBody]string value)
         {
         }
 
         // DELETE: api/Configs/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
         public void Delete(int id)
         {
         }

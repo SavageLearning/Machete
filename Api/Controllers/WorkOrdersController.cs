@@ -27,7 +27,7 @@ namespace Machete.Api.Controllers
 
 
         // GET api/values
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
         public IHttpActionResult Get()
         {
             var vo = new viewOptions();
@@ -43,7 +43,7 @@ namespace Machete.Api.Controllers
         }
 
         // GET api/values/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
         public IHttpActionResult Get(int id)
         {
             var result = map.Map<Domain.WorkOrder, WorkOrder>(serv.Get(id));
@@ -51,7 +51,7 @@ namespace Machete.Api.Controllers
         }
 
         // POST api/values
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
         public void Post([FromBody]WorkOrder order)
         {
             var domain = map.Map<WorkOrder, Domain.WorkOrder>(order);
@@ -59,7 +59,7 @@ namespace Machete.Api.Controllers
         }
 
         // PUT api/values/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
         public void Put(int id, [FromBody]WorkOrder order)
         {
             var domain = serv.Get(order.id);
@@ -69,7 +69,7 @@ namespace Machete.Api.Controllers
         }
 
         // DELETE api/values/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = "Administrator")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
         public void Delete(int id)
         {
         }

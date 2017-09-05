@@ -8,7 +8,7 @@ namespace Machete.Api
     public class ValuesController : ApiController
     {
         private static readonly Random _random = new Random();
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue ="Administrator")]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
         public IEnumerable<string> Get()
         {
             var random = new Random();
