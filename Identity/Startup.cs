@@ -3,10 +3,12 @@ using IdentityManager.Core.Logging;
 using IdentityManager.Logging;
 using IdentityServer3.Core.Configuration;
 using Microsoft.Owin;
+using Microsoft.Owin.Security.Google;
 using Owin;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -45,8 +47,26 @@ namespace Machete.Identity
                     SiteName = "Embedded IdentityServer",
                     SigningCertificate = Certificate.Get(),
                     RequireSsl = true,
-                    Factory = idSvrFactory
+                    Factory = idSvrFactory,
+
+                    AuthenticationOptions = new IdentityServer3.Core.Configuration.AuthenticationOptions
+                    {
+                        EnablePostSignOutAutoRedirect = true,
+                        IdentityProviders = ConfigureIdentityProviders
+                    }
                 });
+            });
+        }
+        private void ConfigureIdentityProviders(IAppBuilder app, string signInAsType)
+        {
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions
+            {
+                AuthenticationType = "Google",
+                Caption = "Sign-in with Google",
+                SignInAsAuthenticationType = signInAsType,
+
+                ClientId = ConfigurationManager.AppSettings["GoogleClientId"],
+                ClientSecret = ConfigurationManager.AppSettings["GoogleClientSecret"]
             });
         }
     }
