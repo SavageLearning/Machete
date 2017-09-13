@@ -17,6 +17,7 @@ namespace Machete.Identity
             StandardScopes.Profile,
             StandardScopes.Email,
             StandardScopes.RolesAlwaysInclude,
+            StandardScopes.OfflineAccess,
             new Scope
             {
                 Name = "api",
