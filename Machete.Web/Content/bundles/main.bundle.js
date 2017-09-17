@@ -23,11 +23,9 @@ webpackEmptyAsyncContext.id = "../../../../../src/$$_gendir lazy recursive";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_common__ = __webpack_require__("../../../common/@angular/common.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_services_auth_guard_service__ = __webpack_require__("../../../../../src/app/shared/services/auth-guard.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__selective_preloading_strategy__ = __webpack_require__("../../../../../src/app/selective-preloading-strategy.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__auth_dashboard_dashboard_component__ = __webpack_require__("../../../../../src/app/auth/dashboard/dashboard.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__auth_unauthorized_unauthorized_component__ = __webpack_require__("../../../../../src/app/auth/unauthorized/unauthorized.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_oidc_client__ = __webpack_require__("../../../../oidc-client/lib/oidc-client.min.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_oidc_client___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_oidc_client__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__auth_authorize_authorize_component__ = __webpack_require__("../../../../../src/app/auth/authorize/authorize.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__auth___ = __webpack_require__("../../../../../src/app/auth/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_oidc_client__ = __webpack_require__("../../../../oidc-client/lib/oidc-client.min.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_oidc_client___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_oidc_client__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -44,42 +42,44 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
-
 var appRoutes = [
     {
         path: '',
-        redirectTo: '/employers',
-        pathMatch: 'full',
-        canActivate: [__WEBPACK_IMPORTED_MODULE_3__shared_services_auth_guard_service__["a" /* AuthGuardService */]]
+        redirectTo: '/welcome',
+        pathMatch: 'full'
+    },
+    {
+        path: 'welcome',
+        component: __WEBPACK_IMPORTED_MODULE_5__auth___["d" /* WelcomeComponent */],
     },
     {
         path: 'dashboard',
-        component: __WEBPACK_IMPORTED_MODULE_5__auth_dashboard_dashboard_component__["a" /* DashboardComponent */],
+        component: __WEBPACK_IMPORTED_MODULE_5__auth___["b" /* DashboardComponent */],
         canActivate: [__WEBPACK_IMPORTED_MODULE_3__shared_services_auth_guard_service__["a" /* AuthGuardService */]]
     },
     {
         path: 'unauthorized',
-        component: __WEBPACK_IMPORTED_MODULE_6__auth_unauthorized_unauthorized_component__["a" /* UnauthorizedComponent */]
+        component: __WEBPACK_IMPORTED_MODULE_5__auth___["c" /* UnauthorizedComponent */]
     },
     // Used to receive redirect from Identity server
     {
         path: 'authorize',
-        component: __WEBPACK_IMPORTED_MODULE_8__auth_authorize_authorize_component__["a" /* AuthorizeComponent */]
+        component: __WEBPACK_IMPORTED_MODULE_5__auth___["a" /* AuthorizeComponent */]
     },
     //{ path: '**', component: PageNotFoundComponent }
     { path: '**', redirectTo: '/dashboard' }
 ];
 var AppRoutingModule = (function () {
     function AppRoutingModule() {
-        __WEBPACK_IMPORTED_MODULE_7_oidc_client__["Log"].info('app-routing.module.ctor called');
+        __WEBPACK_IMPORTED_MODULE_6_oidc_client__["Log"].info('app-routing.module.ctor called');
     }
     AppRoutingModule = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["NgModule"])({
             declarations: [
                 //AppComponent,
-                __WEBPACK_IMPORTED_MODULE_6__auth_unauthorized_unauthorized_component__["a" /* UnauthorizedComponent */],
-                __WEBPACK_IMPORTED_MODULE_5__auth_dashboard_dashboard_component__["a" /* DashboardComponent */]
+                __WEBPACK_IMPORTED_MODULE_5__auth___["c" /* UnauthorizedComponent */],
+                __WEBPACK_IMPORTED_MODULE_5__auth___["b" /* DashboardComponent */],
+                __WEBPACK_IMPORTED_MODULE_5__auth___["d" /* WelcomeComponent */]
             ],
             imports: [
                 __WEBPACK_IMPORTED_MODULE_2__angular_common__["CommonModule"],
@@ -646,6 +646,26 @@ var DashboardComponent = (function () {
 
 /***/ }),
 
+/***/ "../../../../../src/app/auth/index.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__unauthorized_unauthorized_component__ = __webpack_require__("../../../../../src/app/auth/unauthorized/unauthorized.component.ts");
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_0__unauthorized_unauthorized_component__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__welcome_welcome_component__ = __webpack_require__("../../../../../src/app/auth/welcome/welcome.component.ts");
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_1__welcome_welcome_component__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__authorize_authorize_component__ = __webpack_require__("../../../../../src/app/auth/authorize/authorize.component.ts");
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_2__authorize_authorize_component__["a"]; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__dashboard_dashboard_component__ = __webpack_require__("../../../../../src/app/auth/dashboard/dashboard.component.ts");
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_3__dashboard_dashboard_component__["a"]; });
+
+
+
+
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+
 /***/ "../../../../../src/app/auth/unauthorized/unauthorized.component.html":
 /***/ (function(module, exports) {
 
@@ -715,6 +735,67 @@ var UnauthorizedComponent = (function () {
 }());
 
 //# sourceMappingURL=unauthorized.component.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/auth/welcome/welcome.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../src/app/auth/welcome/welcome.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<p>\r\n  welcome works!\r\n</p>\r\n"
+
+/***/ }),
+
+/***/ "../../../../../src/app/auth/welcome/welcome.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return WelcomeComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var WelcomeComponent = (function () {
+    function WelcomeComponent() {
+    }
+    WelcomeComponent.prototype.ngOnInit = function () {
+    };
+    WelcomeComponent = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+            selector: 'app-welcome',
+            template: __webpack_require__("../../../../../src/app/auth/welcome/welcome.component.html"),
+            styles: [__webpack_require__("../../../../../src/app/auth/welcome/welcome.component.css")]
+        }),
+        __metadata("design:paramtypes", [])
+    ], WelcomeComponent);
+    return WelcomeComponent;
+}());
+
+//# sourceMappingURL=welcome.component.js.map
 
 /***/ }),
 
@@ -1948,6 +2029,9 @@ function loadMenuRules(authList) {
         }),
     ];
     // lambda-fu
+    if (authList === null || authList === undefined) {
+        return new Array();
+    }
     return rules.filter(function (rule) {
         return rule.authorizedRoles.findIndex(function (role) {
             return authList.findIndex(function (auth) { return auth == role; }) > -1;
@@ -2997,7 +3081,9 @@ var WorkAssignmentsComponent = (function () {
         var _this = this;
         // waService.transportRules could fail under race conditions
         this.waService.getTransportRules()
-            .subscribe(function (data) { return _this.transportRules = data; }, function (error) { return __WEBPACK_IMPORTED_MODULE_7_oidc_client__["Log"].error('work-assignments.component.ngOnInit.getTransportRules.error' + error); }, function () { return console.log('work-assignments.component: ngOnInit:getTransportRules onCompleted'); });
+            .subscribe(function (data) { return _this.transportRules = data; }, 
+        // When this leads to a REST call, compactRequests will depend on it
+        function (error) { return __WEBPACK_IMPORTED_MODULE_7_oidc_client__["Log"].error('work-assignments.component.ngOnInit.getTransportRules.error' + error); }, function () { return console.log('work-assignments.component: ngOnInit:getTransportRules onCompleted'); });
         this.lookupsService.getLookups(__WEBPACK_IMPORTED_MODULE_5__lookups_models_lookup__["a" /* LCategory */].SKILL)
             .subscribe(function (listData) {
             _this.skills = listData;
@@ -3008,8 +3094,8 @@ var WorkAssignmentsComponent = (function () {
         this.lookupsService.getLookups(__WEBPACK_IMPORTED_MODULE_5__lookups_models_lookup__["a" /* LCategory */].TRANSPORT)
             .subscribe(function (listData) {
             _this.transports = listData;
+            _this.waService.compactRequests();
         }, function (error) { return _this.errorMessage = error; }, function () { return console.log('work-assignments.component: ngOnInit:transports onCompleted'); });
-        this.waService.compactRequests();
         this.requestList = this.waService.getAll();
         this.buildForm();
     };
@@ -4237,13 +4323,24 @@ var AuthService = (function () {
     AuthService.prototype.getUserRoles$ = function () {
         return this.getUser$()
             .mergeMap(function (user) {
-            return __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__["Observable"].of(user.profile.role);
+            if (user === null || user === undefined) {
+                return __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__["Observable"].of(null);
+            }
+            else {
+                return __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__["Observable"].of(user.profile.role);
+            }
         });
     };
     AuthService.prototype.getUsername$ = function () {
         return this.getUser$()
             .mergeMap(function (user) {
-            return __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__["Observable"].of(user.profile.preferred_username);
+            // TODO: if user is null, disable menu
+            if (user === null || user === undefined) {
+                return __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__["Observable"].of(null);
+            }
+            else {
+                return __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__["Observable"].of(user.profile.preferred_username);
+            }
         });
     };
     AuthService.prototype.getUser = function () {
@@ -4347,12 +4444,15 @@ var TokenInterceptor = (function () {
     }
     TokenInterceptor.prototype.intercept = function (request, next) {
         var _this = this;
-        // todo: call observable, then map to to httpevent
+        var url = this.route.url;
         return this.auth.getUser$()
             .mergeMap(function (user) {
             __WEBPACK_IMPORTED_MODULE_2_oidc_client__["Log"].info('token.interceptor.currentUser: ');
-            if (user === null || user === undefined) {
-                _this.auth.redirectUrl = _this.route.url;
+            // TODO: need redirect for expired user
+            if (user === null ||
+                user === undefined ||
+                user.expired) {
+                _this.auth.redirectUrl = url;
                 _this.route.navigate(['/unauthorized']);
             }
             else {

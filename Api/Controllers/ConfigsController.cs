@@ -21,6 +21,7 @@ namespace Machete.Api.Controllers
             this.map = map;
         }
         //[ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
+        [AllowAnonymous]
         public IHttpActionResult Get()
         {
             var result = serv.GetMany(c => c.publicConfig == true);
