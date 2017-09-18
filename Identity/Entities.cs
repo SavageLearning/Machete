@@ -20,26 +20,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using System.Web;
 using IdSvr3 = IdentityServer3.Core;
 
 namespace Machete.Identity
 {
-    //public class User : IdentityUser
-    //{
-    //    public string FirstName { get; set; }
-    //    public string LastName { get; set; }
-    //}
-
-
-    //public class Context : IdentityDbContext<User, Role, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>
-    //{
-    //    public Context(string connString)
-    //        : base(connString)
-    //    {
-    //    }
-    //}
-
     public class UserStore : UserStore<MacheteUser, IdentityRole, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>
     {
         public UserStore(MacheteContext ctx)
@@ -48,7 +34,7 @@ namespace Machete.Identity
         }
     }
 
-    public class UserManager : UserManager<MacheteUser, string>
+    public class UserManager : UserManager<MacheteUser, string>//, IUserEmailStore<MacheteUser, string>
     {
         public UserManager(UserStore store)
             : base(store)
@@ -66,7 +52,10 @@ namespace Machete.Identity
             this.RoleClaimType = IdSvr3.Constants.ClaimTypes.Role;
         }
 
-        public override async System.Threading.Tasks.Task<System.Security.Claims.ClaimsIdentity> CreateAsync(UserManager<MacheteUser, string> manager, MacheteUser user, string authenticationType)
+        public override async Task<ClaimsIdentity> CreateAsync(
+            UserManager<MacheteUser, string> manager, 
+            MacheteUser user, 
+            string authenticationType)
         {
             var ci = await base.CreateAsync(manager, user, authenticationType);
             if (!String.IsNullOrWhiteSpace(user.FirstName))
@@ -76,6 +65,10 @@ namespace Machete.Identity
             if (!String.IsNullOrWhiteSpace(user.LastName))
             {
                 ci.AddClaim(new Claim("family_name", user.LastName));
+            }
+            if (!String.IsNullOrWhiteSpace(user.Email))
+            {
+                ci.AddClaim(new Claim("email", user.Email));
             }
             return ci;
         }

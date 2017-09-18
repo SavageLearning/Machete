@@ -1,7 +1,8 @@
-﻿using IdentityManager.Configuration;
-using IdentityManager.Core.Logging;
+﻿using IdentityManager.Core.Logging;
 using IdentityManager.Logging;
 using IdentityServer3.Core.Configuration;
+using IdentityServer3.Core.Services;
+using Machete.Data;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Google;
 using Owin;
@@ -29,10 +30,12 @@ namespace Machete.Identity
 
             app.Map("/admin", adminApp =>
             {
-                var factory = new IdentityManagerServiceFactory();
+                 
+
+                var factory = new IdentityManager.Configuration.IdentityManagerServiceFactory();
                 factory.ConfigureSimpleIdentityManagerService("MacheteConnection");
 
-                adminApp.UseIdentityManager(new IdentityManagerOptions()
+                adminApp.UseIdentityManager(new IdentityManager.Configuration.IdentityManagerOptions()
                 {
                     Factory = factory
                 });
@@ -40,19 +43,29 @@ namespace Machete.Identity
 
             app.Map("/id", core =>
             {
-                var idSvrFactory = Factory.Configure();
-                idSvrFactory.ConfigureUserService("MacheteConnection");
+                var factory = Factory.Configure();
+                factory.UserService = new Registration<IUserService, UserService>();
+                factory.Register(new Registration<UserManager>());
+                factory.Register(new Registration<UserStore>());
+                factory.Register(new Registration<MacheteContext>(resolver => new MacheteContext("MacheteConnection")));
+
                 core.UseIdentityServer(new IdentityServerOptions
                 {
-                    SiteName = "Embedded IdentityServer",
+                    SiteName = "Machete IdentityServer",
                     SigningCertificate = Certificate.Get(),
                     RequireSsl = true,
-                    Factory = idSvrFactory,
+                    Factory = factory,
 
                     AuthenticationOptions = new IdentityServer3.Core.Configuration.AuthenticationOptions
                     {
                         EnablePostSignOutAutoRedirect = true,
-                        IdentityProviders = ConfigureIdentityProviders
+                        IdentityProviders = ConfigureIdentityProviders,
+                        LoginPageLinks = new LoginPageLink[] {
+                            new LoginPageLink{
+                                Text = "Register",
+                                Href = "localregistration"
+                            }
+                        }
                     }
                 });
             });

@@ -43,7 +43,7 @@ namespace Machete.Api
             );
             config.DependencyResolver = new UnityResolver(UnityConfig.Get());
             //UnityConfig.ConfigureUnity(config);
-            config.Filters.Add(new AuthorizeAttribute());
+            //config.Filters.Add(new AuthorizeAttribute());
             config.Services.Add(typeof(IExceptionLogger), new ElmahExceptionLogger());
             app.UseWebApi(config);
         }
