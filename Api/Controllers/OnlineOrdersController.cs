@@ -27,20 +27,19 @@ namespace Machete.Api.Controllers
             this.map = map;
         }
         // GET: api/OnlineOrders
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
 
         public IHttpActionResult Get()
         {
-            var principal = RequestContext.Principal as ClaimsPrincipal;
-            var user = principal.FindFirst(CAType.nameidentifier).Value;
-            var result = serv.GetMany(a => a.Employer.onlineSigninID == user)
+
+            var result = serv.GetMany(a => a.Employer.onlineSigninID == userSubject)
                 .Select(a => map.Map<Domain.WorkOrder, WorkOrder>(a));
 
             return Json(new { data = result });
         }
 
         // GET: api/OnlineOrders/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
 
         public string Get(int id)
         {
@@ -48,7 +47,7 @@ namespace Machete.Api.Controllers
         }
 
         // POST: api/OnlineOrders
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
         public void Post([FromBody]WorkOrder order)
         {
             var employer = eServ.Get(guid: userSubject);

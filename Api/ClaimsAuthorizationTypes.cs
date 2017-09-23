@@ -11,4 +11,15 @@ namespace Machete.Api
         public const string Role = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
         public const string nameidentifier = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
     }
+
+    public struct CV
+    {
+        public const string Admin = "Administrator";
+        public const string Hirer = "Hirer";
+        public const string User = "User";
+        public const string Phonedesk = "Phonedesk";
+        public const string Manager = "Manager";
+        public const string Checkin = "Check-in";
+        public const string Teacher = "Teacher";
+    }
 }

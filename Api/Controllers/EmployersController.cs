@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using Machete.Api.ViewModel;
 using Machete.Service;
-using DTO = Machete.Service.DTO;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
-using System.Web.Http.Controllers;
+using DTO = Machete.Service.DTO;
 
 namespace Machete.Api.Controllers
 {
@@ -27,7 +25,7 @@ namespace Machete.Api.Controllers
 
         // GET api/values
         // TODO Add real permissions
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Hirer })]
         public IHttpActionResult Get()
         {
             var vo = new viewOptions();
@@ -42,42 +40,69 @@ namespace Machete.Api.Controllers
         }
 
         // GET api/values/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
         public IHttpActionResult Get(int id)
         {
             var result = map.Map<Domain.Employer, Employer>(serv.Get(id));
             return Json(new { data = result });
         }
 
-        // TODO: If employer/hirer, only get my own employer record
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Manager, CV.Phonedesk})]
         public IHttpActionResult Get(string sub)
         {
-
             var result = map.Map<Domain.Employer, Employer>(serv.Get(sub));
             return Json(new { data = result });
         }
 
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Manager, CV.Phonedesk, CV.Hirer })]
+        [HttpGet]
+        [Route("api/employer/profile")]
+        public IHttpActionResult ProfileGet()
+        {
+            var result = map.Map<Domain.Employer, Employer>(serv.Get(userSubject));
+            return Json(new { data = result });
+        }
+
         // POST api/values
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
         public void Post([FromBody]Employer employer)
         {
             var domain = map.Map<Employer, Domain.Employer>(employer);
             serv.Save(domain, User.Identity.Name);
         }
 
+
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Hirer })]
+        [HttpPost]
+        [Route("api/employer/profile")]
+        public void ProfilePost([FromBody]Employer employer)
+        {
+            var domain = map.Map<Employer, Domain.Employer>(employer);
+            domain.onlineSigninID = userSubject;
+            serv.Save(domain, User.Identity.Name);
+        }
+
         // PUT api/values/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
         public void Put(int id, [FromBody]Employer employer)
         {
             var domain = serv.Get(employer.id);
-            // TODO employers must only be able to edit their record
+            map.Map<Employer, Domain.Employer>(employer, domain);
+            serv.Save(domain, User.Identity.Name);
+        }
+
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Hirer })]
+        [HttpPatch]
+        [Route("api/employer/profile")]
+        public void ProfilePut(int id, [FromBody]Employer employer)
+        {
+            var domain = serv.Get(userSubject);
             map.Map<Employer, Domain.Employer>(employer, domain);
             serv.Save(domain, User.Identity.Name);
         }
 
         // DELETE api/values/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
         public void Delete(int id)
         {
         }

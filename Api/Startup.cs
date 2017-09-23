@@ -31,6 +31,7 @@ namespace Machete.Api
 
             // Wire Web API
             var config = new HttpConfiguration();
+            // https://docs.microsoft.com/en-us/aspnet/web-api/overview/web-api-routing-and-actions/attribute-routing-in-web-api-2
             config.MapHttpAttributeRoutes();
             // catch all route mapped to ErrorController so 404 errors
             // can be logged in elmah

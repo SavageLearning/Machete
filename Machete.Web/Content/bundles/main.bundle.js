@@ -24,8 +24,7 @@ webpackEmptyAsyncContext.id = "../../../../../src/$$_gendir lazy recursive";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_services_auth_guard_service__ = __webpack_require__("../../../../../src/app/shared/services/auth-guard.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__selective_preloading_strategy__ = __webpack_require__("../../../../../src/app/selective-preloading-strategy.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__auth___ = __webpack_require__("../../../../../src/app/auth/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_oidc_client__ = __webpack_require__("../../../../oidc-client/lib/oidc-client.min.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_oidc_client___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_oidc_client__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__auth_register_register_component__ = __webpack_require__("../../../../../src/app/auth/register/register.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -53,6 +52,10 @@ var appRoutes = [
         component: __WEBPACK_IMPORTED_MODULE_5__auth___["d" /* WelcomeComponent */],
     },
     {
+        path: 'register',
+        component: __WEBPACK_IMPORTED_MODULE_6__auth_register_register_component__["a" /* RegisterComponent */],
+    },
+    {
         path: 'dashboard',
         component: __WEBPACK_IMPORTED_MODULE_5__auth___["b" /* DashboardComponent */],
         canActivate: [__WEBPACK_IMPORTED_MODULE_3__shared_services_auth_guard_service__["a" /* AuthGuardService */]]
@@ -67,11 +70,11 @@ var appRoutes = [
         component: __WEBPACK_IMPORTED_MODULE_5__auth___["a" /* AuthorizeComponent */]
     },
     //{ path: '**', component: PageNotFoundComponent }
-    { path: '**', redirectTo: '/dashboard' }
+    { path: '**', redirectTo: '/welcome' }
 ];
 var AppRoutingModule = (function () {
     function AppRoutingModule() {
-        __WEBPACK_IMPORTED_MODULE_6_oidc_client__["Log"].info('app-routing.module.ctor called');
+        console.log('.ctor');
     }
     AppRoutingModule = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["NgModule"])({
@@ -79,7 +82,8 @@ var AppRoutingModule = (function () {
                 //AppComponent,
                 __WEBPACK_IMPORTED_MODULE_5__auth___["c" /* UnauthorizedComponent */],
                 __WEBPACK_IMPORTED_MODULE_5__auth___["b" /* DashboardComponent */],
-                __WEBPACK_IMPORTED_MODULE_5__auth___["d" /* WelcomeComponent */]
+                __WEBPACK_IMPORTED_MODULE_5__auth___["d" /* WelcomeComponent */],
+                __WEBPACK_IMPORTED_MODULE_6__auth_register_register_component__["a" /* RegisterComponent */]
             ],
             imports: [
                 __WEBPACK_IMPORTED_MODULE_2__angular_common__["CommonModule"],
@@ -134,6 +138,8 @@ module.exports = module.exports.toString();
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__configs_configs_service__ = __webpack_require__("../../../../../src/app/configs/configs.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lookups_lookups_service__ = __webpack_require__("../../../../../src/app/lookups/lookups.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -145,7 +151,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
-console.log('app.component.ts environment.name:', __WEBPACK_IMPORTED_MODULE_1__environments_environment__["a" /* environment */].name);
+
+
+console.log('environment.name:', __WEBPACK_IMPORTED_MODULE_1__environments_environment__["a" /* environment */].name);
 var MenuOrientation;
 (function (MenuOrientation) {
     MenuOrientation[MenuOrientation["STATIC"] = 0] = "STATIC";
@@ -266,7 +274,8 @@ var AppComponent = (function () {
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'app-root',
             template: __webpack_require__("../../../../../src/app/app.component.html"),
-            styles: [__webpack_require__("../../../../../src/app/app.component.scss")]
+            styles: [__webpack_require__("../../../../../src/app/app.component.scss")],
+            providers: [__WEBPACK_IMPORTED_MODULE_3__lookups_lookups_service__["a" /* LookupsService */], __WEBPACK_IMPORTED_MODULE_2__configs_configs_service__["a" /* ConfigsService */]]
         }),
         __metadata("design:paramtypes", [typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["Renderer"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["Renderer"]) === "function" && _c || Object])
     ], AppComponent);
@@ -328,15 +337,15 @@ var AppFooter = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__shared_services_auth_service__ = __webpack_require__("../../../../../src/app/shared/services/auth.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16_oidc_client__ = __webpack_require__("../../../../oidc-client/lib/oidc-client.min.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16_oidc_client___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_16_oidc_client__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__auth_authorize_authorize_component__ = __webpack_require__("../../../../../src/app/auth/authorize/authorize.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__shared_services_token_interceptor__ = __webpack_require__("../../../../../src/app/shared/services/token.interceptor.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__online_orders_online_orders_module__ = __webpack_require__("../../../../../src/app/online-orders/online-orders.module.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__reports_reports_module__ = __webpack_require__("../../../../../src/app/reports/reports.module.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__exports_exports_module__ = __webpack_require__("../../../../../src/app/exports/exports.module.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__work_orders_work_orders_module__ = __webpack_require__("../../../../../src/app/work-orders/work-orders.module.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__employers_employers_module__ = __webpack_require__("../../../../../src/app/employers/employers.module.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__auth_authorize_authorize_component__ = __webpack_require__("../../../../../src/app/auth/authorize/authorize.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__shared_services_token_interceptor__ = __webpack_require__("../../../../../src/app/shared/services/token.interceptor.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__online_orders_online_orders_module__ = __webpack_require__("../../../../../src/app/online-orders/online-orders.module.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__reports_reports_module__ = __webpack_require__("../../../../../src/app/reports/reports.module.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__exports_exports_module__ = __webpack_require__("../../../../../src/app/exports/exports.module.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__work_orders_work_orders_module__ = __webpack_require__("../../../../../src/app/work-orders/work-orders.module.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__employers_employers_module__ = __webpack_require__("../../../../../src/app/employers/employers.module.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23_oidc_client__ = __webpack_require__("../../../../oidc-client/lib/oidc-client.min.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_23_oidc_client___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_23_oidc_client__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -374,11 +383,10 @@ var AppModule = (function () {
     // Diagnostic only: inspect router configuration
     function AppModule(router) {
         if (!__WEBPACK_IMPORTED_MODULE_14__environments_environment__["a" /* environment */].production) {
-            __WEBPACK_IMPORTED_MODULE_16_oidc_client__["Log"].level = __WEBPACK_IMPORTED_MODULE_16_oidc_client__["Log"].INFO;
-            __WEBPACK_IMPORTED_MODULE_16_oidc_client__["Log"].logger = console;
+            __WEBPACK_IMPORTED_MODULE_23_oidc_client__["Log"].level = __WEBPACK_IMPORTED_MODULE_23_oidc_client__["Log"].INFO;
+            __WEBPACK_IMPORTED_MODULE_23_oidc_client__["Log"].logger = console;
         }
-        __WEBPACK_IMPORTED_MODULE_16_oidc_client__["Log"].info('app.module.ctor()');
-        //console.log('Routes: ', JSON.stringify(router.config, undefined, 2));
+        console.log('.ctor');
     }
     AppModule = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_3__angular_core__["NgModule"])({
@@ -390,7 +398,7 @@ var AppModule = (function () {
                 __WEBPACK_IMPORTED_MODULE_10__app_footer_component__["a" /* AppFooter */],
                 __WEBPACK_IMPORTED_MODULE_11__menu_app_profile_component__["a" /* InlineProfileComponent */],
                 __WEBPACK_IMPORTED_MODULE_12__not_found_component__["a" /* PageNotFoundComponent */],
-                __WEBPACK_IMPORTED_MODULE_17__auth_authorize_authorize_component__["a" /* AuthorizeComponent */]
+                __WEBPACK_IMPORTED_MODULE_16__auth_authorize_authorize_component__["a" /* AuthorizeComponent */]
             ],
             imports: [
                 __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["BrowserModule"],
@@ -398,18 +406,18 @@ var AppModule = (function () {
                 __WEBPACK_IMPORTED_MODULE_4__angular_forms__["FormsModule"],
                 __WEBPACK_IMPORTED_MODULE_6__angular_http__["c" /* HttpModule */],
                 __WEBPACK_IMPORTED_MODULE_5__angular_common_http__["c" /* HttpClientModule */],
-                __WEBPACK_IMPORTED_MODULE_20__reports_reports_module__["a" /* ReportsModule */],
-                __WEBPACK_IMPORTED_MODULE_19__online_orders_online_orders_module__["a" /* OnlineOrdersModule */],
-                __WEBPACK_IMPORTED_MODULE_21__exports_exports_module__["a" /* ExportsModule */],
-                __WEBPACK_IMPORTED_MODULE_22__work_orders_work_orders_module__["a" /* WorkOrdersModule */],
-                __WEBPACK_IMPORTED_MODULE_23__employers_employers_module__["a" /* EmployersModule */],
+                __WEBPACK_IMPORTED_MODULE_19__reports_reports_module__["a" /* ReportsModule */],
+                __WEBPACK_IMPORTED_MODULE_18__online_orders_online_orders_module__["a" /* OnlineOrdersModule */],
+                __WEBPACK_IMPORTED_MODULE_20__exports_exports_module__["a" /* ExportsModule */],
+                __WEBPACK_IMPORTED_MODULE_21__work_orders_work_orders_module__["a" /* WorkOrdersModule */],
+                __WEBPACK_IMPORTED_MODULE_22__employers_employers_module__["a" /* EmployersModule */],
                 __WEBPACK_IMPORTED_MODULE_2__app_routing_module__["a" /* AppRoutingModule */]
             ],
             providers: [
                 __WEBPACK_IMPORTED_MODULE_15__shared_services_auth_service__["a" /* AuthService */],
                 {
                     provide: __WEBPACK_IMPORTED_MODULE_5__angular_common_http__["a" /* HTTP_INTERCEPTORS */],
-                    useClass: __WEBPACK_IMPORTED_MODULE_18__shared_services_token_interceptor__["a" /* TokenInterceptor */],
+                    useClass: __WEBPACK_IMPORTED_MODULE_17__shared_services_token_interceptor__["a" /* TokenInterceptor */],
                     multi: true
                 }
             ],
@@ -499,8 +507,6 @@ module.exports = "<p>\r\n  authorize works!\r\n</p>\r\n"
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__shared_services_auth_service__ = __webpack_require__("../../../../../src/app/shared/services/auth.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_oidc_client__ = __webpack_require__("../../../../oidc-client/lib/oidc-client.min.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_oidc_client___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_oidc_client__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -510,7 +516,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-
 
 
 
@@ -526,12 +531,13 @@ var AuthorizeComponent = (function () {
             // not sure why i have to copy to local variable. 
             // https://github.com/Microsoft/TypeScript/wiki/'this'-in-TypeScript
             var rtr = _this.router;
-            __WEBPACK_IMPORTED_MODULE_3_oidc_client__["Log"].info('authorize.component.endSigninMainWindow.user: ', user.profile.sub);
+            console.log('endSigninMainWindow.user: ', user);
+            _this.auth.getUserEmitter().emit(user);
             if (user.state) {
                 rtr.navigate([user.state]);
             }
         }, function (err) {
-            __WEBPACK_IMPORTED_MODULE_3_oidc_client__["Log"].error('authorize.component.endSigninMainWindow returned: ' + JSON.stringify(err));
+            console.error('endSigninMainWindow returned: ', err);
         });
     };
     AuthorizeComponent = __decorate([
@@ -599,7 +605,7 @@ var DashboardComponent = (function () {
     }
     DashboardComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.loadedUserSub = this.authService.userLoadededEvent
+        this.loadedUserSub = this.authService.getUserEmitter()
             .subscribe(function (user) {
             _this._user = user;
         });
@@ -663,6 +669,67 @@ var DashboardComponent = (function () {
 
 
 //# sourceMappingURL=index.js.map
+
+/***/ }),
+
+/***/ "../../../../../src/app/auth/register/register.component.css":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ "../../../../../src/app/auth/register/register.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<p>\r\n  register works!\r\n</p>\r\n"
+
+/***/ }),
+
+/***/ "../../../../../src/app/auth/register/register.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return RegisterComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var RegisterComponent = (function () {
+    function RegisterComponent() {
+    }
+    RegisterComponent.prototype.ngOnInit = function () {
+    };
+    RegisterComponent = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+            selector: 'app-register',
+            template: __webpack_require__("../../../../../src/app/auth/register/register.component.html"),
+            styles: [__webpack_require__("../../../../../src/app/auth/register/register.component.css")]
+        }),
+        __metadata("design:paramtypes", [])
+    ], RegisterComponent);
+    return RegisterComponent;
+}());
+
+//# sourceMappingURL=register.component.js.map
 
 /***/ }),
 
@@ -759,7 +826,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/auth/welcome/welcome.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<p>\r\n  welcome works!\r\n</p>\r\n"
+module.exports = "<div [innerHTML]=\"welcome\">\r\n</div>\r\n<button pButton type=\"button\" (click)=\"register()\" label=\"Register\">New employer</button>\r\n<button pButton type=\"button\" (click)=\"login()\" label=\"Login\">Returning employer</button>"
 
 /***/ }),
 
@@ -769,6 +836,9 @@ module.exports = "<p>\r\n  welcome works!\r\n</p>\r\n"
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return WelcomeComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__configs_configs_service__ = __webpack_require__("../../../../../src/app/configs/configs.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__shared_index__ = __webpack_require__("../../../../../src/app/shared/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -779,10 +849,25 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
+
+
+
 var WelcomeComponent = (function () {
-    function WelcomeComponent() {
+    function WelcomeComponent(cfgService, authService, router) {
+        this.cfgService = cfgService;
+        this.authService = authService;
+        this.router = router;
     }
     WelcomeComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.cfgService.getConfig('WorkCenterDescription_EN')
+            .subscribe(function (data) { return _this.welcome = data.value; }, function (error) { return console.error('welcome.component.OnInit:' + error); });
+    };
+    WelcomeComponent.prototype.login = function () {
+        this.authService.startSigninMainWindow();
+    };
+    WelcomeComponent.prototype.register = function () {
+        this.router.navigate(['/register']);
     };
     WelcomeComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
@@ -790,9 +875,10 @@ var WelcomeComponent = (function () {
             template: __webpack_require__("../../../../../src/app/auth/welcome/welcome.component.html"),
             styles: [__webpack_require__("../../../../../src/app/auth/welcome/welcome.component.css")]
         }),
-        __metadata("design:paramtypes", [])
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__configs_configs_service__["a" /* ConfigsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__configs_configs_service__["a" /* ConfigsService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__shared_index__["b" /* AuthService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__shared_index__["b" /* AuthService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["Router"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["Router"]) === "function" && _c || Object])
     ], WelcomeComponent);
     return WelcomeComponent;
+    var _a, _b, _c;
 }());
 
 //# sourceMappingURL=welcome.component.js.map
@@ -807,7 +893,9 @@ var WelcomeComponent = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_common_http__ = __webpack_require__("../../../common/@angular/common/http.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_handle_error__ = __webpack_require__("../../../../../src/app/shared/handle-error.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__ = __webpack_require__("../../../../rxjs/Observable.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_handle_error__ = __webpack_require__("../../../../../src/app/shared/handle-error.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -821,26 +909,47 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var ConfigsService = (function () {
     function ConfigsService(http) {
         this.http = http;
-        this.uriBase = __WEBPACK_IMPORTED_MODULE_1__environments_environment__["a" /* environment */].dataUrl + '/api/lookups';
+        this.uriBase = __WEBPACK_IMPORTED_MODULE_1__environments_environment__["a" /* environment */].dataUrl + '/api/configs';
+        this.configs = new Array();
+        this.configsAge = 0;
     }
-    ConfigsService.prototype.getConfigs = function (category) {
-        var uri = this.uriBase;
-        if (category) {
-            uri = uri + '?category=' + category;
+    ConfigsService.prototype.isStale = function () {
+        if (this.configsAge > Date.now() - 36000) {
+            return false;
         }
-        return this.http.get(uri)
-            .map(function (res) { return res['data']; })
-            .catch(__WEBPACK_IMPORTED_MODULE_3__shared_handle_error__["a" /* HandleError */].error);
+        return true;
+    };
+    ConfigsService.prototype.isNotStale = function () {
+        return !this.isStale();
+    };
+    ConfigsService.prototype.getAllConfigs = function () {
+        var _this = this;
+        if (this.isNotStale()) {
+            return __WEBPACK_IMPORTED_MODULE_3_rxjs_Observable__["Observable"].of(this.configs);
+        }
+        console.log('getAllConfigs: ' + this.uriBase);
+        return this.http.get(this.uriBase)
+            .map(function (res) {
+            _this.configs = res['data'];
+            _this.configsAge = Date.now();
+            return res['data'];
+        })
+            .catch(__WEBPACK_IMPORTED_MODULE_4__shared_handle_error__["a" /* HandleError */].error);
+    };
+    ConfigsService.prototype.getConfigs = function (category) {
+        return this.getAllConfigs()
+            .map(function (res) { return res.filter(function (l) { return l.category == category; }); })
+            .catch(__WEBPACK_IMPORTED_MODULE_4__shared_handle_error__["a" /* HandleError */].error);
     };
     ConfigsService.prototype.getConfig = function (key) {
-        var uri = this.uriBase;
-        uri = uri + '?key=' + key;
-        return this.http.get(uri)
-            .map(function (res) { return res['data']; })
-            .catch(__WEBPACK_IMPORTED_MODULE_3__shared_handle_error__["a" /* HandleError */].error);
+        return this.getAllConfigs()
+            .mergeMap(function (a) { return a.filter(function (ll) { return ll.key == key; }); })
+            .first()
+            .catch(__WEBPACK_IMPORTED_MODULE_4__shared_handle_error__["a" /* HandleError */].error);
     };
     ConfigsService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
@@ -937,8 +1046,6 @@ module.exports = "<p>\r\n  employers works!\r\n</p>\r\n<div class=\"ui-fluid\">\
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__shared_models_employer__ = __webpack_require__("../../../../../src/app/shared/models/employer.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__lookups_lookups_service__ = __webpack_require__("../../../../../src/app/lookups/lookups.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_oidc_client__ = __webpack_require__("../../../../oidc-client/lib/oidc-client.min.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_oidc_client___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_oidc_client__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -948,7 +1055,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-
 
 
 
@@ -1000,7 +1106,7 @@ var EmployersComponent = (function () {
         var _this = this;
         this.employersService.getEmployerBySubject()
             .subscribe(function (data) {
-            _this.employer = data;
+            _this.employer = data || new __WEBPACK_IMPORTED_MODULE_2__shared_models_employer__["a" /* Employer */]();
             _this.buildForm();
         });
         this.buildForm();
@@ -1044,13 +1150,13 @@ var EmployersComponent = (function () {
         }
     };
     EmployersComponent.prototype.saveEmployer = function () {
-        __WEBPACK_IMPORTED_MODULE_5_oidc_client__["Log"].info('employers.component.saveEmployer: called');
+        console.log('saveEmployer: called');
         this.onValueChanged();
         if (this.employerForm.status === 'INVALID') {
             this.showErrors = true;
             return;
         }
-        __WEBPACK_IMPORTED_MODULE_5_oidc_client__["Log"].info('employers.component.saveEmployer: valid');
+        console.log('saveEmployer: valid');
         this.showErrors = false;
         var formModel = this.employerForm.value;
         this.employersService.save(formModel)
@@ -1059,8 +1165,8 @@ var EmployersComponent = (function () {
         //   this.buildForm();
         // },
         function (error) {
-            __WEBPACK_IMPORTED_MODULE_5_oidc_client__["Log"].info(JSON.stringify(error));
-        }, function () { return __WEBPACK_IMPORTED_MODULE_5_oidc_client__["Log"].info(); });
+            console.error(error);
+        });
     };
     EmployersComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
@@ -1109,7 +1215,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var EmployersModule = (function () {
     // Diagnostic only: inspect router configuration
     function EmployersModule() {
-        console.log('employers');
+        console.log('.ctor');
     }
     EmployersModule = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["NgModule"])({
@@ -1141,9 +1247,8 @@ var EmployersModule = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common_http__ = __webpack_require__("../../../common/@angular/common/http.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__shared_handle_error__ = __webpack_require__("../../../../../src/app/shared/handle-error.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_index__ = __webpack_require__("../../../../../src/app/shared/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_oidc_client__ = __webpack_require__("../../../../oidc-client/lib/oidc-client.min.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_oidc_client___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_oidc_client__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared_models_employer__ = __webpack_require__("../../../../../src/app/shared/models/employer.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__shared_index__ = __webpack_require__("../../../../../src/app/shared/index.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1164,30 +1269,37 @@ var EmployersService = (function () {
     function EmployersService(http, auth) {
         this.http = http;
         this.auth = auth;
+        console.log('.ctor');
     }
     EmployersService.prototype.getEmployerBySubject = function () {
         var _this = this;
         return this.auth.getUser$()
             .mergeMap(function (user) {
-            var uri = __WEBPACK_IMPORTED_MODULE_2__environments_environment__["a" /* environment */].dataUrl + '/api/employers';
-            uri = uri + '?sub=' + user.profile['sub'];
+            var uri = __WEBPACK_IMPORTED_MODULE_2__environments_environment__["a" /* environment */].dataUrl + '/api/employer/profile';
+            //uri = uri + '?sub=' + user.profile['sub'];
             return _this.http.get(uri)
-                .map(function (o) { return o['data']; })
+                .map(function (o) {
+                console.log(uri, o);
+                if (o['data'] == null) {
+                    return new __WEBPACK_IMPORTED_MODULE_4__shared_models_employer__["a" /* Employer */]();
+                }
+                return o['data'];
+            })
                 .catch(__WEBPACK_IMPORTED_MODULE_3__shared_handle_error__["a" /* HandleError */].error);
         });
     };
     EmployersService.prototype.save = function (employer) {
-        var uri = __WEBPACK_IMPORTED_MODULE_2__environments_environment__["a" /* environment */].dataUrl + '/api/employers';
-        uri = uri + '/' + employer.id;
-        __WEBPACK_IMPORTED_MODULE_5_oidc_client__["Log"].info('employers.service.save: called');
-        return this.http.put(uri, JSON.stringify(employer), {
+        var uri = __WEBPACK_IMPORTED_MODULE_2__environments_environment__["a" /* environment */].dataUrl + '/api/employer/profile';
+        //uri = uri + '/' + employer.id;
+        console.log('http.put:', uri, employer);
+        return this.http.post(uri, JSON.stringify(employer), {
             headers: new __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["d" /* HttpHeaders */]().set('Content-Type', 'application/json'),
-        });
-        //.catch(HandleError.error);
+        })
+            .catch(__WEBPACK_IMPORTED_MODULE_3__shared_handle_error__["a" /* HandleError */].error);
     };
     EmployersService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
-        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["b" /* HttpClient */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["b" /* HttpClient */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_4__shared_index__["b" /* AuthService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__shared_index__["b" /* AuthService */]) === "function" && _b || Object])
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["b" /* HttpClient */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_common_http__["b" /* HttpClient */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_5__shared_index__["b" /* AuthService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__shared_index__["b" /* AuthService */]) === "function" && _b || Object])
     ], EmployersService);
     return EmployersService;
     var _a, _b;
@@ -1385,7 +1497,7 @@ var ExportsComponent = (function () {
             _this.exportsDropDown = listData.map(function (r) {
                 return new __WEBPACK_IMPORTED_MODULE_2__reports_reports_component__["a" /* MySelectItem */](r.name, r.name);
             });
-        }, function (error) { return _this.errorMessage = error; }, function () { return console.log('exports.component: ngOnInit onCompleted'); });
+        }, function (error) { return _this.errorMessage = error; }, function () { return console.log('ngOnInit onCompleted'); });
     };
     ExportsComponent.prototype.getColumns = function () {
         var _this = this;
@@ -1401,7 +1513,7 @@ var ExportsComponent = (function () {
                 group[col.name] = new __WEBPACK_IMPORTED_MODULE_4__angular_forms__["FormControl"](true);
             });
             _this.form = new __WEBPACK_IMPORTED_MODULE_4__angular_forms__["FormGroup"](group);
-        }, function (error) { return _this.errorMessage = error; }, function () { return console.log('exportsService.getColumns completed'); });
+        }, function (error) { return _this.errorMessage = error; }, function () { return console.log('getColumns completed'); });
     };
     ExportsComponent.prototype.onSubmit = function () {
         var _this = this;
@@ -1416,7 +1528,7 @@ var ExportsComponent = (function () {
             _this.downloadFile(res['_body'], _this.getFilename(res.headers.get('content-disposition')), res['_body'].type);
         }, function (error) {
             _this.errorMessage = error;
-        }, function () { return console.log('exportsService.getColumns completed'); });
+        }, function () { return console.log('onSubmit.getExport completed'); });
     };
     ExportsComponent.prototype.downloadFile = function (data, fileName, ttype) {
         var blob = new Blob([data], { type: ttype });
@@ -1475,7 +1587,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 var ExportsModule = (function () {
     function ExportsModule() {
-        console.log('ExportsModule-ctor');
+        console.log('.ctor');
     }
     ExportsModule = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["NgModule"])({
@@ -1524,8 +1636,6 @@ var ExportsModule = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_Observable__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__angular_common_http__ = __webpack_require__("../../../common/@angular/common/http.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_oidc_client__ = __webpack_require__("../../../../oidc-client/lib/oidc-client.min.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_oidc_client___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8_oidc_client__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1543,21 +1653,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var ExportsService = (function () {
     function ExportsService(http) {
         this.http = http;
         this.uriBase = __WEBPACK_IMPORTED_MODULE_6__environments_environment__["a" /* environment */].dataUrl + '/api/exports';
     }
     ExportsService.prototype.getExportsList = function () {
-        __WEBPACK_IMPORTED_MODULE_8_oidc_client__["Log"].info('exportsService.getExportList: ' + this.uriBase);
+        console.log('getExportList: ', this.uriBase);
         return this.http.get(this.uriBase)
             .map(function (res) { return res['data']; })
             .catch(this.handleError);
     };
     ExportsService.prototype.getColumns = function (tableName) {
         var uri = this.uriBase + '/' + tableName.toLowerCase();
-        __WEBPACK_IMPORTED_MODULE_8_oidc_client__["Log"].info('exportsService.getColumns ' + uri);
+        console.log('getColumns ', uri);
         return this.http.get(uri)
             .map(function (res) { return res['data']; })
             .catch(this.handleError);
@@ -1569,7 +1678,7 @@ var ExportsService = (function () {
             responseType: __WEBPACK_IMPORTED_MODULE_4__angular_http__["f" /* ResponseContentType */].Blob
         });
         var params = this.encodeData(o);
-        __WEBPACK_IMPORTED_MODULE_8_oidc_client__["Log"].info('exportsService.getExport: ' + JSON.stringify(params));
+        console.log('getExport: ', params);
         //const uri = this.uriBase + '/' + tableName.toLowerCase();
         var uri = this.uriBase + '/' + tableName + '/execute?' + params;
         return this.http.get(uri)
@@ -1609,6 +1718,8 @@ var ExportsService = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__shared_handle_error__ = __webpack_require__("../../../../../src/app/shared/handle-error.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_common_http__ = __webpack_require__("../../../common/@angular/common/http.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs__ = __webpack_require__("../../../../rxjs/Rx.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1623,12 +1734,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var LookupsService = (function () {
     function LookupsService(http) {
         this.http = http;
         this.uriBase = __WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].dataUrl + '/api/lookups';
         this.lookups = new Array();
         this.lookupsAge = 0;
+        console.log('.ctor');
+        this.lookups$ = new __WEBPACK_IMPORTED_MODULE_5_rxjs__["BehaviorSubject"](new Array());
     }
     LookupsService.prototype.isStale = function () {
         if (this.lookupsAge > Date.now() - 1800) {
@@ -1642,9 +1756,10 @@ var LookupsService = (function () {
     LookupsService.prototype.getAllLookups = function () {
         var _this = this;
         if (this.isNotStale()) {
+            console.log('getLookups cached');
             return __WEBPACK_IMPORTED_MODULE_1_rxjs_Observable__["Observable"].of(this.lookups);
         }
-        console.log('lookupsService.getLookups: ' + this.uriBase);
+        console.log('getLookups: ', this.uriBase);
         return this.http.get(this.uriBase)
             .map(function (res) {
             _this.lookups = res['data'];
@@ -1771,9 +1886,20 @@ var AppMenuComponent = (function () {
     }
     AppMenuComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.auth.getUserRoles$()
-            .subscribe(function (roles) { return _this.model = Object(__WEBPACK_IMPORTED_MODULE_6__load_menu_rules__["a" /* loadMenuRules */])(roles); });
-        this.model = Object(__WEBPACK_IMPORTED_MODULE_6__load_menu_rules__["a" /* loadMenuRules */])(['Hirer']);
+        console.log('ngOnInit');
+        this.auth.getUserEmitter()
+            .subscribe(function (user) {
+            if (user == null) {
+                return new Array();
+            }
+            var roles = user.profile['role'];
+            if (typeof roles === "string") {
+                roles = [roles];
+            }
+            _this.model = Object(__WEBPACK_IMPORTED_MODULE_6__load_menu_rules__["a" /* loadMenuRules */])(roles);
+            console.log(_this.model);
+        });
+        this.auth.getUser();
     };
     __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(),
@@ -1973,7 +2099,7 @@ function loadMenuRules(authList) {
         }),
         new __WEBPACK_IMPORTED_MODULE_0__menu_rule__["b" /* MenuRule */]({
             id: 2,
-            label: 'Employers',
+            label: 'My profile',
             icon: 'business',
             routerLink: ['/employers'],
             authorizedRoles: [
@@ -1983,9 +2109,13 @@ function loadMenuRules(authList) {
         }),
         new __WEBPACK_IMPORTED_MODULE_0__menu_rule__["b" /* MenuRule */]({
             id: 3,
-            label: 'Work Orders',
+            label: 'My work orders',
             icon: 'work',
-            routerLink: ['/work-orders']
+            routerLink: ['/work-orders'],
+            authorizedRoles: [
+                __WEBPACK_IMPORTED_MODULE_0__menu_rule__["a" /* LRole */].ADMIN,
+                __WEBPACK_IMPORTED_MODULE_0__menu_rule__["a" /* LRole */].HIRER
+            ]
         }),
         new __WEBPACK_IMPORTED_MODULE_0__menu_rule__["b" /* MenuRule */]({ id: 4, label: 'Dispatch', icon: 'today', url: ['/workassignment'] }),
         new __WEBPACK_IMPORTED_MODULE_0__menu_rule__["b" /* MenuRule */]({ id: 5, label: 'People', icon: 'people', url: ['/person'] }),
@@ -2413,13 +2543,11 @@ module.exports = "<h1>\r\n  Hire a Worker Online Order Form\r\n</h1>\r\n<p-steps
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return OnlineOrdersComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lookups_lookups_service__ = __webpack_require__("../../../../../src/app/lookups/lookups.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__online_orders_service__ = __webpack_require__("../../../../../src/app/online-orders/online-orders.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__work_assignments_work_assignments_service__ = __webpack_require__("../../../../../src/app/online-orders/work-assignments/work-assignments.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__work_order_work_order_service__ = __webpack_require__("../../../../../src/app/online-orders/work-order/work-order.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__employers_employers_service__ = __webpack_require__("../../../../../src/app/employers/employers.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__configs_configs_service__ = __webpack_require__("../../../../../src/app/configs/configs.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__online_orders_service__ = __webpack_require__("../../../../../src/app/online-orders/online-orders.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__work_assignments_work_assignments_service__ = __webpack_require__("../../../../../src/app/online-orders/work-assignments/work-assignments.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__work_order_work_order_service__ = __webpack_require__("../../../../../src/app/online-orders/work-order/work-order.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__employers_employers_service__ = __webpack_require__("../../../../../src/app/employers/employers.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -2429,8 +2557,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-
-
 
 
 
@@ -2456,13 +2582,11 @@ var OnlineOrdersComponent = (function () {
             template: __webpack_require__("../../../../../src/app/online-orders/online-orders.component.html"),
             styles: [__webpack_require__("../../../../../src/app/online-orders/online-orders.component.css")],
             providers: [
-                __WEBPACK_IMPORTED_MODULE_1__lookups_lookups_service__["a" /* LookupsService */],
-                __WEBPACK_IMPORTED_MODULE_6__employers_employers_service__["a" /* EmployersService */],
-                __WEBPACK_IMPORTED_MODULE_2__online_orders_service__["a" /* OnlineOrdersService */],
-                __WEBPACK_IMPORTED_MODULE_5__work_order_work_order_service__["a" /* WorkOrderService */],
-                __WEBPACK_IMPORTED_MODULE_4__work_assignments_work_assignments_service__["a" /* WorkAssignmentsService */],
-                __WEBPACK_IMPORTED_MODULE_7__configs_configs_service__["a" /* ConfigsService */],
-                __WEBPACK_IMPORTED_MODULE_3__angular_forms__["FormBuilder"]
+                __WEBPACK_IMPORTED_MODULE_5__employers_employers_service__["a" /* EmployersService */],
+                __WEBPACK_IMPORTED_MODULE_1__online_orders_service__["a" /* OnlineOrdersService */],
+                __WEBPACK_IMPORTED_MODULE_4__work_order_work_order_service__["a" /* WorkOrderService */],
+                __WEBPACK_IMPORTED_MODULE_3__work_assignments_work_assignments_service__["a" /* WorkAssignmentsService */],
+                __WEBPACK_IMPORTED_MODULE_2__angular_forms__["FormBuilder"]
             ]
         }),
         __metadata("design:paramtypes", [])
@@ -2558,9 +2682,7 @@ var OnlineOrdersModule = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs_Observable__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_common_http__ = __webpack_require__("../../../common/@angular/common/http.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_oidc_client__ = __webpack_require__("../../../../oidc-client/lib/oidc-client.min.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_oidc_client___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_oidc_client__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__shared__ = __webpack_require__("../../../../../src/app/online-orders/shared/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__shared__ = __webpack_require__("../../../../../src/app/online-orders/shared/index.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -2576,15 +2698,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var OnlineOrdersService = (function () {
     function OnlineOrdersService(http) {
         this.http = http;
         this.scheduleRules = new Array();
         this.transportRules = new Array();
         // this loads static data from a file. will replace later.
-        this.scheduleRules = Object(__WEBPACK_IMPORTED_MODULE_5__shared__["b" /* loadScheduleRules */])();
-        this.transportRules = Object(__WEBPACK_IMPORTED_MODULE_5__shared__["c" /* loadTransportRules */])();
+        this.scheduleRules = Object(__WEBPACK_IMPORTED_MODULE_4__shared__["b" /* loadScheduleRules */])();
+        this.transportRules = Object(__WEBPACK_IMPORTED_MODULE_4__shared__["c" /* loadTransportRules */])();
     }
     OnlineOrdersService.prototype.validate = function () { };
     OnlineOrdersService.prototype.postToApi = function (order) {
@@ -2594,10 +2715,10 @@ var OnlineOrdersService = (function () {
             headers: postHeaders
         }).subscribe(function (data) { }, function (err) {
             if (err.error instanceof Error) {
-                console.log('Client-side error occured.');
+                console.error('Client-side error occured.');
             }
             else {
-                __WEBPACK_IMPORTED_MODULE_4_oidc_client__["Log"].error('online-orders.service.POST: ' + err.message);
+                console.error('online-orders.service.POST: ' + err.message);
             }
         });
     };
@@ -2625,8 +2746,6 @@ var OnlineOrdersService = (function () {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SequenceGuard; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_oidc_client__ = __webpack_require__("../../../../oidc-client/lib/oidc-client.min.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_oidc_client___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_oidc_client__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -2634,12 +2753,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 
-
 var SequenceGuard = (function () {
     function SequenceGuard() {
     }
     SequenceGuard.prototype.canActivate = function () {
-        __WEBPACK_IMPORTED_MODULE_1_oidc_client__["Log"].info('AuthGuard#canActivate called');
+        //console.log('canActivate');
         return true;
     };
     SequenceGuard = __decorate([
@@ -3028,9 +3146,7 @@ module.exports = "<div class=\"ui-fluid\">\r\n  <div class=\"card\">\r\n    <for
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__lookups_lookups_service__ = __webpack_require__("../../../../../src/app/lookups/lookups.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__lookups_models_lookup__ = __webpack_require__("../../../../../src/app/lookups/models/lookup.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__work_assignments_service__ = __webpack_require__("../../../../../src/app/online-orders/work-assignments/work-assignments.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_oidc_client__ = __webpack_require__("../../../../oidc-client/lib/oidc-client.min.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_oidc_client___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_oidc_client__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__work_order_work_order_service__ = __webpack_require__("../../../../../src/app/online-orders/work-order/work-order.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__work_order_work_order_service__ = __webpack_require__("../../../../../src/app/online-orders/work-order/work-order.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -3040,7 +3156,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-
 
 
 
@@ -3083,19 +3198,19 @@ var WorkAssignmentsComponent = (function () {
         this.waService.getTransportRules()
             .subscribe(function (data) { return _this.transportRules = data; }, 
         // When this leads to a REST call, compactRequests will depend on it
-        function (error) { return __WEBPACK_IMPORTED_MODULE_7_oidc_client__["Log"].error('work-assignments.component.ngOnInit.getTransportRules.error' + error); }, function () { return console.log('work-assignments.component: ngOnInit:getTransportRules onCompleted'); });
+        function (error) { return console.error('ngOnInit.getTransportRules.error' + error); }, function () { return console.log('ngOnInit:getTransportRules onCompleted'); });
         this.lookupsService.getLookups(__WEBPACK_IMPORTED_MODULE_5__lookups_models_lookup__["a" /* LCategory */].SKILL)
             .subscribe(function (listData) {
             _this.skills = listData;
             _this.skillsDropDown = listData.map(function (l) {
                 return new __WEBPACK_IMPORTED_MODULE_2__reports_reports_component__["a" /* MySelectItem */](l.text_EN, String(l.id));
             });
-        }, function (error) { return _this.errorMessage = error; }, function () { return console.log('work-assignments.component: ngOnInit:skills onCompleted'); });
+        }, function (error) { return _this.errorMessage = error; }, function () { return console.log('ngOnInit:skills onCompleted'); });
         this.lookupsService.getLookups(__WEBPACK_IMPORTED_MODULE_5__lookups_models_lookup__["a" /* LCategory */].TRANSPORT)
             .subscribe(function (listData) {
             _this.transports = listData;
             _this.waService.compactRequests();
-        }, function (error) { return _this.errorMessage = error; }, function () { return console.log('work-assignments.component: ngOnInit:transports onCompleted'); });
+        }, function (error) { return _this.errorMessage = error; }, function () { return console.log('ngOnInit:transports onCompleted'); });
         this.requestList = this.waService.getAll();
         this.buildForm();
     };
@@ -3129,7 +3244,7 @@ var WorkAssignmentsComponent = (function () {
         }
     };
     WorkAssignmentsComponent.prototype.selectSkill = function (skillId) {
-        __WEBPACK_IMPORTED_MODULE_7_oidc_client__["Log"].info('work-assignment.component.selectSkill.skillId:' + String(skillId));
+        console.log('selectSkill.skillId:' + String(skillId));
         var skill = this.skills.filter(function (f) { return f.id === Number(skillId); }).shift();
         if (skill === null || skill === undefined) {
             throw new Error('Can\'t find selected skill in component\'s list');
@@ -3195,7 +3310,7 @@ var WorkAssignmentsComponent = (function () {
             template: __webpack_require__("../../../../../src/app/online-orders/work-assignments/work-assignments.component.html"),
             styles: [__webpack_require__("../../../../../src/app/online-orders/work-assignments/work-assignments.component.css")]
         }),
-        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4__lookups_lookups_service__["a" /* LookupsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__lookups_lookups_service__["a" /* LookupsService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_8__work_order_work_order_service__["a" /* WorkOrderService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_8__work_order_work_order_service__["a" /* WorkOrderService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_6__work_assignments_service__["a" /* WorkAssignmentsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__work_assignments_service__["a" /* WorkAssignmentsService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__angular_forms__["FormBuilder"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_forms__["FormBuilder"]) === "function" && _d || Object])
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4__lookups_lookups_service__["a" /* LookupsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__lookups_lookups_service__["a" /* LookupsService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_7__work_order_work_order_service__["a" /* WorkOrderService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__work_order_work_order_service__["a" /* WorkOrderService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_6__work_assignments_service__["a" /* WorkAssignmentsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__work_assignments_service__["a" /* WorkAssignmentsService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1__angular_forms__["FormBuilder"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_forms__["FormBuilder"]) === "function" && _d || Object])
     ], WorkAssignmentsComponent);
     return WorkAssignmentsComponent;
     var _a, _b, _c, _d;
@@ -3214,14 +3329,12 @@ var WorkAssignmentsComponent = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__models_work_assignment__ = __webpack_require__("../../../../../src/app/online-orders/work-assignments/models/work-assignment.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__ = __webpack_require__("../../../../rxjs/Observable.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_oidc_client__ = __webpack_require__("../../../../oidc-client/lib/oidc-client.min.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_oidc_client___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_oidc_client__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__online_orders_service__ = __webpack_require__("../../../../../src/app/online-orders/online-orders.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject__ = __webpack_require__("../../../../rxjs/BehaviorSubject.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__work_order_work_order_service__ = __webpack_require__("../../../../../src/app/online-orders/work-order/work-order.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__lookups_models_lookup__ = __webpack_require__("../../../../../src/app/lookups/models/lookup.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__lookups_lookups_service__ = __webpack_require__("../../../../../src/app/lookups/lookups.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__online_orders_service__ = __webpack_require__("../../../../../src/app/online-orders/online-orders.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_BehaviorSubject__ = __webpack_require__("../../../../rxjs/BehaviorSubject.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_BehaviorSubject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_BehaviorSubject__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__work_order_work_order_service__ = __webpack_require__("../../../../../src/app/online-orders/work-order/work-order.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__lookups_models_lookup__ = __webpack_require__("../../../../../src/app/lookups/models/lookup.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__lookups_lookups_service__ = __webpack_require__("../../../../../src/app/lookups/lookups.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -3239,23 +3352,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var WorkAssignmentsService = (function () {
     function WorkAssignmentsService(onlineService, orderService, lookupsService) {
         this.onlineService = onlineService;
         this.orderService = orderService;
         this.lookupsService = lookupsService;
         this.requests = new Array();
-        __WEBPACK_IMPORTED_MODULE_3_oidc_client__["Log"].info('work-assignment.service: ctor called');
+        console.log('.ctor');
         this.initializeTransports();
     }
     WorkAssignmentsService_1 = WorkAssignmentsService;
     WorkAssignmentsService.prototype.initializeTransports = function () {
         var _this = this;
-        this.lookupsService.getLookups(__WEBPACK_IMPORTED_MODULE_7__lookups_models_lookup__["a" /* LCategory */].TRANSPORT)
-            .subscribe(function (data) { return _this.transports = data; }, function (error) { return __WEBPACK_IMPORTED_MODULE_3_oidc_client__["Log"].info('wa.service.initializeTranports.error: ' + JSON.stringify(error)); }, function () { return __WEBPACK_IMPORTED_MODULE_3_oidc_client__["Log"].info('wa.service.initializeTransport.OnComplete'); });
+        this.lookupsService.getLookups(__WEBPACK_IMPORTED_MODULE_6__lookups_models_lookup__["a" /* LCategory */].TRANSPORT)
+            .subscribe(function (data) { return _this.transports = data; }, function (error) { return console.error('initializeTranports.error: ' + JSON.stringify(error)); }, function () { return console.log('initializeTransport.OnComplete'); });
         if (!this.transportRules$) {
-            this.transportRules$ = new __WEBPACK_IMPORTED_MODULE_5_rxjs_BehaviorSubject__["BehaviorSubject"](new Array());
+            this.transportRules$ = new __WEBPACK_IMPORTED_MODULE_4_rxjs_BehaviorSubject__["BehaviorSubject"](new Array());
             this.onlineService.getTransportRules()
                 .subscribe(function (data) {
                 _this.transportRules = data;
@@ -3267,7 +3379,7 @@ var WorkAssignmentsService = (function () {
         return this.transportRules$.asObservable();
     };
     WorkAssignmentsService.prototype.getAll = function () {
-        __WEBPACK_IMPORTED_MODULE_3_oidc_client__["Log"].info('work-assignments.service.getAll: called');
+        console.log('getAll: called');
         var data = sessionStorage.getItem(WorkAssignmentsService_1.storageKey);
         if (data) {
             var requests = JSON.parse(data);
@@ -3367,7 +3479,7 @@ var WorkAssignmentsService = (function () {
     WorkAssignmentsService.storageKey = 'machete.workassignments';
     WorkAssignmentsService = WorkAssignmentsService_1 = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
-        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4__online_orders_service__["a" /* OnlineOrdersService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__online_orders_service__["a" /* OnlineOrdersService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_6__work_order_work_order_service__["a" /* WorkOrderService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__work_order_work_order_service__["a" /* WorkOrderService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_8__lookups_lookups_service__["a" /* LookupsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_8__lookups_lookups_service__["a" /* LookupsService */]) === "function" && _c || Object])
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__online_orders_service__["a" /* OnlineOrdersService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__online_orders_service__["a" /* OnlineOrdersService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_5__work_order_work_order_service__["a" /* WorkOrderService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__work_order_work_order_service__["a" /* WorkOrderService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_7__lookups_lookups_service__["a" /* LookupsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__lookups_lookups_service__["a" /* LookupsService */]) === "function" && _c || Object])
     ], WorkAssignmentsService);
     return WorkAssignmentsService;
     var WorkAssignmentsService_1, _a, _b, _c;
@@ -3444,10 +3556,8 @@ module.exports = "<div class=\"ui-fluid\">\r\n  <div class=\"card\">\r\n    <for
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__online_orders_service__ = __webpack_require__("../../../../../src/app/online-orders/online-orders.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__lookups_models_lookup__ = __webpack_require__("../../../../../src/app/lookups/models/lookup.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__work_order_service__ = __webpack_require__("../../../../../src/app/online-orders/work-order/work-order.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_oidc_client__ = __webpack_require__("../../../../oidc-client/lib/oidc-client.min.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_oidc_client___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8_oidc_client__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__shared__ = __webpack_require__("../../../../../src/app/online-orders/shared/index.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__configs_configs_service__ = __webpack_require__("../../../../../src/app/configs/configs.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__shared__ = __webpack_require__("../../../../../src/app/online-orders/shared/index.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__configs_configs_service__ = __webpack_require__("../../../../../src/app/configs/configs.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -3467,7 +3577,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var WorkOrderComponent = (function () {
     function WorkOrderComponent(lookupsService, orderService, onlineService, configsService, fb) {
         this.lookupsService = lookupsService;
@@ -3475,7 +3584,6 @@ var WorkOrderComponent = (function () {
         this.onlineService = onlineService;
         this.configsService = configsService;
         this.fb = fb;
-        this.logPrefix = 'work-order.component.';
         this.order = new __WEBPACK_IMPORTED_MODULE_3__models_work_order__["a" /* WorkOrder */]();
         this.showErrors = false;
         this.newOrder = true;
@@ -3493,7 +3601,7 @@ var WorkOrderComponent = (function () {
             'transportMethodID': ''
         };
         this.display = false;
-        __WEBPACK_IMPORTED_MODULE_8_oidc_client__["Log"].info(this.logPrefix + 'ctor: called');
+        console.log('.ctor');
     }
     WorkOrderComponent.prototype.showDialog = function () {
         this.display = true;
@@ -3512,7 +3620,7 @@ var WorkOrderComponent = (function () {
         if (this.orderService.get() == null) {
             this.orderService.loadFromProfile()
                 .subscribe(function (data) {
-                __WEBPACK_IMPORTED_MODULE_8_oidc_client__["Log"].info(_this.logPrefix + 'ngOnInit: loadFromProfile ' + JSON.stringify(_this.order));
+                console.log('ngOnInit: loadFromProfile ', data);
                 _this.order = _this.mapOrderFrom(data);
                 _this.buildForm();
             });
@@ -3530,7 +3638,7 @@ var WorkOrderComponent = (function () {
             _this.transportMethodsDropDown = listData.map(function (l) {
                 return new __WEBPACK_IMPORTED_MODULE_1__reports_reports_component__["a" /* MySelectItem */](l.text_EN, String(l.id));
             });
-        }, function (error) { return _this.errorMessage = error; }, function () { return __WEBPACK_IMPORTED_MODULE_8_oidc_client__["Log"].info(_this.logPrefix + 'ngOnInit: getLookups onCompleted'); });
+        }, function (error) { return _this.errorMessage = error; }, function () { return console.log('ngOnInit: getLookups onCompleted'); });
     };
     WorkOrderComponent.prototype.mapOrderFrom = function (employer) {
         var order = new __WEBPACK_IMPORTED_MODULE_3__models_work_order__["a" /* WorkOrder */]();
@@ -3547,19 +3655,19 @@ var WorkOrderComponent = (function () {
         var _this = this;
         this.orderForm = this.fb.group({
             'dateTimeofWork': [this.order.dateTimeofWork, [
-                    Object(__WEBPACK_IMPORTED_MODULE_9__shared__["d" /* requiredValidator */])('Date & time is required.'),
-                    Object(__WEBPACK_IMPORTED_MODULE_9__shared__["e" /* schedulingValidator */])(this.schedulingRules)
+                    Object(__WEBPACK_IMPORTED_MODULE_8__shared__["d" /* requiredValidator */])('Date & time is required.'),
+                    Object(__WEBPACK_IMPORTED_MODULE_8__shared__["e" /* schedulingValidator */])(this.schedulingRules)
                 ]],
-            'contactName': [this.order.contactName, Object(__WEBPACK_IMPORTED_MODULE_9__shared__["d" /* requiredValidator */])('Contact name is required.')],
-            'worksiteAddress1': [this.order.worksiteAddress1, Object(__WEBPACK_IMPORTED_MODULE_9__shared__["d" /* requiredValidator */])('Address is required.')],
+            'contactName': [this.order.contactName, Object(__WEBPACK_IMPORTED_MODULE_8__shared__["d" /* requiredValidator */])('Contact name is required.')],
+            'worksiteAddress1': [this.order.worksiteAddress1, Object(__WEBPACK_IMPORTED_MODULE_8__shared__["d" /* requiredValidator */])('Address is required.')],
             'worksiteAddress2': [this.order.worksiteAddress2],
-            'city': [this.order.city, Object(__WEBPACK_IMPORTED_MODULE_9__shared__["d" /* requiredValidator */])('City is required.')],
-            'state': [this.order.state, Object(__WEBPACK_IMPORTED_MODULE_9__shared__["d" /* requiredValidator */])('State is required.')],
-            'zipcode': [this.order.zipcode, Object(__WEBPACK_IMPORTED_MODULE_9__shared__["d" /* requiredValidator */])('Zip code is required.')],
-            'phone': [this.order.phone, Object(__WEBPACK_IMPORTED_MODULE_9__shared__["d" /* requiredValidator */])('Phone is required.')],
-            'description': [this.order.description, Object(__WEBPACK_IMPORTED_MODULE_9__shared__["d" /* requiredValidator */])('Description is required.')],
+            'city': [this.order.city, Object(__WEBPACK_IMPORTED_MODULE_8__shared__["d" /* requiredValidator */])('City is required.')],
+            'state': [this.order.state, Object(__WEBPACK_IMPORTED_MODULE_8__shared__["d" /* requiredValidator */])('State is required.')],
+            'zipcode': [this.order.zipcode, Object(__WEBPACK_IMPORTED_MODULE_8__shared__["d" /* requiredValidator */])('Zip code is required.')],
+            'phone': [this.order.phone, Object(__WEBPACK_IMPORTED_MODULE_8__shared__["d" /* requiredValidator */])('Phone is required.')],
+            'description': [this.order.description, Object(__WEBPACK_IMPORTED_MODULE_8__shared__["d" /* requiredValidator */])('Description is required.')],
             'additionalNotes': '',
-            'transportMethodID': [this.order.transportMethodID, Object(__WEBPACK_IMPORTED_MODULE_9__shared__["d" /* requiredValidator */])('A transport method is required.')]
+            'transportMethodID': [this.order.transportMethodID, Object(__WEBPACK_IMPORTED_MODULE_8__shared__["d" /* requiredValidator */])('A transport method is required.')]
         });
         this.orderForm.valueChanges
             .subscribe(function (data) { return _this.onValueChanged(data); });
@@ -3573,7 +3681,7 @@ var WorkOrderComponent = (function () {
             var control = form.get(field);
             if (control && !control.valid) {
                 for (var key in control.errors) {
-                    __WEBPACK_IMPORTED_MODULE_8_oidc_client__["Log"].info('online-orders.work-order.component.onValueChanged.error:' + field + ': ' + control.errors[key]);
+                    //console.log('onValueChanged.error:' + field + ': ' + control.errors[key]);
                     this.formErrors[field] += control.errors[key] + ' ';
                 }
             }
@@ -3584,7 +3692,7 @@ var WorkOrderComponent = (function () {
     WorkOrderComponent.prototype.save = function () {
         this.onValueChanged();
         if (this.orderForm.status === 'INVALID') {
-            __WEBPACK_IMPORTED_MODULE_8_oidc_client__["Log"].info(this.logPrefix + 'save: INVALID: ' + JSON.stringify(this.formErrors));
+            console.log('save: INVALID: ' + this.formErrors);
             this.showErrors = true;
             return;
         }
@@ -3619,7 +3727,7 @@ var WorkOrderComponent = (function () {
             template: __webpack_require__("../../../../../src/app/online-orders/work-order/work-order.component.html"),
             styles: [__webpack_require__("../../../../../src/app/online-orders/work-order/work-order.component.css")]
         }),
-        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4__lookups_lookups_service__["a" /* LookupsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__lookups_lookups_service__["a" /* LookupsService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_7__work_order_service__["a" /* WorkOrderService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__work_order_service__["a" /* WorkOrderService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_5__online_orders_service__["a" /* OnlineOrdersService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__online_orders_service__["a" /* OnlineOrdersService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_10__configs_configs_service__["a" /* ConfigsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_10__configs_configs_service__["a" /* ConfigsService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_2__angular_forms__["FormBuilder"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_forms__["FormBuilder"]) === "function" && _e || Object])
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4__lookups_lookups_service__["a" /* LookupsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__lookups_lookups_service__["a" /* LookupsService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_7__work_order_service__["a" /* WorkOrderService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__work_order_service__["a" /* WorkOrderService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_5__online_orders_service__["a" /* OnlineOrdersService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_5__online_orders_service__["a" /* OnlineOrdersService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_9__configs_configs_service__["a" /* ConfigsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_9__configs_configs_service__["a" /* ConfigsService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_2__angular_forms__["FormBuilder"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_forms__["FormBuilder"]) === "function" && _e || Object])
     ], WorkOrderComponent);
     return WorkOrderComponent;
     var _a, _b, _c, _d, _e;
@@ -3636,8 +3744,6 @@ var WorkOrderComponent = (function () {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return WorkOrderService; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__employers_employers_service__ = __webpack_require__("../../../../../src/app/employers/employers.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_oidc_client__ = __webpack_require__("../../../../oidc-client/lib/oidc-client.min.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_oidc_client___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_oidc_client__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -3649,27 +3755,26 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
-
 var WorkOrderService = (function () {
     function WorkOrderService(employerService) {
         this.employerService = employerService;
         this.storageKey = 'machete.workorder';
-        __WEBPACK_IMPORTED_MODULE_2_oidc_client__["Log"].info('work-order.service: ' + JSON.stringify(this.get()));
+        console.log('.ctor');
     }
     WorkOrderService.prototype.loadFromProfile = function () {
-        __WEBPACK_IMPORTED_MODULE_2_oidc_client__["Log"].info('work-order.service.loadFromProfile: called');
+        console.log('loadFromProfile: called');
         return this.employerService.getEmployerBySubject();
     };
     WorkOrderService.prototype.save = function (order) {
-        __WEBPACK_IMPORTED_MODULE_2_oidc_client__["Log"].info('work-order.service.save: called');
+        console.log('save', order);
         sessionStorage.setItem(this.storageKey, JSON.stringify(order));
         this.order = order;
     };
     WorkOrderService.prototype.get = function () {
-        __WEBPACK_IMPORTED_MODULE_2_oidc_client__["Log"].info('work-order.service.get: called');
+        console.log('get called');
         var data = sessionStorage.getItem(this.storageKey);
         if (data) {
-            __WEBPACK_IMPORTED_MODULE_2_oidc_client__["Log"].info('work-order.service.get: returning stored order');
+            console.log('get: returning stored order');
             var order = JSON.parse(data);
             order.dateTimeofWork = new Date(order.dateTimeofWork);
             return order;
@@ -3941,8 +4046,6 @@ var MySelectItem = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_primeng_primeng__ = __webpack_require__("../../../../primeng/primeng.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_primeng_primeng___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_primeng_primeng__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__reports_routing_module__ = __webpack_require__("../../../../../src/app/reports/reports-routing.module.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_oidc_client__ = __webpack_require__("../../../../oidc-client/lib/oidc-client.min.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_oidc_client___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_oidc_client__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -3959,10 +4062,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var ReportsModule = (function () {
     function ReportsModule() {
-        __WEBPACK_IMPORTED_MODULE_7_oidc_client__["Log"].info('reports.module.ctor called');
+        console.log('.ctor');
     }
     ReportsModule = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["NgModule"])({
@@ -4010,9 +4112,7 @@ var ReportsModule = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_Observable__ = __webpack_require__("../../../../rxjs/Observable.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_Observable__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__environments_environment__ = __webpack_require__("../../../../../src/environments/environment.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_oidc_client__ = __webpack_require__("../../../../oidc-client/lib/oidc-client.min.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_oidc_client___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_oidc_client__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__angular_common_http__ = __webpack_require__("../../../common/@angular/common/http.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__angular_common_http__ = __webpack_require__("../../../common/@angular/common/http.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -4022,7 +4122,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-
 
 
 
@@ -4044,20 +4143,20 @@ var ReportsService = (function () {
         if (reportName && params) {
             uri = uri + '?' + params;
         }
-        __WEBPACK_IMPORTED_MODULE_6_oidc_client__["Log"].info('reportsService.getReportData: ' + uri);
+        console.log('getReportData: ' + uri);
         return this.http.get(uri)
             .map(function (res) { return res['data']; })
             .catch(this.handleError);
     };
     ReportsService.prototype.getReportList = function () {
         var uri = __WEBPACK_IMPORTED_MODULE_5__environments_environment__["a" /* environment */].dataUrl + '/api/reports';
-        __WEBPACK_IMPORTED_MODULE_6_oidc_client__["Log"].info('reportsService.getReportList: ' + uri);
+        console.log('getReportList: ', uri);
         return this.http.get(uri)
             .map(function (o) { return o['data']; })
             .catch(this.handleError);
     };
     ReportsService.prototype.handleError = function (error) {
-        console.error('reports.service.handleError:', JSON.stringify(error));
+        console.error('handleError:', error);
         return __WEBPACK_IMPORTED_MODULE_4_rxjs_Observable__["Observable"].of(error);
     };
     ReportsService.prototype.encodeData = function (data) {
@@ -4067,7 +4166,7 @@ var ReportsService = (function () {
     };
     ReportsService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
-        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_7__angular_common_http__["b" /* HttpClient */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__angular_common_http__["b" /* HttpClient */]) === "function" && _a || Object])
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_6__angular_common_http__["b" /* HttpClient */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__angular_common_http__["b" /* HttpClient */]) === "function" && _a || Object])
     ], ReportsService);
     return ReportsService;
     var _a;
@@ -4181,8 +4280,6 @@ var Employer = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__auth_service__ = __webpack_require__("../../../../../src/app/shared/services/auth.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_oidc_client__ = __webpack_require__("../../../../oidc-client/lib/oidc-client.min.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_oidc_client___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_oidc_client__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -4195,21 +4292,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var AuthGuardService = (function () {
     function AuthGuardService(authService, router) {
         this.authService = authService;
         this.router = router;
-        __WEBPACK_IMPORTED_MODULE_3_oidc_client__["Log"].info('auth-guard.service.ctor called');
+        console.log('.ctor');
     }
     AuthGuardService.prototype.canActivate = function (route, state) {
         var _this = this;
-        __WEBPACK_IMPORTED_MODULE_3_oidc_client__["Log"].info("auth-guard.service.canActivate on: " + state.url);
+        console.log(state);
         var isLoggedIn = this.authService.isLoggedInObs();
         isLoggedIn.subscribe(function (loggedin) {
-            __WEBPACK_IMPORTED_MODULE_3_oidc_client__["Log"].info('auth-guard.service.canActivate isLoggedInObs:' + loggedin);
             if (!loggedin) {
-                __WEBPACK_IMPORTED_MODULE_3_oidc_client__["Log"].info('auth-guard.service.canActivate NOT loggedIn: url:' + state.url);
+                console.log('canActivate NOT loggedIn: url:', state);
                 _this.authService.setRedirectUrl(state.url);
                 _this.router.navigate(['unauthorized']);
             }
@@ -4256,46 +4351,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-
 var AuthService = (function () {
     // TODO:
     // need async way to call for auth password, then send intercept on its way
     function AuthService(http, router) {
-        // Log.info('auth.service.ctor: called');
-        // this.mgr.getUser()
-        //   .then((user) => {
-        //     if (user) {
-        //       Log.debug('auth.service.ctor.getUser.callback user:' + JSON.stringify(user));
-        //       this.loggedIn = true;
-        //       this.currentUser = user;
-        //       this.userLoadededEvent.emit(user);
-        //     } else {
-        //       this.loggedIn = false;
-        //     }
-        //   })
-        //   .catch((err) => {
-        //     this.loggedIn = false;
-        //   });
         this.http = http;
         this.router = router;
         this.mgr = new __WEBPACK_IMPORTED_MODULE_3_oidc_client__["UserManager"](__WEBPACK_IMPORTED_MODULE_4__environments_environment__["a" /* environment */].oidc_client_settings);
-        this.userLoadededEvent = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["EventEmitter"]();
+        this.userLoadedEvent = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["EventEmitter"]();
         this.loggedIn = false;
-        // this.mgr.events.addUserLoaded((user) => {
-        //   this.currentUser = user;
-        //   this.loggedIn = !(user === undefined);
-        //     Log.debug('auth.service.ctor.event: addUserLoaded: ', user);
-        //   });
-        // this.mgr.events.addUserUnloaded((e) => {
-        //   if (!environment.production) {
-        //     Log.info('auth.service.ctor.event: addUserUnloaded');
-        //   }
-        //   this.loggedIn = false;
-        // });
     }
+    AuthService.prototype.getUserEmitter = function () {
+        return this.userLoadedEvent;
+    };
     AuthService.prototype.setRedirectUrl = function (url) {
         this.redirectUrl = url;
-        __WEBPACK_IMPORTED_MODULE_3_oidc_client__["Log"].info("auth.service.setRedirectUrl.url: " + this.redirectUrl);
+        console.log("auth.service.setRedirectUrl.url: " + this.redirectUrl);
     };
     AuthService.prototype.getRedirectUrl = function () {
         return this.redirectUrl;
@@ -4312,9 +4383,9 @@ var AuthService = (function () {
     };
     AuthService.prototype.clearState = function () {
         this.mgr.clearStaleState().then(function () {
-            __WEBPACK_IMPORTED_MODULE_3_oidc_client__["Log"].info('auth.service.clearStateState success');
+            console.log('auth.service.clearStateState success');
         }).catch(function (e) {
-            __WEBPACK_IMPORTED_MODULE_3_oidc_client__["Log"].error('auth.service.clearStateState error', e.message);
+            console.error('auth.service.clearStateState error', e.message);
         });
     };
     AuthService.prototype.getUser$ = function () {
@@ -4323,8 +4394,9 @@ var AuthService = (function () {
     AuthService.prototype.getUserRoles$ = function () {
         return this.getUser$()
             .mergeMap(function (user) {
+            console.log(user);
             if (user === null || user === undefined) {
-                return __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__["Observable"].of(null);
+                return __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__["Observable"].of(new Array());
             }
             else {
                 return __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__["Observable"].of(user.profile.role);
@@ -4347,37 +4419,37 @@ var AuthService = (function () {
         var _this = this;
         this.mgr.getUser().then(function (user) {
             _this.currentUser = user;
-            __WEBPACK_IMPORTED_MODULE_3_oidc_client__["Log"].info('auth.service.getUser returned: ' + JSON.stringify(user));
-            _this.userLoadededEvent.emit(user);
+            //console.log('auth.service.getUser returned: ' + JSON.stringify(user));
+            _this.getUserEmitter().emit(user);
         }).catch(function (err) {
-            __WEBPACK_IMPORTED_MODULE_3_oidc_client__["Log"].error('auth.service.getUser returned: ' + JSON.stringify(err));
+            console.error('getUser: ', err);
         });
     };
     AuthService.prototype.removeUser = function () {
         var _this = this;
         this.mgr.removeUser().then(function () {
-            _this.userLoadededEvent.emit(null);
-            __WEBPACK_IMPORTED_MODULE_3_oidc_client__["Log"].info('auth.service.removeUser: user removed');
+            _this.getUserEmitter().emit(null);
+            console.log('auth.service.removeUser: user removed');
         }).catch(function (err) {
-            __WEBPACK_IMPORTED_MODULE_3_oidc_client__["Log"].error('auth.service.removeUser returned: ' + JSON.stringify(err));
+            console.error('auth.service.removeUser returned: ' + JSON.stringify(err));
         });
     };
     AuthService.prototype.startSigninMainWindow = function () {
         this.mgr.signinRedirect({ data: this.redirectUrl }).then(function () {
-            __WEBPACK_IMPORTED_MODULE_3_oidc_client__["Log"].info('signinRedirect done');
+            console.log('signinRedirect done');
         }).catch(function (err) {
-            __WEBPACK_IMPORTED_MODULE_3_oidc_client__["Log"].error('auth.service.startSigninMainWindow returned: ' + JSON.stringify(err));
+            console.error('auth.service.startSigninMainWindow returned: ' + JSON.stringify(err));
         });
     };
     AuthService.prototype.endSigninMainWindow = function (url) {
         return __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__["Observable"].fromPromise(this.mgr.signinRedirectCallback(url));
         // .then(function (user) {
-        //   Log.info('auth.service.endSigninMainWindow.user: ', user.profile.sub);
+        //   console.log('auth.service.endSigninMainWindow.user: ', user.profile.sub);
         //   if (user.state) {
         //     this.router.navigate(['dashboard']);
         //   }
         // }).catch(function (err) {
-        //   Log.error('auth.service.endSigninMainWindow returned: ' + JSON.stringify(err));
+        //   console.error('auth.service.endSigninMainWindow returned: ' + JSON.stringify(err));
         // });
     };
     AuthService.prototype.startSignoutMainWindow = function () {
@@ -4389,7 +4461,7 @@ var AuthService = (function () {
                     console.log('testing to see if fired...');
                 });
             }).catch(function (err) {
-                __WEBPACK_IMPORTED_MODULE_3_oidc_client__["Log"].error('auth.service.startSignoutMainWindow returned: ' + JSON.stringify(err));
+                console.error('auth.service.startSignoutMainWindow returned: ' + JSON.stringify(err));
             });
         });
     };
@@ -4398,7 +4470,7 @@ var AuthService = (function () {
         this.mgr.signoutRedirectCallback().then(function (resp) {
             console.log('signed out', resp);
         }).catch(function (err) {
-            __WEBPACK_IMPORTED_MODULE_3_oidc_client__["Log"].error('auth.service.endSignoutMainWindow returned: ' + JSON.stringify(err));
+            console.error('auth.service.endSignoutMainWindow returned: ' + JSON.stringify(err));
         });
     };
     ;
@@ -4421,9 +4493,7 @@ var AuthService = (function () {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TokenInterceptor; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__auth_service__ = __webpack_require__("../../../../../src/app/shared/services/auth.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_oidc_client__ = __webpack_require__("../../../../oidc-client/lib/oidc-client.min.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_oidc_client___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_oidc_client__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__("../../../router/@angular/router.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -4433,7 +4503,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-
 
 
 
@@ -4447,27 +4516,29 @@ var TokenInterceptor = (function () {
         var url = this.route.url;
         return this.auth.getUser$()
             .mergeMap(function (user) {
-            __WEBPACK_IMPORTED_MODULE_2_oidc_client__["Log"].info('token.interceptor.currentUser: ');
-            // TODO: need redirect for expired user
-            if (user === null ||
-                user === undefined ||
-                user.expired) {
+            //console.log('currentUser: ', user);
+            if (user === null || user === undefined) {
                 _this.auth.redirectUrl = url;
-                _this.route.navigate(['/unauthorized']);
-            }
-            else {
-                request = request.clone({
-                    setHeaders: {
-                        Authorization: "Bearer " + user.access_token
-                    }
-                });
+                _this.route.navigate(['/welcome']);
                 return next.handle(request);
             }
+            if (user.expired) {
+                _this.auth.redirectUrl = url;
+                // TODO: should go to login start, or silently renew?
+                _this.route.navigate(['/unauthorized']);
+                return next.handle(request);
+            }
+            request = request.clone({
+                setHeaders: {
+                    Authorization: "Bearer " + user.access_token
+                }
+            });
+            return next.handle(request);
         });
     };
     TokenInterceptor = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
-        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__auth_service__["a" /* AuthService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__auth_service__["a" /* AuthService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__angular_router__["Router"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_router__["Router"]) === "function" && _b || Object])
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__auth_service__["a" /* AuthService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__auth_service__["a" /* AuthService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["Router"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_router__["Router"]) === "function" && _b || Object])
     ], TokenInterceptor);
     return TokenInterceptor;
     var _a, _b;
@@ -4690,19 +4761,18 @@ var WorkOrdersService = (function () {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return environment; });
 var environment = {
-    name: 'mvc-embedded',
-    production: false,
-    dataUrl: 'http://localhost:63374',
-    authUrl: 'https://localhost:44379/id',
-    baseRef: '/V2',
+    name: 'cloud-test',
+    production: true,
+    dataUrl: 'https://api.machetessl.org',
+    authUrl: 'https://identity.machetessl.org/id',
     oidc_client_settings: {
-        authority: 'https://localhost:44379/id',
-        client_id: 'machete-ui-local-embedded',
-        redirect_uri: 'http://localhost:4213/V2/authorize',
-        post_logout_redirect_uri: 'http://localhost:4213/V2',
+        authority: 'https://identity.machetessl.org/id',
+        client_id: 'machete-ui-cloud-test',
+        redirect_uri: 'https://test.machetessl.org/V2/authorize',
+        post_logout_redirect_uri: 'https://test.machetessl.org/V2',
         response_type: 'id_token token',
         scope: 'openid email roles api profile',
-        silent_redirect_uri: 'http://localhost:4213/V2/silent-renew.html',
+        silent_redirect_uri: 'https://test.machetessl.org/V2/silent-renew.html',
         automaticSilentRenew: true,
         accessTokenExpiringNotificationTime: 4,
         // silentRequestTimeout:10000,
