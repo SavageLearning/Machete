@@ -68,7 +68,7 @@ namespace Machete.Api.Controllers
         public void Post([FromBody]Employer employer)
         {
             var domain = map.Map<Employer, Domain.Employer>(employer);
-            serv.Save(domain, User.Identity.Name);
+            serv.Create(domain, User.Identity.Name);
         }
 
 
@@ -79,7 +79,7 @@ namespace Machete.Api.Controllers
         {
             var domain = map.Map<Employer, Domain.Employer>(employer);
             domain.onlineSigninID = userSubject;
-            serv.Save(domain, User.Identity.Name);
+            serv.Create(domain, User.Identity.Name);
         }
 
         // PUT api/values/5
