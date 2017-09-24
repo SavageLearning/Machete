@@ -262,6 +262,13 @@ namespace Machete.Identity
 
         private Task<MacheteUser> TryGetExistingUserFromExternalProviderClaimsAsync(string provider, IEnumerable<Claim> claims)
         {
+            // search by email
+            var email = claims.FirstOrDefault(x => x.Type == Constants.ClaimTypes.Email);
+            if (email != null && !String.IsNullOrEmpty(email.Value))
+            {
+                var result = userManager.FindByEmailAsync(email.Value);
+                return Task.FromResult<MacheteUser>(result.Result);
+            }
             return Task.FromResult<MacheteUser>(null);
         }
 
