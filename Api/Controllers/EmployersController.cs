@@ -92,9 +92,9 @@ namespace Machete.Api.Controllers
         }
 
         [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Hirer })]
-        [HttpPatch]
+        [HttpPut]
         [Route("api/employer/profile")]
-        public void ProfilePut(int id, [FromBody]Employer employer)
+        public void ProfilePut([FromBody]Employer employer)
         {
             var domain = serv.Get(userSubject);
             map.Map<Employer, Domain.Employer>(employer, domain);
