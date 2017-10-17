@@ -15,31 +15,40 @@ namespace Machete.Api.Controllers
     {
         private readonly IOnlineOrdersService serv;
         private readonly IEmployerService eServ;
+        private readonly IWorkOrderService woServ;
         private readonly IMapper map;
 
         public OnlineOrdersController(
             IOnlineOrdersService serv, 
             IEmployerService eServ,
+            IWorkOrderService woServ,
             IMapper map)
         {
             this.serv = serv;
             this.eServ = eServ;
+            this.woServ = woServ;
             this.map = map;
         }
         // GET: api/OnlineOrders
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Hirer })]
 
         public IHttpActionResult Get()
         {
 
-            var result = serv.GetMany(a => a.Employer.onlineSigninID == userSubject)
-                .Select(a => map.Map<Domain.WorkOrder, WorkOrder>(a));
-
+            var vo = new viewOptions();
+            vo.displayLength = 10;
+            vo.displayStart = 0;
+            vo.employerGuid = userSubject;
+            dataTableResult<Service.DTO.WorkOrdersList> list = woServ.GetIndexView(vo);
+            var result = list.query
+                .Select(
+                    e => map.Map<Service.DTO.WorkOrdersList, WorkOrder>(e)
+                ).AsEnumerable();
             return Json(new { data = result });
         }
 
         // GET: api/OnlineOrders/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Hirer })]
 
         public string Get(int id)
         {
@@ -47,7 +56,7 @@ namespace Machete.Api.Controllers
         }
 
         // POST: api/OnlineOrders
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Hirer })]
         public void Post([FromBody]WorkOrder order)
         {
             var employer = eServ.Get(guid: userSubject);
