@@ -7,14 +7,10 @@ namespace Machete.Data
     {
         public override void Up()
         {
+            AddColumn("dbo.WorkAssignments", "transportCost", c => c.Double());
             AddColumn("dbo.Configs", "publicConfig", c => c.Boolean(nullable: false, defaultValue: true));
-            AddColumn("dbo.Lookups", "clientRules", c => c.String());
             AddColumn("dbo.AspNetUsers", "FirstName", c => c.String());
             AddColumn("dbo.AspNetUsers", "LastName", c => c.String());
-            Sql(@"update lookups set [key] = 'transport_bus' where id = 29");
-            Sql(@"update lookups set [key] = 'transport_car' where id = 30");
-            Sql(@"update lookups set [key] = 'transport_pickup' where id = 31");
-            Sql(@"update lookups set [key] = 'transport_van' where id = 32");
             Sql(@"update configs set publicConfig = 0 where category = 'Emails'");
             Sql(@"update configs set publicConfig = 0 where [key] = 'PayPalAccountID'");
         }
@@ -23,8 +19,8 @@ namespace Machete.Data
         {
             DropColumn("dbo.AspNetUsers", "LastName");
             DropColumn("dbo.AspNetUsers", "FirstName");
-            DropColumn("dbo.Lookups", "clientRules");
             DropColumn("dbo.Configs", "publicConfig");
+            DropColumn("dbo.WorkAssignments", "transportCost");
         }
     }
 }

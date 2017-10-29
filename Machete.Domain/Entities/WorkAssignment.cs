@@ -114,6 +114,7 @@ namespace Machete.Domain
 
         public double minEarnings { get; set; }
         public double maxEarnings { get; set; }
+        public double? transportCost { get; set; }
 
     }
     public class WorkAssignmentSummary

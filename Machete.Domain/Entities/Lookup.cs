@@ -106,9 +106,6 @@ namespace Machete.Domain
 
         [LocalizedDisplayName("active", NameResourceType = typeof(Resources.Lookup))]
         public bool active { get; set; }
-
-        public string clientRules { get; set; }
-
     }
 
 

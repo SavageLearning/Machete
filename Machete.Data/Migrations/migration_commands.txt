@@ -12,8 +12,8 @@ Update-Database -sourcemigration 201305050151353_AddEmailTable -targetmigration 
 # machete.web\web.config or machete.text\app.config. If you're refreshing a migratino, be sure to check the database for any automatic migration 
 # entries in the history. You will probably need to delete them and refresh the migration to make sure you have all the fields you really need.
 #
-#  Update-Database -TargetMigration 201611211803005_Identity_upgrade
-#  add-migration api_refactor -force
+#  Update-Database -TargetMigration 201705070423149_v1_12_0_reports
+#  add-migration v1_13_0-online_orders -force
 
 refresh migration script
 add-migration 201211112024571_AddOnlineSourceBit

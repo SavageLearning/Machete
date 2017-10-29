@@ -57,7 +57,8 @@ namespace Machete.Api.Controllers
 
         // POST: api/OnlineOrders
         [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Hirer })]
-        public void Post([FromBody]WorkOrder order)
+        [HttpPost]
+        public IHttpActionResult Post([FromBody]WorkOrder order)
         {
             var employer = eServ.Get(guid: userSubject);
             if (employer == null)
@@ -67,7 +68,9 @@ namespace Machete.Api.Controllers
             var domain = map.Map<WorkOrder, Domain.WorkOrder>(order);
             domain.EmployerID = employer.ID;
             var result = serv.Create(domain, employer.email ?? employer.name);
-            //return Json(new { data = result });
+            result.Employer = null;
+            result.workAssignments.Select(a => { a.workOrder = null; return a; } ).ToList();
+            return Json(new { data = result });
         }
 
     }

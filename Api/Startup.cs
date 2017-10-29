@@ -46,6 +46,8 @@ namespace Machete.Api
             //UnityConfig.ConfigureUnity(config);
             //config.Filters.Add(new AuthorizeAttribute());
             config.Services.Add(typeof(IExceptionLogger), new ElmahExceptionLogger());
+            //config.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling
+            //            = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             app.UseWebApi(config);
         }
     }
