@@ -295,6 +295,7 @@
     <Compile Include="Infrastructure\UnitOfWork.cs" />
     <Compile Include="Initialize\MacheteLookups.cs" />
     <Compile Include="Initialize\MacheteReportDefinitions.cs" />
+    <Compile Include="Initialize\MacheteRules.cs" />
     <Compile Include="Initialize\MacheteUsers.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\MacheteIntercepterTransientErrors.cs" />

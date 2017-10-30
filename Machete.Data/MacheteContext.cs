@@ -56,8 +56,9 @@ namespace Machete.Data
         public DbSet<ActivitySignin> ActivitySignins { get; set; }
         public DbSet<Config> Configs { get; set; }
         public DbSet<ReportDefinition> ReportDefinitions { get; set; }
-        //public DbSet<ApplicationUser> ApplicationUsers { get; set; }
-
+        public DbSet<TransportRule> TransportRules { get; set; }
+        public DbSet<TransportCostRule> TransportCostRules { get; set; }
+        public DbSet<ScheduleRule> ScheduleRules { get; set; }
         public virtual void Commit()
         {
             try
@@ -90,6 +91,10 @@ namespace Machete.Data
             modelBuilder.Configurations.Add(new ActivitySigninBuilder());
             modelBuilder.Configurations.Add(new ActivityBuilder());
             modelBuilder.Configurations.Add(new EmailBuilder());
+            modelBuilder.Configurations.Add(new TransportRuleBuilder());
+            modelBuilder.Configurations.Add(new TransportCostRuleBuilder());
+            modelBuilder.Configurations.Add(new ScheduleRuleBuilder());
+
             modelBuilder.Entity<Employer>().ToTable("Employers");
             modelBuilder.Entity<WorkOrder>().ToTable("WorkOrders");
             modelBuilder.Entity<WorkAssignment>().ToTable("WorkAssignments");
@@ -244,4 +249,36 @@ namespace Machete.Data
             });
         }
     }
+
+    public class TransportRuleBuilder : EntityTypeConfiguration<TransportRule>
+    {
+        public TransportRuleBuilder()
+        {
+            HasKey(k => k.ID);
+            HasMany(c => c.costRules)
+                .WithRequired(r => r.transportRule)
+                .HasForeignKey(k => k.transportRuleID)
+                .WillCascadeOnDelete();
+        }
+    }
+
+    public class TransportCostRuleBuilder : EntityTypeConfiguration<TransportCostRule>
+    {
+        public TransportCostRuleBuilder()
+        {
+            HasKey(k => k.ID);
+            HasRequired(k => k.transportRule)
+                .WithMany(c => c.costRules)
+                .HasForeignKey(k => k.transportRuleID);
+        }
+    }
+
+    public class ScheduleRuleBuilder : EntityTypeConfiguration<ScheduleRule>
+    {
+        public ScheduleRuleBuilder()
+        {
+            HasKey(k => k.ID);            
+        }
+    }
+
 }

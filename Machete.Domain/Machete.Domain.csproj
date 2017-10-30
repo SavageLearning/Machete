@@ -264,6 +264,10 @@
     <Compile Include="Entities\Person.cs" />
     <Compile Include="Entities\Record.cs" />
     <Compile Include="Entities\ReportDefinition.cs" />
+    <Compile Include="Entities\Rules\ScheduleRule.cs" />
+    <Compile Include="Entities\Rules\SkillRule.cs" />
+    <Compile Include="Entities\Rules\TransportCostRule.cs" />
+    <Compile Include="Entities\Rules\TransportRule.cs" />
     <Compile Include="Entities\WorkAssignment.cs" />
     <Compile Include="Entities\Worker.cs" />
     <Compile Include="Entities\WorkerRequest.cs" />

@@ -57,6 +57,9 @@ namespace Machete.Data
     public interface IWorkAssignmentRepository : IRepository<WorkAssignment> { }
     public interface IPersonRepository : IRepository<Person> { }
     public interface IEventRepository : IRepository<Event> { }
+    public interface IScheduleRuleRepository : IRepository<ScheduleRule> { }
+    public interface ITransportRuleRepository : IRepository<TransportRule> { }
+    public interface ITransportCostRuleRepository : IRepository<TransportCostRule> { }
     public interface IImageRepository : IRepository<Image> { }
     public interface ILookupRepository : IRepository<Lookup> 
     {
@@ -209,6 +212,21 @@ namespace Machete.Data
                 l.selected = false;
             }            
         }
+    }
+
+    public class ScheduleRuleRepository : RepositoryBase<ScheduleRule>, IScheduleRuleRepository
+    {
+        public ScheduleRuleRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
+    }
+
+    public class TransportRuleRepository : RepositoryBase<TransportRule>, ITransportRuleRepository
+    {
+        public TransportRuleRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
+    }
+
+    public class TransportCostRuleRepository : RepositoryBase<TransportCostRule>, ITransportCostRuleRepository
+    {
+        public TransportCostRuleRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
     }
 }
 
