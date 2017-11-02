@@ -42,7 +42,7 @@ namespace Machete.Data
         {
             if (DB.Lookups.Count() == 0) MacheteLookup.Initialize(DB);
             if (DB.Users.Count() == 0)   MacheteUsers.Initialize(DB);
-            if (DB.Configs.Count() == 0) MacheteConfigs.Initialize(DB);
+            if (DB.Configs.Count() == 0) MacheteConfigs.Initialize(DB);            if (DB.TransportRules.Count() == 0) MacheteRules.Initialize(DB);
             if (DB.ReportDefinitions.Count() != MacheteReportDefinitions.cache.Count()) MacheteReportDefinitions.Initialize(DB);
         }
     }   
