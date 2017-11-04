@@ -9,7 +9,7 @@ using System.Web.Http;
 
 namespace Machete.Api.Controllers
 {
-    public class ConfigsController : ApiController
+    public class ConfigsController : MacheteApiController
     {
         private readonly IConfigService serv;
         private readonly IMapper map;
@@ -20,7 +20,7 @@ namespace Machete.Api.Controllers
             this.serv = serv;
             this.map = map;
         }
-        //[ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
+        //[ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
         [AllowAnonymous]
         public IHttpActionResult Get()
         {
@@ -29,7 +29,7 @@ namespace Machete.Api.Controllers
         }
 
         // GET: api/Configs/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
         public IHttpActionResult Get(int id)
         {
             var result = serv.Get(id);
@@ -37,19 +37,19 @@ namespace Machete.Api.Controllers
         }
 
         // POST: api/Configs
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
         public void Post([FromBody]string value)
         {
         }
 
         // PUT: api/Configs/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
         public void Put(int id, [FromBody]string value)
         {
         }
 
         // DELETE: api/Configs/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { "Administrator" })]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin })]
         public void Delete(int id)
         {
         }

@@ -207,6 +207,7 @@
     <Compile Include="Controllers\MacheteApiController.cs" />
     <Compile Include="Controllers\OnlineOrdersController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
+    <Compile Include="Controllers\TransportRulesController.cs" />
     <Compile Include="Controllers\WorkOrdersController.cs" />
     <Compile Include="Maps\EmployersMap.cs" />
     <Compile Include="Maps\LookupsMap.cs" />

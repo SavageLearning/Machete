@@ -292,6 +292,8 @@
     <Compile Include="shared\ServiceExceptions.cs" />
     <Compile Include="shared\SigninServiceBase.cs" />
     <Compile Include="shared\viewOptions.cs" />
+    <Compile Include="TransportCostRuleService.cs" />
+    <Compile Include="TransportRuleService.cs" />
     <Compile Include="WorkAssignmentService.cs" />
     <Compile Include="WorkerRequestService.cs" />
     <Compile Include="WorkerService.cs" />

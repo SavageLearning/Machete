@@ -69,6 +69,7 @@ namespace Machete.Api.Controllers
             domain.EmployerID = employer.ID;
             var result = serv.Create(domain, employer.email ?? employer.name);
             result.Employer = null;
+            // TODO this is a hacky workaround until I have viewmodels
             result.workAssignments.Select(a => { a.workOrder = null; return a; } ).ToList();
             return Json(new { data = result });
         }

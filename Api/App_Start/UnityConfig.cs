@@ -44,6 +44,8 @@ namespace Machete.Api
             .RegisterType<IActivityRepository, ActivityRepository>(new HierarchicalLifetimeManager())
             .RegisterType<IConfigRepository, ConfigRepository>(new HierarchicalLifetimeManager())
             .RegisterType<IActivitySigninRepository, ActivitySigninRepository>(new HierarchicalLifetimeManager())
+            .RegisterType<ITransportRuleRepository, TransportRuleRepository>(new HierarchicalLifetimeManager())
+            .RegisterType<ITransportCostRuleRepository, TransportCostRuleRepository>(new HierarchicalLifetimeManager())
             // 
             .RegisterType<IConfigService, ConfigService>(new HierarchicalLifetimeManager())
             .RegisterType<ILookupService, LookupService>(new HierarchicalLifetimeManager())
@@ -62,6 +64,8 @@ namespace Machete.Api
             .RegisterType<IReportService, ReportService>(new HierarchicalLifetimeManager())
             .RegisterType<IReportsV2Service, ReportsV2Service>(new HierarchicalLifetimeManager())
             .RegisterType<IOnlineOrdersService, OnlineOrdersService>(new HierarchicalLifetimeManager())
+            .RegisterType<ITransportRuleService, TransportRuleService>(new HierarchicalLifetimeManager())
+            .RegisterType<ITransportCostRuleService, TransportCostRuleService>(new HierarchicalLifetimeManager())
             ;
         }
     }
