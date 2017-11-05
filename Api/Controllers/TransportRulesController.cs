@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Api.ViewModels;
+using AutoMapper;
 using Machete.Service;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Web.Http;
 
 namespace Machete.Api.Controllers
 {
-    public class TransportRulesController : ApiController
+    public class TransportRulesController : MacheteApiController
     {
         private readonly ITransportRuleService serv;
         private readonly IMapper map;
@@ -21,13 +22,25 @@ namespace Machete.Api.Controllers
         }
 
         // GET: api/TransportRule
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Hirer })]
+        //[ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Hirer })]
+        [AllowAnonymous]
         public IHttpActionResult Get()
         {
-            var result = serv.GetAll();
+
             // TODO this is a hacky workaround until I have viewmodels
-            result.Select(a => a.costRules.Select(b => { b.transportRule = null; return b; }).ToList()).ToList();
-            return Json(new { data = result });
+            //result.Select(a => { a.costRules = null; return a; }).ToList();
+            //result.Select(a => a.costRules.Select(b => { b.transportRule = null; return b; }).ToList()).ToList();
+            try
+            {
+                var result = serv.GetAll()
+    .Select(e => map.Map<Domain.TransportRule, TransportRule>(e))
+    .AsEnumerable();
+                return Json(new { data = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(ex);
+            }
         }
 
         // GET: api/TransportRule/5

@@ -222,11 +222,16 @@ namespace Machete.Data
     public class TransportRuleRepository : RepositoryBase<TransportRule>, ITransportRuleRepository
     {
         public TransportRuleRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
+        public override IEnumerable<TransportRule> GetAll()
+        {
+            return dbset.Include(a => a.costRules).AsNoTracking().AsEnumerable();
+        }
     }
 
     public class TransportCostRuleRepository : RepositoryBase<TransportCostRule>, ITransportCostRuleRepository
     {
         public TransportCostRuleRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
+
     }
 }
 

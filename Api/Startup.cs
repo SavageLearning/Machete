@@ -42,6 +42,7 @@ namespace Machete.Api
                 routeTemplate: "{*path}",
                 defaults: new { controller = "Error", action = "NotFound" }
             );
+            config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
             config.DependencyResolver = new UnityResolver(UnityConfig.Get());
             //UnityConfig.ConfigureUnity(config);
             //config.Filters.Add(new AuthorizeAttribute());
