@@ -88,5 +88,44 @@ namespace Machete.Service
             }
             base.Save(record, user);
         }
+
+        public void populateStaticIds()
+        {
+            #region WORKERS
+            Worker.iActive = getByKeys(LCategory.memberstatus, LMemberStatus.Active);
+            Worker.iSanctioned = getByKeys(LCategory.memberstatus, LMemberStatus.Sanctioned);
+            Worker.iExpelled = getByKeys(LCategory.memberstatus, LMemberStatus.Expelled);
+            Worker.iExpired = getByKeys(LCategory.memberstatus, LMemberStatus.Expired);
+            Worker.iInactive = getByKeys(LCategory.memberstatus, LMemberStatus.Inactive);
+            //
+            #endregion  
+            #region WORKORDERS
+            WorkOrder.iActive = getByKeys(LCategory.orderstatus, LOrderStatus.Active);
+            WorkOrder.iPending = getByKeys(LCategory.orderstatus, LOrderStatus.Pending);
+            WorkOrder.iCompleted = getByKeys(LCategory.orderstatus, LOrderStatus.Completed);
+            WorkOrder.iCancelled = getByKeys(LCategory.orderstatus, LOrderStatus.Cancelled);
+            WorkOrder.iExpired = getByKeys(LCategory.orderstatus, LOrderStatus.Expired);
+            #endregion
+            #region EMAILS
+            Email.iReadyToSend = getByKeys(LCategory.emailstatus, LEmailStatus.ReadyToSend);
+            Email.iSent = getByKeys(LCategory.emailstatus, LEmailStatus.Sent);
+            Email.iSending = getByKeys(LCategory.emailstatus, LEmailStatus.Sending);
+            Email.iPending = getByKeys(LCategory.emailstatus, LEmailStatus.Pending);
+            Email.iTransmitError = getByKeys(LCategory.emailstatus, LEmailStatus.TransmitError);
+            #endregion
+        }
+
+        // copied from lookupcache because lookupcache will eventually die
+        private int getByKeys(string category, string key)
+        {
+            try
+            {
+                return base.Get(s => s.category == category && s.key == key).ID;
+            }
+            catch
+            {
+                throw new MacheteIntegrityException("Unable to Lookup Category: " + category + ", text: " + key);
+            }
+        }
     }
 }

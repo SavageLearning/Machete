@@ -59,8 +59,8 @@ namespace Machete.Api.Controllers
         }
 
         // POST: api/OnlineOrders
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Hirer })]
         [HttpPost]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Hirer })]
         public IHttpActionResult Post([FromBody]WorkOrder order)
         {
             var employer = eServ.Get(guid: userSubject);

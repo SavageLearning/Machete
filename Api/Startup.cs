@@ -1,5 +1,6 @@
 ﻿using Elmah.Contrib.WebApi;
 using IdentityServer3.AccessTokenValidation;
+using Machete.Service;
 using Microsoft.Owin;
 using Microsoft.Owin.Cors;
 using Owin;
@@ -50,6 +51,8 @@ namespace Machete.Api
             //config.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling
             //            = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             app.UseWebApi(config);
+            var lserv = (LookupService)config.DependencyResolver.GetService(typeof(ILookupService));
+            lserv.populateStaticIds();
         }
     }
 }

@@ -23,12 +23,14 @@ namespace Machete.Service
         private readonly IEmployerService eserv;
         private readonly IWorkOrderService woserv;
         private readonly IWorkAssignmentService waserv;
+
         protected readonly IUnitOfWork uow;
 
         public OnlineOrdersService(
             IEmployerService eServ,
             IWorkOrderService woServ,
             IWorkAssignmentService waServ,
+            ITransportRuleService trServ,
             IUnitOfWork uow, 
             IMapper map)
         {
@@ -51,6 +53,7 @@ namespace Machete.Service
 
         public WorkOrder Create(WorkOrder order, string user)
         {
+            order.statusID = WorkOrder.iPending;
             var assignments = order.workAssignments;
             order.workAssignments = null;
             var entity = woserv.Create(order, user);
@@ -61,6 +64,12 @@ namespace Machete.Service
                 waserv.Create(a, user);
             }
             return woserv.Get(entity.ID);
+        }
+
+        public bool validateTransportRules(WorkOrder order)
+        {
+
+            return true;
         }
     }
 }
