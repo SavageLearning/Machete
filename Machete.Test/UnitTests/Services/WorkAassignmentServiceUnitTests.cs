@@ -142,11 +142,14 @@ namespace Machete.Test.Unit.Service
             //Arrange
             string user = "UnitTest";
             var _wa = (WorkAssignment)Records.assignment.Clone();
+            var _l = (Lookup)Records.lookup.Clone();
+
             _wa.datecreated = DateTime.MinValue;
             _wa.dateupdated = DateTime.MinValue;
             _wa.workOrder = (WorkOrder)Records.order.Clone();
             _wa.workOrder.paperOrderNum = _wa.workOrder.ID;
             waRepo.Setup(r => r.Add(_wa)).Returns(_wa);
+            lRepo.Setup(r => r.GetById(It.IsAny<int>())).Returns(_l);
             //
             //Act
             var result = waServ.Create(_wa, user);
@@ -183,6 +186,8 @@ namespace Machete.Test.Unit.Service
             //
             //Arrange
             var _wa = (WorkAssignment)Records.assignment.Clone();
+            var _l = (Lookup)Records.lookup.Clone();
+            lRepo.Setup(r => r.GetById(It.IsAny<int>())).Returns(_l);
 
             string user = "UnitTest";
             _wa.datecreated = DateTime.MinValue;

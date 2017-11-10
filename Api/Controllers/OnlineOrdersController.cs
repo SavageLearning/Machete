@@ -16,17 +16,20 @@ namespace Machete.Api.Controllers
         private readonly IOnlineOrdersService serv;
         private readonly IEmployerService eServ;
         private readonly IWorkOrderService woServ;
+        private readonly ITransportRuleService trServ;
         private readonly IMapper map;
 
         public OnlineOrdersController(
             IOnlineOrdersService serv, 
             IEmployerService eServ,
             IWorkOrderService woServ,
+            ITransportRuleService trServ,
             IMapper map)
         {
             this.serv = serv;
             this.eServ = eServ;
             this.woServ = woServ;
+            this.trServ = trServ;
             this.map = map;
         }
         // GET: api/OnlineOrders

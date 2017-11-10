@@ -123,7 +123,8 @@ namespace Machete.Test.Integration.Service
         [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.WorkOrders)]
         public void get_GroupView()
         {
-            // Arrange
+            // Arrange            
+            frb.AddLookupCache();
             frb.AddWorkOrder(status: WorkOrder.iActive, dateTimeOfWork: DateTime.Now).AddWorkAssignment();
             //
             //Act
@@ -167,7 +168,7 @@ namespace Machete.Test.Integration.Service
             //
             //Arrange
             var wo = frb.ToWorkOrder();
-            var map = frb.ToMapper();
+            var map = frb.ToWebMapper();
             //
             //Act
             var dto_wolist = map.Map<Machete.Domain.WorkOrder, Machete.Service.DTO.WorkOrdersList>(wo);
@@ -183,7 +184,7 @@ namespace Machete.Test.Integration.Service
             //
             //Arrange
             var wo = frb.AddWorkAssignment(assignWorker: false).ToWorkOrder();
-            var map = frb.ToMapper();
+            var map = frb.ToWebMapper();
             //
             //Act
             var dto_wolist = map.Map<Machete.Domain.WorkOrder, Machete.Service.DTO.WorkOrdersList>(wo);
@@ -199,7 +200,7 @@ namespace Machete.Test.Integration.Service
             //
             //Arrange
             var wo = frb.AddWorkAssignment(assignWorker: true).ToWorkOrder();
-            var map = frb.ToMapper();
+            var map = frb.ToWebMapper();
             //
             //Act
             var dto_wolist = map.Map<Machete.Domain.WorkOrder, Machete.Service.DTO.WorkOrdersList>(wo);

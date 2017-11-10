@@ -13,6 +13,9 @@ namespace Machete.Api.Maps
         {
             CreateMap<Service.DTO.WorkOrdersList, WorkOrder>();
             CreateMap<Domain.WorkOrder, WorkOrder>();
+            //CreateMap<Domain.WorkOrder, Service.DTO.WorkOrdersList>()
+            //    .ForMember(v => v.workers, opt => opt.MapFrom(d => d.workerRequests ?? new List<Domain.WorkerRequest>()))
+            //    ;
             CreateMap<WorkOrder, Domain.WorkOrder>()
                 .ForMember(v => v.datecreated, opt => opt.Ignore())
                 .ForMember(v => v.dateupdated, opt => opt.Ignore())
