@@ -46,6 +46,23 @@ namespace Machete.Test.Integration.Services
                 Assert.IsNotNull(result, "DTO.WorkOrderList is Null");
                 Assert.IsTrue(result.GetType() == typeof(Machete.Domain.WorkOrder));
             }
+
+            public void CreateOnlineOrder_Succeeds()
+            {
+                //
+                // Arrange
+                var wo = frb.CloneWorkOrder();
+                wo.workAssignments.Add(frb.CloneWorkAssignment());
+                var serv = frb.ToServOnlineOrders();
+
+                // 
+                // Act
+                var result = serv.Create(wo, "CreateOnlineOrder_Succeeds");
+                //
+                // Assert
+                Assert.IsNotNull(result);
+
+            }
         }
     }
 }
