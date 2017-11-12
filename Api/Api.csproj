@@ -227,6 +227,7 @@
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="ViewModels\Employer.cs" />
     <Compile Include="ViewModels\Lookup.cs" />
+    <Compile Include="ViewModels\Record.cs" />
     <Compile Include="ViewModels\ReportDefinition.cs" />
     <Compile Include="ViewModels\TransportRule.cs" />
     <Compile Include="ViewModels\WorkAssignment.cs" />

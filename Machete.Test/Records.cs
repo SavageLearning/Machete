@@ -210,6 +210,34 @@ namespace Machete.Test
             transportTransactID = "#6169"
         };
 
+        public static Machete.Api.ViewModel.WorkOrder onlineOrder = new Api.ViewModel.WorkOrder
+        {
+            workSiteAddress1 = "2400 Main Ave E",
+            workSiteAddress2 = "Apt 207",
+            statusID = 42,
+            city = "Seattle",
+            state = "WA",
+            zipcode = "12345",
+            phone = "123-456-7890",
+            typeOfWorkID = 20,
+            timeFlexible = true,
+            englishRequired = false,
+            lunchSupplied = false,
+            permanentPlacement = false,
+            transportMethodID = 1,
+            transportFee = 20.75,
+            transportFeeExtra = 0,
+            englishRequiredNote = "",
+            description = "description string",
+            dateTimeofWork = DateTime.Today,
+            datecreated = DateTime.Now,             //datetime
+            dateupdated = DateTime.Now,              //datetime
+            createdby = "initialization script",
+            updatedby = "initialization script",
+            transportTransactType = 256,
+            transportTransactID = "#6169"
+        };
+
         public static WorkAssignment assignment = new WorkAssignment
         {
             //ID = 1,

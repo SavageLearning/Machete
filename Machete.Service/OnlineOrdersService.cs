@@ -27,7 +27,7 @@ namespace Machete.Service
         protected readonly IUnitOfWork uow;
 
         public OnlineOrdersService(
-            IEmployerService eServ,
+            //IEmployerService eServ,
             IWorkOrderService woServ,
             IWorkAssignmentService waServ,
             ITransportRuleService trServ,
@@ -35,7 +35,7 @@ namespace Machete.Service
             IMapper map)
         {
             this.map = map;
-            this.eserv = eServ;
+            //this.eserv = eServ;
             this.woserv = woServ;
             this.waserv = waServ;
             this.uow = uow;

@@ -20,6 +20,7 @@ namespace Machete.Test
         public const string Data = "Layer-Data";
         //
         //
+        public const string OnlineOrders = "Area-OnlineOrders";
         public const string WorkOrders = "Area-WorkOrders";
         public const string Activities = "Area-Activities";
         public const string Employers = "Area-Employers";

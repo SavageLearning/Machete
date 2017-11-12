@@ -22,6 +22,7 @@
 // 
 #endregion
 using Machete.Domain;
+using Machete.Test.Integration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
