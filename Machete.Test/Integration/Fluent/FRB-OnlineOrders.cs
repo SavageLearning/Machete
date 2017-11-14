@@ -18,9 +18,9 @@ namespace Machete.Test.Integration
             if (_servWO == null) AddServWorkOrder();
             if (_servWA == null) AddServWorkAssignment();
             if (_servTR == null) AddServTransportRule();
-            if (_uow == null) AddUOW();
+            if (_servL == null) AddServLookup();
             if (_apiMap == null) AddMapper();
-            _servOO = new OnlineOrdersService(_servWO, _servWA, _servTR, _uow, _apiMap);
+            _servOO = new OnlineOrdersService(_servWO, _servWA, _servTR, _servL, _apiMap);
             return this;
         }
 

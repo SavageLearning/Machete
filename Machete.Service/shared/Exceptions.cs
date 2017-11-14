@@ -52,4 +52,11 @@ namespace Machete.Service
         public MacheteNullObjectException(string errorMessage) : base(errorMessage) { }
         public MacheteNullObjectException(string errorMessage, Exception innerEx) : base(errorMessage, innerEx) { }
     }
+
+    public class MacheteInvalidInputException : MacheteServiceException
+    {
+        new public string ErrorMessage { get { return base.Message.ToString(); } }
+        public MacheteInvalidInputException(string errorMessage) : base(errorMessage) { }
+        public MacheteInvalidInputException(string errorMessage, Exception innerEx) : base(errorMessage, innerEx) { }
+    }
 }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Machete.Test.Integration;
+using Machete.Domain;
 
 namespace Machete.Test.Integration.Services
 {
@@ -47,12 +48,23 @@ namespace Machete.Test.Integration.Services
                 Assert.IsTrue(result.GetType() == typeof(Machete.Domain.WorkOrder));
             }
 
+            [TestMethod, TestCategory(TC.IT), TestCategory(TC.Service), TestCategory(TC.OnlineOrders)]
             public void CreateOnlineOrder_Succeeds()
             {
                 //
                 // Arrange
+                var e = frb.ToEmployer();
                 var wo = frb.CloneWorkOrder();
-                wo.workAssignments.Add(frb.CloneWorkAssignment());
+                var lserv = frb.ToServLookup();
+
+                wo.zipcode = "98118";
+                wo.EmployerID = e.ID;
+                var ll = lserv.Get(l => l.key == "transport_bus");
+                wo.transportMethodID = ll.ID;
+                wo.workAssignments = new List<WorkAssignment>();
+                var wa = frb.CloneWorkAssignment();
+                wa.transportCost = 5;
+                wo.workAssignments.Add(wa);
                 var serv = frb.ToServOnlineOrders();
 
                 // 
@@ -61,7 +73,8 @@ namespace Machete.Test.Integration.Services
                 //
                 // Assert
                 Assert.IsNotNull(result);
-
+                Assert.IsNotNull(result.workAssignments);
+                Assert.IsTrue(result.workAssignments.Count() == 1);
             }
         }
     }
