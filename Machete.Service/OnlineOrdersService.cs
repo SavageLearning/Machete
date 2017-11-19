@@ -93,6 +93,16 @@ namespace Machete.Service
             var trRule = trRules.Where(r => r.zipcodes.Contains(order.zipcode)).First();
             if (trRule == null)
                 throw new MacheteNullObjectException("No rule matching order zipcode");
+            //
+            // the code assumes that IDs sent from the client
+            // are unique and sequential. They determine price and are prescribed for the pricing logic:
+            var i = 1;
+            foreach (var wa in order.workAssignments.OrderBy(a => a.ID))
+            {
+                if (wa.ID != i)
+                    throw new MacheteInvalidInputException("Work Assignment ID invalid");
+                i++;
+            }
 
             foreach (var wa in order.workAssignments)
             {

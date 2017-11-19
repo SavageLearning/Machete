@@ -219,7 +219,7 @@ namespace Machete.Test.Integration.Service
         public void GetIndexView_check_searchdwccardnum()
         {
             //arrange
-            var skill = frb.ToLookupCache().getByKeys(LCategory.skill,LKey.Default);
+            var skill = frb.ToLookupCache().getByKeys(LCategory.skill,"skill_general_labor");
             var w = frb.AddWorker(skill1: skill).ToWorker();
             dOptions.dwccardnum = w.dwccardnum;
             dOptions.orderDescending = true;
