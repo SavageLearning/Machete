@@ -35,7 +35,8 @@ namespace Machete.Api.ViewModel
         public string skillES { get; set; }
         public int skillID { get; set; }
         public double surcharge { get; set; }
-        public int transportProgram { get; set; }
+        public double transportCost { get; set; }
+        //public int transportProgram { get; set; }
         public bool? weightLifted { get; set; }
         // public Worker workerAssigned { get; set; }
         public int? workerAssignedID { get; set; }
