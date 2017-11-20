@@ -316,6 +316,7 @@
     <Compile Include="Integration\Fluent\FRB-Employer.cs" />
     <Compile Include="Integration\Fluent\FRB-OnlineOrders.cs" />
     <Compile Include="Integration\Fluent\FRB-Person.cs" />
+    <Compile Include="Integration\Fluent\FRB-ScheduleRules.cs" />
     <Compile Include="Integration\Fluent\FRB-TransportRules.cs" />
     <Compile Include="Integration\Fluent\FRB-WorkAssignment.cs" />
     <Compile Include="Integration\Fluent\FRB-WorkerSignins.cs" />

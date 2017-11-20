@@ -46,5 +46,28 @@ namespace Machete.Test.Integration
             if (_servTR == null) AddServTransportRule();
             return _servTR;
         }
+
+        public FluentRecordBase AddTransportRule(
+            )
+        {
+            //
+            // DEPENDENCIES
+            if (_servTR == null) AddServTransportRule();
+
+            //
+            // ARRANGE
+            _tr = (TransportRule)Records.transportRule.Clone();
+
+            //
+            // ACT
+            _servTR.Create(_tr, _user);
+            return this;
+        }
+
+        public TransportRule ToTransportRule()
+        {
+            if (_tr == null) AddTransportRule();
+            return _tr;
+        }
     }
 }

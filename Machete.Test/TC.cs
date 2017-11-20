@@ -34,5 +34,7 @@ namespace Machete.Test
         public const string Reports = "Area-Reports";
         public const string Lookups = "Area-Lookups";
         public const string Configs = "Area-Configs";
+        public const string TransportRules = "Area-TransportRules";
+        public const string ScheduleRules = "Area-ScheduleRules";
     }
 }

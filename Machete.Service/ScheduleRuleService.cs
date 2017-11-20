@@ -1,4 +1,5 @@
-﻿using Machete.Data;
+﻿using AutoMapper;
+using Machete.Data;
 using Machete.Data.Infrastructure;
 using Machete.Domain;
 using System;
@@ -16,9 +17,12 @@ namespace Machete.Service
 
     public class ScheduleRuleService : ServiceBase<ScheduleRule>, IScheduleRuleService
     {
-        public ScheduleRuleService(IScheduleRuleRepository repo, IUnitOfWork uow) : base(repo, uow)
-        {
+        private readonly IMapper map;
 
+        public ScheduleRuleService(IScheduleRuleRepository repo, IUnitOfWork uow, IMapper map) : base(repo, uow)
+        {
+            this.map = map;
+            this.logPrefix = "ScheduleRule";
         }
     }
 }

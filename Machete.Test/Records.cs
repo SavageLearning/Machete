@@ -303,5 +303,21 @@ namespace Machete.Test
             createdby = "TestInitializer",
             updatedby = "TestInitializer"
         };
+
+        public static TransportRule transportRule = new TransportRule
+        {
+            datecreated = DateTime.Now,             //datetime
+            dateupdated = DateTime.Now,              //datetime
+            createdby = "TestInitializer",
+            updatedby = "TestInitializer"
+        };
+
+        public static ScheduleRule scheduleRule = new ScheduleRule
+        {
+            datecreated = DateTime.Now,             //datetime
+            dateupdated = DateTime.Now,              //datetime
+            createdby = "TestInitializer",
+            updatedby = "TestInitializer"
+        };
     }
 }

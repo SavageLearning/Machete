@@ -93,5 +93,20 @@ namespace Machete.Test
             var result = frb.ToEvent();
             Assert.IsInstanceOfType(result, typeof(Event));
         }
+
+        [TestMethod, TestCategory(TC.Fluent), TestCategory(TC.IT), TestCategory(TC.TransportRules)]
+        public void FluentRecordBase_AddRepoTransportRule()
+        {
+            var result = frb.ToTransportRule();
+            Assert.IsInstanceOfType(result, typeof(TransportRule));
+        }
+
+
+        [TestMethod, TestCategory(TC.Fluent), TestCategory(TC.IT), TestCategory(TC.ScheduleRules)]
+        public void FluentRecordBase_AddScheduleRule()
+        {
+            var result = frb.ToEvent();
+            Assert.IsInstanceOfType(result, typeof(Event));
+        }
     }
 }
