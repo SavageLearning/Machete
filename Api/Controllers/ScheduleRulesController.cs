@@ -10,18 +10,18 @@ using System.Web.Http;
 
 namespace Machete.Api.Controllers
 {
-    public class TransportRulesController : MacheteApiController
+    public class ScheduleRulesController : MacheteApiController
     {
-        private readonly ITransportRuleService serv;
+        private readonly IScheduleRuleService serv;
         private readonly IMapper map;
 
-        public TransportRulesController(ITransportRuleService serv, IMapper map)
+        public ScheduleRulesController(IScheduleRuleService serv, IMapper map)
         {
             this.serv = serv;
             this.map = map;
         }
 
-        // GET: api/TransportRule
+        // GET: api/ScheduleRules
         [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Hirer })]
         public IHttpActionResult Get()
         {
@@ -29,7 +29,7 @@ namespace Machete.Api.Controllers
             try
             {
                 var result = serv.GetAll()
-                    .Select(e => map.Map<Domain.TransportRule, TransportRule>(e))
+                    .Select(e => map.Map<Domain.ScheduleRule, ScheduleRule>(e))
                     .AsEnumerable();
                 return Json(new { data = result });
             }
@@ -39,23 +39,23 @@ namespace Machete.Api.Controllers
             }
         }
 
-        // GET: api/TransportRule/5
+        // GET: api/ScheduleRules/5
         public string Get(int id)
         {
             return "value";
         }
 
-        // POST: api/TransportRule
+        // POST: api/ScheduleRules
         public void Post([FromBody]string value)
         {
         }
 
-        // PUT: api/TransportRule/5
+        // PUT: api/ScheduleRules/5
         public void Put(int id, [FromBody]string value)
         {
         }
 
-        // DELETE: api/TransportRule/5
+        // DELETE: api/ScheduleRules/5
         public void Delete(int id)
         {
         }

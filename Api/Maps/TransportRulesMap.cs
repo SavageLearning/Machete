@@ -11,8 +11,7 @@ namespace Machete.Api.Maps
         public TransportRulesMap()
         {
             CreateMap<Domain.TransportRule, TransportRule>()
-                .ForMember(v => v.id, opt => opt.MapFrom(d => d.ID))
-                ;
+                .ForMember(v => v.id, opt => opt.MapFrom(d => d.ID));
             CreateMap<Domain.TransportCostRule, TransportCostRule>();
         }
     }

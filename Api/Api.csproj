@@ -212,6 +212,7 @@
     <Compile Include="Controllers\MacheteApiController.cs" />
     <Compile Include="Controllers\OnlineOrdersController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
+    <Compile Include="Controllers\ScheduleRulesController.cs" />
     <Compile Include="Controllers\TransportRulesController.cs" />
     <Compile Include="Controllers\WorkOrdersController.cs" />
     <Compile Include="Maps\EmployersMap.cs" />
@@ -219,16 +220,18 @@
     <Compile Include="Maps\MacheteProfile.cs" />
     <Compile Include="Maps\MapperConfig.cs" />
     <Compile Include="Maps\ReportDefinitionsMap.cs" />
+    <Compile Include="Maps\ScheduleRulesMap.cs" />
     <Compile Include="Maps\TransportRulesMap.cs" />
     <Compile Include="Maps\WorkAssignmentsMap.cs" />
     <Compile Include="Maps\WorkOrdersMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="ViewModels\BaseModel.cs" />
     <Compile Include="ViewModels\Employer.cs" />
     <Compile Include="ViewModels\Lookup.cs" />
     <Compile Include="ViewModels\Record.cs" />
     <Compile Include="ViewModels\ReportDefinition.cs" />
+    <Compile Include="ViewModels\ScheduleRule.cs" />
     <Compile Include="ViewModels\TransportRule.cs" />
     <Compile Include="ViewModels\WorkAssignment.cs" />
     <Compile Include="ViewModels\WorkOrder.cs" />

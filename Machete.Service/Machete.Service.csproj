@@ -282,6 +282,7 @@
     <Compile Include="EventService.cs" />
     <Compile Include="LookupService.cs" />
     <Compile Include="ReportsV2Service.cs" />
+    <Compile Include="ScheduleRuleService.cs" />
     <Compile Include="shared\Exceptions.cs" />
     <Compile Include="ImageService.cs" />
     <Compile Include="shared\IndexViewBase.cs" />

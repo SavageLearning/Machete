@@ -23,6 +23,7 @@ namespace Machete.Api
                 c.AddProfile<Service.WorkOrderMap>();
                 c.AddProfile<Service.EmployersMap>();
                 c.AddProfile<TransportRulesMap>();
+                c.AddProfile<ScheduleRulesMap>();
             });
         }
         public IMapper getMapper()

@@ -5,14 +5,8 @@ using System.Web;
 
 namespace Api.ViewModels
 {
-    public class TransportRule
+    public class TransportRule : BaseModel
     {
-        public int id { get; set; }
-        public DateTime datecreated { get; set; }
-        public DateTime dateupdated { get; set; }
-        public string createdby { get; set; }
-        public string updatedby { get; set; }
-
         public string key { get; set; }
         public string lookupKey { get; set; }
         public string zoneLabel { get; set; }
@@ -20,14 +14,8 @@ namespace Api.ViewModels
         public List<TransportCostRule> costRules { get; set; }
     }
 
-    public class TransportCostRule
+    public class TransportCostRule : BaseModel
     {
-        public int id { get; set; }
-        public DateTime datecreated { get; set; }
-        public DateTime dateupdated { get; set; }
-        public string createdby { get; set; }
-        public string updatedby { get; set; }
-
         public int transportRuleId { get; set; }
         public int minWorker { get; set; }
         public int maxWorker { get; set; }

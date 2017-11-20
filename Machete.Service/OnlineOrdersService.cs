@@ -119,5 +119,11 @@ namespace Machete.Service
 
             return true;
         }
+
+        public bool validateSkillsRules(WorkOrder order)
+        {
+
+            return true;
+        }
     }
 }

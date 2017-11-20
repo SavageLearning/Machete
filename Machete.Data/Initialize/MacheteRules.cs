@@ -103,6 +103,24 @@ namespace Machete.Data
             p.costRules = new List<TransportCostRule>();
             p.costRules.Add(new TransportCostRule { ID = 8, minWorker = 0, maxWorker = 100, cost = 0, datecreated = DateTime.Now, dateupdated = DateTime.Now, createdby = "Init T. Script", updatedby = "Init T. Script" });
             c.Commit();
+
+            //
+            // Schedule Rules
+            for (var i = 0; i < 7; i++)
+            {
+                c.ScheduleRules.Add(new ScheduleRule()
+                {
+                    day = i,
+                    leadHours = 48,
+                    minStartMin = 420,
+                    maxEndMin = 1020,
+                    datecreated = DateTime.Now,
+                    dateupdated = DateTime.Now,
+                    createdby = "Init T. Script",
+                    updatedby = "Init T. Script"
+                });
+                c.Commit();
+            }
         }
 
     }
