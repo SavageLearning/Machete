@@ -3312,7 +3312,9 @@ var __extends = (this && this.__extends) || (function () {
 var SkillRule = (function (_super) {
     __extends(SkillRule, _super);
     function SkillRule() {
-        return _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.maxHour = 8;
+        return _this;
     }
     return SkillRule;
 }(__WEBPACK_IMPORTED_MODULE_0__record__["a" /* Record */]));
@@ -3393,266 +3395,6 @@ function loadConfirms() {
     ];
 }
 //# sourceMappingURL=load-confirms.js.map
-
-/***/ }),
-
-/***/ "../../../../../src/app/online-orders/shared/rules/load-skill-rules.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = loadSkillRules;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__models_skill_rule__ = __webpack_require__("../../../../../src/app/online-orders/shared/models/skill-rule.ts");
-
-function loadSkillRules() {
-    return [
-        new __WEBPACK_IMPORTED_MODULE_0__models_skill_rule__["a" /* SkillRule */]({
-            id: 1,
-            wage: 20,
-            minHour: 5,
-            maxHour: 8,
-            speciality: false,
-            key: 'skill_general_labor',
-            descriptionEn: 'General Labor',
-            active: true
-        }),
-        new __WEBPACK_IMPORTED_MODULE_0__models_skill_rule__["a" /* SkillRule */]({
-            id: 2,
-            subcategory: 'paint',
-            level: 1,
-            wage: 22,
-            minHour: 5,
-            maxHour: 8,
-            speciality: true,
-            ltrCode: 'P',
-            key: 'skill_painting_rollerbrush',
-            active: true
-        }),
-        new __WEBPACK_IMPORTED_MODULE_0__models_skill_rule__["a" /* SkillRule */]({
-            id: 3,
-            subcategory: 'drywall',
-            level: 2,
-            wage: 22,
-            minHour: 5,
-            maxHour: 8,
-            speciality: true,
-            ltrCode: 'S',
-            key: 'skill_drywall',
-            descriptionEn: 'Sheetrock hanging',
-            active: true
-        }),
-        new __WEBPACK_IMPORTED_MODULE_0__models_skill_rule__["a" /* SkillRule */]({
-            id: 4,
-            subcategory: 'fence',
-            level: 1,
-            wage: 22,
-            minHour: 5,
-            maxHour: 8,
-            speciality: true,
-            ltrCode: 'F',
-            key: 'skill_landscaping_fence',
-            descriptionEn: 'Build retaining wall / wood fence',
-            active: true
-        }),
-        new __WEBPACK_IMPORTED_MODULE_0__models_skill_rule__["a" /* SkillRule */]({
-            id: 5,
-            subcategory: 'carpentry',
-            level: 1,
-            wage: 22,
-            minHour: 5,
-            maxHour: 8,
-            speciality: true,
-            ltrCode: 'C',
-            key: 'skill_carpentry',
-            descriptionEn: 'Carpentry, repairing fences, decks, etc.',
-            active: true
-        }),
-        new __WEBPACK_IMPORTED_MODULE_0__models_skill_rule__["a" /* SkillRule */]({
-            id: 6,
-            subcategory: 'build',
-            level: 2,
-            wage: 22,
-            minHour: 5,
-            maxHour: 8,
-            speciality: true,
-            ltrCode: 'M',
-            key: 'skill_masonry',
-            descriptionEn: 'finishing and stone work',
-            active: true
-        }),
-        new __WEBPACK_IMPORTED_MODULE_0__models_skill_rule__["a" /* SkillRule */]({
-            id: 7,
-            wage: 23,
-            minHour: 4,
-            maxHour: 8,
-            speciality: false,
-            key: 'skill_deep_cleaning',
-            descriptionEn: 'kitchen, bedrooms, living room, bathroom, etc.',
-            'minimumCost': 92,
-            active: true
-        }),
-        new __WEBPACK_IMPORTED_MODULE_0__models_skill_rule__["a" /* SkillRule */]({
-            id: 8,
-            wage: 20,
-            minHour: 5,
-            maxHour: 8,
-            speciality: true,
-            key: 'skill_moving',
-            descriptionEn: 'Moving Furniture and Boxes',
-            active: true
-        }),
-        new __WEBPACK_IMPORTED_MODULE_0__models_skill_rule__["a" /* SkillRule */]({
-            id: 9,
-            subcategory: 'garden',
-            level: 0,
-            wage: 19,
-            minHour: 5,
-            maxHour: 8,
-            fixedJob: false,
-            speciality: false,
-            ltrCode: 'Y',
-            key: 'skill_yardwork',
-            descriptionEn: 'only: yard cleaning, mowing, weeding and planting',
-            descriptionEs: 'only: yard cleaning, mowing, weeding and planting',
-            active: true
-        }),
-        new __WEBPACK_IMPORTED_MODULE_0__models_skill_rule__["a" /* SkillRule */]({
-            id: 10,
-            wage: 20,
-            minHour: 4,
-            maxHour: 8,
-            speciality: false,
-            key: 'skill_basic_cleaning',
-            active: true
-        }),
-        new __WEBPACK_IMPORTED_MODULE_0__models_skill_rule__["a" /* SkillRule */]({
-            id: 11,
-            wage: 20,
-            minHour: 5,
-            maxHour: 8,
-            fixedJob: false,
-            speciality: false,
-            key: 'skill_demolition',
-            descriptionEn: 'walls, ceilings, floors, siding, fences, etc.',
-            active: true
-        }),
-        new __WEBPACK_IMPORTED_MODULE_0__models_skill_rule__["a" /* SkillRule */]({
-            id: 12,
-            subcategory: 'garden',
-            level: 1,
-            wage: 22,
-            minHour: 5,
-            maxHour: 8,
-            fixedJob: false,
-            speciality: true,
-            ltrCode: 'G',
-            key: 'skill_adv_gardening',
-            descriptionEn: 'includes pruning, trimming, transplanting, and basic yard work',
-            active: true
-        }),
-        new __WEBPACK_IMPORTED_MODULE_0__models_skill_rule__["a" /* SkillRule */]({
-            id: 13,
-            subcategory: 'garden',
-            level: 2,
-            wage: 22,
-            minHour: 5,
-            maxHour: 8,
-            fixedJob: false,
-            speciality: true,
-            ltrCode: 'L',
-            key: 'skill_landscaping',
-            descriptionEn: 'patio pavers, retaining walls and walkways',
-            active: true
-        }),
-        new __WEBPACK_IMPORTED_MODULE_0__models_skill_rule__["a" /* SkillRule */]({
-            id: 14,
-            subcategory: 'roof',
-            level: 1,
-            wage: 18,
-            minHour: 5,
-            maxHour: 8,
-            fixedJob: false,
-            speciality: true,
-            ltrCode: 'R',
-            key: 'skill_roofing',
-            active: true
-        }),
-        new __WEBPACK_IMPORTED_MODULE_0__models_skill_rule__["a" /* SkillRule */]({
-            id: 15,
-            level: 3,
-            wage: 20,
-            minHour: 5,
-            maxHour: 8,
-            fixedJob: false,
-            speciality: true,
-            key: 'skill_event_help',
-            descriptionEn: 'Party and Events Staffing',
-            active: true
-        }),
-        new __WEBPACK_IMPORTED_MODULE_0__models_skill_rule__["a" /* SkillRule */]({
-            id: 16,
-            wage: 20,
-            minHour: 5,
-            maxHour: 8,
-            speciality: false,
-            key: 'skill_pressure_washing',
-            descriptionEn: 'Pressure washing',
-            active: true
-        }),
-        new __WEBPACK_IMPORTED_MODULE_0__models_skill_rule__["a" /* SkillRule */]({
-            id: 17,
-            wage: 20,
-            minHour: 5,
-            maxHour: 8,
-            speciality: false,
-            key: 'skill_digging',
-            descriptionEn: 'renches, drains, removing sod, etc',
-            active: true
-        }),
-        new __WEBPACK_IMPORTED_MODULE_0__models_skill_rule__["a" /* SkillRule */]({
-            id: 18,
-            wage: 20,
-            minHour: 5,
-            maxHour: 8,
-            speciality: false,
-            key: 'skill_hauling',
-            descriptionEn: 'heavy material: lumber, dirt, rocks, bricks, bricks, mulch compost, heavy branches, etc.',
-            active: true
-        }),
-        new __WEBPACK_IMPORTED_MODULE_0__models_skill_rule__["a" /* SkillRule */]({
-            id: 19,
-            level: 1,
-            wage: 22,
-            minHour: 5,
-            maxHour: 8,
-            speciality: true,
-            ltrCode: 'I',
-            key: 'skill_insulation',
-            active: true
-        }),
-        new __WEBPACK_IMPORTED_MODULE_0__models_skill_rule__["a" /* SkillRule */]({
-            id: 20,
-            subcategory: 'drywall',
-            level: 1,
-            wage: 22,
-            minHour: 5,
-            maxHour: 8,
-            speciality: false,
-            ltrCode: 'S',
-            key: 'skill_drywall',
-            active: true
-        }),
-        new __WEBPACK_IMPORTED_MODULE_0__models_skill_rule__["a" /* SkillRule */]({
-            id: 21,
-            wage: 22,
-            minHour: 5,
-            maxHour: 8,
-            speciality: true,
-            key: 'skill_flooring',
-            active: true
-        })
-    ];
-}
-//# sourceMappingURL=load-skill-rules.js.map
 
 /***/ }),
 
@@ -3924,8 +3666,8 @@ module.exports = "<div class=\"ui-fluid\">\r\n  <div class=\"card\">\r\n    <for
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__shared__ = __webpack_require__("../../../../../src/app/online-orders/shared/index.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__shared_models_my_select_item__ = __webpack_require__("../../../../../src/app/shared/models/my-select-item.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__shared_validators_hours__ = __webpack_require__("../../../../../src/app/online-orders/shared/validators/hours.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__shared_rules_load_skill_rules__ = __webpack_require__("../../../../../src/app/online-orders/shared/rules/load-skill-rules.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__transport_rules_service__ = __webpack_require__("../../../../../src/app/online-orders/transport-rules.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__transport_rules_service__ = __webpack_require__("../../../../../src/app/online-orders/transport-rules.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__shared_models_skill_rule__ = __webpack_require__("../../../../../src/app/online-orders/shared/models/skill-rule.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -3986,6 +3728,8 @@ var WorkAssignmentsComponent = (function () {
             _this.skillsDropDown = listData.map(function (l) {
                 return new __WEBPACK_IMPORTED_MODULE_9__shared_models_my_select_item__["a" /* MySelectItem */](l.text_EN, String(l.id));
             });
+            _this.skillsRules = listData.map(function (l) { return new __WEBPACK_IMPORTED_MODULE_12__shared_models_skill_rule__["a" /* SkillRule */](l); });
+            console.log(_this.skillsRules);
         }, function (error) { return _this.errorMessage = error; }, function () { return console.log('ngOnInit:skills onCompleted'); });
         this.lookupsService.getLookups(__WEBPACK_IMPORTED_MODULE_5__lookups_models_lookup__["a" /* LCategory */].TRANSPORT)
             .subscribe(function (data) { return _this.transports = data; }, function (error) { return _this.errorMessage = error; }, function () { return console.log('ngOnInit:transports onCompleted'); });
@@ -3999,7 +3743,7 @@ var WorkAssignmentsComponent = (function () {
             'id': '',
             'skillId': ['', Object(__WEBPACK_IMPORTED_MODULE_8__shared__["b" /* requiredValidator */])('Please select the type of work to be performed.')],
             'skill': [''],
-            'hours': ['', Object(__WEBPACK_IMPORTED_MODULE_10__shared_validators_hours__["a" /* hoursValidator */])(Object(__WEBPACK_IMPORTED_MODULE_11__shared_rules_load_skill_rules__["a" /* loadSkillRules */])(), this.skills, 'skillId', 'hours')],
+            'hours': ['', Object(__WEBPACK_IMPORTED_MODULE_10__shared_validators_hours__["a" /* hoursValidator */])(this.skillsRules, this.skills, 'skillId', 'hours')],
             'description': [''],
             'requiresHeavyLifting': [false],
             'hourlyWage': ['']
@@ -4109,7 +3853,7 @@ var WorkAssignmentsComponent = (function () {
             template: __webpack_require__("../../../../../src/app/online-orders/work-assignments/work-assignments.component.html"),
             styles: [__webpack_require__("../../../../../src/app/online-orders/work-assignments/work-assignments.component.css")]
         }),
-        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4__lookups_lookups_service__["a" /* LookupsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__lookups_lookups_service__["a" /* LookupsService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_7__work_assignments_service__["a" /* WorkAssignmentsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__work_assignments_service__["a" /* WorkAssignmentsService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_6__online_orders_service__["a" /* OnlineOrdersService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__online_orders_service__["a" /* OnlineOrdersService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_12__transport_rules_service__["a" /* TransportRulesService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_12__transport_rules_service__["a" /* TransportRulesService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["Router"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["Router"]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_2__angular_forms__["FormBuilder"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_forms__["FormBuilder"]) === "function" && _f || Object])
+        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_4__lookups_lookups_service__["a" /* LookupsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__lookups_lookups_service__["a" /* LookupsService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_7__work_assignments_service__["a" /* WorkAssignmentsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_7__work_assignments_service__["a" /* WorkAssignmentsService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_6__online_orders_service__["a" /* OnlineOrdersService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_6__online_orders_service__["a" /* OnlineOrdersService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_11__transport_rules_service__["a" /* TransportRulesService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_11__transport_rules_service__["a" /* TransportRulesService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["Router"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_router__["Router"]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_2__angular_forms__["FormBuilder"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_forms__["FormBuilder"]) === "function" && _f || Object])
     ], WorkAssignmentsComponent);
     return WorkAssignmentsComponent;
     var _a, _b, _c, _d, _e, _f;
