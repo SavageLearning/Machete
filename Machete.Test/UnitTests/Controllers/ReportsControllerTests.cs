@@ -8,13 +8,11 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Web.Http;
-using Newtonsoft.Json.Linq;
-using System.Web.Http.Results;
-using System;
 using System.Linq;
-using System.Web.Script.Serialization;
 using Newtonsoft.Json;
 using FluentAssertions;
+using Moq.Language.Flow;
+using System;
 
 namespace Machete.Test.UnitTests.Controllers
 {
@@ -29,7 +27,8 @@ namespace Machete.Test.UnitTests.Controllers
         public void Initialize()
         {
             serv = new Mock<IReportsV2Service>();
-            serv.ReturnReportList();
+            serv.SetupGetList();
+            serv.SetupGet();
 
             map = new MapperConfig().getMapper();
 
@@ -38,7 +37,7 @@ namespace Machete.Test.UnitTests.Controllers
             controller.Configuration = new HttpConfiguration();
         }
 
-        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Employers)]
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Reports)]
         public void Get_WithNoArgs_ReturnsJsonListOfAllReports()
         {
             // Arrange
@@ -46,23 +45,49 @@ namespace Machete.Test.UnitTests.Controllers
             var expectedResult = ReportsControllerTestHelpers.FakeReportList().Select(report => map.Map<Domain.ReportDefinition, ReportDefinition>(report));
 
             // Act
-            var result = controller.Get();
-            var response = result.ExecuteAsync(CancellationToken.None).Result;
-            var sResponse = response.Content.ReadAsStringAsync().Result;
-            var jsonResponse = JsonConvert.DeserializeObject<Dictionary<string, object>>(sResponse);
-            var reportList = JsonConvert.DeserializeObject<List<ReportDefinition>>(jsonResponse["data"].ToString());
+            var result = controller.Get().AsCSharpObject<List<ReportDefinition>>();          
 
             // Assert
-            reportList.Should().HaveCount(2, because: "that's what the test object had");
-            reportList.ShouldBeEquivalentTo(expectedResult);
+            result.Should().HaveCount(2, because: "that's what the test object had");
+            result.ShouldBeEquivalentTo(expectedResult);
+        }
+
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Reports)]
+        public void Get_WithId_ReturnsSingleReport_WithSameId()
+        {
+            // Arrange: This only works because the IDs equal the index of the list members for the test class.
+            var expectedResult = ReportsControllerTestHelpers.FakeReportList()[1];
+
+            // Act
+            var result = controller.Get("1").AsCSharpObject<ReportDefinition>();
+
+            // Assert: It's unclear to me how we wind up with id, columns, and inputs, because we're not mapping to the view model this time.
+            result.ShouldBeEquivalentTo(expectedResult, x => x
+              .Excluding(field => field.id)
+              .Excluding(field => field.columns)
+              .Excluding(field => field.inputs)
+            );
         }
     }
     public static class ReportsControllerTestHelpers
     {
         // my extension methods
-        public static Moq.Language.Flow.IReturnsResult<IReportsV2Service> ReturnReportList(this Mock<IReportsV2Service> service)
+        public static T AsCSharpObject<T>(this IHttpActionResult result)
+        {
+            var response = result.ExecuteAsync(CancellationToken.None).Result;
+            var sResponse = response.Content.ReadAsStringAsync().Result;
+            var jsonResponse = JsonConvert.DeserializeObject<Dictionary<string, object>>(sResponse);
+            return JsonConvert.DeserializeObject<T>(jsonResponse["data"].ToString());
+        }
+
+        public static IReturnsResult<IReportsV2Service> SetupGetList(this Mock<IReportsV2Service> service)
         {
             return service.Setup(rs => rs.getList()).Returns(FakeReportList);
+        }
+
+        public static IReturnsResult<IReportsV2Service> SetupGet(this Mock<IReportsV2Service> service)
+        {
+            return service.Setup(rs => rs.Get(It.IsAny<string>())).Returns((string i) => FakeReportList().Single(report => report.ID == Int32.Parse(i)));
         }
 
         public static List<Domain.ReportDefinition> FakeReportList()
@@ -70,6 +95,7 @@ namespace Machete.Test.UnitTests.Controllers
             return new List<Domain.ReportDefinition> {
                 new Domain.ReportDefinition
                 {
+                    ID = 0,
                     name = "FakeReport",
                     commonName = "Fake Report",
                     title = "A Report About Fakes",
@@ -82,6 +108,7 @@ namespace Machete.Test.UnitTests.Controllers
                 },
                 new Domain.ReportDefinition
                 {
+                    ID = 1,
                     name = "FakeReport2",
                     commonName = "Fake Report 2",
                     title = "A Report About Fakes and the People Who Make Them",
