@@ -70,10 +70,8 @@ namespace Machete.Api.Controllers
             }
             var domain = map.Map<WorkOrder, Domain.WorkOrder>(order);
             domain.EmployerID = employer.ID;
-            var result = serv.Create(domain, employer.email ?? employer.name);
-            result.Employer = null;
-            // TODO this is a hacky workaround until I have viewmodels
-            result.workAssignments.Select(a => { a.workOrder = null; return a; } ).ToList();
+            var newOrder = serv.Create(domain, employer.email ?? employer.name);
+            var result = map.Map<Domain.WorkOrder, WorkOrder>(newOrder);
             return Json(new { data = result });
         }
 
