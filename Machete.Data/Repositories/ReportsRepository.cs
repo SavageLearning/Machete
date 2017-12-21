@@ -23,6 +23,7 @@ namespace Machete.Data
         List<ReportDefinition> getList();
         List<QueryMetadata> getColumns(string tableName);
         DataTable getDataTable(string query, DTO.SearchOptions o);
+        List<string> validate(string query);
     }
     public class ReportsRepository : RepositoryBase<ReportDefinition>, IReportsRepository
     {
@@ -110,6 +111,11 @@ namespace Machete.Data
         {
             if (tableName == null) throw new ArgumentNullException("tableName can't be null");
             return SqlServerUtils.getMetadata(DataContext, "select top 0 * from " + tableName);
+        }
+
+        public List<string> validate(string query)
+        {
+            throw new NotImplementedException();
         }
 
         #region IL voodoo

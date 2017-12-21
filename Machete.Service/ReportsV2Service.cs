@@ -24,6 +24,7 @@ namespace Machete.Service
         List<QueryMetadata> getColumns(string tableName);
         DataTable getDataTable(string query, DTO.SearchOptions o);
         void getXlsxFile(DTO.SearchOptions o, ref byte[] bytes);
+        List<string> validateQuery(string query);
     }
 
     public class ReportsV2Service : ServiceBase<ReportDefinition>, IReportsV2Service
@@ -146,6 +147,15 @@ namespace Machete.Service
             return "[" + col + "]";
         }
 
-
+        public List<string> validateQuery(string query)
+        {
+            try {
+              return repo.validate(query);
+            } catch (Exception ex) {
+              // the query is most likely the cause, but we don't know why. bubble up the
+              // bad query and the inner (this) exception together.
+              throw new MacheteServiceException("Could not validate query " + query, ex);
+            }
+        }
     }
 }
