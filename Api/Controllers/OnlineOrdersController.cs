@@ -47,7 +47,7 @@ namespace Machete.Api.Controllers
             this.paypalUrl = cServ.getConfig(Cfg.PaypalUrl);
         }
         // GET: api/OnlineOrders
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Hirer })]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Employer })]
 
         public IHttpActionResult Get()
         {
@@ -65,7 +65,7 @@ namespace Machete.Api.Controllers
         }
 
         // GET: api/OnlineOrders/5
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Hirer })]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Employer })]
 
         public string Get(int id)
         {
@@ -74,7 +74,7 @@ namespace Machete.Api.Controllers
 
         // POST: api/OnlineOrders
         [HttpPost]
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Hirer })]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Employer })]
         public IHttpActionResult Post([FromBody]WorkOrder order)
         {
             var employer = eServ.Get(guid: userSubject);
@@ -92,7 +92,7 @@ namespace Machete.Api.Controllers
         // POST: api/onlineorders/{orderid}/paypalexecute
         [HttpPost]
         [Route("api/onlineorders/{orderID}/paypalexecute")]
-        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Hirer })]
+        [ClaimsAuthorization(ClaimType = CAType.Role, ClaimValue = new[] { CV.Admin, CV.Employer })]
         public IHttpActionResult PaypalExecute(int orderID, [FromBody]PaypalPayment data)
         {
             var token = getPaypalAuthToken(paypalUrl, paypalId, paypalSecret);
@@ -113,7 +113,7 @@ namespace Machete.Api.Controllers
             return Ok(result.Content);
         }
 
-
+        [NonAction]
         public PayPalTokenModel getPaypalAuthToken(string url, string clientId, string clientSecret)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;

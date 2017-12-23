@@ -89,29 +89,6 @@ namespace Machete.Web.ViewModel
         public string ReturnUrl { get; set; } // Note: not in db - how is this used?
     }
 
-
-    public class HirerLoginViewModel
-    {
-        // Note: Hirer's username is their email address
-        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
-        [DataType(DataType.EmailAddress, ErrorMessageResourceName = "emailValidation", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
-        [LocalizedDisplayName("EmailAddress", NameResourceType = typeof(Resources.ValidationStrings))]
-        public string UserName { get; set; }
-
-        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
-        [DataType(DataType.Password)]
-        [LocalizedDisplayName("password", NameResourceType = typeof(Resources.ValidationStrings))]
-        [StringLength(100, ErrorMessageResourceName = "stringLengthMax", ErrorMessageResourceType = typeof(Resources.ValidationStrings))] // 100 char max
-        [RegularExpression(@"^.{6,}$", ErrorMessageResourceName = "passwordLengthMin", ErrorMessageResourceType = typeof(Resources.ValidationStrings))] // 6 char min
-        public string Password { get; set; } // Note: not in db - how is this used?
-
-        // TODO: investigate how these are used & whether they are needed
-        public string Action { get; set; } // Note: not in db - how is this used?
-
-        public string ReturnUrl { get; set; } // Note: not in db - how is this used?
-    }
-
-
     // View Model used for Machete worker center members to sign up
     public class RegisterViewModel
     {
@@ -152,40 +129,6 @@ namespace Machete.Web.ViewModel
             return user;
         }
     }
-
-    // View Model used for Hirers to sign up
-    public class HirerRegisterViewModel
-    {
-        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
-        [StringLength(100, ErrorMessageResourceName = "stringLengthMax", ErrorMessageResourceType = typeof(Resources.ValidationStrings))] // 100 char max
-        [RegularExpression(@"^.{6,}$", ErrorMessageResourceName = "passwordLengthMin", ErrorMessageResourceType = typeof(Resources.ValidationStrings))] // 6 char min
-        [DataType(DataType.Password)]
-        [LocalizedDisplayName("password", NameResourceType = typeof(Resources.ValidationStrings))]
-        public string Password { get; set; } // Note: not in db - how is this used?
-
-        [DataType(DataType.Password)]
-        [LocalizedDisplayName("PasswordConfirm", NameResourceType = typeof(Resources.ValidationStrings))]
-        [Compare("Password", ErrorMessageResourceName = "PasswordCompare", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
-        public string ConfirmPassword { get; set; } // Note: not in db - how is this used?
-
-        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationStrings))]
-        [DataType(DataType.EmailAddress, ErrorMessageResourceName = "emailValidation", ErrorMessageResourceType = typeof(Resources.ValidationStrings))]
-        [LocalizedDisplayName("EmailAddress", NameResourceType = typeof(Resources.ValidationStrings))]
-        public string Email { get; set; }
-
-        // Return a pre-populated instance of ApplicationUser:
-        public MacheteUser GetUser()
-        {
-            var user = new MacheteUser()
-            {
-                UserName = this.Email,
-                Email = this.Email,
-            };
-
-            return user;
-        }
-    }
-
     // TODO: need to understand this class better & need to restrict it to only non-employer users
     public class EditUserViewModel
     {
@@ -194,7 +137,6 @@ namespace Machete.Web.ViewModel
         // Allow Initialization with an instance of ApplicationUser:
         public EditUserViewModel(MacheteUser user)
         {
-            // TODO: add logic here to only retrieve first/last name if not hirer
             this.UserName = user.UserName;
             string[] firstLast = user.UserName.Split('.');
             if (firstLast.Length == 2)

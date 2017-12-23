@@ -34,14 +34,7 @@ namespace Machete.Web.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                if (User.IsInRole("Hirer"))
-                {
-                    return RedirectToAction("Index", "HirerWorkOrder");
-                }
-                else
-                {
-                    return View();
-                }
+                return View();
             }
             return RedirectToAction("Login", "Account");
         }

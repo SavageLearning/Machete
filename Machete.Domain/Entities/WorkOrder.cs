@@ -192,24 +192,24 @@ namespace Machete.Domain
         public bool? disclosureAgreement { get; set; }
 
         // Fee charged by PayPal for online payments
-        [LocalizedDisplayName("paypalFee", NameResourceType = typeof(Resources.WorkOrder))]
-        [DisplayFormat(DataFormatString = "{0:n}", ApplyFormatInEditMode = true)]
-        public double? paypalFee { get; set; }
+        public double? ppFee { get; set; }
 
-        [LocalizedDisplayName("paypalErrors", NameResourceType = typeof(Resources.WorkOrder))]
-        [StringLength(1000, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.WorkOrder))]
-        public string paypalErrors { get; set; }
+        [StringLength(5000)]
+        public string ppResponse { get; set; }
 
-        [LocalizedDisplayName("paypalToken", NameResourceType = typeof(Resources.WorkOrder))]
-        [StringLength(20, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.WorkOrder))]
-        public string paypalToken { get; set; }
+        [StringLength(25)]
+        public string ppPaymentToken { get; set; }
 
-        [StringLength(50, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.WorkOrder))]
-        public string paypalTransactID { get; set; }
+        [StringLength(50)]
+        public string ppPaymentID { get; set; }
 
-        [LocalizedDisplayName("paypalPayerId", NameResourceType = typeof(Resources.WorkOrder))]
-        [StringLength(15, ErrorMessageResourceName = "stringlength", ErrorMessageResourceType = typeof(Resources.WorkOrder))]
-        public string paypalPayerId { get; set; }
+        [StringLength(25)]
+        public string ppPayerID { get; set; }
+
+        [StringLength(20)]
+        public string ppState { get; set; }
+
+
     }
 
     public class WorkOrderSummary

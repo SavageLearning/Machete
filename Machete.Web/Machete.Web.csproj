@@ -261,8 +261,6 @@
     <Compile Include="Controllers\EmployerController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\EventController.cs" />
-    <Compile Include="Controllers\HirerAccountController.cs" />
-    <Compile Include="Controllers\HirerWorkOrderController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImageController.cs" />
     <Compile Include="Controllers\PersonController.cs" />
@@ -283,7 +281,6 @@
     <Compile Include="Helpers\Defaults.cs" />
     <Compile Include="Helpers\MacheteController.cs" />
     <Compile Include="Helpers\mUIExtensions.cs" />
-    <Compile Include="Helpers\PayPal\PaypalExpressCheckout.cs" />
     <Compile Include="Helpers\workerRequestBinder.cs" />
     <Compile Include="Resources\ActivitySchedule.Designer.cs">
       <DependentUpon>ActivitySchedule.resx</DependentUpon>
@@ -1335,20 +1332,7 @@
     <Content Include="Views\Account\_RemoveAccountPartial.cshtml" />
     <Content Include="Views\Account\_SetPasswordPartial.cshtml" />
     <Content Include="Views\Shared\WorkerWAIndex.cshtml" />
-    <Content Include="Views\HirerAccount\Register.cshtml" />
-    <Content Include="Views\HirerAccount\Login.cshtml" />
-    <Content Include="Views\HirerAccount\_ExternalLoginsListPartial.cshtml" />
-    <Content Include="Views\HirerWorkOrder\Create.cshtml" />
-    <Content Include="Views\HirerWorkOrder\Index.cshtml" />
     <Content Include="Views\Shared\HirerWorkOrderEdit.cshtml" />
-    <Content Include="Views\HirerAccount\Edit.cshtml" />
-    <Content Include="Views\HirerWorkOrder\IndexPrePaypal.cshtml" />
-    <Content Include="Views\HirerWorkOrder\IndexPostPaypal.cshtml" />
-    <Content Include="Views\HirerWorkOrder\IndexCancel.cshtml" />
-    <Content Include="Views\HirerWorkOrder\IndexComplete.cshtml" />
-    <Content Include="Views\HirerWorkOrder\IndexError.cshtml" />
-    <Content Include="Views\HirerWorkOrder\IndexCompleteEmpty.cshtml" />
-    <Content Include="Views\HirerWorkOrder\Profile.cshtml" />
     <Content Include="Views\ReportsV2\Index.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
