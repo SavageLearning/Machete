@@ -2888,15 +2888,13 @@ var OnlineOrdersComponent = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__schedule_rules_service__ = __webpack_require__("../../../../../src/app/online-orders/schedule-rules.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__transport_rules_service__ = __webpack_require__("../../../../../src/app/online-orders/transport-rules.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__order_complete_order_complete_component__ = __webpack_require__("../../../../../src/app/online-orders/order-complete/order-complete.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__paypal_notice_paypal_notice_component__ = __webpack_require__("../../../../../src/app/online-orders/paypal-notice/paypal-notice.component.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__shared_views_full_order_view_full_order_view_component__ = __webpack_require__("../../../../../src/app/shared/views/full-order-view/full-order-view.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__shared_views_full_order_view_full_order_view_component__ = __webpack_require__("../../../../../src/app/shared/views/full-order-view/full-order-view.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-
 
 
 
@@ -2940,8 +2938,7 @@ var OnlineOrdersModule = (function () {
                 __WEBPACK_IMPORTED_MODULE_6__work_assignments_work_assignments_component__["a" /* WorkAssignmentsComponent */],
                 __WEBPACK_IMPORTED_MODULE_7__order_confirm_order_confirm_component__["a" /* OrderConfirmComponent */],
                 __WEBPACK_IMPORTED_MODULE_14__order_complete_order_complete_component__["a" /* OrderCompleteComponent */],
-                __WEBPACK_IMPORTED_MODULE_15__paypal_notice_paypal_notice_component__["a" /* PaypalNoticeComponent */],
-                __WEBPACK_IMPORTED_MODULE_16__shared_views_full_order_view_full_order_view_component__["a" /* FullOrderViewComponent */]
+                __WEBPACK_IMPORTED_MODULE_15__shared_views_full_order_view_full_order_view_component__["a" /* FullOrderViewComponent */]
             ],
             providers: [
                 __WEBPACK_IMPORTED_MODULE_11__online_orders_service__["a" /* OnlineOrdersService */],
@@ -3091,6 +3088,15 @@ var OnlineOrdersService = (function () {
             }
         });
     };
+    OnlineOrdersService.prototype.executePaypal = function (orderID, payerID, paymentID) {
+        var url = __WEBPACK_IMPORTED_MODULE_4__environments_environment__["a" /* environment */].dataUrl + '/api/onlineorders/' + orderID + '/paypalexecute';
+        var postHeaders = new __WEBPACK_IMPORTED_MODULE_2__angular_common_http__["d" /* HttpHeaders */]().set('Content-Type', 'application/json');
+        var foo = {
+            payerID: payerID,
+            paymentID: paymentID
+        };
+        return this.http.post(url, JSON.stringify(foo), { headers: postHeaders });
+    };
     OnlineOrdersService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
         __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__angular_common_http__["b" /* HttpClient */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_common_http__["b" /* HttpClient */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__work_order_work_order_service__["a" /* WorkOrderService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__work_order_work_order_service__["a" /* WorkOrderService */]) === "function" && _b || Object])
@@ -3124,7 +3130,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/online-orders/order-complete/order-complete.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"ui-fluid card ui-g\">\r\n  <full-order-view \r\n    [transportLabel]=\"transportLabel\"\r\n    [workerCount]=\"workerCount\"\r\n    [transportCost]=\"transportCost\"\r\n    [laborCost]=\"laborCost\"\r\n    [order]=\"order\">\r\n  </full-order-view> \r\n</div>\r\n"
+module.exports = "<div id=\"paypal-button\"></div>\r\n<div class=\"ui-fluid card ui-g\">\r\n  <full-order-view \r\n    [transportLabel]=\"transportLabel\"\r\n    [workerCount]=\"workerCount\"\r\n    [transportCost]=\"transportCost\"\r\n    [laborCost]=\"laborCost\"\r\n    [order]=\"order\">\r\n  </full-order-view> \r\n</div>\r\n"
 
 /***/ }),
 
@@ -3140,6 +3146,8 @@ module.exports = "<div class=\"ui-fluid card ui-g\">\r\n  <full-order-view \r\n 
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__lookups_models_lookup__ = __webpack_require__("../../../../../src/app/lookups/models/lookup.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_Observable__ = __webpack_require__("../../../../rxjs/Observable.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_Observable__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_paypal_checkout__ = __webpack_require__("../../../../paypal-checkout/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_paypal_checkout___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_paypal_checkout__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -3155,11 +3163,51 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var OrderCompleteComponent = (function () {
     function OrderCompleteComponent(onlineService, lookups) {
+        var _this = this;
         this.onlineService = onlineService;
         this.lookups = lookups;
         this.order = new __WEBPACK_IMPORTED_MODULE_2__shared_models_work_order__["a" /* WorkOrder */]();
+        this.transportCost = 0;
+        // paypal values
+        this.didPaypalScriptLoad = false;
+        this.loading = true;
+        this.paypalConfig = {
+            env: 'sandbox',
+            client: {
+                sandbox: 'AeabfiAbx3eY7bFZDsns0L4u77c4TE4cLuU8bZ4hWA1u9D5kVA2_KbBIJh3mIJcjJ96fGEckqoi9ynyr',
+                production: 'AcXQ3nPggEKWs48Q6_L8F9nwXppmuLNCRAfhzIsOHejWYvUr7Ob1Ciekdc0v4lRliCl0nIW6abuKQeuM'
+            },
+            commit: true,
+            payment: function (data, actions) {
+                return actions.payment.create({
+                    payment: {
+                        transactions: [
+                            { amount: { total: _this.transportCost, currency: 'USD' } }
+                        ]
+                    },
+                    experience: {
+                        input_fields: {
+                            no_shipping: 1
+                        }
+                    },
+                });
+            },
+            onAuthorize: function (data, actions) {
+                console.log('Payment was successful!', data, actions);
+                // TODO: add confirmation notice/spinner
+                _this.onlineService.executePaypal(_this.order.id, data['payerID'], data['paymentID'])
+                    .subscribe(function (data) { return console.log('execute paypal returned:', data); }, function (error) { return console.error('execute paypal errored:', error); });
+            },
+            onCancel: function (data) {
+                console.log('The payment was cancelled!', data);
+            },
+            onError: function (err) {
+                console.log('There was an error:', err);
+            }
+        };
     }
     OrderCompleteComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -3186,6 +3234,15 @@ var OrderCompleteComponent = (function () {
                 _this.laborCost = 0;
             }
         }, function (error) { return console.error('error', error); });
+    };
+    OrderCompleteComponent.prototype.ngAfterViewChecked = function () {
+        if (!this.didPaypalScriptLoad) {
+            //this.loadPaypalScript().then(() => {
+            __WEBPACK_IMPORTED_MODULE_6_paypal_checkout__["Button"].render(this.paypalConfig, '#paypal-button');
+            this.loading = false;
+            this.didPaypalScriptLoad = true;
+            //});
+        }
     };
     OrderCompleteComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
@@ -3319,67 +3376,6 @@ var OrderConfirmComponent = (function () {
 }());
 
 //# sourceMappingURL=order-confirm.component.js.map
-
-/***/ }),
-
-/***/ "../../../../../src/app/online-orders/paypal-notice/paypal-notice.component.css":
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
-// imports
-
-
-// module
-exports.push([module.i, "", ""]);
-
-// exports
-
-
-/*** EXPORTS FROM exports-loader ***/
-module.exports = module.exports.toString();
-
-/***/ }),
-
-/***/ "../../../../../src/app/online-orders/paypal-notice/paypal-notice.component.html":
-/***/ (function(module, exports) {
-
-module.exports = "<p>\r\n  paypal-notice works!\r\n</p>\r\n"
-
-/***/ }),
-
-/***/ "../../../../../src/app/online-orders/paypal-notice/paypal-notice.component.ts":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PaypalNoticeComponent; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-var PaypalNoticeComponent = (function () {
-    function PaypalNoticeComponent() {
-    }
-    PaypalNoticeComponent.prototype.ngOnInit = function () {
-    };
-    PaypalNoticeComponent = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
-            selector: 'app-paypal-notice',
-            template: __webpack_require__("../../../../../src/app/online-orders/paypal-notice/paypal-notice.component.html"),
-            styles: [__webpack_require__("../../../../../src/app/online-orders/paypal-notice/paypal-notice.component.css")]
-        }),
-        __metadata("design:paramtypes", [])
-    ], PaypalNoticeComponent);
-    return PaypalNoticeComponent;
-}());
-
-//# sourceMappingURL=paypal-notice.component.js.map
 
 /***/ }),
 
@@ -5741,18 +5737,19 @@ var WorkOrdersService = (function () {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return environment; });
 var environment = {
-    name: 'cloud-test',
-    production: true,
-    dataUrl: 'https://api.machetessl.org',
-    authUrl: 'https://identity.machetessl.org/id',
+    name: 'mvc-embedded',
+    production: false,
+    dataUrl: 'http://localhost:63374',
+    authUrl: 'https://localhost:44379/id',
+    baseRef: '/V2',
     oidc_client_settings: {
-        authority: 'https://identity.machetessl.org/id',
-        client_id: 'machete-ui-cloud-test',
-        redirect_uri: 'https://test.machetessl.org/V2/authorize',
-        post_logout_redirect_uri: 'https://test.machetessl.org/V2',
+        authority: 'https://localhost:44379/id',
+        client_id: 'machete-ui-local-embedded',
+        redirect_uri: 'http://localhost:4213/V2/authorize',
+        post_logout_redirect_uri: 'http://localhost:4213/V2',
         response_type: 'id_token token',
         scope: 'openid email roles api profile',
-        silent_redirect_uri: 'https://test.machetessl.org/V2/silent-renew.html',
+        silent_redirect_uri: 'http://localhost:4213/V2/silent-renew.html',
         automaticSilentRenew: true,
         accessTokenExpiringNotificationTime: 4,
         // silentRequestTimeout:10000,
