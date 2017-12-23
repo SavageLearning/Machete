@@ -22,4 +22,11 @@ namespace Machete.Api
         public const string Checkin = "Check-in";
         public const string Teacher = "Teacher";
     }
+
+    public struct Cfg
+    {
+        public const string PaypalId = "PayPalClientID";
+        public const string PaypalSecret = "PayPalClientSecret";
+        public const string PaypalUrl = "PayPalUrl";
+    }
 }
