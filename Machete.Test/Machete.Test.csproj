@@ -311,7 +311,6 @@
   <ItemGroup>
     <Compile Include="Integration\Fluent\FluentRecordBase.cs" />
     <Compile Include="Integration\Fluent\FluentRecordTests.cs" />
-    <Compile Include="Integration\Controllers\LoginIntegrationTest.cs" />
     <Compile Include="Integration\Data\ReportsRepositoryTests.cs" />
     <Compile Include="Integration\Fluent\FRB-Employer.cs" />
     <Compile Include="Integration\Fluent\FRB-OnlineOrders.cs" />
@@ -332,7 +331,6 @@
     <Compile Include="Integration\Services\WorkAssignmentServiceTest.cs" />
     <Compile Include="Integration\Services\WorkerSigninServiceTest.cs" />
     <Compile Include="Integration\Services\WorkOrderServiceTest.cs" />
-    <Compile Include="Integration\System\LookupCacheTests.cs" />
     <Compile Include="Integration\System\WorkerCacheTests.cs" />
     <Compile Include="Integration\Views\ActivityTests.cs" />
     <Compile Include="Integration\Views\PersonTests.cs" />
@@ -358,7 +356,6 @@
     <Compile Include="UnitTests\Services\WorkerServiceUnitTests.cs" />
     <Compile Include="UnitTests\Services\WorkerSigninServiceUnitTest.cs" />
     <Compile Include="Integration\Data\DatabaseTests.cs" />
-    <Compile Include="Integration\Domain\LINQ.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitTests\Controllers\PersonsControllerTests.cs" />
     <Compile Include="UnitTests\Controllers\WorkerControllerTests.cs" />
