@@ -2997,6 +2997,7 @@ var OnlineOrdersService = (function () {
         this.workOrderConfirmKey = this.storageKey + '.workorderconfirm';
         this.workAssignmentConfirmKey = this.storageKey + '.workassignmentsconfirm';
         this.orderCompleteKey = this.storageKey + '.ordercomplete';
+        this.paypalResponseKey = this.storageKey + '.paypalresponse';
         console.log('.ctor');
         // this loads static data from a file. will replace later.
         this.loadConfirmState();
@@ -3013,7 +3014,12 @@ var OnlineOrdersService = (function () {
     OnlineOrdersService.prototype.getWorkAssignmentConfirmedStream = function () {
         return this.workAssignmentsConfirmSource.asObservable();
     };
+    OnlineOrdersService.prototype.getPaypalResponseStream = function () {
+        return this.paypalResponseSource.asObservable();
+    };
     OnlineOrdersService.prototype.loadConfirmState = function () {
+        // This pattern is ugly; should be able to simplify, perhaps use BehaviorSubjectSource instead
+        // of companion private variable
         var loadedConfirms = JSON.parse(sessionStorage.getItem(this.initialConfirmKey));
         if (loadedConfirms != null && loadedConfirms.length > 0) {
             this.initialConfirm = loadedConfirms;
@@ -3025,12 +3031,23 @@ var OnlineOrdersService = (function () {
         }
         var loadedCompleteOrder = JSON.parse(sessionStorage.getItem(this.orderCompleteKey));
         if (loadedCompleteOrder != null) {
+            // if we're loading from storage, make sure this record is current (may be recovering after)
+            // paypalexecute started
             this.orderComplete = loadedCompleteOrder;
             this.orderCompleteSource = new __WEBPACK_IMPORTED_MODULE_5_rxjs__["BehaviorSubject"](loadedCompleteOrder);
         }
         else {
             this.orderComplete = new __WEBPACK_IMPORTED_MODULE_1__shared_models_work_order__["a" /* WorkOrder */]();
             this.orderCompleteSource = new __WEBPACK_IMPORTED_MODULE_5_rxjs__["BehaviorSubject"](new __WEBPACK_IMPORTED_MODULE_1__shared_models_work_order__["a" /* WorkOrder */]());
+        }
+        var loadedPaypalResponse = JSON.parse(sessionStorage.getItem(this.paypalResponseKey));
+        if (loadedPaypalResponse != null) {
+            this.paypalResponse = loadedPaypalResponse;
+            this.paypalResponseSource = new __WEBPACK_IMPORTED_MODULE_5_rxjs__["BehaviorSubject"](loadedPaypalResponse);
+        }
+        else {
+            this.paypalResponse = new Object();
+            this.paypalResponseSource = new __WEBPACK_IMPORTED_MODULE_5_rxjs__["BehaviorSubject"](new Object());
         }
         this.workOrderConfirm = (sessionStorage.getItem(this.workOrderConfirmKey) == 'true');
         this.workAssignmentsConfirm = (sessionStorage.getItem(this.workAssignmentConfirmKey) == 'true');
@@ -3039,9 +3056,6 @@ var OnlineOrdersService = (function () {
         this.workOrderConfirmSource.next(this.workOrderConfirm);
         this.workAssignmentsConfirmSource.next(this.workAssignmentsConfirm);
         this.orderCompleteSource.next(this.orderComplete);
-    };
-    OnlineOrdersService.prototype.getInitialConfirmValue = function () {
-        return this.initialConfirm;
     };
     OnlineOrdersService.prototype.setInitialConfirm = function (choice) {
         console.log('setInitialConfirm:', choice);
@@ -3067,6 +3081,12 @@ var OnlineOrdersService = (function () {
         sessionStorage.setItem(this.orderCompleteKey, JSON.stringify(order));
         this.orderCompleteSource.next(order);
     };
+    OnlineOrdersService.prototype.setPaypalResponse = function (response) {
+        console.log(response);
+        this.paypalResponse = response;
+        sessionStorage.setItem(this.paypalResponseKey, JSON.stringify(response));
+        this.paypalResponseSource.next(response);
+    };
     OnlineOrdersService.prototype.createOrder = function (order) {
         var _this = this;
         var url = __WEBPACK_IMPORTED_MODULE_4__environments_environment__["a" /* environment */].dataUrl + '/api/onlineorders';
@@ -3088,14 +3108,19 @@ var OnlineOrdersService = (function () {
             }
         });
     };
-    OnlineOrdersService.prototype.executePaypal = function (orderID, payerID, paymentID) {
+    OnlineOrdersService.prototype.executePaypal = function (orderID, payerID, paymentID, token) {
+        var _this = this;
         var url = __WEBPACK_IMPORTED_MODULE_4__environments_environment__["a" /* environment */].dataUrl + '/api/onlineorders/' + orderID + '/paypalexecute';
         var postHeaders = new __WEBPACK_IMPORTED_MODULE_2__angular_common_http__["d" /* HttpHeaders */]().set('Content-Type', 'application/json');
-        var foo = {
+        return this.http.post(url, JSON.stringify({
             payerID: payerID,
-            paymentID: paymentID
-        };
-        return this.http.post(url, JSON.stringify(foo), { headers: postHeaders });
+            paymentID: paymentID,
+            paymentToken: token
+        }), { headers: postHeaders })
+            .map(function (data) {
+            _this.setPaypalResponse(data);
+            return data;
+        });
     };
     OnlineOrdersService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
@@ -3130,7 +3155,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/online-orders/order-complete/order-complete.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"paypal-button\"></div>\r\n<div class=\"ui-fluid card ui-g\">\r\n  <full-order-view \r\n    [transportLabel]=\"transportLabel\"\r\n    [workerCount]=\"workerCount\"\r\n    [transportCost]=\"transportCost\"\r\n    [laborCost]=\"laborCost\"\r\n    [order]=\"order\">\r\n  </full-order-view> \r\n</div>\r\n"
+module.exports = "<div id=\"paypal-button\" *ngIf=\"transportCost > 0\"></div>\r\n<div class=\"ui-fluid card ui-g\">\r\n  <full-order-view \r\n    [transportLabel]=\"transportLabel\"\r\n    [workerCount]=\"workerCount\"\r\n    [transportCost]=\"transportCost\"\r\n    [laborCost]=\"laborCost\"\r\n    [order]=\"order\">\r\n  </full-order-view> \r\n</div>\r\n"
 
 /***/ }),
 
@@ -3198,7 +3223,7 @@ var OrderCompleteComponent = (function () {
             onAuthorize: function (data, actions) {
                 console.log('Payment was successful!', data, actions);
                 // TODO: add confirmation notice/spinner
-                _this.onlineService.executePaypal(_this.order.id, data['payerID'], data['paymentID'])
+                _this.onlineService.executePaypal(_this.order.id, data['payerID'], data['paymentID'], data['paymentToken'])
                     .subscribe(function (data) { return console.log('execute paypal returned:', data); }, function (error) { return console.error('execute paypal errored:', error); });
             },
             onCancel: function (data) {
@@ -4229,7 +4254,8 @@ var WorkAssignmentsService = (function () {
         if (rules === null || rules === undefined) {
             throw new Error('No TransportRules match lookup key: ' + lookup.key);
         }
-        var result = rules.find(function (f) { return f.zipcodes.includes(order.zipcode); });
+        var result = rules.find(function (f) { return f.zipcodes.includes(order.zipcode) ||
+            f.zipcodes.includes("*"); });
         if (result === null || result == undefined) {
             throw new Error("Zipcode " + order.zipcode + " does not match any rule");
         }
