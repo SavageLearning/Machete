@@ -240,7 +240,7 @@ namespace Machete.Service
         /// <returns></returns>
         private int assignCheckWSI_cardnumber_match(WorkerSignin wsi)
         {
-            Worker worker = wRepo.Get(w => w.dwccardnum == wsi.dwccardnum);
+            Worker worker = wRepo.GetByMemberID(wsi.dwccardnum);
             if (worker == null) throw new NullReferenceException("Worker for key " + wsi.dwccardnum.ToString() + " is null");
             if (worker.ID != wsi.WorkerID) throw new MacheteIntegrityException("WorkerSignin's internal WorkerID and public worker ID don't match");
             return worker.ID;

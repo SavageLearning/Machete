@@ -173,8 +173,8 @@ namespace Machete.Service
 
             var waQ = waRepo.GetAllQ();
             var wrQ = wrRepo.GetAllQ();
-            var loD = lookRepo.Get(s => s.category == "worktype" && s.key == "DWC").ID;
-            var loH = lookRepo.Get(s => s.category == "worktype" && s.key == "HHH").ID;
+            var loD = lookRepo.GetByKey(LCategory.worktype, "DWC").ID;
+            var loH = lookRepo.GetByKey(LCategory.worktype, "HHH").ID;
 
 
             query = waQ

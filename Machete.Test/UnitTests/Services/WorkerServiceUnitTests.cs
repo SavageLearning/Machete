@@ -146,7 +146,7 @@ namespace Machete.Test.Unit.Service
             //Records._worker1.datecreated = DateTime.MinValue;
             //Records._worker1.dateupdated = DateTime.MinValue;
             _repo.Setup(r => r.Add(_w)).Returns(_w);
-            _pRepo.Setup(r => r.Get(It.IsAny<Func<Person, bool>>())).Returns(_p);
+            _pRepo.Setup(r => r.GetById(It.IsAny<int>())).Returns(_p);
             _lRepo.Setup(r => r.GetById(It.IsAny<int>())).Returns(_l);
             //
             //Act

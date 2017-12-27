@@ -248,8 +248,8 @@ namespace Machete.Test.Unit.Controller
                                              savedworkOrder = p;
                                              user = str;
                                          });
-            wrServ.Setup(x => x.GetWorkerRequestsByNum(testid, 1)).Returns(foo1);
-            wrServ.Setup(x => x.GetWorkerRequestsByNum(testid, 2)).Returns(foo2);
+            wrServ.Setup(x => x.GetByWorkerID(testid, 1)).Returns(foo1);
+            wrServ.Setup(x => x.GetByWorkerID(testid, 2)).Returns(foo2);
             _ctrlr.SetFakeControllerContext();
             _ctrlr.ValueProvider = fakeform.ToValueProvider();
             List<WorkerRequest> list = new List<WorkerRequest>();

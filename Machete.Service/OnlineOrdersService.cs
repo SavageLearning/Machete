@@ -11,7 +11,7 @@ namespace Machete.Service
 {
     public interface IOnlineOrdersService
     {
-        //WorkOrder Get(int id);
+        WorkOrder Get(int id);
         IEnumerable<WorkOrder> GetAll();
         IEnumerable<WorkOrder> GetMany(Func<WorkOrder, bool> where);
         WorkOrder Create(WorkOrder order, string user);
@@ -46,6 +46,11 @@ namespace Machete.Service
         public IEnumerable<WorkOrder> GetAll()
         {
             return woserv.GetAll();
+        }
+
+        public WorkOrder Get(int id)
+        {
+            return woserv.Get(id);
         }
 
         public IEnumerable<WorkOrder> GetMany(Func<WorkOrder, bool> where)

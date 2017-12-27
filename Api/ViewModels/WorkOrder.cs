@@ -21,10 +21,12 @@ namespace Machete.Api.ViewModel
         public bool onlineSource { get; set; }
         public int? paperOrderNum { get; set; }
         public string paypalErrors { get; set; }
-        public double? paypalFee { get; set; }
-        public string paypalPayerId { get; set; }
-        public string paypalToken { get; set; }
-        public string paypalTransactID { get; set; }
+        public double? ppFee { get; set; }
+        public string ppPayerID { get; set; }
+        public string ppPaymentToken { get; set; }
+        public string ppPaymentID { get; set; }
+        public string ppState { get; set; }
+        public string ppResponse { get; set; }
         public bool permanentPlacement { get; set; }
         public string phone { get; set; }
         public string state { get; set; }

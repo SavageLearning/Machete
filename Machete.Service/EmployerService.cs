@@ -33,7 +33,6 @@ namespace Machete.Service
 {
     public interface IEmployerService : IService<Employer>
     {
-        IEnumerable<WorkOrder> GetOrders(int id);
         dataTableResult<DTO.EmployersList> GetIndexView(viewOptions o);
         Employer Get(string guid);
     }
@@ -42,6 +41,7 @@ namespace Machete.Service
     {
         private readonly IWorkOrderService woServ;
         private readonly IMapper map;
+        new IEmployerRepository repo;
         public EmployerService(IEmployerRepository repo, 
                                IWorkOrderService woServ,
                                IUnitOfWork unitOfWork,
@@ -51,15 +51,12 @@ namespace Machete.Service
             this.woServ = woServ;
             this.map = map;
             this.logPrefix = "Employer";
-        }
-        public IEnumerable<WorkOrder> GetOrders(int id)
-        {
-            return woServ.GetByEmployer(id);
+            this.repo = repo;
         }
 
         public Employer Get(string guid)
         {
-            return repo.Get(e => e.onlineSigninID == guid);
+            return repo.GetBySubject(guid);
         }
         /// <summary>
         /// 

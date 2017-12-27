@@ -37,7 +37,6 @@ namespace Machete.Service
 {
     public interface IWorkOrderService : IService<WorkOrder>
     {
-        IEnumerable<WorkOrder> GetByEmployer(int id);
         IEnumerable<WorkOrder> GetActiveOrders(DateTime date, bool assignedOnly);
         IQueryable<WorkOrderSummary> GetSummary(string search);
         IQueryable<WorkOrderSummary> GetSummary();
@@ -77,17 +76,6 @@ namespace Machete.Service
             this.logPrefix = "WorkOrder";
         }
 
-        /// <summary>
-        /// Retrieve all worker orders for a specific Employer, or all work orders if null
-        /// </summary>
-        /// <param name="id">Employer ID</param>
-        /// <returns>WorkOrders associated with employer</returns>
-        public IEnumerable<WorkOrder> GetByEmployer(int id)
-        {
-            // TODO: investigate what happens if ID = null (should return all WO)
-            // Retrieve work orders for given employer
-             return repo.GetMany(w => w.EmployerID == id);
-        }
         /// <summary>
         /// Retrieve active orders for a given day. Active and assigned OR all active
         /// </summary>

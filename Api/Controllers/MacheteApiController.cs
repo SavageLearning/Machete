@@ -16,8 +16,8 @@ namespace Machete.Api.Controllers
             userSubject = subjectFromUser();
             base.Initialize(controllerContext);
         }
-
-        private string subjectFromUser()
+        [NonAction]
+        public string subjectFromUser()
         {
             if (User == null) return null;
 
