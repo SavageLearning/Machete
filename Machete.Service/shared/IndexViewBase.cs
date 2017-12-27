@@ -281,7 +281,7 @@ namespace Machete.Service
                 {
                     skills.Push(skillid);
                     Lookup skill = l.GetById(skillid);
-                    foreach (var subskill in l.GetMany(a => a.category == skill.category &&
+                    foreach (var subskill in l.GetManyQ(a => a.category == skill.category &&
                                     a.subcategory == skill.subcategory &&
                                     a.level < skill.level))
                     {
@@ -294,7 +294,7 @@ namespace Machete.Service
                 if (skills.Count() != 0) skill4 = skills.Pop();
                 if (skills.Count() != 0) skill5 = skills.Pop();
                 if (skills.Count() != 0) skill6 = skills.Pop();
-                filteredWA = filteredWA.Join(l.GetAll(), //LINQ
+                filteredWA = filteredWA.Join(l.GetAllQ(), //LINQ
                                                    wa => wa.skillID,
                                                    sk => sk.ID,
                                                    (wa, sk) => new { wa, sk }

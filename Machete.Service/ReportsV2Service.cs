@@ -42,7 +42,7 @@ namespace Machete.Service
             int id = 0;
             if (!Int32.TryParse(o.idOrName, out id))
             {
-                id = repo.GetMany(r => string.Equals(r.name, o.idOrName, StringComparison.OrdinalIgnoreCase)).First().ID;
+                id = repo.GetManyQ(r => string.Equals(r.name, o.idOrName, StringComparison.OrdinalIgnoreCase)).First().ID;
             }
 
             var oo = map.Map<DTO.SearchOptions, Data.DTO.SearchOptions>(o);
@@ -65,7 +65,7 @@ namespace Machete.Service
             }
             else
             {
-                result = repo.GetMany(r => string.Equals(r.name, idOrName, StringComparison.OrdinalIgnoreCase)).First();
+                result = repo.GetManyQ(r => string.Equals(r.name, idOrName, StringComparison.OrdinalIgnoreCase)).First();
             }
             return result;
         }

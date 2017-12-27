@@ -68,7 +68,7 @@ namespace Machete.Service
         /// <returns>WorkerSignin</returns>
         public Domain.WorkerSignin GetSignin(int dwccardnum, DateTime date)
         {
-            return repo.GetManyQ().FirstOrDefault(r => r.dwccardnum == dwccardnum &&
+            return repo.GetAllQ().FirstOrDefault(r => r.dwccardnum == dwccardnum &&
                             DbFunctions.DiffDays(r.dateforsignin, date) == 0 ? true : false);
         }
         /// <summary>

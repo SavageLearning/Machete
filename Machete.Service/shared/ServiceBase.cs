@@ -78,14 +78,14 @@ namespace Machete.Service
         /// 
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<T> GetAll() 
+        public IEnumerable<T> GetAll()
         {
-            return repo.GetAll();
+            return repo.GetAllQ();
         }
 
         public IEnumerable<T> GetMany(Func<T, bool> where)
         {
-            return repo.GetMany(where);
+            return repo.GetManyQ(where);
         }
         /// <summary>
         /// 

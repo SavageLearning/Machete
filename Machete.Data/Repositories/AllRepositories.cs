@@ -270,9 +270,9 @@ namespace Machete.Data
     public class TransportRuleRepository : RepositoryBase<TransportRule>, ITransportRuleRepository
     {
         public TransportRuleRepository(IDatabaseFactory databaseFactory) : base(databaseFactory) { }
-        public override IEnumerable<TransportRule> GetAll()
+        public override IQueryable<TransportRule> GetAllQ()
         {
-            return dbset.Include(a => a.costRules).AsNoTracking().AsEnumerable();
+            return dbset.Include(a => a.costRules).AsNoTracking();
         }
     }
 

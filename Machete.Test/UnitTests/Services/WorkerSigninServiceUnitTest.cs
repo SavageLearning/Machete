@@ -101,7 +101,7 @@ namespace Machete.Test.Unit.Service
             //
             // Arrange WorkerSignin
             _wsiRepo = new Mock<IWorkerSigninRepository>();
-            _wsiRepo.Setup(s => s.GetAll()).Returns(_signins);
+            _wsiRepo.Setup(s => s.GetAllQ()).Returns(_signins.AsQueryable());
             // Arrange Worker
             _wServ = new Mock<IWorkerService>();
             _wServ.Setup(w => w.GetAll()).Returns(_workers);

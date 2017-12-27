@@ -38,11 +38,8 @@ namespace Machete.Data.Infrastructure
         void Delete(T entity);
         void Delete(Func<T, Boolean> predicate);
         T GetById(int Id);
-        IEnumerable<T> GetAll();
-        IQueryable<T> GetMany(Func<T, bool> where);
         IQueryable<T> GetAllQ();
         IQueryable<T> GetManyQ(Func<T, bool> where);
-        IQueryable<T> GetManyQ();
     }
     // class-declaration is a type-declaration that declares a new class
     //
@@ -106,35 +103,14 @@ namespace Machete.Data.Infrastructure
             return dbset.Find(id);
         }
 
-        public virtual IEnumerable<T> GetAll()
-        {
-            return dbset.AsEnumerable();
-        }
         public virtual IQueryable<T> GetAllQ()
         {
             return dbset.AsNoTracking().AsQueryable();
         }
-        public virtual IQueryable<T> GetMany(Func<T, bool> where)
-        {
-            return dbset.Where(where).AsQueryable();
-        }
-        /// <summary>
-        /// Returns tracked objects from database
-        /// </summary>
-        /// <param name="where"></param>
-        /// <returns></returns>
+
         public virtual IQueryable<T> GetManyQ(Func<T, bool> where)
         {
             return dbset.Where(where).AsQueryable();
-        }
-        /// <summary>
-        /// Returns tracked objects from database
-        /// </summary>
-        /// <param name="where"></param>
-        /// <returns></returns>
-        public virtual IQueryable<T> GetManyQ()
-        {
-            return dbset.AsQueryable();
         }
     }
 }
