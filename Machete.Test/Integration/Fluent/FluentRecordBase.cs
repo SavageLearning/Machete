@@ -66,7 +66,7 @@ namespace Machete.Test.Integration
         private IEmailConfig _emCfg;
         private Email _email;
         private Event _event;
-        private Config _config;
+        private Config _config = null;
         private Worker _w;
         private WorkerRequest  _wr;
         private Activity  _a;

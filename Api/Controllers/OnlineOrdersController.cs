@@ -144,14 +144,13 @@ namespace Machete.Api.Controllers
         {
             validatePaypalData(data);
             Domain.WorkOrder order = null;
-            try
-            {
-                order = serv.GetMany(o => o.ID == orderID && o.EmployerID == employer.ID).First();
-            }
-            catch (InvalidOperationException e)
+
+            order = serv.Get(orderID);        
+            if (order.EmployerID != employer.ID)
             {
                 throwInvalidOrder(orderID);
             }
+
             validateNoPreviousPayment(order, data);
 
             if (order.ppState == null)
@@ -168,7 +167,7 @@ namespace Machete.Api.Controllers
             order.ppResponse = result;
             order.ppState = "approved";
             woServ.Save(order, User.Identity.Name);
-            return Json(result);
+            return Json(JsonConvert.DeserializeObject(result));
         }
 
         [NonAction]

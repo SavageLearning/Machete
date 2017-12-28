@@ -47,7 +47,7 @@ namespace Machete.Test.Unit.Service
         Mock<IWorkerRequestService> _wrServ;
         Mock<IUnitOfWork> _uow;
         Mock<IImageService> _iServ;
-        Mock<IConfigService> _cServ;
+        Mock<IConfigService> _cServ = null;
         Mock<IMapper> _map;
         List<WorkerSignin> _signins;
         List<Worker> _workers;

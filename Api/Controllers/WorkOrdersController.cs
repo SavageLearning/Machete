@@ -15,7 +15,6 @@ namespace Machete.Api.Controllers
         private readonly IWorkOrderService serv;
         private readonly IWorkAssignmentService waServ;
         private readonly IMapper map;
-        private string userGuid;
 
         public WorkOrdersController(IWorkOrderService workOrderService, IWorkAssignmentService workAssignmentService,
             IMapper map)

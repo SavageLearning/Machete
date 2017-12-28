@@ -15,12 +15,7 @@ namespace Machete.Test.Integration.Services
     [TestClass]
     public class OnlineOrdersServiceTest
     {
-
-        DTO.SearchOptions o;
         FluentRecordBase frb;
-        WorkOrder wo;
-        OnlineOrdersService serv;
-        IMapper map;
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext c) { }
