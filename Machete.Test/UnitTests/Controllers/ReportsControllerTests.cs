@@ -22,13 +22,20 @@ namespace Machete.Test.UnitTests.Controllers
         public Mock<IReportsV2Service> serv;
         public IMapper map;
         public ReportsController controller;
+        public DateTime testStartDate;
+        public DateTime testEndDate;
 
         [TestInitialize]
         public void Initialize()
         {
+            testStartDate = DateTime.Now.AddMonths(-6);
+            testEndDate = DateTime.Now;
+
             serv = new Mock<IReportsV2Service>();
             serv.SetupGetList();
             serv.SetupGet();
+            // This is a really contrived example; needs work
+            serv.SetupGetQuery(testStartDate, testEndDate);
 
             map = new MapperConfig().getMapper();
 
@@ -68,6 +75,25 @@ namespace Machete.Test.UnitTests.Controllers
               .Excluding(field => field.inputs)
             );
         }
+
+        [TestMethod, TestCategory(TC.UT), TestCategory(TC.Controller), TestCategory(TC.Reports)]
+        public void Get_WithFourArgs_ReturnsSingleReport_MatchingThoseParameters()
+        {
+            // this test is quick-and-dirty and needs serious help.
+            // all it shows currently is that this method can match on a name instead of an ID.
+
+            // Arrange
+            var expectedResult = new List<dynamic> {
+                (dynamic)ReportsControllerTestHelpers.FakeReportList()[0]
+            };
+
+            // Act
+            var result = controller.Get("FakeReport", testStartDate, testEndDate, null)
+                                   .AsCSharpObject<List<ReportDefinition>>();
+
+            // Assert
+            result.ShouldBeEquivalentTo(expectedResult, x => x.ExcludingMissingMembers());
+        }
     }
     public static class ReportsControllerTestHelpers
     {
@@ -88,6 +114,11 @@ namespace Machete.Test.UnitTests.Controllers
         public static IReturnsResult<IReportsV2Service> SetupGet(this Mock<IReportsV2Service> service)
         {
             return service.Setup(rs => rs.Get(It.IsAny<string>())).Returns((string i) => FakeReportList().Single(report => report.ID == Int32.Parse(i)));
+        }
+
+        public static IReturnsResult<IReportsV2Service> SetupGetQuery(this Mock<IReportsV2Service> service, DateTime beginDate, DateTime endDate)
+        {
+            return service.Setup(rs => rs.getQuery(It.IsAny<Service.DTO.SearchOptions>())).Returns((Service.DTO.SearchOptions o) => new List<dynamic> { FakeReportList().Single(report => System.String.Equals(report.name, o.idOrName))});
         }
 
         public static List<Domain.ReportDefinition> FakeReportList()
