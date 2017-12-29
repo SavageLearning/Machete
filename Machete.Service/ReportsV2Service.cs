@@ -149,13 +149,20 @@ namespace Machete.Service
 
         public List<string> validateQuery(string query)
         {
+            // I *think* List<string> will be easier for the JSON parser, but I don't know.
+            var result = new List<string>();
             try {
-                return repo.validate(query);
+                var sqlErrors = repo.validate(query).ToList();
+                sqlErrors.ForEach(error => result.Add(error));
             } catch (Exception ex) {
-                // the query is most likely the cause, but we don't know why. bubble up the
-                // bad query and the inner (this) exception together.
-                throw new MacheteServiceException("Could not validate query " + query, ex);
+                // this shouldn't happen; exceptions are handled and parsed and returned
+                // at the lower layer (hence the return type). so add what just happened
+                // to the list<string> as { innerException, exception } and bubble it up.
+                result.Add(ex.InnerException.ToString());
+                result.Add(ex.ToString());
+                // at the end is fine; return what we have. TODO logging
             }
+            return result;
         }
     }
 }

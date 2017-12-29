@@ -23,12 +23,13 @@ namespace Machete.Data
         List<ReportDefinition> getList();
         List<QueryMetadata> getColumns(string tableName);
         DataTable getDataTable(string query, DTO.SearchOptions o);
-        List<string> validate(string query);
+        string[] validate(string query);
     }
     public class ReportsRepository : RepositoryBase<ReportDefinition>, IReportsRepository
     {
         private IReadOnlyContext readOnlyContext;
 
+        // leaving for now for testing purposes...
         public ReportsRepository(IDatabaseFactory dbFactory) : base(dbFactory) { }
 
         public ReportsRepository(IDatabaseFactory dbFactory, IReadOnlyContext readOnlyContext) : base(dbFactory) {
@@ -189,9 +190,10 @@ namespace Machete.Data
         }
         #endregion
 
-        public List<string> validate(string query)
+        public string[] validate(string query)
         {
-            throw new NotImplementedException();
+            var context = readOnlyContext.Get();
+            return readOnlyContext.ExecuteSql(context, query);
         }
     }
 

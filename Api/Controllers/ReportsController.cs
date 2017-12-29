@@ -73,20 +73,19 @@ namespace Machete.Api.Controllers
         public IHttpActionResult Post(string query)
         {
             try {
-              var validationMessages = serv.validateQuery(query);
-              if (validationMessages.Count == 0) { 
-                return StatusCode(HttpStatusCode.NotModified);
-              } else {
-                // minor abuse of 200 status code, but we want the validation messages! send them back as JSON
-                return Json(new { data = validationMessages });
-              }
-            } catch (Exception exception) {
-              // SQL errors are expected but they will be returned as strings
-              // so the user can correct them. in this case, something
-              // happened we were not expecting; return 500.
-
-              // TODO implement logging? we should be logging the exceptions.
-              return StatusCode(HttpStatusCode.InternalServerError);
+                var validationMessages = serv.validateQuery(query);
+                if (validationMessages.Count == 0) { 
+                    return StatusCode(HttpStatusCode.NotModified);
+                } else {
+                    // 200 status code is correct; we wanted validation messages, and got them.
+                    return Json(new { data = validationMessages });
+                }
+            } catch (Exception) {
+                // SQL errors are expected but they will be returned as strings.
+                // Service level errors will be added to that object, if the service fails.
+                // in this case, something happened that we were not expecting; return 500.
+                return StatusCode(HttpStatusCode.InternalServerError);
+                // TODO logging....
             }
         }
 
