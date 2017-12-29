@@ -150,11 +150,11 @@ namespace Machete.Service
         public List<string> validateQuery(string query)
         {
             try {
-              return repo.validate(query);
+                return repo.validate(query);
             } catch (Exception ex) {
-              // the query is most likely the cause, but we don't know why. bubble up the
-              // bad query and the inner (this) exception together.
-              throw new MacheteServiceException("Could not validate query " + query, ex);
+                // the query is most likely the cause, but we don't know why. bubble up the
+                // bad query and the inner (this) exception together.
+                throw new MacheteServiceException("Could not validate query " + query, ex);
             }
         }
     }

@@ -27,10 +27,14 @@ namespace Machete.Data
     }
     public class ReportsRepository : RepositoryBase<ReportDefinition>, IReportsRepository
     {
+        private IReadOnlyContext readOnlyContext;
 
+        public ReportsRepository(IDatabaseFactory dbFactory) : base(dbFactory) { }
 
-        public ReportsRepository(IDatabaseFactory dbFactory) : base(dbFactory)
-        {}
+        public ReportsRepository(IDatabaseFactory dbFactory, IReadOnlyContext readOnlyContext) : base(dbFactory) {
+            // there's no reason to put this in the base; this class needs a read-only context to perform server-side validation.
+            this.readOnlyContext = readOnlyContext;
+        }
 
         public List<SimpleDataRow> getSimpleAggregate(int id, DateTime beginDate, DateTime endDate)
         {
@@ -113,11 +117,6 @@ namespace Machete.Data
             return SqlServerUtils.getMetadata(DataContext, "select top 0 * from " + tableName);
         }
 
-        public List<string> validate(string query)
-        {
-            throw new NotImplementedException();
-        }
-
         #region IL voodoo
 
         //
@@ -189,6 +188,11 @@ namespace Machete.Data
             propertyBuilder.SetSetMethod(setterMethod);
         }
         #endregion
+
+        public List<string> validate(string query)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class QueryMetadata
@@ -198,5 +202,16 @@ namespace Machete.Data
         public string system_type_name { get; set; }
         public bool include { get; set; } /// default value for the UI
     }
-  
+    
+    public interface IReportValidator
+    {
+        List<string> validate(string query);
+    }
+    public class ReportValidator : IReportValidator
+    {
+        public List<string> validate(string query)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
