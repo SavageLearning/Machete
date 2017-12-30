@@ -34,6 +34,7 @@ namespace Machete.Test
 {
     public static class Records
     {
+        private static readonly DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         public static int GetNextMemberID(DbSet<Worker> db)
         {
             //debug
@@ -229,9 +230,9 @@ namespace Machete.Test
             transportFeeExtra = 0,
             englishRequiredNote = "",
             description = "description string",
-            dateTimeofWork = DateTime.Today,
-            datecreated = DateTime.Now,             //datetime
-            dateupdated = DateTime.Now,              //datetime
+            dateTimeofWork = DateTime.Today.ToUniversalTime().Subtract(epoch).TotalMilliseconds,
+            datecreated = DateTime.Now.ToUniversalTime().Subtract(epoch).TotalMilliseconds,
+            dateupdated = DateTime.Now.ToUniversalTime().Subtract(epoch).TotalMilliseconds,       
             createdby = "initialization script",
             updatedby = "initialization script",
             transportTransactType = 256,

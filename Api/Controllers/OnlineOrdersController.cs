@@ -72,7 +72,7 @@ namespace Machete.Api.Controllers
         public IHttpActionResult Get()
         {
             var vo = new viewOptions();
-            vo.displayLength = 10;
+            vo.displayLength = 500; // TODO dumping on the client; will address Angular using search later
             vo.displayStart = 0;
             vo.employerGuid = userSubject;
             dataTableResult<Service.DTO.WorkOrdersList> list = woServ.GetIndexView(vo);

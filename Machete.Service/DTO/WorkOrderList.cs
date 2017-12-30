@@ -24,6 +24,7 @@ namespace Machete.Service.DTO
         public bool onlineSource { get; set; }
         public string updatedby { get; set; }
         public DateTime dateupdated { get; set; }
+        public DateTime datecreated { get; set; }
         public int WAcount { get; set; }
         public int emailSentCount { get; set; }
         public int emailErrorCount { get; set; }

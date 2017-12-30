@@ -9,10 +9,17 @@ namespace Machete.Api.Maps
 {
     public class WorkOrdersMap : MacheteProfile
     {
+        private static readonly DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         public WorkOrdersMap()
         {
-            CreateMap<Service.DTO.WorkOrdersList, WorkOrder>();
-            CreateMap<Domain.WorkOrder, WorkOrder>();
+            CreateMap<Service.DTO.WorkOrdersList, WorkOrder>()
+                .ForMember(v => v.dateTimeofWork, opt => opt.MapFrom(d => d.dateTimeofWork.ToUniversalTime().Subtract(epoch).TotalMilliseconds))
+                .ForMember(v => v.datecreated, opt => opt.MapFrom(d => d.dateupdated.ToUniversalTime().Subtract(epoch).TotalMilliseconds))
+                .ForMember(v => v.dateupdated, opt => opt.MapFrom(d => d.datecreated.ToUniversalTime().Subtract(epoch).TotalMilliseconds));
+            CreateMap<Domain.WorkOrder, WorkOrder>()
+                .ForMember(v => v.dateTimeofWork, opt => opt.MapFrom(d => d.dateTimeofWork.ToUniversalTime().Subtract(epoch).TotalMilliseconds))
+                .ForMember(v => v.datecreated, opt => opt.MapFrom(d => d.dateupdated.ToUniversalTime().Subtract(epoch).TotalMilliseconds))
+                .ForMember(v => v.dateupdated, opt => opt.MapFrom(d => d.datecreated.ToUniversalTime().Subtract(epoch).TotalMilliseconds));
             //CreateMap<Domain.WorkOrder, Service.DTO.WorkOrdersList>()
             //    .ForMember(v => v.workers, opt => opt.MapFrom(d => d.workerRequests ?? new List<Domain.WorkerRequest>()))
             //    ;
